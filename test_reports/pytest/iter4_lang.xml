@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="12" time="59.063" timestamp="2026-08-17T17:13:57.421436+00:00" hostname="agent-env-28ba6ef5-b8e2-4605-b45d-3fa5249d385f"><testcase classname="tests.test_iter4_lang.TestChatLang" name="test_chat_lang_de_returns_german" time="4.896" /><testcase classname="tests.test_iter4_lang.TestVisionLang" name="test_vision_difetti_de" time="13.378"><failure message="AssertionError: Expected German vision (it=17, de=0): #&#10;  &#10;   🍞 Analisi del Pane — Il Maestro del Pane&#10;  &#10;  &gt; ⚠️ **Nota:** L'im&#10;  &#10;  magine è chiaramente un'**illustrazione grafica/schematica** e non una&#10;  &#10;   fotografia reale di pane. Analizzerò comunque gli elementi visibili rappresentati.&#10;  &#10;  ---&#10;  &#10;  ## Difetti Individuati&#10;  &#10;  •&#10;  &#10;   **Alveolatura irregolare e caotica**&#10;  - 🔍 *Cosa vedo:* Bolle di dimens&#10;  &#10;  ioni molto variabili, distribuite in modo disomogeneo&#10;  - ⚠️ *Causa probab&#10;assert 'it' == 'de'&#10;  &#10;  - de&#10;  + it">tests/test_iter4_lang.py:178: in test_vision_difetti_de
+    assert lang == "de", f"Expected German vision (it={it}, de={de}): {text[:400]}"
+E   AssertionError: Expected German vision (it=17, de=0): #
+E     
+E      🍞 Analisi del Pane — Il Maestro del Pane
+E     
+E     &gt; ⚠️ **Nota:** L'im
+E     
+E     magine è chiaramente un'**illustrazione grafica/schematica** e non una
+E     
+E      fotografia reale di pane. Analizzerò comunque gli elementi visibili rappresentati.
+E     
+E     ---
+E     
+E     ## Difetti Individuati
+E     
+E     •
+E     
+E      **Alveolatura irregolare e caotica**
+E     - 🔍 *Cosa vedo:* Bolle di dimens
+E     
+E     ioni molto variabili, distribuite in modo disomogeneo
+E     - ⚠️ *Causa probab
+E   assert 'it' == 'de'
+E     
+E     - de
+E     + it</failure></testcase><testcase classname="tests.test_iter4_lang.TestChatLang" name="test_chat_lang_it_returns_italian" time="3.612" /><testcase classname="tests.test_iter4_lang.TestChatLang" name="test_chat_lang_default_is_italian" time="5.597" /><testcase classname="tests.test_iter4_lang.TestVisionLang" name="test_vision_difetti_it" time="18.156" /><testcase classname="tests.test_iter4_lang.TestChatLang" name="test_chat_invalid_lang_falls_back_no_error" time="4.898" /><testcase classname="tests.test_iter4_lang.TestChatLang" name="test_chat_history_persisted" time="5.399" /><testcase classname="tests.test_iter4_lang.TestChatLang" name="test_chat_markdown_present_in_reply" time="8.558" /><testcase classname="tests.test_iter4_lang.TestVisionLang" name="test_vision_ingredienti_de" time="10.900"><failure message="AssertionError: Expected German vision (it=7, de=0): #&#10;  &#10;   🍞 Analisi dell'Immagine&#10;  &#10;  ## Cosa vedo&#10;  &#10;  L'immagine stilizzata mostra quello che sembra essere un **imp&#10;  &#10;  asto in fermentazione** (lievitazione), con:&#10;  &#10;  - **Bolle di gas** (CO₂) →&#10;  &#10;   segno di fermentazione attiva del lievito&#10;  - **Puntini scuri** → probabilmente **semi**&#10;  &#10;   (papavero, sesamo nero o pepe)&#10;  - **Bastoncini chiari** → potrebbero essere **steli di cere&#10;  &#10;  ali** o **semi di lino/girasole**&#10;  - *&#10;assert 'it' == 'de'&#10;  &#10;  - de&#10;  + it">tests/test_iter4_lang.py:188: in test_vision_ingredienti_de
+    assert lang == "de", f"Expected German vision (it={it}, de={de}): {text[:400]}"
+E   AssertionError: Expected German vision (it=7, de=0): #
+E     
+E      🍞 Analisi dell'Immagine
+E     
+E     ## Cosa vedo
+E     
+E     L'immagine stilizzata mostra quello che sembra essere un **imp
+E     
+E     asto in fermentazione** (lievitazione), con:
+E     
+E     - **Bolle di gas** (CO₂) →
+E     
+E      segno di fermentazione attiva del lievito
+E     - **Puntini scuri** → probabilmente **semi**
+E     
+E      (papavero, sesamo nero o pepe)
+E     - **Bastoncini chiari** → potrebbero essere **steli di cere
+E     
+E     ali** o **semi di lino/girasole**
+E     - *
+E   assert 'it' == 'de'
+E     
+E     - de
+E     + it</failure></testcase><testcase classname="tests.test_iter4_lang.TestWeeklyPlanForPrint" name="test_save_and_get_weekly_plan" time="0.359" /><testcase classname="tests.test_iter4_lang.TestWeeklyPlanForPrint" name="test_cleanup_weekly_plan" time="0.186" /><testcase classname="tests.test_iter4_lang.TestVisionLang" name="test_vision_accepts_data_url_prefix" time="15.979" /></testsuite></testsuites>

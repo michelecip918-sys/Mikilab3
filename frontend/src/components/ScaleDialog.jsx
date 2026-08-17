@@ -3,17 +3,19 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
 import { Scale } from "lucide-react";
+import { useLang } from "@/i18n/LanguageContext";
 
 const GRAM_FIELDS = [
-  { key: "flour_grams", label: "Farina" },
-  { key: "water_grams", label: "Acqua" },
-  { key: "sourdough_grams", label: "Lievito madre" },
-  { key: "salt_grams", label: "Sale" },
+  { key: "flour_grams", labelKey: "ing_flour" },
+  { key: "water_grams", labelKey: "ing_water" },
+  { key: "sourdough_grams", labelKey: "ing_sourdough" },
+  { key: "salt_grams", labelKey: "ing_salt" },
 ];
 
 export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
   const [mode, setMode] = useState("total"); // "total" | "flour"
   const [target, setTarget] = useState("");
+  const { t } = useLang();
 
   const currentTotal = useMemo(() => {
     if (!recipe) return 0;
@@ -60,10 +62,10 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
       <DialogContent className="max-w-md bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A]">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
-            <Scale className="w-6 h-6 text-[#6B8E62]" /> Scala le dosi
+            <Scale className="w-6 h-6 text-[#6B8E62]" /> {t("scale_title")}
           </DialogTitle>
           <DialogDescription className="text-[#8C7567]">
-            {recipe?.name} — l'idratazione resta invariata.
+            {recipe?.name} {t("scale_desc_suffix")}
           </DialogDescription>
         </DialogHeader>
 
@@ -78,7 +80,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
                   : "bg-white dark:bg-[#2A211D] text-[#8C7567] border-[#E8DEC8] dark:border-[#3D302A]"
               }`}
             >
-              Peso impasto
+              {t("scale_mode_total")}
             </button>
             <button
               data-testid="scale-mode-flour"
@@ -89,13 +91,13 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
                   : "bg-white dark:bg-[#2A211D] text-[#8C7567] border-[#E8DEC8] dark:border-[#3D302A]"
               }`}
             >
-              Peso farina
+              {t("scale_mode_flour")}
             </button>
           </div>
 
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">
-              {mode === "total" ? "Peso impasto desiderato (g)" : "Peso farina desiderato (g)"}
+              {mode === "total" ? t("scale_target_total") : t("scale_target_flour")}
             </label>
             <input
               data-testid="scale-target-input"
@@ -109,7 +111,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
           <div className="space-y-2" data-testid="scale-preview">
             {scaled.map((f) => (
               <div key={f.key} className="flex items-center justify-between bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-2.5">
-                <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0]">{f.label}</span>
+                <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0]">{t(f.labelKey)}</span>
                 <span className="font-mono-data font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">
                   {f.value != null ? `${f.value} g` : "—"}
                 </span>
@@ -117,7 +119,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             ))}
             {factor && (
               <div className="flex items-center justify-between px-4 pt-1">
-                <span className="text-xs text-[#8C7567]">Totale impasto</span>
+                <span className="text-xs text-[#8C7567]">{t("scale_total_dough")}</span>
                 <span className="font-mono-data text-xs font-bold text-[#8C7567]">{Math.round(newTotal)} g</span>
               </div>
             )}
@@ -129,7 +131,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             onClick={() => onOpenChange(false)}
             className="flex-1 bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-4 py-3 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A]"
           >
-            Annulla
+            {t("cancel")}
           </button>
           <button
             data-testid="scale-save-btn"
@@ -137,7 +139,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             disabled={!factor}
             className="flex-1 bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
           >
-            Salva come nuova
+            {t("save_as_new")}
           </button>
         </DialogFooter>
       </DialogContent>

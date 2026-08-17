@@ -1,8 +1,10 @@
 import { Wheat, Moon, Sun, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useLang } from "@/i18n/LanguageContext";
 
 export default function Header() {
   const [dark, setDark] = useState(false);
+  const { lang, setLang, t } = useLang();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -22,24 +24,39 @@ export default function Header() {
             Mikilab
           </div>
           <div className="text-[10px] tracking-wider uppercase font-semibold text-[#8C7567]">
-            Il Maestro del Pane
+            {t("brand_subtitle")}
           </div>
         </div>
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Language switcher IT / DE */}
         <div
-          data-testid="climate-indicator"
-          className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-[#736055] dark:text-[#A89689] bg-[#F5EFE6] dark:bg-[#332823] px-2.5 py-1.5 rounded-lg border border-[#E8DEC8] dark:border-[#3D302A]"
+          data-testid="lang-switcher"
+          className="flex items-center bg-[#F5EFE6] dark:bg-[#332823] rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] p-0.5"
+          aria-label={t("lang_label")}
         >
-          <MapPin className="w-3.5 h-3.5 text-[#B34A26]" />
-          Stoccarda
+          {["it", "de"].map((l) => (
+            <button
+              key={l}
+              data-testid={`lang-${l}`}
+              onClick={() => setLang(l)}
+              className={`px-2.5 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
+                lang === l
+                  ? "bg-[#B34A26] text-white shadow-sm"
+                  : "text-[#8C7567]"
+              }`}
+            >
+              {l}
+            </button>
+          ))}
         </div>
+
         <button
           data-testid="theme-toggle"
           onClick={() => setDark((d) => !d)}
           className="w-10 h-10 rounded-xl bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center text-[#B34A26] active:scale-95 transition-all"
-          aria-label="Cambia tema"
+          aria-label={t("theme_toggle")}
         >
           {dark ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
         </button>

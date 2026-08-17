@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Flame, Plus, Trash2, Play, Pause, RotateCcw } from "lucide-react";
 import { ovenApi } from "@/lib/api";
+import { useLang } from "@/i18n/LanguageContext";
 
 const emptyProfile = {
-  name: "", preheat_temp: "", phase1_temp: "", phase1_minutes: "",
+  name: "", oven_type: "statico", preheat_temp: "", phase1_temp: "", phase1_minutes: "",
   phase2_temp: "", phase2_minutes: "", phase3_temp: "", phase3_minutes: "", notes: "",
 };
 
@@ -43,12 +44,13 @@ export default function GestioneForno() {
   const [form, setForm] = useState(emptyProfile);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const { t } = useLang();
 
   const load = async () => {
     try {
       setProfiles(await ovenApi.list());
     } catch {
-      toast.error("Errore nel caricamento dei profili forno");
+      toast.error(t("toast_oven_error"));
     }
   };
   useEffect(() => { load(); }, []);
@@ -57,15 +59,15 @@ export default function GestioneForno() {
 
   const save = async () => {
     if (!form.name.trim()) return;
-    const payload = { name: form.name.trim(), notes: form.notes };
+    const payload = { name: form.name.trim(), notes: form.notes, oven_type: form.oven_type };
     ["preheat_temp", "phase1_temp", "phase1_minutes", "phase2_temp", "phase2_minutes", "phase3_temp", "phase3_minutes"]
       .forEach((k) => { payload[k] = form[k] === "" ? null : Number(form[k]); });
     try {
       if (editingId) await ovenApi.update(editingId, payload);
       else await ovenApi.create(payload);
-      toast.success("Profilo forno salvato");
+      toast.success(t("toast_oven_saved"));
       setForm(emptyProfile); setEditingId(null); setShowForm(false); load();
-    } catch { toast.error("Errore nel salvataggio"); }
+    } catch { toast.error(t("toast_save_error")); }
   };
 
   const edit = (p) => {
@@ -74,8 +76,8 @@ export default function GestioneForno() {
   };
 
   const remove = async (id) => {
-    try { await ovenApi.remove(id); toast.success("Profilo eliminato"); load(); }
-    catch { toast.error("Errore"); }
+    try { await ovenApi.remove(id); toast.success(t("toast_oven_deleted")); load(); }
+    catch { toast.error(t("toast_generic_error")); }
   };
 
   return (
@@ -85,8 +87,8 @@ export default function GestioneForno() {
           <Flame className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">Gestione forno</h1>
-          <p className="text-sm text-[#8C7567]">Temperature, vapore e timer di cottura</p>
+          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("oven_title")}</h1>
+          <p className="text-sm text-[#8C7567]">{t("oven_subtitle")}</p>
         </div>
       </div>
 
@@ -96,7 +98,7 @@ export default function GestioneForno() {
           onClick={() => { setForm(emptyProfile); setEditingId(null); setShowForm(true); }}
           className="w-full mt-5 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
         >
-          <Plus className="w-5 h-5" /> Nuovo profilo forno
+          <Plus className="w-5 h-5" /> {t("oven_new")}
         </button>
       )}
 
@@ -105,33 +107,44 @@ export default function GestioneForno() {
           <input
             data-testid="oven-name-input"
             value={form.name} onChange={(e) => set("name", e.target.value)}
-            placeholder="Nome profilo (es. Pentola in ghisa)"
+            placeholder={t("oven_name_ph")}
             className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]"
           />
-          <NumRow label="Preriscaldo (°C)" k="preheat_temp" form={form} set={set} />
-          <div className="text-xs font-semibold uppercase tracking-wide text-[#8C7567] pt-1">Fase 1 · con vapore</div>
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("oven_type")}</label>
+            <select
+              data-testid="oven-type-select"
+              value={form.oven_type} onChange={(e) => set("oven_type", e.target.value)}
+              className="mt-1 w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]"
+            >
+              <option value="statico">{t("oven_type_static")}</option>
+              <option value="ventilato">{t("oven_type_fan")}</option>
+            </select>
+          </div>
+          <NumRow label={t("oven_preheat")} k="preheat_temp" form={form} set={set} />
+          <div className="text-xs font-semibold uppercase tracking-wide text-[#8C7567] pt-1">{t("oven_phase1")}</div>
           <div className="grid grid-cols-2 gap-2">
             <NumRow label="°C" k="phase1_temp" form={form} set={set} />
-            <NumRow label="minuti" k="phase1_minutes" form={form} set={set} />
+            <NumRow label={t("oven_min")} k="phase1_minutes" form={form} set={set} />
           </div>
-          <div className="text-xs font-semibold uppercase tracking-wide text-[#8C7567] pt-1">Fase 2 · senza vapore</div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-[#8C7567] pt-1">{t("oven_phase2")}</div>
           <div className="grid grid-cols-2 gap-2">
             <NumRow label="°C" k="phase2_temp" form={form} set={set} />
-            <NumRow label="minuti" k="phase2_minutes" form={form} set={set} />
+            <NumRow label={t("oven_min")} k="phase2_minutes" form={form} set={set} />
           </div>
-          <div className="text-xs font-semibold uppercase tracking-wide text-[#8C7567] pt-1">Fase 3 · asciugatura crosta</div>
+          <div className="text-xs font-semibold uppercase tracking-wide text-[#8C7567] pt-1">{t("oven_phase3")}</div>
           <div className="grid grid-cols-2 gap-2">
             <NumRow label="°C" k="phase3_temp" form={form} set={set} />
-            <NumRow label="minuti" k="phase3_minutes" form={form} set={set} />
+            <NumRow label={t("oven_min")} k="phase3_minutes" form={form} set={set} />
           </div>
           <div className="flex gap-2 pt-1">
             <button onClick={() => { setShowForm(false); setEditingId(null); }}
               className="flex-1 bg-[#F5EFE6] dark:bg-[#332823] px-4 py-3 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] font-medium">
-              Annulla
+              {t("cancel")}
             </button>
             <button data-testid="oven-save-btn" onClick={save}
               className="flex-1 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-4 py-3 rounded-xl">
-              Salva
+              {t("save")}
             </button>
           </div>
         </div>
@@ -141,7 +154,12 @@ export default function GestioneForno() {
         {profiles.map((p) => (
           <div key={p.id} data-testid={`oven-profile-${p.id}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
             <div className="flex items-start justify-between">
-              <h3 className="font-display text-xl font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{p.name}</h3>
+              <div>
+                <h3 className="font-display text-xl font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{p.name}</h3>
+                <span data-testid={`oven-type-${p.id}`} className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A] bg-[#D99B26]/15 px-2 py-0.5 rounded-full border border-[#D99B26]/30">
+                  {p.oven_type === "ventilato" ? t("oven_type_fan") : t("oven_type_static")}
+                </span>
+              </div>
               <div className="flex gap-1.5">
                 <button onClick={() => edit(p)} className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B34A26]">✎</button>
                 <button data-testid={`delete-oven-${p.id}`} onClick={() => remove(p.id)} className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B4442A]">
@@ -150,12 +168,12 @@ export default function GestioneForno() {
               </div>
             </div>
             {p.preheat_temp != null && (
-              <p className="font-mono-data text-sm text-[#8C7567] mt-1">Preriscaldo {p.preheat_temp}°C</p>
+              <p className="font-mono-data text-sm text-[#8C7567] mt-1">{t("oven_preheat_short")} {p.preheat_temp}°C</p>
             )}
             <div className="mt-3 space-y-2">
-              <PhaseTimer label="Fase 1 · vapore" temp={p.phase1_temp} minutes={p.phase1_minutes} onDone={() => { beep(); toast("Fase 1 completata"); notify("Mikilab — Forno", `${p.name}: Fase 1 (vapore) completata`); }} />
-              <PhaseTimer label="Fase 2 · senza vapore" temp={p.phase2_temp} minutes={p.phase2_minutes} onDone={() => { beep(); toast("Fase 2 completata"); notify("Mikilab — Forno", `${p.name}: Fase 2 completata`); }} />
-              <PhaseTimer label="Fase 3 · asciugatura" temp={p.phase3_temp} minutes={p.phase3_minutes} onDone={() => { beep(); toast("Cottura terminata!"); notify("Mikilab — Forno", `${p.name}: cottura terminata!`); }} />
+              <PhaseTimer label={t("tl_phase1")} temp={p.phase1_temp} minutes={p.phase1_minutes} onDone={() => { beep(); toast(t("notify_phase1_done")); notify(t("notify_oven_title"), `${p.name}: ${t("notify_phase1_done")}`); }} />
+              <PhaseTimer label={t("tl_phase2")} temp={p.phase2_temp} minutes={p.phase2_minutes} onDone={() => { beep(); toast(t("notify_phase2_done")); notify(t("notify_oven_title"), `${p.name}: ${t("notify_phase2_done")}`); }} />
+              <PhaseTimer label={t("tl_phase3")} temp={p.phase3_temp} minutes={p.phase3_minutes} onDone={() => { beep(); toast(t("notify_bake_done")); notify(t("notify_oven_title"), `${p.name}: ${t("notify_bake_done")}`); }} />
             </div>
           </div>
         ))}

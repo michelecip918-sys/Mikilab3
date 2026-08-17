@@ -1,0 +1,48 @@
+{
+  "summary": "Iteration 4 testing of bilingual IT/DE, weekly plan print/share, markdown rendering and full regression. Backend: 40/40 existing pytest regression pass; new suite test_iter4_lang.py = 10/12 pass (2 failures: vision lang='de' returns Italian). Frontend (Playwright, mobile 390x844): language switcher, localStorage persistence, full UI translation, weekly print/share with live doses, recipe CRUD/duplicate/scale, oven profile CRUD, production plan compute+persist, announcements CRUD with delete confirm/cancel all PASS. Two real defects found: (1) photo vision ignores lang='de', (2) markdown rendering broken by SSE newline loss (lists not rendered, raw '##'/'**'/'---' leaking).",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "POST /api/maestro/vision", "issue": "lang='de' still returns ITALIAN analysis (reproduced 2x for mode='difetti' and 'ingredienti'). RCA: VISION_PROMPTS strings end with 'Rispondi in italiano, ...' (server.py L466/472) which conflicts with the appended LANG_DIRECTIVE, and the Italian instruction wins. Fix: remove the hardcoded 'Rispondi in italiano' from both prompts (and ideally localize the whole vision prompt per lang) so LANG_DIRECTIVE is authoritative.", "priority": "HIGH"},
+      {"endpoint": "POST /api/maestro/chat and /api/maestro/vision (SSE format)", "issue": "Streaming frames are emitted as 'data: {content}\\n\\n' with raw, unescaped model text. Model deltas contain newlines, so blank-line (paragraph) separators are destroyed by the client split on '\\n\\n'. Result in UI: markdown lists are NOT rendered (no <ul>/<li>), literal '##', '**', '---' leak into the visible text and consecutive blocks get glued ('...vermeidestEin gutes Brot...'). Fix: JSON-encode each delta (e.g. data: {\\\"d\\\": <json string>}) on the backend and JSON.parse on the frontend (MaestroSaTutto.jsx L87-97, PhotoDiagnosi.jsx L73-76).", "priority": "HIGH"}
+    ],
+    "minor": [
+      {"endpoint": "maestro_stream context prefix", "issue": "Prior-turn context is injected with hardcoded Italian labels ('Conversazione precedente', 'Utente', 'Maestro') regardless of lang; can bias multi-turn German conversations back to Italian."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PhotoDiagnosi / MaestroSaTutto (markdown)", "issue": "AI markdown renders partially: headings/strong appear but lists render as inline text and raw '##'/'**'/'---' are visible (caused by SSE newline loss above)", "selector": "[data-testid=\"photo-result\"], [data-testid=\"chat-msg-assistant\"]", "priority": "HIGH"},
+      {"component": "PhotoDiagnosi (DE)", "issue": "With DE selected the request correctly sends lang:'de' but the returned analysis is in Italian (backend defect)", "selector": "[data-testid=\"photo-result\"]", "priority": "HIGH"},
+      {"component": "WeeklyPlan", "issue": "Load-failure toast is hardcoded Italian 'Errore nel caricamento' (WeeklyPlan.jsx L47) - not translated", "selector": "[data-sonner-toast]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Pianifica produzione / Produktion planen", "issues": ["bake-time-input is a native datetime-local picker (renders as mm/dd/yyyy US format), not a localized/shadcn date-time control; date format does not follow the selected language"]},
+      {"screen": "Stuttgart announcements (DE mode)", "issues": ["Seeded announcement titles/bodies remain Italian when DE is selected (DB-stored seed data, not UI strings) - consider bilingual seeds"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter4_lang.py",
+    "/app/test_reports/pytest/iter4_lang.xml",
+    "/app/test_reports/pytest/iter4_regression.xml"
+  ],
+  "action_items": [
+    "Remove 'Rispondi in italiano' from VISION_PROMPTS (server.py) so lang='de' produces German vision output; optionally localize vision prompts per language",
+    "Fix SSE payload encoding (JSON-encode deltas backend + parse frontend) so markdown paragraphs/lists survive streaming and no raw '##'/'**' leaks",
+    "Translate WeeklyPlan load-error toast via t()",
+    "Localize maestro_stream conversation-context labels per lang"
+  ],
+  "critical_code_review_comments": [
+    "SSE protocol is not newline-safe: any model delta containing \\n\\n silently loses content structure. Must encode payloads.",
+    "Prompt language control is split between LANG_DIRECTIVE and hardcoded per-prompt language instructions -> conflicting instructions; keep a single source of truth.",
+    "translations.js it/de key parity verified (171/171 keys, no missing keys, only 3 intentionally identical values)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter4_lang.py"],
+  "success_rate": {"backend": "96% (50/52 tests)", "frontend": "85% (all flows work; markdown rendering + DE vision output defective)"},
+  "seed_data_creation": "Created and deleted TEST_ data only: recipe 'TEST_DE Brot' (+duplicate), oven profile 'TEST_DE Ofen', announcement 'TEST_DE Ankündigung', temporary weekly-plan items. Baseline restored: 3 mikilab recipes, 0 personal, 0 oven profiles, 2 seeded announcements, empty weekly plan. NOTE: production-plan doc now stores bake time 2026-07-20T07:00 with phase0=3h (was previously saved test data too).",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "No auth required (per /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Run: pytest /app/backend/tests/ -v (52 tests incl. test_iter4_lang.py). The 2 known failures are TestVisionLang::test_vision_difetti_de and test_vision_ingredienti_de (language directive overridden by Italian prompt). For markdown verification, assert rendered tags in [data-testid=\"chat-msg-assistant\"]/[data-testid=\"photo-result\"] contain ul/li and that inner_text has no '##'/'**'. Weekly print can be verified by monkeypatching window.open and capturing document.write output; empty plan shows warning toast and never calls window.open. Language switcher verified via localStorage key mikilab_lang.",
+  "rca_of_the_issue": "1) Vision language: VISION_PROMPTS end with 'Rispondi in italiano...'; LANG_DIRECTIVE ' Antworte IMMER auf Deutsch' is appended after but the model follows the domain-specific Italian instruction, so DE requests return Italian (reproduced twice via API and once via UI). 2) Markdown: backend yields 'data: <raw delta>\\n\\n'; deltas contain newlines including blank lines, so frontend buffer.split('\\n\\n') treats them as frame boundaries and discards the blank lines, collapsing markdown block separation -> remark cannot parse lists/headings, raw markers leak."
+}

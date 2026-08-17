@@ -24,6 +24,11 @@ export const planApi = {
   save: (data) => api.put(`/production-plan`, data).then((r) => r.data),
 };
 
+export const weeklyApi = {
+  get: () => api.get(`/weekly-plan`).then((r) => r.data),
+  save: (data) => api.put(`/weekly-plan`, data).then((r) => r.data),
+};
+
 export const announcementsApi = {
   list: () => api.get(`/announcements`).then((r) => r.data),
   create: (data) => api.post(`/announcements`, data).then((r) => r.data),

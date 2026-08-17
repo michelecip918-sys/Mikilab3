@@ -1,0 +1,54 @@
+{
+  "summary": "Iteration 5 verification of the two HIGH iteration-4 bugs plus 3 new features and full regression. Backend: 60/60 pytest pass (incl. new /app/backend/tests/test_iter5_sse_vision.py, 8/8). Both HIGH bugs are FIXED and verified end-to-end: (1) vision now answers in the selected language (DE difetti+ingredienti German, IT Italian - verified via API and UI with a real JPEG), (2) SSE is now JSON-framed ({\"d\":...}/{\"done\":true}), newlines/blank lines survive and the UI renders real <ul>/<li>/<strong>/<h2>/<p> with zero raw '##'/'**'/'---' leaks in both chat-msg-assistant and photo-result. New features verified: bio-card (IT/DE), 6 news items (2 Stoccarda highlighted + 2 Germania + 2 Italia, translated), Maestro hub with 5 tools, and 'Attacca gli impasti' (StartDoughs) forward planner - rest defaults from recipe bulk+proof (360/390 min), start = ready - rest, ordering earliest-mix-first, ready time last, sd-load-day correctly loads a weekly-plan day. Regression all pass: lang switch+persistence (localStorage mikilab_lang), recipe create/edit/duplicate/scale/delete-with-confirm, weekly plan save/persist/print/share(clipboard), oven CRUD + timer start/tick/reset, announcements CRUD with delete confirm+cancel, photo both modes. No 'Calcola gradi' and no freezer anywhere in the rendered app.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET/PUT /api/production-plan", "issue": "Singleton production plan has no DELETE/reset endpoint, so test/stale data can only be overwritten (I reset it to bake_time 2026-07-20T07:00 with phases: [])."},
+      {"endpoint": "vision_stream error path", "issue": "Error placeholder text '[Errore nell analisi. Riprova.]' is hardcoded Italian and is not localized by lang (also lost its apostrophe vs. earlier iterations)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "WeeklyPlan.sharePlan", "issue": "navigator.clipboard/share failures are swallowed by an empty catch, so when clipboard access is blocked the user gets no feedback at all (reproduced in a context without clipboard permission: no toast). Should show an error toast.", "selector": "[data-testid=\"weekly-share-btn\"]", "priority": "LOW"},
+      {"component": "StartDoughs", "issue": "sd-rest-{id} is an unbounded number input: clearing it or entering a negative value yields start == ready (or start after ready) with no validation/warning.", "selector": "[data-testid^=\"sd-rest-\"]", "priority": "LOW"},
+      {"component": "RecipeDialog", "issue": "Ambiguous test ids: 'recipe-flour-input' is the flour TYPE text field while the flour weight is 'recipe-flour_grams-input' - easy source of false test failures; consider renaming to recipe-flour-type-input.", "selector": "[data-testid=\"recipe-flour-input\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Attacca gli impasti / Inforna", "issues": ["sd-ready-time and bake-time-input are native datetime-local inputs rendering in US mm/dd/yyyy hh:mm AM format regardless of IT/DE language; not a localized/shadcn date-time picker"]},
+      {"screen": "Stoccarda announcements (DE)", "issues": ["Seeded announcement titles/bodies remain Italian in DE mode (DB seed data, pre-existing)"]},
+      {"screen": "Mikilab bio-card / news", "issues": ["No contrast or spacing problems found; bio card white-on-terracotta and highlighted Stuttgart news (amber tint + solid tag) read clearly"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter5_sse_vision.py",
+    "/app/test_reports/pytest/iter5.xml",
+    "/app/test_reports/pytest/iter5_full.xml"
+  ],
+  "action_items": [
+    "Optional: show an error toast when clipboard/share fails in WeeklyPlan.sharePlan instead of an empty catch",
+    "Optional: validate sd-rest-{id} (min 1, non-empty) in StartDoughs",
+    "Optional: localize the vision error placeholder string per lang",
+    "Optional cleanup: /app/frontend/src/sections/CalcolaGradi.jsx is dead code (no imports anywhere) - delete it",
+    "Optional: replace native datetime-local inputs with a localized date-time control"
+  ],
+  "critical_code_review_comments": [
+    "SSE contract is now newline-safe (json.dumps per frame) and the frontend parses each frame with JSON.parse - verified strictly: every data line in chat and vision streams is JSON-parseable and the stream terminates with {\"done\": true}.",
+    "VISION_PROMPTS no longer contain a hardcoded 'Rispondi in italiano', so LANG_DIRECTIVE is the single source of truth for language - verified German output for both modes.",
+    "translations.js key parity intact: 187 IT keys == 187 DE keys, no missing keys after adding bio_*, sd_*, tool_inforna/impasti, news_region_*.",
+    "StartDoughs.compute() is pure client-side and unpersisted (per spec); no backend endpoint added, so nothing to validate server-side."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter5_sse_vision.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_iter3_features.py",
+    "/app/backend/tests/test_iter4_lang.py"
+  ],
+  "success_rate": {"backend": "100% (60/60 pytest)", "frontend": "100% of tested flows (only 3 LOW-severity polish items)"},
+  "seed_data_creation": "Temporary only: personal recipes 'TEST_i5 Pane' (+duplicate, +scaled, +edit) all deleted; oven profile 'TEST_i5 Forno' deleted; announcement 'TEST_i5 Avviso' deleted; weekly-plan test items removed and plan saved empty. Baseline verified after cleanup: 3 mikilab recipes, 0 personal, 0 oven profiles, 2 seeded announcements, weekly-plan items = []. production-plan singleton reset to phases: [] (stale 'TEST_NoHours' phase from iteration 4 removed).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "No auth required (per /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Run: pytest /app/backend/tests/ -v (60 tests, ~2min; AI/vision tests dominate runtime). SSE helpers in all suites were migrated to the JSON contract ({'d':delta} / {'done':true}) - do NOT reintroduce '[DONE]' assertions. Frontend notes: news tags render uppercase via CSS so inner_text returns 'STUTTGART'/'STOCCARDA' - compare case-insensitively. WeeklyPlan/StartDoughs load data asynchronously: wait for [data-testid^='weekly-pieces-'] (not just the day cards) before counting rows, otherwise you get a false 0. Oven timer widgets only render when a profile has phaseN_minutes set. weekly print can be captured by stubbing window.open and reading the document.write payload; share needs clipboard permissions granted or it silently no-ops.",
+  "rca_of_the_issue": "Both iteration-4 HIGH defects are resolved. (1) Vision language: removing 'Rispondi in italiano' from VISION_PROMPTS left LANG_DIRECTIVE authoritative; DE requests now score de>>it (e.g. de=21 vs it=8) and IT requests stay Italian. (2) Markdown: JSON-encoding each SSE delta prevents the client split('\\n\\n') from consuming model newlines; backend test asserts '\\n\\n' is present in the reassembled text and the UI now emits real <ul>/<li>/<strong>/<h2> with no raw markers."
+}

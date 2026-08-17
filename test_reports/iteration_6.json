@@ -1,0 +1,39 @@
+{
+  "summary": "Iteration 6: verified the new Recipes<->Weekly Plan<->planner connection. Backend regression: existing pytest suite 60/60 passed (no backend changes). Frontend (mobile 390x844): Maestro hub shows exactly 5 tools with the new IT/DE titles; bio text (IT+DE) is the rewritten professional copy; weekly plan save/persist works and BOTH 'Quando impastare' (sd-*) and 'Quando infornare' (inf-*) correctly list only planned days, prefill rows from the chosen day with rest = bulk+proof hours, recompute correctly (mix start = target - rest, earliest first, target last), and 'Quando infornare' persists to PUT /api/production-plan (verified via API: bake_time + phases hours = rest/60). Regression passed: recipe create/duplicate/scale(flour mode)/edit/delete, personal recipes appear in both planners, oven CRUD + phase timer countdown/reset, announcements CRUD, photo diagnosis both modes (difetti/ingredienti) in IT and DE, AI chat streaming with markdown. No 'Calcola gradi' tool and no freezer references in the UI. All test data cleaned up (weekly plan reset to empty, 0 personal recipes).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PianificaProduzione (Quando infornare)", "issue": "Loading a weekly day (e.g. Mercoledi/Sabato) does not adjust the bake datetime date part, so the computed plan can display a different weekday than the selected plan day (result showed 'lun 11:30' for Mercoledi rows). Consider defaulting bake date to the next occurrence of the chosen weekday.", "selector": "[data-testid=\"inf-load-day\"] / [data-testid=\"bake-time-input\"]", "priority": "MEDIUM"},
+      {"component": "StartDoughs (Quando impastare)", "issue": "Label for sd-ready-time reads 'Ora in cui vuoi iniziare la produzione' but the value is used as the READY/target time (result footer says 'pronto 18:00'). Misleading copy in IT (DE equivalent should be checked too).", "selector": "[data-testid=\"sd-ready-time\"]", "priority": "MEDIUM"},
+      {"component": "Both planners", "issue": "compute with zero rows silently does nothing (no toast/hint); rest-minutes inputs accept empty/negative values which makes mix start == target time (no validation).", "selector": "[data-testid=\"sd-compute-btn\"], [data-testid=\"btn-compute-plan\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Maestro planners", "issues": ["Recipe select inside a row truncates long recipe names ('Ciabatta ad Alta Idrata...') on 390px width - acceptable but could use smaller font/2-line layout"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/backend/tests/test_iter3_features.py", "/app/backend/tests/test_iter4_lang.py", "/app/backend/tests/test_iter5_sse_vision.py", "/app/backend/tests/test_new_features.py", "/app/test_reports/pytest/pytest_iter6.xml"],
+  "action_items": [
+    "Optional: align bake/ready date with the weekday selected in the load-day dropdown (currently only the recipe rows are prefilled).",
+    "Fix IT/DE label of sd-ready-time to reflect that it is the target/ready time, not the production start.",
+    "Remove dead file /app/frontend/src/sections/CalcolaGradi.jsx (no longer imported anywhere).",
+    "PianificaProduzione.compute(): drop the pointless 'await weeklyApi.get() // keep connection warm' call and use the static planApi import instead of a dynamic import().",
+    "Rename ambiguous testid 'recipe-flour-input' (it is flour TYPE) vs 'recipe-flour_grams-input'."
+  ],
+  "critical_code_review_comments": [
+    "StartDoughs.jsx and PianificaProduzione.jsx are ~95% duplicated (defaultRest/totalRestMin, toLocalInput, loadDay, addRow/updateRow/removeRow, row markup). Extract a shared hook/component to avoid divergence.",
+    "production-plan persistence loses the recipe identity/day (only {name, hours}); planner cannot restore a previously saved plan on reopen.",
+    "Rest minutes are stored as raw strings from the input; Number() coercion happens only at compute time - empty string becomes 0 rest with no user feedback."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (60/60 pytest)", "frontend": "100% of core connection assertions passed; 3 minor UX/copy issues"},
+  "seed_data_creation": "Temporary: weekly plan items (mer x2, sab x1), personal recipes TEST_QA*, oven profile TEST_QA Forno, announcement TEST_QA Avviso - ALL deleted; weekly plan reset to empty via PUT /api/weekly-plan. /api/production-plan now holds the last test computation (singleton doc, harmless).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "N/A - app has no auth",
+  "context_for_next_testing_agent": "Weekly-plan linkage works; note that load-day options render only AFTER the async weekly fetch resolves, so wait ~2s after the section mounts before asserting option lists (otherwise only the placeholder option is present). Row testids are dynamic ([data-testid^=\"sd-recipe-\"], [data-testid^=\"inf-rest-\"]). Announcements CRUD lives under sa-tutto-tab-stoccarda. Oven timer only renders when phaseN_minutes is set. Baseline: 3 mikilab recipes, 0 personal, empty weekly plan.",
+  "rca_of_the_issue": "No functional defects found in the new connection logic. The weekday mismatch in the computed plan is by design (day dropdown only seeds recipe rows; date comes from the datetime input) and the sd-ready-time label is a translation/copy inaccuracy."
+}

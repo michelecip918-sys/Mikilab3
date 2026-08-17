@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale } from "lucid
 import { recipesApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
+import { useLang } from "@/i18n/LanguageContext";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -17,13 +18,14 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [editing, setEditing] = useState(null);
   const [toDelete, setToDelete] = useState(null);
   const [scaling, setScaling] = useState(null);
+  const { t } = useLang();
 
   const load = async () => {
     setLoading(true);
     try {
       setRecipes(await recipesApi.list(collectionName));
     } catch {
-      toast.error("Errore nel caricamento delle ricette");
+      toast.error(t("toast_load_error"));
     } finally {
       setLoading(false);
     }
@@ -35,49 +37,49 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     try {
       if (editing) {
         await recipesApi.update(editing.id, payload);
-        toast.success("Ricetta aggiornata");
+        toast.success(t("toast_recipe_updated"));
       } else {
         await recipesApi.create({ ...payload, collection_name: collectionName });
-        toast.success("Ricetta aggiunta");
+        toast.success(t("toast_recipe_added"));
       }
       setDialogOpen(false);
       setEditing(null);
       load();
     } catch {
-      toast.error("Errore nel salvataggio");
+      toast.error(t("toast_save_error"));
     }
   };
 
   const handleDelete = async () => {
     try {
       await recipesApi.remove(toDelete.id);
-      toast.success("Ricetta eliminata");
+      toast.success(t("toast_recipe_deleted"));
       setToDelete(null);
       load();
     } catch {
-      toast.error("Errore nell'eliminazione");
+      toast.error(t("toast_delete_error"));
     }
   };
 
   const handleDuplicate = async (r) => {
     try {
       const { id, created_at, updated_at, ...rest } = r;
-      await recipesApi.create({ ...rest, collection_name: collectionName, name: `${r.name} (copia)` });
-      toast.success("Ricetta duplicata");
+      await recipesApi.create({ ...rest, collection_name: collectionName, name: `${r.name} (${t("copy_suffix")})` });
+      toast.success(t("toast_recipe_duplicated"));
       load();
     } catch {
-      toast.error("Errore nella duplicazione");
+      toast.error(t("toast_dup_error"));
     }
   };
 
   const handleScaleSave = async (payload) => {
     try {
       await recipesApi.create({ ...payload, collection_name: collectionName });
-      toast.success("Ricetta scalata salvata");
+      toast.success(t("toast_recipe_scaled"));
       setScaling(null);
       load();
     } catch {
-      toast.error("Errore nel salvataggio");
+      toast.error(t("toast_save_error"));
     }
   };
 
@@ -97,11 +99,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         onClick={() => { setEditing(null); setDialogOpen(true); }}
         className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
       >
-        <Plus className="w-5 h-5" /> Aggiungi ricetta
+        <Plus className="w-5 h-5" /> {t("add_recipe")}
       </button>
 
       {loading ? (
-        <p className="text-center text-[#8C7567] py-8">Caricamento…</p>
+        <p className="text-center text-[#8C7567] py-8">{t("loading")}</p>
       ) : recipes.length === 0 ? (
         <div className="text-center py-12 px-6 border-2 border-dashed border-[#E8DEC8] dark:border-[#3D302A] rounded-3xl">
           <Wheat className="w-10 h-10 text-[#D99B26] mx-auto mb-3" />
@@ -132,7 +134,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     data-testid={`scale-recipe-${r.id}`}
                     onClick={() => setScaling(r)}
                     className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#6B8E62] active:scale-95"
-                    aria-label="Scala dosi"
+                    aria-label={t("scale_aria")}
                   >
                     <Scale className="w-4 h-4" />
                   </button>
@@ -140,7 +142,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     data-testid={`duplicate-recipe-${r.id}`}
                     onClick={() => handleDuplicate(r)}
                     className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#8C7567] active:scale-95"
-                    aria-label="Duplica"
+                    aria-label={t("duplicate_aria")}
                   >
                     <Copy className="w-4 h-4" />
                   </button>
@@ -163,13 +165,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
               <div className="flex flex-wrap gap-2 mt-3">
                 {r.hydration_percent != null && (
-                  <Badge icon={<Droplets className="w-3.5 h-3.5" />}>{r.hydration_percent}% idr.</Badge>
+                  <Badge icon={<Droplets className="w-3.5 h-3.5" />}>{r.hydration_percent}% {t("badge_hydration")}</Badge>
                 )}
                 {r.flour_grams != null && (
-                  <Badge icon={<Wheat className="w-3.5 h-3.5" />}>{r.flour_grams}g farina</Badge>
+                  <Badge icon={<Wheat className="w-3.5 h-3.5" />}>{r.flour_grams}g {t("badge_flour")}</Badge>
                 )}
                 {r.bulk_fermentation_hours != null && (
-                  <Badge icon={<Clock className="w-3.5 h-3.5" />}>{r.bulk_fermentation_hours}h lievit.</Badge>
+                  <Badge icon={<Clock className="w-3.5 h-3.5" />}>{r.bulk_fermentation_hours}h {t("badge_ferment")}</Badge>
                 )}
               </div>
 
@@ -198,19 +200,19 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
         <AlertDialogContent className="bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-display">Eliminare la ricetta?</AlertDialogTitle>
+            <AlertDialogTitle className="font-display">{t("delete_recipe_q")}</AlertDialogTitle>
             <AlertDialogDescription>
-              "{toDelete?.name}" verrà eliminata definitivamente.
+              "{toDelete?.name}" {t("delete_recipe_desc")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel data-testid="delete-cancel-btn">Annulla</AlertDialogCancel>
+            <AlertDialogCancel data-testid="delete-cancel-btn">{t("cancel")}</AlertDialogCancel>
             <AlertDialogAction
               data-testid="delete-confirm-btn"
               onClick={handleDelete}
               className="bg-[#B4442A] hover:bg-[#963B1C]"
             >
-              Elimina
+              {t("delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

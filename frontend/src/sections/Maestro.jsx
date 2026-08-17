@@ -1,20 +1,24 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, CalendarClock, Thermometer, Flame, ChevronLeft, ChevronRight } from "lucide-react";
+import { PlusCircle, CalendarClock, CalendarDays, Timer, Flame, ChevronLeft, ChevronRight } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
-import CalcolaGradi from "@/sections/CalcolaGradi";
 import PianificaProduzione from "@/sections/PianificaProduzione";
 import GestioneForno from "@/sections/GestioneForno";
-
-const TOOLS = [
-  { id: "aggiungi", title: "Aggiungi ricetta", desc: "Le tue ricette, inserite a mano", Icon: PlusCircle },
-  { id: "pianifica", title: "Pianifica la produzione", desc: "Tabella di marcia a ritroso", Icon: CalendarClock },
-  { id: "gradi", title: "Calcola gradi", desc: "Temperatura acqua impasto", Icon: Thermometer },
-  { id: "forno", title: "Gestione forno", desc: "Fasi di cottura, vapore e timer", Icon: Flame },
-];
+import WeeklyPlan from "@/sections/WeeklyPlan";
+import StartDoughs from "@/sections/StartDoughs";
+import { useLang } from "@/i18n/LanguageContext";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
+  const { t } = useLang();
+
+  const TOOLS = [
+    { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
+    { id: "settimana", title: t("tool_settimana"), desc: t("tool_settimana_desc"), Icon: CalendarDays },
+    { id: "impasti", title: t("tool_impasti"), desc: t("tool_impasti_desc"), Icon: Timer },
+    { id: "inforna", title: t("tool_inforna"), desc: t("tool_inforna_desc"), Icon: CalendarClock },
+    { id: "forno", title: t("tool_forno"), desc: t("tool_forno_desc"), Icon: Flame },
+  ];
 
   if (tool) {
     return (
@@ -24,19 +28,20 @@ export default function Maestro() {
           onClick={() => setTool(null)}
           className="flex items-center gap-1 text-[#B34A26] font-medium mb-4"
         >
-          <ChevronLeft className="w-5 h-5" /> Strumenti
+          <ChevronLeft className="w-5 h-5" /> {t("tools_back")}
         </button>
         {tool === "aggiungi" && (
           <RecipeList
             collectionName="personal"
             heroImage="https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHw0fHxiYWtlciUyMHNjb3JpbmclMjBzb3VyZG91Z2glMjBmbG91ciUyMHRhYmxlfGVufDB8fHx8MTc4Njk4MjgzMHww&ixlib=rb-4.1.0&q=85"
-            heroTitle="Le tue ricette"
-            heroSubtitle="Inseriscile a mano, senza esempi"
-            emptyText="Ancora nessuna ricetta tua. Aggiungine una da zero."
+            heroTitle={t("personal_hero_title")}
+            heroSubtitle={t("personal_hero_sub")}
+            emptyText={t("personal_empty")}
           />
         )}
-        {tool === "pianifica" && <PianificaProduzione />}
-        {tool === "gradi" && <CalcolaGradi />}
+        {tool === "inforna" && <PianificaProduzione />}
+        {tool === "impasti" && <StartDoughs />}
+        {tool === "settimana" && <WeeklyPlan />}
         {tool === "forno" && <GestioneForno />}
       </div>
     );
@@ -44,8 +49,8 @@ export default function Maestro() {
 
   return (
     <div className="pb-4">
-      <h1 className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">Il Maestro</h1>
-      <p className="text-sm text-[#8C7567] mt-1 mb-5">Strumenti e calcoli per la panificazione</p>
+      <h1 className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("maestro_title")}</h1>
+      <p className="text-sm text-[#8C7567] mt-1 mb-5">{t("maestro_subtitle")}</p>
 
       <div className="space-y-3">
         {TOOLS.map(({ id, title, desc, Icon }, i) => (

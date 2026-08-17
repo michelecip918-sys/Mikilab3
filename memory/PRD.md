@@ -1,27 +1,26 @@
 # PRD — Mikilab / Il Maestro del Pane
 
-## Problem statement (original, IT)
-App personale di panificazione artigianale. Sezioni: Mikilab (ricette modificabili), Maestro (Aggiungi ricetta, Pianifica produzione senza freezer, Calcola gradi, Gestione forno senza esempi), Il Maestro sa tutto (AI "chiedi e ti sarà dato" + enciclopedia/notizie + video YouTube + zona Stoccarda).
+## Problem statement
+App personale di panificazione artigianale (zona Stoccarda), bilingue IT/DE, senza login.
 
 ## Architecture
-- Frontend: React (CRACO), Tailwind, framer-motion, sonner, lucide-react. Mobile-first, bottom nav a 3 voci.
-- Backend: FastAPI + MongoDB (motor). AI chat streaming (SSE) con emergentintegrations, Claude Sonnet 4.6, EMERGENT_LLM_KEY.
-- No authentication (single-user personal app).
+- Frontend: React (CRACO), Tailwind, framer-motion, sonner, lucide-react, react-markdown. Mobile-first, bottom nav 4 voci. i18n via LanguageContext (IT/DE, persist localStorage).
+- Backend: FastAPI + MongoDB (motor). AI (chat + vision) streaming SSE JSON con emergentintegrations, Claude Sonnet 4.6, EMERGENT_LLM_KEY. `lang` param → risposta AI nella lingua scelta.
+- No authentication.
 
-## Sections implemented (2026-08-17)
-- **Mikilab**: CRUD ricette (collection "mikilab"), 3 esempi pre-caricati modificabili/eliminabili, idratazione auto-calcolata.
-- **Maestro** hub:
-  - Aggiungi ricetta (collection "personal", nessun esempio, inserimento manuale).
-  - Pianifica la produzione (timeline a ritroso dall'infornata, NESSUN freezer).
-  - Calcola gradi (T_acqua = 4×T_desiderata − (farina+ambiente+attrito+lievito)).
-  - Gestione forno (profili forno CRUD, 3 fasi con timer sonoro, nessun esempio).
-- **Il Maestro sa tutto**: chat AI streaming; tab Enciclopedia/Notizie, Video YouTube, Annunci Stoccarda.
+## Sections
+- **Mikilab**: bio card (professionale, farro/Dinkel, lievito madre, panettone) + ricette CRUD (3 esempi), duplica, scala dosi.
+- **Maestro** hub (5 strumenti): Aggiungi ricetta (personal); Piano settimanale (ricette×pezzi/giorno, dosi, salva/stampa/condividi); **Quando impastare** (StartDoughs: schedulazione impastatore quantità-aware, ordine per riposo, formatura = pezzi×sec/pezzo, attesa/sovra-maturazione); **Quando infornare** (backward dall'infornata, collegato a ricette+piano settimanale); Gestione forno (profili con tipo Statico/Ventilato con carrello, timer con notifiche).
+- **Diagnosi (Foto)**: AI vision Trova difetti / Trova ingredienti (markdown).
+- **Il Maestro sa tutto**: chat AI (markdown), Enciclopedia + Notizie (Stoccarda evidenziata + Germania + Italia), Video YouTube, Annunci Stoccarda CRUD.
 
-## Status
-- Backend 15/15 pytest pass. Frontend flows verified. No blocking issues.
-- Fixed: PUT recipe honours cleared fields; oven load error handling; dialog a11y; phase input width.
+## Connections
+ricette → piano settimanale → Quando impastare / Quando infornare (prefill da giorno del piano, quantità incluse).
+
+## Status (verified)
+- iteration_7: backend 64/64 pytest; tutti i flussi frontend OK. Bug HIGH iterazioni precedenti risolti (vision lingua, SSE markdown JSON).
 
 ## Backlog / Next
-- P1: Persistenza piano di produzione + notifiche timer in background.
-- P2: Duplica ricetta; export/stampa ricetta; scala dosi per peso teglia.
-- P2: Video YouTube dinamici (ricerca) e annunci Stoccarda gestibili.
+- P2: split automatico grandi lotti in formatura per evitare sovra-maturazione.
+- P2: notifiche timer in background persistenti; export PDF piano.
+- P2: video/annunci dinamici.

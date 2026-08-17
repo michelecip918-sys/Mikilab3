@@ -209,14 +209,17 @@ class TestMaestroChat:
         ) as resp:
             assert resp.status_code == 200, resp.text
             assert "text/event-stream" in resp.headers.get("content-type", "")
+            done = False
             for line in resp.iter_lines(decode_unicode=True):
-                if line and line.startswith("data: "):
-                    chunks.append(line[6:])
-                    if line.strip() == "data: [DONE]":
+                if line and line.startswith("data:"):
+                    payload = json.loads(line.split(":", 1)[1].strip())
+                    if payload.get("done"):
+                        done = True
                         break
+                    chunks.append(payload.get("d", ""))
         assert chunks, "No SSE data chunks received"
-        assert chunks[-1] == "[DONE]"
-        text = "".join(c for c in chunks if c != "[DONE]")
+        assert done, "stream did not terminate with {'done': true}"
+        text = "".join(chunks)
         assert len(text) > 20, f"AI reply too short: {text!r}"
 
         # history should contain user + assistant

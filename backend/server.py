@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import json
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field
@@ -11,7 +12,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 
-from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone
+from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone, ImageContent
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -81,6 +82,7 @@ class RecipeUpdate(BaseModel):
 class OvenProfile(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
+    oven_type: Optional[str] = "statico"  # "statico" | "ventilato"
     preheat_temp: Optional[float] = None
     phase1_temp: Optional[float] = None
     phase1_minutes: Optional[float] = None
@@ -94,6 +96,7 @@ class OvenProfile(BaseModel):
 
 class OvenProfileCreate(BaseModel):
     name: str
+    oven_type: Optional[str] = "statico"
     preheat_temp: Optional[float] = None
     phase1_temp: Optional[float] = None
     phase1_minutes: Optional[float] = None
@@ -107,6 +110,13 @@ class OvenProfileCreate(BaseModel):
 class ChatRequest(BaseModel):
     session_id: str
     message: str
+    lang: str = "it"
+
+
+class VisionRequest(BaseModel):
+    mode: str  # "difetti" | "ingredienti"
+    image_base64: str
+    lang: str = "it"
 
 
 class PhaseItem(BaseModel):
@@ -130,6 +140,20 @@ class Announcement(BaseModel):
 class AnnouncementCreate(BaseModel):
     title: str
     details: Optional[str] = ""
+
+
+class WeeklyItem(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    day: str  # "lun","mar","mer","gio","ven","sab","dom"
+    recipe_id: str
+    recipe_name: str
+    pieces: float = 1
+    grams_per_piece: float = 100
+
+
+class WeeklyPlan(BaseModel):
+    items: List[WeeklyItem] = []
+    updated_at: str = Field(default_factory=now_iso)
 
 
 # ---------------------------------------------------------------------------
@@ -270,6 +294,25 @@ async def save_production_plan(payload: ProductionPlan):
 
 
 # ---------------------------------------------------------------------------
+# Weekly plan (single persisted plan)
+# ---------------------------------------------------------------------------
+@api_router.get("/weekly-plan")
+async def get_weekly_plan():
+    doc = await db.weekly_plan.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+    return doc  # may be null if never saved
+
+
+@api_router.put("/weekly-plan", response_model=WeeklyPlan)
+async def save_weekly_plan(payload: WeeklyPlan):
+    payload.updated_at = now_iso()
+    doc = payload.model_dump()
+    await db.weekly_plan.update_one(
+        {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
+    )
+    return payload
+
+
+# ---------------------------------------------------------------------------
 # Stuttgart announcements
 # ---------------------------------------------------------------------------
 ANNOUNCEMENT_SEED = [
@@ -300,17 +343,24 @@ async def get_announcements():
 
 @api_router.post("/announcements", response_model=Announcement)
 async def create_announcement(payload: AnnouncementCreate):
-    ann = Announcement(**payload.model_dump())
+    if not payload.title.strip():
+        raise HTTPException(status_code=422, detail="Il titolo è obbligatorio")
+    data = payload.model_dump()
+    data["title"] = data["title"].strip()
+    ann = Announcement(**data)
     await db.announcements.insert_one(ann.model_dump())
     return ann
 
 
 @api_router.put("/announcements/{ann_id}", response_model=Announcement)
 async def update_announcement(ann_id: str, payload: AnnouncementCreate):
+    if not payload.title.strip():
+        raise HTTPException(status_code=422, detail="Il titolo è obbligatorio")
     existing = await db.announcements.find_one({"id": ann_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Annuncio non trovato")
     updates = payload.model_dump()
+    updates["title"] = updates["title"].strip()
     await db.announcements.update_one({"id": ann_id}, {"$set": updates})
     return {**existing, **updates}
 
@@ -330,7 +380,7 @@ MAESTRO_SYSTEM = (
     "Sei 'Il Maestro del Pane', un mastro panettiere artigiano esperto di panificazione "
     "a lievitazione naturale, con profonda conoscenza sia della tradizione italiana sia "
     "delle farine e delle abitudini tedesche (zona Stoccarda, Baden-Württemberg). "
-    "Rispondi SEMPRE in italiano, in modo caldo, chiaro e pratico, come un maestro che "
+    "Rispondi in modo caldo, chiaro e pratico, come un maestro che "
     "insegna a un allievo. Dai consigli concreti su idratazione, lievito madre, farine "
     "(inclusa la corrispondenza tra tipi italiani 00/0/1/2 e tedeschi Type 405/550/812/1050, "
     "e Dinkelmehl per il farro), temperature, tempi, cottura e vapore. "
@@ -338,12 +388,17 @@ MAESTRO_SYSTEM = (
     "Il motto della sezione è: 'Chiedi e ti sarà dato'. Sii incoraggiante e mai prolisso."
 )
 
+LANG_DIRECTIVE = {
+    "it": " Rispondi SEMPRE in italiano.",
+    "de": " Antworte IMMER auf Deutsch (respond always in German).",
+}
 
-async def maestro_stream(session_id: str, message: str):
+
+async def maestro_stream(session_id: str, message: str, lang: str = "it"):
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=session_id,
-        system_message=MAESTRO_SYSTEM,
+        system_message=MAESTRO_SYSTEM + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]),
     ).with_model("anthropic", "claude-sonnet-4-6")
 
     # Load prior history for this session into the chat for continuity
@@ -362,17 +417,20 @@ async def maestro_stream(session_id: str, message: str):
     context_prefix = ""
     if prior:
         lines = []
+        labels = {"it": ("Utente", "Maestro", "Conversazione precedente", "Nuova domanda"),
+                  "de": ("Nutzer", "Meister", "Bisheriges Gespräch", "Neue Frage")}
+        u, a, hdr, nq = labels.get(lang, labels["it"])
         for m in prior[-10:]:
-            who = "Utente" if m["role"] == "user" else "Maestro"
+            who = u if m["role"] == "user" else a
             lines.append(f"{who}: {m['content']}")
-        context_prefix = "Conversazione precedente:\n" + "\n".join(lines) + "\n\nNuova domanda:\n"
+        context_prefix = f"{hdr}:\n" + "\n".join(lines) + f"\n\n{nq}:\n"
 
     full_text = ""
     user_msg = UserMessage(text=context_prefix + message)
     async for event in chat.stream_message(user_msg):
         if isinstance(event, TextDelta):
             full_text += event.content
-            yield f"data: {event.content}\n\n"
+            yield f"data: {json.dumps({'d': event.content})}\n\n"
         elif isinstance(event, StreamDone):
             break
 
@@ -380,7 +438,7 @@ async def maestro_stream(session_id: str, message: str):
         "id": str(uuid.uuid4()), "session_id": session_id,
         "role": "assistant", "content": full_text, "created_at": now_iso(),
     })
-    yield "data: [DONE]\n\n"
+    yield f"data: {json.dumps({'done': True})}\n\n"
 
 
 @api_router.post("/maestro/chat")
@@ -388,7 +446,7 @@ async def maestro_chat(payload: ChatRequest):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
     return StreamingResponse(
-        maestro_stream(payload.session_id, payload.message),
+        maestro_stream(payload.session_id, payload.message, payload.lang),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
@@ -400,6 +458,64 @@ async def maestro_history(session_id: str):
         {"session_id": session_id}, {"_id": 0}
     ).sort("created_at", 1).to_list(500)
     return docs
+
+
+# ---------------------------------------------------------------------------
+# Vision: trova difetti / trova ingredienti (photo analysis, streaming)
+# ---------------------------------------------------------------------------
+VISION_PROMPTS = {
+    "difetti": (
+        "Sei un mastro panettiere esperto. Analizza la foto del pane e individua i DIFETTI "
+        "visibili (crosta, alveolatura, mollica, forma, colore, cottura, lievitazione, incisione). "
+        "Per ogni difetto indica: cosa vedi, la probabile CAUSA e come CORREGGERLO la prossima volta. "
+        "Se il pane sembra ben riuscito, dillo e dai comunque 1-2 consigli. "
+        "Usa un elenco puntato chiaro e conciso."
+    ),
+    "ingredienti": (
+        "Sei un mastro panettiere esperto. Guarda la foto e identifica gli INGREDIENTI: se vedi "
+        "ingredienti/materie prime (farine, semi, cereali, lievito, ecc.) elencali; se è un pane "
+        "finito, deduci gli ingredienti probabili e il tipo di farina. Poi suggerisci una o due "
+        "cose che si possono preparare con ciò che vedi. Rispondi in modo chiaro e conciso."
+    ),
+}
+
+
+async def vision_stream(mode: str, image_b64: str, lang: str = "it"):
+    prompt = VISION_PROMPTS.get(mode, VISION_PROMPTS["difetti"])
+    prompt = prompt + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"])
+    # Strip data URL prefix if present
+    if "," in image_b64 and image_b64.strip().startswith("data:"):
+        image_b64 = image_b64.split(",", 1)[1]
+
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"vision-{uuid.uuid4()}",
+        system_message="Sei 'Il Maestro del Pane', esperto di panificazione artigianale.",
+    ).with_model("anthropic", "claude-sonnet-4-6")
+
+    image_content = ImageContent(image_base64=image_b64)
+    user_msg = UserMessage(text=prompt, file_contents=[image_content])
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                yield f"data: {json.dumps({'d': event.content})}\n\n"
+            elif isinstance(event, StreamDone):
+                break
+    except Exception as e:  # noqa
+        logger.exception("vision stream error")
+        yield f"data: {json.dumps({'d': '[Errore nell analisi. Riprova.]'})}\n\n"
+    yield f"data: {json.dumps({'done': True})}\n\n"
+
+
+@api_router.post("/maestro/vision")
+async def maestro_vision(payload: VisionRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        vision_stream(payload.mode, payload.image_base64, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 # ---------------------------------------------------------------------------

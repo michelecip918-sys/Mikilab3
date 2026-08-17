@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 7 full-stack test: oven_type field (backend + Gestione forno UI), quantity-aware mixer/forming scheduling in 'Quando impastare' (StartDoughs) incl. the user's 5000-buns vs 19-loaves example, weekly-plan -> sd-load-day quantity link, and regression of Quando infornare, weekly plan, oven timers, announcements CRUD, photo diagnosis, AI chat markdown, IT/DE language switch+persist. Backend: 64/64 pytest passing. Frontend: all tested flows working, no console errors.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "WeeklyPlan pieces input", "issue": "Numeric pieces input is too narrow: a value of 5000 renders visually clipped as '500' (value is correct, only display is truncated). Now that 4-5 digit batch quantities are a core use case (5000 hamburger buns), widen the field or reduce font size.", "selector": "[data-testid^=\"weekly-pieces-\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Quando impastare (result)", "issues": ["No warning when 'attesa' is very large (measured 329 min wait for the 19-piece dough while the 5000-piece batch occupies the forming station) — schedule is mathematically correct but a dough waiting >5h after its rest will over-proof; consider a visual warning/threshold or splitting large batches."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter7_oven_type.py",
+    "/app/test_reports/pytest/pytest_iter7.xml"
+  ],
+  "action_items": [
+    "Widen weekly-pieces-{id} input so 4-5 digit quantities are fully visible",
+    "Optional: dedicated i18n key for the 'no rows' toast in StartDoughs (currently reuses weekly_empty_share) and an over-proofing warning when attesa exceeds a threshold"
+  ],
+  "critical_code_review_comments": [
+    "StartDoughs.compute(): forming station uses FIFO by readyToForm; it does not consider that a long forming job can force a later dough to over-proof. If that matters for the bakery, order forming by (readyToForm, formMin) or warn.",
+    "StartDoughs loadDay() hardcodes mix_min=15 and sec_piece=4 for plan-loaded rows; consider persisting these per recipe so the plan link is fully data-driven.",
+    "Mixer order sort on rest_min uses Number() on string inputs — correct, but equal-rest ties depend on row order; deterministic secondary key (e.g. formMin desc) would make output stable."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter7_oven_type.py"],
+  "success_rate": {"backend": "100% (64/64)", "frontend": "100% of tested flows"},
+  "seed_data_creation": "Created and deleted: TEST_Ventilato_UI oven profile, TEST_avviso announcement, TEST_ vwp recipe, weekly plan rows on Mercoledì. Baseline restored: 3 mikilab recipes, 0 personal, 0 oven profiles, 2 announcements, weekly plan reset to items: [] (an empty document now exists where previously none was saved — harmless).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "None (app has no auth)",
+  "context_for_next_testing_agent": "Verified numbers for the quantity example (start 08:00, mix 15 min, 4 s/piece): 19 pz rest 20 mixes FIRST 08:00-08:15 (longest rest first), forms 08:35-08:37; 5000 pz rest 10 mixes 08:15-08:30, forms 08:40-14:14 (334 min forming). Wait detection verified by setting the 5000-pz row rest=0 -> '⏳ attesa 329′' shown on the 19-pz dough. sd-load-day prefill from weekly plan verified (pieces 5000/19, rest derived from recipe hours). Oven type: create ventilato -> badge 'Ventilato con carrello', edit prefills select, DE shows 'Statisch'/'Umluft mit Wagen'. Chat testids are ai-chat-input/ai-chat-submit; announcements live in sa-tutto-tab-stoccarda. Regression file suite: /app/backend/tests/*.py (run with pytest.ini xdist config, no extra -p flags).",
+  "rca_of_the_issue": "No functional defects found this iteration. The weekly pieces clipping is a CSS width issue on the number input (fixed narrow width with mono font), not a data problem — the API stores/returns 5000 correctly."
+}

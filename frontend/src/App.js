@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import Mikilab from "@/sections/Mikilab";
 import Maestro from "@/sections/Maestro";
+import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           >
             {tab === "mikilab" && <Mikilab />}
             {tab === "maestro" && <Maestro />}
+            {tab === "foto" && <PhotoDiagnosi />}
             {tab === "sa-tutto" && <MaestroSaTutto />}
           </motion.div>
         </AnimatePresence>

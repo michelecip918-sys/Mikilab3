@@ -1,0 +1,40 @@
+{
+  "summary": "Iteration-3 full test: added /app/backend/tests/test_iter3_features.py (13 tests: weekly-plan persistence/validation, vision streaming for both modes with real bread JPEG+PNG base64, announcement title validation). Full backend suite = 40/40 passed. Frontend (mobile 390x844) verified: 4-tab bottom nav (mikilab/maestro/foto/sa-tutto), Maestro hub tools exactly [aggiungi, settimana, pianifica, forno] with NO 'Calcola gradi', Piano settimanale end-to-end (7 day cards, add items, dropdown lists only the 3 existing recipes, default g/pz by recipe name 800/400, doses recompute on pieces & g/pz change and on recipe switch, save -> persists across nav-away and full reload), Photo Diagnosi (hidden file input accept=image/*, preview, streaming AI analysis in Italian for both difetti and ingredienti, result cleared on mode switch), Stoccarda announcement delete AlertDialog (cancel keeps, confirm deletes), plus regressions: recipe duplicate + scale (scale creates a new recipe, original untouched), production-plan save, oven profile CRUD + phase timer (20:00 -> 19:57 -> reset), AI text chat streaming. DB restored to baseline (3 mikilab recipes, 0 personal, 0 oven profiles, 2 seeded announcements, no saved weekly/production plan).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/weekly-plan", "issue": "No server-side validation that recipe_id refers to an existing recipe or that day is one of lun..dom; arbitrary values are accepted (frontend UI is safe because the dropdown only lists existing recipes, and stale items render 'Ricetta non piu disponibile'). Consider validating day enum + recipe existence."},
+      {"endpoint": "POST /api/maestro/vision", "issue": "Invalid/garbage image_base64 returns 200 with SSE '[Errore nell'analisi dell'immagine. Riprova.]' instead of a 4xx; acceptable for SSE but the client cannot distinguish a real error (no error toast shown, error text is streamed into the result panel)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Diagnosi (photo-result) and Chiedi chat", "issues": ["AI output is Markdown but rendered raw in a whitespace-pre-wrap div: '# ', '**bold**', emoji headings and Markdown tables ('| Ingrediente | Note |') are shown as literal characters. Consider react-markdown for photo-result and chat bubbles."]},
+      {"screen": "Piano settimanale", "issues": ["During the initial load the 'Aggiungi' buttons are disabled (recipes not yet fetched) with no loading indicator, so it briefly looks like the 'no recipes' state; a skeleton/spinner would be clearer."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter3_features.py",
+    "/app/test_reports/pytest/iter3_features.xml",
+    "/app/test_reports/pytest/iter3_all.xml"
+  ],
+  "action_items": [
+    "Optional: render Markdown in photo-result (and chat) instead of raw text",
+    "Optional: validate weekly-plan day enum / recipe existence server-side",
+    "Optional: surface a real error state (toast) when vision streaming returns the error sentinel"
+  ],
+  "critical_code_review_comments": [
+    "PhotoDiagnosi.analyze() does not check res.ok before res.body.getReader(); a 4xx/5xx JSON error would be streamed into the result panel as raw text.",
+    "WeeklyPlan item ids are generated with Date.now()+random on the client; two items added in the same millisecond could collide (low risk but ids are used as React keys and testids)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter3_features.py"],
+  "success_rate": {"backend": "100% (40/40)", "frontend": "100% of tested flows"},
+  "seed_data_creation": "Temporary only: TEST_UI_Annuncio announcement, TEST_Forno/TEST_Forno2 oven profiles, duplicated+scaled Altamura recipes, weekly/production plan docs - all deleted/reset after testing.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "N/A - app has no auth",
+  "context_for_next_testing_agent": "Backend suites: tests/backend_test.py, tests/test_new_features.py, tests/test_iter3_features.py (run with `python -m pytest tests/ -v` from /app/backend; pytest.ini uses -n 2 loadscope). Vision tests download a real bread JPEG from Unsplash to /tmp/bread.jpg; a resized copy for UI upload is at /app/.screenshots/bread_test.jpg. Not covered: the 'no recipes at all' empty state of Piano settimanale (destructive - would require deleting all 3 seeded mikilab recipes); code path verified by review only.",
+  "rca_of_the_issue": "No defects found in this iteration's features; the only observations are cosmetic (raw Markdown output) and defensive-validation gaps listed above."
+}
