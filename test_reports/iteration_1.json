@@ -1,0 +1,47 @@
+{
+  "summary": "Full backend + frontend E2E testing of Mikilab / Il Maestro del Pane. Backend: 15 pytest cases (health, recipes CRUD + mikilab seed idempotency, personal-collection emptiness, oven-profiles CRUD, 404/422 validation, Maestro SSE streaming chat + history) - all 15 PASSED. Frontend (mobile 390x844): bottom nav 3-way switching, Mikilab seeded 3 example recipes, recipe create/edit/delete with confirm, hydration auto-calc (1000g/780g -> 78%), Maestro hub 4 tools, personal recipe list empty (no examples), Calcola gradi formula 4*25-(20+22+5+21)=32C correct, Pianifica backward timeline correct (12h total, start lun 06:00 -> infornata lun 18:00, NO freezer references anywhere in code or UI), Gestione forno profile creation with working phase timers (15:00 counted down to 14:58) + delete, AI chat streamed a real Italian reply token-by-token, Enciclopedia (2 news + 4 encyclopedia), Video (2 valid youtube.com/embed iframes), Stoccarda (2 announcements). No blocking issues found.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/recipes/{id}", "issue": "Update drops all None values, so fields cannot be cleared. Verified: PUT with water_grams=null, hydration_percent=null left stored values at 700 / 70. RecipeDialog sends null for emptied numeric inputs, so clearing 'Acqua (g)' or removing hydration in the UI silently keeps stale data. Use payload.model_dump(exclude_unset=True) instead of filtering None."},
+      {"endpoint": "POST /api/maestro/chat", "issue": "Prior turns are re-sent as a text 'context_prefix' on every request in addition to LlmChat's own session; last 10 turns get resent each time (token cost grows, potential duplicated context). Consider relying only on LlmChat session history."},
+      {"endpoint": "POST /api/maestro/chat", "issue": "If the LLM stream raises mid-generation, the assistant message is never persisted and no error event is emitted to the client (stream just ends); wrap the generator in try/except and yield an SSE error chunk."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PianificaProduzione phase hours input", "issue": "Input is only w-16 with right-aligned mono font; fractional values like 0.25 render visually truncated as '0.2' (value is correct, display is clipped).", "selector": "[data-testid='phase-hours-0']", "priority": "LOW"},
+      {"component": "RecipeDialog / DialogContent", "issue": "React console warning: Missing `Description` or `aria-describedby` for DialogContent (a11y).", "selector": "[data-testid='recipe-name-input']", "priority": "LOW"},
+      {"component": "GestioneForno", "issue": "load() has no try/catch and no loading/error state; a failing GET /api/oven-profiles causes an unhandled promise rejection and a permanently empty list with no user feedback.", "selector": "[data-testid='add-oven-profile-btn']", "priority": "MEDIUM"},
+      {"component": "PianificaProduzione phase rows", "issue": "Phase name inputs and the 'Aggiungi fase' / 'Rimuovi' buttons have no data-testid, making phase add/remove hard to test.", "selector": "input (phase name)", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Pianifica la produzione", "issues": ["Uses the browser-native <input type='datetime-local'> picker instead of a shadcn calendar/time component - inconsistent with the rest of the design system and inconsistent across browsers."]},
+      {"screen": "Il Maestro sa tutto > Video", "issues": ["YouTube iframes render as black boxes until interaction (no poster/thumbnail placeholder); embeds are valid youtube.com/embed URLs, but a lightweight thumbnail-first load would look better on mobile."]},
+      {"screen": "Maestro > Pianifica", "issues": ["Phase list has no reset-to-defaults action after editing/removing phases; state is lost on tool navigation (no persistence of the plan)."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "Fix PUT /api/recipes/{id} to honour explicitly-sent nulls (exclude_unset=True) so users can clear numeric fields/hydration.",
+    "Add try/catch + loading/error state to GestioneForno.load().",
+    "Widen the Pianifica phase-hours input so 0.25 is fully visible.",
+    "Add aria-describedby/DialogDescription to RecipeDialog to clear the a11y warning.",
+    "Optional: emit an SSE error chunk if the Maestro LLM stream fails."
+  ],
+  "critical_code_review_comments": [
+    "server.py update_recipe: filtering out None makes PATCH semantics lossy - confirmed data bug, use exclude_unset.",
+    "maestro_stream: no exception handling around chat.stream_message; a provider error loses the assistant turn and leaves the client stream truncated with no [DONE].",
+    "GestioneForno.jsx: unguarded async load() (unhandled rejection) and no error UI, unlike RecipeList which handles it correctly.",
+    "PianificaProduzione: computed plan is component-local only; nothing is persisted to backend, so a refresh loses the schedule (acceptable if by design, but worth confirming with product intent)."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (15/15 pytest cases)", "frontend": "100% of tested flows passed (4 minor UI/a11y issues noted)"},
+  "seed_data_creation": "Backend seeded 3 mikilab example recipes automatically. All test data created (TEST_ prefixed recipes and oven profiles) was deleted after testing; personal collection and oven-profiles left empty.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "No authentication (per /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Regression suite at /app/backend/tests/backend_test.py (15 cases, ~13s, includes a live Claude Sonnet 4.6 SSE streaming test). Frontend flows all verified once via Playwright at 390x844: nav, Mikilab recipe CRUD + hydration, Maestro 4 tools (aggiungi/pianifica/gradi/forno incl. running timer), sa-tutto chat streaming + 4 tabs. Verified NO freezer/congelatore string anywhere in /app/frontend/src or server.py. Remaining known bug: PUT /api/recipes drops nulls (cannot clear fields) - retest that specific case after the fix.",
+  "rca_of_the_issue": "PUT /api/recipes/{id} builds updates via {k: v for k, v in payload.model_dump().items() if v is not None}. Because RecipeDialog converts empty numeric inputs to null, those keys are stripped and the old values remain in Mongo. Repro: POST a recipe with water_grams=700, then PUT {water_grams: null} -> GET still returns 700. Mitigation: model_dump(exclude_unset=True) with the client sending only changed keys."
+}

@@ -1,0 +1,38 @@
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import "@/App.css";
+import { Toaster } from "@/components/ui/sonner";
+import Header from "@/components/Header";
+import BottomNav from "@/components/BottomNav";
+import Mikilab from "@/sections/Mikilab";
+import Maestro from "@/sections/Maestro";
+import MaestroSaTutto from "@/sections/MaestroSaTutto";
+
+function App() {
+  const [tab, setTab] = useState("mikilab");
+
+  return (
+    <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1A1412]">
+      <Header />
+      <main className="max-w-xl mx-auto px-4 pt-4 pb-28">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+          >
+            {tab === "mikilab" && <Mikilab />}
+            {tab === "maestro" && <Maestro />}
+            {tab === "sa-tutto" && <MaestroSaTutto />}
+          </motion.div>
+        </AnimatePresence>
+      </main>
+      <BottomNav active={tab} onChange={setTab} />
+      <Toaster position="top-center" richColors />
+    </div>
+  );
+}
+
+export default App;

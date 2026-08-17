@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #FDFBF7;
+}
+
+.font-display { font-family: 'Playfair Display', serif; }
+.font-mono-data { font-family: 'JetBrains Mono', monospace; }
+
+@layer base {
+    :root {
+        --background: 40 43% 98%;
+        --foreground: 20 20% 15%;
+        --card: 0 0% 100%;
+        --card-foreground: 20 20% 15%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 20 20% 15%;
+        --primary: 16 64% 42%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 38 43% 93%;
+        --secondary-foreground: 20 20% 15%;
+        --muted: 38 30% 92%;
+        --muted-foreground: 22 15% 45%;
+        --accent: 41 66% 50%;
+        --accent-foreground: 20 20% 15%;
+        --destructive: 0 72% 45%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 43 45% 85%;
+        --input: 43 45% 85%;
+        --ring: 16 64% 42%;
+        --radius: 0.85rem;
+    }
+    .dark {
+        --background: 18 18% 9%;
+        --foreground: 38 43% 93%;
+        --card: 20 20% 14%;
+        --card-foreground: 38 43% 93%;
+        --popover: 20 20% 14%;
+        --popover-foreground: 38 43% 93%;
+        --primary: 16 66% 55%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 22 20% 18%;
+        --secondary-foreground: 38 43% 93%;
+        --muted: 22 20% 18%;
+        --muted-foreground: 30 12% 62%;
+        --accent: 41 78% 58%;
+        --accent-foreground: 18 18% 9%;
+        --destructive: 0 62% 45%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 22 22% 22%;
+        --input: 22 22% 22%;
+        --ring: 16 66% 55%;
+    }
+}
+
+@layer base {
+    * { @apply border-border; }
+    body { @apply bg-background text-foreground; }
+}
+
+/* Custom scrollbar for chat */
+.thin-scroll::-webkit-scrollbar { width: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: #D9A76233; border-radius: 8px; }
