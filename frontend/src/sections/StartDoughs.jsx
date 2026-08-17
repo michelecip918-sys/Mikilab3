@@ -1,10 +1,32 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
-import { Timer, Plus, Trash2, ChefHat, AlertTriangle, Cog, Hand } from "lucide-react";
+import { Timer, Plus, Trash2, ChefHat, AlertTriangle, Cog, Hand, Bell } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
 const DAY_IDS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
+
+function beep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination); o.frequency.value = 880; o.type = "sine";
+    g.gain.setValueAtTime(0.4, ctx.currentTime); o.start();
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2); o.stop(ctx.currentTime + 1.2);
+  } catch { /* no audio */ }
+}
+async function ensureNotify() {
+  if (!("Notification" in window)) return false;
+  if (Notification.permission === "granted") return true;
+  if (Notification.permission === "denied") return false;
+  return (await Notification.requestPermission()) === "granted";
+}
+function notify(title, body) {
+  try {
+    if ("Notification" in window && Notification.permission === "granted")
+      new Notification(title, { body, tag: "mikilab-knead" });
+  } catch { /* ignore */ }
+}
 
 function restMin(r) {
   const h = Number(r?.bulk_fermentation_hours || 0) + Number(r?.proofing_hours || 0);
@@ -28,6 +50,11 @@ export default function StartDoughs() {
   });
   const [schedule, setSchedule] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [maxChunk, setMaxChunk] = useState(30);
+  const [alarmsOn, setAlarmsOn] = useState(false);
+  const alarmTimers = useRef([]);
+
+  useEffect(() => () => alarmTimers.current.forEach(clearTimeout), []);
 
   useEffect(() => {
     (async () => {
@@ -86,17 +113,65 @@ export default function StartDoughs() {
       const readyToForm = new Date(mixEnd.getTime() + rest * 60000);
       return { name: rec?.name || "—", pieces, rest, mixMin, formMin, mixStart, mixEnd, readyToForm };
     });
-    // 2) Forming station: process in order of readyToForm, back-to-back.
-    const byReady = [...items].sort((a, b) => a.readyToForm - b.readyToForm);
-    let formCursor = null;
-    byReady.forEach((it) => {
-      const fStart = formCursor ? new Date(Math.max(formCursor, it.readyToForm.getTime())) : new Date(it.readyToForm);
-      const fEnd = new Date(fStart.getTime() + it.formMin * 60000);
-      it.formStart = fStart; it.formEnd = fEnd;
-      it.waitMin = Math.round((fStart.getTime() - it.readyToForm.getTime()) / 60000);
-      formCursor = fEnd.getTime();
+    // 2) Forming station: split large batches into rounds (<= maxChunk min)
+    //    and interleave, always forming the dough closest to over-proofing.
+    const chunkCap = Math.max(1, Number(maxChunk || 30));
+    const chunks = [];
+    items.forEach((it, idx) => {
+      it.formStart = null; it.formEnd = null; it.rounds = 0;
+      let remaining = it.formMin;
+      if (remaining <= 0) { chunks.push({ idx, dur: 0, ready: it.readyToForm.getTime() }); return; }
+      while (remaining > 0) {
+        const dur = Math.min(chunkCap, remaining);
+        chunks.push({ idx, dur, ready: it.readyToForm.getTime() });
+        remaining -= dur;
+      }
+    });
+    let cursor = Math.min(...items.map((it) => it.readyToForm.getTime()));
+    const done = new Array(chunks.length).fill(false);
+    let remainingChunks = chunks.length;
+    while (remainingChunks > 0) {
+      let candidates = chunks.map((c, i) => ({ c, i })).filter((x) => !done[x.i] && x.c.ready <= cursor);
+      if (candidates.length === 0) {
+        const nextReady = Math.min(...chunks.filter((c, i) => !done[i]).map((c) => c.ready));
+        cursor = nextReady; continue;
+      }
+      candidates.sort((a, b) => a.c.ready - b.c.ready); // most at risk first
+      const { c, i } = candidates[0];
+      const it = items[c.idx];
+      const cStart = new Date(cursor);
+      const cEnd = new Date(cursor + c.dur * 60000);
+      if (!it.formStart) it.formStart = cStart;
+      it.formEnd = cEnd; it.rounds += 1;
+      cursor = cEnd.getTime(); done[i] = true; remainingChunks -= 1;
+    }
+    items.forEach((it) => {
+      it.waitMin = it.formStart ? Math.round((it.formStart.getTime() - it.readyToForm.getTime()) / 60000) : 0;
     });
     setSchedule({ items });
+    setAlarmsOn(false);
+    alarmTimers.current.forEach(clearTimeout);
+    alarmTimers.current = [];
+  };
+
+  const enableAlarms = async () => {
+    if (!schedule) return;
+    const ok = await ensureNotify();
+    alarmTimers.current.forEach(clearTimeout);
+    alarmTimers.current = [];
+    const now = Date.now();
+    schedule.items.forEach((it) => {
+      const delay = it.mixStart.getTime() - now;
+      if (delay > 0 && delay < 24 * 3600 * 1000) {
+        alarmTimers.current.push(setTimeout(() => {
+          beep();
+          toast(`${t("sd_alarm_title")} — ${it.name}`);
+          if (ok) notify(t("sd_alarm_title"), `${it.name} · ${fmt(it.mixStart, lang)}`);
+        }, delay));
+      }
+    });
+    setAlarmsOn(true);
+    toast.success(t("sd_alarms_on"));
   };
 
   return (
@@ -173,6 +248,16 @@ export default function StartDoughs() {
         <Plus className="w-4 h-4" /> {t("sd_add")}
       </button>
 
+      <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-2.5">
+        <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{t("sd_max_chunk")}</span>
+        <input
+          data-testid="sd-maxchunk" type="number" value={maxChunk}
+          onChange={(e) => setMaxChunk(e.target.value)}
+          className="w-16 text-right font-mono-data font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-2 py-1.5 outline-none"
+        />
+        <span className="text-xs text-[#8C7567]">min</span>
+      </div>
+
       <button
         data-testid="sd-compute-btn" onClick={compute}
         className="w-full mt-3 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
@@ -188,7 +273,7 @@ export default function StartDoughs() {
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-full bg-[#D99B26]/20 text-[#8C3A1D] dark:text-[#E5AC3A] font-mono-data font-bold text-sm flex items-center justify-center shrink-0">{i + 1}</div>
                 <p className="text-sm font-medium text-[#2C221E] dark:text-[#F5EFE6] flex-1 truncate">{it.name}</p>
-                <span className="font-mono-data text-xs text-[#8C7567]">{it.pieces} {t("sd_pieces_short")}</span>
+                <span className="font-mono-data text-xs text-[#8C7567]">{it.pieces} {t("sd_pieces_short")}{it.rounds > 1 ? ` · ${it.rounds} ${t("sd_rounds")}` : ""}</span>
               </div>
               <div className="flex flex-wrap gap-2 mt-2 pl-9 font-mono-data text-xs">
                 <span className="inline-flex items-center gap-1 text-[#4A3B34] dark:text-[#C9BBB0]">
@@ -205,6 +290,15 @@ export default function StartDoughs() {
               </div>
             </div>
           ))}
+          <button
+            data-testid="sd-alarms-btn"
+            onClick={enableAlarms}
+            className={`w-full mt-2 font-semibold px-5 py-3 rounded-2xl flex items-center justify-center gap-2 transition-all ${
+              alarmsOn ? "bg-[#6B8E62] text-white" : "bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] border border-[#E8DEC8] dark:border-[#3D302A]"
+            }`}
+          >
+            <Bell className="w-5 h-5" /> {alarmsOn ? t("sd_alarms_on") : t("sd_alarms")}
+          </button>
         </div>
       )}
     </div>

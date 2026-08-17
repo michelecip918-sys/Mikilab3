@@ -194,7 +194,7 @@ export const translations = {
 
     // Bio
     bio_title: "La mia biografia",
-    bio_text: "Panificatore per passione, mi dedico da anni alla lievitazione naturale. Prediligo il farro (Dinkel) per il suo aroma delicato e la sua digeribilità: gran parte del mio repertorio nasce da questa farina. Coltivo con cura il mio lievito madre e affino stagione dopo stagione il panettone, grande lievitato che richiede metodo e pazienza. Con questa app desidero condividere tecnica ed esperienza con chi, come me, ama l'arte bianca ma non ha un maestro di riferimento qui in Germania.",
+    bio_text: "Panificatore per passione, mi dedico da anni alla lievitazione naturale. Prediligo il farro (Dinkel) per il suo aroma delicato e la sua digeribilità: gran parte del mio repertorio nasce da questa farina. Coltivo con cura il mio lievito madre e affino stagione dopo stagione il panettone, grande lievitato che richiede metodo e pazienza. Ho creato questa app non solo per chi non ha un maestro, ma soprattutto per chi desidera diventarlo — e per chi già lo è e vuole conoscere il mio metodo.",
 
     // Two planning voices
     tool_inforna: "Quando infornare",
@@ -223,6 +223,17 @@ export const translations = {
     sd_col_form: "Formatura",
     sd_wait: "attesa",
     sd_overproof: "rischio sovra-maturazione",
+    sd_max_chunk: "max min/tornata formatura",
+    sd_rounds: "tornate",
+    sd_alarms: "Attiva sveglie impasti",
+    sd_alarms_on: "Sveglie attivate",
+    sd_alarm_title: "È ora di impastare!",
+    inf_oven: "Forno (per suggerimenti cottura)",
+    inf_oven_none: "Nessun profilo",
+    inf_suggest: "Suggerimento di cottura",
+    inf_fan_note: "Forno ventilato con carrello: abbassa di ~20°C e riduci un po' i tempi rispetto allo statico; ottima uniformità con il carrello.",
+    inf_static_note: "Forno statico: temperature piene e vapore iniziale per una buona crosta.",
+    weekly_pdf: "PDF",
     sd_legend: "L'impastatore fa un impasto alla volta; la formatura dipende dalla quantità. L'ordine è ottimizzato in base al riposo, quindi la produzione spezza gli impasti.",
     oven_type: "Tipo di forno",
     oven_type_static: "Statico",
@@ -427,7 +438,7 @@ export const translations = {
 
     // Bio
     bio_title: "Meine Biografie",
-    bio_text: "Bäcker aus Leidenschaft, widme ich mich seit Jahren der natürlichen Sauerteigführung. Ich bevorzuge Dinkel für sein feines Aroma und seine Bekömmlichkeit: ein großer Teil meines Repertoires beruht auf diesem Mehl. Meinen Sauerteig pflege ich mit Sorgfalt und verfeinere Saison für Saison den Panettone, ein großes Hefegebäck, das Methode und Geduld verlangt. Mit dieser App möchte ich Technik und Erfahrung mit allen teilen, die – wie ich – das Bäckerhandwerk lieben, aber hier in Deutschland keinen Meister an ihrer Seite haben.",
+    bio_text: "Bäcker aus Leidenschaft, widme ich mich seit Jahren der natürlichen Sauerteigführung. Ich bevorzuge Dinkel für sein feines Aroma und seine Bekömmlichkeit: ein großer Teil meines Repertoires beruht auf diesem Mehl. Meinen Sauerteig pflege ich mit Sorgfalt und verfeinere Saison für Saison den Panettone, ein großes Hefegebäck, das Methode und Geduld verlangt. Diese App habe ich nicht nur für jene geschaffen, die keinen Meister haben, sondern vor allem für alle, die es werden möchten – und für jene, die es bereits sind und meine Methode kennenlernen wollen.",
 
     // Two planning voices
     tool_inforna: "Wann backen",
@@ -456,6 +467,17 @@ export const translations = {
     sd_col_form: "Formen",
     sd_wait: "Wartezeit",
     sd_overproof: "Übergare-Risiko",
+    sd_max_chunk: "max Min/Formrunde",
+    sd_rounds: "Runden",
+    sd_alarms: "Knet-Wecker aktivieren",
+    sd_alarms_on: "Wecker aktiviert",
+    sd_alarm_title: "Zeit zum Kneten!",
+    inf_oven: "Ofen (für Backempfehlungen)",
+    inf_oven_none: "Kein Profil",
+    inf_suggest: "Backempfehlung",
+    inf_fan_note: "Umluftofen mit Wagen: ~20°C niedriger und Zeiten etwas kürzer als statisch; sehr gleichmäßig dank Wagen.",
+    inf_static_note: "Statischer Ofen: volle Temperaturen und Anfangsdampf für eine gute Kruste.",
+    weekly_pdf: "PDF",
     sd_legend: "Der Kneter macht einen Teig nach dem anderen; das Formen hängt von der Menge ab. Die Reihenfolge ist nach Ruhezeit optimiert, daher teilt die Produktion die Teige auf.",
     oven_type: "Ofentyp",
     oven_type_static: "Statisch",
