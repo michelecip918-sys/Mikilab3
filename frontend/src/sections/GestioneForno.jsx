@@ -22,6 +22,22 @@ function beep() {
   } catch { /* no audio */ }
 }
 
+async function ensureNotifyPermission() {
+  if (!("Notification" in window)) return false;
+  if (Notification.permission === "granted") return true;
+  if (Notification.permission === "denied") return false;
+  const p = await Notification.requestPermission();
+  return p === "granted";
+}
+
+function notify(title, body) {
+  try {
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification(title, { body, icon: "/favicon.ico", tag: "mikilab-timer" });
+    }
+  } catch { /* ignore */ }
+}
+
 export default function GestioneForno() {
   const [profiles, setProfiles] = useState([]);
   const [form, setForm] = useState(emptyProfile);
@@ -137,9 +153,9 @@ export default function GestioneForno() {
               <p className="font-mono-data text-sm text-[#8C7567] mt-1">Preriscaldo {p.preheat_temp}°C</p>
             )}
             <div className="mt-3 space-y-2">
-              <PhaseTimer label="Fase 1 · vapore" temp={p.phase1_temp} minutes={p.phase1_minutes} onDone={() => { beep(); toast("Fase 1 completata"); }} />
-              <PhaseTimer label="Fase 2 · senza vapore" temp={p.phase2_temp} minutes={p.phase2_minutes} onDone={() => { beep(); toast("Fase 2 completata"); }} />
-              <PhaseTimer label="Fase 3 · asciugatura" temp={p.phase3_temp} minutes={p.phase3_minutes} onDone={() => { beep(); toast("Cottura terminata!"); }} />
+              <PhaseTimer label="Fase 1 · vapore" temp={p.phase1_temp} minutes={p.phase1_minutes} onDone={() => { beep(); toast("Fase 1 completata"); notify("Mikilab — Forno", `${p.name}: Fase 1 (vapore) completata`); }} />
+              <PhaseTimer label="Fase 2 · senza vapore" temp={p.phase2_temp} minutes={p.phase2_minutes} onDone={() => { beep(); toast("Fase 2 completata"); notify("Mikilab — Forno", `${p.name}: Fase 2 completata`); }} />
+              <PhaseTimer label="Fase 3 · asciugatura" temp={p.phase3_temp} minutes={p.phase3_minutes} onDone={() => { beep(); toast("Cottura terminata!"); notify("Mikilab — Forno", `${p.name}: cottura terminata!`); }} />
             </div>
           </div>
         ))}
@@ -166,21 +182,36 @@ function PhaseTimer({ label, temp, minutes, onDone }) {
   const [left, setLeft] = useState(totalSec);
   const [running, setRunning] = useState(false);
   const ref = useRef(null);
+  const endRef = useRef(null);
 
   useEffect(() => { setLeft(totalSec); }, [totalSec]);
 
   useEffect(() => {
     if (running) {
-      ref.current = setInterval(() => {
-        setLeft((l) => {
-          if (l <= 1) { clearInterval(ref.current); setRunning(false); onDone && onDone(); return 0; }
-          return l - 1;
-        });
-      }, 1000);
+      // Absolute end time keeps the countdown accurate even if the tab is
+      // throttled / the screen is off; on resume it recomputes from the clock.
+      endRef.current = Date.now() + left * 1000;
+      const tick = () => {
+        const remaining = Math.round((endRef.current - Date.now()) / 1000);
+        if (remaining <= 0) {
+          clearInterval(ref.current);
+          setRunning(false);
+          setLeft(0);
+          onDone && onDone();
+        } else {
+          setLeft(remaining);
+        }
+      };
+      ref.current = setInterval(tick, 1000);
     }
     return () => clearInterval(ref.current);
     // eslint-disable-next-line
   }, [running]);
+
+  const start = async () => {
+    if (!running) await ensureNotifyPermission();
+    setRunning((r) => !r);
+  };
 
   if (!minutes) return null;
   const mm = String(Math.floor(left / 60)).padStart(2, "0");
@@ -192,11 +223,11 @@ function PhaseTimer({ label, temp, minutes, onDone }) {
         <p className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0] truncate">{label}</p>
         <p className="font-mono-data text-xs text-[#8C7567]">{temp != null ? `${temp}°C · ` : ""}{minutes} min</p>
       </div>
-      <span className="font-mono-data font-bold text-lg text-[#8C3A1D] dark:text-[#E5AC3A] tabular-nums">{mm}:{ss}</span>
-      <button onClick={() => setRunning((r) => !r)} className="w-8 h-8 rounded-lg bg-[#B34A26] text-white flex items-center justify-center">
+      <span data-testid="timer-display" className="font-mono-data font-bold text-lg text-[#8C3A1D] dark:text-[#E5AC3A] tabular-nums">{mm}:{ss}</span>
+      <button data-testid="timer-toggle" onClick={start} className="w-8 h-8 rounded-lg bg-[#B34A26] text-white flex items-center justify-center">
         {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
       </button>
-      <button onClick={() => { setRunning(false); setLeft(totalSec); }} className="w-8 h-8 rounded-lg bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center text-[#8C7567]">
+      <button data-testid="timer-reset" onClick={() => { setRunning(false); setLeft(totalSec); }} className="w-8 h-8 rounded-lg bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center text-[#8C7567]">
         <RotateCcw className="w-4 h-4" />
       </button>
     </div>

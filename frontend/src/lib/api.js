@@ -18,3 +18,15 @@ export const ovenApi = {
   update: (id, data) => api.put(`/oven-profiles/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/oven-profiles/${id}`).then((r) => r.data),
 };
+
+export const planApi = {
+  get: () => api.get(`/production-plan`).then((r) => r.data),
+  save: (data) => api.put(`/production-plan`, data).then((r) => r.data),
+};
+
+export const announcementsApi = {
+  list: () => api.get(`/announcements`).then((r) => r.data),
+  create: (data) => api.post(`/announcements`, data).then((r) => r.data),
+  update: (id, data) => api.put(`/announcements/${id}`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/announcements/${id}`).then((r) => r.data),
+};

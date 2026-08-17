@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { CalendarClock, Plus, Trash2 } from "lucide-react";
+import { planApi } from "@/lib/api";
 
 const DEFAULT_PHASES = [
   { name: "Rinfresco lievito madre", hours: 4 },
@@ -26,21 +28,48 @@ export default function PianificaProduzione() {
   const [phases, setPhases] = useState(DEFAULT_PHASES);
   const [plan, setPlan] = useState(null);
 
+  // Load the saved plan on mount so it reappears after closing the app
+  useEffect(() => {
+    (async () => {
+      try {
+        const saved = await planApi.get();
+        if (saved && saved.phases) {
+          setBakeTime(saved.bake_time);
+          setPhases(saved.phases.map((p) => ({ name: p.name, hours: p.hours })));
+          buildPlan(saved.bake_time, saved.phases);
+        }
+      } catch { /* nessun piano salvato */ }
+    })();
+  }, []);
+
   const setHours = (i, v) => setPhases((p) => p.map((x, idx) => idx === i ? { ...x, hours: v } : x));
   const setName = (i, v) => setPhases((p) => p.map((x, idx) => idx === i ? { ...x, name: v } : x));
   const addPhase = () => setPhases((p) => [...p, { name: "Nuova fase", hours: 1 }]);
   const removePhase = (i) => setPhases((p) => p.filter((_, idx) => idx !== i));
 
-  const compute = () => {
-    const bake = new Date(bakeTime);
-    const total = phases.reduce((s, p) => s + Number(p.hours || 0), 0);
+  const buildPlan = (bt, ph) => {
+    const bake = new Date(bt);
+    const total = ph.reduce((s, p) => s + Number(p.hours || 0), 0);
     let cursor = new Date(bake.getTime() - total * 3600 * 1000);
-    const timeline = phases.map((p) => {
+    const timeline = ph.map((p) => {
       const start = new Date(cursor);
       cursor = new Date(cursor.getTime() + Number(p.hours || 0) * 3600 * 1000);
       return { name: p.name, hours: Number(p.hours || 0), start };
     });
     setPlan({ timeline, bake, total });
+  };
+
+  const compute = async () => {
+    buildPlan(bakeTime, phases);
+    try {
+      await planApi.save({
+        bake_time: bakeTime,
+        phases: phases.map((p) => ({ name: p.name, hours: Number(p.hours || 0) })),
+      });
+      toast.success("Pianificazione salvata");
+    } catch {
+      toast.error("Errore nel salvataggio del piano");
+    }
   };
 
   return (
@@ -102,7 +131,7 @@ export default function PianificaProduzione() {
         onClick={compute}
         className="w-full mt-3 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
       >
-        Calcola la tabella di marcia
+        Calcola e salva la tabella di marcia
       </button>
 
       {plan && (

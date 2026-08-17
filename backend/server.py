@@ -109,6 +109,29 @@ class ChatRequest(BaseModel):
     message: str
 
 
+class PhaseItem(BaseModel):
+    name: str
+    hours: float = 0
+
+
+class ProductionPlan(BaseModel):
+    bake_time: str
+    phases: List[PhaseItem]
+    updated_at: str = Field(default_factory=now_iso)
+
+
+class Announcement(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str
+    details: Optional[str] = ""
+    created_at: str = Field(default_factory=now_iso)
+
+
+class AnnouncementCreate(BaseModel):
+    title: str
+    details: Optional[str] = ""
+
+
 # ---------------------------------------------------------------------------
 # Seed data for Mikilab
 # ---------------------------------------------------------------------------
@@ -224,6 +247,79 @@ async def delete_oven_profile(profile_id: str):
     res = await db.oven_profiles.delete_one({"id": profile_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Profilo non trovato")
+    return {"success": True}
+
+
+# ---------------------------------------------------------------------------
+# Production plan (single persisted plan)
+# ---------------------------------------------------------------------------
+@api_router.get("/production-plan")
+async def get_production_plan():
+    doc = await db.production_plan.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+    return doc  # may be null if never saved
+
+
+@api_router.put("/production-plan", response_model=ProductionPlan)
+async def save_production_plan(payload: ProductionPlan):
+    payload.updated_at = now_iso()
+    doc = payload.model_dump()
+    await db.production_plan.update_one(
+        {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
+    )
+    return payload
+
+
+# ---------------------------------------------------------------------------
+# Stuttgart announcements
+# ---------------------------------------------------------------------------
+ANNOUNCEMENT_SEED = [
+    {
+        "title": "Mulini di qualità nell'area di Stoccarda",
+        "details": "Cerca farina biologica macinata a pietra nei mulini regionali (Schwabenmühle e mercati Bio locali). Chiedi la 'Type' per scegliere la forza giusta.",
+    },
+    {
+        "title": "Scambio lievito madre — zona Cannstatt & Mitte",
+        "details": "Incontri informali tra appassionati italiani e tedeschi: scambio di pasta madre, grani antichi e consigli di cottura nella zona di Stoccarda.",
+    },
+]
+
+
+async def seed_announcements_if_empty():
+    if await db.announcements.count_documents({}) == 0:
+        for item in ANNOUNCEMENT_SEED:
+            ann = Announcement(**item)
+            await db.announcements.insert_one(ann.model_dump())
+
+
+@api_router.get("/announcements", response_model=List[Announcement])
+async def get_announcements():
+    await seed_announcements_if_empty()
+    docs = await db.announcements.find({}, {"_id": 0}).sort("created_at", 1).to_list(500)
+    return docs
+
+
+@api_router.post("/announcements", response_model=Announcement)
+async def create_announcement(payload: AnnouncementCreate):
+    ann = Announcement(**payload.model_dump())
+    await db.announcements.insert_one(ann.model_dump())
+    return ann
+
+
+@api_router.put("/announcements/{ann_id}", response_model=Announcement)
+async def update_announcement(ann_id: str, payload: AnnouncementCreate):
+    existing = await db.announcements.find_one({"id": ann_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Annuncio non trovato")
+    updates = payload.model_dump()
+    await db.announcements.update_one({"id": ann_id}, {"$set": updates})
+    return {**existing, **updates}
+
+
+@api_router.delete("/announcements/{ann_id}")
+async def delete_announcement(ann_id: str):
+    res = await db.announcements.delete_one({"id": ann_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Annuncio non trovato")
     return {"success": True}
 
 

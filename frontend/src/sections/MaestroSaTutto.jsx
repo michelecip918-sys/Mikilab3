@@ -1,8 +1,9 @@
 import { useRef, useState, useEffect } from "react";
-import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper } from "lucide-react";
-import { API } from "@/lib/api";
+import { toast } from "sonner";
+import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper, Plus, Pencil, Trash2 } from "lucide-react";
+import { API, announcementsApi } from "@/lib/api";
 import {
-  promptSuggestions, encyclopedia, news, youtubeVideos, stuttgartAnnouncements,
+  promptSuggestions, encyclopedia, news, youtubeVideos,
 } from "@/data/content";
 
 const TABS = [
@@ -216,17 +217,91 @@ function VideoPanel() {
 }
 
 function StoccardaPanel() {
+  const [items, setItems] = useState([]);
+  const [editing, setEditing] = useState(null); // announcement being edited, or {} for new
+  const [form, setForm] = useState({ title: "", details: "" });
+
+  const load = async () => {
+    try { setItems(await announcementsApi.list()); }
+    catch { toast.error("Errore nel caricamento degli annunci"); }
+  };
+  useEffect(() => { load(); }, []);
+
+  const openNew = () => { setForm({ title: "", details: "" }); setEditing({}); };
+  const openEdit = (a) => { setForm({ title: a.title, details: a.details || "" }); setEditing(a); };
+
+  const save = async () => {
+    if (!form.title.trim()) return;
+    try {
+      if (editing && editing.id) await announcementsApi.update(editing.id, form);
+      else await announcementsApi.create(form);
+      toast.success("Annuncio salvato");
+      setEditing(null); load();
+    } catch { toast.error("Errore nel salvataggio"); }
+  };
+
+  const remove = async (id) => {
+    try { await announcementsApi.remove(id); toast.success("Annuncio eliminato"); load(); }
+    catch { toast.error("Errore"); }
+  };
+
   return (
     <div className="space-y-4">
-      {stuttgartAnnouncements.map((a, i) => (
-        <div key={i} data-testid={`announcement-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
+      {editing ? (
+        <div className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 space-y-3">
+          <input
+            data-testid="announcement-title-input"
+            value={form.title}
+            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+            placeholder="Titolo (es. Mulino preferito)"
+            className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]"
+          />
+          <textarea
+            data-testid="announcement-details-input"
+            value={form.details}
+            onChange={(e) => setForm((f) => ({ ...f, details: e.target.value }))}
+            rows={3}
+            placeholder="Dettagli, indirizzo, note…"
+            className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26] resize-none"
+          />
+          <div className="flex gap-2">
+            <button onClick={() => setEditing(null)}
+              className="flex-1 bg-[#F5EFE6] dark:bg-[#332823] px-4 py-3 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] font-medium">
+              Annulla
+            </button>
+            <button data-testid="announcement-save-btn" onClick={save}
+              className="flex-1 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-4 py-3 rounded-xl">
+              Salva
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          data-testid="add-announcement-btn"
+          onClick={openNew}
+          className="w-full bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-4 py-3 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-2"
+        >
+          <Plus className="w-4 h-4" /> Aggiungi annuncio / mulino
+        </button>
+      )}
+
+      {items.map((a) => (
+        <div key={a.id} data-testid={`announcement-${a.id}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
           <div className="flex items-start gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#6B8E62]/15 border border-[#6B8E62]/30 flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5 text-[#6B8E62]" />
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{a.title}</h3>
-              <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{a.details}</p>
+              {a.details ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{a.details}</p> : null}
+            </div>
+            <div className="flex gap-1.5 shrink-0">
+              <button onClick={() => openEdit(a)} data-testid={`edit-announcement-${a.id}`} className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B34A26]">
+                <Pencil className="w-4 h-4" />
+              </button>
+              <button onClick={() => remove(a.id)} data-testid={`delete-announcement-${a.id}`} className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B4442A]">
+                <Trash2 className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>

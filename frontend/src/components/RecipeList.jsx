@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale } from "lucide-react";
 import { recipesApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
+import ScaleDialog from "@/components/ScaleDialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -15,6 +16,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [toDelete, setToDelete] = useState(null);
+  const [scaling, setScaling] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -54,6 +56,28 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       load();
     } catch {
       toast.error("Errore nell'eliminazione");
+    }
+  };
+
+  const handleDuplicate = async (r) => {
+    try {
+      const { id, created_at, updated_at, ...rest } = r;
+      await recipesApi.create({ ...rest, collection_name: collectionName, name: `${r.name} (copia)` });
+      toast.success("Ricetta duplicata");
+      load();
+    } catch {
+      toast.error("Errore nella duplicazione");
+    }
+  };
+
+  const handleScaleSave = async (payload) => {
+    try {
+      await recipesApi.create({ ...payload, collection_name: collectionName });
+      toast.success("Ricetta scalata salvata");
+      setScaling(null);
+      load();
+    } catch {
+      toast.error("Errore nel salvataggio");
     }
   };
 
@@ -105,6 +129,22 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 </div>
                 <div className="flex gap-1.5 shrink-0">
                   <button
+                    data-testid={`scale-recipe-${r.id}`}
+                    onClick={() => setScaling(r)}
+                    className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#6B8E62] active:scale-95"
+                    aria-label="Scala dosi"
+                  >
+                    <Scale className="w-4 h-4" />
+                  </button>
+                  <button
+                    data-testid={`duplicate-recipe-${r.id}`}
+                    onClick={() => handleDuplicate(r)}
+                    className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#8C7567] active:scale-95"
+                    aria-label="Duplica"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
+                  <button
                     data-testid={`edit-recipe-${r.id}`}
                     onClick={() => { setEditing(r); setDialogOpen(true); }}
                     className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B34A26] active:scale-95"
@@ -146,6 +186,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         onOpenChange={setDialogOpen}
         initial={editing}
         onSave={handleSave}
+      />
+
+      <ScaleDialog
+        recipe={scaling}
+        open={!!scaling}
+        onOpenChange={(o) => !o && setScaling(null)}
+        onSave={handleScaleSave}
       />
 
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>

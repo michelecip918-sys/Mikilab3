@@ -98,8 +98,11 @@ class TestRecipes:
         assert len(match) == 1
         assert match[0]["hydration_percent"] == 72
 
-        # UPDATE
-        u = api_client.put(f"{API}/recipes/{rid}", json={"name": "TEST_Aggiornato", "hydration_percent": 80}, timeout=30)
+        # UPDATE — PUT is now full-state (unsent fields are cleared to null by design),
+        # so the client must send the whole recipe. Send full state like RecipeDialog does.
+        full = {**{k: v for k, v in payload.items() if k != "collection_name"},
+                "name": "TEST_Aggiornato", "hydration_percent": 80}
+        u = api_client.put(f"{API}/recipes/{rid}", json=full, timeout=30)
         assert u.status_code == 200, u.text
         assert u.json()["name"] == "TEST_Aggiornato"
         assert u.json()["hydration_percent"] == 80
@@ -108,7 +111,14 @@ class TestRecipes:
         got = [x for x in lst if x["id"] == rid][0]
         assert got["name"] == "TEST_Aggiornato"
         assert got["hydration_percent"] == 80
-        assert got["flour_type"] == "Tipo 2"  # untouched
+        assert got["flour_type"] == "Tipo 2"
+
+        # Explicit null must now clear the field (iteration-1 bug fix regression)
+        cleared = api_client.put(f"{API}/recipes/{rid}", json={**full, "water_grams": None}, timeout=30)
+        assert cleared.status_code == 200
+        got = [x for x in api_client.get(f"{API}/recipes", params={"collection_name": "personal"}, timeout=30).json()
+               if x["id"] == rid][0]
+        assert got["water_grams"] is None
 
         # DELETE
         d = api_client.delete(f"{API}/recipes/{rid}", timeout=30)

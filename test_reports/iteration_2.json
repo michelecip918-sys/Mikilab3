@@ -1,0 +1,56 @@
+{
+  "summary": "Iteration-2 E2E validation of the 4 new features + regressions on Mikilab / Il Maestro del Pane. Backend: 27/27 pytest cases green (15 existing regression + 12 new for production-plan persistence, announcements CRUD, duplicate/scale record semantics). Frontend (mobile 390x844, Playwright): (1) PERSIST PLAN - GET returned null initially, editing bake time to 2026-08-15T19:30 + phase hours (3h/5h) and tapping 'Calcola e salva la tabella di marcia' saved; timeline correct (total 12h, start sab 07:30 -> infornata sab 19:30); state survived navigate-away-and-back AND a full page reload (bake_time, phase hours and rebuilt timeline all restored); no freezer/congelatore strings anywhere. (2) ANNOUNCEMENTS - Stoccarda tab listed the 2 seeded cards, add-announcement-btn form created a 3rd card, edit prefilled + updated in place (no duplicate row) and survived reload, delete removed it (back to 2). (3) DUPLICATE - duplicate-recipe-{id} created 'Pane di Altamura DOP (copia)' in the mikilab collection with identical flour/hydration/notes. (4) SCALE - ScaleDialog defaulted to total mode with target 1970; flour mode target 500 -> 500/375/100/10 g (hydration exactly 75% preserved); total mode 985 -> same values; scale-save-btn created a NEW recipe 'Pane di Altamura DOP (985g)' that persisted after reload. (5) OVEN TIMER regression - profile create, phase timer counted 01:00 -> 00:57, pause froze the value for 2.5s, reset restored 01:00, a 0.1 min phase reached 00:00 and fired the completion toast + browser Notification (permission granted, no console errors), profile delete worked. All test data cleaned up (DB back to 3 mikilab recipes, 0 personal, 0 oven profiles, 2 seeded announcements, no saved production plan).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/production-plan", "issue": "bake_time is an unvalidated free-form string: PUT {bake_time: 'x'} returns 200 and is persisted. On reload the frontend does new Date('x') -> Invalid Date and the timeline would render 'Invalid Date' rows. Validate with a datetime/regex pattern."},
+      {"endpoint": "PUT /api/recipes/{id}", "issue": "Semantics changed to full-state overwrite (all model fields applied, including implicit nulls). A partial PUT now WIPES the unsent fields (verified: PUT {name, hydration_percent} cleared flour_type). Correct for the current RecipeDialog (always sends full state) but a footgun for any future partial update; consider a separate PATCH or exclude_unset. Existing regression test was updated to the new contract."},
+      {"endpoint": "GET /api/production-plan", "issue": "Returns bare JSON null with 200 when nothing is saved (no response_model). Works with the frontend but is untyped/undocumented in OpenAPI; consider Optional[ProductionPlan] response_model."},
+      {"endpoint": "POST/PUT /api/announcements", "issue": "No length limit / whitespace-trim on title; an empty-string title ('   ') is accepted and renders an empty card."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "StoccardaPanel delete", "issue": "delete-announcement-{id} deletes immediately with no confirmation dialog, inconsistent with recipe delete which uses an AlertDialog. Easy accidental data loss on mobile (the icon sits next to edit).", "selector": "[data-testid^='delete-announcement-']", "priority": "MEDIUM"},
+      {"component": "PhaseTimer (GestioneForno)", "issue": "Play/pause/reset buttons and the countdown had no data-testid; added timer-toggle, timer-reset, timer-display (test-only change, no logic touched).", "selector": "[data-testid='timer-toggle']", "priority": "LOW"},
+      {"component": "ScaleDialog", "issue": "In 'Peso impasto' mode the saved recipe name uses the recomputed rounded total, not the typed target (typing 1000 on a 1970 g recipe saves '... (985g)' because each component is rounded independently). Name/target mismatch can confuse; round-correct the last component or name it from the typed target.", "selector": "[data-testid='scale-save-btn']", "priority": "LOW"},
+      {"component": "GestioneForno profile edit button", "issue": "Pencil (edit) icon on an oven-profile card is very pale (#B34A26 at low opacity on #F5EFE6) and is hard to see against the card; verify contrast.", "selector": "[data-testid^='oven-profile-']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Pianifica la produzione", "issues": ["Still uses the browser-native <input type='datetime-local'> instead of a shadcn calendar/time component (pre-existing).", "No 'reset ai valori predefiniti' action - once phases are edited and saved, the defaults cannot be restored from the UI.", "Phase name inputs and the 'Aggiungi fase'/'Rimuovi' buttons still have no data-testid."]},
+      {"screen": "Mikilab recipe card", "issues": ["4 icon-only 9x9 action buttons (scale/duplicate/edit/delete) crowd the card header on a 390px viewport; duplicate/scale have no visible label or tooltip, only aria-label."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_new_features.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/iter2_all.xml"
+  ],
+  "action_items": [
+    "Add a confirmation step (AlertDialog) before deleting a Stuttgart announcement.",
+    "Validate bake_time format in PUT /api/production-plan (reject non-parsable datetimes) to avoid an 'Invalid Date' timeline after reload.",
+    "Trim/require non-empty announcement title server-side and in the form.",
+    "Optional: make ScaleDialog's saved name match the typed target weight in 'Peso impasto' mode.",
+    "Optional: response_model=Optional[ProductionPlan] on GET /api/production-plan for correct OpenAPI typing."
+  ],
+  "critical_code_review_comments": [
+    "PianificaProduzione.jsx: the mount effect calls buildPlan() which is declared as a const further down the component body; it works today only because effects run after the render pass. Move buildPlan above the effect (or into useCallback) to avoid a future TDZ crash if the call is ever hoisted into render.",
+    "PianificaProduzione.jsx: phase hours are stored as raw input strings in state and sent to the API as Number(p.hours || 0); an empty input silently becomes 0h with no validation feedback.",
+    "GestioneForno PhaseTimer: onDone is captured from the render in which running flipped to true (eslint-disable on the deps array). Safe now, but if the profile is edited while a timer runs the notification text will be stale.",
+    "server.py update_recipe applies the full model (nulls included) - correct only as long as every client sends full state; document the contract or split PATCH.",
+    "server.py is a single 424-line module holding models + seeds + 5 resource groups + the LLM stream; splitting into routers/ models/ would help before adding more features."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_new_features.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/frontend/src/sections/GestioneForno.jsx"
+  ],
+  "success_rate": {"backend": "100% (27/27 pytest cases)", "frontend": "100% of tested flows passed (4 minor UI issues noted)"},
+  "seed_data_creation": "No permanent seed data added. Created and then deleted: TEST_ announcements, TEST_ recipes, duplicate/scaled copies of 'Pane di Altamura DOP', TEST_Profilo Timer oven profile, and the test production plan (production_plan collection emptied so GET returns null again). Final DB state: 3 mikilab recipes, 0 personal, 0 oven profiles, 2 seeded announcements, no saved plan.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "No authentication (per /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Two backend suites: /app/backend/tests/backend_test.py (15 cases incl. live Claude SSE stream) and /app/backend/tests/test_new_features.py (12 cases: production-plan upsert/validation, announcements CRUD + seed idempotency, duplicate/scale record semantics). Run with `cd /app/backend && pytest tests/ -q`. NOTE backend_test.py::test_recipe_full_crud was rewritten for the NEW full-state PUT /api/recipes contract (partial PUT wipes unsent fields) - if the main agent reverts to PATCH semantics, that test needs updating again. Frontend verified at 390x844: plan persistence (incl. hard reload), announcements CRUD, duplicate + scale (hydration preserved 75%), oven timers with data-testid timer-toggle/timer-reset/timer-display (added by me). Notification permission can be granted via page.context.grant_permissions(['notifications']).",
+  "rca_of_the_issue": "No functional defect reproduced this iteration. The only earlier failure was the pre-existing backend_test.py::test_recipe_full_crud assertion (flour_type expected 'Tipo 2', got None), caused by the intentional iteration-2 change from PATCH-style (drop None) to full-state PUT in update_recipe; the test now asserts the new contract and additionally verifies that an explicit null clears a field (the iteration-1 bug is fixed)."
+}
