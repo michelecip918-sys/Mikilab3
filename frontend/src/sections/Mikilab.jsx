@@ -1,7 +1,7 @@
 import RecipeList from "@/components/RecipeList";
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";
-import { Heart, ChefHat, Wheat, Sprout, ChevronLeft, ChevronRight, Quote, BookHeart, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
+import { Heart, ChefHat, Wheat, Sprout, ChevronLeft, ChevronRight, Sparkles, BookHeart, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 const BEGINNERS = {
@@ -211,37 +211,34 @@ export default function Mikilab() {
 
   return (
     <div>
-      {/* Prefazione — versetto biblico */}
-      <div data-testid="preface-card" className="mb-5 rounded-3xl p-5 bg-[#2C221E] dark:bg-[#241D19] text-[#F5EFE6] border border-[#D99B26]/40 relative overflow-hidden min-h-[200px] flex flex-col justify-end">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-cover bg-center opacity-70 pointer-events-none"
-          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1594842059196-5b6b8fa73187?crop=entropy&cs=srgb&fm=jpg&w=1000&q=75)" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E] via-[#2C221E]/70 to-[#2C221E]/20 pointer-events-none" />
-        <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-2">
-          <Quote className="w-5 h-5 text-[#E5AC3A]" />
-          <h2 className="font-display text-lg font-bold text-[#E5AC3A] uppercase tracking-wide">{t("prefazione_label")}</h2>
-        </div>
-        <p className="font-display text-base italic leading-relaxed text-[#F5EFE6] drop-shadow">{t("prefazione_body")}</p>
-        </div>
-      </div>
-
-      <div data-testid="bio-card" className="mb-5 rounded-3xl p-5 bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white">
-        <div className="flex items-center gap-2 mb-3">
-          <Heart className="w-5 h-5" />
-          <h2 className="font-display text-xl font-bold">{t("bio_title")}</h2>
-        </div>
-        <div className="flex items-start gap-4">
-          <div data-testid="bio-photo" className="w-20 h-20 rounded-full overflow-hidden shrink-0 bg-white/15 border-2 border-white/40 flex items-center justify-center">
-            {imgOk ? (
-              <img src={`${process.env.PUBLIC_URL}/bio-photo.jpg`} alt="Michele" className="w-full h-full object-cover" onError={() => setImgOk(false)} />
-            ) : (
-              <ChefHat className="w-9 h-9 text-white/80" />
-            )}
+      {/* Bio: Benvenuti + Chi sono */}
+      <div data-testid="bio-card" className="mb-5 rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white">
+        <div className="p-5">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-5 h-5 text-[#FFCE00]" />
+            <div className="leading-tight">
+              <h2 className="font-display text-xl font-bold">{t("bio_welcome_title")}</h2>
+              <p className="text-[11px] uppercase tracking-wider text-white/70">{t("bio_welcome_sub")} <span>🇮🇹</span> <span>🇩🇪</span></p>
+            </div>
           </div>
-          <p className="text-sm text-white/90 leading-relaxed flex-1">{t("bio_text")}</p>
+          <p className="text-sm text-white/90 leading-relaxed">{t("bio_welcome_body")}</p>
+        </div>
+
+        <div className="px-5 pb-5 pt-4 border-t border-white/15">
+          <div className="flex items-center gap-3 mb-3">
+            <div data-testid="bio-photo" className="w-16 h-16 rounded-full overflow-hidden shrink-0 bg-white/15 border-2 border-white/40 flex items-center justify-center">
+              {imgOk ? (
+                <img src={`${process.env.PUBLIC_URL}/bio-photo.jpg`} alt="Michele" className="w-full h-full object-cover" onError={() => setImgOk(false)} />
+              ) : (
+                <ChefHat className="w-8 h-8 text-white/80" />
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <Heart className="w-5 h-5 text-[#FFCE00]" />
+              <h3 className="font-display text-lg font-bold">{t("bio_about_title")}</h3>
+            </div>
+          </div>
+          <p className="text-sm text-white/90 leading-relaxed whitespace-pre-line">{t("bio_about_body")}</p>
         </div>
       </div>
 

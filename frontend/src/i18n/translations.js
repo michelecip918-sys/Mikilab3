@@ -229,6 +229,11 @@ export const translations = {
 
     // Bio
     bio_title: "La mia biografia",
+    bio_welcome_title: "Benvenuti in Mikilab",
+    bio_welcome_sub: "Il Laboratorio di Michele",
+    bio_welcome_body: "Benvenuto in Mikilab, l'applicazione ideata per accompagnarti alla scoperta dei segreti della panificazione naturale, della lavorazione del farro (Dinkel), della gestione del lievito madre e dell'arte delle lunghe lievitazioni. Qui troverai una raccolta esclusiva delle mie ricette, guide passo passo, consigli pratici e gli strumenti necessari per portare la qualità del pane artigianale direttamente a casa tua.",
+    bio_about_title: "Chi sono",
+    bio_about_body: "Dietro questo progetto ci sono io, Michele Signorella. Sono italiano, originario della storica terra di Matera, e oggi vivo in Germania guidato da una motivazione semplice e profonda: la voglia di non smettere mai di imparare, scoprendo ogni giorno un pane nuovo e una ricetta diversa.\n\nPer me il pane è una vera e propria vocazione. Ricordando che \"non di solo pane vive l'uomo\", sono profondamente grato a Chi ha creato il grano e la terra: è questa spiritualità e passione che metto ogni giorno nel mio laboratorio e che ho racchiuso all'interno di questa app per condividerla con te.",
     bio_text: "Mi chiamo Michele Signorella, sono italiano di Matera e vivo in Germania per un motivo semplice: ogni giorno voglio scoprire e imparare un pane nuovo, una ricetta diversa. Il pane è la mia passione: farro (Dinkel), lievito madre e lunghe lievitazioni. In quest'app trovi le mie ricette da consultare — complete di dosi in grammi e in percentuale, metodo, tempi e costi — e puoi creare e gestire le tue. Con Mikilab prepari il piano settimanale, capisci da dove iniziare il lavoro, calcoli la temperatura dell'acqua, ricevi avvisi vocali, scopri difetti e stato dell'impasto da una foto o un video, ascolti la radio mentre lavori e resti aggiornato su corsi e novità da Stoccarda, dalla Germania, dall'Italia e dal mondo. Puoi anche parlare con l'app: sono qui per darti una mano.",
 
     // Two planning voices
@@ -659,6 +664,11 @@ export const translations = {
 
     // Bio
     bio_title: "Meine Biografie",
+    bio_welcome_title: "Willkommen bei Mikilab",
+    bio_welcome_sub: "Micheles Backstube",
+    bio_welcome_body: "Willkommen bei Mikilab, der App, die dich auf die Entdeckung der Geheimnisse des natürlichen Brotbackens begleitet: die Verarbeitung von Dinkel, die Führung des Sauerteigs und die Kunst der langen Gare. Hier findest du eine exklusive Sammlung meiner Rezepte, Schritt-für-Schritt-Anleitungen, praktische Tipps und alle Werkzeuge, um die Qualität von handwerklichem Brot direkt zu dir nach Hause zu bringen.",
+    bio_about_title: "Wer ich bin",
+    bio_about_body: "Hinter diesem Projekt stehe ich, Michele Signorella. Ich bin Italiener aus dem historischen Matera und lebe heute in Deutschland – angetrieben von einem einfachen, tiefen Wunsch: nie aufzuhören zu lernen und jeden Tag ein neues Brot und ein neues Rezept zu entdecken.\n\nBrot ist für mich eine echte Berufung. Im Bewusstsein, dass \"der Mensch nicht vom Brot allein lebt\", bin ich Dem zutiefst dankbar, der das Getreide und die Erde erschaffen hat: diese Spiritualität und Leidenschaft lege ich täglich in meine Backstube und habe sie in dieser App gebündelt, um sie mit dir zu teilen.",
     bio_text: "Ich bin ein Bäcker, der das Brot liebt. Ich lebe für den Teig, der in den Händen entsteht, für den Duft der natürlichen Gärung und für die Kruste, die frisch aus dem Ofen singt. Ich liebe Dinkel, und meine Rezepte sind natürlich, gesund und sorgfältig erprobt. Hier kannst du meine Rezepte ansehen und deine eigenen erstellen und verwalten: Mengen, Zeiten, direkte oder indirekte Methode und automatisch berechnete Kosten. Mit Mikilab erstellst du Wochen- und Arbeitsplan, prüfst die Wassertemperatur, bekommst Sprachhinweise, erkennst Brotfehler per Foto und bleibst über die besten Kurse informiert. Frag mich einfach um Rat: Ich bin hier, um dir zu helfen.",
 
     // Two planning voices
