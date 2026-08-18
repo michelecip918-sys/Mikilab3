@@ -345,48 +345,6 @@ async def save_weekly_plan(payload: WeeklyPlan):
     return payload
 
 
-# ---------------------------------------------------------------------------
-# Production diary (Diario di produzione)
-# ---------------------------------------------------------------------------
-class ProductionLog(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    date: str
-    product: str
-    quantity: float = 0
-    rating: int = 0
-    oven: Optional[str] = ""
-    notes: Optional[str] = ""
-    created_at: str = Field(default_factory=now_iso)
-
-
-class ProductionLogCreate(BaseModel):
-    date: str
-    product: str
-    quantity: float = 0
-    rating: int = 0
-    oven: Optional[str] = ""
-    notes: Optional[str] = ""
-
-
-@api_router.get("/production-log", response_model=List[ProductionLog])
-async def list_production_log():
-    docs = await db.production_log.find({}, {"_id": 0}).sort("date", -1).to_list(1000)
-    return docs
-
-
-@api_router.post("/production-log", response_model=ProductionLog)
-async def add_production_log(payload: ProductionLogCreate):
-    entry = ProductionLog(**payload.model_dump())
-    await db.production_log.insert_one(entry.model_dump())
-    return entry
-
-
-@api_router.delete("/production-log/{entry_id}")
-async def delete_production_log(entry_id: str):
-    await db.production_log.delete_one({"id": entry_id})
-    return {"ok": True}
-
-
 
 # ---------------------------------------------------------------------------
 # Stuttgart announcements
@@ -557,6 +515,14 @@ VISION_PROMPTS = {
         "ingredienti/materie prime (farine, semi, cereali, lievito, ecc.) elencali; se è un pane "
         "finito, deduci gli ingredienti probabili e il tipo di farina. Poi suggerisci una o due "
         "cose che si possono preparare con ciò che vedi. Rispondi in modo chiaro e conciso."
+    ),
+    "forni": (
+        "Sei un mastro panettiere esperto di forni professionali. Guarda la foto del/dei forno/i. "
+        "Riconosci il TIPO di forno (statico a suola/deck, ventilato con carrello, rotor/rotativo a carrello, "
+        "a legna, elettrico o a gas), notando indizi come ventola, camera, carrello rotante, iniezione di vapore, "
+        "pietra/suola. Se nella foto ci sono DUE forni, confrontali e spiega la DIFFERENZA pratica in cottura. "
+        "Poi dai consigli concreti: come regolare GRADI e MINUTI e il vapore per ottenere lo stesso risultato, "
+        "e cosa cambia per crosta e alveolatura. Sii pratico, rassicurante e conciso, con un breve elenco puntato."
     ),
 }
 

@@ -40,3 +40,11 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - Backend: PUT /api/recipes ora partial-safe (exclude_unset). Prompt AI: metodo logico passo-passo.
 - Google Play: possibile via PWABuilder (TWA); il backend/dominio deve restare online (spiegato all'utente).
 
+## v3 (2026-06) — Voce + strumenti anti-stress
+- **Assistente vocale**: pulsante microfono globale (Web Speech API) per "parlare con Mikilab": comandi di navigazione ("vai su ricette/corsi…") e domande al Maestro AI con risposta letta ad alta voce (IT/DE). Funziona su Chrome/Android.
+- **Adatta al forno** (Maestro): modalità Calcolo (converte gradi/minuti tra Statico/Ventilato/Rotor, parte anche da una ricetta) e modalità Foto (vision mode "forni": riconosce il tipo di forno e spiega come cambia la cottura).
+- **Sveglia lievito madre** (Maestro): promemoria rinfreschi con conto alla rovescia, "Ho rinfrescato ora" e avviso vocale/notifica (localStorage, nessun backend).
+- Costi ricette: mostrati SOLO nelle ricette del fornaio (personal), non in Mikilab; mostrato solo il costo di produzione (totale + a pezzo), rimossi prezzo di vendita/margine/markup.
+- Bio accorciata e resa in italiano scorrevole ("innamorato del pane").
+- Diario di produzione: valutato e SCARTATO su richiesta utente (aggiungeva stress).
+

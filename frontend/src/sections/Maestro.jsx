@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, CalendarDays, ChefHat, Thermometer, ChevronLeft, ChevronRight } from "lucide-react";
+import { PlusCircle, CalendarDays, ChefHat, Thermometer, Flame, Wheat, ChevronLeft, ChevronRight } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import StartDoughs from "@/sections/StartDoughs";
 import CalcolaGradi from "@/sections/CalcolaGradi";
+import AdattaForno from "@/sections/AdattaForno";
+import SvegliaLievito from "@/sections/SvegliaLievito";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function Maestro() {
@@ -16,6 +18,8 @@ export default function Maestro() {
     { id: "settimana", title: t("tool_settimana"), desc: t("tool_settimana_desc"), Icon: CalendarDays },
     { id: "lavoro", title: t("tool_lavoro"), desc: t("tool_lavoro_desc"), Icon: ChefHat },
     { id: "clima", title: t("tool_clima"), desc: t("tool_clima_desc"), Icon: Thermometer },
+    { id: "adatta", title: t("tool_adatta"), desc: t("tool_adatta_desc"), Icon: Flame },
+    { id: "sveglia", title: t("tool_sveglia"), desc: t("tool_sveglia_desc"), Icon: Wheat },
   ];
 
   if (tool) {
@@ -40,6 +44,8 @@ export default function Maestro() {
         {tool === "settimana" && <WeeklyPlan />}
         {tool === "lavoro" && <StartDoughs />}
         {tool === "clima" && <CalcolaGradi />}
+        {tool === "adatta" && <AdattaForno />}
+        {tool === "sveglia" && <SvegliaLievito />}
       </div>
     );
   }

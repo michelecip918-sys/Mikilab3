@@ -29,12 +29,6 @@ export const weeklyApi = {
   save: (data) => api.put(`/weekly-plan`, data).then((r) => r.data),
 };
 
-export const diaryApi = {
-  list: () => api.get(`/production-log`).then((r) => r.data),
-  add: (data) => api.post(`/production-log`, data).then((r) => r.data),
-  remove: (id) => api.delete(`/production-log/${id}`).then((r) => r.data),
-};
-
 export const announcementsApi = {
   list: () => api.get(`/announcements`).then((r) => r.data),
   create: (data) => api.post(`/announcements`, data).then((r) => r.data),
