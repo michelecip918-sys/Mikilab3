@@ -26,3 +26,10 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - P2: split automatico grandi lotti in formatura per evitare sovra-maturazione.
 - P2: notifiche timer in background persistenti; export PDF piano.
 - P2: video/annunci dinamici.
+
+## PWA (2026-06)
+- App installabile su home telefono. Nome: "Il laboratorio di Michele" (short: "Il lab di Michele").
+- Icona monogramma "ML" elegante (icon-192.png, icon-512.png, apple-touch-icon.png, favicon-32.png in /public).
+- manifest.json (standalone, portrait, theme #3d2b1f) + meta tag PWA in index.html + service worker minimo (/public/sw.js).
+- NOTA: per vedere l'icona in produzione l'utente deve fare **Redeploy** dalla piattaforma.
+
