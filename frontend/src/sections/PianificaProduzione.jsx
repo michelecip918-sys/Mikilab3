@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { CalendarClock, Plus, Trash2, Flame, AlertTriangle } from "lucide-react";
-import { recipesApi, weeklyApi } from "@/lib/api";
+import { recipesApi, weeklyApi, ovenApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
 const DAY_IDS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -28,20 +28,25 @@ export default function PianificaProduzione() {
   });
   const [plan, setPlan] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [ovens, setOvens] = useState([]);
+  const [ovenId, setOvenId] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
-        const [miki, personal, wp] = await Promise.all([
-          recipesApi.list("mikilab"), recipesApi.list("personal"), weeklyApi.get(),
+        const [miki, personal, wp, ov] = await Promise.all([
+          recipesApi.list("mikilab"), recipesApi.list("personal"), weeklyApi.get(), ovenApi.list(),
         ]);
         setRecipes([...miki, ...personal]);
         setWeekly(wp && wp.items ? wp.items : []);
+        setOvens(ov || []);
       } catch { toast.error(t("toast_load_error")); }
       finally { setLoaded(true); }
     })();
     // eslint-disable-next-line
   }, []);
+
+  const selectedOven = useMemo(() => ovens.find((o) => o.id === ovenId) || null, [ovens, ovenId]);
 
   const recipeById = useMemo(() => {
     const m = {}; recipes.forEach((r) => { m[r.id] = r; }); return m;
@@ -130,6 +135,22 @@ export default function PianificaProduzione() {
         </select>
       </div>
 
+      <div className="mt-3">
+        <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("inf_oven")}</label>
+        <select
+          data-testid="inf-oven-select"
+          value={ovenId} onChange={(e) => setOvenId(e.target.value)}
+          className="mt-1 w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#B34A26]"
+        >
+          <option value="">{t("inf_oven_none")}</option>
+          {ovens.map((o) => (
+            <option key={o.id} value={o.id}>
+              {o.name} · {o.oven_type === "ventilato" ? t("oven_type_fan") : t("oven_type_static")}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="space-y-2 mt-4">
         {rows.map((r) => (
           <div key={r.id} className="flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-3 py-2.5">
@@ -191,6 +212,35 @@ export default function PianificaProduzione() {
               <p className="font-mono-data text-xs text-white/85">{fmt(plan.bake, lang)}</p>
             </div>
           </div>
+
+          {selectedOven && (
+            <div data-testid="inf-oven-suggestion" className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Flame className="w-4 h-4 text-[#B34A26]" />
+                <span className="text-xs font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A]">
+                  {t("inf_suggest")} · {selectedOven.name}
+                </span>
+              </div>
+              {[["phase1", t("tl_phase1")], ["phase2", t("tl_phase2")], ["phase3", t("tl_phase3")]].map(([k, label]) => {
+                const temp = selectedOven[`${k}_temp`];
+                const mins = selectedOven[`${k}_minutes`];
+                if (temp == null && mins == null) return null;
+                const fan = selectedOven.oven_type === "ventilato";
+                const shownTemp = temp != null ? (fan ? Math.round(temp - 20) : temp) : null;
+                return (
+                  <div key={k} className="flex items-center justify-between font-mono-data text-sm py-0.5">
+                    <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{label}</span>
+                    <span className="text-[#8C3A1D] dark:text-[#E5AC3A] font-bold">
+                      {shownTemp != null ? `${shownTemp}°C` : "—"}{mins != null ? ` · ${mins}′` : ""}
+                    </span>
+                  </div>
+                );
+              })}
+              <p className="text-xs text-[#8C7567] mt-2 leading-relaxed">
+                {selectedOven.oven_type === "ventilato" ? t("inf_fan_note") : t("inf_static_note")}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

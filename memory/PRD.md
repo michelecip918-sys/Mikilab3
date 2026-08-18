@@ -18,7 +18,9 @@ App personale di panificazione artigianale (zona Stoccarda), bilingue IT/DE, sen
 ricette → piano settimanale → Quando impastare / Quando infornare (prefill da giorno del piano, quantità incluse).
 
 ## Status (verified)
-- iteration_7: backend 64/64 pytest; tutti i flussi frontend OK. Bug HIGH iterazioni precedenti risolti (vision lingua, SSE markdown JSON).
+- iteration_9: recipe COSTING (costi/prezzo di vendita) end-to-end, LOTTI DIVISI (preemption piccoli lotti), bio; backend 70 passed/1 skipped. Tutti i flussi frontend OK.
+- Bio aggiornata (nessun riferimento al maestro; invito "Fatti aiutare da Mikilab").
+- Fix robustezza: PUT /api/recipes parziale non azzera più 'name' (niente corruzione lista).
 
 ## Backlog / Next
 - P2: split automatico grandi lotti in formatura per evitare sovra-maturazione.

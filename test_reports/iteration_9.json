@@ -1,0 +1,44 @@
+{
+  "summary": "Iteration 9: verified (A) recipe COSTING end-to-end, (B) LOTTI DIVISI interleaving fix, (C) bio text, plus regression. Backend: 70 passed / 1 skipped (new /app/backend/tests/test_iter9_costing.py + all previous suites). Costing dict persists verbatim on POST, is returned in GET list, and survives full-payload PUT; recipes without costing return costing=null. Frontend (mobile 390x844): costing section renders in BOTH Mikilab and Maestro>Aggiungi ricetta dialogs with all expected testids; live math is exact (flour 1000g@1.2 + water 700g@0.002 + sourdough 200g@2.5 + salt 20g@0.4 + extras 1.50+0.75 + overhead 3 = EUR 6.96, /10 pz = 0.70, x2.5 = 1.74 -> cost-sell-price 'EUR 1.74'); saved recipe card shows recipe-price-{id} with per-piece + sell price, the 3 mikilab recipes without costing show no chip and no crash; reopening the recipe restores all costing inputs incl. both extras; duplicate keeps the costing chip. LOTTI DIVISI FIXED: repro (start 03:00, A 5000pz/4s/rest0/mix15, B 20pz/4s/rest30/mix15) now gives with maxchunk=30: B formed 04:00-04:02 attesa 15' (was 319' with over-proof warning) and A shows '12 tornate' / forming 03:30-09:06; with maxchunk=999 the old schedule (B 09:04, attesa 319') is reproduced -> schedules differ and the small batch preempts. Bio: IT contains 'per me e per tutti'/'senza segreti', DE contains 'für mich und für alle'/'ohne Geheimnisse', no maestro/master/Meister mention. Regression OK: weekly plan add/save/reload-persist/PDF download (piano-settimanale-mikilab.pdf)/print/share buttons, Quando infornare compute + ventilato -20C suggestion (250/230 -> 230/210 with carrello note), oven CRUD + phase timer countdown, AI chat answered in IT (~15s), IT/DE switch incl. DE costing labels, announcements (2 seeded) via API. All test data cleaned (personal recipes 0, ovens 0, weekly empty, production-plan reset).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/recipes/{id}", "issue": "Not a partial update: omitted fields are written as null. A partial body such as {\"costing\": {...}} sets name=None, the PUT returns 500 (ResponseValidationError on Recipe.name) AND from then on GET /api/recipes?collection_name=... returns 500 for the WHOLE collection (one corrupted doc breaks the list response_model) - the recipe book becomes unusable until the doc is deleted. Current UI always posts the full form so it is not user-visible, but the endpoint is unsafe. Fix: use payload.model_dump(exclude_unset=True) (keep explicit-null clearing via fields_set) and/or make Recipe.name tolerant."},
+      {"endpoint": "GET /api/recipes/{id}", "issue": "No single-recipe GET endpoint (returns 405). Persistence checks must go through the list endpoint; a detail route would be useful for tests/deep links."},
+      {"endpoint": "PUT/GET /api/production-plan", "issue": "Plan is saved ('Pianificazione salvata') but PianificaProduzione never fetches it on mount, so after reload the rows/result are empty - saved data is write-only (pre-existing, not part of this iteration)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipe dialog - Costi e prezzo di vendita", "issues": ["The 3-column row label 'SPESE (ENERGIA, MANO D'OPERA...) €' wraps onto two lines on 390px, so its input sits lower than 'PEZZI PER INFORNATA' / 'RICARICO %' - the row is visually misaligned. Consider a shorter label (e.g. 'SPESE FISSE €') or aligning inputs with items-end.", "Extra-ingredient rows have no column headers (name / €); the price field only shows the '€' placeholder until typed.", "cost-* number inputs have no min=0, so negative unit costs are accepted and produce a negative production cost/sell price."]},
+      {"screen": "Quando impastare (result)", "issues": ["Split batch still shows a single Formatura span (03:30-09:06) instead of the individual round slots, so '12 tornate' is not actionable (carried over from iteration_8, optional).", "sd-maxchunk has no min attribute (empty/0/negative displayable, clamped only in code)."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter9_costing.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_iter9.xml"
+  ],
+  "action_items": [
+    "Make PUT /api/recipes/{id} safe: exclude_unset (or validate that name is present) so a partial body cannot null out name and break GET /api/recipes for the whole collection.",
+    "Optional: add GET /api/recipes/{id} (currently 405).",
+    "Load the saved production plan on PianificaProduzione mount (currently save-only).",
+    "Minor UI polish in the costing section: label wrap/alignment of 'SPESE (ENERGIA, MANO D'OPERA...) €', min=0 on cost inputs, headers for extra rows."
+  ],
+  "critical_code_review_comments": [
+    "RecipeDialog.submit() always writes a full costing object with zeros even when the user filled nothing, so every new recipe stores costing={all 0}. RecipeList guards with total<=0/pieces<=0 so no chip is shown, but consider sending costing=null when everything is empty to keep documents clean and to distinguish 'no costing' from 'zero cost'.",
+    "The costing formula is duplicated in RecipeDialog.jsx (prodCost/costPerPiece/sellPrice) and RecipeList.jsx (inline IIFE). Extract to a shared helper (e.g. lib/costing.js) to avoid drift.",
+    "StartDoughs.compute(): candidate ordering is now shortest-total-formMin-first. This fixes the reported case, but it is strictly SJF, so a medium batch that becomes ready earlier can still be starved by a slightly smaller batch that keeps producing chunks; an urgency metric (ready + tolerance, EDF) would be more correct for over-proof avoidance.",
+    "Dev-instrumentation wraps <option> labels in <span>, causing a React hydration console error and making Playwright select_option(label=...) fail - use option values in tests (dev-only artifact)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter9_costing.py"],
+  "success_rate": {"backend": "100% (70 passed, 1 intentionally skipped destructive test)", "frontend": "100% of the 3 iteration features verified"},
+  "seed_data_creation": "Created and deleted: personal recipes TEST_Cost QA9 (+duplicate), TEST_Personal9 (cancelled), TEST_Costing9/TEST_NoCost9/TEST_Del9 (pytest), oven profiles TEST_Forno9 & TEST_Forno9b, one weekly row on Mercoledì (removed and saved back), production-plan reset to empty. Baseline restored: 3 mikilab recipes, 0 personal, 0 ovens, empty weekly plan, 2 announcements.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "None required (no auth; /app/memory/test_credentials.md documents this)",
+  "context_for_next_testing_agent": "Costing repro: Mikilab > add-recipe-btn, fill recipe-flour_grams=1000/water=700/sourdough=200/salt=20 and cost-flour_kg=1.2/water_l=0.002/sourdough_kg=2.5/salt_kg=0.4, 2 extras (1.5, 0.75), overhead 3, pieces 10, markup 150 -> cost-summary 6.96 / 0.70 / cost-sell-price 1.74; card chip recipe-price-{id}. LOTTI DIVISI verified fixed (maxchunk 30 vs 999 differ; B attesa 15' vs 319'). Do NOT run a partial-body PUT /api/recipes/{id} against the shared DB: it nulls name and makes GET /api/recipes 500 for the whole collection (test is skipped in test_iter9_costing.py for that reason). Use option value (not label) for select_option because of the dev <span>-in-<option> instrumentation. Photo diagnosis was only covered by the existing backend vision tests (test_iter5_sse_vision.py) this round, not via UI upload.",
+  "rca_of_the_issue": "LOTTI DIVISI fix confirmed: candidates.sort now compares items[idx].formMin ascending before ready, so once the big batch's first 30' round is consumed the small 2' dough (ready 03:45 <= cursor 04:00) wins the next slot -> attesa drops from 319' to 15' and the big batch only finishes 2' later. Backend PUT issue RCA: update_recipe uses payload.model_dump() without exclude_unset, persisting None for every field the client omitted; Recipe.name is a required str, so the corrupted document raises ResponseValidationError both on the PUT response and on every subsequent GET /api/recipes list for that collection."
+}

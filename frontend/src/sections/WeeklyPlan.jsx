@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2 } from "lucide-react";
+import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { jsPDF } from "jspdf";
 
 const DAYS = [
   { id: "lun" }, { id: "mar" }, { id: "mer" }, { id: "gio" },
@@ -153,8 +154,33 @@ export default function WeeklyPlan() {
     setTimeout(() => w.print(), 300);
   };
 
-  const sharePlan = async () => {
+  const pdfPlan = () => {
     const summary = buildSummary();
+    if (summary.length === 0) { toast.error(t("weekly_empty_share")); return; }
+    const doc = new jsPDF();
+    let y = 18;
+    doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(179, 74, 38);
+    doc.text(t("weekly_print_title"), 14, y); y += 10;
+    summary.forEach((d) => {
+      if (y > 275) { doc.addPage(); y = 18; }
+      doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(140, 58, 29);
+      doc.text(d.day, 14, y); y += 7;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(44, 34, 30);
+      d.items.forEach((it) => {
+        if (y > 280) { doc.addPage(); y = 18; }
+        doc.text(`• ${it.name} — ${it.pieces} x ${it.gpp}g = ${Math.round(it.totalDough)}g`, 18, y); y += 6;
+        if (it.doses.length) {
+          doc.setTextColor(140, 58, 29); doc.setFontSize(9);
+          doc.text(`   ${t("weekly_doses_label")}: ${it.doses.join(" · ")}`, 18, y); y += 6;
+          doc.setTextColor(44, 34, 30); doc.setFontSize(11);
+        }
+      });
+      y += 4;
+    });
+    doc.save("piano-settimanale-mikilab.pdf");
+  };
+
+  const sharePlan = async () => {    const summary = buildSummary();
     if (summary.length === 0) { toast.error(t("weekly_empty_share")); return; }
     const text = buildPlainText();
     try {
@@ -237,18 +263,25 @@ export default function WeeklyPlan() {
         <Save className="w-5 h-5" /> {t("weekly_save")}
       </button>
 
-      <div className="grid grid-cols-2 gap-2 mt-2">
+      <div className="grid grid-cols-3 gap-2 mt-2">
         <button
           data-testid="weekly-print-btn"
           onClick={printPlan}
-          className="bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-4 py-3 rounded-2xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-2 active:scale-98 transition-all"
+          className="bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-3 py-3 rounded-2xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <Printer className="w-5 h-5" /> {t("weekly_print")}
         </button>
         <button
+          data-testid="weekly-pdf-btn"
+          onClick={pdfPlan}
+          className="bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-3 py-3 rounded-2xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
+        >
+          <FileText className="w-5 h-5" /> {t("weekly_pdf")}
+        </button>
+        <button
           data-testid="weekly-share-btn"
           onClick={sharePlan}
-          className="bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-4 py-3 rounded-2xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-2 active:scale-98 transition-all"
+          className="bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-3 py-3 rounded-2xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <Share2 className="w-5 h-5" /> {t("weekly_share")}
         </button>

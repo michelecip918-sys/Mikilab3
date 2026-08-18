@@ -61,6 +61,21 @@ export const translations = {
     hydration: "Idratazione",
     field_notes: "Note",
     save: "Salva",
+    cost_section: "Costi e prezzo di vendita",
+    cost_flour_kg: "Farina €/kg",
+    cost_water_l: "Acqua €/l",
+    cost_sourdough_kg: "Lievito madre €/kg",
+    cost_salt_kg: "Sale €/kg",
+    cost_extra: "Altri ingredienti",
+    cost_extra_name: "Ingrediente",
+    cost_extra_price: "€",
+    cost_extra_add: "Aggiungi ingrediente",
+    cost_overhead: "Spese (energia, mano d'opera…) €",
+    cost_pieces: "Pezzi per infornata",
+    cost_markup: "Ricarico %",
+    cost_total: "Costo produzione",
+    cost_per_piece: "Costo a pezzo",
+    cost_sell: "Prezzo di vendita consigliato",
 
     // Scale dialog
     scale_title: "Scala le dosi",
@@ -194,7 +209,7 @@ export const translations = {
 
     // Bio
     bio_title: "La mia biografia",
-    bio_text: "Panificatore per passione, mi dedico da anni alla lievitazione naturale. Prediligo il farro (Dinkel) per il suo aroma delicato e la sua digeribilità: gran parte del mio repertorio nasce da questa farina. Coltivo con cura il mio lievito madre e affino stagione dopo stagione il panettone, grande lievitato che richiede metodo e pazienza. Ho creato questa app non solo per chi non ha un maestro, ma soprattutto per chi desidera diventarlo — e per chi già lo è e vuole conoscere il mio metodo.",
+    bio_text: "Panificatore per passione, da anni lavoro con la lievitazione naturale. Prediligo il farro (Dinkel) per il suo aroma e la sua digeribilità: gran parte del mio repertorio nasce da questa farina. Curo con dedizione il mio lievito madre e affino stagione dopo stagione il panettone. Questa app l'ho creata per me e per tutti: condivido il mio metodo senza segreti, con passione e rispetto per il mestiere. Fatti aiutare anche tu da Mikilab e impara il metodo passo dopo passo.",
 
     // Two planning voices
     tool_inforna: "Quando infornare",
@@ -305,6 +320,21 @@ export const translations = {
     hydration: "Hydration",
     field_notes: "Notizen",
     save: "Speichern",
+    cost_section: "Kosten & Verkaufspreis",
+    cost_flour_kg: "Mehl €/kg",
+    cost_water_l: "Wasser €/l",
+    cost_sourdough_kg: "Sauerteig €/kg",
+    cost_salt_kg: "Salz €/kg",
+    cost_extra: "Weitere Zutaten",
+    cost_extra_name: "Zutat",
+    cost_extra_price: "€",
+    cost_extra_add: "Zutat hinzufügen",
+    cost_overhead: "Kosten (Energie, Arbeit…) €",
+    cost_pieces: "Stück pro Charge",
+    cost_markup: "Aufschlag %",
+    cost_total: "Herstellkosten",
+    cost_per_piece: "Kosten pro Stück",
+    cost_sell: "Empfohlener Verkaufspreis",
 
     // Scale dialog
     scale_title: "Mengen skalieren",
@@ -438,7 +468,7 @@ export const translations = {
 
     // Bio
     bio_title: "Meine Biografie",
-    bio_text: "Bäcker aus Leidenschaft, widme ich mich seit Jahren der natürlichen Sauerteigführung. Ich bevorzuge Dinkel für sein feines Aroma und seine Bekömmlichkeit: ein großer Teil meines Repertoires beruht auf diesem Mehl. Meinen Sauerteig pflege ich mit Sorgfalt und verfeinere Saison für Saison den Panettone, ein großes Hefegebäck, das Methode und Geduld verlangt. Diese App habe ich nicht nur für jene geschaffen, die keinen Meister haben, sondern vor allem für alle, die es werden möchten – und für jene, die es bereits sind und meine Methode kennenlernen wollen.",
+    bio_text: "Bäcker aus Leidenschaft, arbeite ich seit Jahren mit natürlicher Sauerteigführung. Ich bevorzuge Dinkel für sein Aroma und seine Bekömmlichkeit: ein großer Teil meines Repertoires beruht auf diesem Mehl. Meinen Sauerteig pflege ich mit Hingabe und verfeinere Saison für Saison den Panettone. Diese App habe ich für mich und für alle gemacht: Ich teile meine Methode ohne Geheimnisse, mit Leidenschaft und Respekt vor dem Handwerk. Lass auch du dich von Mikilab begleiten und lerne die Methode Schritt für Schritt.",
 
     // Two planning voices
     tool_inforna: "Wann backen",

@@ -48,6 +48,7 @@ class Recipe(BaseModel):
     bulk_fermentation_hours: Optional[float] = None
     proofing_hours: Optional[float] = None
     notes: Optional[str] = ""
+    costing: Optional[dict] = None
     created_at: str = Field(default_factory=now_iso)
     updated_at: str = Field(default_factory=now_iso)
 
@@ -64,6 +65,7 @@ class RecipeCreate(BaseModel):
     bulk_fermentation_hours: Optional[float] = None
     proofing_hours: Optional[float] = None
     notes: Optional[str] = ""
+    costing: Optional[dict] = None
 
 
 class RecipeUpdate(BaseModel):
@@ -77,6 +79,7 @@ class RecipeUpdate(BaseModel):
     bulk_fermentation_hours: Optional[float] = None
     proofing_hours: Optional[float] = None
     notes: Optional[str] = None
+    costing: Optional[dict] = None
 
 
 class OvenProfile(BaseModel):
@@ -226,6 +229,9 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate):
     # Full-state save from the recipe dialog: apply all provided fields,
     # including explicit nulls (so a cleared field is actually cleared).
     updates = payload.model_dump()
+    # Never null out the required 'name': keep existing if not provided.
+    if updates.get("name") is None:
+        updates.pop("name", None)
     updates["updated_at"] = now_iso()
     await db.recipes.update_one({"id": recipe_id}, {"$set": updates})
     merged = {**existing, **updates}

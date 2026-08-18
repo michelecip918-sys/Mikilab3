@@ -13,10 +13,12 @@ const FIELDS = [
   { key: "proofing_hours", labelKey: "field_proof_h" },
 ];
 
+const emptyCost = { flour_kg: "", water_l: "", sourdough_kg: "", salt_kg: "", extras: [], overhead: "", pieces: "", markup: "" };
+
 const empty = {
   name: "", flour_type: "", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
-  proofing_hours: "", notes: "",
+  proofing_hours: "", notes: "", costing: emptyCost,
 };
 
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
@@ -35,6 +37,30 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
       : null;
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+  const c = form.costing || emptyCost;
+  const setC = (k, v) => setForm((f) => ({ ...f, costing: { ...(f.costing || emptyCost), [k]: v } }));
+  const setExtra = (i, patch) => setForm((f) => {
+    const extras = [...((f.costing || emptyCost).extras || [])];
+    extras[i] = { ...extras[i], ...patch };
+    return { ...f, costing: { ...(f.costing || emptyCost), extras } };
+  });
+  const addExtra = () => setForm((f) => ({ ...f, costing: { ...(f.costing || emptyCost), extras: [...((f.costing || emptyCost).extras || []), { name: "", cost: "" }] } }));
+  const removeExtra = (i) => setForm((f) => {
+    const extras = ((f.costing || emptyCost).extras || []).filter((_, idx) => idx !== i);
+    return { ...f, costing: { ...(f.costing || emptyCost), extras } };
+  });
+
+  const num = (v) => (v === "" || v == null ? 0 : Number(v) || 0);
+  const prodCost =
+    num(form.flour_grams) / 1000 * num(c.flour_kg) +
+    num(form.water_grams) / 1000 * num(c.water_l) +
+    num(form.sourdough_grams) / 1000 * num(c.sourdough_kg) +
+    num(form.salt_grams) / 1000 * num(c.salt_kg) +
+    (c.extras || []).reduce((s, e) => s + num(e.cost), 0) +
+    num(c.overhead);
+  const pieces = num(c.pieces);
+  const costPerPiece = pieces > 0 ? prodCost / pieces : null;
+  const sellPrice = costPerPiece != null ? costPerPiece * (1 + num(c.markup) / 100) : null;
 
   const submit = () => {
     if (!form.name.trim()) return;
@@ -43,6 +69,11 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
       payload[key] = form[key] === "" ? null : Number(form[key]);
     });
     payload.hydration_percent = hydration;
+    payload.costing = {
+      flour_kg: num(c.flour_kg), water_l: num(c.water_l), sourdough_kg: num(c.sourdough_kg), salt_kg: num(c.salt_kg),
+      extras: (c.extras || []).filter((e) => e.name || e.cost).map((e) => ({ name: e.name || "", cost: num(e.cost) })),
+      overhead: num(c.overhead), pieces: num(c.pieces), markup: num(c.markup),
+    };
     onSave(payload);
   };
 
@@ -115,6 +146,73 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base outline-none resize-none"
             />
           </div>
+
+          {/* Costi e prezzo di vendita */}
+          <div className="pt-2 border-t border-[#E8DEC8] dark:border-[#3D302A]" data-testid="recipe-costing-section">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("cost_section")}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[["flour_kg", "cost_flour_kg"], ["water_l", "cost_water_l"], ["sourdough_kg", "cost_sourdough_kg"], ["salt_kg", "cost_salt_kg"]].map(([k, lk]) => (
+                <div key={k}>
+                  <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t(lk)}</label>
+                  <input
+                    data-testid={`cost-${k}-input`} type="number" step="0.01" value={c[k]}
+                    onChange={(e) => setC(k, e.target.value)}
+                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-2 space-y-1.5">
+              {(c.extras || []).map((e, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    data-testid={`cost-extra-name-${i}`} value={e.name} placeholder={t("cost_extra_name")}
+                    onChange={(ev) => setExtra(i, { name: ev.target.value })}
+                    className="flex-1 min-w-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]"
+                  />
+                  <input
+                    data-testid={`cost-extra-price-${i}`} type="number" step="0.01" value={e.cost} placeholder="€"
+                    onChange={(ev) => setExtra(i, { cost: ev.target.value })}
+                    className="w-20 text-right font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]"
+                  />
+                  <button onClick={() => removeExtra(i)} className="text-[#B4442A] p-1" aria-label={t("delete")}>✕</button>
+                </div>
+              ))}
+              <button
+                data-testid="cost-add-extra-btn" onClick={addExtra}
+                className="text-sm font-medium text-[#B34A26] flex items-center gap-1"
+              >
+                + {t("cost_extra_add")}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 mt-2">
+              {[["overhead", "cost_overhead"], ["pieces", "cost_pieces"], ["markup", "cost_markup"]].map(([k, lk]) => (
+                <div key={k}>
+                  <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t(lk)}</label>
+                  <input
+                    data-testid={`cost-${k}-input`} type="number" step="0.01" value={c[k]}
+                    onChange={(e) => setC(k, e.target.value)}
+                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {prodCost > 0 && (
+              <div className="mt-3 space-y-1.5 bg-[#F5EFE6] dark:bg-[#332823] rounded-xl p-3" data-testid="cost-summary">
+                <Row label={t("cost_total")} value={`€ ${prodCost.toFixed(2)}`} />
+                {costPerPiece != null && <Row label={t("cost_per_piece")} value={`€ ${costPerPiece.toFixed(2)}`} />}
+                {sellPrice != null && (
+                  <div className="flex items-center justify-between pt-1.5 border-t border-[#E8DEC8] dark:border-[#3D302A]">
+                    <span className="text-sm font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{t("cost_sell")}</span>
+                    <span data-testid="cost-sell-price" className="font-mono-data font-bold text-lg text-[#8C3A1D] dark:text-[#E5AC3A]">€ {sellPrice.toFixed(2)}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
@@ -138,10 +236,25 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   );
 }
 
+function Row({ label, value }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0]">{label}</span>
+      <span className="font-mono-data font-semibold text-[#4A3B34] dark:text-[#C9BBB0]">{value}</span>
+    </div>
+  );
+}
+
 function normalize(r) {
   const out = { ...r };
   ["flour_grams", "water_grams", "sourdough_grams", "salt_grams", "bulk_fermentation_hours", "proofing_hours"].forEach((k) => {
     out[k] = r[k] == null ? "" : r[k];
   });
+  const rc = r.costing || {};
+  out.costing = {
+    flour_kg: rc.flour_kg ?? "", water_l: rc.water_l ?? "", sourdough_kg: rc.sourdough_kg ?? "",
+    salt_kg: rc.salt_kg ?? "", extras: (rc.extras || []).map((e) => ({ name: e.name || "", cost: e.cost ?? "" })),
+    overhead: rc.overhead ?? "", pieces: rc.pieces ?? "", markup: rc.markup ?? "",
+  };
   return out;
 }

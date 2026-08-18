@@ -178,6 +178,29 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               {r.notes ? (
                 <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-3 leading-relaxed">{r.notes}</p>
               ) : null}
+
+              {(() => {
+                const cst = r.costing;
+                if (!cst) return null;
+                const n = (v) => Number(v) || 0;
+                const total = n(r.flour_grams) / 1000 * n(cst.flour_kg) + n(r.water_grams) / 1000 * n(cst.water_l)
+                  + n(r.sourdough_grams) / 1000 * n(cst.sourdough_kg) + n(r.salt_grams) / 1000 * n(cst.salt_kg)
+                  + (cst.extras || []).reduce((s, e) => s + n(e.cost), 0) + n(cst.overhead);
+                const pcs = n(cst.pieces);
+                if (total <= 0 || pcs <= 0) return null;
+                const perPiece = total / pcs;
+                const sell = perPiece * (1 + n(cst.markup) / 100);
+                return (
+                  <div data-testid={`recipe-price-${r.id}`} className="mt-3 flex items-center justify-between bg-[#6B8E62]/12 border border-[#6B8E62]/30 rounded-xl px-3 py-2">
+                    <span className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0]">
+                      {t("cost_per_piece")}: <span className="font-mono-data">€ {perPiece.toFixed(2)}</span>
+                    </span>
+                    <span className="text-sm font-bold text-[#4d6b45] dark:text-[#9ec48f]">
+                      {t("cost_sell")}: <span className="font-mono-data">€ {sell.toFixed(2)}</span>
+                    </span>
+                  </div>
+                );
+              })()}
             </motion.div>
           ))}
         </div>

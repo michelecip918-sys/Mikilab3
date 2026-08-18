@@ -136,7 +136,13 @@ export default function StartDoughs() {
         const nextReady = Math.min(...chunks.filter((c, i) => !done[i]).map((c) => c.ready));
         cursor = nextReady; continue;
       }
-      candidates.sort((a, b) => a.c.ready - b.c.ready); // most at risk first
+      candidates.sort((a, b) => {
+        // Small batches preempt big ones so short-rest doughs are formed
+        // between the big batch's rounds (reduces over-proof waiting).
+        const fa = items[a.c.idx].formMin, fb = items[b.c.idx].formMin;
+        if (fa !== fb) return fa - fb;
+        return a.c.ready - b.c.ready;
+      });
       const { c, i } = candidates[0];
       const it = items[c.idx];
       const cStart = new Date(cursor);

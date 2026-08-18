@@ -1,0 +1,51 @@
+{
+  "summary": "Iteration 8 full-stack test of the 4 new features + bio correction. Backend regression: 64/64 pytest passing (backend unchanged this round). Frontend (mobile 390x844): SVEGLIA IMPASTI works (permission grant, toast 'Sveglie attivate', green state, reset+reschedule on recompute, no console errors); FORNO NEL PIANO works exactly as specced (ventilato shows temp-20 with fan note, statico shows full temp with static note, no card when no oven selected); PIANO IN PDF works (real .pdf download 'piano-settimanale-mikilab.pdf', 3-button row, warning toast on empty plan); bio corrected in IT and DE. LOTTI DIVISI is only PARTIALLY working: the 'N tornate' badge and the >60' over-proof warning render correctly, but the interleaving does NOT actually reduce the waiting time of short-rest doughs - the schedule with maxChunk=30 is byte-identical to maxChunk=999. Regression verified: weekly add/save/persist after reload, sd-load-day prefill from plan (12 pz), Quando infornare compute+persist, oven CRUD (create statico+ventilato, delete), AI chat (LLM answered in IT). All test data cleaned up.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "LOTTI DIVISI - chunked/interleaved forming (StartDoughs.compute)",
+        "issue": "Splitting into rounds has no effect on the schedule. Repro: start 03:00, row A = 5000 pz / 4 s-pz / rest 0 / mix 15, row B = 20 pz / 4 s-pz / rest 30 / mix 15. With sd-maxchunk=999: B waits 319' and is formed 09:04-09:06 (⚠️ over-proof). With sd-maxchunk=30: identical output (B still 09:04-09:06, attesa 319'), the only difference is the cosmetic '12 tornate' label on A. The stated benefit (short-rest doughs formed between chunks to cut the over-proof wait) is not delivered.",
+        "affected_selectors": ["[data-testid=\"sd-maxchunk\"]", "[data-testid=\"sd-result\"]"]
+      }
+    ],
+    "design_issues": [
+      {
+        "screen": "Quando impastare (result)",
+        "issues": [
+          "For a split batch the 'Formatura' range is printed as formStart-formEnd (e.g. 03:30-09:04) which hides the fact that the work is done in 12 separate rounds; showing the per-round slots (or total forming minutes) would make '12 tornate' actionable.",
+          "sd-maxchunk accepts any string (including empty / 0 / negative); it is clamped in code (max(1,...)) but the input has no min attribute so the UI can display an invalid value."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/backend/tests/test_iter7_oven_type.py",
+    "/app/test_reports/pytest/pytest_iter8.xml"
+  ],
+  "action_items": [
+    "Fix the forming-station scheduler in StartDoughs.compute(): candidates.sort((a,b)=>a.c.ready-b.c.ready) is plain FIFO and, because every chunk of a dough shares the same `ready` timestamp, all chunks of the earliest-ready dough are always consumed before any other dough - so chunking never interleaves. Use a priority that reflects urgency, e.g. among ready chunks prefer the dough with the smallest total formMin (shortest-job-first) or round-robin one chunk per dough per pass, or EDF on (ready + tolerance).",
+    "Optional: render the individual round slots (or total forming minutes) for a split dough instead of a single formStart-formEnd span.",
+    "Optional: add min=\"5\" / step to sd-maxchunk."
+  ],
+  "critical_code_review_comments": [
+    "StartDoughs.compute(): the chunk loop is O(n^2) over chunks (5000 pz @4s with maxChunk=30 -> 12 chunks, fine, but maxChunk=1 on a big batch creates 334 chunks and a 334-iteration scan each pass). Acceptable now, but cap chunk count or use a heap if maxChunk can be 1.",
+    "enableAlarms(): if notification permission is denied, ok=false and only an in-tab toast+beep is scheduled, yet the UI still turns green and says 'Sveglie attivate' - user gets no hint that OS notifications will not appear. Consider a distinct message when permission is denied.",
+    "enableAlarms() relies on setTimeout, so alarms silently die on reload/tab close (documented by the dev, but no UI hint). A short note under the button would avoid a missed bake.",
+    "PianificaProduzione: the fan -20°C adjustment is hard-coded in the JSX; extract to a constant (e.g. FAN_TEMP_DELTA) shared with any future oven logic.",
+    "WeeklyPlan.pdfPlan() uses jsPDF helvetica (WinAnsi) - IT/DE accented chars render fine, but if recipe names ever contain non-Latin-1 chars the text will be mangled; also the y-overflow guards (275/280) duplicate logic that could be one helper."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (64/64)", "frontend": "3.5/4 features (LOTTI DIVISI cosmetic only)"},
+  "seed_data_creation": "Created and deleted oven profiles TEST_Vent8 (ventilato, 250/10, 230/15, 210/20) and TEST_Stat8 (statico, 250/10). Weekly plan rows added on Mercoledì/Giovedì then removed and saved back to empty. No leftover test data.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "None (app has no auth, per /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Repro for the interleaving bug: Maestro > maestro-tool-impasti, two rows (5000 pz/4s/rest 0/mix 15 and 20 pz/4s/rest 30/mix 15), compare sd-result with sd-maxchunk=999 vs 30 - must differ after the fix (the 20 pz dough should be formed shortly after its readyToForm, ~03:45, not at 09:04). Verified values for Forno nel Piano: ventilato 250/230/210 -> shown 230/210/190 with fan note; statico 250 -> 250 with static note. PDF download asserted via expect_download (3645 bytes, %PDF magic). Notifications: page.context.grant_permissions(['notifications']) then sd-alarms-btn -> label becomes 'Sveglie attivate' and class bg-[#6B8E62]. Note: option label text via all_text_contents() returns empty for dynamically rendered <option> because the Emergent dev instrumentation wraps the label in a <span> inside <option> (also produces a React hydration console warning in dev only) - read the option value attribute instead. Weekly plan render after reload needs ~3s wait before asserting (async fetch).",
+  "rca_of_the_issue": "LOTTI DIVISI: in StartDoughs.compute() every chunk pushed for a dough carries the same `ready` value (it.readyToForm). The scheduler picks candidates whose ready<=cursor and sorts ascending by `ready`, so the dough with the earliest readyToForm always wins every tie/comparison and all of its chunks are drained consecutively - reproducing exactly the pre-chunking FIFO schedule. Splitting therefore only changes the `rounds` counter (display) and never yields the forming station to a dough that becomes ready later, which is precisely the over-proof case the feature was meant to solve."
+}
