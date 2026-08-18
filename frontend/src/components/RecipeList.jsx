@@ -6,6 +6,7 @@ import { recipesApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
+import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -121,6 +122,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               data-testid={`recipe-card-${r.id}`}
               className="relative overflow-hidden bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 shadow-sm"
             >
+              {countryColors(r.origin) && (
+                <div aria-hidden data-testid={`recipe-flag-strip-${r.id}`} className="absolute top-0 left-0 right-0 flex h-1.5 z-20">
+                  {countryColors(r.origin).map((c, k) => (
+                    <div key={k} className="flex-1" style={{ background: c }} />
+                  ))}
+                </div>
+              )}
               {r.image_url && (
                 <div
                   aria-hidden
@@ -132,6 +140,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h3 className="font-display text-xl font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
+                    {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
                     {r.name}
                   </h3>
                   {r.flour_type ? (

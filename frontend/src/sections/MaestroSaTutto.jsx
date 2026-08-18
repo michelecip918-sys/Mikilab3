@@ -16,7 +16,6 @@ export default function MaestroSaTutto() {
 
   const TABS = [
     { id: "chiedi", label: t("tab_chiedi"), Icon: MessageCircle },
-    { id: "video", label: t("tab_video"), Icon: Youtube },
     { id: "enciclopedia", label: t("tab_enciclopedia"), Icon: BookOpen },
     { id: "stoccarda", label: t("tab_stoccarda"), Icon: MapPin },
   ];
@@ -48,7 +47,6 @@ export default function MaestroSaTutto() {
 
       {tab === "chiedi" && <ChatPanel />}
       {tab === "enciclopedia" && <EncyclopediaPanel />}
-      {tab === "video" && <VideoPanel />}
       {tab === "stoccarda" && <StoccardaPanel />}
     </div>
   );

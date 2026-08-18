@@ -3,6 +3,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
 import { useLang } from "@/i18n/LanguageContext";
+import { COUNTRIES, flagEmoji } from "@/lib/countries";
 import { STANDARD_PRICES, standardCosting } from "@/data/prices";
 
 const FIELDS = [
@@ -22,7 +23,7 @@ const HOUR_FIELDS = new Set(["bulk_fermentation_hours", "proofing_hours"]);
 const emptyCost = standardCosting();
 
 const empty = {
-  name: "", flour_type: "", preferment_type: "lm", flour_grams: "", water_grams: "",
+  name: "", flour_type: "", origin: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", extra_ingredients: [], costing: standardCosting(),
@@ -81,7 +82,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const submit = () => {
     if (!form.name.trim()) return;
     const payload = {
-      name: form.name.trim(), flour_type: form.flour_type, notes: form.notes, procedure: form.procedure,
+      name: form.name.trim(), flour_type: form.flour_type, origin: form.origin || null, notes: form.notes, procedure: form.procedure,
       preferment_type: form.preferment_type || null,
       oven_type: form.oven_type || null,
       method_type: form.method_type || null,
@@ -137,6 +138,21 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               placeholder={t("field_flour_ph")}
               className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base outline-none"
             />
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_origin")}</label>
+            <select
+              data-testid="recipe-origin-select"
+              value={form.origin || ""}
+              onChange={(e) => set("origin", e.target.value)}
+              className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+            >
+              <option value="">{t("origin_none")}</option>
+              {COUNTRIES.map((c) => (
+                <option key={c.code} value={c.code}>{flagEmoji(c.code)} {c.name}</option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -432,6 +448,7 @@ function normalize(r) {
   out.method_type = r.method_type || "indiretto";
   out.extra_ingredients = (r.extra_ingredients || []).map((e) => ({ name: e.name || "", percent: e.percent ?? "" }));
   out.procedure = r.procedure || "";
+  out.origin = r.origin || "";
   const rc = r.costing || {};
   const has = (v) => v !== "" && v != null;
   out.costing = {
