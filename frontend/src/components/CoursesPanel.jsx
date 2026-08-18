@@ -1,0 +1,40 @@
+import { GraduationCap } from "lucide-react";
+import { content } from "@/data/content";
+import { useLang } from "@/i18n/LanguageContext";
+
+export default function CoursesPanel() {
+  const { t, lang } = useLang();
+  const courses = content[lang].freeCourses || [];
+  return (
+    <div className="space-y-4" data-testid="courses-panel">
+      <div className="flex items-center gap-2 text-[#8C7567]">
+        <GraduationCap className="w-4 h-4" />
+        <span className="text-xs font-semibold uppercase tracking-wide">{t("courses_label")}</span>
+      </div>
+      <p className="text-xs text-[#8C7567] -mt-1 leading-relaxed">{t("courses_note")}</p>
+      {courses.map((c, i) => (
+        <div key={i} data-testid={`course-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden">
+          <div className="aspect-video bg-black">
+            <iframe
+              className="w-full h-full"
+              src={c.url}
+              title={c.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+          <div className="p-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{c.category}</span>
+              {c.isNew && (
+                <span data-testid={`course-new-${i}`} className="text-[10px] font-bold uppercase tracking-wide text-white bg-[#E5AC3A] px-2 py-0.5 rounded-full">{t("course_new")}</span>
+              )}
+            </div>
+            <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mt-0.5">{c.title}</h3>
+            <p className="text-xs text-[#8C7567] mt-1">{t("course_source")}: {c.source} · {c.level}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

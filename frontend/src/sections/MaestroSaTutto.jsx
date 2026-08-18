@@ -1,57 +1,21 @@
 import { useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper, Plus, Pencil, Trash2, GraduationCap } from "lucide-react";
+import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper, Plus, Pencil, Trash2 } from "lucide-react";
 import { API, announcementsApi } from "@/lib/api";
-import { content, COURSES_VERSION } from "@/data/content";
+import { content } from "@/data/content";
 import { useLang } from "@/i18n/LanguageContext";
-import { speak } from "@/lib/voice";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const COURSES_SEEN_KEY = "mikilab_courses_v";
-
 export default function MaestroSaTutto() {
   const [tab, setTab] = useState("chiedi");
-  const { t, lang } = useLang();
-  const [coursesNew, setCoursesNew] = useState(false);
-
-  const hasNewCourses = content[lang].freeCourses?.some((c) => c.isNew);
-
-  // Notifica "nuovi corsi": scatta se la versione corsi è cambiata e ci sono novità.
-  useEffect(() => {
-    const seen = Number(localStorage.getItem(COURSES_SEEN_KEY) || 0);
-    if (hasNewCourses && seen !== COURSES_VERSION) {
-      setCoursesNew(true);
-      toast(t("courses_toast_new"), { icon: "🎓", duration: 6000 });
-      try {
-        if ("Notification" in window) {
-          if (Notification.permission === "granted") {
-            new Notification(t("courses_notify_title"), { body: t("courses_notify_body"), tag: "mikilab-courses" });
-          } else if (Notification.permission !== "denied") {
-            Notification.requestPermission().then((p) => {
-              if (p === "granted") new Notification(t("courses_notify_title"), { body: t("courses_notify_body"), tag: "mikilab-courses" });
-            });
-          }
-        }
-      } catch { /* ignore */ }
-    }
-    // eslint-disable-next-line
-  }, []);
-
-  const openTab = (id) => {
-    setTab(id);
-    if (id === "corsi") {
-      localStorage.setItem(COURSES_SEEN_KEY, String(COURSES_VERSION));
-      setCoursesNew(false);
-    }
-  };
+  const { t } = useLang();
 
   const TABS = [
     { id: "chiedi", label: t("tab_chiedi"), Icon: MessageCircle },
-    { id: "corsi", label: t("tab_corsi"), Icon: GraduationCap, badge: coursesNew },
     { id: "video", label: t("tab_video"), Icon: Youtube },
     { id: "enciclopedia", label: t("tab_enciclopedia"), Icon: BookOpen },
     { id: "stoccarda", label: t("tab_stoccarda"), Icon: MapPin },
@@ -66,11 +30,11 @@ export default function MaestroSaTutto() {
       </div>
 
       <div className="flex gap-2 mb-5 overflow-x-auto thin-scroll pb-1">
-        {TABS.map(({ id, label, Icon, badge }) => (
+        {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
             data-testid={`sa-tutto-tab-${id}`}
-            onClick={() => openTab(id)}
+            onClick={() => setTab(id)}
             className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
               tab === id
                 ? "bg-[#B34A26] text-white"
@@ -78,55 +42,14 @@ export default function MaestroSaTutto() {
             }`}
           >
             <Icon className="w-4 h-4" /> {label}
-            {badge && (
-              <span data-testid="courses-new-dot" className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#E5AC3A] border border-white" />
-            )}
           </button>
         ))}
       </div>
 
       {tab === "chiedi" && <ChatPanel />}
-      {tab === "corsi" && <CoursesPanel />}
       {tab === "enciclopedia" && <EncyclopediaPanel />}
       {tab === "video" && <VideoPanel />}
       {tab === "stoccarda" && <StoccardaPanel />}
-    </div>
-  );
-}
-
-function CoursesPanel() {
-  const { t, lang } = useLang();
-  const courses = content[lang].freeCourses || [];
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-[#8C7567]">
-        <GraduationCap className="w-4 h-4" />
-        <span className="text-xs font-semibold uppercase tracking-wide">{t("courses_label")}</span>
-      </div>
-      <p className="text-xs text-[#8C7567] -mt-1 leading-relaxed">{t("courses_note")}</p>
-      {courses.map((c, i) => (
-        <div key={i} data-testid={`course-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden">
-          <div className="aspect-video bg-black">
-            <iframe
-              className="w-full h-full"
-              src={c.url}
-              title={c.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-          <div className="p-4">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{c.category}</span>
-              {c.isNew && (
-                <span data-testid={`course-new-${i}`} className="text-[10px] font-bold uppercase tracking-wide text-white bg-[#E5AC3A] px-2 py-0.5 rounded-full">{t("course_new")}</span>
-              )}
-            </div>
-            <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mt-0.5">{c.title}</h3>
-            <p className="text-xs text-[#8C7567] mt-1">{t("course_source")}: {c.source} · {c.level}</p>
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
@@ -313,8 +236,12 @@ function StoccardaPanel() {
   const { t } = useLang();
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(null); // announcement being edited, or {} for new
-  const [form, setForm] = useState({ title: "", details: "" });
+  const [form, setForm] = useState({ title: "", details: "", region: "stoccarda" });
   const [toDelete, setToDelete] = useState(null);
+  const [filter, setFilter] = useState("all");
+
+  const REGIONS = ["stoccarda", "germania", "italia", "mondo"];
+  const regionLabel = (r) => t(`region_${r || "stoccarda"}`);
 
   const load = async () => {
     try { setItems(await announcementsApi.list()); }
@@ -322,8 +249,8 @@ function StoccardaPanel() {
   };
   useEffect(() => { load(); }, []);
 
-  const openNew = () => { setForm({ title: "", details: "" }); setEditing({}); };
-  const openEdit = (a) => { setForm({ title: a.title, details: a.details || "" }); setEditing(a); };
+  const openNew = () => { setForm({ title: "", details: "", region: "stoccarda" }); setEditing({}); };
+  const openEdit = (a) => { setForm({ title: a.title, details: a.details || "", region: a.region || "stoccarda" }); setEditing(a); };
 
   const save = async () => {
     if (!form.title.trim()) return;
@@ -359,6 +286,17 @@ function StoccardaPanel() {
             placeholder={t("ann_details_ph")}
             className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26] resize-none"
           />
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("ann_region")}</label>
+            <select
+              data-testid="announcement-region-select"
+              value={form.region}
+              onChange={(e) => setForm((f) => ({ ...f, region: e.target.value }))}
+              className="mt-1 w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]"
+            >
+              {REGIONS.map((r) => <option key={r} value={r}>{regionLabel(r)}</option>)}
+            </select>
+          </div>
           <div className="flex gap-2">
             <button onClick={() => setEditing(null)}
               className="flex-1 bg-[#F5EFE6] dark:bg-[#332823] px-4 py-3 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] font-medium">
@@ -380,14 +318,32 @@ function StoccardaPanel() {
         </button>
       )}
 
-      {items.map((a) => (
+      <div className="flex gap-2 overflow-x-auto thin-scroll pb-1">
+        {["all", ...REGIONS].map((r) => (
+          <button
+            key={r}
+            data-testid={`region-chip-${r}`}
+            onClick={() => setFilter(r)}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+              filter === r ? "bg-[#B34A26] text-white" : "bg-[#F5EFE6] dark:bg-[#332823] text-[#8C7567] border border-[#E8DEC8] dark:border-[#3D302A]"
+            }`}
+          >
+            {r === "all" ? t("region_all") : regionLabel(r)}
+          </button>
+        ))}
+      </div>
+
+      {items.filter((a) => filter === "all" || (a.region || "stoccarda") === filter).map((a) => (
         <div key={a.id} data-testid={`announcement-${a.id}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
           <div className="flex items-start gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#6B8E62]/15 border border-[#6B8E62]/30 flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5 text-[#6B8E62]" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{a.title}</h3>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-bold uppercase tracking-wide text-white bg-[#6B8E62] px-2 py-0.5 rounded-full">{regionLabel(a.region)}</span>
+              </div>
+              <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mt-1">{a.title}</h3>
               {a.details ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{a.details}</p> : null}
             </div>
             <div className="flex gap-1.5 shrink-0">

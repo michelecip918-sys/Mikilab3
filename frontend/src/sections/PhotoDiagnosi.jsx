@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Camera, Bug, Sparkles, Upload, RefreshCw } from "lucide-react";
+import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { speak, primeVoice } from "@/lib/voice";
 
 // Downscale + compress an image file to a base64 JPEG (keeps payload small)
 function fileToCompressedBase64(file, maxDim = 1024, quality = 0.8) {
@@ -28,26 +29,49 @@ function fileToCompressedBase64(file, maxDim = 1024, quality = 0.8) {
   });
 }
 
+// Grab a representative frame from a video file as base64 JPEG.
+function videoToFrameBase64(file, maxDim = 1024, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement("video");
+    video.preload = "metadata"; video.muted = true; video.playsInline = true; video.src = url;
+    video.onloadeddata = () => { try { video.currentTime = Math.min(1, (video.duration || 2) / 2); } catch { /* */ } };
+    video.onseeked = () => {
+      let w = video.videoWidth, h = video.videoHeight;
+      if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
+      else if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      c.getContext("2d").drawImage(video, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", quality));
+    };
+    video.onerror = () => { URL.revokeObjectURL(url); reject(new Error("video")); };
+  });
+}
+
 export default function PhotoDiagnosi() {
   const [mode, setMode] = useState("difetti");
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
+  const [praised, setPraised] = useState(false);
   const fileRef = useRef(null);
   const { t, lang } = useLang();
 
   const MODES = [
     { id: "difetti", label: t("photo_mode_defects"), desc: t("photo_mode_defects_desc"), Icon: Bug },
+    { id: "impasto", label: t("photo_mode_dough"), desc: t("photo_mode_dough_desc"), Icon: Wheat },
     { id: "ingredienti", label: t("photo_mode_ing"), desc: t("photo_mode_ing_desc"), Icon: Sparkles },
+    { id: "scopri", label: t("photo_mode_discover"), desc: t("photo_mode_discover_desc"), Icon: Lightbulb },
   ];
 
   const onPick = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      const b64 = await fileToCompressedBase64(file);
+      const b64 = file.type.startsWith("video") ? await videoToFrameBase64(file) : await fileToCompressedBase64(file);
       setPreview(b64);
-      setResult("");
+      setResult(""); setPraised(false);
     } catch {
       toast.error(t("toast_img_error"));
     }
@@ -55,8 +79,10 @@ export default function PhotoDiagnosi() {
 
   const analyze = async () => {
     if (!preview || analyzing) return;
+    primeVoice();
     setAnalyzing(true);
-    setResult("");
+    setResult(""); setPraised(false);
+    let full = "";
     try {
       const res = await fetch(`${API}/maestro/vision`, {
         method: "POST",
@@ -78,12 +104,18 @@ export default function PhotoDiagnosi() {
           let obj;
           try { obj = JSON.parse(line); } catch { continue; }
           if (obj.done) continue;
-          if (obj.d) setResult((r) => r + obj.d);
+          if (obj.d) { full += obj.d; setResult((r) => (r + obj.d)); }
         }
+      }
+      // Complimento vocale se il pane/impasto è fatto bene ([OK] in coda).
+      if (/\[OK\]/.test(full) && (mode === "difetti" || mode === "impasto")) {
+        setPraised(true);
+        speak(t("photo_compliment"), lang);
       }
     } catch {
       toast.error(t("toast_analyze_error"));
     } finally {
+      setResult((r) => r.replace(/\[OK\]|\[FIX\]/g, "").trim());
       setAnalyzing(false);
     }
   };
@@ -96,12 +128,12 @@ export default function PhotoDiagnosi() {
         <p className="text-white/85 text-sm mt-1">{t("photo_subtitle")}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mb-5">
+      <div className="grid grid-cols-2 gap-2 mb-3">
         {MODES.map(({ id, label, desc, Icon }) => (
           <button
             key={id}
             data-testid={`photo-mode-${id}`}
-            onClick={() => { setMode(id); setResult(""); }}
+            onClick={() => { setMode(id); setResult(""); setPraised(false); }}
             className={`flex flex-col items-start gap-1 p-3.5 rounded-2xl border text-left transition-all ${
               mode === id
                 ? "bg-[#B34A26] text-white border-[#B34A26]"
@@ -115,7 +147,9 @@ export default function PhotoDiagnosi() {
         ))}
       </div>
 
-      <input ref={fileRef} data-testid="photo-file-input" type="file" accept="image/*" capture="environment" onChange={onPick} className="hidden" />
+      <p className="text-xs text-[#8C7567] mb-4">{t("photo_video_hint")}</p>
+
+      <input ref={fileRef} data-testid="photo-file-input" type="file" accept="image/*,video/*" capture="environment" onChange={onPick} className="hidden" />
 
       {preview ? (
         <div className="rounded-3xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4 relative">
@@ -148,6 +182,13 @@ export default function PhotoDiagnosi() {
         {analyzing ? t("photo_analyzing") : t("photo_analyze")}
       </button>
 
+      {praised && (
+        <div data-testid="photo-compliment" className="mt-4 flex items-center gap-3 bg-[#6B8E62]/15 border border-[#6B8E62]/40 rounded-2xl p-4">
+          <PartyPopper className="w-6 h-6 text-[#4d6b45] dark:text-[#9ec48f] shrink-0" />
+          <p className="text-sm font-bold text-[#4d6b45] dark:text-[#9ec48f]">{t("photo_compliment")}</p>
+        </div>
+      )}
+
       {result && (
         <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 text-sm leading-relaxed text-[#2C221E] dark:text-[#F5EFE6]">
           <ReactMarkdown>{result}</ReactMarkdown>
@@ -156,3 +197,4 @@ export default function PhotoDiagnosi() {
     </div>
   );
 }
+

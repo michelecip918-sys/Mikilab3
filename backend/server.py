@@ -161,12 +161,14 @@ class Announcement(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     details: Optional[str] = ""
+    region: Optional[str] = "stoccarda"
     created_at: str = Field(default_factory=now_iso)
 
 
 class AnnouncementCreate(BaseModel):
     title: str
     details: Optional[str] = ""
+    region: Optional[str] = "stoccarda"
 
 
 class WeeklyItem(BaseModel):
@@ -504,11 +506,27 @@ async def maestro_history(session_id: str):
 # ---------------------------------------------------------------------------
 VISION_PROMPTS = {
     "difetti": (
-        "Sei un mastro panettiere esperto. Analizza la foto del pane e individua i DIFETTI "
-        "visibili (crosta, alveolatura, mollica, forma, colore, cottura, lievitazione, incisione). "
-        "Per ogni difetto indica: cosa vedi, la probabile CAUSA e come CORREGGERLO la prossima volta. "
-        "Se il pane sembra ben riuscito, dillo e dai comunque 1-2 consigli. "
-        "Usa un elenco puntato chiaro e conciso."
+        "Sei un mastro panettiere esperto. Analizza con attenzione la foto (o fotogramma) del pane o dell'impasto. "
+        "Valuta prima lo STATO generale: se è un impasto, dì se è PRONTO, POCO LIEVITATO o TROPPO LIEVITATO e da cosa lo capisci; "
+        "se è un pane cotto, valuta la cottura (giusta, poco cotta, troppo cotta). "
+        "Poi individua i DIFETTI visibili (crosta, alveolatura, mollica, forma, colore, cottura, lievitazione, incisione): "
+        "per ognuno indica cosa vedi, la probabile CAUSA e come CORREGGERLO la prossima volta. "
+        "Usa un elenco puntato chiaro e conciso. "
+        "IMPORTANTISSIMO: nell'ULTIMA riga scrivi ESATTAMENTE '[OK]' se il pane/impasto è fatto bene e senza difetti rilevanti, "
+        "oppure '[FIX]' se ci sono difetti da correggere. Non aggiungere altro dopo quel simbolo."
+    ),
+    "impasto": (
+        "Sei un mastro panettiere esperto. Guarda la foto (o fotogramma) dell'IMPASTO. Dimmi in modo chiaro se è: "
+        "PRONTO da lavorare/infornare, ANCORA INDIETRO (poco lievitato) o TROPPO LIEVITATO/collassato. "
+        "Spiega i segnali che osservi (volume, bolle, cupola, superficie, tenuta) e cosa fare ADESSO in pratica. "
+        "Se possibile stima quanto manca o cosa correggere. Sii pratico e conciso. "
+        "Nell'ULTIMA riga scrivi ESATTAMENTE '[OK]' se l'impasto è al punto giusto, altrimenti '[FIX]'."
+    ),
+    "scopri": (
+        "Sei un mastro panettiere innovatore e curioso. Guarda la foto e proponi al fornaio UNA o DUE idee "
+        "che probabilmente NON conosce per innovare e migliorare: una tecnica poco nota, un abbinamento di farine/ingredienti, "
+        "una lavorazione o una presentazione originale, coerente con ciò che vedi. Spiega brevemente il PERCHÉ e come provarla. "
+        "Tono ispirante, sorprendente ma concreto. Elenco puntato breve."
     ),
     "ingredienti": (
         "Sei un mastro panettiere esperto. Guarda la foto e identifica gli INGREDIENTI: se vedi "
