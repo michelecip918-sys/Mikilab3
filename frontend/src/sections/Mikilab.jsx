@@ -212,27 +212,19 @@ export default function Mikilab() {
   return (
     <div>
       {/* Prefazione — versetto biblico */}
-      <div data-testid="preface-card" className="mb-5 rounded-3xl p-5 bg-[#2C221E] dark:bg-[#241D19] text-[#F5EFE6] border border-[#D99B26]/40 relative overflow-hidden">
+      <div data-testid="preface-card" className="mb-5 rounded-3xl p-5 bg-[#2C221E] dark:bg-[#241D19] text-[#F5EFE6] border border-[#D99B26]/40 relative overflow-hidden min-h-[200px] flex flex-col justify-end">
         <div
           aria-hidden
-          className="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none"
+          className="absolute inset-0 bg-cover bg-center opacity-70 pointer-events-none"
           style={{ backgroundImage: "url(https://images.unsplash.com/photo-1594842059196-5b6b8fa73187?crop=entropy&cs=srgb&fm=jpg&w=1000&q=75)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E] via-[#2C221E]/80 to-[#2C221E]/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E] via-[#2C221E]/70 to-[#2C221E]/20 pointer-events-none" />
         <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-2">
           <Quote className="w-5 h-5 text-[#E5AC3A]" />
           <h2 className="font-display text-lg font-bold text-[#E5AC3A] uppercase tracking-wide">{t("prefazione_label")}</h2>
         </div>
-        <blockquote className="border-l-2 border-[#D99B26]/60 pl-3 mb-3">
-          <p className="font-display text-base italic leading-relaxed">{t("prefazione_verse1")}</p>
-          <p className="text-xs text-[#E5AC3A] mt-1">{t("prefazione_verse1_ref")}</p>
-        </blockquote>
-        <blockquote className="border-l-2 border-[#D99B26]/60 pl-3 mb-3">
-          <p className="font-display text-base italic leading-relaxed">{t("prefazione_verse2")}</p>
-          <p className="text-xs text-[#E5AC3A] mt-1">{t("prefazione_verse2_ref")}</p>
-        </blockquote>
-        <p className="text-sm text-[#F5EFE6]/90 leading-relaxed">{t("prefazione_body")}</p>
+        <p className="font-display text-base italic leading-relaxed text-[#F5EFE6] drop-shadow">{t("prefazione_body")}</p>
         </div>
       </div>
 
