@@ -206,6 +206,12 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 if (r.water_grams != null) rows.push([t("ing_water"), `${g(r.water_grams)} g${pct(r.water_grams)}`]);
                 if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
                 if (r.salt_grams != null) rows.push([t("ing_salt"), `${g(r.salt_grams)} g${pct(r.salt_grams)}`]);
+                (r.extra_ingredients || []).forEach((e) => {
+                  if (e && e.name && e.percent != null && e.percent !== "") {
+                    const grams = flourG > 0 ? Math.round(target * (Number(e.percent) / 100)) : null;
+                    rows.push([e.name, grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
+                  }
+                });
                 (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([e.name, e.cost ? `€ ${e.cost}` : "—"]); });
                 const rest = (Number(r.bulk_fermentation_hours) || 0) + (Number(r.proofing_hours) || 0);
                 const proc = [];

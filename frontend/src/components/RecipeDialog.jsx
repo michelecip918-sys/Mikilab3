@@ -25,7 +25,7 @@ const empty = {
   name: "", flour_type: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
-  oven_type: "statico", method_type: "indiretto", notes: "", costing: standardCosting(),
+  oven_type: "statico", method_type: "indiretto", notes: "", extra_ingredients: [], costing: standardCosting(),
 };
 
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
@@ -59,6 +59,14 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
     return { ...f, costing: { ...(f.costing || emptyCost), extras } };
   });
 
+  const setIng = (i, patch) => setForm((f) => {
+    const list = [...(f.extra_ingredients || [])];
+    list[i] = { ...list[i], ...patch };
+    return { ...f, extra_ingredients: list };
+  });
+  const addIng = () => setForm((f) => ({ ...f, extra_ingredients: [...(f.extra_ingredients || []), { name: "", percent: "" }] }));
+  const removeIng = (i) => setForm((f) => ({ ...f, extra_ingredients: (f.extra_ingredients || []).filter((_, idx) => idx !== i) }));
+
   const num = (v) => (v === "" || v == null ? 0 : Number(v) || 0);
   const prodCost =
     num(form.flour_grams) / 1000 * num(c.flour_kg) +
@@ -85,6 +93,9 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
       payload[key] = form[key] === "" ? null : Number(form[key]);
     });
     payload.hydration_percent = hydration;
+    payload.extra_ingredients = (form.extra_ingredients || [])
+      .filter((e) => (e.name || "").trim() || e.percent !== "")
+      .map((e) => ({ name: (e.name || "").trim(), percent: e.percent === "" || e.percent == null ? null : Number(e.percent) }));
     payload.costing = {
       flour_kg: num(c.flour_kg), water_l: num(c.water_l), sourdough_kg: num(c.sourdough_kg), salt_kg: num(c.salt_kg),
       extras: (c.extras || []).filter((e) => e.name || e.cost).map((e) => ({ name: e.name || "", cost: num(e.cost) })),
@@ -269,6 +280,34 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             />
           </div>
 
+          {/* Altri ingredienti (percentuale sul peso farina) */}
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("ing_extra_section")}</label>
+            <div className="mt-1 space-y-1.5" data-testid="extra-ingredients-section">
+              {(form.extra_ingredients || []).map((e, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    data-testid={`extra-ing-name-${i}`} value={e.name} placeholder={t("ing_extra_name")}
+                    onChange={(ev) => setIng(i, { name: ev.target.value })}
+                    className="flex-1 min-w-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]"
+                  />
+                  <div className="relative w-24 shrink-0">
+                    <input
+                      data-testid={`extra-ing-pct-${i}`} type="number" step="0.1" value={e.percent} placeholder="%"
+                      onChange={(ev) => setIng(i, { percent: ev.target.value })}
+                      className="w-full text-right font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#B34A26]"
+                    />
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[#8C7567] pointer-events-none">%</span>
+                  </div>
+                  <button onClick={() => removeIng(i)} className="text-[#B4442A] p-1" aria-label={t("delete")}>✕</button>
+                </div>
+              ))}
+              <button data-testid="extra-ing-add-btn" onClick={addIng} className="text-sm font-medium text-[#B34A26] flex items-center gap-1">
+                + {t("ing_extra_add")}
+              </button>
+            </div>
+          </div>
+
           {/* Costi e prezzo di vendita */}
           <div className="pt-2 border-t border-[#E8DEC8] dark:border-[#3D302A]" data-testid="recipe-costing-section">
             <p className="text-xs font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("cost_section")}</p>
@@ -379,6 +418,7 @@ function normalize(r) {
   out.preferment_type = r.preferment_type || "none";
   out.oven_type = r.oven_type || "statico";
   out.method_type = r.method_type || "indiretto";
+  out.extra_ingredients = (r.extra_ingredients || []).map((e) => ({ name: e.name || "", percent: e.percent ?? "" }));
   const rc = r.costing || {};
   const has = (v) => v !== "" && v != null;
   out.costing = {
