@@ -27,9 +27,16 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - P2: notifiche timer in background persistenti; export PDF piano.
 - P2: video/annunci dinamici.
 
-## PWA (2026-06)
-- App installabile su home telefono. Nome: "Il laboratorio di Michele" (short: "Il lab di Michele").
-- Icona monogramma "ML" elegante (icon-192.png, icon-512.png, apple-touch-icon.png, favicon-32.png in /public).
-- manifest.json (standalone, portrait, theme #3d2b1f) + meta tag PWA in index.html + service worker minimo (/public/sw.js).
-- NOTA: per vedere l'icona in produzione l'utente deve fare **Redeploy** dalla piattaforma.
+## v2 (2026-06) — Riorganizzazione Maestro + Ricette avanzate
+- Intestazione: sottotitolo "Il laboratorio di Michele".
+- PWA installabile (icona ML, manifest, service worker). NB: per la produzione serve Redeploy.
+- Maestro: 4 strumenti → Aggiungi ricetta, Piano settimanale, **Piano di lavoro** (ex Quando impastare: persone, ricetta di partenza, avvisi vocali IT/DE, info cottura per ricetta), **Clima e temperatura** (acqua + verdetto camera calda/fredda). Rimossi "Quando infornare" e "Gestione forno".
+- Ricette: nuovi campi mix_minutes, bake_temp, bake_minutes, oven_type (Statico/Ventilato/Rotor), preferment_type (none/poolish/lievito madre-Sauerteig/licoli/biga/altro), method_type (diretto/indiretto), image_url. Prezzi standard auto. Modalità dosi Grammi/% farina. Sfondo prodotto tenue nelle card.
+- Ricette Mikilab in **sola lettura** (consultabili); l'utente crea/gestisce le proprie in "Aggiungi ricetta".
+- Ricette Mikilab dal video utente: Mitternacht Brot, VK Teig, Helle Teig, Ita Teig, Panettone al Dinkel (Millebolle), Plunder, Laugenbrötchen con poolish, Focaccia con poolish (bozze, l'utente rifinisce).
+- Pagina **Lievito madre** dentro Mikilab (cos'è, Li.Co.Li, Sauerteig, autolisi, gestione Millebolle 50-50).
+- Il Maestro sa tutto: scheda **Corsi** gratuiti professionali (IT/DE mondo) con badge "Nuovo" + notifica; video tab con embed funzionanti.
+- Bio riscritta: innamorato del pane, spiega l'app in modo chiaro (senza elenco numerato).
+- Backend: PUT /api/recipes ora partial-safe (exclude_unset). Prompt AI: metodo logico passo-passo.
+- Google Play: possibile via PWABuilder (TWA); il backend/dominio deve restare online (spiegato all'utente).
 

@@ -3,31 +3,40 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
 import { useLang } from "@/i18n/LanguageContext";
+import { STANDARD_PRICES, standardCosting } from "@/data/prices";
 
 const FIELDS = [
   { key: "flour_grams", labelKey: "field_flour_g" },
   { key: "water_grams", labelKey: "field_water_g" },
-  { key: "sourdough_grams", labelKey: "field_sourdough_g" },
+  { key: "sourdough_grams", labelKey: "field_preferment_g" },
   { key: "salt_grams", labelKey: "field_salt_g" },
   { key: "bulk_fermentation_hours", labelKey: "field_bulk_h" },
   { key: "proofing_hours", labelKey: "field_proof_h" },
 ];
 
-const emptyCost = { flour_kg: "", water_l: "", sourdough_kg: "", salt_kg: "", extras: [], overhead: "", pieces: "", markup: "" };
+const PREFERMENTS = ["none", "poolish", "lm", "licoli", "biga", "altro"];
+const OVEN_TYPES = ["statico", "ventilato", "rotor"];
+const PCT_FIELDS = new Set(["water_grams", "sourdough_grams", "salt_grams"]);
+const HOUR_FIELDS = new Set(["bulk_fermentation_hours", "proofing_hours"]);
+
+const emptyCost = standardCosting();
 
 const empty = {
-  name: "", flour_type: "", flour_grams: "", water_grams: "",
+  name: "", flour_type: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
-  proofing_hours: "", notes: "", costing: emptyCost,
+  proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
+  oven_type: "statico", method_type: "indiretto", notes: "", costing: standardCosting(),
 };
 
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const [form, setForm] = useState(empty);
+  const [pctMode, setPctMode] = useState(false);
   const { t } = useLang();
 
   useEffect(() => {
     if (open) {
       setForm(initial ? { ...empty, ...normalize(initial) } : empty);
+      setPctMode(false);
     }
   }, [open, initial]);
 
@@ -64,7 +73,15 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
 
   const submit = () => {
     if (!form.name.trim()) return;
-    const payload = { name: form.name.trim(), flour_type: form.flour_type, notes: form.notes };
+    const payload = {
+      name: form.name.trim(), flour_type: form.flour_type, notes: form.notes,
+      preferment_type: form.preferment_type || null,
+      oven_type: form.oven_type || null,
+      method_type: form.method_type || null,
+      mix_minutes: form.mix_minutes === "" ? null : Number(form.mix_minutes),
+      bake_temp: form.bake_temp === "" ? null : Number(form.bake_temp),
+      bake_minutes: form.bake_minutes === "" ? null : Number(form.bake_minutes),
+    };
     FIELDS.forEach(({ key }) => {
       payload[key] = form[key] === "" ? null : Number(form[key]);
     });
@@ -112,19 +129,71 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             />
           </div>
 
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_preferment")}</label>
+            <select
+              data-testid="recipe-preferment-select"
+              value={form.preferment_type || "none"}
+              onChange={(e) => set("preferment_type", e.target.value)}
+              className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+            >
+              {PREFERMENTS.map((p) => (
+                <option key={p} value={p}>{t(`pf_${p}`)}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("dose_mode")}</span>
+            <div className="flex items-center bg-[#F5EFE6] dark:bg-[#332823] rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] p-0.5">
+              {[["grams", "dose_grams"], ["pct", "dose_pct"]].map(([m, lk]) => (
+                <button
+                  key={m} type="button"
+                  data-testid={`dose-mode-${m}`}
+                  onClick={() => setPctMode(m === "pct")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    (pctMode ? "pct" : "grams") === m ? "bg-[#B34A26] text-white shadow-sm" : "text-[#8C7567]"
+                  }`}
+                >
+                  {t(lk)}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
-            {FIELDS.map(({ key, labelKey }) => (
-              <div key={key}>
-                <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t(labelKey)}</label>
-                <input
-                  data-testid={`recipe-${key}-input`}
-                  type="number"
-                  value={form[key]}
-                  onChange={(e) => set(key, e.target.value)}
-                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base outline-none"
-                />
-              </div>
-            ))}
+            {FIELDS.map(({ key, labelKey }) => {
+              const isPctField = pctMode && PCT_FIELDS.has(key);
+              const flourG = Number(form.flour_grams) || 0;
+              const displayVal = isPctField
+                ? (flourG > 0 && form[key] !== "" && form[key] != null ? Math.round((Number(form[key]) / flourG) * 1000) / 10 : "")
+                : form[key];
+              const onCh = (v) => {
+                if (isPctField) {
+                  if (v === "") { set(key, ""); return; }
+                  const grams = flourG > 0 ? Math.round(flourG * (Number(v) / 100)) : "";
+                  set(key, grams);
+                } else {
+                  set(key, v);
+                }
+              };
+              const unit = HOUR_FIELDS.has(key) ? "h" : isPctField ? "%" : "g";
+              return (
+                <div key={key}>
+                  <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t(labelKey)}</label>
+                  <div className="relative mt-1">
+                    <input
+                      data-testid={`recipe-${key}-input`}
+                      type="number"
+                      value={displayVal}
+                      onChange={(e) => onCh(e.target.value)}
+                      className="w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 pr-8 text-base outline-none"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8C7567] pointer-events-none">{unit}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {hydration != null && (
@@ -135,6 +204,60 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               </span>
             </div>
           )}
+
+          {/* Lavorazione e cottura */}
+          <div className="pt-1">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("work_bake_section")}</p>
+            <div className="mb-3">
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_method")}</label>
+              <select
+                data-testid="recipe-method-select" value={form.method_type || "indiretto"}
+                onChange={(e) => set("method_type", e.target.value)}
+                className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+              >
+                <option value="indiretto">{t("method_indiretto")}</option>
+                <option value="diretto">{t("method_diretto")}</option>
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_mix_min")}</label>
+                <input
+                  data-testid="recipe-mix_minutes-input" type="number" value={form.mix_minutes}
+                  onChange={(e) => set("mix_minutes", e.target.value)}
+                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_oven")}</label>
+                <select
+                  data-testid="recipe-oven-select" value={form.oven_type || "statico"}
+                  onChange={(e) => set("oven_type", e.target.value)}
+                  className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+                >
+                  {OVEN_TYPES.map((o) => (
+                    <option key={o} value={o}>{t(o === "ventilato" ? "oven_type_fan" : o === "rotor" ? "oven_type_rotor" : "oven_type_static")}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_bake_temp")}</label>
+                <input
+                  data-testid="recipe-bake_temp-input" type="number" value={form.bake_temp}
+                  onChange={(e) => set("bake_temp", e.target.value)}
+                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_bake_min")}</label>
+                <input
+                  data-testid="recipe-bake_minutes-input" type="number" value={form.bake_minutes}
+                  onChange={(e) => set("bake_minutes", e.target.value)}
+                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+                />
+              </div>
+            </div>
+          </div>
 
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_notes")}</label>
@@ -150,6 +273,16 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           {/* Costi e prezzo di vendita */}
           <div className="pt-2 border-t border-[#E8DEC8] dark:border-[#3D302A]" data-testid="recipe-costing-section">
             <p className="text-xs font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("cost_section")}</p>
+            <div className="flex items-start gap-2 mb-2 bg-[#D99B26]/12 border border-[#D99B26]/30 rounded-lg px-3 py-2">
+              <p className="text-[11px] text-[#4A3B34] dark:text-[#C9BBB0] flex-1 leading-snug">{t("cost_auto_note")}</p>
+              <button
+                type="button" data-testid="cost-use-standard-btn"
+                onClick={() => setForm((f) => ({ ...f, costing: { ...(f.costing || emptyCost), ...STANDARD_PRICES } }))}
+                className="text-[11px] font-semibold text-[#B34A26] whitespace-nowrap shrink-0"
+              >
+                {t("cost_use_standard")}
+              </button>
+            </div>
             <div className="grid grid-cols-2 gap-2">
               {[["flour_kg", "cost_flour_kg"], ["water_l", "cost_water_l"], ["sourdough_kg", "cost_sourdough_kg"], ["salt_kg", "cost_salt_kg"]].map(([k, lk]) => (
                 <div key={k}>
@@ -247,13 +380,20 @@ function Row({ label, value }) {
 
 function normalize(r) {
   const out = { ...r };
-  ["flour_grams", "water_grams", "sourdough_grams", "salt_grams", "bulk_fermentation_hours", "proofing_hours"].forEach((k) => {
+  ["flour_grams", "water_grams", "sourdough_grams", "salt_grams", "bulk_fermentation_hours", "proofing_hours", "mix_minutes", "bake_temp", "bake_minutes"].forEach((k) => {
     out[k] = r[k] == null ? "" : r[k];
   });
+  out.preferment_type = r.preferment_type || "none";
+  out.oven_type = r.oven_type || "statico";
+  out.method_type = r.method_type || "indiretto";
   const rc = r.costing || {};
+  const has = (v) => v !== "" && v != null;
   out.costing = {
-    flour_kg: rc.flour_kg ?? "", water_l: rc.water_l ?? "", sourdough_kg: rc.sourdough_kg ?? "",
-    salt_kg: rc.salt_kg ?? "", extras: (rc.extras || []).map((e) => ({ name: e.name || "", cost: e.cost ?? "" })),
+    flour_kg: has(rc.flour_kg) ? rc.flour_kg : STANDARD_PRICES.flour_kg,
+    water_l: has(rc.water_l) ? rc.water_l : STANDARD_PRICES.water_l,
+    sourdough_kg: has(rc.sourdough_kg) ? rc.sourdough_kg : STANDARD_PRICES.sourdough_kg,
+    salt_kg: has(rc.salt_kg) ? rc.salt_kg : STANDARD_PRICES.salt_kg,
+    extras: (rc.extras || []).map((e) => ({ name: e.name || "", cost: e.cost ?? "" })),
     overhead: rc.overhead ?? "", pieces: rc.pieces ?? "", markup: rc.markup ?? "",
   };
   return out;

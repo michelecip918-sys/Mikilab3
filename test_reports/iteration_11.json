@@ -1,0 +1,46 @@
+{
+  "summary": "Tested iteration-11 changes end-to-end (no auth app). Backend: new pytest suite for recipe fields (preferment_type, mix_minutes, rest_minutes, bake_temp, bake_minutes, oven_type) + CRUD/persistence/404/422 -> 8/8 passed. Frontend (Playwright, 390x844): header subtitle 'Il laboratorio di Michele' OK; Maestro shows EXACTLY 4 tools (aggiungi/settimana/lavoro/clima), no 'Quando infornare' / 'Gestione forno'; recipe dialog new fields all present with correct IT/DE option labels (Statico/Ventilato con carrello/Rotor; Diretto/Poolish/Lievito madre-Sauerteig/Biga/Altro), standard prices auto-prefilled (1.2 / 0.002 / 1 / 0.5), cost summary + sell price auto-compute, save+reopen persists all new fields; dose-mode toggle grams<->% farina verified (1000g/700g -> 70%, 80% -> 800g); recipe card bake badge '235\u00b0 \u00b7 40\u2032 Statico' present; Piano di lavoro people +/- works and increasing 1->4 people reduced forming 20\u2032->5\u2032 and removed waits, lv-first honored in 'Prepara per primo', per-item bake info shown, voice toggle/test and alarms button present; Clima calc + verdict hot/cold/ok work; Maestro sa tutto has new Corsi tab with new-dot + toast 'Nuovi corsi gratuiti disponibili!', 4 course cards with 2 'Nuovo' badges, dot cleared and localStorage mikilab_courses_v=1 after opening; DE language switch updates tools/dialog/tab labels. Main defect found: both videos in the Video tab are broken YouTube embeds.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/recipes/{id}", "issue": "Full-replace semantics: RecipeUpdate.model_dump() includes unset fields as None, so any partial update nulls every omitted field (only 'name' is protected). Verified via curl: sending only bake/oven fields wiped flour_type, flour_grams, sourdough_grams, salt_grams, bulk/proofing hours and costing. Use exclude_unset=True (or a PATCH route) for partial saves."},
+      {"endpoint": "GET /api/recipes?collection_name=mikilab (seed_mikilab_if_empty)", "issue": "Seeding only runs when the collection is empty and there is no migration/backfill, so the updated MIKILAB_SEED values from this iteration are NOT applied to existing DBs. Live preview data shows all 3 recipes as oven_type=statico / preferment=lm / bake_temp=235 while code expects Ciabatta=ventilato/poolish/22\u2032 and Rustico=230\u00b0. Consider upsert-by-name seeding."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "MaestroSaTutto > VideoPanel", "issue": "Both YouTube embeds are dead: video-0 (embed/1timJlCT3PM) renders 'This video is private' and video-1 (embed/Z4I3S24u7sA) renders 'Video unavailable' (oembed returns 403 / 404). User sees two unplayable black players.", "selector": "[data-testid=\"video-0\"], [data-testid=\"video-1\"]", "priority": "HIGH"},
+      {"component": "MaestroSaTutto > CoursesPanel", "issue": "Course 'source' labels do not match the actual YouTube channels: 'Martesana Milano' -> Eater, 'Masterclass' -> Ricette di Caterina, 'ChainBaker' -> Bread Ritual. Videos play fine but attribution is wrong.", "selector": "[data-testid=\"course-0\"], [data-testid=\"course-1\"], [data-testid=\"course-3\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Clima e temperatura", "issues": ["Verdict is derived only from the required water temperature, so an obviously hot room (room=40\u00b0C with flour 20 / starter 21) still reports 'Camera OK' (water 14\u00b0C). Requirement 'room too hot' is only detected when required water < 4\u00b0C.", "Result can display physically unusable water temperatures (e.g. 89\u00b0C) without clamping to the 4\u201338\u00b0C usable range shown in the code constants."]},
+      {"screen": "Piano di lavoro", "issues": ["People count has no visible effect on small batches (default 10 pieces \u00d7 4s = 1\u2032 with a 1\u2032 floor); the hint 'pi\u00f9 persone = formatura pi\u00f9 rapida' can look broken until pieces are large."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter11_recipe_fields.py",
+    "/app/test_reports/pytest/iter11_results.xml"
+  ],
+  "action_items": [
+    "Replace the two broken YouTube embeds in content.js youtubeVideos (IT+DE) with working, embeddable videos.",
+    "Fix course 'source' attributions in freeCourses to match the real channels.",
+    "Make PUT /api/recipes partial-safe (exclude_unset) or split into PATCH so partial saves don't null other fields.",
+    "Add a seed refresh/migration so updated MIKILAB_SEED values (Ciabatta ventilato/poolish/22\u2032, Rustico 230\u00b0) reach existing DBs; current preview data shows all recipes as statico/lm/235.",
+    "Optional: make Clima verdict consider room temperature directly and clamp displayed water temp to a usable range."
+  ],
+  "critical_code_review_comments": [
+    "server.py update_recipe(): payload.model_dump() without exclude_unset makes every PUT a destructive full replace; only 'name' is guarded.",
+    "server.py seed_mikilab_if_empty(): seed changes are silently ineffective for non-empty collections \u2014 no versioned seed/upsert.",
+    "RecipeDialog.jsx (388 lines) mixes dose-mode math, costing math and markup; the costing block could be extracted into a CostingSection component for maintainability.",
+    "StartDoughs.jsx compute(): formMin floor of 1 minute makes the people multiplier a no-op for small batches; consider surfacing per-person totals instead."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter11_recipe_fields.py"],
+  "success_rate": {"backend": "100%", "frontend": "92%"},
+  "seed_data_creation": "Created and deleted TEST_iter11* personal recipes via API (cleaned up). Restored the seeded 'Pane di Altamura DOP' recipe to its code-seed values after UI save testing (water 750, lm, 15\u2032, 235\u00b0/40\u2032, statico).",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "N/A - app has no auth; /app/memory/test_credentials.md not required",
+  "context_for_next_testing_agent": "Backend regression file: /app/backend/tests/test_iter11_recipe_fields.py (run with `cd /app/backend && python -m pytest tests/test_iter11_recipe_fields.py -v`; pytest.ini forces xdist so no -p no:xdist). All iteration-11 UI features verified working; only remaining frontend defect is the two dead YouTube embeds in the Video tab and wrong course source labels. Note PUT /api/recipes nulls omitted fields \u2014 always send full recipe payloads in tests, and restore seeded mikilab recipes if you mutate them. Courses notification: clear localStorage key 'mikilab_courses_v' to re-trigger dot+toast.",
+  "rca_of_the_issue": "Video tab: content.js youtubeVideos still points to embed IDs 1timJlCT3PM (now private, oembed 403) and Z4I3S24u7sA (removed, oembed 404); the iframes therefore render YouTube's error page. Stale seeded recipe values: seed_mikilab_if_empty() inserts only when the mikilab collection is empty, so per-recipe oven/preferment/bake values added later in MIKILAB_SEED never reach an already-seeded database."
+}

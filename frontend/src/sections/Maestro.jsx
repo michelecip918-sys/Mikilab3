@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, CalendarClock, CalendarDays, Timer, Flame, ChevronLeft, ChevronRight } from "lucide-react";
+import { PlusCircle, CalendarDays, ChefHat, Thermometer, ChevronLeft, ChevronRight } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
-import PianificaProduzione from "@/sections/PianificaProduzione";
-import GestioneForno from "@/sections/GestioneForno";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import StartDoughs from "@/sections/StartDoughs";
+import CalcolaGradi from "@/sections/CalcolaGradi";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function Maestro() {
@@ -15,9 +14,8 @@ export default function Maestro() {
   const TOOLS = [
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
     { id: "settimana", title: t("tool_settimana"), desc: t("tool_settimana_desc"), Icon: CalendarDays },
-    { id: "impasti", title: t("tool_impasti"), desc: t("tool_impasti_desc"), Icon: Timer },
-    { id: "inforna", title: t("tool_inforna"), desc: t("tool_inforna_desc"), Icon: CalendarClock },
-    { id: "forno", title: t("tool_forno"), desc: t("tool_forno_desc"), Icon: Flame },
+    { id: "lavoro", title: t("tool_lavoro"), desc: t("tool_lavoro_desc"), Icon: ChefHat },
+    { id: "clima", title: t("tool_clima"), desc: t("tool_clima_desc"), Icon: Thermometer },
   ];
 
   if (tool) {
@@ -39,10 +37,9 @@ export default function Maestro() {
             emptyText={t("personal_empty")}
           />
         )}
-        {tool === "inforna" && <PianificaProduzione />}
-        {tool === "impasti" && <StartDoughs />}
         {tool === "settimana" && <WeeklyPlan />}
-        {tool === "forno" && <GestioneForno />}
+        {tool === "lavoro" && <StartDoughs />}
+        {tool === "clima" && <CalcolaGradi />}
       </div>
     );
   }

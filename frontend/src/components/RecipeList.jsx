@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers } from "lucide-react";
 import { recipesApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
@@ -11,7 +11,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText }) {
+export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false }) {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -94,13 +94,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       </div>
 
-      <button
-        data-testid="add-recipe-btn"
-        onClick={() => { setEditing(null); setDialogOpen(true); }}
-        className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
-      >
-        <Plus className="w-5 h-5" /> {t("add_recipe")}
-      </button>
+      {!readOnly && (
+        <button
+          data-testid="add-recipe-btn"
+          onClick={() => { setEditing(null); setDialogOpen(true); }}
+          className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
+        >
+          <Plus className="w-5 h-5" /> {t("add_recipe")}
+        </button>
+      )}
 
       {loading ? (
         <p className="text-center text-[#8C7567] py-8">{t("loading")}</p>
@@ -118,8 +120,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               data-testid={`recipe-card-${r.id}`}
-              className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 shadow-sm"
+              className="relative overflow-hidden bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 shadow-sm"
             >
+              {r.image_url && (
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-cover bg-center opacity-[0.10] dark:opacity-[0.16] pointer-events-none"
+                  style={{ backgroundImage: `url(${r.image_url})` }}
+                />
+              )}
+              <div className="relative z-10">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h3 className="font-display text-xl font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
@@ -130,6 +140,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   ) : null}
                 </div>
                 <div className="flex gap-1.5 shrink-0">
+                  {!readOnly && (<>
                   <button
                     data-testid={`scale-recipe-${r.id}`}
                     onClick={() => setScaling(r)}
@@ -160,6 +171,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
+                  </>)}
                 </div>
               </div>
 
@@ -172,6 +184,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 )}
                 {r.bulk_fermentation_hours != null && (
                   <Badge icon={<Clock className="w-3.5 h-3.5" />}>{r.bulk_fermentation_hours}h {t("badge_ferment")}</Badge>
+                )}
+                {r.bake_temp != null && (
+                  <Badge icon={<Flame className="w-3.5 h-3.5" />}>
+                    {r.bake_temp}°{r.bake_minutes != null ? ` · ${r.bake_minutes}′` : ""} {r.oven_type === "ventilato" ? t("oven_type_fan") : r.oven_type === "rotor" ? t("oven_type_rotor") : t("oven_type_static")}
+                  </Badge>
+                )}
+                {r.method_type && (
+                  <Badge icon={<Layers className="w-3.5 h-3.5" />}>
+                    {r.method_type === "diretto" ? t("method_diretto") : t("method_indiretto")}
+                  </Badge>
                 )}
               </div>
 
@@ -212,6 +234,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   </div>
                 );
               })()}
+              </div>
             </motion.div>
           ))}
         </div>

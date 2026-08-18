@@ -47,6 +47,14 @@ class Recipe(BaseModel):
     salt_grams: Optional[float] = None
     bulk_fermentation_hours: Optional[float] = None
     proofing_hours: Optional[float] = None
+    preferment_type: Optional[str] = None
+    mix_minutes: Optional[float] = None
+    rest_minutes: Optional[float] = None
+    bake_temp: Optional[float] = None
+    bake_minutes: Optional[float] = None
+    oven_type: Optional[str] = None
+    method_type: Optional[str] = None
+    image_url: Optional[str] = None
     notes: Optional[str] = ""
     costing: Optional[dict] = None
     created_at: str = Field(default_factory=now_iso)
@@ -64,6 +72,14 @@ class RecipeCreate(BaseModel):
     salt_grams: Optional[float] = None
     bulk_fermentation_hours: Optional[float] = None
     proofing_hours: Optional[float] = None
+    preferment_type: Optional[str] = None
+    mix_minutes: Optional[float] = None
+    rest_minutes: Optional[float] = None
+    bake_temp: Optional[float] = None
+    bake_minutes: Optional[float] = None
+    oven_type: Optional[str] = None
+    method_type: Optional[str] = None
+    image_url: Optional[str] = None
     notes: Optional[str] = ""
     costing: Optional[dict] = None
 
@@ -78,6 +94,14 @@ class RecipeUpdate(BaseModel):
     salt_grams: Optional[float] = None
     bulk_fermentation_hours: Optional[float] = None
     proofing_hours: Optional[float] = None
+    preferment_type: Optional[str] = None
+    mix_minutes: Optional[float] = None
+    rest_minutes: Optional[float] = None
+    bake_temp: Optional[float] = None
+    bake_minutes: Optional[float] = None
+    oven_type: Optional[str] = None
+    method_type: Optional[str] = None
+    image_url: Optional[str] = None
     notes: Optional[str] = None
     costing: Optional[dict] = None
 
@@ -169,6 +193,7 @@ MIKILAB_SEED = [
         "hydration_percent": 75,
         "flour_grams": 1000, "water_grams": 750, "sourdough_grams": 200, "salt_grams": 20,
         "bulk_fermentation_hours": 4, "proofing_hours": 2,
+        "preferment_type": "lm", "mix_minutes": 15, "bake_temp": 235, "bake_minutes": 40, "oven_type": "statico",
         "notes": "Crosta spessa, mollica fitta e dorata. Tipica lavorazione pugliese con farina rimacinata.",
     },
     {
@@ -177,6 +202,7 @@ MIKILAB_SEED = [
         "hydration_percent": 82,
         "flour_grams": 1000, "water_grams": 820, "sourdough_grams": 150, "salt_grams": 22,
         "bulk_fermentation_hours": 5, "proofing_hours": 1.5,
+        "preferment_type": "poolish", "mix_minutes": 18, "bake_temp": 235, "bake_minutes": 22, "oven_type": "ventilato",
         "notes": "Alveolatura aperta, crosta croccante. Richiede pieghe in ciotola ogni 30 minuti.",
     },
     {
@@ -185,6 +211,7 @@ MIKILAB_SEED = [
         "hydration_percent": 70,
         "flour_grams": 1000, "water_grams": 700, "sourdough_grams": 180, "salt_grams": 18,
         "bulk_fermentation_hours": 4, "proofing_hours": 2,
+        "preferment_type": "lm", "mix_minutes": 15, "bake_temp": 230, "bake_minutes": 40, "oven_type": "statico",
         "notes": "Aroma nocciolato, miele di acacia per favorire la doratura della crosta.",
     },
 ]
@@ -228,7 +255,7 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate):
         raise HTTPException(status_code=404, detail="Ricetta non trovata")
     # Full-state save from the recipe dialog: apply all provided fields,
     # including explicit nulls (so a cleared field is actually cleared).
-    updates = payload.model_dump()
+    updates = payload.model_dump(exclude_unset=True)
     # Never null out the required 'name': keep existing if not provided.
     if updates.get("name") is None:
         updates.pop("name", None)
@@ -391,7 +418,12 @@ MAESTRO_SYSTEM = (
     "(inclusa la corrispondenza tra tipi italiani 00/0/1/2 e tedeschi Type 405/550/812/1050, "
     "e Dinkelmehl per il farro), temperature, tempi, cottura e vapore. "
     "Quando utile, cita fonti locali di Stoccarda (mulini, mercati bio, grani antichi). "
-    "Il motto della sezione è: 'Chiedi e ti sarà dato'. Sii incoraggiante e mai prolisso."
+    "Il motto della sezione è: 'Chiedi e ti sarà dato'. Sii incoraggiante e mai prolisso. "
+    "Quando l'utente chiede di 'imparare un metodo' o 'insegnami un metodo', rispondi SEMPRE "
+    "con un metodo logico passo-passo NUMERATO e ordinato: 1) scelta di farina e prefermento "
+    "(poolish, lievito madre/Sauerteig, biga), 2) impasto (tempi e temperatura acqua/impasto), "
+    "3) riposi con durate e temperature, 4) formatura, 5) appretto, 6) cottura con forno "
+    "(statico/ventilato/rotor), gradi, minuti e vapore. Chiaro e facile da seguire in laboratorio."
 )
 
 LANG_DIRECTIVE = {

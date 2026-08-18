@@ -50,6 +50,12 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
       hydration_percent: recipe.hydration_percent,
       bulk_fermentation_hours: recipe.bulk_fermentation_hours,
       proofing_hours: recipe.proofing_hours,
+      preferment_type: recipe.preferment_type || null,
+      mix_minutes: recipe.mix_minutes ?? null,
+      bake_temp: recipe.bake_temp ?? null,
+      bake_minutes: recipe.bake_minutes ?? null,
+      oven_type: recipe.oven_type || null,
+      costing: recipe.costing || null,
     };
     GRAM_FIELDS.forEach(({ key }) => {
       payload[key] = recipe[key] != null ? Math.round(recipe[key] * factor) : null;

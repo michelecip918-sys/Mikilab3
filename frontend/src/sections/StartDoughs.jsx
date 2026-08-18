@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
-import { Timer, Plus, Trash2, ChefHat, AlertTriangle, Cog, Hand, Bell } from "lucide-react";
+import { ChefHat, Plus, Trash2, AlertTriangle, Cog, Hand, Bell, Users, Flame, Volume2 } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { speak, primeVoice } from "@/lib/voice";
 
 const DAY_IDS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
@@ -29,6 +30,7 @@ function notify(title, body) {
 }
 
 function restMin(r) {
+  if (r?.rest_minutes) return Number(r.rest_minutes);
   const h = Number(r?.bulk_fermentation_hours || 0) + Number(r?.proofing_hours || 0);
   return h > 0 ? Math.round(h * 60) : 30;
 }
@@ -51,6 +53,9 @@ export default function StartDoughs() {
   const [schedule, setSchedule] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [maxChunk, setMaxChunk] = useState(30);
+  const [people, setPeople] = useState(1);
+  const [firstId, setFirstId] = useState("");
+  const [voiceOn, setVoiceOn] = useState(true);
   const [alarmsOn, setAlarmsOn] = useState(false);
   const alarmTimers = useRef([]);
 
@@ -74,15 +79,29 @@ export default function StartDoughs() {
     const m = {}; recipes.forEach((r) => { m[r.id] = r; }); return m;
   }, [recipes]);
 
+  const ovenLabel = (ot) =>
+    ot === "ventilato" ? t("oven_type_fan") : ot === "rotor" ? t("oven_type_rotor") : t("oven_type_static");
+
+  const bakeInfo = (rec) => {
+    if (rec && (rec.bake_temp != null || rec.bake_minutes != null)) {
+      return { temp: rec.bake_temp, mins: rec.bake_minutes, oven: rec.oven_type || "statico" };
+    }
+    return null;
+  };
+
   const newRow = (recipe, pieces = 10) => ({
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    recipe_id: recipe.id, pieces, rest_min: restMin(recipe), mix_min: 15, sec_piece: 4,
+    recipe_id: recipe.id, pieces, rest_min: restMin(recipe),
+    mix_min: recipe.mix_minutes ? Number(recipe.mix_minutes) : 15, sec_piece: 4,
   });
 
   const addRow = () => { if (recipes.length) setRows((x) => [...x, newRow(recipes[0])]); };
   const updateRow = (id, patch) => setRows((x) => x.map((r) => r.id === id ? { ...r, ...patch } : r));
   const removeRow = (id) => setRows((x) => x.filter((r) => r.id !== id));
-  const onRecipe = (id, rid) => updateRow(id, { recipe_id: rid, rest_min: restMin(recipeById[rid]) });
+  const onRecipe = (id, rid) => {
+    const rec = recipeById[rid];
+    updateRow(id, { recipe_id: rid, rest_min: restMin(rec), mix_min: rec?.mix_minutes ? Number(rec.mix_minutes) : 15 });
+  };
 
   const loadDay = (dayId) => {
     if (!dayId) return;
@@ -93,28 +112,38 @@ export default function StartDoughs() {
       return { ...row, id: `${w.id}-sd` };
     }));
     setSchedule(null);
+    setFirstId("");
   };
 
   const compute = () => {
     if (rows.length === 0) { toast.error(t("weekly_empty_share")); return; }
     const start = new Date(startTime);
-    // 1) Mixer works one dough at a time. Mix order = longest rest first.
-    const mixOrder = [...rows].sort((a, b) => Number(b.rest_min) - Number(a.rest_min));
+    const nPeople = Math.max(1, Number(people || 1));
+    // 1) Mixer works one dough at a time. Chosen "first" recipe leads,
+    //    then longest rest first (so nothing over-proofs while waiting).
+    const mixOrder = [...rows].sort((a, b) => {
+      if (firstId) {
+        if (a.id === firstId && b.id !== firstId) return -1;
+        if (b.id === firstId && a.id !== firstId) return 1;
+      }
+      return Number(b.rest_min) - Number(a.rest_min);
+    });
     let mixCursor = start.getTime();
     const items = mixOrder.map((r) => {
       const rec = recipeById[r.recipe_id];
       const mixMin = Math.max(0, Number(r.mix_min || 0));
       const rest = Math.max(0, Number(r.rest_min || 0));
       const pieces = Math.max(0, Number(r.pieces || 0));
-      const formMin = Math.ceil((pieces * Math.max(0, Number(r.sec_piece || 0))) / 60);
+      // More people share the forming work → faster forming.
+      const rawFormMin = Math.ceil((pieces * Math.max(0, Number(r.sec_piece || 0))) / 60);
+      const formMin = Math.max(rawFormMin > 0 ? 1 : 0, Math.ceil(rawFormMin / nPeople));
       const mixStart = new Date(mixCursor);
       const mixEnd = new Date(mixCursor + mixMin * 60000);
       mixCursor = mixEnd.getTime();
       const readyToForm = new Date(mixEnd.getTime() + rest * 60000);
-      return { name: rec?.name || "—", pieces, rest, mixMin, formMin, mixStart, mixEnd, readyToForm };
+      return { name: rec?.name || "—", pieces, rest, mixMin, formMin, mixStart, mixEnd, readyToForm, bake: bakeInfo(rec) };
     });
-    // 2) Forming station: split large batches into rounds (<= maxChunk min)
-    //    and interleave, always forming the dough closest to over-proofing.
+    // 2) Forming station: split large batches into rounds (<= maxChunk min).
     const chunkCap = Math.max(1, Number(maxChunk || 30));
     const chunks = [];
     items.forEach((it, idx) => {
@@ -137,8 +166,6 @@ export default function StartDoughs() {
         cursor = nextReady; continue;
       }
       candidates.sort((a, b) => {
-        // Small batches preempt big ones so short-rest doughs are formed
-        // between the big batch's rounds (reduces over-proof waiting).
         const fa = items[a.c.idx].formMin, fb = items[b.c.idx].formMin;
         if (fa !== fb) return fa - fb;
         return a.c.ready - b.c.ready;
@@ -154,7 +181,7 @@ export default function StartDoughs() {
     items.forEach((it) => {
       it.waitMin = it.formStart ? Math.round((it.formStart.getTime() - it.readyToForm.getTime()) / 60000) : 0;
     });
-    setSchedule({ items });
+    setSchedule({ items, first: items[0]?.name });
     setAlarmsOn(false);
     alarmTimers.current.forEach(clearTimeout);
     alarmTimers.current = [];
@@ -162,6 +189,7 @@ export default function StartDoughs() {
 
   const enableAlarms = async () => {
     if (!schedule) return;
+    primeVoice();
     const ok = await ensureNotify();
     alarmTimers.current.forEach(clearTimeout);
     alarmTimers.current = [];
@@ -171,8 +199,10 @@ export default function StartDoughs() {
       if (delay > 0 && delay < 24 * 3600 * 1000) {
         alarmTimers.current.push(setTimeout(() => {
           beep();
-          toast(`${t("sd_alarm_title")} — ${it.name}`);
+          const line = `${t("sd_alarm_title")} — ${it.name}`;
+          toast(line);
           if (ok) notify(t("sd_alarm_title"), `${it.name} · ${fmt(it.mixStart, lang)}`);
+          if (voiceOn) speak(`${t("sd_alarm_title")} ${it.name}`, lang);
         }, delay));
       }
     });
@@ -184,7 +214,7 @@ export default function StartDoughs() {
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
         <div className="w-11 h-11 rounded-2xl bg-[#B34A26] flex items-center justify-center">
-          <Timer className="w-6 h-6 text-white" />
+          <ChefHat className="w-6 h-6 text-white" />
         </div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("sd_title")}</h1>
@@ -207,6 +237,32 @@ export default function StartDoughs() {
           onChange={(e) => setStartTime(e.target.value)}
           className="mt-1 w-full font-mono-data bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-3 py-2 outline-none focus:border-[#B34A26]"
         />
+      </div>
+
+      {/* Persone al lavoro */}
+      <div className="mt-3 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-[#B34A26]" />
+          <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{t("lv_people")}</span>
+          <div className="flex items-center gap-2">
+            <button
+              data-testid="lv-people-minus"
+              onClick={() => setPeople((p) => Math.max(1, Number(p) - 1))}
+              className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] font-bold text-[#B34A26]"
+            >−</button>
+            <input
+              data-testid="lv-people" type="number" min="1" value={people}
+              onChange={(e) => setPeople(e.target.value)}
+              className="w-12 text-center font-mono-data font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-1 py-1.5 outline-none"
+            />
+            <button
+              data-testid="lv-people-plus"
+              onClick={() => setPeople((p) => Math.max(1, Number(p) + 1))}
+              className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] font-bold text-[#B34A26]"
+            >+</button>
+          </div>
+        </div>
+        <p className="text-[11px] text-[#8C7567] mt-1.5 leading-snug">{t("lv_people_hint")}</p>
       </div>
 
       <div className="mt-3">
@@ -254,6 +310,22 @@ export default function StartDoughs() {
         <Plus className="w-4 h-4" /> {t("sd_add")}
       </button>
 
+      {/* Parti da questa ricetta */}
+      {rows.length > 0 && (
+        <div className="mt-3">
+          <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("lv_first")}</label>
+          <select
+            data-testid="lv-first" value={firstId} onChange={(e) => setFirstId(e.target.value)}
+            className="mt-1 w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#B34A26]"
+          >
+            <option value="">{t("lv_first_auto")}</option>
+            {rows.map((r) => (
+              <option key={r.id} value={r.id}>{recipeById[r.recipe_id]?.name || "—"}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
       <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-2.5">
         <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{t("sd_max_chunk")}</span>
         <input
@@ -264,15 +336,44 @@ export default function StartDoughs() {
         <span className="text-xs text-[#8C7567]">min</span>
       </div>
 
+      {/* Avvisi vocali */}
+      <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-2.5">
+        <Volume2 className="w-4 h-4 text-[#B34A26]" />
+        <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{t("lv_voice")}</span>
+        <button
+          data-testid="lv-voice-test"
+          onClick={() => { primeVoice(); speak(t("sd_alarm_title"), lang); }}
+          className="text-xs font-medium text-[#B34A26] mr-2"
+        >
+          {t("lv_voice_test")}
+        </button>
+        <button
+          data-testid="lv-voice-toggle"
+          onClick={() => setVoiceOn((v) => !v)}
+          className={`w-11 h-6 rounded-full transition-colors relative ${voiceOn ? "bg-[#6B8E62]" : "bg-[#C9BBB0] dark:bg-[#3D302A]"}`}
+          aria-label={t("lv_voice")}
+        >
+          <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${voiceOn ? "left-[22px]" : "left-0.5"}`} />
+        </button>
+      </div>
+
       <button
         data-testid="sd-compute-btn" onClick={compute}
         className="w-full mt-3 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
       >
-        {t("sd_compute")}
+        {t("lv_compute")}
       </button>
 
       {schedule && (
         <div data-testid="sd-result" className="mt-5 space-y-2">
+          {schedule.first && (
+            <div data-testid="lv-first-result" className="flex items-center gap-2 bg-[#6B8E62]/12 border border-[#6B8E62]/35 rounded-2xl px-4 py-3">
+              <ChefHat className="w-5 h-5 text-[#4d6b45] dark:text-[#9ec48f] shrink-0" />
+              <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0]">
+                <span className="font-semibold">{t("lv_first_label")}:</span> {schedule.first}
+              </p>
+            </div>
+          )}
           <p className="text-xs text-[#8C7567]">{t("sd_legend")}</p>
           {[...schedule.items].sort((a, b) => a.mixStart - b.mixStart).map((it, i) => (
             <div key={i} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
@@ -288,6 +389,11 @@ export default function StartDoughs() {
                 <span className="inline-flex items-center gap-1 text-[#4A3B34] dark:text-[#C9BBB0]">
                   <Hand className="w-3.5 h-3.5 text-[#6B8E62]" /> {t("sd_col_form")} {fmt(it.formStart, lang)}–{fmt(it.formEnd, lang)}
                 </span>
+                {it.bake && (it.bake.temp != null || it.bake.mins != null) && (
+                  <span className="inline-flex items-center gap-1 text-[#8C3A1D] dark:text-[#E5AC3A]">
+                    <Flame className="w-3.5 h-3.5" /> {t("lv_bake")} {it.bake.temp != null ? `${it.bake.temp}°C` : ""}{it.bake.mins != null ? ` · ${it.bake.mins}′` : ""} ({ovenLabel(it.bake.oven)})
+                  </span>
+                )}
                 {it.waitMin > 0 && (
                   <span className={it.waitMin > 60 ? "text-[#B4442A] font-bold" : "text-[#B4442A]"}>
                     ⏳ {t("sd_wait")} {it.waitMin}′{it.waitMin > 60 ? ` · ⚠️ ${t("sd_overproof")}` : ""}

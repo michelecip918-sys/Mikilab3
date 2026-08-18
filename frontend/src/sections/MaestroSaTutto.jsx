@@ -1,23 +1,59 @@
 import { useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper, Plus, Pencil, Trash2 } from "lucide-react";
+import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper, Plus, Pencil, Trash2, GraduationCap } from "lucide-react";
 import { API, announcementsApi } from "@/lib/api";
-import { content } from "@/data/content";
+import { content, COURSES_VERSION } from "@/data/content";
 import { useLang } from "@/i18n/LanguageContext";
+import { speak } from "@/lib/voice";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+const COURSES_SEEN_KEY = "mikilab_courses_v";
+
 export default function MaestroSaTutto() {
   const [tab, setTab] = useState("chiedi");
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const [coursesNew, setCoursesNew] = useState(false);
+
+  const hasNewCourses = content[lang].freeCourses?.some((c) => c.isNew);
+
+  // Notifica "nuovi corsi": scatta se la versione corsi è cambiata e ci sono novità.
+  useEffect(() => {
+    const seen = Number(localStorage.getItem(COURSES_SEEN_KEY) || 0);
+    if (hasNewCourses && seen !== COURSES_VERSION) {
+      setCoursesNew(true);
+      toast(t("courses_toast_new"), { icon: "🎓", duration: 6000 });
+      try {
+        if ("Notification" in window) {
+          if (Notification.permission === "granted") {
+            new Notification(t("courses_notify_title"), { body: t("courses_notify_body"), tag: "mikilab-courses" });
+          } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then((p) => {
+              if (p === "granted") new Notification(t("courses_notify_title"), { body: t("courses_notify_body"), tag: "mikilab-courses" });
+            });
+          }
+        }
+      } catch { /* ignore */ }
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  const openTab = (id) => {
+    setTab(id);
+    if (id === "corsi") {
+      localStorage.setItem(COURSES_SEEN_KEY, String(COURSES_VERSION));
+      setCoursesNew(false);
+    }
+  };
 
   const TABS = [
     { id: "chiedi", label: t("tab_chiedi"), Icon: MessageCircle },
-    { id: "enciclopedia", label: t("tab_enciclopedia"), Icon: BookOpen },
+    { id: "corsi", label: t("tab_corsi"), Icon: GraduationCap, badge: coursesNew },
     { id: "video", label: t("tab_video"), Icon: Youtube },
+    { id: "enciclopedia", label: t("tab_enciclopedia"), Icon: BookOpen },
     { id: "stoccarda", label: t("tab_stoccarda"), Icon: MapPin },
   ];
 
@@ -30,26 +66,67 @@ export default function MaestroSaTutto() {
       </div>
 
       <div className="flex gap-2 mb-5 overflow-x-auto thin-scroll pb-1">
-        {TABS.map(({ id, label, Icon }) => (
+        {TABS.map(({ id, label, Icon, badge }) => (
           <button
             key={id}
             data-testid={`sa-tutto-tab-${id}`}
-            onClick={() => setTab(id)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+            onClick={() => openTab(id)}
+            className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
               tab === id
                 ? "bg-[#B34A26] text-white"
                 : "bg-[#F5EFE6] dark:bg-[#332823] text-[#8C7567] border border-[#E8DEC8] dark:border-[#3D302A]"
             }`}
           >
             <Icon className="w-4 h-4" /> {label}
+            {badge && (
+              <span data-testid="courses-new-dot" className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#E5AC3A] border border-white" />
+            )}
           </button>
         ))}
       </div>
 
       {tab === "chiedi" && <ChatPanel />}
+      {tab === "corsi" && <CoursesPanel />}
       {tab === "enciclopedia" && <EncyclopediaPanel />}
       {tab === "video" && <VideoPanel />}
       {tab === "stoccarda" && <StoccardaPanel />}
+    </div>
+  );
+}
+
+function CoursesPanel() {
+  const { t, lang } = useLang();
+  const courses = content[lang].freeCourses || [];
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2 text-[#8C7567]">
+        <GraduationCap className="w-4 h-4" />
+        <span className="text-xs font-semibold uppercase tracking-wide">{t("courses_label")}</span>
+      </div>
+      <p className="text-xs text-[#8C7567] -mt-1 leading-relaxed">{t("courses_note")}</p>
+      {courses.map((c, i) => (
+        <div key={i} data-testid={`course-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden">
+          <div className="aspect-video bg-black">
+            <iframe
+              className="w-full h-full"
+              src={c.url}
+              title={c.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+          <div className="p-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{c.category}</span>
+              {c.isNew && (
+                <span data-testid={`course-new-${i}`} className="text-[10px] font-bold uppercase tracking-wide text-white bg-[#E5AC3A] px-2 py-0.5 rounded-full">{t("course_new")}</span>
+              )}
+            </div>
+            <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mt-0.5">{c.title}</h3>
+            <p className="text-xs text-[#8C7567] mt-1">{t("course_source")}: {c.source} · {c.level}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
