@@ -245,7 +245,7 @@ async def root():
 async def get_recipes(collection_name: str = "mikilab"):
     if collection_name == "mikilab":
         await seed_mikilab_if_empty()
-    docs = await db.recipes.find({"collection_name": collection_name}, {"_id": 0}).sort("created_at", 1).to_list(1000)
+    docs = await db.recipes.find({"collection_name": collection_name}, {"_id": 0}).sort("name", 1).to_list(1000)
     return docs
 
 
