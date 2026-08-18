@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false }) {
+  const [scale, setScale] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -94,15 +95,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       </div>
 
-      {!readOnly && (
-        <button
-          data-testid="add-recipe-btn"
-          onClick={() => { setEditing(null); setDialogOpen(true); }}
-          className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
-        >
-          <Plus className="w-5 h-5" /> {t("add_recipe")}
-        </button>
-      )}
+      <button
+        data-testid="add-recipe-btn"
+        onClick={() => { setEditing(null); setDialogOpen(true); }}
+        className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
+      >
+        <Plus className="w-5 h-5" /> {t("add_recipe")}
+      </button>
 
       {loading ? (
         <p className="text-center text-[#8C7567] py-8">{t("loading")}</p>
@@ -140,7 +139,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   ) : null}
                 </div>
                 <div className="flex gap-1.5 shrink-0">
-                  {!readOnly && (<>
                   <button
                     data-testid={`scale-recipe-${r.id}`}
                     onClick={() => setScaling(r)}
@@ -171,7 +169,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
-                  </>)}
                 </div>
               </div>
 
@@ -199,12 +196,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
               {(() => {
                 const flourG = Number(r.flour_grams) || 0;
-                const pct = (g) => (flourG > 0 && g != null ? ` · ${Math.round((Number(g) / flourG) * 1000) / 10}%` : "");
+                const isBack = /backmittel/i.test(r.name || "");
+                const target = flourG > 0 ? (Number(scale[r.id]) || flourG) : 0;
+                const f = flourG > 0 ? target / flourG : 1;
+                const g = (v) => (v == null ? null : Math.round(Number(v) * f));
+                const pct = (v) => (flourG > 0 && v != null ? ` · ${Math.round((Number(v) / flourG) * 1000) / 10}%` : "");
                 const rows = [];
-                if (r.flour_grams != null) rows.push([t("ing_flour"), `${r.flour_grams} g${flourG > 0 ? " · 100%" : ""}`]);
-                if (r.water_grams != null) rows.push([t("ing_water"), `${r.water_grams} g${pct(r.water_grams)}`]);
-                if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${r.sourdough_grams} g${pct(r.sourdough_grams)}`]);
-                if (r.salt_grams != null) rows.push([t("ing_salt"), `${r.salt_grams} g${pct(r.salt_grams)}`]);
+                if (r.flour_grams != null) rows.push([t("ing_flour"), `${g(r.flour_grams)} g${flourG > 0 ? " · 100%" : ""}`]);
+                if (r.water_grams != null) rows.push([t("ing_water"), `${g(r.water_grams)} g${pct(r.water_grams)}`]);
+                if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
+                if (r.salt_grams != null) rows.push([t("ing_salt"), `${g(r.salt_grams)} g${pct(r.salt_grams)}`]);
                 (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([e.name, e.cost ? `€ ${e.cost}` : "—"]); });
                 const rest = (Number(r.bulk_fermentation_hours) || 0) + (Number(r.proofing_hours) || 0);
                 const proc = [];
@@ -212,9 +213,23 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 if (rest > 0) proc.push(`${t("proc_rest")} ${rest}h`);
                 if (r.bake_temp != null) proc.push(`${t("proc_bake")} ${r.bake_temp}°${r.bake_minutes != null ? `/${r.bake_minutes}′` : ""}`);
                 if (rows.length === 0) return null;
+                const backG = flourG > 0 ? Math.round(target * 0.03) : 0;
                 return (
                   <div data-testid={`recipe-ingredients-${r.id}`} className="mt-3 rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-1.5">{t("recipe_ingredients")}</p>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{t("recipe_ingredients")}</p>
+                      {flourG > 0 && (
+                        <div className="flex items-center gap-1">
+                          <span className="text-[10px] text-[#8C7567]">{t("recipe_scale")}</span>
+                          <input
+                            data-testid={`recipe-scale-${r.id}`} type="number" value={scale[r.id] ?? flourG}
+                            onChange={(e) => setScale((s) => ({ ...s, [r.id]: e.target.value }))}
+                            className="w-20 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none"
+                          />
+                          <span className="text-[10px] text-[#8C7567]">g</span>
+                        </div>
+                      )}
+                    </div>
                     <div className="space-y-1">
                       {rows.map(([k, v], idx) => (
                         <div key={idx} className="flex items-center justify-between text-sm">
@@ -222,6 +237,12 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                           <span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{v}</span>
                         </div>
                       ))}
+                      {!isBack && flourG > 0 && (
+                        <div className="flex items-center justify-between text-sm pt-1 mt-1 border-t border-dashed border-[#D99B26]/50">
+                          <span className="text-[#4d6b45] dark:text-[#9ec48f] font-medium">🌾 {t("backmittel_name")}</span>
+                          <span className="font-mono-data font-semibold text-[#4d6b45] dark:text-[#9ec48f]">{backG} g · 3%</span>
+                        </div>
+                      )}
                     </div>
                     {proc.length > 0 && (
                       <p className="text-xs text-[#8C7567] mt-2 pt-2 border-t border-[#E8DEC8]/70 dark:border-[#3D302A]">

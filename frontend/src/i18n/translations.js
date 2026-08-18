@@ -28,6 +28,8 @@ export const translations = {
     badge_flour: "farina",
     badge_ferment: "lievit.",
     recipe_ingredients: "Ingredienti",
+    recipe_scale: "Riscala",
+    backmittel_name: "Backmittel naturale",
     recipe_process: "Lavorazione",
     ing_flour: "Farina",
     ing_water: "Acqua",
@@ -227,7 +229,7 @@ export const translations = {
 
     // Bio
     bio_title: "La mia biografia",
-    bio_text: "Sono un panettiere innamorato del pane. Vivo per l'impasto che nasce tra le mani, per il profumo della lievitazione naturale e per la crosta che canta appena esce dal forno. Amo il farro (Dinkel) e le mie ricette sono genuine, sane e testate con cura. Qui puoi consultare le mie ricette e creare e gestire le tue: dosi, tempi, metodo diretto o indiretto e costi calcolati in automatico. Con Mikilab prepari il piano settimanale e il piano di lavoro, controlli la temperatura dell'acqua, ricevi avvisi vocali, scopri i difetti del pane da una foto e resti aggiornato sui corsi migliori. Chiedimi pure un consiglio: sono qui per aiutarti.",
+    bio_text: "Mi chiamo Michele Signorella, sono italiano di Matera e vivo in Germania per un motivo semplice: ogni giorno voglio scoprire e imparare un pane nuovo, una ricetta diversa. Il pane è la mia passione: farro (Dinkel), lievito madre e lunghe lievitazioni. In quest'app trovi le mie ricette da consultare — complete di dosi in grammi e in percentuale, metodo, tempi e costi — e puoi creare e gestire le tue. Con Mikilab prepari il piano settimanale, capisci da dove iniziare il lavoro, calcoli la temperatura dell'acqua, ricevi avvisi vocali, scopri difetti e stato dell'impasto da una foto o un video, ascolti la radio mentre lavori e resti aggiornato su corsi e novità da Stoccarda, dalla Germania, dall'Italia e dal mondo. Puoi anche parlare con l'app: sono qui per darti una mano.",
 
     // Two planning voices
     tool_inforna: "Quando infornare",
@@ -420,6 +422,8 @@ export const translations = {
     badge_flour: "Mehl",
     badge_ferment: "Gare",
     recipe_ingredients: "Zutaten",
+    recipe_scale: "Skalieren",
+    backmittel_name: "Natürliches Backmittel",
     recipe_process: "Verarbeitung",
     ing_flour: "Mehl",
     ing_water: "Wasser",

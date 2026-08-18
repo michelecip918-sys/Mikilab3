@@ -137,8 +137,8 @@ export default function Mikilab() {
       <RecipeList
         collectionName="mikilab"
         readOnly
-        heroImage="https://images.unsplash.com/photo-1675725291010-cb1020860cb2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHwzfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBiYWtlcnklMjB3b29kJTIwb3ZlbiUyMGZsb3VyfGVufDB8fHx8MTc4Njk4MjgxOXww&ixlib=rb-4.1.0&q=85"
-        heroTitle={t("mikilab_title")}
+        heroImage={`${process.env.PUBLIC_URL}/bio-photo.jpg`}
+        heroTitle={t("brand_subtitle")}
         heroSubtitle={t("mikilab_subtitle")}
         emptyText={t("mikilab_empty")}
       />
