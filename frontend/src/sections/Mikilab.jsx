@@ -40,6 +40,14 @@ export default function Mikilab() {
       {/* Bio: Benvenuti + Chi sono */}
       <div data-testid="bio-card" className="mb-5 rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white">
         <div className="p-5">
+          <div className="flex justify-center mb-3">
+            <img
+              src={`${process.env.PUBLIC_URL}/logo.png`}
+              alt="Mikilab"
+              data-testid="bio-logo"
+              className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg"
+            />
+          </div>
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-5 h-5 text-[#FFCE00]" />
             <div className="leading-tight">
