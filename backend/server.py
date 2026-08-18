@@ -346,6 +346,49 @@ async def save_weekly_plan(payload: WeeklyPlan):
 
 
 # ---------------------------------------------------------------------------
+# Production diary (Diario di produzione)
+# ---------------------------------------------------------------------------
+class ProductionLog(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    date: str
+    product: str
+    quantity: float = 0
+    rating: int = 0
+    oven: Optional[str] = ""
+    notes: Optional[str] = ""
+    created_at: str = Field(default_factory=now_iso)
+
+
+class ProductionLogCreate(BaseModel):
+    date: str
+    product: str
+    quantity: float = 0
+    rating: int = 0
+    oven: Optional[str] = ""
+    notes: Optional[str] = ""
+
+
+@api_router.get("/production-log", response_model=List[ProductionLog])
+async def list_production_log():
+    docs = await db.production_log.find({}, {"_id": 0}).sort("date", -1).to_list(1000)
+    return docs
+
+
+@api_router.post("/production-log", response_model=ProductionLog)
+async def add_production_log(payload: ProductionLogCreate):
+    entry = ProductionLog(**payload.model_dump())
+    await db.production_log.insert_one(entry.model_dump())
+    return entry
+
+
+@api_router.delete("/production-log/{entry_id}")
+async def delete_production_log(entry_id: str):
+    await db.production_log.delete_one({"id": entry_id})
+    return {"ok": True}
+
+
+
+# ---------------------------------------------------------------------------
 # Stuttgart announcements
 # ---------------------------------------------------------------------------
 ANNOUNCEMENT_SEED = [
