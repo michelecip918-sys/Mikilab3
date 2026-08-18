@@ -76,17 +76,8 @@ export default function Mikilab() {
         </div>
       </div>
 
-      <RecipeList
-        collectionName="mikilab"
-        readOnly
-        heroImage={`${process.env.PUBLIC_URL}/bio-photo.jpg`}
-        heroTitle={t("brand_subtitle")}
-        heroSubtitle={t("mikilab_subtitle")}
-        emptyText={t("mikilab_empty")}
-      />
-
-      {/* Lievito madre — alla fine delle ricette */}
-      <button data-testid="lievito-open-btn" onClick={() => setView("lievito")} className="w-full mt-5 flex items-center gap-4 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
+      {/* Lievito madre — da qui si parte */}
+      <button data-testid="lievito-open-btn" onClick={() => setView("lievito")} className="w-full mb-3 flex items-center gap-4 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
         <div className="w-12 h-12 rounded-2xl bg-[#D99B26]/15 border border-[#D99B26]/30 flex items-center justify-center shrink-0">
           <Wheat className="w-6 h-6 text-[#B34A26]" />
         </div>
@@ -97,13 +88,22 @@ export default function Mikilab() {
         <ChevronRight className="w-5 h-5 text-[#C9BBB0] shrink-0" />
       </button>
 
-      {/* Pensiero finale */}
-      <div data-testid="closing-card" className="mt-5 rounded-3xl p-5 bg-[#6B8E62]/12 border border-[#6B8E62]/30">
+      <RecipeList
+        collectionName="mikilab"
+        readOnly
+        heroImage={`${process.env.PUBLIC_URL}/bio-photo.jpg`}
+        heroTitle={t("brand_subtitle")}
+        heroSubtitle={t("mikilab_subtitle")}
+        emptyText={t("mikilab_empty")}
+      />
+
+      {/* Ringraziamenti ai follower */}
+      <div data-testid="thanks-card" className="mt-5 rounded-3xl p-5 bg-[#6B8E62]/12 border border-[#6B8E62]/30">
         <div className="flex items-center gap-2 mb-2">
           <BookHeart className="w-5 h-5 text-[#4d6b45] dark:text-[#9ec48f]" />
-          <h2 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("closing_label")}</h2>
+          <h2 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("thanks_label")}</h2>
         </div>
-        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("closing_body")}</p>
+        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("thanks_body")}</p>
       </div>
     </div>
   );

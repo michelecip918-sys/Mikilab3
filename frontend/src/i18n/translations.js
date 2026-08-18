@@ -349,6 +349,8 @@ export const translations = {
     prefazione_verse2_ref: "— Matteo 5:3",
     prefazione_body: "Non di solo pane vive l'uomo, ma di ogni parola di Dio, e felice è chi sente il proprio bisogno spirituale: per questo, grato a Chi ha creato il grano, ho raccolto qui le mie ricette e i miei segreti.",
     closing_label: "Un pensiero finale",
+    thanks_label: "Grazie a voi",
+    thanks_body: "Grazie di cuore a tutti voi che mi seguite: ogni giorno la vostra passione per il pane è la mia motivazione più grande. Questo ricettario è per voi, con affetto. — Michele",
     closing_body: "Ma ora, nonostante la mia passione per questo stupendo cibo, vorrei parlarvi di Colui che ha inventato i cereali. Come il pane nutre il corpo, i valori spirituali nutrono il cuore. È Dio, Geova, che ci dà tutto: il chicco di grano, la pioggia e il sole che lo fanno crescere, le mani per lavorarlo e la vita stessa. Ogni volta che impasto lo faccio con gratitudine, perché dietro ogni pagnotta c'è la generosità del Creatore. A Lui va il mio grazie più sincero.",
 
 
@@ -793,6 +795,8 @@ export const translations = {
     prefazione_verse2_ref: "— Matthäus 5:3",
     prefazione_body: "Nicht vom Brot allein lebt der Mensch, sondern von jedem Wort Gottes, und glücklich ist, wer sein geistiges Bedürfnis spürt: darum habe ich, dankbar dem Schöpfer des Getreides, hier meine Rezepte und Geheimnisse zusammengetragen.",
     closing_label: "Ein letzter Gedanke",
+    thanks_label: "Danke an euch",
+    thanks_body: "Von Herzen danke ich euch allen, die mir folgen: eure Leidenschaft fürs Brot ist jeden Tag meine größte Motivation. Dieses Rezeptbuch ist für euch, mit Zuneigung. — Michele",
     closing_body: "Doch jetzt möchte ich euch, trotz meiner Leidenschaft für dieses wunderbare Lebensmittel, von Dem erzählen, der das Getreide erfunden hat. So wie Brot den Körper nährt, nähren geistige Werte das Herz. Es ist Gott, Jehova, der uns alles gibt: das Weizenkorn, den Regen und die Sonne, die es wachsen lassen, die Hände zum Verarbeiten und das Leben selbst. Jedes Mal, wenn ich knete, tue ich es mit Dankbarkeit, denn hinter jedem Laib steht die Großzügigkeit des Schöpfers. Ihm gilt mein aufrichtigster Dank.",
 
 

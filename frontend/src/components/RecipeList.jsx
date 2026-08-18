@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal } from "lucide-react";
 import { recipesApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -20,12 +21,21 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [editing, setEditing] = useState(null);
   const [toDelete, setToDelete] = useState(null);
   const [scaling, setScaling] = useState(null);
+  const [viewing, setViewing] = useState(null);
   const { t } = useLang();
 
   const load = async () => {
     setLoading(true);
     try {
-      setRecipes(await recipesApi.list(collectionName));
+      const list = await recipesApi.list(collectionName);
+      // Miglioratore/Backmittel sempre in cima (da lì si parte), poi in ordine alfabetico
+      list.sort((a, b) => {
+        const ia = /migliorator|backmittel/i.test(a.name || "") ? 0 : 1;
+        const ib = /migliorator|backmittel/i.test(b.name || "") ? 0 : 1;
+        if (ia !== ib) return ia - ib;
+        return (a.name || "").localeCompare(b.name || "");
+      });
+      setRecipes(list);
     } catch {
       toast.error(t("toast_load_error"));
     } finally {
@@ -34,6 +44,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   };
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [collectionName]);
+
+  // tiene aggiornata la ricetta aperta dopo un salvataggio/scala
+  useEffect(() => {
+    if (viewing) {
+      const fresh = recipes.find((x) => x.id === viewing.id);
+      if (fresh && fresh !== viewing) setViewing(fresh);
+    }
+    /* eslint-disable-next-line */
+  }, [recipes]);
 
   const handleSave = async (payload) => {
     try {
@@ -57,6 +76,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       await recipesApi.remove(toDelete.id);
       toast.success(t("toast_recipe_deleted"));
       setToDelete(null);
+      setViewing(null);
       load();
     } catch {
       toast.error(t("toast_delete_error"));
@@ -83,6 +103,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     } catch {
       toast.error(t("toast_save_error"));
     }
+  };
+
+  const openImprover = () => {
+    const target = recipes.find((x) => /migliorator|backmittel/i.test(x.name || ""));
+    if (target) setViewing(target);
   };
 
   return (
@@ -112,219 +137,56 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           <p className="text-[#736055] dark:text-[#A89689]">{emptyText}</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {recipes.map((r, i) => (
-            <motion.div
+            <motion.button
               key={r.id}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              data-testid={`recipe-card-${r.id}`}
-              className="relative overflow-hidden bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 shadow-sm"
+              transition={{ delay: Math.min(i * 0.03, 0.4) }}
+              onClick={() => setViewing(r)}
+              data-testid={`recipe-row-${r.id}`}
+              className="relative overflow-hidden w-full text-left bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-[0.99] hover:border-[#D99B26]/60 transition-all flex items-center gap-3"
             >
               {countryColors(r.origin) && (
-                <div aria-hidden data-testid={`recipe-flag-strip-${r.id}`} className="absolute top-0 left-0 right-0 flex h-1.5 z-20">
+                <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
                   {countryColors(r.origin).map((c, k) => (
                     <div key={k} className="flex-1" style={{ background: c }} />
                   ))}
                 </div>
               )}
-              {r.image_url && (
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-cover bg-center opacity-[0.10] dark:opacity-[0.16] pointer-events-none"
-                  style={{ backgroundImage: `url(${r.image_url})` }}
-                />
-              )}
-              <div className="relative z-10">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h3 className="font-display text-xl font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
-                    {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
-                    {r.name}
-                  </h3>
-                  {r.flour_type ? (
-                    <p className="text-sm text-[#8C7567] mt-0.5">{r.flour_type}</p>
-                  ) : null}
-                </div>
-                <div className="flex gap-1.5 shrink-0">
-                  <button
-                    data-testid={`scale-recipe-${r.id}`}
-                    onClick={() => setScaling(r)}
-                    className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#6B8E62] active:scale-95"
-                    aria-label={t("scale_aria")}
-                  >
-                    <Scale className="w-4 h-4" />
-                  </button>
-                  <button
-                    data-testid={`duplicate-recipe-${r.id}`}
-                    onClick={() => handleDuplicate(r)}
-                    className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#8C7567] active:scale-95"
-                    aria-label={t("duplicate_aria")}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </button>
-                  <button
-                    data-testid={`edit-recipe-${r.id}`}
-                    onClick={() => { setEditing(r); setDialogOpen(true); }}
-                    className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B34A26] active:scale-95"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <button
-                    data-testid={`delete-recipe-${r.id}`}
-                    onClick={() => setToDelete(r)}
-                    className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B4442A] active:scale-95"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
+                  {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
+                  {r.name}
+                </h3>
+                {r.flour_type ? <p className="text-xs text-[#8C7567] truncate">{r.flour_type}</p> : null}
               </div>
-
-              <div className="flex flex-wrap gap-2 mt-3">
-                {r.hydration_percent != null && (
-                  <Badge icon={<Droplets className="w-3.5 h-3.5" />}>{r.hydration_percent}% {t("badge_hydration")}</Badge>
-                )}
-                {r.flour_grams != null && (
-                  <Badge icon={<Wheat className="w-3.5 h-3.5" />}>{r.flour_grams}g {t("badge_flour")}</Badge>
-                )}
-                {r.bulk_fermentation_hours != null && (
-                  <Badge icon={<Clock className="w-3.5 h-3.5" />}>{r.bulk_fermentation_hours}h {t("badge_ferment")}</Badge>
-                )}
-                {r.bake_temp != null && (
-                  <Badge icon={<Flame className="w-3.5 h-3.5" />}>
-                    {r.bake_temp}°{r.bake_minutes != null ? ` · ${r.bake_minutes}′` : ""} {r.oven_type === "ventilato" ? t("oven_type_fan") : r.oven_type === "rotor" ? t("oven_type_rotor") : t("oven_type_static")}
-                  </Badge>
-                )}
-                {r.method_type && (
-                  <Badge icon={<Layers className="w-3.5 h-3.5" />}>
-                    {r.method_type === "diretto" ? t("method_diretto") : t("method_indiretto")}
-                  </Badge>
-                )}
-              </div>
-
-              {(() => {
-                const flourG = Number(r.flour_grams) || 0;
-                const isBack = /backmittel/i.test(r.name || "");
-                const target = flourG > 0 ? (Number(scale[r.id]) || flourG) : 0;
-                const f = flourG > 0 ? target / flourG : 1;
-                const g = (v) => (v == null ? null : Math.round(Number(v) * f));
-                const pct = (v) => (flourG > 0 && v != null ? ` · ${Math.round((Number(v) / flourG) * 1000) / 10}%` : "");
-                const rows = [];
-                if (r.flour_grams != null) rows.push([t("ing_flour"), `${g(r.flour_grams)} g${flourG > 0 ? " · 100%" : ""}`]);
-                if (r.water_grams != null) rows.push([t("ing_water"), `${g(r.water_grams)} g${pct(r.water_grams)}`]);
-                if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
-                if (r.salt_grams != null) rows.push([t("ing_salt"), `${g(r.salt_grams)} g${pct(r.salt_grams)}`]);
-                (r.extra_ingredients || []).forEach((e) => {
-                  if (e && e.name && e.percent != null && e.percent !== "") {
-                    const grams = flourG > 0 ? Math.round(target * (Number(e.percent) / 100)) : null;
-                    rows.push([e.name, grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
-                  }
-                });
-                (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([e.name, e.cost ? `€ ${e.cost}` : "—"]); });
-                const rest = (Number(r.bulk_fermentation_hours) || 0) + (Number(r.proofing_hours) || 0);
-                const proc = [];
-                if (r.mix_minutes != null) proc.push(`${t("proc_mix")} ${r.mix_minutes}′`);
-                if (rest > 0) proc.push(`${t("proc_rest")} ${rest}h`);
-                if (r.bake_temp != null) proc.push(`${t("proc_bake")} ${r.bake_temp}°${r.bake_minutes != null ? `/${r.bake_minutes}′` : ""}`);
-                if (rows.length === 0) return null;
-                return (
-                  <div data-testid={`recipe-ingredients-${r.id}`} className="mt-3 rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{t("recipe_ingredients")}</p>
-                      {flourG > 0 && (
-                        <div className="flex items-center gap-1">
-                          <span className="text-[10px] text-[#8C7567]">{t("recipe_scale")}</span>
-                          <input
-                            data-testid={`recipe-scale-${r.id}`} type="number" value={scale[r.id] ?? flourG}
-                            onChange={(e) => setScale((s) => ({ ...s, [r.id]: e.target.value }))}
-                            className="w-20 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none"
-                          />
-                          <span className="text-[10px] text-[#8C7567]">g</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="space-y-1">
-                      {rows.map(([k, v], idx) => {
-                        const isImprover = typeof k === "string" && /migliorator|backmittel/i.test(k);
-                        return (
-                        <div key={idx} className="flex items-center justify-between text-sm">
-                          <span className="text-[#4A3B34] dark:text-[#C9BBB0]">
-                            {k}
-                            {isImprover && (
-                              <button
-                                data-testid={`improver-link-${r.id}`}
-                                onClick={() => {
-                                  const target = recipes.find((x) => /migliorator|backmittel/i.test(x.name || ""));
-                                  if (target) {
-                                    const el = document.querySelector(`[data-testid="recipe-card-${target.id}"]`);
-                                    if (el) {
-                                      el.scrollIntoView({ behavior: "smooth", block: "center" });
-                                      el.classList.add("ring-2", "ring-[#6B8E62]");
-                                      setTimeout(() => el.classList.remove("ring-2", "ring-[#6B8E62]"), 2000);
-                                    }
-                                  }
-                                }}
-                                className="ml-1 text-[#6B8E62] font-bold align-super"
-                                title={t("improver_link_title")}
-                              >*</button>
-                            )}
-                          </span>
-                          <span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{v}</span>
-                        </div>
-                        );
-                      })}
-                    </div>
-                    {proc.length > 0 && (
-                      <p className="text-xs text-[#8C7567] mt-2 pt-2 border-t border-[#E8DEC8]/70 dark:border-[#3D302A]">
-                        <span className="font-semibold">{t("recipe_process")}:</span> {proc.join(" · ")}
-                      </p>
-                    )}
-                  </div>
-                );
-              })()}
-
-              {r.procedure ? (
-                <div data-testid={`recipe-procedure-${r.id}`} className="mt-3 rounded-xl bg-[#6B8E62]/10 border border-[#6B8E62]/25 p-3">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-[#4d6b45] dark:text-[#9ec48f] mb-1.5">{t("recipe_procedure")}</p>
-                  <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.procedure}</p>
-                </div>
-              ) : null}
-
-              {r.notes ? (
-                <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-3 leading-relaxed whitespace-pre-line">{r.notes}</p>
-              ) : null}
-
-              {(() => {
-                const cst = r.costing;
-                if (!cst || readOnly) return null;
-                const n = (v) => Number(v) || 0;
-                const total = n(r.flour_grams) / 1000 * n(cst.flour_kg) + n(r.water_grams) / 1000 * n(cst.water_l)
-                  + n(r.sourdough_grams) / 1000 * n(cst.sourdough_kg) + n(r.salt_grams) / 1000 * n(cst.salt_kg)
-                  + (cst.extras || []).reduce((s, e) => s + n(e.cost), 0) + n(cst.overhead);
-                const pcs = n(cst.pieces);
-                if (total <= 0) return null;
-                const perPiece = pcs > 0 ? total / pcs : null;
-                return (
-                  <div data-testid={`recipe-price-${r.id}`} className="mt-3 rounded-xl px-3 py-2 border bg-[#D99B26]/10 border-[#D99B26]/30">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_total")}</span>
-                      <span className="font-mono-data text-sm font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">€ {total.toFixed(2)}</span>
-                    </div>
-                    {perPiece != null && (
-                      <div className="flex items-center justify-between mt-1 pt-1 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
-                        <span className="text-xs text-[#8C7567]">{t("cost_per_piece")}</span>
-                        <span className="font-mono-data text-sm font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">€ {perPiece.toFixed(2)}</span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-              </div>
-            </motion.div>
+              <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />
+            </motion.button>
           ))}
         </div>
       )}
+
+      {/* Finestra ricetta */}
+      <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
+        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A] p-0">
+          {viewing && (
+            <RecipeDetail
+              r={viewing}
+              t={t}
+              readOnly={readOnly}
+              scaleVal={scale[viewing.id]}
+              onScaleChange={(v) => setScale((s) => ({ ...s, [viewing.id]: v }))}
+              onImprover={openImprover}
+              onEdit={() => { setEditing(viewing); setDialogOpen(true); setViewing(null); }}
+              onDuplicate={() => handleDuplicate(viewing)}
+              onScaleAction={() => setScaling(viewing)}
+              onDelete={() => setToDelete(viewing)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       <RecipeDialog
         open={dialogOpen}
@@ -361,6 +223,159 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
+  const flourG = Number(r.flour_grams) || 0;
+  const target = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
+  const f = flourG > 0 ? target / flourG : 1;
+  const g = (v) => (v == null ? null : Math.round(Number(v) * f));
+  const pct = (v) => (flourG > 0 && v != null ? ` · ${Math.round((Number(v) / flourG) * 1000) / 10}%` : "");
+  const rows = [];
+  if (r.flour_grams != null) rows.push([t("ing_flour"), `${g(r.flour_grams)} g${flourG > 0 ? " · 100%" : ""}`]);
+  if (r.water_grams != null) rows.push([t("ing_water"), `${g(r.water_grams)} g${pct(r.water_grams)}`]);
+  if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
+  if (r.salt_grams != null) rows.push([t("ing_salt"), `${g(r.salt_grams)} g${pct(r.salt_grams)}`]);
+  (r.extra_ingredients || []).forEach((e) => {
+    if (e && e.name && e.percent != null && e.percent !== "") {
+      const grams = flourG > 0 ? Math.round(target * (Number(e.percent) / 100)) : null;
+      rows.push([e.name, grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
+    }
+  });
+  (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([e.name, e.cost ? `€ ${e.cost}` : "—"]); });
+
+  const cst = r.costing;
+  const n = (v) => Number(v) || 0;
+  let priceBlock = null;
+  if (cst && !readOnly) {
+    const total = n(r.flour_grams) / 1000 * n(cst.flour_kg) + n(r.water_grams) / 1000 * n(cst.water_l)
+      + n(r.sourdough_grams) / 1000 * n(cst.sourdough_kg) + n(r.salt_grams) / 1000 * n(cst.salt_kg)
+      + (cst.extras || []).reduce((s, e) => s + n(e.cost), 0) + n(cst.overhead);
+    const pcs = n(cst.pieces);
+    if (total > 0) {
+      const perPiece = pcs > 0 ? total / pcs : null;
+      priceBlock = (
+        <div className="rounded-xl px-3 py-2 border bg-[#D99B26]/10 border-[#D99B26]/30">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_total")}</span>
+            <span className="font-mono-data text-sm font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">€ {total.toFixed(2)}</span>
+          </div>
+          {perPiece != null && (
+            <div className="flex items-center justify-between mt-1 pt-1 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
+              <span className="text-xs text-[#8C7567]">{t("cost_per_piece")}</span>
+              <span className="font-mono-data text-sm font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">€ {perPiece.toFixed(2)}</span>
+            </div>
+          )}
+        </div>
+      );
+    }
+  }
+
+  return (
+    <div data-testid={`recipe-detail-${r.id}`}>
+      {r.image_url && (
+        <div className="relative h-40 w-full">
+          <img src={r.image_url} alt={r.name} className="w-full h-full object-cover" />
+          {countryColors(r.origin) && (
+            <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
+              {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1412]/70 to-transparent" />
+        </div>
+      )}
+      <div className="p-5 space-y-4">
+        <div>
+          <h2 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
+            {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
+            {r.name}
+          </h2>
+          {r.flour_type ? <p className="text-sm text-[#8C7567] mt-0.5">{r.flour_type}</p> : null}
+        </div>
+
+        <div className="flex gap-1.5">
+          <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#6B8E62" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
+          <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#8C7567" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>
+          <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#B34A26"><Pencil className="w-4 h-4" /></ActionBtn>
+          <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#B4442A"><Trash2 className="w-4 h-4" /></ActionBtn>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {r.hydration_percent != null && <Badge icon={<Droplets className="w-3.5 h-3.5" />}>{r.hydration_percent}% {t("badge_hydration")}</Badge>}
+          {r.flour_grams != null && <Badge icon={<Wheat className="w-3.5 h-3.5" />}>{r.flour_grams}g {t("badge_flour")}</Badge>}
+          {r.bulk_fermentation_hours != null && <Badge icon={<Clock className="w-3.5 h-3.5" />}>{r.bulk_fermentation_hours}h {t("badge_ferment")}</Badge>}
+          {r.bake_temp != null && (
+            <Badge icon={<Flame className="w-3.5 h-3.5" />}>
+              {r.bake_temp}°{r.bake_minutes != null ? ` · ${r.bake_minutes}′` : ""} {r.oven_type === "ventilato" ? t("oven_type_fan") : r.oven_type === "rotor" ? t("oven_type_rotor") : t("oven_type_static")}
+            </Badge>
+          )}
+          {r.method_type && (
+            <Badge icon={<Layers className="w-3.5 h-3.5" />}>{r.method_type === "diretto" ? t("method_diretto") : t("method_indiretto")}</Badge>
+          )}
+        </div>
+
+        {rows.length > 0 && (
+          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{t("recipe_ingredients")}</p>
+              {flourG > 0 && (
+                <div className="flex items-center gap-1">
+                  <span className="text-[10px] text-[#8C7567]">{t("recipe_scale")}</span>
+                  <input
+                    data-testid={`recipe-scale-${r.id}`} type="number" value={scaleVal ?? flourG}
+                    onChange={(e) => onScaleChange(e.target.value)}
+                    className="w-20 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none"
+                  />
+                  <span className="text-[10px] text-[#8C7567]">g</span>
+                </div>
+              )}
+            </div>
+            <div className="space-y-1">
+              {rows.map(([k, v], idx) => {
+                const isImprover = typeof k === "string" && /migliorator|backmittel/i.test(k);
+                return (
+                  <div key={idx} className="flex items-center justify-between text-sm">
+                    <span className="text-[#4A3B34] dark:text-[#C9BBB0]">
+                      {k}
+                      {isImprover && (
+                        <button data-testid={`improver-link-${r.id}`} onClick={onImprover} className="ml-1 text-[#6B8E62] font-bold align-super" title={t("improver_link_title")}>*</button>
+                      )}
+                    </span>
+                    <span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{v}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {r.procedure ? (
+          <div data-testid={`recipe-procedure-${r.id}`} className="rounded-xl bg-[#6B8E62]/10 border border-[#6B8E62]/25 p-3">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-[#4d6b45] dark:text-[#9ec48f] mb-1.5">{t("recipe_procedure")}</p>
+            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.procedure}</p>
+          </div>
+        ) : null}
+
+        {r.notes ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.notes}</p> : null}
+
+        {priceBlock}
+      </div>
+    </div>
+  );
+}
+
+function ActionBtn({ testid, onClick, color, label, children }) {
+  return (
+    <button
+      data-testid={testid}
+      onClick={onClick}
+      aria-label={label}
+      className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center active:scale-95"
+      style={{ color }}
+    >
+      {children}
+    </button>
   );
 }
 
