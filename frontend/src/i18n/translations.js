@@ -334,7 +334,7 @@ export const translations = {
     prefazione_verse1_ref: "— Matteo 4:4; Deuteronomio 8:3",
     prefazione_verse2: "«Felici quelli che si rendono conto del loro bisogno spirituale.»",
     prefazione_verse2_ref: "— Matteo 5:3",
-    prefazione_body: "Non di solo pane vive l'uomo, ma di ogni parola di Dio, e felice è chi sente il proprio bisogno spirituale: per questo, grato a Chi ha creato il grano, ho raccolto qui le mie ricette e i miei segreti. (Matteo 4:4; Deuteronomio 8:3; Matteo 5:3)",
+    prefazione_body: "Non di solo pane vive l'uomo, ma di ogni parola di Dio, e felice è chi sente il proprio bisogno spirituale: per questo, grato a Chi ha creato il grano, ho raccolto qui le mie ricette e i miei segreti.",
     closing_label: "Un pensiero finale",
     closing_body: "Ma ora, nonostante la mia passione per questo stupendo cibo, vorrei parlarvi di Colui che ha inventato i cereali. Come il pane nutre il corpo, i valori spirituali nutrono il cuore. È Dio, Geova, che ci dà tutto: il chicco di grano, la pioggia e il sole che lo fanno crescere, le mani per lavorarlo e la vita stessa. Ogni volta che impasto lo faccio con gratitudine, perché dietro ogni pagnotta c'è la generosità del Creatore. A Lui va il mio grazie più sincero.",
 
@@ -763,7 +763,7 @@ export const translations = {
     prefazione_verse1_ref: "— Matthäus 4:4; 5. Mose 8:3",
     prefazione_verse2: "«Glücklich sind, die sich ihres geistigen Bedürfnisses bewusst sind.»",
     prefazione_verse2_ref: "— Matthäus 5:3",
-    prefazione_body: "Nicht vom Brot allein lebt der Mensch, sondern von jedem Wort Gottes, und glücklich ist, wer sein geistiges Bedürfnis spürt: darum habe ich, dankbar dem Schöpfer des Getreides, hier meine Rezepte und Geheimnisse zusammengetragen. (Matthäus 4:4; 5. Mose 8:3; Matthäus 5:3)",
+    prefazione_body: "Nicht vom Brot allein lebt der Mensch, sondern von jedem Wort Gottes, und glücklich ist, wer sein geistiges Bedürfnis spürt: darum habe ich, dankbar dem Schöpfer des Getreides, hier meine Rezepte und Geheimnisse zusammengetragen.",
     closing_label: "Ein letzter Gedanke",
     closing_body: "Doch jetzt möchte ich euch, trotz meiner Leidenschaft für dieses wunderbare Lebensmittel, von Dem erzählen, der das Getreide erfunden hat. So wie Brot den Körper nährt, nähren geistige Werte das Herz. Es ist Gott, Jehova, der uns alles gibt: das Weizenkorn, den Regen und die Sonne, die es wachsen lassen, die Hände zum Verarbeiten und das Leben selbst. Jedes Mal, wenn ich knete, tue ich es mit Dankbarkeit, denn hinter jedem Laib steht die Großzügigkeit des Schöpfers. Ihm gilt mein aufrichtigster Dank.",
 
