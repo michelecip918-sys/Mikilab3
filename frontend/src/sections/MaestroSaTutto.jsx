@@ -11,14 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function MaestroSaTutto() {
-  const [tab, setTab] = useState("chiedi");
   const { t } = useLang();
-
-  const TABS = [
-    { id: "chiedi", label: t("tab_chiedi"), Icon: MessageCircle },
-    { id: "enciclopedia", label: t("tab_enciclopedia"), Icon: BookOpen },
-    { id: "stoccarda", label: t("tab_stoccarda"), Icon: MapPin },
-  ];
 
   return (
     <div className="pb-4">
@@ -28,26 +21,7 @@ export default function MaestroSaTutto() {
         <p className="text-white/85 text-sm mt-1 italic">{t("satutto_tagline")}</p>
       </div>
 
-      <div className="flex gap-2 mb-5 overflow-x-auto thin-scroll pb-1">
-        {TABS.map(({ id, label, Icon }) => (
-          <button
-            key={id}
-            data-testid={`sa-tutto-tab-${id}`}
-            onClick={() => setTab(id)}
-            className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-              tab === id
-                ? "bg-[#B34A26] text-white"
-                : "bg-[#F5EFE6] dark:bg-[#332823] text-[#8C7567] border border-[#E8DEC8] dark:border-[#3D302A]"
-            }`}
-          >
-            <Icon className="w-4 h-4" /> {label}
-          </button>
-        ))}
-      </div>
-
-      {tab === "chiedi" && <ChatPanel />}
-      {tab === "enciclopedia" && <EncyclopediaPanel />}
-      {tab === "stoccarda" && <StoccardaPanel />}
+      <ChatPanel />
     </div>
   );
 }

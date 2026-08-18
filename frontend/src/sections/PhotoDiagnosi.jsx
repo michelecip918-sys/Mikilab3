@@ -5,6 +5,7 @@ import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
+import Encyclopedia from "@/sections/Encyclopedia";
 
 // Downscale + compress an image file to a base64 JPEG (keeps payload small)
 function fileToCompressedBase64(file, maxDim = 1024, quality = 0.8) {
@@ -194,6 +195,10 @@ export default function PhotoDiagnosi() {
           <ReactMarkdown>{result}</ReactMarkdown>
         </div>
       )}
+
+      <div className="mt-8 pt-6 border-t border-[#E8DEC8] dark:border-[#3D302A]">
+        <Encyclopedia />
+      </div>
     </div>
   );
 }

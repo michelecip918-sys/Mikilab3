@@ -1,4 +1,5 @@
 import RecipeList from "@/components/RecipeList";
+import Stoccarda from "@/sections/Stoccarda";
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";
 import { Heart, ChefHat, Wheat, Sparkles, BookHeart, ChevronLeft, ChevronRight } from "lucide-react";
@@ -37,6 +38,7 @@ export default function Mikilab() {
 
   return (
     <div>
+      <Stoccarda />
       {/* Bio: Benvenuti + Chi sono */}
       <div data-testid="bio-card" className="mb-5 rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white">
         <div className="p-5">
@@ -48,14 +50,7 @@ export default function Mikilab() {
               className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg"
             />
           </div>
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-5 h-5 text-[#FFCE00]" />
-            <div className="leading-tight">
-              <h2 className="font-display text-xl font-bold">{t("bio_welcome_title")}</h2>
-              <p className="text-[11px] uppercase tracking-wider text-white/70">{t("bio_welcome_sub")} <span>🇮🇹</span> <span>🇩🇪</span></p>
-            </div>
-          </div>
-          <p className="text-sm text-white/90 leading-relaxed">{t("bio_welcome_body")}</p>
+          <p data-testid="bio-motto" className="font-display text-center italic text-[#FFE9B8] text-base leading-relaxed mb-2">{t("bio_motto")}</p>
         </div>
 
         <div className="px-5 pb-5 pt-4 border-t border-white/15">

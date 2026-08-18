@@ -10,6 +10,7 @@ import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
+import IntroGuide from "@/components/IntroGuide";
 
 function App() {
   const [tab, setTab] = useState("mikilab");
@@ -36,6 +37,7 @@ function App() {
       <BottomNav active={tab} onChange={setTab} />
       <VoiceAssistant onNavigate={setTab} />
       <RadioFornaio />
+      <IntroGuide />
       <Toaster position="top-center" richColors />
     </div>
   );
