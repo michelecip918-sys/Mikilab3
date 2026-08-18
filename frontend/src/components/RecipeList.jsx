@@ -197,8 +197,41 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 )}
               </div>
 
+              {(() => {
+                const rows = [];
+                if (r.flour_grams != null) rows.push([t("ing_flour"), `${r.flour_grams} g`]);
+                if (r.water_grams != null) rows.push([t("ing_water"), `${r.water_grams} g${r.hydration_percent != null ? ` (${r.hydration_percent}%)` : ""}`]);
+                if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${r.sourdough_grams} g`]);
+                if (r.salt_grams != null) rows.push([t("ing_salt"), `${r.salt_grams} g`]);
+                (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([e.name, e.cost ? `€ ${e.cost}` : "—"]); });
+                const rest = (Number(r.bulk_fermentation_hours) || 0) + (Number(r.proofing_hours) || 0);
+                const proc = [];
+                if (r.mix_minutes != null) proc.push(`${t("proc_mix")} ${r.mix_minutes}′`);
+                if (rest > 0) proc.push(`${t("proc_rest")} ${rest}h`);
+                if (r.bake_temp != null) proc.push(`${t("proc_bake")} ${r.bake_temp}°${r.bake_minutes != null ? `/${r.bake_minutes}′` : ""}`);
+                if (rows.length === 0) return null;
+                return (
+                  <div data-testid={`recipe-ingredients-${r.id}`} className="mt-3 rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-1.5">{t("recipe_ingredients")}</p>
+                    <div className="space-y-1">
+                      {rows.map(([k, v], idx) => (
+                        <div key={idx} className="flex items-center justify-between text-sm">
+                          <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{k}</span>
+                          <span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{v}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {proc.length > 0 && (
+                      <p className="text-xs text-[#8C7567] mt-2 pt-2 border-t border-[#E8DEC8]/70 dark:border-[#3D302A]">
+                        <span className="font-semibold">{t("recipe_process")}:</span> {proc.join(" · ")}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
+
               {r.notes ? (
-                <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-3 leading-relaxed">{r.notes}</p>
+                <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-3 leading-relaxed whitespace-pre-line">{r.notes}</p>
               ) : null}
 
               {(() => {
