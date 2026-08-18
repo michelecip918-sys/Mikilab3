@@ -44,16 +44,20 @@ STEP = ("1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo m
         "2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n"
         "3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n"
         "4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n"
-        "5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n"
+        "{rest}\n"
         "6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n"
         "7) Cottura: {temp}°C per {min} minuti, con vapore nei primi 10 minuti.")
 
-PANINI = ("\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il punto 5, spezza in pezzi da ~90 g, "
+REST_CELLA = "5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore."
+REST_FRIGO = "5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora."
+
+PANINI = ("\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, "
           "arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.")
 
 
-def proc(temp, mins, panini=False):
-    p = STEP.format(temp=temp, min=mins)
+def proc(temp, mins, panini=False, rest="cella"):
+    r = REST_FRIGO if rest == "frigo" else REST_CELLA
+    p = STEP.format(temp=temp, min=mins, rest=r)
     return p + (PANINI if panini else "")
 
 
@@ -236,12 +240,15 @@ async def main():
     print("Collezione mikilab svuotata.")
 
     all_recipes = []
+    fridge = {"Croissant", "Lg Brezel — Bretzel", "Hefeteig — Pane a Lievito di Birra",
+              "Mürbe Br — Pane Dolce Morbido", "HefeZopf — Treccia Dolce"}
     for r in RECIPES + SPECIALS:
         r = dict(r)
         extra = r.pop("extra", [])
         panini = r.pop("panini", False)
+        rest = "frigo" if r["name"] in fridge else "cella"
         r["method_type"] = "indiretto"
-        r["procedure"] = proc(r.get("bake_temp", 230), r.get("bake_minutes", 35), panini)
+        r["procedure"] = proc(r.get("bake_temp", 230), r.get("bake_minutes", 35), panini, rest)
         r["extra_ingredients"] = extra
         all_recipes.append(r)
 
