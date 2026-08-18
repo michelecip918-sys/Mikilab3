@@ -27,8 +27,8 @@ export default function Header() {
 
       <div className="px-4 py-3 flex items-center justify-between">
       <div className="flex items-center gap-2.5">
-        <div className="w-9 h-9 rounded-xl bg-[#B34A26] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70">
-          <Wheat className="w-5 h-5 text-white" strokeWidth={2.2} />
+        <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#2A211D] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70">
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-full h-full object-cover" />
         </div>
         <div className="leading-none">
           <div className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
