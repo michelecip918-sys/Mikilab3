@@ -198,11 +198,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </div>
 
               {(() => {
+                const flourG = Number(r.flour_grams) || 0;
+                const pct = (g) => (flourG > 0 && g != null ? ` · ${Math.round((Number(g) / flourG) * 1000) / 10}%` : "");
                 const rows = [];
-                if (r.flour_grams != null) rows.push([t("ing_flour"), `${r.flour_grams} g`]);
-                if (r.water_grams != null) rows.push([t("ing_water"), `${r.water_grams} g${r.hydration_percent != null ? ` (${r.hydration_percent}%)` : ""}`]);
-                if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${r.sourdough_grams} g`]);
-                if (r.salt_grams != null) rows.push([t("ing_salt"), `${r.salt_grams} g`]);
+                if (r.flour_grams != null) rows.push([t("ing_flour"), `${r.flour_grams} g${flourG > 0 ? " · 100%" : ""}`]);
+                if (r.water_grams != null) rows.push([t("ing_water"), `${r.water_grams} g${pct(r.water_grams)}`]);
+                if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${r.sourdough_grams} g${pct(r.sourdough_grams)}`]);
+                if (r.salt_grams != null) rows.push([t("ing_salt"), `${r.salt_grams} g${pct(r.salt_grams)}`]);
                 (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([e.name, e.cost ? `€ ${e.cost}` : "—"]); });
                 const rest = (Number(r.bulk_fermentation_hours) || 0) + (Number(r.proofing_hours) || 0);
                 const proc = [];
