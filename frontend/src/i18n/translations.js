@@ -334,7 +334,7 @@ export const translations = {
     prefazione_verse1_ref: "— Matteo 4:4; Deuteronomio 8:3",
     prefazione_verse2: "«Felici quelli che si rendono conto del loro bisogno spirituale.»",
     prefazione_verse2_ref: "— Matteo 5:3",
-    prefazione_body: "Sia nelle Scritture Ebraiche che in quelle Greche troviamo questa verità fondamentale. La Bibbia dà importanza a ciò che lo merita: i valori spirituali. Indicando un elemento indispensabile per trovare la felicità, essa dichiara di essere felici quando ci rendiamo conto del nostro bisogno spirituale. Questo sottolinea che il pane ha una certa importanza: per questo mi sono accinto a farvi conoscere le molte ricette e i segreti che ho imparato in tanti anni di lavoro.",
+    prefazione_body: "Il pane conta, ma i valori spirituali contano di più. Per questo ho raccolto qui, con gratitudine, le mie ricette e i miei segreti di tanti anni di lavoro.",
     closing_label: "Un pensiero finale",
     closing_body: "Ma ora, nonostante la mia passione per questo stupendo cibo, vorrei parlarvi di Colui che ha inventato i cereali. Come il pane nutre il corpo, i valori spirituali nutrono il cuore. È Dio, Geova, che ci dà tutto: il chicco di grano, la pioggia e il sole che lo fanno crescere, le mani per lavorarlo e la vita stessa. Ogni volta che impasto lo faccio con gratitudine, perché dietro ogni pagnotta c'è la generosità del Creatore. A Lui va il mio grazie più sincero.",
 
@@ -763,7 +763,7 @@ export const translations = {
     prefazione_verse1_ref: "— Matthäus 4:4; 5. Mose 8:3",
     prefazione_verse2: "«Glücklich sind, die sich ihres geistigen Bedürfnisses bewusst sind.»",
     prefazione_verse2_ref: "— Matthäus 5:3",
-    prefazione_body: "Sowohl in den Hebräischen als auch in den Griechischen Schriften finden wir diese grundlegende Wahrheit. Die Bibel misst dem Bedeutung bei, was es verdient: den geistigen Werten. Sie zeigt: Glücklich sind wir, wenn wir uns unseres geistigen Bedürfnisses bewusst werden. Das unterstreicht, dass auch das Brot eine gewisse Bedeutung hat – deshalb habe ich mich daran gemacht, euch die vielen Rezepte und Geheimnisse zu zeigen, die ich in vielen Jahren der Arbeit gelernt habe.",
+    prefazione_body: "Brot zählt, doch geistige Werte zählen mehr. Deshalb habe ich hier, mit Dankbarkeit, meine Rezepte und Geheimnisse aus vielen Jahren zusammengetragen.",
     closing_label: "Ein letzter Gedanke",
     closing_body: "Doch jetzt möchte ich euch, trotz meiner Leidenschaft für dieses wunderbare Lebensmittel, von Dem erzählen, der das Getreide erfunden hat. So wie Brot den Körper nährt, nähren geistige Werte das Herz. Es ist Gott, Jehova, der uns alles gibt: das Weizenkorn, den Regen und die Sonne, die es wachsen lassen, die Hände zum Verarbeiten und das Leben selbst. Jedes Mal, wenn ich knete, tue ich es mit Dankbarkeit, denn hinter jedem Laib steht die Großzügigkeit des Schöpfers. Ihm gilt mein aufrichtigster Dank.",
 

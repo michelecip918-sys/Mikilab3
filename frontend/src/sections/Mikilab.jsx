@@ -213,19 +213,27 @@ export default function Mikilab() {
     <div>
       {/* Prefazione — versetto biblico */}
       <div data-testid="preface-card" className="mb-5 rounded-3xl p-5 bg-[#2C221E] dark:bg-[#241D19] text-[#F5EFE6] border border-[#D99B26]/40 relative overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none"
+          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1594842059196-5b6b8fa73187?crop=entropy&cs=srgb&fm=jpg&w=1000&q=75)" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E] via-[#2C221E]/80 to-[#2C221E]/40 pointer-events-none" />
+        <div className="relative z-10">
         <div className="flex items-center gap-2 mb-3">
           <Quote className="w-5 h-5 text-[#E5AC3A]" />
           <h2 className="font-display text-lg font-bold text-[#E5AC3A] uppercase tracking-wide">{t("prefazione_label")}</h2>
         </div>
         <blockquote className="border-l-2 border-[#D99B26]/60 pl-3 mb-3">
           <p className="font-display text-base italic leading-relaxed">{t("prefazione_verse1")}</p>
-          <p className="text-xs text-[#D99B26] mt-1">{t("prefazione_verse1_ref")}</p>
+          <p className="text-xs text-[#E5AC3A] mt-1">{t("prefazione_verse1_ref")}</p>
         </blockquote>
         <blockquote className="border-l-2 border-[#D99B26]/60 pl-3 mb-3">
           <p className="font-display text-base italic leading-relaxed">{t("prefazione_verse2")}</p>
-          <p className="text-xs text-[#D99B26] mt-1">{t("prefazione_verse2_ref")}</p>
+          <p className="text-xs text-[#E5AC3A] mt-1">{t("prefazione_verse2_ref")}</p>
         </blockquote>
-        <p className="text-sm text-[#F5EFE6]/85 leading-relaxed">{t("prefazione_body")}</p>
+        <p className="text-sm text-[#F5EFE6]/90 leading-relaxed">{t("prefazione_body")}</p>
+        </div>
       </div>
 
       <div data-testid="bio-card" className="mb-5 rounded-3xl p-5 bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white">
