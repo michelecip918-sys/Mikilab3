@@ -18,6 +18,20 @@ function fmt(date, lang) {
   return date.toLocaleString(lang === "de" ? "de-DE" : "it-IT", { weekday: "short", hour: "2-digit", minute: "2-digit" });
 }
 
+// Suggested baking temp/time by bread type; adjusted for fan ovens.
+function bakeSuggest(name = "", ovenType = "statico") {
+  const n = name.toLowerCase();
+  let temp = 230, mins = 30;
+  if (n.includes("baguette")) { temp = 240; mins = 20; }
+  else if (n.includes("ciabatt")) { temp = 235; mins = 22; }
+  else if (n.includes("panin") || n.includes("rosett") || n.includes("hamburger") || n.includes("all'olio") || n.includes("brötchen")) { temp = 220; mins = 15; }
+  else if (n.includes("focacc")) { temp = 220; mins = 20; }
+  else if (n.includes("panettone")) { temp = 165; mins = 50; }
+  else if (n.includes("pane") || n.includes("pagnott") || n.includes("filon") || n.includes("brot") || n.includes("farro") || n.includes("dinkel")) { temp = 235; mins = 40; }
+  if (ovenType === "ventilato") { temp -= 20; mins = Math.max(5, Math.round(mins * 0.9)); }
+  return { temp, mins };
+}
+
 export default function PianificaProduzione() {
   const { t, lang } = useLang();
   const [recipes, setRecipes] = useState([]);
@@ -196,15 +210,22 @@ export default function PianificaProduzione() {
       {plan && (
         <div data-testid="plan-result" className="mt-5 space-y-2">
           <p className="text-xs text-[#8C7567]">{t("plan_note")}</p>
-          {plan.items.map((it, i) => (
+          {plan.items.map((it, i) => {
+            const ovenType = selectedOven?.oven_type || "statico";
+            const bs = bakeSuggest(it.name, ovenType);
+            return (
             <div key={i} className="flex items-center gap-3 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
               <div className="w-8 h-8 rounded-full bg-[#D99B26]/20 text-[#8C3A1D] dark:text-[#E5AC3A] font-mono-data font-bold text-sm flex items-center justify-center shrink-0">{i + 1}</div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-[#2C221E] dark:text-[#F5EFE6] truncate">{it.name}</p>
                 <p className="font-mono-data text-xs text-[#8C7567]">{t("sd_start_mix")} {fmt(it.start, lang)} · {t("sd_rest_min")} {it.rest}</p>
+                <p data-testid={`inf-bake-${i}`} className="font-mono-data text-xs text-[#8C3A1D] dark:text-[#E5AC3A] mt-0.5">
+                  🔥 {t("inf_bake")}: {bs.temp}°C · {bs.mins}′ ({ovenType === "ventilato" ? t("oven_type_fan") : t("oven_type_static")})
+                </p>
               </div>
             </div>
-          ))}
+            );
+          })}
           <div className="flex items-center gap-3 bg-[#B34A26] rounded-2xl px-4 py-3 text-white">
             <Flame className="w-5 h-5 shrink-0" />
             <div className="flex-1">

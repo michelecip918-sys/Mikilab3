@@ -76,6 +76,9 @@ export const translations = {
     cost_total: "Costo produzione",
     cost_per_piece: "Costo a pezzo",
     cost_sell: "Prezzo di vendita consigliato",
+    cost_profit: "Guadagno/pezzo",
+    cost_margin: "Margine",
+    inf_bake: "Cottura consigliata",
 
     // Scale dialog
     scale_title: "Scala le dosi",
@@ -335,6 +338,9 @@ export const translations = {
     cost_total: "Herstellkosten",
     cost_per_piece: "Kosten pro Stück",
     cost_sell: "Empfohlener Verkaufspreis",
+    cost_profit: "Gewinn/Stück",
+    cost_margin: "Marge",
+    inf_bake: "Empfohlenes Backen",
 
     // Scale dialog
     scale_title: "Mengen skalieren",

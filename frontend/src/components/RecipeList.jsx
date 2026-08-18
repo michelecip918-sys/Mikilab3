@@ -190,14 +190,25 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 if (total <= 0 || pcs <= 0) return null;
                 const perPiece = total / pcs;
                 const sell = perPiece * (1 + n(cst.markup) / 100);
+                const profit = sell - perPiece;
+                const marginPct = sell > 0 ? (profit / sell) * 100 : 0;
+                const good = profit > 0;
                 return (
-                  <div data-testid={`recipe-price-${r.id}`} className="mt-3 flex items-center justify-between bg-[#6B8E62]/12 border border-[#6B8E62]/30 rounded-xl px-3 py-2">
-                    <span className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0]">
-                      {t("cost_per_piece")}: <span className="font-mono-data">€ {perPiece.toFixed(2)}</span>
-                    </span>
-                    <span className="text-sm font-bold text-[#4d6b45] dark:text-[#9ec48f]">
-                      {t("cost_sell")}: <span className="font-mono-data">€ {sell.toFixed(2)}</span>
-                    </span>
+                  <div data-testid={`recipe-price-${r.id}`} className={`mt-3 rounded-xl px-3 py-2 border ${good ? "bg-[#6B8E62]/10 border-[#6B8E62]/30" : "bg-[#B4442A]/10 border-[#B4442A]/30"}`}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0]">
+                        {t("cost_per_piece")}: <span className="font-mono-data">€ {perPiece.toFixed(2)}</span>
+                      </span>
+                      <span className="text-sm font-bold text-[#4d6b45] dark:text-[#9ec48f]">
+                        {t("cost_sell")}: <span className="font-mono-data">€ {sell.toFixed(2)}</span>
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between mt-1 pt-1 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
+                      <span className="text-xs text-[#8C7567]">{t("cost_profit")}</span>
+                      <span data-testid={`recipe-margin-${r.id}`} className={`font-mono-data text-sm font-bold ${good ? "text-[#4d6b45] dark:text-[#9ec48f]" : "text-[#B4442A]"}`}>
+                        € {profit.toFixed(2)} · {marginPct.toFixed(0)}%
+                      </span>
+                    </div>
                   </div>
                 );
               })()}
