@@ -56,6 +56,8 @@ class Recipe(BaseModel):
     method_type: Optional[str] = None
     image_url: Optional[str] = None
     origin: Optional[str] = None
+    dough_category: Optional[str] = None
+    water_temp_c: Optional[float] = None
     notes: Optional[str] = ""
     procedure: Optional[str] = ""
     extra_ingredients: Optional[List[dict]] = None
@@ -84,6 +86,8 @@ class RecipeCreate(BaseModel):
     method_type: Optional[str] = None
     image_url: Optional[str] = None
     origin: Optional[str] = None
+    dough_category: Optional[str] = None
+    water_temp_c: Optional[float] = None
     notes: Optional[str] = ""
     procedure: Optional[str] = ""
     extra_ingredients: Optional[List[dict]] = None
@@ -109,6 +113,8 @@ class RecipeUpdate(BaseModel):
     method_type: Optional[str] = None
     image_url: Optional[str] = None
     origin: Optional[str] = None
+    dough_category: Optional[str] = None
+    water_temp_c: Optional[float] = None
     notes: Optional[str] = None
     procedure: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None

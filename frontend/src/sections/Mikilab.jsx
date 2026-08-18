@@ -50,7 +50,7 @@ export default function Mikilab() {
               className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg"
             />
           </div>
-          <p data-testid="bio-motto" className="font-display text-center italic text-[#FFE9B8] text-base leading-relaxed mb-2">{t("bio_motto")}</p>
+          <p data-testid="bio-welcome-sub" className="text-center text-[11px] uppercase tracking-wider text-white/70 mb-3">{t("bio_welcome_sub")} <span>🇮🇹</span> <span>🇩🇪</span></p>
         </div>
 
         <div className="px-5 pb-5 pt-4 border-t border-white/15">

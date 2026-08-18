@@ -23,7 +23,7 @@ const HOUR_FIELDS = new Set(["bulk_fermentation_hours", "proofing_hours"]);
 const emptyCost = standardCosting();
 
 const empty = {
-  name: "", flour_type: "", origin: "", preferment_type: "lm", flour_grams: "", water_grams: "",
+  name: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", extra_ingredients: [], costing: standardCosting(),
@@ -82,7 +82,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const submit = () => {
     if (!form.name.trim()) return;
     const payload = {
-      name: form.name.trim(), flour_type: form.flour_type, origin: form.origin || null, notes: form.notes, procedure: form.procedure,
+      name: form.name.trim(), flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
       preferment_type: form.preferment_type || null,
       oven_type: form.oven_type || null,
       method_type: form.method_type || null,
@@ -153,6 +153,32 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                 <option key={c.code} value={c.code}>{flagEmoji(c.code)} {c.name}</option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_dough_category")}</label>
+            <select
+              data-testid="recipe-dough-category-select"
+              value={form.dough_category || ""}
+              onChange={(e) => set("dough_category", e.target.value)}
+              className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+            >
+              <option value="">{t("dc_none")}</option>
+              <option value="pre">{t("dc_pre")}</option>
+              <option value="lm">{t("dc_lm")}</option>
+              <option value="diretto">{t("dc_diretto")}</option>
+              <option value="rinfresco">{t("dc_rinfresco")}</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_water_temp")}</label>
+            <input
+              data-testid="recipe-water-temp-input"
+              type="number" step="0.5" value={form.water_temp_c ?? ""}
+              onChange={(e) => set("water_temp_c", e.target.value)}
+              className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] rounded-xl p-3 text-base outline-none"
+            />
           </div>
 
           <div>
@@ -449,6 +475,8 @@ function normalize(r) {
   out.extra_ingredients = (r.extra_ingredients || []).map((e) => ({ name: e.name || "", percent: e.percent ?? "" }));
   out.procedure = r.procedure || "";
   out.origin = r.origin || "";
+  out.dough_category = r.dough_category || "";
+  out.water_temp_c = r.water_temp_c ?? "";
   const rc = r.costing || {};
   const has = (v) => v !== "" && v != null;
   out.costing = {

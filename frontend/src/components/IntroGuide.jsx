@@ -23,7 +23,6 @@ export default function IntroGuide() {
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg mx-auto mb-3" />
           <h2 className="font-display text-2xl font-bold">{t("bio_welcome_title")}</h2>
           <p className="text-[11px] uppercase tracking-wider text-white/70 mt-0.5">{t("bio_welcome_sub")} <span>🇮🇹</span> <span>🇩🇪</span></p>
-          <p className="font-display italic text-[#FFE9B8] text-sm leading-relaxed mt-3">{t("bio_motto")}</p>
         </div>
         <div className="p-6">
           <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("bio_welcome_body")}</p>
