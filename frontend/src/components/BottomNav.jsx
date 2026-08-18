@@ -13,9 +13,17 @@ export default function BottomNav({ active, onChange }) {
   return (
     <nav
       data-testid="bottom-nav"
-      className="fixed bottom-0 inset-x-0 bg-[#FDFBF7]/95 dark:bg-[#1A1412]/95 backdrop-blur-md border-t border-[#E8DEC8] dark:border-[#3D302A] z-50 px-3 py-2 shadow-[0_-4px_20px_rgba(44,34,30,0.06)]"
+      className="fixed bottom-0 inset-x-0 bg-[#FDFBF7]/95 dark:bg-[#1A1412]/95 backdrop-blur-md border-t border-[#E8DEC8] dark:border-[#3D302A] z-50 shadow-[0_-4px_20px_rgba(44,34,30,0.06)]"
     >
-      <div className="max-w-xl mx-auto grid grid-cols-4 gap-1">
+      <div aria-hidden className="flex h-1 w-full">
+        <div className="flex-1 bg-[#009246]" />
+        <div className="flex-1 bg-white" />
+        <div className="flex-1 bg-[#CE2B37]" />
+        <div className="flex-1 bg-[#111111]" />
+        <div className="flex-1 bg-[#DD0000]" />
+        <div className="flex-1 bg-[#FFCE00]" />
+      </div>
+      <div className="max-w-xl mx-auto grid grid-cols-4 gap-1 px-3 py-2">
         {TABS.map(({ id, label, sub, Icon }) => {
           const on = active === id;
           return (
