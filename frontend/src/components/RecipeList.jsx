@@ -245,12 +245,35 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                       )}
                     </div>
                     <div className="space-y-1">
-                      {rows.map(([k, v], idx) => (
+                      {rows.map(([k, v], idx) => {
+                        const isImprover = typeof k === "string" && /migliorator|backmittel/i.test(k);
+                        return (
                         <div key={idx} className="flex items-center justify-between text-sm">
-                          <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{k}</span>
+                          <span className="text-[#4A3B34] dark:text-[#C9BBB0]">
+                            {k}
+                            {isImprover && (
+                              <button
+                                data-testid={`improver-link-${r.id}`}
+                                onClick={() => {
+                                  const target = recipes.find((x) => /migliorator|backmittel/i.test(x.name || ""));
+                                  if (target) {
+                                    const el = document.querySelector(`[data-testid="recipe-card-${target.id}"]`);
+                                    if (el) {
+                                      el.scrollIntoView({ behavior: "smooth", block: "center" });
+                                      el.classList.add("ring-2", "ring-[#6B8E62]");
+                                      setTimeout(() => el.classList.remove("ring-2", "ring-[#6B8E62]"), 2000);
+                                    }
+                                  }
+                                }}
+                                className="ml-1 text-[#6B8E62] font-bold align-super"
+                                title={t("improver_link_title")}
+                              >*</button>
+                            )}
+                          </span>
                           <span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{v}</span>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                     {proc.length > 0 && (
                       <p className="text-xs text-[#8C7567] mt-2 pt-2 border-t border-[#E8DEC8]/70 dark:border-[#3D302A]">

@@ -4,7 +4,18 @@ import { translations } from "@/i18n/translations";
 const LanguageContext = createContext(null);
 
 export function LanguageProvider({ children }) {
-  const [lang, setLangState] = useState(() => localStorage.getItem("mikilab_lang") || "it");
+  const [lang, setLangState] = useState(() => {
+    const saved = localStorage.getItem("mikilab_lang");
+    if (saved) return saved;
+    // Rilevamento automatico della lingua del dispositivo
+    const langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "it"]);
+    for (const l of langs) {
+      const code = (l || "").toLowerCase();
+      if (code.startsWith("de")) return "de";
+      if (code.startsWith("it")) return "it";
+    }
+    return "it";
+  });
 
   useEffect(() => {
     localStorage.setItem("mikilab_lang", lang);
