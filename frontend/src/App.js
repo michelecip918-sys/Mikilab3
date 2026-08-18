@@ -8,6 +8,7 @@ import Mikilab from "@/sections/Mikilab";
 import Maestro from "@/sections/Maestro";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
+import VoiceAssistant from "@/components/VoiceAssistant";
 
 function App() {
   const [tab, setTab] = useState("mikilab");
@@ -32,6 +33,7 @@ function App() {
         </AnimatePresence>
       </main>
       <BottomNav active={tab} onChange={setTab} />
+      <VoiceAssistant onNavigate={setTab} />
       <Toaster position="top-center" richColors />
     </div>
   );

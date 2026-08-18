@@ -69,7 +69,6 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
     num(c.overhead);
   const pieces = num(c.pieces);
   const costPerPiece = pieces > 0 ? prodCost / pieces : null;
-  const sellPrice = costPerPiece != null ? costPerPiece * (1 + num(c.markup) / 100) : null;
 
   const submit = () => {
     if (!form.name.trim()) return;
@@ -320,8 +319,8 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               </button>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 mt-2">
-              {[["overhead", "cost_overhead"], ["pieces", "cost_pieces"], ["markup", "cost_markup"]].map(([k, lk]) => (
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              {[["overhead", "cost_overhead"], ["pieces", "cost_pieces"]].map(([k, lk]) => (
                 <div key={k}>
                   <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t(lk)}</label>
                   <input
@@ -337,12 +336,6 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               <div className="mt-3 space-y-1.5 bg-[#F5EFE6] dark:bg-[#332823] rounded-xl p-3" data-testid="cost-summary">
                 <Row label={t("cost_total")} value={`€ ${prodCost.toFixed(2)}`} />
                 {costPerPiece != null && <Row label={t("cost_per_piece")} value={`€ ${costPerPiece.toFixed(2)}`} />}
-                {sellPrice != null && (
-                  <div className="flex items-center justify-between pt-1.5 border-t border-[#E8DEC8] dark:border-[#3D302A]">
-                    <span className="text-sm font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{t("cost_sell")}</span>
-                    <span data-testid="cost-sell-price" className="font-mono-data font-bold text-lg text-[#8C3A1D] dark:text-[#E5AC3A]">€ {sellPrice.toFixed(2)}</span>
-                  </div>
-                )}
               </div>
             )}
           </div>

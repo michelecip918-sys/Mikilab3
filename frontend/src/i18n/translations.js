@@ -18,8 +18,8 @@ export const translations = {
 
     // Mikilab
     mikilab_title: "Mikilab",
-    mikilab_subtitle: "Le tue ricette, sempre modificabili",
-    mikilab_empty: "Nessuna ricetta. Tocca 'Aggiungi ricetta' per iniziare.",
+    mikilab_subtitle: "Le ricette del laboratorio, da consultare",
+    mikilab_empty: "Nessuna ricetta disponibile al momento.",
 
     // Recipe list / card
     add_recipe: "Aggiungi ricetta",
@@ -286,6 +286,14 @@ export const translations = {
     pf_licoli: "Li.Co.Li (liquido)",
     tab_lievito: "Lievito madre",
     lm_page_title: "Lievito madre — tutto in dettaglio",
+    voice_tap: "Parla con Mikilab",
+    voice_listening: "Ti ascolto…",
+    voice_thinking: "Sto pensando…",
+    voice_unsupported: "Il riconoscimento vocale non è supportato su questo browser. Usa Chrome o Android.",
+    voice_nav_ricette: "Apro le ricette",
+    voice_nav_maestro: "Apro gli strumenti del Maestro",
+    voice_nav_foto: "Apro la diagnosi con foto",
+    voice_nav_satutto: "Apro il Maestro sa tutto",
     cost_auto_note: "Ho inserito prezzi standard automatici. Puoi modificarli quando vuoi.",
     cost_use_standard: "Usa prezzi standard",
     badge_bake: "cottura",
@@ -346,8 +354,8 @@ export const translations = {
 
     // Mikilab
     mikilab_title: "Mikilab",
-    mikilab_subtitle: "Deine Rezepte, jederzeit änderbar",
-    mikilab_empty: "Noch keine Rezepte. Tippe auf 'Rezept hinzufügen', um zu starten.",
+    mikilab_subtitle: "Die Rezepte der Backstube, zum Ansehen",
+    mikilab_empty: "Momentan keine Rezepte verfügbar.",
 
     // Recipe list / card
     add_recipe: "Rezept hinzufügen",
@@ -613,6 +621,14 @@ export const translations = {
     pf_licoli: "Li.Co.Li (flüssig)",
     tab_lievito: "Sauerteig",
     lm_page_title: "Sauerteig / Lievito madre — alle Details",
+    voice_tap: "Sprich mit Mikilab",
+    voice_listening: "Ich höre zu…",
+    voice_thinking: "Ich denke nach…",
+    voice_unsupported: "Spracherkennung wird in diesem Browser nicht unterstützt. Nutze Chrome oder Android.",
+    voice_nav_ricette: "Ich öffne die Rezepte",
+    voice_nav_maestro: "Ich öffne die Meister-Werkzeuge",
+    voice_nav_foto: "Ich öffne die Foto-Diagnose",
+    voice_nav_satutto: "Ich öffne 'Der Meister weiß alles'",
     cost_auto_note: "Standardpreise wurden automatisch eingetragen. Du kannst sie jederzeit ändern.",
     cost_use_standard: "Standardpreise verwenden",
     badge_bake: "Backen",
