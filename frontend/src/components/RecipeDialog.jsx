@@ -25,7 +25,7 @@ const empty = {
   name: "", flour_type: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
-  oven_type: "statico", method_type: "indiretto", notes: "", extra_ingredients: [], costing: standardCosting(),
+  oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", extra_ingredients: [], costing: standardCosting(),
 };
 
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
@@ -81,7 +81,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const submit = () => {
     if (!form.name.trim()) return;
     const payload = {
-      name: form.name.trim(), flour_type: form.flour_type, notes: form.notes,
+      name: form.name.trim(), flour_type: form.flour_type, notes: form.notes, procedure: form.procedure,
       preferment_type: form.preferment_type || null,
       oven_type: form.oven_type || null,
       method_type: form.method_type || null,
@@ -280,6 +280,18 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             />
           </div>
 
+          {/* Procedimento passo-passo */}
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_procedure")}</label>
+            <textarea
+              data-testid="recipe-procedure-input"
+              value={form.procedure}
+              onChange={(e) => set("procedure", e.target.value)}
+              rows={5}
+              className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base outline-none resize-none"
+            />
+          </div>
+
           {/* Altri ingredienti (percentuale sul peso farina) */}
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("ing_extra_section")}</label>
@@ -419,6 +431,7 @@ function normalize(r) {
   out.oven_type = r.oven_type || "statico";
   out.method_type = r.method_type || "indiretto";
   out.extra_ingredients = (r.extra_ingredients || []).map((e) => ({ name: e.name || "", percent: e.percent ?? "" }));
+  out.procedure = r.procedure || "";
   const rc = r.costing || {};
   const has = (v) => v !== "" && v != null;
   out.costing = {

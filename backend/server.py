@@ -56,6 +56,7 @@ class Recipe(BaseModel):
     method_type: Optional[str] = None
     image_url: Optional[str] = None
     notes: Optional[str] = ""
+    procedure: Optional[str] = ""
     extra_ingredients: Optional[List[dict]] = None
     costing: Optional[dict] = None
     created_at: str = Field(default_factory=now_iso)
@@ -82,6 +83,7 @@ class RecipeCreate(BaseModel):
     method_type: Optional[str] = None
     image_url: Optional[str] = None
     notes: Optional[str] = ""
+    procedure: Optional[str] = ""
     extra_ingredients: Optional[List[dict]] = None
     costing: Optional[dict] = None
 
@@ -105,6 +107,7 @@ class RecipeUpdate(BaseModel):
     method_type: Optional[str] = None
     image_url: Optional[str] = None
     notes: Optional[str] = None
+    procedure: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     costing: Optional[dict] = None
 

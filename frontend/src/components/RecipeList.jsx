@@ -219,7 +219,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 if (rest > 0) proc.push(`${t("proc_rest")} ${rest}h`);
                 if (r.bake_temp != null) proc.push(`${t("proc_bake")} ${r.bake_temp}°${r.bake_minutes != null ? `/${r.bake_minutes}′` : ""}`);
                 if (rows.length === 0) return null;
-                const backG = flourG > 0 ? Math.round(target * 0.03) : 0;
                 return (
                   <div data-testid={`recipe-ingredients-${r.id}`} className="mt-3 rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
                     <div className="flex items-center justify-between mb-2">
@@ -243,12 +242,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                           <span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{v}</span>
                         </div>
                       ))}
-                      {!isBack && flourG > 0 && (
-                        <div className="flex items-center justify-between text-sm pt-1 mt-1 border-t border-dashed border-[#D99B26]/50">
-                          <span className="text-[#4d6b45] dark:text-[#9ec48f] font-medium">🌾 {t("backmittel_name")}</span>
-                          <span className="font-mono-data font-semibold text-[#4d6b45] dark:text-[#9ec48f]">{backG} g · 3%</span>
-                        </div>
-                      )}
                     </div>
                     {proc.length > 0 && (
                       <p className="text-xs text-[#8C7567] mt-2 pt-2 border-t border-[#E8DEC8]/70 dark:border-[#3D302A]">
@@ -258,6 +251,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   </div>
                 );
               })()}
+
+              {r.procedure ? (
+                <div data-testid={`recipe-procedure-${r.id}`} className="mt-3 rounded-xl bg-[#6B8E62]/10 border border-[#6B8E62]/25 p-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-[#4d6b45] dark:text-[#9ec48f] mb-1.5">{t("recipe_procedure")}</p>
+                  <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.procedure}</p>
+                </div>
+              ) : null}
 
               {r.notes ? (
                 <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-3 leading-relaxed whitespace-pre-line">{r.notes}</p>
