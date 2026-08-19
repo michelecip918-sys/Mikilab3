@@ -617,24 +617,44 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 
+async def _run_mikilab_seed():
+    """Esegue in-process gli script di seed (import + await main)."""
+    import importlib
+    import sys
+    base = os.path.dirname(os.path.abspath(__file__))
+    if base not in sys.path:
+        sys.path.insert(0, base)
+    for name in ["seed_real_recipes", "rename_nice", "fix_backmittel_origin",
+                 "seed_quellstuck", "seed_quell_for_seeds"]:
+        try:
+            mod = importlib.import_module(name)
+            importlib.reload(mod)
+            await mod.main()
+        except Exception as e:
+            logging.getLogger(__name__).error(f"Seed {name} error: {e}")
+
+
+@app.get("/api/seed-mikilab")
+async def seed_mikilab_endpoint(force: bool = False):
+    count = await db.recipes.count_documents({"collection_name": "mikilab"})
+    if count > 0 and not force:
+        return {"status": "skipped", "message": "Ricette già presenti", "count": count}
+    await _run_mikilab_seed()
+    new_count = await db.recipes.count_documents({"collection_name": "mikilab"})
+    return {"status": "seeded", "count": new_count}
+
+
 @app.on_event("startup")
 async def seed_mikilab_if_empty():
-    """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab di Michele."""
+    """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab."""
     try:
         count = await db.recipes.count_documents({"collection_name": "mikilab"})
-        if count > 0:
-            return
-        import subprocess, sys
-        base = os.path.dirname(os.path.abspath(__file__))
-        for scr in ["seed_real_recipes.py", "rename_nice.py", "fix_backmittel_origin.py",
-                    "seed_quellstuck.py", "seed_quell_for_seeds.py"]:
-            path = os.path.join(base, scr)
-            if os.path.exists(path):
-                subprocess.run([sys.executable, path], check=False, cwd=base, timeout=60)
-        new_count = await db.recipes.count_documents({"collection_name": "mikilab"})
-        logging.getLogger(__name__).info(f"Mikilab seed eseguito: {new_count} ricette")
+        if count == 0:
+            await _run_mikilab_seed()
+            n = await db.recipes.count_documents({"collection_name": "mikilab"})
+            logging.getLogger(__name__).info(f"Mikilab seed startup: {n} ricette")
     except Exception as e:
-        logging.getLogger(__name__).error(f"Seed mikilab error: {e}")
+        logging.getLogger(__name__).error(f"Seed startup error: {e}")
 
 
 @app.on_event("shutdown")
