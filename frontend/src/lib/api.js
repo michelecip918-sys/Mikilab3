@@ -49,6 +49,10 @@ export const recipeTempApi = {
   save: (data) => api.post(`/recipe-temp`, data).then((r) => r.data),
 };
 
+export const newsApi = {
+  list: () => api.get(`/news`).then((r) => r.data),
+};
+
 export const announcementsApi = {
   list: () => api.get(`/announcements`).then((r) => r.data),
   create: (data) => api.post(`/announcements`, data).then((r) => r.data),

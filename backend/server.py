@@ -890,6 +890,111 @@ async def maestro_vision(payload: VisionRequest):
     )
 
 
+class ScanRecipeRequest(BaseModel):
+    image_base64: str
+    lang: str = "it"
+
+
+SCAN_PROMPT = (
+    "Sei un assistente di panificazione. Nella foto c'è una RICETTA (scritta a mano o stampata). "
+    "Leggila e trasformala in DATI STRUTTURATI. Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, "
+    "con ESATTAMENTE queste chiavi (usa null se un dato non è presente, NON inventare):\n"
+    '{"name": string, "flour_type": string, "hydration_percent": number|null, '
+    '"flour_grams": number|null, "water_grams": number|null, "sourdough_grams": number|null, "salt_grams": number|null, '
+    '"preferment_type": "none"|"lm"|"poolish"|"biga", "method_type": "diretto"|"indiretto", '
+    '"dough_category": string|null, "water_temp_c": number|null, "mix_minutes": number|null, '
+    '"bake_temp": number|null, "bake_minutes": number|null, "oven_type": string|null, '
+    '"bulk_fermentation_hours": number|null, "proofing_hours": number|null, "origin": string|null, '
+    '"extra_ingredients": [{"name": string, "percent": number|null, "grams": number|null}], '
+    '"procedure": string, "notes": string}\n'
+    "Converti tutte le quantità in grammi quando possibile. Metti il procedimento passo-passo in 'procedure'. "
+    "Non aggiungere spiegazioni: SOLO il JSON."
+)
+
+
+@api_router.post("/maestro/scan-recipe")
+async def scan_recipe(payload: ScanRecipeRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    img = payload.image_base64
+    if "," in img and img.strip().startswith("data:"):
+        img = img.split(",", 1)[1]
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"scan-{uuid.uuid4()}",
+        system_message="Estrai ricette da foto e restituisci solo JSON valido.",
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
+    user_msg = UserMessage(text=SCAN_PROMPT, file_contents=[ImageContent(image_base64=img)])
+    text = ""
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("scan-recipe error")
+        raise HTTPException(status_code=500, detail="Errore nell'analisi della foto")
+    raw = text.strip()
+    if raw.startswith("```"):
+        raw = raw.strip("`")
+        raw = raw[raw.find("{"):]
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Ricetta non riconosciuta nella foto")
+    try:
+        data = json.loads(raw[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile leggere la ricetta dalla foto")
+    return data
+
+
+import xml.etree.ElementTree as ET
+
+
+def _fetch_rss(query: str, hl: str, gl: str, ceid: str, region: str, limit: int = 5):
+    url = f"https://news.google.com/rss/search?q={requests.utils.quote(query)}&hl={hl}&gl={gl}&ceid={ceid}"
+    out = []
+    try:
+        r = requests.get(url, timeout=12, headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        root = ET.fromstring(r.content)
+        for item in root.iter("item"):
+            title = (item.findtext("title") or "").strip()
+            link = (item.findtext("link") or "").strip()
+            pub = (item.findtext("pubDate") or "").strip()
+            src_el = item.find("{http://www.w3.org/2005/Atom}source") or item.find("source")
+            src = (src_el.text if src_el is not None and src_el.text else "").strip()
+            if not title:
+                continue
+            details = " · ".join([x for x in [src, pub[:16]] if x])
+            out.append({"title": title, "details": details, "link": link, "region": region})
+            if len(out) >= limit:
+                break
+    except Exception as e:
+        logging.getLogger(__name__).error(f"RSS fetch error ({region}): {e}")
+    return out
+
+
+@api_router.get("/news")
+async def get_news():
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    cached = await db.news_cache.find_one({"_key": "news"}, {"_id": 0})
+    if cached and cached.get("date") == today and cached.get("items"):
+        return cached["items"]
+    items = []
+    items += _fetch_rss("Bäckerei OR Brot Stuttgart", "de", "DE", "DE:de", "stoccarda", 4)
+    items += _fetch_rss("Handwerksbäckerei OR Sauerteig Deutschland", "de", "DE", "DE:de", "germania", 3)
+    items += _fetch_rss("panificazione OR pane artigianale OR lievito madre", "it", "IT", "IT:it", "italia", 3)
+    if items:
+        await db.news_cache.update_one(
+            {"_key": "news"}, {"$set": {"_key": "news", "date": today, "items": items}}, upsert=True
+        )
+    elif cached and cached.get("items"):
+        return cached["items"]  # fallback to last good cache
+    return items
+
+
 # ---------------------------------------------------------------------------
 app.include_router(api_router)
 

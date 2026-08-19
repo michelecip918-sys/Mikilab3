@@ -65,6 +65,44 @@
   "origin": "de"
  },
  {
+  "id": "e5e6fa92-d9db-4ed6-af88-089340ab3a40",
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T10:03:59.503964+00:00",
+  "updated_at": "2026-08-19T10:03:59.503973+00:00",
+  "name": "Baguette con Poolish",
+  "flour_type": "Farina T65 (W270) — con Poolish",
+  "hydration_percent": 70,
+  "flour_grams": 1000,
+  "water_grams": 700,
+  "sourdough_grams": 0,
+  "salt_grams": 20,
+  "preferment_type": "poolish",
+  "method_type": "indiretto",
+  "dough_category": "pre",
+  "water_temp_c": 15,
+  "mix_minutes": 10,
+  "bake_temp": 250,
+  "bake_minutes": 22,
+  "oven_type": "statico",
+  "bulk_fermentation_hours": 2,
+  "proofing_hours": 1,
+  "origin": "fr",
+  "image_url": "/recipes/r_filo.jpg",
+  "extra_ingredients": [
+   {
+    "name": "Poolish (500 g farina + 500 g acqua + 2 g lievito)",
+    "percent": 50
+   },
+   {
+    "name": "Lievito di birra fresco",
+    "percent": 0.6
+   }
+  ],
+  "procedure": "La classica baguette francese con POOLISH (prefermento liquido).\n1) POOLISH (sera prima): 500 g farina + 500 g acqua a 15°C + 2 g lievito. Mescola, copri e lascia 12-16 h a TA finché è pieno di bolle.\n2) IMPASTO: unisci il poolish con i restanti 500 g di farina, ~200 g di acqua, 6 g di lievito e per ultimo 20 g di sale. Impasta 10 min fino a incordare.\n3) PUNTATA: ~2 h con 1-2 pieghe.\n4) SPEZZATURA e PRE-FORMA leggera; riposo 20 min.\n5) FORMATURA a filone lungo (baguette); appretto ~1 h su telo (couche).\n6) TAGLI (grignes) obliqui; COTTURA 250°C con vapore i primi 10 min, poi 230°C, ~22 min. Crosta croccante e alveolatura irregolare.",
+  "notes": "Baguette con poolish: prefermento liquido per aroma e alveolatura. Idratazione ~70%%. Cuoci con vapore per una crosta sottile e croccante."
+ },
+ {
   "id": "7d432668-ec89-4dd8-b18a-de44cb98e843",
   "collection_name": "mikilab",
   "costing": null,
@@ -552,31 +590,35 @@
   "created_at": "2026-08-19T09:33:15.142564+00:00",
   "updated_at": "2026-08-19T09:33:15.142571+00:00",
   "name": "Gnetze Brot",
-  "flour_type": "Farina di frumento Type 550 (o Dinkel)",
-  "hydration_percent": 68,
+  "flour_type": "Farina di frumento Type 550/630 — con Poolish e Sauerteig liquido",
+  "hydration_percent": 82,
   "flour_grams": 1000,
-  "water_grams": 680,
-  "sourdough_grams": 200,
+  "water_grams": 820,
+  "sourdough_grams": 250,
   "salt_grams": 20,
-  "preferment_type": "lm",
+  "preferment_type": "poolish",
   "method_type": "indiretto",
-  "dough_category": "lm",
-  "water_temp_c": 20,
+  "dough_category": "pre",
+  "water_temp_c": 18,
   "mix_minutes": 12,
   "bake_temp": 240,
   "bake_minutes": 40,
   "oven_type": "statico",
-  "bulk_fermentation_hours": 4,
-  "proofing_hours": 1.5,
+  "bulk_fermentation_hours": 3,
+  "proofing_hours": 1,
   "origin": "de",
   "extra_ingredients": [
    {
-    "name": "Miglioratore naturale",
-    "percent": 3
+    "name": "Poolish (150 g farina + 150 g acqua + 1,5 g lievito)",
+    "percent": 30
+   },
+   {
+    "name": "Sauerteig liquido (maturo)",
+    "percent": 25
    }
   ],
-  "procedure": "BOZZA (da rifinire con dosi e passaggi di Michele).\n1) Rinfresca il lievito madre.\n2) Impasta farina, acqua, lievito madre e Miglioratore; sale a fine impasto (12').\n3) Riposo in CELLA a 16°C (max 6 ore) — metodo Michele.\n4) Spezza e forma le pagnotte 'gnetze' (pieghe rustiche).\n5) Appretto ~1,5 h.\n6) Cottura 240°C con vapore, poi 210°C, ~40 min.",
-  "notes": "Bozza del Gnetze Brot col metodo indiretto di Michele (lievito madre + Miglioratore, cella 16°C). Rifinisci dosi, forma e tempi secondo la tua esperienza.",
+  "procedure": "Netzbrot / Genetztes (Württemberg-Schwaben): mollica molto umida e alta idratazione. Prefermenti: POOLISH liquido (150 g farina + 150 g acqua + 1,5 g lievito, 12-16 h a TA) + SAUERTEIG liquido maturo (~250 g).\n1) AUTOLISI: unisci poolish, Sauerteig, farina e gran parte dell acqua, riposa 20-30 min.\n2) IMPASTO: aggiungi il sale; impasta fino a incordare, impasto morbido e appiccicoso (usa bassinage per l ultima acqua).\n3) STOCKGARE: ~3 h con 2-3 pieghe in ciotola.\n4) NON si forma sul banco: per la sua umidità si versa direttamente dalla ciotola (Schapf) sulla teglia/pietra.\n5) COTTURA: 240°C con vapore, poi 210-220°C, ~40 min. Crosta rustica, mollica umida e alveolata.",
+  "notes": "Gnetzbrot/Netzbrot col metodo indiretto: poolish + Sauerteig liquido, idratazione ~82%%. Tradizionale di Württemberg: impasto così morbido da versarsi dalla ciotola. Rifinisci a piacere.",
   "image_url": "/recipes/r_gnetze.jpg"
  },
  {
@@ -2280,17 +2322,17 @@
   "created_at": "2026-08-19T09:33:15.142844+00:00",
   "updated_at": "2026-08-19T09:33:15.142847+00:00",
   "name": "Wurzelbrot",
-  "flour_type": "Farina Type 550 + un po' di Dinkel",
-  "hydration_percent": 75,
+  "flour_type": "Farina Tipo 0 (W300) — con Poolish e Weizensauerteig liquido",
+  "hydration_percent": 82,
   "flour_grams": 1000,
-  "water_grams": 750,
-  "sourdough_grams": 180,
-  "salt_grams": 20,
+  "water_grams": 820,
+  "sourdough_grams": 300,
+  "salt_grams": 22,
   "preferment_type": "poolish",
   "method_type": "indiretto",
   "dough_category": "pre",
-  "water_temp_c": 18,
-  "mix_minutes": 10,
+  "water_temp_c": 15,
+  "mix_minutes": 12,
   "bake_temp": 250,
   "bake_minutes": 25,
   "oven_type": "statico",
@@ -2299,12 +2341,16 @@
   "origin": "de",
   "extra_ingredients": [
    {
-    "name": "Miglioratore naturale",
-    "percent": 3
+    "name": "Poolish (150 g farina + 150 g acqua + 1,5 g lievito)",
+    "percent": 30
+   },
+   {
+    "name": "Weizensauerteig liquido (maturo)",
+    "percent": 30
    }
   ],
-  "procedure": "BOZZA (da rifinire con dosi e passaggi di Michele).\n1) Poolish la sera prima.\n2) Impasta poolish, farina, acqua e Miglioratore; sale a fine impasto (impasto morbido).\n3) Puntata ~3 h con pieghe; riposo fresco possibile.\n4) Taglia strisce e ATTORCIGLIALE (forma tipica 'a radice').\n5) Cottura forte 250°C con vapore, ~25 min: crosta croccante e alveoli irregolari.",
-  "notes": "Bozza del Wurzelbrot (pane 'a radice' attorcigliato) col metodo indiretto di Michele. Rifinisci idratazione, pieghe e tempi a piacere.",
+  "procedure": "Ricetta ad alta idratazione (TA ~182). Prefermenti: POOLISH liquido (150 g farina + 150 g acqua a 15°C + 1,5 g lievito; 2-3 h a TA poi in frigo a 4°C) + WEIZENSAUERTEIG liquido maturo (~300 g).\n1) AUTOLISI: unisci Sauerteig, poolish, farina e la prima acqua (~650 g), riposa 30 min.\n2) IMPASTO: aggiungi il sale, mescola lento 10 min poi veloce fino a incordare (il tuo Miglioratore a piacere).\n3) BASSINAGE: trattieni ~10%% dell acqua (~80 g) e uniscila poco a poco a impasto incordato.\n4) STOCKGARE: 3 h in vasca oliata a TA con 2 pieghe (stretch & fold). Opzionale: 18-24 h in frigo a 4°C per affinare l alveolatura.\n5) FORMATURA: rovescia delicatamente sul banco infarinato, taglia strisce e ATTORCIGLIALE a vite (senza sgonfiare).\n6) COTTURA: 250°C con vapore forte, poi abbassa a 220-230°C, ~25 min. Crosta croccante, alveoli irregolari.",
+  "notes": "Wurzelbrot (pane a radice) col metodo indiretto: poolish + Weizensauerteig liquido, idratazione ~82%% con bassinage. Impasto molto morbido: attorciglia con delicatezza.",
   "image_url": "/recipes/r_wurzel.jpg"
  }
 ]

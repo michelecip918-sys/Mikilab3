@@ -415,6 +415,8 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
 
         {r.notes ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.notes}</p> : null}
 
+        <GlossaryBox text={`${r.procedure || ""} ${r.notes || ""}`} />
+
         {Array.isArray(r.work_phases) && r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).length > 0 && (
           <div data-testid={`recipe-phases-${r.id}`} className="rounded-xl bg-[#B34A26]/8 border border-[#B34A26]/20 p-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("work_phases_section")}</p>
@@ -465,4 +467,69 @@ function fmtTemp(v) {
   if (v == null) return "";
   const m = String(v).match(/-?\d+(?:[.,]\d+)?/);
   return m ? m[0].replace(",", ".") : String(v).replace(/[°cC\s]+$/g, "");
+}
+
+const GLOSSARY = {
+  bassinage: {
+    it: "Bassinage: si trattiene una parte dell'acqua (~10%) e la si aggiunge poco a poco all'impasto GIÀ incordato, per raggiungere alte idratazioni senza smontare la maglia glutinica.",
+    de: "Bassinage: Man hält ca. 10% des Wassers zurück und arbeitet es erst in den FERTIG gekneteten Teig ein – so erreicht man hohe Hydratation, ohne das Glutengerüst zu zerstören.",
+    match: ["bassinage"],
+  },
+  autolisi: {
+    it: "Autolisi: riposo iniziale di farina e acqua (20-40 min) prima di sale e lievito; sviluppa glutine e rende l'impasto più estensibile.",
+    de: "Autolyse: anfängliche Ruhezeit von Mehl und Wasser (20-40 Min.) vor Salz und Hefe; entwickelt Gluten und macht den Teig dehnbarer.",
+    match: ["autolisi", "autolyse"],
+  },
+  poolish: {
+    it: "Poolish: prefermento liquido (farina e acqua in parti uguali + poco lievito), matura 8-16 h; dà aroma e sofficità.",
+    de: "Poolish: flüssiger Vorteig (Mehl und Wasser zu gleichen Teilen + wenig Hefe), reift 8-16 h; gibt Aroma und Lockerheit.",
+    match: ["poolish"],
+  },
+  stockgare: {
+    it: "Stockgare (puntata): prima lievitazione in massa dopo l'impasto, spesso con pieghe.",
+    de: "Stockgare: erste Teigruhe in der Masse nach dem Kneten, oft mit Dehnen und Falten.",
+    match: ["stockgare"],
+  },
+  quellstuck: {
+    it: "Quellstück: semi/cereali messi in ammollo (spesso la sera prima) così assorbono acqua e non rubano umidità all'impasto.",
+    de: "Quellstück: Saaten/Körner werden eingeweicht (oft am Vorabend), damit sie Wasser aufnehmen und dem Teig keine Feuchtigkeit entziehen.",
+    match: ["quellstück", "quellstuck"],
+  },
+  sauerteig: {
+    it: "Sauerteig: lievito naturale (pasta acida). Il Weizensauerteig è di frumento, il Roggensauerteig di segale.",
+    de: "Sauerteig: natürliches Triebmittel. Weizensauerteig aus Weizen, Roggensauerteig aus Roggen.",
+    match: ["sauerteig", "weizensauerteig", "roggensauerteig"],
+  },
+  incordare: {
+    it: "Incordare: impastare fino a che l'impasto diventa liscio, elastico e si stacca dalle pareti (glutine ben sviluppato).",
+    de: "Auskneten (incordare): kneten, bis der Teig glatt, elastisch ist und sich von der Schüssel löst (Gluten gut entwickelt).",
+    match: ["incorda", "incordat"],
+  },
+  appretto: {
+    it: "Appretto: seconda lievitazione dopo la formatura, prima della cottura.",
+    de: "Stückgare (appretto): zweite Gare nach dem Formen, vor dem Backen.",
+    match: ["appretto"],
+  },
+  ta: {
+    it: "TA (Teigausbeute): resa dell'impasto = (farina+acqua)/farina ×100. Es. TA 182 ≈ 82% di idratazione.",
+    de: "TA (Teigausbeute): (Mehl+Wasser)/Mehl ×100. Z. B. TA 182 ≈ 82% Hydratation.",
+    match: ["teigausbeute", "ta ~", "ta182", "ta 18"],
+  },
+};
+
+function GlossaryBox({ text }) {
+  const { t, lang } = useLang();
+  const low = (text || "").toLowerCase();
+  const found = Object.values(GLOSSARY).filter((g) => g.match.some((m) => low.includes(m)));
+  if (found.length === 0) return null;
+  return (
+    <div data-testid="recipe-glossary" className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A] mb-1.5">{t("gloss_title")} *</p>
+      <ul className="space-y-1.5">
+        {found.map((g, i) => (
+          <li key={i} className="text-xs text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">* {lang === "de" ? g.de : g.it}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }

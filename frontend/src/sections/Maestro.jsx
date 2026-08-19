@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, CalendarDays, ChefHat, Flame, Wheat, Sprout, ChevronLeft, ChevronRight, ClipboardList, Thermometer, Tag } from "lucide-react";
+import { PlusCircle, CalendarDays, ChefHat, Flame, Wheat, Sprout, ChevronLeft, ChevronRight, ClipboardList, Thermometer, Tag, ScanLine, BookOpen } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import StartDoughs from "@/sections/StartDoughs";
@@ -10,6 +10,8 @@ import Beginners from "@/sections/Beginners";
 import CapoLaboratorio from "@/sections/CapoLaboratorio";
 import ClimaTermostato from "@/sections/ClimaTermostato";
 import PanettoneLabels from "@/sections/PanettoneLabels";
+import ScanRecipe from "@/sections/ScanRecipe";
+import GuidaMetodi from "@/sections/GuidaMetodi";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function Maestro() {
@@ -19,6 +21,8 @@ export default function Maestro() {
   const TOOLS = [
     { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
     { id: "termo", title: t("tool_termo"), desc: t("tool_termo_desc"), Icon: Thermometer },
+    { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
+    { id: "guida", title: t("tool_guida"), desc: t("tool_guida_desc"), Icon: BookOpen },
     { id: "labels", title: t("tool_labels"), desc: t("tool_labels_desc"), Icon: Tag },
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
     { id: "settimana", title: t("tool_settimana"), desc: t("tool_settimana_desc"), Icon: CalendarDays },
@@ -51,6 +55,8 @@ export default function Maestro() {
         {tool === "lavoro" && <StartDoughs />}
         {tool === "capo" && <CapoLaboratorio />}
         {tool === "termo" && <ClimaTermostato />}
+        {tool === "scan" && <ScanRecipe />}
+        {tool === "guida" && <GuidaMetodi />}
         {tool === "labels" && <PanettoneLabels />}
         {tool === "adatta" && <AdattaForno />}
         {tool === "sveglia" && <SvegliaLievito />}
