@@ -31,22 +31,22 @@ export default function Header() {
         <div className="flex-1 bg-[#FFCE00]" />
       </div>
 
-      <div className="px-4 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-2.5">
-        <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#2A211D] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70">
+      <div className="px-4 py-3 flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2.5 min-w-0">
+        <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#2A211D] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70 shrink-0">
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-full h-full object-cover" />
         </div>
-        <div className="leading-none">
+        <div className="leading-none min-w-0">
           <div className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
             Mikilab
           </div>
-          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#8C7567] flex items-center gap-1">
-            <span>🇮🇹</span> {t("brand_subtitle")} <span>🇩🇪</span>
+          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#8C7567] flex items-center gap-1 truncate">
+            <span>🇮🇹</span> <span className="truncate">{t("brand_subtitle")}</span> <span>🇩🇪</span>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 shrink-0">
         {/* Orologio sempre visibile */}
         <div data-testid="header-clock" className="flex items-center gap-1.5 bg-[#F5EFE6] dark:bg-[#332823] rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] px-2.5 py-1.5">
           <Clock className="w-3.5 h-3.5 text-[#B34A26]" />

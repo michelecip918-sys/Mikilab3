@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal } from "lucide-react";
@@ -28,11 +28,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     setLoading(true);
     try {
       const list = await recipesApi.list(collectionName);
-      // Miglioratore/Backmittel sempre in cima (da lì si parte), poi in ordine alfabetico
       list.sort((a, b) => {
-        const ia = /migliorator|backmittel/i.test(a.name || "") ? 0 : 1;
-        const ib = /migliorator|backmittel/i.test(b.name || "") ? 0 : 1;
-        if (ia !== ib) return ia - ib;
+        const ca = recipeCategory(a), cb = recipeCategory(b);
+        if (ca.rank !== cb.rank) return ca.rank - cb.rank;
         return (a.name || "").localeCompare(b.name || "");
       });
       setRecipes(list);
@@ -138,12 +136,22 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       ) : (
         <div className="space-y-2.5">
-          {recipes.map((r, i) => (
+          {recipes.map((r, i) => {
+            const cat = recipeCategory(r);
+            const showHeader = collectionName === "mikilab" && (i === 0 || recipeCategory(recipes[i - 1]).key !== cat.key);
+            return (
+            <Fragment key={r.id}>
+              {showHeader && (
+                <div data-testid={`cat-${cat.key}`} className="flex items-center gap-2 pt-3 pb-1 first:pt-0">
+                  <span className="text-lg">{cat.icon}</span>
+                  <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B34A26]">{t(cat.label)}</h2>
+                  <span className="flex-1 h-px bg-[#E8DEC8] dark:bg-[#3D302A]" />
+                </div>
+              )}
             <motion.button
-              key={r.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: Math.min(i * 0.03, 0.4) }}
+              transition={{ delay: Math.min(i * 0.02, 0.3) }}
               onClick={() => setViewing(r)}
               data-testid={`recipe-row-${r.id}`}
               className="relative overflow-hidden w-full text-left bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-[0.99] hover:border-[#D99B26]/60 transition-all flex items-center gap-3"
@@ -168,7 +176,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </div>
               <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />
             </motion.button>
-          ))}
+            </Fragment>
+            );
+          })}
         </div>
       )}
 
@@ -467,6 +477,16 @@ function fmtTemp(v) {
   if (v == null) return "";
   const m = String(v).match(/-?\d+(?:[.,]\d+)?/);
   return m ? m[0].replace(",", ".") : String(v).replace(/[°cC\s]+$/g, "");
+}
+
+// Categoria e ordine di visualizzazione: Backmittel -> Lievito Madre -> Panettoni -> Pane -> Panini
+function recipeCategory(r) {
+  const name = (r.name || "").toLowerCase();
+  if (/migliorator|backmittel/.test(name)) return { rank: 0, key: "backmittel", label: "cat_backmittel", icon: "✨" };
+  if (/panettone/.test(name)) return { rank: 2, key: "panettoni", label: "cat_panettoni", icon: "🎁" };
+  if (/puccia|bretzel|taralli|frisell|panino|panini/.test(name)) return { rank: 4, key: "panini", label: "cat_panini", icon: "🥖" };
+  if (r.preferment_type === "lm") return { rank: 1, key: "lm", label: "cat_lm", icon: "🌾" };
+  return { rank: 3, key: "pane", label: "cat_pane", icon: "🍞" };
 }
 
 const GLOSSARY = {
