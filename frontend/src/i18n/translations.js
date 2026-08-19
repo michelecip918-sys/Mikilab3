@@ -414,6 +414,11 @@ export const translations = {
     labels_b2b_500: "Prezzo consigliato 500 g",
     labels_b2b_100: "Prezzo consigliato 100 g",
     labels_b2b_hint: "Prezzi di vendita consigliati per bar e ristoranti (B2B).",
+    view_labels: "Etichette",
+    view_listino: "Listino",
+    listino_print: "Stampa listino",
+    listino_subtitle: "Listino prezzi consigliati · bar e ristoranti",
+    listino_col_flavor: "Gusto",
     // Scansiona ricetta + Guida metodi + Glossario
     tool_scan: "Scansiona ricetta",
     tool_scan_desc: "Fotografa una ricetta e diventa testo modificabile e salvabile",
@@ -1002,6 +1007,11 @@ export const translations = {
     labels_b2b_500: "Empfohlener Preis 500 g",
     labels_b2b_100: "Empfohlener Preis 100 g",
     labels_b2b_hint: "Empfohlene Verkaufspreise für Bars und Restaurants (B2B).",
+    view_labels: "Etiketten",
+    view_listino: "Preisliste",
+    listino_print: "Preisliste drucken",
+    listino_subtitle: "Empfohlene Preisliste · Bars und Restaurants",
+    listino_col_flavor: "Sorte",
     // Scansiona ricetta + Guida metodi + Glossario
     tool_scan: "Rezept scannen",
     tool_scan_desc: "Rezept fotografieren → bearbeitbarer, speicherbarer Text",

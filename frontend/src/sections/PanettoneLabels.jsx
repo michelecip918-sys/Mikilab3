@@ -8,6 +8,7 @@ const ENRICH = new Set(["Zucchero", "Tuorlo", "Burro", "Miele", "Pasta d'arancia
 export default function PanettoneLabels() {
   const { t } = useLang();
   const [items, setItems] = useState([]);
+  const [view, setView] = useState("labels");
 
   useEffect(() => {
     (async () => {
@@ -32,15 +33,60 @@ export default function PanettoneLabels() {
         <p className="text-white/85 text-sm mt-1">{t("labels_sub")}</p>
       </div>
 
+      <div className="no-print flex gap-2 mb-3">
+        {["labels", "listino"].map((v) => (
+          <button key={v} data-testid={`view-${v}`} onClick={() => setView(v)}
+            className={`flex-1 px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${view === v ? "bg-[#B34A26] text-white border-[#B34A26]" : "bg-white dark:bg-[#2A211D] text-[#4A3B34] dark:text-[#C9BBB0] border-[#E8DEC8] dark:border-[#3D302A]"}`}>
+            {t(v === "labels" ? "view_labels" : "view_listino")}
+          </button>
+        ))}
+      </div>
+
       <button data-testid="labels-print-btn" onClick={() => window.print()}
         className="no-print w-full mb-5 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
-        <Printer className="w-5 h-5" /> {t("labels_print")}
+        <Printer className="w-5 h-5" /> {view === "labels" ? t("labels_print") : t("listino_print")}
       </button>
 
       <p data-testid="labels-b2b-hint" className="no-print text-xs text-[#8C7567] mb-3 -mt-2">{t("labels_b2b_hint")}</p>
 
       {items.length === 0 ? (
         <p className="no-print text-center text-[#8C7567] py-8">{t("labels_empty")}</p>
+      ) : view === "listino" ? (
+        <div className="print-area">
+          <div className="rounded-2xl border-2 border-[#B34A26] bg-white text-[#2C221E] overflow-hidden">
+            <div className="relative bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white p-5 text-center">
+              <div className="absolute top-0 left-0 right-0 flex h-1.5">
+                <div className="flex-1 bg-[#008C45]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CD212A]" />
+                <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCC00]" />
+              </div>
+              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#FFCE00]/70 mx-auto mb-1.5 mt-1" />
+              <h2 className="font-display text-2xl font-extrabold">Panettoni Mikilab</h2>
+              <p className="text-white/85 text-xs mt-0.5">{t("listino_subtitle")}</p>
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[#F5EFE6] text-[#8C3A1D] text-xs uppercase tracking-wide">
+                  <th className="text-left p-2.5">{t("listino_col_flavor")}</th>
+                  <th className="text-right p-2.5 text-[#008C45]">500 g</th>
+                  <th className="text-right p-2.5 text-[#B34A26]">100 g</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((r) => {
+                  const c = r.costing || {};
+                  return (
+                    <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#E8DEC8]">
+                      <td className="p-2.5 font-semibold">{flavor(r.name)}</td>
+                      <td className="p-2.5 text-right font-mono-data font-bold text-[#008C45]">€{Number(c.b2b_500g || 0).toFixed(2)}</td>
+                      <td className="p-2.5 text-right font-mono-data font-bold text-[#B34A26]">€{Number(c.b2b_100g || 0).toFixed(2)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <p className="text-center text-[10px] text-[#8C7567] italic p-3">Il Laboratorio di Michele · Stoccarda 🇮🇹🇩🇪 · mikilab.de</p>
+          </div>
+        </div>
       ) : (
         <div className="print-area grid grid-cols-1 sm:grid-cols-2 gap-3">
           {items.map((r) => {
