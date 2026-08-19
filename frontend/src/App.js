@@ -4,23 +4,23 @@ import "@/App.css";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
-import Mikilab from "@/sections/Mikilab";
+import Home from "@/sections/Home";
+import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import Beginners from "@/sections/Beginners";
-import NewsPage from "@/sections/NewsPage";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
-import MaestroSaTutto from "@/sections/MaestroSaTutto";
+import NewsPage from "@/sections/NewsPage";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
 
 function App() {
-  const [tab, setTab] = useState("mikilab");
+  const [tab, setTab] = useState("home");
 
   return (
     <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1A1412]">
       <Header />
-      <main className="max-w-xl mx-auto px-4 pt-4 pb-40">
+      <main className="max-w-xl mx-auto px-4 pt-4 pb-48">
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
@@ -29,12 +29,12 @@ function App() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
-            {tab === "mikilab" && <Mikilab />}
+            {tab === "home" && <Home />}
+            {tab === "ricette" && <Ricette />}
             {tab === "maestro" && <Maestro />}
             {tab === "impara" && <Beginners />}
+            {tab === "diagnosi" && <PhotoDiagnosi />}
             {tab === "news" && <NewsPage />}
-            {tab === "foto" && <PhotoDiagnosi />}
-            {tab === "chiedi" && <MaestroSaTutto />}
           </motion.div>
         </AnimatePresence>
       </main>

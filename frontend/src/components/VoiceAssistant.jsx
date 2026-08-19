@@ -6,12 +6,12 @@ import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
 
 const NAV = [
-  { tab: "mikilab", key: "voice_nav_ricette", words: ["ricett", "mikilab", "pane", "brot", "rezept", "biograf", "lievito", "sauerteig", "guida", "etichett", "panettone"] },
-  { tab: "maestro", key: "voice_nav_maestro", words: ["maestro", "strument", "piano", "lavoro", "impast", "knet", "arbeitsplan", "clima", "klima", "settiman", "wochen", "forno"] },
+  { tab: "home", key: "voice_nav_ricette", words: ["home", "bio", "biograf", "michele", "chied", "frag", "chat", "pre-impast", "preimpast", "lievito", "poolish"] },
+  { tab: "ricette", key: "voice_nav_ricette", words: ["ricett", "rezept", "pane", "brot", "panettone", "panino"] },
+  { tab: "maestro", key: "voice_nav_maestro", words: ["maestro", "strument", "piano", "lavoro", "impast", "knet", "arbeitsplan", "clima", "klima", "settiman", "wochen", "forno", "spesa", "turni", "check", "invers"] },
   { tab: "impara", key: "voice_nav_impara", words: ["principian", "impar", "lern", "quiz", "cors", "kurs", "video"] },
+  { tab: "diagnosi", key: "voice_nav_foto", words: ["foto", "diagnos", "difett", "fehler", "bild", "ingredient", "zutat", "macchin", "störung", "guast"] },
   { tab: "news", key: "voice_nav_news", words: ["notizi", "news", "nachricht"] },
-  { tab: "foto", key: "voice_nav_foto", words: ["foto", "diagnos", "difett", "fehler", "bild", "ingredient", "zutat", "scansiona difett"] },
-  { tab: "chiedi", key: "voice_nav_satutto", words: ["chied", "frag", "sa tutto", "weiß alles", "weiss alles", "chat", "domanda"] },
 ];
 
 export default function VoiceAssistant({ onNavigate }) {

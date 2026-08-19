@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 16 full-stack test of Mikilab UI/UX reorg. Backend: 19 pytest tests (core GETs, recipes seed + DE translations, recipe CRUD, vision mode='macchine' SSE) all passed. Frontend (mobile 390x844, preview URL): IntroGuide appears on every load/reload, 6-tab bottom nav all switch without console errors, Home (bio + preimpasti lm/poolish/koch + chat + guida/labels, 0 video/iframe), Ricette goes straight to categorized list (37 recipes, all 5 category headings), panettone recipe shows NO cost/b2b blocks and no '€', DE switch translates recipe names/procedures/notes (Süße Zwiebel, Bretzel des Meisters, no IT leftovers in procedure), Maestro guide + all 12 tools open/close via maestro-back-btn, Produzione Inversa backward math correct (cottura 05:30 + 30min = 06:00 end; editing durations shifts earlier phases; 5 alarms set), Check-list 4 tabs with counters persisting after reload (2/6), Turni add/name/role/task persist in localStorage after reload, Lista Spesa shows sl-flour/sl-base/sl-extras/sl-share after saving a weekly plan, Diagnosi shows all 5 modes incl. macchine with upload UI, Impara has 6 videos, Maestro chat AI streams a full IT answer (~10-40s).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/maestro/chat", "issue": "First token can take >15s and full answer ~40s; not a bug but UI shows only a '…' indicator for a long time (consider streaming-start feedback)"}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "All screens (mobile 390px)", "issues": ["Floating RadioFornaio (bottom-left) and VoiceAssistant mic (bottom-right) circles overlap page content just above the bottom nav: they cover part of the Maestro tool card descriptions ('Produzione Inversa' / 'Piano di lavoro') and the Diagnosi upload dropzone label. Consider extra bottom padding or repositioning."]},
+      {"screen": "Recipe dialog in DE", "issues": ["Extra-ingredient names are not localized in German (e.g. 'Cipolle stufate dolci', 'Fiocchi di patate', 'Latte in polvere', 'Olio d'oliva (Öl)') while names/procedure/notes are translated."]},
+      {"screen": "Header (mobile)", "issues": ["Brand subtitle is truncated to 'IL LABORAT …' at 390px width."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter16_reorg.py", "/app/test_reports/pytest/iter16.xml"],
+  "action_items": [
+    "Optional: add bottom padding / reposition floating radio + voice buttons so they don't overlap card text and the diagnosi dropzone",
+    "Optional: translate extra_ingredients names for DE (add *_de or a mapping)",
+    "Optional: avoid header subtitle truncation on small screens"
+  ],
+  "critical_code_review_comments": [
+    "Home.jsx hardcodes PREIMPASTI IT/DE copy in the component; move to i18n/content for consistency with the rest of the app",
+    "BackwardScheduler allows empty duration inputs (Number('')=0) — schedule silently collapses; consider min validation feedback",
+    "ShoppingList useEffect has an empty dep array but uses t/lang inside the fetch closure (eslint exhaustive-deps); harmless today but fragile"
+  ],
+  "updated_files": ["/app/backend/tests/test_iter16_reorg.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Created and deleted TEST_iter16 personal recipe; saved a weekly plan entry (20 x 500g) to enable Lista Spesa testing (left in DB); localStorage entries for shifts/checklists in the test browser only.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "none (app has no auth)",
+  "context_for_next_testing_agent": "Use /app/backend/tests/test_iter16_reorg.py as regression for DE translations + vision macchine SSE. Frontend: close intro modal via data-testid='intro-close-btn' after every load/reload (it always shows). Header language buttons are data-testid='lang-it'/'lang-de' (get_by_text('DE') does not resolve). A weekly plan is already saved in DB so Lista Spesa shows totals. All 12 maestro tools, 6 nav tabs, panettone price-hiding and localStorage persistence verified passing in iteration 16.",
+  "rca_of_the_issue": "No functional defects reproduced. The apparent 'chat not answering' during the first run was purely LLM latency (first token >15s, full answer ~40s verified via direct SSE curl)."
+}

@@ -111,6 +111,10 @@ class Recipe(BaseModel):
     water_temp_c: Optional[float] = None
     notes: Optional[str] = ""
     procedure: Optional[str] = ""
+    name_de: Optional[str] = None
+    flour_type_de: Optional[str] = None
+    notes_de: Optional[str] = None
+    procedure_de: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -142,6 +146,10 @@ class RecipeCreate(BaseModel):
     water_temp_c: Optional[float] = None
     notes: Optional[str] = ""
     procedure: Optional[str] = ""
+    name_de: Optional[str] = None
+    flour_type_de: Optional[str] = None
+    notes_de: Optional[str] = None
+    procedure_de: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -278,7 +286,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v18b-nomenclatura-lm"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v19b-de-translations"  # bump quando cambia mikilab_seed_data.json
 LEGACY_STALE_NAMES = ["Ciabatta ad Alta Idratazione", "Pane Rustico al Farro e Miele"]
 
 
@@ -849,15 +857,24 @@ VISION_PROMPTS = {
     ),
     "macchine": (
         "Sei un tecnico esperto di macchinari e ATTREZZI per panetteria e pasticceria. Guarda con attenzione "
-        "la foto e RICONOSCI cosa vedi: può essere una MACCHINA (impastatrice a spirale/a bracci tuffanti/"
-        "planetaria, spezzatrice, formatrice, sfogliatrice, cella di lievitazione, abbattitore, cella frigo/"
-        "freezer, forno, tavolo refrigerato, affettatrice, dosatore) oppure uno STRUMENTO/ATTREZZO da laboratorio "
-        "(raschietto/tarocco, coppapasta, lama/grignette, spatola, cestino da lievitazione/banneton, teglia, "
-        "termometro, bilancia, sac à poche, mattarello, ecc.). Se sono visibili marca o modello, indicali. "
-        "Poi fornisci una SCHEDA con: **Cosa è**, **A cosa serve (funzione)**, **Come si usa** (passaggi pratici, "
-        "passo passo), **Impostazioni/capacità tipiche** dove ha senso (kg, velocità, temperatura, umidità), "
-        "**Consigli d'uso e sicurezza**, **Pulizia/manutenzione**. "
-        "Se non riconosci con certezza, elenca le ipotesi più probabili e come distinguerle. "
+        "la foto e RICONOSCI cosa vedi. "
+        "PRIORITÀ ASSOLUTA — DIAGNOSI GUASTI: se nell'immagine vedi un DISPLAY, un pannello, un menu, una spia o un "
+        "messaggio di ERRORE/ALLARME (es. 'Störung', 'Error', 'Alarm', 'Fehler', codici tipo E01/F5/Err, spie rosse, "
+        "simboli di guasto, avvisi di temperatura/sonda/motore/porta) allora per PRIMA cosa: "
+        "1) **Errore rilevato**: leggi e riporta ESATTAMENTE il testo/codice mostrato (anche se in tedesco) e su quale "
+        "macchina sembra essere (forno, impastatrice, cella/Rehon, abbattitore...). "
+        "2) **Cosa significa**: spiega in parole semplici qual è il problema (causa più probabile). "
+        "3) **Come risolverlo — passo passo**: dai i rimedi pratici numerati, dal più semplice e sicuro al più tecnico "
+        "(es. controlla la porta/guarnizione, riavvia/reset, verifica sonda/temperatura, controlla acqua/vapore, "
+        "chiama il tecnico se X). Segnala eventuali rischi di sicurezza (corrente, parti calde). "
+        "Se il codice non è universale, indica cosa controllare sul manuale e le cause tipiche di quel tipo di allarme. "
+        "SE INVECE non c'è alcun errore: riconosci la MACCHINA o l'ATTREZZO (impastatrice a spirale/a bracci tuffanti/"
+        "planetaria, spezzatrice, formatrice, sfogliatrice, cella di lievitazione, abbattitore, cella frigo/freezer, "
+        "forno, tavolo refrigerato, affettatrice, dosatore, oppure raschietto/coppapasta/grignette/banneton/termometro/"
+        "bilancia, ecc.). Se sono visibili marca o modello, indicali. "
+        "Poi fornisci una SCHEDA con: **Cosa è**, **A cosa serve**, **Come si usa** (passo passo), "
+        "**Impostazioni/capacità tipiche** (kg, velocità, temperatura, umidità), **Consigli d'uso e sicurezza**, "
+        "**Pulizia/manutenzione**. Se non riconosci con certezza, elenca le ipotesi più probabili e come distinguerle. "
         "Usa titoli in grassetto ed elenchi puntati, tono chiaro e professionale."
     ),
     "laboratorio": (

@@ -1,15 +1,15 @@
-import { BookOpen, Wrench, GraduationCap, Newspaper, Camera, MessageCircle } from "lucide-react";
+import { Home, BookOpen, Wrench, GraduationCap, Camera, Newspaper } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function BottomNav({ active, onChange }) {
   const { t } = useLang();
   const TABS = [
-    { id: "mikilab", label: t("nav_mikilab"), Icon: BookOpen },
+    { id: "home", label: t("nav_home"), Icon: Home },
+    { id: "ricette", label: t("nav_ricette"), Icon: BookOpen },
     { id: "maestro", label: t("nav_maestro"), Icon: Wrench },
-    { id: "foto", label: t("nav_foto"), Icon: Camera },
     { id: "impara", label: t("nav_impara"), Icon: GraduationCap },
+    { id: "diagnosi", label: t("nav_foto"), Icon: Camera },
     { id: "news", label: t("nav_news"), Icon: Newspaper },
-    { id: "chiedi", label: t("nav_chiedi"), Icon: MessageCircle },
   ];
 
   return (
@@ -34,9 +34,7 @@ export default function BottomNav({ active, onChange }) {
               data-testid={`nav-tab-${id}`}
               onClick={() => onChange(id)}
               className={`flex flex-col items-center justify-center gap-1 py-2 px-0.5 rounded-xl transition-all min-h-[52px] ${
-                on
-                  ? "bg-[#B34A26] text-white shadow-md"
-                  : "text-[#8C7567] hover:bg-[#F5EFE6] dark:hover:bg-[#332823]"
+                on ? "bg-[#B34A26] text-white shadow-md" : "text-[#8C7567] hover:bg-[#F5EFE6] dark:hover:bg-[#332823]"
               }`}
             >
               <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />

@@ -8,11 +8,10 @@ export default function IntroGuide() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!localStorage.getItem("mikilab_seen_intro")) setOpen(true);
+    setOpen(true);
   }, []);
 
   const close = () => {
-    localStorage.setItem("mikilab_seen_intro", "1");
     setOpen(false);
   };
 

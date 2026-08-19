@@ -6,6 +6,7 @@ import { recipesApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
+import { rLoc, ingLoc } from "@/lib/loc";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
@@ -22,7 +23,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [toDelete, setToDelete] = useState(null);
   const [scaling, setScaling] = useState(null);
   const [viewing, setViewing] = useState(null);
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const load = async () => {
     setLoading(true);
@@ -170,9 +171,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <div className="min-w-0 flex-1">
                 <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
                   {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
-                  {r.name}
+                  {rLoc(r, "name", lang)}
                 </h3>
-                {r.flour_type ? <p className="text-xs text-[#8C7567] truncate">{r.flour_type}</p> : null}
+                {r.flour_type ? <p className="text-xs text-[#8C7567] truncate">{rLoc(r, "flour_type", lang)}</p> : null}
               </div>
               <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />
             </motion.button>
@@ -243,6 +244,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 }
 
 function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
+  const { lang } = useLang();
+  const isPanettone = recipeCategory(r).key === "panettoni";
   const flourG = Number(r.flour_grams) || 0;
   const target = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
   const f = flourG > 0 ? target / flourG : 1;
@@ -256,17 +259,17 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
   (r.extra_ingredients || []).forEach((e) => {
     if (e && e.name && e.percent != null && e.percent !== "") {
       const grams = flourG > 0 ? Math.round(target * (Number(e.percent) / 100)) : null;
-      rows.push([e.name, grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
+      rows.push([ingLoc(e.name, lang), grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
     }
   });
-  (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([e.name, e.cost ? `€ ${e.cost}` : "—"]); });
+  (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([ingLoc(e.name, lang), e.cost ? `€ ${e.cost}` : "—"]); });
 
   const cst = r.costing;
   const n = (v) => Number(v) || 0;
   const [pieces, setPieces] = useState("");
   useEffect(() => { setPieces(cst?.pieces != null ? String(cst.pieces) : ""); /* eslint-disable-next-line */ }, [r.id]);
   let priceBlock = null;
-  if (cst) {
+  if (cst && !isPanettone) {
     const cFlour = n(g(r.flour_grams)) / 1000 * n(cst.flour_kg);
     const cWater = n(g(r.water_grams)) / 1000 * n(cst.water_l);
     const cSour = n(g(r.sourdough_grams)) / 1000 * n(cst.sourdough_kg);
@@ -353,9 +356,9 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
         <div>
           <h2 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
             {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
-            {r.name}
+            {rLoc(r, "name", lang)}
           </h2>
-          {r.flour_type ? <p className="text-sm text-[#8C7567] mt-0.5">{r.flour_type}</p> : null}
+          {r.flour_type ? <p className="text-sm text-[#8C7567] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
         </div>
 
         <div className="flex gap-1.5">
@@ -419,11 +422,11 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
         {r.procedure ? (
           <div data-testid={`recipe-procedure-${r.id}`} className="rounded-xl bg-[#6B8E62]/10 border border-[#6B8E62]/25 p-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-[#4d6b45] dark:text-[#9ec48f] mb-1.5">{t("recipe_procedure")}</p>
-            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.procedure}</p>
+            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{rLoc(r, "procedure", lang)}</p>
           </div>
         ) : null}
 
-        {r.notes ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.notes}</p> : null}
+        {r.notes ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{rLoc(r, "notes", lang)}</p> : null}
 
         <GlossaryBox text={`${r.procedure || ""} ${r.notes || ""}`} />
 

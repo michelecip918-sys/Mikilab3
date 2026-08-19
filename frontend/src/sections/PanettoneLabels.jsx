@@ -47,7 +47,7 @@ export default function PanettoneLabels() {
         <Printer className="w-5 h-5" /> {view === "labels" ? t("labels_print") : t("listino_print")}
       </button>
 
-      <p data-testid="labels-b2b-hint" className="no-print text-xs text-[#8C7567] mb-3 -mt-2">{t("labels_b2b_hint")}</p>
+      <p data-testid="labels-b2b-hint" className="no-print text-xs text-[#8C7567] mb-3 -mt-2">{t("labels_sub")}</p>
 
       {items.length === 0 ? (
         <p className="no-print text-center text-[#8C7567] py-8">{t("labels_empty")}</p>
@@ -66,19 +66,14 @@ export default function PanettoneLabels() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[#F5EFE6] text-[#8C3A1D] text-xs uppercase tracking-wide">
-                  <th className="text-left p-2.5">{t("listino_col_flavor")}</th>
-                  <th className="text-right p-2.5 text-[#008C45]">500 g</th>
-                  <th className="text-right p-2.5 text-[#B34A26]">100 g</th>
+                  <th className="text-left p-2.5" colSpan={2}>{t("listino_col_flavor")}</th>
                 </tr>
               </thead>
               <tbody>
                 {items.map((r) => {
-                  const c = r.costing || {};
                   return (
                     <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#E8DEC8]">
-                      <td className="p-2.5 font-semibold">{flavor(r.name)}</td>
-                      <td className="p-2.5 text-right font-mono-data font-bold text-[#008C45]">€{Number(c.b2b_500g || 0).toFixed(2)}</td>
-                      <td className="p-2.5 text-right font-mono-data font-bold text-[#B34A26]">€{Number(c.b2b_100g || 0).toFixed(2)}</td>
+                      <td className="p-2.5 font-semibold" colSpan={2}>{flavor(r.name)}</td>
                     </tr>
                   );
                 })}
@@ -91,7 +86,6 @@ export default function PanettoneLabels() {
         <div className="print-area grid grid-cols-1 sm:grid-cols-2 gap-3">
           {items.map((r) => {
             const susp = (r.extra_ingredients || []).filter((e) => e.name && !ENRICH.has(e.name)).map((e) => e.name);
-            const c = r.costing || {};
             return (
               <div key={r.id} data-testid={`label-${r.id}`}
                 className="rounded-2xl border-2 border-[#B34A26] bg-white text-[#2C221E] p-4 flex flex-col items-center text-center break-inside-avoid"
@@ -108,16 +102,6 @@ export default function PanettoneLabels() {
                 {susp.length > 0 && (
                   <p className="text-xs text-[#4A3B34] mt-1.5"><span className="font-semibold">{t("labels_ingredients")}:</span> {susp.join(", ")}</p>
                 )}
-                <div className="mt-2.5 grid grid-cols-2 gap-2 w-full">
-                  <div className="rounded-lg bg-[#008C45]/10 border border-[#008C45]/30 py-1.5">
-                    <p className="text-[9px] uppercase tracking-wide text-[#6B6157]">{t("labels_b2b_500")}</p>
-                    <p className="font-mono-data text-base font-extrabold text-[#008C45]">€{Number(c.b2b_500g || 0).toFixed(2)}</p>
-                  </div>
-                  <div className="rounded-lg bg-[#B34A26]/10 border border-[#B34A26]/30 py-1.5">
-                    <p className="text-[9px] uppercase tracking-wide text-[#6B6157]">{t("labels_b2b_100")}</p>
-                    <p className="font-mono-data text-base font-extrabold text-[#B34A26]">€{Number(c.b2b_100g || 0).toFixed(2)}</p>
-                  </div>
-                </div>
                 <p className="text-[9px] text-[#8C7567] mt-2 italic">Il Laboratorio di Michele · Stoccarda 🇮🇹🇩🇪</p>
               </div>
             );
