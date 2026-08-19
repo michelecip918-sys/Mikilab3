@@ -1,0 +1,38 @@
+{
+  "summary": "Iteration 15 e2e testing (no auth app). Backend: 12/12 pytest tests pass — mikilab returns exactly 37 recipes, old 'lievito madre / Sauerteig / poolish' string fully removed, 'Oro di Terra' notes start with 'Lievito madre 10%', 'Sauerteig' remains only in German/rye recipes (Bruno d'Autunno, Gran Riserva, Gnetze Brot, Wurzelbrot), user_edited anti-overwrite protection verified against GET /api/seed-mikilab force sync, personal recipe CRUD + 404 edge cases OK, POST /api/maestro/vision SSE streaming works for both mode='ingredienti' and mode='difetti' (non-empty text + {'done':true}). Frontend: 5-tab nav, Maestro 4-step flow with all 8 tools, Mikilab guida/labels/lievito, Impara (6 tips, 2 our-videos, 6 famous bakers, quiz to result), News feed loaded, Maestro AI chat/foto tabs with all 5 photo modes, and Mikilab recipe edit persistence with success toast — all pass with 0 console errors. Test data cleaned up (user_edited flags unset, notes restored, no TEST_ leftovers).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/recipes/{id}", "issue": "The endpoint sets user_edited=True in Mongo but response_model=Recipe does not declare the field, so it is silently stripped from the API response. Frontend has no way to know/display that a recipe is now protected from seed sync."},
+      {"endpoint": "PUT /api/recipes/{id} + GET /api/seed-mikilab", "issue": "user_edited is set on ANY update (even a no-op or a revert to the original value) and there is no way to reset it. A Mikilab recipe touched once is permanently frozen from all future seed corrections/nomenclature fixes. Consider an explicit reset flag/endpoint or comparing against the seed value."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Global (mobile 390x844) — floating FABs", "issues": ["RadioFornaio FAB (bottom-left) and VoiceAssistant mic FAB (bottom-right) overlay page content: in Capo Laboratorio the 'PERSONE IN TURNO' field label is covered by the radio button; in Maestro AI > Diagnosi Foto the hint text 'Puoi caricare anche un video...' is covered by both FABs. Add bottom/side padding to content containers or move FABs above the safe area."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter15_nomenclatura.py",
+    "/app/test_reports/pytest/iter15.xml"
+  ],
+  "action_items": [
+    "Optional: expose user_edited in the Recipe response model so the UI can show 'modificata a mano'.",
+    "Optional: provide a way to clear user_edited (or only set it when values actually differ from the seed) so future seed fixes are not permanently blocked.",
+    "Design: add bottom padding / reposition the Radio and Voice FABs so they stop covering form labels and hint text on mobile."
+  ],
+  "critical_code_review_comments": [
+    "server.py update_recipe returns a plain merged dict (existing + updates) rather than re-reading the document; it works today but will drift if pre-save hooks are added later.",
+    "seed_mikilab_if_empty skips user-edited docs entirely — nomenclature/data fixes in mikilab_seed_data.json will never reach recipes Michele has touched. Consider field-level merge for seed-owned fields (procedure/notes) with a version guard."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter15_nomenclatura.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Created and deleted a temporary personal recipe 'TEST_Pane Iter15'; temporarily modified notes of 'Oro di Terra' (backend) and 'Miglioratore Naturale' (frontend) then restored them and unset the user_edited flags. DB left clean: 37 mikilab recipes, 0 TEST_ leftovers.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "None required — app has no login (auth removed by user).",
+  "context_for_next_testing_agent": "Backend regression suite for this iteration: /app/backend/tests/test_iter15_nomenclatura.py (run with `python -m pytest tests/test_iter15_nomenclatura.py -o addopts=''`). Note the Sauerteig-allowed set is {Bruno d'Autunno, Gran Riserva, Gnetze Brot, Wurzelbrot} — the last two are German/Swabian recipes that legitimately use Sauerteig/Weizensauerteig. Vision SSE tests take ~15-20s each. Frontend: an IntroGuide modal appears on load, close via data-testid='intro-close-btn'. Careful: any PUT on a mikilab recipe sets user_edited=true permanently — unset it in Mongo after testing.",
+  "rca_of_the_issue": "No functional defects found. The two minor backend findings stem from (a) Recipe pydantic response_model not declaring user_edited, and (b) update_recipe unconditionally stamping user_edited=True with no reset path."
+}

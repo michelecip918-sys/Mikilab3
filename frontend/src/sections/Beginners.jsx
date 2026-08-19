@@ -1,6 +1,6 @@
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";
-import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
+import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star } from "lucide-react";
 import { useState } from "react";
 
 const BEGINNERS = {
@@ -21,6 +21,20 @@ const BEGINNERS = {
     { title: "Nicht entmutigen lassen", body: "Die ersten Brote werden nicht perfekt – das ist normal. Jeder Ofengang lehrt etwas: wir waren alle mal Anfänger. Wichtig ist weiterzumachen." },
   ],
 };
+
+const FAMOUS = [
+  { name: "Fulvio Marino", country: "🇮🇹", q: "Fulvio Marino pane lievito madre" },
+  { name: "Gabriele Bonci", country: "🇮🇹", q: "Gabriele Bonci pizza pane impasto" },
+  { name: "Sara Papa", country: "🇮🇹", q: "Sara Papa pane lievito madre" },
+  { name: "Lutz Geißler (Plötzblog)", country: "🇩🇪", q: "Lutz Geißler Brot backen Sauerteig" },
+  { name: "Ketex — Der Brotdoc", country: "🇩🇪", q: "Der Brotdoc Sauerteig Brot" },
+  { name: "Chad Robertson (Tartine)", country: "🇺🇸", q: "Chad Robertson Tartine sourdough bread" },
+];
+
+const OUR_VIDEOS = [
+  { id: "_606t-4KXT4", key: "method_video1_title" },
+  { id: "HpOycYo1Cvc", key: "method_video2_title" },
+];
 
 const QUIZ = {
   it: [
@@ -162,6 +176,50 @@ export default function Beginners() {
           </div>
         </div>
       ))}
+
+      {/* I nostri video — il metodo di Michele */}
+      <div className="flex items-center gap-2 text-[#8C7567] pt-2">
+        <Youtube className="w-4 h-4" />
+        <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_ours_title")}</span>
+      </div>
+      <p className="text-sm text-[#8C7567] -mt-2">{t("beginners_ours_sub")}</p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {OUR_VIDEOS.map((v) => (
+          <div key={v.id} data-testid={`our-video-${v.id}`} className="rounded-2xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] bg-white dark:bg-[#2A211D]">
+            <div className="aspect-video bg-black">
+              <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${v.id}`} title={t(v.key)}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+            </div>
+            <p className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0] p-2.5">{t(v.key)}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Video dei grandi panettieri (link a YouTube) */}
+      <div className="flex items-center gap-2 text-[#8C7567] pt-2">
+        <Star className="w-4 h-4" />
+        <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_famous_title")}</span>
+      </div>
+      <p className="text-sm text-[#8C7567] -mt-2">{t("beginners_famous_sub")}</p>
+      <div className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
+        <p className="text-xs text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("beginners_subtitles_note")}</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {FAMOUS.map((b, i) => (
+          <a
+            key={i}
+            data-testid={`famous-baker-${i}`}
+            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(b.q)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-3.5 active:scale-98 transition-all hover:border-[#B34A26]/50"
+          >
+            <div className="w-10 h-10 rounded-xl bg-[#B34A26]/10 border border-[#B34A26]/25 flex items-center justify-center shrink-0 text-lg">{b.country}</div>
+            <span className="flex-1 min-w-0 font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">{b.name}</span>
+            <ExternalLink className="w-4 h-4 text-[#B34A26] shrink-0" />
+          </a>
+        ))}
+      </div>
 
       {/* Quiz del Fornaio */}
       <div className="flex items-center gap-2 text-[#8C7567] pt-2">

@@ -1,2356 +1,2356 @@
 [
- {
-  "id": "b3db8e20-8b7b-423a-9f0f-1c5f51fcb7b8",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.982804+00:00",
-  "updated_at": "2026-08-19T07:47:43.999169+00:00",
-  "name": "Anima Integrale",
-  "flour_type": "Vollkorn 900 + 630 100 (Dinkel)",
-  "hydration_percent": 88,
-  "flour_grams": 1000,
-  "water_grams": 880,
-  "sourdough_grams": 200,
-  "salt_grams": 20,
-  "preferment_type": "poolish",
-  "bake_temp": 230,
-  "bake_minutes": 22,
-  "oven_type": "ventilato",
-  "image_url": "/recipes/r_anima.jpg",
-  "notes": "Impasto integrale con 20% di poolish. Alveolatura fitta e mollica umida.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 22 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
-  "extra_ingredients": [
-   {
-    "name": "Psyllium (Psy)",
-    "percent": 1
-   },
-   {
-    "name": "Fiocchi di patate (Kart.Fl)",
-    "percent": 1
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Glutine (Di.Glutin)",
-    "percent": 2
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 0.7
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "e5e6fa92-d9db-4ed6-af88-089340ab3a40",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T10:03:59.503964+00:00",
-  "updated_at": "2026-08-19T10:03:59.503973+00:00",
-  "name": "Baguette con Poolish",
-  "flour_type": "Farina T65 (W270) — con Poolish",
-  "hydration_percent": 70,
-  "flour_grams": 1000,
-  "water_grams": 700,
-  "sourdough_grams": 0,
-  "salt_grams": 20,
-  "preferment_type": "poolish",
-  "method_type": "indiretto",
-  "dough_category": "pre",
-  "water_temp_c": 15,
-  "mix_minutes": 10,
-  "bake_temp": 250,
-  "bake_minutes": 22,
-  "oven_type": "statico",
-  "bulk_fermentation_hours": 2,
-  "proofing_hours": 1,
-  "origin": "fr",
-  "image_url": "/recipes/r_filo.jpg",
-  "extra_ingredients": [
-   {
-    "name": "Poolish (500 g farina + 500 g acqua + 2 g lievito)",
-    "percent": 50
-   },
-   {
-    "name": "Lievito di birra fresco",
-    "percent": 0.6
-   }
-  ],
-  "procedure": "La classica baguette francese con POOLISH (prefermento liquido).\n1) POOLISH (sera prima): 500 g farina + 500 g acqua a 15°C + 2 g lievito. Mescola, copri e lascia 12-16 h a TA finché è pieno di bolle.\n2) IMPASTO: unisci il poolish con i restanti 500 g di farina, ~200 g di acqua, 6 g di lievito e per ultimo 20 g di sale. Impasta 10 min fino a incordare.\n3) PUNTATA: ~2 h con 1-2 pieghe.\n4) SPEZZATURA e PRE-FORMA leggera; riposo 20 min.\n5) FORMATURA a filone lungo (baguette); appretto ~1 h su telo (couche).\n6) TAGLI (grignes) obliqui; COTTURA 250°C con vapore i primi 10 min, poi 230°C, ~22 min. Crosta croccante e alveolatura irregolare.",
-  "notes": "Baguette con poolish: prefermento liquido per aroma e alveolatura. Idratazione ~70%%. Cuoci con vapore per una crosta sottile e croccante."
- },
- {
-  "id": "7d432668-ec89-4dd8-b18a-de44cb98e843",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.985100+00:00",
-  "updated_at": "2026-08-19T07:47:44.004028+00:00",
-  "name": "Bretzel del Maestro",
-  "flour_type": "630 1,5kg + Vollkorn 1,3kg",
-  "hydration_percent": 50,
-  "flour_grams": 1000,
-  "water_grams": 500,
-  "sourdough_grams": 0,
-  "salt_grams": 22,
-  "preferment_type": "none",
-  "bake_temp": 220,
-  "bake_minutes": 15,
-  "oven_type": "ventilato",
-  "image_url": "/recipes/r_bretzel.jpg",
-  "notes": "Con Vorteig (H2o Vk 850 g). Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Glutine (Di.Glutin)",
-    "percent": 2
-   },
-   {
-    "name": "Psyllium (Psy)",
-    "percent": 1
-   },
-   {
-    "name": "Fiocchi di patate (Kart.Fl)",
-    "percent": 1
-   },
-   {
-    "name": "Margarina",
-    "percent": 5
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Latte in polvere (Milk.Pu)",
-    "percent": 2
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 1
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "676c3f25-b8ba-447c-96e7-d9e18219ab2e",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.983641+00:00",
-  "updated_at": "2026-08-19T07:47:44.014487+00:00",
-  "name": "Bruno d'Autunno",
-  "flour_type": "630 + Vollkorn + segale integrale (Rg.Vk)",
-  "hydration_percent": 42,
-  "flour_grams": 1000,
-  "water_grams": 420,
-  "sourdough_grams": 100,
-  "salt_grams": 24,
-  "preferment_type": "lm",
-  "bake_temp": 230,
-  "bake_minutes": 45,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_bruno.jpg",
-  "notes": "Sauerteig 10%. Pane scuro e saporito, con semi ammollati (Quellstück).",
-  "method_type": "indiretto",
-  "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Segale integrale (Rg.Vk)",
-    "percent": 5
-   },
-   {
-    "name": "Quellstück (semi ammollati)",
-    "percent": 25
-   },
-   {
-    "name": "Patate lessate (Kart.Fr)",
-    "percent": 7
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Glutine (Di.Glutin)",
-    "percent": 2
-   },
-   {
-    "name": "Quark",
-    "percent": 5
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 0.6
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "805b813c-4fdf-47f7-9fd6-9cfe3e2488f6",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.985498+00:00",
-  "updated_at": "2026-08-19T07:47:44.004526+00:00",
-  "name": "Carezza Dolce",
-  "flour_type": "Farina 630 + Vorteig",
-  "hydration_percent": 50,
-  "flour_grams": 1000,
-  "water_grams": 500,
-  "sourdough_grams": 0,
-  "salt_grams": 24,
-  "preferment_type": "biga",
-  "bake_temp": 180,
-  "bake_minutes": 30,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_carezza.jpg",
-  "notes": "Con Vorteig (Mehl 10% + Wasser 5% + Hefe 10%). Impasto arricchito e soffice, dolce.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Psyllium (Psy)",
-    "percent": 1.1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Latte in polvere (Milk.P)",
-    "percent": 5
-   },
-   {
-    "name": "Zucchero (Zucker)",
-    "percent": 4
-   },
-   {
-    "name": "Quark",
-    "percent": 10
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 4
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Burro (Butter)",
-    "percent": 15
-   },
-   {
-    "name": "Margarina",
-    "percent": 5
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 1.5
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "dccccb01-5bae-4dd7-95e0-c79df42e479e",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.985301+00:00",
-  "updated_at": "2026-08-19T07:47:44.004275+00:00",
-  "name": "Cornetto Sfogliato",
-  "flour_type": "Farina 630 + uova",
-  "hydration_percent": 60,
-  "flour_grams": 1000,
-  "water_grams": 600,
-  "sourdough_grams": 0,
-  "salt_grams": 20,
-  "preferment_type": "none",
-  "bake_temp": 190,
-  "bake_minutes": 20,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_cornetto.jpg",
-  "notes": "Impasto con acqua + uova (60%). Sfogliatura con burro/margarina (2 pieghe da 20%). Riposo in cella 16°C tra le pieghe.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 190°C per 20 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Margarina (Marg)",
-    "percent": 10
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Latte in polvere (Milk.Pu)",
-    "percent": 4
-   },
-   {
-    "name": "Burro per sfoglia (Fett) 2x20%",
-    "percent": 40
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 1
-   }
-  ],
-  "origin": "fr"
- },
- {
-  "id": "c167ca08-705f-4a40-bf05-49cccc23477b",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.984467+00:00",
-  "updated_at": "2026-08-19T07:47:44.003229+00:00",
-  "name": "Cuore Italiano",
-  "flour_type": "Semola 800 + W550 200",
-  "hydration_percent": 75,
-  "flour_grams": 1000,
-  "water_grams": 750,
-  "sourdough_grams": 200,
-  "salt_grams": 27,
-  "preferment_type": "none",
-  "bake_temp": 240,
-  "bake_minutes": 40,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_cuore.jpg",
-  "notes": "Lievito madre 20%. Stile italiano con semola: crosta croccante e alveoli aperti.",
-  "method_type": "diretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 40 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
-  "extra_ingredients": [
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 2
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 0.5
-   }
-  ],
-  "origin": "it"
- },
- {
-  "id": "42064ae2-8b16-4e54-920e-99ba64a57e9c",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.986084+00:00",
-  "updated_at": "2026-08-19T07:47:44.005268+00:00",
-  "name": "Dolce Cipolla",
-  "flour_type": "Farina Tipo 1",
-  "hydration_percent": 72,
-  "flour_grams": 1000,
-  "water_grams": 720,
-  "sourdough_grams": 180,
-  "salt_grams": 20,
-  "preferment_type": "none",
-  "bake_temp": 225,
-  "bake_minutes": 40,
-  "oven_type": "ventilato",
-  "image_url": "/recipes/r_cipolla.jpg",
-  "notes": "Lievito madre. Cipolle stufate dorate aggiunte durante le pieghe.",
-  "method_type": "diretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 225°C per 40 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Cipolle stufate dolci",
-    "percent": 20
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   }
-  ],
-  "origin": "it"
- },
- {
-  "id": "22075a26-fc13-4876-910d-119b59656630",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.984687+00:00",
-  "updated_at": "2026-08-19T07:47:44.003512+00:00",
-  "name": "Filo di Francia",
-  "flour_type": "Farina 630 / W550",
-  "hydration_percent": 72,
-  "flour_grams": 1000,
-  "water_grams": 720,
-  "sourdough_grams": 200,
-  "salt_grams": 20,
-  "preferment_type": "lm",
-  "bake_temp": 240,
-  "bake_minutes": 22,
-  "oven_type": "ventilato",
-  "image_url": "/recipes/r_filo.jpg",
-  "notes": "Lievito madre 20%. Crosta sottile e cantante, alveoli aperti. Vapore abbondante.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 22 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 0.5
-   }
-  ],
-  "origin": "fr"
- },
- {
-  "id": "dc029210-cb00-4346-b8c0-356afb952c8f",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T08:24:48.557570+00:00",
-  "updated_at": "2026-08-19T08:24:48.557573+00:00",
-  "name": "Focaccia Barese",
-  "flour_type": "Semola rimacinata + tipo 0 + patata lessa",
-  "hydration_percent": 85,
-  "flour_grams": 1000,
-  "water_grams": 850,
-  "sourdough_grams": 100,
-  "salt_grams": 20,
-  "preferment_type": "none",
-  "method_type": "diretto",
-  "dough_category": "pre",
-  "water_temp_c": 20,
-  "mix_minutes": 14,
-  "bake_temp": 230,
-  "bake_minutes": 25,
-  "oven_type": "statico",
-  "bulk_fermentation_hours": 2,
-  "proofing_hours": 1.5,
-  "origin": "IT",
-  "extra_ingredients": [
-   {
-    "name": "Patata lessa schiacciata",
-    "percent": 20
-   },
-   {
-    "name": "Olio extravergine d'oliva",
-    "percent": 6
-   }
-  ],
-  "procedure": "1) Prepara un poolish la sera prima (parti uguali farina/acqua + poco lievito).\n2) Impasta semola, tipo 0, patata lessa schiacciata, poolish e acqua; sale a fine impasto.\n3) Puntata ~2 ore.\n4) Ungi bene una teglia rotonda con olio, stendi l'impasto con le mani unte e lascia lievitare 1,5 ore.\n5) Affonda con le dita, guarnisci con pomodorini schiacciati, olive baresane, origano, sale grosso e un filo d'olio.\n6) Cuoci a 230°C per 25 minuti: bordi croccanti e interno soffice.",
-  "notes": "La focaccia di Bari: la patata la rende soffice e umida a lungo. Pomodorini, olive baresane e origano sono la firma.",
-  "image_url": "/recipes/r_focaccia.jpg"
- },
- {
-  "id": "3d8337f4-f173-409b-a76a-a54f38c8c9e1",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T08:24:48.557836+00:00",
-  "updated_at": "2026-08-19T08:24:48.557838+00:00",
-  "name": "Friselle Pugliesi",
-  "flour_type": "Semola di grano duro (o orzo)",
-  "hydration_percent": 55,
-  "flour_grams": 1000,
-  "water_grams": 550,
-  "sourdough_grams": 150,
-  "salt_grams": 20,
-  "preferment_type": "none",
-  "method_type": "diretto",
-  "dough_category": "lm",
-  "water_temp_c": 20,
-  "mix_minutes": 12,
-  "bake_temp": 200,
-  "bake_minutes": 45,
-  "oven_type": "ventilato",
-  "bulk_fermentation_hours": 3,
-  "proofing_hours": 1,
-  "origin": "IT",
-  "procedure": "1) Impasta semola, acqua, lievito madre e sale (impasto piuttosto sodo).\n2) Puntata ~3 ore.\n3) Forma dei filoncini e chiudili ad anello (ciambella).\n4) Lievitazione ~1 ora, poi prima cottura a 200°C per ~25 minuti.\n5) Sforna, taglia a metà nel senso orizzontale con un filo/coltello.\n6) Rimetti in forno le due metà (lato taglio in su) a 160°C per ~20 minuti: devono biscottare e diventare secche.\n7) Per servire: 'sponza' velocemente sotto l'acqua, poi pomodoro, origano, sale e olio.",
-  "notes": "La frisella è biscottata (doppia cottura), per questo si conserva per mesi. Si bagna al momento e si condisce: piatto povero e geniale del Salento.",
-  "image_url": "/recipes/r_friselle.jpg"
- },
- {
-  "id": "9e5ffbfb-00b9-444e-9268-d5c4c09fbef3",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T09:33:15.142564+00:00",
-  "updated_at": "2026-08-19T09:33:15.142571+00:00",
-  "name": "Gnetze Brot",
-  "flour_type": "Farina di frumento Type 550/630 — con Poolish e Sauerteig liquido",
-  "hydration_percent": 82,
-  "flour_grams": 1000,
-  "water_grams": 820,
-  "sourdough_grams": 250,
-  "salt_grams": 20,
-  "preferment_type": "poolish",
-  "method_type": "indiretto",
-  "dough_category": "pre",
-  "water_temp_c": 18,
-  "mix_minutes": 12,
-  "bake_temp": 240,
-  "bake_minutes": 40,
-  "oven_type": "statico",
-  "bulk_fermentation_hours": 3,
-  "proofing_hours": 1,
-  "origin": "de",
-  "extra_ingredients": [
-   {
-    "name": "Poolish (150 g farina + 150 g acqua + 1,5 g lievito)",
-    "percent": 30
-   },
-   {
-    "name": "Sauerteig liquido (maturo)",
-    "percent": 25
-   }
-  ],
-  "procedure": "Netzbrot / Genetztes (Württemberg-Schwaben): mollica molto umida e alta idratazione. Prefermenti: POOLISH liquido (150 g farina + 150 g acqua + 1,5 g lievito, 12-16 h a TA) + SAUERTEIG liquido maturo (~250 g).\n1) AUTOLISI: unisci poolish, Sauerteig, farina e gran parte dell acqua, riposa 20-30 min.\n2) IMPASTO: aggiungi il sale; impasta fino a incordare, impasto morbido e appiccicoso (usa bassinage per l ultima acqua).\n3) STOCKGARE: ~3 h con 2-3 pieghe in ciotola.\n4) NON si forma sul banco: per la sua umidità si versa direttamente dalla ciotola (Schapf) sulla teglia/pietra.\n5) COTTURA: 240°C con vapore, poi 210-220°C, ~40 min. Crosta rustica, mollica umida e alveolata.",
-  "notes": "Gnetzbrot/Netzbrot col metodo indiretto: poolish + Sauerteig liquido, idratazione ~82%%. Tradizionale di Württemberg: impasto così morbido da versarsi dalla ciotola. Rifinisci a piacere.",
-  "image_url": "/recipes/r_gnetze.jpg"
- },
- {
-  "id": "cc8f48ef-c606-41e0-b34b-bbdfcd0b322b",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.983948+00:00",
-  "updated_at": "2026-08-19T07:47:44.002435+00:00",
-  "name": "Gran Riserva",
-  "flour_type": "630 30% + Vollkorn 60% + segale (Rg.Vk)",
-  "hydration_percent": 82,
-  "flour_grams": 1000,
-  "water_grams": 820,
-  "sourdough_grams": 100,
-  "salt_grams": 20,
-  "preferment_type": "lm",
-  "bake_temp": 230,
-  "bake_minutes": 42,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_granriserva.jpg",
-  "notes": "Sauerteig 10%. Pane rustico ad alta idratazione, mollica aperta.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 42 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Segale integrale (Rg.Vk)",
-    "percent": 5
-   },
-   {
-    "name": "Patate lessate (Kart.Fr)",
-    "percent": 7
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Glutine (Di.Glutin)",
-    "percent": 2
-   },
-   {
-    "name": "Quark",
-    "percent": 5
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 0.6
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "acfd4e86-adc9-4da0-badc-582aeb6b1260",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.986457+00:00",
-  "updated_at": "2026-08-19T07:47:44.005926+00:00",
-  "name": "Miglioratore Naturale",
-  "flour_type": "Mix naturale — nessun additivo chimico",
-  "preferment_type": "none",
-  "image_url": "/recipes/r_migliora.jpg",
-  "notes": "Il mio miglioratore 100% naturale. Dose consigliata ~2-3% sul peso della farina. Mescola tutto a secco e aggiungi con le farine all'inizio dell'impasto. Rende l'impasto piu' forte, migliora crosta, colore e alveolatura e mantiene il pane morbido piu' a lungo.",
-  "procedure": "Preparazione: pesa i componenti nelle percentuali indicate (sul peso della farina della ricetta), mescolali bene a secco e conservali in un barattolo chiuso, al fresco e all'asciutto. Uso: aggiungi tutto alla farina all'inizio dell'impasto.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Malto (Malz)",
-    "percent": 0.3
-   },
-   {
-    "name": "Farina di lupino dolce (Süßlupinen)",
-    "percent": 1
-   },
-   {
-    "name": "Acerola in polvere",
-    "percent": 0.3
-   },
-   {
-    "name": "Lino dorato macinato (Gold)",
-    "percent": 2
-   },
-   {
-    "name": "Buccia di psillio (Flohsamen)",
-    "percent": 0.5
-   }
-  ]
- },
- {
-  "id": "eb689d6e-1bb6-486c-b1f0-4a1bab7532eb",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.984226+00:00",
-  "updated_at": "2026-08-19T07:47:44.002924+00:00",
-  "name": "Nuvola in Cassetta",
-  "flour_type": "630 + Vollkorn",
-  "hydration_percent": 87,
-  "flour_grams": 1000,
-  "water_grams": 870,
-  "sourdough_grams": 200,
-  "salt_grams": 20,
-  "preferment_type": "poolish",
-  "bake_temp": 200,
-  "bake_minutes": 30,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_nuvola.jpg",
-  "notes": "Poolish 20%. Pane morbido da toast, mollica soffice e regolare. Cuoci nello stampo con coperchio.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 200°C per 30 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Psyllium (Psy)",
-    "percent": 1
-   },
-   {
-    "name": "Latte in polvere (Milk.Pu)",
-    "percent": 2
-   },
-   {
-    "name": "Fiocchi di patate (Kart.Fl)",
-    "percent": 1
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Glutine (Di.Glutin)",
-    "percent": 2
-   },
-   {
-    "name": "Quark",
-    "percent": 5
-   },
-   {
-    "name": "Zucchero (Zucker)",
-    "percent": 2
-   },
-   {
-    "name": "Margarina",
-    "percent": 5
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 1.1
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "7221f3ca-6f32-4ab7-970e-d9ba65a298df",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.983282+00:00",
-  "updated_at": "2026-08-19T07:47:43.999586+00:00",
-  "name": "Oro di Terra",
-  "flour_type": "630 + Vollkorn (50/50) + patate lessate",
-  "hydration_percent": 52,
-  "flour_grams": 1000,
-  "water_grams": 520,
-  "sourdough_grams": 100,
-  "salt_grams": 28,
-  "preferment_type": "lm",
-  "bake_temp": 230,
-  "bake_minutes": 45,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_oro.jpg",
-  "notes": "Sauerteig 10%. Patate lavate e lessate con la buccia, usate il giorno dopo. Mollica soffice, lunga conservazione.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Patate lessate (Kart.Fr)",
-    "percent": 30
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 1
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "6c3d0d73-707b-4097-8f27-d460f5c77a16",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T08:24:48.556999+00:00",
-  "updated_at": "2026-08-19T08:24:48.557002+00:00",
-  "name": "Pane di Altamura DOP",
-  "flour_type": "Semola rimacinata di grano duro (Puglia)",
-  "hydration_percent": 76,
-  "flour_grams": 1000,
-  "water_grams": 760,
-  "sourdough_grams": 250,
-  "salt_grams": 20,
-  "preferment_type": "lm",
-  "method_type": "indiretto",
-  "dough_category": "lm",
-  "water_temp_c": 20,
-  "mix_minutes": 15,
-  "bake_temp": 240,
-  "bake_minutes": 55,
-  "oven_type": "statico",
-  "bulk_fermentation_hours": 4,
-  "proofing_hours": 2,
-  "origin": "IT",
-  "procedure": "1) Rinfresca il lievito madre e usalo maturo.\n2) Impasta semola rimacinata, acqua e lievito madre; aggiungi il sale a fine impasto (15').\n3) Puntata 4 ore a ~24°C con una piega dopo 1 ora.\n4) Forma la tipica pagnotta alta ('accavallata') e lascia lievitare 1,5-2 ore.\n5) Inforna a 240°C con vapore i primi 10', poi cala a 210°C.\n6) Cottura totale ~55 minuti: crosta spessa >3 mm, mollica gialla e profumata.",
-  "notes": "Il grande pane della Murgia, 100% semola rimacinata di grano duro. Crosta croccante e lunga conservazione. È l'orgoglio di Altamura.",
-  "image_url": "/recipes/r_altamura.jpg"
- },
- {
-  "id": "9bd50f04-7cf6-4ce3-ae14-e60f4e3c701e",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T08:24:48.557301+00:00",
-  "updated_at": "2026-08-19T08:24:48.557304+00:00",
-  "name": "Pane di Matera IGP",
-  "flour_type": "Semola di grano duro lucano",
-  "hydration_percent": 78,
-  "flour_grams": 1000,
-  "water_grams": 780,
-  "sourdough_grams": 300,
-  "salt_grams": 22,
-  "preferment_type": "lm",
-  "method_type": "indiretto",
-  "dough_category": "lm",
-  "water_temp_c": 20,
-  "mix_minutes": 16,
-  "bake_temp": 250,
-  "bake_minutes": 60,
-  "oven_type": "statico",
-  "bulk_fermentation_hours": 4,
-  "proofing_hours": 2,
-  "origin": "IT",
-  "procedure": "1) Usa lievito madre attivo e semola di grano duro lucana.\n2) Impasta a lungo (15-16') per sviluppare bene la maglia; sale a fine impasto.\n3) Puntata 4 ore con 2 pieghe.\n4) Dai la forma tipica 'a cornetto' (o alta con cresta) e lascia lievitare ~2 ore.\n5) Inforna a 250°C con vapore, poi cala a 210°C.\n6) Cuoci ~1 ora: mollica gialla, alveolata e profumo intenso di grano.",
-  "notes": "Il pane simbolo della mia terra, Matera. Forma a cornetto, mollica gialla e crosta scura: nasce dal grano duro lucano e dal lievito madre.",
-  "image_url": "/recipes/r_matera.jpg"
- },
- {
-  "id": "2c86b3e8-8f23-4e05-af55-98ddf761218e",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.986649+00:00",
-  "updated_at": "2026-08-19T07:47:44.006177+00:00",
-  "name": "Panettone Mikilab",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 40,
-  "flour_grams": 446,
-  "water_grams": 179,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_panettone_base.jpg",
-  "notes": "Il mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 41
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Sospensione (canditi + uvetta)",
-    "percent": 101
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   }
-  ],
-  "origin": "it"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.18
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Amarene sciroppate scolate",
-     "cost": 0.56
-    },
-    {
-     "name": "Gocce di cioccolato fondente",
-     "cost": 0.6
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.69,
-   "cost_100g": 0.34,
-   "b2b_500g": 7.0,
-   "b2b_100g": 2.5
+  {
+    "id": "b3db8e20-8b7b-423a-9f0f-1c5f51fcb7b8",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.982804+00:00",
+    "updated_at": "2026-08-19T07:47:43.999169+00:00",
+    "name": "Anima Integrale",
+    "flour_type": "Vollkorn 900 + 630 100 (Dinkel)",
+    "hydration_percent": 88,
+    "flour_grams": 1000,
+    "water_grams": 880,
+    "sourdough_grams": 200,
+    "salt_grams": 20,
+    "preferment_type": "poolish",
+    "bake_temp": 230,
+    "bake_minutes": 22,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_anima.jpg",
+    "notes": "Impasto integrale con 20% di poolish. Alveolatura fitta e mollica umida.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 22 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
+    "extra_ingredients": [
+      {
+        "name": "Psyllium (Psy)",
+        "percent": 1
+      },
+      {
+        "name": "Fiocchi di patate (Kart.Fl)",
+        "percent": 1
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Glutine (Di.Glutin)",
+        "percent": 2
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 0.7
+      }
+    ],
+    "origin": "de"
   },
-  "created_at": "2026-08-19T09:27:49.482091+00:00",
-  "updated_at": "2026-08-19T09:27:49.482100+00:00",
-  "name": "Panettone Mikilab — Amarena e Cioccolato",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 34,
-  "flour_grams": 446,
-  "water_grams": 151,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_amarena.jpg",
-  "notes": "Amarene e cioccolato fondente: dolce con una nota acidula.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~28 g rispetto al panettone base per compensare le paste/frutta umida.)\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 34
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Amarene sciroppate scolate",
-    "percent": 18
-   },
-   {
-    "name": "Gocce di cioccolato fondente",
-    "percent": 15
-   }
-  ],
-  "origin": "it",
-  "id": "94f9b196-7c1e-453b-9595-dcac09fad58c"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.18
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Arancia candita a cubetti",
-     "cost": 0.48
-    },
-    {
-     "name": "Gocce di cioccolato fondente",
-     "cost": 0.6
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.67,
-   "cost_100g": 0.33,
-   "b2b_500g": 7.0,
-   "b2b_100g": 2.5
+  {
+    "id": "e5e6fa92-d9db-4ed6-af88-089340ab3a40",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T10:03:59.503964+00:00",
+    "updated_at": "2026-08-19T10:03:59.503973+00:00",
+    "name": "Baguette con Poolish",
+    "flour_type": "Farina T65 (W270) — con Poolish",
+    "hydration_percent": 70,
+    "flour_grams": 1000,
+    "water_grams": 700,
+    "sourdough_grams": 0,
+    "salt_grams": 20,
+    "preferment_type": "poolish",
+    "method_type": "indiretto",
+    "dough_category": "pre",
+    "water_temp_c": 15,
+    "mix_minutes": 10,
+    "bake_temp": 250,
+    "bake_minutes": 22,
+    "oven_type": "statico",
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 1,
+    "origin": "fr",
+    "image_url": "/recipes/r_filo.jpg",
+    "extra_ingredients": [
+      {
+        "name": "Poolish (500 g farina + 500 g acqua + 2 g lievito)",
+        "percent": 50
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 0.6
+      }
+    ],
+    "procedure": "La classica baguette francese con POOLISH (prefermento liquido).\n1) POOLISH (sera prima): 500 g farina + 500 g acqua a 15°C + 2 g lievito. Mescola, copri e lascia 12-16 h a TA finché è pieno di bolle.\n2) IMPASTO: unisci il poolish con i restanti 500 g di farina, ~200 g di acqua, 6 g di lievito e per ultimo 20 g di sale. Impasta 10 min fino a incordare.\n3) PUNTATA: ~2 h con 1-2 pieghe.\n4) SPEZZATURA e PRE-FORMA leggera; riposo 20 min.\n5) FORMATURA a filone lungo (baguette); appretto ~1 h su telo (couche).\n6) TAGLI (grignes) obliqui; COTTURA 250°C con vapore i primi 10 min, poi 230°C, ~22 min. Crosta croccante e alveolatura irregolare.",
+    "notes": "Baguette con poolish: prefermento liquido per aroma e alveolatura. Idratazione ~70%%. Cuoci con vapore per una crosta sottile e croccante."
   },
-  "created_at": "2026-08-19T09:26:47.165809+00:00",
-  "updated_at": "2026-08-19T09:26:47.165815+00:00",
-  "name": "Panettone Mikilab — Arancia e Cioccolato Fondente",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 40,
-  "flour_grams": 446,
-  "water_grams": 179,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_arancia.jpg",
-  "notes": "Arancia candita e cioccolato fondente, profumo intenso.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 34
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Arancia candita a cubetti",
-    "percent": 18
-   },
-   {
-    "name": "Gocce di cioccolato fondente",
-    "percent": 15
-   }
-  ],
-  "origin": "it",
-  "id": "cce86064-7cea-478b-b622-b2245842d85e"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.22
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Pasta di nocciola",
-     "cost": 0.48
-    },
-    {
-     "name": "Granella di nocciole tostate",
-     "cost": 0.71
-    },
-    {
-     "name": "Gocce di cioccolato al caffè",
-     "cost": 0.54
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.84,
-   "cost_100g": 0.37,
-   "b2b_500g": 7.5,
-   "b2b_100g": 2.5
+  {
+    "id": "7d432668-ec89-4dd8-b18a-de44cb98e843",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.985100+00:00",
+    "updated_at": "2026-08-19T07:47:44.004028+00:00",
+    "name": "Bretzel del Maestro",
+    "flour_type": "630 1,5kg + Vollkorn 1,3kg",
+    "hydration_percent": 50,
+    "flour_grams": 1000,
+    "water_grams": 500,
+    "sourdough_grams": 0,
+    "salt_grams": 22,
+    "preferment_type": "none",
+    "bake_temp": 220,
+    "bake_minutes": 15,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_bretzel.jpg",
+    "notes": "Con Vorteig (H2o Vk 850 g). Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Glutine (Di.Glutin)",
+        "percent": 2
+      },
+      {
+        "name": "Psyllium (Psy)",
+        "percent": 1
+      },
+      {
+        "name": "Fiocchi di patate (Kart.Fl)",
+        "percent": 1
+      },
+      {
+        "name": "Margarina",
+        "percent": 5
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Latte in polvere (Milk.Pu)",
+        "percent": 2
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1
+      }
+    ],
+    "origin": "de"
   },
-  "created_at": "2026-08-19T09:27:49.482538+00:00",
-  "updated_at": "2026-08-19T09:27:49.482542+00:00",
-  "name": "Panettone Mikilab — Caffè e Nocciola",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 37,
-  "flour_grams": 446,
-  "water_grams": 166,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_caffe.jpg",
-  "notes": "Caffè e nocciola: aromatico e goloso, per chi ama i sapori decisi.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~13 g rispetto al panettone base per compensare le paste/frutta umida.)",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 41
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Pasta di nocciola",
-    "percent": 6
-   },
-   {
-    "name": "Granella di nocciole tostate",
-    "percent": 10
-   },
-   {
-    "name": "Gocce di cioccolato al caffè",
-    "percent": 12
-   }
-  ],
-  "origin": "it",
-  "id": "a57b738f-45a4-496e-809f-495259a64aba"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.22
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Gocce di cioccolato fondente",
-     "cost": 0.72
-    },
-    {
-     "name": "Noci in pezzi",
-     "cost": 0.75
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.78,
-   "cost_100g": 0.36,
-   "b2b_500g": 7.5,
-   "b2b_100g": 2.5
+  {
+    "id": "676c3f25-b8ba-447c-96e7-d9e18219ab2e",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.983641+00:00",
+    "updated_at": "2026-08-19T07:47:44.014487+00:00",
+    "name": "Bruno d'Autunno",
+    "flour_type": "630 + Vollkorn + segale integrale (Rg.Vk)",
+    "hydration_percent": 42,
+    "flour_grams": 1000,
+    "water_grams": 420,
+    "sourdough_grams": 100,
+    "salt_grams": 24,
+    "preferment_type": "lm",
+    "bake_temp": 230,
+    "bake_minutes": 45,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_bruno.jpg",
+    "notes": "Sauerteig 10%. Pane scuro e saporito, con semi ammollati (Quellstück).",
+    "method_type": "indiretto",
+    "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca il Sauerteig (lievito madre di segale) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Segale integrale (Rg.Vk)",
+        "percent": 5
+      },
+      {
+        "name": "Quellstück (semi ammollati)",
+        "percent": 25
+      },
+      {
+        "name": "Patate lessate (Kart.Fr)",
+        "percent": 7
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Glutine (Di.Glutin)",
+        "percent": 2
+      },
+      {
+        "name": "Quark",
+        "percent": 5
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 0.6
+      }
+    ],
+    "origin": "de"
   },
-  "created_at": "2026-08-19T09:26:47.163962+00:00",
-  "updated_at": "2026-08-19T09:26:47.163968+00:00",
-  "name": "Panettone Mikilab — Cioccolato e Noci",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 40,
-  "flour_grams": 446,
-  "water_grams": 179,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_cioc_noci.jpg",
-  "notes": "Goloso: gocce di cioccolato fondente e noci. Inserisci le sospensioni a fine impasto, delicatamente.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 41
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Gocce di cioccolato fondente",
-    "percent": 18
-   },
-   {
-    "name": "Noci in pezzi",
-    "percent": 12
-   }
-  ],
-  "origin": "it",
-  "id": "50bbd781-8957-4eb1-8d4c-546eb7abbd2f"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.22
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Fichi secchi a pezzi",
-     "cost": 0.8
-    },
-    {
-     "name": "Mandorle tostate",
-     "cost": 0.64
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.77,
-   "cost_100g": 0.35,
-   "b2b_500g": 7.5,
-   "b2b_100g": 2.5
+  {
+    "id": "805b813c-4fdf-47f7-9fd6-9cfe3e2488f6",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.985498+00:00",
+    "updated_at": "2026-08-19T07:47:44.004526+00:00",
+    "name": "Carezza Dolce",
+    "flour_type": "Farina 630 + Vorteig",
+    "hydration_percent": 50,
+    "flour_grams": 1000,
+    "water_grams": 500,
+    "sourdough_grams": 0,
+    "salt_grams": 24,
+    "preferment_type": "biga",
+    "bake_temp": 180,
+    "bake_minutes": 30,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_carezza.jpg",
+    "notes": "Con Vorteig (Mehl 10% + Wasser 5% + Hefe 10%). Impasto arricchito e soffice, dolce.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Psyllium (Psy)",
+        "percent": 1.1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Latte in polvere (Milk.P)",
+        "percent": 5
+      },
+      {
+        "name": "Zucchero (Zucker)",
+        "percent": 4
+      },
+      {
+        "name": "Quark",
+        "percent": 10
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 4
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Burro (Butter)",
+        "percent": 15
+      },
+      {
+        "name": "Margarina",
+        "percent": 5
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1.5
+      }
+    ],
+    "origin": "de"
   },
-  "created_at": "2026-08-19T09:26:47.165401+00:00",
-  "updated_at": "2026-08-19T09:26:47.165407+00:00",
-  "name": "Panettone Mikilab — Fichi e Mandorle",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 40,
-  "flour_grams": 446,
-  "water_grams": 179,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_fichi.jpg",
-  "notes": "Mediterraneo: fichi secchi e mandorle tostate.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 41
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Fichi secchi a pezzi",
-    "percent": 18
-   },
-   {
-    "name": "Mandorle tostate",
-    "percent": 12
-   }
-  ],
-  "origin": "it",
-  "id": "473417f1-6147-458b-bff7-359c63575317"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.22
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Mirtilli disidratati",
-     "cost": 0.96
-    },
-    {
-     "name": "Lamponi disidratati",
-     "cost": 0.78
-    },
-    {
-     "name": "Gocce di cioccolato bianco",
-     "cost": 0.54
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.98,
-   "cost_100g": 0.4,
-   "b2b_500g": 8.5,
-   "b2b_100g": 3.0
+  {
+    "id": "dccccb01-5bae-4dd7-95e0-c79df42e479e",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.985301+00:00",
+    "updated_at": "2026-08-19T07:47:44.004275+00:00",
+    "name": "Cornetto Sfogliato",
+    "flour_type": "Farina 630 + uova",
+    "hydration_percent": 60,
+    "flour_grams": 1000,
+    "water_grams": 600,
+    "sourdough_grams": 0,
+    "salt_grams": 20,
+    "preferment_type": "none",
+    "bake_temp": 190,
+    "bake_minutes": 20,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_cornetto.jpg",
+    "notes": "Impasto con acqua + uova (60%). Sfogliatura con burro/margarina (2 pieghe da 20%). Riposo in cella 16°C tra le pieghe.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 190°C per 20 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Margarina (Marg)",
+        "percent": 10
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Latte in polvere (Milk.Pu)",
+        "percent": 4
+      },
+      {
+        "name": "Burro per sfoglia (Fett) 2x20%",
+        "percent": 40
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1
+      }
+    ],
+    "origin": "fr"
   },
-  "created_at": "2026-08-19T09:27:49.483368+00:00",
-  "updated_at": "2026-08-19T09:27:49.483372+00:00",
-  "name": "Panettone Mikilab — Frutti di Bosco",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 40,
-  "flour_grams": 446,
-  "water_grams": 179,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_frutti.jpg",
-  "notes": "Frutti di bosco disidratati e cioccolato bianco: fresco e colorato.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 41
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Mirtilli disidratati",
-    "percent": 12
-   },
-   {
-    "name": "Lamponi disidratati",
-    "percent": 8
-   },
-   {
-    "name": "Gocce di cioccolato bianco",
-    "percent": 12
-   }
-  ],
-  "origin": "it",
-  "id": "84ac31f9-0b67-4a78-a37e-42adde9601f7"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.18
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Marron glacé a pezzi",
-     "cost": 1.96
-    },
-    {
-     "name": "Gocce di cioccolato bianco",
-     "cost": 0.45
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 2.0,
-   "cost_100g": 0.4,
-   "b2b_500g": 8.5,
-   "b2b_100g": 3.0
+  {
+    "id": "c167ca08-705f-4a40-bf05-49cccc23477b",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.984467+00:00",
+    "updated_at": "2026-08-19T07:47:44.003229+00:00",
+    "name": "Cuore Italiano",
+    "flour_type": "Semola 800 + W550 200",
+    "hydration_percent": 75,
+    "flour_grams": 1000,
+    "water_grams": 750,
+    "sourdough_grams": 200,
+    "salt_grams": 27,
+    "preferment_type": "none",
+    "bake_temp": 240,
+    "bake_minutes": 40,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_cuore.jpg",
+    "notes": "Lievito madre 20%. Stile italiano con semola: crosta croccante e alveoli aperti.",
+    "method_type": "diretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 40 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
+    "extra_ingredients": [
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 2
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 0.5
+      }
+    ],
+    "origin": "it"
   },
-  "created_at": "2026-08-19T09:27:49.483000+00:00",
-  "updated_at": "2026-08-19T09:27:49.483007+00:00",
-  "name": "Panettone Mikilab — Marron Glacé (Castagne)",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 37,
-  "flour_grams": 446,
-  "water_grams": 164,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_marron.jpg",
-  "notes": "Marron glacé e cioccolato bianco: elegante e natalizio.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~15 g rispetto al panettone base per compensare le paste/frutta umida.)\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 34
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Marron glacé a pezzi",
-    "percent": 22
-   },
-   {
-    "name": "Gocce di cioccolato bianco",
-    "percent": 10
-   }
-  ],
-  "origin": "it",
-  "id": "6452304f-e754-401c-bfbb-9c044ad1b1c7"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.22
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Pere disidratate a cubetti",
-     "cost": 0.96
-    },
-    {
-     "name": "Gocce di cioccolato fondente",
-     "cost": 0.6
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.8,
-   "cost_100g": 0.36,
-   "b2b_500g": 7.5,
-   "b2b_100g": 2.5
+  {
+    "id": "42064ae2-8b16-4e54-920e-99ba64a57e9c",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.986084+00:00",
+    "updated_at": "2026-08-19T07:47:44.005268+00:00",
+    "name": "Dolce Cipolla",
+    "flour_type": "Farina Tipo 1",
+    "hydration_percent": 72,
+    "flour_grams": 1000,
+    "water_grams": 720,
+    "sourdough_grams": 180,
+    "salt_grams": 20,
+    "preferment_type": "none",
+    "bake_temp": 225,
+    "bake_minutes": 40,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_cipolla.jpg",
+    "notes": "Lievito madre. Cipolle stufate dorate aggiunte durante le pieghe.",
+    "method_type": "diretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 225°C per 40 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Cipolle stufate dolci",
+        "percent": 20
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      }
+    ],
+    "origin": "it"
   },
-  "created_at": "2026-08-19T09:26:47.164873+00:00",
-  "updated_at": "2026-08-19T09:26:47.164879+00:00",
-  "name": "Panettone Mikilab — Pere e Cioccolato",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 40,
-  "flour_grams": 446,
-  "water_grams": 179,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_pere.jpg",
-  "notes": "Pere disidratate e cioccolato fondente: dolce ed equilibrato.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 41
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Pere disidratate a cubetti",
-    "percent": 18
-   },
-   {
-    "name": "Gocce di cioccolato fondente",
-    "percent": 15
-   }
-  ],
-  "origin": "it",
-  "id": "4c784420-5b6a-4f62-9ed3-a2b2dd19f266"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.22
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Pasta di pistacchio",
-     "cost": 0.8
-    },
-    {
-     "name": "Granella di pistacchio",
-     "cost": 1.07
-    },
-    {
-     "name": "Gocce di cioccolato bianco",
-     "cost": 0.67
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 2.04,
-   "cost_100g": 0.41,
-   "b2b_500g": 8.5,
-   "b2b_100g": 3.0
+  {
+    "id": "22075a26-fc13-4876-910d-119b59656630",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.984687+00:00",
+    "updated_at": "2026-08-19T07:47:44.003512+00:00",
+    "name": "Filo di Francia",
+    "flour_type": "Farina 630 / W550",
+    "hydration_percent": 72,
+    "flour_grams": 1000,
+    "water_grams": 720,
+    "sourdough_grams": 200,
+    "salt_grams": 20,
+    "preferment_type": "lm",
+    "bake_temp": 240,
+    "bake_minutes": 22,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_filo.jpg",
+    "notes": "Lievito madre 20%. Crosta sottile e cantante, alveoli aperti. Vapore abbondante.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 22 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 0.5
+      }
+    ],
+    "origin": "fr"
   },
-  "created_at": "2026-08-19T09:26:47.164455+00:00",
-  "updated_at": "2026-08-19T09:26:47.164462+00:00",
-  "name": "Panettone Mikilab — Pistacchio e Cioccolato Bianco",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 37,
-  "flour_grams": 446,
-  "water_grams": 166,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_pistacchio.jpg",
-  "notes": "Raffinato: pasta di pistacchio nell impasto, granella e cioccolato bianco come sospensioni.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~13 g rispetto al panettone base per compensare le paste/frutta umida.)",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 41
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Pasta di pistacchio",
-    "percent": 6
-   },
-   {
-    "name": "Granella di pistacchio",
-    "percent": 8
-   },
-   {
-    "name": "Gocce di cioccolato bianco",
-    "percent": 15
-   }
-  ],
-  "origin": "it",
-  "id": "fd260daf-c2fb-40dd-8ef1-9f73d50d9f3a"
- },
- {
-  "collection_name": "mikilab",
-  "costing": {
-   "flour_kg": 1.2,
-   "water_l": 0.002,
-   "sourdough_kg": 1.0,
-   "salt_kg": 0.5,
-   "extras": [
-    {
-     "name": "Zucchero",
-     "cost": 0.18
-    },
-    {
-     "name": "Tuorlo",
-     "cost": 1.09
-    },
-    {
-     "name": "Burro",
-     "cost": 2.65
-    },
-    {
-     "name": "Miele",
-     "cost": 0.22
-    },
-    {
-     "name": "Pasta d'arancia",
-     "cost": 0.08
-    },
-    {
-     "name": "Uvetta sultanina",
-     "cost": 0.45
-    },
-    {
-     "name": "Arancia e cedro canditi",
-     "cost": 0.4
-    }
-   ],
-   "overhead": 0.7,
-   "pieces": 2,
-   "markup": 0,
-   "cost_500g": 1.61,
-   "cost_100g": 0.32,
-   "b2b_500g": 7.0,
-   "b2b_100g": 2.5
+  {
+    "id": "dc029210-cb00-4346-b8c0-356afb952c8f",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T08:24:48.557570+00:00",
+    "updated_at": "2026-08-19T08:24:48.557573+00:00",
+    "name": "Focaccia Barese",
+    "flour_type": "Semola rimacinata + tipo 0 + patata lessa",
+    "hydration_percent": 85,
+    "flour_grams": 1000,
+    "water_grams": 850,
+    "sourdough_grams": 100,
+    "salt_grams": 20,
+    "preferment_type": "none",
+    "method_type": "diretto",
+    "dough_category": "pre",
+    "water_temp_c": 20,
+    "mix_minutes": 14,
+    "bake_temp": 230,
+    "bake_minutes": 25,
+    "oven_type": "statico",
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 1.5,
+    "origin": "IT",
+    "extra_ingredients": [
+      {
+        "name": "Patata lessa schiacciata",
+        "percent": 20
+      },
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 6
+      }
+    ],
+    "procedure": "1) Prepara un poolish la sera prima (parti uguali farina/acqua + poco lievito).\n2) Impasta semola, tipo 0, patata lessa schiacciata, poolish e acqua; sale a fine impasto.\n3) Puntata ~2 ore.\n4) Ungi bene una teglia rotonda con olio, stendi l'impasto con le mani unte e lascia lievitare 1,5 ore.\n5) Affonda con le dita, guarnisci con pomodorini schiacciati, olive baresane, origano, sale grosso e un filo d'olio.\n6) Cuoci a 230°C per 25 minuti: bordi croccanti e interno soffice.",
+    "notes": "La focaccia di Bari: la patata la rende soffice e umida a lungo. Pomodorini, olive baresane e origano sono la firma.",
+    "image_url": "/recipes/r_focaccia.jpg"
   },
-  "created_at": "2026-08-19T09:26:47.161419+00:00",
-  "updated_at": "2026-08-19T09:26:47.161427+00:00",
-  "name": "Panettone Mikilab — Uvetta e Canditi (Classico)",
-  "flour_type": "Farina alta forza W380 + lievito madre",
-  "hydration_percent": 40,
-  "flour_grams": 446,
-  "water_grams": 179,
-  "sourdough_grams": 140,
-  "salt_grams": 7,
-  "preferment_type": "lm",
-  "bake_temp": 165,
-  "bake_minutes": 50,
-  "oven_type": "statico",
-  "image_url": "/recipes/pan_classico.jpg",
-  "notes": "Il classico: uvetta ammollata e canditi di arancia e cedro. Aggiungi le sospensioni a fine impasto, a bassa velocità, per non spezzare la maglia.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
-  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
-  "method_type": "indiretto",
-  "extra_ingredients": [
-   {
-    "name": "Zucchero",
-    "percent": 34
-   },
-   {
-    "name": "Tuorlo",
-    "percent": 61
-   },
-   {
-    "name": "Burro",
-    "percent": 66
-   },
-   {
-    "name": "Miele",
-    "percent": 5.6
-   },
-   {
-    "name": "Pasta d'arancia",
-    "percent": 2.2
-   },
-   {
-    "name": "Uvetta sultanina",
-    "percent": 20
-   },
-   {
-    "name": "Arancia e cedro canditi",
-    "percent": 15
-   }
-  ],
-  "origin": "it",
-  "id": "da30caa9-d07c-4298-821a-189237f566f0"
- },
- {
-  "id": "65e7fe8e-6544-4705-8c10-c9b496d7a0b6",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T08:24:48.558073+00:00",
-  "updated_at": "2026-08-19T08:24:48.558076+00:00",
-  "name": "Puccia Salentina",
-  "flour_type": "Farina tipo 0 + semola rimacinata",
-  "hydration_percent": 65,
-  "flour_grams": 1000,
-  "water_grams": 650,
-  "sourdough_grams": 200,
-  "salt_grams": 20,
-  "preferment_type": "none",
-  "method_type": "diretto",
-  "dough_category": "lm",
-  "water_temp_c": 20,
-  "mix_minutes": 13,
-  "bake_temp": 230,
-  "bake_minutes": 18,
-  "oven_type": "statico",
-  "bulk_fermentation_hours": 3,
-  "proofing_hours": 1.5,
-  "origin": "IT",
-  "extra_ingredients": [
-   {
-    "name": "Olio extravergine d'oliva",
-    "percent": 3
-   }
-  ],
-  "procedure": "1) Impasta farine, acqua e lievito madre; unisci l'olio e il sale a fine impasto.\n2) Puntata ~3 ore con una piega.\n3) Forma delle palline da ~200 g e appiattiscile leggermente.\n4) Lievitazione ~1,5 ore.\n5) Cuoci a 230°C per ~18 minuti: devono restare chiare e morbide.\n6) Da farcire ancora tiepide (olive, verdure, tonno, salumi).",
-  "notes": "Il panino tondo del Salento, morbido e adatto a essere farcito. Spesso si aggiungono olive nere denocciolate direttamente nell'impasto.",
-  "image_url": "/recipes/r_puccia.jpg"
- },
- {
-  "id": "295d02bf-2a7e-44b5-a731-b911dc7858d2",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.984891+00:00",
-  "updated_at": "2026-08-19T07:47:44.003774+00:00",
-  "name": "Quotidiano del Fornaio",
-  "flour_type": "Farina 630",
-  "hydration_percent": 70,
-  "flour_grams": 1000,
-  "water_grams": 700,
-  "sourdough_grams": 200,
-  "salt_grams": 24,
-  "preferment_type": "poolish",
-  "bake_temp": 230,
-  "bake_minutes": 35,
-  "oven_type": "ventilato",
-  "image_url": "/recipes/r_quotidiano.jpg",
-  "notes": "Poolish / L.M 20%. Pane da tutti i giorni, morbido e leggero.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 35 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
-  "extra_ingredients": [
-   {
-    "name": "Psyllium (Psy)",
-    "percent": 0.5
-   },
-   {
-    "name": "Fiocchi di patate (Kart.Fl)",
-    "percent": 1
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 1
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "4b762bc5-0a91-4a42-a9e9-4003c6d18b47",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.985897+00:00",
-  "updated_at": "2026-08-19T07:47:44.005026+00:00",
-  "name": "Rustico Noci e Uvetta",
-  "flour_type": "Farina Tipo 1",
-  "hydration_percent": 70,
-  "flour_grams": 1000,
-  "water_grams": 700,
-  "sourdough_grams": 180,
-  "salt_grams": 18,
-  "preferment_type": "none",
-  "bake_temp": 220,
-  "bake_minutes": 38,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_rustico.jpg",
-  "notes": "Lievito madre. Noci e uvetta a fine impasto. Ottimo con formaggi.",
-  "method_type": "diretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 38 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Noci tostate",
-    "percent": 15
-   },
-   {
-    "name": "Uvetta ammollata",
-    "percent": 12
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   }
-  ],
-  "origin": "it"
- },
- {
-  "id": "9325a24c-55ca-425e-8797-df8b07518db2",
-  "collection_name": "mikilab",
-  "name": "Sinfonia di Cereali",
-  "flour_type": "Mix 5 cereali + Quellstück (semi ammollati)",
-  "origin": "de",
-  "hydration_percent": 76,
-  "flour_grams": 1000,
-  "water_grams": 760,
-  "sourdough_grams": 200,
-  "salt_grams": 20,
-  "preferment_type": "poolish",
-  "method_type": "indiretto",
-  "mix_minutes": 12,
-  "bake_temp": 225,
-  "bake_minutes": 40,
-  "oven_type": "ventilato",
-  "image_url": "/recipes/r_sinfonia.jpg",
-  "extra_ingredients": [
-   {
-    "name": "Quellstück (5 cereali ammollati)",
-    "percent": 40
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Lino dorato (Gold)",
-    "percent": 1
-   },
-   {
-    "name": "Glutine (Di.Glutin)",
-    "percent": 2
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 0.7
-   }
-  ],
-  "notes": "Pane multicereale con Quellstück: i semi ammollati la sera prima danno una mollica morbida e una lunga conservazione. Amatissimo in Germania.",
-  "procedure": "🌙 LA SERA PRIMA — Quellstück (semi ammollati): pesa il mix di 5 cereali/semi (girasole, lino, sesamo, avena, miglio) e coprilo con pari peso di acqua tiepida (rapporto 1:1). Copri e lascia riposare tutta la notte a temperatura ambiente: i semi si ammorbidiscono, non rubano acqua all'impasto e rendono la mollica morbida e umida.\n\nIL GIORNO DOPO:\n1) Prefermento: rinfresca lievito madre / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, miglioratore) e incorda.\n4) Aggiungi il Quellstück scolato e i semi; poi il Kokosfett a palla; per ultimi olio, aceto e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma (o fai i panini), rotola nei semi e metti in appretto.\n7) Cottura: 225°C per 40 minuti (panini ~18′), con vapore nei primi 10 minuti.\n\n👉 Panini ai cereali con lo STESSO impasto: pezzi da ~90 g, arrotondati e passati nei semi.",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:44.007806+00:00",
-  "updated_at": "2026-08-19T07:47:44.007809+00:00"
- },
- {
-  "id": "342d01a0-ca87-4808-9587-9458eee9a053",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T08:24:48.556514+00:00",
-  "updated_at": "2026-08-19T08:24:48.556522+00:00",
-  "name": "Taralli Pugliesi",
-  "flour_type": "Farina di grano tenero tipo 00",
-  "hydration_percent": null,
-  "flour_grams": 1000,
-  "water_grams": 0,
-  "sourdough_grams": 0,
-  "salt_grams": 20,
-  "preferment_type": "none",
-  "method_type": "diretto",
-  "dough_category": "diretto",
-  "water_temp_c": 20,
-  "mix_minutes": 12,
-  "bake_temp": 200,
-  "bake_minutes": 25,
-  "oven_type": "ventilato",
-  "origin": "IT",
-  "extra_ingredients": [
-   {
-    "name": "Olio extravergine d'oliva",
-    "percent": 15
-   },
-   {
-    "name": "Vino bianco secco",
-    "percent": 35
-   },
-   {
-    "name": "Semi di finocchio",
-    "percent": 1.5
-   }
-  ],
-  "procedure": "1) In una ciotola unisci farina, sale e semi di finocchio.\n2) Aggiungi l'olio extravergine e il vino bianco a temperatura ambiente; impasta 10-12 minuti fino a ottenere un panetto liscio e sodo (nessuna acqua: l'idratazione viene dal vino).\n3) Copri e lascia riposare 30 minuti.\n4) Preleva piccoli pezzi, forma cordoncini di ~1 cm e chiudi ad anello sovrapponendo le estremità.\n5) Porta a bollore una pentola d'acqua: tuffa i taralli pochi alla volta e scolali appena vengono a galla.\n6) Asciugali su un telo, poi disponili sulla teglia.\n7) Cuoci a 200°C ventilato per 25-30 minuti finché sono dorati e croccanti.",
-  "notes": "Il classico tarallo pugliese: olio, vino e finocchietto. Prima si sbollentano, poi si cuociono: così restano friabili e si conservano a lungo. Varianti: pepe nero, peperoncino, cipolla.",
-  "image_url": "/recipes/r_taralli.jpg"
- },
- {
-  "id": "145e4c9e-19c7-4a89-a112-09409af4b23c",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.985705+00:00",
-  "updated_at": "2026-08-19T07:47:44.004778+00:00",
-  "name": "Treccia del Sole",
-  "flour_type": "Farina 630 + Vorteig + uova",
-  "hydration_percent": 50,
-  "flour_grams": 1000,
-  "water_grams": 500,
-  "sourdough_grams": 0,
-  "salt_grams": 11,
-  "preferment_type": "biga",
-  "bake_temp": 180,
-  "bake_minutes": 30,
-  "oven_type": "statico",
-  "image_url": "/recipes/r_treccia.jpg",
-  "notes": "Con Vorteig. Treccia dolce profumata al limone. Spennella con uovo prima di cuocere.",
-  "method_type": "indiretto",
-  "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Uova (Eier) 4",
-    "percent": 0
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   },
-   {
-    "name": "Malto (Malz)",
-    "percent": 1
-   },
-   {
-    "name": "Latte in polvere (Milk.P)",
-    "percent": 3
-   },
-   {
-    "name": "Zucchero (Zucker)",
-    "percent": 20
-   },
-   {
-    "name": "Quark",
-    "percent": 8
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Burro (Butter)",
-    "percent": 20
-   },
-   {
-    "name": "Margarina",
-    "percent": 5
-   },
-   {
-    "name": "Succo di limone (Zit.Saft)",
-    "percent": 5
-   },
-   {
-    "name": "Scorza di limone (Zitr.)",
-    "percent": 0.5
-   },
-   {
-    "name": "Lievito di birra (Hefe)",
-    "percent": 1.5
-   }
-  ],
-  "origin": "de"
- },
- {
-  "id": "42578e87-e808-4157-b2c1-0b960b2d5c79",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T07:47:43.986269+00:00",
-  "updated_at": "2026-08-19T07:47:44.014939+00:00",
-  "name": "Verde Canapa",
-  "flour_type": "Farina Tipo 1 + semi di canapa",
-  "hydration_percent": 75,
-  "flour_grams": 1000,
-  "water_grams": 750,
-  "sourdough_grams": 180,
-  "salt_grams": 20,
-  "preferment_type": "none",
-  "bake_temp": 220,
-  "bake_minutes": 40,
-  "oven_type": "ventilato",
-  "image_url": "/recipes/r_canapa.jpg",
-  "notes": "Lievito madre. Semi di canapa in impasto e in copertura.",
-  "method_type": "diretto",
-  "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 40 minuti, con vapore nei primi 10 minuti.",
-  "extra_ingredients": [
-   {
-    "name": "Semi di canapa decorticati",
-    "percent": 8
-   },
-   {
-    "name": "Olio d'oliva (Öl)",
-    "percent": 1
-   },
-   {
-    "name": "Aceto di mele (Essig)",
-    "percent": 1
-   },
-   {
-    "name": "Kokosfett",
-    "percent": 1
-   },
-   {
-    "name": "Miglioratore naturale (Backmittel)",
-    "percent": 2
-   }
-  ],
-  "origin": "it"
- },
- {
-  "id": "22e85fcb-0fb0-4a64-aeaa-2cb9a128b0a3",
-  "collection_name": "mikilab",
-  "costing": null,
-  "created_at": "2026-08-19T09:33:15.142844+00:00",
-  "updated_at": "2026-08-19T09:33:15.142847+00:00",
-  "name": "Wurzelbrot",
-  "flour_type": "Farina Tipo 0 (W300) — con Poolish e Weizensauerteig liquido",
-  "hydration_percent": 82,
-  "flour_grams": 1000,
-  "water_grams": 820,
-  "sourdough_grams": 300,
-  "salt_grams": 22,
-  "preferment_type": "poolish",
-  "method_type": "indiretto",
-  "dough_category": "pre",
-  "water_temp_c": 15,
-  "mix_minutes": 12,
-  "bake_temp": 250,
-  "bake_minutes": 25,
-  "oven_type": "statico",
-  "bulk_fermentation_hours": 3,
-  "proofing_hours": 1,
-  "origin": "de",
-  "extra_ingredients": [
-   {
-    "name": "Poolish (150 g farina + 150 g acqua + 1,5 g lievito)",
-    "percent": 30
-   },
-   {
-    "name": "Weizensauerteig liquido (maturo)",
-    "percent": 30
-   }
-  ],
-  "procedure": "Ricetta ad alta idratazione (TA ~182). Prefermenti: POOLISH liquido (150 g farina + 150 g acqua a 15°C + 1,5 g lievito; 2-3 h a TA poi in frigo a 4°C) + WEIZENSAUERTEIG liquido maturo (~300 g).\n1) AUTOLISI: unisci Sauerteig, poolish, farina e la prima acqua (~650 g), riposa 30 min.\n2) IMPASTO: aggiungi il sale, mescola lento 10 min poi veloce fino a incordare (il tuo Miglioratore a piacere).\n3) BASSINAGE: trattieni ~10%% dell acqua (~80 g) e uniscila poco a poco a impasto incordato.\n4) STOCKGARE: 3 h in vasca oliata a TA con 2 pieghe (stretch & fold). Opzionale: 18-24 h in frigo a 4°C per affinare l alveolatura.\n5) FORMATURA: rovescia delicatamente sul banco infarinato, taglia strisce e ATTORCIGLIALE a vite (senza sgonfiare).\n6) COTTURA: 250°C con vapore forte, poi abbassa a 220-230°C, ~25 min. Crosta croccante, alveoli irregolari.",
-  "notes": "Wurzelbrot (pane a radice) col metodo indiretto: poolish + Weizensauerteig liquido, idratazione ~82%% con bassinage. Impasto molto morbido: attorciglia con delicatezza.",
-  "image_url": "/recipes/r_wurzel.jpg"
- }
+  {
+    "id": "3d8337f4-f173-409b-a76a-a54f38c8c9e1",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T08:24:48.557836+00:00",
+    "updated_at": "2026-08-19T08:24:48.557838+00:00",
+    "name": "Friselle Pugliesi",
+    "flour_type": "Semola di grano duro (o orzo)",
+    "hydration_percent": 55,
+    "flour_grams": 1000,
+    "water_grams": 550,
+    "sourdough_grams": 150,
+    "salt_grams": 20,
+    "preferment_type": "none",
+    "method_type": "diretto",
+    "dough_category": "lm",
+    "water_temp_c": 20,
+    "mix_minutes": 12,
+    "bake_temp": 200,
+    "bake_minutes": 45,
+    "oven_type": "ventilato",
+    "bulk_fermentation_hours": 3,
+    "proofing_hours": 1,
+    "origin": "IT",
+    "procedure": "1) Impasta semola, acqua, lievito madre e sale (impasto piuttosto sodo).\n2) Puntata ~3 ore.\n3) Forma dei filoncini e chiudili ad anello (ciambella).\n4) Lievitazione ~1 ora, poi prima cottura a 200°C per ~25 minuti.\n5) Sforna, taglia a metà nel senso orizzontale con un filo/coltello.\n6) Rimetti in forno le due metà (lato taglio in su) a 160°C per ~20 minuti: devono biscottare e diventare secche.\n7) Per servire: 'sponza' velocemente sotto l'acqua, poi pomodoro, origano, sale e olio.",
+    "notes": "La frisella è biscottata (doppia cottura), per questo si conserva per mesi. Si bagna al momento e si condisce: piatto povero e geniale del Salento.",
+    "image_url": "/recipes/r_friselle.jpg"
+  },
+  {
+    "id": "9e5ffbfb-00b9-444e-9268-d5c4c09fbef3",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T09:33:15.142564+00:00",
+    "updated_at": "2026-08-19T09:33:15.142571+00:00",
+    "name": "Gnetze Brot",
+    "flour_type": "Farina di frumento Type 550/630 — con Poolish e Sauerteig liquido",
+    "hydration_percent": 82,
+    "flour_grams": 1000,
+    "water_grams": 820,
+    "sourdough_grams": 250,
+    "salt_grams": 20,
+    "preferment_type": "poolish",
+    "method_type": "indiretto",
+    "dough_category": "pre",
+    "water_temp_c": 18,
+    "mix_minutes": 12,
+    "bake_temp": 240,
+    "bake_minutes": 40,
+    "oven_type": "statico",
+    "bulk_fermentation_hours": 3,
+    "proofing_hours": 1,
+    "origin": "de",
+    "extra_ingredients": [
+      {
+        "name": "Poolish (150 g farina + 150 g acqua + 1,5 g lievito)",
+        "percent": 30
+      },
+      {
+        "name": "Sauerteig liquido (maturo)",
+        "percent": 25
+      }
+    ],
+    "procedure": "Netzbrot / Genetztes (Württemberg-Schwaben): mollica molto umida e alta idratazione. Prefermenti: POOLISH liquido (150 g farina + 150 g acqua + 1,5 g lievito, 12-16 h a TA) + SAUERTEIG liquido maturo (~250 g).\n1) AUTOLISI: unisci poolish, Sauerteig, farina e gran parte dell acqua, riposa 20-30 min.\n2) IMPASTO: aggiungi il sale; impasta fino a incordare, impasto morbido e appiccicoso (usa bassinage per l ultima acqua).\n3) STOCKGARE: ~3 h con 2-3 pieghe in ciotola.\n4) NON si forma sul banco: per la sua umidità si versa direttamente dalla ciotola (Schapf) sulla teglia/pietra.\n5) COTTURA: 240°C con vapore, poi 210-220°C, ~40 min. Crosta rustica, mollica umida e alveolata.",
+    "notes": "Gnetzbrot/Netzbrot col metodo indiretto: poolish + Sauerteig liquido, idratazione ~82%%. Tradizionale di Württemberg: impasto così morbido da versarsi dalla ciotola. Rifinisci a piacere.",
+    "image_url": "/recipes/r_gnetze.jpg"
+  },
+  {
+    "id": "cc8f48ef-c606-41e0-b34b-bbdfcd0b322b",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.983948+00:00",
+    "updated_at": "2026-08-19T07:47:44.002435+00:00",
+    "name": "Gran Riserva",
+    "flour_type": "630 30% + Vollkorn 60% + segale (Rg.Vk)",
+    "hydration_percent": 82,
+    "flour_grams": 1000,
+    "water_grams": 820,
+    "sourdough_grams": 100,
+    "salt_grams": 20,
+    "preferment_type": "lm",
+    "bake_temp": 230,
+    "bake_minutes": 42,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_granriserva.jpg",
+    "notes": "Sauerteig 10%. Pane rustico ad alta idratazione, mollica aperta.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il Sauerteig (lievito madre di segale) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 42 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Segale integrale (Rg.Vk)",
+        "percent": 5
+      },
+      {
+        "name": "Patate lessate (Kart.Fr)",
+        "percent": 7
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Glutine (Di.Glutin)",
+        "percent": 2
+      },
+      {
+        "name": "Quark",
+        "percent": 5
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 0.6
+      }
+    ],
+    "origin": "de"
+  },
+  {
+    "id": "acfd4e86-adc9-4da0-badc-582aeb6b1260",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.986457+00:00",
+    "updated_at": "2026-08-19T07:47:44.005926+00:00",
+    "name": "Miglioratore Naturale",
+    "flour_type": "Mix naturale — nessun additivo chimico",
+    "preferment_type": "none",
+    "image_url": "/recipes/r_migliora.jpg",
+    "notes": "Il mio miglioratore 100% naturale. Dose consigliata ~2-3% sul peso della farina. Mescola tutto a secco e aggiungi con le farine all'inizio dell'impasto. Rende l'impasto piu' forte, migliora crosta, colore e alveolatura e mantiene il pane morbido piu' a lungo.",
+    "procedure": "Preparazione: pesa i componenti nelle percentuali indicate (sul peso della farina della ricetta), mescolali bene a secco e conservali in un barattolo chiuso, al fresco e all'asciutto. Uso: aggiungi tutto alla farina all'inizio dell'impasto.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Malto (Malz)",
+        "percent": 0.3
+      },
+      {
+        "name": "Farina di lupino dolce (Süßlupinen)",
+        "percent": 1
+      },
+      {
+        "name": "Acerola in polvere",
+        "percent": 0.3
+      },
+      {
+        "name": "Lino dorato macinato (Gold)",
+        "percent": 2
+      },
+      {
+        "name": "Buccia di psillio (Flohsamen)",
+        "percent": 0.5
+      }
+    ]
+  },
+  {
+    "id": "eb689d6e-1bb6-486c-b1f0-4a1bab7532eb",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.984226+00:00",
+    "updated_at": "2026-08-19T07:47:44.002924+00:00",
+    "name": "Nuvola in Cassetta",
+    "flour_type": "630 + Vollkorn",
+    "hydration_percent": 87,
+    "flour_grams": 1000,
+    "water_grams": 870,
+    "sourdough_grams": 200,
+    "salt_grams": 20,
+    "preferment_type": "poolish",
+    "bake_temp": 200,
+    "bake_minutes": 30,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_nuvola.jpg",
+    "notes": "Poolish 20%. Pane morbido da toast, mollica soffice e regolare. Cuoci nello stampo con coperchio.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 200°C per 30 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Psyllium (Psy)",
+        "percent": 1
+      },
+      {
+        "name": "Latte in polvere (Milk.Pu)",
+        "percent": 2
+      },
+      {
+        "name": "Fiocchi di patate (Kart.Fl)",
+        "percent": 1
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Glutine (Di.Glutin)",
+        "percent": 2
+      },
+      {
+        "name": "Quark",
+        "percent": 5
+      },
+      {
+        "name": "Zucchero (Zucker)",
+        "percent": 2
+      },
+      {
+        "name": "Margarina",
+        "percent": 5
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1.1
+      }
+    ],
+    "origin": "de"
+  },
+  {
+    "id": "7221f3ca-6f32-4ab7-970e-d9ba65a298df",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.983282+00:00",
+    "updated_at": "2026-08-19T07:47:43.999586+00:00",
+    "name": "Oro di Terra",
+    "flour_type": "630 + Vollkorn (50/50) + patate lessate",
+    "hydration_percent": 52,
+    "flour_grams": 1000,
+    "water_grams": 520,
+    "sourdough_grams": 100,
+    "salt_grams": 28,
+    "preferment_type": "lm",
+    "bake_temp": 230,
+    "bake_minutes": 45,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_oro.jpg",
+    "notes": "Lievito madre 10%. Patate lavate e lessate con la buccia, usate il giorno dopo. Mollica soffice, lunga conservazione.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Patate lessate (Kart.Fr)",
+        "percent": 30
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1
+      }
+    ],
+    "origin": "de"
+  },
+  {
+    "id": "6c3d0d73-707b-4097-8f27-d460f5c77a16",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T08:24:48.556999+00:00",
+    "updated_at": "2026-08-19T08:24:48.557002+00:00",
+    "name": "Pane di Altamura DOP",
+    "flour_type": "Semola rimacinata di grano duro (Puglia)",
+    "hydration_percent": 76,
+    "flour_grams": 1000,
+    "water_grams": 760,
+    "sourdough_grams": 250,
+    "salt_grams": 20,
+    "preferment_type": "lm",
+    "method_type": "indiretto",
+    "dough_category": "lm",
+    "water_temp_c": 20,
+    "mix_minutes": 15,
+    "bake_temp": 240,
+    "bake_minutes": 55,
+    "oven_type": "statico",
+    "bulk_fermentation_hours": 4,
+    "proofing_hours": 2,
+    "origin": "IT",
+    "procedure": "1) Rinfresca il lievito madre e usalo maturo.\n2) Impasta semola rimacinata, acqua e lievito madre; aggiungi il sale a fine impasto (15').\n3) Puntata 4 ore a ~24°C con una piega dopo 1 ora.\n4) Forma la tipica pagnotta alta ('accavallata') e lascia lievitare 1,5-2 ore.\n5) Inforna a 240°C con vapore i primi 10', poi cala a 210°C.\n6) Cottura totale ~55 minuti: crosta spessa >3 mm, mollica gialla e profumata.",
+    "notes": "Il grande pane della Murgia, 100% semola rimacinata di grano duro. Crosta croccante e lunga conservazione. È l'orgoglio di Altamura.",
+    "image_url": "/recipes/r_altamura.jpg"
+  },
+  {
+    "id": "9bd50f04-7cf6-4ce3-ae14-e60f4e3c701e",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T08:24:48.557301+00:00",
+    "updated_at": "2026-08-19T08:24:48.557304+00:00",
+    "name": "Pane di Matera IGP",
+    "flour_type": "Semola di grano duro lucano",
+    "hydration_percent": 78,
+    "flour_grams": 1000,
+    "water_grams": 780,
+    "sourdough_grams": 300,
+    "salt_grams": 22,
+    "preferment_type": "lm",
+    "method_type": "indiretto",
+    "dough_category": "lm",
+    "water_temp_c": 20,
+    "mix_minutes": 16,
+    "bake_temp": 250,
+    "bake_minutes": 60,
+    "oven_type": "statico",
+    "bulk_fermentation_hours": 4,
+    "proofing_hours": 2,
+    "origin": "IT",
+    "procedure": "1) Usa lievito madre attivo e semola di grano duro lucana.\n2) Impasta a lungo (15-16') per sviluppare bene la maglia; sale a fine impasto.\n3) Puntata 4 ore con 2 pieghe.\n4) Dai la forma tipica 'a cornetto' (o alta con cresta) e lascia lievitare ~2 ore.\n5) Inforna a 250°C con vapore, poi cala a 210°C.\n6) Cuoci ~1 ora: mollica gialla, alveolata e profumo intenso di grano.",
+    "notes": "Il pane simbolo della mia terra, Matera. Forma a cornetto, mollica gialla e crosta scura: nasce dal grano duro lucano e dal lievito madre.",
+    "image_url": "/recipes/r_matera.jpg"
+  },
+  {
+    "id": "2c86b3e8-8f23-4e05-af55-98ddf761218e",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.986649+00:00",
+    "updated_at": "2026-08-19T07:47:44.006177+00:00",
+    "name": "Panettone Mikilab",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_panettone_base.jpg",
+    "notes": "Il mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Sospensione (canditi + uvetta)",
+        "percent": 101
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      }
+    ],
+    "origin": "it"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Amarene sciroppate scolate",
+          "cost": 0.56
+        },
+        {
+          "name": "Gocce di cioccolato fondente",
+          "cost": 0.6
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.69,
+      "cost_100g": 0.34,
+      "b2b_500g": 7.0,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-19T09:27:49.482091+00:00",
+    "updated_at": "2026-08-19T09:27:49.482100+00:00",
+    "name": "Panettone Mikilab — Amarena e Cioccolato",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 34,
+    "flour_grams": 446,
+    "water_grams": 151,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_amarena.jpg",
+    "notes": "Amarene e cioccolato fondente: dolce con una nota acidula.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~28 g rispetto al panettone base per compensare le paste/frutta umida.)\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Amarene sciroppate scolate",
+        "percent": 18
+      },
+      {
+        "name": "Gocce di cioccolato fondente",
+        "percent": 15
+      }
+    ],
+    "origin": "it",
+    "id": "94f9b196-7c1e-453b-9595-dcac09fad58c"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Arancia candita a cubetti",
+          "cost": 0.48
+        },
+        {
+          "name": "Gocce di cioccolato fondente",
+          "cost": 0.6
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.67,
+      "cost_100g": 0.33,
+      "b2b_500g": 7.0,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-19T09:26:47.165809+00:00",
+    "updated_at": "2026-08-19T09:26:47.165815+00:00",
+    "name": "Panettone Mikilab — Arancia e Cioccolato Fondente",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_arancia.jpg",
+    "notes": "Arancia candita e cioccolato fondente, profumo intenso.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Arancia candita a cubetti",
+        "percent": 18
+      },
+      {
+        "name": "Gocce di cioccolato fondente",
+        "percent": 15
+      }
+    ],
+    "origin": "it",
+    "id": "cce86064-7cea-478b-b622-b2245842d85e"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.22
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Pasta di nocciola",
+          "cost": 0.48
+        },
+        {
+          "name": "Granella di nocciole tostate",
+          "cost": 0.71
+        },
+        {
+          "name": "Gocce di cioccolato al caffè",
+          "cost": 0.54
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.84,
+      "cost_100g": 0.37,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-19T09:27:49.482538+00:00",
+    "updated_at": "2026-08-19T09:27:49.482542+00:00",
+    "name": "Panettone Mikilab — Caffè e Nocciola",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 37,
+    "flour_grams": 446,
+    "water_grams": 166,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_caffe.jpg",
+    "notes": "Caffè e nocciola: aromatico e goloso, per chi ama i sapori decisi.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~13 g rispetto al panettone base per compensare le paste/frutta umida.)",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Pasta di nocciola",
+        "percent": 6
+      },
+      {
+        "name": "Granella di nocciole tostate",
+        "percent": 10
+      },
+      {
+        "name": "Gocce di cioccolato al caffè",
+        "percent": 12
+      }
+    ],
+    "origin": "it",
+    "id": "a57b738f-45a4-496e-809f-495259a64aba"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.22
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Gocce di cioccolato fondente",
+          "cost": 0.72
+        },
+        {
+          "name": "Noci in pezzi",
+          "cost": 0.75
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.78,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-19T09:26:47.163962+00:00",
+    "updated_at": "2026-08-19T09:26:47.163968+00:00",
+    "name": "Panettone Mikilab — Cioccolato e Noci",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_cioc_noci.jpg",
+    "notes": "Goloso: gocce di cioccolato fondente e noci. Inserisci le sospensioni a fine impasto, delicatamente.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Gocce di cioccolato fondente",
+        "percent": 18
+      },
+      {
+        "name": "Noci in pezzi",
+        "percent": 12
+      }
+    ],
+    "origin": "it",
+    "id": "50bbd781-8957-4eb1-8d4c-546eb7abbd2f"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.22
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Fichi secchi a pezzi",
+          "cost": 0.8
+        },
+        {
+          "name": "Mandorle tostate",
+          "cost": 0.64
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.77,
+      "cost_100g": 0.35,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-19T09:26:47.165401+00:00",
+    "updated_at": "2026-08-19T09:26:47.165407+00:00",
+    "name": "Panettone Mikilab — Fichi e Mandorle",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_fichi.jpg",
+    "notes": "Mediterraneo: fichi secchi e mandorle tostate.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Fichi secchi a pezzi",
+        "percent": 18
+      },
+      {
+        "name": "Mandorle tostate",
+        "percent": 12
+      }
+    ],
+    "origin": "it",
+    "id": "473417f1-6147-458b-bff7-359c63575317"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.22
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Mirtilli disidratati",
+          "cost": 0.96
+        },
+        {
+          "name": "Lamponi disidratati",
+          "cost": 0.78
+        },
+        {
+          "name": "Gocce di cioccolato bianco",
+          "cost": 0.54
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.98,
+      "cost_100g": 0.4,
+      "b2b_500g": 8.5,
+      "b2b_100g": 3.0
+    },
+    "created_at": "2026-08-19T09:27:49.483368+00:00",
+    "updated_at": "2026-08-19T09:27:49.483372+00:00",
+    "name": "Panettone Mikilab — Frutti di Bosco",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_frutti.jpg",
+    "notes": "Frutti di bosco disidratati e cioccolato bianco: fresco e colorato.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Mirtilli disidratati",
+        "percent": 12
+      },
+      {
+        "name": "Lamponi disidratati",
+        "percent": 8
+      },
+      {
+        "name": "Gocce di cioccolato bianco",
+        "percent": 12
+      }
+    ],
+    "origin": "it",
+    "id": "84ac31f9-0b67-4a78-a37e-42adde9601f7"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Marron glacé a pezzi",
+          "cost": 1.96
+        },
+        {
+          "name": "Gocce di cioccolato bianco",
+          "cost": 0.45
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 2.0,
+      "cost_100g": 0.4,
+      "b2b_500g": 8.5,
+      "b2b_100g": 3.0
+    },
+    "created_at": "2026-08-19T09:27:49.483000+00:00",
+    "updated_at": "2026-08-19T09:27:49.483007+00:00",
+    "name": "Panettone Mikilab — Marron Glacé (Castagne)",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 37,
+    "flour_grams": 446,
+    "water_grams": 164,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_marron.jpg",
+    "notes": "Marron glacé e cioccolato bianco: elegante e natalizio.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~15 g rispetto al panettone base per compensare le paste/frutta umida.)\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Marron glacé a pezzi",
+        "percent": 22
+      },
+      {
+        "name": "Gocce di cioccolato bianco",
+        "percent": 10
+      }
+    ],
+    "origin": "it",
+    "id": "6452304f-e754-401c-bfbb-9c044ad1b1c7"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.22
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Pere disidratate a cubetti",
+          "cost": 0.96
+        },
+        {
+          "name": "Gocce di cioccolato fondente",
+          "cost": 0.6
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.8,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-19T09:26:47.164873+00:00",
+    "updated_at": "2026-08-19T09:26:47.164879+00:00",
+    "name": "Panettone Mikilab — Pere e Cioccolato",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_pere.jpg",
+    "notes": "Pere disidratate e cioccolato fondente: dolce ed equilibrato.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Pere disidratate a cubetti",
+        "percent": 18
+      },
+      {
+        "name": "Gocce di cioccolato fondente",
+        "percent": 15
+      }
+    ],
+    "origin": "it",
+    "id": "4c784420-5b6a-4f62-9ed3-a2b2dd19f266"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.22
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Pasta di pistacchio",
+          "cost": 0.8
+        },
+        {
+          "name": "Granella di pistacchio",
+          "cost": 1.07
+        },
+        {
+          "name": "Gocce di cioccolato bianco",
+          "cost": 0.67
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 2.04,
+      "cost_100g": 0.41,
+      "b2b_500g": 8.5,
+      "b2b_100g": 3.0
+    },
+    "created_at": "2026-08-19T09:26:47.164455+00:00",
+    "updated_at": "2026-08-19T09:26:47.164462+00:00",
+    "name": "Panettone Mikilab — Pistacchio e Cioccolato Bianco",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 37,
+    "flour_grams": 446,
+    "water_grams": 166,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_pistacchio.jpg",
+    "notes": "Raffinato: pasta di pistacchio nell impasto, granella e cioccolato bianco come sospensioni.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~13 g rispetto al panettone base per compensare le paste/frutta umida.)",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Pasta di pistacchio",
+        "percent": 6
+      },
+      {
+        "name": "Granella di pistacchio",
+        "percent": 8
+      },
+      {
+        "name": "Gocce di cioccolato bianco",
+        "percent": 15
+      }
+    ],
+    "origin": "it",
+    "id": "fd260daf-c2fb-40dd-8ef1-9f73d50d9f3a"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Pasta d'arancia",
+          "cost": 0.08
+        },
+        {
+          "name": "Uvetta sultanina",
+          "cost": 0.45
+        },
+        {
+          "name": "Arancia e cedro canditi",
+          "cost": 0.4
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.61,
+      "cost_100g": 0.32,
+      "b2b_500g": 7.0,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-19T09:26:47.161419+00:00",
+    "updated_at": "2026-08-19T09:26:47.161427+00:00",
+    "name": "Panettone Mikilab — Uvetta e Canditi (Classico)",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_classico.jpg",
+    "notes": "Il classico: uvetta ammollata e canditi di arancia e cedro. Aggiungi le sospensioni a fine impasto, a bassa velocità, per non spezzare la maglia.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 2.2
+      },
+      {
+        "name": "Uvetta sultanina",
+        "percent": 20
+      },
+      {
+        "name": "Arancia e cedro canditi",
+        "percent": 15
+      }
+    ],
+    "origin": "it",
+    "id": "da30caa9-d07c-4298-821a-189237f566f0"
+  },
+  {
+    "id": "65e7fe8e-6544-4705-8c10-c9b496d7a0b6",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T08:24:48.558073+00:00",
+    "updated_at": "2026-08-19T08:24:48.558076+00:00",
+    "name": "Puccia Salentina",
+    "flour_type": "Farina tipo 0 + semola rimacinata",
+    "hydration_percent": 65,
+    "flour_grams": 1000,
+    "water_grams": 650,
+    "sourdough_grams": 200,
+    "salt_grams": 20,
+    "preferment_type": "none",
+    "method_type": "diretto",
+    "dough_category": "lm",
+    "water_temp_c": 20,
+    "mix_minutes": 13,
+    "bake_temp": 230,
+    "bake_minutes": 18,
+    "oven_type": "statico",
+    "bulk_fermentation_hours": 3,
+    "proofing_hours": 1.5,
+    "origin": "IT",
+    "extra_ingredients": [
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 3
+      }
+    ],
+    "procedure": "1) Impasta farine, acqua e lievito madre; unisci l'olio e il sale a fine impasto.\n2) Puntata ~3 ore con una piega.\n3) Forma delle palline da ~200 g e appiattiscile leggermente.\n4) Lievitazione ~1,5 ore.\n5) Cuoci a 230°C per ~18 minuti: devono restare chiare e morbide.\n6) Da farcire ancora tiepide (olive, verdure, tonno, salumi).",
+    "notes": "Il panino tondo del Salento, morbido e adatto a essere farcito. Spesso si aggiungono olive nere denocciolate direttamente nell'impasto.",
+    "image_url": "/recipes/r_puccia.jpg"
+  },
+  {
+    "id": "295d02bf-2a7e-44b5-a731-b911dc7858d2",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.984891+00:00",
+    "updated_at": "2026-08-19T07:47:44.003774+00:00",
+    "name": "Quotidiano del Fornaio",
+    "flour_type": "Farina 630",
+    "hydration_percent": 70,
+    "flour_grams": 1000,
+    "water_grams": 700,
+    "sourdough_grams": 200,
+    "salt_grams": 24,
+    "preferment_type": "poolish",
+    "bake_temp": 230,
+    "bake_minutes": 35,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_quotidiano.jpg",
+    "notes": "Poolish / L.M 20%. Pane da tutti i giorni, morbido e leggero.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 35 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
+    "extra_ingredients": [
+      {
+        "name": "Psyllium (Psy)",
+        "percent": 0.5
+      },
+      {
+        "name": "Fiocchi di patate (Kart.Fl)",
+        "percent": 1
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1
+      }
+    ],
+    "origin": "de"
+  },
+  {
+    "id": "4b762bc5-0a91-4a42-a9e9-4003c6d18b47",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.985897+00:00",
+    "updated_at": "2026-08-19T07:47:44.005026+00:00",
+    "name": "Rustico Noci e Uvetta",
+    "flour_type": "Farina Tipo 1",
+    "hydration_percent": 70,
+    "flour_grams": 1000,
+    "water_grams": 700,
+    "sourdough_grams": 180,
+    "salt_grams": 18,
+    "preferment_type": "none",
+    "bake_temp": 220,
+    "bake_minutes": 38,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_rustico.jpg",
+    "notes": "Lievito madre. Noci e uvetta a fine impasto. Ottimo con formaggi.",
+    "method_type": "diretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 38 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Noci tostate",
+        "percent": 15
+      },
+      {
+        "name": "Uvetta ammollata",
+        "percent": 12
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      }
+    ],
+    "origin": "it"
+  },
+  {
+    "id": "9325a24c-55ca-425e-8797-df8b07518db2",
+    "collection_name": "mikilab",
+    "name": "Sinfonia di Cereali",
+    "flour_type": "Mix 5 cereali + Quellstück (semi ammollati)",
+    "origin": "de",
+    "hydration_percent": 76,
+    "flour_grams": 1000,
+    "water_grams": 760,
+    "sourdough_grams": 200,
+    "salt_grams": 20,
+    "preferment_type": "poolish",
+    "method_type": "indiretto",
+    "mix_minutes": 12,
+    "bake_temp": 225,
+    "bake_minutes": 40,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_sinfonia.jpg",
+    "extra_ingredients": [
+      {
+        "name": "Quellstück (5 cereali ammollati)",
+        "percent": 40
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Lino dorato (Gold)",
+        "percent": 1
+      },
+      {
+        "name": "Glutine (Di.Glutin)",
+        "percent": 2
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 0.7
+      }
+    ],
+    "notes": "Pane multicereale con Quellstück: i semi ammollati la sera prima danno una mollica morbida e una lunga conservazione. Amatissimo in Germania.",
+    "procedure": "🌙 LA SERA PRIMA — Quellstück (semi ammollati): pesa il mix di 5 cereali/semi (girasole, lino, sesamo, avena, miglio) e coprilo con pari peso di acqua tiepida (rapporto 1:1). Copri e lascia riposare tutta la notte a temperatura ambiente: i semi si ammorbidiscono, non rubano acqua all'impasto e rendono la mollica morbida e umida.\n\nIL GIORNO DOPO:\n1) Prefermento: rinfresca lievito madre / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, miglioratore) e incorda.\n4) Aggiungi il Quellstück scolato e i semi; poi il Kokosfett a palla; per ultimi olio, aceto e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma (o fai i panini), rotola nei semi e metti in appretto.\n7) Cottura: 225°C per 40 minuti (panini ~18′), con vapore nei primi 10 minuti.\n\n👉 Panini ai cereali con lo STESSO impasto: pezzi da ~90 g, arrotondati e passati nei semi.",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:44.007806+00:00",
+    "updated_at": "2026-08-19T07:47:44.007809+00:00"
+  },
+  {
+    "id": "342d01a0-ca87-4808-9587-9458eee9a053",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T08:24:48.556514+00:00",
+    "updated_at": "2026-08-19T08:24:48.556522+00:00",
+    "name": "Taralli Pugliesi",
+    "flour_type": "Farina di grano tenero tipo 00",
+    "hydration_percent": null,
+    "flour_grams": 1000,
+    "water_grams": 0,
+    "sourdough_grams": 0,
+    "salt_grams": 20,
+    "preferment_type": "none",
+    "method_type": "diretto",
+    "dough_category": "diretto",
+    "water_temp_c": 20,
+    "mix_minutes": 12,
+    "bake_temp": 200,
+    "bake_minutes": 25,
+    "oven_type": "ventilato",
+    "origin": "IT",
+    "extra_ingredients": [
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 15
+      },
+      {
+        "name": "Vino bianco secco",
+        "percent": 35
+      },
+      {
+        "name": "Semi di finocchio",
+        "percent": 1.5
+      }
+    ],
+    "procedure": "1) In una ciotola unisci farina, sale e semi di finocchio.\n2) Aggiungi l'olio extravergine e il vino bianco a temperatura ambiente; impasta 10-12 minuti fino a ottenere un panetto liscio e sodo (nessuna acqua: l'idratazione viene dal vino).\n3) Copri e lascia riposare 30 minuti.\n4) Preleva piccoli pezzi, forma cordoncini di ~1 cm e chiudi ad anello sovrapponendo le estremità.\n5) Porta a bollore una pentola d'acqua: tuffa i taralli pochi alla volta e scolali appena vengono a galla.\n6) Asciugali su un telo, poi disponili sulla teglia.\n7) Cuoci a 200°C ventilato per 25-30 minuti finché sono dorati e croccanti.",
+    "notes": "Il classico tarallo pugliese: olio, vino e finocchietto. Prima si sbollentano, poi si cuociono: così restano friabili e si conservano a lungo. Varianti: pepe nero, peperoncino, cipolla.",
+    "image_url": "/recipes/r_taralli.jpg"
+  },
+  {
+    "id": "145e4c9e-19c7-4a89-a112-09409af4b23c",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.985705+00:00",
+    "updated_at": "2026-08-19T07:47:44.004778+00:00",
+    "name": "Treccia del Sole",
+    "flour_type": "Farina 630 + Vorteig + uova",
+    "hydration_percent": 50,
+    "flour_grams": 1000,
+    "water_grams": 500,
+    "sourdough_grams": 0,
+    "salt_grams": 11,
+    "preferment_type": "biga",
+    "bake_temp": 180,
+    "bake_minutes": 30,
+    "oven_type": "statico",
+    "image_url": "/recipes/r_treccia.jpg",
+    "notes": "Con Vorteig. Treccia dolce profumata al limone. Spennella con uovo prima di cuocere.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Uova (Eier) 4",
+        "percent": 0
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Latte in polvere (Milk.P)",
+        "percent": 3
+      },
+      {
+        "name": "Zucchero (Zucker)",
+        "percent": 20
+      },
+      {
+        "name": "Quark",
+        "percent": 8
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Burro (Butter)",
+        "percent": 20
+      },
+      {
+        "name": "Margarina",
+        "percent": 5
+      },
+      {
+        "name": "Succo di limone (Zit.Saft)",
+        "percent": 5
+      },
+      {
+        "name": "Scorza di limone (Zitr.)",
+        "percent": 0.5
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1.5
+      }
+    ],
+    "origin": "de"
+  },
+  {
+    "id": "42578e87-e808-4157-b2c1-0b960b2d5c79",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.986269+00:00",
+    "updated_at": "2026-08-19T07:47:44.014939+00:00",
+    "name": "Verde Canapa",
+    "flour_type": "Farina Tipo 1 + semi di canapa",
+    "hydration_percent": 75,
+    "flour_grams": 1000,
+    "water_grams": 750,
+    "sourdough_grams": 180,
+    "salt_grams": 20,
+    "preferment_type": "none",
+    "bake_temp": 220,
+    "bake_minutes": 40,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_canapa.jpg",
+    "notes": "Lievito madre. Semi di canapa in impasto e in copertura.",
+    "method_type": "diretto",
+    "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 40 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Semi di canapa decorticati",
+        "percent": 8
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore naturale (Backmittel)",
+        "percent": 2
+      }
+    ],
+    "origin": "it"
+  },
+  {
+    "id": "22e85fcb-0fb0-4a64-aeaa-2cb9a128b0a3",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T09:33:15.142844+00:00",
+    "updated_at": "2026-08-19T09:33:15.142847+00:00",
+    "name": "Wurzelbrot",
+    "flour_type": "Farina Tipo 0 (W300) — con Poolish e Weizensauerteig liquido",
+    "hydration_percent": 82,
+    "flour_grams": 1000,
+    "water_grams": 820,
+    "sourdough_grams": 300,
+    "salt_grams": 22,
+    "preferment_type": "poolish",
+    "method_type": "indiretto",
+    "dough_category": "pre",
+    "water_temp_c": 15,
+    "mix_minutes": 12,
+    "bake_temp": 250,
+    "bake_minutes": 25,
+    "oven_type": "statico",
+    "bulk_fermentation_hours": 3,
+    "proofing_hours": 1,
+    "origin": "de",
+    "extra_ingredients": [
+      {
+        "name": "Poolish (150 g farina + 150 g acqua + 1,5 g lievito)",
+        "percent": 30
+      },
+      {
+        "name": "Weizensauerteig liquido (maturo)",
+        "percent": 30
+      }
+    ],
+    "procedure": "Ricetta ad alta idratazione (TA ~182). Prefermenti: POOLISH liquido (150 g farina + 150 g acqua a 15°C + 1,5 g lievito; 2-3 h a TA poi in frigo a 4°C) + WEIZENSAUERTEIG liquido maturo (~300 g).\n1) AUTOLISI: unisci Sauerteig, poolish, farina e la prima acqua (~650 g), riposa 30 min.\n2) IMPASTO: aggiungi il sale, mescola lento 10 min poi veloce fino a incordare (il tuo Miglioratore a piacere).\n3) BASSINAGE: trattieni ~10%% dell acqua (~80 g) e uniscila poco a poco a impasto incordato.\n4) STOCKGARE: 3 h in vasca oliata a TA con 2 pieghe (stretch & fold). Opzionale: 18-24 h in frigo a 4°C per affinare l alveolatura.\n5) FORMATURA: rovescia delicatamente sul banco infarinato, taglia strisce e ATTORCIGLIALE a vite (senza sgonfiare).\n6) COTTURA: 250°C con vapore forte, poi abbassa a 220-230°C, ~25 min. Crosta croccante, alveoli irregolari.",
+    "notes": "Wurzelbrot (pane a radice) col metodo indiretto: poolish + Weizensauerteig liquido, idratazione ~82%% con bassinage. Impasto molto morbido: attorciglia con delicatezza.",
+    "image_url": "/recipes/r_wurzel.jpg"
+  }
 ]

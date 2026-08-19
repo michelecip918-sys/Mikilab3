@@ -1,4 +1,4 @@
-import { BookOpen, Wrench, Camera, Sparkles } from "lucide-react";
+import { BookOpen, Wrench, GraduationCap, Newspaper, Sparkles } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function BottomNav({ active, onChange }) {
@@ -6,8 +6,9 @@ export default function BottomNav({ active, onChange }) {
   const TABS = [
     { id: "mikilab", label: t("nav_mikilab"), sub: t("nav_mikilab_sub"), Icon: BookOpen },
     { id: "maestro", label: t("nav_maestro"), sub: t("nav_maestro_sub"), Icon: Wrench },
-    { id: "foto", label: t("nav_foto"), sub: t("nav_foto_sub"), Icon: Camera },
-    { id: "sa-tutto", label: t("nav_satutto"), sub: t("nav_satutto_sub"), Icon: Sparkles },
+    { id: "impara", label: t("nav_impara"), sub: t("nav_impara_sub"), Icon: GraduationCap },
+    { id: "news", label: t("nav_news"), sub: t("nav_news_sub"), Icon: Newspaper },
+    { id: "ai", label: t("nav_ai"), sub: t("nav_ai_sub"), Icon: Sparkles },
   ];
 
   return (
@@ -23,7 +24,7 @@ export default function BottomNav({ active, onChange }) {
         <div className="flex-1 bg-[#DD0000]" />
         <div className="flex-1 bg-[#FFCE00]" />
       </div>
-      <div className="max-w-xl mx-auto grid grid-cols-4 gap-1 px-3 py-2">
+      <div className="max-w-xl mx-auto grid grid-cols-5 gap-0.5 px-2 py-2">
         {TABS.map(({ id, label, sub, Icon }) => {
           const on = active === id;
           return (
@@ -31,15 +32,15 @@ export default function BottomNav({ active, onChange }) {
               key={id}
               data-testid={`nav-tab-${id}`}
               onClick={() => onChange(id)}
-              className={`flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-all min-h-[56px] ${
+              className={`flex flex-col items-center justify-center gap-0.5 py-2 px-0.5 rounded-xl transition-all min-h-[56px] ${
                 on
                   ? "bg-[#B34A26] text-white shadow-md"
                   : "text-[#8C7567] hover:bg-[#F5EFE6] dark:hover:bg-[#332823]"
               }`}
             >
               <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />
-              <span className="text-[11px] font-semibold leading-none">{label}</span>
-              <span className={`text-[9px] leading-none ${on ? "text-white/80" : "text-[#A89689]"}`}>
+              <span className="text-[10px] font-semibold leading-none text-center">{label}</span>
+              <span className={`text-[8px] leading-none text-center ${on ? "text-white/80" : "text-[#A89689]"}`}>
                 {sub}
               </span>
             </button>

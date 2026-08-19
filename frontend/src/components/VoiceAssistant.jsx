@@ -6,10 +6,11 @@ import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
 
 const NAV = [
-  { tab: "mikilab", key: "voice_nav_ricette", words: ["ricett", "mikilab", "pane", "brot", "rezept", "biograf", "lievito", "sauerteig"] },
+  { tab: "mikilab", key: "voice_nav_ricette", words: ["ricett", "mikilab", "pane", "brot", "rezept", "biograf", "lievito", "sauerteig", "guida", "etichett", "panettone"] },
   { tab: "maestro", key: "voice_nav_maestro", words: ["maestro", "strument", "piano", "lavoro", "impast", "knet", "arbeitsplan", "clima", "klima", "settiman", "wochen", "forno"] },
-  { tab: "foto", key: "voice_nav_foto", words: ["foto", "diagnos", "difett", "fehler", "bild"] },
-  { tab: "sa-tutto", key: "voice_nav_satutto", words: ["sa tutto", "weiß alles", "weiss alles", "cors", "kurs", "video", "chied", "frag", "notizi", "news"] },
+  { tab: "impara", key: "voice_nav_impara", words: ["principian", "impar", "lern", "quiz", "cors", "kurs", "video"] },
+  { tab: "news", key: "voice_nav_news", words: ["notizi", "news", "nachricht"] },
+  { tab: "ai", key: "voice_nav_ai", words: ["foto", "diagnos", "difett", "fehler", "bild", "chied", "frag", "sa tutto", "weiß alles", "weiss alles", "maestro ai", "meister ki"] },
 ];
 
 export default function VoiceAssistant({ onNavigate }) {

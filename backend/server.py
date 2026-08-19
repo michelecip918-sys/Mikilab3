@@ -278,7 +278,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-08-19-v16-37"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v18b-nomenclatura-lm"  # bump quando cambia mikilab_seed_data.json
 LEGACY_STALE_NAMES = ["Ciabatta ad Alta Idratazione", "Pane Rustico al Farro e Miele"]
 
 
@@ -304,14 +304,18 @@ async def seed_mikilab_if_empty(force: bool = False):
         item = dict(item)
         item.pop("collection_name", None)
         doc = Recipe(collection_name="mikilab", **item).model_dump()
-        set_on_insert = {
-            "id": doc.pop("id", None),
-            "created_at": doc.pop("created_at", now_iso()),
-        }
+        seed_id = doc.pop("id", None)
+        seed_created = doc.pop("created_at", now_iso())
+        existing = await db.recipes.find_one(
+            {"collection_name": "mikilab", "name": doc["name"]}, {"_id": 0, "user_edited": 1}
+        )
+        # Non sovrascrivere MAI le ricette che Michele ha modificato a mano.
+        if existing and existing.get("user_edited"):
+            continue
         doc["updated_at"] = now_iso()
         await db.recipes.update_one(
             {"collection_name": "mikilab", "name": doc["name"]},
-            {"$set": doc, "$setOnInsert": set_on_insert},
+            {"$set": doc, "$setOnInsert": {"id": seed_id, "created_at": seed_created}},
             upsert=True,
         )
     for stale in LEGACY_STALE_NAMES:
@@ -392,6 +396,8 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate):
     if updates.get("name") is None:
         updates.pop("name", None)
     updates["updated_at"] = now_iso()
+    # Segna la ricetta come modificata a mano: il seed non la sovrascriverà più.
+    updates["user_edited"] = True
     await db.recipes.update_one({"id": recipe_id}, {"$set": updates})
     merged = {**existing, **updates}
     return merged
@@ -804,12 +810,13 @@ async def capo_plan(payload: CapoPlanRequest):
 # ---------------------------------------------------------------------------
 VISION_PROMPTS = {
     "difetti": (
-        "Sei un mastro panettiere esperto. Analizza con attenzione la foto (o fotogramma) del pane o dell'impasto. "
-        "Valuta prima lo STATO generale: se è un impasto, dì se è PRONTO, POCO LIEVITATO o TROPPO LIEVITATO e da cosa lo capisci; "
+        "Sei un mastro panettiere esperto. Analizza a fondo la foto (o fotogramma) del pane o dell'impasto e DIMMI TUTTO quello che riesci a capire. "
+        "1) STATO generale: se è un impasto, dì se è PRONTO, POCO LIEVITATO o TROPPO LIEVITATO e da cosa lo capisci; "
         "se è un pane cotto, valuta la cottura (giusta, poco cotta, troppo cotta). "
-        "Poi individua i DIFETTI visibili (crosta, alveolatura, mollica, forma, colore, cottura, lievitazione, incisione): "
-        "per ognuno indica cosa vedi, la probabile CAUSA e come CORREGGERLO la prossima volta. "
-        "Usa un elenco puntato chiaro e conciso. "
+        "2) ANALISI COMPLETA punto per punto di TUTTO ciò che vedi: crosta (colore, spessore, croccantezza), alveolatura, mollica "
+        "(umidità, struttura, colore), forma e volume, colore/doratura, cottura, lievitazione, incisione/taglio, eventuale gommosità o crudo al centro. "
+        "3) Per OGNI difetto individuato scrivi in modo chiaro: **cosa vedi** → **causa probabile** → **rimedio pratico** (cosa cambiare la prossima volta: idratazione, tempi, temperatura, forza farina, cottura, vapore, formatura). "
+        "Non tralasciare nulla: analizza tutto quello che puoi. Usa titoli in grassetto ed elenchi puntati chiari. "
         "IMPORTANTISSIMO: nell'ULTIMA riga scrivi ESATTAMENTE '[OK]' se il pane/impasto è fatto bene e senza difetti rilevanti, "
         "oppure '[FIX]' se ci sono difetti da correggere. Non aggiungere altro dopo quel simbolo."
     ),
@@ -827,10 +834,12 @@ VISION_PROMPTS = {
         "Tono ispirante, sorprendente ma concreto. Elenco puntato breve."
     ),
     "ingredienti": (
-        "Sei un mastro panettiere esperto. Guarda la foto e identifica gli INGREDIENTI: se vedi "
-        "ingredienti/materie prime (farine, semi, cereali, lievito, ecc.) elencali; se è un pane "
-        "finito, deduci gli ingredienti probabili e il tipo di farina. Poi suggerisci una o due "
-        "cose che si possono preparare con ciò che vedi. Rispondi in modo chiaro e conciso."
+        "Sei un mastro panettiere esperto. Guarda a fondo la foto ed ELENCA TUTTI gli ingredienti che riesci a riconoscere o dedurre — non tralasciare nulla. "
+        "Se vedi materie prime (farine e loro tipo, semi, cereali, frutta secca, canditi, lievito/lievito madre, grassi, zuccheri, sale, spezie, ecc.) elencale una per una. "
+        "Se è un prodotto FINITO (pane, focaccia, panettone, dolce), deduci la RICETTA PROBABILE: tipo e forza della farina, presenza di prefermento (poolish/lievito madre/biga), "
+        "idratazione stimata, grassi e zuccheri, eventuali semi o sospensioni, e per ciascuno una PERCENTUALE APPROSSIMATIVA sul peso della farina. "
+        "Organizza la risposta con: **Ingredienti riconosciuti** (elenco completo), **Ricetta probabile** (proporzioni stimate), **Cosa puoi preparare** (1-2 idee). "
+        "Analizza tutto quello che puoi, in modo chiaro e ordinato con elenchi puntati."
     ),
     "forni": (
         "Sei un mastro panettiere esperto di forni professionali. Guarda la foto del/dei forno/i. "

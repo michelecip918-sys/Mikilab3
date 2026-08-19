@@ -6,8 +6,9 @@ import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import Mikilab from "@/sections/Mikilab";
 import Maestro from "@/sections/Maestro";
-import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
-import MaestroSaTutto from "@/sections/MaestroSaTutto";
+import Beginners from "@/sections/Beginners";
+import NewsPage from "@/sections/NewsPage";
+import MaestroAI from "@/sections/MaestroAI";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
@@ -18,7 +19,7 @@ function App() {
   return (
     <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1A1412]">
       <Header />
-      <main className="max-w-xl mx-auto px-4 pt-4 pb-28">
+      <main className="max-w-xl mx-auto px-4 pt-4 pb-40">
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
@@ -29,8 +30,9 @@ function App() {
           >
             {tab === "mikilab" && <Mikilab />}
             {tab === "maestro" && <Maestro />}
-            {tab === "foto" && <PhotoDiagnosi />}
-            {tab === "sa-tutto" && <MaestroSaTutto />}
+            {tab === "impara" && <Beginners />}
+            {tab === "news" && <NewsPage />}
+            {tab === "ai" && <MaestroAI />}
           </motion.div>
         </AnimatePresence>
       </main>

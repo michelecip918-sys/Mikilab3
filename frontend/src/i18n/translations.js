@@ -15,6 +15,42 @@ export const translations = {
     nav_foto_sub: "Foto",
     nav_satutto: "Maestro",
     nav_satutto_sub: "sa tutto",
+    nav_impara: "Impara",
+    nav_impara_sub: "Video & Quiz",
+    nav_news: "News",
+    nav_news_sub: "del Pane",
+    nav_ai: "Maestro AI",
+    nav_ai_sub: "Chat & Foto",
+
+    // Maestro — flusso a 4 passi
+    maestro_flow_intro: "Il tuo capo laboratorio, passo dopo passo.",
+    step1_title: "1 · Le tue ricette",
+    step1_desc: "Scrivi o scansiona le tue ricette (solo tu puoi modificarle)",
+    step2_title: "2 · Piano & quantità",
+    step2_desc: "Cosa produrre, quanto, cosa va in frigo o freezer",
+    step3_title: "3 · Laboratorio & forni",
+    step3_desc: "Riconosci impastatrici e forni con la fotocamera",
+    step4_title: "4 · Consigli & allarmi",
+    step4_desc: "Piano AI, sequenza impasti, clima e sveglie",
+
+    // Maestro AI (Chat + Foto)
+    ai_tab_chat: "Chiedi al Maestro",
+    ai_tab_foto: "Diagnosi Foto",
+
+    // News del Pane
+    news_page_title: "News del Pane",
+    news_page_sub: "Notizie automatiche su pane e panificazione",
+
+    // Mikilab — accessi Guida & Etichette
+    mikilab_guida_sub: "Poolish, Lievito Madre, Sauerteig e Miglioratore",
+    mikilab_labels_sub: "Etichette e listino pronti da stampare",
+
+    // Impara — panettieri famosi
+    beginners_famous_title: "Video dei grandi panettieri",
+    beginners_famous_sub: "Impara guardando i maestri (sottotitoli IT/DE)",
+    beginners_subtitles_note: "Attiva i sottotitoli (CC) su YouTube: i video italiani hanno i sottotitoli in tedesco e viceversa.",
+    beginners_ours_title: "I nostri video",
+    beginners_ours_sub: "Il metodo di Michele: diretto vs indiretto",
 
     // Mikilab
     mikilab_title: "Mikilab",
@@ -215,12 +251,12 @@ export const translations = {
     // Photo diagnosis
     photo_title: "Diagnosi con foto",
     photo_subtitle: "Scatta una foto o un video: trovo difetti, stato dell'impasto, ingredienti e idee.",
-    photo_mode_defects: "Trova difetti",
-    photo_mode_defects_desc: "Difetti + rimedi",
+    photo_mode_defects: "Difetti e rimedi",
+    photo_mode_defects_desc: "Analizza tutto + soluzioni",
     photo_mode_dough: "Stato impasto",
     photo_mode_dough_desc: "Pronto, poco o troppo lievitato?",
-    photo_mode_ing: "Trova ingredienti",
-    photo_mode_ing_desc: "Ingredienti possibili",
+    photo_mode_ing: "Tutti gli ingredienti",
+    photo_mode_ing_desc: "Elenco completo + ricetta",
     photo_mode_discover: "Scopri qualcosa",
     photo_mode_discover_desc: "Un'idea nuova per innovare",
     photo_mode_machines: "Strumento o macchina",
@@ -508,6 +544,9 @@ export const translations = {
     voice_nav_maestro: "Apro gli strumenti del Maestro",
     voice_nav_foto: "Apro la diagnosi con foto",
     voice_nav_satutto: "Apro il Maestro sa tutto",
+    voice_nav_impara: "Apro la sezione Impara",
+    voice_nav_news: "Apro le News del Pane",
+    voice_nav_ai: "Apro il Maestro AI",
     tool_adatta: "Adatta al forno",
     tool_adatta_desc: "Cambi forno? Ti dico gradi e minuti giusti, senza pensieri",
     adatta_title: "Adatta al forno",
@@ -608,6 +647,43 @@ export const translations = {
     nav_foto_sub: "Foto",
     nav_satutto: "Meister",
     nav_satutto_sub: "weiß alles",
+    nav_impara: "Lernen",
+    nav_impara_sub: "Videos & Quiz",
+    nav_news: "News",
+    nav_news_sub: "rund ums Brot",
+    nav_ai: "Meister KI",
+    nav_ai_sub: "Chat & Foto",
+
+    // Meister — 4-Schritte-Ablauf
+    maestro_flow_intro: "Dein Backstuben-Chef, Schritt für Schritt.",
+    step1_title: "1 · Deine Rezepte",
+    step1_desc: "Rezepte schreiben oder scannen (nur du kannst sie ändern)",
+    step2_title: "2 · Plan & Mengen",
+    step2_desc: "Was, wie viel, was in Kühl- oder Gefrierzelle kommt",
+    step3_title: "3 · Backstube & Öfen",
+    step3_desc: "Kneter und Öfen mit der Kamera erkennen",
+    step4_title: "4 · Tipps & Alarme",
+    step4_desc: "KI-Plan, Teigreihenfolge, Klima und Wecker",
+
+    // Meister KI (Chat + Foto)
+    ai_tab_chat: "Frag den Meister",
+    ai_tab_foto: "Foto-Diagnose",
+
+    // News rund ums Brot
+    news_page_title: "Brot-News",
+    news_page_sub: "Automatische Nachrichten rund ums Brot und Backen",
+
+    // Mikilab — Guide & Etiketten
+    mikilab_guida_sub: "Poolish, Lievito Madre, Sauerteig und Backhelfer",
+    mikilab_labels_sub: "Etiketten und Preisliste druckfertig",
+
+    // Lernen — berühmte Bäcker
+    beginners_famous_title: "Videos großer Bäcker",
+    beginners_famous_sub: "Lerne von den Meistern (Untertitel IT/DE)",
+    beginners_subtitles_note: "Untertitel (CC) auf YouTube aktivieren: italienische Videos haben deutsche Untertitel und umgekehrt.",
+    beginners_ours_title: "Unsere Videos",
+    beginners_ours_sub: "Micheles Methode: direkt vs. indirekt",
+
 
     // Mikilab
     mikilab_title: "Mikilab",
@@ -808,12 +884,12 @@ export const translations = {
     // Photo diagnosis
     photo_title: "Foto-Diagnose",
     photo_subtitle: "Mach ein Foto oder Video: ich finde Fehler, Teig-Status, Zutaten und Ideen.",
-    photo_mode_defects: "Fehler finden",
-    photo_mode_defects_desc: "Fehler + Lösungen",
+    photo_mode_defects: "Fehler & Lösungen",
+    photo_mode_defects_desc: "Alles analysieren + Lösungen",
     photo_mode_dough: "Teig-Status",
     photo_mode_dough_desc: "Reif, zu wenig oder zu viel?",
-    photo_mode_ing: "Zutaten finden",
-    photo_mode_ing_desc: "Mögliche Zutaten",
+    photo_mode_ing: "Alle Zutaten",
+    photo_mode_ing_desc: "Komplette Liste + Rezept",
     photo_mode_discover: "Entdecke etwas",
     photo_mode_discover_desc: "Eine neue Idee zum Innovieren",
     photo_mode_machines: "Werkzeug oder Maschine",
@@ -1100,6 +1176,9 @@ export const translations = {
     voice_nav_maestro: "Ich öffne die Meister-Werkzeuge",
     voice_nav_foto: "Ich öffne die Foto-Diagnose",
     voice_nav_satutto: "Ich öffne 'Der Meister weiß alles'",
+    voice_nav_impara: "Ich öffne den Lernbereich",
+    voice_nav_news: "Ich öffne die Brot-News",
+    voice_nav_ai: "Ich öffne die Meister-KI",
     tool_adatta: "An den Ofen anpassen",
     tool_adatta_desc: "Anderer Ofen? Ich sage dir Grad und Minuten, ganz entspannt",
     adatta_title: "An den Ofen anpassen",

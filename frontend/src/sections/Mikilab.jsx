@@ -1,8 +1,9 @@
 import RecipeList from "@/components/RecipeList";
-import Stoccarda from "@/sections/Stoccarda";
+import GuidaMetodi from "@/sections/GuidaMetodi";
+import PanettoneLabels from "@/sections/PanettoneLabels";
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";
-import { Heart, ChefHat, Wheat, Sparkles, BookHeart, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, ChefHat, Wheat, Sparkles, BookHeart, BookOpen, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 export default function Mikilab() {
@@ -14,9 +15,7 @@ export default function Mikilab() {
   if (view === "lievito") {
     return (
       <div className="pb-4">
-        <button data-testid="mikilab-back-btn" onClick={() => setView("main")} className="flex items-center gap-1 text-[#B34A26] font-medium mb-4">
-          <ChevronLeft className="w-5 h-5" /> Mikilab
-        </button>
+        <BackBtn onClick={() => setView("main")} />
         <div data-testid="lievito-page" className="space-y-4">
           <div className="rounded-2xl p-5 bg-[#D99B26]/12 border border-[#D99B26]/40">
             <div className="flex items-center gap-2 mb-2">
@@ -32,6 +31,24 @@ export default function Mikilab() {
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (view === "guida") {
+    return (
+      <div className="pb-4">
+        <BackBtn onClick={() => setView("main")} />
+        <GuidaMetodi />
+      </div>
+    );
+  }
+
+  if (view === "labels") {
+    return (
+      <div className="pb-4">
+        <BackBtn onClick={() => setView("main")} />
+        <PanettoneLabels />
       </div>
     );
   }
@@ -80,20 +97,13 @@ export default function Mikilab() {
         </div>
       </div>
 
-      {/* Lievito madre — da qui si parte */}
-      <button data-testid="lievito-open-btn" onClick={() => setView("lievito")} className="w-full mb-3 flex items-center gap-4 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
-        <div className="w-12 h-12 rounded-2xl bg-[#D99B26]/15 border border-[#D99B26]/30 flex items-center justify-center shrink-0">
-          <Wheat className="w-6 h-6 text-[#B34A26]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{t("tab_lievito")}</h3>
-          <p className="text-sm text-[#8C7567] truncate">{t("lm_page_title")}</p>
-        </div>
-        <ChevronRight className="w-5 h-5 text-[#C9BBB0] shrink-0" />
-      </button>
+      {/* Accessi rapidi: Lievito madre · Guida ai metodi · Etichette */}
+      <AccessBtn testid="lievito-open-btn" Icon={Wheat} title={t("tab_lievito")} sub={t("lm_page_title")} onClick={() => setView("lievito")} />
+      <AccessBtn testid="guida-open-btn" Icon={BookOpen} title={t("tool_guida")} sub={t("mikilab_guida_sub")} onClick={() => setView("guida")} />
+      <AccessBtn testid="labels-open-btn" Icon={Tag} title={t("tool_labels")} sub={t("mikilab_labels_sub")} onClick={() => setView("labels")} />
 
       {/* Metodo dell'impasto — diretto vs indiretto (prima delle ricette) */}
-      <div data-testid="method-section" className="mb-5 rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-5">
+      <div data-testid="method-section" className="mt-2 mb-5 rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-5">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="w-5 h-5 text-[#B34A26]" />
           <h2 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("method_section_title")}</h2>
@@ -115,7 +125,6 @@ export default function Mikilab() {
 
       <RecipeList
         collectionName="mikilab"
-        readOnly
         heroImage={`${process.env.PUBLIC_URL}/bio-photo.jpg`}
         heroTitle={t("brand_subtitle")}
         heroSubtitle={t("mikilab_subtitle")}
@@ -130,11 +139,29 @@ export default function Mikilab() {
         </div>
         <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("thanks_body")}</p>
       </div>
-
-      {/* Notiziario Stoccarda & Mondo — in fondo */}
-      <div className="mt-6">
-        <Stoccarda />
-      </div>
     </div>
+  );
+}
+
+function BackBtn({ onClick }) {
+  return (
+    <button data-testid="mikilab-back-btn" onClick={onClick} className="flex items-center gap-1 text-[#B34A26] font-medium mb-4">
+      <ChevronLeft className="w-5 h-5" /> Mikilab
+    </button>
+  );
+}
+
+function AccessBtn({ testid, Icon, title, sub, onClick }) {
+  return (
+    <button data-testid={testid} onClick={onClick} className="w-full mb-3 flex items-center gap-4 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
+      <div className="w-12 h-12 rounded-2xl bg-[#D99B26]/15 border border-[#D99B26]/30 flex items-center justify-center shrink-0">
+        <Icon className="w-6 h-6 text-[#B34A26]" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{title}</h3>
+        <p className="text-sm text-[#8C7567] truncate">{sub}</p>
+      </div>
+      <ChevronRight className="w-5 h-5 text-[#C9BBB0] shrink-0" />
+    </button>
   );
 }
