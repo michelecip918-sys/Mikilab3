@@ -318,8 +318,6 @@ async def seed_mikilab_if_empty(force: bool = False):
             {"$set": doc, "$setOnInsert": {"id": seed_id, "created_at": seed_created}},
             upsert=True,
         )
-    for stale in LEGACY_STALE_NAMES:
-        await db.recipes.delete_one({"collection_name": "mikilab", "name": stale})
     await db.app_meta.update_one(
         {"_key": "mikilab_meta"},
         {"$set": {"_key": "mikilab_meta", "seed_version": SEED_VERSION, "synced_at": now_iso()}},
