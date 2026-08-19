@@ -1,33 +1,58 @@
 {
   "app_identity": {
-    "name": "Mikilab / Il Maestro del Pane",
-    "tagline": "Il tuo assistente personale per la panificazione artigianale",
-    "target_location": "Stuttgart (Stoccarda), Baden-Württemberg, Germany",
-    "language": "it",
-    "locale": "it-IT"
+    "name": "Mikilab — Il Laboratorio di Michele",
+    "tagline": "Ricettario artigianale & Capo Laboratorio intelligente (Matera ➔ Stoccarda)",
+    "target_location": "Stuttgart, Germany & Matera, Italy",
+    "languages": ["it", "de"],
+    "locale": "it-IT / de-DE"
   },
   "design_archetype": {
-    "name": "Organic & Earthy (Artisanal Craft)",
-    "description": "Inspired by traditional wood-fired bakeries, raw grain, unbleached linen, warm terracotta tiles, golden bread crust, and ambient kitchen warmth."
+    "name": "Artisan Bakery + Bilingual IT/DE Heritage Fusion",
+    "description": "Blends authentic warm wood-fired bakery textures (flour cream #FDFBF7, terracotta #B34A26, golden crust #D99B26) with bold, high-contrast Italian (Verde Italia #008C45, Rosso Italia #CD212A) and German (Schwarz #111111, Rot Deutschland #DD0000, Gold Deutschland #FFCC00) visual accents woven into cards, buttons, badges, dividers, navigation states, and dark-mode themes."
+  },
+  "national_color_system": {
+    "italian_palette": {
+      "green": "#008C45",
+      "green_light": "#E6F4ED",
+      "green_dark": "#006633",
+      "white": "#FDFBF7",
+      "red": "#CD212A",
+      "red_light": "#FDF0F0",
+      "usage": "Used for Italian origin badges, Matera/Puglia sourdough indicators, dough freshness scores, IT language active states, and left-side card accent borders."
+    },
+    "german_palette": {
+      "black": "#111111",
+      "black_soft": "#1A181B",
+      "red": "#DD0000",
+      "gold": "#FFCC00",
+      "gold_warm": "#D99B26",
+      "gold_light": "#FFF9E6",
+      "usage": "Used for Stuttgart local flour guides, German oven adaptation tools, DE language active states, temperature alerts, and right-side card accent badges."
+    },
+    "bakery_base_palette": {
+      "terracotta": "#B34A26",
+      "terracotta_hover": "#963B1C",
+      "flour_cream": "#FDFBF7",
+      "dough_secondary": "#F5EFE6",
+      "charcoal_text": "#2C221E",
+      "warm_border": "#E8DEC8"
+    }
   },
   "typography": {
     "headings": {
-      "font_family": "Playfair Display, Cormorant Garamond, serif",
-      "h1": "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#2C221E]",
-      "h2": "text-2xl sm:text-3xl font-semibold tracking-tight text-[#2C221E]",
-      "h3": "text-xl sm:text-2xl font-semibold text-[#3D302A]",
-      "h4": "text-lg sm:text-xl font-medium text-[#4A3B34]"
+      "font_family": "Playfair Display, serif",
+      "h1": "text-2xl sm:text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6] tracking-tight",
+      "h2": "text-xl sm:text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]",
+      "h3": "text-lg font-semibold text-[#3D302A] dark:text-[#E8DEC8]"
     },
     "body": {
-      "font_family": "Manrope, Plus Jakarta Sans, sans-serif",
-      "base": "text-base leading-relaxed text-[#4A3B34]",
-      "small": "text-sm text-[#736055]",
-      "caption": "text-xs tracking-wider uppercase font-semibold text-[#8C7567]"
+      "font_family": "Manrope, sans-serif",
+      "base": "text-base text-[#4A3B34] dark:text-[#D9CECE] leading-relaxed",
+      "small": "text-sm text-[#78685E] dark:text-[#A89689]"
     },
     "numbers_and_data": {
-      "font_family": "JetBrains Mono, Source Code Pro, monospace",
-      "style": "font-mono font-bold tracking-wide text-[#8C3A1D]",
-      "usage": "Hydration %, Dough Temperatures, Baking Timers, Flour Ratios"
+      "font_family": "JetBrains Mono, monospace",
+      "style": "font-mono font-bold text-[#B34A26] dark:text-[#FFCC00]"
     }
   },
   "colors": {
@@ -37,17 +62,16 @@
       "card_bg": "#FFFFFF",
       "card_border": "#E8DEC8",
       "primary": "#B34A26",
-      "primary_hover": "#963B1C",
       "primary_foreground": "#FFFFFF",
-      "secondary": "#D99B26",
+      "secondary": "#F5EFE6",
       "secondary_foreground": "#2C221E",
-      "accent_terracotta": "#C85A32",
-      "accent_wheat": "#E6B85C",
-      "accent_sage": "#6B8E62",
+      "it_green": "#008C45",
+      "it_red": "#CD212A",
+      "de_gold": "#FFCC00",
+      "de_red": "#DD0000",
+      "de_black": "#111111",
       "foreground": "#2C221E",
-      "muted": "#78685E",
-      "muted_bg": "#EFE8DC",
-      "overlay_scrim": "rgba(44, 34, 30, 0.4)"
+      "muted": "#78685E"
     },
     "dark_theme": {
       "background": "#1A1412",
@@ -55,282 +79,68 @@
       "card_bg": "#2A211D",
       "card_border": "#3D302A",
       "primary": "#D86B43",
-      "primary_hover": "#E57C54",
       "primary_foreground": "#FFFFFF",
-      "secondary": "#E5AC3A",
-      "secondary_foreground": "#1A1412",
-      "accent_terracotta": "#E0744B",
-      "accent_wheat": "#F0C46A",
-      "accent_sage": "#7EA374",
+      "secondary": "#332823",
+      "secondary_foreground": "#F5EFE6",
+      "it_green": "#26B066",
+      "it_red": "#E04852",
+      "de_gold": "#FFD833",
+      "de_red": "#FF4D4D",
+      "de_black": "#000000",
       "foreground": "#F5EFE6",
-      "muted": "#A89689",
-      "muted_bg": "#332823",
-      "overlay_scrim": "rgba(0, 0, 0, 0.6)"
+      "muted": "#A89689"
     }
   },
   "layout_and_navigation": {
-    "type": "mobile_first_hybrid",
-    "main_navigation": {
-      "position": "fixed_bottom_bar",
-      "style": "bg-[#FDFBF7]/95 dark:bg-[#1A1412]/95 backdrop-blur-md border-t border-[#E8DEC8] dark:border-[#3D302A] z-50 px-4 py-2 shadow-lg",
-      "tabs": [
-        {
-          "id": "mikilab",
-          "label": "Mikilab",
-          "sublabel": "Ricette Modificabili",
-          "icon": "BookOpen",
-          "test_id": "nav-tab-mikilab"
-        },
-        {
-          "id": "maestro",
-          "label": "Maestro",
-          "sublabel": "Strumenti & Calcoli",
-          "icon": "Wrench",
-          "test_id": "nav-tab-maestro"
-        },
-        {
-          "id": "maestro-sa-tutto",
-          "label": "Chiedi al Maestro",
-          "sublabel": "IA, Enciclopedia & Stoccarda",
-          "icon": "Sparkles",
-          "test_id": "nav-tab-maestro-sa-tutto"
-        }
-      ]
-    },
+    "type": "mobile_first_pwa",
     "header": {
-      "style": "sticky top-0 z-40 bg-[#FDFBF7]/90 dark:bg-[#1A1412]/90 backdrop-blur-md border-b border-[#E8DEC8] dark:border-[#3D302A] px-4 py-3 flex items-center justify-between",
-      "elements": [
-        "Brand Logo & Title ('Mikilab')",
-        "Quick Climate Indicator ('Stoccarda 21°C / 65% RH')",
-        "Dark/Light Theme Switcher",
-        "Kitchen Mode Toggle (keeps screen bright & text extra clear)"
+      "style": "sticky top-0 z-40 bg-[#FDFBF7]/95 dark:bg-[#1A1412]/95 backdrop-blur-md border-b border-[#E8DEC8] dark:border-[#3D302A]",
+      "flag_strip": "flex h-1.5 w-full (IT green #008C45, IT white #FFFFFF, IT red #CD212A | DE black #111111, DE red #DD0000, DE gold #FFCC00)",
+      "elements": ["Logo + Title 'Mikilab'", "IT/DE Subtitle Badge", "Live Clock (it-IT / de-DE)", "Language Switcher (IT / DE)", "Dark Mode Toggle"]
+    },
+    "bottom_nav": {
+      "style": "fixed bottom-0 inset-x-0 bg-[#FDFBF7]/95 dark:bg-[#1A1412]/95 backdrop-blur-md border-t border-[#E8DEC8] dark:border-[#3D302A] z-50",
+      "flag_strip": "flex h-1 w-full top indicator",
+      "tabs": [
+        { "id": "mikilab", "label": "Mikilab", "sub": "Ricette", "test_id": "nav-tab-mikilab" },
+        { "id": "maestro", "label": "Maestro", "sub": "Strumenti", "test_id": "nav-tab-maestro" },
+        { "id": "foto", "label": "Diagnosi", "sub": "Foto AI", "test_id": "nav-tab-foto" },
+        { "id": "sa-tutto", "label": "Sa Tutto", "sub": "Chiedi IA", "test_id": "nav-tab-sa-tutto" }
       ]
     }
   },
   "sections_and_functionalities": {
-    "mikilab": {
-      "title": "Mikilab - Le Tue Ricette Base",
-      "description": "Raccolta delle tue ricette personali di pane con dosi, percentuale di idratazione, tempi di lievitazione e fasi. Completamente modificabili ed eliminabili.",
-      "preloaded_examples": [
-        {
-          "id": "rec-01",
-          "name": "Pane di Altamura DOP",
-          "flour_type": "Semola Rimacinata di Grano Duro",
-          "hydration_percent": 75,
-          "flour_grams": 1000,
-          "water_grams": 750,
-          "sourdough_grams": 200,
-          "salt_grams": 20,
-          "bulk_fermentation_hours": 4,
-          "proofing_hours": 2,
-          "notes": "Crosta spessa, mollica fitta e dorata. Tipica lavorazione pugliese con farina rimacinata."
-        },
-        {
-          "id": "rec-02",
-          "name": "Ciabatta ad Alta Idratazione",
-          "flour_type": "Farina Tipo 0 W350",
-          "hydration_percent": 82,
-          "flour_grams": 1000,
-          "water_grams": 820,
-          "sourdough_grams": 150,
-          "salt_grams": 22,
-          "bulk_fermentation_hours": 5,
-          "proofing_hours": 1.5,
-          "notes": "Alveolatura aperta, crosta croccante. Richiede pieghe in ciotola ogni 30 minuti."
-        },
-        {
-          "id": "rec-03",
-          "name": "Pane Rustico al Farro e Miele",
-          "flour_type": "70% Farina Tipo 1 + 30% Farro Integrale",
-          "hydration_percent": 70,
-          "flour_grams": 1000,
-          "water_grams": 700,
-          "sourdough_grams": 180,
-          "salt_grams": 18,
-          "notes": "Aroma nocciolato, miele di acacia per favorire la doratura della crosta."
-        }
-      ],
-      "actions": [
-        "Modifica ricetta (cambia grammature, farine, idratazione ricalcolata in tempo reale)",
-        "Elimina ricetta con conferma modal",
-        "Duplica ricetta in 'Le Tue Ricette'",
-        "Copia dosi per teglia/peso desiderato"
-      ]
-    },
-    "maestro": {
-      "title": "Il Maestro - Hub Strumenti",
-      "sub_tools": [
-        {
-          "id": "aggiungi_ricetta",
-          "title": "Aggiungi Ricetta / Le Tue Ricette",
-          "rule": "Nessun esempio pre-caricato in questa voce! Inizia vuota, riservata alle ricette personali inserite manualmente dall'utente."
-        },
-        {
-          "id": "pianifica_produzione",
-          "title": "Pianifica la Produzione",
-          "rule": "Pianificazione dettagliata delle fasi di panificazione per orario. ESCLUSIONE RIGOROSA: NESSUNA gestione o voce relativa al congelatore/freezer.",
-          "phases": [
-            "Rinfresco Lievito Madre",
-            "Autolisi Farina + Acqua",
-            "Impasto Finale + Sale",
-            "Pieghe di Rinforzo (Coil / Laminazione)",
-            "Lievitazione Iniziale (Bulk Fermentation)",
-            "Formatura (Shape)",
-            "Appretto a Temperatura Ambiente o Cella",
-            "Incisione (Scoring) e Cottura in Forno"
-          ]
-        },
-        {
-          "id": "calcola_gradi",
-          "title": "Calcola Gradi (Temperatura Acqua Impasto)",
-          "formula": "T_acqua = (4 * T_impasto_desiderato) - (T_farina + T_ambiente + F_attrito + T_lievito)",
-          "inputs": [
-            "Temperatura Impasto Desiderata (es. 25°C)",
-            "Temperatura Farina (es. 20°C)",
-            "Temperatura Ambiente / Clima Stoccarda (es. 22°C)",
-            "Fattore Attrito Impastatrice / Mani (es. 5°C per spirale, 2°C a mano)",
-            "Temperatura Lievito / Prefermento (es. 21°C)"
-          ],
-          "output_display": "Temperatura esatta dell'acqua da versare per ottenere la fermentazione perfetta."
-        },
-        {
-          "id": "gestione_forno",
-          "title": "Gestione Forno & Vapore",
-          "rule": "NESSUNA ricetta di esempio. Pannello di controllo per parametri di cottura personalizzati.",
-          "controls": [
-            "Preriscaldamento Pietra Refrattaria / Pentola Ghisa (°C)",
-            "Fase 1: Cottura con Vapore / Coperchio (minuti & °C)",
-            "Fase 2: Rimozione Vapore / Valvola Aperta (minuti & °C)",
-            "Fase 3: Asciugatura della Crosta (spiffero forno)",
-            "Timer sonoro integrato per ogni fase"
-          ]
-        }
-      ]
-    },
-    "maestro_sa_tutto": {
-      "title": "Il Maestro Sa Tutto - Chiedi e ti sarà dato",
-      "tagline": "\"Chiedi al Maestro e ti sarà dato: tutto sui segreti del pane artigianale.\"",
-      "features": [
-        {
-          "type": "ai_assistant",
-          "name": "Assistente AI Panificazione",
-          "prompt_suggestions": [
-            "Come correggere un impasto troppo idratato e appiccicoso?",
-            "Quale farina tedesca corrisponde alla Tipo 00 o Tipo 1 italiana (Type 550, Type 812, Type 1050)?",
-            "Come capire quando il pane in appretto è pronto per infornare (Finger Poke Test)?",
-            "Come rinfrescare il lievito madre prima di un grande rinfresco?"
-          ]
-        },
-        {
-          "type": "encyclopedia_and_news",
-          "name": "Enciclopedia del Pane & Notizie Tecniche",
-          "topics": [
-            "Guida alle farine tedesche (Weizenmehl 405, 550, 812, 1050 & Dinkelmehl) per panificatori italiani a Stoccarda",
-            "Scienza dell'Autolisi e Glutine",
-            "Gestione dell'Acidità nel Lievito Madre (Acido Lattico vs Acido Acetico)"
-          ]
-        },
-        {
-          "type": "youtube_videos",
-          "name": "Video Tutorial Curati",
-          "videos": [
-            {
-              "title": "Tecnica Pieghe di Rinforzo in Ciotola (Coil Folds)",
-              "url": "https://www.youtube.com/embed/1timJlCT3PM",
-              "category": "Tecnica Impasto"
-            },
-            {
-              "title": "Come Incidere il Pane con la Lametta (Bread Scoring)",
-              "url": "https://www.youtube.com/embed/Z4I3S24u7sA",
-              "category": "Formatura & Incisione"
-            }
-          ]
-        },
-        {
-          "type": "stuttgart_local_announcements",
-          "name": "Zona Stoccarda & Annunci Locali",
-          "announcements": [
-            {
-              "title": "Mulini di Qualità nell'Area di Stoccarda (Stuttgart Mühlen)",
-              "details": "Consigli su dove acquistare farina biologica macinata a pietra vicina a Stoccarda (es. Kunstmühle Eissingen, Schwabenmühle)."
-            },
-            {
-              "title": "Mercato Bio e Grani Antichi a Stoccarda",
-              "details": "Incontri di panificazione amatoriale e scambio lievito madre tra appassionati italiani e tedeschi nella zona di Cannstatt e Mitte."
-            }
-          ]
-        }
-      ]
-    }
-  },
-  "media_assets": {
-    "image_urls": [
-      {
-        "category": "hero_bread",
-        "url": "https://images.unsplash.com/photo-1675725291010-cb1020860cb2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHwzfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBiYWtlcnklMjB3b29kJTIwb3ZlbiUyMGZsb3VyfGVufDB8fHx8MTc4Njk4MjgxOXww&ixlib=rb-4.1.0&q=85",
-        "description": "Pagnotta di pane artigianale a lievitazione naturale su tagliere di legno antico con spolverata di farina."
-      },
-      {
-        "category": "bread_crust_detail",
-        "url": "https://images.unsplash.com/photo-1585478259844-06d7b756b082?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHw0fHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBiYWtlcnklMjB3b29kJTIwb3ZlbiUyMGZsb3VyfGVufDB8fHx8MTc4Njk4MjgxOXww&ixlib=rb-4.1.0&q=85",
-        "description": "Incisione artistica a spiga su pagnotta ben dorata."
-      },
-      {
-        "category": "scoring_hands",
-        "url": "https://images.pexels.com/photos/15577266/pexels-photo-15577266.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-        "description": "Mani del mastro panificatore che incide la superficie del pane con lametta prima dell'infornata."
-      },
-      {
-        "category": "flour_table",
-        "url": "https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHw0fHxiYWtlciUyMHNjb3JpbmclMjBzb3VyZG91Z2glMjBmbG91ciUyMHRhYmxlfGVufDB8fHx8MTc4Njk4MjgzMHww&ixlib=rb-4.1.0&q=85",
-        "description": "Spolverata di farina di grano su bancone di lavoro in grembiule da panettiere."
-      }
-    ]
+    "mikilab": "Recipe book list & detail modals, cost calculation per piece, flour ratios, step-by-step instructions.",
+    "maestro": "Capo Laboratorio production planner, Termostato & Clima, Panettone printable labels, add recipe, weekly plan, adapt oven, sourdough refresh, beginners.",
+    "photo_diagnosi": "AI photo analysis for dough defects, ingredients, and tool recognition.",
+    "maestro_sa_tutto": "AI Maestro chat ('Chiedi e ti sarà dato'), encyclopedia IT/DE farine, YouTube technique videos, Stuttgart local announcements."
   },
   "component_styles": {
-    "recipe_card": "bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all space-y-3",
-    "primary_button": "bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3 rounded-xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 text-base min-h-[48px]",
-    "secondary_button": "bg-[#F5EFE6] dark:bg-[#332823] hover:bg-[#EFE8DC] dark:hover:bg-[#3D302A] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-4 py-2.5 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] transition-all flex items-center gap-2 min-h-[44px]",
-    "number_badge": "bg-[#D99B26]/15 text-[#B34A26] dark:text-[#E5AC3A] font-mono text-sm px-3 py-1 rounded-full font-bold border border-[#D99B26]/30",
-    "input_field": "w-full bg-[#FDFBF7] dark:bg-[#1A1412] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base text-[#2C221E] dark:text-[#F5EFE6] outline-none transition-all min-h-[48px]",
-    "kitchen_stepper": "flex items-center gap-3 bg-[#F5EFE6] dark:bg-[#241D19] p-2 rounded-2xl border border-[#E8DEC8] dark:border-[#3D302A]"
-  },
-  "motion_and_microinteractions": {
-    "framework": "framer-motion",
-    "page_transitions": {
-      "initial": { "opacity": 0, "y": 8 },
-      "animate": { "opacity": 1, "y": 0 },
-      "exit": { "opacity": 0, "y": -8 },
-      "transition": { "duration": 0.25, "ease": "easeOut" }
-    },
-    "button_press": "whileTap={{ scale: 0.97 }}",
-    "toast_notifications": "Using Sonner toast for recipe saves, temperature calculations, and timer alerts"
+    "it_accent_card": "border-l-4 border-l-[#008C45] bg-white dark:bg-[#2A211D] border-y border-r border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm",
+    "de_accent_card": "border-r-4 border-r-[#FFCC00] bg-white dark:bg-[#2A211D] border-y border-l border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm",
+    "bilingual_card": "bg-gradient-to-r from-[#008C45]/5 via-transparent to-[#FFCC00]/10 border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4",
+    "it_badge": "bg-[#008C45]/10 text-[#008C45] dark:bg-[#008C45]/20 dark:text-[#26B066] text-xs font-bold px-2.5 py-1 rounded-full border border-[#008C45]/30",
+    "de_badge": "bg-[#FFCC00]/15 text-[#B34A26] dark:text-[#FFD833] text-xs font-bold px-2.5 py-1 rounded-full border border-[#FFCC00]/40",
+    "it_de_divider": "h-1 w-full bg-gradient-to-r from-[#008C45] via-[#CD212A] via-50% to-[#FFCC00] rounded-full my-4 opacity-80"
   },
   "accessibility_and_testing": {
-    "data_testid_convention": "All interactive elements (buttons, inputs, tabs, modals, timer toggles) MUST include data-testid in kebab-case format.",
+    "data_testid_convention": "All buttons, inputs, tabs, modals, and switches MUST maintain kebab-case data-testid attributes.",
     "data_testid_examples": [
+      "data-testid=\"app-header\"",
+      "data-testid=\"bottom-nav\"",
       "data-testid=\"nav-tab-mikilab\"",
       "data-testid=\"nav-tab-maestro\"",
-      "data-testid=\"nav-tab-maestro-sa-tutto\"",
-      "data-testid=\"btn-add-recipe\"",
-      "data-testid=\"btn-calculate-temp\"",
-      "data-testid=\"input-desired-dough-temp\"",
-      "data-testid=\"btn-start-baking-timer\"",
-      "data-testid=\"ai-chat-input\"",
-      "data-testid=\"ai-chat-submit\""
-    ],
-    "kitchen_ergonomics": "Minimum touch target size 48px, high contrast text contrast >= 4.5:1, bold labels for easy viewing from a distance while working in the kitchen."
+      "data-testid=\"nav-tab-foto\"",
+      "data-testid=\"nav-tab-sa-tutto\"",
+      "data-testid=\"lang-switcher\"",
+      "data-testid=\"theme-toggle\""
+    ]
   },
   "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
-    "Never use dark colors as aggressive gradients. Prefer flat warm natural tones with subtle 1px warm borders.",
-    "Do NOT center align body text or recipe forms. Maintain left alignment for readability.",
-    "Do NOT use transparent backgrounds on fixed headers or sticky overlays. Always use high opacity blur like bg-[#FDFBF7]/95 or dark equivalent.",
-    "Ensure the bottom navigation bar is fixed, responsive, and easily clickable with one thumb on mobile devices.",
-    "All interactive elements MUST have explicit data-testid attributes.",
-    "When rendering formula output in 'Calcola gradi', display both Celsius values and step-by-step breakdown clearly in font-mono.",
-    "Under NO circumstances include any freezer / congelatore features in 'Pianifica la produzione'.",
-    "In 'Maestro > Aggiungi ricetta', keep the recipe list clean without pre-loaded dummy recipes, allowing the user to create their own from scratch.",
-    "In 'Maestro > Gestione forno', keep it as a clean oven timing & steam phase controller without pre-loaded recipe examples.",
-    "In 'Il Maestro sa tutto', include the specific phrase: 'Chiedi e ti sarà dato' along with YouTube video embeds and Stuttgart local announcements."
+    "Ensure Italian (green/white/red) and German (black/red/gold) colors are visibly integrated throughout card borders, badges, dividers, button highlights, and status indicators without removing the warm bakery terracotta identity.",
+    "Do NOT alter or remove any existing data-testid attributes across components.",
+    "Maintain high contrast (WCAG AA) for all text against backgrounds in both light and dark modes.",
+    "Ensure all interactive touch targets on mobile maintain a minimum height of 44px-48px.",
+    "Preserve full dark-mode support using Tailwind dark: modifiers and CSS variables."
   ]
 }

@@ -154,3 +154,9 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - Redesign a colori completo IT/DE su tutta l'app (design_agent).
 - Rifinitura dosi/passaggi di Gnetze Brot e Wurzelbrot da parte di Michele.
 
+## v15 (2026-08) — Prezzi B2B, foto realistiche per tutte le ricette
+- **Prezzi B2B panettoni**: calcolati e salvati (`costing.cost_500g/100g`, `b2b_500g/100g`) prezzi di vendita consigliati per bar/ristoranti (500 g ~€7-8,50 · 100 g ~€2,50-3). Mostrati nelle etichette e nella scheda ricetta (accanto al costo).
+- **Etichette Panettoni** aggiornate: immagine del gusto + prezzi B2B 500g/100g, accenti tricolore IT/DE, pronte da stampare.
+- **Foto realistiche per TUTTE le 36 ricette** (generate con Nano Banana, stile fotografico non-AI): 10 panettoni in forme rosse (500g + mini 100g) + 26 pani/prodotti; scaricate in `/app/frontend/public/recipes/` e collegate (image_url). Miniature aggiunte nelle righe della lista ricette.
+- Accenti colore IT (verde #008C45 / rosso #CD212A) e DE (nero/oro #FFCC00) applicati a etichette e card prezzi (design_guidelines.json creato dal design agent; redesign completo resta backlog).
+

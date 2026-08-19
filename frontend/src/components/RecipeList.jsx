@@ -155,6 +155,10 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   ))}
                 </div>
               )}
+              {r.image_url && (
+                <img src={r.image_url} alt="" loading="lazy"
+                  className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#E8DEC8] dark:border-[#3D302A]" />
+              )}
               <div className="min-w-0 flex-1">
                 <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
                   {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
@@ -300,6 +304,21 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
             <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
               <span className="text-xs font-semibold text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_per_piece")}</span>
               <span className="font-mono-data text-sm font-bold text-[#6B8E62]">€ {perPiece.toFixed(2)}</span>
+            </div>
+          )}
+          {(cst.b2b_500g || cst.b2b_100g) && (
+            <div className="mt-2 pt-2 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]" data-testid={`b2b-${r.id}`}>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-1">{t("labels_b2b_hint")}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-lg bg-[#008C45]/10 border border-[#008C45]/30 px-2 py-1.5 text-center">
+                  <p className="text-[9px] uppercase tracking-wide text-[#8C7567]">{t("labels_b2b_500")}</p>
+                  <p className="font-mono-data text-sm font-extrabold text-[#008C45]">€ {Number(cst.b2b_500g || 0).toFixed(2)}</p>
+                </div>
+                <div className="rounded-lg bg-[#B34A26]/10 border border-[#B34A26]/30 px-2 py-1.5 text-center">
+                  <p className="text-[9px] uppercase tracking-wide text-[#8C7567]">{t("labels_b2b_100")}</p>
+                  <p className="font-mono-data text-sm font-extrabold text-[#B34A26]">€ {Number(cst.b2b_100g || 0).toFixed(2)}</p>
+                </div>
+              </div>
             </div>
           )}
         </div>

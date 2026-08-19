@@ -5,22 +5,6 @@ import { useLang } from "@/i18n/LanguageContext";
 
 const ENRICH = new Set(["Zucchero", "Tuorlo", "Burro", "Miele", "Pasta d'arancia", "Miglioratore naturale"]);
 
-function costPerPiece(r) {
-  const c = r.costing;
-  if (!c) return null;
-  const n = (v) => Number(v) || 0;
-  const flour = n(r.flour_grams);
-  const tot =
-    flour / 1000 * n(c.flour_kg) +
-    n(r.water_grams) / 1000 * n(c.water_l) +
-    n(r.sourdough_grams) / 1000 * n(c.sourdough_kg) +
-    n(r.salt_grams) / 1000 * n(c.salt_kg) +
-    (c.extras || []).reduce((s, e) => s + n(e.cost), 0) +
-    n(c.overhead);
-  const pcs = n(c.pieces);
-  return pcs > 0 ? tot / pcs : null;
-}
-
 export default function PanettoneLabels() {
   const { t } = useLang();
   const [items, setItems] = useState([]);
@@ -53,31 +37,40 @@ export default function PanettoneLabels() {
         <Printer className="w-5 h-5" /> {t("labels_print")}
       </button>
 
+      <p data-testid="labels-b2b-hint" className="no-print text-xs text-[#8C7567] mb-3 -mt-2">{t("labels_b2b_hint")}</p>
+
       {items.length === 0 ? (
         <p className="no-print text-center text-[#8C7567] py-8">{t("labels_empty")}</p>
       ) : (
         <div className="print-area grid grid-cols-1 sm:grid-cols-2 gap-3">
           {items.map((r) => {
             const susp = (r.extra_ingredients || []).filter((e) => e.name && !ENRICH.has(e.name)).map((e) => e.name);
-            const cpp = costPerPiece(r);
+            const c = r.costing || {};
             return (
               <div key={r.id} data-testid={`label-${r.id}`}
                 className="rounded-2xl border-2 border-[#B34A26] bg-white text-[#2C221E] p-4 flex flex-col items-center text-center break-inside-avoid"
                 style={{ pageBreakInside: "avoid" }}>
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#FFCE00]/70 mb-2" />
+                {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#E8DEC8]" />}
+                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#FFCE00]/70 mb-1.5 -mt-6 bg-white" />
                 <p className="font-display text-lg font-bold leading-tight">Panettone Mikilab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
-                  <span className="inline-block w-3 h-2 bg-[#009246]" /><span className="inline-block w-3 h-2 bg-[#CE2B37]" />
+                  <span className="inline-block w-3 h-2 bg-[#008C45]" /><span className="inline-block w-3 h-2 bg-[#CD212A]" />
                   <span className="px-1">•</span>
-                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#FFCE00]" />
+                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#FFCC00]" />
                 </div>
                 <p className="font-display text-xl font-extrabold text-[#B34A26]">{flavor(r.name)}</p>
                 {susp.length > 0 && (
                   <p className="text-xs text-[#4A3B34] mt-1.5"><span className="font-semibold">{t("labels_ingredients")}:</span> {susp.join(", ")}</p>
                 )}
-                <div className="mt-2 flex items-center gap-3 text-xs text-[#6B6157]">
-                  <span>{t("labels_net")}</span>
-                  {cpp != null && <span className="font-mono-data font-bold text-[#6B8E62]">{t("labels_cost")}: €{cpp.toFixed(2)}</span>}
+                <div className="mt-2.5 grid grid-cols-2 gap-2 w-full">
+                  <div className="rounded-lg bg-[#008C45]/10 border border-[#008C45]/30 py-1.5">
+                    <p className="text-[9px] uppercase tracking-wide text-[#6B6157]">{t("labels_b2b_500")}</p>
+                    <p className="font-mono-data text-base font-extrabold text-[#008C45]">€{Number(c.b2b_500g || 0).toFixed(2)}</p>
+                  </div>
+                  <div className="rounded-lg bg-[#B34A26]/10 border border-[#B34A26]/30 py-1.5">
+                    <p className="text-[9px] uppercase tracking-wide text-[#6B6157]">{t("labels_b2b_100")}</p>
+                    <p className="font-mono-data text-base font-extrabold text-[#B34A26]">€{Number(c.b2b_100g || 0).toFixed(2)}</p>
+                  </div>
                 </div>
                 <p className="text-[9px] text-[#8C7567] mt-2 italic">Il Laboratorio di Michele · Stoccarda 🇮🇹🇩🇪</p>
               </div>
