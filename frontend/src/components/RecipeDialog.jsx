@@ -3,6 +3,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
 import { useLang } from "@/i18n/LanguageContext";
+import { Camera, X } from "lucide-react";
 import { COUNTRIES, flagEmoji } from "@/lib/countries";
 import { STANDARD_PRICES, standardCosting } from "@/data/prices";
 
@@ -26,7 +27,7 @@ const empty = {
   name: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
-  oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", extra_ingredients: [], costing: standardCosting(),
+  oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", image_url: "", extra_ingredients: [], work_phases: [], costing: standardCosting(),
 };
 
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
@@ -68,6 +69,29 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const addIng = () => setForm((f) => ({ ...f, extra_ingredients: [...(f.extra_ingredients || []), { name: "", percent: "" }] }));
   const removeIng = (i) => setForm((f) => ({ ...f, extra_ingredients: (f.extra_ingredients || []).filter((_, idx) => idx !== i) }));
 
+  const setPhase = (i, patch) => setForm((f) => { const l = [...(f.work_phases || [])]; l[i] = { ...l[i], ...patch }; return { ...f, work_phases: l }; });
+  const addPhase = () => setForm((f) => ({ ...f, work_phases: [...(f.work_phases || []), { name: "", time: "", temp: "" }] }));
+  const removePhase = (i) => setForm((f) => ({ ...f, work_phases: (f.work_phases || []).filter((_, idx) => idx !== i) }));
+  const onPhoto = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 1024; let w = img.width, h = img.height;
+        if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
+        else if (h > max) { w = Math.round(w * max / h); h = max; }
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        c.getContext("2d").drawImage(img, 0, 0, w, h);
+        set("image_url", c.toDataURL("image/jpeg", 0.8));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+
   const num = (v) => (v === "" || v == null ? 0 : Number(v) || 0);
   const prodCost =
     num(form.flour_grams) / 1000 * num(c.flour_kg) +
@@ -97,6 +121,10 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
     payload.extra_ingredients = (form.extra_ingredients || [])
       .filter((e) => (e.name || "").trim() || e.percent !== "")
       .map((e) => ({ name: (e.name || "").trim(), percent: e.percent === "" || e.percent == null ? null : Number(e.percent) }));
+    payload.image_url = form.image_url || null;
+    payload.work_phases = (form.work_phases || [])
+      .filter((p) => (p.name || "").trim() || p.time !== "" || p.temp !== "")
+      .map((p) => ({ name: (p.name || "").trim(), time: p.time === "" || p.time == null ? null : String(p.time), temp: p.temp === "" || p.temp == null ? null : String(p.temp) }));
     payload.costing = {
       flour_kg: num(c.flour_kg), water_l: num(c.water_l), sourdough_kg: num(c.sourdough_kg), salt_kg: num(c.salt_kg),
       extras: (c.extras || []).filter((e) => e.name || e.cost).map((e) => ({ name: e.name || "", cost: num(e.cost) })),
@@ -334,6 +362,50 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             />
           </div>
 
+          {/* Foto ricetta (dalla fotocamera) */}
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_photo")}</label>
+            <div className="mt-1 flex items-center gap-3">
+              {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#E8DEC8] dark:border-[#3D302A]" /> : null}
+              <label data-testid="recipe-photo-input" className="cursor-pointer bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2C221E] dark:text-[#F5EFE6]">
+                <Camera className="w-4 h-4 text-[#B34A26]" /> {form.image_url ? t("photo_change") : t("photo_take")}
+                <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} />
+              </label>
+              {form.image_url ? <button onClick={() => set("image_url", "")} className="text-[#B4442A] p-1"><X className="w-4 h-4" /></button> : null}
+            </div>
+          </div>
+
+          {/* Fasi di lavorazione (impasto/riposo/lievitazione) */}
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("work_phases_section")}</label>
+            <div className="mt-1 space-y-1.5" data-testid="work-phases-section">
+              {(form.work_phases || []).map((p, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    data-testid={`phase-name-${i}`} value={p.name} placeholder={t("phase_name_ph")}
+                    onChange={(ev) => setPhase(i, { name: ev.target.value })}
+                    className="flex-1 min-w-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]"
+                  />
+                  <input
+                    data-testid={`phase-time-${i}`} value={p.time} placeholder={t("phase_time_ph")}
+                    onChange={(ev) => setPhase(i, { time: ev.target.value })}
+                    className="w-20 shrink-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]"
+                  />
+                  <div className="relative w-16 shrink-0">
+                    <input
+                      data-testid={`phase-temp-${i}`} type="number" value={p.temp} placeholder="°"
+                      onChange={(ev) => setPhase(i, { temp: ev.target.value })}
+                      className="w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 pr-5 text-sm outline-none focus:border-[#B34A26]"
+                    />
+                    <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-xs text-[#8C7567] pointer-events-none">°</span>
+                  </div>
+                  <button onClick={() => removePhase(i)} className="text-[#B4442A] p-1"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
+              <button data-testid="phase-add-btn" onClick={addPhase} className="text-sm font-medium text-[#B34A26] flex items-center gap-1">+ {t("work_phases_add")}</button>
+            </div>
+          </div>
+
           {/* Altri ingredienti (percentuale sul peso farina) */}
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("ing_extra_section")}</label>
@@ -473,6 +545,8 @@ function normalize(r) {
   out.oven_type = r.oven_type || "statico";
   out.method_type = r.method_type || "indiretto";
   out.extra_ingredients = (r.extra_ingredients || []).map((e) => ({ name: e.name || "", percent: e.percent ?? "" }));
+  out.work_phases = (r.work_phases || []).map((p) => ({ name: p.name || "", time: p.time ?? "", temp: p.temp ?? "" }));
+  out.image_url = r.image_url || "";
   out.procedure = r.procedure || "";
   out.origin = r.origin || "";
   out.dough_category = r.dough_category || "";

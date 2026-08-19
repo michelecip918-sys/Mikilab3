@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 12: tested recipe new fields + compact list/modal + cost (spesa) block. Backend: 6/6 pytest tests pass (GET mikilab returns 18 recipes sorted by name with all new optional fields in schema, no _id leak; full POST/GET/PUT/DELETE cycle with dough_category='pre', water_temp_c=18.5, work_phases, extra_ingredients, base64 image_url and costing all persisted; PUT water_temp_c 18.5->20 saved without clobbering other fields; 404/422 error paths correct). Frontend (390x844): Mikilab tab shows compact list of 18 recipe rows (recipe-row-<id>); clicking opens modal (recipe-detail-<id>); asterisk improver-link switches modal to 'Miglioratore Naturale'; created a recipe through the UI dialog with dough category, water temp, photo attach, 2 work phases and costing -> saved, cost block (recipe-cost-<id>) VISIBLE with per-ingredient breakdown (Farina 1.20, Prefermento 0.40, Sale 0.01, Varie/forno 0.50), total 2.11, editable pieces (input + / -) and per-piece recomputing correctly (10 pcs -> 0.21, 5 pcs -> 0.42); edit re-open prefilled all new fields and PUT persisted water_temp 20; deleted test recipe (cleanup done). ONE functional gap: work_phases are saved but never rendered in the recipe modal.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList / RecipeDetail", "issue": "work_phases ('Fasi di lavorazione') are saved by RecipeDialog and persist in the API/edit form, but RecipeDetail never renders them - the recipe modal shows no work-phases section (verified: modal text contained neither 'Autolisi' nor 'Puntata' for a recipe having both phases). Review request expected work phases visible in the modal.", "selector": "[data-testid^=\"recipe-detail-\"]", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipe modal / RecipeDialog", "issues": ["Radix console error on every dialog open: 'DialogContent requires a DialogTitle' + missing aria-describedby - the recipe detail DialogContent has no DialogTitle/Description (a11y, noisy console).", "Form uses native <select> for Origine / Tipologia di impasto / Forno instead of shadcn Select (inconsistent with the rest of the design system)."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter12_recipe_new_fields.py",
+    "/app/test_reports/pytest/iter12_results.xml"
+  ],
+  "action_items": [
+    "Render work_phases in RecipeDetail (e.g. a 'Fasi di lavorazione' block listing name · time · °C with data-testid recipe-phases-<id>) - currently saved data is invisible to the user.",
+    "Add a (optionally visually hidden) DialogTitle/DialogDescription to the recipe detail DialogContent in RecipeList.jsx to remove the Radix a11y console errors.",
+    "Duplicate key in /app/frontend/src/i18n/translations.js: 'cost_pieces' is defined twice in both it and de blocks (line ~109 and ~114 / ~578 and ~583); the later value wins - remove the dead one."
+  ],
+  "critical_code_review_comments": [
+    "RecipeList.jsx (425 lines) mixes list, detail, cost logic; RecipeDetail (~170 lines) would be better in its own file, and the cost computation duplicates the same formula already in RecipeDialog.jsx (prodCost) - extract a shared computeCosting() helper to avoid drift.",
+    "RecipeDetail's cost block only shows when total > 0; a recipe with costing where all unit prices are 0 silently hides the spesa block (acceptable, but no empty-state message).",
+    "Cost block scales with the ingredient 'Riscala' factor but 'pieces' is not persisted when changed in the modal (local state only) - confirm this is intended, otherwise the edited pieces value is lost on close."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter12_recipe_new_fields.py"],
+  "success_rate": {"backend": "100%", "frontend": "92%"},
+  "seed_data_creation": "Created and deleted TEST_QA Iter12 Costi (mikilab, via UI) and TEST_Iter12 Nuovi Campi (personal, via API). No residual test data.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend recipe CRUD with all new fields is fully covered by /app/backend/tests/test_iter12_recipe_new_fields.py. Seeded mikilab recipes (18) all have costing=null and work_phases=null, so create a recipe through the UI dialog (costing defaults to STANDARD_PRICES) to exercise the cost block. IntroGuide modal blocks the first interaction: click [data-testid=intro-close-btn] before anything else. Only remaining known defect: work_phases not rendered in the recipe detail modal.",
+  "rca_of_the_issue": "work_phases: RecipeDialog builds payload.work_phases and the backend stores/returns it (verified by API test and by the edit form prefilling 'Autolisi'), but RecipeList.jsx RecipeDetail has no JSX branch for r.work_phases (only badges, ingredient rows, procedure, notes and the cost block), so the data is never displayed."
+}

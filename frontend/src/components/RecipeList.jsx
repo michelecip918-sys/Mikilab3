@@ -247,24 +247,57 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
 
   const cst = r.costing;
   const n = (v) => Number(v) || 0;
+  const [pieces, setPieces] = useState("");
+  useEffect(() => { setPieces(cst?.pieces != null ? String(cst.pieces) : ""); /* eslint-disable-next-line */ }, [r.id]);
   let priceBlock = null;
-  if (cst && !readOnly) {
-    const total = n(r.flour_grams) / 1000 * n(cst.flour_kg) + n(r.water_grams) / 1000 * n(cst.water_l)
-      + n(r.sourdough_grams) / 1000 * n(cst.sourdough_kg) + n(r.salt_grams) / 1000 * n(cst.salt_kg)
-      + (cst.extras || []).reduce((s, e) => s + n(e.cost), 0) + n(cst.overhead);
-    const pcs = n(cst.pieces);
+  if (cst) {
+    const cFlour = n(g(r.flour_grams)) / 1000 * n(cst.flour_kg);
+    const cWater = n(g(r.water_grams)) / 1000 * n(cst.water_l);
+    const cSour = n(g(r.sourdough_grams)) / 1000 * n(cst.sourdough_kg);
+    const cSalt = n(g(r.salt_grams)) / 1000 * n(cst.salt_kg);
+    const overhead = n(cst.overhead);
+    const br = [];
+    if (cFlour > 0) br.push([t("ing_flour"), cFlour]);
+    if (cWater > 0) br.push([t("ing_water"), cWater]);
+    if (cSour > 0) br.push([t("ing_preferment"), cSour]);
+    if (cSalt > 0) br.push([t("ing_salt"), cSalt]);
+    (cst.extras || []).forEach((e) => { if (e.name && n(e.cost) > 0) br.push([e.name, n(e.cost)]); });
+    if (overhead > 0) br.push([t("cost_overhead"), overhead]);
+    const total = br.reduce((s, [, v]) => s + v, 0);
+    const pcs = n(pieces);
+    const perPiece = pcs > 0 ? total / pcs : null;
     if (total > 0) {
-      const perPiece = pcs > 0 ? total / pcs : null;
       priceBlock = (
-        <div className="rounded-xl px-3 py-2 border bg-[#D99B26]/10 border-[#D99B26]/30">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_total")}</span>
+        <div data-testid={`recipe-cost-${r.id}`} className="rounded-xl px-3 py-3 border bg-[#D99B26]/10 border-[#D99B26]/30">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A] mb-2">{t("cost_breakdown")}</p>
+          <div className="space-y-1 mb-2">
+            {br.map(([label, val], idx) => (
+              <div key={idx} className="flex items-center justify-between text-sm">
+                <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{label}</span>
+                <span className="font-mono-data text-[#8C3A1D] dark:text-[#E5AC3A]">€ {val.toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center justify-between pt-2 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
+            <span className="text-xs font-semibold text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_total")}</span>
             <span className="font-mono-data text-sm font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">€ {total.toFixed(2)}</span>
           </div>
+          <div className="flex items-center justify-between mt-2">
+            <span className="text-xs text-[#8C7567]">{t("cost_pieces")}</span>
+            <div className="flex items-center gap-1.5">
+              <button data-testid={`pieces-minus-${r.id}`} onClick={() => setPieces((p) => String(Math.max(1, (n(p) || 1) - 1)))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] text-[#B34A26] font-bold">−</button>
+              <input
+                data-testid={`pieces-input-${r.id}`} type="number" value={pieces}
+                onChange={(e) => setPieces(e.target.value)}
+                className="w-14 text-center font-mono-data text-sm font-bold bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg py-1 outline-none"
+              />
+              <button data-testid={`pieces-plus-${r.id}`} onClick={() => setPieces((p) => String((n(p) || 0) + 1))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] text-[#B34A26] font-bold">+</button>
+            </div>
+          </div>
           {perPiece != null && (
-            <div className="flex items-center justify-between mt-1 pt-1 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
-              <span className="text-xs text-[#8C7567]">{t("cost_per_piece")}</span>
-              <span className="font-mono-data text-sm font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">€ {perPiece.toFixed(2)}</span>
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
+              <span className="text-xs font-semibold text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_per_piece")}</span>
+              <span className="font-mono-data text-sm font-bold text-[#6B8E62]">€ {perPiece.toFixed(2)}</span>
             </div>
           )}
         </div>

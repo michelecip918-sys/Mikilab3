@@ -61,6 +61,7 @@ class Recipe(BaseModel):
     notes: Optional[str] = ""
     procedure: Optional[str] = ""
     extra_ingredients: Optional[List[dict]] = None
+    work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
     created_at: str = Field(default_factory=now_iso)
     updated_at: str = Field(default_factory=now_iso)
@@ -91,6 +92,7 @@ class RecipeCreate(BaseModel):
     notes: Optional[str] = ""
     procedure: Optional[str] = ""
     extra_ingredients: Optional[List[dict]] = None
+    work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
 
 
@@ -118,6 +120,7 @@ class RecipeUpdate(BaseModel):
     notes: Optional[str] = None
     procedure: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
+    work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
 
 
@@ -612,6 +615,26 @@ app.add_middleware(
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+
+@app.on_event("startup")
+async def seed_mikilab_if_empty():
+    """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab di Michele."""
+    try:
+        count = await db.recipes.count_documents({"collection_name": "mikilab"})
+        if count > 0:
+            return
+        import subprocess, sys
+        base = os.path.dirname(os.path.abspath(__file__))
+        for scr in ["seed_real_recipes.py", "rename_nice.py", "fix_backmittel_origin.py",
+                    "seed_quellstuck.py", "seed_quell_for_seeds.py"]:
+            path = os.path.join(base, scr)
+            if os.path.exists(path):
+                subprocess.run([sys.executable, path], check=False, cwd=base, timeout=60)
+        new_count = await db.recipes.count_documents({"collection_name": "mikilab"})
+        logging.getLogger(__name__).info(f"Mikilab seed eseguito: {new_count} ricette")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Seed mikilab error: {e}")
 
 
 @app.on_event("shutdown")
