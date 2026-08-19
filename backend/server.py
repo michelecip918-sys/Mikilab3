@@ -479,6 +479,33 @@ async def save_lab_config(payload: LabConfig):
     return payload
 
 
+# ---------------------------------------------------------------------------
+# Memoria temperatura impasto per ricetta (termostato)
+# ---------------------------------------------------------------------------
+class RecipeTemp(BaseModel):
+    recipe_id: str
+    recipe_name: Optional[str] = ""
+    target_c: Optional[float] = None   # temperatura impasto desiderata
+    actual_c: float                    # temperatura misurata oggi
+    date: str = Field(default_factory=now_iso)
+
+
+@api_router.get("/recipe-temp")
+async def list_recipe_temp():
+    docs = await db.recipe_temps.find({}, {"_id": 0}).to_list(1000)
+    return docs
+
+
+@api_router.post("/recipe-temp", response_model=RecipeTemp)
+async def save_recipe_temp(payload: RecipeTemp):
+    payload.date = now_iso()
+    doc = payload.model_dump()
+    await db.recipe_temps.update_one(
+        {"recipe_id": payload.recipe_id}, {"$set": doc}, upsert=True
+    )
+    return payload
+
+
 
 # ---------------------------------------------------------------------------
 # Stuttgart announcements

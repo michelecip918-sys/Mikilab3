@@ -1,14 +1,20 @@
-import { Wheat, Moon, Sun, MapPin } from "lucide-react";
+import { Wheat, Moon, Sun, MapPin, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function Header() {
   const [dark, setDark] = useState(false);
+  const [now, setNow] = useState(new Date());
   const { lang, setLang, t } = useLang();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <header
@@ -41,6 +47,14 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Orologio sempre visibile */}
+        <div data-testid="header-clock" className="flex items-center gap-1.5 bg-[#F5EFE6] dark:bg-[#332823] rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] px-2.5 py-1.5">
+          <Clock className="w-3.5 h-3.5 text-[#B34A26]" />
+          <span className="font-mono-data text-xs font-bold text-[#2C221E] dark:text-[#F5EFE6]">
+            {now.toLocaleTimeString(lang === "de" ? "de-DE" : "it-IT", { hour: "2-digit", minute: "2-digit" })}
+          </span>
+        </div>
+
         {/* Language switcher IT / DE */}
         <div
           data-testid="lang-switcher"

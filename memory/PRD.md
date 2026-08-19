@@ -133,5 +133,16 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - Ricette **Gente Brot** e **Wurzelbrot** (bozze col metodo di Michele).
 - Convertire le ricette ITALIANE a impasto DIRETTO (da confermare QUALI ricette).
 - Rendere TUTTI i titoli più professionali/chiari.
-- Redesign a colori con accenti IT/DE forti su header, pulsanti e accenti (sfondo caldo invariato).
+- **Redesign a colori** con accenti IT/DE forti su header, pulsanti e accenti (sfondo caldo invariato). (parziale: fascia tricolore su header e nei nuovi header sezione)
+
+## v13 (2026-08) — Termostato & Clima, panettoni, ricette dirette
+- **Termostato & Clima** (nuovo tool Maestro `ClimaTermostato.jsx`): orologio live, avviso caldo/freddo vs standard, **connessione termostato Bluetooth** (Web Bluetooth, servizio environmental_sensing 0x2A6E, best-effort con inserimento manuale di fallback), e **memoria temperatura impasto per ricetta** con consiglio di correzione il giorno dopo. Backend: `GET/POST /api/recipe-temp`.
+- **Orologio sempre visibile** nell'header.
+- **Ricette italiane → impasto DIRETTO**: convertite 7 ricette italiane quotidiane (Cuore Italiano, Rustico Noci e Uvetta, Dolce Cipolla, Verde Canapa, Focaccia Barese, Friselle Pugliesi, Puccia Salentina). MANTENUTE indirette (lievito madre) per tradizione: Panettone, Pane di Altamura DOP, Pane di Matera IGP.
+- **Panettone Millebolle → "Panettone Mikilab"**; creati **10 gusti** (stessa ricetta base, sospensioni diverse): Uvetta e Canditi (Classico), Cioccolato e Noci, Pistacchio e Cioccolato Bianco, Pere e Cioccolato, Fichi e Mandorle, Arancia e Cioccolato Fondente, Amarena e Cioccolato, Caffè e Nocciola, Marron Glacé, Frutti di Bosco. Totale ricette: **34**.
+
+## BACKLOG dopo v13
+- Redesign a colori completo IT/DE (design_agent) su tutta l'app.
+- Ricette Gente Brot e Wurzelbrot col metodo di Michele.
+- (Eventuale) conversione a diretto di altre ricette se richiesto.
 

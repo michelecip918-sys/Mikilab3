@@ -44,6 +44,11 @@ export const labConfigApi = {
   save: (data) => api.put(`/lab-config`, data).then((r) => r.data),
 };
 
+export const recipeTempApi = {
+  list: () => api.get(`/recipe-temp`).then((r) => r.data),
+  save: (data) => api.post(`/recipe-temp`, data).then((r) => r.data),
+};
+
 export const announcementsApi = {
   list: () => api.get(`/announcements`).then((r) => r.data),
   create: (data) => api.post(`/announcements`, data).then((r) => r.data),

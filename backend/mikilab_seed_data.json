@@ -353,13 +353,13 @@
   "water_grams": 750,
   "sourdough_grams": 200,
   "salt_grams": 27,
-  "preferment_type": "lm",
+  "preferment_type": "none",
   "bake_temp": 240,
   "bake_minutes": 40,
   "oven_type": "statico",
   "image_url": "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?crop=entropy&cs=srgb&fm=jpg&w=800&q=70",
   "notes": "Lievito madre 20%. Stile italiano con semola: crosta croccante e alveoli aperti.",
-  "method_type": "indiretto",
+  "method_type": "diretto",
   "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 40 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
   "extra_ingredients": [
    {
@@ -398,13 +398,13 @@
   "water_grams": 720,
   "sourdough_grams": 180,
   "salt_grams": 20,
-  "preferment_type": "lm",
+  "preferment_type": "none",
   "bake_temp": 225,
   "bake_minutes": 40,
   "oven_type": "ventilato",
   "image_url": "https://images.unsplash.com/photo-1549413468-cd78edb7e75c?crop=entropy&cs=srgb&fm=jpg&w=800&q=70",
   "notes": "Lievito madre. Cipolle stufate dorate aggiunte durante le pieghe.",
-  "method_type": "indiretto",
+  "method_type": "diretto",
   "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 225°C per 40 minuti, con vapore nei primi 10 minuti.",
   "extra_ingredients": [
    {
@@ -492,8 +492,8 @@
   "water_grams": 850,
   "sourdough_grams": 100,
   "salt_grams": 20,
-  "preferment_type": "poolish",
-  "method_type": "indiretto",
+  "preferment_type": "none",
+  "method_type": "diretto",
   "dough_category": "pre",
   "water_temp_c": 20,
   "mix_minutes": 14,
@@ -529,8 +529,8 @@
   "water_grams": 550,
   "sourdough_grams": 150,
   "salt_grams": 20,
-  "preferment_type": "lm",
-  "method_type": "indiretto",
+  "preferment_type": "none",
+  "method_type": "diretto",
   "dough_category": "lm",
   "water_temp_c": 20,
   "mix_minutes": 12,
@@ -846,7 +846,7 @@
   "costing": null,
   "created_at": "2026-08-19T07:47:43.986649+00:00",
   "updated_at": "2026-08-19T07:47:44.006177+00:00",
-  "name": "Panettone Millebolle",
+  "name": "Panettone Mikilab",
   "flour_type": "Farina alta forza W380 + lievito madre",
   "hydration_percent": 40,
   "flour_grams": 446,
@@ -890,6 +890,348 @@
   "origin": "it"
  },
  {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:27:49.482091+00:00",
+  "updated_at": "2026-08-19T09:27:49.482100+00:00",
+  "name": "Panettone Mikilab — Amarena e Cioccolato",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 34,
+  "flour_grams": 446,
+  "water_grams": 151,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Amarene e cioccolato fondente: dolce con una nota acidula.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~28 g rispetto al panettone base per compensare le paste/frutta umida.)",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Amarene sciroppate scolate",
+    "percent": 18
+   },
+   {
+    "name": "Gocce di cioccolato fondente",
+    "percent": 15
+   }
+  ],
+  "origin": "it",
+  "id": "94f9b196-7c1e-453b-9595-dcac09fad58c"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:26:47.165809+00:00",
+  "updated_at": "2026-08-19T09:26:47.165815+00:00",
+  "name": "Panettone Mikilab — Arancia e Cioccolato Fondente",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 40,
+  "flour_grams": 446,
+  "water_grams": 179,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Arancia candita e cioccolato fondente, profumo intenso.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Arancia candita a cubetti",
+    "percent": 18
+   },
+   {
+    "name": "Gocce di cioccolato fondente",
+    "percent": 15
+   }
+  ],
+  "origin": "it",
+  "id": "cce86064-7cea-478b-b622-b2245842d85e"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:27:49.482538+00:00",
+  "updated_at": "2026-08-19T09:27:49.482542+00:00",
+  "name": "Panettone Mikilab — Caffè e Nocciola",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 37,
+  "flour_grams": 446,
+  "water_grams": 166,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Caffè e nocciola: aromatico e goloso, per chi ama i sapori decisi.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~13 g rispetto al panettone base per compensare le paste/frutta umida.)",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Pasta di nocciola",
+    "percent": 6
+   },
+   {
+    "name": "Granella di nocciole tostate",
+    "percent": 10
+   },
+   {
+    "name": "Gocce di cioccolato al caffè",
+    "percent": 12
+   }
+  ],
+  "origin": "it",
+  "id": "a57b738f-45a4-496e-809f-495259a64aba"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:26:47.163962+00:00",
+  "updated_at": "2026-08-19T09:26:47.163968+00:00",
+  "name": "Panettone Mikilab — Cioccolato e Noci",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 40,
+  "flour_grams": 446,
+  "water_grams": 179,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Goloso: gocce di cioccolato fondente e noci. Inserisci le sospensioni a fine impasto, delicatamente.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Gocce di cioccolato fondente",
+    "percent": 18
+   },
+   {
+    "name": "Noci in pezzi",
+    "percent": 12
+   }
+  ],
+  "origin": "it",
+  "id": "50bbd781-8957-4eb1-8d4c-546eb7abbd2f"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:26:47.165401+00:00",
+  "updated_at": "2026-08-19T09:26:47.165407+00:00",
+  "name": "Panettone Mikilab — Fichi e Mandorle",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 40,
+  "flour_grams": 446,
+  "water_grams": 179,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Mediterraneo: fichi secchi e mandorle tostate.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Fichi secchi a pezzi",
+    "percent": 18
+   },
+   {
+    "name": "Mandorle tostate",
+    "percent": 12
+   }
+  ],
+  "origin": "it",
+  "id": "473417f1-6147-458b-bff7-359c63575317"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:27:49.483368+00:00",
+  "updated_at": "2026-08-19T09:27:49.483372+00:00",
+  "name": "Panettone Mikilab — Frutti di Bosco",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 40,
+  "flour_grams": 446,
+  "water_grams": 179,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Frutti di bosco disidratati e cioccolato bianco: fresco e colorato.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Mirtilli disidratati",
+    "percent": 12
+   },
+   {
+    "name": "Lamponi disidratati",
+    "percent": 8
+   },
+   {
+    "name": "Gocce di cioccolato bianco",
+    "percent": 12
+   }
+  ],
+  "origin": "it",
+  "id": "84ac31f9-0b67-4a78-a37e-42adde9601f7"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:27:49.483000+00:00",
+  "updated_at": "2026-08-19T09:27:49.483007+00:00",
+  "name": "Panettone Mikilab — Marron Glacé (Castagne)",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 37,
+  "flour_grams": 446,
+  "water_grams": 164,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Marron glacé e cioccolato bianco: elegante e natalizio.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~15 g rispetto al panettone base per compensare le paste/frutta umida.)",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Marron glacé a pezzi",
+    "percent": 22
+   },
+   {
+    "name": "Gocce di cioccolato bianco",
+    "percent": 10
+   }
+  ],
+  "origin": "it",
+  "id": "6452304f-e754-401c-bfbb-9c044ad1b1c7"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:26:47.164873+00:00",
+  "updated_at": "2026-08-19T09:26:47.164879+00:00",
+  "name": "Panettone Mikilab — Pere e Cioccolato",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 40,
+  "flour_grams": 446,
+  "water_grams": 179,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Pere disidratate e cioccolato fondente: dolce ed equilibrato.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Pere disidratate a cubetti",
+    "percent": 18
+   },
+   {
+    "name": "Gocce di cioccolato fondente",
+    "percent": 15
+   }
+  ],
+  "origin": "it",
+  "id": "4c784420-5b6a-4f62-9ed3-a2b2dd19f266"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:26:47.164455+00:00",
+  "updated_at": "2026-08-19T09:26:47.164462+00:00",
+  "name": "Panettone Mikilab — Pistacchio e Cioccolato Bianco",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 37,
+  "flour_grams": 446,
+  "water_grams": 166,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Raffinato: pasta di pistacchio nell impasto, granella e cioccolato bianco come sospensioni.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~13 g rispetto al panettone base per compensare le paste/frutta umida.)",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Pasta di pistacchio",
+    "percent": 6
+   },
+   {
+    "name": "Granella di pistacchio",
+    "percent": 8
+   },
+   {
+    "name": "Gocce di cioccolato bianco",
+    "percent": 15
+   }
+  ],
+  "origin": "it",
+  "id": "fd260daf-c2fb-40dd-8ef1-9f73d50d9f3a"
+ },
+ {
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:26:47.161419+00:00",
+  "updated_at": "2026-08-19T09:26:47.161427+00:00",
+  "name": "Panettone Mikilab — Uvetta e Canditi (Classico)",
+  "flour_type": "Farina alta forza W380 + lievito madre",
+  "hydration_percent": 40,
+  "flour_grams": 446,
+  "water_grams": 179,
+  "sourdough_grams": 140,
+  "salt_grams": 7,
+  "preferment_type": "lm",
+  "bake_temp": 165,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "notes": "Il classico: uvetta ammollata e canditi di arancia e cedro. Aggiungi le sospensioni a fine impasto, a bassa velocità, per non spezzare la maglia.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
+  "method_type": "indiretto",
+  "extra_ingredients": [
+   {
+    "name": "Uvetta sultanina",
+    "percent": 20
+   },
+   {
+    "name": "Arancia e cedro canditi",
+    "percent": 15
+   }
+  ],
+  "origin": "it",
+  "id": "da30caa9-d07c-4298-821a-189237f566f0"
+ },
+ {
   "id": "65e7fe8e-6544-4705-8c10-c9b496d7a0b6",
   "collection_name": "mikilab",
   "costing": null,
@@ -902,8 +1244,8 @@
   "water_grams": 650,
   "sourdough_grams": 200,
   "salt_grams": 20,
-  "preferment_type": "lm",
-  "method_type": "indiretto",
+  "preferment_type": "none",
+  "method_type": "diretto",
   "dough_category": "lm",
   "water_temp_c": 20,
   "mix_minutes": 13,
@@ -996,13 +1338,13 @@
   "water_grams": 700,
   "sourdough_grams": 180,
   "salt_grams": 18,
-  "preferment_type": "lm",
+  "preferment_type": "none",
   "bake_temp": 220,
   "bake_minutes": 38,
   "oven_type": "statico",
   "image_url": "https://images.pexels.com/photos/1255097/pexels-photo-1255097.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
   "notes": "Lievito madre. Noci e uvetta a fine impasto. Ottimo con formaggi.",
-  "method_type": "indiretto",
+  "method_type": "diretto",
   "procedure": "1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 38 minuti, con vapore nei primi 10 minuti.",
   "extra_ingredients": [
    {
@@ -1227,13 +1569,13 @@
   "water_grams": 750,
   "sourdough_grams": 180,
   "salt_grams": 20,
-  "preferment_type": "lm",
+  "preferment_type": "none",
   "bake_temp": 220,
   "bake_minutes": 40,
   "oven_type": "ventilato",
   "image_url": "https://images.unsplash.com/photo-1628809643534-b3d1faffe8d2?crop=entropy&cs=srgb&fm=jpg&w=800&q=70",
   "notes": "Lievito madre. Semi di canapa in impasto e in copertura.",
-  "method_type": "indiretto",
+  "method_type": "diretto",
   "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca lievito madre / Sauerteig / poolish e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 40 minuti, con vapore nei primi 10 minuti.",
   "extra_ingredients": [
    {
