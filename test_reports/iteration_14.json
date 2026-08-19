@@ -1,0 +1,40 @@
+{
+  "summary": "Iteration 14 focused on the new Capo Laboratorio feature. Backend: 10 pytest cases (lab-config GET/PUT persistence, capo/plan SSE with climate warning, laboratorio + macchine vision SSE, regressions: 24 mikilab recipes, personal recipe CRUD w/ work_phases, upload/file round-trip) => 9/10 pass. The single failure is a real product-impacting issue: POST /api/capo/plan streams for ~68s internally but the public ingress terminates the SSE response at exactly 60.2s, so the client never receives data:{done:true} and the plan text is cut mid-sentence (reproduced 2/2 times over the public URL, passes over localhost:8001). Frontend: full Capo Laboratorio flow verified on mobile viewport (390x844) - tool is first in Maestro tools, subtitle correct, mixer/cell/staff/std-temp config saves (success toast 'Configurazione salvata') and reloads persisted after page reload, product row with 25 recipe options, start time + lab temp 29 shows warm-climate warning, empty-product generate shows error toast, plan generated and rendered as markdown, live camera opened with fake device and 'Scatta e analizza' returned a laboratorio vision report, Diagnosi mode label is 'Strumento o macchina'. No JS page errors.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "POST /api/capo/plan", "issue": "SSE stream is cut by the ingress/proxy at ~60s (hard response duration cap). Internal call needs ~68s and 8.7k chars; over the public URL only ~7.2k chars arrive and data:{done:true} is never sent, so the UI silently shows a truncated plan (last line ends mid-word). Fix by shortening the generated plan (tighter prompt / max_tokens / less verbose sections) or splitting generation into stages so each response finishes well under 60s.", "priority": "HIGH"}
+    ],
+    "minor": [
+      {"endpoint": "GET /api/recipes/{id}", "issue": "No GET-by-id route exists (returns 405); only list/POST/PUT/DELETE. Fine for current frontend but blocks single-resource verification/deep links."},
+      {"endpoint": "PUT /api/lab-config", "issue": "mixers/cells are untyped List[dict] - no validation of capacity_kg/type/temp_c, so empty strings from the UI ('capacity_kg': '') are persisted as-is and later interpolated into the AI prompt. Consider Pydantic sub-models."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Capo Laboratorio - Genera piano di lavoro", "issue": "When the SSE stream is cut at 60s by the ingress the reader just ends: no error/'incomplete' indicator is shown, the user sees a plan that stops mid-sentence. Add a check for the done event and surface a warning/retry if missing.", "affected_selectors": ["capo-generate", "capo-plan"]}
+    ],
+    "design_issues": [
+      {"screen": "Capo Laboratorio (mobile 390px)", "issues": ["The two floating action buttons (radio + mic) sit above the plan/camera content bottom-left and bottom-right and overlap the rendered plan/analysis text and the 'Chiudi' camera button area", "Field label 'Temperatura standard laboratorio (°C)' wraps to 3 lines in the 2-column grid, making the two inputs vertically misaligned (same for 'Temperatura di oggi in laboratorio')"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter14_capo.py", "/app/backend/tests/_diag_capo_stream.py", "/app/test_reports/pytest/iter14.xml"],
+  "action_items": [
+    "Reduce capo/plan generation time/length so the whole SSE response completes < 60s (ingress cuts longer streams) - e.g. cap output tokens, ask for a compact table-based plan, or stream in 2 stages.",
+    "Frontend: detect missing data:{done:true} in CapoLaboratorio.generate() and show a 'piano incompleto, riprova' warning instead of silently rendering truncated text.",
+    "Move/hide the floating radio+mic FABs (or add bottom padding) so they don't overlap Capo Laboratorio plan/camera controls."
+  ],
+  "critical_code_review_comments": [
+    "capo_plan_stream prompt requests 5 verbose sections -> ~9k chars output; this is the root cause of the 60s ingress truncation. Keep AI streams short or chunked.",
+    "CapoLaboratorio.jsx duplicates the SSE reader loop twice (generate + LabCamera.snap, ~20 lines each) - extract a shared readSSE helper.",
+    "labConfigApi.save sends capacity_kg/temp_c as '' when the input is cleared; coerce to null before PUT."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter14_capo.py", "/app/backend/tests/_diag_capo_stream.py"],
+  "success_rate": {"backend": "90%", "frontend": "100% (all UI flows pass; plan content truncated due to backend/ingress issue)"},
+  "seed_data_creation": "lab_config doc overwritten with TEST_ mixers/cells (single-doc collection, staff=3, standard 26C) plus a transient TEST_Iter14 personal recipe (deleted).",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "none - app has no auth",
+  "context_for_next_testing_agent": "Run: cd /app/backend && python -m pytest tests/test_iter14_capo.py -v -n0 (pytest.ini forces xdist; -n0 needed for readable -s output). Vision tests must use a real >=1 image (helper make_test_image_b64) - a 1x1 PNG makes Anthropic return 'Could not process image'. Use /app/backend/tests/_diag_capo_stream.py to compare capo/plan SSE over localhost:8001 (completes, done=True, 68s) vs the public URL (cut at 60.2s, done=False) after the main agent shortens the plan. Frontend: dismiss intro-close-btn, nav testids are nav-tab-mikilab/maestro/foto/sa-tutto; camera getUserMedia DOES work in the test browser (fake device) so capo-film-snap can be validated end-to-end.",
+  "rca_of_the_issue": "Root cause of the failing capo/plan test: the Kubernetes ingress enforces a ~60s maximum response duration. capo_plan_stream asks Claude Sonnet 4.6 for a 5-section detailed plan (~9k chars) which takes ~68s to stream, so the proxy closes the connection before the terminating data:{done:true} event. Reproduced deterministically twice at 60.2s over the public URL while the identical request to localhost:8001 finishes with done=True. Mitigation: shorten/cap the generated plan or stream it in stages; additionally make the frontend flag a stream that ended without a done event."
+}

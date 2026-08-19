@@ -1,0 +1,41 @@
+{
+  "summary": "Iteration 13 (Capo Laboratorio Phase 1 + UX changes) tested end-to-end. Backend: new pytest suite /app/backend/tests/test_iter13_capolab.py (6/6 passed) covering mikilab seed (24 recipes, sorted, no _id leak, 6 new Puglia/Basilicata recipes with non-empty procedure), POST /api/upload -> GET /api/files/<path> object-storage round-trip (200 + image/png), 404 on missing file, full personal-recipe CRUD with work_phases incl. non-clobbering partial PUT + delete verification, and the new SSE vision mode 'macchine' (streams data:{d} and closes with done:true). Full regression run of /app/backend/tests: 90 passed, 1 skipped after fixing one stale assertion. Frontend: Playwright on the public URL verified IntroGuide short text (long preface removed), bio-card with bio-welcome-body + 'Chi sono', Stuttgart 'Zona & Mondo' feed moved to the BOTTOM (y: recipes 1334 < thanks 3472 < news 3717), all 24 recipes listed incl. the 6 Puglia recipes, recipe detail modal opens, RecipeDialog photo control + work_phases editor (add-phase works), 'Fasi di lavorazione' block VISIBLE for a recipe with work_phases, clima tool removed from Maestro tools, Diagnosi 'Riconosci macchina' mode selectable and returning a real streamed AI analysis, 'Chiedi al Maestro' title + satutto-intro-card. Photo upload E2E from the recipe dialog uploads to /api/upload and the saved image_url points to /api/files/... (no base64 fallback).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "IntroGuide", "issue": "DialogContent has no DialogTitle -> Radix a11y console error logged twice on every first visit ('`DialogContent` requires a `DialogTitle`...'). RecipeList/RecipeDialog are fine (sr-only/visible titles present); only IntroGuide.jsx line 21 needs a (sr-only) DialogTitle.", "selector": "[data-testid=\"intro-close-btn\"] dialog", "priority": "LOW"},
+      {"component": "RecipeList RecipeDetail phases", "issue": "Phase temperature is rendered as `{temp}°C` unconditionally, so a value typed with a unit renders as '22C°C' / '22°C°C'. Strip/normalize the unit before appending °C.", "selector": "[data-testid^=\"recipe-phases-\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter13_capolab.py",
+    "/app/test_reports/pytest/iter13.xml"
+  ],
+  "action_items": [
+    "None of the 24 Mikilab seed recipes contains a work_phases array, so the newly implemented 'Fasi di lavorazione' block never appears in the read-only Mikilab collection (verified: recipe-phases-<id> count = 0 for Pane di Altamura DOP). It renders correctly only for user-created recipes. Add work_phases to the mikilab seed data if the feature is meant to be visible to Michele's published recipes.",
+    "Add a visually-hidden DialogTitle to IntroGuide.jsx to clear the remaining Radix console error.",
+    "Normalize the phase 'temp' value before appending °C in RecipeList (avoids '22C°C')."
+  ],
+  "critical_code_review_comments": [
+    "seed_mikilab_if_empty is now insert-only and idempotent (verified: repeated GET /api/recipes?collection_name=mikilab keeps 24 docs) - deployment blocker resolved.",
+    "PUT /api/recipes uses exclude_unset so partial updates no longer clobber other fields (verified with work_phases + notes).",
+    "vision_stream catches exceptions and still emits done:true, so the UI never hangs; good.",
+    "RecipeDialog.onPhoto falls back to a base64 data URL when /api/upload fails - silently hides archive outages; consider surfacing a toast."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter13_capolab.py",
+    "/app/backend/tests/backend_test.py"
+  ],
+  "success_rate": {"backend": "100% (96/96 tests, 1 skipped)", "frontend": "100% of the 12 requested checks pass (2 low-priority polish items)"},
+  "seed_data_creation": "Temporary personal recipes TEST_Fasi Ricetta / TEST_Foto Ricetta and one uploaded test image; recipes deleted after tests (uploaded image objects remain in the archive).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "None required (app has no auth)",
+  "context_for_next_testing_agent": "Backend suite: run `cd /app/backend && python -m pytest tests/ -q` (xdist preconfigured in pytest.ini). Fixed stale assertion in backend_test.py (recipe 'Ciabatta' no longer exists in the 24-recipe seed; replaced with 'Rustico'/'Pane di Matera IGP'). Mikilab seed recipes have NO work_phases, so to test phase rendering create a personal recipe via API first (POST /api/recipes with collection_name=personal + work_phases), then Maestro tab -> maestro-tool-aggiungi -> click recipe-row-<id>. IntroGuide modal must be closed via [data-testid=intro-close-btn] before any interaction. Object storage upload + /api/files round-trip works from both API and UI.",
+  "rca_of_the_issue": "Only remaining console error comes from IntroGuide's DialogContent lacking a DialogTitle (Radix requirement); the RecipeDetail dialog already got an sr-only DialogTitle, which is why the error count stays at 2 (StrictMode double render of the intro dialog) and does not grow when other dialogs open."
+}

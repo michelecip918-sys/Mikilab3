@@ -46,8 +46,8 @@ class TestRecipes:
         assert isinstance(data, list)
         names = [x["name"] for x in data]
         assert "Pane di Altamura DOP" in names
-        assert any("Ciabatta" in n for n in names)
         assert any("Rustico" in n for n in names)
+        assert "Pane di Matera IGP" in names
         assert len(data) >= 3
         first = data[0]
         assert "_id" not in first

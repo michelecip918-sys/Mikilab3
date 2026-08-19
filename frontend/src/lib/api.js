@@ -5,6 +5,16 @@ export const API = `${BACKEND_URL}/api`;
 
 export const api = axios.create({ baseURL: API });
 
+export const uploadApi = {
+  // Uploads a Blob/File to the dedicated image archive, returns absolute URL.
+  image: async (blob, filename = "foto.jpg") => {
+    const fd = new FormData();
+    fd.append("file", blob, filename);
+    const r = await api.post(`/upload`, fd, { headers: { "Content-Type": "multipart/form-data" } });
+    return `${BACKEND_URL}${r.data.url}`;
+  },
+};
+
 export const recipesApi = {
   list: (collection) => api.get(`/recipes`, { params: { collection_name: collection } }).then((r) => r.data),
   create: (data) => api.post(`/recipes`, data).then((r) => r.data),
@@ -27,6 +37,11 @@ export const planApi = {
 export const weeklyApi = {
   get: () => api.get(`/weekly-plan`).then((r) => r.data),
   save: (data) => api.put(`/weekly-plan`, data).then((r) => r.data),
+};
+
+export const labConfigApi = {
+  get: () => api.get(`/lab-config`).then((r) => r.data),
+  save: (data) => api.put(`/lab-config`, data).then((r) => r.data),
 };
 
 export const announcementsApi = {

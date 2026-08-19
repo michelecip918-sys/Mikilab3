@@ -3,9 +3,10 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
 import { useLang } from "@/i18n/LanguageContext";
-import { Camera, X } from "lucide-react";
+import { Camera, X, Loader2 } from "lucide-react";
 import { COUNTRIES, flagEmoji } from "@/lib/countries";
 import { STANDARD_PRICES, standardCosting } from "@/data/prices";
+import { uploadApi } from "@/lib/api";
 
 const FIELDS = [
   { key: "flour_grams", labelKey: "field_flour_g" },
@@ -33,6 +34,7 @@ const empty = {
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const [form, setForm] = useState(empty);
   const [pctMode, setPctMode] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const { t } = useLang();
 
   useEffect(() => {
@@ -75,6 +77,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const onPhoto = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
+    setUploading(true);
     const reader = new FileReader();
     reader.onload = () => {
       const img = new Image();
@@ -82,9 +85,19 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
         const max = 1024; let w = img.width, h = img.height;
         if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
         else if (h > max) { w = Math.round(w * max / h); h = max; }
-        const c = document.createElement("canvas"); c.width = w; c.height = h;
-        c.getContext("2d").drawImage(img, 0, 0, w, h);
-        set("image_url", c.toDataURL("image/jpeg", 0.8));
+        const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        cv.toBlob(async (blob) => {
+          try {
+            const url = await uploadApi.image(blob, `ricetta-${Date.now()}.jpg`);
+            set("image_url", url);
+          } catch {
+            // fallback: keep a compressed preview if the archive is unreachable
+            set("image_url", cv.toDataURL("image/jpeg", 0.8));
+          } finally {
+            setUploading(false);
+          }
+        }, "image/jpeg", 0.8);
       };
       img.src = reader.result;
     };
@@ -367,11 +380,12 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_photo")}</label>
             <div className="mt-1 flex items-center gap-3">
               {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#E8DEC8] dark:border-[#3D302A]" /> : null}
-              <label data-testid="recipe-photo-input" className="cursor-pointer bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2C221E] dark:text-[#F5EFE6]">
-                <Camera className="w-4 h-4 text-[#B34A26]" /> {form.image_url ? t("photo_change") : t("photo_take")}
-                <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} />
+              <label data-testid="recipe-photo-input" className={`cursor-pointer bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2C221E] dark:text-[#F5EFE6] ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+                {uploading ? <Loader2 className="w-4 h-4 text-[#B34A26] animate-spin" /> : <Camera className="w-4 h-4 text-[#B34A26]" />}
+                {uploading ? t("photo_uploading") : (form.image_url ? t("photo_change") : t("photo_take"))}
+                <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
-              {form.image_url ? <button onClick={() => set("image_url", "")} className="text-[#B4442A] p-1"><X className="w-4 h-4" /></button> : null}
+              {form.image_url && !uploading ? <button onClick={() => set("image_url", "")} className="text-[#B4442A] p-1"><X className="w-4 h-4" /></button> : null}
             </div>
           </div>
 

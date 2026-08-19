@@ -21,6 +21,14 @@ export default function MaestroSaTutto() {
         <p className="text-white/85 text-sm mt-1 italic">{t("satutto_tagline")}</p>
       </div>
 
+      <div data-testid="satutto-intro-card" className="mb-4 rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-4">
+        <div className="flex items-center gap-2 mb-1.5">
+          <MessageCircle className="w-4 h-4 text-[#B34A26]" />
+          <h2 className="font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{t("satutto_intro_title")}</h2>
+        </div>
+        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{t("satutto_intro_body")}</p>
+      </div>
+
       <ChatPanel />
     </div>
   );

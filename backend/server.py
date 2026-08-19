@@ -1,11 +1,12 @@
-from fastapi import FastAPI, APIRouter, HTTPException
-from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File
+from fastapi.responses import StreamingResponse, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import json
 import logging
+import requests
 from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -23,6 +24,56 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
+
+# ---------------------------------------------------------------------------
+# Object Storage (archivio immagini dedicato)
+# ---------------------------------------------------------------------------
+STORAGE_BASE = (os.environ.get("INTEGRATION_PROXY_URL") or "").strip() or "https://integrations.emergentagent.com"
+STORAGE_URL = STORAGE_BASE.rstrip("/") + "/objstore/api/v1/storage"
+APP_NAME = "mikilab"
+MIME_TYPES = {
+    "jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png",
+    "gif": "image/gif", "webp": "image/webp",
+}
+_storage_key = None
+
+
+def init_storage(force: bool = False):
+    global _storage_key
+    if _storage_key and not force:
+        return _storage_key
+    resp = requests.post(f"{STORAGE_URL}/init", json={"emergent_key": EMERGENT_LLM_KEY}, timeout=30)
+    resp.raise_for_status()
+    _storage_key = resp.json()["storage_key"]
+    return _storage_key
+
+
+def put_object(path: str, data: bytes, content_type: str) -> dict:
+    key = init_storage()
+    resp = requests.put(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": key, "Content-Type": content_type},
+        data=data, timeout=120,
+    )
+    if resp.status_code == 404:
+        key = init_storage(force=True)
+        resp = requests.put(
+            f"{STORAGE_URL}/objects/{path}",
+            headers={"X-Storage-Key": key, "Content-Type": content_type},
+            data=data, timeout=120,
+        )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def get_object(path: str):
+    key = init_storage()
+    resp = requests.get(f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": key}, timeout=60)
+    if resp.status_code == 404:
+        key = init_storage(force=True)
+        resp = requests.get(f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": key}, timeout=60)
+    resp.raise_for_status()
+    return resp.content, resp.headers.get("Content-Type", "application/octet-stream")
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -164,6 +215,26 @@ class VisionRequest(BaseModel):
     lang: str = "it"
 
 
+class LabConfig(BaseModel):
+    mixers: List[dict] = []          # [{name, capacity_kg, type}]
+    cells: List[dict] = []           # [{name, type: frigo|freezer|lievitazione, temp_c, contents}]
+    staff: Optional[int] = None
+    standard_temp_c: Optional[float] = 26.0
+    updated_at: str = Field(default_factory=now_iso)
+
+
+class CapoPlanRequest(BaseModel):
+    items: List[dict] = []           # [{recipe_id, name, quantity, unit}]
+    mixers: List[dict] = []
+    cells: List[dict] = []
+    staff: Optional[int] = None
+    start_time: Optional[str] = None
+    lab_temp_c: Optional[float] = None
+    standard_temp_c: Optional[float] = 26.0
+    notes: Optional[str] = ""
+    lang: str = "it"
+
+
 class PhaseItem(BaseModel):
     name: str
     hours: float = 0
@@ -204,45 +275,36 @@ class WeeklyPlan(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Seed data for Mikilab
+# Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
-MIKILAB_SEED = [
-    {
-        "name": "Pane di Altamura DOP",
-        "flour_type": "Semola Rimacinata di Grano Duro",
-        "hydration_percent": 75,
-        "flour_grams": 1000, "water_grams": 750, "sourdough_grams": 200, "salt_grams": 20,
-        "bulk_fermentation_hours": 4, "proofing_hours": 2,
-        "preferment_type": "lm", "mix_minutes": 15, "bake_temp": 235, "bake_minutes": 40, "oven_type": "statico",
-        "notes": "Crosta spessa, mollica fitta e dorata. Tipica lavorazione pugliese con farina rimacinata.",
-    },
-    {
-        "name": "Ciabatta ad Alta Idratazione",
-        "flour_type": "Farina Tipo 0 W350",
-        "hydration_percent": 82,
-        "flour_grams": 1000, "water_grams": 820, "sourdough_grams": 150, "salt_grams": 22,
-        "bulk_fermentation_hours": 5, "proofing_hours": 1.5,
-        "preferment_type": "poolish", "mix_minutes": 18, "bake_temp": 235, "bake_minutes": 22, "oven_type": "ventilato",
-        "notes": "Alveolatura aperta, crosta croccante. Richiede pieghe in ciotola ogni 30 minuti.",
-    },
-    {
-        "name": "Pane Rustico al Farro e Miele",
-        "flour_type": "70% Farina Tipo 1 + 30% Farro Integrale",
-        "hydration_percent": 70,
-        "flour_grams": 1000, "water_grams": 700, "sourdough_grams": 180, "salt_grams": 18,
-        "bulk_fermentation_hours": 4, "proofing_hours": 2,
-        "preferment_type": "lm", "mix_minutes": 15, "bake_temp": 230, "bake_minutes": 40, "oven_type": "statico",
-        "notes": "Aroma nocciolato, miele di acacia per favorire la doratura della crosta.",
-    },
-]
+SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
+
+
+def _load_mikilab_seed():
+    try:
+        with open(SEED_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Impossibile leggere il seed Mikilab: {e}")
+        return []
 
 
 async def seed_mikilab_if_empty():
+    """Popola il ricettario Mikilab SOLO se la collezione è vuota (nessuna cancellazione)."""
     count = await db.recipes.count_documents({"collection_name": "mikilab"})
-    if count == 0:
-        for item in MIKILAB_SEED:
-            recipe = Recipe(collection_name="mikilab", **item)
-            await db.recipes.insert_one(recipe.model_dump())
+    if count > 0:
+        return count
+    items = _load_mikilab_seed()
+    if not items:
+        return 0
+    docs = []
+    for item in items:
+        item = dict(item)
+        item.pop("collection_name", None)
+        docs.append(Recipe(collection_name="mikilab", **item).model_dump())
+    if docs:
+        await db.recipes.insert_many(docs)
+    return len(docs)
 
 
 # ---------------------------------------------------------------------------
@@ -266,6 +328,39 @@ async def create_recipe(payload: RecipeCreate):
     recipe = Recipe(**payload.model_dump())
     await db.recipes.insert_one(recipe.model_dump())
     return recipe
+
+
+@api_router.post("/upload")
+async def upload_image(file: UploadFile = File(...)):
+    """Carica una foto nell'archivio immagini dedicato e restituisce l'URL servito dal backend."""
+    ext = (file.filename.rsplit(".", 1)[-1] if file.filename and "." in file.filename else "jpg").lower()
+    if ext not in MIME_TYPES:
+        ext = "jpg"
+    content_type = MIME_TYPES.get(ext, file.content_type or "image/jpeg")
+    file_id = str(uuid.uuid4())
+    path = f"{APP_NAME}/uploads/{file_id}.{ext}"
+    data = await file.read()
+    result = put_object(path, data, content_type)
+    storage_path = result["path"]
+    await db.files.insert_one({
+        "id": file_id,
+        "storage_path": storage_path,
+        "original_filename": file.filename or f"{file_id}.{ext}",
+        "content_type": content_type,
+        "size": result.get("size", len(data)),
+        "is_deleted": False,
+        "created_at": now_iso(),
+    })
+    return {"url": f"/api/files/{storage_path}", "path": storage_path, "id": file_id}
+
+
+@api_router.get("/files/{path:path}")
+async def download_image(path: str):
+    record = await db.files.find_one({"storage_path": path, "is_deleted": False})
+    if not record:
+        raise HTTPException(status_code=404, detail="File non trovato")
+    data, content_type = get_object(path)
+    return Response(content=data, media_type=record.get("content_type", content_type))
 
 
 @api_router.put("/recipes/{recipe_id}", response_model=Recipe)
@@ -360,6 +455,25 @@ async def save_weekly_plan(payload: WeeklyPlan):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.weekly_plan.update_one(
+        {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
+    )
+    return payload
+
+
+# ---------------------------------------------------------------------------
+# Capo Laboratorio — configurazione attrezzature/celle (single persisted doc)
+# ---------------------------------------------------------------------------
+@api_router.get("/lab-config")
+async def get_lab_config():
+    doc = await db.lab_config.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+    return doc  # null if never saved
+
+
+@api_router.put("/lab-config", response_model=LabConfig)
+async def save_lab_config(payload: LabConfig):
+    payload.updated_at = now_iso()
+    doc = payload.model_dump()
+    await db.lab_config.update_one(
         {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
     )
     return payload
@@ -520,6 +634,128 @@ async def maestro_history(session_id: str):
 
 
 # ---------------------------------------------------------------------------
+# Capo Laboratorio — pianificazione intelligente del lavoro (Claude, streaming)
+# ---------------------------------------------------------------------------
+CAPO_SYSTEM = (
+    "Sei il 'Capo Laboratorio', un mastro panettiere che organizza il lavoro di una panetteria "
+    "artigianale in modo pratico e ottimizzato. Conosci il metodo di Michele: metodo INDIRETTO con "
+    "lievito madre e Miglioratore naturale; dopo l'impasto RIPOSO in CELLA a 16°C per il lievito madre "
+    "(max 6 ore) oppure in FRIGO 4-6°C per lievito di birra e sfogliati; i semi richiedono il Quellstück "
+    "(ammollo la sera prima). Ragiona come un capo turno: parti dai prefermenti e dagli impasti con "
+    "lievitazione più lunga, sfrutta la portata (kg) delle impastatrici senza superarla, assegna le celle "
+    "(frigo/freezer/lievitazione) in base al prodotto, distribuisci i compiti al personale disponibile e "
+    "indica orari concreti a partire dall'ora di inizio."
+)
+
+
+def _capo_lang(lang):
+    return LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"])
+
+
+async def capo_plan_stream(payload: CapoPlanRequest):
+    # Enrich items with recipe details from the DB
+    detail_lines = []
+    for it in payload.items:
+        rid = it.get("recipe_id")
+        rec = None
+        if rid:
+            rec = await db.recipes.find_one({"id": rid}, {"_id": 0})
+        qty = it.get("quantity")
+        unit = it.get("unit") or "pezzi"
+        name = (rec or {}).get("name") or it.get("name") or "?"
+        bits = [f"- {name}: {qty} {unit}" if qty else f"- {name}"]
+        if rec:
+            extra = []
+            if rec.get("dough_category"):
+                extra.append(f"tipologia={rec['dough_category']}")
+            if rec.get("preferment_type") and rec["preferment_type"] != "none":
+                extra.append(f"prefermento={rec['preferment_type']}")
+            if rec.get("water_temp_c") is not None:
+                extra.append(f"acqua={rec['water_temp_c']}°C")
+            if rec.get("mix_minutes"):
+                extra.append(f"impasto={rec['mix_minutes']}min")
+            if rec.get("bulk_fermentation_hours"):
+                extra.append(f"puntata={rec['bulk_fermentation_hours']}h")
+            if rec.get("proofing_hours"):
+                extra.append(f"appretto={rec['proofing_hours']}h")
+            if rec.get("bake_temp"):
+                extra.append(f"cottura={rec['bake_temp']}°/{rec.get('bake_minutes','?')}min {rec.get('oven_type','')}")
+            if extra:
+                bits.append("  (" + ", ".join(extra) + ")")
+        detail_lines.append("\n".join(bits))
+
+    mixers = payload.mixers or []
+    cells = payload.cells or []
+    mixer_txt = "\n".join(
+        f"- {m.get('name','Impastatrice')}: portata {m.get('capacity_kg','?')} kg"
+        + (f", tipo {m.get('type')}" if m.get("type") else "")
+        for m in mixers
+    ) or "(nessuna impastatrice indicata)"
+    cell_txt = "\n".join(
+        f"- {c.get('name','Cella')} [{c.get('type','')}]"
+        + (f" {c.get('temp_c')}°C" if c.get("temp_c") not in (None, "") else "")
+        + (f" — contenuto desiderato: {c.get('contents')}" if c.get("contents") else "")
+        for c in cells
+    ) or "(nessuna cella indicata)"
+
+    temp_note = ""
+    std = payload.standard_temp_c or 26.0
+    if payload.lab_temp_c not in (None, ""):
+        diff = float(payload.lab_temp_c) - float(std)
+        if abs(diff) >= 1:
+            verso = "più CALDO" if diff > 0 else "più FREDDO"
+            temp_note = (
+                f"\nATTENZIONE clima: il laboratorio è {payload.lab_temp_c}°C, {verso} dello standard "
+                f"({std}°C). Adatta la temperatura dell'acqua e i tempi di lievitazione di conseguenza."
+            )
+
+    prompt = (
+        "Organizza il PIANO DI LAVORO del laboratorio.\n\n"
+        f"ORA DI INIZIO: {payload.start_time or 'non indicata'}\n"
+        f"PERSONALE DISPONIBILE: {payload.staff if payload.staff is not None else 'non indicato'}\n\n"
+        f"PRODOTTI DA PREPARARE:\n" + ("\n".join(detail_lines) or "(nessun prodotto)") + "\n\n"
+        f"IMPASTATRICI:\n{mixer_txt}\n\n"
+        f"CELLE (frigo / freezer / lievitazione):\n{cell_txt}\n"
+        f"{temp_note}\n"
+        + (f"\nNOTE: {payload.notes}\n" if payload.notes else "")
+        + "\nProduci un piano COMPATTO e ORDINATO (breve, max ~350 parole, niente ripetizioni), con:\n"
+        "1) **Sequenza impasti**: elenco ordinato (quale impastatrice, quanti kg, perché in quest'ordine).\n"
+        "2) **Orari**: tabella o elenco essenziale dall'inizio (prefermenti/Quellstück → impasti → riposi cella 16°C o frigo 4-6°C → formatura → appretto → cottura).\n"
+        "3) **Celle**: cosa va in frigo/freezer/lievitazione e quando spostarlo (1-2 righe).\n"
+        "4) **Compiti squadra** e **Avvisi** clima/lievitazione (poche righe).\n"
+        "Usa grassetti ed elenchi brevi. Sii sintetico e concreto come un capo turno."
+    )
+
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"capo-{uuid.uuid4()}",
+        system_message=CAPO_SYSTEM + _capo_lang(payload.lang),
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1800)
+
+    try:
+        async for event in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(event, TextDelta):
+                yield f"data: {json.dumps({'d': event.content})}\n\n"
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("capo plan stream error")
+        yield f"data: {json.dumps({'d': '[Errore nella generazione del piano. Riprova.]'})}\n\n"
+    yield f"data: {json.dumps({'done': True})}\n\n"
+
+
+@api_router.post("/capo/plan")
+async def capo_plan(payload: CapoPlanRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        capo_plan_stream(payload),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+# ---------------------------------------------------------------------------
 # Vision: trova difetti / trova ingredienti (photo analysis, streaming)
 # ---------------------------------------------------------------------------
 VISION_PROMPTS = {
@@ -559,6 +795,32 @@ VISION_PROMPTS = {
         "pietra/suola. Se nella foto ci sono DUE forni, confrontali e spiega la DIFFERENZA pratica in cottura. "
         "Poi dai consigli concreti: come regolare GRADI e MINUTI e il vapore per ottenere lo stesso risultato, "
         "e cosa cambia per crosta e alveolatura. Sii pratico, rassicurante e conciso, con un breve elenco puntato."
+    ),
+    "macchine": (
+        "Sei un tecnico esperto di macchinari e ATTREZZI per panetteria e pasticceria. Guarda con attenzione "
+        "la foto e RICONOSCI cosa vedi: può essere una MACCHINA (impastatrice a spirale/a bracci tuffanti/"
+        "planetaria, spezzatrice, formatrice, sfogliatrice, cella di lievitazione, abbattitore, cella frigo/"
+        "freezer, forno, tavolo refrigerato, affettatrice, dosatore) oppure uno STRUMENTO/ATTREZZO da laboratorio "
+        "(raschietto/tarocco, coppapasta, lama/grignette, spatola, cestino da lievitazione/banneton, teglia, "
+        "termometro, bilancia, sac à poche, mattarello, ecc.). Se sono visibili marca o modello, indicali. "
+        "Poi fornisci una SCHEDA con: **Cosa è**, **A cosa serve (funzione)**, **Come si usa** (passaggi pratici, "
+        "passo passo), **Impostazioni/capacità tipiche** dove ha senso (kg, velocità, temperatura, umidità), "
+        "**Consigli d'uso e sicurezza**, **Pulizia/manutenzione**. "
+        "Se non riconosci con certezza, elenca le ipotesi più probabili e come distinguerle. "
+        "Usa titoli in grassetto ed elenchi puntati, tono chiaro e professionale."
+    ),
+    "laboratorio": (
+        "Sei il 'Capo Laboratorio', un mastro panettiere che organizza gli spazi e il lavoro. Guarda la foto (o "
+        "fotogramma del video) del laboratorio/postazione dove si fanno gli impasti. "
+        "PRIMA riconosci le ATTREZZATURE visibili e descrivile: IMPASTATRICI (tipo — a spirale, a bracci tuffanti, "
+        "planetaria — e stima la portata in kg dalla vasca), FORNI (statico a suola/deck, ventilato, rotor a carrello), "
+        "CELLE (frigo/freezer/lievitazione), spezzatrici, sfogliatrici, tavoli e altri macchinari. "
+        "POI, sulla base di ciò che vedi, dai indicazioni OPERATIVE e INTELLIGENTI: "
+        "in QUALE impastatrice conviene lavorare ciascun tipo di impasto (in base a portata e tipo) e perché, "
+        "QUANDO impastare (ordine e momento) per non sovraccaricare le macchine e rispettare i tempi di lievitazione, "
+        "come usare al meglio forni e celle nel flusso, e come disporre le postazioni per un lavoro scorrevole. "
+        "Segnala colli di bottiglia (una sola impastatrice, forno piccolo, poca cella) e come aggirarli. "
+        "Concludi con 3-5 azioni concrete da fare subito. Usa titoli in grassetto ed elenchi puntati, tono concreto e da capo turno."
     ),
 }
 
@@ -617,44 +879,29 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 
-async def _run_mikilab_seed():
-    """Esegue in-process gli script di seed (import + await main)."""
-    import importlib
-    import sys
-    base = os.path.dirname(os.path.abspath(__file__))
-    if base not in sys.path:
-        sys.path.insert(0, base)
-    for name in ["seed_real_recipes", "rename_nice", "fix_backmittel_origin",
-                 "seed_quellstuck", "seed_quell_for_seeds"]:
-        try:
-            mod = importlib.import_module(name)
-            importlib.reload(mod)
-            await mod.main()
-        except Exception as e:
-            logging.getLogger(__name__).error(f"Seed {name} error: {e}")
-
-
 @app.get("/api/seed-mikilab")
-async def seed_mikilab_endpoint(force: bool = False):
+async def seed_mikilab_endpoint():
     count = await db.recipes.count_documents({"collection_name": "mikilab"})
-    if count > 0 and not force:
+    if count > 0:
         return {"status": "skipped", "message": "Ricette già presenti", "count": count}
-    await _run_mikilab_seed()
-    new_count = await db.recipes.count_documents({"collection_name": "mikilab"})
-    return {"status": "seeded", "count": new_count}
+    n = await seed_mikilab_if_empty()
+    return {"status": "seeded", "count": n}
 
 
 @app.on_event("startup")
-async def seed_mikilab_if_empty():
-    """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab."""
+async def on_startup_seed_mikilab():
+    """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab, senza cancellare nulla."""
     try:
-        count = await db.recipes.count_documents({"collection_name": "mikilab"})
-        if count == 0:
-            await _run_mikilab_seed()
-            n = await db.recipes.count_documents({"collection_name": "mikilab"})
+        n = await seed_mikilab_if_empty()
+        if n:
             logging.getLogger(__name__).info(f"Mikilab seed startup: {n} ricette")
     except Exception as e:
         logging.getLogger(__name__).error(f"Seed startup error: {e}")
+    try:
+        init_storage()
+        logging.getLogger(__name__).info("Archivio immagini inizializzato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Storage init error: {e}")
 
 
 @app.on_event("shutdown")

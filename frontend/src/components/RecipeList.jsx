@@ -7,7 +7,7 @@ import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -171,6 +171,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       {/* Finestra ricetta */}
       <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
         <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A] p-0">
+          <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
+          <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
           {viewing && (
             <RecipeDetail
               r={viewing}
@@ -394,6 +396,22 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
 
         {r.notes ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{r.notes}</p> : null}
 
+        {Array.isArray(r.work_phases) && r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).length > 0 && (
+          <div data-testid={`recipe-phases-${r.id}`} className="rounded-xl bg-[#B34A26]/8 border border-[#B34A26]/20 p-3">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("work_phases_section")}</p>
+            <div className="space-y-1.5">
+              {r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).map((p, idx) => (
+                <div key={idx} className="flex items-center justify-between text-sm">
+                  <span className="text-[#4A3B34] dark:text-[#C9BBB0] font-medium">{p.name || `${t("phase_name_ph")} ${idx + 1}`}</span>
+                  <span className="font-mono-data text-[#8C3A1D] dark:text-[#E5AC3A] shrink-0 ml-2">
+                    {p.time ? p.time : ""}{p.time && p.temp ? " · " : ""}{p.temp ? `${fmtTemp(p.temp)}°C` : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {priceBlock}
       </div>
     </div>
@@ -421,4 +439,11 @@ function Badge({ icon, children }) {
       {children}
     </span>
   );
+}
+
+// Normalizes a phase temperature: keeps the number, drops any unit (° / C) the user may have typed.
+function fmtTemp(v) {
+  if (v == null) return "";
+  const m = String(v).match(/-?\d+(?:[.,]\d+)?/);
+  return m ? m[0].replace(",", ".") : String(v).replace(/[°cC\s]+$/g, "");
 }

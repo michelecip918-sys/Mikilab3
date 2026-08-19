@@ -38,7 +38,6 @@ export default function Mikilab() {
 
   return (
     <div>
-      <Stoccarda />
       {/* Bio: Benvenuti + Chi sono */}
       <div data-testid="bio-card" className="mb-5 rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white">
         <div className="p-5">
@@ -51,6 +50,16 @@ export default function Mikilab() {
             />
           </div>
           <p data-testid="bio-welcome-sub" className="text-center text-[11px] uppercase tracking-wider text-white/70 mb-3">{t("bio_welcome_sub")} <span>🇮🇹</span> <span>🇩🇪</span></p>
+          <p data-testid="bio-welcome-body" className="text-sm text-white/90 leading-relaxed">{t("bio_welcome_body")}</p>
+          <figure className="mt-4">
+            <img
+              src={`${process.env.PUBLIC_URL}/bio-dough.jpg`}
+              alt="Michele — impasto in mano"
+              data-testid="bio-dough-photo"
+              className="w-full rounded-2xl object-contain bg-[#1A1412] ring-2 ring-[#FFCE00]/60 shadow-xl"
+            />
+            <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
+          </figure>
         </div>
 
         <div className="px-5 pb-5 pt-4 border-t border-white/15">
@@ -83,6 +92,27 @@ export default function Mikilab() {
         <ChevronRight className="w-5 h-5 text-[#C9BBB0] shrink-0" />
       </button>
 
+      {/* Metodo dell'impasto — diretto vs indiretto (prima delle ricette) */}
+      <div data-testid="method-section" className="mb-5 rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-5">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="w-5 h-5 text-[#B34A26]" />
+          <h2 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("method_section_title")}</h2>
+        </div>
+        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("method_section_body")}</p>
+        <div className="grid gap-3 mt-4 sm:grid-cols-2">
+          {[["_606t-4KXT4", "method_video1_title"], ["HpOycYo1Cvc", "method_video2_title"]].map(([vid, tk]) => (
+            <div key={vid} data-testid={`method-video-${vid}`} className="rounded-xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A]">
+              <div className="aspect-video bg-black">
+                <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${vid}`} title={t(tk)}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+              </div>
+              <p className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0] p-2.5">{t(tk)}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-[#8C7567] mt-2">{t("method_video_hint")}</p>
+      </div>
+
       <RecipeList
         collectionName="mikilab"
         readOnly
@@ -99,6 +129,11 @@ export default function Mikilab() {
           <h2 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("thanks_label")}</h2>
         </div>
         <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("thanks_body")}</p>
+      </div>
+
+      {/* Notiziario Stoccarda & Mondo — in fondo */}
+      <div className="mt-6">
+        <Stoccarda />
       </div>
     </div>
   );

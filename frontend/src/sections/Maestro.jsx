@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, CalendarDays, ChefHat, Thermometer, Flame, Wheat, Sprout, ChevronLeft, ChevronRight } from "lucide-react";
+import { PlusCircle, CalendarDays, ChefHat, Flame, Wheat, Sprout, ChevronLeft, ChevronRight, ClipboardList } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import StartDoughs from "@/sections/StartDoughs";
-import CalcolaGradi from "@/sections/CalcolaGradi";
 import AdattaForno from "@/sections/AdattaForno";
 import SvegliaLievito from "@/sections/SvegliaLievito";
 import Beginners from "@/sections/Beginners";
+import CapoLaboratorio from "@/sections/CapoLaboratorio";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function Maestro() {
@@ -15,10 +15,10 @@ export default function Maestro() {
   const { t } = useLang();
 
   const TOOLS = [
+    { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
     { id: "settimana", title: t("tool_settimana"), desc: t("tool_settimana_desc"), Icon: CalendarDays },
     { id: "lavoro", title: t("tool_lavoro"), desc: t("tool_lavoro_desc"), Icon: ChefHat },
-    { id: "clima", title: t("tool_clima"), desc: t("tool_clima_desc"), Icon: Thermometer },
     { id: "adatta", title: t("tool_adatta"), desc: t("tool_adatta_desc"), Icon: Flame },
     { id: "sveglia", title: t("tool_sveglia"), desc: t("tool_sveglia_desc"), Icon: Wheat },
     { id: "principianti", title: t("tool_principianti"), desc: t("tool_principianti_desc"), Icon: Sprout },
@@ -45,7 +45,7 @@ export default function Maestro() {
         )}
         {tool === "settimana" && <WeeklyPlan />}
         {tool === "lavoro" && <StartDoughs />}
-        {tool === "clima" && <CalcolaGradi />}
+        {tool === "capo" && <CapoLaboratorio />}
         {tool === "adatta" && <AdattaForno />}
         {tool === "sveglia" && <SvegliaLievito />}
         {tool === "principianti" && <Beginners />}
