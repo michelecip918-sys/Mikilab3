@@ -270,7 +270,7 @@ export const translations = {
     news_empty: "Nessuna notizia per ora. Riprova più tardi.",
     bio_welcome_sub: "Il Laboratorio di Michele",
     intro_short: "Il ricettario e l'assistente del fornaio, in italiano e in tedesco. Tocca per iniziare.",
-    bio_dough_caption: "Michele nel suo laboratorio",
+    bio_dough_caption: "Michele di Mikilab",
     method_section_title: "Diretto o indiretto? Il mio metodo",
     method_section_body: "Nelle mie ricette uso spesso il metodo INDIRETTO (prefermento — lievito madre/Sauerteig, poolish o biga — e il mio Miglioratore naturale): richiede più tempo ma dona più profumo, mollica più soffice, migliore digeribilità e una conservazione più lunga. È il metodo che preferisco per il farro (Dinkel) e per il pane in stile tedesco. Molte ricette ITALIANE della tradizione, invece, le lascio con IMPASTO DIRETTO (tutti gli ingredienti insieme in un'unica fase): sono più veloci e mantengono il carattere genuino e immediato del pane di casa. Qui sotto due video che spiegano bene la differenza.",
     method_video_hint: "Suggerimento: su YouTube puoi attivare i sottotitoli (CC) nella tua lingua.",
@@ -278,7 +278,7 @@ export const translations = {
     method_video2_title: "Diretto vs indiretto: vantaggi",
     bio_welcome_body: "Mikilab è il mio laboratorio digitale: qui trovi le MIE RICETTE e i MIEI METODI, spiegati passo dopo passo. Uso TUTTE le farine e tutti i cereali, ma il mio preferito è il FARRO (Dinkel); lavoro molto con il metodo indiretto (lievito madre, poolish/biga e il mio Backmittel naturale) e trovi anche i classici italiani a impasto diretto. Il bello è che puoi seguire il mio metodo sia in un vero PANIFICIO sia a CASA, guidato dal Maestro. Con Mikilab puoi: SCANSIONARE una ricetta da una foto e trasformarla in testo compilato; farti DIAGNOSTICARE un pane o un impasto da una foto per capire i difetti e come correggerli; riconoscere strumenti e macchine; organizzare il lavoro con il Capo Laboratorio; e chiedere qualsiasi cosa al Maestro. In breve: un ricettario e un vero aiutante per fornai e appassionati.",
     bio_about_title: "Chi sono",
-    bio_about_body: "Dietro questo progetto ci sono io, Michele Signorella. Sono italiano, originario della storica terra di Matera, e oggi vivo in Germania guidato da una motivazione semplice e profonda: la voglia di non smettere mai di imparare, scoprendo ogni giorno un pane nuovo e una ricetta diversa.\n\nPer me il pane è una vera e propria vocazione: è questa passione che metto ogni giorno nel mio laboratorio e che ho racchiuso dentro Mikilab per condividerla con te.",
+    bio_about_body: "Dietro questo progetto ci sono io, Michele Signorella. Sono italiano, originario della storica terra di Matera, e oggi vivo in Germania guidato da una motivazione semplice e profonda: la voglia di non smettere mai di imparare, scoprendo ogni giorno un pane nuovo e una ricetta diversa.\n\nPer me il pane è una vera e propria vocazione: è questa passione che metto ogni giorno nel mio laboratorio e che ho racchiuso dentro Mikilab per condividerla con te.\n\nOggi non ho ancora un forno tutto mio: lavoro come dipendente in un panificio. Il mio sogno è averne uno e gestirlo con il mio metodo — ed è proprio per questo che ho creato Mikilab: per organizzare, migliorare e un giorno realizzare quel sogno.",
     bio_text: "Mi chiamo Michele Signorella, sono italiano di Matera e vivo in Germania per un motivo semplice: ogni giorno voglio scoprire e imparare un pane nuovo, una ricetta diversa. Il pane è la mia passione: farro (Dinkel), lievito madre e lunghe lievitazioni. In quest'app trovi le mie ricette da consultare — complete di dosi in grammi e in percentuale, metodo, tempi e costi — e puoi creare e gestire le tue. Con Mikilab prepari il piano settimanale, capisci da dove iniziare il lavoro, calcoli la temperatura dell'acqua, ricevi avvisi vocali, scopri difetti e stato dell'impasto da una foto o un video, ascolti la radio mentre lavori e resti aggiornato su corsi e novità da Stoccarda, dalla Germania, dall'Italia e dal mondo. Puoi anche parlare con l'app: sono qui per darti una mano.",
 
     // Two planning voices
@@ -435,7 +435,7 @@ export const translations = {
     guida_sub: "I prefermenti e il miglioratore spiegati con parole semplici.",
     gloss_title: "Termini utili",
     cat_backmittel: "Backmittel — il mio miglioratore",
-    cat_lm: "Lievito Madre",
+    cat_lm: "Pane a Lievito Madre",
     cat_panettoni: "Panettoni",
     cat_pane: "Pane",
     cat_panini: "Panini & snack",
@@ -863,7 +863,7 @@ export const translations = {
     news_empty: "Momentan keine Nachrichten. Später erneut versuchen.",
     bio_welcome_sub: "Micheles Backstube",
     intro_short: "Das Rezeptbuch und der Assistent des Bäckers, auf Italienisch und Deutsch. Zum Starten tippen.",
-    bio_dough_caption: "Michele in seiner Backstube",
+    bio_dough_caption: "Michele von Mikilab",
     method_section_title: "Direkt oder indirekt? Meine Methode",
     method_section_body: "In meinen Rezepten nutze ich oft die INDIREKTE Methode (Vorteig — Sauerteig/Lievito madre, Poolish oder Biga — und mein natürlicher Backmittel): Sie braucht mehr Zeit, gibt aber mehr Aroma, eine weichere Krume, bessere Bekömmlichkeit und längere Frische. Das ist meine Lieblingsmethode für Dinkel und für Brote im deutschen Stil. Viele traditionelle ITALIENISCHE Rezepte lasse ich hingegen mit DIREKTER Teigführung (alle Zutaten in einem Schritt): Sie sind schneller und behalten den echten, unmittelbaren Charakter des Hausbrots. Unten zwei Videos, die den Unterschied gut erklären.",
     method_video_hint: "Tipp: Auf YouTube kannst du die Untertitel (CC) in deiner Sprache aktivieren.",
@@ -871,7 +871,7 @@ export const translations = {
     method_video2_title: "Direkt vs. indirekt: Vorteile",
     bio_welcome_body: "Mikilab ist meine digitale Backstube: Hier findest du MEINE REZEPTE und MEINE METHODEN, Schritt für Schritt erklärt. Ich verwende ALLE Mehle und Getreidesorten, aber mein Favorit ist DINKEL; ich arbeite viel mit der indirekten Methode (Sauerteig, Poolish/Biga und mein natürliches Backmittel), und auch italienische Klassiker mit direkter Teigführung sind dabei. Das Schöne: Du kannst meine Methode sowohl in einer echten BÄCKEREI als auch zu HAUSE anwenden – geführt vom Meister. Mit Mikilab kannst du: ein Rezept per FOTO SCANNEN und in ausgefüllten Text verwandeln; ein Brot oder einen Teig per Foto DIAGNOSTIZIEREN lassen (Fehler erkennen und beheben); Werkzeuge und Maschinen erkennen; die Arbeit mit dem Backstuben-Chef organisieren; und den Meister alles fragen. Kurz: ein Rezeptbuch und ein echter Helfer für Bäcker und Hobbybäcker.",
     bio_about_title: "Wer ich bin",
-    bio_about_body: "Hinter diesem Projekt stehe ich, Michele Signorella. Ich bin Italiener aus dem historischen Matera und lebe heute in Deutschland – angetrieben von einem einfachen, tiefen Wunsch: nie aufzuhören zu lernen und jeden Tag ein neues Brot und ein neues Rezept zu entdecken.\n\nBrot ist für mich eine echte Berufung: diese Leidenschaft lege ich täglich in meine Backstube und habe sie in Mikilab gebündelt, um sie mit dir zu teilen.",
+    bio_about_body: "Hinter diesem Projekt stehe ich, Michele Signorella. Ich bin Italiener aus dem historischen Matera und lebe heute in Deutschland – angetrieben von einem einfachen, tiefen Wunsch: nie aufzuhören zu lernen und jeden Tag ein neues Brot und ein neues Rezept zu entdecken.\n\nBrot ist für mich eine echte Berufung: diese Leidenschaft lege ich täglich in meine Backstube und habe sie in Mikilab gebündelt, um sie mit dir zu teilen.\n\nHeute habe ich noch keine eigene Backstube: Ich arbeite als Angestellter in einer Bäckerei. Mein Traum ist eine eigene Backstube, die ich nach meiner Methode führe – und genau dafür habe ich Mikilab geschaffen: um zu organisieren, besser zu werden und diesen Traum eines Tages zu verwirklichen.",
     bio_text: "Ich bin ein Bäcker, der das Brot liebt. Ich lebe für den Teig, der in den Händen entsteht, für den Duft der natürlichen Gärung und für die Kruste, die frisch aus dem Ofen singt. Ich liebe Dinkel, und meine Rezepte sind natürlich, gesund und sorgfältig erprobt. Hier kannst du meine Rezepte ansehen und deine eigenen erstellen und verwalten: Mengen, Zeiten, direkte oder indirekte Methode und automatisch berechnete Kosten. Mit Mikilab erstellst du Wochen- und Arbeitsplan, prüfst die Wassertemperatur, bekommst Sprachhinweise, erkennst Brotfehler per Foto und bleibst über die besten Kurse informiert. Frag mich einfach um Rat: Ich bin hier, um dir zu helfen.",
 
     // Two planning voices
@@ -1028,7 +1028,7 @@ export const translations = {
     guida_sub: "Vorteige und Backmittel einfach erklärt.",
     gloss_title: "Nützliche Begriffe",
     cat_backmittel: "Backmittel — mein Backhelfer",
-    cat_lm: "Sauerteig / Lievito Madre",
+    cat_lm: "Brote mit Sauerteig",
     cat_panettoni: "Panettoni",
     cat_pane: "Brot",
     cat_panini: "Brötchen & Snacks",
