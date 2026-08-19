@@ -278,6 +278,8 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
+SEED_VERSION = "2026-08-19-v16-37"  # bump quando cambia mikilab_seed_data.json
+LEGACY_STALE_NAMES = ["Ciabatta ad Alta Idratazione", "Pane Rustico al Farro e Miele"]
 
 
 def _load_mikilab_seed():
@@ -289,22 +291,37 @@ def _load_mikilab_seed():
         return []
 
 
-async def seed_mikilab_if_empty():
-    """Popola il ricettario Mikilab SOLO se la collezione è vuota (nessuna cancellazione)."""
-    count = await db.recipes.count_documents({"collection_name": "mikilab"})
-    if count > 0:
-        return count
+async def seed_mikilab_if_empty(force: bool = False):
+    """Sincronizza il ricettario Mikilab (upsert per nome) quando cambia la versione del seed.
+    Non cancella le ricette aggiunte dall'utente; rimuove solo le vecchie generiche note."""
+    meta = await db.app_meta.find_one({"_key": "mikilab_meta"}, {"_id": 0})
+    if not force and meta and meta.get("seed_version") == SEED_VERSION:
+        return await db.recipes.count_documents({"collection_name": "mikilab"})
     items = _load_mikilab_seed()
     if not items:
-        return 0
-    docs = []
+        return await db.recipes.count_documents({"collection_name": "mikilab"})
     for item in items:
         item = dict(item)
         item.pop("collection_name", None)
-        docs.append(Recipe(collection_name="mikilab", **item).model_dump())
-    if docs:
-        await db.recipes.insert_many(docs)
-    return len(docs)
+        doc = Recipe(collection_name="mikilab", **item).model_dump()
+        set_on_insert = {
+            "id": doc.pop("id", None),
+            "created_at": doc.pop("created_at", now_iso()),
+        }
+        doc["updated_at"] = now_iso()
+        await db.recipes.update_one(
+            {"collection_name": "mikilab", "name": doc["name"]},
+            {"$set": doc, "$setOnInsert": set_on_insert},
+            upsert=True,
+        )
+    for stale in LEGACY_STALE_NAMES:
+        await db.recipes.delete_one({"collection_name": "mikilab", "name": stale})
+    await db.app_meta.update_one(
+        {"_key": "mikilab_meta"},
+        {"$set": {"_key": "mikilab_meta", "seed_version": SEED_VERSION, "synced_at": now_iso()}},
+        upsert=True,
+    )
+    return await db.recipes.count_documents({"collection_name": "mikilab"})
 
 
 # ---------------------------------------------------------------------------
@@ -1013,11 +1030,8 @@ logger = logging.getLogger(__name__)
 
 @app.get("/api/seed-mikilab")
 async def seed_mikilab_endpoint():
-    count = await db.recipes.count_documents({"collection_name": "mikilab"})
-    if count > 0:
-        return {"status": "skipped", "message": "Ricette già presenti", "count": count}
-    n = await seed_mikilab_if_empty()
-    return {"status": "seeded", "count": n}
+    n = await seed_mikilab_if_empty(force=True)
+    return {"status": "synced", "count": n}
 
 
 @app.on_event("startup")
