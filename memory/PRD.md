@@ -196,6 +196,10 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - **UX**: padding inferiore main aumentato (pb-40) per non far coprire i testi dai FAB Radio/Microfono su mobile.
 - Testato: iteration_15.json → backend 100%, frontend 100%, 0 errori console.
 
+## v18.1 (2026-06) — Diagnosi di nuovo come tab dedicata
+- Feedback utente: non trovava la sezione "scansiona difetti e ingredienti" (era stata annidata in "Maestro AI").
+- Fix: navigazione riportata a 6 voci → Mikilab · Maestro · **Diagnosi** (Camera) · Impara · News · **Chiedi** (chat). Rimosso il wrapper MaestroAI dall'uso (file lasciato inutilizzato). Aggiunte chiavi nav_chiedi (IT/DE), aggiornato VoiceAssistant NAV (foto/chiedi). Verificato compile + screenshot. Da ripubblicare per la produzione.
+
 ## BACKLOG dopo v18
 - Redesign a colori completo IT/DE su TUTTA l'app (design_agent).
 - (Opz.) Modo per resettare `user_edited` così i fix futuri del seed tornano ad applicarsi.

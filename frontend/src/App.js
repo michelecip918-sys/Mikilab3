@@ -8,7 +8,8 @@ import Mikilab from "@/sections/Mikilab";
 import Maestro from "@/sections/Maestro";
 import Beginners from "@/sections/Beginners";
 import NewsPage from "@/sections/NewsPage";
-import MaestroAI from "@/sections/MaestroAI";
+import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
+import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
@@ -32,7 +33,8 @@ function App() {
             {tab === "maestro" && <Maestro />}
             {tab === "impara" && <Beginners />}
             {tab === "news" && <NewsPage />}
-            {tab === "ai" && <MaestroAI />}
+            {tab === "foto" && <PhotoDiagnosi />}
+            {tab === "chiedi" && <MaestroSaTutto />}
           </motion.div>
         </AnimatePresence>
       </main>
