@@ -89,3 +89,11 @@ body {
 .dark .markdown-body th, .dark .markdown-body td { border-color: #3D302A; }
 .markdown-body th { background: rgba(217,155,38,0.15); }
 .markdown-body a { color: #B34A26; text-decoration: underline; }
+
+/* Stampa etichette: mostra solo l'area etichette */
+@media print {
+  body * { visibility: hidden !important; }
+  .print-area, .print-area * { visibility: visible !important; }
+  .print-area { position: absolute; top: 0; left: 0; width: 100%; }
+  .no-print { display: none !important; }
+}

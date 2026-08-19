@@ -143,6 +143,14 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 
 ## BACKLOG dopo v13
 - Redesign a colori completo IT/DE (design_agent) su tutta l'app.
-- Ricette Gente Brot e Wurzelbrot col metodo di Michele.
-- (Eventuale) conversione a diretto di altre ricette se richiesto.
+
+## v14 (2026-08) — Panettoni completi, etichette, ricette DE
+- **Panettoni**: ripristinati gli arricchimenti base (zucchero, tuorlo, burro, miele, pasta d'arancia) su tutti i 10 gusti + sospensioni specifiche; **acqua ridotta** dove ci sono paste/frutta sciroppata; **zucchero ridotto a 34%** dove la sospensione è già molto dolce (Classico, Arancia candita, Amarena, Marron Glacé); **costo a pezzo** calcolato e salvato (`costing`) per ogni gusto (~€3.24–4.09/pezzo).
+- **Etichette Panettoni stampabili** (nuovo tool Maestro `PanettoneLabels.jsx` + CSS `@media print`): un'etichetta per gusto con logo, tricolore IT/DE, sospensioni e costo/pezzo; pulsante Stampa (window.print).
+- **Nuove ricette DE (bozze col metodo di Michele)**: **Gnetze Brot** e **Wurzelbrot** (indiretto + LM/poolish + Miglioratore, cella 16°C). Totale ricette: **36**.
+- Tool Maestro ora: Capo Laboratorio, Termostato & Clima, Etichette Panettoni, + esistenti.
+
+## BACKLOG dopo v14
+- Redesign a colori completo IT/DE su tutta l'app (design_agent).
+- Rifinitura dosi/passaggi di Gnetze Brot e Wurzelbrot da parte di Michele.
 

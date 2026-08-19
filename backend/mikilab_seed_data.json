@@ -544,6 +544,39 @@
   "notes": "La frisella è biscottata (doppia cottura), per questo si conserva per mesi. Si bagna al momento e si condisce: piatto povero e geniale del Salento."
  },
  {
+  "id": "9e5ffbfb-00b9-444e-9268-d5c4c09fbef3",
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:33:15.142564+00:00",
+  "updated_at": "2026-08-19T09:33:15.142571+00:00",
+  "name": "Gnetze Brot",
+  "flour_type": "Farina di frumento Type 550 (o Dinkel)",
+  "hydration_percent": 68,
+  "flour_grams": 1000,
+  "water_grams": 680,
+  "sourdough_grams": 200,
+  "salt_grams": 20,
+  "preferment_type": "lm",
+  "method_type": "indiretto",
+  "dough_category": "lm",
+  "water_temp_c": 20,
+  "mix_minutes": 12,
+  "bake_temp": 240,
+  "bake_minutes": 40,
+  "oven_type": "statico",
+  "bulk_fermentation_hours": 4,
+  "proofing_hours": 1.5,
+  "origin": "de",
+  "extra_ingredients": [
+   {
+    "name": "Miglioratore naturale",
+    "percent": 3
+   }
+  ],
+  "procedure": "BOZZA (da rifinire con dosi e passaggi di Michele).\n1) Rinfresca il lievito madre.\n2) Impasta farina, acqua, lievito madre e Miglioratore; sale a fine impasto (12').\n3) Riposo in CELLA a 16°C (max 6 ore) — metodo Michele.\n4) Spezza e forma le pagnotte 'gnetze' (pieghe rustiche).\n5) Appretto ~1,5 h.\n6) Cottura 240°C con vapore, poi 210°C, ~40 min.",
+  "notes": "Bozza del Gnetze Brot col metodo indiretto di Michele (lievito madre + Miglioratore, cella 16°C). Rifinisci dosi, forma e tempi secondo la tua esperienza."
+ },
+ {
   "id": "cc8f48ef-c606-41e0-b34b-bbdfcd0b322b",
   "collection_name": "mikilab",
   "costing": null,
@@ -891,7 +924,45 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.18
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Amarene sciroppate scolate",
+     "cost": 0.56
+    },
+    {
+     "name": "Gocce di cioccolato fondente",
+     "cost": 0.6
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:27:49.482091+00:00",
   "updated_at": "2026-08-19T09:27:49.482100+00:00",
   "name": "Panettone Mikilab — Amarena e Cioccolato",
@@ -906,10 +977,30 @@
   "bake_minutes": 50,
   "oven_type": "statico",
   "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "notes": "Amarene e cioccolato fondente: dolce con una nota acidula.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~28 g rispetto al panettone base per compensare le paste/frutta umida.)",
+  "notes": "Amarene e cioccolato fondente: dolce con una nota acidula.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~28 g rispetto al panettone base per compensare le paste/frutta umida.)\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
   "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
   "method_type": "indiretto",
   "extra_ingredients": [
+   {
+    "name": "Zucchero",
+    "percent": 34
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
    {
     "name": "Amarene sciroppate scolate",
     "percent": 18
@@ -924,7 +1015,45 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.18
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Arancia candita a cubetti",
+     "cost": 0.48
+    },
+    {
+     "name": "Gocce di cioccolato fondente",
+     "cost": 0.6
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:26:47.165809+00:00",
   "updated_at": "2026-08-19T09:26:47.165815+00:00",
   "name": "Panettone Mikilab — Arancia e Cioccolato Fondente",
@@ -939,10 +1068,30 @@
   "bake_minutes": 50,
   "oven_type": "statico",
   "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "notes": "Arancia candita e cioccolato fondente, profumo intenso.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "notes": "Arancia candita e cioccolato fondente, profumo intenso.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
   "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
   "method_type": "indiretto",
   "extra_ingredients": [
+   {
+    "name": "Zucchero",
+    "percent": 34
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
    {
     "name": "Arancia candita a cubetti",
     "percent": 18
@@ -957,7 +1106,49 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.22
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Pasta di nocciola",
+     "cost": 0.48
+    },
+    {
+     "name": "Granella di nocciole tostate",
+     "cost": 0.71
+    },
+    {
+     "name": "Gocce di cioccolato al caffè",
+     "cost": 0.54
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:27:49.482538+00:00",
   "updated_at": "2026-08-19T09:27:49.482542+00:00",
   "name": "Panettone Mikilab — Caffè e Nocciola",
@@ -977,6 +1168,26 @@
   "method_type": "indiretto",
   "extra_ingredients": [
    {
+    "name": "Zucchero",
+    "percent": 41
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
+   {
     "name": "Pasta di nocciola",
     "percent": 6
    },
@@ -994,7 +1205,45 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.22
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Gocce di cioccolato fondente",
+     "cost": 0.72
+    },
+    {
+     "name": "Noci in pezzi",
+     "cost": 0.75
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:26:47.163962+00:00",
   "updated_at": "2026-08-19T09:26:47.163968+00:00",
   "name": "Panettone Mikilab — Cioccolato e Noci",
@@ -1014,6 +1263,26 @@
   "method_type": "indiretto",
   "extra_ingredients": [
    {
+    "name": "Zucchero",
+    "percent": 41
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
+   {
     "name": "Gocce di cioccolato fondente",
     "percent": 18
    },
@@ -1027,7 +1296,45 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.22
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Fichi secchi a pezzi",
+     "cost": 0.8
+    },
+    {
+     "name": "Mandorle tostate",
+     "cost": 0.64
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:26:47.165401+00:00",
   "updated_at": "2026-08-19T09:26:47.165407+00:00",
   "name": "Panettone Mikilab — Fichi e Mandorle",
@@ -1047,6 +1354,26 @@
   "method_type": "indiretto",
   "extra_ingredients": [
    {
+    "name": "Zucchero",
+    "percent": 41
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
+   {
     "name": "Fichi secchi a pezzi",
     "percent": 18
    },
@@ -1060,7 +1387,49 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.22
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Mirtilli disidratati",
+     "cost": 0.96
+    },
+    {
+     "name": "Lamponi disidratati",
+     "cost": 0.78
+    },
+    {
+     "name": "Gocce di cioccolato bianco",
+     "cost": 0.54
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:27:49.483368+00:00",
   "updated_at": "2026-08-19T09:27:49.483372+00:00",
   "name": "Panettone Mikilab — Frutti di Bosco",
@@ -1080,6 +1449,26 @@
   "method_type": "indiretto",
   "extra_ingredients": [
    {
+    "name": "Zucchero",
+    "percent": 41
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
+   {
     "name": "Mirtilli disidratati",
     "percent": 12
    },
@@ -1097,7 +1486,45 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.18
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Marron glacé a pezzi",
+     "cost": 1.96
+    },
+    {
+     "name": "Gocce di cioccolato bianco",
+     "cost": 0.45
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:27:49.483000+00:00",
   "updated_at": "2026-08-19T09:27:49.483007+00:00",
   "name": "Panettone Mikilab — Marron Glacé (Castagne)",
@@ -1112,10 +1539,30 @@
   "bake_minutes": 50,
   "oven_type": "statico",
   "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "notes": "Marron glacé e cioccolato bianco: elegante e natalizio.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~15 g rispetto al panettone base per compensare le paste/frutta umida.)",
+  "notes": "Marron glacé e cioccolato bianco: elegante e natalizio.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n(Per questo gusto l acqua è già ridotta di ~15 g rispetto al panettone base per compensare le paste/frutta umida.)\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
   "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
   "method_type": "indiretto",
   "extra_ingredients": [
+   {
+    "name": "Zucchero",
+    "percent": 34
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
    {
     "name": "Marron glacé a pezzi",
     "percent": 22
@@ -1130,7 +1577,45 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.22
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Pere disidratate a cubetti",
+     "cost": 0.96
+    },
+    {
+     "name": "Gocce di cioccolato fondente",
+     "cost": 0.6
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:26:47.164873+00:00",
   "updated_at": "2026-08-19T09:26:47.164879+00:00",
   "name": "Panettone Mikilab — Pere e Cioccolato",
@@ -1150,6 +1635,26 @@
   "method_type": "indiretto",
   "extra_ingredients": [
    {
+    "name": "Zucchero",
+    "percent": 41
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
+   {
     "name": "Pere disidratate a cubetti",
     "percent": 18
    },
@@ -1163,7 +1668,49 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.22
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Pasta di pistacchio",
+     "cost": 0.8
+    },
+    {
+     "name": "Granella di pistacchio",
+     "cost": 1.07
+    },
+    {
+     "name": "Gocce di cioccolato bianco",
+     "cost": 0.67
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:26:47.164455+00:00",
   "updated_at": "2026-08-19T09:26:47.164462+00:00",
   "name": "Panettone Mikilab — Pistacchio e Cioccolato Bianco",
@@ -1183,6 +1730,26 @@
   "method_type": "indiretto",
   "extra_ingredients": [
    {
+    "name": "Zucchero",
+    "percent": 41
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
+   {
     "name": "Pasta di pistacchio",
     "percent": 6
    },
@@ -1200,7 +1767,45 @@
  },
  {
   "collection_name": "mikilab",
-  "costing": null,
+  "costing": {
+   "flour_kg": 1.2,
+   "water_l": 0.002,
+   "sourdough_kg": 1.0,
+   "salt_kg": 0.5,
+   "extras": [
+    {
+     "name": "Zucchero",
+     "cost": 0.18
+    },
+    {
+     "name": "Tuorlo",
+     "cost": 1.09
+    },
+    {
+     "name": "Burro",
+     "cost": 2.65
+    },
+    {
+     "name": "Miele",
+     "cost": 0.22
+    },
+    {
+     "name": "Pasta d'arancia",
+     "cost": 0.08
+    },
+    {
+     "name": "Uvetta sultanina",
+     "cost": 0.45
+    },
+    {
+     "name": "Arancia e cedro canditi",
+     "cost": 0.4
+    }
+   ],
+   "overhead": 0.7,
+   "pieces": 2,
+   "markup": 0
+  },
   "created_at": "2026-08-19T09:26:47.161419+00:00",
   "updated_at": "2026-08-19T09:26:47.161427+00:00",
   "name": "Panettone Mikilab — Uvetta e Canditi (Classico)",
@@ -1215,10 +1820,30 @@
   "bake_minutes": 50,
   "oven_type": "statico",
   "image_url": "https://images.pexels.com/photos/30767689/pexels-photo-30767689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "notes": "Il classico: uvetta ammollata e canditi di arancia e cedro. Aggiungi le sospensioni a fine impasto, a bassa velocità, per non spezzare la maglia.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.",
+  "notes": "Il classico: uvetta ammollata e canditi di arancia e cedro. Aggiungi le sospensioni a fine impasto, a bassa velocità, per non spezzare la maglia.\n\nStessa ricetta base del Panettone Mikilab (lievito madre, metodo indiretto).\n\nIl mio panettone, metodo classico a DUE IMPASTI su lievito madre. Dosi totali per ~2 kg di impasto:\nFarina 446 g · Acqua 179 g · Lievito madre 140 g · Zucchero 184 g · Tuorlo 279 g · Burro 295 g · Miele 25 g · Sale 7 g · Sospensione 450 g · Pasta d'arancia 10 g.\n\n⚙️ Regola delle sospensioni: aggiungile SEMPRE a fine impasto, a bassa velocità. Se contengono PASTE (pistacchio, nocciola) o FRUTTA SCIROPPATA/UMIDA, riduci leggermente l acqua dell impasto per mantenere la stessa consistenza (l idratazione non deve salire). Le paste grasse ammorbidiscono la maglia: incordare bene prima di unirle.\n\n🍬 Zucchero ridotto (34% invece di 41%) perché questa sospensione è già molto dolce: così il panettone resta equilibrato.",
   "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min in acqua a 31°C, poi 3 rinfreschi ravvicinati (1:1:0,5) a 28°C ogni 3-4 h, fino a triplicare in ~3 h e pH 4,1-4,3.\n\n1° IMPASTO (sera) — Farina 223 g, Acqua 123 g, Lievito madre 140 g, Zucchero 83 g, Tuorlo 87 g, Burro 123 g:\nacqua + zucchero + LM ~4 min, poi farina ~4 min, infine tuorli e burro a filo. Impasto liscio ma NON elastico. Lievitazione ~12 h a 24-26°C fino a TRIPLICARE.\n\n2° IMPASTO (mattina) — aggiungi Farina 223 g, Zucchero 101 g, Tuorlo 192 g, Burro 172 g, Miele 25 g, Sale 7 g, Pasta d'arancia 10 g, poi la Sospensione (canditi + uvetta) 450 g:\nriprendi corda con farina, poi zucchero/tuorli in piu' volte, miele e sale sciolti in poca acqua, burro a filo; per ultima la sospensione.\nPuntata ~45 min a 28°C, pirlatura, appretto ~6 h a 28°C fino a ~2 cm dal bordo del pirottino.\nCottura 165°C statico ~50 min, cuore 92-94°C. Capovolgi subito e fai riposare 12 h a testa in giu'.",
   "method_type": "indiretto",
   "extra_ingredients": [
+   {
+    "name": "Zucchero",
+    "percent": 34
+   },
+   {
+    "name": "Tuorlo",
+    "percent": 61
+   },
+   {
+    "name": "Burro",
+    "percent": 66
+   },
+   {
+    "name": "Miele",
+    "percent": 5.6
+   },
+   {
+    "name": "Pasta d'arancia",
+    "percent": 2.2
+   },
    {
     "name": "Uvetta sultanina",
     "percent": 20
@@ -1600,5 +2225,38 @@
    }
   ],
   "origin": "it"
+ },
+ {
+  "id": "22e85fcb-0fb0-4a64-aeaa-2cb9a128b0a3",
+  "collection_name": "mikilab",
+  "costing": null,
+  "created_at": "2026-08-19T09:33:15.142844+00:00",
+  "updated_at": "2026-08-19T09:33:15.142847+00:00",
+  "name": "Wurzelbrot",
+  "flour_type": "Farina Type 550 + un po' di Dinkel",
+  "hydration_percent": 75,
+  "flour_grams": 1000,
+  "water_grams": 750,
+  "sourdough_grams": 180,
+  "salt_grams": 20,
+  "preferment_type": "poolish",
+  "method_type": "indiretto",
+  "dough_category": "pre",
+  "water_temp_c": 18,
+  "mix_minutes": 10,
+  "bake_temp": 250,
+  "bake_minutes": 25,
+  "oven_type": "statico",
+  "bulk_fermentation_hours": 3,
+  "proofing_hours": 1,
+  "origin": "de",
+  "extra_ingredients": [
+   {
+    "name": "Miglioratore naturale",
+    "percent": 3
+   }
+  ],
+  "procedure": "BOZZA (da rifinire con dosi e passaggi di Michele).\n1) Poolish la sera prima.\n2) Impasta poolish, farina, acqua e Miglioratore; sale a fine impasto (impasto morbido).\n3) Puntata ~3 h con pieghe; riposo fresco possibile.\n4) Taglia strisce e ATTORCIGLIALE (forma tipica 'a radice').\n5) Cottura forte 250°C con vapore, ~25 min: crosta croccante e alveoli irregolari.",
+  "notes": "Bozza del Wurzelbrot (pane 'a radice' attorcigliato) col metodo indiretto di Michele. Rifinisci idratazione, pieghe e tempi a piacere."
  }
 ]
