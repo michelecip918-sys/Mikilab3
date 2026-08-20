@@ -486,6 +486,10 @@ def _teaser_recipe(doc: dict) -> dict:
     return d
 
 
+# 2 ricette DEMO sempre complete (vetrina gratuita per non-PRO): una semplice + un panettone.
+DEMO_RECIPE_NAMES = {"Cuore Italiano", "Panettone Mikilab — Uvetta e Canditi (Classico)"}
+
+
 async def _translate_recipe_de(doc):
     """Traduce in tedesco i campi principali della ricetta (best-effort)."""
     try:
@@ -588,8 +592,9 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
         await seed_mikilab_if_empty()
         docs = await db.recipes.find({"collection_name": "mikilab"}, {"_id": 0}).sort("name", 1).to_list(1000)
         # Modalità "assaggio": i non-PRO vedono nome/foto/ingredienti base, il metodo è bloccato.
+        # Eccezione: 2 ricette DEMO restano complete come vetrina gratuita.
         if not await user_is_pro(user):
-            docs = [_teaser_recipe(d) for d in docs]
+            docs = [d if d.get("name") in DEMO_RECIPE_NAMES else _teaser_recipe(d) for d in docs]
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")

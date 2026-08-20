@@ -1,12 +1,62 @@
 import { useEffect, useState, useCallback } from "react";
-import { Lock, Crown, Clock, Sparkles } from "lucide-react";
+import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check } from "lucide-react";
 import { subscriptionApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { toast } from "sonner";
 
+// Elenco funzioni mostrate PRIMA del prezzo ("Guarda cosa fa"), per far vedere il valore.
+const FEATURES = {
+  lab: {
+    it: [
+      [ClipboardList, "Capo Laboratorio", "Piano di lavoro intelligente: impastatrici, celle e orari"],
+      [CalendarDays, "Piano settimanale", "Organizza ricette e quantità per ogni giorno"],
+      [Flame, "Adatta al forno", "Gradi e minuti giusti cambiando tipo di forno"],
+      [Thermometer, "Costi & Spesa", "Calcolo costi in € e lista della spesa per fornitori"],
+      [ScanLine, "Scansiona ricetta", "Fotografi una ricetta e diventa testo modificabile"],
+      [Sparkles, "Panettone dinamico", "Ricalcolo dosi e sospensioni sui 10+ gusti"],
+    ],
+    de: [
+      [ClipboardList, "Backstuben-Chef", "Intelligenter Arbeitsplan: Kneter, Zellen und Zeiten"],
+      [CalendarDays, "Wochenplan", "Rezepte und Mengen für jeden Tag organisieren"],
+      [Flame, "Ofen anpassen", "Richtige Grad und Minuten bei anderem Ofen"],
+      [Thermometer, "Kosten & Einkauf", "Kostenrechnung in € und Einkaufsliste für Lieferanten"],
+      [ScanLine, "Rezept scannen", "Rezept fotografieren → bearbeitbarer Text"],
+      [Sparkles, "Panettone dynamisch", "Mengen und Einlagen für 10+ Sorten neu berechnen"],
+    ],
+  },
+  diagnosi: {
+    it: [
+      [Camera, "Difetti e rimedi", "Analisi completa di crosta, mollica, cottura e come correggere"],
+      [Camera, "Stato dell'impasto", "Capisci se è pronto, indietro o troppo lievitato"],
+      [ScanLine, "Tutti gli ingredienti", "Ricetta probabile con percentuali stimate da una foto"],
+      [Flame, "Macchine & guasti", "Legge codici errore dal display e spiega i rimedi"],
+    ],
+    de: [
+      [Camera, "Fehler & Lösungen", "Vollständige Analyse von Kruste, Krume, Backung + Korrektur"],
+      [Camera, "Teigzustand", "Erkenne, ob reif, zu früh oder übergar"],
+      [ScanLine, "Alle Zutaten", "Wahrscheinliches Rezept mit geschätzten Prozenten per Foto"],
+      [Flame, "Maschinen & Störungen", "Liest Fehlercodes vom Display und erklärt Lösungen"],
+    ],
+  },
+  beginners: {
+    it: [
+      [GraduationCap, "Basi passo-passo", "Pane casereccio, pizza in teglia e focaccia spiegati bene"],
+      [BookOpen, "Glossario interattivo", "Termini tecnici e fasi dell'impasto spiegati semplici"],
+      [ClipboardList, "Dosi senza attrezzi", "Calcolo delle dosi anche senza strumenti professionali"],
+      [Sparkles, "Quiz del Fornaio", "Impara divertendoti e metti alla prova le tue conoscenze"],
+    ],
+    de: [
+      [GraduationCap, "Grundlagen Schritt für Schritt", "Hausbrot, Blechpizza und Focaccia gut erklärt"],
+      [BookOpen, "Interaktives Glossar", "Fachbegriffe und Teigphasen einfach erklärt"],
+      [ClipboardList, "Mengen ohne Geräte", "Mengenberechnung auch ohne Profi-Ausstattung"],
+      [Sparkles, "Bäcker-Quiz", "Lerne mit Spaß und teste dein Wissen"],
+    ],
+  },
+};
+
 // Blocca la sezione se l'utente non è PRO (o prova attiva).
-export default function PaywallGate({ children, sectionName }) {
+export default function PaywallGate({ children, sectionName, feature = "lab" }) {
   const { user, setAuthOpen } = useAuth();
   const { lang } = useLang();
   const it = lang !== "de";
@@ -80,8 +130,37 @@ export default function PaywallGate({ children, sectionName }) {
         </div>
         <h2 className="font-display text-2xl font-bold">{sectionName} · PRO</h2>
         <p className="text-white/85 text-sm mt-2">
-          {it ? "Questa sezione è riservata agli abbonati PRO. Sblocca tutti gli strumenti del laboratorio."
-              : "Dieser Bereich ist PRO-Abonnenten vorbehalten. Schalte alle Werkzeuge frei."}
+          {feature === "beginners"
+            ? (it ? "La Sezione Principianti è inclusa nell'accesso PRO. Sblocca guide, basi e ricette semplici."
+                  : "Die Sektion Anfänger ist im PRO-Zugang enthalten. Schalte Anleitungen, Grundlagen und einfache Rezepte frei.")
+            : (it ? "Questa sezione è riservata agli abbonati PRO. Sblocca tutti gli strumenti del laboratorio."
+                  : "Dieser Bereich ist PRO-Abonnenten vorbehalten. Schalte alle Werkzeuge frei.")}
+        </p>
+      </div>
+
+      {/* "Guarda cosa fa" — anteprima funzioni prima del prezzo */}
+      <div data-testid="paywall-preview" className="mt-5">
+        <h3 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6] mb-3">
+          {it ? "Guarda cosa fa 👇" : "Sieh, was es kann 👇"}
+        </h3>
+        <div className="space-y-2.5">
+          {(FEATURES[feature]?.[it ? "it" : "de"] || []).map(([Icon, title, desc], i) => (
+            <div key={i} data-testid={`paywall-feature-${i}`}
+              className="flex items-start gap-3 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-3.5 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#D99B26]/15 border border-[#D99B26]/30 flex items-center justify-center shrink-0">
+                <Icon className="w-5 h-5 text-[#B34A26]" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6] leading-tight flex items-center gap-1.5">
+                  {title} <Check className="w-3.5 h-3.5 text-[#6B8E62]" />
+                </p>
+                <p className="text-xs text-[#8C7567] leading-snug mt-0.5">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-sm font-semibold text-[#B34A26] mt-4">
+          {it ? "Provalo gratis o abbonati per sbloccare tutto 👇" : "Kostenlos testen oder abonnieren, um alles freizuschalten 👇"}
         </p>
       </div>
 

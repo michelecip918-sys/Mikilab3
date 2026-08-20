@@ -9,7 +9,7 @@ import ShareInstall from "@/components/ShareInstall";
 const CONCEPTS = {
   it: [
     { id: "cosa", title: "Cosa fa Mikilab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
-      body: "Mikilab è il tuo laboratorio digitale e il tuo assistente personale: ricette spiegate passo dopo passo, pianificazione della produzione, diagnosi di pane e impasti da una semplice foto, riconoscimento di macchine e guasti, e un Maestro AI pronto a rispondere a ogni domanda. Tutto in italiano e in tedesco." },
+      body: "Mikilab è il tuo laboratorio digitale e il tuo assistente personale: ricette spiegate passo dopo passo, pianificazione della produzione, diagnosi di pane e impasti da una semplice foto, riconoscimento di macchine e guasti, e un assistente AI pronto a rispondere a ogni domanda. Tutto in italiano e in tedesco." },
     { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
       body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato Mikilab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
     { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
@@ -19,7 +19,7 @@ const CONCEPTS = {
   ],
   de: [
     { id: "cosa", title: "Was Mikilab macht", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
-      body: "Mikilab ist deine digitale Backstube und dein persönlicher Assistent: Schritt-für-Schritt-Rezepte, Produktionsplanung, Diagnose von Brot und Teigen per Foto, Erkennung von Maschinen und Störungen und ein Meister-KI, der jede Frage beantwortet. Alles auf Italienisch und Deutsch." },
+      body: "Mikilab ist deine digitale Backstube und dein persönlicher Assistent: Schritt-für-Schritt-Rezepte, Produktionsplanung, Diagnose von Brot und Teigen per Foto, Erkennung von Maschinen und Störungen und ein KI-Assistent, der jede Frage beantwortet. Alles auf Italienisch und Deutsch." },
     { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
       body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. Mikilab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
     { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
@@ -58,14 +58,21 @@ export default function Home({ onNavigate }) {
   const go = (tab) => onNavigate && onNavigate(tab);
   const jokes = JOKES[lang === "de" ? "de" : "it"];
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
+  const de = lang === "de";
 
   const SECTIONS = [
-    { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#B34A26] to-[#8C3A1D]" },
-    { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]" },
-    { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]" },
-    { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#D99B26] to-[#B8801a]" },
-    { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#8C7567] to-[#5f4f45]" },
-    { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#3a2d27] to-[#1A1412]" },
+    { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#B34A26] to-[#8C3A1D]",
+      sub: de ? "38 Rezepte mit meiner Methode (Gratis-Vorschau)" : "38 ricette col mio metodo (assaggio gratis)" },
+    { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]",
+      sub: de ? "Für Anfänger: Grundlagen & einfache Rezepte" : "Per chi inizia: basi e ricette semplici" },
+    { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
+      sub: de ? "Neuigkeiten aus IT, Stuttgart und DE" : "Novità da Italia, Stoccarda e Germania" },
+    { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#D99B26] to-[#B8801a]",
+      sub: de ? "Für Profis: Arbeitsplan, Kosten, Panettone (PRO)" : "Per professionisti: piano, costi, panettone (PRO)" },
+    { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#8C7567] to-[#5f4f45]",
+      sub: de ? "Brotfehler per Foto erkennen (PRO)" : "Scopri i difetti del pane da una foto (PRO)" },
+    { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#3a2d27] to-[#1A1412]",
+      sub: de ? "Alle Grundlagen erklärt" : "Tutte le basi spiegate" },
   ];
 
   if (chat) {
@@ -139,13 +146,39 @@ export default function Home({ onNavigate }) {
       {/* Menu principale — subito sotto i blocchi */}
       <div>
         <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C7567] mb-2 px-1">{t("home_tap_open")}</p>
+
+        {/* Due mondi: professionisti + principianti */}
+        <div data-testid="home-audiences" className="grid grid-cols-1 gap-2.5 mb-3">
+          <div className="rounded-2xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-4">
+            <p className="font-display text-base font-bold text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
+              <Wrench className="w-4 h-4 text-[#B34A26]" /> {de ? "Für Profis · „Dein Labor“" : "Per professionisti · «Il Tuo Laboratorio»"}
+            </p>
+            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-snug">
+              {de ? "Arbeitsplan, automatische Berechnungen (Kosten in €), Kühlzellen-Verteilung und dynamische Panettone-Rezepte."
+                  : "Piano di lavoro, calcoli automatici (costi in €), smistamento celle e ricette panettone dinamiche."}
+            </p>
+          </div>
+          <div className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4">
+            <p className="font-display text-base font-bold text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
+              <GraduationCap className="w-4 h-4 text-[#4d6b45]" /> {de ? "Für Anfänger · Sektion Anfänger" : "Per chi inizia · Sezione Principianti"}
+            </p>
+            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-snug">
+              {de ? "Erste Schritte in der Backkunst: geführte Anleitungen, Grundlagen und vereinfachte Rezepte."
+                  : "I primi passi nell'Arte Bianca: guide passo-passo, basi della panificazione e ricette semplificate."}
+            </p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 gap-3" data-testid="home-sections">
-          {SECTIONS.map(({ tab, label, Icon, grad }) => (
+          {SECTIONS.map(({ tab, label, Icon, grad, sub }) => (
             <button key={tab} data-testid={`home-section-${tab}`} onClick={() => go(tab)}
-              className={`flex items-center gap-3 rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br ${grad}`}>
-              <Icon className="w-6 h-6 shrink-0" />
-              <span className="font-display text-base font-bold text-left leading-tight flex-1">{label}</span>
-              <ChevronRight className="w-5 h-5 text-white/80 shrink-0" />
+              className={`flex flex-col gap-1 rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br ${grad} min-h-[104px]`}>
+              <div className="flex items-center gap-2">
+                <Icon className="w-6 h-6 shrink-0" />
+                <span className="font-display text-base font-bold text-left leading-tight flex-1">{label}</span>
+                <ChevronRight className="w-5 h-5 text-white/80 shrink-0" />
+              </div>
+              {sub && <span className="text-[11px] text-white/85 leading-snug text-left">{sub}</span>}
             </button>
           ))}
         </div>

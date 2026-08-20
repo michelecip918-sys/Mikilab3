@@ -4,6 +4,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import Beginners from "@/sections/Beginners";
 import NewsPage from "@/sections/NewsPage";
 import Enciclopedia from "@/sections/Enciclopedia";
+import PaywallGate from "@/components/PaywallGate";
 
 // Pagina unica: Impara + News + Enciclopedia con sotto-schede.
 export default function LearnHub({ initial = "impara" }) {
@@ -33,7 +34,9 @@ export default function LearnHub({ initial = "impara" }) {
         })}
       </div>
 
-      {sub === "impara" && <Beginners />}
+      {sub === "impara" && (
+        <PaywallGate feature="beginners" sectionName={t("nav_impara") === "Impara" ? "Sezione Principianti" : "Sektion Anfänger"}><Beginners /></PaywallGate>
+      )}
       {sub === "news" && <NewsPage />}
       {sub === "enciclopedia" && <Enciclopedia />}
     </div>

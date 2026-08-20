@@ -385,3 +385,18 @@ Priorità: DOPO il Freemium/Paywall. Default stato "Coming Soon".
 - (Opz.) 2 ricette DEMO completamente sbloccate come vetrina.
 - Badge PRO nell'header; gestione visiva ritorno `?sub=success`.
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+---
+## v25 (2026-06) — FASE 1 direttiva globale (UI + valore paywall)
+Direttiva completa salvata in `/app/memory/DIRETTIVA_GLOBALE.md` (10 punti, 5 fasi).
+- **Rename "Maestro" → "Il Tuo Laboratorio"** ovunque (nav, gate_sub login, voice_nav, bio_welcome, Home concept). Resta SOLO nella chat AI ("Chiedi al Maestro"). TODO F2: rinominare la ricetta "Bretzel del Maestro".
+- **Home didascalie**: nuovo blocco `home-audiences` (Per professionisti · Il Tuo Laboratorio / Per chi inizia · Sezione Principianti) + sottotitolo su ogni sezione del menu.
+- **Paywall "Guarda cosa fa"**: `PaywallGate` ora mostra l'anteprima funzioni (`paywall-preview`, card titolo+descrizione) PRIMA di prezzo/prova, adattata per sezione via prop `feature` (lab/diagnosi/beginners).
+- **Sezione Principianti sotto paywall**: `LearnHub` avvolge Beginners in PaywallGate (feature=beginners). News + Enciclopedia restano LIBERE.
+- **2 ricette DEMO complete** (vetrina non-PRO): "Cuore Italiano" + "Panettone Mikilab — Uvetta e Canditi (Classico)" via `DEMO_RECIPE_NAMES` in server.py.
+- Test iteration_22: backend 100% (8/8), frontend 95% → corretto bug HIGH (ternario didascalia "Ricette" invertito) e copy paywall Principianti.
+- PAGAMENTI: PayPal → account `michelecip918@gmail.com`, BLOCCATO (account sospeso). Carta di credito: gestita da Stripe (mai chiedere il numero all'utente).
+### FASI SUCCESSIVE (vedi DIRETTIVA_GLOBALE.md)
+- FASE 2: doppia nomenclatura ricette (nome reale) + correzione catena del freddo per tipologia (sfoglie 2-4°C, panettoni 24-28°C, misti).
+- FASE 3: miglioratore 0,3% auto, smistamento celle non ridondante, notifica email soglia freezer.
+- FASE 4: PayPal (a sblocco) + eventuale lingua EN. FASE 5: E-commerce Shop + Academy "Coming Soon".

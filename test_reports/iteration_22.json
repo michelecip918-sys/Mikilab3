@@ -1,0 +1,34 @@
+{
+  "summary": "FASE 1 (rename Il Tuo Laboratorio, didascalie Home, paywall preview, Principianti sotto paywall, 2 ricette demo) testata end-to-end. Backend: 8/8 pytest passati (demo recipes unlock per anonimo/non-PRO, teaser senza procedure, admin tutto sbloccato, subscription/status). Frontend: home-audiences + didascalie OK, bottom nav rinominata, paywall-preview con 6/4/4 card PRIMA dei pulsanti in lab/diagnosi/beginners, news+enciclopedia libere, non-PRO vede sub-monthly/yearly/trial + trial 1h sblocca contenuto con trial-banner, admin sblocca lab/diagnosi/impara/ricette. Unico bug funzionale: didascalia Home 'Ricette' con ternario invertito (mostra testo tedesco in IT).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "sections/Home.jsx SECTIONS[0] (ricette)", "issue": "Ternario lingua INVERTITO: `sub: de ? \"38 ricette col mio metodo (assaggio gratis)\" : \"38 Rezepte mit meiner Methode (Gratis-Vorschau)\"` → in italiano la didascalia appare in TEDESCO ('38 Rezepte mit meiner Methode') e in tedesco in italiano. Tutte le altre 5 sezioni hanno l'ordine corretto (de ? DE : IT).", "selector": "[data-testid=\"home-section-ricette\"]", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Paywall / sezioni con scroll (Il Tuo Laboratorio, Impara)", "issues": ["I pulsanti flottanti 'Radio' (in basso a sinistra) e 'Parla' (in basso a destra) coprono il testo delle card ('Costi & Spesa', 'Dosi senza attrezzi', 'Quattro ingredienti'): rendono parzialmente illeggibile il contenuto su mobile 390px. Valutare offset/opacità o padding laterale."]},
+      {"screen": "Impara → Per principianti (pianifica pane a casa)", "issues": ["Usa <select> nativi del browser ('Scegli una ricett…', 'Ogni giorn…') invece del componente Select shadcn: label troncate e look inconsistente."]},
+      {"screen": "Paywall Impara", "issues": ["Titolo paywall 'Impara · PRO' e sottotitolo generico 'Sblocca tutti gli strumenti del laboratorio' non coerenti con la Sezione Principianti (atteso 'Sezione Principianti'). Solo copy, non bloccante."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter22_phase1.py", "/app/backend/tests/test_iter21_paywall.py"],
+  "action_items": [
+    "Correggere il ternario invertito della didascalia 'Ricette' in Home.jsx (riga ~65).",
+    "Opzionale: chiave i18n `gate_sub` aggiornata a 'Il Tuo Laboratorio' ma NON usata da nessun componente (AuthScreen usa una nota hardcoded 'Le tue ricette sono private…'): rimuoverla o usarla nel modale login.",
+    "Opzionale: allineare copy paywall della Sezione Principianti e ridurre l'overlap dei pulsanti flottanti Radio/Parla."
+  ],
+  "critical_code_review_comments": [
+    "Home.jsx: le stringhe bilingui sono inline nei componenti (SECTIONS.sub, home-audiences) invece che in i18n/translations.js → alto rischio di ternari invertiti come quello trovato. Spostare in t() keys.",
+    "PaywallGate.jsx: FEATURES con copy hardcoded IT/DE nel componente; considerare i18n centralizzato.",
+    "PaywallGate viene montato per-sezione e chiama /api/subscription/status a ogni cambio tab (nessuna cache/context) → chiamate ridondanti; valutare un SubscriptionContext."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter22_phase1.py"],
+  "success_rate": {"backend": "100% (8/8)", "frontend": "95% (1 bug di localizzazione su didascalia Ricette)"},
+  "seed_data_creation": "Nessun dato nuovo. Il doc entitlements di fornaio@mikilab.de creato dal test trial (1h) è stato cancellato al termine → prova di nuovo disponibile.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin, sempre PRO); fornaio@mikilab.de / Mikilab2026! (non-PRO, trial resettato)",
+  "context_for_next_testing_agent": "Il modale intro (intro-close-btn) appare a ogni load: chiuderlo prima. Le ricette si aprono in un Dialog Radix: chiudere con Escape (non ri-cliccando la row, l'overlay intercetta i click). Le 2 demo (Cuore Italiano, Panettone Classico) mostrano recipe-procedure-<id>; le altre 36 recipe-teaser-<id> + recipe-unlock-<id>. Per ri-testare il trial di fornaio, cancellare il doc in Mongo db.entitlements {email:'fornaio@mikilab.de'}.",
+  "rca_of_the_issue": "Bug didascalia Ricette: nel primo elemento dell'array SECTIONS in Home.jsx i rami del ternario `de ? ... : ...` sono scambiati rispetto agli altri elementi; confermato a runtime in locale IT (testo reso: '38 Rezepte mit meiner Methode (Gratis-Vorschau)')."
+}

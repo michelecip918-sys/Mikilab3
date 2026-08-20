@@ -69,9 +69,9 @@ function App() {
           >
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
-            {tab === "maestro" && <PaywallGate sectionName="Il Tuo Laboratorio"><Maestro /></PaywallGate>}
+            {tab === "maestro" && <PaywallGate feature="lab" sectionName="Il Tuo Laboratorio"><Maestro /></PaywallGate>}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} />}
-            {tab === "diagnosi" && <PaywallGate sectionName="Diagnosi"><PhotoDiagnosi /></PaywallGate>}
+            {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName="Diagnosi"><PhotoDiagnosi /></PaywallGate>}
           </motion.div>
         </AnimatePresence>
       </main>
