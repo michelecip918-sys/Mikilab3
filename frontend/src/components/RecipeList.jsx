@@ -195,6 +195,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
                   {rLoc(r, "name", lang)}
                 </h3>
+                {rLoc(r, "real_name", lang) ? <p className="text-xs font-medium text-[#B34A26] truncate">{rLoc(r, "real_name", lang)}</p> : null}
                 {r.flour_type ? <p className="text-xs text-[#8C7567] truncate">{rLoc(r, "flour_type", lang)}</p> : null}
               </div>
               {r.locked
@@ -385,6 +386,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
             {rLoc(r, "name", lang)}
           </h2>
+          {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-[#B34A26] mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
           {r.flour_type ? <p className="text-sm text-[#8C7567] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
         </div>
 

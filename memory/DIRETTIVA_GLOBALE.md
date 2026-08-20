@@ -15,14 +15,15 @@ Master plan dalla direttiva tassativa dell'utente. Stato: ✅ fatto · 🔲 da f
 - (contenuti passo-passo/glossario/quiz già in Beginners.jsx; da arricchire in fasi successive se richiesto).
 
 ## 4. Fix procedimenti / catena del freddo (DATI ricette)
-- 🔲 Rimuovere regola generica "6h a 16°C" universale. Parametri per tipologia:
-  - Sfoglie/Croissant: frigo 2-4°C (stabilizzazione burro, incasso, pieghe, formatura).
-  - Grandi lievitati/Panettoni: 1ª e 2ª lievitazione 24-28°C, raffreddamento a testa in giù.
-  - Lievitazione mista/indiretta: bighe, poolish, riposi dedicati.
+- ✅ Rimossa regola generica "16°C / 6 ore" universale (script apply_phase2.py). LM: cella 16°C mantenuta. Sfoglie/croissant: pieghe in frigo 2–4°C. Non-LM (diretto/poolish/biga): puntata a temperatura ambiente ~24-26°C, frigo solo per gestire i tempi. Panettoni: nota lievitazione 24-28°C + raffreddamento capovolto.
 
 ## 5. Nomi ricette / Traduzioni / Lingue
-- 🔲 Doppia nomenclatura: Nome fantasia + nome reale tra parentesi/sottotitolo (es. "Terra del Sole (Pane alle Patate)").
-- 🔲 Italiano nativo per ricette/ingredienti/note. Selezionando altra lingua (DE/EN) tradurre interfaccia + nomi commerciali + nomi reali (es. Terra del Sole – Kartoffelbrot), mantenendo termini tecnici. NB: oggi solo IT/DE; EN = nuovo.
+- ✅ Doppia nomenclatura: campo `real_name`/`real_name_de` (proposta automatica su 18-19 ricette fantasia, MODIFICABILE dall'admin nel form — data-testid recipe-realname-input). Mostrato in lista e dettaglio sotto il nome fantasia. Michele può correggere i nomi proposti.
+- 🔲 Lingua EN (solo IT/DE oggi) — FASE 4.
+
+## 3b. Automazioni lab (FASE 3 avviata)
+- ✅ Avviso Freezer: strumento "Scorte Freezer" in Il Tuo Laboratorio (data-testid freezer-stock) — imposti quantità+soglia; salvando, se sotto soglia parte email all'email dell'UTENTE loggato (Resend). Endpoint /api/freezer GET/PUT.
+- 🔲 Miglioratore 0,3% auto, smistamento celle non ridondante — da fare.
 
 ## 6. Visitatori / Trial / Paywall (SaaS)
 - ✅ Trial 1h/24h attivazione singola + countdown header.
@@ -43,10 +44,12 @@ Master plan dalla direttiva tassativa dell'utente. Stato: ✅ fatto · 🔲 da f
 - ✅ Logica/DB server-side. ✅ Anti-copia (right-click/selezione/copia/F12).
 - ✅ Pagina legale (LegalPage). 🔲 Rifinire T&C vendita, Privacy, Cookie, Copyright completi.
 
-## 9. E-Commerce Shop + Academy ("Coming Soon") — FUTURO
-- 🧊 Catalogo panettoni (pezzature, varianti, foto HD, allergeni/nutrizionale/peso netto), carrello.
-- 🧊 "Academy / I Miei Corsi" (masterclass, consulenze) come sottosezione Shop.
-- 🧊 Toggle "Coming Soon" da admin + raccolta email lista d'attesa; acquisto reale attivato da admin.
+## 9. E-Commerce Shop + Academy ("Coming Soon")
+- ✅ Shop & Academy "In arrivo": pagina Shop (raggiungibile da Home, data-testid shop-page) con catalogo panettoni + corsi (Academy), badge "In arrivo", modulo lista d'attesa email (salvata in shop_waitlist). Toggle ON/OFF da AdminPanel (admin-shop-toggle): OFF=In arrivo+waitlist, ON=pulsanti Prenota/Iscriviti. Immagini reali (unsplash/pexels).
+- 🔲 Carrello/checkout reale, schede prodotto complete (nutrizionale/peso netto), video corsi riservati — FASE 5 con pagamenti.
+
+## OWNER / Admin
+- ✅ Email proprietario SEMPRE admin (vede tutto): OWNER_EMAILS = {michelecip918@gmail.com, admin@mikilab.de}, promozione automatica in current_user ad ogni login.
 
 ## 10. Pagamenti (PayPal)
 - 🧊 PayPal all'account **michelecip918@gmail.com** (accredito diretto). BLOCCATO: account PayPal sospeso alcuni giorni.

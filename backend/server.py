@@ -119,6 +119,8 @@ class Recipe(BaseModel):
     flour_type_de: Optional[str] = None
     notes_de: Optional[str] = None
     procedure_de: Optional[str] = None
+    real_name: Optional[str] = None
+    real_name_de: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -155,6 +157,8 @@ class RecipeCreate(BaseModel):
     flour_type_de: Optional[str] = None
     notes_de: Optional[str] = None
     procedure_de: Optional[str] = None
+    real_name: Optional[str] = None
+    real_name_de: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -183,6 +187,8 @@ class RecipeUpdate(BaseModel):
     water_temp_c: Optional[float] = None
     notes: Optional[str] = None
     procedure: Optional[str] = None
+    real_name: Optional[str] = None
+    real_name_de: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -297,7 +303,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v21-canapa-panettone"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v25-realname-coldchain"  # bump quando cambia mikilab_seed_data.json
 LEGACY_STALE_NAMES = ["Ciabatta ad Alta Idratazione", "Pane Rustico al Farro e Miele"]
 
 
@@ -355,6 +361,8 @@ async def root():
 
 EMERGENT_SESSION_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
 SESSION_DAYS = 7
+# Email PROPRIETARIO: sempre admin (accesso completo a tutto), a prescindere dall'ordine di registrazione.
+OWNER_EMAILS = {"michelecip918@gmail.com", "admin@mikilab.de"}
 
 
 class RegisterReq(BaseModel):
@@ -427,6 +435,10 @@ async def current_user(request: Request):
     u = await db.users.find_one({"user_id": sess["user_id"]}, {"_id": 0})
     if not u:
         raise HTTPException(status_code=401, detail="Utente non trovato")
+    # Promozione automatica: l'email del proprietario è sempre admin.
+    if (u.get("email") or "").strip().lower() in OWNER_EMAILS and u.get("role") != "admin":
+        await db.users.update_one({"user_id": u["user_id"]}, {"$set": {"role": "admin"}})
+        u["role"] = "admin"
     return u
 
 
@@ -670,8 +682,11 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depe
     updates["updated_at"] = now_iso()
     # Segna la ricetta come modificata a mano: il seed non la sovrascriverà più.
     updates["user_edited"] = True
-    # Ritraduci in tedesco i campi modificati.
-    if any(updates.get(k) for k in ("name", "flour_type", "notes", "procedure")):
+    # Ritraduci in tedesco SOLO se i campi tradotti sono davvero cambiati
+    # (così modificare solo 'real_name'/costi non fa partire la traduzione lenta).
+    translatable = ("name", "flour_type", "notes", "procedure")
+    changed = [k for k in translatable if k in updates and (updates.get(k) or "") != (existing.get(k) or "")]
+    if changed:
         base = {**existing, **updates}
         tr = await _translate_recipe_de(base)
         for k in ("name_de", "flour_type_de", "notes_de", "procedure_de"):
@@ -1744,6 +1759,153 @@ async def reset_password(body: ResetReq):
     return {"ok": True}
 
 
+# ---------------------------------------------------------------------------
+# Scorte Freezer + avviso email (soglia minima) — per utente loggato
+# ---------------------------------------------------------------------------
+class FreezerItem(BaseModel):
+    name: str
+    qty: float = 0
+    min_qty: float = 0
+
+
+class FreezerSave(BaseModel):
+    items: List[FreezerItem] = []
+
+
+def _freezer_email_html(low, de: bool) -> str:
+    rows = "".join(
+        f"<tr><td style='padding:6px 10px'>{i['name']}</td>"
+        f"<td style='padding:6px 10px;text-align:right;color:#B4442A;font-weight:bold'>{i['qty']}</td>"
+        f"<td style='padding:6px 10px;text-align:right;color:#8C7567'>{i['min_qty']}</td></tr>"
+        for i in low
+    )
+    if de:
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+                f"<h2 style='color:#B34A26'>Mikilab · Gefrier-Bestand niedrig</h2>"
+                f"<p>Folgende Produkte sind unter der Mindestmenge:</p>"
+                f"<table style='border-collapse:collapse;width:100%'><tr style='background:#F5EFE6'>"
+                f"<th style='padding:6px 10px;text-align:left'>Produkt</th><th style='padding:6px 10px'>Bestand</th><th style='padding:6px 10px'>Min.</th></tr>{rows}</table></div>")
+    return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+            f"<h2 style='color:#B34A26'>Mikilab · Scorta freezer bassa</h2>"
+            f"<p>Questi prodotti sono sotto la soglia minima:</p>"
+            f"<table style='border-collapse:collapse;width:100%'><tr style='background:#F5EFE6'>"
+            f"<th style='padding:6px 10px;text-align:left'>Prodotto</th><th style='padding:6px 10px'>Scorta</th><th style='padding:6px 10px'>Min.</th></tr>{rows}</table></div>")
+
+
+@api_router.get("/freezer")
+async def get_freezer(user: dict = Depends(current_user)):
+    doc = await db.freezer_stock.find_one({"owner_id": user["user_id"]}, {"_id": 0})
+    return {"items": (doc or {}).get("items", [])}
+
+
+@api_router.put("/freezer")
+async def save_freezer(body: FreezerSave, lang: str = "it", user: dict = Depends(current_user)):
+    items = [i.model_dump() for i in body.items]
+    await db.freezer_stock.update_one(
+        {"owner_id": user["user_id"]},
+        {"$set": {"owner_id": user["user_id"], "items": items, "updated_at": now_iso()}},
+        upsert=True,
+    )
+    low = [i for i in items if i.get("min_qty") and float(i["qty"]) < float(i["min_qty"])]
+    emailed = False
+    if low and RESEND_API_KEY and user.get("email"):
+        try:
+            params = {"from": f"Mikilab <{SENDER_EMAIL}>", "to": [user["email"]],
+                      "subject": "Mikilab · Scorta freezer bassa" if lang != "de" else "Mikilab · Gefrier-Bestand niedrig",
+                      "html": _freezer_email_html(low, lang == "de")}
+            await asyncio.to_thread(_resend.Emails.send, params)
+            emailed = True
+        except Exception as e:
+            logging.getLogger(__name__).error(f"freezer email failed: {e}")
+    return {"ok": True, "low": low, "emailed": emailed}
+
+
+# ---------------------------------------------------------------------------
+# Shop & Academy ("Coming Soon") — catalogo + lista d'attesa + toggle admin
+# ---------------------------------------------------------------------------
+SHOP_SEED = [
+    {"id": "p-classico", "kind": "panettone", "name": "Panettone Classico", "name_de": "Panettone Klassik",
+     "desc": "Uvetta e canditi, lievito madre, 36h di lievitazione.", "desc_de": "Rosinen und kandierte Früchte, Sauerteig, 36h Gärung.",
+     "sizes": ["500g", "750g", "1000g"], "image_url": "https://images.pexels.com/photos/10530451/pexels-photo-10530451.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+     "allergens": "Glutine, Uova, Latte", "active": True},
+    {"id": "p-cioccolato", "kind": "panettone", "name": "Panettone Cioccolato e Noci", "name_de": "Panettone Schokolade & Nüsse",
+     "desc": "Gocce di cioccolato fondente e noci.", "desc_de": "Zartbitter-Schokostückchen und Walnüsse.",
+     "sizes": ["500g", "1000g"], "image_url": "https://images.unsplash.com/photo-1606589121362-2de49373c497?crop=entropy&cs=srgb&fm=jpg&q=85&w=940",
+     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "active": True},
+    {"id": "p-pistacchio", "kind": "panettone", "name": "Panettone Pistacchio", "name_de": "Panettone Pistazie",
+     "desc": "Cioccolato bianco e pistacchio.", "desc_de": "Weiße Schokolade und Pistazie.",
+     "sizes": ["500g", "1000g"], "image_url": "https://images.pexels.com/photos/10530446/pexels-photo-10530446.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "active": True},
+    {"id": "c-lievitati", "kind": "corso", "name": "Masterclass Grandi Lievitati", "name_de": "Masterclass Große Hefegebäcke",
+     "desc": "Corso online sul panettone col metodo Mikilab (lievito madre, 2 impasti).", "desc_de": "Online-Kurs zum Panettone nach Mikilab-Methode (Sauerteig, 2 Teige).",
+     "sizes": ["Online"], "image_url": "https://images.pexels.com/photos/29226708/pexels-photo-29226708.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+     "allergens": "", "active": True},
+    {"id": "c-basi", "kind": "corso", "name": "Corso Basi del Pane", "name_de": "Kurs Brot-Grundlagen",
+     "desc": "Per principianti: pane casereccio, pizza in teglia, focaccia.", "desc_de": "Für Anfänger: Hausbrot, Blechpizza, Focaccia.",
+     "sizes": ["Online"], "image_url": "https://images.unsplash.com/photo-1595801105145-795f1927c0fc?crop=entropy&cs=srgb&fm=jpg&q=85&w=940",
+     "allergens": "", "active": True},
+]
+
+
+async def seed_shop_if_empty():
+    if await db.shop_products.count_documents({}) == 0:
+        await db.shop_products.insert_many([dict(p) for p in SHOP_SEED])
+    if not await db.app_meta.find_one({"_key": "shop_settings"}):
+        await db.app_meta.update_one({"_key": "shop_settings"},
+            {"$set": {"_key": "shop_settings", "enabled": False}}, upsert=True)  # default: Coming Soon
+
+
+@api_router.get("/shop/products")
+async def shop_products():
+    await seed_shop_if_empty()
+    settings = await db.app_meta.find_one({"_key": "shop_settings"}, {"_id": 0})
+    prods = await db.shop_products.find({"active": True}, {"_id": 0}).to_list(200)
+    return {"enabled": bool((settings or {}).get("enabled")), "products": prods}
+
+
+class WaitlistReq(BaseModel):
+    email: str
+    product_id: Optional[str] = None
+    lang: str = "it"
+
+
+@api_router.post("/shop/waitlist")
+async def shop_waitlist(body: WaitlistReq):
+    email = (body.email or "").strip().lower()
+    if not email or "@" not in email:
+        raise HTTPException(400, "Email non valida")
+    await db.shop_waitlist.update_one(
+        {"email": email, "product_id": body.product_id},
+        {"$set": {"email": email, "product_id": body.product_id, "created_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True}
+
+
+@api_router.get("/admin/shop/settings")
+async def admin_shop_get(admin: dict = Depends(require_admin)):
+    settings = await db.app_meta.find_one({"_key": "shop_settings"}, {"_id": 0})
+    n = await db.shop_waitlist.count_documents({})
+    return {"enabled": bool((settings or {}).get("enabled")), "waitlist_count": n}
+
+
+class ShopSettingsReq(BaseModel):
+    enabled: bool
+
+
+@api_router.put("/admin/shop/settings")
+async def admin_shop_set(body: ShopSettingsReq, admin: dict = Depends(require_admin)):
+    await db.app_meta.update_one({"_key": "shop_settings"},
+        {"$set": {"_key": "shop_settings", "enabled": bool(body.enabled)}}, upsert=True)
+    return {"ok": True, "enabled": bool(body.enabled)}
+
+
+@api_router.get("/admin/shop/waitlist")
+async def admin_shop_waitlist(admin: dict = Depends(require_admin)):
+    rows = await db.shop_waitlist.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    return rows
+
+
 app.include_router(api_router)
 
 app.add_middleware(
@@ -1774,6 +1936,10 @@ async def on_startup_seed_mikilab():
             logging.getLogger(__name__).info(f"Mikilab seed startup: {n} ricette")
     except Exception as e:
         logging.getLogger(__name__).error(f"Seed startup error: {e}")
+    try:
+        await seed_shop_if_empty()
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Shop seed error: {e}")
     try:
         init_storage()
         logging.getLogger(__name__).info("Archivio immagini inizializzato")

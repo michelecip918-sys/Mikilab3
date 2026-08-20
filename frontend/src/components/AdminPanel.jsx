@@ -13,13 +13,25 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [email, setEmail] = useState("");
   const [days, setDays] = useState("0"); // "0" = illimitato
   const [busy, setBusy] = useState(false);
+  const [shop, setShop] = useState({ enabled: false, waitlist_count: 0 });
 
   const load = useCallback(async () => {
     setLoading(true);
-    try { setList(await adminApi.entitlements()); }
+    try {
+      setList(await adminApi.entitlements());
+      try { setShop(await adminApi.shopSettings()); } catch { /* */ }
+    }
     catch { toast.error(de ? "Fehler beim Laden" : "Errore nel caricamento"); }
     setLoading(false);
   }, [de]);
+
+  const toggleShop = async () => {
+    try {
+      const r = await adminApi.setShop(!shop.enabled);
+      setShop((s) => ({ ...s, enabled: r.enabled }));
+      toast.success(r.enabled ? (de ? "Shop aktiv" : "Shop attivo") : (de ? "Shop: Bald verfügbar" : "Shop: In arrivo"));
+    } catch { toast.error(de ? "Fehler" : "Errore"); }
+  };
 
   useEffect(() => { if (open) load(); }, [open, load]);
 
@@ -87,6 +99,19 @@ export default function AdminPanel({ open, onOpenChange }) {
           >
             {de ? "PRO schenken" : "Regala PRO"}
           </button>
+        </div>
+
+        <div data-testid="admin-shop" className="rounded-2xl bg-[#8C3A1D]/10 border border-[#8C3A1D]/30 p-4 mt-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
+              <p className="text-[11px] text-[#8C7567]">{de ? "Warteliste" : "Lista d'attesa"}: <b>{shop.waitlist_count}</b> · {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}</p>
+            </div>
+            <button data-testid="admin-shop-toggle" onClick={toggleShop}
+              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#6B8E62] text-white" : "bg-[#F5EFE6] dark:bg-[#332823] text-[#8C3A1D] dark:text-[#E5AC3A] border border-[#8C3A1D]/30"}`}>
+              {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center justify-between mt-2 mb-1">

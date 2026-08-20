@@ -400,3 +400,14 @@ Direttiva completa salvata in `/app/memory/DIRETTIVA_GLOBALE.md` (10 punti, 5 fa
 - FASE 2: doppia nomenclatura ricette (nome reale) + correzione catena del freddo per tipologia (sfoglie 2-4°C, panettoni 24-28°C, misti).
 - FASE 3: miglioratore 0,3% auto, smistamento celle non ridondante, notifica email soglia freezer.
 - FASE 4: PayPal (a sblocco) + eventuale lingua EN. FASE 5: E-commerce Shop + Academy "Coming Soon".
+
+---
+## v26 (2026-06) — FASE 2/3 + Shop + Owner admin
+- **Nomi reali ricette (1a)**: campo `real_name`/`real_name_de` (Recipe/Create/Update). Proposta automatica su ~18 ricette fantasia (script apply_phase2.py), MODIFICABILE dall'admin nel form (recipe-realname-input). Mostrato sotto il nome fantasia in lista+dettaglio.
+- **Catena del freddo (2c)**: rimossa regola generica 16°C/6h. LM tiene 16°C; sfoglie→frigo 2–4°C; non-LM→ambiente ~24-26°C; panettoni→nota 24-28°C+capovolto. SEED_VERSION bump → re-sync.
+- **Avviso Freezer (3)**: strumento "Scorte Freezer" in Il Tuo Laboratorio + endpoint /api/freezer; email di avviso all'email dell'UTENTE loggato quando scende sotto soglia (Resend).
+- **Shop & Academy (4e)**: pagina Shop da Home (catalogo panettoni+corsi, "In arrivo", lista d'attesa email), toggle admin (admin-shop-toggle), immagini reali. Endpoints /shop/products, /shop/waitlist, /admin/shop/*.
+- **OWNER admin**: michelecip918@gmail.com + admin@mikilab.de sempre admin (vedono tutto) via OWNER_EMAILS + promozione in current_user.
+- **FIX post-test (iter23)**: PUT /recipes ora ri-traduce solo se cambiano i campi tradotti (salvataggio real_name da 8-24s → 0.09s); pulsante Salva con stato di caricamento; immagini Shop reali; toggle Shop ora ha effetto sulla pagina pubblica; casing admin.
+- Test: backend 100% (iter23, 23/23), frontend 100% flussi. sw.js → v4 (forza refresh cache al redeploy).
+- PROMEMORIA: preview ≠ produzione. mikilab.de si aggiorna solo con REDEPLOY dopo le modifiche.

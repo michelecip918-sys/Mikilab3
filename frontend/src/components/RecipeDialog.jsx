@@ -25,7 +25,7 @@ const HOUR_FIELDS = new Set(["bulk_fermentation_hours", "proofing_hours"]);
 const emptyCost = standardCosting();
 
 const empty = {
-  name: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
+  name: "", real_name: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", image_url: "", extra_ingredients: [], work_phases: [], costing: standardCosting(),
@@ -35,7 +35,8 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const [form, setForm] = useState(empty);
   const [pctMode, setPctMode] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const { t } = useLang();
+  const [saving, setSaving] = useState(false);
+  const { t, lang } = useLang();
 
   useEffect(() => {
     if (open) {
@@ -116,10 +117,11 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const pieces = num(c.pieces);
   const costPerPiece = pieces > 0 ? prodCost / pieces : null;
 
-  const submit = () => {
+  const submit = async () => {
     if (!form.name.trim()) return;
+    if (saving) return;
     const payload = {
-      name: form.name.trim(), flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
+      name: form.name.trim(), real_name: (form.real_name || "").trim() || null, flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
       preferment_type: form.preferment_type || null,
       oven_type: form.oven_type || null,
       method_type: form.method_type || null,
@@ -143,7 +145,12 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
       extras: (c.extras || []).filter((e) => e.name || e.cost).map((e) => ({ name: e.name || "", cost: num(e.cost) })),
       overhead: num(c.overhead), pieces: num(c.pieces), markup: num(c.markup),
     };
-    onSave(payload);
+    try {
+      setSaving(true);
+      await onSave(payload);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -166,6 +173,17 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
               placeholder={t("field_name_ph")}
+              className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Echter Name (optional)" : "Nome reale (opzionale)"}</label>
+            <input
+              data-testid="recipe-realname-input"
+              value={form.real_name || ""}
+              onChange={(e) => set("real_name", e.target.value)}
+              placeholder={lang === "de" ? "z. B. Kartoffelbrot" : "es. Pane alle Patate"}
               className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base outline-none"
             />
           </div>
@@ -531,9 +549,11 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           <button
             data-testid="recipe-save-btn"
             onClick={submit}
-            className="flex-1 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
+            disabled={saving}
+            className="flex-1 flex items-center justify-center gap-2 bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-60 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
           >
-            {t("save")}
+            {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+            {saving ? t("saving") : t("save")}
           </button>
         </DialogFooter>
       </DialogContent>

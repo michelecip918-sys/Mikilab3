@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
-  ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks,
+  ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -16,11 +16,12 @@ import BackwardScheduler from "@/sections/BackwardScheduler";
 import ShoppingList from "@/sections/ShoppingList";
 import ShiftRoles from "@/sections/ShiftRoles";
 import Checklists from "@/sections/Checklists";
+import FreezerStock from "@/sections/FreezerStock";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const TOOLS = [
     { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
@@ -29,6 +30,7 @@ export default function Maestro() {
     { id: "lavoro", title: t("tool_lavoro"), desc: t("tool_lavoro_desc"), Icon: ChefHat },
     { id: "adatta", title: t("tool_adatta"), desc: t("tool_adatta_desc"), Icon: Flame },
     { id: "termo", title: t("tool_termo"), desc: t("tool_termo_desc"), Icon: Thermometer },
+    { id: "freezer", title: lang === "de" ? "Gefrier-Bestand" : "Scorte Freezer", desc: "", Icon: Snowflake },
     { id: "spesa", title: t("tool_spesa"), desc: t("tool_spesa_desc"), Icon: ShoppingCart },
     { id: "turni", title: t("tool_turni"), desc: t("tool_turni_desc"), Icon: Users },
     { id: "check", title: t("tool_check"), desc: t("tool_check_desc"), Icon: ListChecks },
@@ -61,6 +63,7 @@ export default function Maestro() {
         {tool === "lavoro" && <StartDoughs />}
         {tool === "adatta" && <AdattaForno />}
         {tool === "termo" && <ClimaTermostato />}
+        {tool === "freezer" && <FreezerStock />}
         {tool === "spesa" && <ShoppingList />}
         {tool === "turni" && <ShiftRoles />}
         {tool === "check" && <Checklists />}

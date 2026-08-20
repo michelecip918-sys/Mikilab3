@@ -82,4 +82,7 @@ export const adminApi = {
   entitlements: () => api.get(`/admin/entitlements`).then((r) => r.data),
   grant: (email, days) => api.post(`/admin/grant`, { email, days }).then((r) => r.data),
   revoke: (email) => api.post(`/admin/revoke`, { email }).then((r) => r.data),
+  shopSettings: () => api.get(`/admin/shop/settings`).then((r) => r.data),
+  setShop: (enabled) => api.put(`/admin/shop/settings`, { enabled }).then((r) => r.data),
+  shopWaitlist: () => api.get(`/admin/shop/waitlist`).then((r) => r.data),
 };

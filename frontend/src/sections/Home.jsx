@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import LegalPage from "@/sections/LegalPage";
@@ -73,6 +73,8 @@ export default function Home({ onNavigate }) {
       sub: de ? "Brotfehler per Foto erkennen (PRO)" : "Scopri i difetti del pane da una foto (PRO)" },
     { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#3a2d27] to-[#1A1412]",
       sub: de ? "Alle Grundlagen erklärt" : "Tutte le basi spiegate" },
+    { tab: "shop", label: de ? "Shop & Academy" : "Shop & Academy", Icon: ShoppingBag, grad: "from-[#8C3A1D] to-[#5f2410]",
+      sub: de ? "Panettoni & Kurse — bald verfügbar" : "Panettoni & corsi — in arrivo" },
   ];
 
   if (chat) {

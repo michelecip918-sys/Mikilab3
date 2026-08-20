@@ -1,0 +1,46 @@
+{
+  "summary": "FASE 2 verification (both backend + frontend). Backend: created /app/backend/tests/test_iter23_phase2.py with 23 pytest cases — 23/23 PASSED (owner-email admin promotion + subscription/status is_admin/pro, recipes real_name (19 with real_name; 'Oro di Terra'→'Pane alle Patate', 'Cuore Italiano'→'Pane Bianco Italiano'), real_name editable+persisted by admin and preserved on locked teasers, /freezer GET/PUT with low-threshold detection + emailed:true via Resend + per-user isolation + 401 for anon, /shop/products (5 products: 3 panettoni + 2 corsi, no _id), /shop/waitlist (valid ok / invalid email 422), /admin/shop/settings GET+PUT toggle persistence, /admin/shop/waitlist, 403 for non-admin, paywall regression: 2 demo recipes complete, all others locked for anon, admin sees everything). Frontend (mobile 390x844): Ricette shows real name under fancy name (IT and DE 'Kartoffelbrot'); anon paywall + paywall-preview still present on nav-tab-maestro; Home→home-section-shop opens shop-page with 5 shop-product-* cards, 'In arrivo'/'Bald verfügbar' badges, waitlist form → shop-waitlist-done; admin login → admin-panel → admin-shop card + admin-shop-toggle alternates 'In arrivo'/'Attivo' and shows waitlist count (3); admin has no paywall on Il Tuo Laboratorio, 'Scorte Freezer' opens freezer-stock, freezer-add/row inputs/freezer-low-warning ('Sotto la soglia: QA Pane Test') and freezer-save persists after reload; RecipeDialog exposes recipe-realname-input prefilled and editable, save persists (verified in list + API). Test data cleaned up (freezer rows emptied, real_name restored to 'Pane alle Patate').",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/recipes/{id}", "issue": "Blocking LLM re-translation (_translate_recipe_de) on every update makes the request take 8-24s measured. Editing only 'real_name' should not trigger a full DE re-translation (real_name is not even in the translated field list); consider running it in a background task or skipping when only real_name/costing changed."},
+      {"endpoint": "GET /api/shop/products", "issue": "All 5 seeded image_url paths 404 (/recipes/panettone-classico.jpg, -cioccolato-e-noci, -pistacchio-e-cioccolato-bianco, panettone-mikilab.jpg, cuore-italiano.jpg). Only r_panettone_base.jpg exists in /app/frontend/public/recipes/."},
+      {"endpoint": "PUT /api/admin/shop/settings", "issue": "The 'enabled' flag is returned by /api/shop/products but never consumed by the UI, so the admin toggle has no user-visible effect on the public Shop page."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeDialog (save)", "issue": "No loading/pending state: after clicking Salva the dialog stays open 8-24s (slow backend PUT) with the button still enabled and no spinner/toast — user gets no feedback and can double-submit.", "selector": "[data-testid=\"recipe-save-btn\"]", "priority": "HIGH"},
+      {"component": "Shop cards", "issue": "All product images fail to load (404) and are hidden via onError, so every card renders imageless — looks unfinished for a commercial page.", "selector": "[data-testid^=\"shop-product-\"] img", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Admin shop toggle → public Shop page", "issue": "Toggling admin-shop-toggle to 'Attivo' changes nothing on shop-page: 'In arrivo' badges and the waitlist form are rendered unconditionally (data.enabled unused in Shop.jsx).", "affected_selectors": ["[data-testid=\"admin-shop-toggle\"]", "[data-testid=\"shop-page\"]", "[data-testid=\"shop-waitlist-btn\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Ricette / all tabs (mobile)", "issues": ["Floating Radio (left) and Parla (right) FABs overlap recipe card content — e.g. 'Filo di Francia' title and its real name are partially covered above the bottom nav; add bottom padding or offset the FABs."]},
+      {"screen": "Admin panel · Shop card", "issues": ["Inconsistent casing in status line: 'Lista d'attesa: 3 · attivo' (lowercase) vs button label 'Attivo'; the off-state uses 'In arrivo' capitalized."]},
+      {"screen": "RecipeDialog (mobile 390x844)", "issues": ["Dialog footer (Salva/Annulla) sits right over the bottom navigation bar; buttons were still clickable in tests but visually collide with the nav."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter23_phase2.py", "/app/test_reports/pytest/iter23.xml"],
+  "action_items": [
+    "Make PUT /api/recipes/{id} fast: skip/background the DE translation when translatable fields (name/flour_type/notes/procedure) are unchanged; also translate real_name → real_name_de if that field is meant to be localized.",
+    "Add loading state (disable button + spinner) to recipe-save-btn while the PUT is in flight.",
+    "Add the 5 missing shop product images to /app/frontend/public/recipes/ (or point image_url to existing assets).",
+    "Use the shop 'enabled' flag in Shop.jsx so the admin toggle actually switches between 'In arrivo' (waitlist) and 'Attivo' (purchase/enrol) states.",
+    "Minor copy/design: unify 'attivo/Attivo' casing in AdminPanel shop card; add bottom safe padding so the Radio/Parla FABs don't cover list content."
+  ],
+  "critical_code_review_comments": [
+    "server.py update_recipe: awaiting the LLM translation inline on every recipe PUT couples a simple field edit to a 8-24s external call; wrap in asyncio background task or gate on changed translatable fields.",
+    "Shop.jsx: fetched 'enabled' state is dead code — admin toggle is effectively a no-op for end users.",
+    "server.py is 1949 lines — split into routers (auth, recipes, shop, freezer, maestro) per the >700-line guideline."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter23_phase2.py"],
+  "success_rate": {"backend": "100%", "frontend": "100% of requested flows (with 1 HIGH UX defect on save feedback)"},
+  "seed_data_creation": "Waitlist entry TEST_qa@mikilab.de and qa.playwright@mikilab.de added via /api/shop/waitlist (left in place, harmless). Freezer rows for admin/fornaio created then emptied. 'Oro di Terra' real_name temporarily changed and restored to 'Pane alle Patate'.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin, PRO); fornaio@mikilab.de / Mikilab2026! (non-PRO)",
+  "context_for_next_testing_agent": "All FASE 2 acceptance criteria in the review request pass. Reusable suite: /app/backend/tests/test_iter23_phase2.py. Frontend notes: intro-close-btn appears on every load AND again right after login; recipe rows are '[data-testid^=recipe-row-]' and the h3 contains a flag emoji so get_by_text('Oro di Terra', exact=True) fails — use .filter(has_text=...); the edit button is edit-recipe-<recipe_id>. Recipe PUT takes 8-24s, so wait >=25s before asserting saved state. Shop is reachable only from Home (home-section-shop).",
+  "rca_of_the_issue": "Initial 'save did not work' observation on recipe_realname was a false negative: PUT /api/recipes/{id} synchronously calls _translate_recipe_de (LLM stream) whenever name/flour_type/notes/procedure are present in the merged doc, so the response took 8s (and 24s on a second run). The frontend shows no pending state, so the dialog appeared frozen. Verified 200 responses and DB persistence (real_name='TEST_QA_RN', real_name_de='Kartoffelbrot') before restoring the original value."
+}
