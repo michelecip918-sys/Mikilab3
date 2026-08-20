@@ -127,7 +127,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E]/85 via-[#2C221E]/30 to-transparent" />
         <div className="absolute bottom-0 left-0 p-5">
           <h1 className="font-display text-3xl font-bold text-white">{heroTitle}</h1>
-          <p className="text-white/85 text-sm mt-0.5">{heroSubtitle}</p>
+          {heroSubtitle ? <p className="text-white/85 text-sm mt-0.5">{heroSubtitle}</p> : null}
         </div>
       </div>
 

@@ -154,7 +154,7 @@ export default function Home({ onNavigate }) {
             collectionName="personal"
             heroImage="https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
             heroTitle={t("personal_hero_title")}
-            heroSubtitle={t("personal_hero_sub")}
+            heroSubtitle=""
             emptyText={t("personal_empty")}
           />
         </div>
