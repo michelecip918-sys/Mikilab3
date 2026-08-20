@@ -348,3 +348,17 @@ Priorità: DOPO il Freemium/Paywall. Default stato "Coming Soon".
 1. Sezione Shop: catalogo panettoni/prodotti da forno. Scheda prodotto: titolo+descrizione, selezione pezzatura (500/750/1000g), varianti sospensione (Classico/Cioccolato/Uvetta/Canditi), galleria HD. Carrello + checkout con calcolo spedizione per peso/destinazione, pagamenti Stripe + PayPal.
 2. "Coming Soon" + interruttore ON/OFF da pannello Admin. In modalità Coming Soon: al posto di "Acquista" mostra form "Lascia la tua email per l'avviso al lancio" (raccolta lead). Vendite reali sbloccate da admin solo dopo inserimento dati fiscali aziendali.
 3. Conformità alimentare e-commerce: in ogni scheda campi obbligatori — lista ingredienti completa, ALLERGENI in grassetto, tabella nutrizionale, peso netto, conservazione. Footer shop: "Prodotto da [Laboratorio] per conto di [Marchio]" + note legali recesso/spedizione deperibili.
+
+---
+## Changelog — 20 Giu 2026 (Paywall Fase 1 — backend Stripe)
+- Provisioning sandbox Stripe (account acct_1U6Q6D8mKQQsGy1M, paese DE). Chiavi in backend/.env (STRIPE_SECRET_KEY/PUBLISHABLE_KEY/ACCOUNT_ID/WEBHOOK_SECRET/MODE). Onboarding claim URL dato all'utente.
+- setup_stripe.py: piani PRO creati — pro_monthly €9,99, pro_yearly €99 (EUR).
+- server.py endpoint: POST /api/subscription/checkout (Checkout subscription, coupon via allow_promotion_codes), GET /api/subscription/status?email, POST /api/webhook/stripe (checkout.session.completed → entitlements.pro=true; subscription.deleted → pro=false). Collezioni: payment_transactions, entitlements. TESTATO: checkout ritorna URL+session_id.
+- stripe SDK in requirements.txt.
+### PAYWALL — ANCORA DA FARE (prossima sessione)
+- Frontend: pulsanti Abbonati (mensile/annuale) → checkout; pagina success/cancel; badge PRO.
+- Trial pass 1h/24h (attivazione unica per utente) + countdown in header (backend: entitlements con source=trial + expires_at, endpoint /api/trial/activate).
+- Gating server-side reale di /api/lab/* e /api/diagnosi/* (legare a utente loggato, non email in query — HARDENING).
+- Ricette "assaggio" (mostra solo parte ingredienti se non PRO) + landing "Chi sono" + 2 demo read-only.
+- Admin: generazione coupon/inviti VIP (usare Stripe Promotion Codes 100% + grant manuale _grant_from_email con days).
+- PayPal come secondo provider.

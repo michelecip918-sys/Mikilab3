@@ -1450,6 +1450,91 @@ async def get_news():
 
 
 # ---------------------------------------------------------------------------
+import stripe as _stripe
+_stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
+PRICE_LOOKUP = {"monthly": "pro_monthly", "yearly": "pro_yearly"}
+
+
+class CheckoutReq(BaseModel):
+    plan: str = "monthly"        # monthly | yearly
+    email: str
+    origin_url: str
+    coupon: Optional[str] = None
+
+
+@api_router.post("/subscription/checkout")
+async def create_checkout(body: CheckoutReq):
+    lookup = PRICE_LOOKUP.get(body.plan, "pro_monthly")
+    prices = _stripe.Price.list(lookup_keys=[lookup], active=True, limit=1).data
+    if not prices:
+        raise HTTPException(400, "Prezzo non configurato")
+    # Cliente per email (riuso se esiste)
+    existing = _stripe.Customer.list(email=body.email, limit=1).data
+    customer = existing[0] if existing else _stripe.Customer.create(email=body.email)
+    session = _stripe.checkout.Session.create(
+        mode="subscription",
+        customer=customer.id,
+        line_items=[{"price": prices[0].id, "quantity": 1}],
+        allow_promotion_codes=True,
+        success_url=body.origin_url.rstrip("/") + "/?sub=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=body.origin_url.rstrip("/") + "/?sub=cancel",
+        metadata={"email": body.email, "plan": body.plan},
+    )
+    await db.payment_transactions.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": body.email,
+        "plan": body.plan, "amount": prices[0].unit_amount, "currency": prices[0].currency,
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
+
+
+async def _grant_from_email(email, source="stripe", days=None):
+    exp = None
+    if days:
+        exp = (datetime.now(timezone.utc) + timedelta(days=days)).isoformat()
+    await db.entitlements.update_one({"email": email},
+        {"$set": {"email": email, "pro": True, "source": source, "expires_at": exp, "updated_at": now_iso()}},
+        upsert=True)
+
+
+@api_router.get("/subscription/status")
+async def subscription_status(email: str):
+    ent = await db.entitlements.find_one({"email": email}, {"_id": 0})
+    pro = False
+    if ent and ent.get("pro"):
+        exp = ent.get("expires_at")
+        pro = True if not exp else exp > now_iso()
+    return {"pro": pro, "entitlement": ent}
+
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    sig = request.headers.get("stripe-signature", "")
+    try:
+        event = _stripe.Webhook.construct_event(payload, sig, STRIPE_WEBHOOK_SECRET)
+    except Exception:
+        raise HTTPException(400, "Firma non valida")
+    t = event["type"]
+    obj = event["data"]["object"]
+    if t == "checkout.session.completed":
+        email = (obj.get("metadata") or {}).get("email") or obj.get("customer_email")
+        await db.payment_transactions.update_one({"session_id": obj.get("id")},
+            {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
+        if email:
+            await _grant_from_email(email, "stripe")
+    elif t == "customer.subscription.deleted":
+        cust = obj.get("customer")
+        try:
+            c = _stripe.Customer.retrieve(cust)
+            if c.get("email"):
+                await db.entitlements.update_one({"email": c["email"]}, {"$set": {"pro": False, "updated_at": now_iso()}})
+        except Exception:
+            pass
+    return {"received": True}
+
+
 app.include_router(api_router)
 
 app.add_middleware(
