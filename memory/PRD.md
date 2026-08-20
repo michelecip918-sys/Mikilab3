@@ -381,7 +381,7 @@ Priorità: DOPO il Freemium/Paywall. Default stato "Coming Soon".
 - **RESET PASSWORD via RESEND (P2 FATTO)**: `POST /api/auth/forgot-password` (token 1h in `password_resets`, email HTML IT/DE via Resend, anti-enumeration) + `POST /api/auth/reset-password` (aggiorna hash, invalida sessioni, cancella token). UI: link "Password dimenticata?" in AuthScreen (`auth-forgot-link` → `forgot-sent`), schermata `ResetPassword.jsx` via `/?reset=<token>` (`reset-screen`). RESEND_API_KEY + SENDER_EMAIL=noreply@mikilab.de in backend/.env. Dominio mikilab.de verificato su Resend → email consegnate.
 - **FIX**: IntroGuide non viene più renderizzato quando c'è `?reset=` (prima l'overlay Radix bloccava i click sulla schermata reset).
 ### RESTA DA FARE (Paywall)
-- PayPal come secondo provider (serve credenziali business dell'utente — BLOCCATO).
+- PayPal come secondo provider — **BLOCCATO**: account PayPal business dell'utente sospeso per alcuni giorni (2026-06). Piano concordato: PAGAMENTO SINGOLO A TEMPO (€9,99=30gg PRO, €99=1 anno PRO) via PayPal REST Orders (create+capture, redirect come Stripe), grant via `_grant_from_email(email,"paypal",days)`. Serve Client ID + Secret da developer.paypal.com quando l'account si riattiva.
 - (Opz.) 2 ricette DEMO completamente sbloccate come vetrina.
 - Badge PRO nell'header; gestione visiva ritorno `?sub=success`.
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
