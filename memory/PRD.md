@@ -196,6 +196,12 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - **UX**: padding inferiore main aumentato (pb-40) per non far coprire i testi dai FAB Radio/Microfono su mobile.
 - Testato: iteration_15.json → backend 100%, frontend 100%, 0 errori console.
 
+## v23 (2026-06) — DE ricette personali + pagina legale + header
+- **Traduzione DE automatica ricette personali**: `_translate_recipe_de()` (Claude via Emergent key) chiamata in create/update di /api/recipes → riempie name_de/flour_type_de/notes_de/procedure_de. Ora le ricette dell'utente non restano in italiano quando la lingua è DE. Best-effort (try/except, il salvataggio non fallisce mai).
+- **Pagina legale** (`LegalPage.jsx`, bilingue IT/DE): scopo organizzativo/didattico, senza lucro; Datenschutz (dati minimi email+nome, cookie tecnico di sessione, no cessione a terzi); contatto noreply@mikilab.de. Link discreto in fondo alla Home (home-legal-link).
+- **Header**: aggiunta foto di Michele accanto al logo; sottotitolo nascosto sotto 400px per non sovrapporsi all'orologio.
+- ROADMAP completa salvata in `/app/memory/ROADMAP.md` (attesa priorità utente: blocchi a–h).
+
 ## v22 (2026-06) — Ricette private in Home
 - **Home**: aggiunta sezione **"Le mie ricette private"** (RecipeList collection `personal`), visibile solo se l'utente è loggato.
 - **Reset password (Resend)**: RINVIATO — l'utente deve fornire la API key di Resend (re_...) e ha confermato dominio `noreply@mikilab.de`. Playbook pronto; da implementare quando arriva la key.
@@ -240,3 +246,44 @@ Barra a 6 voci: **Home · Ricette · Maestro · Impara · Diagnosi · News**.
 - (Se richiesto di nuovo) Login Google + Email (playbook pronti).
 
 
+
+---
+## Changelog — 20 Giugno 2026 (Capo Laboratorio avanzato + Condivisione/PWA)
+
+### Capo Laboratorio (piano intelligente)
+- Piano generato in DUE FASI (phase=weekly → phase=daily) per evitare il troncamento del proxy a 60s. Ogni fase < 60s con evento `done`.
+- Selettore GIORNO (Lun–Dom) + g/pz per ogni prodotto; opzione "Usa anche il Piano settimanale salvato" (use_weekly).
+- Piano settimanale + quotidiano dettagliato, bilingue reale IT/DE (prompt/context/etichette tradotti quando lang=de; direttiva lingua in apertura e chiusura).
+- Lista della spesa settimanale calcolata (farine per tipo, acqua, prefermento, sale, extra) lato frontend (/lib/shopping.js).
+- Stampa/PDF (window.print + .print-area) del piano con le RICETTE coinvolte.
+
+### Piano settimanale (WeeklyPlan)
+- Nuovi campi destinazione pezzi per prodotto: to_proof (cella lievitazione/oggi), to_fridge (frigo/domani), to_freezer (freezer/resto). Persistiti in weekly_plan.
+- Le destinazioni vengono lette dal Capo Laboratorio e rispettate nel piano quotidiano AI.
+- Quantità mostrate in kg (fmtQty) invece di grammi grezzi.
+
+### Fornitori / Ordini
+- SupplierOrder: lista spesa + ordine via email (mailto, fornitore auto per lingua DE→BÄKO / IT→mulino, modificabile, salvato in localStorage) + directory ~25 fornitori DE+IT (BÄKO, IREKS, Puratos, Lesaffre, mulini IT/DE, canditi, ecc.) con descrizioni bilingui. File: /data/suppliers.js, /components/SupplierOrder.jsx.
+- Riusato anche nel tool "Lista Spesa" (ShoppingList.jsx).
+
+### Principianti (pane a casa)
+- HomePlanner in Beginners.jsx: planner casalingo semplificato (mode=home) con lista spesa e stampa.
+
+### Home
+- Barra CONDIVIDI (WhatsApp, Telegram, Facebook, X, Email, Copia link, condivisione nativa) + tasto INSTALLA APP (PWA beforeinstallprompt, con hint iOS). File: /components/ShareInstall.jsx.
+- Cartone animato di Michele (con coppola + tatuaggio avambraccio) in card "Chi sono io" → /public/michele-cartoon.jpg.
+
+### Bio
+- bio_about_body (IT+DE) aggiornata: Mikilab nasce nel 2023 dalla gestione di un forno di FARRO (Dinkel), inserimento prodotti italiani, ora messo a disposizione di tutti.
+
+### Fix critici (da iteration_19/20, verificati)
+- recipesApi.list resiliente (.catch(()=>[])) → utenti anonimi vedono comunque le ricette pubbliche mikilab.
+- Lingua DE su mode=pro risolta (prompt costruito in tedesco).
+- Troncamento 60s risolto con generazione a due fasi.
+
+### Testing
+- iteration_20.json: backend 87%, frontend 92%. Dopo fix lingua DE verificato via curl (weekly ~19s / daily ~34s, DE integralmente in tedesco).
+- deployment_agent: PASS (nessun blocco).
+
+### Note
+- Dati di test del weekly_plan rimossi (DB pulito).

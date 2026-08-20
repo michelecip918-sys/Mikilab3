@@ -34,15 +34,21 @@ export default function Header() {
       </div>
 
       <div className="px-4 py-3 flex items-center justify-between gap-2">
-      <div className="flex items-center gap-2.5 min-w-0">
-        <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#2A211D] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70 shrink-0">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-full h-full object-cover" />
+      <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center -space-x-2 shrink-0">
+          <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#2A211D] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70">
+            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-full h-full object-cover" />
+          </div>
+          <img src={`${process.env.PUBLIC_URL}/bio-photo.jpg`} alt="Michele"
+            data-testid="header-michele"
+            className="w-9 h-9 rounded-full object-cover ring-2 ring-white dark:ring-[#1A1412] shadow-sm bg-[#B34A26]"
+            onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
         <div className="leading-none min-w-0">
           <div className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
             Mikilab
           </div>
-          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#8C7567] flex items-center gap-1 truncate">
+          <div className="text-[10px] tracking-wider uppercase font-semibold text-[#8C7567] items-center gap-1 truncate hidden min-[400px]:flex">
             <span>🇮🇹</span> <span className="truncate">{t("brand_subtitle")}</span> <span>🇩🇪</span>
           </div>
         </div>

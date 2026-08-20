@@ -1,0 +1,43 @@
+{
+  "summary": "Iteration 20 retest dei 3 problemi critici di iteration_19 + nuove feature destinazioni pezzi. BACKEND (8 test in /app/backend/tests/test_iter20_phases.py): la generazione a due fasi RISOLVE il troncamento del proxy (phase=weekly ~20s con done, phase=daily ~35-45s con done, use_weekly ~40s con done, mode=home ~40s con done; nessuna risposta troncata); PUT/GET /api/weekly-plan persiste to_proof/to_fridge/to_freezer (45/25/530) senza _id/_key; il piano daily rispetta/menziona le destinazioni (cella, frigo, freezer). RESTA APERTO il problema LINGUA: con lang='de' e mode='pro' il piano viene generato in ITALIANO (phase=daily fallito 2/2, phase=weekly 1/2 -> comportamento non deterministico); mode='home' in DE OK. FRONTEND: fix ricette anonime confermato (38 opzioni in Capo Laboratorio, 37 nel Piano settimanale, tool spesa OK senza login); flusso UI a due fasi produce piano COMPLETO con '## Piano settimanale' + '## Piano quotidiano' in ~60s, nessun toast 'Piano forse incompleto', supplier-order/select/mail-btn, capo-print e capo-recipes presenti; Piano settimanale: i 3 campi destinazione esistono, si salvano e persistono dopo reload; HomePlanner completa in ~45s con supplier-order; immagine concept-photo-chi (/michele-cartoon.jpg 1024x1024) carica correttamente. Riprodotto in UI il bug lingua: con UI in DE il piano PRO generato e' in italiano (it_hits=37, de_hits=1).",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "POST /api/capo/plan (mode=pro, lang=de)", "issue": "Con lang='de' il contenuto del piano PRO viene ancora generato in ITALIANO. phase='daily' fallito 2/2 tentativi (it_hits=26/30, de_hits=0), phase='weekly' fallito 1/2 (non deterministico). mode='home' con lang='de' risponde correttamente in tedesco. L'istruzione lang_instr in coda al prompt utente + LANG_DIRECTIVE nel system message non basta perche' TUTTO il prompt pro (context, elenco sezioni, DAY_NAMES, destinazioni) e' in italiano e domina. Fix suggerito: per lang='de' costruire prompt/context/etichette in tedesco (o mettere la direttiva di lingua come PRIMA riga sia del system sia del messaggio utente e ripeterla in chiusura).", "priority": "HIGH"}
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Maestro > Capo Laboratorio con UI in tedesco", "issue": "UI tradotta in DE ma il piano generato (entrambe le fasi) e' in italiano: 'PIANO SETTIMANALE – LABORATORIO ARTIGIANALE', 'MARTEDÌ (giorno precedente)'. Riproduce il bug backend lang=de su mode=pro.", "affected_selectors": ["[data-testid=\"capo-plan\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Maestro > Piano settimanale (WeeklyPlan)", "issues": ["Le dosi/quantita' sono mostrate in grammi non formattati: '= 300000g', 'Farina 142857g', 'Acqua 125714g'. Andrebbero convertite in kg (300 kg, 142,9 kg) per leggibilita'."]},
+      {"screen": "Maestro > Capo Laboratorio, piano generato (capo-plan)", "issues": ["Su mobile 390px alcune righe del markdown (es. 'MARTEDÌ (giorno precedente) — ...') sembrano sfondare il padding sinistro della card: verificare word-break/overflow-x nella .markdown-body."]},
+      {"screen": "Capo Laboratorio / HomePlanner", "issues": ["Il campo 'Ora di inizio' usa il picker nativo del browser (input type=time) invece di un componente coerente con il design system: accettabile ma stonato con il resto della UI."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter20_phases.py",
+    "/app/test_reports/pytest/iter20.xml"
+  ],
+  "action_items": [
+    "HIGH: forzare la lingua per mode='pro' (phase weekly e daily): tradurre in tedesco il prompt/context/etichette quando lang='de' oppure ripetere la direttiva di lingua in apertura e chiusura del messaggio utente. Attualmente il piano PRO in DE esce in italiano (riprodotto sia via API sia in UI).",
+    "MINOR: formattare in kg le quantita' del Piano settimanale (attualmente '300000g', '142857g').",
+    "MINOR: verificare overflow-x/word-break della .markdown-body del piano su viewport 390px."
+  ],
+  "critical_code_review_comments": [
+    "server.py capo_plan_stream: il testo del prompt pro e' interamente hard-coded in italiano; l'unica leva per la lingua e' una frase finale. Estrarre i prompt in un modulo per lingua (prompts_it.py / prompts_de.py) risolverebbe anche il problema del file server.py oltre 1300 righe.",
+    "CapoLaboratorio.streamPhase non invia to_proof/to_fridge/to_freezer per i prodotti inseriti a mano (esistono solo nel Piano settimanale): se le destinazioni devono valere anche per i prodotti manuali servono i campi anche in capo-products.",
+    "CapoLaboratorio.streamPhase non controlla res.ok: in caso di 500 (es. LLM key mancante) res.body viene letto comunque e l'utente vede solo il toast generico; aggiungere gestione dello status.",
+    "Lo useEffect di CapoLaboratorio ha ancora catch vuoti: nessuno stato di errore/loading mostrato se il caricamento ricette/config fallisce."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter20_phases.py"],
+  "success_rate": {"backend": "87% (7/8 test; unico fallimento ricorrente: lang=de su mode=pro)", "frontend": "92% (tutti i flussi OK; unico difetto: contenuto piano PRO non in tedesco)"},
+  "seed_data_creation": "PUT /api/weekly-plan sovrascritto piu' volte durante i test: attualmente contiene 1 item backend 'TEST_iter20_item' (day=mer, 600 pz x 500 g, to_proof=45/to_fridge=25/to_freezer=530) piu' gli item creati dal test UI (Anima Integrale e Baguette con Poolish, giorno mercoledi). Rimuoverli se non desiderati.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Non necessarie: tutti i flussi testati da utente ANONIMO (fornaio@mikilab.de / Mikilab2026! disponibile ma non usato)",
+  "context_for_next_testing_agent": "Confermati risolti: (1) troncamento 60s -> generazione a due fasi, ogni fase < 60s con done; (2) ricette vuote per anonimi -> recipesApi.list con .catch(()=>[]) funziona (38 opzioni). RESTA il bug lingua DE su mode=pro (non deterministico, phase=daily quasi sempre in italiano). Test riutilizzabile: /app/backend/tests/test_iter20_phases.py (usa pytest.ini con -n 2, non passare -p no:xdist). In UI: chiudere il dialog 'Inizia', lang switch [data-testid=lang-it]/[lang-de], la generazione a due fasi impiega ~60-65s totali quindi usare polling a step di 5s per ~150s.",
+  "rca_of_the_issue": "Lingua DE su mode=pro: il prompt utente (contesto lab, elenco prodotti con destinazioni, nomi dei giorni, elenco sezioni richieste) e' scritto integralmente in italiano; l'unica indicazione di lingua e' la frase 'WICHTIG: Schreibe den GESAMTEN Plan AUSSCHLIESSLICH auf DEUTSCH' appesa in coda piu' LANG_DIRECTIVE in coda al system message. Con un prompt lungo in italiano il modello segue la lingua del contesto: risultato non deterministico (weekly a volte in DE, daily quasi sempre in IT). mode=home ha un prompt piu' corto e quindi la direttiva prevale piu' spesso."
+}

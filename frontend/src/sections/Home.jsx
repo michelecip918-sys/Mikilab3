@@ -4,7 +4,9 @@ import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, 
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
+import LegalPage from "@/sections/LegalPage";
 import RecipeList from "@/components/RecipeList";
+import ShareInstall from "@/components/ShareInstall";
 
 const CONCEPTS = {
   it: [
@@ -30,7 +32,7 @@ const CONCEPTS = {
 };
 
 const CONCEPT_PHOTOS = {
-  chi: `${process.env.PUBLIC_URL}/bio-dough-3.jpg`,
+  chi: `${process.env.PUBLIC_URL}/michele-cartoon.jpg`,
   metodo: `${process.env.PUBLIC_URL}/bio-dough-2.jpg`,
 };
 
@@ -38,6 +40,7 @@ export default function Home({ onNavigate }) {
   const { t, lang } = useLang();
   const { user } = useAuth();
   const [chat, setChat] = useState(false);
+  const [legal, setLegal] = useState(false);
   const [open, setOpen] = useState(null);
   const concepts = CONCEPTS[lang === "de" ? "de" : "it"];
   const go = (tab) => onNavigate && onNavigate(tab);
@@ -57,6 +60,17 @@ export default function Home({ onNavigate }) {
           <ChevronRight className="w-5 h-5 rotate-180" /> Home
         </button>
         <MaestroSaTutto />
+      </div>
+    );
+  }
+
+  if (legal) {
+    return (
+      <div className="pb-4">
+        <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#B34A26] font-medium mb-4">
+          <ChevronRight className="w-5 h-5 rotate-180" /> Home
+        </button>
+        <LegalPage />
       </div>
     );
   }
@@ -161,6 +175,15 @@ export default function Home({ onNavigate }) {
           emptyText={t("mikilab_empty")}
         />
       </div>
+
+      {/* Condividi & Installa app */}
+      <ShareInstall />
+
+      {/* Footer legale */}
+      <button data-testid="home-legal-link" onClick={() => setLegal(true)}
+        className="w-full text-center text-xs text-[#8C7567] underline underline-offset-2 py-2">
+        {lang === "de" ? "Impressum & Datenschutz" : "Note legali & Privacy"}
+      </button>
     </div>
   );
 }

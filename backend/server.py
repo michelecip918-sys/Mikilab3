@@ -6,6 +6,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import json
 import logging
+import re
 import requests
 from pathlib import Path
 from pydantic import BaseModel, Field
@@ -234,7 +235,7 @@ class LabConfig(BaseModel):
 
 
 class CapoPlanRequest(BaseModel):
-    items: List[dict] = []           # [{recipe_id, name, quantity, unit}]
+    items: List[dict] = []           # [{recipe_id, name, quantity, unit, day}]
     mixers: List[dict] = []
     cells: List[dict] = []
     staff: Optional[int] = None
@@ -242,6 +243,9 @@ class CapoPlanRequest(BaseModel):
     lab_temp_c: Optional[float] = None
     standard_temp_c: Optional[float] = 26.0
     notes: Optional[str] = ""
+    mode: str = "pro"                # "pro" (laboratorio) | "home" (pane a casa)
+    phase: str = "full"              # "full" | "weekly" | "daily" (per evitare troncamenti)
+    use_weekly: bool = False         # se True, unisce anche il Piano settimanale salvato
     lang: str = "it"
 
 
@@ -277,6 +281,9 @@ class WeeklyItem(BaseModel):
     recipe_name: str
     pieces: float = 1
     grams_per_piece: float = 100
+    to_proof: Optional[float] = None    # pezzi in cella lievitazione (per oggi)
+    to_fridge: Optional[float] = None   # pezzi in frigo (per domani)
+    to_freezer: Optional[float] = None  # pezzi in freezer (il resto)
 
 
 class WeeklyPlan(BaseModel):
@@ -428,6 +435,33 @@ async def optional_user(request: Request):
         return None
 
 
+async def _translate_recipe_de(doc):
+    """Traduce in tedesco i campi principali della ricetta (best-effort)."""
+    try:
+        fields = {k: doc.get(k) for k in ["name", "flour_type", "notes", "procedure"] if doc.get(k)}
+        if not fields:
+            return {}
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"trrec-{doc.get('id', 'x')}",
+            system_message=("Traduttore IT->DE per panificazione artigianale. Mantieni invariati i termini tecnici: "
+                            "Lievito Madre, Poolish, Biga, Sauerteig, Panettone, Backmittel, Kochstück, Quellstück. "
+                            "Non tradurre nomi propri (Mikilab, Michele). Rispondi SOLO con JSON valido."),
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
+        prompt = ("Traduci in tedesco e restituisci un JSON con SOLO le chiavi tra name_de, flour_type_de, notes_de, "
+                  "procedure_de corrispondenti ai campi forniti:\n" + json.dumps(fields, ensure_ascii=False))
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        return json.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logging.warning(f"translate_de failed: {e}")
+        return {}
+
+
 @api_router.post("/auth/register")
 async def auth_register(payload: RegisterReq, response: Response):
     email = payload.email.strip().lower()
@@ -517,8 +551,12 @@ async def create_recipe(payload: RecipeCreate, user: dict = Depends(current_user
     doc = recipe.model_dump()
     if payload.collection_name != "mikilab":
         doc["owner_id"] = user["user_id"]
+    tr = await _translate_recipe_de(doc)
+    for k in ("name_de", "flour_type_de", "notes_de", "procedure_de"):
+        if tr.get(k):
+            doc[k] = tr[k]
     await db.recipes.insert_one(doc)
-    return recipe
+    return Recipe(**{k: v for k, v in doc.items() if k != "owner_id"})
 
 
 @api_router.post("/upload")
@@ -573,6 +611,13 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depe
     updates["updated_at"] = now_iso()
     # Segna la ricetta come modificata a mano: il seed non la sovrascriverà più.
     updates["user_edited"] = True
+    # Ritraduci in tedesco i campi modificati.
+    if any(updates.get(k) for k in ("name", "flour_type", "notes", "procedure")):
+        base = {**existing, **updates}
+        tr = await _translate_recipe_de(base)
+        for k in ("name_de", "flour_type_de", "notes_de", "procedure_de"):
+            if tr.get(k):
+                updates[k] = tr[k]
     await db.recipes.update_one({"id": recipe_id}, {"$set": updates})
     merged = {**existing, **updates}
     return merged
@@ -878,90 +923,283 @@ CAPO_SYSTEM = (
     "indica orari concreti a partire dall'ora di inizio."
 )
 
+CAPO_HOME_SYSTEM = (
+    "Sei un fornaio esperto e paziente che aiuta chi fa il pane A CASA (forno domestico, niente attrezzature "
+    "professionali). Spieghi tutto con parole semplici, passo-passo, senza tecnicismi. Conosci il metodo di "
+    "Michele: prefermento la sera prima (poolish o lievito madre), impasto delicato con pieghe, lunga "
+    "lievitazione lenta in frigo per più sapore, cottura in forno di casa ben caldo con un pentolino d'acqua "
+    "per il vapore. Sei incoraggiante e rassicurante: va bene sbagliare, l'importante è divertirsi."
+)
+
+DAY_NAMES_L = {
+    "it": {"lun": "Lunedì", "mar": "Martedì", "mer": "Mercoledì", "gio": "Giovedì",
+           "ven": "Venerdì", "sab": "Sabato", "dom": "Domenica"},
+    "de": {"lun": "Montag", "mar": "Dienstag", "mer": "Mittwoch", "gio": "Donnerstag",
+           "ven": "Freitag", "sab": "Samstag", "dom": "Sonntag"},
+}
+DAY_NAMES = DAY_NAMES_L["it"]
+DAY_ORDER = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"]
+
 
 def _capo_lang(lang):
     return LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"])
 
 
+async def _capo_item_line(it, lang="it"):
+    """Formatta un prodotto con i dettagli ricetta dal DB."""
+    de = lang == "de"
+    rid = it.get("recipe_id")
+    rec = await db.recipes.find_one({"id": rid}, {"_id": 0}) if rid else None
+    qty = it.get("quantity")
+    unit = it.get("unit") or ("Stück" if de else "pezzi")
+    name = (rec or {}).get("name") or it.get("name") or "?"
+    line = f"- {name}: {qty} {unit}" if qty else f"- {name}"
+    dest = []
+    if it.get("to_proof"):
+        dest.append(f"{it['to_proof']} in GÄRKAMMER (für heute)" if de else f"{it['to_proof']} in cella LIEVITAZIONE (per oggi)")
+    if it.get("to_fridge"):
+        dest.append(f"{it['to_fridge']} in KÜHLSCHRANK 4-6°C (für morgen)" if de else f"{it['to_fridge']} in FRIGO 4-6°C (per domani)")
+    if it.get("to_freezer"):
+        dest.append(f"{it['to_freezer']} ins GEFRIERFACH (Vorrat)" if de else f"{it['to_freezer']} in FREEZER (scorta)")
+    if dest:
+        line += (" → Ziele: " if de else " → destinazioni: ") + ", ".join(dest)
+    if rec:
+        extra = []
+        if rec.get("dough_category"):
+            extra.append(f"{'Art' if de else 'tipologia'}={rec['dough_category']}")
+        if rec.get("preferment_type") and rec["preferment_type"] != "none":
+            extra.append(f"{'Vorteig' if de else 'prefermento'}={rec['preferment_type']}")
+        if rec.get("water_temp_c") is not None:
+            extra.append(f"{'Wasser' if de else 'acqua'}={rec['water_temp_c']}°C")
+        if rec.get("mix_minutes"):
+            extra.append(f"{'Kneten' if de else 'impasto'}={rec['mix_minutes']}min")
+        if rec.get("bulk_fermentation_hours"):
+            extra.append(f"{'Stockgare' if de else 'puntata'}={rec['bulk_fermentation_hours']}h")
+        if rec.get("proofing_hours"):
+            extra.append(f"{'Stückgare' if de else 'appretto'}={rec['proofing_hours']}h")
+        if rec.get("bake_temp"):
+            extra.append(f"{'Backen' if de else 'cottura'}={rec['bake_temp']}°/{rec.get('bake_minutes','?')}min {rec.get('oven_type','')}")
+        if extra:
+            line += " (" + ", ".join(extra) + ")"
+    return line
+
+
+async def _capo_build_products_block(items, lang="it"):
+    """Raggruppa i prodotti per giorno (se indicato). Ritorna (testo, has_days)."""
+    names = DAY_NAMES_L.get(lang, DAY_NAMES_L["it"])
+    by_day, no_day = {}, []
+    for it in items:
+        line = await _capo_item_line(it, lang)
+        day = (it.get("day") or "").strip().lower()
+        if day in names:
+            by_day.setdefault(day, []).append(line)
+        else:
+            no_day.append(line)
+    if not by_day:
+        return ("\n".join(no_day) or ("(keine Produkte)" if lang == "de" else "(nessun prodotto)")), False
+    parts = []
+    for d in DAY_ORDER:
+        if by_day.get(d):
+            parts.append(f"**{names[d]}**\n" + "\n".join(by_day[d]))
+    if no_day:
+        parts.append(("**Ohne zugewiesenen Tag**\n" if lang == "de" else "**Senza giorno assegnato**\n") + "\n".join(no_day))
+    return "\n\n".join(parts), True
+
+
 async def capo_plan_stream(payload: CapoPlanRequest):
-    # Enrich items with recipe details from the DB
-    detail_lines = []
-    for it in payload.items:
-        rid = it.get("recipe_id")
-        rec = None
-        if rid:
-            rec = await db.recipes.find_one({"id": rid}, {"_id": 0})
-        qty = it.get("quantity")
-        unit = it.get("unit") or "pezzi"
-        name = (rec or {}).get("name") or it.get("name") or "?"
-        bits = [f"- {name}: {qty} {unit}" if qty else f"- {name}"]
-        if rec:
-            extra = []
-            if rec.get("dough_category"):
-                extra.append(f"tipologia={rec['dough_category']}")
-            if rec.get("preferment_type") and rec["preferment_type"] != "none":
-                extra.append(f"prefermento={rec['preferment_type']}")
-            if rec.get("water_temp_c") is not None:
-                extra.append(f"acqua={rec['water_temp_c']}°C")
-            if rec.get("mix_minutes"):
-                extra.append(f"impasto={rec['mix_minutes']}min")
-            if rec.get("bulk_fermentation_hours"):
-                extra.append(f"puntata={rec['bulk_fermentation_hours']}h")
-            if rec.get("proofing_hours"):
-                extra.append(f"appretto={rec['proofing_hours']}h")
-            if rec.get("bake_temp"):
-                extra.append(f"cottura={rec['bake_temp']}°/{rec.get('bake_minutes','?')}min {rec.get('oven_type','')}")
-            if extra:
-                bits.append("  (" + ", ".join(extra) + ")")
-        detail_lines.append("\n".join(bits))
+    items = list(payload.items or [])
+    # Unisce anche il Piano settimanale salvato, se richiesto.
+    if payload.use_weekly:
+        wp = await db.weekly_plan.find_one({"_key": "default"}, {"_id": 0})
+        for w in (wp or {}).get("items", []):
+            items.append({
+                "recipe_id": w.get("recipe_id"), "name": w.get("recipe_name"),
+                "quantity": w.get("pieces"), "unit": "pezzi", "day": w.get("day"),
+                "to_proof": w.get("to_proof"), "to_fridge": w.get("to_fridge"), "to_freezer": w.get("to_freezer"),
+            })
 
-    mixers = payload.mixers or []
-    cells = payload.cells or []
-    mixer_txt = "\n".join(
-        f"- {m.get('name','Impastatrice')}: portata {m.get('capacity_kg','?')} kg"
-        + (f", tipo {m.get('type')}" if m.get("type") else "")
-        for m in mixers
-    ) or "(nessuna impastatrice indicata)"
-    cell_txt = "\n".join(
-        f"- {c.get('name','Cella')} [{c.get('type','')}]"
-        + (f" {c.get('temp_c')}°C" if c.get("temp_c") not in (None, "") else "")
-        + (f" — contenuto desiderato: {c.get('contents')}" if c.get("contents") else "")
-        for c in cells
-    ) or "(nessuna cella indicata)"
+    de = payload.lang == "de"
+    products_txt, has_days = await _capo_build_products_block(items, payload.lang)
+    # Direttiva di lingua FORTE, sia in apertura che in chiusura del prompt utente.
+    lang_lead = ("[SPRACHE: DEUTSCH] Schreibe den GESAMTEN Plan AUSSCHLIESSLICH auf DEUTSCH.\n\n"
+                 if de else "[LINGUA: ITALIANO] Scrivi TUTTO il piano in ITALIANO.\n\n")
+    lang_instr = ("\n\nWICHTIG: Der gesamte Plan MUSS auf DEUTSCH sein."
+                  if de else "\n\nIMPORTANTE: tutto il piano DEVE essere in ITALIANO.")
 
-    temp_note = ""
-    std = payload.standard_temp_c or 26.0
-    if payload.lab_temp_c not in (None, ""):
-        diff = float(payload.lab_temp_c) - float(std)
-        if abs(diff) >= 1:
-            verso = "più CALDO" if diff > 0 else "più FREDDO"
-            temp_note = (
-                f"\nATTENZIONE clima: il laboratorio è {payload.lab_temp_c}°C, {verso} dello standard "
-                f"({std}°C). Adatta la temperatura dell'acqua e i tempi di lievitazione di conseguenza."
+    if payload.mode == "home":
+        if de:
+            sections = (("1) **Wochenplan**: was an jedem Tag vorbereiten und was für den nächsten Tag ruhen lassen (Vorteige am Vorabend).\n"
+                         "2) **Tagesplan Schritt für Schritt**: ungefähre Uhrzeiten vom Vorabend bis zum Backen (Vorteig → Teig → Falten → Gare im Kühlschrank → Formen → Backen mit Dampf).\n"
+                         "3) **Einfache Tipps**: Wassertemperatur, wie man erkennt, dass der Teig reif ist, Backen im Hausofen.\n")
+                        if has_days else
+                        ("1) **Schritt-für-Schritt-Plan**: ungefähre Uhrzeiten vom Vorabend bis zum Backen (Vorteig → Teig → Falten → Gare im Kühlschrank → Formen → Backen mit Dampf).\n"
+                         "2) **Einfache Tipps**: Wassertemperatur, wie man erkennt, dass der Teig reif ist, Backen im Hausofen.\n"))
+            prompt = (
+                lang_lead
+                + "Hilf mir, das Brot für ZU HAUSE mit einem KLAREN und VOLLSTÄNDIGEN Plan zu organisieren.\n\n"
+                f"WAS ICH MACHEN MÖCHTE:\n{products_txt}\n"
+                + (f"\nWANN ICH STARTE / WANN ES FERTIG SEIN SOLL: {payload.start_time}\n" if payload.start_time else "")
+                + (f"\nNOTIZEN: {payload.notes}\n" if payload.notes else "")
+                + "\nErstelle den Plan mit DIESEN Abschnitten (Fettdruck und Listen):\n"
+                + sections
+                + "Sprich einfach und ermutigend, wie zu einem Anfänger. Sei vollständig, aber nicht verwirrend."
+            )
+        else:
+            sections = (("1) **Piano della settimana**: cosa preparare ogni giorno e cosa lasciar riposare per il giorno dopo (prefermenti la sera prima).\n"
+                         "2) **Piano del giorno passo-passo**: orari indicativi dalla sera prima alla sfornata (prefermento → impasto → pieghe → lievitazione in frigo → formatura → cottura col vapore).\n"
+                         "3) **Consigli semplici**: temperatura acqua, come capire quando è lievitato, cottura nel forno di casa.\n")
+                        if has_days else
+                        ("1) **Piano passo-passo**: orari indicativi dalla sera prima alla sfornata (prefermento → impasto → pieghe → lievitazione in frigo → formatura → cottura col vapore).\n"
+                         "2) **Consigli semplici**: temperatura acqua, come capire quando è lievitato, cottura nel forno di casa.\n"))
+            prompt = (
+                lang_lead
+                + "Aiutami a organizzare il pane da fare A CASA con un piano CHIARO e COMPLETO.\n\n"
+                f"COSA VOGLIO FARE:\n{products_txt}\n"
+                + (f"\nQUANDO INIZIO / QUANDO MI SERVE PRONTO: {payload.start_time}\n" if payload.start_time else "")
+                + (f"\nNOTE: {payload.notes}\n" if payload.notes else "")
+                + "\nProduci il piano con QUESTE sezioni (usa grassetti ed elenchi):\n"
+                + sections
+                + "Parla in modo semplice e incoraggiante, come a un principiante. Sii completo ma senza confondere."
+            )
+        system = CAPO_HOME_SYSTEM
+        max_tokens = 2600
+    else:
+        mixers = payload.mixers or []
+        cells = payload.cells or []
+        if de:
+            mixer_txt = "\n".join(
+                f"- {m.get('name','Knetmaschine')}: Kapazität {m.get('capacity_kg','?')} kg"
+                + (f", Typ {m.get('type')}" if m.get("type") else "")
+                for m in mixers
+            ) or "(keine Knetmaschine angegeben)"
+            cell_txt = "\n".join(
+                f"- {c.get('name','Kammer')} [{c.get('type','')}]"
+                + (f" {c.get('temp_c')}°C" if c.get("temp_c") not in (None, "") else "")
+                + (f" — gewünschter Inhalt: {c.get('contents')}" if c.get("contents") else "")
+                for c in cells
+            ) or "(keine Kammer angegeben)"
+        else:
+            mixer_txt = "\n".join(
+                f"- {m.get('name','Impastatrice')}: portata {m.get('capacity_kg','?')} kg"
+                + (f", tipo {m.get('type')}" if m.get("type") else "")
+                for m in mixers
+            ) or "(nessuna impastatrice indicata)"
+            cell_txt = "\n".join(
+                f"- {c.get('name','Cella')} [{c.get('type','')}]"
+                + (f" {c.get('temp_c')}°C" if c.get("temp_c") not in (None, "") else "")
+                + (f" — contenuto desiderato: {c.get('contents')}" if c.get("contents") else "")
+                for c in cells
+            ) or "(nessuna cella indicata)"
+
+        temp_note = ""
+        std = payload.standard_temp_c or 26.0
+        if payload.lab_temp_c not in (None, ""):
+            diff = float(payload.lab_temp_c) - float(std)
+            if abs(diff) >= 1:
+                if de:
+                    verso = "WÄRMER" if diff > 0 else "KÄLTER"
+                    temp_note = (
+                        f"\nACHTUNG Klima: die Backstube ist {payload.lab_temp_c}°C, {verso} als der Standard "
+                        f"({std}°C). Passe Wassertemperatur und Gärzeiten entsprechend an."
+                    )
+                else:
+                    verso = "più CALDO" if diff > 0 else "più FREDDO"
+                    temp_note = (
+                        f"\nATTENZIONE clima: il laboratorio è {payload.lab_temp_c}°C, {verso} dello standard "
+                        f"({std}°C). Adatta la temperatura dell'acqua e i tempi di lievitazione di conseguenza."
+                    )
+
+        if de:
+            context = (
+                f"TAGESBEGINN: {payload.start_time or 'nicht angegeben'}\n"
+                f"VERFÜGBARES PERSONAL: {payload.staff if payload.staff is not None else 'nicht angegeben'}\n\n"
+                f"ZU VORBEREITENDE PRODUKTE:\n{products_txt}\n\n"
+                f"KNETMASCHINEN:\n{mixer_txt}\n\n"
+                f"KAMMERN (Kühlschrank / Gefrierfach / Gärkammer):\n{cell_txt}\n"
+                f"{temp_note}\n"
+                + (f"\nNOTIZEN: {payload.notes}\n" if payload.notes else "")
+            )
+        else:
+            context = (
+                f"ORA DI INIZIO GIORNATA: {payload.start_time or 'non indicata'}\n"
+                f"PERSONALE DISPONIBILE: {payload.staff if payload.staff is not None else 'non indicato'}\n\n"
+                f"PRODOTTI DA PREPARARE:\n{products_txt}\n\n"
+                f"IMPASTATRICI:\n{mixer_txt}\n\n"
+                f"CELLE (frigo / freezer / lievitazione):\n{cell_txt}\n"
+                f"{temp_note}\n"
+                + (f"\nNOTE: {payload.notes}\n" if payload.notes else "")
             )
 
-    prompt = (
-        "Organizza il PIANO DI LAVORO del laboratorio.\n\n"
-        f"ORA DI INIZIO: {payload.start_time or 'non indicata'}\n"
-        f"PERSONALE DISPONIBILE: {payload.staff if payload.staff is not None else 'non indicato'}\n\n"
-        f"PRODOTTI DA PREPARARE:\n" + ("\n".join(detail_lines) or "(nessun prodotto)") + "\n\n"
-        f"IMPASTATRICI:\n{mixer_txt}\n\n"
-        f"CELLE (frigo / freezer / lievitazione):\n{cell_txt}\n"
-        f"{temp_note}\n"
-        + (f"\nNOTE: {payload.notes}\n" if payload.notes else "")
-        + "\nProduci un piano COMPATTO e ORDINATO (breve, max ~350 parole, niente ripetizioni), con:\n"
-        "1) **Sequenza impasti**: elenco ordinato (quale impastatrice, quanti kg, perché in quest'ordine).\n"
-        "2) **Orari**: tabella o elenco essenziale dall'inizio (prefermenti/Quellstück → impasti → riposi cella 16°C o frigo 4-6°C → formatura → appretto → cottura).\n"
-        "3) **Celle**: cosa va in frigo/freezer/lievitazione e quando spostarlo (1-2 righe).\n"
-        "4) **Compiti squadra** e **Avvisi** clima/lievitazione (poche righe).\n"
-        "Usa grassetti ed elenchi brevi. Sii sintetico e concreto come un capo turno."
-    )
+        if payload.phase == "weekly":
+            if de:
+                prompt = (
+                    lang_lead
+                    + "Organisiere NUR den WOCHENPLAN der Backstube (Übersicht nach Tagen), knapp aber vollständig.\n\n"
+                    + context
+                    + "\nErstelle (Fettdruck und Listen pro Tag):\n"
+                    "1) **Wochenübersicht**: für jeden Tag was zu kneten ist und welche Vorteige/Auffrischungen am Vortag anzusetzen sind (Sauerteig, Poolish, Quellstück für Saaten).\n"
+                    "2) **Ziele**: für jedes Produkt die angegebene Aufteilung beachten (X in Gärkammer = heute backen, Y in Kühlschrank = morgen backen, Rest ins Gefrierfach als Vorrat) und erinnern, wann Kühlschrank/Gefrierfach wieder herausnehmen.\n"
+                    "Sei knapp und konkret (max ~450 Wörter). Schreibe NICHT den Stundenplan: der kommt danach."
+                )
+            else:
+                prompt = (
+                    lang_lead
+                    + "Organizza SOLO il PIANO SETTIMANALE del laboratorio (panoramica per giorni), sintetico ma completo.\n\n"
+                    + context
+                    + "\nProduci (usa grassetti ed elenchi per ogni giorno):\n"
+                    "1) **Panoramica settimanale**: per ogni giorno cosa impastare e quali prefermenti/rinfreschi avviare il giorno prima (lievito madre, poolish, Quellstück per i semi).\n"
+                    "2) **Destinazioni**: per ogni prodotto rispetta la ripartizione indicata (X in cella lievitazione = da cuocere oggi, Y in frigo = da cuocere domani, resto in freezer come scorta) e ricorda quando riprendere frigo/freezer.\n"
+                    "Sii sintetico e concreto (max ~450 parole). NON scrivere il piano ora-per-ora: quello arriva dopo."
+                )
+            max_tokens = 1600
+        elif payload.phase == "daily":
+            if de:
+                prompt = (
+                    lang_lead
+                    + "Erstelle den TAGESPLAN Stunde für Stunde der Backstube, PRÄZISE und VOLLSTÄNDIG, basierend auf dem Wochenplan.\n\n"
+                    + context
+                    + "\nErstelle (Fettdruck und Listen, konkrete Uhrzeiten ab Tagesbeginn):\n"
+                    "1) **Stundenablauf des Tages**: Vorteige/Quellstück → Teige (welche Knetmaschine, wie viele kg, ohne Kapazität zu überschreiten) → Ruhe Gärkammer 16°C oder Kühlschrank 4-6°C → Formen → Stückgare → Backen (Temperatur und Ofen).\n"
+                    "2) **Kammer- und Zielverwaltung**: was in die Gärkammer (heute backen), was in den Kühlschrank (morgen), was ins Gefrierfach (Vorrat) und wann herausnehmen/auftauen.\n"
+                    "3) **Team-Aufgaben** und **Hinweise** zu Klima/Gärung.\n"
+                    "Sei präzise und vollständig bis zum Backen, ohne abzuschneiden. Maximal ~700 Wörter."
+                )
+            else:
+                prompt = (
+                    lang_lead
+                    + "Crea il PIANO QUOTIDIANO ora-per-ora del laboratorio, PRECISO e COMPLETO, basandoti sul piano settimanale.\n\n"
+                    + context
+                    + "\nProduci (usa grassetti ed elenchi, orari concreti dall'ora di inizio):\n"
+                    "1) **Sequenza oraria del giorno**: prefermenti/Quellstück → impasti (quale impastatrice, quanti kg, senza superare la portata) → riposi cella 16°C o frigo 4-6°C → formatura → appretto → cottura (temperatura e forno).\n"
+                    "2) **Gestione celle e destinazioni**: cosa mettere in cella lievitazione (da cuocere oggi), cosa in frigo (domani), cosa in freezer (scorta), e quando spostarlo/scongelarlo.\n"
+                    "3) **Compiti squadra** e **Avvisi** clima/lievitazione.\n"
+                    "Sii preciso e completo fino alla cottura, senza troncare. Massimo ~700 parole."
+                )
+            max_tokens = 2400
+        else:
+            if de:
+                prompt = (
+                    lang_lead
+                    + "Organisiere den ARBEITSPLAN der Backstube, PRÄZISE aber KNAPP.\n\n"
+                    + context
+                    + "\nErstelle mit Abschnitten (Fettdruck und Listen): Wochenübersicht (falls Tage vorhanden), Tagesplan Stunde für Stunde, Reihenfolge der Teige, Kammern und Ziele, Team-Aufgaben und Hinweise. Max ~600 Wörter, vollständig bis zum Backen."
+                )
+            else:
+                prompt = (
+                    lang_lead
+                    + "Organizza il PIANO DI LAVORO del laboratorio, PRECISO ma SINTETICO.\n\n"
+                    + context
+                    + "\nProduci con sezioni (grassetti ed elenchi): panoramica settimanale (se ci sono giorni), piano quotidiano ora-per-ora, sequenza impasti, celle e destinazioni, compiti squadra e avvisi. Max ~600 parole, completa fino alla cottura."
+                )
+            max_tokens = 3000
+        system = CAPO_SYSTEM
 
+    prompt += lang_instr
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=f"capo-{uuid.uuid4()}",
-        system_message=CAPO_SYSTEM + _capo_lang(payload.lang),
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1800)
+        system_message=system + _capo_lang(payload.lang),
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=max_tokens)
 
     try:
         async for event in chat.stream_message(UserMessage(text=prompt)):

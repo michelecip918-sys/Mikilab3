@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { fmtQty } from "@/lib/shopping";
 import { jsPDF } from "jspdf";
 
 const DAYS = [
@@ -50,6 +51,7 @@ export default function WeeklyPlan() {
         setLoaded(true);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const recipeById = useMemo(() => {
@@ -78,9 +80,12 @@ export default function WeeklyPlan() {
   const save = async () => {
     try {
       await weeklyApi.save({
-        items: items.map(({ id, day, recipe_id, recipe_name, pieces, grams_per_piece }) => ({
+        items: items.map(({ id, day, recipe_id, recipe_name, pieces, grams_per_piece, to_proof, to_fridge, to_freezer }) => ({
           id, day, recipe_id, recipe_name,
           pieces: Number(pieces || 0), grams_per_piece: Number(grams_per_piece || 0),
+          to_proof: to_proof === "" || to_proof == null ? null : Number(to_proof),
+          to_fridge: to_fridge === "" || to_fridge == null ? null : Number(to_fridge),
+          to_freezer: to_freezer === "" || to_freezer == null ? null : Number(to_freezer),
         })),
       });
       toast.success(t("toast_weekly_saved"));
@@ -100,7 +105,7 @@ export default function WeeklyPlan() {
         const currentTotal = r ? GRAM_FIELDS.reduce((s, f) => s + Number(r[f.key] || 0), 0) : 0;
         const factor = currentTotal > 0 ? totalDough / currentTotal : null;
         const doses = r && factor
-          ? GRAM_FIELDS.filter((f) => r[f.key] != null).map((f) => `${t(f.labelKey)} ${Math.round(r[f.key] * factor)}g`)
+          ? GRAM_FIELDS.filter((f) => r[f.key] != null).map((f) => `${t(f.labelKey)} ${fmtQty(r[f.key] * factor)}`)
           : [];
         return { name: it.recipe_name, pieces, gpp, totalDough, doses, missing: !r };
       });
@@ -114,7 +119,7 @@ export default function WeeklyPlan() {
     summary.forEach((d) => {
       out += `${d.day}:\n`;
       d.items.forEach((it) => {
-        out += `  • ${it.name} — ${it.pieces} × ${it.gpp}g = ${Math.round(it.totalDough)}g\n`;
+        out += `  • ${it.name} — ${it.pieces} × ${it.gpp}g = ${fmtQty(it.totalDough)}\n`;
         if (it.doses.length) out += `    ${t("weekly_doses_label")}: ${it.doses.join(" · ")}\n`;
       });
       out += "\n";
@@ -131,7 +136,7 @@ export default function WeeklyPlan() {
         <ul>
           ${d.items.map((it) => `
             <li>
-              <strong>${it.name}</strong> — ${it.pieces} × ${it.gpp}g = <b>${Math.round(it.totalDough)}g</b>
+              <strong>${it.name}</strong> — ${it.pieces} × ${it.gpp}g = <b>${fmtQty(it.totalDough)}</b>
               ${it.missing ? `<div class="warn">${t("weekly_recipe_gone")}</div>` : ""}
               ${it.doses.length ? `<div class="doses">${t("weekly_doses_label")}: ${it.doses.join(" &middot; ")}</div>` : ""}
             </li>`).join("")}
@@ -168,7 +173,7 @@ export default function WeeklyPlan() {
       doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(44, 34, 30);
       d.items.forEach((it) => {
         if (y > 280) { doc.addPage(); y = 18; }
-        doc.text(`• ${it.name} — ${it.pieces} x ${it.gpp}g = ${Math.round(it.totalDough)}g`, 18, y); y += 6;
+        doc.text(`• ${it.name} — ${it.pieces} x ${it.gpp}g = ${fmtQty(it.totalDough)}`, 18, y); y += 6;
         if (it.doses.length) {
           doc.setTextColor(140, 58, 29); doc.setFontSize(9);
           doc.text(`   ${t("weekly_doses_label")}: ${it.doses.join(" · ")}`, 18, y); y += 6;
@@ -340,7 +345,7 @@ function WeeklyItemRow({ item, recipes, recipe, t, onRecipeChange, onChange, onR
           />
           <span className="text-xs text-[#8C7567]">{t("weekly_gpp")}</span>
         </div>
-        <span className="font-mono-data text-sm font-bold text-[#4A3B34] dark:text-[#C9BBB0]">= {Math.round(totalDough)}g</span>
+        <span className="font-mono-data text-sm font-bold text-[#4A3B34] dark:text-[#C9BBB0]">= {fmtQty(totalDough)}</span>
       </div>
 
       {!recipe ? (
@@ -349,11 +354,34 @@ function WeeklyItemRow({ item, recipes, recipe, t, onRecipeChange, onChange, onR
         <div className="flex flex-wrap gap-1.5 mt-2" data-testid={`weekly-doses-${item.id}`}>
           {scaled.map((f) => f.value != null && (
             <span key={f.key} className="inline-flex items-center gap-1 bg-[#D99B26]/15 text-[#8C3A1D] dark:text-[#E5AC3A] font-mono-data text-xs px-2 py-0.5 rounded-full font-bold border border-[#D99B26]/30">
-              <Wheat className="w-3 h-3" /> {t(f.labelKey)} {f.value}g
+              <Wheat className="w-3 h-3" /> {t(f.labelKey)} {fmtQty(f.value)}
             </span>
           ))}
         </div>
       ) : null}
+
+      {/* Destinazione pezzi: lievitazione (oggi) / frigo (domani) / freezer (resto) */}
+      <div className="mt-3 pt-2 border-t border-dashed border-[#E8DEC8] dark:border-[#3D302A]">
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567]">{t("weekly_dest_title")}</p>
+        <div className="grid grid-cols-3 gap-2 mt-1.5">
+          {[
+            ["to_proof", t("weekly_dest_proof")],
+            ["to_fridge", t("weekly_dest_fridge")],
+            ["to_freezer", t("weekly_dest_freezer")],
+          ].map(([key, label]) => (
+            <div key={key}>
+              <label className="text-[10px] text-[#8C7567] block leading-tight">{label}</label>
+              <input
+                data-testid={`weekly-${key}-${item.id}`}
+                type="number" value={item[key] ?? ""} placeholder="—"
+                onChange={(e) => onChange({ [key]: e.target.value })}
+                className="mt-0.5 w-full text-center font-mono-data font-bold text-[#6B8E62] bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-1 py-1.5 outline-none focus:border-[#6B8E62]"
+              />
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px] text-[#A89689] mt-1 leading-snug">{t("weekly_dest_hint")}</p>
+      </div>
     </div>
   );
 }

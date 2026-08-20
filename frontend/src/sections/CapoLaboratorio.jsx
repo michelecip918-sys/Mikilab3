@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Cog, Snowflake, Wind, Thermometer, Video, Camera, Sparkles } from "lucide-react";
-import { API, labConfigApi, recipesApi } from "@/lib/api";
+import { ChefHat, Plus, X, Cog, Snowflake, Wind, Thermometer, Video, Camera, Sparkles, Printer, CalendarDays } from "lucide-react";
+import { API, labConfigApi, recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { computeShopping } from "@/lib/shopping";
+import SupplierOrder from "@/components/SupplierOrder";
+import { rLoc } from "@/lib/loc";
 
 const CELL_TYPES = ["frigo", "freezer", "lievitazione"];
+const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
 export default function CapoLaboratorio() {
   const { t, lang } = useLang();
@@ -19,6 +23,8 @@ export default function CapoLaboratorio() {
   const [notes, setNotes] = useState("");
   const [products, setProducts] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [weeklyItems, setWeeklyItems] = useState([]);
+  const [useWeekly, setUseWeekly] = useState(false);
   const [plan, setPlan] = useState("");
   const [generating, setGenerating] = useState(false);
 
@@ -34,11 +40,32 @@ export default function CapoLaboratorio() {
         }
       } catch { /* first run */ }
       try {
-        const [mk, ps] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal")]);
+        const [mk, ps, wp] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal"), weeklyApi.get()]);
         setRecipes([...(mk || []), ...(ps || [])].sort((a, b) => (a.name || "").localeCompare(b.name || "")));
+        if (wp && wp.items) setWeeklyItems(wp.items);
       } catch { /* */ }
     })();
   }, []);
+
+  const recipeById = useMemo(() => Object.fromEntries(recipes.map((r) => [r.id, r])), [recipes]);
+
+  // Lista della spesa: unisce prodotti manuali (+ piano settimanale se attivo).
+  const shopTotals = useMemo(() => {
+    const list = products
+      .filter((p) => p.recipe_id)
+      .map((p) => ({ recipe_id: p.recipe_id, grams: p.unit === "kg" ? Number(p.qty || 0) * 1000 : Number(p.qty || 0) * Number(p.gpp || 500) }));
+    if (useWeekly) {
+      weeklyItems.forEach((w) => list.push({ recipe_id: w.recipe_id, grams: Number(w.pieces || 0) * Number(w.grams_per_piece || 0) }));
+    }
+    return computeShopping(list, recipeById, lang);
+  }, [products, useWeekly, weeklyItems, recipeById, lang]);
+
+  // Ricette coinvolte (per la stampa).
+  const usedRecipes = useMemo(() => {
+    const ids = new Set(products.filter((p) => p.recipe_id).map((p) => p.recipe_id));
+    if (useWeekly) weeklyItems.forEach((w) => ids.add(w.recipe_id));
+    return [...ids].map((id) => recipeById[id]).filter(Boolean);
+  }, [products, useWeekly, weeklyItems, recipeById]);
 
   const saveConfig = async () => {
     const numOrNull = (v) => (v === "" || v == null ? null : Number(v));
@@ -56,38 +83,52 @@ export default function CapoLaboratorio() {
   const tempDelta = labTemp === "" ? null : Number(labTemp) - (Number(stdTemp) || 26);
   const tempMsg = tempDelta == null ? null : Math.abs(tempDelta) < 1 ? t("capo_temp_ok") : tempDelta > 0 ? t("capo_temp_warm") : t("capo_temp_cold");
 
-  const generate = async () => {
-    if (products.length === 0) { toast.error(t("capo_no_products")); return; }
-    setGenerating(true); setPlan("");
-    let sawDone = false;
-    try {
-      const res = await fetch(`${API}/capo/plan`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit })),
-          mixers, cells,
-          staff: staff === "" ? null : Number(staff),
-          start_time: startTime, lab_temp_c: labTemp === "" ? null : Number(labTemp),
-          standard_temp_c: Number(stdTemp) || 26, notes, lang,
-        }),
-      });
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const parts = buffer.split("\n\n"); buffer = parts.pop();
-        for (const part of parts) {
-          const line = part.replace(/^data: ?/, "").trim();
-          if (!line) continue;
-          let obj; try { obj = JSON.parse(line); } catch { continue; }
-          if (obj.done) { sawDone = true; continue; }
-          if (obj.d) setPlan((p) => p + obj.d);
-        }
+  // Genera in due fasi (settimanale → quotidiano) per non superare il limite ~60s del proxy.
+  const streamPhase = async (phase, headerLabel) => {
+    const res = await fetch(`${API}/capo/plan`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit, day: p.day || null })),
+        mixers, cells, mode: "pro", phase, use_weekly: useWeekly,
+        staff: staff === "" ? null : Number(staff),
+        start_time: startTime, lab_temp_c: labTemp === "" ? null : Number(labTemp),
+        standard_temp_c: Number(stdTemp) || 26, notes, lang,
+      }),
+    });
+    if (headerLabel) setPlan((p) => p + (p ? "\n\n" : "") + `## ${headerLabel}\n\n`);
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let done = false;
+    while (true) {
+      const { done: rd, value } = await reader.read();
+      if (rd) break;
+      buffer += decoder.decode(value, { stream: true });
+      const parts = buffer.split("\n\n"); buffer = parts.pop();
+      for (const part of parts) {
+        const line = part.replace(/^data: ?/, "").trim();
+        if (!line) continue;
+        let obj; try { obj = JSON.parse(line); } catch { continue; }
+        if (obj.done) { done = true; continue; }
+        if (obj.d) setPlan((p) => p + obj.d);
       }
-      if (!sawDone) toast.warning(t("capo_plan_incomplete"));
+    }
+    return done;
+  };
+
+  const generate = async () => {
+    if (products.length === 0 && !(useWeekly && weeklyItems.length)) { toast.error(t("capo_no_products")); return; }
+    setGenerating(true); setPlan("");
+    const twoPhase = useWeekly || products.some((p) => p.day);
+    try {
+      let ok = true;
+      if (twoPhase) {
+        ok = await streamPhase("weekly", t("capo_phase_weekly"));
+        ok = (await streamPhase("daily", t("capo_phase_daily"))) && ok;
+      } else {
+        ok = await streamPhase("daily", null);
+      }
+      if (!ok) toast.warning(t("capo_plan_incomplete"));
     } catch { toast.error(t("chat_error")); }
     finally { setGenerating(false); }
   };
@@ -168,28 +209,52 @@ export default function CapoLaboratorio() {
 
       {/* Prodotti da preparare */}
       <Section icon={<Sparkles className="w-4 h-4" />} title={t("capo_products_title")}>
+        {weeklyItems.length > 0 && (
+          <label data-testid="capo-use-weekly" className="flex items-center gap-2 mb-3 text-sm text-[#4A3B34] dark:text-[#C9BBB0] bg-[#6B8E62]/10 border border-[#6B8E62]/25 rounded-xl px-3 py-2.5 cursor-pointer">
+            <input type="checkbox" checked={useWeekly} onChange={(e) => setUseWeekly(e.target.checked)} className="accent-[#6B8E62] w-4 h-4" />
+            <CalendarDays className="w-4 h-4 text-[#6B8E62]" />
+            <span>{t("capo_use_weekly")} <b>({weeklyItems.length})</b></span>
+          </label>
+        )}
         <div className="space-y-2" data-testid="capo-products">
           {products.map((p, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <select data-testid={`capo-product-recipe-${i}`} value={p.recipe_id || ""}
-                onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                className="flex-1 min-w-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
-                <option value="">{t("capo_pick_recipe")}</option>
-                {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
-              </select>
-              <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
-                onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-                className="w-20 shrink-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]" />
-              <select data-testid={`capo-product-unit-${i}`} value={p.unit}
-                onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))}
-                className="w-20 shrink-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
-                <option value="pezzi">{t("capo_unit_pieces")}</option>
-                <option value="kg">{t("capo_unit_kg")}</option>
-              </select>
-              <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#B4442A] p-1"><X className="w-4 h-4" /></button>
+            <div key={i} className="bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-2.5 space-y-2">
+              <div className="flex items-center gap-2">
+                <select data-testid={`capo-product-recipe-${i}`} value={p.recipe_id || ""}
+                  onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
+                  className="flex-1 min-w-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+                  <option value="">{t("capo_pick_recipe")}</option>
+                  {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                </select>
+                <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#B4442A] p-1 shrink-0"><X className="w-4 h-4" /></button>
+              </div>
+              <div className="flex items-center gap-2">
+                <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
+                  onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
+                  className="w-16 shrink-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]" />
+                <select data-testid={`capo-product-unit-${i}`} value={p.unit}
+                  onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))}
+                  className="w-[72px] shrink-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+                  <option value="pezzi">{t("capo_unit_pieces")}</option>
+                  <option value="kg">{t("capo_unit_kg")}</option>
+                </select>
+                {p.unit === "pezzi" && (
+                  <div className="relative w-[72px] shrink-0">
+                    <input data-testid={`capo-product-gpp-${i}`} type="number" value={p.gpp ?? ""} placeholder="g/pz"
+                      onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, gpp: e.target.value } : x))}
+                      className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#B34A26]" />
+                    <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[#8C7567]">g</span>
+                  </div>
+                )}
+                <select data-testid={`capo-product-day-${i}`} value={p.day || ""}
+                  onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
+                  className="flex-1 min-w-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+                  {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
+                </select>
+              </div>
             </div>
           ))}
-          <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi" }])} className="text-sm font-medium text-[#B34A26] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+          <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "" }])} className="text-sm font-medium text-[#B34A26] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mt-4">
@@ -213,15 +278,62 @@ export default function CapoLaboratorio() {
         </button>
 
         {plan && (
-          <div data-testid="capo-plan" className="markdown-body mt-4 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 text-sm leading-relaxed text-[#2C221E] dark:text-[#F5EFE6]">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("capo_plan_title")}</p>
-            <ReactMarkdown>{plan}</ReactMarkdown>
-          </div>
+          <>
+            <button data-testid="capo-print" onClick={() => window.print()}
+              className="no-print mt-3 w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+              <Printer className="w-5 h-5" /> {t("capo_print")}
+            </button>
+
+            <div className="print-area mt-4 space-y-4">
+              <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 text-sm leading-relaxed text-[#2C221E] dark:text-[#F5EFE6]">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("capo_plan_title")}</p>
+                <ReactMarkdown>{plan}</ReactMarkdown>
+              </div>
+
+              {/* Lista della spesa + ordine fornitori */}
+              <SupplierOrder totals={shopTotals} />
+
+              {/* Ricette del piano (per la stampa) */}
+              {usedRecipes.length > 0 && (
+                <div data-testid="capo-recipes" className="space-y-3">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{t("capo_recipes_title")}</p>
+                  {usedRecipes.map((r) => <RecipePrint key={r.id} r={r} lang={lang} t={t} />)}
+                </div>
+              )}
+            </div>
+          </>
         )}
       </Section>
 
       {/* Filma il laboratorio */}
       <LabCamera />
+    </div>
+  );
+}
+
+function RecipePrint({ r, lang, t }) {
+  const ing = [
+    [lang === "de" ? "Mehl" : "Farina", r.flour_grams],
+    [lang === "de" ? "Wasser" : "Acqua", r.water_grams],
+    [lang === "de" ? "Vorteig/Sauerteig" : "Prefermento/Lievito madre", r.sourdough_grams],
+    [lang === "de" ? "Salz" : "Sale", r.salt_grams],
+  ].filter(([, g]) => Number(g) > 0);
+  const proc = rLoc(r, "procedure", lang);
+  return (
+    <div className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4">
+      <h3 className="font-display text-base font-bold text-[#2C221E] dark:text-[#F5EFE6]">{rLoc(r, "name", lang)}</h3>
+      <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-0.5">
+        {ing.map(([label, g]) => (
+          <div key={label} className="flex items-center justify-between text-xs">
+            <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{label}</span>
+            <span className="font-mono-data font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">{g} g</span>
+          </div>
+        ))}
+      </div>
+      {(r.extra_ingredients || []).length > 0 && (
+        <p className="text-xs text-[#8C7567] mt-1.5">{r.extra_ingredients.map((e) => `${e.name} ${e.percent}%`).join(" · ")}</p>
+      )}
+      {proc && <p className="text-xs text-[#4A3B34] dark:text-[#C9BBB0] mt-2 whitespace-pre-line leading-relaxed">{proc}</p>}
     </div>
   );
 }

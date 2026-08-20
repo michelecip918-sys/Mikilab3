@@ -1,7 +1,126 @@
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";
-import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star } from "lucide-react";
-import { useState } from "react";
+import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import { API, recipesApi } from "@/lib/api";
+import { computeShopping } from "@/lib/shopping";
+import SupplierOrder from "@/components/SupplierOrder";
+
+const HOME_DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
+
+function HomePlanner() {
+  const { t, lang } = useLang();
+  const [recipes, setRecipes] = useState([]);
+  const [products, setProducts] = useState([{ recipe_id: "", qty: "2", gpp: "500", day: "" }]);
+  const [when, setWhen] = useState("");
+  const [plan, setPlan] = useState("");
+  const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const mk = await recipesApi.list("mikilab");
+        setRecipes((mk || []).sort((a, b) => (a.name || "").localeCompare(b.name || "")));
+      } catch { /* */ }
+    })();
+  }, []);
+
+  const recipeById = useMemo(() => Object.fromEntries(recipes.map((r) => [r.id, r])), [recipes]);
+  const shopTotals = useMemo(() => computeShopping(
+    products.filter((p) => p.recipe_id).map((p) => ({ recipe_id: p.recipe_id, grams: Number(p.qty || 0) * Number(p.gpp || 500) })),
+    recipeById, lang,
+  ), [products, recipeById, lang]);
+
+  const generate = async () => {
+    const valid = products.filter((p) => p.recipe_id);
+    if (valid.length === 0) { toast.error(t("home_no_products")); return; }
+    setGenerating(true); setPlan("");
+    let sawDone = false;
+    try {
+      const res = await fetch(`${API}/capo/plan`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: valid.map((p) => { const r = recipeById[p.recipe_id]; return { recipe_id: p.recipe_id, name: r ? r.name : "", quantity: p.qty === "" ? null : Number(p.qty), unit: "pezzi", day: p.day || null }; }),
+          mode: "home", start_time: when, lang,
+        }),
+      });
+      const reader = res.body.getReader(); const decoder = new TextDecoder(); let buffer = "";
+      while (true) {
+        const { done, value } = await reader.read(); if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split("\n\n"); buffer = parts.pop();
+        for (const part of parts) {
+          const line = part.replace(/^data: ?/, "").trim(); if (!line) continue;
+          let obj; try { obj = JSON.parse(line); } catch { continue; }
+          if (obj.done) { sawDone = true; continue; }
+          if (obj.d) setPlan((p) => p + obj.d);
+        }
+      }
+      if (!sawDone) toast.warning(t("capo_plan_incomplete"));
+    } catch { toast.error(t("chat_error")); }
+    finally { setGenerating(false); }
+  };
+
+  return (
+    <div data-testid="home-planner" className="rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-5">
+      <div className="flex items-center gap-2 mb-1 text-[#B34A26]">
+        <ChefHat className="w-5 h-5" />
+        <h3 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("home_plan_title")}</h3>
+      </div>
+      <p className="text-sm text-[#8C7567] mb-4">{t("home_plan_sub")}</p>
+
+      <div className="space-y-2" data-testid="home-products">
+        {products.map((p, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <select data-testid={`home-product-recipe-${i}`} value={p.recipe_id || ""}
+              onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value } : x))}
+              className="flex-1 min-w-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+              <option value="">{t("capo_pick_recipe")}</option>
+              {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </select>
+            <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
+              onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
+              className="w-16 shrink-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]" />
+            <select data-testid={`home-product-day-${i}`} value={p.day || ""}
+              onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
+              className="w-24 shrink-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+              {HOME_DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
+            </select>
+            {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#B4442A] p-1 shrink-0"><X className="w-4 h-4" /></button>}
+          </div>
+        ))}
+        <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#B34A26] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+      </div>
+
+      <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567] mt-3 block">{t("home_when")}</label>
+      <input data-testid="home-when" value={when} placeholder={t("home_when_ph")} onChange={(e) => setWhen(e.target.value)}
+        className="mt-1 w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-2.5 text-sm outline-none focus:border-[#B34A26]" />
+
+      <button data-testid="home-generate" onClick={generate} disabled={generating}
+        className="mt-3 w-full bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("home_generate")}
+      </button>
+
+      {plan && (
+        <>
+          <button data-testid="home-print" onClick={() => window.print()}
+            className="no-print mt-3 w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            <Printer className="w-5 h-5" /> {t("capo_print")}
+          </button>
+          <div className="print-area mt-4 space-y-4">
+            <div data-testid="home-plan" className="markdown-body bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 text-sm leading-relaxed text-[#2C221E] dark:text-[#F5EFE6]">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("home_plan_result")}</p>
+              <ReactMarkdown>{plan}</ReactMarkdown>
+            </div>
+            <SupplierOrder totals={shopTotals} />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 const BEGINNERS = {
   it: [
@@ -146,6 +265,9 @@ export default function Beginners() {
         </div>
         <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("beginners_intro")}</p>
       </div>
+
+      {/* Pianifica il pane a casa */}
+      <HomePlanner />
 
       {beginners.map((s, i) => (
         <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">

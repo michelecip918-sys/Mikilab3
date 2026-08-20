@@ -1,0 +1,49 @@
+{
+  "summary": "Test completo della nuova feature Capo Laboratorio (piano settimanale+quotidiano, lista spesa, ordine fornitore, stampa) e HomePlanner in Impara. Backend: 6 test su /api/capo/plan (pro con giorni, use_weekly, home, edge, lingua DE) + PUT/GET /api/weekly-plan. Frontend: flusso e2e Maestro>Capo Laboratorio (login fornaio@mikilab.de), Maestro>Lista Spesa, Impara>Pianifica il pane a casa, IT e DE. Trovati 3 problemi bloccanti/gravi: (1) lo stream SSE del piano PRO viene TRONCATO a 60s dall'ingress del preview URL (il backend impiega ~74s e completa solo su localhost) -> l'utente vede il piano tagliato a metà frase + toast 'Piano forse incompleto'; (2) utenti NON loggati non vedono NESSUNA ricetta nei tool (Promise.all va in reject sul 401 di /api/recipes?collection_name=personal) -> Capo Laboratorio inutilizzabile in modalita pubblica; (3) con lang=de il piano viene generato in ITALIANO. Il resto della feature funziona: quantita lista spesa corrette, fornitore default per lingua (IT dallagiovanna / DE bako), directory 25 fornitori, mailto abilitato, stampa, ricette del piano, lettura del piano settimanale salvato.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "POST /api/capo/plan (mode=pro)", "issue": "Stream SSE troncato: via URL pubblico la connessione si chiude esattamente a 60.1s senza mai inviare 'data: {\"done\":true}' (testo tagliato a meta frase, ~7.8k char). Su http://localhost:8001 la stessa richiesta completa in 73.6s con done=true e 9.5k char => limite di durata dell'ingress, non bug LLM. Riproducibile 3/3 (pro con giorni, use_weekly, singolo prodotto). Serve ridurre la lunghezza/tempo di generazione (max_tokens piu basso o prompt piu compatto) o spezzare in 2 chiamate (settimanale + quotidiano) in modo che ogni risposta stia sotto ~55s.", "priority": "CRITICAL"},
+      {"endpoint": "POST /api/capo/plan (lang=de)", "issue": "Con lang='de' il piano viene generato in ITALIANO (heuristica parole: it_hits=6, de_hits=0). Il prompt utente e tutto in italiano e LANG_DIRECTIVE (' Antworte IMMER auf Deutsch') in coda al system message non basta. Verificato su mode=home; presumibile anche su mode=pro. Rompe il requisito bilingue IT/DE.", "priority": "HIGH"}
+    ],
+    "minor": [
+      {"endpoint": "POST /api/capo/plan (mode=home, senza giorni)", "issue": "Numerazione sezioni: il prompt home ha la sezione quotidiana hard-coded come '2)' anche quando la sezione settimanale (1) e omessa -> il piano mostrato all'utente inizia con '2) Piano del Giorno Passo-Passo' senza un 1)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "CapoLaboratorio / ShoppingList / AdattaForno / PianificaProduzione / ClimaTermostato / StartDoughs / WeeklyPlan", "issue": "Utente NON loggato: il select ricette resta vuoto (0 opzioni) e il tool e inutilizzabile. Causa: `await Promise.all([recipesApi.list('mikilab'), recipesApi.list('personal'), ...])` -> /api/recipes?collection_name=personal risponde 401 per anonimi, Promise.all rejecta e il catch svuota tutto lo stato (anche le ricette mikilab, che sono pubbliche). Fix: aggiungere `.catch(() => [])` su ogni singola chiamata (o Promise.allSettled).", "selector": "[data-testid=\"capo-product-recipe-0\"]", "priority": "CRITICAL"},
+      {"component": "CapoLaboratorio (piano PRO)", "issue": "Riprodotto in UI: dopo 60s la generazione si interrompe, il piano visualizzato termina a meta frase ('...Unico impasto della gi') e compare il toast 'Piano forse incompleto: tocca di nuovo per riprovare.' Il piano PDF/stampa risulta quindi incompleto (manca la parte finale/celle/compiti).", "selector": "[data-testid=\"capo-plan\"]", "priority": "CRITICAL"}
+    ],
+    "integration_issues": [
+      {"flow": "Impara > Pianifica il pane a casa in tedesco", "issue": "UI tradotta correttamente in DE ma il contenuto del piano generato e in italiano ('LA SERA PRIMA – Il Poolish', 'Piano del Giorno Passo-Passo').", "affected_selectors": ["[data-testid=\"home-plan\"]"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter19_capo_weekly.py",
+    "/app/backend/tests/test_iter19_lang_de.py",
+    "/app/test_reports/pytest/iter19.xml"
+  ],
+  "action_items": [
+    "CRITICAL: ridurre la durata di generazione del piano PRO sotto ~55s (abbassare max_tokens, prompt piu sintetico) oppure dividere in due chiamate separate (piano settimanale, poi piano quotidiano) e concatenarle nel frontend: attualmente ogni piano PRO arriva troncato dal preview URL.",
+    "CRITICAL: sostituire i Promise.all con chiamate resilienti (.catch(() => [])) in CapoLaboratorio.jsx, ShoppingList.jsx, AdattaForno.jsx, PianificaProduzione.jsx, ClimaTermostato.jsx, StartDoughs.jsx, WeeklyPlan.jsx: il 401 su collection_name=personal blocca anche le ricette pubbliche mikilab per gli utenti anonimi.",
+    "HIGH: forzare la lingua della generazione: quando lang='de' scrivere il prompt utente in tedesco o mettere la direttiva di lingua all'inizio del system message e ripeterla nel messaggio utente ('Antworte ausschliesslich auf Deutsch').",
+    "MINOR: correggere la numerazione delle sezioni nel prompt CAPO_HOME (la sezione quotidiana resta '2)' quando manca la settimanale)."
+  ],
+  "critical_code_review_comments": [
+    "server.py capo_plan_stream: nessun keep-alive/heartbeat ne indicazione di troncamento lato server; se il proxy chiude la connessione il client non puo distinguere errore da fine. Considerare invio di un evento 'partial' periodico o generazione a blocchi.",
+    "Il blocco try/catch nello useEffect di CapoLaboratorio inghiotte l'errore (catch vuoto) senza mostrare alcuno stato di errore all'utente: il select resta vuoto senza spiegazione. Aggiungere stato di errore/loading.",
+    "server.py supera le 1000 righe con molti prompt inline: valutare estrazione dei prompt (CAPO_*, VISION_PROMPTS) in un modulo dedicato."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter19_capo_weekly.py",
+    "/app/backend/tests/test_iter19_lang_de.py"
+  ],
+  "success_rate": {"backend": "33% (2/6 test: 3 fallimenti dovuti al troncamento a 60s, 1 alla lingua DE)", "frontend": "70% (feature funzionante ma piano PRO troncato e tool inutilizzabili da anonimo)"},
+  "seed_data_creation": "PUT /api/weekly-plan ha salvato 1 item di test (day=mer, ricetta 'Anima Integrale', 50 pz x 500 g). Rimane in DB ed e usato dal tool Lista Spesa: rimuoverlo se non desiderato.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "fornaio@mikilab.de / Mikilab2026! (usato per il flusso UI); admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Verificato: PUT/GET /api/weekly-plan OK (nessun _id/_key), merge use_weekly funziona, mode=home completa in ~35-40s con done, lista spesa calcolata correttamente (60 pz x 500 g = 30 kg impasto -> 14.29 kg farina), fornitore default per lingua (IT dallagiovanna, DE bako), directory con 25 fornitori, supplier-mail-btn abilitato, capo-print/home-print presenti, capo-recipes con le ricette del piano, tool Maestro>Lista Spesa legge il weekly-plan salvato. Attenzione durante i test UI: chiudere il dialog di benvenuto (button 'Inizia') prima di qualsiasi click, altrimenti l'overlay del dialog intercetta gli eventi; il selettore lingua e [data-testid=\"lang-it\"]/[data-testid=\"lang-de\"]; SupplierOrder viene renderizzato solo DOPO che il piano esiste. Per testare da anonimo serve prima il fix del Promise.all.",
+  "rca_of_the_issue": "Troncamento piano PRO: il backend produce ~9.5k caratteri in 73.6s (max_tokens=4000) e su localhost:8001 emette regolarmente 'done'; via il preview URL la connessione SSE viene chiusa a 60.1s costantemente => limite di durata della richiesta a livello di ingress/proxy. Non e un bug del client ne dell'LLM: la soluzione deve ridurre il tempo di ogni singola risposta. Ricette assenti da anonimo: /api/recipes?collection_name=personal risponde 401 ('Accesso richiesto per le ricette personali') e Promise.all rejecta l'intero blocco, quindi setRecipes non viene mai chiamato."
+}

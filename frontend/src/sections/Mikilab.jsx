@@ -83,7 +83,7 @@ export default function Mikilab() {
           <div className="flex items-center gap-3 mb-3">
             <div data-testid="bio-photo" className="w-16 h-16 rounded-full overflow-hidden shrink-0 bg-white/15 border-2 border-white/40 flex items-center justify-center">
               {imgOk ? (
-                <img src={`${process.env.PUBLIC_URL}/bio-photo.jpg`} alt="Michele" className="w-full h-full object-cover" onError={() => setImgOk(false)} />
+                <img src={`${process.env.PUBLIC_URL}/michele-cartoon.jpg`} alt="Michele" className="w-full h-full object-cover" onError={() => setImgOk(false)} />
               ) : (
                 <ChefHat className="w-8 h-8 text-white/80" />
               )}
@@ -93,6 +93,11 @@ export default function Mikilab() {
               <h3 className="font-display text-lg font-bold">{t("bio_about_title")}</h3>
             </div>
           </div>
+          <figure className="mb-4">
+            <img data-testid="bio-cartoon" src={`${process.env.PUBLIC_URL}/michele-cartoon.jpg`} alt="Michele — Mikilab"
+              className="w-40 h-40 mx-auto rounded-3xl object-cover border-2 border-[#FFCE00]/50 shadow-lg" />
+            <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
+          </figure>
           <p className="text-sm text-white/90 leading-relaxed whitespace-pre-line">{t("bio_about_body")}</p>
         </div>
       </div>

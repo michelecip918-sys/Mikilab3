@@ -16,7 +16,9 @@ export const uploadApi = {
 };
 
 export const recipesApi = {
-  list: (collection) => api.get(`/recipes`, { params: { collection_name: collection } }).then((r) => r.data),
+  // Resiliente: se una collezione è protetta (es. 'personal' per utenti anonimi → 401),
+  // ritorna [] invece di far fallire l'intero Promise.all e svuotare anche le ricette pubbliche.
+  list: (collection) => api.get(`/recipes`, { params: { collection_name: collection } }).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/recipes`, data).then((r) => r.data),
   update: (id, data) => api.put(`/recipes/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/recipes/${id}`).then((r) => r.data),
