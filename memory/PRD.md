@@ -318,3 +318,15 @@ Barra a 6 voci: **Home · Ricette · Maestro · Impara · Diagnosi · News**.
 - F2: metodo 50/50 + "Mille Bolle" su TUTTI i panettoni; nomi tecnici farine su tutte; ricette personali in griglia unica; "aggiungi ricetta" da tutti nel Maestro; Diguette (non esiste "Baguette di Farro" nel seed — da creare se serve).
 - F3 Capo Lab: tipo impastatrice, celle frigo/lievitazione+foto, piano settimanale turni+foto, produzione inversa scelta prefermento+rinfreschi, cambio orario, sveglie per fase (togliere "Sveglia Lievito Madre"), pulizia Piano di Lavoro, sync piano con celle lievitazione/frigo/freezer.
 - F4 AI: temp acqua auto, lista spesa nel piano, checklist settimanali+promemoria sabato, scansione ricette nel Maestro+foto (togliere News da scan), Adatta Forno con foto+AI, assistente vocale comandi ("vai alle ricette", "accendi radio"), ricerca web ricetta+adatta a "Metodo Mikilab", calcolo prezzi (stima media), Bluetooth termometro realistico, PIÙ METODI (Mikilab/veloce/qualità/diretto/indiretto/poolish/autolisi), togliere "Miei Brio Impasto".
+
+---
+## Changelog — 20 Giugno 2026 (Impara-hub + Fase 3 Capo Lab avvio)
+- Impara + News + Enciclopedia unite in UNA pagina (LearnHub, sotto-schede). Bottom nav ridotta a 5 voci (Home, Ricette, Maestro, Impara, Diagnosi). Enciclopedia non più autonoma.
+- Maestro: rimossa voce "Sveglia Lievito Madre".
+- Maestro: titolo "Il Maestro" → "Nel tuo laboratorio" (IT) / "In deiner Backstube" (DE).
+- Capo Lab: aggiunto TIPO IMPASTATRICE (spirale/1 braccio/forcella/planetaria/tuffante/presa diretta), passato anche al prompt AI.
+- Capo Lab: aggiunto tipo cella "Lievitazione Frigo (fermalievitazione)".
+### NUOVA RICHIESTA (Sezione 5) — DA PIANIFICARE
+- Controllo accessi su INVITO/permesso: Michele decide chi vede quali sezioni (specie Maestro/Laboratorio). Protezione anti-copia contenuti. Feature grande = fase dedicata (auth + ruoli + permessi per sezione).
+### RESTA DA FARE (Maestro/AI)
+- Celle + caricamento FOTO (AI riconosce), piano settimanale turni+foto, produzione inversa scelta prefermento+rinfreschi, cambio orario primo impasto, sveglie per fase, pulizia Piano di Lavoro (solo COSA PREPARARE+PERSONALE), togliere "Persone al lavoro" e "Miei Brio Impasto", Adatta Forno con foto+AI, temp acqua auto, lista spesa nel piano, checklist+promemoria sabato, scansione dentro Maestro+foto (togliere News), comandi vocali, ricerca web ricetta+Metodo Mikilab, calcolo prezzi, Bluetooth termometro, più metodi.

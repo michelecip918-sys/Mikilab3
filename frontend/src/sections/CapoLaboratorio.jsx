@@ -9,7 +9,7 @@ import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { rLoc } from "@/lib/loc";
 
-const CELL_TYPES = ["frigo", "freezer", "lievitazione"];
+const CELL_TYPES = ["frigo", "freezer", "lievitazione", "lievitazione_frigo"];
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
 export default function CapoLaboratorio() {
@@ -150,20 +150,29 @@ export default function CapoLaboratorio() {
         <p className="text-xs font-bold uppercase tracking-wide text-[#8C7567] mb-1.5">{t("capo_mixers")}</p>
         <div className="space-y-2" data-testid="capo-mixers">
           {mixers.map((m, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <input data-testid={`capo-mixer-name-${i}`} value={m.name || ""} placeholder={t("capo_mixer_name")}
-                onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))}
-                className="flex-1 min-w-0 bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]" />
-              <div className="relative w-24 shrink-0">
-                <input data-testid={`capo-mixer-cap-${i}`} type="number" value={m.capacity_kg ?? ""} placeholder={t("capo_mixer_cap")}
-                  onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, capacity_kg: e.target.value === "" ? "" : Number(e.target.value) } : x))}
-                  className="w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 pr-7 text-sm outline-none focus:border-[#B34A26]" />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[#8C7567]">kg</span>
+            <div key={i} className="bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 space-y-2">
+              <div className="flex items-center gap-2">
+                <input data-testid={`capo-mixer-name-${i}`} value={m.name || ""} placeholder={t("capo_mixer_name")}
+                  onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))}
+                  className="flex-1 min-w-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]" />
+                <div className="relative w-24 shrink-0">
+                  <input data-testid={`capo-mixer-cap-${i}`} type="number" value={m.capacity_kg ?? ""} placeholder={t("capo_mixer_cap")}
+                    onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, capacity_kg: e.target.value === "" ? "" : Number(e.target.value) } : x))}
+                    className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 pr-7 text-sm outline-none focus:border-[#B34A26]" />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[#8C7567]">kg</span>
+                </div>
+                <button onClick={() => setMixers((l) => l.filter((_, k) => k !== i))} className="text-[#B4442A] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
-              <button onClick={() => setMixers((l) => l.filter((_, k) => k !== i))} className="text-[#B4442A] p-1"><X className="w-4 h-4" /></button>
+              <select data-testid={`capo-mixer-type-${i}`} value={m.type || "spirale"}
+                onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, type: e.target.value } : x))}
+                className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+                {["spirale", "braccio", "forcella", "planetaria", "tuffante", "diretta"].map((mt) => (
+                  <option key={mt} value={mt}>{t(`mixer_${mt}`)}</option>
+                ))}
+              </select>
             </div>
           ))}
-          <button data-testid="capo-mixer-add" onClick={() => setMixers((l) => [...l, { name: "", capacity_kg: "" }])} className="text-sm font-medium text-[#B34A26]">+ {t("capo_mixer_add")}</button>
+          <button data-testid="capo-mixer-add" onClick={() => setMixers((l) => [...l, { name: "", capacity_kg: "", type: "spirale" }])} className="text-sm font-medium text-[#B34A26]">+ {t("capo_mixer_add")}</button>
         </div>
 
         <p className="text-xs font-bold uppercase tracking-wide text-[#8C7567] mb-1.5 mt-4">{t("capo_cells")}</p>
