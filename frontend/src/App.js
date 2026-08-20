@@ -7,10 +7,8 @@ import BottomNav from "@/components/BottomNav";
 import Home from "@/sections/Home";
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
-import Beginners from "@/sections/Beginners";
+import LearnHub from "@/sections/LearnHub";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
-import NewsPage from "@/sections/NewsPage";
-import Enciclopedia from "@/sections/Enciclopedia";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
@@ -65,10 +63,8 @@ function App() {
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
             {tab === "maestro" && <Maestro />}
-            {tab === "impara" && <Beginners />}
+            {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} />}
             {tab === "diagnosi" && <PhotoDiagnosi />}
-            {tab === "news" && <NewsPage />}
-            {tab === "enciclopedia" && <Enciclopedia />}
           </motion.div>
         </AnimatePresence>
       </main>

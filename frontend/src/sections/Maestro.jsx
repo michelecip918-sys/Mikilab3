@@ -32,7 +32,6 @@ export default function Maestro() {
     { id: "spesa", title: t("tool_spesa"), desc: t("tool_spesa_desc"), Icon: ShoppingCart },
     { id: "turni", title: t("tool_turni"), desc: t("tool_turni_desc"), Icon: Users },
     { id: "check", title: t("tool_check"), desc: t("tool_check_desc"), Icon: ListChecks },
-    { id: "sveglia", title: t("tool_sveglia"), desc: t("tool_sveglia_desc"), Icon: Wheat },
     { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
   ];
