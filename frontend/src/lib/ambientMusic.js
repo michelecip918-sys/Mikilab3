@@ -15,6 +15,7 @@ const SECTIONS = {
   impara:   { scale: [NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.B4, NOTE.D5], bass: NOTE.D3, beat: 460, wave: "square",   cutoff: 1400 },
   diagnosi: { scale: [NOTE.E4, NOTE.G4, NOTE.A4, NOTE.B4, NOTE.D5, NOTE.E5], bass: NOTE.E3, beat: 720, wave: "sine",     cutoff: 1500 },
   news:     { scale: [NOTE.G4, NOTE.A4, NOTE.B4, NOTE.D5, NOTE.E5, NOTE.G5], bass: NOTE.G3, beat: 440, wave: "triangle", cutoff: 2400 },
+  enciclopedia: { scale: [NOTE.C4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.C5, NOTE.E5], bass: NOTE.C3, beat: 680, wave: "sine", cutoff: 1700 },
 };
 
 class AmbientMusic {

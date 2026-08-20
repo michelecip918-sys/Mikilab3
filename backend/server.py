@@ -295,7 +295,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v19b-de-translations"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v21-canapa-panettone"  # bump quando cambia mikilab_seed_data.json
 LEGACY_STALE_NAMES = ["Ciabatta ad Alta Idratazione", "Pane Rustico al Farro e Miele"]
 
 

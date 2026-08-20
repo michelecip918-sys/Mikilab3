@@ -177,7 +177,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   ))}
                 </div>
               )}
-              {r.image_url && (
+              {r.image_url && recipeCategory(r).key === "panettoni" && (
                 <img src={r.image_url} alt="" loading="lazy"
                   className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#E8DEC8] dark:border-[#3D302A]" />
               )}
@@ -355,7 +355,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
 
   return (
     <div data-testid={`recipe-detail-${r.id}`}>
-      {r.image_url && (
+      {r.image_url && isPanettone && (
         <div className="relative h-40 w-full">
           <img src={r.image_url} alt={r.name} className="w-full h-full object-cover" />
           {countryColors(r.origin) && (

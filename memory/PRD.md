@@ -292,3 +292,29 @@ Barra a 6 voci: **Home · Ricette · Maestro · Impara · Diagnosi · News**.
 ## Changelog — 20 Giugno 2026 (Vetrina Home + Sottofondo musicale)
 - **Vetrina ricette in Home**: griglia 2 per riga con foto grandi (stile vetrina di panetteria), bandiere/colori paese; tap → tab Ricette per i dettagli. Solo ricette Mikilab pubbliche. File: /components/RecipeShowcase.jsx (sostituisce la vecchia lista RecipeList in Home). I dettagli completi restano nel tab Ricette.
 - **Sottofondo musicale**: melodia gentile sintetizzata con Web Audio API (nessun file esterno), DIVERSA per ogni sezione (home/ricette/maestro/impara/diagnosi/news → scale, tempo e timbro diversi). Toggle nell'header (icona musica), OFF di default, parte al primo tocco (gesto utente per policy browser). File: /lib/ambientMusic.js, /audio/AmbientContext.jsx; App.js cambia sezione musicale al cambio tab; chiave i18n music_toggle IT/DE.
+
+---
+## Changelog — 20 Giugno 2026 (FASE 1 del piano grande di Michele)
+- Header: "Il Laboratorio di Michele" sempre visibile + foto cartone; fix orologio che copriva "Mikilab" (nascosto <420px).
+- Home riordinata: blocchi (Cosa fa/Chi sono/Metodo/Serenità) in alto → menu sotto (Ricette, Impara, News, Maestro, Diagnosi, Enciclopedia) con "Tocca per aprire". Aggiunta battuta simpatica.
+- Rimosse dalla Home: vetrina ricette Mikilab + ricette personali (restano nei tab dedicati).
+- Foto ricette nascoste ovunque tranne i Panettoni (RecipeList: lista + dettaglio).
+- Nuova sezione ENCICLOPEDIA (bottom nav 7 tab): 10 voci basi (Lievito Madre di segale, Sauerteig, Poolish, Biga, Kochstück, Quellstück, Miglioratore, Malto, Autolisi, Idratazione) IT/DE.
+- Microfono ("Parla") e Radio resi evidenti (etichetta + alone animate-ping).
+- Musica ambient: aggiunta melodia sezione enciclopedia.
+### DA FARE (fasi successive del piano di Michele)
+- FASE 2 Ricette: nomi tecnici farine, Miglioratore+malto %, Baguette→Diguette, Lievito Madre=Segale (togliere Sauerteig label), spiegazioni basi, nuove ricette (Wurzel, Gretze, Verde Canapa), Panettone 50/50 + Mille Bolle, ricette personali griglia unica, "aggiungi ricetta" da tutti nel Maestro.
+- FASE 3 Capo Lab: tipo impastatrice, celle frigo/lievitazione+foto, piano settimanale con turni+foto, produzione inversa con scelta prefermento+rinfreschi, cambio orario, sveglie per fase (togliere "Sveglia Lievito Madre"), pulizia Piano di Lavoro.
+- FASE 4 AI: temp acqua auto, lista spesa nel piano, checklist settimanali, scansione ricette dentro Maestro+foto, Adatta Forno con foto+AI, assistente vocale comandi, ricerca web ricetta+adatta a "Metodo Mikilab", calcolo prezzi, Bluetooth termometro (versione realistica), PIÙ METODI selezionabili (Mikilab/veloce/qualità/diretto/indiretto/poolish/autolisi).
+
+---
+## Changelog — 20 Giugno 2026 (FASE 2 parziale — Ricette)
+- Miglioratore: ricetta ora "Miglioratore Naturale al Malto" = MALTO PURO (malto d'orzo diastasico), dose 0,5% (max 1%), note "ingrediente più forte". Deduplicata nel DB.
+- Nuova ricetta "Panettone Mikilab — Verde Canapa" (canapa alimentare): metodo 50/50 su 2 impasti, MIELE una sola volta alla fine, UOVA aumentate nel 2° impasto, prefermento 18h fino a pH ~4,7-5,0. Con foto semi di canapa.
+- Wurzelbrot e Gnetze (Gretze) già presenti nel seed.
+- Etichetta prefermento: "Lievito Madre (di Segale)" IT / "Lievito Madre (Roggen)" DE — rimosso "Sauerteig" dove indicava il lievito madre (pf_lm, dc_lm).
+- SEED_VERSION → v21-canapa-panettone. 38 ricette mikilab.
+### ANCORA DA FARE (Fase 2 restante + Fasi 3-4)
+- F2: metodo 50/50 + "Mille Bolle" su TUTTI i panettoni; nomi tecnici farine su tutte; ricette personali in griglia unica; "aggiungi ricetta" da tutti nel Maestro; Diguette (non esiste "Baguette di Farro" nel seed — da creare se serve).
+- F3 Capo Lab: tipo impastatrice, celle frigo/lievitazione+foto, piano settimanale turni+foto, produzione inversa scelta prefermento+rinfreschi, cambio orario, sveglie per fase (togliere "Sveglia Lievito Madre"), pulizia Piano di Lavoro, sync piano con celle lievitazione/frigo/freezer.
+- F4 AI: temp acqua auto, lista spesa nel piano, checklist settimanali+promemoria sabato, scansione ricette nel Maestro+foto (togliere News da scan), Adatta Forno con foto+AI, assistente vocale comandi ("vai alle ricette", "accendi radio"), ricerca web ricetta+adatta a "Metodo Mikilab", calcolo prezzi (stima media), Bluetooth termometro realistico, PIÙ METODI (Mikilab/veloce/qualità/diretto/indiretto/poolish/autolisi), togliere "Miei Brio Impasto".

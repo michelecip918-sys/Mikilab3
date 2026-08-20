@@ -140,24 +140,28 @@ export default function RadioFornaio() {
         </div>
       )}
 
-      <button
-        data-testid="radio-fornaio-btn"
-        onClick={() => setOpen((o) => !o)}
-        aria-label={t("radio_title")}
-        className={`fixed z-50 left-4 bottom-24 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
-          status === "playing" ? "bg-[#6B8E62]" : "bg-[#8C3A1D] hover:bg-[#732f18]"
-        }`}
-      >
-        {status === "playing" ? (
-          <span className="flex items-end gap-0.5 h-5" aria-hidden>
-            <span className="w-1 bg-white rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "60%" }} />
-            <span className="w-1 bg-white rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "100%", animationDelay: "0.15s" }} />
-            <span className="w-1 bg-white rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "40%", animationDelay: "0.3s" }} />
-          </span>
-        ) : (
-          <Radio className="w-6 h-6 text-white" />
-        )}
-      </button>
+      <div className="fixed z-50 left-4 bottom-24 flex flex-col items-center gap-1">
+        <button
+          data-testid="radio-fornaio-btn"
+          onClick={() => setOpen((o) => !o)}
+          aria-label={t("radio_title")}
+          className={`relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
+            status === "playing" ? "bg-[#6B8E62]" : "bg-[#8C3A1D] hover:bg-[#732f18]"
+          }`}
+        >
+          {status !== "playing" && !open && <span aria-hidden className="absolute inset-0 rounded-full bg-[#8C3A1D] opacity-50 animate-ping" />}
+          {status === "playing" ? (
+            <span className="flex items-end gap-0.5 h-5 relative" aria-hidden>
+              <span className="w-1 bg-white rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "60%" }} />
+              <span className="w-1 bg-white rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "100%", animationDelay: "0.15s" }} />
+              <span className="w-1 bg-white rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "40%", animationDelay: "0.3s" }} />
+            </span>
+          ) : (
+            <Radio className="w-6 h-6 text-white relative" />
+          )}
+        </button>
+        <span className="text-[9px] font-bold text-[#8C3A1D] bg-[#FDFBF7]/90 dark:bg-[#1A1412]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("radio_label")}</span>
+      </div>
     </>
   );
 }

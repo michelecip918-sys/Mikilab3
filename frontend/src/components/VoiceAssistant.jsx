@@ -127,16 +127,20 @@ export default function VoiceAssistant({ onNavigate }) {
         </div>
       )}
 
-      <button
-        data-testid="voice-assistant-btn"
-        onClick={state === "listening" ? stop : start}
-        aria-label={t("voice_tap")}
-        className={`fixed z-50 right-4 bottom-24 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
-          state === "listening" ? "bg-[#B4442A] animate-pulse" : "bg-[#B34A26] hover:bg-[#963B1C]"
-        }`}
-      >
-        {state === "thinking" ? <Loader2 className="w-6 h-6 text-white animate-spin" /> : <Mic className="w-6 h-6 text-white" />}
-      </button>
+      <div className="fixed z-50 right-4 bottom-24 flex flex-col items-center gap-1">
+        <button
+          data-testid="voice-assistant-btn"
+          onClick={state === "listening" ? stop : start}
+          aria-label={t("voice_tap")}
+          className={`relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
+            state === "listening" ? "bg-[#B4442A] animate-pulse" : "bg-[#B34A26] hover:bg-[#963B1C]"
+          }`}
+        >
+          {state === "idle" && <span aria-hidden className="absolute inset-0 rounded-full bg-[#B34A26] opacity-60 animate-ping" />}
+          {state === "thinking" ? <Loader2 className="w-6 h-6 text-white animate-spin relative" /> : <Mic className="w-6 h-6 text-white relative" />}
+        </button>
+        <span className="text-[9px] font-bold text-[#B34A26] bg-[#FDFBF7]/90 dark:bg-[#1A1412]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("voice_label")}</span>
+      </div>
     </>
   );
 }

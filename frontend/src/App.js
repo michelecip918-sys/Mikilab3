@@ -10,6 +10,7 @@ import Maestro from "@/sections/Maestro";
 import Beginners from "@/sections/Beginners";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import NewsPage from "@/sections/NewsPage";
+import Enciclopedia from "@/sections/Enciclopedia";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
@@ -67,6 +68,7 @@ function App() {
             {tab === "impara" && <Beginners />}
             {tab === "diagnosi" && <PhotoDiagnosi />}
             {tab === "news" && <NewsPage />}
+            {tab === "enciclopedia" && <Enciclopedia />}
           </motion.div>
         </AnimatePresence>
       </main>

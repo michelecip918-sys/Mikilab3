@@ -1,4 +1,4 @@
-import { Home, BookOpen, Wrench, GraduationCap, Camera, Newspaper } from "lucide-react";
+import { Home, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function BottomNav({ active, onChange }) {
@@ -10,6 +10,7 @@ export default function BottomNav({ active, onChange }) {
     { id: "impara", label: t("nav_impara"), Icon: GraduationCap },
     { id: "diagnosi", label: t("nav_foto"), Icon: Camera },
     { id: "news", label: t("nav_news"), Icon: Newspaper },
+    { id: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library },
   ];
 
   return (
@@ -25,7 +26,7 @@ export default function BottomNav({ active, onChange }) {
         <div className="flex-1 bg-[#DD0000]" />
         <div className="flex-1 bg-[#FFCE00]" />
       </div>
-      <div className="max-w-xl mx-auto grid grid-cols-6 gap-0.5 px-1 py-2">
+      <div className="max-w-xl mx-auto grid grid-cols-7 gap-0.5 px-1 py-2">
         {TABS.map(({ id, label, Icon }) => {
           const on = active === id;
           return (
@@ -38,7 +39,7 @@ export default function BottomNav({ active, onChange }) {
               }`}
             >
               <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />
-              <span className="text-[9px] font-semibold leading-none text-center">{label}</span>
+              <span className="text-[8px] font-semibold leading-none text-center">{label}</span>
             </button>
           );
         })}
