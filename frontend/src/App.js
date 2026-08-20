@@ -9,6 +9,7 @@ import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import LearnHub from "@/sections/LearnHub";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
+import PaywallGate from "@/components/PaywallGate";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
@@ -66,9 +67,9 @@ function App() {
           >
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
-            {tab === "maestro" && <Maestro />}
+            {tab === "maestro" && <PaywallGate sectionName="Il Tuo Laboratorio"><Maestro /></PaywallGate>}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} />}
-            {tab === "diagnosi" && <PhotoDiagnosi />}
+            {tab === "diagnosi" && <PaywallGate sectionName="Diagnosi"><PhotoDiagnosi /></PaywallGate>}
           </motion.div>
         </AnimatePresence>
       </main>

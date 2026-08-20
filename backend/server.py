@@ -1505,7 +1505,27 @@ async def subscription_status(email: str):
     if ent and ent.get("pro"):
         exp = ent.get("expires_at")
         pro = True if not exp else exp > now_iso()
-    return {"pro": pro, "entitlement": ent}
+    return {"pro": pro, "source": (ent or {}).get("source"),
+            "expires_at": (ent or {}).get("expires_at"),
+            "trial_used": bool((ent or {}).get("trial_used"))}
+
+
+class TrialReq(BaseModel):
+    email: str
+    hours: int = 24          # 1 oppure 24
+
+
+@api_router.post("/trial/activate")
+async def activate_trial(body: TrialReq):
+    ent = await db.entitlements.find_one({"email": body.email})
+    if ent and ent.get("trial_used"):
+        raise HTTPException(400, "Prova già utilizzata")
+    hours = 1 if int(body.hours) == 1 else 24
+    exp = (datetime.now(timezone.utc) + timedelta(hours=hours)).isoformat()
+    await db.entitlements.update_one({"email": body.email},
+        {"$set": {"email": body.email, "pro": True, "source": "trial",
+                  "expires_at": exp, "trial_used": True, "updated_at": now_iso()}}, upsert=True)
+    return {"pro": True, "source": "trial", "expires_at": exp}
 
 
 @api_router.post("/webhook/stripe")

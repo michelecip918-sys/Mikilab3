@@ -362,3 +362,13 @@ Priorità: DOPO il Freemium/Paywall. Default stato "Coming Soon".
 - Ricette "assaggio" (mostra solo parte ingredienti se non PRO) + landing "Chi sono" + 2 demo read-only.
 - Admin: generazione coupon/inviti VIP (usare Stripe Promotion Codes 100% + grant manuale _grant_from_email con days).
 - PayPal come secondo provider.
+
+---
+## Changelog — 20 Giu 2026 (Paywall Fase 2 — frontend + trial)
+- Backend: POST /api/trial/activate (1h/24h, attivazione unica per email → entitlements source=trial + expires_at + trial_used). /api/subscription/status ora ritorna pro/source/expires_at/trial_used. TESTATO.
+- Frontend: PaywallGate.jsx avvolge Maestro ("Il Tuo Laboratorio") e PhotoDiagnosi in App.js. Mostra: login se anon, altrimenti pulsanti abbonamento (monthly/yearly) → checkout Stripe, prova gratis 1h/24h, countdown se prova attiva. VERIFICATO a schermo.
+### PAYWALL — RESTA (prossima sessione)
+- HARDENING: gating SERVER-SIDE reale delle API del laboratorio (ora il blocco è a livello di UI/tab; legare entitlement all'utente loggato via sessione invece che email in query).
+- Ricette "assaggio" (solo parte ingredienti se non PRO) + landing "Chi sono" + 2 demo read-only.
+- Admin: pannello coupon/inviti VIP (Stripe Promotion Codes + _grant_from_email con days).
+- PayPal secondo provider. Badge PRO in header. Gestione ritorno success/cancel da Stripe (?sub=success).
