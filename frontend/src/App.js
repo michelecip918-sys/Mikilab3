@@ -14,6 +14,7 @@ import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
 import AuthScreen from "@/components/AuthScreen";
+import ResetPassword from "@/components/ResetPassword";
 import { useAuth } from "@/auth/AuthContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import ambient from "@/lib/ambientMusic";
@@ -22,6 +23,7 @@ function App() {
   const [tab, setTab] = useState("home");
   const tabRef = useRef("home");
   const { user, authOpen, setAuthOpen } = useAuth();
+  const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
 
   // Gestione tasto Indietro: sincronizza i tab con la history del browser.
   const navigate = useCallback((next) => {
@@ -76,7 +78,7 @@ function App() {
       <BottomNav active={tab} onChange={navigate} />
       <VoiceAssistant onNavigate={navigate} />
       <RadioFornaio />
-      <IntroGuide />
+      {!resetToken && <IntroGuide />}
 
       <AnimatePresence>
         {authOpen && !user && (
@@ -91,6 +93,18 @@ function App() {
       </AnimatePresence>
 
       <Toaster position="top-center" richColors />
+      {resetToken && (
+        <ResetPassword
+          token={resetToken}
+          onDone={() => {
+            setResetToken(null);
+            const u = new URL(window.location.href);
+            u.searchParams.delete("reset");
+            window.history.replaceState(null, "", u.pathname + u.search);
+            setAuthOpen(true);
+          }}
+        />
+      )}
       </div>
     </div>
     </AmbientProvider>

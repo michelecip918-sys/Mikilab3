@@ -1,12 +1,14 @@
-import { Wheat, Moon, Sun, MapPin, Clock, LogOut, LogIn, Music, VolumeX } from "lucide-react";
+import { Wheat, Moon, Sun, MapPin, Clock, LogOut, LogIn, Music, VolumeX, Crown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { useAmbient } from "@/audio/AmbientContext";
+import AdminPanel from "@/components/AdminPanel";
 
 export default function Header() {
   const [dark, setDark] = useState(false);
   const [now, setNow] = useState(new Date());
+  const [adminOpen, setAdminOpen] = useState(false);
   const { lang, setLang, t } = useLang();
   const { user, logout, setAuthOpen } = useAuth();
   const { on: musicOn, toggle: toggleMusic } = useAmbient();
@@ -110,6 +112,17 @@ export default function Header() {
           {dark ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
         </button>
 
+        {user?.role === "admin" && (
+          <button
+            data-testid="admin-btn"
+            onClick={() => setAdminOpen(true)}
+            className="w-10 h-10 rounded-xl bg-[#D99B26]/15 border border-[#D99B26]/40 flex items-center justify-center text-[#D99B26] active:scale-95 transition-all"
+            aria-label="Admin" title="Admin · VIP"
+          >
+            <Crown className="w-4.5 h-4.5" />
+          </button>
+        )}
+
         {user ? (
           <button
             data-testid="logout-btn"
@@ -132,6 +145,7 @@ export default function Header() {
         )}
       </div>
       </div>
+      <AdminPanel open={adminOpen} onOpenChange={setAdminOpen} />
     </header>
   );
 }

@@ -7,6 +7,7 @@ import os
 import json
 import logging
 import re
+import asyncio
 import requests
 from pathlib import Path
 from pydantic import BaseModel, Field
@@ -121,6 +122,7 @@ class Recipe(BaseModel):
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
+    locked: Optional[bool] = None  # True = versione "assaggio" (metodo bloccato per non-PRO)
     created_at: str = Field(default_factory=now_iso)
     updated_at: str = Field(default_factory=now_iso)
 
@@ -435,6 +437,55 @@ async def optional_user(request: Request):
         return None
 
 
+# ---------------------------------------------------------------------------
+# Entitlement / PRO helpers (blindatura server-side)
+# ---------------------------------------------------------------------------
+async def _email_has_pro(email: Optional[str]) -> bool:
+    if not email:
+        return False
+    ent = await db.entitlements.find_one({"email": email.strip().lower()}, {"_id": 0})
+    if not ent or not ent.get("pro"):
+        return False
+    exp = ent.get("expires_at")
+    return True if not exp else exp > now_iso()
+
+
+async def user_is_pro(user: Optional[dict]) -> bool:
+    """PRO se abbonato/prova attiva OPPURE admin (accesso completo)."""
+    if not user:
+        return False
+    if user.get("role") == "admin":
+        return True
+    return await _email_has_pro(user.get("email"))
+
+
+async def require_pro(user: dict = Depends(current_user)):
+    """Dependency: richiede utente loggato CON accesso PRO attivo (o admin)."""
+    if not await user_is_pro(user):
+        raise HTTPException(status_code=403, detail="Abbonamento PRO richiesto")
+    return user
+
+
+async def require_admin(user: dict = Depends(current_user)):
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Accesso riservato all'amministratore")
+    return user
+
+
+def _teaser_recipe(doc: dict) -> dict:
+    """Versione 'assaggio': mostra nome/foto/ingredienti base, blocca metodo ed extra."""
+    d = dict(doc)
+    d["procedure"] = ""
+    d["procedure_de"] = ""
+    d["notes"] = ""
+    d["notes_de"] = ""
+    d["work_phases"] = []
+    d["extra_ingredients"] = []
+    d["costing"] = None
+    d["locked"] = True
+    return d
+
+
 async def _translate_recipe_de(doc):
     """Traduce in tedesco i campi principali della ricetta (best-effort)."""
     try:
@@ -536,6 +587,9 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
     if collection_name == "mikilab":
         await seed_mikilab_if_empty()
         docs = await db.recipes.find({"collection_name": "mikilab"}, {"_id": 0}).sort("name", 1).to_list(1000)
+        # Modalità "assaggio": i non-PRO vedono nome/foto/ingredienti base, il metodo è bloccato.
+        if not await user_is_pro(user):
+            docs = [_teaser_recipe(d) for d in docs]
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
@@ -1214,9 +1268,12 @@ async def capo_plan_stream(payload: CapoPlanRequest):
 
 
 @api_router.post("/capo/plan")
-async def capo_plan(payload: CapoPlanRequest):
+async def capo_plan(payload: CapoPlanRequest, user: Optional[dict] = Depends(optional_user)):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
+    # La modalità "pro" (Capo Laboratorio) è riservata agli abbonati; "home" resta gratuita.
+    if payload.mode == "pro" and not await user_is_pro(user):
+        raise HTTPException(status_code=403, detail="Abbonamento PRO richiesto")
     return StreamingResponse(
         capo_plan_stream(payload),
         media_type="text/event-stream",
@@ -1334,7 +1391,7 @@ async def vision_stream(mode: str, image_b64: str, lang: str = "it"):
 
 
 @api_router.post("/maestro/vision")
-async def maestro_vision(payload: VisionRequest):
+async def maestro_vision(payload: VisionRequest, user: dict = Depends(require_pro)):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
     return StreamingResponse(
@@ -1367,7 +1424,7 @@ SCAN_PROMPT = (
 
 
 @api_router.post("/maestro/scan-recipe")
-async def scan_recipe(payload: ScanRecipeRequest):
+async def scan_recipe(payload: ScanRecipeRequest, user: dict = Depends(require_pro)):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
     img = payload.image_base64
@@ -1458,20 +1515,20 @@ PRICE_LOOKUP = {"monthly": "pro_monthly", "yearly": "pro_yearly"}
 
 class CheckoutReq(BaseModel):
     plan: str = "monthly"        # monthly | yearly
-    email: str
     origin_url: str
     coupon: Optional[str] = None
 
 
 @api_router.post("/subscription/checkout")
-async def create_checkout(body: CheckoutReq):
+async def create_checkout(body: CheckoutReq, user: dict = Depends(current_user)):
+    email = user["email"]
     lookup = PRICE_LOOKUP.get(body.plan, "pro_monthly")
     prices = _stripe.Price.list(lookup_keys=[lookup], active=True, limit=1).data
     if not prices:
         raise HTTPException(400, "Prezzo non configurato")
     # Cliente per email (riuso se esiste)
-    existing = _stripe.Customer.list(email=body.email, limit=1).data
-    customer = existing[0] if existing else _stripe.Customer.create(email=body.email)
+    existing = _stripe.Customer.list(email=email, limit=1).data
+    customer = existing[0] if existing else _stripe.Customer.create(email=email)
     session = _stripe.checkout.Session.create(
         mode="subscription",
         customer=customer.id,
@@ -1479,10 +1536,10 @@ async def create_checkout(body: CheckoutReq):
         allow_promotion_codes=True,
         success_url=body.origin_url.rstrip("/") + "/?sub=success&session_id={CHECKOUT_SESSION_ID}",
         cancel_url=body.origin_url.rstrip("/") + "/?sub=cancel",
-        metadata={"email": body.email, "plan": body.plan},
+        metadata={"email": email, "plan": body.plan},
     )
     await db.payment_transactions.insert_one({
-        "id": str(uuid.uuid4()), "session_id": session.id, "email": body.email,
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
         "plan": body.plan, "amount": prices[0].unit_amount, "currency": prices[0].currency,
         "payment_status": "initiated", "created_at": now_iso(),
     })
@@ -1490,40 +1547,46 @@ async def create_checkout(body: CheckoutReq):
 
 
 async def _grant_from_email(email, source="stripe", days=None):
+    email = (email or "").strip().lower()
     exp = None
     if days:
-        exp = (datetime.now(timezone.utc) + timedelta(days=days)).isoformat()
+        exp = (datetime.now(timezone.utc) + timedelta(days=int(days))).isoformat()
     await db.entitlements.update_one({"email": email},
         {"$set": {"email": email, "pro": True, "source": source, "expires_at": exp, "updated_at": now_iso()}},
         upsert=True)
 
 
 @api_router.get("/subscription/status")
-async def subscription_status(email: str):
+async def subscription_status(user: Optional[dict] = Depends(optional_user)):
+    if not user:
+        return {"pro": False, "source": None, "expires_at": None, "trial_used": False, "is_admin": False}
+    email = user["email"].strip().lower()
     ent = await db.entitlements.find_one({"email": email}, {"_id": 0})
-    pro = False
+    is_admin = user.get("role") == "admin"
+    pro = is_admin
     if ent and ent.get("pro"):
         exp = ent.get("expires_at")
         pro = True if not exp else exp > now_iso()
-    return {"pro": pro, "source": (ent or {}).get("source"),
+    return {"pro": pro, "source": "admin" if (is_admin and not (ent or {}).get("source")) else (ent or {}).get("source"),
             "expires_at": (ent or {}).get("expires_at"),
-            "trial_used": bool((ent or {}).get("trial_used"))}
+            "trial_used": bool((ent or {}).get("trial_used")),
+            "is_admin": is_admin}
 
 
 class TrialReq(BaseModel):
-    email: str
     hours: int = 24          # 1 oppure 24
 
 
 @api_router.post("/trial/activate")
-async def activate_trial(body: TrialReq):
-    ent = await db.entitlements.find_one({"email": body.email})
+async def activate_trial(body: TrialReq, user: dict = Depends(current_user)):
+    email = user["email"].strip().lower()
+    ent = await db.entitlements.find_one({"email": email})
     if ent and ent.get("trial_used"):
         raise HTTPException(400, "Prova già utilizzata")
     hours = 1 if int(body.hours) == 1 else 24
     exp = (datetime.now(timezone.utc) + timedelta(hours=hours)).isoformat()
-    await db.entitlements.update_one({"email": body.email},
-        {"$set": {"email": body.email, "pro": True, "source": "trial",
+    await db.entitlements.update_one({"email": email},
+        {"$set": {"email": email, "pro": True, "source": "trial",
                   "expires_at": exp, "trial_used": True, "updated_at": now_iso()}}, upsert=True)
     return {"pro": True, "source": "trial", "expires_at": exp}
 
@@ -1553,6 +1616,127 @@ async def stripe_webhook(request: Request):
         except Exception:
             pass
     return {"received": True}
+
+
+# ---------------------------------------------------------------------------
+# Admin: coupon / inviti VIP (accesso PRO gratuito, illimitato o a tempo)
+# ---------------------------------------------------------------------------
+class GrantReq(BaseModel):
+    email: str
+    days: Optional[int] = None   # None = illimitato
+
+
+@api_router.get("/admin/entitlements")
+async def admin_list_entitlements(admin: dict = Depends(require_admin)):
+    ents = await db.entitlements.find({}, {"_id": 0}).sort("updated_at", -1).to_list(500)
+    out = []
+    for e in ents:
+        exp = e.get("expires_at")
+        active = bool(e.get("pro")) and (not exp or exp > now_iso())
+        out.append({"email": e.get("email"), "pro": bool(e.get("pro")), "active": active,
+                    "source": e.get("source"), "expires_at": exp, "trial_used": bool(e.get("trial_used"))})
+    return out
+
+
+@api_router.post("/admin/grant")
+async def admin_grant(body: GrantReq, admin: dict = Depends(require_admin)):
+    email = (body.email or "").strip().lower()
+    if not email or "@" not in email:
+        raise HTTPException(400, "Email non valida")
+    await _grant_from_email(email, source="vip", days=body.days)
+    ent = await db.entitlements.find_one({"email": email}, {"_id": 0})
+    return {"ok": True, "email": email, "expires_at": (ent or {}).get("expires_at")}
+
+
+@api_router.post("/admin/revoke")
+async def admin_revoke(body: GrantReq, admin: dict = Depends(require_admin)):
+    email = (body.email or "").strip().lower()
+    await db.entitlements.update_one({"email": email},
+        {"$set": {"pro": False, "updated_at": now_iso()}})
+    return {"ok": True, "email": email}
+
+
+# ---------------------------------------------------------------------------
+# Password reset (Resend email)
+# ---------------------------------------------------------------------------
+import resend as _resend
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "noreply@mikilab.de")
+if RESEND_API_KEY:
+    _resend.api_key = RESEND_API_KEY
+
+
+class ForgotReq(BaseModel):
+    email: str
+    origin_url: Optional[str] = None
+    lang: str = "it"
+
+
+class ResetReq(BaseModel):
+    token: str
+    password: str
+
+
+def _reset_email_html(link: str, de: bool) -> str:
+    if de:
+        return (f"<div style='font-family:Arial,sans-serif;max-width:480px;margin:auto'>"
+                f"<h2 style='color:#B34A26'>Mikilab · Passwort zurücksetzen</h2>"
+                f"<p>Du hast angefordert, dein Passwort zurückzusetzen. Klicke auf den Button "
+                f"(gültig für 1 Stunde):</p>"
+                f"<p><a href='{link}' style='background:#B34A26;color:#fff;text-decoration:none;"
+                f"padding:12px 22px;border-radius:12px;font-weight:bold;display:inline-block'>Passwort ändern</a></p>"
+                f"<p style='color:#888;font-size:12px'>Wenn du das nicht warst, ignoriere diese E-Mail.</p></div>")
+    return (f"<div style='font-family:Arial,sans-serif;max-width:480px;margin:auto'>"
+            f"<h2 style='color:#B34A26'>Mikilab · Reimposta la password</h2>"
+            f"<p>Hai richiesto di reimpostare la password. Clicca sul pulsante "
+            f"(valido per 1 ora):</p>"
+            f"<p><a href='{link}' style='background:#B34A26;color:#fff;text-decoration:none;"
+            f"padding:12px 22px;border-radius:12px;font-weight:bold;display:inline-block'>Cambia password</a></p>"
+            f"<p style='color:#888;font-size:12px'>Se non sei stato tu, ignora questa email.</p></div>")
+
+
+@api_router.post("/auth/forgot-password")
+async def forgot_password(body: ForgotReq):
+    email = (body.email or "").strip().lower()
+    # Non riveliamo se l'email esiste (anti-enumeration). Rispondiamo sempre ok.
+    u = await db.users.find_one({"email": email, "auth_provider": "email"})
+    if u and RESEND_API_KEY:
+        token = secrets.token_urlsafe(32)
+        exp = (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat()
+        await db.password_resets.update_one(
+            {"email": email},
+            {"$set": {"email": email, "token": token, "expires_at": exp, "created_at": now_iso()}},
+            upsert=True,
+        )
+        origin = (body.origin_url or "").rstrip("/")
+        link = f"{origin}/?reset={token}"
+        try:
+            params = {"from": f"Mikilab <{SENDER_EMAIL}>", "to": [email],
+                      "subject": "Mikilab · Reset password" if body.lang != "de" else "Mikilab · Passwort zurücksetzen",
+                      "html": _reset_email_html(link, body.lang == "de")}
+            await asyncio.to_thread(_resend.Emails.send, params)
+        except Exception as e:
+            logging.getLogger(__name__).error(f"reset email send failed: {e}")
+    return {"ok": True}
+
+
+@api_router.post("/auth/reset-password")
+async def reset_password(body: ResetReq):
+    if not body.password or len(body.password) < 6:
+        raise HTTPException(400, "La password deve avere almeno 6 caratteri")
+    rec = await db.password_resets.find_one({"token": body.token}, {"_id": 0})
+    if not rec:
+        raise HTTPException(400, "Link non valido o già usato")
+    exp = rec.get("expires_at")
+    if exp and exp < now_iso():
+        raise HTTPException(400, "Link scaduto, richiedine uno nuovo")
+    await db.users.update_one({"email": rec["email"]}, {"$set": {"password_hash": _hash_pw(body.password)}})
+    await db.password_resets.delete_one({"token": body.token})
+    # invalida tutte le sessioni esistenti dell'utente
+    u = await db.users.find_one({"email": rec["email"]}, {"_id": 0, "user_id": 1})
+    if u:
+        await db.user_sessions.delete_many({"user_id": u["user_id"]})
+    return {"ok": True}
 
 
 app.include_router(api_router)

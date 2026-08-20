@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Lock, Crown, Clock, Sparkles } from "lucide-react";
-import { API } from "@/lib/api";
+import { subscriptionApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { toast } from "sonner";
@@ -16,11 +16,10 @@ export default function PaywallGate({ children, sectionName }) {
   const [left, setLeft] = useState("");
 
   const load = useCallback(async () => {
-    if (!email) { setLoading(false); return; }
+    if (!email) { setStatus(null); setLoading(false); return; }
     setLoading(true);
     try {
-      const r = await fetch(`${API}/subscription/status?email=${encodeURIComponent(email)}`);
-      setStatus(await r.json());
+      setStatus(await subscriptionApi.status());
     } catch { setStatus(null); }
     setLoading(false);
   }, [email]);
@@ -41,24 +40,19 @@ export default function PaywallGate({ children, sectionName }) {
 
   const subscribe = async (plan) => {
     try {
-      const r = await fetch(`${API}/subscription/checkout`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, email, origin_url: window.location.origin }),
-      });
-      const d = await r.json();
+      const d = await subscriptionApi.checkout(plan);
       if (d.url) window.location.href = d.url; else toast.error("Errore checkout");
     } catch { toast.error("Errore checkout"); }
   };
 
   const startTrial = async (hours) => {
     try {
-      const r = await fetch(`${API}/trial/activate`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, hours }),
-      });
-      if (r.ok) { toast.success(it ? "Prova attivata!" : "Test aktiviert!"); load(); }
-      else { const e = await r.json(); toast.error(e.detail || (it ? "Prova non disponibile" : "Test nicht verfügbar")); }
-    } catch { toast.error("Errore"); }
+      await subscriptionApi.trial(hours);
+      toast.success(it ? "Prova attivata!" : "Test aktiviert!");
+      load();
+    } catch (e) {
+      toast.error(e?.response?.data?.detail || (it ? "Prova non disponibile" : "Test nicht verfügbar"));
+    }
   };
 
   if (loading) return <div className="py-20 text-center text-[#8C7567]">…</div>;

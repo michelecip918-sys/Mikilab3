@@ -68,4 +68,18 @@ export const authApi = {
   login: (data) => api.post(`/auth/login`, data).then((r) => r.data),
   google: (session_id) => api.post(`/auth/google/session`, { session_id }).then((r) => r.data),
   logout: () => api.post(`/auth/logout`).then((r) => r.data),
+  forgot: (email, lang) => api.post(`/auth/forgot-password`, { email, origin_url: window.location.origin, lang }).then((r) => r.data),
+  reset: (token, password) => api.post(`/auth/reset-password`, { token, password }).then((r) => r.data),
+};
+
+export const subscriptionApi = {
+  status: () => api.get(`/subscription/status`).then((r) => r.data),
+  checkout: (plan) => api.post(`/subscription/checkout`, { plan, origin_url: window.location.origin }).then((r) => r.data),
+  trial: (hours) => api.post(`/trial/activate`, { hours }).then((r) => r.data),
+};
+
+export const adminApi = {
+  entitlements: () => api.get(`/admin/entitlements`).then((r) => r.data),
+  grant: (email, days) => api.post(`/admin/grant`, { email, days }).then((r) => r.data),
+  revoke: (email) => api.post(`/admin/revoke`, { email }).then((r) => r.data),
 };

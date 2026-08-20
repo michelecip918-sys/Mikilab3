@@ -89,6 +89,7 @@ export default function PhotoDiagnosi() {
       const res = await fetch(`${API}/maestro/vision`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ mode, image_base64: preview, lang }),
       });
       const reader = res.body.getReader();

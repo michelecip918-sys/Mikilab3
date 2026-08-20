@@ -86,7 +86,7 @@ export default function CapoLaboratorio() {
   // Genera in due fasi (settimanale → quotidiano) per non superare il limite ~60s del proxy.
   const streamPhase = async (phase, headerLabel) => {
     const res = await fetch(`${API}/capo/plan`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
       body: JSON.stringify({
         items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit, day: p.day || null })),
         mixers, cells, mode: "pro", phase, use_weekly: useWeekly,
@@ -381,7 +381,7 @@ function LabCamera() {
     setAnalyzing(true); setResult("");
     try {
       const res = await fetch(`${API}/maestro/vision`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
         body: JSON.stringify({ mode: "laboratorio", image_base64: b64, lang }),
       });
       const reader = res.body.getReader(); const decoder = new TextDecoder(); let buffer = "";

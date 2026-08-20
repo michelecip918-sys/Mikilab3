@@ -27,7 +27,7 @@ export default function ScanRecipe() {
         const b64 = cv.toDataURL("image/jpeg", 0.85);
         try {
           const res = await fetch(`${API}/maestro/scan-recipe`, {
-            method: "POST", headers: { "Content-Type": "application/json" },
+            method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
             body: JSON.stringify({ image_base64: b64, lang }),
           });
           if (!res.ok) throw new Error();

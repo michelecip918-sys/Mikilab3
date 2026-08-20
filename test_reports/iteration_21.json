@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 21: tested server-side PRO blindatura, teaser ('assaggio') recipes, admin coupon/VIP panel, paywall + trial, and password reset flow. Backend: 25/25 pytest tests pass (new file test_iter21_paywall.py). Frontend: all requested flows pass (anon lock icons + teaser CTA, anon paywall on maestro/diagnosi, admin crown + grant/revoke, admin no-paywall + unlocked recipes, non-PRO paywall with sub/trial buttons, trial-1h activation with countdown banner and unlocked content, forgot-password confirmation, reset screen with invalid-token error). One real UI defect found: the IntroGuide modal renders over the ?reset= screen and its Radix overlay blocks all clicks until dismissed.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/admin/revoke", "issue": "Uses update_one without upsert and returns {ok:true} even when the email has no entitlement document (silent no-op); consider 404 or explicit 'not found' flag."},
+      {"endpoint": "GET /api/admin/entitlements", "issue": "Returns revoked rows (pro:false) in a list labelled 'ACCESSI ATTIVI' in the UI — cosmetic/data-labelling mismatch."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "IntroGuide + ResetPassword", "issue": "Opening /?reset=<token> renders reset-screen but IntroGuide dialog also opens on every load; its Radix DialogOverlay (z-50, pointer-events on body) intercepts all clicks so reset-password/reset-submit are unusable until intro is closed. Also intro is shown on EVERY page load (no localStorage persistence).", "selector": "[data-testid=\"intro-close-btn\"] overlay vs [data-testid=\"reset-screen\"]", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipe teaser dialog (anonymous)", "issues": ["The teaser card fills the modal; base ingredients promised in the copy are not visible without scrolling — consider showing the base ingredient list above the lock card."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter21_paywall.py", "/app/test_reports/pytest/iter21.xml"],
+  "action_items": [
+    "Do not render <IntroGuide /> when resetToken is present in App.js (and persist intro dismissal in localStorage) so the password-reset screen is usable.",
+    "Optional: make /api/admin/revoke report when the email had no entitlement; label the admin list 'Accessi' or filter inactive rows."
+  ],
+  "critical_code_review_comments": [
+    "server.py is 1781 lines — consider splitting into routers (auth, recipes, maestro/capo, billing/admin).",
+    "require_pro/require_admin correctly depend on current_user so anonymous requests get 401 and non-PRO/non-admin get 403 — verified end-to-end.",
+    "_teaser_recipe strips procedure/notes/work_phases/extra_ingredients/costing and sets locked:true; no _id leakage in any response tested."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter21_paywall.py"],
+  "success_rate": {"backend": "100% (25/25)", "frontend": "95% (1 blocking overlay bug on reset screen)"},
+  "seed_data_creation": "Created and then deleted entitlements for test_vip_iter21@example.com and vip_ui_iter21@example.com. Trial was activated for fornaio@mikilab.de during testing; its entitlement document was DELETED afterwards, so fornaio is back to non-PRO with trial available.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin, always PRO); fornaio@mikilab.de / Mikilab2026! (non-PRO)",
+  "context_for_next_testing_agent": "Run `pytest tests/test_iter21_paywall.py` for paywall/blindatura regression. Note: /api/maestro/vision requires body {mode:'difetti'|'ingredienti', image_base64, lang}. Trial is one-shot per email; delete the entitlements doc in Mongo to re-test the trial UI. On the frontend, close the intro modal (intro-close-btn) before any interaction — it appears on every load.",
+  "rca_of_the_issue": "App.js renders <IntroGuide /> unconditionally and IntroGuide opens itself in a useEffect on mount, with no persistence. When the URL contains ?reset=<token>, both ResetPassword (z-[80]) and the Radix intro Dialog (z-50 overlay + body pointer-events lock) mount together; Radix's modal semantics block pointer events outside its own content, so the visually-on-top reset form cannot be clicked."
+}

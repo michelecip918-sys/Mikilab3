@@ -372,3 +372,16 @@ Priorità: DOPO il Freemium/Paywall. Default stato "Coming Soon".
 - Ricette "assaggio" (solo parte ingredienti se non PRO) + landing "Chi sono" + 2 demo read-only.
 - Admin: pannello coupon/inviti VIP (Stripe Promotion Codes + _grant_from_email con days).
 - PayPal secondo provider. Badge PRO in header. Gestione ritorno success/cancel da Stripe (?sub=success).
+
+---
+## v24 (2026-06) — Blindatura server, Ricette Assaggio, Admin VIP, Reset password
+- **BLINDATURA SERVER (P0 FATTO)**: entitlement PRO derivato dalla SESSIONE (non più email dal client). Helpers `user_is_pro`/`require_pro`/`require_admin`. API protette: `/api/maestro/vision` e `/api/maestro/scan-recipe` (require_pro → 401 anon / 403 non-PRO); `/api/capo/plan` con `mode=="pro"` richiede PRO, `mode=="home"` resta pubblico; `/api/maestro/chat` pubblico. `subscription/status`, `trial/activate`, `subscription/checkout` ora usano l'email della sessione. **Admin = sempre PRO**. Fetch streaming frontend con `credentials:"include"`. Verificato: 25/25 pytest (test_iter21_paywall.py).
+- **RICETTE ASSAGGIO (P1 FATTO)**: `GET /api/recipes` (mikilab) per NON-PRO ritorna versione "assaggio" (`locked:true`, niente procedure/notes/work_phases/extra_ingredients/costing) — ingredienti base visibili. Frontend: icona lucchetto nella lista (`recipe-locked-<id>`), card teaser nella scheda (`recipe-teaser-<id>`) con CTA "Sblocca con PRO" (`recipe-unlock-<id>` → checkout mensile o login). Admin/PRO vedono tutto.
+- **ADMIN COUPON/VIP (P1 FATTO)**: `GET /api/admin/entitlements`, `POST /api/admin/grant` {email, days?(null=illimitato)}, `POST /api/admin/revoke` (solo admin). UI: pulsante corona nell'header (`admin-btn`) → `AdminPanel.jsx` (regala PRO illimitato/7/30/90/365 gg, lista accessi, revoca).
+- **RESET PASSWORD via RESEND (P2 FATTO)**: `POST /api/auth/forgot-password` (token 1h in `password_resets`, email HTML IT/DE via Resend, anti-enumeration) + `POST /api/auth/reset-password` (aggiorna hash, invalida sessioni, cancella token). UI: link "Password dimenticata?" in AuthScreen (`auth-forgot-link` → `forgot-sent`), schermata `ResetPassword.jsx` via `/?reset=<token>` (`reset-screen`). RESEND_API_KEY + SENDER_EMAIL=noreply@mikilab.de in backend/.env. Dominio mikilab.de verificato su Resend → email consegnate.
+- **FIX**: IntroGuide non viene più renderizzato quando c'è `?reset=` (prima l'overlay Radix bloccava i click sulla schermata reset).
+### RESTA DA FARE (Paywall)
+- PayPal come secondo provider (serve credenziali business dell'utente — BLOCCATO).
+- (Opz.) 2 ricette DEMO completamente sbloccate come vetrina.
+- Badge PRO nell'header; gestione visiva ritorno `?sub=success`.
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.

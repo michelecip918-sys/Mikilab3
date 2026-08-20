@@ -1,8 +1,8 @@
 import { useEffect, useState, Fragment } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal } from "lucide-react";
-import { recipesApi } from "@/lib/api";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown } from "lucide-react";
+import { recipesApi, subscriptionApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
@@ -120,6 +120,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     if (target) setViewing(target);
   };
 
+  // "Assaggio": sblocca la ricetta completa abbonandosi (o accede se anonimo).
+  const handleUnlock = async () => {
+    if (!user) { setAuthOpen(true); toast.info(t("gate_save_login")); return; }
+    try {
+      const d = await subscriptionApi.checkout("monthly");
+      if (d.url) window.location.href = d.url;
+    } catch { toast.error(t("toast_load_error")); }
+  };
+
   return (
     <div className="pb-4">
       <div className="relative rounded-3xl overflow-hidden mb-5 h-40">
@@ -188,7 +197,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 </h3>
                 {r.flour_type ? <p className="text-xs text-[#8C7567] truncate">{rLoc(r, "flour_type", lang)}</p> : null}
               </div>
-              <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />
+              {r.locked
+                ? <Lock data-testid={`recipe-locked-${r.id}`} className="w-4 h-4 text-[#D99B26] shrink-0" />
+                : <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />}
             </motion.button>
             </Fragment>
             );
@@ -210,6 +221,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               scaleVal={scale[viewing.id]}
               onScaleChange={(v) => setScale((s) => ({ ...s, [viewing.id]: v }))}
               onImprover={openImprover}
+              onUnlock={handleUnlock}
               onEdit={() => { setEditing(viewing); setDialogOpen(true); setViewing(null); }}
               onDuplicate={() => handleDuplicate(viewing)}
               onScaleAction={() => setScaling(viewing)}
@@ -257,8 +269,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   );
 }
 
-function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
+function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onUnlock, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
+  const de = lang === "de";
   const isPanettone = recipeCategory(r).key === "panettoni";
   const flourG = Number(r.flour_grams) || 0;
   const target = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
@@ -439,6 +452,25 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{rLoc(r, "procedure", lang)}</p>
           </div>
         ) : null}
+
+        {r.locked && (
+          <div data-testid={`recipe-teaser-${r.id}`} className="rounded-2xl bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white p-5 text-center shadow-lg">
+            <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-3">
+              <Lock className="w-6 h-6" />
+            </div>
+            <p className="font-display text-lg font-bold">
+              {de ? "Vollständiges Rezept mit PRO freischalten" : "Sblocca la ricetta completa con PRO"}
+            </p>
+            <p className="text-white/85 text-sm mt-1.5">
+              {de ? "Prozedur Schritt für Schritt, alle Zutaten, Arbeitsphasen und Werkzeuge des Labors."
+                  : "Procedimento passo-passo, tutti gli ingredienti, le fasi di lavorazione e gli strumenti del laboratorio."}
+            </p>
+            <button data-testid={`recipe-unlock-${r.id}`} onClick={onUnlock}
+              className="mt-4 inline-flex items-center gap-2 bg-white text-[#8C3A1D] font-bold px-5 py-2.5 rounded-xl active:scale-97 transition-all">
+              <Crown className="w-4 h-4" /> {de ? "PRO freischalten · €9,99/Monat" : "Passa a PRO · €9,99/mese"}
+            </button>
+          </div>
+        )}
 
         {r.notes ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{rLoc(r, "notes", lang)}</p> : null}
 

@@ -178,7 +178,7 @@ export default function AdattaForno() {
       setAnalyzing(true); setResult("");
       try {
         const res = await fetch(`${API}/maestro/vision`, {
-          method: "POST", headers: { "Content-Type": "application/json" },
+          method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
           body: JSON.stringify({ mode: "forni", image_base64: preview, lang }),
         });
         const reader = res.body.getReader();
