@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import RecipeList from "@/components/RecipeList";
 
@@ -35,6 +36,7 @@ const CONCEPT_PHOTOS = {
 
 export default function Home({ onNavigate }) {
   const { t, lang } = useLang();
+  const { user } = useAuth();
   const [chat, setChat] = useState(false);
   const [open, setOpen] = useState(null);
   const concepts = CONCEPTS[lang === "de" ? "de" : "it"];
@@ -127,7 +129,23 @@ export default function Home({ onNavigate }) {
         })}
       </div>
 
-      {/* Le mie ricette */}
+      {/* Le mie ricette private (solo loggati) */}
+      {user && (
+        <div data-testid="home-personal-recipes">
+          <h2 className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6] mb-3">
+            {lang === "de" ? "Meine privaten Rezepte" : "Le mie ricette private"}
+          </h2>
+          <RecipeList
+            collectionName="personal"
+            heroImage="https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
+            heroTitle={t("personal_hero_title")}
+            heroSubtitle={t("personal_hero_sub")}
+            emptyText={t("personal_empty")}
+          />
+        </div>
+      )}
+
+      {/* Le mie ricette (Mikilab) */}
       <div data-testid="home-recipes">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{lang === "de" ? "Meine Rezepte" : "Le mie ricette"}</h2>

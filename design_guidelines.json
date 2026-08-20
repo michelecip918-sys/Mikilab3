@@ -1,140 +1,135 @@
 {
-  "project_name": "Mikilab - Panetteria Artigianale & Assistente da Laboratorio",
-  "app_type": "mobile_web_app (Mobile-First PWA per Panettiere Italo-Tedesco)",
-  "design_philosophy": {
-    "archetype": "Warm Artisanal Luxury & Performance Precision",
-    "tone": "Elegante, caldo, autorevole ma accessibile, artigianale italiano con precisione tedesca",
-    "core_goals": [
-      "Eliminare il disordine visivo e le sovrapposizioni di testo per un'esperienza pulita e fluida",
-      "Accesso 1-Click immediato a tutti gli strumenti di laboratorio e ricette",
-      "Elevare l'estetica a un look da laboratorio d'haute boulangerie con finiture in rame/terracotta e dettagli oro",
-      "Garantire una navigazione mobile-first iper-funzionale durante l'uso in forno con le mani in farina"
-    ]
+  "project_name": "Mikilab Mobile Web App - Bold IT/DE Color Redesign",
+  "app_type": "mobile_web_app",
+  "design_archetype": "Fusion Archetype: Italian & German Craftsman Bakery (Warm Artisan + Italian Tricolore + German Precision Gold/Black)",
+  "color_palette": {
+    "hex_codes": {
+      "bakery_terracotta": "#B34A26",
+      "bakery_terracotta_dark": "#8C3417",
+      "bakery_gold": "#D99B26",
+      "bakery_cream": "#FDFBF7",
+      "bakery_cream_muted": "#F4EFE6",
+      "bakery_sage": "#6B8E62",
+      "bakery_dark": "#1A1412",
+      "it_green": "#009246",
+      "it_green_dark": "#006B33",
+      "it_white": "#FFFFFF",
+      "it_red": "#CE2B37",
+      "de_black": "#111827",
+      "de_red": "#DD0000",
+      "de_gold": "#FFCE00",
+      "dark_mode_bg": "#120E0D",
+      "dark_mode_card": "#1E1816",
+      "dark_mode_border": "#322925"
+    },
+    "css_variables": {
+      "--bg-app-light": "#FDFBF7",
+      "--bg-app-dark": "#120E0D",
+      "--card-it-hero": "linear-gradient(135deg, rgba(0,146,70,0.12) 0%, rgba(255,255,255,0.95) 50%, rgba(206,43,55,0.12) 100%)",
+      "--card-de-accent": "linear-gradient(135deg, rgba(17,24,39,0.92) 0%, rgba(221,0,0,0.85) 50%, rgba(255,206,0,0.92) 100%)",
+      "--card-bakery-warm": "linear-gradient(135deg, #B34A26 0%, #D99B26 100%)",
+      "--card-sage-bio": "linear-gradient(135deg, #6B8E62 0%, #009246 100%)",
+      "--it-de-header-ribbon": "linear-gradient(90deg, #009246 0%, #009246 30%, #FFFFFF 30%, #FFFFFF 35%, #CE2B37 35%, #CE2B37 50%, #111827 50%, #111827 65%, #DD0000 65%, #DD0000 80%, #FFCE00 80%, #FFCE00 100%)"
+    },
+    "tailwind_classes": {
+      "bg_main_light": "bg-[#FDFBF7]",
+      "bg_main_dark": "dark:bg-[#120E0D]",
+      "card_terracotta": "bg-gradient-to-br from-[#B34A26] to-[#8C3417] text-white shadow-lg border border-[#B34A26]/20",
+      "card_gold": "bg-gradient-to-br from-[#D99B26] to-[#B37A1B] text-white shadow-lg border border-[#D99B26]/20",
+      "card_sage": "bg-gradient-to-br from-[#6B8E62] to-[#009246] text-white shadow-lg border border-[#6B8E62]/20",
+      "card_dark_espresso": "bg-gradient-to-br from-[#1A1412] via-[#2A1F1C] to-[#111827] text-amber-100 shadow-xl border border-[#D99B26]/30",
+      "card_it_tint": "bg-gradient-to-r from-[#009246]/10 via-amber-50/80 to-[#CE2B37]/10 dark:from-[#009246]/20 dark:via-[#1E1816] dark:to-[#CE2B37]/20 border border-emerald-600/20",
+      "card_de_tint": "bg-gradient-to-r from-[#111827]/90 via-[#DD0000]/80 to-[#FFCE00]/90 text-white border border-[#FFCE00]/40 shadow-xl"
+    }
   },
   "typography": {
-    "fonts": {
-      "display": "Playfair Display, serif (usato per Titoli principali, Categorie e Nomi Ricette per dare tocco da maestro artigiano)",
-      "body": "Manrope, sans-serif (usato per testi descrittivi, istruzioni, pulsanti e note)",
-      "mono": "JetBrains Mono, monospace (usato per percentuali di idratazione, temperature, dosi in grammi, costi e timer)"
-    },
-    "scale": {
-      "h1": "text-2xl sm:text-3xl font-display font-bold tracking-tight text-[#2C221E] dark:text-[#FDFBF7]",
-      "h2": "text-xl sm:text-2xl font-display font-semibold tracking-tight text-[#B34A26] dark:text-[#E07A5F]",
-      "h3": "text-lg sm:text-xl font-display font-medium text-[#2C221E] dark:text-[#F3EAD8]",
-      "body": "text-sm sm:text-base font-sans text-[#5A4A42] dark:text-[#C4B5A5] leading-relaxed",
-      "caption": "text-xs font-sans text-[#8C7567] dark:text-[#9E8C7E]",
-      "mono_metric": "font-mono-data text-xs sm:text-sm font-bold tracking-wide"
+    "heading_font": "Outfit, Cabinet Grotesk, sans-serif",
+    "body_font": "Inter, sans-serif",
+    "mono_font": "JetBrains Mono, monospace",
+    "font_classes": {
+      "h1": "font-bold text-3xl sm:text-4xl tracking-tight text-[#1A1412] dark:text-[#FDFBF7]",
+      "h2": "font-bold text-xl sm:text-2xl tracking-tight text-[#1A1412] dark:text-[#FDFBF7]",
+      "h3": "font-semibold text-lg tracking-snug text-[#B34A26] dark:text-[#FFCE00]",
+      "badge": "font-mono text-xs uppercase tracking-wider font-bold"
     }
   },
-  "colors": {
-    "primary": {
-      "terracotta": "#B34A26",
-      "terracotta_hover": "#8C381A",
-      "terracotta_light": "#FBEBE6"
-    },
-    "secondary": {
-      "gold": "#D99B26",
-      "gold_hover": "#B37E1B",
-      "gold_light": "#FFF7E6"
-    },
-    "neutrals": {
-      "cream": "#FDFBF7",
-      "sand": "#F5EFE6",
-      "linen": "#E8DEC8",
-      "charcoal": "#2C221E",
-      "dark_bg": "#1A1412",
-      "dark_surface": "#251D19",
-      "dark_border": "#3D302A"
-    },
-    "accents": {
-      "sage_green": "#6B8E62",
-      "sage_light": "#F0F4EF",
-      "warm_red": "#CE2B37"
-    },
-    "bilingual_flags": {
-      "IT": ["#009246", "#FFFFFF", "#CE2B37"],
-      "DE": ["#111111", "#DD0000", "#FFCE00"]
-    }
+  "background_strategy": {
+    "concept": "Warm Artisan Flour & Dual IT/DE Identity Backgrounds",
+    "rules": [
+      "Avoid raw plain white backgrounds. Use #FDFBF7 (crema) for light mode and #120E0D (dark espresso) for dark mode.",
+      "Integrate subtle IT/DE ambient background glows using radial gradients: green glow on top-left (#009246/5), red glow on bottom-right (#CE2B37/5), gold glow on top-right (#FFCE00/5).",
+      "Sections are distinctly color-block segmented: Ricette section gets warm terracotta subtle tint, Maestro AI section gets dark espresso command center background, Impara section gets sage green tint, PhotoDiagnosi gets tech-dark DE gold theme.",
+      "Use subtle grain/paper texture overlay where possible to convey the physical warmth of flour, sourdough, and traditional oven stone."
+    ]
   },
-  "surfaces_and_textures": {
-    "cards": "bg-white/80 dark:bg-[#251D19]/90 backdrop-blur-md border border-[#E8DEC8]/80 dark:border-[#3D302A] rounded-2xl shadow-[0_4px_20px_rgba(44,34,30,0.04)] hover:border-[#D99B26]/50 transition-all duration-300",
-    "glass_header": "bg-[#FDFBF7]/90 dark:bg-[#1A1412]/90 backdrop-blur-xl border-b border-[#E8DEC8]/60 dark:border-[#3D302A] sticky top-0 z-40",
-    "gold_accent_glow": "shadow-[0_0_15px_rgba(217,155,38,0.25)] border-[#D99B26]",
-    "interactive_pills": "px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 border cursor-pointer active:scale-95 text-center flex items-center justify-center gap-1.5"
+  "card_system": {
+    "concept": "6 Distinct Colored Card Archetypes mapped to App Sections",
+    "archetypes": {
+      "hero_it_de_fusion": {
+        "bg": "bg-gradient-to-br from-[#1A1412] via-[#2A1F1C] to-[#111827]",
+        "border": "border-2 border-[#FFCE00]/40",
+        "badge_it": "bg-[#009246] text-white",
+        "badge_de": "bg-[#DD0000] text-[#FFCE00]",
+        "use": "Home Hero section, Bi-national announcement banners, Main Call-To-Action"
+      },
+      "bakery_terracotta": {
+        "bg": "bg-gradient-to-br from-[#B34A26] to-[#963A1C]",
+        "text": "text-white",
+        "border": "border-amber-400/20",
+        "use": "Primary recipes, dough calculation CTA, oven controls"
+      },
+      "bakery_gold": {
+        "bg": "bg-gradient-to-br from-[#D99B26] to-[#B87D18]",
+        "text": "text-zinc-950 font-medium",
+        "border": "border-amber-200/40",
+        "use": "Sourdough wake-up guides, timers, alerts, key metrics"
+      },
+      "sage_organic": {
+        "bg": "bg-gradient-to-br from-[#6B8E62] to-[#009246]",
+        "text": "text-white",
+        "border": "border-emerald-200/30",
+        "use": "Bio recipes, fermentations, eco/natural ingredients, beginner steps"
+      },
+      "de_gold_tactical": {
+        "bg": "bg-gradient-to-br from-[#111827] via-[#1F2937] to-[#111827]",
+        "text": "text-white",
+        "border": "border-[#FFCE00] border-l-4",
+        "use": "Capo Laboratorio shift management, temperature calculations, precision tools"
+      },
+      "it_tricolore_glass": {
+        "bg": "bg-white/80 dark:bg-[#1E1816]/90 backdrop-blur-md",
+        "text": "text-[#1A1412] dark:text-[#FDFBF7]",
+        "border": "border-l-4 border-l-[#009246] border-r-4 border-r-[#CE2B37]",
+        "use": "Expanded recipe details, Italian tradition cards, ingredient lists"
+      }
+    }
   },
   "navigation": {
+    "header": {
+      "bg": "bg-[#1A1412]/95 dark:bg-[#0E0B0A]/95 backdrop-blur-md text-[#FDFBF7]",
+      "border": "border-b border-[#D99B26]/30",
+      "tricolore_ribbon": "h-1.5 w-full bg-gradient-to-r from-[#009246] via-[#FFFFFF] via-[#CE2B37] via-[#111827] via-[#DD0000] to-[#FFCE00]",
+      "language_toggle_active": "bg-[#D99B26] text-[#1A1412] font-bold shadow-md",
+      "language_toggle_inactive": "bg-[#1A1412]/60 text-amber-200 hover:bg-[#2A1F1C]"
+    },
     "bottom_nav": {
-      "type": "Fixed 6-tab mobile dock with bilingual subtle header line",
-      "tabs": [
-        { "id": "mikilab", "label": "Home", "icon": "BookOpen", "testid": "nav-tab-mikilab" },
-        { "id": "ricette", "label": "Ricette", "icon": "ChefHat", "testid": "nav-tab-ricette" },
-        { "id": "maestro", "label": "Maestro", "icon": "Wrench", "testid": "nav-tab-maestro" },
-        { "id": "impara", "label": "Impara", "icon": "GraduationCap", "testid": "nav-tab-impara" },
-        { "id": "foto", "label": "Diagnosi", "icon": "Camera", "testid": "nav-tab-foto" },
-        { "id": "news", "label": "News", "icon": "Newspaper", "testid": "nav-tab-news" }
-      ],
-      "active_state_style": "bg-gradient-to-r from-[#B34A26] to-[#D99B26] text-white shadow-md rounded-xl font-bold",
-      "inactive_state_style": "text-[#8C7567] dark:text-[#A89385] hover:text-[#B34A26] dark:hover:text-[#FDFBF7] hover:bg-[#F5EFE6] dark:hover:bg-[#332823] rounded-xl"
+      "bg": "bg-[#1A1412]/98 dark:bg-[#0E0B0A]/98 backdrop-blur-lg border-t-2 border-[#D99B26]/40",
+      "active_tab_it": "bg-gradient-to-r from-[#009246] to-[#CE2B37] text-white shadow-lg ring-2 ring-[#FFCE00]/50 scale-105",
+      "active_tab_de": "bg-gradient-to-r from-[#111827] via-[#DD0000] to-[#FFCE00] text-white shadow-lg ring-2 ring-[#FFCE00]/50 scale-105",
+      "active_tab_default": "bg-gradient-to-r from-[#B34A26] to-[#D99B26] text-white shadow-md font-bold scale-105",
+      "inactive_tab": "text-amber-200/70 hover:text-amber-100 hover:bg-[#2A1F1C]/50 transition-all duration-200"
     }
   },
-  "sections_breakdown": {
-    "home": {
-      "elements": [
-        "Hero Baker Profile: Foto artigianale con badge IT/DE e storia sintetica del panettiere in Germania",
-        "Pillole 1-Click Pre-Impasti Educational: Lievito Madre, Poolish, Kochstück con scomparti richiudibili puliti e chiari",
-        "Pulsante Hero 'Chiedi al Maestro' AI: Pulsante grande con effetto bagliore terracotta/oro e scorciatoia rapida 1-click"
-      ]
-    },
-    "ricette": {
-      "elements": [
-        "Filtri 1-Click Categorie: Tutti, Backmittel, Lievito Madre, Panettoni, Pane, Panini",
-        "Card Ricetta Premium: Foto full-width con gradient overlay sottile, badge idratazione (es. 80%), temp perno, minuti cottura, costo calcolato",
-        "Modal Ricetta Raffinato: Calcolo idratazione/dosi istantaneo, tab ingredienti/procedimento senza blocchi di testo confusi"
-      ]
-    },
-    "maestro": {
-      "elements": [
-        "Guida sintetica 4 passi in alto per orientamento rapido in laboratorio",
-        "Griglia 6 Strumenti 1-Click: Capo Laboratorio, Piano Settimanale, Piano di Lavoro, Adatta al Forno, Termostato Acqua, Sveglia Lievito",
-        "Card strumenti minimal con icone dorate, status in tempo reale e azioni immediate"
-      ]
-    },
-    "impara": {
-      "elements": [
-        "Lezioni video con player integrato e riassunti visivi",
-        "Quiz interattivi con feedback immediato per affinare la tecnica da forno"
-      ]
-    },
-    "diagnosi": {
-      "elements": [
-        "Caricamento o scatto foto per AI Vision",
-        "Scheda report diagnostica su al alveolatura, crosta, lievitazione ed errori di fermentazione"
-      ]
-    },
-    "news": {
-      "elements": [
-        "Feed Notizie sul mondo del pane e panificazione tra Italia e Germania con tag lingua e date"
-      ]
-    }
-  },
-  "image_urls": {
-    "hero_baker": "https://images.unsplash.com/photo-1560427183-4efd29c38997?auto=format&fit=crop&q=85&w=800",
-    "bread_artisan": "https://images.unsplash.com/photo-1686154596696-d6f594a98af9?auto=format&fit=crop&q=85&w=800",
-    "sourdough_crust": "https://images.unsplash.com/photo-1612136435731-ad3e522eac01?auto=format&fit=crop&q=85&w=800",
-    "bread_loaf": "https://images.unsplash.com/photo-1616841888027-89693dec0827?auto=format&fit=crop&q=85&w=800"
-  },
+  "component_path": "frontend/src/components/",
   "instructions_to_main_agent": [
-    "Mantieni tutti i data-testid esistenti (es. nav-tab-mikilab, nav-tab-ricette, nav-tab-maestro, nav-tab-impara, nav-tab-foto, nav-tab-news, nav-tab-chiedi).",
-    "Assicurati che la bottom nav contenga tutte le 6 voci richieste con icone Lucide chiare ed etichette bilingue sincronizzate.",
-    "Rimuovi sovrapposizioni e blocchi di testo disordinati. Sostituisci i muri di testo con accordion puliti o schede apribili con 1-click.",
-    "Utilizza la combinazione tipografica Playfair Display per i titoli e Manrope per il corpo testo per conferire un look da ricettario editoriale di lusso.",
-    "Integra dettagli di contrasto ed eleganza: bordi dorati sottili (#D99B26), sfondi crema caldi (#FDFBF7), micro-interazioni Framer Motion su ogni card e pulsante.",
-    "Ogni card di strumento in 'Maestro' deve offrire un'azione diretta in 1-click senza passaggi intermedi superfluo."
+    "Apply exact color palette classes and CSS variables across all views.",
+    "Ensure every interactive element has a data-testid attribute.",
+    "Maintain responsive layout optimized for mobile viewports (pwa style).",
+    "Never compromise readability - contrast between text and background must follow accessibility standards."
   ],
-  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
-    "Tutti gli elementi interattivi e pulsanti DEVONO contenere attributi data-testid in formato kebab-case per i test automatizzati.",
-    "Non usare sfondi totalmente trasparenti per header o menu a tendina; usa sempre backdrop-blur con background semi-opaco.",
-    "Includi micro-animazioni fluide per hover, tap e cambi di tab per un'esperienza premium al tatto su smartphone.",
-    "Rispetta sempre la doppia identità culturale bilingue Italiano (IT) e Tedesco (DE) in tutti i componenti del pannello."
-  ]
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": {
+    "test_id_requirement": "All buttons, inputs, tabs, recipe items, language switchers, and dialog actions MUST retain or add data-testid attributes.",
+    "no_transparent_overlays": "Never use fully transparent header or overlay dropdown backgrounds.",
+    "toast_library": "Use sonner for user feedback toasts."
+  }
 }

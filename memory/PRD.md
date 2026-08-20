@@ -196,6 +196,11 @@ ricette → piano settimanale → Quando impastare / Quando infornare (prefill d
 - **UX**: padding inferiore main aumentato (pb-40) per non far coprire i testi dai FAB Radio/Microfono su mobile.
 - Testato: iteration_15.json → backend 100%, frontend 100%, 0 errori console.
 
+## v22 (2026-06) — Ricette private in Home
+- **Home**: aggiunta sezione **"Le mie ricette private"** (RecipeList collection `personal`), visibile solo se l'utente è loggato.
+- **Reset password (Resend)**: RINVIATO — l'utente deve fornire la API key di Resend (re_...) e ha confermato dominio `noreply@mikilab.de`. Playbook pronto; da implementare quando arriva la key.
+- **Redesign colori IT/DE audace**: blueprint generato in `/app/design_guidelines.json` (design_agent). Implementazione RINVIATA su richiesta utente ("va bene così"). Da riprendere: sfondi/sezioni con identità IT (verde/bianco/rosso) e DE (nero/rosso/oro) + toni caldi.
+
 ## v21 (2026-06) — Auth "leggera", hub Home, tasto Indietro, branding
 - **Accesso LIBERO**: nessun login all'avvio. Login (Google + Email/password) richiesto SOLO al momento di **salvare/modificare una ricetta** (handleSave apre il modale login se non autenticato). Maestro e tutte le sezioni sono libere. Backend: `GET /recipes?mikilab` pubblico; `personal` e mutazioni richiedono auth (`optional_user`/`current_user`).
 - **Auth**: endpoint `/api/auth/register|login|google/session|me|logout`, cookie `session_token` httpOnly 7gg, primo utente = admin. Mikilab modificabile solo da admin; personali isolate per `owner_id`. Header con pulsante Accedi/Logout. Modale login con chiusura (`auth-close`).
