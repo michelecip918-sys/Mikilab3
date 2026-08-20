@@ -1,7 +1,9 @@
 {
   "short_name": "Mikilab",
-  "name": "Mikilab",
-  "description": "Mikilab — panificazione artigianale: ricette, produzione e Maestro AI",
+  "name": "Mikilab — Il laboratorio del pane",
+  "description": "Ricette di panificazione artigianale (farro, lievito madre, grandi lievitati), pianificazione della produzione e Maestro AI. Bilingue IT/DE.",
+  "lang": "it",
+  "categories": ["food", "productivity", "lifestyle"],
   "icons": [
     {
       "src": "favicon-32.png",
