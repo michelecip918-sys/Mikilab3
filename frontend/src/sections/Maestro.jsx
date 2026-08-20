@@ -71,8 +71,7 @@ export default function Maestro() {
 
   return (
     <div className="pb-4">
-      <h1 className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("maestro_title")}</h1>
-      <p className="text-sm text-[#8C7567] mt-1 mb-4">{t("maestro_flow_intro")}</p>
+      <h1 className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6] mb-4">{t("maestro_title")}</h1>
 
       {/* Guida a 4 passi */}
       <div data-testid="maestro-guide" className="mb-6 rounded-3xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-5">
@@ -102,7 +101,6 @@ export default function Maestro() {
             </div>
             <div className="min-w-0">
               <h3 className="font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6] leading-tight">{title}</h3>
-              <p className="text-[11px] text-[#8C7567] leading-snug mt-0.5">{desc}</p>
             </div>
           </motion.button>
         ))}

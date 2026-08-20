@@ -50,6 +50,10 @@ function App() {
   return (
     <AmbientProvider>
     <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1A1412]">
+      {/* Sfondo tematico cartone (leggero, su ogni pagina) */}
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-no-repeat bg-right-bottom opacity-[0.05] dark:opacity-[0.07]"
+        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/michele-cartoon.jpg)`, backgroundSize: "min(70vw, 420px)" }} />
+      <div className="relative z-10">
       <Header />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-48">
         <AnimatePresence mode="wait">
@@ -86,6 +90,7 @@ function App() {
       </AnimatePresence>
 
       <Toaster position="top-center" richColors />
+      </div>
     </div>
     </AmbientProvider>
   );

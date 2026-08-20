@@ -10,8 +10,8 @@ export const translations = {
     // Bottom nav
     nav_mikilab: "Mikilab",
     nav_mikilab_sub: "Ricette",
-    nav_maestro: "Maestro",
-    nav_maestro_sub: "Strumenti",
+    nav_maestro: "Il Tuo Laboratorio",
+    nav_maestro_sub: "",
     nav_foto: "Diagnosi",
     nav_foto_sub: "Foto",
     nav_chiedi: "Chiedi",
@@ -203,7 +203,7 @@ export const translations = {
     ing_salt: "Sale",
 
     // Maestro hub
-    maestro_title: "Nel tuo laboratorio",
+    maestro_title: "Il Tuo Laboratorio",
     maestro_subtitle: "Strumenti e calcoli per la panificazione",
     tools_back: "Strumenti",
     tool_aggiungi: "Aggiungi ricetta",
@@ -726,8 +726,8 @@ export const translations = {
     // Bottom nav
     nav_mikilab: "Mikilab",
     nav_mikilab_sub: "Rezepte",
-    nav_maestro: "Meister",
-    nav_maestro_sub: "Werkzeuge",
+    nav_maestro: "Dein Labor",
+    nav_maestro_sub: "",
     nav_foto: "Diagnose",
     nav_foto_sub: "Foto",
     nav_chiedi: "Fragen",
@@ -920,7 +920,7 @@ export const translations = {
     ing_salt: "Salz",
 
     // Maestro hub
-    maestro_title: "In deiner Backstube",
+    maestro_title: "Dein Labor",
     maestro_subtitle: "Werkzeuge und Berechnungen fürs Brotbacken",
     tools_back: "Werkzeuge",
     tool_aggiungi: "Rezept hinzufügen",

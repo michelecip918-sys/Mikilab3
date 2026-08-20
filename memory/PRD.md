@@ -330,3 +330,14 @@ Barra a 6 voci: **Home · Ricette · Maestro · Impara · Diagnosi · News**.
 - Controllo accessi su INVITO/permesso: Michele decide chi vede quali sezioni (specie Maestro/Laboratorio). Protezione anti-copia contenuti. Feature grande = fase dedicata (auth + ruoli + permessi per sezione).
 ### RESTA DA FARE (Maestro/AI)
 - Celle + caricamento FOTO (AI riconosce), piano settimanale turni+foto, produzione inversa scelta prefermento+rinfreschi, cambio orario primo impasto, sveglie per fase, pulizia Piano di Lavoro (solo COSA PREPARARE+PERSONALE), togliere "Persone al lavoro" e "Miei Brio Impasto", Adatta Forno con foto+AI, temp acqua auto, lista spesa nel piano, checklist+promemoria sabato, scansione dentro Maestro+foto (togliere News), comandi vocali, ricerca web ricetta+Metodo Mikilab, calcolo prezzi, Bluetooth termometro, più metodi.
+
+---
+## Changelog — 20 Giu 2026 (Restyling "Il Tuo Laboratorio" + anti-copia)
+- Rinominato "Maestro" → "Il Tuo Laboratorio" (nav + titolo, IT/DE "Dein Labor").
+- Rimosse didascalie sotto i pulsanti/schede del laboratorio (UI essenziale).
+- Protezione contenuti (index.html + index.css): blocco contextmenu/copy/cut/selezione/F12/Ctrl+U/Ctrl+Shift+I, con eccezione input/textarea; immagini non trascinabili.
+- Sfondo cartone tematico fisso leggero su ogni pagina (App.js).
+
+## PROSSIMA GRANDE FEATURE — Freemium/Paywall (Stripe) — PIANO PRONTO
+Direttiva: PRO sblocca "Il Tuo Laboratorio" + "Diagnosi". Free = consultazione base + landing "Chi sono" + 2 ricette DEMO read-only (no ricalcolo/export). Trial pass 1h/24h (attivazione singola per utente) con countdown in header. Coupon/VIP in admin (accesso gratis illimitato/temporaneo). Tutto server-side: le formule NON vengono inviate in blocco al browser; gating su /api/lab/* e /api/diagnosi/*; frontend riceve solo un flag di accesso.
+Stripe: FLOW A (claimable sandbox, nessuna chiave dall'utente). Playbook ottenuto. Prezzi default €9,99/mese, €99/anno (lookup_key pro_monthly/pro_yearly). Login: riusare Emergent Auth (Email+Google) già presente. Webhook Flow A: /api/stripe/webhook. payment_transactions in Mongo. Provisioning sandbox in A1 (job_id già noto). Da implementare + testare in sessione dedicata.
