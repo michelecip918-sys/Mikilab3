@@ -1,13 +1,15 @@
-import { Wheat, Moon, Sun, MapPin, Clock, LogOut, LogIn } from "lucide-react";
+import { Wheat, Moon, Sun, MapPin, Clock, LogOut, LogIn, Music, VolumeX } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
+import { useAmbient } from "@/audio/AmbientContext";
 
 export default function Header() {
   const [dark, setDark] = useState(false);
   const [now, setNow] = useState(new Date());
   const { lang, setLang, t } = useLang();
   const { user, logout, setAuthOpen } = useAuth();
+  const { on: musicOn, toggle: toggleMusic } = useAmbient();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -84,6 +86,20 @@ export default function Header() {
             </button>
           ))}
         </div>
+
+        <button
+          data-testid="music-toggle"
+          onClick={toggleMusic}
+          className={`w-10 h-10 rounded-xl border flex items-center justify-center active:scale-95 transition-all ${
+            musicOn
+              ? "bg-[#B34A26] border-[#B34A26] text-white"
+              : "bg-[#F5EFE6] dark:bg-[#332823] border-[#E8DEC8] dark:border-[#3D302A] text-[#B34A26]"
+          }`}
+          aria-label={t("music_toggle")}
+          title={t("music_toggle")}
+        >
+          {musicOn ? <Music className="w-4.5 h-4.5" /> : <VolumeX className="w-4.5 h-4.5" />}
+        </button>
 
         <button
           data-testid="theme-toggle"

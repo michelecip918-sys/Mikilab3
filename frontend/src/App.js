@@ -15,6 +15,8 @@ import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
 import AuthScreen from "@/components/AuthScreen";
 import { useAuth } from "@/auth/AuthContext";
+import { AmbientProvider } from "@/audio/AmbientContext";
+import ambient from "@/lib/ambientMusic";
 
 function App() {
   const [tab, setTab] = useState("home");
@@ -43,7 +45,11 @@ function App() {
   // chiudi il modale login appena l'utente è autenticato
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
 
+  // Sottofondo musicale: cambia melodia in base alla sezione attiva.
+  useEffect(() => { ambient.setSection(tab); }, [tab]);
+
   return (
+    <AmbientProvider>
     <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1A1412]">
       <Header />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-48">
@@ -83,6 +89,7 @@ function App() {
 
       <Toaster position="top-center" richColors />
     </div>
+    </AmbientProvider>
   );
 }
 

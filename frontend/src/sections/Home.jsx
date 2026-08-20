@@ -6,6 +6,7 @@ import { useAuth } from "@/auth/AuthContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import LegalPage from "@/sections/LegalPage";
 import RecipeList from "@/components/RecipeList";
+import RecipeShowcase from "@/components/RecipeShowcase";
 import ShareInstall from "@/components/ShareInstall";
 
 const CONCEPTS = {
@@ -159,22 +160,8 @@ export default function Home({ onNavigate }) {
         </div>
       )}
 
-      {/* Le mie ricette (Mikilab) */}
-      <div data-testid="home-recipes">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{lang === "de" ? "Meine Rezepte" : "Le mie ricette"}</h2>
-          <button data-testid="home-recipes-all" onClick={() => go("ricette")} className="text-sm font-medium text-[#B34A26] flex items-center gap-1">
-            {lang === "de" ? "Alle" : "Tutte"} <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-        <RecipeList
-          collectionName="mikilab"
-          heroImage="https://images.unsplash.com/photo-1509440159596-0249088772ff?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
-          heroTitle={t("brand_subtitle")}
-          heroSubtitle={t("mikilab_subtitle")}
-          emptyText={t("mikilab_empty")}
-        />
-      </div>
+      {/* Le mie ricette (Mikilab) — vetrina */}
+      <RecipeShowcase onOpen={() => go("ricette")} />
 
       {/* Condividi & Installa app */}
       <ShareInstall />

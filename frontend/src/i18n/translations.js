@@ -4,6 +4,7 @@ export const translations = {
     brand_subtitle: "Il laboratorio di Michele",
     city: "Stoccarda",
     theme_toggle: "Cambia tema",
+    music_toggle: "Musica di sottofondo",
     lang_label: "Lingua",
 
     // Bottom nav
@@ -705,6 +706,7 @@ export const translations = {
     brand_subtitle: "Il laboratorio di Michele",
     city: "Stuttgart",
     theme_toggle: "Thema wechseln",
+    music_toggle: "Hintergrundmusik",
     lang_label: "Sprache",
 
     // Bottom nav
