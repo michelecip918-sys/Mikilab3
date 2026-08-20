@@ -6,6 +6,7 @@ import { recipesApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -24,6 +25,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [scaling, setScaling] = useState(null);
   const [viewing, setViewing] = useState(null);
   const { t, lang } = useLang();
+  const { user, setAuthOpen } = useAuth();
+  // Mikilab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
+  const canEdit = collectionName === "mikilab" ? user?.role === "admin" : true;
 
   const load = async () => {
     setLoading(true);
@@ -35,8 +39,10 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         return (a.name || "").localeCompare(b.name || "");
       });
       setRecipes(list);
-    } catch {
-      toast.error(t("toast_load_error"));
+    } catch (e) {
+      // ricette personali senza login → lista vuota (nessun errore)
+      if (collectionName !== "mikilab" && e?.response?.status === 401) setRecipes([]);
+      else toast.error(t("toast_load_error"));
     } finally {
       setLoading(false);
     }
@@ -54,6 +60,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   }, [recipes]);
 
   const handleSave = async (payload) => {
+    if (!user) {
+      setAuthOpen(true);
+      toast.info(t("gate_save_login"));
+      return;
+    }
     try {
       if (editing) {
         await recipesApi.update(editing.id, payload);
@@ -120,13 +131,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       </div>
 
-      <button
-        data-testid="add-recipe-btn"
-        onClick={() => { setEditing(null); setDialogOpen(true); }}
-        className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
-      >
-        <Plus className="w-5 h-5" /> {t("add_recipe")}
-      </button>
+      {canEdit && (
+        <button
+          data-testid="add-recipe-btn"
+          onClick={() => { setEditing(null); setDialogOpen(true); }}
+          className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
+        >
+          <Plus className="w-5 h-5" /> {t("add_recipe")}
+        </button>
+      )}
 
       {loading ? (
         <p className="text-center text-[#8C7567] py-8">{t("loading")}</p>
@@ -193,6 +206,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               r={viewing}
               t={t}
               readOnly={readOnly}
+              canEdit={canEdit}
               scaleVal={scale[viewing.id]}
               onScaleChange={(v) => setScale((s) => ({ ...s, [viewing.id]: v }))}
               onImprover={openImprover}
@@ -243,7 +257,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   );
 }
 
-function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
+function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
   const isPanettone = recipeCategory(r).key === "panettoni";
   const flourG = Number(r.flour_grams) || 0;
@@ -363,9 +377,9 @@ function RecipeDetail({ r, t, readOnly, scaleVal, onScaleChange, onImprover, onE
 
         <div className="flex gap-1.5">
           <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#6B8E62" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
-          <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#8C7567" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>
-          <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#B34A26"><Pencil className="w-4 h-4" /></ActionBtn>
-          <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#B4442A"><Trash2 className="w-4 h-4" /></ActionBtn>
+          {canEdit && <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#8C7567" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>}
+          {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#B34A26"><Pencil className="w-4 h-4" /></ActionBtn>}
+          {canEdit && <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#B4442A"><Trash2 className="w-4 h-4" /></ActionBtn>}
         </div>
 
         <div className="flex flex-wrap gap-2">

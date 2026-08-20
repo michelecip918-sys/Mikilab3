@@ -1,0 +1,39 @@
+{
+  "summary": "Iteration 18 — testato accesso libero (no login all'avvio), Home hub, gate Maestro, login da modale, permessi ricette, auth-close e tasto Indietro. Backend: 14/14 pytest passati (mikilab pubblico, personal 401, mutazioni protette, permessi admin/user, isolamento owner_id). Frontend: tutti i punti OK tranne il TASTO INDIETRO, che richiede 2 pressioni per tab a causa di pushState duplicato (history.length +2 per navigazione).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "App.js navigate()", "issue": "window.history.pushState viene chiamato DENTRO l'updater di setTab; React StrictMode (dev) invoca l'updater due volte, quindi ogni navigazione aggiunge 2 entry alla history (misurato: history.length delta=+2 per nav). Risultato: servono 4 go_back per tornare a Home da Home->Ricette->Maestro (attesi 2); l'utente deve premere Indietro due volte per ogni tab. Fix: spostare pushState fuori dall'updater (usare un useRef con il tab corrente o confrontare con lo stato `tab` nella callback) in modo che sia un side-effect eseguito una sola volta.", "selector": "App.js navigate/useCallback", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home/Ricette (mobile 390px)", "issues": ["Il FAB Radio Fornaio (in basso a sinistra) e il mic (in basso a destra) coprono parzialmente le card ricette/strumenti sopra la bottom-nav: aggiungere padding-bottom extra o spostare i FAB", "Minore: nell'header su 390px il titolo 'Mikilab' viene troncato quando è visibile logout-btn/login-btn"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter18_public_access.py",
+    "/app/backend/tests/_cleanup_iter18.py"
+  ],
+  "action_items": [
+    "Correggere il doppio pushState in App.js navigate() per far funzionare il tasto Indietro con una sola pressione per tab"
+  ],
+  "critical_code_review_comments": [
+    "App.js: side-effect (history.pushState) dentro un updater di useState non è puro → doppia esecuzione in StrictMode. Spostarlo in un effetto o usare un ref del tab corrente.",
+    "AuthContext: authOpen chiuso via useEffect su `user` — corretto e verificato; nessun altro problema rilevato.",
+    "RecipeList: canEdit = collection mikilab ? role==='admin' : !!user — coerente con i controlli backend (403 per user non admin su mikilab)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter18_public_access.py",
+    "/app/backend/tests/_cleanup_iter18.py"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "90%"},
+  "seed_data_creation": "Nessun dato persistente: ricetta personale TEST_iter18_personal creata e cancellata; nota TEST_ui_iter18 su 'Miglioratore Naturale' ripristinata a vuoto tramite /app/backend/tests/_cleanup_iter18.py",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin), fornaio@mikilab.de / Mikilab2026! (user)",
+  "context_for_next_testing_agent": "Verificato OK: Home senza login (bio-card), login-btn header, 5 home-section-* navigano, concept-photo-chi/metodo, 37 ricette mikilab visibili da anonimo senza add/edit/delete, maestro-gate + gate-login-btn -> auth-screen, login da modale (modale si chiude, logout-btn, maestro-guide + maestro-tool-capo), auth-close chiude senza login, da admin add-recipe-btn/edit-recipe presenti e salvataggio ricetta mikilab OK (toast 'Ricetta aggiornata', PUT 200). Unico fail: numero di pressioni Indietro (2x per tab). Nota: dopo il salvataggio il dettaglio ricetta si chiude, quindi ri-cliccare la riga prima di riaprire l'editor.",
+  "rca_of_the_issue": "In App.js `navigate` chiama window.history.pushState all'interno della callback passata a setTab. React 18 in StrictMode esegue gli updater due volte per rilevare impurità, producendo due entry di history identiche per ogni cambio tab (verificato con window.history.length: +2 per navigazione e stati duplicati {tab:'ricette'} consecutivi). Riproduzione: chiudere intro -> nav-tab-ricette -> nav-tab-maestro -> premere Indietro: il primo back resta su Maestro. L'app non esce mai (nessun rischio di chiusura), ma la UX del tasto Indietro è errata."
+}

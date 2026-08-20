@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request
 from fastapi.responses import StreamingResponse, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -11,7 +11,9 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional
 import uuid
-from datetime import datetime, timezone
+import bcrypt
+import secrets
+from datetime import datetime, timezone, timedelta
 
 from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone, ImageContent
 
@@ -342,18 +344,180 @@ async def root():
     return {"message": "Mikilab API attiva"}
 
 
+EMERGENT_SESSION_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
+SESSION_DAYS = 7
+
+
+class RegisterReq(BaseModel):
+    email: str
+    password: str
+    name: Optional[str] = ""
+
+
+class LoginReq(BaseModel):
+    email: str
+    password: str
+
+
+class GoogleReq(BaseModel):
+    session_id: str
+
+
+def _hash_pw(pw):
+    return bcrypt.hashpw(pw.encode(), bcrypt.gensalt()).decode()
+
+
+def _check_pw(pw, h):
+    try:
+        return bcrypt.checkpw(pw.encode(), h.encode())
+    except Exception:
+        return False
+
+
+async def _make_session(user_id, token=None):
+    token = token or secrets.token_urlsafe(32)
+    exp = (datetime.now(timezone.utc) + timedelta(days=SESSION_DAYS)).isoformat()
+    await db.user_sessions.update_one(
+        {"session_token": token},
+        {"$set": {"user_id": user_id, "session_token": token, "expires_at": exp, "created_at": now_iso()}},
+        upsert=True,
+    )
+    return token
+
+
+def _set_cookie(resp, token):
+    resp.set_cookie("session_token", token, httponly=True, secure=True, samesite="none", path="/", max_age=SESSION_DAYS * 86400)
+
+
+def _public_user(u):
+    return {"user_id": u["user_id"], "email": u["email"], "name": u.get("name", ""), "picture": u.get("picture", ""), "role": u.get("role", "user")}
+
+
+async def _role_for_new_user():
+    return "admin" if await db.users.count_documents({}) == 0 else "user"
+
+
+async def current_user(request: Request):
+    token = request.cookies.get("session_token")
+    if not token:
+        auth = request.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            token = auth[7:]
+    if not token:
+        raise HTTPException(status_code=401, detail="Non autenticato")
+    sess = await db.user_sessions.find_one({"session_token": token}, {"_id": 0})
+    if not sess:
+        raise HTTPException(status_code=401, detail="Sessione non valida")
+    exp = sess["expires_at"]
+    if isinstance(exp, str):
+        exp = datetime.fromisoformat(exp)
+    if exp.tzinfo is None:
+        exp = exp.replace(tzinfo=timezone.utc)
+    if exp < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Sessione scaduta")
+    u = await db.users.find_one({"user_id": sess["user_id"]}, {"_id": 0})
+    if not u:
+        raise HTTPException(status_code=401, detail="Utente non trovato")
+    return u
+
+
+async def optional_user(request: Request):
+    try:
+        return await current_user(request)
+    except HTTPException:
+        return None
+
+
+@api_router.post("/auth/register")
+async def auth_register(payload: RegisterReq, response: Response):
+    email = payload.email.strip().lower()
+    if not email or not payload.password:
+        raise HTTPException(status_code=400, detail="Email e password richieste")
+    if await db.users.find_one({"email": email}):
+        raise HTTPException(status_code=400, detail="Email già registrata")
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    await db.users.insert_one({
+        "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],
+        "picture": "", "role": await _role_for_new_user(), "auth_provider": "email",
+        "password_hash": _hash_pw(payload.password), "created_at": now_iso(),
+    })
+    token = await _make_session(user_id)
+    _set_cookie(response, token)
+    u = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    return {"user": _public_user(u), "session_token": token}
+
+
+@api_router.post("/auth/login")
+async def auth_login(payload: LoginReq, response: Response):
+    email = payload.email.strip().lower()
+    u = await db.users.find_one({"email": email}, {"_id": 0})
+    if not u or not u.get("password_hash") or not _check_pw(payload.password, u["password_hash"]):
+        raise HTTPException(status_code=401, detail="Credenziali non valide")
+    token = await _make_session(u["user_id"])
+    _set_cookie(response, token)
+    return {"user": _public_user(u), "session_token": token}
+
+
+@api_router.post("/auth/google/session")
+async def auth_google(payload: GoogleReq, response: Response):
+    try:
+        r = requests.get(EMERGENT_SESSION_URL, headers={"X-Session-ID": payload.session_id}, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+    except Exception:
+        raise HTTPException(status_code=401, detail="Sessione Google non valida")
+    email = (data.get("email") or "").strip().lower()
+    if not email:
+        raise HTTPException(status_code=401, detail="Email mancante")
+    u = await db.users.find_one({"email": email}, {"_id": 0})
+    if not u:
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        await db.users.insert_one({
+            "user_id": user_id, "email": email, "name": data.get("name", ""),
+            "picture": data.get("picture", ""), "role": await _role_for_new_user(),
+            "auth_provider": "google", "created_at": now_iso(),
+        })
+        u = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    token = await _make_session(u["user_id"], data.get("session_token"))
+    _set_cookie(response, token)
+    return {"user": _public_user(u), "session_token": token}
+
+
+@api_router.get("/auth/me")
+async def auth_me(user: dict = Depends(current_user)):
+    return _public_user(user)
+
+
+@api_router.post("/auth/logout")
+async def auth_logout(request: Request, response: Response):
+    token = request.cookies.get("session_token")
+    if token:
+        await db.user_sessions.delete_one({"session_token": token})
+    response.delete_cookie("session_token", path="/")
+    return {"success": True}
+
+
 @api_router.get("/recipes", response_model=List[Recipe])
-async def get_recipes(collection_name: str = "mikilab"):
+async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = Depends(optional_user)):
     if collection_name == "mikilab":
         await seed_mikilab_if_empty()
-    docs = await db.recipes.find({"collection_name": collection_name}, {"_id": 0}).sort("name", 1).to_list(1000)
+        docs = await db.recipes.find({"collection_name": "mikilab"}, {"_id": 0}).sort("name", 1).to_list(1000)
+        return docs
+    if not user:
+        raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
+    docs = await db.recipes.find({"collection_name": collection_name, "owner_id": user["user_id"]}, {"_id": 0}).sort("name", 1).to_list(1000)
     return docs
 
 
 @api_router.post("/recipes", response_model=Recipe)
-async def create_recipe(payload: RecipeCreate):
+async def create_recipe(payload: RecipeCreate, user: dict = Depends(current_user)):
+    if payload.collection_name == "mikilab" and user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Solo l'admin può modificare le ricette Mikilab")
     recipe = Recipe(**payload.model_dump())
-    await db.recipes.insert_one(recipe.model_dump())
+    doc = recipe.model_dump()
+    if payload.collection_name != "mikilab":
+        doc["owner_id"] = user["user_id"]
+    await db.recipes.insert_one(doc)
     return recipe
 
 
@@ -391,10 +555,15 @@ async def download_image(path: str):
 
 
 @api_router.put("/recipes/{recipe_id}", response_model=Recipe)
-async def update_recipe(recipe_id: str, payload: RecipeUpdate):
+async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depends(current_user)):
     existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Ricetta non trovata")
+    if existing.get("collection_name") == "mikilab":
+        if user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Solo l'admin può modificare le ricette Mikilab")
+    elif existing.get("owner_id") != user["user_id"]:
+        raise HTTPException(status_code=403, detail="Non autorizzato")
     # Full-state save from the recipe dialog: apply all provided fields,
     # including explicit nulls (so a cleared field is actually cleared).
     updates = payload.model_dump(exclude_unset=True)
@@ -410,10 +579,16 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate):
 
 
 @api_router.delete("/recipes/{recipe_id}")
-async def delete_recipe(recipe_id: str):
-    res = await db.recipes.delete_one({"id": recipe_id})
-    if res.deleted_count == 0:
+async def delete_recipe(recipe_id: str, user: dict = Depends(current_user)):
+    existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not existing:
         raise HTTPException(status_code=404, detail="Ricetta non trovata")
+    if existing.get("collection_name") == "mikilab":
+        if user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Solo l'admin può modificare le ricette Mikilab")
+    elif existing.get("owner_id") != user["user_id"]:
+        raise HTTPException(status_code=403, detail="Non autorizzato")
+    await db.recipes.delete_one({"id": recipe_id})
     return {"success": True}
 
 

@@ -1,11 +1,13 @@
-import { Wheat, Moon, Sun, MapPin, Clock } from "lucide-react";
+import { Wheat, Moon, Sun, MapPin, Clock, LogOut, LogIn } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 
 export default function Header() {
   const [dark, setDark] = useState(false);
   const [now, setNow] = useState(new Date());
   const { lang, setLang, t } = useLang();
+  const { user, logout, setAuthOpen } = useAuth();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -85,6 +87,27 @@ export default function Header() {
         >
           {dark ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
         </button>
+
+        {user ? (
+          <button
+            data-testid="logout-btn"
+            onClick={logout}
+            className="w-10 h-10 rounded-xl bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center text-[#B4442A] active:scale-95 transition-all"
+            aria-label="Logout"
+            title={user.email}
+          >
+            <LogOut className="w-4.5 h-4.5" />
+          </button>
+        ) : (
+          <button
+            data-testid="login-btn"
+            onClick={() => setAuthOpen(true)}
+            className="h-10 px-3 rounded-xl bg-[#B34A26] text-white text-sm font-semibold flex items-center gap-1.5 active:scale-95 transition-all"
+            aria-label="Accedi"
+          >
+            <LogIn className="w-4 h-4" /> {t("login_cta")}
+          </button>
+        )}
       </div>
       </div>
     </header>

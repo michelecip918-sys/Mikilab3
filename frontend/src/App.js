@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import "@/App.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -13,9 +13,35 @@ import NewsPage from "@/sections/NewsPage";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
+import AuthScreen from "@/components/AuthScreen";
+import { useAuth } from "@/auth/AuthContext";
 
 function App() {
   const [tab, setTab] = useState("home");
+  const tabRef = useRef("home");
+  const { user, authOpen, setAuthOpen } = useAuth();
+
+  // Gestione tasto Indietro: sincronizza i tab con la history del browser.
+  const navigate = useCallback((next) => {
+    if (next === tabRef.current) return;
+    tabRef.current = next;
+    window.history.pushState({ tab: next }, "");
+    setTab(next);
+  }, []);
+
+  useEffect(() => {
+    window.history.replaceState({ tab: "home" }, "");
+    const onPop = (e) => {
+      const next = (e.state && e.state.tab) || "home";
+      tabRef.current = next;
+      setTab(next);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
+  // chiudi il modale login appena l'utente è autenticato
+  useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
 
   return (
     <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1A1412]">
@@ -29,7 +55,7 @@ function App() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
-            {tab === "home" && <Home />}
+            {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
             {tab === "maestro" && <Maestro />}
             {tab === "impara" && <Beginners />}
@@ -38,10 +64,23 @@ function App() {
           </motion.div>
         </AnimatePresence>
       </main>
-      <BottomNav active={tab} onChange={setTab} />
-      <VoiceAssistant onNavigate={setTab} />
+      <BottomNav active={tab} onChange={navigate} />
+      <VoiceAssistant onNavigate={navigate} />
       <RadioFornaio />
       <IntroGuide />
+
+      <AnimatePresence>
+        {authOpen && !user && (
+          <motion.div
+            data-testid="auth-modal"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[70] bg-[#FDFBF7] dark:bg-[#1A1412] overflow-auto"
+          >
+            <AuthScreen onClose={() => setAuthOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Toaster position="top-center" richColors />
     </div>
   );

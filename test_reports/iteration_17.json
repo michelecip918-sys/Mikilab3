@@ -1,0 +1,52 @@
+{
+  "summary": "Iteration 17 (auth): tested backend auth (register/login/me/logout, bearer+cookie, 401 gates), recipe scoping (personal owner isolation) and admin-only Mikilab writes with pytest (21/22 pass), plus full UI e2e on the preview URL (auth gate, login admin+user, register, logout, session persistence, Home 4 concetti+foto, Ricette+Guida+Etichette senza prezzi, 6-tab nav, DE translation, 5 Maestro tools, personal recipe create+persistence, non-admin 403 on Mikilab edit, admin edit OK). Core auth and isolation work correctly. Main gaps: toasts invisible on the login screen, no admin gating in the recipe UI, no brute-force lockout, and every non-recipe endpoint is still unauthenticated/unscoped.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "/api/oven-profiles, /api/production-plan, /api/weekly-plan, /api/lab-config, /api/recipe-temp, /api/announcements (POST/PUT/DELETE), /api/maestro/chat, /api/maestro/history/{id}, /api/capo/plan, /api/maestro/vision, /api/maestro/scan-recipe, /api/upload", "issue": "Only /api/recipes and /api/auth/me require a session. All other endpoints are open (no Depends(current_user)) and are NOT scoped by owner_id: any anonymous caller can read/modify lab config, production plans, weekly plans, oven profiles, announcements and burn the LLM key; all logged-in users also share the same plan/config documents instead of having private ones.", "priority": "HIGH"},
+      {"endpoint": "GET /api/seed-mikilab", "issue": "Unauthenticated endpoint that force re-syncs the whole Mikilab recipe collection (destructive/overwrites fields). Must be admin-only.", "priority": "HIGH"}
+    ],
+    "minor": [
+      {"endpoint": "POST /api/auth/login", "issue": "No brute-force protection: 7 consecutive wrong passwords all return 401, no 429/lockout (playbook requirement)."},
+      {"endpoint": "POST /api/auth/register + /auth/google/session", "issue": "No unique index on users.email; DB already contains 2 duplicate records for michelecip918@gmail.com (auth_provider=google). Race on the Google callback creates duplicate accounts, so a user can end up bound to the 'wrong' user_id and lose their personal recipes. Add a unique index on users.email."},
+      {"endpoint": "POST /api/auth/register", "issue": "No password strength / email format validation (Pydantic str, not EmailStr); empty password returns 400 only via manual check."},
+      {"endpoint": "POST /api/auth/logout", "issue": "Only deletes the session when the cookie is present; a Bearer-only client (headless) cannot revoke its token (Authorization header not read here)."},
+      {"endpoint": "CORS", "issue": "CORS_ORIGINS='*' combined with allow_credentials=True. Works today only because the frontend is same-origin; set explicit origins."},
+      {"endpoint": "GET /api/recipes/{id}", "issue": "No single-recipe GET (405). Not blocking (UI uses the list), but noted for API consistency."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AuthScreen", "issue": "<Toaster/> is mounted only inside the authenticated App tree (App.js line 57), so toast.error/toast.success called from AuthScreen NEVER render. A wrong password gives zero visible feedback (verified: no message on screen, only a 401 in console). Mount Toaster above the auth gate or render an inline error element with data-testid.", "selector": "[data-testid=\"auth-screen\"]", "priority": "HIGH"},
+      {"component": "RecipeList (Ricette / Mikilab collection)", "issue": "No admin gating in the UI: normal users (fornaio@mikilab.de) see 'Aggiungi ricetta', 'edit-recipe-{id}' and 'delete-recipe-{id}' on Mikilab recipes. Saving fails with 403 and only a generic 'Errore nel salvataggio' toast while the dialog stays open (user loses the entered data and no explanation). RecipeList does not use useAuth; hide/disable these controls for role!=admin and surface err.response.data.detail.", "selector": "[data-testid=\"add-recipe-btn\"], [data-testid^=\"edit-recipe-\"]", "priority": "HIGH"},
+      {"component": "Header", "issue": "On 390px width the brand subtitle is truncated to 'IL L...' next to the title (crowded header row with clock + lang + theme + logout).", "selector": "[data-testid=\"app-header\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Header (mobile 390px)", "issues": ["brand subtitle truncated to 3 chars", "5 controls compressed in the right cluster"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter17_auth.py", "/app/test_reports/pytest/iter17_auth.xml"],
+  "action_items": [
+    "Mount <Toaster/> outside the auth gate (or add an inline data-testid error) so login/registration errors are visible.",
+    "Gate recipe write controls in RecipeList by user.role (admin only for collection 'mikilab') and show the backend detail message on 403.",
+    "Add Depends(current_user) + owner_id scoping to oven-profiles, production-plan, weekly-plan, lab-config, recipe-temp, maestro chat/history, capo/plan, vision, scan-recipe, upload; make announcements writes admin-only.",
+    "Protect GET /api/seed-mikilab (admin only).",
+    "Add unique index on users.email and de-duplicate the existing michelecip918@gmail.com records.",
+    "Add login rate limiting / lockout after 5 failed attempts.",
+    "Support Bearer token in /auth/logout."
+  ],
+  "critical_code_review_comments": [
+    "server.py is 1245 lines: split auth, recipes and AI routers into modules.",
+    "AuthScreen relies on sonner toasts that are unreachable because the Toaster lives behind the auth gate.",
+    "current_user is only wired to recipes endpoints — the auth requirement is not enforced app-wide.",
+    "Verified good: bcrypt hashes are $2b$12$, session cookie is httpOnly/secure/samesite=none, sessions revoked on logout, mongo responses exclude _id."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter17_auth.py", "/app/test_reports/iteration_17.json"],
+  "success_rate": {"backend": "95% (21/22 pytest; 1 fail = missing brute-force lockout)", "frontend": "90% (all flows pass; 2 auth-UX/permission-UI defects)"},
+  "seed_data_creation": "Temporary users test_*@mikilab.test and TEST_ recipes were created and deleted afterwards; the admin note edited on 'Anima Integrale' was reverted.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin), fornaio@mikilab.de / Mikilab2026! (user) — both valid, roles correct.",
+  "context_for_next_testing_agent": "Auth verified working end-to-end: gate (auth-screen), email login for both accounts, register->auto-login, logout, session persistence across reload, IntroGuide shown after each login, personal recipe isolation (fornaio sees 0 others' recipes; created recipe persists), non-admin Mikilab write -> 403, admin write -> 200. Home shows the 4 concepts with photos for chi/metodo and no video/recipe list; Ricette has guida+labels buttons and labels contain no currency; DE switch translates recipe names (Süße Zwiebel). Not tested: real Google login (per instructions), slow AI endpoints. Re-test after fixes: Toaster on AuthScreen, role gating of recipe controls, auth on the remaining endpoints.",
+  "rca_of_the_issue": "Login-error silence: sonner's <Toaster/> is rendered only in the authenticated branch of App.js, so AuthScreen's toast calls have no host. Non-admin edit UX: RecipeList never reads the auth context, so permission checks exist only server-side (403) and the UI shows a generic save error. Broad unauthenticated surface: current_user was added only to the recipes routes during this iteration."
+}

@@ -3,7 +3,7 @@ import axios from "axios";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
 
-export const api = axios.create({ baseURL: API });
+export const api = axios.create({ baseURL: API, withCredentials: true });
 
 export const uploadApi = {
   // Uploads a Blob/File to the dedicated image archive, returns absolute URL.
@@ -58,4 +58,12 @@ export const announcementsApi = {
   create: (data) => api.post(`/announcements`, data).then((r) => r.data),
   update: (id, data) => api.put(`/announcements/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/announcements/${id}`).then((r) => r.data),
+};
+
+export const authApi = {
+  me: () => api.get(`/auth/me`).then((r) => r.data),
+  register: (data) => api.post(`/auth/register`, data).then((r) => r.data),
+  login: (data) => api.post(`/auth/login`, data).then((r) => r.data),
+  google: (session_id) => api.post(`/auth/google/session`, { session_id }).then((r) => r.data),
+  logout: () => api.post(`/auth/logout`).then((r) => r.data),
 };

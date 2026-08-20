@@ -56,6 +56,11 @@ export const translations = {
     tool_turni_desc: "Assegna i ruoli al team",
     tool_check: "Check-list Laboratorio",
     tool_check_desc: "Apertura, celle, pulizie e manutenzione",
+    gate_title: "Accesso richiesto",
+    gate_sub: "Accedi con Google o email per usare il Maestro e gestire le tue ricette.",
+    gate_btn: "Accedi / Registrati",
+    login_cta: "Accedi",
+    gate_save_login: "Accedi per salvare le tue ricette",
 
     // Maestro AI (Chat + Foto)
     ai_tab_chat: "Chiedi al Maestro",
@@ -712,6 +717,11 @@ export const translations = {
     tool_turni_desc: "Rollen im Team zuweisen",
     tool_check: "Backstuben-Checklisten",
     tool_check_desc: "Öffnung, Zellen, Reinigung und Wartung",
+    gate_title: "Anmeldung erforderlich",
+    gate_sub: "Melde dich mit Google oder E-Mail an, um den Meister zu nutzen und deine Rezepte zu verwalten.",
+    gate_btn: "Anmelden / Registrieren",
+    login_cta: "Anmelden",
+    gate_save_login: "Melde dich an, um deine Rezepte zu speichern",
 
     // Meister KI (Chat + Foto)
     ai_tab_chat: "Frag den Meister",
