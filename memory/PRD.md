@@ -485,3 +485,9 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **EN esteso**: helper `tri(it,de,en)` in LanguageContext. Convertiti al trilingue: Home (già), AuthScreen (login/registrazione/recupero password), ResetPassword, Shop, RecipeList (farro/teaser/PRO + struttura panettone: LM, 1°/2°/Totale, glassa), CapoLaboratorio (prefermento + tabella dosi), FreezerStock, BackwardScheduler, ShiftRoles, Checklists, SupplierOrder, ShoppingList, RecipeDialog, RecipeShowcase, Maestro, date locale (en-GB). Dizionario t() già completo (666 chiavi).
 - **RESTA in fallback IT per EN** (contenuti array o schermate admin): AdminPanel (solo admin), glossario ricette, voci Enciclopedia/GuidaMetodi/ROLES (array it/de). Da tradurre se richiesto.
 - Verificato: compilazione pulita, switch EN OK su nav/Home/ricette; nessun errore runtime.
+
+## v37.1 (2026-06) — Fix layout/tipografia Home + FAB
+- **Blocchi Home tornano ACCORDION** (richiesta utente, annulla il modal di Punto 6): i concetti si espandono verso il basso (foto + testo) con AnimatePresence; niente più Dialog. testid `concept-block-<id>`, `concept-content-<id>`, `concept-photo-<id>`.
+- **Fumetto avatar leggibile**: sfondo scuro semitrasparente (#1A1412/85) + testo bianco bold text-[15px] + ombra + backdrop-blur; icone smartphone/PC spostate in basso a destra (bottom-6) per non sovrapporsi al testo/titolo.
+- **FAB Radio/Parla**: da bottom-24 z-50 → bottom-28 z-40 + marginBottom safe-area; BottomNav resta z-50 con paddingBottom safe-area (iPhone). Evita sovrapposizioni su mobile.
+- Verificato su viewport 430px: accordion, leggibilità e FAB OK, nessun errore.

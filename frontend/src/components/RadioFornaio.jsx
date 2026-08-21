@@ -168,7 +168,7 @@ export default function RadioFornaio() {
         </div>
       )}
 
-      <div className="fixed z-50 left-4 bottom-24 flex flex-col items-center gap-1">
+      <div className="fixed z-40 left-4 bottom-28 flex flex-col items-center gap-1" style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
         <button
           data-testid="radio-fornaio-btn"
           onClick={() => setOpen((o) => !o)}

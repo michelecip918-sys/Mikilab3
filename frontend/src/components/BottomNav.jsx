@@ -26,7 +26,7 @@ export default function BottomNav({ active, onChange }) {
         <div className="flex-1 bg-[#DD0000]" />
         <div className="flex-1 bg-[#FFCE00]" />
       </div>
-      <div className="max-w-xl mx-auto grid grid-cols-5 gap-0.5 px-1 py-2">
+      <div className="max-w-xl mx-auto grid grid-cols-5 gap-0.5 px-1 py-2" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
         {TABS.map(({ id, label, Icon }) => {
           const on = norm === id;
           return (

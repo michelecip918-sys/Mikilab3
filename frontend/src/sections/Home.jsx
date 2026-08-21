@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import LegalPage from "@/sections/LegalPage";
@@ -116,26 +116,26 @@ function HomeAvatarScene({ lang }) {
 
       {/* Smartphone & PC che fluttuano */}
       <motion.div
-        className="absolute right-4 bottom-24 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
+        className="absolute right-4 bottom-6 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
         animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
         <Smartphone className="w-6 h-6 text-[#B34A26]" />
       </motion.div>
       <motion.div
-        className="absolute right-20 top-10 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
+        className="absolute right-20 bottom-6 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
         animate={{ y: [0, -8, 0] }} transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
       >
         <Monitor className="w-6 h-6 text-[#6B8E62]" />
       </motion.div>
 
       {/* Fumetto di testo a rotazione */}
-      <div className="absolute top-5 left-4 right-24 z-20">
+      <div className="absolute top-4 left-4 right-4 z-30">
         <AnimatePresence mode="wait">
           <motion.div
             key={idx} data-testid="home-scene-bubble"
             initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.4 }}
-            className="inline-block bg-white/92 text-[#2C221E] text-xs font-semibold px-3 py-2 rounded-2xl rounded-tl-sm shadow-md"
+            className="inline-block max-w-[85%] bg-[#1A1412]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-tl-md shadow-xl ring-1 ring-white/20"
           >
             {phrases[idx]}
           </motion.div>
@@ -230,51 +230,43 @@ export default function Home({ onNavigate }) {
         </p>
       </div>
 
-      {/* 4 concetti (in alto) — aprono una finestra modale */}
+      {/* 4 concetti — accordion: si espandono verso il basso con foto e testo */}
       <div className="space-y-4">
         {concepts.map((c) => {
           const Icon = c.icon;
+          const isOpen = open === c.id;
           return (
-            <button key={c.id} data-testid={`home-concept-${c.id}`} onClick={() => setOpen(c.id)}
-              className={`w-full flex items-center gap-4 rounded-3xl p-6 text-white shadow-lg active:scale-98 transition-all bg-gradient-to-br ${c.grad}`}>
-              <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
-                <Icon className="w-7 h-7" />
-              </div>
-              <div className="flex-1 min-w-0 text-left">
-                <h3 className="font-display text-xl font-bold">{c.title}</h3>
-                <p className="text-white/70 text-[11px] font-medium">{t("home_tap_open")}</p>
-              </div>
-              <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
-            </button>
+            <div key={c.id} data-testid={`concept-block-${c.id}`}>
+              <button data-testid={`home-concept-${c.id}`} onClick={() => setOpen(isOpen ? null : c.id)}
+                className={`w-full flex items-center gap-4 rounded-3xl p-6 text-white shadow-lg active:scale-98 transition-all bg-gradient-to-br ${c.grad} ${isOpen ? "rounded-b-none" : ""}`}>
+                <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
+                  <Icon className="w-7 h-7" />
+                </div>
+                <div className="flex-1 min-w-0 text-left">
+                  <h3 className="font-display text-xl font-bold">{c.title}</h3>
+                  <p className="text-white/70 text-[11px] font-medium">{isOpen ? t("home_tap_open") : t("home_tap_open")}</p>
+                </div>
+                <ChevronDown className={`w-6 h-6 text-white/90 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
+              </button>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
+                    <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#241D19] border border-t-0 border-[#E8DEC8] dark:border-[#3D302A] overflow-hidden">
+                      {CONCEPT_PHOTOS[c.id] && (
+                        <img src={CONCEPT_PHOTOS[c.id]} alt={c.title}
+                          data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy"
+                          onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                      )}
+                      <p className="p-6 text-[15px] leading-relaxed text-[#4A3B34] dark:text-[#C9BBB0] whitespace-pre-line">{c.body}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           );
         })}
       </div>
-
-      {/* Finestra modale dei concetti */}
-      <Dialog open={!!activeConcept} onOpenChange={(o) => !o && setOpen(null)}>
-        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A] p-0">
-          <DialogTitle className="sr-only">{activeConcept?.title || "MikiLab"}</DialogTitle>
-          <DialogDescription className="sr-only">{activeConcept?.title || "MikiLab"}</DialogDescription>
-          {activeConcept && (
-            <div data-testid={`concept-modal-${activeConcept.id}`}>
-              {CONCEPT_PHOTOS[activeConcept.id] && (
-                <img src={CONCEPT_PHOTOS[activeConcept.id]} alt={activeConcept.title}
-                  data-testid={`concept-photo-${activeConcept.id}`} className="w-full h-52 object-cover rounded-t-lg" loading="lazy"
-                  onError={(e) => { e.currentTarget.style.display = "none"; }} />
-              )}
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white bg-gradient-to-br ${activeConcept.grad}`}>
-                    <activeConcept.icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{activeConcept.title}</h3>
-                </div>
-                <p className="text-[15px] leading-relaxed text-[#4A3B34] dark:text-[#C9BBB0] whitespace-pre-line">{activeConcept.body}</p>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
 
       {/* Menu principale — subito sotto i blocchi */}
       <div>

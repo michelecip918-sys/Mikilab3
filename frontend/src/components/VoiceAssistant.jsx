@@ -127,7 +127,7 @@ export default function VoiceAssistant({ onNavigate }) {
         </div>
       )}
 
-      <div className="fixed z-50 right-4 bottom-24 flex flex-col items-center gap-1">
+      <div className="fixed z-40 right-4 bottom-28 flex flex-col items-center gap-1" style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
         <button
           data-testid="voice-assistant-btn"
           onClick={state === "listening" ? stop : start}
