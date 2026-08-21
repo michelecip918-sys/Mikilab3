@@ -5,6 +5,19 @@ import { useLang } from "@/i18n/LanguageContext";
 
 const ENRICH = new Set(["Zucchero", "Tuorlo", "Burro", "Miele", "Pasta d'arancia", "Miglioratore naturale"]);
 
+// Valori nutrizionali medi per 100 g, variabili per gusto (stime su ricetta artigianale).
+function nutriFor(name) {
+  const n = (name || "").toLowerCase();
+  let v = { kj: 1560, kcal: 372, fat: 15, sat: 8.2, carb: 52, sugar: 28, prot: 7.2, salt: 0.45 };
+  if (/cioccolat|chocolate|schoko/.test(n)) v = { kj: 1660, kcal: 397, fat: 17.5, sat: 10.5, carb: 53, sugar: 33, prot: 7, salt: 0.42 };
+  else if (/pistacch|pistazie|pistachio/.test(n)) v = { kj: 1690, kcal: 404, fat: 19, sat: 8.5, carb: 49, sugar: 27, prot: 8.2, salt: 0.4 };
+  else if (/cocco|kokos|coconut/.test(n)) v = { kj: 1670, kcal: 399, fat: 18, sat: 12, carb: 51, sugar: 29, prot: 6.8, salt: 0.42 };
+  else if (/limoncell|limone|zitron|lemon|agrumi/.test(n)) v = { kj: 1520, kcal: 363, fat: 13.5, sat: 7.5, carb: 53, sugar: 29, prot: 7, salt: 0.45 };
+  else if (/albicocc|aprikose|apricot|frutt/.test(n)) v = { kj: 1500, kcal: 358, fat: 13, sat: 7, carb: 54, sugar: 31, prot: 6.8, salt: 0.44 };
+  return v;
+}
+const gf = (x) => String(x).replace(".", ",") + " g";
+
 export default function PanettoneLabels() {
   const { t, tri } = useLang();
   const [items, setItems] = useState([]);
@@ -134,15 +147,15 @@ export default function PanettoneLabels() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[
-                      [tri("Energia", "Energie", "Energy"), "1560 kJ / 372 kcal", true],
-                      [tri("Grassi", "Fett", "Fat"), "15 g", true],
-                      [tri("di cui acidi grassi saturi", "davon gesättigte Fettsäuren", "of which saturates"), "8,2 g", false],
-                      [tri("Carboidrati", "Kohlenhydrate", "Carbohydrate"), "52 g", true],
-                      [tri("di cui zuccheri", "davon Zucker", "of which sugars"), "28 g", false],
-                      [tri("Proteine", "Eiweiß", "Protein"), "7,2 g", true],
-                      [tri("Sale", "Salz", "Salt"), "0,45 g", true],
-                    ].map(([k, v, bold], i) => (
+                    {(() => { const nv = nutriFor(r.name); return [
+                      [tri("Energia", "Energie", "Energy"), `${nv.kj} kJ / ${nv.kcal} kcal`, true],
+                      [tri("Grassi", "Fett", "Fat"), gf(nv.fat), true],
+                      [tri("di cui acidi grassi saturi", "davon gesättigte Fettsäuren", "of which saturates"), gf(nv.sat), false],
+                      [tri("Carboidrati", "Kohlenhydrate", "Carbohydrate"), gf(nv.carb), true],
+                      [tri("di cui zuccheri", "davon Zucker", "of which sugars"), gf(nv.sugar), false],
+                      [tri("Proteine", "Eiweiß", "Protein"), gf(nv.prot), true],
+                      [tri("Sale", "Salz", "Salt"), gf(nv.salt), true],
+                    ]; })().map(([k, v, bold], i) => (
                       <tr key={i} className="border-t border-[#D7E1DB]">
                         <td className={`text-left px-1.5 py-0.5 ${bold ? "font-semibold" : "pl-3 text-[#3F4A54]"}`}>{k}</td>
                         <td className="text-right px-1.5 py-0.5 font-mono-data">{v}</td>

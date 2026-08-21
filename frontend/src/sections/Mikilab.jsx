@@ -130,7 +130,7 @@ export default function Mikilab() {
 
       <RecipeList
         collectionName="mikilab"
-        heroImage={`${process.env.PUBLIC_URL}/michele-toon.jpg`}
+        heroImage={`${process.env.PUBLIC_URL}/michele-avatar.jpg`}
         heroTitle={t("brand_subtitle")}
         heroSubtitle={t("mikilab_subtitle")}
         emptyText={t("mikilab_empty")}

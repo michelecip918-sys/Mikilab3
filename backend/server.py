@@ -308,7 +308,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v42-treccia-uova"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v43-hidden-flag"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro",
@@ -355,6 +355,7 @@ async def seed_mikilab_if_empty(force: bool = False):
         if existing and existing.get("user_edited"):
             continue
         doc["updated_at"] = now_iso()
+        doc["hidden"] = False
         await db.recipes.update_one(
             {"collection_name": "mikilab", "name": doc["name"]},
             {"$set": doc, "$setOnInsert": {"id": seed_id, "created_at": seed_created}},
@@ -365,12 +366,13 @@ async def seed_mikilab_if_empty(force: bool = False):
         {"$set": {"_key": "mikilab_meta", "seed_version": SEED_VERSION, "synced_at": now_iso()}},
         upsert=True,
     )
-    # Rimuovo le vecchie schede ritirate (solo se non modificate a mano da Michele).
+    # Le vecchie schede ritirate NON vengono cancellate: le nascondo soltanto (non distruttivo).
     for old_name in SEED_RETIRED_NAMES:
         ex = await db.recipes.find_one({"collection_name": "mikilab", "name": old_name}, {"_id": 0, "user_edited": 1})
         if ex and not ex.get("user_edited"):
-            await db.recipes.delete_one({"collection_name": "mikilab", "name": old_name})
-    # Dedup: per ogni nome del seed tieni UNA sola scheda (rimuove i doppioni, es. Miglioratore duplicato).
+            await db.recipes.update_one({"collection_name": "mikilab", "name": old_name},
+                {"$set": {"hidden": True, "updated_at": now_iso()}})
+    # Dedup: per ogni nome del seed tieni UNA sola scheda visibile; i doppioni vengono NASCOSTI (non cancellati).
     seed_names = {dict(it).get("name") for it in items}
     for nm in seed_names:
         docs = []
@@ -381,8 +383,8 @@ async def seed_mikilab_if_empty(force: bool = False):
         keep = next((x for x in docs if x.get("user_edited")), docs[0])
         for x in docs:
             if x["_id"] != keep["_id"]:
-                await db.recipes.delete_one({"_id": x["_id"]})
-    return await db.recipes.count_documents({"collection_name": "mikilab"})
+                await db.recipes.update_one({"_id": x["_id"]}, {"$set": {"hidden": True}})
+    return await db.recipes.count_documents({"collection_name": "mikilab", "hidden": {"$ne": True}})
 
 
 # ---------------------------------------------------------------------------
@@ -637,7 +639,7 @@ async def auth_logout(request: Request, response: Response):
 async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = Depends(optional_user)):
     if collection_name == "mikilab":
         await seed_mikilab_if_empty()
-        docs = await db.recipes.find({"collection_name": "mikilab"}, {"_id": 0}).sort("name", 1).to_list(1000)
+        docs = await db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0}).sort("name", 1).to_list(1000)
         # Modalità "assaggio": i non-PRO vedono nome/foto/ingredienti base, il metodo è bloccato.
         # Eccezione: 2 ricette DEMO restano complete come vetrina gratuita.
         if not await user_is_pro(user):

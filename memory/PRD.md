@@ -564,3 +564,10 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **Benvenuto**: "panificio digitale" (non "cucina").
 - **WhatsApp FAB**: solo sezioni dedicate — nascosto in Home E nel Laboratorio (wizard); posizione right-4 bottom-44 (sopra "Parla") per non coprire testi/pulsanti. wa.me/491601253378.
 ### RESTANO grandi: Bilancia IoT(3), Food Cost energetico(10), Calo peso(11), Meteo IA(12), Timer rumorosi(14), Marketplace(17), Onboarding(18), Tracciabilità lotti(19), Anti-spreco(20), Enterprise multi-negozio(21), Digital Twin(22), Ordini multi-fornitore(23), Shelf-life/digeribilità(24), QR/Blockchain(25), i18n 100%(7), menu 6-sezioni(1), Community B2B.
+
+## v47 (2026-06) — Pre-publish: nutrizione per gusto + foto Home su avatar + seed NON distruttivo (deploy PASS)
+- **Valori nutrizionali per gusto** (`PanettoneLabels.jsx` → `nutriFor(name)`): classico/cioccolato/pistacchio/cocco/limoncello/albicocca-frutta con valori differenziati per 100 g (Energia, Grassi/saturi, Carbo/zuccheri, Proteine, Sale); allergeni GRASSETTO MAIUSCOLO.
+- **Foto Home**: rimossa la foto reale/cappello dalla Home. Home hero + card + welcome (IntroGuide) ora usano l'AVATAR 3D `michele-avatar.jpg` (rigenerato uguale a lui: orecchino + tatuaggio reale, forno pulito). La foto REALE col polo (`michele-real.webp`) resta solo su Ricette (hero "bancone"). File cartone col cappello (`michele-toon.jpg`) non più usato in Home/Mikilab.
+- **FIX BLOCKER DEPLOY** (`server.py seed_mikilab_if_empty`): niente più `delete_one` all'avvio. Le schede ritirate e i doppioni vengono NASCOSTI con flag `{hidden:true}` (update, non delete); le ricette valide del seed impostano `hidden:false`; `GET /recipes` filtra `hidden != true`. deployment_agent → **PASS** (nessun blocker, secrets in env, CORS ok, seed upsert-only). SEED_VERSION → v43-hidden-flag. 49 ricette visibili, Cornetto 3400 g OK.
+- **Rinviati a domani (per scelta utente)**: video/prezzi corsi reali, PayPal, Bilancia IoT (Punto 3). 
+### PRONTO ALLA PUBBLICAZIONE: l'app è deploy-ready. L'utente pubblica dal pulsante Deploy.
