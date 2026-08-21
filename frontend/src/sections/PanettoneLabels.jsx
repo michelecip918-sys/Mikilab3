@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 const ENRICH = new Set(["Zucchero", "Tuorlo", "Burro", "Miele", "Pasta d'arancia", "Miglioratore naturale"]);
 
 export default function PanettoneLabels() {
-  const { t } = useLang();
+  const { t, tri } = useLang();
   const [items, setItems] = useState([]);
   const [view, setView] = useState("labels");
 
@@ -91,6 +91,16 @@ export default function PanettoneLabels() {
         <div className="print-area grid grid-cols-1 sm:grid-cols-2 gap-3">
           {items.map((r) => {
             const susp = (r.extra_ingredients || []).filter((e) => e.name && !ENRICH.has(e.name)).map((e) => e.name);
+            const sl = susp.join(" ").toLowerCase();
+            const alg = [
+              tri("glutine (frumento)", "Gluten (Weizen)", "gluten (wheat)"),
+              tri("uova", "Eier", "eggs"),
+              tri("latte", "Milch", "milk"),
+              tri("frutta a guscio (mandorle, nocciole)", "Schalenfrüchte (Mandeln, Haselnüsse)", "tree nuts (almonds, hazelnuts)"),
+            ];
+            if (sl.includes("pistacch")) alg.push(tri("pistacchi", "Pistazien", "pistachios"));
+            if (sl.includes("cocco") || sl.includes("kokos")) alg.push(tri("frutta a guscio (cocco)", "Schalenfrüchte (Kokos)", "tree nuts (coconut)"));
+            const allergens = alg.join(", ") + ". " + tri("Può contenere tracce di soia.", "Kann Spuren von Soja enthalten.", "May contain traces of soy.");
             return (
               <div key={r.id} data-testid={`label-${r.id}`}
                 className="rounded-2xl border-2 border-[#B34A26] bg-white text-[#2C221E] p-4 flex flex-col items-center text-center break-inside-avoid"
@@ -107,6 +117,10 @@ export default function PanettoneLabels() {
                 {susp.length > 0 && (
                   <p className="text-xs text-[#4A3B34] mt-1.5"><span className="font-semibold">{t("labels_ingredients")}:</span> {susp.join(", ")}</p>
                 )}
+                <p className="text-[11px] font-bold text-[#8C3A1D] mt-1.5">{tri("Peso netto", "Nettogewicht", "Net weight")}: ~1 kg</p>
+                <p data-testid={`label-allergens-${r.id}`} className="text-[10px] text-[#4A3B34] mt-1 leading-snug">
+                  <span className="font-semibold uppercase">{tri("Allergeni", "Allergene", "Allergens")}:</span> {allergens}
+                </p>
                 <p className="text-[9px] text-[#8C7567] mt-2 italic">Il Laboratorio di Michele · Stoccarda 🇮🇹🇩🇪</p>
               </div>
             );

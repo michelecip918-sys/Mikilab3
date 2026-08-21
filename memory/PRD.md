@@ -506,3 +506,8 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **Foto sull'etichetta**: già presente (usa `r.image_url`); ora i 6 nuovi gusti hanno foto dedicate → l'etichetta stampabile mostra la foto del gusto.
 - **Listino con prezzi**: aggiunte le colonne "500 g" e "100 g" alla tabella listino, che leggono `costing.b2b_500g/b2b_100g` (prima mostrava solo il nome del gusto).
 - Verificato: immagini servite 200, prezzi per gusto nel DB. L'accesso UI alle etichette è dalla sezione Ricette (non dalla griglia strumenti del Laboratorio).
+
+## v39.2 (2026-06) — Etichette: allergeni + peso netto
+- Ogni etichetta stampabile (PanettoneLabels.jsx) mostra ora: foto del gusto, sospensioni, **Peso netto ~1 kg** e riga **Allergeni** trilingue (base: glutine/frumento, uova, latte, frutta a guscio mandorle/nocciole + "può contenere tracce di soia"; aggiunge pistacchi/cocco se presenti nelle sospensioni). testid `label-allergens-<id>`.
+- Verificato admin: 17 etichette con foto (tutte caricate), 17 righe allergeni, listino 17 righe con colonne 500g/100g e prezzi. Accesso: Ricette → "Etichette Panettoni" (testid ricette-labels-btn).
+- Prezzi B2B impostati da agente (l'utente li aggiusterà); sospensioni dei nuovi gusti restano di default in attesa dei valori esatti dell'utente.
