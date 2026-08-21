@@ -25,6 +25,7 @@ export default function CapoLaboratorio() {
   const [recipes, setRecipes] = useState([]);
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
+  const [preferment, setPreferment] = useState("solido");
   const [plan, setPlan] = useState("");
   const [generating, setGenerating] = useState(false);
 
@@ -92,7 +93,7 @@ export default function CapoLaboratorio() {
         mixers, cells, mode: "pro", phase, use_weekly: useWeekly,
         staff: staff === "" ? null : Number(staff),
         start_time: startTime, lab_temp_c: labTemp === "" ? null : Number(labTemp),
-        standard_temp_c: Number(stdTemp) || 26, notes, lang,
+        standard_temp_c: Number(stdTemp) || 26, notes, lang, preferment_choice: preferment,
       }),
     });
     if (headerLabel) setPlan((p) => p + (p ? "\n\n" : "") + `## ${headerLabel}\n\n`);
@@ -275,6 +276,24 @@ export default function CapoLaboratorio() {
             <Thermometer className="w-4 h-4 inline mr-1" />{tempMsg}
           </div>
         )}
+        <div className="mt-3">
+          <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Triebmittel / Vorteig" : "Lievito / Prefermento"}</label>
+          <select data-testid="capo-preferment" value={preferment} onChange={(e) => setPreferment(e.target.value)}
+            className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 text-sm outline-none focus:border-[#B34A26]">
+            <option value="solido">{lang === "de" ? "Fester Lievito Madre" : "Lievito Madre solido"}</option>
+            <option value="licoli">LiCoLi ({lang === "de" ? "Flüssighefe" : "lievito in coltura liquida"})</option>
+            <option value="poolish">Poolish</option>
+            <option value="lievito_birra">{lang === "de" ? "Hefe (Bierhefe)" : "Lievito di birra"}</option>
+          </select>
+          {(preferment === "licoli" || preferment === "poolish") && (
+            <div data-testid="capo-preferment-banner" className="mt-2 rounded-xl bg-[#D99B26]/15 border border-[#D99B26]/40 p-3 text-sm text-[#8C3A1D] dark:text-[#E5AC3A] leading-relaxed">
+              ⚠️ {lang === "de"
+                ? "TECHNISCHER HINWEIS: Du verwendest LiCoLi oder Poolish. Da es sich um Vorteige mit 100% Hydratation handelt, wird die Wassermenge im Hauptteig automatisch neu berechnet und reduziert, damit die Endhydratation ausgewogen bleibt."
+                : "ATTENZIONE TECNICA: Stai utilizzando il LiCoLi o il Poolish. Essendo prefermenti al 100% di idratazione, la quantità di acqua/liquidi nell'impasto principale è stata automaticamente ricalcolata e ridotta per mantenere bilanciata l'idratazione finale."}
+            </div>
+          )}
+        </div>
+
         <div className="mt-3">
           <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("capo_notes")}</label>
           <textarea data-testid="capo-notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}

@@ -18,6 +18,7 @@ import ShiftRoles from "@/sections/ShiftRoles";
 import Checklists from "@/sections/Checklists";
 import FreezerStock from "@/sections/FreezerStock";
 import { useLang } from "@/i18n/LanguageContext";
+import { MikiAvatar } from "@/components/MikiAvatar";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
@@ -74,6 +75,7 @@ export default function Maestro() {
 
   return (
     <div className="pb-4">
+      <MikiAvatar label="Michele" subtitle={t("maestro_title")} className="mb-4" />
       <h1 className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6] mb-4">{t("maestro_title")}</h1>
 
       {/* Guida a 4 passi */}

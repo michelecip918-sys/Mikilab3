@@ -155,6 +155,23 @@ const OUR_VIDEOS = [
   { id: "HpOycYo1Cvc", key: "method_video2_title" },
 ];
 
+// Contenitore video responsive 16:9, bordi arrotondati 16px, overflow nascosto, senza PiP.
+function VideoEmbed({ src, title, testid }) {
+  const url = src.includes("?") ? `${src}&rel=0&modestbranding=1&playsinline=1` : `${src}?rel=0&modestbranding=1&playsinline=1`;
+  return (
+    <div data-testid={testid} className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: "16 / 9" }}>
+      <iframe
+        className="absolute inset-0 w-full h-full"
+        src={url}
+        title={title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen"
+        allowFullScreen
+      />
+    </div>
+  );
+}
+
 const QUIZ = {
   it: [
     { q: "A che temperatura dev'essere l'acqua per impastare?", options: ["Bollente", "Tiepida", "Ghiacciata"], correct: 1 },
@@ -284,10 +301,7 @@ export default function Beginners() {
       <p className="text-sm text-[#8C7567] -mt-2">{t("beginners_courses_sub")}</p>
       {courses.map((v, i) => (
         <div key={i} data-testid={`beg-course-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden">
-          <div className="aspect-video bg-black">
-            <iframe className="w-full h-full" src={v.url} title={v.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-          </div>
+          <VideoEmbed src={v.url} title={v.title} testid={`beg-course-video-${i}`} />
           <div className="p-4">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{v.category}</span>
@@ -308,10 +322,7 @@ export default function Beginners() {
       <div className="grid gap-3 sm:grid-cols-2">
         {OUR_VIDEOS.map((v) => (
           <div key={v.id} data-testid={`our-video-${v.id}`} className="rounded-2xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] bg-white dark:bg-[#2A211D]">
-            <div className="aspect-video bg-black">
-              <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${v.id}`} title={t(v.key)}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-            </div>
+            <VideoEmbed src={`https://www.youtube.com/embed/${v.id}`} title={t(v.key)} testid={`our-video-frame-${v.id}`} />
             <p className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0] p-2.5">{t(v.key)}</p>
           </div>
         ))}

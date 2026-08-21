@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, BookOpen } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { HeroAvatar } from "@/components/MikiAvatar";
 
 const SECTIONS = [
   {
@@ -36,6 +37,7 @@ export default function GuidaMetodi() {
           <div className="flex-1 bg-[#008C45]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CD212A]" />
           <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCC00]" />
         </div>
+        <HeroAvatar />
         <BookOpen className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("guida_title")}</h1>
         <p className="text-white/85 text-sm mt-1">{t("guida_sub")}</p>

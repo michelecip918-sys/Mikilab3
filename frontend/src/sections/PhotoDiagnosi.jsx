@@ -6,6 +6,7 @@ import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
 import Encyclopedia from "@/sections/Encyclopedia";
+import { HeroAvatar } from "@/components/MikiAvatar";
 
 // Downscale + compress an image file to a base64 JPEG (keeps payload small)
 function fileToCompressedBase64(file, maxDim = 1024, quality = 0.8) {
@@ -126,6 +127,7 @@ export default function PhotoDiagnosi() {
   return (
     <div className="pb-4">
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] p-6 text-white">
+        <HeroAvatar />
         <Camera className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("photo_title")}</h1>
         <p className="text-white/85 text-sm mt-1">{t("photo_subtitle")}</p>

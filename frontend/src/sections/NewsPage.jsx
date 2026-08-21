@@ -2,6 +2,7 @@ import { Newspaper } from "lucide-react";
 import Stoccarda from "@/sections/Stoccarda";
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";
+import { HeroAvatar } from "@/components/MikiAvatar";
 
 export default function NewsPage() {
   const { t, lang } = useLang();
@@ -13,6 +14,7 @@ export default function NewsPage() {
           <div className="flex-1 bg-[#009246]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CE2B37]" />
           <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCE00]" />
         </div>
+        <HeroAvatar />
         <Newspaper className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("news_page_title")}</h1>
         <p className="text-white/85 text-sm mt-1">{t("news_page_sub")}</p>

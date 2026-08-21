@@ -1,0 +1,35 @@
+{
+  "summary": "Focused v7.8 verification (backend + frontend). Backend: 4/4 pytest tests passed — GET /api/recipes?collection_name=mikilab (admin) returns exactly 42 recipes with 11 'Panettone Artigianale MikiLab —' items and no legacy 'Panettone Mikilab'; POST /api/capo/plan (mode=pro, phase=weekly) streams valid SSE ending with done:true for both preferment_choice=poolish and licoli, and the generated text explicitly mentions the preferment plus water/hydration reduction. Frontend (admin@mikilab.de, mobile 390x844): Home founder photo renders first (home-founder-photo); all 4 info blocks (cosa/metodo/serenita/chi) open a real Radix modal (concept-modal-<id>, role=dialog) — no inline accordion; avatars verified: miki-avatar in Ricette, Il Tuo Laboratorio, Enciclopedia; section-avatar in Diagnosi, News. Panettone 'Cioccolato e Noci': panettone-structure-<id> renders pH mother-yeast table, ingredient table with 1°/2°/Tot./% columns and Glaze module (glaze-total-<id>=150g). Farro toggle works: title gains 'al Farro', farro-banner-<id> appears, water drops 179g→172g (-3.9%). Capo Laboratorio: capo-preferment select shows capo-preferment-banner for licoli+poolish and hides it for solido. Impara: 4 beg-course-video-<i> and 2 our-video-frame-<id> all render at exact 16:9 (356x200, ratio 1.78) with rounded corners, no layout breakage.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeDetail (farro title)", "issue": "Farro title insertion produces awkward Italian: 'Panettone Artigianale al Farro MikiLab — Cioccolato e Noci' (regex inserts 'al Farro' before 'MikiLab'). Suggest suffixing the flavour part or 'MikiLab al Farro —'.", "selector": "[data-testid='recipe-detail-<id>'] h2", "priority": "LOW"},
+      {"component": "RecipeDetail badges", "issue": "In farro mode the hydration badge still shows the wheat value (40% idr.) while the ingredient table shows the reduced 38.6% — inconsistent numbers on the same screen.", "selector": "[data-testid='recipe-detail-<id>'] badge row", "priority": "MEDIUM"},
+      {"component": "PanettoneStructure water row", "issue": "Water is assigned 100% to the 1° impasto (2° column shows '—'). Technically a panettone 2° impasto usually receives part of the liquids; verify intended split factor (first: 1).", "selector": "[data-testid='panettone-structure-<id>']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Impara / Enciclopedia / Il Tuo Laboratorio (mobile)", "issues": ["Floating 'Radio' and 'Parla' FABs overlap page content (e.g. 'Quattro ingredienti' heading, accordion rows 'Poolish'/'Kochstück', tool cards) — content sits under the buttons; add bottom/side padding or move FABs."]},
+      {"screen": "Console (Il Tuo Laboratorio → Impostazione Macchine)", "issues": ["React dev warning: 'In HTML, <span> cannot be a child of <option> ... will cause a hydration error'. No matching source found in *.jsx option blocks — likely from a select rendered with a span child via a shared component; worth tracing."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter25_v78.py", "/app/test_reports/pytest/iter25.xml"],
+  "action_items": [
+    "Update hydration badge (and any hydration_percent display) when farro mode is active so it matches the reduced table value.",
+    "Improve farro title wording ('al Farro' placement).",
+    "Add bottom padding / reposition Radio & Parla floating buttons so they don't cover content on mobile.",
+    "Trace the <span> inside <option> hydration warning."
+  ],
+  "critical_code_review_comments": [
+    "Duplicate data-testid 'recipe-scale-<id>' exists in both PanettoneStructure and the standard ingredients block; currently mutually exclusive branches so no clash, but keep them distinct to avoid future strict-mode selector ambiguity.",
+    "/app/frontend/src/components/RecipeList.jsx is 772 lines — consider extracting PanettoneStructure into its own module."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter25_v78.py"],
+  "success_rate": {"backend": "100%", "frontend": "100% of requested v7.8 flows"},
+  "seed_data_creation": "None; used existing seeded mikilab collection and admin account.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md) — login works, PRO/admin bypass confirmed",
+  "context_for_next_testing_agent": "New regression file /app/backend/tests/test_iter25_v78.py covers 42-recipe count, panettone naming, and capo/plan preferment SSE (poolish/licoli). Frontend selectors confirmed working: intro-close-btn, auth-email/password/submit, home-concept-<id> -> concept-modal-<id>, home-founder-photo, miki-avatar, section-avatar, recipe-row-<id>, panettone-structure-<id>, farro-toggle/banner-<id>, glaze-total-<id>, capo-preferment(+banner), beg-course-video-<i>, our-video-frame-<id>. Capo plan SSE takes ~20-40s; use long timeouts.",
+  "rca_of_the_issue": "No functional defects found in the v7.8 scope. Only cosmetic/consistency items: farro mode reduces water in the structure table but the badge row still renders raw recipe.hydration_percent, and the farro name rewrite uses a /mikilab/i regex replacement which inserts the qualifier mid-title."
+}

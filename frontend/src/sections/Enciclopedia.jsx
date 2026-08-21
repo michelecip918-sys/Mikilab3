@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { MikiAvatar } from "@/components/MikiAvatar";
 
 const ENTRIES = {
   it: [
@@ -36,6 +37,7 @@ export default function Enciclopedia() {
 
   return (
     <div data-testid="enciclopedia" className="pb-4">
+      <MikiAvatar label="Michele" subtitle={t("enc_title")} className="mb-4" />
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 rounded-2xl bg-[#6B8E62] flex items-center justify-center"><BookOpen className="w-6 h-6 text-white" /></div>
         <div>

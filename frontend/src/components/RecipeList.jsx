@@ -275,14 +275,18 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const { lang } = useLang();
   const de = lang === "de";
   const isPanettone = recipeCategory(r).key === "panettoni";
+  const [farro, setFarro] = useState(false);
+  useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const flourG = Number(r.flour_grams) || 0;
   const target = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
   const f = flourG > 0 ? target / flourG : 1;
   const g = (v) => (v == null ? null : Math.round(Number(v) * f));
+  // In modalità farro l'idratazione dell'impasto principale è ridotta ~4%.
+  const gWater = (v) => { const b = g(v); return b == null ? null : (farro ? Math.round(b * 0.96) : b); };
   const pct = (v) => (flourG > 0 && v != null ? ` · ${Math.round((Number(v) / flourG) * 1000) / 10}%` : "");
   const rows = [];
   if (r.flour_grams != null) rows.push([t("ing_flour"), `${g(r.flour_grams)} g${flourG > 0 ? " · 100%" : ""}`]);
-  if (r.water_grams != null) rows.push([t("ing_water"), `${g(r.water_grams)} g${pct(r.water_grams)}`]);
+  if (r.water_grams != null) rows.push([t("ing_water"), `${gWater(r.water_grams)} g${pct(farro ? Number(r.water_grams) * 0.96 : r.water_grams)}`]);
   if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
   if (r.salt_grams != null) rows.push([t("ing_salt"), `${g(r.salt_grams)} g${pct(r.salt_grams)}`]);
   (r.extra_ingredients || []).forEach((e) => {
@@ -385,7 +389,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         <div>
           <h2 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
             {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
-            {rLoc(r, "name", lang)}
+            {isPanettone && farro ? rLoc(r, "name", lang).replace(/mikilab/i, (m) => "al Farro " + m) : rLoc(r, "name", lang)}
           </h2>
           {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-[#B34A26] mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
           {r.flour_type ? <p className="text-sm text-[#8C7567] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
@@ -397,6 +401,26 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#B34A26"><Pencil className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#B4442A"><Trash2 className="w-4 h-4" /></ActionBtn>}
         </div>
+
+        {isPanettone && !r.locked && (
+          <button data-testid={`farro-toggle-${r.id}`} onClick={() => setFarro((v) => !v)}
+            className={`w-full flex items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-sm transition-all active:scale-98 border ${
+              farro ? "bg-[#6B8E62] text-white border-[#6B8E62]" : "bg-[#D99B26]/10 text-[#8C3A1D] dark:text-[#E5AC3A] border-[#D99B26]/40"
+            }`}>
+            <Wheat className="w-4 h-4" />
+            {farro
+              ? (de ? "Dinkel-Version aktiv — zur Weizen-Version" : "Versione al Farro attiva — torna al grano")
+              : (de ? "In Dinkel (Farro) umwandeln" : "Converti in Farro")}
+          </button>
+        )}
+
+        {isPanettone && !r.locked && farro && (
+          <div data-testid={`farro-banner-${r.id}`} className="rounded-xl bg-[#6B8E62]/12 border border-[#6B8E62]/30 p-3 text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">
+            🌾 {de
+              ? "DINKEL-VERSION: Da das Dinkelgluten zerbrechlicher ist, wurde die Hydratation ~4% reduziert. Kürzer und schonender kneten (Überhitzung vermeiden); Butter und Eigelb in kleinen Portionen fraktioniert einarbeiten. Lievito-Madre-Führung, Glasur und Ablauf bleiben unverändert."
+              : "VERSIONE AL FARRO: essendo il glutine del farro più fragile e tenace, l'idratazione è stata ridotta di ~4%. Impasta per meno tempo e più delicatamente (evita il surriscaldamento); inserisci burro e tuorli in piccole dosi frazionate. Gestione del lievito madre, glassa e procedimento restano invariati."}
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-2">
           {r.dough_category && <Badge icon={<Layers className="w-3.5 h-3.5" />}>{t(`dc_${r.dough_category}`)}</Badge>}
@@ -414,7 +438,9 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           )}
         </div>
 
-        {rows.length > 0 && (
+        {isPanettone && !r.locked ? (
+          <PanettoneStructure r={r} t={t} lang={lang} flourG={flourG} farro={farro} scaleVal={scaleVal} onScaleChange={onScaleChange} />
+        ) : rows.length > 0 ? (
           <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{t("recipe_ingredients")}</p>
@@ -447,7 +473,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
               })}
             </div>
           </div>
-        )}
+        ) : null}
 
         {r.procedure ? (
           <div data-testid={`recipe-procedure-${r.id}`} className="rounded-xl bg-[#6B8E62]/10 border border-[#6B8E62]/25 p-3">
@@ -609,6 +635,138 @@ function GlossaryBox({ text }) {
           <li key={i} className="text-xs text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">* {lang === "de" ? g.de : g.it}</li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+
+// ——— Struttura tecnica obbligatoria dei Panettoni (Direttiva v7.8) ———
+const PAN_MY = {
+  it: [
+    { s: "Bagnetto", d: "15 min in acqua a 28°C — pH 3,9" },
+    { s: "1° Rinfresco", d: "1:1:0,5 a 28°C — pH 3,9" },
+    { s: "2° Rinfresco", d: "28°C per 3,5–4 h — pH 4,1–4,3" },
+    { s: "Legato in sacco", d: "16°C per 16–18 h" },
+  ],
+  de: [
+    { s: "Bagnetto (Bad)", d: "15 Min. in Wasser bei 28°C — pH 3,9" },
+    { s: "1. Auffrischung", d: "1:1:0,5 bei 28°C — pH 3,9" },
+    { s: "2. Auffrischung", d: "28°C für 3,5–4 h — pH 4,1–4,3" },
+    { s: "Gebunden im Sack", d: "16°C für 16–18 h" },
+  ],
+};
+
+const PAN_GLAZE = [
+  ["Zucchero", "Zucker", 54.55],
+  ["Mandorle grezze", "Rohe Mandeln", 18.18],
+  ["Albumi", "Eiweiß", 18.18],
+  ["Nocciole", "Haselnüsse", 3.64],
+  ["Armelline", "Bittermandeln (Aprikosenkerne)", 1.82],
+  ["Farina MP", "Mehl", 1.82],
+  ["Farina Fioretto", "Maismehl (fein)", 0.91],
+  ["Fecola", "Kartoffelstärke", 0.91],
+];
+
+function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange }) {
+  const de = lang === "de";
+  const [glazeTot, setGlazeTot] = useState(150);
+  const targetVal = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
+  const fct = flourG > 0 ? targetVal / flourG : 1;
+  const G = (v) => (v == null ? 0 : Math.round(Number(v) * fct));
+  const flourTot = G(r.flour_grams);
+  const items = [];
+  items.push({ name: t("ing_flour"), tot: flourTot, first: 0.5 });
+  const waterBase = G(r.water_grams);
+  items.push({ name: t("ing_water"), tot: farro ? Math.round(waterBase * 0.96) : waterBase, first: 1 });
+  if (r.sourdough_grams) items.push({ name: t("ing_preferment"), tot: G(r.sourdough_grams), first: 1 });
+  (r.extra_ingredients || []).forEach((e) => {
+    if (!e || !e.name || e.percent == null || e.percent === "") return;
+    const tot = flourG > 0 ? Math.round(targetVal * (Number(e.percent) / 100)) : 0;
+    const key = String(e.name).toLowerCase();
+    let first = 0;
+    if (key.includes("zuccher") || key.includes("zucker")) first = 0.45;
+    else if (key.includes("tuorl") || key.includes("eigelb")) first = 0.31;
+    else if (key.includes("burro") || key.includes("butter")) first = 0.42;
+    items.push({ name: ingLoc(e.name, lang), tot, first });
+  });
+  if (r.salt_grams) items.push({ name: t("ing_salt"), tot: G(r.salt_grams), first: 0 });
+  const pctOf = (v) => (flourTot > 0 ? `${Math.round((v / flourTot) * 1000) / 10}%` : "—");
+
+  return (
+    <div data-testid={`panettone-structure-${r.id}`} className="space-y-4">
+      {flourG > 0 && (
+        <div className="flex items-center justify-end gap-1">
+          <span className="text-[10px] text-[#8C7567]">{t("recipe_scale")}</span>
+          <input data-testid={`recipe-scale-${r.id}`} type="number" value={scaleVal ?? flourG}
+            onChange={(e) => onScaleChange(e.target.value)}
+            className="w-20 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none" />
+          <span className="text-[10px] text-[#8C7567]">g</span>
+        </div>
+      )}
+
+      <div className="rounded-xl bg-[#B34A26]/8 border border-[#B34A26]/25 p-3">
+        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">🌾 {de ? "Führung Lievito Madre (pH)" : "Gestione Lievito Madre (pH)"}</p>
+        <div className="space-y-1">
+          {PAN_MY[de ? "de" : "it"].map((m, i) => (
+            <div key={i} className="flex items-start justify-between gap-2 text-sm">
+              <span className="font-medium text-[#4A3B34] dark:text-[#C9BBB0] shrink-0">{m.s}</span>
+              <span className="text-right text-[#8C7567]">{m.d}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3 overflow-x-auto">
+        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{de ? "Zutaten: 1./2. Teig · Gesamt" : "Ingredienti: 1° e 2° Impasto · Totale"}</p>
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="text-[10px] uppercase text-[#8C7567]">
+              <th className="text-left font-semibold pb-1">{de ? "Zutat" : "Ingrediente"}</th>
+              <th className="text-right font-semibold pb-1">1°</th>
+              <th className="text-right font-semibold pb-1">2°</th>
+              <th className="text-right font-semibold pb-1">{de ? "Ges." : "Tot."}</th>
+              <th className="text-right font-semibold pb-1">%</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((it, i) => {
+              const first = Math.round(it.tot * it.first);
+              const second = it.tot - first;
+              return (
+                <tr key={i} className="border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
+                  <td className="py-1 text-[#4A3B34] dark:text-[#C9BBB0] pr-2">{it.name}</td>
+                  <td className="py-1 text-right font-mono-data text-[#8C7567]">{first > 0 ? first : "—"}</td>
+                  <td className="py-1 text-right font-mono-data text-[#8C7567]">{second > 0 ? second : "—"}</td>
+                  <td className="py-1 text-right font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{it.tot}</td>
+                  <td className="py-1 text-right font-mono-data text-[#8C7567]">{pctOf(it.tot)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p className="text-[10px] text-[#8C7567] mt-2">{de ? "g · % auf das Gesamtmehl. Suspensionen immer am Ende, langsam einarbeiten." : "g · % sul peso della farina totale. Sospensioni sempre a fine impasto, a bassa velocità."}</p>
+      </div>
+
+      <div className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A]">{de ? "Glasur-Modul (automatisch)" : "Modulo Glassa (automatico)"}</p>
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-[#8C7567]">{de ? "Gesamt" : "Totale"}</span>
+            <input data-testid={`glaze-total-${r.id}`} type="number" value={glazeTot}
+              onChange={(e) => setGlazeTot(e.target.value)}
+              className="w-16 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none" />
+            <span className="text-[10px] text-[#8C7567]">g</span>
+          </div>
+        </div>
+        <div className="space-y-1">
+          {PAN_GLAZE.map(([itn, den, p], i) => (
+            <div key={i} className="flex items-center justify-between text-sm">
+              <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{de ? den : itn}</span>
+              <span className="font-mono-data text-[#8C3A1D] dark:text-[#E5AC3A]">{Math.round((Number(glazeTot) || 0) * p / 100)} g · {p}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

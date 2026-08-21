@@ -257,6 +257,7 @@ class CapoPlanRequest(BaseModel):
     mode: str = "pro"                # "pro" (laboratorio) | "home" (pane a casa)
     phase: str = "full"              # "full" | "weekly" | "daily" (per evitare troncamenti)
     use_weekly: bool = False         # se True, unisce anche il Piano settimanale salvato
+    preferment_choice: Optional[str] = None  # "solido" | "licoli" | "poolish" | "lievito_birra"
     lang: str = "it"
 
 
@@ -306,9 +307,18 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v31-licoli-testi-home"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v32-panettoni-artigianali"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
-SEED_RETIRED_NAMES = ["Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro"]
+SEED_RETIRED_NAMES = [
+    "Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro",
+    "Panettone Mikilab",
+    "Panettone Mikilab — Amarena e Cioccolato", "Panettone Mikilab — Arancia e Cioccolato Fondente",
+    "Panettone Mikilab — Caffè e Nocciola", "Panettone Mikilab — Cioccolato e Noci",
+    "Panettone Mikilab — Fichi e Mandorle", "Panettone Mikilab — Frutti di Bosco",
+    "Panettone Mikilab — Marron Glacé (Castagne)", "Panettone Mikilab — Pere e Cioccolato",
+    "Panettone Mikilab — Pistacchio e Cioccolato Bianco", "Panettone Mikilab — Uvetta e Canditi (Classico)",
+    "Panettone Mikilab — Verde Canapa",
+]
 LEGACY_STALE_NAMES = ["Ciabatta ad Alta Idratazione", "Pane Rustico al Farro e Miele"]
 
 
@@ -509,7 +519,7 @@ def _teaser_recipe(doc: dict) -> dict:
 
 
 # 2 ricette DEMO sempre complete (vetrina gratuita per non-PRO): una semplice + un panettone.
-DEMO_RECIPE_NAMES = {"Cuore Italiano", "Panettone Mikilab — Uvetta e Canditi (Classico)"}
+DEMO_RECIPE_NAMES = {"Cuore Italiano", "Panettone Artigianale MikiLab — Uvetta e Canditi (Classico)"}
 
 
 async def _translate_recipe_de(doc):
@@ -1277,6 +1287,17 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                 )
             max_tokens = 3000
         system = CAPO_SYSTEM
+
+    # Direttiva v7.8 — LiCoLi/Poolish: riduzione automatica dell'idratazione.
+    pref = (payload.preferment_choice or "").lower()
+    if pref in ("licoli", "poolish"):
+        pref_name = "LiCoLi" if pref == "licoli" else "Poolish"
+        if de:
+            prompt += (f"\n\nWICHTIG (Vorteig {pref_name}): Es wird {pref_name} verwendet (100% Hydratation, flüssig). "
+                       "Reduziere das Wasser im Hauptteig, indem du das im Vorteig enthaltene Wasser abziehst (bei 100% Hydratation ist die Hälfte des Vorteiggewichts Wasser), damit die Endhydratation gleich bleibt. Erkläre den Abzug kurz.")
+        else:
+            prompt += (f"\n\nIMPORTANTE (prefermento {pref_name}): si usa il {pref_name} (idratazione 100%, liquido). "
+                       "Riduci l'acqua dell'impasto principale scomputando l'acqua già presente nel prefermento (con idratazione al 100% la metà del suo peso è acqua), così l'idratazione finale resta invariata. Spiega brevemente lo scomputo.")
 
     prompt += lang_instr
     chat = LlmChat(

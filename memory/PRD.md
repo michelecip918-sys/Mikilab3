@@ -437,3 +437,22 @@ Griglia riordinata per priorità d'uso quotidiano (Maestro.jsx TOOLS) + rinomini
 - Avatar 3D cartone generato dalla foto reale di Michele (coppola, maglia logo ML) → /public/michele-avatar.jpg; usato in promo e card "Chi sono".
 - Ricetta base rinominata "Lievito Madre / Licoli (Liko)" con gestione a % aumentata (25-35%); aggiornata anche in Guida Metodi (Enciclopedia). SEED_VERSION v31.
 - RESTA (media directive): estendere foto/avatar a TUTTE le sezioni (Laboratorio, Diagnosi, News/Enciclopedia, Guida Metodi, schede ricetta); swap logo forno → "ML" sulla foto del forno (da confermare quale asset è quella del forno). Asset caricati: item2=volto(coppola), item5/3/9=da verificare.
+
+## v32 (2026-06) — Direttiva v7.8 (Panettoni, Farro, LiCoLi, Avatar, Modali, Video)
+- **FASE A UI**: blocchi Home ("Cos'è MikiLab", "Il Mio Metodo", "Lavorare in Serenità", "Chi sono io") ora sono FINESTRE MODALI (Dialog, data-testid `concept-modal-<id>`), non più accordion. Video YouTube (Beginners) in container 16:9 `rounded-2xl overflow-hidden`, senza picture-in-picture (`VideoEmbed`, testid `beg-course-video-<i>`/`our-video-frame-<id>`).
+- **FASE B Panettoni** (`RecipeList.jsx` → `PanettoneStructure`): per ogni panettone (PRO/admin) struttura obbligatoria — Scheda Gestione Lievito Madre (tabella pH: bagnetto 28°C pH3,9 · 2° rinf. pH4,1-4,3 · legato 16°C 16-18h), Tabella Ingredienti 1°/2°/Totale + % sul peso farina, Modulo Glassa automatico (Zucchero 54,55% … Albumi 18,18%, input grammi totali). Bottone **"Converti in Farro"** dinamico (testid `farro-toggle-<id>`): idratazione -4%, banner tecnico (`farro-banner-<id>`), titolo → "Panettone al Farro …". NON crea ricette nel DB.
+- **Rinomina Panettoni**: seed → "Panettone Artigianale MikiLab — [Gusto]" (11 gusti), rimosso il generico "Panettone Mikilab". SEED_VERSION `v32`; vecchi nomi in SEED_RETIRED_NAMES; DEMO_RECIPE_NAMES aggiornato. Reseed OK: 42 ricette totali.
+- **Punto 3 LiCoLi/Poolish** (solo Capo Laboratorio): selettore `capo-preferment` (solido/LiCoLi/Poolish/lievito birra) + banner `capo-preferment-banner`; backend `CapoPlanRequest.preferment_choice` → il prompt AI riduce l'acqua scomputando il prefermento al 100% di idratazione.
+- **FASE C Avatar (Punto 4)**: generato avatar 3D che somiglia a Michele con logo ML sulla polo (`/public/michele-avatar.jpg`) + foto reale editata (collega rimosso, logo ML) (`/public/michele-photo.jpg`). Componente `MikiAvatar`/`HeroAvatar` inserito in Ricette, Il Tuo Laboratorio, Diagnosi, News, Enciclopedia, Guida Metodi.
+- **Card Home in alto**: mostra l'AVATAR cartoon con titolo "MikiLab Avatar" / "Il tuo compagno digitale 🇮🇹🇩🇪". **Ricette**: la FOTO REALE di Michele (con logo ML) è la copertina (heroImage).
+- Testato iteration_25: backend 4/4 pytest, frontend tutti i flussi OK, 0 bug.
+
+### RESTA (Direttiva v7.8): 
+- Punto 5: scheda ricetta dedicata "LiCoLi (Lievito in Coltura Liquida)" separata dal "Lievito Madre solido" in Basi & Lieviti (oggi combinata "Lievito Madre / Licoli (Liko)"; l'Enciclopedia già la documenta).
+
+### NUOVO BLOCCO richiesto dall'utente (da fare, TRILINGUE):
+1. Popup di benvenuto con avatar + trilingue (🇮🇹 IT | 🇩🇪 DE | 🇬🇧 EN), titolo "La Tua Guida alla Panificazione", CTA "Inizia Ora".
+2. Header pulito: solo logo grafico (no testo sovrapposto), orologio, chip lingua IT|DE|EN, tasto Accedi a destra.
+3. Audio: rimuovere icona altoparlante dall'header; sostituire i suoni con sottofondo d'ambiente (scoppiettio forno/legna); attivazione solo in "Radio"/Impostazioni.
+4. Tasto "Installa App" (PWA) fuori dalla bottom nav → dentro menu Accedi/Profilo o banner discreto al primo accesso.
+NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.

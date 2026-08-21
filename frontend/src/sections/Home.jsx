@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag } from "lucide-react";
+import { MessageCircle, ChevronRight, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const CONCEPTS = {
   it: [
@@ -26,8 +26,6 @@ const CONCEPTS = {
       body: "Meine Methode verbindet die große italienische Tradition mit deutscher technischer Präzision. Ich arbeite täglich sowohl mit direkten als auch mit indirekten Methoden, bevorzuge aber klar Letztere: Vorteige wie Lievito Madre, Poolish, Biga und Kochstücke sind die wahre Seele meiner Rezepte. Indirekt zu arbeiten heißt, der Zeit Zeit zu geben, damit die Enzyme den Rohstoff verwandeln – für einzigartige Aromatik, knusprige Kruste und offene Porung. Dennoch liebe ich jede Nuance des Backens: das richtige Mehl zum richtigen Zeitpunkt und die strikte Einhaltung der Zeiten sind der Schlüssel, um jeden Teig zu beherrschen." },
     { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
       body: "Entspannt zu arbeiten bedeutet, die Backstube in eine organisierte, effiziente und stressfreie Umgebung zu verwandeln. Mit sorgfältiger Planung der Gärzeiten, präzisen Standards und zuverlässigen Techniken werden Überraschungen ausgeschlossen. Kleine praktische Einsichten, verbunden mit Erfahrung, vereinfachen den Alltag und machen die Arbeit gleichmäßig, sicher und angenehm. Mit Gelassenheit zu backen ist das Geheimnis für höchste Qualität, ohne je die Leidenschaft für dieses Handwerk zu verlieren." },
-    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
-      body: "Arbeite völlig entspannt und ohne Stress: Mit Mikilab ist es fast so, als stünde ich neben dir am Ofen und führe dich Schritt für Schritt … mit dem Vorteil, dass ich dich nicht anschreie, wenn du eine Auffrischung verpatzt! 😄" },
   ],
 };
 
@@ -59,6 +57,7 @@ export default function Home({ onNavigate }) {
   const [legal, setLegal] = useState(false);
   const [open, setOpen] = useState(null);
   const concepts = CONCEPTS[lang === "de" ? "de" : "it"];
+  const activeConcept = concepts.find((c) => c.id === open) || null;
   const go = (tab) => onNavigate && onNavigate(tab);
   const jokes = JOKES[lang === "de" ? "de" : "it"];
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
@@ -105,6 +104,22 @@ export default function Home({ onNavigate }) {
 
   return (
     <div className="pb-2 space-y-6">
+      {/* Card in alto: avatar digitale (compagno) */}
+      <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl">
+        <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab Avatar"
+          className="w-full h-72 object-cover object-center"
+          onError={(e) => { e.currentTarget.parentElement.style.display = "none"; }} />
+        <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
+          <div className="flex-1 bg-[#009246]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CE2B37]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCE00]" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E]/80 via-[#2C221E]/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 p-5">
+          <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
+          <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪</p>
+        </div>
+      </div>
+
       {/* Hero compatto */}
       <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white shadow-xl p-7 text-center">
         <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
@@ -125,41 +140,51 @@ export default function Home({ onNavigate }) {
         </p>
       </div>
 
-      {/* 4 concetti (in alto) */}
+      {/* 4 concetti (in alto) — aprono una finestra modale */}
       <div className="space-y-4">
         {concepts.map((c) => {
-          const isOpen = open === c.id;
           const Icon = c.icon;
           return (
-            <div key={c.id} data-testid={`home-concept-${c.id}`}>
-              <button onClick={() => setOpen(isOpen ? null : c.id)}
-                className={`w-full flex items-center gap-4 rounded-3xl p-6 text-white shadow-lg active:scale-98 transition-all bg-gradient-to-br ${c.grad}`}>
-                <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
-                  <Icon className="w-7 h-7" />
-                </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <h3 className="font-display text-xl font-bold">{c.title}</h3>
-                  <p className="text-white/70 text-[11px] font-medium">{t("home_tap_open")}</p>
-                </div>
-                {isOpen ? <ChevronDown className="w-6 h-6 text-white/80 shrink-0" /> : <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />}
-              </button>
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25 }} className="overflow-hidden">
-                    <div className="mt-2 rounded-3xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] overflow-hidden">
-                      {CONCEPT_PHOTOS[c.id] && (
-                        <img src={CONCEPT_PHOTOS[c.id]} alt={c.title} data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy" />
-                      )}
-                      <p className="p-6 text-[15px] leading-relaxed text-[#4A3B34] dark:text-[#C9BBB0]">{c.body}</p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <button key={c.id} data-testid={`home-concept-${c.id}`} onClick={() => setOpen(c.id)}
+              className={`w-full flex items-center gap-4 rounded-3xl p-6 text-white shadow-lg active:scale-98 transition-all bg-gradient-to-br ${c.grad}`}>
+              <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
+                <Icon className="w-7 h-7" />
+              </div>
+              <div className="flex-1 min-w-0 text-left">
+                <h3 className="font-display text-xl font-bold">{c.title}</h3>
+                <p className="text-white/70 text-[11px] font-medium">{t("home_tap_open")}</p>
+              </div>
+              <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
+            </button>
           );
         })}
       </div>
+
+      {/* Finestra modale dei concetti */}
+      <Dialog open={!!activeConcept} onOpenChange={(o) => !o && setOpen(null)}>
+        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A] p-0">
+          <DialogTitle className="sr-only">{activeConcept?.title || "MikiLab"}</DialogTitle>
+          <DialogDescription className="sr-only">{activeConcept?.title || "MikiLab"}</DialogDescription>
+          {activeConcept && (
+            <div data-testid={`concept-modal-${activeConcept.id}`}>
+              {CONCEPT_PHOTOS[activeConcept.id] && (
+                <img src={CONCEPT_PHOTOS[activeConcept.id]} alt={activeConcept.title}
+                  data-testid={`concept-photo-${activeConcept.id}`} className="w-full h-52 object-cover rounded-t-lg" loading="lazy"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              )}
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-white bg-gradient-to-br ${activeConcept.grad}`}>
+                    <activeConcept.icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{activeConcept.title}</h3>
+                </div>
+                <p className="text-[15px] leading-relaxed text-[#4A3B34] dark:text-[#C9BBB0] whitespace-pre-line">{activeConcept.body}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Menu principale — subito sotto i blocchi */}
       <div>
