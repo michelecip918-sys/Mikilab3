@@ -571,3 +571,8 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **FIX BLOCKER DEPLOY** (`server.py seed_mikilab_if_empty`): niente più `delete_one` all'avvio. Le schede ritirate e i doppioni vengono NASCOSTI con flag `{hidden:true}` (update, non delete); le ricette valide del seed impostano `hidden:false`; `GET /recipes` filtra `hidden != true`. deployment_agent → **PASS** (nessun blocker, secrets in env, CORS ok, seed upsert-only). SEED_VERSION → v43-hidden-flag. 49 ricette visibili, Cornetto 3400 g OK.
 - **Rinviati a domani (per scelta utente)**: video/prezzi corsi reali, PayPal, Bilancia IoT (Punto 3). 
 ### PRONTO ALLA PUBBLICAZIONE: l'app è deploy-ready. L'utente pubblica dal pulsante Deploy.
+
+## v48 (2026-06) — Bilancia IoT / Smart Scale (Punto 3)
+- **Bilancia Smart** (`sections/SmartScale.jsx`, strumento Lab Passo 1 `maestro-tool-bilancia`): tabella ingredienti (target g + peso reale g), rileva lo scostamento; se una pesata supera ±2% ricalcola AUTOMATICAMENTE tutti gli altri ingredienti in proporzione (R = reale/target, altri × R), evidenziando il pivot. Se entro tolleranza mostra "tutto ok". Bottone Bluetooth best-effort (navigator.bluetooth, fallback manuale). Persistenza localStorage. Trilingue. Righe vuote escluse dal risultato, testid cestino, pb-40 per clearance FAB.
+- Testato iteration_32: 4/4 PASS (es. Farina 1000→1100 = +10% → Acqua 660, Sale 22, Lievito 11). Rifiniti i 3 rilievi LOW.
+### RESTA per l'Academy nutrizione: i valori nutrizionali per gusto attuali sono STIME; sostituirli con i valori reali di laboratorio quando l'utente li fornisce.

@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend-only test of the new PRO tool 'Bilancia Smart' (Smart Scale) in Il Tuo Laboratorio Step 1. Logged in as admin@mikilab.de (PRO), navigated nav-tab-maestro -> maestro-tool-bilancia. All 4 requested scenarios PASS: (1) tool card opens the scale with default rows scale-row-1..4 (Farina 1000, Acqua 600, Sale 20, Lievito 10); (2) scale-actual-1=1100 shows scale-result 'Scostamento +10% · Farina' with full re-proportioning Farina 1100 (pivot ✓), Acqua 660, Sale 22, Lievito 11; (3) scale-reset clears actuals (scale-result disappears) and scale-actual-1=1010 shows only the green scale-ok 'Pesata nella tolleranza (±2%): tutto ok!'; (4) scale-bt-btn clicks without crash (toast 'Bluetooth non disponibile: inserisci i pesi a mano.') and scale-add-row adds an empty row (4->5, visible). Extra edge cases: negative deviation (Acqua 540 = -10%) correctly re-proportions to 900/540/18/9; pivot correctly stays on the largest deviation when two rows deviate (Acqua -10% vs Farina +3%); rows+actuals persist in localStorage across reload. Zero console errors, zero error elements.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "SmartScale delete-row button", "issue": "Per-row Trash2 delete button has no data-testid (untestable); other controls do", "selector": "[data-testid='scale-row-N'] button", "priority": "LOW"},
+      {"component": "SmartScale add-row", "issue": "New row is created with target 0 and empty name, and it is immediately listed in the recalculation panel as '— 0 g', adding noise to the adjusted-recipe output", "selector": "[data-testid='scale-add-row']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Bilancia Smart (mobile 430px)", "issues": ["When rows are added/result panel is long, the bottom of the scale-result panel is overlapped by the floating Radio/Parla bar + bottom nav; pb-24 is not enough clearance (last adjusted row '0 g' was visually clipped)", "Row target inputs have no data-testid, so target edits can't be driven by tests"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Boundary/floating-point: exactly +2% (target 1000, actual 1020) triggers the recalculation panel because 1020/1000-1 = 0.020000000000000018 > TOL. Spec says recalculate only when deviation is >±2%. Use an epsilon or round the deviation (e.g. dev > TOL + 1e-9) in SmartScale.jsx line 41/85.",
+    "Increase bottom padding of SmartScale (pb-24 -> pb-40) so the result panel is not hidden behind the floating voice bar + bottom nav on mobile.",
+    "Add data-testid to the per-row delete button and target input (e.g. scale-del-N, scale-target-N).",
+    "Optional UX: skip rows with target 0 / empty name in the adjusted-recipe listing."
+  ],
+  "critical_code_review_comments": [
+    "SmartScale.jsx: deviation comparison uses raw float (Math.abs(a/t-1) > 0.02) which makes the ±2% boundary inclusive due to IEEE754 error — round to 2-3 decimals or add epsilon.",
+    "SmartScale.jsx: target is stored as a raw string from the input; an empty target becomes '' -> Number('')=0 which silently disables that row. Consider normalising on blur.",
+    "localStorage 'mikilab_scale_recipe' also persists the 'actual' weights across sessions, so a stale weighing (and its recalculation panel) reappears on next visit. Consider persisting only name/target."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested", "frontend": "100% (4/4 requested scenarios passed)" },
+  "seed_data_creation": "None. Existing admin account used; localStorage now holds 5 rows with actual-1=1020 in the test browser profile only.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (PRO/admin) — valid, login works. NOTE: password field testid is 'auth-password', not 'password'.",
+  "context_for_next_testing_agent": "Smart Scale fully verified (open, >2% recalc with correct pivot & ratio, within-tolerance path, reset, Bluetooth toast, add-row, negative deviation, multi-row pivot, localStorage persistence). Only open items are the exact-2% boundary rounding, bottom-overlap padding, and missing data-testids on row delete/target inputs. Login path: intro-close-btn -> login-btn -> auth-email/auth-password/auth-submit -> nav-tab-maestro -> maestro-tool-bilancia.",
+  "rca_of_the_issue": "Exact +2% deviation recalculates because 1020/1000-1 evaluates to 0.020000000000000018 in double precision, which is strictly greater than the 0.02 tolerance constant. Reproduce: open Bilancia Smart, set scale-actual-1 to 1020 -> scale-result appears with 'Scostamento +2%' instead of the scale-ok tolerance message. Mitigation: compare a rounded deviation or add a small epsilon to TOL."
+}

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard,
+  Cog, BookOpen, LayoutDashboard, Scale,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -20,6 +20,7 @@ import Checklists from "@/sections/Checklists";
 import FreezerStock from "@/sections/FreezerStock";
 import WaterTempCalc from "@/sections/WaterTempCalc";
 import SourdoughTracker from "@/sections/SourdoughTracker";
+import SmartScale from "@/sections/SmartScale";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 
@@ -44,11 +45,12 @@ export default function Maestro() {
     { id: "acqua", title: lang === "de" ? "Wasser-Temperatur" : lang === "en" ? "Water temperature" : "Temperatura Acqua", desc: "", Icon: Droplets },
     { id: "ph", title: lang === "de" ? "pH-Tracker" : lang === "en" ? "pH Tracker" : "Tracker pH Lievito", desc: "", Icon: FlaskConical },
     { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
+    { id: "bilancia", title: lang === "de" ? "Smarte Waage" : lang === "en" ? "Smart scale" : "Bilancia Smart", desc: "", Icon: Scale },
   ];
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
   const STEPS = [
-    { icon: Cog, title: tri("Parco Macchine", "Maschinenpark", "Machines"), sub: tri("Impastatrici, forni, celle e giacenze", "Kneter, Öfen, Gärzellen und Bestände", "Mixers, ovens, cells & stock"), tools: ["capo", "freezer"] },
+    { icon: Cog, title: tri("Parco Macchine", "Maschinenpark", "Machines"), sub: tri("Impastatrici, forni, celle, giacenze e bilancia smart", "Kneter, Öfen, Gärzellen, Bestände und smarte Waage", "Mixers, ovens, cells, stock and smart scale"), tools: ["capo", "bilancia", "freezer"] },
     { icon: BookOpen, title: tri("Ricette Personali", "Eigene Rezepte", "Your Recipes"), sub: tri("Inserisci o scansiona le tue ricette e adatta il forno con l'IA", "Rezepte erfassen/scannen und Ofen mit KI anpassen", "Add or scan recipes and adapt the oven with AI"), tools: ["aggiungi", "scan", "adatta"] },
     { icon: CalendarDays, title: tri("Pianificazione", "Planung", "Planning"), sub: tri("Produzione giornaliera e settimanale, tempi a ritroso", "Tages- und Wochenproduktion, Rückwärtsplanung", "Daily & weekly production, backward timing"), tools: ["lavoro", "settimana", "inversa"] },
     { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità Bluetooth, pH e acqua d'impasto", "Temperatur/Feuchte via Bluetooth, pH und Teigwasser", "Bluetooth temp/humidity, pH and dough water"), tools: ["termo", "acqua", "ph"] },
@@ -69,6 +71,7 @@ export default function Maestro() {
         )}
         {tool === "scan" && <ScanRecipe />}
         {tool === "capo" && <CapoLaboratorio />}
+        {tool === "bilancia" && <SmartScale />}
         {tool === "settimana" && <WeeklyPlan />}
         {tool === "inversa" && <BackwardScheduler />}
         {tool === "lavoro" && <StartDoughs />}
