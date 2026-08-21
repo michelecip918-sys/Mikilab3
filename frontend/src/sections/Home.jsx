@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { MessageCircle, ChevronRight, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle, ChevronRight, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import LegalPage from "@/sections/LegalPage";
@@ -50,6 +51,82 @@ const JOKES = {
     "Das Geheimnis des perfekten Brots? Geduld, gutes Mehl … und den Ofen nicht alle zwei Minuten öffnen! 😅",
   ],
 };
+
+const SCENE_PHRASES = {
+  it: [
+    "Organizzo le tue ricette 📋",
+    "Pianifico la produzione in laboratorio ⏱️",
+    "Calcolo dosi, idratazione e costi 🧮",
+    "Ti seguo da smartphone e PC 📱💻",
+  ],
+  de: [
+    "Ich ordne deine Rezepte 📋",
+    "Ich plane die Produktion in der Backstube ⏱️",
+    "Ich berechne Mengen, Hydratation und Kosten 🧮",
+    "Ich begleite dich per Smartphone und PC 📱💻",
+  ],
+};
+
+function HomeAvatarScene({ de }) {
+  const phrases = SCENE_PHRASES[de ? "de" : "it"];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setIdx((i) => (i + 1) % phrases.length), 3000);
+    return () => clearInterval(id);
+  }, [phrases.length]);
+
+  return (
+    <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl h-80 bg-[#2C221E]">
+      {/* Avatar con zoom morbido (finto video) */}
+      <motion.img
+        src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab Avatar"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        onError={(e) => { e.currentTarget.style.display = "none"; }}
+      />
+      <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5 z-20">
+        <div className="flex-1 bg-[#009246]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CE2B37]" />
+        <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCE00]" />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E]/85 via-[#2C221E]/15 to-transparent" />
+
+      {/* Smartphone & PC che fluttuano */}
+      <motion.div
+        className="absolute right-4 bottom-24 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
+        animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Smartphone className="w-6 h-6 text-[#B34A26]" />
+      </motion.div>
+      <motion.div
+        className="absolute right-20 top-10 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
+        animate={{ y: [0, -8, 0] }} transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+      >
+        <Monitor className="w-6 h-6 text-[#6B8E62]" />
+      </motion.div>
+
+      {/* Fumetto di testo a rotazione */}
+      <div className="absolute top-5 left-4 right-24 z-20">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={idx} data-testid="home-scene-bubble"
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.4 }}
+            className="inline-block bg-white/92 text-[#2C221E] text-xs font-semibold px-3 py-2 rounded-2xl rounded-tl-sm shadow-md"
+          >
+            {phrases[idx]}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Titolo */}
+      <div className="absolute bottom-0 left-0 p-5 z-20">
+        <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
+        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Home({ onNavigate }) {
   const { t, lang } = useLang();
@@ -104,21 +181,8 @@ export default function Home({ onNavigate }) {
 
   return (
     <div className="pb-2 space-y-6">
-      {/* Card in alto: avatar digitale (compagno) */}
-      <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl">
-        <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab Avatar"
-          className="w-full h-72 object-cover object-center"
-          onError={(e) => { e.currentTarget.parentElement.style.display = "none"; }} />
-        <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#009246]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CE2B37]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCE00]" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E]/80 via-[#2C221E]/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 p-5">
-          <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-          <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪</p>
-        </div>
-      </div>
+      {/* Card in alto: avatar digitale animato (finto video) */}
+      <HomeAvatarScene de={de} />
 
       {/* Hero compatto */}
       <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white shadow-xl p-7 text-center">

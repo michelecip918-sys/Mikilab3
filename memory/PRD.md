@@ -456,3 +456,6 @@ Griglia riordinata per priorità d'uso quotidiano (Maestro.jsx TOOLS) + rinomini
 3. Audio: rimuovere icona altoparlante dall'header; sostituire i suoni con sottofondo d'ambiente (scoppiettio forno/legna); attivazione solo in "Radio"/Impostazioni.
 4. Tasto "Installa App" (PWA) fuori dalla bottom nav → dentro menu Accedi/Profilo o banner discreto al primo accesso.
 NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
+
+## v32.1 (2026-06) — Home card "finto video" animato
+- Card in alto Home = scena animata (framer-motion, opzione B): avatar cartoon con zoom morbido (ken-burns), icone Smartphone e PC che fluttuano, fumetti di testo a rotazione (IT/DE) che spiegano l'app. Titolo "MikiLab Avatar / Il tuo compagno digitale". `HomeAvatarScene` in Home.jsx (testid `home-founder-photo`, `home-scene-bubble`). Nessun audio (scelta utente). Foto reale resta copertina in Ricette.
