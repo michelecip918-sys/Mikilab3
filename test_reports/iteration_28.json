@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend-only verification of Blocco 1 (dual camera options everywhere) on mobile 430px as admin@mikilab.de (PRO). All 5 requested surfaces PASS: PhotoDiagnosi (photo-dual), ScanRecipe (scan-dual), AdattaForno Foto (adatta-dual), RecipeDialog (recipe-photo-take/attach), CapoLaboratorio (capo-film-start/capo-film-attach). In every case the 'Scatta ora' input carries capture='environment' and the 'Allega' input has NO capture attribute; setting a file on the gallery input drove the expected flow (preview + enabled analyze / scan-loading / AI result). SEPARATE CRITICAL PRE-EXISTING BUG FOUND: with lang='en' (the default in a browser whose locale is en-US, i.e. most first-time visitors) the app crashes with a red runtime overlay — 'Cannot destructure property encyclopedia of content[lang] as it is undefined' — because /app/frontend/src/data/content.js only defines 'it' and 'de'. This made Diagnosi (and News/Impara/Mikilab) completely unusable until localStorage mikilab_lang was forced to 'it'.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "data/content.js + Encyclopedia/NewsPage/Mikilab/Beginners/CoursesPanel/MaestroSaTutto", "issue": "content object has only 'it' and 'de' keys. When lang==='en' (auto-detected from navigator.language in a fresh en-US browser) every `content[lang]` access throws: 'Cannot destructure property encyclopedia of content[lang] as it is undefined' -> full React crash overlay, Diagnosi screen unusable. Add an 'en' block or fall back: `const c = content[lang] || content.it`.", "selector": "nav-tab-diagnosi -> Encyclopedia (PhotoDiagnosi line 199)", "priority": "CRITICAL"},
+      {"component": "PhotoDiagnosi photo-change-btn / AdattaForno adatta-change-photo", "issue": "The 'Cambia foto' overlay button still opens the legacy camera-only input (photo-file-input / adatta-file-input with capture='environment'), i.e. a single camera-only path. The DualPhotoButtons block remains rendered above so the user is not blocked, but per the Blocco 1 directive this change-path should also offer 'Allega' (or the legacy inputs should be removed).", "selector": "[data-testid='photo-change-btn'], [data-testid='adatta-change-photo']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "AdattaForno Foto / Diagnosi (mobile 430px)", "issues": ["Fixed floating 'Radio' (left) and 'Parla' (right) FABs overlap the primary CTA ('Analizza il forno' / 'Analizza') — the button's left and right ends are covered; center is still clickable. Same overlap previously reported for the recipe list (iteration_27).", "Console warnings (non-blocking): repeated 'value prop on input should not be null' and a hydration warning '<span> cannot be a child of <option>' coming from a select in the recipes/App tree."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "CRITICAL: guard/complete content[lang] (add 'en' data or fallback to content.it) — English-locale users get a white/red crash screen on Diagnosi, News, Impara and Mikilab.",
+    "Optional: make 'Cambia foto' respect the dual-option directive (or delete the legacy capture-only inputs photo-file-input / adatta-file-input).",
+    "Optional: fix null-valued controlled inputs and the <span> inside <option> nesting warning; review FAB overlap over primary CTAs."
+  ],
+  "critical_code_review_comments": [
+    "data/content.js is indexed directly by lang in 6+ components with no fallback — a single missing locale key crashes the whole subtree. Centralise it in a `useContentData()` hook returning `content[lang] ?? content.it`.",
+    "DualPhotoButtons is correctly implemented (cam input capture='environment', gallery input without capture, e.target.value reset so re-picking the same file fires onChange) — no issues found."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested", "frontend": "100% of the 5 Blocco 1 items PASS; 1 unrelated critical crash found" },
+  "seed_data_creation": "none (no recipe saved; RecipeDialog only opened and inspected)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! — worked (PRO/admin, all PRO-gated tools reachable)",
+  "context_for_next_testing_agent": "Navigation: intro-close-btn -> login-btn -> auth-email/auth-password/auth-submit. PRO tools are under nav-tab-maestro -> maestro-tool-scan / maestro-tool-adatta / maestro-tool-capo, back via maestro-back-btn. IMPORTANT: headless browsers resolve lang='en' which crashes the app; run `localStorage.setItem('mikilab_lang','it')` then reload before testing. Also note: uploading a file to scan-gallery-input completes the scan and auto-opens the RecipeDialog ('Modifica ricetta') whose overlay blocks all subsequent clicks — close it (Esc) before continuing. Verified attributes: photo/scan/adatta cam-input capture='environment', gallery-input capture=None; recipe-photo-take input capture='environment', recipe-photo-attach input capture=None; capo-film-attach input capture=None and attaching an image produced a real AI result in capo-film-result (~10s).",
+  "rca_of_the_issue": "LanguageContext auto-detects 'en' from navigator.languages and persists it, but data/content.js exports only { it, de }. Components destructure content[lang] without a fallback, so the render throws a TypeError and React unmounts the tree (dev overlay shown). Fix in data access layer, not in the components."
+}

@@ -99,6 +99,8 @@ export const content = {
   },
 };
 
-// Incrementa questo numero ogni volta che aggiungi/aggiorni corsi:
+// Fallback lingua: finché i contenuti EN non sono tradotti, EN usa l'italiano
+// (evita il crash `content[lang]` undefined quando la lingua è 'en').
+if (!content.en) content.en = content.it;
 // serve a far scattare la notifica "nuovi corsi" all'utente.
 export const COURSES_VERSION = 1;

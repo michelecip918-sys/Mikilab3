@@ -3,7 +3,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
 import { useLang } from "@/i18n/LanguageContext";
-import { Camera, X, Loader2 } from "lucide-react";
+import { Camera, X, Loader2, ImagePlus } from "lucide-react";
 import { COUNTRIES, flagEmoji } from "@/lib/countries";
 import { STANDARD_PRICES, standardCosting } from "@/data/prices";
 import { uploadApi } from "@/lib/api";
@@ -396,12 +396,17 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           {/* Foto ricetta (dalla fotocamera) */}
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("field_photo")}</label>
-            <div className="mt-1 flex items-center gap-3">
+            <div className="mt-1 flex items-center gap-2 flex-wrap">
               {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#E8DEC8] dark:border-[#3D302A]" /> : null}
-              <label data-testid="recipe-photo-input" className={`cursor-pointer bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2C221E] dark:text-[#F5EFE6] ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
-                {uploading ? <Loader2 className="w-4 h-4 text-[#B34A26] animate-spin" /> : <Camera className="w-4 h-4 text-[#B34A26]" />}
-                {uploading ? t("photo_uploading") : (form.image_url ? t("photo_change") : t("photo_take"))}
+              <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#B34A26] hover:bg-[#963B1C] text-white rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+                {uploading ? t("photo_uploading") : (lang === "de" ? "Jetzt aufnehmen" : lang === "en" ? "Take photo" : "Scatta ora")}
                 <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
+              </label>
+              <label data-testid="recipe-photo-attach" className={`cursor-pointer bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2C221E] dark:text-[#F5EFE6] ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+                <ImagePlus className="w-4 h-4 text-[#6B8E62]" />
+                {lang === "de" ? "Anhängen" : lang === "en" ? "Attach" : "Allega"}
+                <input type="file" accept="image/*" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
               {form.image_url && !uploading ? <button onClick={() => set("image_url", "")} className="text-[#B4442A] p-1"><X className="w-4 h-4" /></button> : null}
             </div>

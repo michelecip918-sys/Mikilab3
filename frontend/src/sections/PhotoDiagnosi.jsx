@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper, Cog } from "lucide-react";
@@ -7,6 +7,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
 import Encyclopedia from "@/sections/Encyclopedia";
 import { HeroAvatar } from "@/components/MikiAvatar";
+import DualPhotoButtons from "@/components/DualPhotoButtons";
 
 // Downscale + compress an image file to a base64 JPEG (keeps payload small)
 function fileToCompressedBase64(file, maxDim = 1024, quality = 0.8) {
@@ -57,7 +58,6 @@ export default function PhotoDiagnosi() {
   const [result, setResult] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
   const [praised, setPraised] = useState(false);
-  const fileRef = useRef(null);
   const { t, lang } = useLang();
 
   const MODES = [
@@ -68,8 +68,7 @@ export default function PhotoDiagnosi() {
     { id: "macchine", label: t("photo_mode_machines"), desc: t("photo_mode_machines_desc"), Icon: Cog },
   ];
 
-  const onPick = async (e) => {
-    const file = e.target.files?.[0];
+  const onPick = async (file) => {
     if (!file) return;
     try {
       const b64 = file.type.startsWith("video") ? await videoToFrameBase64(file) : await fileToCompressedBase64(file);
@@ -154,28 +153,14 @@ export default function PhotoDiagnosi() {
 
       <p className="text-xs text-[#8C7567] mb-4">{t("photo_video_hint")}</p>
 
-      <input ref={fileRef} data-testid="photo-file-input" type="file" accept="image/*,video/*" capture="environment" onChange={onPick} className="hidden" />
+      <div className="mb-4">
+        <DualPhotoButtons onFile={onPick} allowVideo testid="photo" />
+      </div>
 
-      {preview ? (
-        <div className="rounded-3xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4 relative">
+      {preview && (
+        <div className="rounded-3xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4">
           <img src={preview} alt="anteprima" className="w-full max-h-80 object-cover" />
-          <button
-            data-testid="photo-change-btn"
-            onClick={() => fileRef.current?.click()}
-            className="absolute top-3 right-3 bg-black/50 text-white text-sm px-3 py-1.5 rounded-full flex items-center gap-1.5"
-          >
-            <RefreshCw className="w-3.5 h-3.5" /> {t("photo_change")}
-          </button>
         </div>
-      ) : (
-        <button
-          data-testid="photo-upload-btn"
-          onClick={() => fileRef.current?.click()}
-          className="w-full mb-4 border-2 border-dashed border-[#E8DEC8] dark:border-[#3D302A] rounded-3xl py-12 flex flex-col items-center gap-2 text-[#8C7567]"
-        >
-          <Upload className="w-8 h-8 text-[#D99B26]" />
-          <span className="font-medium">{t("photo_upload")}</span>
-        </button>
       )}
 
       <button

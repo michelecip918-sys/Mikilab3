@@ -4,6 +4,7 @@ import { Camera, Loader2, ScanLine } from "lucide-react";
 import { API, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipeDialog from "@/components/RecipeDialog";
+import DualPhotoButtons from "@/components/DualPhotoButtons";
 
 export default function ScanRecipe() {
   const { t, lang } = useLang();
@@ -11,8 +12,7 @@ export default function ScanRecipe() {
   const [scanned, setScanned] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const onPhoto = (e) => {
-    const file = e.target.files && e.target.files[0];
+  const onPhoto = (file) => {
     if (!file) return;
     setLoading(true);
     const reader = new FileReader();
@@ -71,12 +71,13 @@ export default function ScanRecipe() {
 
       <div className="rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-6 text-center">
         <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mb-4">{t("scan_hint")}</p>
-        <label data-testid="scan-photo-input"
-          className={`cursor-pointer inline-flex items-center gap-2 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all ${loading ? "opacity-60 pointer-events-none" : ""}`}>
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />}
-          {loading ? t("scan_reading") : t("scan_take")}
-          <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={loading} />
-        </label>
+        {loading ? (
+          <div data-testid="scan-loading" className="inline-flex items-center gap-2 bg-[#B34A26] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
+            <Loader2 className="w-5 h-5 animate-spin" /> {t("scan_reading")}
+          </div>
+        ) : (
+          <DualPhotoButtons onFile={onPhoto} testid="scan" />
+        )}
       </div>
 
       <RecipeDialog open={dialogOpen} onOpenChange={setDialogOpen} initial={scanned} onSave={handleSave} />

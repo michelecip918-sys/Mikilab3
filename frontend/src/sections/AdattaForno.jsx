@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { Flame, Camera, Upload, RefreshCw, ArrowRight } from "lucide-react";
 import { API, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import DualPhotoButtons from "@/components/DualPhotoButtons";
 
 const OVENS = ["statico", "ventilato", "rotor"];
 
@@ -164,10 +165,8 @@ export default function AdattaForno() {
     const [preview, setPreview] = useState(null);
     const [result, setResult] = useState("");
     const [analyzing, setAnalyzing] = useState(false);
-    const fileRef = useRef(null);
 
-    const onPick = async (e) => {
-      const file = e.target.files?.[0];
+    const onPick = async (file) => {
       if (!file) return;
       try { setPreview(await fileToCompressedBase64(file)); setResult(""); }
       catch { toast.error(t("toast_img_error")); }
@@ -204,21 +203,11 @@ export default function AdattaForno() {
     return (
       <div>
         <p className="text-sm text-[#8C7567] mb-3 leading-relaxed">{t("adatta_photo_hint")}</p>
-        <input ref={fileRef} data-testid="adatta-file-input" type="file" accept="image/*" capture="environment" onChange={onPick} className="hidden" />
-        {preview ? (
-          <div className="rounded-3xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4 relative">
+        <div className="mb-4"><DualPhotoButtons onFile={onPick} testid="adatta" /></div>
+        {preview && (
+          <div className="rounded-3xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4">
             <img src={preview} alt="forno" className="w-full max-h-80 object-cover" />
-            <button data-testid="adatta-change-photo" onClick={() => fileRef.current?.click()}
-              className="absolute top-3 right-3 bg-black/50 text-white text-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
-              <RefreshCw className="w-3.5 h-3.5" /> {t("adatta_change_photo")}
-            </button>
           </div>
-        ) : (
-          <button data-testid="adatta-upload-btn" onClick={() => fileRef.current?.click()}
-            className="w-full mb-4 border-2 border-dashed border-[#E8DEC8] dark:border-[#3D302A] rounded-3xl py-12 flex flex-col items-center gap-2 text-[#8C7567]">
-            <Camera className="w-8 h-8 text-[#D99B26]" />
-            <span className="font-medium">{t("adatta_take_photo")}</span>
-          </button>
         )}
         <button data-testid="adatta-analyze-btn" onClick={analyze} disabled={!preview || analyzing}
           className="w-full bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">

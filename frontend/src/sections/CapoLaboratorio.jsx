@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Cog, Snowflake, Wind, Thermometer, Video, Camera, Sparkles, Printer, CalendarDays } from "lucide-react";
+import { ChefHat, Plus, X, Cog, Snowflake, Wind, Thermometer, Video, Camera, Sparkles, Printer, CalendarDays, ImagePlus } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
@@ -396,7 +396,30 @@ function LabCamera() {
     if (w > h && w > max) { h = Math.round(h * max / w); w = max; } else if (h > max) { w = Math.round(w * max / h); h = max; }
     const c = document.createElement("canvas"); c.width = w; c.height = h;
     c.getContext("2d").drawImage(v, 0, 0, w, h);
-    const b64 = c.toDataURL("image/jpeg", 0.8);
+    analyzeB64(c.toDataURL("image/jpeg", 0.8));
+  };
+
+  const onAttach = (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 1024; let w = img.width, h = img.height;
+        if (w > h && w > max) { h = Math.round(h * max / w); w = max; } else if (h > max) { w = Math.round(w * max / h); h = max; }
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        c.getContext("2d").drawImage(img, 0, 0, w, h);
+        stop();
+        analyzeB64(c.toDataURL("image/jpeg", 0.8));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const analyzeB64 = async (b64) => {
     setAnalyzing(true); setResult("");
     try {
       const res = await fetch(`${API}/maestro/vision`, {
@@ -428,9 +451,15 @@ function LabCamera() {
       <p className="text-sm text-[#8C7567] mb-3">{t("capo_film_hint")}</p>
 
       {!open ? (
-        <button data-testid="capo-film-start" onClick={start} className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-3 text-sm font-medium flex items-center justify-center gap-2 text-[#2C221E] dark:text-[#F5EFE6]">
-          <Camera className="w-4 h-4 text-[#B34A26]" /> {t("capo_film_start")}
-        </button>
+        <div className="grid grid-cols-2 gap-2">
+          <button data-testid="capo-film-start" onClick={start} className="bg-[#B34A26] hover:bg-[#963B1C] text-white rounded-xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2">
+            <Camera className="w-4 h-4" /> {lang === "de" ? "Jetzt filmen" : lang === "en" ? "Film now" : "Filma ora"}
+          </button>
+          <label data-testid="capo-film-attach" className="cursor-pointer bg-white dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 text-[#2C221E] dark:text-[#F5EFE6]">
+            <ImagePlus className="w-4 h-4 text-[#6B8E62]" /> {lang === "de" ? "Anhängen" : lang === "en" ? "Attach" : "Allega"}
+            <input type="file" accept="image/*" className="hidden" onChange={onAttach} />
+          </label>
+        </div>
       ) : (
         <div>
           <div className="rounded-2xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] bg-black">
