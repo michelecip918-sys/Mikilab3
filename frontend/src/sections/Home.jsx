@@ -8,22 +8,24 @@ import ShareInstall from "@/components/ShareInstall";
 
 const CONCEPTS = {
   it: [
-    { id: "cosa", title: "Cosa fa Mikilab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
-      body: "Mikilab è il tuo laboratorio digitale e il tuo assistente personale: ricette spiegate passo dopo passo, pianificazione della produzione, diagnosi di pane e impasti da una semplice foto, riconoscimento di macchine e guasti, e un assistente AI pronto a rispondere a ogni domanda. Tutto in italiano e in tedesco." },
+    { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
+      body: "MikiLab è il mio laboratorio creativo e scientifico digitale dedicato all'arte bianca. Nasce per fondere la passione artigianale con lo studio metodico delle farine e dei processi fermentativi. Qui la panificazione non è una semplice sequenza di gesti, ma una costante ricerca dell'eccellenza, dove ogni ingrediente è calibrato al milligrammo per ottenere strutture perfette, digeribilità estrema e sapori autentici. È il luogo in cui la tradizione dell'arte panificatoria incontra l'innovazione e la precisione." },
     { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
       body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato Mikilab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
     { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
-      body: "Il mio metodo rende la gestione dell'app identica a quella di un laboratorio reale: ricette collaudate, pianificazione del piano giornaliero e settimanale, e gestione efficiente delle scorte per lavorare con costanza e serenità." },
+      body: "Il mio metodo unisce la grande tradizione italiana alla precisione tecnica tedesca. Lavoro quotidianamente sia con metodi diretti sia con metodi indiretti, anche se prediligo nettamente questi ultimi: prefermenti come lievito madre, poolish, biga e precotture come il kochstück sono la vera anima delle mie ricette. Prediligere l'indiretto significa dare tempo al tempo, permettendo agli enzimi di trasformare la materia prima per ottenere una complessità aromatica unica, una crosta fragrante e un'alveolatura sviluppata. Tuttavia, amo ogni sfumatura della panificazione: la farina giusta al momento giusto e il rispetto rigoroso dei tempi sono la chiave per dominare ogni tipo di impasto." },
     { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
-      body: "Lavora in totale serenità e zero stress: con Mikilab è praticamente come avere me al tuo fianco in forno a guidarti passaggio dopo passaggio… con il vantaggio che io non ti urlo dietro se sbagli un rinfresco! 😄" },
+      body: "Lavorare in serenità significa trasformare il laboratorio in un ambiente organizzato, efficiente e privo di stress. Con una pianificazione accurata dei tempi di fermentazione, l'uso di standard precisi e la scelta di tecniche affidabili, ogni imprevisto viene eliminato. Le piccole intuizioni pratiche, unite all'esperienza sul campo, semplificano le operazioni quotidiane rendendo il lavoro costante, sicuro e piacevole. Panificare con serenità è il segreto per esprimere la massima qualità senza mai perdere la passione per questo mestiere." },
   ],
   de: [
-    { id: "cosa", title: "Was Mikilab macht", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
-      body: "Mikilab ist deine digitale Backstube und dein persönlicher Assistent: Schritt-für-Schritt-Rezepte, Produktionsplanung, Diagnose von Brot und Teigen per Foto, Erkennung von Maschinen und Störungen und ein KI-Assistent, der jede Frage beantwortet. Alles auf Italienisch und Deutsch." },
+    { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
+      body: "MikiLab ist mein kreatives und wissenschaftliches digitales Labor für die Backkunst. Es verbindet handwerkliche Leidenschaft mit dem methodischen Studium von Mehlen und Fermentationsprozessen. Hier ist Backen keine bloße Abfolge von Handgriffen, sondern eine ständige Suche nach Exzellenz, bei der jede Zutat auf das Milligramm genau kalibriert wird – für perfekte Strukturen, höchste Bekömmlichkeit und authentische Aromen. Hier trifft die Tradition der Backkunst auf Innovation und Präzision." },
     { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
       body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. Mikilab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
     { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
-      body: "Meine Methode macht die Nutzung der App identisch mit einer echten Backstube: erprobte Rezepte, Planung des Tages- und Wochenplans und effiziente Bestandsverwaltung, um konstant und entspannt zu arbeiten." },
+      body: "Meine Methode verbindet die große italienische Tradition mit deutscher technischer Präzision. Ich arbeite täglich sowohl mit direkten als auch mit indirekten Methoden, bevorzuge aber klar Letztere: Vorteige wie Lievito Madre, Poolish, Biga und Kochstücke sind die wahre Seele meiner Rezepte. Indirekt zu arbeiten heißt, der Zeit Zeit zu geben, damit die Enzyme den Rohstoff verwandeln – für einzigartige Aromatik, knusprige Kruste und offene Porung. Dennoch liebe ich jede Nuance des Backens: das richtige Mehl zum richtigen Zeitpunkt und die strikte Einhaltung der Zeiten sind der Schlüssel, um jeden Teig zu beherrschen." },
+    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
+      body: "Entspannt zu arbeiten bedeutet, die Backstube in eine organisierte, effiziente und stressfreie Umgebung zu verwandeln. Mit sorgfältiger Planung der Gärzeiten, präzisen Standards und zuverlässigen Techniken werden Überraschungen ausgeschlossen. Kleine praktische Einsichten, verbunden mit Erfahrung, vereinfachen den Alltag und machen die Arbeit gleichmäßig, sicher und angenehm. Mit Gelassenheit zu backen ist das Geheimnis für höchste Qualität, ohne je die Leidenschaft für dieses Handwerk zu verlieren." },
     { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
       body: "Arbeite völlig entspannt und ohne Stress: Mit Mikilab ist es fast so, als stünde ich neben dir am Ofen und führe dich Schritt für Schritt … mit dem Vorteil, dass ich dich nicht anschreie, wenn du eine Auffrischung verpatzt! 😄" },
   ],
@@ -31,7 +33,7 @@ const CONCEPTS = {
 
 const CONCEPT_PHOTOS = {
   cosa: `${process.env.PUBLIC_URL}/bio-dough.jpg`,
-  chi: `${process.env.PUBLIC_URL}/bio-photo.jpg`,
+  chi: `${process.env.PUBLIC_URL}/michele-avatar.jpg`,
   metodo: `${process.env.PUBLIC_URL}/bio-dough-2.jpg`,
   serenita: `${process.env.PUBLIC_URL}/bio-dough-3.jpg`,
 };
@@ -109,6 +111,18 @@ export default function Home({ onNavigate }) {
           className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg mx-auto mb-4" />
         <h1 className="font-display text-3xl font-bold">Mikilab</h1>
         <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
+      </div>
+
+      {/* Blocco promozionale in evidenza */}
+      <div data-testid="home-promo" className="rounded-3xl bg-[#FFF7E8] dark:bg-[#241D19] border border-[#D99B26]/40 shadow-md p-5 flex items-start gap-4">
+        <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="Michele" loading="lazy"
+          className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#D99B26]/50 shrink-0"
+          onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <p className="text-sm text-[#4A3B34] dark:text-[#E9DCCB] leading-relaxed">
+          {de
+            ? "Eine Website, die die Arbeit genau so organisiert, wie du es tun würdest. Von der detaillierten Rezeptverwaltung über die Einkaufsliste bis zur präzisen Produktionsplanung in der Backstube. Und mit Hilfe der KI kannst du jede Phase ohne Fehler berechnen, anpassen und steuern: Du kümmerst dich um die Backstube, um den Rest kümmern wir uns."
+            : "Un sito pensato per organizzare il lavoro proprio come lo faresti tu. Dalla gestione dettagliata delle ricette alla lista della spesa, fino alla pianificazione precisa della produzione in laboratorio. In più, con l'aiuto dell'AI potrai calcolare, adattare e gestire ogni fase senza margine di errore: tu pensi al laboratorio, al resto ci pensiamo noi."}
+        </p>
       </div>
 
       {/* 4 concetti (in alto) */}

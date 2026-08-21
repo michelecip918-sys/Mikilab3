@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 const ENTRIES = {
   it: [
     { t: "Miglioratore Naturale Pro", b: "Per tutti gli impasti (metodo Diretto e Indiretto) si utilizza unicamente il Miglioratore Naturale Pro al 2% sul peso della farina. Un'unica formula universale per garantire spinta, tenuta e morbidezza." },
-    { t: "Lievito Madre", b: "Pasta madre solida (idratazione 45-50%), mantenuta viva con rinfreschi regolari (1:1:0,5). Dona profumo, alveolatura e lunga conservazione. Nei pani 15-20% sul peso farina, nei grandi lievitati 25-30%." },
+    { t: "Lievito Madre / Licoli (Liko)", b: "Pasta madre solida (idr. 45-50%) o Licoli in coltura liquida (idr. 100%, più reattivo). Mantenuta viva con rinfreschi regolari. Nei pani 15-20% sul peso farina, con Licoli fino al 25-35%; nei grandi lievitati 25-30%." },
     { t: "Lievito Madre di Segale", b: "Sauerteig di segale, più acido e attivo (idratazione 100%, liquido). Fermenta 12-16 h a 26-28°C. Perfetto per pani di segale e misti (20-30% sulla farina)." },
     { t: "Poolish", b: "Prefermento liquido (stesso peso di acqua e farina + poco lievito). Matura 12-16 h a 18°C. Regala alveolatura aperta, estensibilità e aroma. Usa 30-40% sul totale farina." },
     { t: "Kochstück (con Haferflocken)", b: "Fiocchi d'avena (Haferflocken) cotti con acqua e sale (1:4) fino a crema densa, poi raffreddati. Trattengono acqua: pane più morbido e a lunga durata. Aggiungi 10-20% sul peso farina riducendo un po' l'acqua." },
@@ -17,7 +17,7 @@ const ENTRIES = {
   ],
   de: [
     { t: "Natürlicher Pro-Backmittel", b: "Für alle Teige (Direkt und Indirekt) wird ausschließlich der Natürliche Pro-Backmittel mit 2% auf das Mehlgewicht verwendet. Eine einzige universelle Formel für Trieb, Stand und Weichheit." },
-    { t: "Lievito Madre", b: "Fester Sauerteig (Hydration 45-50%), durch regelmäßige Auffrischungen lebendig gehalten (1:1:0,5). Bringt Aroma, Porung und lange Frische. Brote 15-20% auf das Mehl, große Hefegebäcke 25-30%." },
+    { t: "Lievito Madre / Licoli (Liko)", b: "Fester Sauerteig (Hydr. 45-50%) oder Licoli als Flüssigsauer (Hydr. 100%, reaktiver). Durch regelmäßige Auffrischungen lebendig gehalten. Brote 15-20% auf das Mehl, mit Licoli bis 25-35%; große Hefegebäcke 25-30%." },
     { t: "Roggen-Sauerteig", b: "Roggensauerteig, säuerlicher und aktiver (Hydration 100%, flüssig). Reift 12-16 h bei 26-28°C. Perfekt für Roggen- und Mischbrote (20-30% auf das Mehl)." },
     { t: "Poolish", b: "Flüssiger Vorteig (gleiche Menge Wasser und Mehl + wenig Hefe). Reift 12-16 h bei 18°C. Bringt offene Porung, Dehnbarkeit und Aroma. 30-40% auf das Gesamtmehl." },
     { t: "Kochstück (mit Haferflocken)", b: "Haferflocken mit Wasser und Salz (1:4) zu einer dicken Creme gekocht, dann abgekühlt. Binden Wasser: weicheres, länger frisches Brot. 10-20% auf das Mehl, Wasser etwas reduzieren." },

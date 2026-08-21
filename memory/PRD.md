@@ -430,3 +430,10 @@ Griglia riordinata per priorità d'uso quotidiano (Maestro.jsx TOOLS) + rinomini
 - **Guida Metodi** (Enciclopedia): 5 basi in cima nell'ordine corretto + testo "Miglioratore Naturale Pro al 2% per Diretto e Indiretto".
 - **Home "Il Tuo Laboratorio"**: rimossa parola "Panettone" dalle didascalie (→ impasti/produzione). Card Ricette: 38→43.
 - Panini e Snack = Taralli, Friselle, Puccia, Focaccia. Test iter24: 14/14 pytest verdi; frontend ordine categorie OK (IT+DE). SEED_VERSION v30.
+
+## v31 (2026-06) — Testi Home, promo, avatar 3D, Licoli
+- Testi esatti Home (CONCEPTS): "Cos'è MikiLab", "Il Mio Metodo" (preferenza indiretto), "Lavorare in Serenità" — IT+DE. Blocchi restano espandibili (scelta: meglio per chi lavora).
+- Nuovo blocco promozionale Home (`home-promo`) con testo esatto (IT+DE) + avatar.
+- Avatar 3D cartone generato dalla foto reale di Michele (coppola, maglia logo ML) → /public/michele-avatar.jpg; usato in promo e card "Chi sono".
+- Ricetta base rinominata "Lievito Madre / Licoli (Liko)" con gestione a % aumentata (25-35%); aggiornata anche in Guida Metodi (Enciclopedia). SEED_VERSION v31.
+- RESTA (media directive): estendere foto/avatar a TUTTE le sezioni (Laboratorio, Diagnosi, News/Enciclopedia, Guida Metodi, schede ricetta); swap logo forno → "ML" sulla foto del forno (da confermare quale asset è quella del forno). Asset caricati: item2=volto(coppola), item5/3/9=da verificare.

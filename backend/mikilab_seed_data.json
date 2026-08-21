@@ -34,7 +34,7 @@
     "procedure_de": "1) Zutaten abwiegen und trocken gut vermischen.\n2) In einem geschlossenen Glas kühl und trocken lagern.\n3) VERWENDUNG: 2% der Mischung direkt zu Beginn des Knetens zum Mehl geben."
   },
   {
-    "name": "Lievito Madre",
+    "name": "Lievito Madre / Licoli (Liko)",
     "name_de": "Lievito Madre (Sauerteig)",
     "real_name": "Pasta madre solida",
     "real_name_de": "Fester Sauerteig",
@@ -44,8 +44,8 @@
     "method_type": "lm",
     "menu_category": "basi",
     "image_url": "/recipes/r_cuore.jpg",
-    "notes": "Base viva del laboratorio. Idratazione 45-50%. Da conservare a 4°C tra un rinfresco e l'altro.",
-    "notes_de": "Lebende Basis der Backstube. Hydration 45-50%. Zwischen den Auffrischungen bei 4°C lagern.",
+    "notes": "Base viva del laboratorio. Idratazione 45-50%. Da conservare a 4°C tra un rinfresco e l'altro. In alternativa puoi gestirlo come Licoli (lievito madre in coltura liquida, idratazione 100%): più pratico e reattivo, con percentuale d'uso aumentata (fino al 25-35% sul peso della farina).",
+    "notes_de": "Lebende Basis der Backstube. Hydration 45-50%. Zwischen den Auffrischungen bei 4°C lagern. Alternativ als Licoli führbar (flüssiger Sauerteig, 100% Hydration): praktischer und reaktiver, mit erhöhtem Einsatz (bis 25-35% auf das Mehl).",
     "procedure": "RINFRESCO (rapporto 1:1:0,5)\n1) 100 g lievito madre + 100 g farina forte + 45-50 g acqua a 24°C.\n2) Impasta 4-5', forma un cilindro, incidi a croce.\n3) Lievitazione 3-4 h a 26-28°C fino al raddoppio.\n4) Pronto all'uso; l'eccedenza torna in frigo a 4°C.\nESEMPI D'USO: pani 15-20% sul peso farina; grandi lievitati 25-30%.",
     "procedure_de": "AUFFRISCHUNG (Verhältnis 1:1:0,5)\n1) 100 g Sauerteig + 100 g starkes Mehl + 45-50 g Wasser bei 24°C.\n2) 4-5' kneten, zu einer Rolle formen, kreuzweise einschneiden.\n3) 3-4 h bei 26-28°C bis zur Verdopplung.\n4) Einsatzbereit; Rest zurück in den Kühlschrank bei 4°C.\nANWENDUNG: Brote 15-20% auf das Mehl; große Hefegebäcke 25-30%."
   },
