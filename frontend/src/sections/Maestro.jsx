@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
-  ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake,
+  ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -17,6 +17,8 @@ import ShoppingList from "@/sections/ShoppingList";
 import ShiftRoles from "@/sections/ShiftRoles";
 import Checklists from "@/sections/Checklists";
 import FreezerStock from "@/sections/FreezerStock";
+import WaterTempCalc from "@/sections/WaterTempCalc";
+import SourdoughTracker from "@/sections/SourdoughTracker";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 
@@ -36,6 +38,8 @@ export default function Maestro() {
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
     { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
     { id: "termo", title: t("tool_termo"), desc: t("tool_termo_desc"), Icon: Thermometer },
+    { id: "acqua", title: lang === "de" ? "Wasser-Temperatur" : lang === "en" ? "Water temperature" : "Temperatura Acqua", desc: "", Icon: Droplets },
+    { id: "ph", title: lang === "de" ? "pH-Tracker" : lang === "en" ? "pH Tracker" : "Tracker pH Lievito", desc: "", Icon: FlaskConical },
     { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
   ];
 
@@ -64,6 +68,8 @@ export default function Maestro() {
         {tool === "lavoro" && <StartDoughs />}
         {tool === "adatta" && <AdattaForno />}
         {tool === "termo" && <ClimaTermostato />}
+        {tool === "acqua" && <WaterTempCalc />}
+        {tool === "ph" && <SourdoughTracker />}
         {tool === "freezer" && <FreezerStock />}
         {tool === "spesa" && <ShoppingList />}
         {tool === "turni" && <ShiftRoles />}

@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend-only testing of the two new PRO lab tools (Dough Water Temperature calculator, Sourdough & pH Tracker) plus the EN-locale crash regression. Logged in as admin@mikilab.de (PRO) at 430px mobile viewport. All 3 requested feature areas PASS: water-temp formula correct with no focus loss on multi-digit typing, pH tracker ideal-window detection/log/clear/persistence/BT+notification buttons work, and Diagnosi + both tools render in IT/EN/DE with zero JS pageerrors and no error overlay.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Maestro nav", "issue": "Re-tapping the already-active bottom nav tab 'Il Tuo Laboratorio' while inside a sub-tool does NOT reset to the tools grid (stays inside the open tool). User must use the header back link. Minor UX inconsistency.", "selector": "[data-testid=\"nav-tab-maestro\"]", "priority": "LOW"},
+      {"component": "SourdoughTracker", "issue": "Entered pH 5.0 is stored/displayed as 'pH 5' (Number() drops trailing zero); readings like 4.10 also lose formatting. Cosmetic — consider toFixed(2)/toFixed(1) for display.", "selector": "[data-testid=\"ph-status\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Lab tools (all)", "issues": ["Floating Radio/Talk FABs sit above page content near the bottom and visually overlap the reading-history / hero background area; they did not block any tested control but crowd the layout on 430px."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: make tapping the active Lab nav tab return to the tools grid (setTool(null)).",
+    "Optional: format pH display to fixed decimals so 5.0 doesn't render as 5."
+  ],
+  "critical_code_review_comments": [
+    "WaterTempCalc: Field is now at module scope — verified no remount/focus-loss regression (typed '26' and '125' with 150ms delay, focus retained).",
+    "SourdoughTracker: add() rejects 0 values via falsy check (!p || !t), so a legitimate temperature of 0°C or pH 0 would be rejected — acceptable for this domain but technically a validation smell.",
+    "SourdoughTracker persists to localStorage 'mikilab_sourdough_log' correctly; log capped at 50 entries."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% of requested flows passed (2 low-severity cosmetic/UX findings)"},
+  "seed_data_creation": "Transient pH readings in localStorage only; cleared via ph-clear-btn during test.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (PRO/admin) — worked",
+  "context_for_next_testing_agent": "Language switcher buttons are data-testid lang-it/lang-de/lang-en (visible text is CSS-uppercased lowercase, so get_by_text('IT', exact=True) fails). Bottom nav tab ids: home, ricette, maestro, impara, diagnosi. Inside a Maestro sub-tool you must click the header back label (Strumenti/Werkzeuge/Tools) to return to the grid — nav-tab-maestro does not reset it. Verified values: wtc defaults -> 27C, dough=26 -> 33C, ambient=125 -> -70C with tooCold message. pH 4.2/29 -> PRONTO/READY/BEREIT + success toast + speech; pH 5/24 -> keep monitoring.",
+  "rca_of_the_issue": "No defects reproduced for the reported regressions: EN locale content[lang] crash is gone (no pageerror in it/en/de on Diagnosi and both tools, including a full reload in EN), and the Field-component remount focus loss is fixed (document.activeElement stayed on wtc-dough/wtc-ambient after multi-digit typing)."
+}
