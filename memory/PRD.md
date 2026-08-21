@@ -495,3 +495,8 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 ## v38 (2026-06) — 4 suoni ambient + 6 nuovi gusti panettone
 - **Suoni ambient (Radio)**: `ambientMusic.js` ora sintetizza 4 modalità — fire (scoppiettio forno), rain (pioggia), mixer (impastatrice, ronzio ritmico), morning (mattino, chirp). `setMode()` in ambient + AmbientContext (mode/setMode). Selettore 4 pulsanti in RadioFornaio (`ambient-mode-<id>`) + slider volume. Verificato.
 - **6 nuovi gusti Panettone** (17 totali, 49 ricette): Limoncello, Albicocca e Cioccolato, Zafferano, Mela e Cannella, Tiramisù, Cocco e Cioccolato. Clonati dalla base Classico (446 farina, 179 acqua, 140 LM, metodo indiretto 2 impasti) con sospensioni per gusto in extra_ingredients e zucchero bilanciato (34% per gusti dolci, 41% zafferano). Naming "Panettone Artigianale MikiLab — [Gusto]". Glassa automatica dal modulo frontend. SEED_VERSION v38. Verificato render (struttura pH + tabella 1°/2°/Totale + glassa + sospensioni + Converti in Farro). NOTA: procedure_de dei nuovi gusti = fallback testo IT (notes_de tradotte).
+
+## v39 (2026-06) — Foto dedicate + prezzi B2B nuovi gusti
+- **Foto per gusto**: generate 6 immagini dedicate (Gemini) e salvate in /public/recipes/ (pan_limoncello, pan_albicocca, pan_zafferano, pan_mela_cannella, pan_tiramisu, pan_cocco). image_url aggiornato per ogni gusto. Verificato: tutte servono 200, 0 immagini rotte in lista.
+- **Prezzi B2B per gusto** (costing b2b_500g / b2b_100g): Limoncello 8,0/2,5 · Albicocca 7,5/2,5 · Zafferano 9,5/3,0 · Mela e Cannella 7,5/2,5 · Tiramisù 8,5/2,8 · Cocco 7,5/2,5. Il listino stampabile (Etichette→Listino) legge questi valori.
+- SEED_VERSION v39, reseed OK (49 ricette).
