@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
-export default function Shop() {
+export default function Shop({ hideCourses = false }) {
   const { lang, tri } = useLang();
   const de = lang === "de";
   const [data, setData] = useState({ enabled: false, products: [] });

@@ -28,7 +28,7 @@ export default function IntroGuide() {
         <DialogTitle className="sr-only">{c.title}</DialogTitle>
         <DialogDescription className="sr-only">{c.desc}</DialogDescription>
         <div className="bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-6 text-center">
-          <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab Avatar"
+          <img src={`${process.env.PUBLIC_URL}/michele-real.webp`} alt="MikiLab Avatar"
             className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-3"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <p className="text-sm text-white/90 mb-1">{c.greet}</p>

@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only test (mobile 430px, admin@mikilab.de) of the new batch: Academy page + Stripe course purchase + 1-to-1 consultation booking, WhatsApp FAB visibility rule, and EU nutrition table / bold-uppercase allergens on panettone labels. All 5 requested features PASSED. Stripe checkout redirects verified (no payment completed).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Panettone Labels (mobile 430px) and Academy", "issues": ["The three floating action buttons (Radio, WhatsApp FAB, 'Parla') are vertically centered-low and overlap label/card content (e.g. the WhatsApp FAB covers part of the 'ALLERGENI' line and the 3rd course card title), reducing readability on mobile. Consider moving FABs lower/right or adding side padding."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": ["Optional: reposition floating FABs so they don't overlap label/allergen text and course card titles on mobile."],
+  "critical_code_review_comments": [
+    "Academy.buy() logged-out path (requireLogin -> auth modal) is effectively unreachable in the UI because login is mandatory at app start; could not be exercised. Backend still enforces auth on /api/academy/checkout (Depends(current_user)), so this is safe.",
+    "Academy consultation date input uses a native <input type=\"date\"> (browser default picker) rather than the shadcn calendar component used elsewhere — minor consistency note."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (5/5 features)"},
+  "seed_data_creation": "Two Stripe test-mode Checkout Sessions were created (1 consult booking 'TEST QA' 2026-08-15, 1 course corso-panettone); neither payment was completed, so academy_orders holds 2 unpaid records for admin@mikilab.de.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked)",
+  "context_for_next_testing_agent": "Verified: (1) Home shortcut home-section-shop opens shop tab rendering academy-page with 3 courses (lievito-madre 49, panettone 79, brezel 39) each with academy-buy-<id>; (2) academy-buy-corso-panettone -> POST /api/academy/checkout -> redirect to https://checkout.stripe.com/c/pay/cs_test_...; (3) consult empty submit shows toast 'Inserisci nome e data preferita.' and issues no checkout call; filled name+date -> checkout call -> stripe redirect; (4) whatsapp-fab absent on home tab, present on ricette and shop tabs with href https://wa.me/491601253378?text=...; (5) Labels reachable via nav-tab-ricette -> ricette-labels-btn: 17 labels each with label-nutrition-<id> table containing Energia/Grassi/di cui acidi grassi saturi/Carboidrati/di cui zuccheri/Proteine/Sale per 100 g, allergen names rendered with computed textTransform=uppercase and fontWeight=700 (4 spans).",
+  "rca_of_the_issue": "n/a - no functional defects found"
+}

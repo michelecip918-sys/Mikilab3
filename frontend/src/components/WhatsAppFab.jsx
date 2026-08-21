@@ -19,7 +19,7 @@ export default function WhatsAppFab() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"
-      className="fixed z-40 left-1/2 -translate-x-1/2 bottom-28 flex flex-col items-center gap-1"
+      className="fixed z-40 right-4 bottom-44 flex flex-col items-center gap-1"
       style={{ marginBottom: "env(safe-area-inset-bottom)" }}
     >
       <span className="w-12 h-12 rounded-full bg-[#25D366] shadow-lg flex items-center justify-center active:scale-95 transition-transform">

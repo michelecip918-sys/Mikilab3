@@ -10,6 +10,7 @@ import Maestro from "@/sections/Maestro";
 import LearnHub from "@/sections/LearnHub";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import Shop from "@/sections/Shop";
+import Academy from "@/sections/Academy";
 import PaywallGate from "@/components/PaywallGate";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
@@ -23,7 +24,7 @@ import { AmbientProvider } from "@/audio/AmbientContext";
 import ambient from "@/lib/ambientMusic";
 
 function App() {
-  const [tab, setTab] = useState("home");
+  const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
   const tabRef = useRef("home");
   const { user, authOpen, setAuthOpen } = useAuth();
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
@@ -76,14 +77,14 @@ function App() {
             {tab === "maestro" && <PaywallGate feature="lab" sectionName="Il Tuo Laboratorio"><Maestro /></PaywallGate>}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} />}
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName="Diagnosi"><PhotoDiagnosi /></PaywallGate>}
-            {tab === "shop" && <Shop />}
+            {tab === "shop" && <><Academy /><Shop hideCourses /></>}
           </motion.div>
         </AnimatePresence>
       </main>
       <BottomNav active={tab} onChange={navigate} />
       <VoiceAssistant onNavigate={navigate} />
       <RadioFornaio />
-      <WhatsAppFab />
+      {tab !== "home" && tab !== "maestro" && <WhatsAppFab />}
       {!resetToken && <IntroGuide />}
 
       <AnimatePresence>

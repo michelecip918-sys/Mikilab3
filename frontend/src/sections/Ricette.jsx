@@ -20,7 +20,7 @@ export default function Ricette() {
       </div>
       <RecipeList
         collectionName="mikilab"
-        heroImage={`${process.env.PUBLIC_URL}/michele-photo.jpg`}
+        heroImage={`${process.env.PUBLIC_URL}/michele-real.webp`}
         heroTitle={t("brand_subtitle")}
         heroSubtitle={t("mikilab_subtitle")}
         emptyText={t("mikilab_empty")}

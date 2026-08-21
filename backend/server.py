@@ -1668,11 +1668,15 @@ async def stripe_webhook(request: Request):
     t = event["type"]
     obj = event["data"]["object"]
     if t == "checkout.session.completed":
-        email = (obj.get("metadata") or {}).get("email") or obj.get("customer_email")
-        await db.payment_transactions.update_one({"session_id": obj.get("id")},
-            {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
-        if email:
-            await _grant_from_email(email, "stripe")
+        meta = obj.get("metadata") or {}
+        email = meta.get("email") or obj.get("customer_email")
+        if meta.get("academy_kind"):
+            await _academy_fulfill(obj)
+        else:
+            await db.payment_transactions.update_one({"session_id": obj.get("id")},
+                {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
+            if email:
+                await _grant_from_email(email, "stripe")
     elif t == "customer.subscription.deleted":
         cust = obj.get("customer")
         try:
@@ -1682,6 +1686,118 @@ async def stripe_webhook(request: Request):
         except Exception:
             pass
     return {"received": True}
+
+
+# ---------------------------------------------------------------------------
+# ACADEMY: corsi video con paywall (pagamento una tantum) + consulenze 1-to-1
+# ---------------------------------------------------------------------------
+_DEMO_VIDEO = "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/jvsy7ppn_20260820_115442.mp4"
+ACADEMY_COURSES = [
+    {"id": "corso-lievito-madre", "title": "Lievito Madre da Zero", "title_de": "Sauerteig von Grund auf", "title_en": "Sourdough from Scratch",
+     "desc": "Crea e gestisci il tuo lievito madre solido e LiCoLi, dalla nascita al panettone.",
+     "desc_de": "Erstelle und pflege deinen festen Sauerteig und LiCoLi, von Anfang bis Panettone.",
+     "desc_en": "Create and manage your stiff sourdough and LiCoLi, from birth to panettone.",
+     "price_cents": 4900, "duration": "8 lezioni · 2h", "video_url": _DEMO_VIDEO},
+    {"id": "corso-panettone", "title": "Panettone Perfetto", "title_de": "Perfekter Panettone", "title_en": "Perfect Panettone",
+     "desc": "Il metodo completo per un panettone soffice: impasti, pieghe, cottura e conservazione.",
+     "desc_de": "Die komplette Methode für einen fluffigen Panettone: Teige, Faltungen, Backen, Lagerung.",
+     "desc_en": "The complete method for a fluffy panettone: doughs, folds, baking and storage.",
+     "price_cents": 7900, "duration": "12 lezioni · 3h", "video_url": _DEMO_VIDEO},
+    {"id": "corso-brezel", "title": "Brezel & Laugengebäck", "title_de": "Brezel & Laugengebäck", "title_en": "Pretzels & Lye Bakes",
+     "desc": "Tecnica tedesca: impasto, formatura, bagno in soda e cottura professionale.",
+     "desc_de": "Deutsche Technik: Teig, Formen, Laugenbad und professionelles Backen.",
+     "desc_en": "German technique: dough, shaping, lye bath and professional baking.",
+     "price_cents": 3900, "duration": "6 lezioni · 1.5h", "video_url": _DEMO_VIDEO},
+]
+CONSULT = {"id": "consult-1to1", "title": "Consulenza 1-to-1 con il Maestro", "title_de": "1-zu-1-Beratung mit dem Meister",
+           "title_en": "1-to-1 consultation with the Master", "price_cents": 12000, "duration": "60 min · videochiamata"}
+_COURSE_BY_ID = {c["id"]: c for c in ACADEMY_COURSES}
+
+
+def _course_public(c):
+    return {k: v for k, v in c.items() if k != "video_url"}
+
+
+class AcademyCheckoutReq(BaseModel):
+    kind: str                       # "course" | "consult"
+    origin_url: str
+    course_id: Optional[str] = None
+    booking: Optional[dict] = None  # {name, date, topic, phone} per consulenza
+
+
+@api_router.get("/academy/catalog")
+async def academy_catalog():
+    return {"courses": [_course_public(c) for c in ACADEMY_COURSES], "consult": CONSULT}
+
+
+@api_router.get("/academy/my")
+async def academy_my(user: dict = Depends(current_user)):
+    email = user["email"].strip().lower()
+    access = await db.academy_access.find({"email": email}, {"_id": 0}).to_list(100)
+    owned = {a["course_id"] for a in access}
+    courses = [{"id": c["id"], "video_url": c["video_url"], "title": c["title"]} for c in ACADEMY_COURSES if c["id"] in owned]
+    bookings = await db.academy_orders.find({"email": email, "kind": "consult", "payment_status": "paid"}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    return {"courses": courses, "bookings": bookings}
+
+
+@api_router.post("/academy/checkout")
+async def academy_checkout(body: AcademyCheckoutReq, user: dict = Depends(current_user)):
+    email = user["email"].strip().lower()
+    origin = body.origin_url.rstrip("/")
+    if body.kind == "course":
+        c = _COURSE_BY_ID.get(body.course_id or "")
+        if not c:
+            raise HTTPException(400, "Corso non trovato")
+        title, cents, item_id = c["title"], c["price_cents"], c["id"]
+    elif body.kind == "consult":
+        title, cents, item_id = CONSULT["title"], CONSULT["price_cents"], CONSULT["id"]
+    else:
+        raise HTTPException(400, "Tipo non valido")
+    session = _stripe.checkout.Session.create(
+        mode="payment",
+        customer_email=email,
+        line_items=[{"price_data": {"currency": "eur", "product_data": {"name": title}, "unit_amount": cents}, "quantity": 1}],
+        success_url=origin + "/?academy=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=origin + "/?academy=cancel",
+        metadata={"email": email, "academy_kind": body.kind, "academy_item": item_id},
+    )
+    await db.academy_orders.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "kind": body.kind, "item_id": item_id, "amount": cents, "currency": "eur",
+        "booking": body.booking or None, "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
+
+
+async def _academy_fulfill(session_obj):
+    """Marca l'ordine come pagato e sblocca corso / conferma consulenza."""
+    order = await db.academy_orders.find_one({"session_id": session_obj.get("id")})
+    if not order or order.get("payment_status") == "paid":
+        return order
+    await db.academy_orders.update_one({"session_id": session_obj.get("id")},
+        {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
+    if order["kind"] == "course":
+        await db.academy_access.update_one(
+            {"email": order["email"], "course_id": order["item_id"]},
+            {"$set": {"email": order["email"], "course_id": order["item_id"], "granted_at": now_iso()}}, upsert=True)
+    return {**order, "payment_status": "paid"}
+
+
+@api_router.get("/academy/checkout/status/{session_id}")
+async def academy_checkout_status(session_id: str, user: dict = Depends(current_user)):
+    try:
+        s = _stripe.checkout.Session.retrieve(session_id)
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    paid = s.get("payment_status") == "paid"
+    order = None
+    if paid:
+        order = await _academy_fulfill(s)
+    else:
+        order = await db.academy_orders.find_one({"session_id": session_id}, {"_id": 0})
+    return {"payment_status": s.get("payment_status"), "paid": paid,
+            "kind": (order or {}).get("kind"), "item_id": (order or {}).get("item_id")}
+
 
 
 # ---------------------------------------------------------------------------

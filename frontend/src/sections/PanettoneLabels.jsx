@@ -100,7 +100,6 @@ export default function PanettoneLabels() {
             ];
             if (sl.includes("pistacch")) alg.push(tri("pistacchi", "Pistazien", "pistachios"));
             if (sl.includes("cocco") || sl.includes("kokos")) alg.push(tri("frutta a guscio (cocco)", "Schalenfrüchte (Kokos)", "tree nuts (coconut)"));
-            const allergens = alg.join(", ") + ". " + tri("Può contenere tracce di soia.", "Kann Spuren von Soja enthalten.", "May contain traces of soy.");
             return (
               <div key={r.id} data-testid={`label-${r.id}`}
                 className="rounded-2xl border-2 border-[#5E8B7E] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
@@ -119,8 +118,38 @@ export default function PanettoneLabels() {
                 )}
                 <p className="text-[11px] font-bold text-[#33564E] mt-1.5">{tri("Peso netto", "Nettogewicht", "Net weight")}: ~1 kg</p>
                 <p data-testid={`label-allergens-${r.id}`} className="text-[10px] text-[#3F4A54] mt-1 leading-snug">
-                  <span className="font-semibold uppercase">{tri("Allergeni", "Allergene", "Allergens")}:</span> {allergens}
+                  <span className="font-semibold uppercase">{tri("Allergeni", "Allergene", "Allergens")}:</span>{" "}
+                  {alg.map((a, i) => (
+                    <span key={i}><span className="font-bold uppercase">{a}</span>{i < alg.length - 1 ? ", " : ""}</span>
+                  ))}
+                  {". "}
+                  {tri("Può contenere tracce di soia.", "Kann Spuren von Soja enthalten.", "May contain traces of soy.")}
                 </p>
+                <table data-testid={`label-nutrition-${r.id}`} className="w-full text-[9px] text-[#2B303B] mt-2 border border-[#D7E1DB]">
+                  <thead>
+                    <tr className="bg-[#EAF0EC]">
+                      <th className="text-left px-1.5 py-0.5 font-bold uppercase" colSpan={2}>
+                        {tri("Valori nutrizionali medi", "Durchschnittliche Nährwerte", "Average nutritional values")} · 100 g
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      [tri("Energia", "Energie", "Energy"), "1560 kJ / 372 kcal", true],
+                      [tri("Grassi", "Fett", "Fat"), "15 g", true],
+                      [tri("di cui acidi grassi saturi", "davon gesättigte Fettsäuren", "of which saturates"), "8,2 g", false],
+                      [tri("Carboidrati", "Kohlenhydrate", "Carbohydrate"), "52 g", true],
+                      [tri("di cui zuccheri", "davon Zucker", "of which sugars"), "28 g", false],
+                      [tri("Proteine", "Eiweiß", "Protein"), "7,2 g", true],
+                      [tri("Sale", "Salz", "Salt"), "0,45 g", true],
+                    ].map(([k, v, bold], i) => (
+                      <tr key={i} className="border-t border-[#D7E1DB]">
+                        <td className={`text-left px-1.5 py-0.5 ${bold ? "font-semibold" : "pl-3 text-[#3F4A54]"}`}>{k}</td>
+                        <td className="text-right px-1.5 py-0.5 font-mono-data">{v}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
                 <p className="text-[9px] text-[#7E8A93] mt-2 italic">Il Laboratorio di Michele · Stoccarda 🇮🇹🇩🇪</p>
               </div>
             );

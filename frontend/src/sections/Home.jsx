@@ -42,7 +42,7 @@ const CONCEPTS = {
 
 const CONCEPT_PHOTOS = {
   cosa: `${process.env.PUBLIC_URL}/bio-dough.jpg`,
-  chi: `${process.env.PUBLIC_URL}/bio-photo.jpg`,
+  chi: `${process.env.PUBLIC_URL}/michele-toon.jpg`,
   metodo: `${process.env.PUBLIC_URL}/bio-dough-2.jpg`,
   serenita: `${process.env.PUBLIC_URL}/bio-dough-3.jpg`,
 };
@@ -102,7 +102,7 @@ function HomeAvatarScene({ lang }) {
     <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl h-80 bg-[#2B303B]">
       {/* Avatar con zoom morbido (finto video) */}
       <motion.img
-        src={`${process.env.PUBLIC_URL}/michele-photo.jpg`} alt="Michele"
+        src={`${process.env.PUBLIC_URL}/michele-real.webp`} alt="Michele"
         className="absolute inset-0 w-full h-full object-cover object-top"
         animate={{ scale: [1, 1.08, 1] }}
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
@@ -215,7 +215,7 @@ export default function Home({ onNavigate }) {
 
       {/* Blocco promozionale in evidenza */}
       <div data-testid="home-promo" className="rounded-3xl bg-[#EAF0EC] dark:bg-[#1F252B] border border-[#6E8CA0]/40 shadow-md p-5 flex items-start gap-4">
-        <img src={`${process.env.PUBLIC_URL}/michele-photo.jpg`} alt="Michele" loading="lazy"
+        <img src={`${process.env.PUBLIC_URL}/michele-real.webp`} alt="Michele" loading="lazy"
           className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#6E8CA0]/50 shrink-0"
           onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <p className="text-sm text-[#3F4A54] dark:text-[#EAF0EC] leading-relaxed">
