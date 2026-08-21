@@ -14,7 +14,7 @@ export default function PanettoneLabels() {
     (async () => {
       try {
         const mk = await recipesApi.list("mikilab");
-        setItems((mk || []).filter((r) => (r.name || "").includes("Panettone Mikilab —")));
+        setItems((mk || []).filter((r) => (r.name || "").includes("Panettone") || r.menu_category === "panettoni"));
       } catch { /* */ }
     })();
   }, []);
@@ -66,14 +66,19 @@ export default function PanettoneLabels() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[#F5EFE6] text-[#8C3A1D] text-xs uppercase tracking-wide">
-                  <th className="text-left p-2.5" colSpan={2}>{t("listino_col_flavor")}</th>
+                  <th className="text-left p-2.5">{t("listino_col_flavor")}</th>
+                  <th className="text-right p-2.5 whitespace-nowrap">500 g</th>
+                  <th className="text-right p-2.5 whitespace-nowrap">100 g</th>
                 </tr>
               </thead>
               <tbody>
                 {items.map((r) => {
+                  const c = r.costing || {};
                   return (
                     <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#E8DEC8]">
-                      <td className="p-2.5 font-semibold" colSpan={2}>{flavor(r.name)}</td>
+                      <td className="p-2.5 font-semibold">{flavor(r.name)}</td>
+                      <td className="p-2.5 text-right font-mono-data">{c.b2b_500g != null ? `€ ${Number(c.b2b_500g).toFixed(2)}` : "—"}</td>
+                      <td className="p-2.5 text-right font-mono-data">{c.b2b_100g != null ? `€ ${Number(c.b2b_100g).toFixed(2)}` : "—"}</td>
                     </tr>
                   );
                 })}
@@ -92,7 +97,7 @@ export default function PanettoneLabels() {
                 style={{ pageBreakInside: "avoid" }}>
                 {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#E8DEC8]" />}
                 <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#FFCE00]/70 mb-1.5 -mt-6 bg-white" />
-                <p className="font-display text-lg font-bold leading-tight">Panettone Mikilab</p>
+                <p className="font-display text-lg font-bold leading-tight">Panettone Artigianale MikiLab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
                   <span className="inline-block w-3 h-2 bg-[#008C45]" /><span className="inline-block w-3 h-2 bg-[#CD212A]" />
                   <span className="px-1">•</span>
