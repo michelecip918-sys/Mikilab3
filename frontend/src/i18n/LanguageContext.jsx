@@ -7,14 +7,7 @@ export function LanguageProvider({ children }) {
   const [lang, setLangState] = useState(() => {
     const saved = localStorage.getItem("mikilab_lang");
     if (saved) return saved;
-    // Rilevamento automatico della lingua del dispositivo
-    const langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "it"]);
-    for (const l of langs) {
-      const code = (l || "").toLowerCase();
-      if (code.startsWith("de")) return "de";
-      if (code.startsWith("en")) return "en";
-      if (code.startsWith("it")) return "it";
-    }
+    // Lingua di default: ITALIANO (l'utente sceglie DE/EN dal selettore, la scelta è salvata).
     return "it";
   });
 

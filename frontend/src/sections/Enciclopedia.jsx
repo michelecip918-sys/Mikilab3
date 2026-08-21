@@ -41,8 +41,8 @@ export default function Enciclopedia() {
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 rounded-2xl bg-[#6B8E62] flex items-center justify-center"><BookOpen className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("enc_title")}</h1>
-          <p className="text-sm text-[#8C7567]">{t("enc_sub")}</p>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("enc_title")}</h1>
+          <p className="text-sm text-[#7E8A93]">{t("enc_sub")}</p>
         </div>
       </div>
 
@@ -50,12 +50,12 @@ export default function Enciclopedia() {
         {list.map((e, i) => {
           const isOpen = open === i;
           return (
-            <div key={e.t} data-testid={`enc-entry-${i}`} className="rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] overflow-hidden">
+            <div key={e.t} data-testid={`enc-entry-${i}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
               <button onClick={() => setOpen(isOpen ? -1 : i)} className="w-full flex items-center justify-between p-4 text-left">
-                <span className="font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{e.t}</span>
-                <ChevronDown className={`w-4 h-4 text-[#8C7567] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{e.t}</span>
+                <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
-              {isOpen && <p className="px-4 pb-4 text-sm leading-relaxed text-[#4A3B34] dark:text-[#C9BBB0]">{e.b}</p>}
+              {isOpen && <p className="px-4 pb-4 text-sm leading-relaxed text-[#3F4A54] dark:text-[#AEB8BF]">{e.b}</p>}
             </div>
           );
         })}

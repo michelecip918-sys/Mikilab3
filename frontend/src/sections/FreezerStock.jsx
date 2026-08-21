@@ -41,9 +41,9 @@ export default function FreezerStock() {
       </div>
 
       {low.length > 0 && (
-        <div data-testid="freezer-low-warning" className="mb-3 rounded-xl bg-[#B4442A]/10 border border-[#B4442A]/30 p-3 flex items-start gap-2">
-          <AlertTriangle className="w-4 h-4 text-[#B4442A] shrink-0 mt-0.5" />
-          <p className="text-sm text-[#8C3A1D] dark:text-[#E5AC3A]">
+        <div data-testid="freezer-low-warning" className="mb-3 rounded-xl bg-[#C0574D]/10 border border-[#C0574D]/30 p-3 flex items-start gap-2">
+          <AlertTriangle className="w-4 h-4 text-[#C0574D] shrink-0 mt-0.5" />
+          <p className="text-sm text-[#33564E] dark:text-[#8FB0C2]">
             {de ? "Unter Mindestmenge: " : lang === "en" ? "Below minimum: " : "Sotto la soglia: "}<b>{low.map((x) => x.name).join(", ")}</b>
           </p>
         </div>
@@ -51,25 +51,25 @@ export default function FreezerStock() {
 
       <div className="space-y-2">
         {items.map((it, i) => (
-          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-2.5">
+          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5">
             <input value={it.name} onChange={(e) => set(i, { name: e.target.value })} placeholder={de ? "Produkt" : lang === "en" ? "Product" : "Prodotto"}
-              className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#2C221E] dark:text-[#F5EFE6]" />
+              className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#EAF0EC]" />
             <div className="flex items-center gap-1">
               <input type="number" value={it.qty} onChange={(e) => set(i, { qty: e.target.value })} title={de ? "Bestand" : lang === "en" ? "Stock" : "Scorta"}
-                className="w-16 text-center font-mono-data text-sm bg-[#F5EFE6] dark:bg-[#332823] rounded-lg py-1.5 outline-none" />
-              <span className="text-[10px] text-[#8C7567]">/</span>
+                className="w-16 text-center font-mono-data text-sm bg-[#EAF0EC] dark:bg-[#2A323A] rounded-lg py-1.5 outline-none" />
+              <span className="text-[10px] text-[#7E8A93]">/</span>
               <input type="number" value={it.min_qty} onChange={(e) => set(i, { min_qty: e.target.value })} title={de ? "Min." : "Min."}
-                className="w-16 text-center font-mono-data text-sm bg-[#D99B26]/15 rounded-lg py-1.5 outline-none" />
+                className="w-16 text-center font-mono-data text-sm bg-[#6E8CA0]/15 rounded-lg py-1.5 outline-none" />
             </div>
-            <button onClick={() => remove(i)} className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B4442A] shrink-0"><Trash2 className="w-4 h-4" /></button>
+            <button onClick={() => remove(i)} className="w-8 h-8 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#C0574D] shrink-0"><Trash2 className="w-4 h-4" /></button>
           </div>
         ))}
       </div>
 
-      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#E8DEC8] dark:border-[#3D302A] text-[#8C7567] rounded-xl py-2.5 active:scale-98">
+      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#D7E1DB] dark:border-[#38424B] text-[#7E8A93] rounded-xl py-2.5 active:scale-98">
         <Plus className="w-4 h-4" /> {de ? "Produkt hinzufügen" : lang === "en" ? "Add product" : "Aggiungi prodotto"}
       </button>
-      <button data-testid="freezer-save" onClick={save} disabled={saving} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#B34A26] disabled:opacity-50 text-white font-semibold rounded-2xl py-3 active:scale-98">
+      <button data-testid="freezer-save" onClick={save} disabled={saving} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#5E8B7E] disabled:opacity-50 text-white font-semibold rounded-2xl py-3 active:scale-98">
         <Save className="w-5 h-5" /> {de ? "Speichern" : lang === "en" ? "Save" : "Salva"}
       </button>
     </div>

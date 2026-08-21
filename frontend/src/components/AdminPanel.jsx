@@ -70,11 +70,11 @@ export default function AdminPanel({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A]">
-        <DialogTitle className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
-          <Crown className="w-5 h-5 text-[#D99B26]" /> {de ? "Admin · VIP-Zugänge" : "Admin · Accessi VIP"}
+      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B]">
+        <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
+          <Crown className="w-5 h-5 text-[#6E8CA0]" /> {de ? "Admin · VIP-Zugänge" : "Admin · Accessi VIP"}
         </DialogTitle>
-        <DialogDescription className="text-sm text-[#8C7567]">
+        <DialogDescription className="text-sm text-[#7E8A93]">
           {de ? "Verschenke kostenlosen PRO-Zugang (unbegrenzt oder befristet)." : "Regala accesso PRO gratuito (illimitato o a tempo)."}
         </DialogDescription>
 
@@ -85,11 +85,11 @@ export default function AdminPanel({ open, onOpenChange }) {
           <input
             data-testid="admin-grant-email" type="email" value={email}
             onChange={(e) => setEmail(e.target.value)} placeholder="email@esempio.it"
-            className="w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2C221E] dark:text-[#F5EFE6]"
+            className="w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC]"
           />
           <select
             data-testid="admin-grant-days" value={days} onChange={(e) => setDays(e.target.value)}
-            className="w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2C221E] dark:text-[#F5EFE6]"
+            className="w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC]"
           >
             {dayOpts.map((o) => <option key={o.v} value={o.v}>{de ? o.de : o.it}</option>)}
           </select>
@@ -101,36 +101,36 @@ export default function AdminPanel({ open, onOpenChange }) {
           </button>
         </div>
 
-        <div data-testid="admin-shop" className="rounded-2xl bg-[#8C3A1D]/10 border border-[#8C3A1D]/30 p-4 mt-2">
+        <div data-testid="admin-shop" className="rounded-2xl bg-[#33564E]/10 border border-[#33564E]/30 p-4 mt-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
-              <p className="text-[11px] text-[#8C7567]">{de ? "Warteliste" : "Lista d'attesa"}: <b>{shop.waitlist_count}</b> · {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}</p>
+              <p className="text-sm font-semibold text-[#33564E] dark:text-[#8FB0C2]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
+              <p className="text-[11px] text-[#7E8A93]">{de ? "Warteliste" : "Lista d'attesa"}: <b>{shop.waitlist_count}</b> · {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}</p>
             </div>
             <button data-testid="admin-shop-toggle" onClick={toggleShop}
-              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#6B8E62] text-white" : "bg-[#F5EFE6] dark:bg-[#332823] text-[#8C3A1D] dark:text-[#E5AC3A] border border-[#8C3A1D]/30"}`}>
+              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#6B8E62] text-white" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#33564E] dark:text-[#8FB0C2] border border-[#33564E]/30"}`}>
               {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}
             </button>
           </div>
         </div>
 
         <div className="flex items-center justify-between mt-2 mb-1">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#B34A26]">{de ? "Zugänge" : "Accessi"}</p>
-          <button data-testid="admin-refresh" onClick={load} className="text-[#8C7567] active:scale-90">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#5E8B7E]">{de ? "Zugänge" : "Accessi"}</p>
+          <button data-testid="admin-refresh" onClick={load} className="text-[#7E8A93] active:scale-90">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </button>
         </div>
 
         <div className="space-y-2">
           {list.length === 0 ? (
-            <p className="text-sm text-[#8C7567] text-center py-4">{de ? "Noch keine Zugänge." : "Nessun accesso ancora."}</p>
+            <p className="text-sm text-[#7E8A93] text-center py-4">{de ? "Noch keine Zugänge." : "Nessun accesso ancora."}</p>
           ) : list.map((e) => (
             <div key={e.email} data-testid={`ent-row-${e.email}`}
-              className="flex items-center justify-between gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-3 py-2.5">
+              className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5">
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">{e.email}</p>
-                <p className="text-[11px] text-[#8C7567]">
-                  <span className={`font-bold ${e.active ? "text-[#6B8E62]" : "text-[#B4442A]"}`}>
+                <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{e.email}</p>
+                <p className="text-[11px] text-[#7E8A93]">
+                  <span className={`font-bold ${e.active ? "text-[#6B8E62]" : "text-[#C0574D]"}`}>
                     {e.active ? "PRO" : (de ? "inaktiv" : "inattivo")}
                   </span>
                   {" · "}{e.source || "—"}{" · "}{fmt(e.expires_at)}
@@ -138,7 +138,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               </div>
               {e.active && (
                 <button data-testid={`ent-revoke-${e.email}`} onClick={() => revoke(e.email)}
-                  className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B4442A] shrink-0 active:scale-95">
+                  className="w-8 h-8 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#C0574D] shrink-0 active:scale-95">
                   <Trash2 className="w-4 h-4" />
                 </button>
               )}

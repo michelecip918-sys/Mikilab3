@@ -24,25 +24,25 @@ export default function IntroGuide() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && setOpen(false)}>
-      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A] p-0 overflow-hidden">
+      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B] p-0 overflow-hidden">
         <DialogTitle className="sr-only">{c.title}</DialogTitle>
         <DialogDescription className="sr-only">{c.desc}</DialogDescription>
-        <div className="bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white p-6 text-center">
+        <div className="bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-6 text-center">
           <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab Avatar"
-            className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg mx-auto mb-3"
+            className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-3"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <p className="text-sm text-white/90 mb-1">{c.greet}</p>
           <h2 className="font-display text-2xl font-bold leading-tight">{c.title}</h2>
         </div>
         <div className="p-6">
-          <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed text-center">{c.desc}</p>
+          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed text-center">{c.desc}</p>
 
           {/* Selettore lingua trilingue */}
           <div data-testid="intro-lang" className="mt-4 flex items-center justify-center gap-2">
             {LANGS.map((l) => (
               <button key={l.id} data-testid={`intro-lang-${l.id}`} onClick={() => setLang(l.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
-                  lang === l.id ? "bg-[#B34A26] text-white border-[#B34A26]" : "bg-[#F5EFE6] dark:bg-[#332823] text-[#8C7567] border-[#E8DEC8] dark:border-[#3D302A]"
+                  lang === l.id ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"
                 }`}>
                 <span>{l.flag}</span> {l.label}
               </button>
@@ -52,7 +52,7 @@ export default function IntroGuide() {
           <button
             data-testid="intro-close-btn"
             onClick={() => setOpen(false)}
-            className="mt-5 w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2"
+            className="mt-5 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2"
           >
             <Sparkles className="w-5 h-5" /> {c.start} →
           </button>

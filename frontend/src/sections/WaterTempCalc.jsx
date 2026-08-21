@@ -5,13 +5,13 @@ import { useLang } from "@/i18n/LanguageContext";
 function Field({ testid, label, value, onChange, hint }) {
   return (
     <div>
-      <label className="text-[11px] font-semibold uppercase tracking-wide text-[#8C7567]">{label}</label>
+      <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type="number" value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 pr-8 outline-none focus:border-[#B34A26]" />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8C7567]">°C</span>
+          className="w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 pr-8 outline-none focus:border-[#5E8B7E]" />
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">°C</span>
       </div>
-      {hint ? <p className="text-[10px] text-[#8C7567] mt-1 leading-snug">{hint}</p> : null}
+      {hint ? <p className="text-[10px] text-[#7E8A93] mt-1 leading-snug">{hint}</p> : null}
     </div>
   );
 }
@@ -38,10 +38,10 @@ export default function WaterTempCalc() {
           <Droplets className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">
             {tri("Temperatura Acqua d'Impasto", "Teigwasser-Temperatur", "Dough Water Temperature")}
           </h1>
-          <p className="text-sm text-[#8C7567]">{tri("Trova i gradi giusti dell'acqua", "Finde die richtige Wassertemperatur", "Find the right water temperature")}</p>
+          <p className="text-sm text-[#7E8A93]">{tri("Trova i gradi giusti dell'acqua", "Finde die richtige Wassertemperatur", "Find the right water temperature")}</p>
         </div>
       </div>
 

@@ -45,12 +45,12 @@ export default function AdattaForno() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#B34A26] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#5E8B7E] flex items-center justify-center">
           <Flame className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("adatta_title")}</h1>
-          <p className="text-sm text-[#8C7567]">{t("adatta_subtitle")}</p>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("adatta_title")}</h1>
+          <p className="text-sm text-[#7E8A93]">{t("adatta_subtitle")}</p>
         </div>
       </div>
 
@@ -61,7 +61,7 @@ export default function AdattaForno() {
             data-testid={`adatta-mode-${m}`}
             onClick={() => setMode(m)}
             className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition-all ${
-              mode === m ? "bg-[#B34A26] text-white border-[#B34A26]" : "bg-white dark:bg-[#2A211D] text-[#8C7567] border-[#E8DEC8] dark:border-[#3D302A]"
+              mode === m ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"
             }`}
           >
             {t(lk)}
@@ -109,10 +109,10 @@ export default function AdattaForno() {
       <div className="space-y-3">
         {recipes.length > 0 && (
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("adatta_from_recipe")}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_from_recipe")}</label>
             <select
               data-testid="adatta-recipe" defaultValue="" onChange={(e) => loadRecipe(e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B34A26]"
+              className="mt-1 w-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#5E8B7E]"
             >
               <option value="">{t("adatta_choose")}</option>
               {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
@@ -122,35 +122,35 @@ export default function AdattaForno() {
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("adatta_temp")}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_temp")}</label>
             <input data-testid="adatta-temp" type="number" value={temp} onChange={(e) => setTemp(e.target.value)}
-              className="mt-1 w-full font-mono-data bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]" />
+              className="mt-1 w-full font-mono-data bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 outline-none focus:border-[#5E8B7E]" />
           </div>
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("adatta_min")}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_min")}</label>
             <input data-testid="adatta-min" type="number" value={min} onChange={(e) => setMin(e.target.value)}
-              className="mt-1 w-full font-mono-data bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]" />
+              className="mt-1 w-full font-mono-data bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 outline-none focus:border-[#5E8B7E]" />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("adatta_from_oven")}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_from_oven")}</label>
             <select data-testid="adatta-from-oven" value={fromOven} onChange={(e) => setFromOven(e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B34A26]">
+              className="mt-1 w-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#5E8B7E]">
               {OVENS.map((o) => <option key={o} value={o}>{ovenLabel(o)}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("adatta_to_oven")}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_to_oven")}</label>
             <select data-testid="adatta-to-oven" value={toOven} onChange={(e) => setToOven(e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#B34A26]">
+              className="mt-1 w-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#5E8B7E]">
               {OVENS.map((o) => <option key={o} value={o}>{ovenLabel(o)}</option>)}
             </select>
           </div>
         </div>
 
-        <div data-testid="adatta-result" className="mt-2 bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] rounded-3xl p-6 text-white shadow-lg">
+        <div data-testid="adatta-result" className="mt-2 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] rounded-3xl p-6 text-white shadow-lg">
           <p className="text-white/80 text-sm uppercase tracking-wider font-semibold">{t("adatta_result")} {ovenLabel(toOven)}</p>
           <p className="font-mono-data text-4xl font-bold mt-1">{outTemp}°C · {outMin}′</p>
           <p className="text-white/85 text-sm mt-3 leading-relaxed">
@@ -202,19 +202,19 @@ export default function AdattaForno() {
 
     return (
       <div>
-        <p className="text-sm text-[#8C7567] mb-3 leading-relaxed">{t("adatta_photo_hint")}</p>
+        <p className="text-sm text-[#7E8A93] mb-3 leading-relaxed">{t("adatta_photo_hint")}</p>
         <div className="mb-4"><DualPhotoButtons onFile={onPick} testid="adatta" /></div>
         {preview && (
-          <div className="rounded-3xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4">
+          <div className="rounded-3xl overflow-hidden border border-[#D7E1DB] dark:border-[#38424B] mb-4">
             <img src={preview} alt="forno" className="w-full max-h-80 object-cover" />
           </div>
         )}
         <button data-testid="adatta-analyze-btn" onClick={analyze} disabled={!preview || analyzing}
-          className="w-full bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="w-full bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           {analyzing ? t("adatta_analyzing") : t("adatta_analyze")} {!analyzing && <ArrowRight className="w-4 h-4" />}
         </button>
         {result && (
-          <div data-testid="adatta-result-photo" className="markdown-body mt-5 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 text-sm leading-relaxed text-[#2C221E] dark:text-[#F5EFE6]">
+          <div data-testid="adatta-result-photo" className="markdown-body mt-5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">
             <ReactMarkdown>{result}</ReactMarkdown>
           </div>
         )}

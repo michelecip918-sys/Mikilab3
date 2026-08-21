@@ -11,8 +11,8 @@ export const flagEmoji = (code) => {
 
 // code: ISO2, name: italiano, colors: strisce per la card (opzionale)
 export const COUNTRIES = [
-  { code: "it", name: "Italia", colors: ["#009246", "#ffffff", "#CE2B37"] },
-  { code: "de", name: "Germania", colors: ["#111111", "#DD0000", "#FFCE00"] },
+  { code: "it", name: "Italia", colors: ["#6B8E62", "#ffffff", "#6E8CA0"] },
+  { code: "de", name: "Germania", colors: ["#2B303B", "#6E8CA0", "#A9C5D4"] },
   { code: "fr", name: "Francia", colors: ["#0055A4", "#ffffff", "#EF4135"] },
   { code: "at", name: "Austria", colors: ["#ED2939", "#ffffff", "#ED2939"] },
   { code: "ch", name: "Svizzera", colors: ["#D52B1E", "#ffffff", "#D52B1E"] },

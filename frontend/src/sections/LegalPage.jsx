@@ -39,12 +39,12 @@ export default function LegalPage() {
         <p className="text-white/90 text-sm mt-2 leading-relaxed">{c.intro}</p>
       </div>
       {c.sections.map((s, i) => (
-        <div key={i} className="rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-5">
-          <h2 className="font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{s.h}</h2>
-          <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{s.b}</p>
+        <div key={i} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-5">
+          <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{s.h}</h2>
+          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.b}</p>
         </div>
       ))}
-      <p className="text-center text-xs text-[#8C7567] italic">{c.note}</p>
+      <p className="text-center text-xs text-[#7E8A93] italic">{c.note}</p>
     </div>
   );
 }

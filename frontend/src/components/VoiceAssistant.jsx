@@ -109,19 +109,19 @@ export default function VoiceAssistant({ onNavigate }) {
     <>
       {open && (
         <div className="fixed inset-x-0 bottom-24 z-40 px-4 flex justify-center pointer-events-none">
-          <div data-testid="voice-panel" className="pointer-events-auto w-full max-w-xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl shadow-xl p-4">
+          <div data-testid="voice-panel" className="pointer-events-auto w-full max-w-xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl shadow-xl p-4">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-bold uppercase tracking-wide text-[#B34A26] flex-1">
+              <span className="text-xs font-bold uppercase tracking-wide text-[#5E8B7E] flex-1">
                 {state === "listening" ? t("voice_listening") : state === "thinking" ? t("voice_thinking") : t("voice_tap")}
               </span>
-              <button data-testid="voice-close" onClick={stop} className="text-[#8C7567] p-1"><X className="w-4 h-4" /></button>
+              <button data-testid="voice-close" onClick={stop} className="text-[#7E8A93] p-1"><X className="w-4 h-4" /></button>
             </div>
-            {transcript && <p className="text-sm text-[#2C221E] dark:text-[#F5EFE6] font-medium">“{transcript}”</p>}
+            {transcript && <p className="text-sm text-[#2B303B] dark:text-[#EAF0EC] font-medium">“{transcript}”</p>}
             {state === "thinking" && (
-              <div className="flex items-center gap-2 mt-2 text-[#8C7567] text-sm"><Loader2 className="w-4 h-4 animate-spin" /> {t("voice_thinking")}</div>
+              <div className="flex items-center gap-2 mt-2 text-[#7E8A93] text-sm"><Loader2 className="w-4 h-4 animate-spin" /> {t("voice_thinking")}</div>
             )}
             {answer && (
-              <p data-testid="voice-answer" className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-2 leading-relaxed max-h-56 overflow-y-auto whitespace-pre-wrap">{answer}</p>
+              <p data-testid="voice-answer" className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-2 leading-relaxed max-h-56 overflow-y-auto whitespace-pre-wrap">{answer}</p>
             )}
           </div>
         </div>
@@ -133,13 +133,13 @@ export default function VoiceAssistant({ onNavigate }) {
           onClick={state === "listening" ? stop : start}
           aria-label={t("voice_tap")}
           className={`relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
-            state === "listening" ? "bg-[#B4442A] animate-pulse" : "bg-[#B34A26] hover:bg-[#963B1C]"
+            state === "listening" ? "bg-[#C0574D] animate-pulse" : "bg-[#5E8B7E] hover:bg-[#4C7368]"
           }`}
         >
-          {state === "idle" && <span aria-hidden className="absolute inset-0 rounded-full bg-[#B34A26] opacity-60 animate-ping" />}
+          {state === "idle" && <span aria-hidden className="absolute inset-0 rounded-full bg-[#5E8B7E] opacity-60 animate-ping" />}
           {state === "thinking" ? <Loader2 className="w-6 h-6 text-white animate-spin relative" /> : <Mic className="w-6 h-6 text-white relative" />}
         </button>
-        <span className="text-[9px] font-bold text-[#B34A26] bg-[#FDFBF7]/90 dark:bg-[#1A1412]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("voice_label")}</span>
+        <span className="text-[9px] font-bold text-[#5E8B7E] bg-[#F6F8F5]/90 dark:bg-[#1B2127]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("voice_label")}</span>
       </div>
     </>
   );

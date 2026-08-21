@@ -9,40 +9,40 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 
 const CONCEPTS = {
   it: [
-    { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
+    { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#5E8B7E] to-[#33564E]",
       body: "MikiLab è il mio laboratorio creativo e scientifico digitale dedicato all'arte bianca. Nasce per fondere la passione artigianale con lo studio metodico delle farine e dei processi fermentativi. Qui la panificazione non è una semplice sequenza di gesti, ma una costante ricerca dell'eccellenza, dove ogni ingrediente è calibrato al milligrammo per ottenere strutture perfette, digeribilità estrema e sapori autentici. È il luogo in cui la tradizione dell'arte panificatoria incontra l'innovazione e la precisione." },
-    { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
+    { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#6E8CA0] to-[#5E7E90]",
       body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato Mikilab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
     { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
       body: "Il mio metodo unisce la grande tradizione italiana alla precisione tecnica tedesca. Lavoro quotidianamente sia con metodi diretti sia con metodi indiretti, anche se prediligo nettamente questi ultimi: prefermenti come lievito madre, poolish, biga e precotture come il kochstück sono la vera anima delle mie ricette. Prediligere l'indiretto significa dare tempo al tempo, permettendo agli enzimi di trasformare la materia prima per ottenere una complessità aromatica unica, una crosta fragrante e un'alveolatura sviluppata. Tuttavia, amo ogni sfumatura della panificazione: la farina giusta al momento giusto e il rispetto rigoroso dei tempi sono la chiave per dominare ogni tipo di impasto." },
-    { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
+    { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#33564E] to-[#1B2127]",
       body: "Lavorare in serenità significa trasformare il laboratorio in un ambiente organizzato, efficiente e privo di stress. Con una pianificazione accurata dei tempi di fermentazione, l'uso di standard precisi e la scelta di tecniche affidabili, ogni imprevisto viene eliminato. Le piccole intuizioni pratiche, unite all'esperienza sul campo, semplificano le operazioni quotidiane rendendo il lavoro costante, sicuro e piacevole. Panificare con serenità è il segreto per esprimere la massima qualità senza mai perdere la passione per questo mestiere." },
   ],
   de: [
-    { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
+    { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#5E8B7E] to-[#33564E]",
       body: "MikiLab ist mein kreatives und wissenschaftliches digitales Labor für die Backkunst. Es verbindet handwerkliche Leidenschaft mit dem methodischen Studium von Mehlen und Fermentationsprozessen. Hier ist Backen keine bloße Abfolge von Handgriffen, sondern eine ständige Suche nach Exzellenz, bei der jede Zutat auf das Milligramm genau kalibriert wird – für perfekte Strukturen, höchste Bekömmlichkeit und authentische Aromen. Hier trifft die Tradition der Backkunst auf Innovation und Präzision." },
-    { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
+    { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#6E8CA0] to-[#5E7E90]",
       body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. Mikilab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
     { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
       body: "Meine Methode verbindet die große italienische Tradition mit deutscher technischer Präzision. Ich arbeite täglich sowohl mit direkten als auch mit indirekten Methoden, bevorzuge aber klar Letztere: Vorteige wie Lievito Madre, Poolish, Biga und Kochstücke sind die wahre Seele meiner Rezepte. Indirekt zu arbeiten heißt, der Zeit Zeit zu geben, damit die Enzyme den Rohstoff verwandeln – für einzigartige Aromatik, knusprige Kruste und offene Porung. Dennoch liebe ich jede Nuance des Backens: das richtige Mehl zum richtigen Zeitpunkt und die strikte Einhaltung der Zeiten sind der Schlüssel, um jeden Teig zu beherrschen." },
-    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
+    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#33564E] to-[#1B2127]",
       body: "Entspannt zu arbeiten bedeutet, die Backstube in eine organisierte, effiziente und stressfreie Umgebung zu verwandeln. Mit sorgfältiger Planung der Gärzeiten, präzisen Standards und zuverlässigen Techniken werden Überraschungen ausgeschlossen. Kleine praktische Einsichten, verbunden mit Erfahrung, vereinfachen den Alltag und machen die Arbeit gleichmäßig, sicher und angenehm. Mit Gelassenheit zu backen ist das Geheimnis für höchste Qualität, ohne je die Leidenschaft für dieses Handwerk zu verlieren." },
   ],
   en: [
-    { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
+    { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#5E8B7E] to-[#33564E]",
       body: "MikiLab is my creative, scientific digital lab dedicated to the baking art. It was born to blend artisan passion with the methodical study of flours and fermentation. Here baking is not a mere sequence of gestures but a constant pursuit of excellence, where every ingredient is calibrated to the milligram for perfect structures, extreme digestibility and authentic flavours. It's where the tradition of baking meets innovation and precision." },
     { id: "chi", title: "About me", icon: ChefHat, grad: "from-[#6B8E62] to-[#4d6b45]",
       body: "I'm Michele, a baker by passion even before by trade. I love spelt, sourdough and the scent of freshly baked bread. I created Mikilab to put my recipes and my way of working into every baker's pocket, with the same care I bring to the bakery every day." },
     { id: "metodo", title: "My method", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
       body: "My method blends the great Italian tradition with German technical precision. I work daily with both direct and indirect methods, though I clearly prefer the latter: preferments such as sourdough, poolish, biga and pre-cooks like kochstück are the true soul of my recipes. Choosing indirect means giving time to time, letting enzymes transform the raw material for unique aromatic complexity, a fragrant crust and an open crumb. Yet I love every nuance of baking: the right flour at the right moment and strict respect for timings are the key to mastering any dough." },
-    { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
+    { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#33564E] to-[#1B2127]",
       body: "Working with peace of mind means turning the bakery into an organised, efficient and stress-free environment. With careful planning of fermentation times, precise standards and reliable techniques, surprises are eliminated. Small practical insights, combined with hands-on experience, simplify daily operations and make the work steady, safe and pleasant. Baking calmly is the secret to expressing top quality without ever losing the passion for this craft." },
   ],
 };
 
 const CONCEPT_PHOTOS = {
   cosa: `${process.env.PUBLIC_URL}/bio-dough.jpg`,
-  chi: `${process.env.PUBLIC_URL}/michele-avatar.jpg`,
+  chi: `${process.env.PUBLIC_URL}/bio-photo.jpg`,
   metodo: `${process.env.PUBLIC_URL}/bio-dough-2.jpg`,
   serenita: `${process.env.PUBLIC_URL}/bio-dough-3.jpg`,
 };
@@ -99,27 +99,24 @@ function HomeAvatarScene({ lang }) {
   }, [phrases.length]);
 
   return (
-    <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl h-80 bg-[#2C221E]">
+    <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl h-80 bg-[#2B303B]">
       {/* Avatar con zoom morbido (finto video) */}
       <motion.img
-        src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab Avatar"
-        className="absolute inset-0 w-full h-full object-cover object-center"
+        src={`${process.env.PUBLIC_URL}/michele-photo.jpg`} alt="Michele"
+        className="absolute inset-0 w-full h-full object-cover object-top"
         animate={{ scale: [1, 1.08, 1] }}
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         onError={(e) => { e.currentTarget.style.display = "none"; }}
       />
-      <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5 z-20">
-        <div className="flex-1 bg-[#009246]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CE2B37]" />
-        <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCE00]" />
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E]/85 via-[#2C221E]/15 to-transparent" />
+      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 bg-gradient-to-r from-[#6B8E62] via-[#6E8CA0] to-[#A9C5D4]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
 
       {/* Smartphone & PC che fluttuano */}
       <motion.div
         className="absolute right-4 bottom-6 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
         animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
-        <Smartphone className="w-6 h-6 text-[#B34A26]" />
+        <Smartphone className="w-6 h-6 text-[#5E8B7E]" />
       </motion.div>
       <motion.div
         className="absolute right-20 bottom-6 w-12 h-12 rounded-2xl bg-white/90 backdrop-blur border border-white/60 shadow-lg flex items-center justify-center z-20"
@@ -135,7 +132,7 @@ function HomeAvatarScene({ lang }) {
             key={idx} data-testid="home-scene-bubble"
             initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.4 }}
-            className="inline-block max-w-[85%] bg-[#1A1412]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-tl-md shadow-xl ring-1 ring-white/20"
+            className="inline-block max-w-[85%] bg-[#1B2127]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-tl-md shadow-xl ring-1 ring-white/20"
           >
             {phrases[idx]}
           </motion.div>
@@ -165,26 +162,26 @@ export default function Home({ onNavigate }) {
   const L = (it_, de_, en_) => (de ? de_ : lang === "en" ? en_ : it_);
 
   const SECTIONS = [
-    { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#B34A26] to-[#8C3A1D]",
+    { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#5E8B7E] to-[#33564E]",
       sub: L("43 ricette col mio metodo (assaggio gratis)", "43 Rezepte mit meiner Methode (Gratis-Vorschau)", "43 recipes with my method (free preview)") },
     { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]",
       sub: L("Per chi inizia: basi e ricette semplici", "Für Anfänger: Grundlagen & einfache Rezepte", "For beginners: basics & easy recipes") },
     { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
       sub: L("Novità da Italia, Stoccarda e Germania", "Neuigkeiten aus IT, Stuttgart und DE", "News from Italy, Stuttgart and Germany") },
-    { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#D99B26] to-[#B8801a]",
+    { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#6E8CA0] to-[#5E7E90]",
       sub: L("Per professionisti: piano, costi, impasti (PRO)", "Für Profis: Arbeitsplan, Kosten, Teige (PRO)", "For pros: plan, costs, doughs (PRO)") },
-    { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#8C7567] to-[#5f4f45]",
+    { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#7E8A93] to-[#6B7680]",
       sub: L("Scopri i difetti del pane da una foto (PRO)", "Brotfehler per Foto erkennen (PRO)", "Spot bread defects from a photo (PRO)") },
-    { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#3a2d27] to-[#1A1412]",
+    { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#33564E] to-[#1B2127]",
       sub: L("Tutte le basi spiegate", "Alle Grundlagen erklärt", "All the basics explained") },
-    { tab: "shop", label: "Shop & Academy", Icon: ShoppingBag, grad: "from-[#8C3A1D] to-[#5f2410]",
+    { tab: "shop", label: "Shop & Academy", Icon: ShoppingBag, grad: "from-[#33564E] to-[#33564E]",
       sub: L("Panettoni & corsi — in arrivo", "Panettoni & Kurse — bald verfügbar", "Panettoni & courses — coming soon") },
   ];
 
   if (chat) {
     return (
       <div className="pb-4">
-        <button data-testid="home-back-btn" onClick={() => setChat(false)} className="flex items-center gap-1 text-[#B34A26] font-medium mb-4">
+        <button data-testid="home-back-btn" onClick={() => setChat(false)} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
           <ChevronRight className="w-5 h-5 rotate-180" /> Home
         </button>
         <MaestroSaTutto />
@@ -195,7 +192,7 @@ export default function Home({ onNavigate }) {
   if (legal) {
     return (
       <div className="pb-4">
-        <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#B34A26] font-medium mb-4">
+        <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
           <ChevronRight className="w-5 h-5 rotate-180" /> Home
         </button>
         <LegalPage />
@@ -209,19 +206,19 @@ export default function Home({ onNavigate }) {
       <HomeAvatarScene lang={lang} />
 
       {/* Hero compatto */}
-      <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white shadow-xl p-7 text-center">
+      <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-xl p-7 text-center">
         <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
-          className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg mx-auto mb-4" />
+          className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-4" />
         <h1 className="font-display text-3xl font-bold">Mikilab</h1>
         <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
       </div>
 
       {/* Blocco promozionale in evidenza */}
-      <div data-testid="home-promo" className="rounded-3xl bg-[#FFF7E8] dark:bg-[#241D19] border border-[#D99B26]/40 shadow-md p-5 flex items-start gap-4">
-        <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="Michele" loading="lazy"
-          className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#D99B26]/50 shrink-0"
+      <div data-testid="home-promo" className="rounded-3xl bg-[#EAF0EC] dark:bg-[#1F252B] border border-[#6E8CA0]/40 shadow-md p-5 flex items-start gap-4">
+        <img src={`${process.env.PUBLIC_URL}/michele-photo.jpg`} alt="Michele" loading="lazy"
+          className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#6E8CA0]/50 shrink-0"
           onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <p className="text-sm text-[#4A3B34] dark:text-[#E9DCCB] leading-relaxed">
+        <p className="text-sm text-[#3F4A54] dark:text-[#EAF0EC] leading-relaxed">
           {L(
             "Un sito pensato per organizzare il lavoro proprio come lo faresti tu. Dalla gestione dettagliata delle ricette alla lista della spesa, fino alla pianificazione precisa della produzione in laboratorio. In più, con l'aiuto dell'AI potrai calcolare, adattare e gestire ogni fase senza margine di errore: tu pensi al laboratorio, al resto ci pensiamo noi.",
             "Eine Website, die die Arbeit genau so organisiert, wie du es tun würdest. Von der detaillierten Rezeptverwaltung über die Einkaufsliste bis zur präzisen Produktionsplanung in der Backstube. Und mit Hilfe der KI kannst du jede Phase ohne Fehler berechnen, anpassen und steuern: Du kümmerst dich um die Backstube, um den Rest kümmern wir uns.",
@@ -252,13 +249,13 @@ export default function Home({ onNavigate }) {
                 {isOpen && (
                   <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
-                    <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#241D19] border border-t-0 border-[#E8DEC8] dark:border-[#3D302A] overflow-hidden">
+                    <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#1F252B] border border-t-0 border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
                       {CONCEPT_PHOTOS[c.id] && (
                         <img src={CONCEPT_PHOTOS[c.id]} alt={c.title}
                           data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy"
                           onError={(e) => { e.currentTarget.style.display = "none"; }} />
                       )}
-                      <p className="p-6 text-[15px] leading-relaxed text-[#4A3B34] dark:text-[#C9BBB0] whitespace-pre-line">{c.body}</p>
+                      <p className="p-6 text-[15px] leading-relaxed text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line">{c.body}</p>
                     </div>
                   </motion.div>
                 )}
@@ -270,25 +267,25 @@ export default function Home({ onNavigate }) {
 
       {/* Menu principale — subito sotto i blocchi */}
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C7567] mb-2 px-1">{t("home_tap_open")}</p>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2 px-1">{t("home_tap_open")}</p>
 
         {/* Due mondi: professionisti + principianti */}
         <div data-testid="home-audiences" className="grid grid-cols-1 gap-2.5 mb-3">
-          <div className="rounded-2xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-4">
-            <p className="font-display text-base font-bold text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
-              <Wrench className="w-4 h-4 text-[#B34A26]" /> {L("Per professionisti · «Il Tuo Laboratorio»", "Für Profis · „Dein Labor“", "For pros · “Your Lab”")}
+          <div className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4">
+            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
+              <Wrench className="w-4 h-4 text-[#5E8B7E]" /> {L("Per professionisti · «Il Tuo Laboratorio»", "Für Profis · „Dein Labor“", "For pros · “Your Lab”")}
             </p>
-            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-snug">
+            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-snug">
               {L("Piano di produzione giornaliero/settimanale, calcolo costi, gestione celle e pulizie, affiancato dall'IA per rigenerare impasti e processi.",
                  "Täglicher/wöchentlicher Produktionsplan, Kostenrechnung, Zellen- und Reinigungsverwaltung, unterstützt von der KI zum Regenerieren von Teigen und Prozessen.",
                  "Daily/weekly production plan, cost calculation, cell and cleaning management, backed by AI to regenerate doughs and processes.")}
             </p>
           </div>
           <div className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4">
-            <p className="font-display text-base font-bold text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
+            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
               <GraduationCap className="w-4 h-4 text-[#4d6b45]" /> {L("Per chi inizia · Sezione Principianti", "Für Anfänger · Sektion Anfänger", "For beginners · Beginners section")}
             </p>
-            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-snug">
+            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-snug">
               {L("I primi passi nell'Arte Bianca: guide passo-passo, basi della panificazione e ricette semplificate.",
                  "Erste Schritte in der Backkunst: geführte Anleitungen, Grundlagen und vereinfachte Rezepte.",
                  "First steps in the baking art: step-by-step guides, baking basics and simplified recipes.")}
@@ -325,9 +322,9 @@ export default function Home({ onNavigate }) {
       </button>
 
       {/* Battuta del giorno */}
-      <div data-testid="home-joke" className="flex items-start gap-3 rounded-2xl bg-[#D99B26]/12 border border-[#D99B26]/30 p-4">
-        <Laugh className="w-5 h-5 text-[#B34A26] shrink-0 mt-0.5" />
-        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] italic leading-relaxed">{joke}</p>
+      <div data-testid="home-joke" className="flex items-start gap-3 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4">
+        <Laugh className="w-5 h-5 text-[#5E8B7E] shrink-0 mt-0.5" />
+        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] italic leading-relaxed">{joke}</p>
       </div>
 
       {/* Condividi & Installa app */}
@@ -335,7 +332,7 @@ export default function Home({ onNavigate }) {
 
       {/* Footer legale */}
       <button data-testid="home-legal-link" onClick={() => setLegal(true)}
-        className="w-full text-center text-xs text-[#8C7567] underline underline-offset-2 py-2">
+        className="w-full text-center text-xs text-[#7E8A93] underline underline-offset-2 py-2">
         {L("Note legali & Privacy", "Impressum & Datenschutz", "Legal notice & Privacy")}
       </button>
     </div>

@@ -138,7 +138,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     <div className="pb-4">
       <div className="relative rounded-3xl overflow-hidden mb-5 h-40">
         <img src={heroImage} alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2C221E]/85 via-[#2C221E]/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/30 to-transparent" />
         <div className="absolute bottom-0 left-0 p-5">
           <h1 className="font-display text-3xl font-bold text-white">{heroTitle}</h1>
           {heroSubtitle ? <p className="text-white/85 text-sm mt-0.5">{heroSubtitle}</p> : null}
@@ -149,18 +149,18 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <button
           data-testid="add-recipe-btn"
           onClick={() => { setEditing(null); setDialogOpen(true); }}
-          className="w-full bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
+          className="w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
         >
           <Plus className="w-5 h-5" /> {t("add_recipe")}
         </button>
       )}
 
       {loading ? (
-        <p className="text-center text-[#8C7567] py-8">{t("loading")}</p>
+        <p className="text-center text-[#7E8A93] py-8">{t("loading")}</p>
       ) : recipes.length === 0 ? (
-        <div className="text-center py-12 px-6 border-2 border-dashed border-[#E8DEC8] dark:border-[#3D302A] rounded-3xl">
-          <Wheat className="w-10 h-10 text-[#D99B26] mx-auto mb-3" />
-          <p className="text-[#736055] dark:text-[#A89689]">{emptyText}</p>
+        <div className="text-center py-12 px-6 border-2 border-dashed border-[#D7E1DB] dark:border-[#38424B] rounded-3xl">
+          <Wheat className="w-10 h-10 text-[#6E8CA0] mx-auto mb-3" />
+          <p className="text-[#6B7680] dark:text-[#9AA6AE]">{emptyText}</p>
         </div>
       ) : (() => {
         const q = query.trim().toLowerCase();
@@ -187,7 +187,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             transition={{ delay: Math.min(i * 0.015, 0.2) }}
             onClick={() => setViewing(r)}
             data-testid={`recipe-row-${r.id}`}
-            className="relative overflow-hidden w-full text-left bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-[0.99] hover:border-[#D99B26]/60 transition-all flex items-center gap-3"
+            className="relative overflow-hidden w-full text-left bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 shadow-sm active:scale-[0.99] hover:border-[#6E8CA0]/60 transition-all flex items-center gap-3"
           >
             {countryColors(r.origin) && (
               <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
@@ -195,14 +195,14 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </div>
             )}
             {r.image_url && recipeCategory(r).key === "panettoni" && (
-              <img src={r.image_url} alt="" loading="lazy" className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#E8DEC8] dark:border-[#3D302A]" />
+              <img src={r.image_url} alt="" loading="lazy" className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#D7E1DB] dark:border-[#38424B]" />
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
+              <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">
                 {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
                 {rLoc(r, "name", lang)}
               </h3>
-              {rLoc(r, "real_name", lang) ? <p className="text-xs font-medium text-[#B34A26] truncate">{rLoc(r, "real_name", lang)}</p> : null}
+              {rLoc(r, "real_name", lang) ? <p className="text-xs font-medium text-[#5E8B7E] truncate">{rLoc(r, "real_name", lang)}</p> : null}
               {(() => {
                 const badges = recipeBadges(r);
                 return badges.length > 0 ? (
@@ -211,12 +211,12 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                       <span key={b} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${badgeClass(b)}`}>{b}</span>
                     ))}
                   </div>
-                ) : (r.flour_type ? <p className="text-xs text-[#8C7567] truncate mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null);
+                ) : (r.flour_type ? <p className="text-xs text-[#7E8A93] truncate mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null);
               })()}
             </div>
             {r.locked
-              ? <Lock data-testid={`recipe-locked-${r.id}`} className="w-4 h-4 text-[#D99B26] shrink-0" />
-              : <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />}
+              ? <Lock data-testid={`recipe-locked-${r.id}`} className="w-4 h-4 text-[#6E8CA0] shrink-0" />
+              : <MoreHorizontal className="w-5 h-5 text-[#AEB8BF] shrink-0" />}
           </motion.button>
         );
 
@@ -224,16 +224,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           <div>
             {/* Barra di ricerca */}
             <div className="relative mb-3">
-              <Search className="w-4 h-4 text-[#8C7567] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#7E8A93] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 data-testid="recipe-search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={triM("Cerca ricetta, farina, badge…", "Rezept, Mehl, Badge suchen…", "Search recipe, flour, badge…")}
-                className="w-full pl-9 pr-9 py-2.5 rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] text-sm text-[#2C221E] dark:text-[#F5EFE6] outline-none focus:border-[#D99B26]"
+                className="w-full pl-9 pr-9 py-2.5 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-sm text-[#2B303B] dark:text-[#EAF0EC] outline-none focus:border-[#6E8CA0]"
               />
               {query && (
-                <button data-testid="recipe-search-clear" onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8C7567]" aria-label="clear">
+                <button data-testid="recipe-search-clear" onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" aria-label="clear">
                   <X className="w-4 h-4" />
                 </button>
               )}
@@ -249,8 +249,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     onClick={() => setCatFilter(c.key)}
                     className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
                       catFilter === c.key
-                        ? "bg-[#B34A26] text-white border-[#B34A26]"
-                        : "bg-white dark:bg-[#2A211D] text-[#8C7567] border-[#E8DEC8] dark:border-[#3D302A]"
+                        ? "bg-[#5E8B7E] text-white border-[#5E8B7E]"
+                        : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"
                     }`}
                   >
                     <span className="mr-1">{c.icon}</span>{c.key === "all" ? c.label : t(c.label)}
@@ -260,7 +260,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             )}
 
             {filtered.length === 0 ? (
-              <p className="text-center text-[#8C7567] py-8 text-sm" data-testid="recipe-no-results">
+              <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
                 {triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
               </p>
             ) : !isMikilab ? (
@@ -272,16 +272,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   if (items.length === 0) return null;
                   const open = q ? true : (openCats[cat.key] ?? true);
                   return (
-                    <div key={cat.key} className="border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden bg-white/40 dark:bg-[#2A211D]/40">
+                    <div key={cat.key} className="border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl overflow-hidden bg-white/40 dark:bg-[#232A31]/40">
                       <button
                         data-testid={`cat-accordion-${cat.key}`}
                         onClick={() => setOpenCats((s) => ({ ...s, [cat.key]: !open }))}
                         className="w-full flex items-center gap-2 px-4 py-3 text-left"
                       >
                         <span className="text-lg">{cat.icon}</span>
-                        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B34A26] flex-1">{t(cat.label)}</h2>
-                        <span className="text-xs font-mono-data text-[#8C7567]">{items.length}</span>
-                        <ChevronDown className={`w-4 h-4 text-[#8C7567] transition-transform ${open ? "rotate-180" : ""}`} />
+                        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#5E8B7E] flex-1">{t(cat.label)}</h2>
+                        <span className="text-xs font-mono-data text-[#7E8A93]">{items.length}</span>
+                        <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform ${open ? "rotate-180" : ""}`} />
                       </button>
                       <AnimatePresence initial={false}>
                         {open && (
@@ -309,7 +309,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
       {/* Finestra ricetta */}
       <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
-        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A] p-0">
+        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B] p-0">
           <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
           <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
           {viewing && (
@@ -346,7 +346,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       />
 
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
-        <AlertDialogContent className="bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A]">
+        <AlertDialogContent className="bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B]">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-display">{t("delete_recipe_q")}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -358,7 +358,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             <AlertDialogAction
               data-testid="delete-confirm-btn"
               onClick={handleDelete}
-              className="bg-[#B4442A] hover:bg-[#963B1C]"
+              className="bg-[#C0574D] hover:bg-[#4C7368]"
             >
               {t("delete")}
             </AlertDialogAction>
@@ -424,49 +424,49 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
     const perPiece = pcs > 0 ? total / pcs : null;
     if (total > 0) {
       priceBlock = (
-        <div data-testid={`recipe-cost-${r.id}`} className="rounded-xl px-3 py-3 border bg-[#D99B26]/10 border-[#D99B26]/30">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A] mb-2">{t("cost_breakdown")}</p>
+        <div data-testid={`recipe-cost-${r.id}`} className="rounded-xl px-3 py-3 border bg-[#6E8CA0]/10 border-[#6E8CA0]/30">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#8FB0C2] mb-2">{t("cost_breakdown")}</p>
           <div className="space-y-1 mb-2">
             {br.map(([label, val], idx) => (
               <div key={idx} className="flex items-center justify-between text-sm">
-                <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{label}</span>
-                <span className="font-mono-data text-[#8C3A1D] dark:text-[#E5AC3A]">€ {val.toFixed(2)}</span>
+                <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{label}</span>
+                <span className="font-mono-data text-[#33564E] dark:text-[#8FB0C2]">€ {val.toFixed(2)}</span>
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-between pt-2 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
-            <span className="text-xs font-semibold text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_total")}</span>
-            <span className="font-mono-data text-sm font-bold text-[#8C3A1D] dark:text-[#E5AC3A]">€ {total.toFixed(2)}</span>
+          <div className="flex items-center justify-between pt-2 border-t border-[#D7E1DB]/60 dark:border-[#38424B]">
+            <span className="text-xs font-semibold text-[#3F4A54] dark:text-[#AEB8BF]">{t("cost_total")}</span>
+            <span className="font-mono-data text-sm font-bold text-[#33564E] dark:text-[#8FB0C2]">€ {total.toFixed(2)}</span>
           </div>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-xs text-[#8C7567]">{t("cost_pieces")}</span>
+            <span className="text-xs text-[#7E8A93]">{t("cost_pieces")}</span>
             <div className="flex items-center gap-1.5">
-              <button data-testid={`pieces-minus-${r.id}`} onClick={() => setPieces((p) => String(Math.max(1, (n(p) || 1) - 1)))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] text-[#B34A26] font-bold">−</button>
+              <button data-testid={`pieces-minus-${r.id}`} onClick={() => setPieces((p) => String(Math.max(1, (n(p) || 1) - 1)))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] text-[#5E8B7E] font-bold">−</button>
               <input
                 data-testid={`pieces-input-${r.id}`} type="number" value={pieces}
                 onChange={(e) => setPieces(e.target.value)}
-                className="w-14 text-center font-mono-data text-sm font-bold bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg py-1 outline-none"
+                className="w-14 text-center font-mono-data text-sm font-bold bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg py-1 outline-none"
               />
-              <button data-testid={`pieces-plus-${r.id}`} onClick={() => setPieces((p) => String((n(p) || 0) + 1))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] text-[#B34A26] font-bold">+</button>
+              <button data-testid={`pieces-plus-${r.id}`} onClick={() => setPieces((p) => String((n(p) || 0) + 1))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] text-[#5E8B7E] font-bold">+</button>
             </div>
           </div>
           {perPiece != null && (
-            <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
-              <span className="text-xs font-semibold text-[#4A3B34] dark:text-[#C9BBB0]">{t("cost_per_piece")}</span>
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#D7E1DB]/60 dark:border-[#38424B]">
+              <span className="text-xs font-semibold text-[#3F4A54] dark:text-[#AEB8BF]">{t("cost_per_piece")}</span>
               <span className="font-mono-data text-sm font-bold text-[#6B8E62]">€ {perPiece.toFixed(2)}</span>
             </div>
           )}
           {(cst.b2b_500g || cst.b2b_100g) && (
-            <div className="mt-2 pt-2 border-t border-[#E8DEC8]/60 dark:border-[#3D302A]" data-testid={`b2b-${r.id}`}>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-1">{t("labels_b2b_hint")}</p>
+            <div className="mt-2 pt-2 border-t border-[#D7E1DB]/60 dark:border-[#38424B]" data-testid={`b2b-${r.id}`}>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E] mb-1">{t("labels_b2b_hint")}</p>
               <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-lg bg-[#008C45]/10 border border-[#008C45]/30 px-2 py-1.5 text-center">
-                  <p className="text-[9px] uppercase tracking-wide text-[#8C7567]">{t("labels_b2b_500")}</p>
-                  <p className="font-mono-data text-sm font-extrabold text-[#008C45]">€ {Number(cst.b2b_500g || 0).toFixed(2)}</p>
+                <div className="rounded-lg bg-[#6B8E62]/10 border border-[#6B8E62]/30 px-2 py-1.5 text-center">
+                  <p className="text-[9px] uppercase tracking-wide text-[#7E8A93]">{t("labels_b2b_500")}</p>
+                  <p className="font-mono-data text-sm font-extrabold text-[#6B8E62]">€ {Number(cst.b2b_500g || 0).toFixed(2)}</p>
                 </div>
-                <div className="rounded-lg bg-[#B34A26]/10 border border-[#B34A26]/30 px-2 py-1.5 text-center">
-                  <p className="text-[9px] uppercase tracking-wide text-[#8C7567]">{t("labels_b2b_100")}</p>
-                  <p className="font-mono-data text-sm font-extrabold text-[#B34A26]">€ {Number(cst.b2b_100g || 0).toFixed(2)}</p>
+                <div className="rounded-lg bg-[#5E8B7E]/10 border border-[#5E8B7E]/30 px-2 py-1.5 text-center">
+                  <p className="text-[9px] uppercase tracking-wide text-[#7E8A93]">{t("labels_b2b_100")}</p>
+                  <p className="font-mono-data text-sm font-extrabold text-[#5E8B7E]">€ {Number(cst.b2b_100g || 0).toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -486,30 +486,30 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
               {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1412]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1B2127]/70 to-transparent" />
         </div>
       )}
       <div className="p-5 space-y-4">
         <div>
-          <h2 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
+          <h2 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">
             {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
             {isPanettone && farro ? rLoc(r, "name", lang).replace(/mikilab/i, (m) => "al Farro " + m) : rLoc(r, "name", lang)}
           </h2>
-          {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-[#B34A26] mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
-          {r.flour_type ? <p className="text-sm text-[#8C7567] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
+          {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-[#5E8B7E] mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
+          {r.flour_type ? <p className="text-sm text-[#7E8A93] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
         </div>
 
         <div className="flex gap-1.5">
           <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#6B8E62" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
-          {canEdit && <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#8C7567" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>}
-          {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#B34A26"><Pencil className="w-4 h-4" /></ActionBtn>}
-          {canEdit && <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#B4442A"><Trash2 className="w-4 h-4" /></ActionBtn>}
+          {canEdit && <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#7E8A93" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>}
+          {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#5E8B7E"><Pencil className="w-4 h-4" /></ActionBtn>}
+          {canEdit && <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#C0574D"><Trash2 className="w-4 h-4" /></ActionBtn>}
         </div>
 
         {isPanettone && !r.locked && (
           <button data-testid={`farro-toggle-${r.id}`} onClick={() => setFarro((v) => !v)}
             className={`w-full flex items-center justify-center gap-2 rounded-2xl px-4 py-3 font-semibold text-sm transition-all active:scale-98 border ${
-              farro ? "bg-[#6B8E62] text-white border-[#6B8E62]" : "bg-[#D99B26]/10 text-[#8C3A1D] dark:text-[#E5AC3A] border-[#D99B26]/40"
+              farro ? "bg-[#6B8E62] text-white border-[#6B8E62]" : "bg-[#6E8CA0]/10 text-[#33564E] dark:text-[#8FB0C2] border-[#6E8CA0]/40"
             }`}>
             <Wheat className="w-4 h-4" />
             {farro
@@ -519,7 +519,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         )}
 
         {isPanettone && !r.locked && farro && (
-          <div data-testid={`farro-banner-${r.id}`} className="rounded-xl bg-[#6B8E62]/12 border border-[#6B8E62]/30 p-3 text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">
+          <div data-testid={`farro-banner-${r.id}`} className="rounded-xl bg-[#6B8E62]/12 border border-[#6B8E62]/30 p-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
             🌾 {tri(
               "VERSIONE AL FARRO: essendo il glutine del farro più fragile e tenace, l'idratazione è stata ridotta di ~4%. Impasta per meno tempo e più delicatamente (evita il surriscaldamento); inserisci burro e tuorli in piccole dosi frazionate. Gestione del lievito madre, glassa e procedimento restano invariati.",
               "DINKEL-VERSION: Da das Dinkelgluten zerbrechlicher ist, wurde die Hydratation ~4% reduziert. Kürzer und schonender kneten (Überhitzung vermeiden); Butter und Eigelb in kleinen Portionen fraktioniert einarbeiten. Lievito-Madre-Führung, Glasur und Ablauf bleiben unverändert.",
@@ -548,29 +548,29 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         ) : rows.length > 0 ? (
           <>
           {biga && (
-            <div data-testid={`recipe-biga-${r.id}`} className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A] mb-2">🥖 {tri("Fase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)")}</p>
+            <div data-testid={`recipe-biga-${r.id}`} className="rounded-xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-3">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#8FB0C2] mb-2">🥖 {tri("Fase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)")}</p>
               <div className="space-y-1">
-                <div className="flex items-center justify-between text-sm"><span className="text-[#4A3B34] dark:text-[#C9BBB0]">{t("ing_flour")}</span><span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{bFlour} g</span></div>
-                <div className="flex items-center justify-between text-sm"><span className="text-[#4A3B34] dark:text-[#C9BBB0]">{t("ing_water")}</span><span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{bWater} g</span></div>
-                {bYeast > 0 && <div className="flex items-center justify-between text-sm"><span className="text-[#4A3B34] dark:text-[#C9BBB0]">{tri("Lievito di birra", "Hefe", "Fresh yeast")}</span><span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{bYeast} g</span></div>}
+                <div className="flex items-center justify-between text-sm"><span className="text-[#3F4A54] dark:text-[#AEB8BF]">{t("ing_flour")}</span><span className="font-mono-data font-semibold text-[#33564E] dark:text-[#8FB0C2]">{bFlour} g</span></div>
+                <div className="flex items-center justify-between text-sm"><span className="text-[#3F4A54] dark:text-[#AEB8BF]">{t("ing_water")}</span><span className="font-mono-data font-semibold text-[#33564E] dark:text-[#8FB0C2]">{bWater} g</span></div>
+                {bYeast > 0 && <div className="flex items-center justify-between text-sm"><span className="text-[#3F4A54] dark:text-[#AEB8BF]">{tri("Lievito di birra", "Hefe", "Fresh yeast")}</span><span className="font-mono-data font-semibold text-[#33564E] dark:text-[#8FB0C2]">{bYeast} g</span></div>}
               </div>
-              {(biga.hours || biga.hours_de) && <p className="text-[11px] text-[#8C7567] mt-2 leading-relaxed">{de ? (biga.hours_de || biga.hours) : (lang === "en" ? (biga.hours_en || biga.hours) : biga.hours)}</p>}
+              {(biga.hours || biga.hours_de) && <p className="text-[11px] text-[#7E8A93] mt-2 leading-relaxed">{de ? (biga.hours_de || biga.hours) : (lang === "en" ? (biga.hours_en || biga.hours) : biga.hours)}</p>}
             </div>
           )}
-          {biga && <div className="border-t border-dashed border-[#D99B26]/50 my-1" aria-hidden />}
-          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
+          {biga && <div className="border-t border-dashed border-[#6E8CA0]/50 my-1" aria-hidden />}
+          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] p-3">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{biga ? tri("Fase 2 · Impasto principale", "Phase 2 · Hauptteig", "Phase 2 · Main dough") : t("recipe_ingredients")}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E]">{biga ? tri("Fase 2 · Impasto principale", "Phase 2 · Hauptteig", "Phase 2 · Main dough") : t("recipe_ingredients")}</p>
               {flourG > 0 && (
                 <div className="flex items-center gap-1">
-                  <span className="text-[10px] text-[#8C7567]">{t("recipe_scale")}</span>
+                  <span className="text-[10px] text-[#7E8A93]">{t("recipe_scale")}</span>
                   <input
                     data-testid={`recipe-scale-${r.id}`} type="number" value={scaleVal ?? flourG}
                     onChange={(e) => onScaleChange(e.target.value)}
-                    className="w-20 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none"
+                    className="w-20 text-right font-mono-data text-xs font-bold text-[#33564E] dark:text-[#8FB0C2] bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-md px-1.5 py-1 outline-none"
                   />
-                  <span className="text-[10px] text-[#8C7567]">g</span>
+                  <span className="text-[10px] text-[#7E8A93]">g</span>
                 </div>
               )}
             </div>
@@ -579,13 +579,13 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
                 const isImprover = typeof k === "string" && /migliorator|backmittel/i.test(k);
                 return (
                   <div key={idx} className="flex items-center justify-between text-sm">
-                    <span className="text-[#4A3B34] dark:text-[#C9BBB0]">
+                    <span className="text-[#3F4A54] dark:text-[#AEB8BF]">
                       {k}
                       {isImprover && (
                         <button data-testid={`improver-link-${r.id}`} onClick={onImprover} className="ml-1 text-[#6B8E62] font-bold align-super" title={t("improver_link_title")}>*</button>
                       )}
                     </span>
-                    <span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{v}</span>
+                    <span className="font-mono-data font-semibold text-[#33564E] dark:text-[#8FB0C2]">{v}</span>
                   </div>
                 );
               })}
@@ -597,12 +597,12 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         {r.procedure ? (
           <div data-testid={`recipe-procedure-${r.id}`} className="rounded-xl bg-[#6B8E62]/10 border border-[#6B8E62]/25 p-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-[#4d6b45] dark:text-[#9ec48f] mb-1.5">{t("recipe_procedure")}</p>
-            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{rLoc(r, "procedure", lang)}</p>
+            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{rLoc(r, "procedure", lang)}</p>
           </div>
         ) : null}
 
         {r.locked && (
-          <div data-testid={`recipe-teaser-${r.id}`} className="rounded-2xl bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white p-5 text-center shadow-lg">
+          <div data-testid={`recipe-teaser-${r.id}`} className="rounded-2xl bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-5 text-center shadow-lg">
             <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-3">
               <Lock className="w-6 h-6" />
             </div>
@@ -613,24 +613,24 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
               {tri("Procedimento passo-passo, tutti gli ingredienti, le fasi di lavorazione e gli strumenti del laboratorio.", "Prozedur Schritt für Schritt, alle Zutaten, Arbeitsphasen und Werkzeuge des Labors.", "Step-by-step procedure, all ingredients, work phases and lab tools.")}
             </p>
             <button data-testid={`recipe-unlock-${r.id}`} onClick={onUnlock}
-              className="mt-4 inline-flex items-center gap-2 bg-white text-[#8C3A1D] font-bold px-5 py-2.5 rounded-xl active:scale-97 transition-all">
+              className="mt-4 inline-flex items-center gap-2 bg-white text-[#33564E] font-bold px-5 py-2.5 rounded-xl active:scale-97 transition-all">
               <Crown className="w-4 h-4" /> {tri("Passa a PRO · €9,99/mese", "PRO freischalten · €9,99/Monat", "Go PRO · €9.99/month")}
             </button>
           </div>
         )}
 
-        {r.notes ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{rLoc(r, "notes", lang)}</p> : null}
+        {r.notes ? <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{rLoc(r, "notes", lang)}</p> : null}
 
         <GlossaryBox text={`${r.procedure || ""} ${r.notes || ""}`} />
 
         {Array.isArray(r.work_phases) && r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).length > 0 && (
-          <div data-testid={`recipe-phases-${r.id}`} className="rounded-xl bg-[#B34A26]/8 border border-[#B34A26]/20 p-3">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("work_phases_section")}</p>
+          <div data-testid={`recipe-phases-${r.id}`} className="rounded-xl bg-[#5E8B7E]/8 border border-[#5E8B7E]/20 p-3">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E] mb-2">{t("work_phases_section")}</p>
             <div className="space-y-1.5">
               {r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).map((p, idx) => (
                 <div key={idx} className="flex items-center justify-between text-sm">
-                  <span className="text-[#4A3B34] dark:text-[#C9BBB0] font-medium">{p.name || `${t("phase_name_ph")} ${idx + 1}`}</span>
-                  <span className="font-mono-data text-[#8C3A1D] dark:text-[#E5AC3A] shrink-0 ml-2">
+                  <span className="text-[#3F4A54] dark:text-[#AEB8BF] font-medium">{p.name || `${t("phase_name_ph")} ${idx + 1}`}</span>
+                  <span className="font-mono-data text-[#33564E] dark:text-[#8FB0C2] shrink-0 ml-2">
                     {p.time ? p.time : ""}{p.time && p.temp ? " · " : ""}{p.temp ? `${fmtTemp(p.temp)}°C` : ""}
                   </span>
                 </div>
@@ -651,7 +651,7 @@ function ActionBtn({ testid, onClick, color, label, children }) {
       data-testid={testid}
       onClick={onClick}
       aria-label={label}
-      className="w-9 h-9 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center active:scale-95"
+      className="w-9 h-9 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center active:scale-95"
       style={{ color }}
     >
       {children}
@@ -661,7 +661,7 @@ function ActionBtn({ testid, onClick, color, label, children }) {
 
 function Badge({ icon, children }) {
   return (
-    <span className="inline-flex items-center gap-1 bg-[#D99B26]/15 text-[#8C3A1D] dark:text-[#E5AC3A] font-mono-data text-xs px-2.5 py-1 rounded-full font-bold border border-[#D99B26]/30">
+    <span className="inline-flex items-center gap-1 bg-[#6E8CA0]/15 text-[#33564E] dark:text-[#8FB0C2] font-mono-data text-xs px-2.5 py-1 rounded-full font-bold border border-[#6E8CA0]/30">
       {icon}
       {children}
     </span>
@@ -701,14 +701,14 @@ function recipeBadges(r) {
 
 const BADGE_STYLE = {
   LM: "bg-[#6B8E62]/15 text-[#4d6b45] border-[#6B8E62]/40",
-  LDB: "bg-[#B34A26]/12 text-[#8C3A1D] border-[#B34A26]/35",
-  Rg: "bg-[#8C5A2B]/12 text-[#7A4A20] border-[#8C5A2B]/35",
-  Vk: "bg-[#A6803A]/12 text-[#7A5E24] border-[#A6803A]/35",
+  LDB: "bg-[#5E8B7E]/12 text-[#33564E] border-[#5E8B7E]/35",
+  Rg: "bg-[#6E8CA0]/12 text-[#33564E] border-[#6E8CA0]/35",
+  Vk: "bg-[#6E8CA0]/12 text-[#33564E] border-[#6E8CA0]/35",
   Poolish: "bg-[#3F7CAC]/12 text-[#2E5E82] border-[#3F7CAC]/35",
   Biga: "bg-[#3F7CAC]/12 text-[#2E5E82] border-[#3F7CAC]/35",
 };
 function badgeClass(b) {
-  return BADGE_STYLE[b] || "bg-[#D99B26]/15 text-[#8C3A1D] border-[#D99B26]/35";
+  return BADGE_STYLE[b] || "bg-[#6E8CA0]/15 text-[#33564E] border-[#6E8CA0]/35";
 }
 
 function recipeCategory(r) {
@@ -779,11 +779,11 @@ function GlossaryBox({ text }) {
   const found = Object.values(GLOSSARY).filter((g) => g.match.some((m) => low.includes(m)));
   if (found.length === 0) return null;
   return (
-    <div data-testid="recipe-glossary" className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
-      <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A] mb-1.5">{t("gloss_title")} *</p>
+    <div data-testid="recipe-glossary" className="rounded-xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-3">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#8FB0C2] mb-1.5">{t("gloss_title")} *</p>
       <ul className="space-y-1.5">
         {found.map((g, i) => (
-          <li key={i} className="text-xs text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">* {lang === "de" ? g.de : g.it}</li>
+          <li key={i} className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">* {lang === "de" ? g.de : g.it}</li>
         ))}
       </ul>
     </div>
@@ -848,31 +848,31 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
     <div data-testid={`panettone-structure-${r.id}`} className="space-y-4">
       {flourG > 0 && (
         <div className="flex items-center justify-end gap-1">
-          <span className="text-[10px] text-[#8C7567]">{t("recipe_scale")}</span>
+          <span className="text-[10px] text-[#7E8A93]">{t("recipe_scale")}</span>
           <input data-testid={`recipe-scale-${r.id}`} type="number" value={scaleVal ?? flourG}
             onChange={(e) => onScaleChange(e.target.value)}
-            className="w-20 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none" />
-          <span className="text-[10px] text-[#8C7567]">g</span>
+            className="w-20 text-right font-mono-data text-xs font-bold text-[#33564E] dark:text-[#8FB0C2] bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-md px-1.5 py-1 outline-none" />
+          <span className="text-[10px] text-[#7E8A93]">g</span>
         </div>
       )}
 
-      <div className="rounded-xl bg-[#B34A26]/8 border border-[#B34A26]/25 p-3">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">🌾 {tri("Gestione Lievito Madre (pH)", "Führung Lievito Madre (pH)", "Sourdough management (pH)")}</p>
+      <div className="rounded-xl bg-[#5E8B7E]/8 border border-[#5E8B7E]/25 p-3">
+        <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E] mb-2">🌾 {tri("Gestione Lievito Madre (pH)", "Führung Lievito Madre (pH)", "Sourdough management (pH)")}</p>
         <div className="space-y-1">
           {PAN_MY[de ? "de" : "it"].map((m, i) => (
             <div key={i} className="flex items-start justify-between gap-2 text-sm">
-              <span className="font-medium text-[#4A3B34] dark:text-[#C9BBB0] shrink-0">{m.s}</span>
-              <span className="text-right text-[#8C7567]">{m.d}</span>
+              <span className="font-medium text-[#3F4A54] dark:text-[#AEB8BF] shrink-0">{m.s}</span>
+              <span className="text-right text-[#7E8A93]">{m.d}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3 overflow-x-auto">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{tri("Ingredienti: 1° e 2° Impasto · Totale", "Zutaten: 1./2. Teig · Gesamt", "Ingredients: 1st/2nd dough · Total")}</p>
+      <div className="rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] p-3 overflow-x-auto">
+        <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E] mb-2">{tri("Ingredienti: 1° e 2° Impasto · Totale", "Zutaten: 1./2. Teig · Gesamt", "Ingredients: 1st/2nd dough · Total")}</p>
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="text-[10px] uppercase text-[#8C7567]">
+            <tr className="text-[10px] uppercase text-[#7E8A93]">
               <th className="text-left font-semibold pb-1">{tri("Ingrediente", "Zutat", "Ingredient")}</th>
               <th className="text-right font-semibold pb-1">1°</th>
               <th className="text-right font-semibold pb-1">2°</th>
@@ -885,36 +885,36 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
               const first = Math.round(it.tot * it.first);
               const second = it.tot - first;
               return (
-                <tr key={i} className="border-t border-[#E8DEC8]/60 dark:border-[#3D302A]">
-                  <td className="py-1 text-[#4A3B34] dark:text-[#C9BBB0] pr-2">{it.name}</td>
-                  <td className="py-1 text-right font-mono-data text-[#8C7567]">{first > 0 ? first : "—"}</td>
-                  <td className="py-1 text-right font-mono-data text-[#8C7567]">{second > 0 ? second : "—"}</td>
-                  <td className="py-1 text-right font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{it.tot}</td>
-                  <td className="py-1 text-right font-mono-data text-[#8C7567]">{pctOf(it.tot)}</td>
+                <tr key={i} className="border-t border-[#D7E1DB]/60 dark:border-[#38424B]">
+                  <td className="py-1 text-[#3F4A54] dark:text-[#AEB8BF] pr-2">{it.name}</td>
+                  <td className="py-1 text-right font-mono-data text-[#7E8A93]">{first > 0 ? first : "—"}</td>
+                  <td className="py-1 text-right font-mono-data text-[#7E8A93]">{second > 0 ? second : "—"}</td>
+                  <td className="py-1 text-right font-mono-data font-semibold text-[#33564E] dark:text-[#8FB0C2]">{it.tot}</td>
+                  <td className="py-1 text-right font-mono-data text-[#7E8A93]">{pctOf(it.tot)}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <p className="text-[10px] text-[#8C7567] mt-2">{tri("g · % sul peso della farina totale. Sospensioni sempre a fine impasto, a bassa velocità.", "g · % auf das Gesamtmehl. Suspensionen immer am Ende, langsam einarbeiten.", "g · % of total flour. Add suspensions at the very end, at low speed.")}</p>
+        <p className="text-[10px] text-[#7E8A93] mt-2">{tri("g · % sul peso della farina totale. Sospensioni sempre a fine impasto, a bassa velocità.", "g · % auf das Gesamtmehl. Suspensionen immer am Ende, langsam einarbeiten.", "g · % of total flour. Add suspensions at the very end, at low speed.")}</p>
       </div>
 
-      <div className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
+      <div className="rounded-xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-3">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A]">{tri("Modulo Glassa (automatico)", "Glasur-Modul (automatisch)", "Glaze module (automatic)")}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#8FB0C2]">{tri("Modulo Glassa (automatico)", "Glasur-Modul (automatisch)", "Glaze module (automatic)")}</p>
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-[#8C7567]">{tri("Totale", "Gesamt", "Total")}</span>
+            <span className="text-[10px] text-[#7E8A93]">{tri("Totale", "Gesamt", "Total")}</span>
             <input data-testid={`glaze-total-${r.id}`} type="number" value={glazeTot}
               onChange={(e) => setGlazeTot(e.target.value)}
-              className="w-16 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none" />
-            <span className="text-[10px] text-[#8C7567]">g</span>
+              className="w-16 text-right font-mono-data text-xs font-bold text-[#33564E] dark:text-[#8FB0C2] bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-md px-1.5 py-1 outline-none" />
+            <span className="text-[10px] text-[#7E8A93]">g</span>
           </div>
         </div>
         <div className="space-y-1">
           {PAN_GLAZE.map(([itn, den, p], i) => (
             <div key={i} className="flex items-center justify-between text-sm">
-              <span className="text-[#4A3B34] dark:text-[#C9BBB0]">{de ? den : itn}</span>
-              <span className="font-mono-data text-[#8C3A1D] dark:text-[#E5AC3A]">{Math.round((Number(glazeTot) || 0) * p / 100)} g · {p}%</span>
+              <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{de ? den : itn}</span>
+              <span className="font-mono-data text-[#33564E] dark:text-[#8FB0C2]">{Math.round((Number(glazeTot) || 0) * p / 100)} g · {p}%</span>
             </div>
           ))}
         </div>

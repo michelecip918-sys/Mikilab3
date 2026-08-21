@@ -76,29 +76,29 @@ export default function SourdoughTracker() {
           <FlaskConical className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">
             {tri("Lievito Madre & pH Tracker", "Lievito Madre & pH-Tracker", "Sourdough & pH Tracker")}
           </h1>
-          <p className="text-sm text-[#8C7567]">{tri("Segui la maturazione fino al punto giusto", "Verfolge die Reife bis zum idealen Punkt", "Track ripening to the ideal point")}</p>
+          <p className="text-sm text-[#7E8A93]">{tri("Segui la maturazione fino al punto giusto", "Verfolge die Reife bis zum idealen Punkt", "Track ripening to the ideal point")}</p>
         </div>
       </div>
 
       {/* Finestra ideale */}
-      <div className="rounded-2xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3 mb-4 text-sm text-[#8C3A1D] dark:text-[#E5AC3A]">
+      <div className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-3 mb-4 text-sm text-[#33564E] dark:text-[#8FB0C2]">
         🎯 {tri("Punto per LEGARE il Panettone", "Punkt zum BINDEN des Panettone", "Point to BIND the Panettone")}: <b>pH {PH_MIN}–{PH_MAX}</b> · <b>{T_MIN}–{T_MAX}°C</b>
       </div>
 
       {/* Stato attuale */}
       {last && (
-        <div data-testid="ph-status" className={`rounded-2xl p-4 mb-4 border ${atPeak ? "bg-[#6B8E62]/15 border-[#6B8E62]/40" : "bg-white dark:bg-[#2A211D] border-[#E8DEC8] dark:border-[#3D302A]"}`}>
+        <div data-testid="ph-status" className={`rounded-2xl p-4 mb-4 border ${atPeak ? "bg-[#6B8E62]/15 border-[#6B8E62]/40" : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B]"}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] uppercase tracking-wide text-[#8C7567]">{tri("Ultima misura", "Letzte Messung", "Last reading")}</p>
-              <p className="font-mono-data text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">pH {Number(last.ph).toFixed(1)} · {last.temp}°C</p>
+              <p className="text-[11px] uppercase tracking-wide text-[#7E8A93]">{tri("Ultima misura", "Letzte Messung", "Last reading")}</p>
+              <p className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">pH {Number(last.ph).toFixed(1)} · {last.temp}°C</p>
             </div>
             {atPeak
               ? <div className="flex items-center gap-2 text-[#4d6b45] dark:text-[#9ec48f] font-bold"><CheckCircle2 className="w-6 h-6" /> {tri("PRONTO", "BEREIT", "READY")}</div>
-              : <span className="text-xs text-[#8C7567] text-right max-w-[45%]">{tri("Continua a monitorare fino alla finestra ideale.", "Weiter überwachen bis zum Idealfenster.", "Keep monitoring until the ideal window.")}</span>}
+              : <span className="text-xs text-[#7E8A93] text-right max-w-[45%]">{tri("Continua a monitorare fino alla finestra ideale.", "Weiter überwachen bis zum Idealfenster.", "Keep monitoring until the ideal window.")}</span>}
           </div>
         </div>
       )}
@@ -106,16 +106,16 @@ export default function SourdoughTracker() {
       {/* Inserimento */}
       <div className="grid grid-cols-2 gap-3 mb-2">
         <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wide text-[#8C7567]">pH</label>
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">pH</label>
           <input data-testid="ph-input" type="number" step="0.1" value={ph} onChange={(e) => setPh(e.target.value)} placeholder="4.2"
-            className="mt-1 w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#6B8E62]" />
+            className="mt-1 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 outline-none focus:border-[#6B8E62]" />
         </div>
         <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wide text-[#8C7567]">{tri("Temperatura", "Temperatur", "Temperature")}</label>
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">{tri("Temperatura", "Temperatur", "Temperature")}</label>
           <div className="relative mt-1">
             <input data-testid="ph-temp-input" type="number" value={temp} onChange={(e) => setTemp(e.target.value)} placeholder="28"
-              className="w-full font-mono-data bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 pr-8 outline-none focus:border-[#6B8E62]" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#8C7567]">°C</span>
+              className="w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 pr-8 outline-none focus:border-[#6B8E62]" />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">°C</span>
           </div>
         </div>
       </div>
@@ -126,10 +126,10 @@ export default function SourdoughTracker() {
       </button>
 
       <button data-testid="ph-bt-btn" onClick={connectBt} disabled={btBusy}
-        className="w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] text-[#2C221E] dark:text-[#F5EFE6] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
+        className="w-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
         <Bluetooth className="w-5 h-5 text-[#3F7CAC]" /> {tri("Collega pH-metro (Bluetooth)", "pH-Meter verbinden (Bluetooth)", "Connect pH meter (Bluetooth)")}
       </button>
-      <button data-testid="ph-notif-btn" onClick={askNotif} className="w-full mt-2 text-xs text-[#8C7567] flex items-center justify-center gap-1">
+      <button data-testid="ph-notif-btn" onClick={askNotif} className="w-full mt-2 text-xs text-[#7E8A93] flex items-center justify-center gap-1">
         <Bell className="w-3.5 h-3.5" /> {tri("Attiva le notifiche del picco", "Peak-Benachrichtigungen aktivieren", "Enable peak notifications")}
       </button>
 
@@ -137,16 +137,16 @@ export default function SourdoughTracker() {
       {log.length > 0 && (
         <div className="mt-5" data-testid="ph-log">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B34A26]">{tri("Storico misure", "Messverlauf", "Reading history")}</h2>
-            <button data-testid="ph-clear-btn" onClick={() => setLog([])} className="text-xs text-[#B4442A] flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Svuota", "Leeren", "Clear")}</button>
+            <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#5E8B7E]">{tri("Storico misure", "Messverlauf", "Reading history")}</h2>
+            <button data-testid="ph-clear-btn" onClick={() => setLog([])} className="text-xs text-[#C0574D] flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Svuota", "Leeren", "Clear")}</button>
           </div>
           <div className="space-y-1.5">
             {log.map((e) => {
               const ok = inWindow(Number(e.ph), Number(e.temp));
               return (
-                <div key={e.id} className={`flex items-center justify-between rounded-xl px-3 py-2 border text-sm ${ok ? "bg-[#6B8E62]/12 border-[#6B8E62]/30" : "bg-white dark:bg-[#2A211D] border-[#E8DEC8] dark:border-[#3D302A]"}`}>
-                  <span className="font-mono-data font-semibold text-[#2C221E] dark:text-[#F5EFE6]">pH {Number(e.ph).toFixed(1)} · {e.temp}°C</span>
-                  <span className="text-xs text-[#8C7567]">{new Date(e.ts).toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
+                <div key={e.id} className={`flex items-center justify-between rounded-xl px-3 py-2 border text-sm ${ok ? "bg-[#6B8E62]/12 border-[#6B8E62]/30" : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+                  <span className="font-mono-data font-semibold text-[#2B303B] dark:text-[#EAF0EC]">pH {Number(e.ph).toFixed(1)} · {e.temp}°C</span>
+                  <span className="text-xs text-[#7E8A93]">{new Date(e.ts).toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
                 </div>
               );
             })}

@@ -67,32 +67,32 @@ export default function AuthScreen({ onClose }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#FDFBF7] dark:bg-[#1A1412]">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[#F6F8F5] dark:bg-[#1B2127]">
       <div className="w-full max-w-sm relative" data-testid="auth-screen">
         {onClose && (
           <button data-testid="auth-close" onClick={onClose} aria-label="Chiudi"
-            className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center text-[#8C7567] z-10">
+            className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center text-[#7E8A93] z-10">
             <X className="w-5 h-5" />
           </button>
         )}
         <div className="text-center mb-6">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg mx-auto mb-3" />
-          <h1 className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{T.title}</h1>
-          <p className="text-sm text-[#8C7567] mt-1">{T.sub} 🇮🇹 🇩🇪 🇬🇧</p>
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-3" />
+          <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{T.title}</h1>
+          <p className="text-sm text-[#7E8A93] mt-1">{T.sub} 🇮🇹 🇩🇪 🇬🇧</p>
         </div>
 
         {mode !== "forgot" && (
           <>
             <button data-testid="google-login-btn" onClick={google}
-              className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3 font-semibold text-[#2C221E] dark:text-[#F5EFE6] shadow-sm active:scale-98 transition-all mb-4">
+              className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-3 font-semibold text-[#2B303B] dark:text-[#EAF0EC] shadow-sm active:scale-98 transition-all mb-4">
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5 h-5" />
               {T.google}
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <span className="flex-1 h-px bg-[#E8DEC8] dark:bg-[#3D302A]" />
-              <span className="text-xs text-[#8C7567]">{T.or}</span>
-              <span className="flex-1 h-px bg-[#E8DEC8] dark:bg-[#3D302A]" />
+              <span className="flex-1 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
+              <span className="text-xs text-[#7E8A93]">{T.or}</span>
+              <span className="flex-1 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
             </div>
           </>
         )}
@@ -100,37 +100,37 @@ export default function AuthScreen({ onClose }) {
         {mode === "forgot" && sent ? (
           <div data-testid="forgot-sent" className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-5 text-center">
             <Mail className="w-8 h-8 text-[#6B8E62] mx-auto mb-2" />
-            <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0]">{T.sent_msg}</p>
+            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{T.sent_msg}</p>
           </div>
         ) : (
         <form onSubmit={submit} className="space-y-3">
           {mode === "forgot" && (
-            <p className="text-sm text-[#8C7567] text-center -mt-1 mb-1">{T.forgot_sub}</p>
+            <p className="text-sm text-[#7E8A93] text-center -mt-1 mb-1">{T.forgot_sub}</p>
           )}
           {mode === "register" && (
             <Field icon={<User className="w-4 h-4" />}>
               <input data-testid="auth-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={T.name}
-                className="flex-1 bg-transparent outline-none text-sm text-[#2C221E] dark:text-[#F5EFE6]" />
+                className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#EAF0EC]" />
             </Field>
           )}
           <Field icon={<Mail className="w-4 h-4" />}>
             <input data-testid="auth-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder={T.email}
-              className="flex-1 bg-transparent outline-none text-sm text-[#2C221E] dark:text-[#F5EFE6]" />
+              className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#EAF0EC]" />
           </Field>
           {mode !== "forgot" && (
             <Field icon={<Lock className="w-4 h-4" />}>
               <input data-testid="auth-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder={T.pw}
-                className="flex-1 bg-transparent outline-none text-sm text-[#2C221E] dark:text-[#F5EFE6]" />
+                className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#EAF0EC]" />
             </Field>
           )}
           {mode === "login" && (
             <button type="button" data-testid="auth-forgot-link" onClick={() => { setMode("forgot"); setSent(false); }}
-              className="block w-full text-right text-xs text-[#8C7567] hover:text-[#B34A26] -mt-1">
+              className="block w-full text-right text-xs text-[#7E8A93] hover:text-[#5E8B7E] -mt-1">
               {T.forgot}
             </button>
           )}
           <button data-testid="auth-submit" type="submit" disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
             {mode === "login" ? <LogIn className="w-5 h-5" /> : mode === "register" ? <UserPlus className="w-5 h-5" /> : <Mail className="w-5 h-5" />}
             {mode === "login" ? T.login : mode === "register" ? T.register : T.send}
           </button>
@@ -139,16 +139,16 @@ export default function AuthScreen({ onClose }) {
 
         {mode === "forgot" ? (
           <button data-testid="auth-switch" onClick={() => { setMode("login"); setSent(false); }}
-            className="w-full text-center text-sm text-[#B34A26] font-medium mt-4">
+            className="w-full text-center text-sm text-[#5E8B7E] font-medium mt-4">
             {T.back}
           </button>
         ) : (
           <button data-testid="auth-switch" onClick={() => setMode(mode === "login" ? "register" : "login")}
-            className="w-full text-center text-sm text-[#B34A26] font-medium mt-4">
+            className="w-full text-center text-sm text-[#5E8B7E] font-medium mt-4">
             {mode === "login" ? T.switch_r : T.switch_l}
           </button>
         )}
-        <p className="text-center text-xs text-[#8C7567] mt-3">{T.note}</p>
+        <p className="text-center text-xs text-[#7E8A93] mt-3">{T.note}</p>
       </div>
     </div>
   );
@@ -156,8 +156,8 @@ export default function AuthScreen({ onClose }) {
 
 function Field({ icon, children }) {
   return (
-    <div className="flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
-      <span className="text-[#B34A26]">{icon}</span>
+    <div className="flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-3">
+      <span className="text-[#5E8B7E]">{icon}</span>
       {children}
     </div>
   );

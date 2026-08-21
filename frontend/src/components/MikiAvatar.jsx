@@ -5,13 +5,13 @@ export const MikiAvatar = ({ label, subtitle, size = 46, className = "" }) => (
       src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`}
       alt="Michele — MikiLab"
       style={{ width: size, height: size }}
-      className="rounded-full object-cover ring-2 ring-[#D99B26]/60 shadow-sm shrink-0"
+      className="rounded-full object-cover ring-2 ring-[#6E8CA0]/60 shadow-sm shrink-0"
       onError={(e) => { e.currentTarget.style.display = "none"; }}
     />
     {(label || subtitle) && (
       <div className="min-w-0 leading-tight">
-        {label && <p className="font-display text-sm font-bold text-[#2C221E] dark:text-[#F5EFE6] truncate">{label}</p>}
-        {subtitle && <p className="text-[11px] text-[#8C7567] truncate">{subtitle}</p>}
+        {label && <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#EAF0EC] truncate">{label}</p>}
+        {subtitle && <p className="text-[11px] text-[#7E8A93] truncate">{subtitle}</p>}
       </div>
     )}
   </div>

@@ -54,7 +54,7 @@ function App() {
 
   return (
     <AmbientProvider>
-    <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1A1412]">
+    <div className="App min-h-screen bg-[#F6F8F5] dark:bg-[#1B2127]">
       {/* Sfondo tematico cartone (leggero, su ogni pagina) */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-no-repeat bg-right-bottom opacity-[0.05] dark:opacity-[0.07]"
         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/michele-cartoon.jpg)`, backgroundSize: "min(70vw, 420px)" }} />
@@ -89,7 +89,7 @@ function App() {
           <motion.div
             data-testid="auth-modal"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-[#FDFBF7] dark:bg-[#1A1412] overflow-auto"
+            className="fixed inset-0 z-[70] bg-[#F6F8F5] dark:bg-[#1B2127] overflow-auto"
           >
             <AuthScreen onClose={() => setAuthOpen(false)} />
           </motion.div>

@@ -64,42 +64,42 @@ function HomePlanner() {
   };
 
   return (
-    <div data-testid="home-planner" className="rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-5">
-      <div className="flex items-center gap-2 mb-1 text-[#B34A26]">
+    <div data-testid="home-planner" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-5">
+      <div className="flex items-center gap-2 mb-1 text-[#5E8B7E]">
         <ChefHat className="w-5 h-5" />
-        <h3 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("home_plan_title")}</h3>
+        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("home_plan_title")}</h3>
       </div>
-      <p className="text-sm text-[#8C7567] mb-4">{t("home_plan_sub")}</p>
+      <p className="text-sm text-[#7E8A93] mb-4">{t("home_plan_sub")}</p>
 
       <div className="space-y-2" data-testid="home-products">
         {products.map((p, i) => (
           <div key={i} className="flex items-center gap-2">
             <select data-testid={`home-product-recipe-${i}`} value={p.recipe_id || ""}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value } : x))}
-              className="flex-1 min-w-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+              className="flex-1 min-w-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]">
               <option value="">{t("capo_pick_recipe")}</option>
               {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
             <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-              className="w-16 shrink-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]" />
+              className="w-16 shrink-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]" />
             <select data-testid={`home-product-day-${i}`} value={p.day || ""}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-              className="w-24 shrink-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg p-2 text-sm outline-none focus:border-[#B34A26]">
+              className="w-24 shrink-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]">
               {HOME_DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
             </select>
-            {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#B4442A] p-1 shrink-0"><X className="w-4 h-4" /></button>}
+            {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>}
           </div>
         ))}
-        <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#B34A26] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+        <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#5E8B7E] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
       </div>
 
-      <label className="text-[10px] font-semibold uppercase tracking-wide text-[#8C7567] mt-3 block">{t("home_when")}</label>
+      <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93] mt-3 block">{t("home_when")}</label>
       <input data-testid="home-when" value={when} placeholder={t("home_when_ph")} onChange={(e) => setWhen(e.target.value)}
-        className="mt-1 w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-2.5 text-sm outline-none focus:border-[#B34A26]" />
+        className="mt-1 w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#5E8B7E]" />
 
       <button data-testid="home-generate" onClick={generate} disabled={generating}
-        className="mt-3 w-full bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="mt-3 w-full bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("home_generate")}
       </button>
 
@@ -110,8 +110,8 @@ function HomePlanner() {
             <Printer className="w-5 h-5" /> {t("capo_print")}
           </button>
           <div className="print-area mt-4 space-y-4">
-            <div data-testid="home-plan" className="markdown-body bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 text-sm leading-relaxed text-[#2C221E] dark:text-[#F5EFE6]">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{t("home_plan_result")}</p>
+            <div data-testid="home-plan" className="markdown-body bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E] mb-2">{t("home_plan_result")}</p>
               <ReactMarkdown>{plan}</ReactMarkdown>
             </div>
             <SupplierOrder totals={shopTotals} />
@@ -222,10 +222,10 @@ function BakerQuiz() {
     return (
       <div data-testid="quiz-result" className="text-center bg-[#6B8E62]/12 border border-[#6B8E62]/30 rounded-2xl p-6">
         <Trophy className="w-10 h-10 text-[#6B8E62] mx-auto mb-2" />
-        <p className="text-sm text-[#8C7567]">{t("quiz_your_score")}</p>
-        <p className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6] my-1">{score} / {questions.length}</p>
-        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mb-4">{msg}</p>
-        <button data-testid="quiz-restart-btn" onClick={start} className="inline-flex items-center gap-2 bg-[#B34A26] text-white font-semibold px-5 py-2.5 rounded-xl">
+        <p className="text-sm text-[#7E8A93]">{t("quiz_your_score")}</p>
+        <p className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] my-1">{score} / {questions.length}</p>
+        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{msg}</p>
+        <button data-testid="quiz-restart-btn" onClick={start} className="inline-flex items-center gap-2 bg-[#5E8B7E] text-white font-semibold px-5 py-2.5 rounded-xl">
           <RotateCcw className="w-4 h-4" /> {t("quiz_restart")}
         </button>
       </div>
@@ -234,32 +234,32 @@ function BakerQuiz() {
 
   const cur = questions[idx];
   return (
-    <div data-testid="quiz-panel" className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
-      <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-1">{t("quiz_question")} {idx + 1} / {questions.length}</p>
-      <h4 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mb-3">{cur.q}</h4>
+    <div data-testid="quiz-panel" className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E] mb-1">{t("quiz_question")} {idx + 1} / {questions.length}</p>
+      <h4 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] mb-3">{cur.q}</h4>
       <div className="space-y-2">
         {cur.options.map((opt, i) => {
           const isCorrect = i === cur.correct;
           const chosen = picked === i;
-          let cls = "bg-[#F5EFE6] dark:bg-[#332823] border-[#E8DEC8] dark:border-[#3D302A]";
+          let cls = "bg-[#EAF0EC] dark:bg-[#2A323A] border-[#D7E1DB] dark:border-[#38424B]";
           if (picked != null && isCorrect) cls = "bg-[#6B8E62]/20 border-[#6B8E62]";
-          else if (picked != null && chosen && !isCorrect) cls = "bg-[#B4442A]/15 border-[#B4442A]";
+          else if (picked != null && chosen && !isCorrect) cls = "bg-[#C0574D]/15 border-[#C0574D]";
           return (
             <button key={i} data-testid={`quiz-option-${i}`} onClick={() => pick(i)} disabled={picked != null}
               className={`w-full flex items-center gap-2 text-left text-sm px-4 py-3 rounded-xl border transition-all ${cls}`}>
-              <span className="flex-1 text-[#2C221E] dark:text-[#F5EFE6]">{opt}</span>
+              <span className="flex-1 text-[#2B303B] dark:text-[#EAF0EC]">{opt}</span>
               {picked != null && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#6B8E62] shrink-0" />}
-              {picked != null && chosen && !isCorrect && <XCircle className="w-4 h-4 text-[#B4442A] shrink-0" />}
+              {picked != null && chosen && !isCorrect && <XCircle className="w-4 h-4 text-[#C0574D] shrink-0" />}
             </button>
           );
         })}
       </div>
       {picked != null && (
         <div className="mt-3 flex items-center justify-between gap-2">
-          <p className="text-sm font-medium text-[#4A3B34] dark:text-[#C9BBB0]">
+          <p className="text-sm font-medium text-[#3F4A54] dark:text-[#AEB8BF]">
             {picked === cur.correct ? t("quiz_correct") : `${t("quiz_wrong")} ${cur.options[cur.correct]}`}
           </p>
-          <button data-testid="quiz-next-btn" onClick={next} className="shrink-0 bg-[#B34A26] text-white font-semibold px-4 py-2 rounded-xl">
+          <button data-testid="quiz-next-btn" onClick={next} className="shrink-0 bg-[#5E8B7E] text-white font-semibold px-4 py-2 rounded-xl">
             {t("quiz_next")}
           </button>
         </div>
@@ -278,64 +278,64 @@ export default function Beginners() {
       <div className="rounded-2xl p-5 bg-[#6B8E62]/12 border border-[#6B8E62]/30">
         <div className="flex items-center gap-2 mb-2">
           <Sprout className="w-5 h-5 text-[#4d6b45] dark:text-[#9ec48f]" />
-          <h2 className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("beginners_title")}</h2>
+          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("beginners_title")}</h2>
         </div>
-        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("beginners_intro")}</p>
+        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_intro")}</p>
       </div>
 
       {/* Pianifica il pane a casa */}
       <HomePlanner />
 
       {beginners.map((s, i) => (
-        <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
-          <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{s.title}</h3>
-          <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{s.body}</p>
+        <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5">
+          <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{s.title}</h3>
+          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.body}</p>
         </div>
       ))}
 
       {/* Video e corsi gratis */}
-      <div className="flex items-center gap-2 text-[#8C7567] pt-2">
+      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <Youtube className="w-4 h-4" />
         <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_courses_title")}</span>
       </div>
-      <p className="text-sm text-[#8C7567] -mt-2">{t("beginners_courses_sub")}</p>
+      <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_courses_sub")}</p>
       {courses.map((v, i) => (
-        <div key={i} data-testid={`beg-course-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden">
+        <div key={i} data-testid={`beg-course-${i}`} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl overflow-hidden">
           <VideoEmbed src={v.url} title={v.title} testid={`beg-course-video-${i}`} />
           <div className="p-4">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{v.category}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E]">{v.category}</span>
               {v.isNew && <span className="text-[9px] font-bold uppercase text-white bg-[#6B8E62] px-1.5 py-0.5 rounded-full">New</span>}
             </div>
-            <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mt-0.5">{v.title}</h3>
-            {v.source && <p className="text-xs text-[#8C7567] mt-0.5 flex items-center gap-1"><PlayCircle className="w-3 h-3" /> {v.source}</p>}
+            <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] mt-0.5">{v.title}</h3>
+            {v.source && <p className="text-xs text-[#7E8A93] mt-0.5 flex items-center gap-1"><PlayCircle className="w-3 h-3" /> {v.source}</p>}
           </div>
         </div>
       ))}
 
       {/* I nostri video — il metodo di Michele */}
-      <div className="flex items-center gap-2 text-[#8C7567] pt-2">
+      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <Youtube className="w-4 h-4" />
         <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_ours_title")}</span>
       </div>
-      <p className="text-sm text-[#8C7567] -mt-2">{t("beginners_ours_sub")}</p>
+      <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_ours_sub")}</p>
       <div className="grid gap-3 sm:grid-cols-2">
         {OUR_VIDEOS.map((v) => (
-          <div key={v.id} data-testid={`our-video-${v.id}`} className="rounded-2xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] bg-white dark:bg-[#2A211D]">
+          <div key={v.id} data-testid={`our-video-${v.id}`} className="rounded-2xl overflow-hidden border border-[#D7E1DB] dark:border-[#38424B] bg-white dark:bg-[#232A31]">
             <VideoEmbed src={`https://www.youtube.com/embed/${v.id}`} title={t(v.key)} testid={`our-video-frame-${v.id}`} />
-            <p className="text-xs font-medium text-[#4A3B34] dark:text-[#C9BBB0] p-2.5">{t(v.key)}</p>
+            <p className="text-xs font-medium text-[#3F4A54] dark:text-[#AEB8BF] p-2.5">{t(v.key)}</p>
           </div>
         ))}
       </div>
 
       {/* Video dei grandi panettieri (link a YouTube) */}
-      <div className="flex items-center gap-2 text-[#8C7567] pt-2">
+      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <Star className="w-4 h-4" />
         <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_famous_title")}</span>
       </div>
-      <p className="text-sm text-[#8C7567] -mt-2">{t("beginners_famous_sub")}</p>
-      <div className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
-        <p className="text-xs text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">{t("beginners_subtitles_note")}</p>
+      <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_famous_sub")}</p>
+      <div className="rounded-xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-3">
+        <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_subtitles_note")}</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {FAMOUS.map((b, i) => (
@@ -345,21 +345,21 @@ export default function Beginners() {
             href={`https://www.youtube.com/results?search_query=${encodeURIComponent(b.q)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-3.5 active:scale-98 transition-all hover:border-[#B34A26]/50"
+            className="flex items-center gap-3 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 active:scale-98 transition-all hover:border-[#5E8B7E]/50"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#B34A26]/10 border border-[#B34A26]/25 flex items-center justify-center shrink-0 text-lg">{b.country}</div>
-            <span className="flex-1 min-w-0 font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">{b.name}</span>
-            <ExternalLink className="w-4 h-4 text-[#B34A26] shrink-0" />
+            <div className="w-10 h-10 rounded-xl bg-[#5E8B7E]/10 border border-[#5E8B7E]/25 flex items-center justify-center shrink-0 text-lg">{b.country}</div>
+            <span className="flex-1 min-w-0 font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{b.name}</span>
+            <ExternalLink className="w-4 h-4 text-[#5E8B7E] shrink-0" />
           </a>
         ))}
       </div>
 
       {/* Quiz del Fornaio */}
-      <div className="flex items-center gap-2 text-[#8C7567] pt-2">
+      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <Trophy className="w-4 h-4" />
         <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_quiz_title")}</span>
       </div>
-      <p className="text-sm text-[#8C7567] -mt-2">{t("beginners_quiz_sub")}</p>
+      <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_quiz_sub")}</p>
       <BakerQuiz />
     </div>
   );

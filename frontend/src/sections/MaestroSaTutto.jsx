@@ -15,18 +15,18 @@ export default function MaestroSaTutto() {
 
   return (
     <div className="pb-4">
-      <div className="relative rounded-3xl overflow-hidden mb-4 bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-4 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
         <Sparkles className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("satutto_title")}</h1>
         <p className="text-white/85 text-sm mt-1 italic">{t("satutto_tagline")}</p>
       </div>
 
-      <div data-testid="satutto-intro-card" className="mb-4 rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-4">
+      <div data-testid="satutto-intro-card" className="mb-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
         <div className="flex items-center gap-2 mb-1.5">
-          <MessageCircle className="w-4 h-4 text-[#B34A26]" />
-          <h2 className="font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{t("satutto_intro_title")}</h2>
+          <MessageCircle className="w-4 h-4 text-[#5E8B7E]" />
+          <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{t("satutto_intro_title")}</h2>
         </div>
-        <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{t("satutto_intro_body")}</p>
+        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{t("satutto_intro_body")}</p>
       </div>
 
       <ChatPanel />
@@ -99,13 +99,13 @@ function ChatPanel() {
     <div>
       {messages.length === 0 && (
         <div className="space-y-2 mb-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("chat_try")}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("chat_try")}</p>
           {promptSuggestions.map((s, i) => (
             <button
               key={i}
               data-testid={`prompt-suggestion-${i}`}
               onClick={() => send(s)}
-              className="w-full text-left bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl px-4 py-3 text-sm text-[#4A3B34] dark:text-[#C9BBB0] active:scale-98 transition-all"
+              className="w-full text-left bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-4 py-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF] active:scale-98 transition-all"
             >
               {s}
             </button>
@@ -120,8 +120,8 @@ function ChatPanel() {
               data-testid={`chat-msg-${m.role}`}
               className={`markdown-body max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 m.role === "user"
-                  ? "bg-[#B34A26] text-white rounded-br-sm whitespace-pre-wrap"
-                  : "bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] text-[#2C221E] dark:text-[#F5EFE6] rounded-bl-sm"
+                  ? "bg-[#5E8B7E] text-white rounded-br-sm whitespace-pre-wrap"
+                  : "bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC] rounded-bl-sm"
               }`}
             >
               {m.role === "assistant"
@@ -133,7 +133,7 @@ function ChatPanel() {
         <div ref={endRef} />
       </div>
 
-      <div className="sticky bottom-[76px] flex items-end gap-2 bg-[#FDFBF7] dark:bg-[#1A1412] pt-2">
+      <div className="sticky bottom-[76px] flex items-end gap-2 bg-[#F6F8F5] dark:bg-[#1B2127] pt-2">
         <textarea
           data-testid="ai-chat-input"
           value={input}
@@ -141,13 +141,13 @@ function ChatPanel() {
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
           rows={1}
           placeholder={t("chat_placeholder")}
-          className="flex-1 resize-none bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-2xl px-4 py-3 text-base outline-none max-h-32"
+          className="flex-1 resize-none bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] focus:border-[#5E8B7E] focus:ring-2 focus:ring-[#5E8B7E]/20 rounded-2xl px-4 py-3 text-base outline-none max-h-32"
         />
         <button
           data-testid="ai-chat-submit"
           onClick={() => send()}
           disabled={streaming}
-          className="w-12 h-12 rounded-2xl bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white flex items-center justify-center shrink-0 active:scale-95 transition-all"
+          className="w-12 h-12 rounded-2xl bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white flex items-center justify-center shrink-0 active:scale-95 transition-all"
         >
           <Send className="w-5 h-5" />
         </button>
@@ -161,25 +161,25 @@ function EncyclopediaPanel() {
   const { news, encyclopedia } = content[lang];
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 text-[#8C7567]">
+      <div className="flex items-center gap-2 text-[#7E8A93]">
         <Newspaper className="w-4 h-4" />
         <span className="text-xs font-semibold uppercase tracking-wide">{t("news_label")}</span>
       </div>
       {news.map((n, i) => (
-        <div key={i} data-testid={`news-${i}`} className={`rounded-2xl p-5 border ${n.highlight ? "bg-[#D99B26]/10 border-[#D99B26]/40" : "bg-white dark:bg-[#2A211D] border-[#E8DEC8] dark:border-[#3D302A]"}`}>
-          <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-2 ${n.highlight ? "text-white bg-[#B34A26]" : "text-[#B34A26] bg-[#D99B26]/15"}`}>{n.tag}</span>
-          <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{n.title}</h3>
-          <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{n.body}</p>
+        <div key={i} data-testid={`news-${i}`} className={`rounded-2xl p-5 border ${n.highlight ? "bg-[#6E8CA0]/10 border-[#6E8CA0]/40" : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+          <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-2 ${n.highlight ? "text-white bg-[#5E8B7E]" : "text-[#5E8B7E] bg-[#6E8CA0]/15"}`}>{n.tag}</span>
+          <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{n.title}</h3>
+          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{n.body}</p>
         </div>
       ))}
-      <div className="flex items-center gap-2 text-[#8C7567] pt-2">
+      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <BookOpen className="w-4 h-4" />
         <span className="text-xs font-semibold uppercase tracking-wide">{t("enc_label")}</span>
       </div>
       {encyclopedia.map((e, i) => (
-        <div key={i} data-testid={`encyclopedia-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
-          <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{e.title}</h3>
-          <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{e.body}</p>
+        <div key={i} data-testid={`encyclopedia-${i}`} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5">
+          <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{e.title}</h3>
+          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{e.body}</p>
         </div>
       ))}
     </div>
@@ -192,7 +192,7 @@ function VideoPanel() {
   return (
     <div className="space-y-4">
       {youtubeVideos.map((v, i) => (
-        <div key={i} data-testid={`video-${i}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden">
+        <div key={i} data-testid={`video-${i}`} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl overflow-hidden">
           <div className="aspect-video bg-black">
             <iframe
               className="w-full h-full"
@@ -203,8 +203,8 @@ function VideoPanel() {
             />
           </div>
           <div className="p-4">
-            <span className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{v.category}</span>
-            <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mt-0.5">{v.title}</h3>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E]">{v.category}</span>
+            <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] mt-0.5">{v.title}</h3>
           </div>
         </div>
       ))}
@@ -250,13 +250,13 @@ function StoccardaPanel() {
   return (
     <div className="space-y-4">
       {editing ? (
-        <div className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 space-y-3">
+        <div className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 space-y-3">
           <input
             data-testid="announcement-title-input"
             value={form.title}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
             placeholder={t("ann_title_ph")}
-            className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]"
+            className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 outline-none focus:border-[#5E8B7E]"
           />
           <textarea
             data-testid="announcement-details-input"
@@ -264,26 +264,26 @@ function StoccardaPanel() {
             onChange={(e) => setForm((f) => ({ ...f, details: e.target.value }))}
             rows={3}
             placeholder={t("ann_details_ph")}
-            className="w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26] resize-none"
+            className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 outline-none focus:border-[#5E8B7E] resize-none"
           />
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("ann_region")}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("ann_region")}</label>
             <select
               data-testid="announcement-region-select"
               value={form.region}
               onChange={(e) => setForm((f) => ({ ...f, region: e.target.value }))}
-              className="mt-1 w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 outline-none focus:border-[#B34A26]"
+              className="mt-1 w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 outline-none focus:border-[#5E8B7E]"
             >
               {REGIONS.map((r) => <option key={r} value={r}>{regionLabel(r)}</option>)}
             </select>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setEditing(null)}
-              className="flex-1 bg-[#F5EFE6] dark:bg-[#332823] px-4 py-3 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] font-medium">
+              className="flex-1 bg-[#EAF0EC] dark:bg-[#2A323A] px-4 py-3 rounded-xl border border-[#D7E1DB] dark:border-[#38424B] font-medium">
               {t("cancel")}
             </button>
             <button data-testid="announcement-save-btn" onClick={save}
-              className="flex-1 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-4 py-3 rounded-xl">
+              className="flex-1 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-4 py-3 rounded-xl">
               {t("save")}
             </button>
           </div>
@@ -292,7 +292,7 @@ function StoccardaPanel() {
         <button
           data-testid="add-announcement-btn"
           onClick={openNew}
-          className="w-full bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-4 py-3 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-2"
+          className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-3 rounded-xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2"
         >
           <Plus className="w-4 h-4" /> {t("ann_add")}
         </button>
@@ -305,7 +305,7 @@ function StoccardaPanel() {
             data-testid={`region-chip-${r}`}
             onClick={() => setFilter(r)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-              filter === r ? "bg-[#B34A26] text-white" : "bg-[#F5EFE6] dark:bg-[#332823] text-[#8C7567] border border-[#E8DEC8] dark:border-[#3D302A]"
+              filter === r ? "bg-[#5E8B7E] text-white" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#7E8A93] border border-[#D7E1DB] dark:border-[#38424B]"
             }`}
           >
             {r === "all" ? t("region_all") : regionLabel(r)}
@@ -314,7 +314,7 @@ function StoccardaPanel() {
       </div>
 
       {items.filter((a) => filter === "all" || (a.region || "stoccarda") === filter).map((a) => (
-        <div key={a.id} data-testid={`announcement-${a.id}`} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5">
+        <div key={a.id} data-testid={`announcement-${a.id}`} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5">
           <div className="flex items-start gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#6B8E62]/15 border border-[#6B8E62]/30 flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5 text-[#6B8E62]" />
@@ -323,14 +323,14 @@ function StoccardaPanel() {
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-[10px] font-bold uppercase tracking-wide text-white bg-[#6B8E62] px-2 py-0.5 rounded-full">{regionLabel(a.region)}</span>
               </div>
-              <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] mt-1">{a.title}</h3>
-              {a.details ? <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-relaxed">{a.details}</p> : null}
+              <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] mt-1">{a.title}</h3>
+              {a.details ? <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{a.details}</p> : null}
             </div>
             <div className="flex gap-1.5 shrink-0">
-              <button onClick={() => openEdit(a)} data-testid={`edit-announcement-${a.id}`} className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B34A26]">
+              <button onClick={() => openEdit(a)} data-testid={`edit-announcement-${a.id}`} className="w-8 h-8 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#5E8B7E]">
                 <Pencil className="w-4 h-4" />
               </button>
-              <button onClick={() => setToDelete(a)} data-testid={`delete-announcement-${a.id}`} className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] flex items-center justify-center text-[#B4442A]">
+              <button onClick={() => setToDelete(a)} data-testid={`delete-announcement-${a.id}`} className="w-8 h-8 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#C0574D]">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
@@ -339,14 +339,14 @@ function StoccardaPanel() {
       ))}
 
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
-        <AlertDialogContent className="bg-[#FDFBF7] dark:bg-[#1A1412] border-[#E8DEC8] dark:border-[#3D302A]">
+        <AlertDialogContent className="bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B]">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-display">{t("ann_delete_q")}</AlertDialogTitle>
             <AlertDialogDescription>"{toDelete?.title}" {t("ann_delete_desc")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="announcement-delete-cancel">{t("cancel")}</AlertDialogCancel>
-            <AlertDialogAction data-testid="announcement-delete-confirm" onClick={remove} className="bg-[#B4442A] hover:bg-[#963B1C]">{t("delete")}</AlertDialogAction>
+            <AlertDialogAction data-testid="announcement-delete-confirm" onClick={remove} className="bg-[#C0574D] hover:bg-[#4C7368]">{t("delete")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

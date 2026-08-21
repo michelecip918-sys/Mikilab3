@@ -32,10 +32,10 @@ export default function GuidaMetodi() {
   const [open, setOpen] = useState("poolish");
   return (
     <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#008C45]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#CD212A]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#DD0000]" /><div className="flex-1 bg-[#FFCC00]" />
+          <div className="flex-1 bg-[#6B8E62]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
         </div>
         <HeroAvatar />
         <BookOpen className="w-7 h-7 mb-2" />
@@ -48,18 +48,18 @@ export default function GuidaMetodi() {
           const c = s[lang] || s.it;
           const isOpen = open === s.id;
           return (
-            <div key={s.id} data-testid={`guida-${s.id}`} className="rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] overflow-hidden">
+            <div key={s.id} data-testid={`guida-${s.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
               <button data-testid={`guida-toggle-${s.id}`} onClick={() => setOpen(isOpen ? "" : s.id)}
                 className="w-full flex items-center gap-3 p-4 text-left">
                 <span className="text-2xl">{s.icon}</span>
-                <span className="flex-1 font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6]">{c.title}</span>
-                <ChevronDown className={`w-5 h-5 text-[#B34A26] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <span className="flex-1 font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{c.title}</span>
+                <ChevronDown className={`w-5 h-5 text-[#5E8B7E] transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
               <AnimatePresence initial={false}>
                 {isOpen && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden">
-                    <p className="px-4 pb-4 text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed whitespace-pre-line">{c.body}</p>
+                    <p className="px-4 pb-4 text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{c.body}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

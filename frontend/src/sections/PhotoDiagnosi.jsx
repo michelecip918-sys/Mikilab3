@@ -125,7 +125,7 @@ export default function PhotoDiagnosi() {
 
   return (
     <div className="pb-4">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
         <HeroAvatar />
         <Camera className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("photo_title")}</h1>
@@ -140,25 +140,25 @@ export default function PhotoDiagnosi() {
             onClick={() => { setMode(id); setResult(""); setPraised(false); }}
             className={`flex flex-col items-start gap-1 p-3.5 rounded-2xl border text-left transition-all ${
               mode === id
-                ? "bg-[#B34A26] text-white border-[#B34A26]"
-                : "bg-white dark:bg-[#2A211D] text-[#2C221E] dark:text-[#F5EFE6] border-[#E8DEC8] dark:border-[#3D302A]"
+                ? "bg-[#5E8B7E] text-white border-[#5E8B7E]"
+                : "bg-white dark:bg-[#232A31] text-[#2B303B] dark:text-[#EAF0EC] border-[#D7E1DB] dark:border-[#38424B]"
             }`}
           >
             <Icon className="w-5 h-5" />
             <span className="font-semibold text-sm">{label}</span>
-            <span className={`text-xs ${mode === id ? "text-white/80" : "text-[#8C7567]"}`}>{desc}</span>
+            <span className={`text-xs ${mode === id ? "text-white/80" : "text-[#7E8A93]"}`}>{desc}</span>
           </button>
         ))}
       </div>
 
-      <p className="text-xs text-[#8C7567] mb-4">{t("photo_video_hint")}</p>
+      <p className="text-xs text-[#7E8A93] mb-4">{t("photo_video_hint")}</p>
 
       <div className="mb-4">
         <DualPhotoButtons onFile={onPick} allowVideo testid="photo" />
       </div>
 
       {preview && (
-        <div className="rounded-3xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4">
+        <div className="rounded-3xl overflow-hidden border border-[#D7E1DB] dark:border-[#38424B] mb-4">
           <img src={preview} alt="anteprima" className="w-full max-h-80 object-cover" />
         </div>
       )}
@@ -167,7 +167,7 @@ export default function PhotoDiagnosi() {
         data-testid="photo-analyze-btn"
         onClick={analyze}
         disabled={!preview || analyzing}
-        className="w-full bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         {analyzing ? t("photo_analyzing") : t("photo_analyze")}
       </button>
@@ -180,12 +180,12 @@ export default function PhotoDiagnosi() {
       )}
 
       {result && (
-        <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-5 text-sm leading-relaxed text-[#2C221E] dark:text-[#F5EFE6]">
+        <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">
           <ReactMarkdown>{result}</ReactMarkdown>
         </div>
       )}
 
-      <div className="mt-8 pt-6 border-t border-[#E8DEC8] dark:border-[#3D302A]">
+      <div className="mt-8 pt-6 border-t border-[#D7E1DB] dark:border-[#38424B]">
         <Encyclopedia />
       </div>
     </div>

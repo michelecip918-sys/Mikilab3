@@ -32,11 +32,11 @@ export default function Ricette() {
 function UtilBtn({ testid, Icon, label, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick}
-      className="flex items-center gap-2.5 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-3.5 shadow-sm active:scale-97 hover:border-[#D99B26]/60 transition-all">
-      <div className="w-10 h-10 rounded-xl bg-[#D99B26]/15 border border-[#D99B26]/30 flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-[#B34A26]" />
+      className="flex items-center gap-2.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm active:scale-97 hover:border-[#6E8CA0]/60 transition-all">
+      <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center shrink-0">
+        <Icon className="w-5 h-5 text-[#5E8B7E]" />
       </div>
-      <span className="font-display text-sm font-semibold text-[#2C221E] dark:text-[#F5EFE6] text-left leading-tight">{label}</span>
+      <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] text-left leading-tight">{label}</span>
     </button>
   );
 }
@@ -44,7 +44,7 @@ function UtilBtn({ testid, Icon, label, onClick }) {
 function Sub({ onBack, children }) {
   return (
     <div className="pb-4">
-      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#B34A26] font-medium mb-4">
+      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
         <ChevronLeft className="w-5 h-5" /> Ricette
       </button>
       {children}

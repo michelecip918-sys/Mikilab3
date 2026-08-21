@@ -213,63 +213,63 @@ export default function StartDoughs() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-2xl bg-[#B34A26] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#5E8B7E] flex items-center justify-center">
           <ChefHat className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("sd_title")}</h1>
-          <p className="text-sm text-[#8C7567]">{t("sd_subtitle")}</p>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("sd_title")}</h1>
+          <p className="text-sm text-[#7E8A93]">{t("sd_subtitle")}</p>
         </div>
       </div>
 
       {loaded && recipes.length === 0 && (
-        <div className="mt-5 flex items-start gap-3 bg-[#D99B26]/15 border border-[#D99B26]/30 rounded-2xl p-4">
-          <AlertTriangle className="w-5 h-5 text-[#B34A26] shrink-0 mt-0.5" />
-          <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0]">{t("sd_no_recipes")}</p>
+        <div className="mt-5 flex items-start gap-3 bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 rounded-2xl p-4">
+          <AlertTriangle className="w-5 h-5 text-[#5E8B7E] shrink-0 mt-0.5" />
+          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{t("sd_no_recipes")}</p>
         </div>
       )}
 
-      <div className="mt-5 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
-        <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("sd_start_work")}</label>
+      <div className="mt-5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-3">
+        <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("sd_start_work")}</label>
         <input
           data-testid="sd-ready-time"
           type="datetime-local" value={startTime}
           onChange={(e) => setStartTime(e.target.value)}
-          className="mt-1 w-full font-mono-data bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-3 py-2 outline-none focus:border-[#B34A26]"
+          className="mt-1 w-full font-mono-data bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-3 py-2 outline-none focus:border-[#5E8B7E]"
         />
       </div>
 
       {/* Persone al lavoro */}
-      <div className="mt-3 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
+      <div className="mt-3 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-3">
         <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-[#B34A26]" />
-          <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{t("lv_people")}</span>
+          <Users className="w-4 h-4 text-[#5E8B7E]" />
+          <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] flex-1">{t("lv_people")}</span>
           <div className="flex items-center gap-2">
             <button
               data-testid="lv-people-minus"
               onClick={() => setPeople((p) => Math.max(1, Number(p) - 1))}
-              className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] font-bold text-[#B34A26]"
+              className="w-8 h-8 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] font-bold text-[#5E8B7E]"
             >−</button>
             <input
               data-testid="lv-people" type="number" min="1" value={people}
               onChange={(e) => setPeople(e.target.value)}
-              className="w-12 text-center font-mono-data font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-1 py-1.5 outline-none"
+              className="w-12 text-center font-mono-data font-bold text-[#33564E] dark:text-[#8FB0C2] bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-1 py-1.5 outline-none"
             />
             <button
               data-testid="lv-people-plus"
               onClick={() => setPeople((p) => Math.max(1, Number(p) + 1))}
-              className="w-8 h-8 rounded-lg bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] font-bold text-[#B34A26]"
+              className="w-8 h-8 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] font-bold text-[#5E8B7E]"
             >+</button>
           </div>
         </div>
-        <p className="text-[11px] text-[#8C7567] mt-1.5 leading-snug">{t("lv_people_hint")}</p>
+        <p className="text-[11px] text-[#7E8A93] mt-1.5 leading-snug">{t("lv_people_hint")}</p>
       </div>
 
       <div className="mt-3">
-        <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("sd_load_day")}</label>
+        <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("sd_load_day")}</label>
         <select
           data-testid="sd-load-day" onChange={(e) => loadDay(e.target.value)} defaultValue=""
-          className="mt-1 w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#B34A26]"
+          className="mt-1 w-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#5E8B7E]"
         >
           <option value="">{t("sd_choose_day")}</option>
           {DAY_IDS.filter((d) => weekly.some((w) => w.day === d)).map((d) => (
@@ -280,16 +280,16 @@ export default function StartDoughs() {
 
       <div className="space-y-2 mt-4">
         {rows.map((r) => (
-          <div key={r.id} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-3">
+          <div key={r.id} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3">
             <div className="flex items-center gap-2">
               <select
                 data-testid={`sd-recipe-${r.id}`} value={r.recipe_id}
                 onChange={(e) => onRecipe(r.id, e.target.value)}
-                className="flex-1 min-w-0 bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#B34A26]"
+                className="flex-1 min-w-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#5E8B7E]"
               >
                 {recipes.map((rec) => <option key={rec.id} value={rec.id}>{rec.name}</option>)}
               </select>
-              <button onClick={() => removeRow(r.id)} className="text-[#B4442A] p-1 shrink-0" aria-label={t("delete")}>
+              <button onClick={() => removeRow(r.id)} className="text-[#C0574D] p-1 shrink-0" aria-label={t("delete")}>
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
@@ -305,7 +305,7 @@ export default function StartDoughs() {
 
       <button
         data-testid="sd-add-btn" onClick={addRow} disabled={recipes.length === 0}
-        className="w-full mt-2 bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] font-medium px-4 py-2.5 rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] flex items-center justify-center gap-2 disabled:opacity-40"
+        className="w-full mt-2 bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-2.5 rounded-xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 disabled:opacity-40"
       >
         <Plus className="w-4 h-4" /> {t("sd_add")}
       </button>
@@ -313,10 +313,10 @@ export default function StartDoughs() {
       {/* Parti da questa ricetta */}
       {rows.length > 0 && (
         <div className="mt-3">
-          <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{t("lv_first")}</label>
+          <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("lv_first")}</label>
           <select
             data-testid="lv-first" value={firstId} onChange={(e) => setFirstId(e.target.value)}
-            className="mt-1 w-full bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#B34A26]"
+            className="mt-1 w-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#5E8B7E]"
           >
             <option value="">{t("lv_first_auto")}</option>
             {rows.map((r) => (
@@ -326,31 +326,31 @@ export default function StartDoughs() {
         </div>
       )}
 
-      <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-2.5">
-        <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{t("sd_max_chunk")}</span>
+      <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-2.5">
+        <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] flex-1">{t("sd_max_chunk")}</span>
         <input
           data-testid="sd-maxchunk" type="number" value={maxChunk}
           onChange={(e) => setMaxChunk(e.target.value)}
-          className="w-16 text-right font-mono-data font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-2 py-1.5 outline-none"
+          className="w-16 text-right font-mono-data font-bold text-[#33564E] dark:text-[#8FB0C2] bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-1.5 outline-none"
         />
-        <span className="text-xs text-[#8C7567]">min</span>
+        <span className="text-xs text-[#7E8A93]">min</span>
       </div>
 
       {/* Avvisi vocali */}
-      <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-2.5">
-        <Volume2 className="w-4 h-4 text-[#B34A26]" />
-        <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{t("lv_voice")}</span>
+      <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-2.5">
+        <Volume2 className="w-4 h-4 text-[#5E8B7E]" />
+        <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] flex-1">{t("lv_voice")}</span>
         <button
           data-testid="lv-voice-test"
           onClick={() => { primeVoice(); speak(t("sd_alarm_title"), lang); }}
-          className="text-xs font-medium text-[#B34A26] mr-2"
+          className="text-xs font-medium text-[#5E8B7E] mr-2"
         >
           {t("lv_voice_test")}
         </button>
         <button
           data-testid="lv-voice-toggle"
           onClick={() => setVoiceOn((v) => !v)}
-          className={`w-11 h-6 rounded-full transition-colors relative ${voiceOn ? "bg-[#6B8E62]" : "bg-[#C9BBB0] dark:bg-[#3D302A]"}`}
+          className={`w-11 h-6 rounded-full transition-colors relative ${voiceOn ? "bg-[#6B8E62]" : "bg-[#AEB8BF] dark:bg-[#38424B]"}`}
           aria-label={t("lv_voice")}
         >
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${voiceOn ? "left-[22px]" : "left-0.5"}`} />
@@ -359,7 +359,7 @@ export default function StartDoughs() {
 
       <button
         data-testid="sd-compute-btn" onClick={compute}
-        className="w-full mt-3 bg-[#B34A26] hover:bg-[#963B1C] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
+        className="w-full mt-3 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
       >
         {t("lv_compute")}
       </button>
@@ -369,33 +369,33 @@ export default function StartDoughs() {
           {schedule.first && (
             <div data-testid="lv-first-result" className="flex items-center gap-2 bg-[#6B8E62]/12 border border-[#6B8E62]/35 rounded-2xl px-4 py-3">
               <ChefHat className="w-5 h-5 text-[#4d6b45] dark:text-[#9ec48f] shrink-0" />
-              <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0]">
+              <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">
                 <span className="font-semibold">{t("lv_first_label")}:</span> {schedule.first}
               </p>
             </div>
           )}
-          <p className="text-xs text-[#8C7567]">{t("sd_legend")}</p>
+          <p className="text-xs text-[#7E8A93]">{t("sd_legend")}</p>
           {[...schedule.items].sort((a, b) => a.mixStart - b.mixStart).map((it, i) => (
-            <div key={i} className="bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
+            <div key={i} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-[#D99B26]/20 text-[#8C3A1D] dark:text-[#E5AC3A] font-mono-data font-bold text-sm flex items-center justify-center shrink-0">{i + 1}</div>
-                <p className="text-sm font-medium text-[#2C221E] dark:text-[#F5EFE6] flex-1 truncate">{it.name}</p>
-                <span className="font-mono-data text-xs text-[#8C7567]">{it.pieces} {t("sd_pieces_short")}{it.rounds > 1 ? ` · ${it.rounds} ${t("sd_rounds")}` : ""}</span>
+                <div className="w-7 h-7 rounded-full bg-[#6E8CA0]/20 text-[#33564E] dark:text-[#8FB0C2] font-mono-data font-bold text-sm flex items-center justify-center shrink-0">{i + 1}</div>
+                <p className="text-sm font-medium text-[#2B303B] dark:text-[#EAF0EC] flex-1 truncate">{it.name}</p>
+                <span className="font-mono-data text-xs text-[#7E8A93]">{it.pieces} {t("sd_pieces_short")}{it.rounds > 1 ? ` · ${it.rounds} ${t("sd_rounds")}` : ""}</span>
               </div>
               <div className="flex flex-wrap gap-2 mt-2 pl-9 font-mono-data text-xs">
-                <span className="inline-flex items-center gap-1 text-[#4A3B34] dark:text-[#C9BBB0]">
-                  <Cog className="w-3.5 h-3.5 text-[#B34A26]" /> {t("sd_col_mix")} {fmt(it.mixStart, lang)}–{fmt(it.mixEnd, lang)}
+                <span className="inline-flex items-center gap-1 text-[#3F4A54] dark:text-[#AEB8BF]">
+                  <Cog className="w-3.5 h-3.5 text-[#5E8B7E]" /> {t("sd_col_mix")} {fmt(it.mixStart, lang)}–{fmt(it.mixEnd, lang)}
                 </span>
-                <span className="inline-flex items-center gap-1 text-[#4A3B34] dark:text-[#C9BBB0]">
+                <span className="inline-flex items-center gap-1 text-[#3F4A54] dark:text-[#AEB8BF]">
                   <Hand className="w-3.5 h-3.5 text-[#6B8E62]" /> {t("sd_col_form")} {fmt(it.formStart, lang)}–{fmt(it.formEnd, lang)}
                 </span>
                 {it.bake && (it.bake.temp != null || it.bake.mins != null) && (
-                  <span className="inline-flex items-center gap-1 text-[#8C3A1D] dark:text-[#E5AC3A]">
+                  <span className="inline-flex items-center gap-1 text-[#33564E] dark:text-[#8FB0C2]">
                     <Flame className="w-3.5 h-3.5" /> {t("lv_bake")} {it.bake.temp != null ? `${it.bake.temp}°C` : ""}{it.bake.mins != null ? ` · ${it.bake.mins}′` : ""} ({ovenLabel(it.bake.oven)})
                   </span>
                 )}
                 {it.waitMin > 0 && (
-                  <span className={it.waitMin > 60 ? "text-[#B4442A] font-bold" : "text-[#B4442A]"}>
+                  <span className={it.waitMin > 60 ? "text-[#C0574D] font-bold" : "text-[#C0574D]"}>
                     ⏳ {t("sd_wait")} {it.waitMin}′{it.waitMin > 60 ? ` · ⚠️ ${t("sd_overproof")}` : ""}
                   </span>
                 )}
@@ -406,7 +406,7 @@ export default function StartDoughs() {
             data-testid="sd-alarms-btn"
             onClick={enableAlarms}
             className={`w-full mt-2 font-semibold px-5 py-3 rounded-2xl flex items-center justify-center gap-2 transition-all ${
-              alarmsOn ? "bg-[#6B8E62] text-white" : "bg-[#F5EFE6] dark:bg-[#332823] text-[#2C221E] dark:text-[#F5EFE6] border border-[#E8DEC8] dark:border-[#3D302A]"
+              alarmsOn ? "bg-[#6B8E62] text-white" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] border border-[#D7E1DB] dark:border-[#38424B]"
             }`}
           >
             <Bell className="w-5 h-5" /> {alarmsOn ? t("sd_alarms_on") : t("sd_alarms")}
@@ -420,11 +420,11 @@ export default function StartDoughs() {
 function NumField({ testid, label, value, onChange }) {
   return (
     <div className="flex flex-col">
-      <span className="text-[9px] uppercase tracking-wide text-[#8C7567] mb-0.5 truncate">{label}</span>
+      <span className="text-[9px] uppercase tracking-wide text-[#7E8A93] mb-0.5 truncate">{label}</span>
       <input
         data-testid={testid} type="number" value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full text-right font-mono-data font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-lg px-1.5 py-1.5 outline-none"
+        className="w-full text-right font-mono-data font-bold text-[#33564E] dark:text-[#8FB0C2] bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-1.5 py-1.5 outline-none"
       />
     </div>
   );

@@ -105,14 +105,14 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
     }
   };
 
-  if (loading) return <div className="py-20 text-center text-[#8C7567]">…</div>;
+  if (loading) return <div className="py-20 text-center text-[#7E8A93]">…</div>;
 
   // PRO / prova attiva → contenuto sbloccato (+ banner countdown se prova)
   if (status?.pro) {
     return (
       <>
         {status.source === "trial" && left && (
-          <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#D99B26]/15 border border-[#D99B26]/40 px-3 py-2 text-sm font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">
+          <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/40 px-3 py-2 text-sm font-semibold text-[#33564E] dark:text-[#8FB0C2]">
             <Clock className="w-4 h-4" /> {it ? "Prova PRO — resta:" : "PRO-Test — verbleibend:"} <span className="font-mono-data">{left}</span>
           </div>
         )}
@@ -124,7 +124,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   // Paywall
   return (
     <div data-testid="paywall" className="py-6">
-      <div className="rounded-3xl bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white p-7 text-center shadow-xl">
+      <div className="rounded-3xl bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-7 text-center shadow-xl">
         <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-4">
           <Lock className="w-8 h-8" />
         </div>
@@ -140,50 +140,50 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
 
       {/* "Guarda cosa fa" — anteprima funzioni prima del prezzo */}
       <div data-testid="paywall-preview" className="mt-5">
-        <h3 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6] mb-3">
+        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-3">
           {it ? "Guarda cosa fa 👇" : "Sieh, was es kann 👇"}
         </h3>
         <div className="space-y-2.5">
           {(FEATURES[feature]?.[it ? "it" : "de"] || []).map(([Icon, title, desc], i) => (
             <div key={i} data-testid={`paywall-feature-${i}`}
-              className="flex items-start gap-3 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-3.5 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-[#D99B26]/15 border border-[#D99B26]/30 flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-[#B34A26]" />
+              className="flex items-start gap-3 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center shrink-0">
+                <Icon className="w-5 h-5 text-[#5E8B7E]" />
               </div>
               <div className="min-w-0">
-                <p className="font-display text-base font-semibold text-[#2C221E] dark:text-[#F5EFE6] leading-tight flex items-center gap-1.5">
+                <p className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight flex items-center gap-1.5">
                   {title} <Check className="w-3.5 h-3.5 text-[#6B8E62]" />
                 </p>
-                <p className="text-xs text-[#8C7567] leading-snug mt-0.5">{desc}</p>
+                <p className="text-xs text-[#7E8A93] leading-snug mt-0.5">{desc}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-center text-sm font-semibold text-[#B34A26] mt-4">
+        <p className="text-center text-sm font-semibold text-[#5E8B7E] mt-4">
           {it ? "Provalo gratis o abbonati per sbloccare tutto 👇" : "Kostenlos testen oder abonnieren, um alles freizuschalten 👇"}
         </p>
       </div>
 
       {!email ? (
         <button data-testid="paywall-login" onClick={() => setAuthOpen(true)}
-          className="mt-5 w-full bg-[#B34A26] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
+          className="mt-5 w-full bg-[#5E8B7E] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
           {it ? "Accedi per continuare" : "Anmelden, um fortzufahren"}
         </button>
       ) : (
         <div className="mt-5 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <button data-testid="sub-monthly" onClick={() => subscribe("monthly")}
-              className="rounded-2xl border-2 border-[#B34A26] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#2A211D]">
-              <Crown className="w-6 h-6 text-[#B34A26] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6] mt-1">€9,99</p>
-              <p className="text-xs text-[#8C7567]">{it ? "al mese" : "pro Monat"}</p>
+              className="rounded-2xl border-2 border-[#5E8B7E] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#232A31]">
+              <Crown className="w-6 h-6 text-[#5E8B7E] mx-auto" />
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€9,99</p>
+              <p className="text-xs text-[#7E8A93]">{it ? "al mese" : "pro Monat"}</p>
             </button>
             <button data-testid="sub-yearly" onClick={() => subscribe("yearly")}
-              className="rounded-2xl border-2 border-[#D99B26] p-4 text-center active:scale-97 transition-all bg-[#D99B26]/10 relative">
+              className="rounded-2xl border-2 border-[#6E8CA0] p-4 text-center active:scale-97 transition-all bg-[#6E8CA0]/10 relative">
               <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#6B8E62] text-white px-1.5 py-0.5 rounded-full">-17%</span>
-              <Crown className="w-6 h-6 text-[#D99B26] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6] mt-1">€99</p>
-              <p className="text-xs text-[#8C7567]">{it ? "all'anno" : "pro Jahr"}</p>
+              <Crown className="w-6 h-6 text-[#6E8CA0] mx-auto" />
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€99</p>
+              <p className="text-xs text-[#7E8A93]">{it ? "all'anno" : "pro Jahr"}</p>
             </button>
           </div>
 
