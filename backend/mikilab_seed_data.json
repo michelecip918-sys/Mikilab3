@@ -12,8 +12,8 @@
     "image_url": "/recipes/r_panettone_base.jpg",
     "extra_ingredients": [
       {
-        "name": "Malto d'orzo diastasico in polvere",
-        "percent": 0.5
+        "name": "Malto diastasico puro in polvere",
+        "percent": 3
       },
       {
         "name": "Farina di lupino dolce",
@@ -32,10 +32,10 @@
         "percent": 0.5
       }
     ],
-    "notes": "Formula unica 100% naturale a 5 ingredienti (azione completa). Il MALTO usato è MALTO D'ORZO DIASTASICO in polvere: nutre i lieviti, dona colore e croccantezza. La farina di lupino dolce e l'acerola (vitamina C naturale) rinforzano la maglia glutinica e la tenuta. La farina di lino dorato aggiunge struttura e omega. La buccia di psillio trattiene l'idratazione mantenendo il pane morbido piu' a lungo.\n\nDOSAGGIO: 2-4% sul peso della farina (indiretto 2-3%, diretto 3-4%).",
-    "notes_de": "Einzigartige, 100% natuerliche Formel mit 5 Zutaten (Rundum-Wirkung). Verwendetes MALZ: DIASTATISCHES GERSTENMALZ in Pulverform - naehrt die Hefen, gibt Farbe und Kruste. Suesslupinenmehl und Acerola (natuerliches Vitamin C) staerken das Glutennetz und die Stabilitaet. Goldleinmehl gibt Struktur und Omega. Flohsamenschalen halten die Feuchtigkeit und das Brot laenger weich.\n\nDOSIERUNG: 2-4% auf das Mehl (indirekt 2-3%, direkt 3-4%).",
-    "procedure": "PREPARAZIONE (mix a secco)\n1) Pesa con precisione i 5 ingredienti: Malto d'orzo diastasico 0,5% - Lupino dolce 1% - Acerola 0,3% - Lino dorato 2% - Psillio 0,5% (percentuali sul peso della farina della ricetta).\n2) Mescola bene a secco fino a polvere omogenea.\n3) Conserva in barattolo chiuso, al fresco e all'asciutto (validita' alcuni mesi).\nUSO: aggiungi il mix alla farina all'inizio dell'impasto (2-4% totale). Con l'indiretto usa la dose minore, con il diretto la maggiore.",
-    "procedure_de": "ZUBEREITUNG (Trockenmischung)\n1) Die 5 Zutaten genau abwiegen: diastatisches Gerstenmalz 0,5% - Suesslupine 1% - Acerola 0,3% - Goldlein 2% - Flohsamen 0,5% (Prozente auf das Mehl des Rezepts).\n2) Trocken gut zu einem homogenen Pulver mischen.\n3) In geschlossenem Glas kuehl und trocken lagern (mehrere Monate haltbar).\nVERWENDUNG: die Mischung zu Beginn des Knetens zum Mehl geben (2-4% gesamt). Indirekt die kleinere, direkt die groessere Dosis."
+    "notes": "Formula unica 100% naturale a 5 ingredienti (azione completa). Il MALTO usato è MALTO DIASTASICO PURO IN POLVERE (3%): nutre i lieviti, dona colore e croccantezza. La farina di lupino dolce e l'acerola (vitamina C naturale) rinforzano la maglia glutinica e la tenuta. La farina di lino dorato aggiunge struttura e omega. La buccia di psillio trattiene l'idratazione mantenendo il pane morbido piu' a lungo.\n\nDOSAGGIO: 2-4% sul peso della farina (indiretto 2-3%, diretto 3-4%).",
+    "notes_de": "Einzigartige, 100% natuerliche Formel mit 5 Zutaten (Rundum-Wirkung). Verwendetes MALZ: REINES DIASTATISCHES MALZPULVER (3%) - naehrt die Hefen, gibt Farbe und Kruste. Suesslupinenmehl und Acerola (natuerliches Vitamin C) staerken das Glutennetz und die Stabilitaet. Goldleinmehl gibt Struktur und Omega. Flohsamenschalen halten die Feuchtigkeit und das Brot laenger weich.\n\nDOSIERUNG: 2-4% auf das Mehl (indirekt 2-3%, direkt 3-4%).",
+    "procedure": "PREPARAZIONE (mix a secco)\n1) Pesa con precisione i 5 ingredienti: Malto diastasico puro in polvere 3% - Lupino dolce 1% - Acerola 0,3% - Lino dorato 2% - Psillio 0,5% (percentuali sul peso della farina della ricetta).\n2) Mescola bene a secco fino a polvere omogenea.\n3) Conserva in barattolo chiuso, al fresco e all'asciutto (validita' alcuni mesi).\nUSO: aggiungi il mix alla farina all'inizio dell'impasto (2-4% totale). Con l'indiretto usa la dose minore, con il diretto la maggiore.",
+    "procedure_de": "ZUBEREITUNG (Trockenmischung)\n1) Die 5 Zutaten genau abwiegen: reines diastatisches Malzpulver 3% - Suesslupine 1% - Acerola 0,3% - Goldlein 2% - Flohsamen 0,5% (Prozente auf das Mehl des Rezepts).\n2) Trocken gut zu einem homogenen Pulver mischen.\n3) In geschlossenem Glas kuehl und trocken lagern (mehrere Monate haltbar).\nVERWENDUNG: die Mischung zu Beginn des Knetens zum Mehl geben (2-4% gesamt). Indirekt die kleinere, direkt die groessere Dosis."
   },
   {
     "name": "Lievito Madre Solido",

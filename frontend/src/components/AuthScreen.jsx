@@ -7,7 +7,7 @@ import { useLang } from "@/i18n/LanguageContext";
 
 export default function AuthScreen({ onClose }) {
   const { setUser } = useAuth();
-  const { lang } = useLang();
+  const { lang, tri } = useLang();
   const de = lang === "de";
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
@@ -18,24 +18,23 @@ export default function AuthScreen({ onClose }) {
 
   const T = {
     title: "Mikilab",
-    sub: de ? "Der Backstube-Assistent · Anmelden" : "L'assistente del fornaio · Accedi",
-    login: de ? "Anmelden" : "Accedi",
-    register: de ? "Registrieren" : "Registrati",
+    sub: tri("L'assistente del fornaio · Accedi", "Der Backstube-Assistent · Anmelden", "The baker's assistant · Sign in"),
+    login: tri("Accedi", "Anmelden", "Sign in"),
+    register: tri("Registrati", "Registrieren", "Register"),
     email: "Email",
-    pw: de ? "Passwort" : "Password",
-    name: de ? "Name" : "Nome",
-    google: de ? "Mit Google fortfahren" : "Continua con Google",
-    or: de ? "oder" : "oppure",
-    note: de ? "Deine Rezepte sind privat. Mit Login geschützt." : "Le tue ricette sono private. Protette dal login.",
-    switch_r: de ? "Noch kein Konto? Registrieren" : "Non hai un account? Registrati",
-    switch_l: de ? "Schon registriert? Anmelden" : "Hai già un account? Accedi",
-    forgot: de ? "Passwort vergessen?" : "Password dimenticata?",
-    forgot_title: de ? "Passwort zurücksetzen" : "Reimposta la password",
-    forgot_sub: de ? "Wir senden dir einen Link per E-Mail." : "Ti inviamo un link via email.",
-    send: de ? "Link senden" : "Invia link",
-    back: de ? "Zurück zum Login" : "Torna al login",
-    sent_msg: de ? "Wenn die E-Mail existiert, haben wir dir einen Link gesendet. Prüfe dein Postfach."
-                 : "Se l'email esiste, ti abbiamo inviato un link. Controlla la posta.",
+    pw: tri("Password", "Passwort", "Password"),
+    name: tri("Nome", "Name", "Name"),
+    google: tri("Continua con Google", "Mit Google fortfahren", "Continue with Google"),
+    or: tri("oppure", "oder", "or"),
+    note: tri("Le tue ricette sono private. Protette dal login.", "Deine Rezepte sind privat. Mit Login geschützt.", "Your recipes are private. Protected by login."),
+    switch_r: tri("Non hai un account? Registrati", "Noch kein Konto? Registrieren", "No account yet? Register"),
+    switch_l: tri("Hai già un account? Accedi", "Schon registriert? Anmelden", "Already registered? Sign in"),
+    forgot: tri("Password dimenticata?", "Passwort vergessen?", "Forgot password?"),
+    forgot_title: tri("Reimposta la password", "Passwort zurücksetzen", "Reset password"),
+    forgot_sub: tri("Ti inviamo un link via email.", "Wir senden dir einen Link per E-Mail.", "We'll email you a link."),
+    send: tri("Invia link", "Link senden", "Send link"),
+    back: tri("Torna al login", "Zurück zum Login", "Back to login"),
+    sent_msg: tri("Se l'email esiste, ti abbiamo inviato un link. Controlla la posta.", "Wenn die E-Mail existiert, haben wir dir einen Link gesendet. Prüfe dein Postfach.", "If the email exists, we've sent you a link. Check your inbox."),
   };
 
   const submit = async (e) => {
@@ -52,9 +51,9 @@ export default function AuthScreen({ onClose }) {
         ? await authApi.login({ email, password })
         : await authApi.register({ email, password, name });
       setUser(data.user);
-      toast.success(de ? "Willkommen!" : "Benvenuto!");
+      toast.success(tri("Benvenuto!", "Willkommen!", "Welcome!"));
     } catch (err) {
-      const msg = err?.response?.data?.detail || (de ? "Fehler" : "Errore");
+      const msg = err?.response?.data?.detail || tri("Errore", "Fehler", "Error");
       toast.error(msg);
     } finally {
       setBusy(false);
@@ -79,7 +78,7 @@ export default function AuthScreen({ onClose }) {
         <div className="text-center mb-6">
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#FFCE00]/70 shadow-lg mx-auto mb-3" />
           <h1 className="font-display text-3xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{T.title}</h1>
-          <p className="text-sm text-[#8C7567] mt-1">{T.sub} 🇮🇹 🇩🇪</p>
+          <p className="text-sm text-[#8C7567] mt-1">{T.sub} 🇮🇹 🇩🇪 🇬🇧</p>
         </div>
 
         {mode !== "forgot" && (

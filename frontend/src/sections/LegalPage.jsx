@@ -30,7 +30,7 @@ const T = {
 
 export default function LegalPage() {
   const { lang } = useLang();
-  const c = T[lang === "de" ? "de" : "it"];
+  const c = T[lang] || T.it;
   return (
     <div data-testid="legal-page" className="pb-4 space-y-4">
       <div className="rounded-3xl p-6 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white">

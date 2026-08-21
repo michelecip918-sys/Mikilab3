@@ -22,11 +22,11 @@ export default function RecipeShowcase({ onOpen }) {
     <div data-testid="home-showcase">
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-display text-xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
-          {lang === "de" ? "Meine Rezepte" : "Le mie ricette"}
+          {lang === "de" ? "Meine Rezepte" : lang === "en" ? "My recipes" : "Le mie ricette"}
         </h2>
         <button data-testid="home-recipes-all" onClick={() => onOpen && onOpen()}
           className="text-sm font-medium text-[#B34A26] flex items-center gap-1">
-          {lang === "de" ? "Alle" : "Tutte"} <ChevronRight className="w-4 h-4" />
+          {lang === "de" ? "Alle" : lang === "en" ? "All" : "Tutte"} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 

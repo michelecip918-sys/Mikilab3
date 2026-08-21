@@ -15,7 +15,7 @@ function toLocalInput(d) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 function fmt(date, lang) {
-  return date.toLocaleString(lang === "de" ? "de-DE" : "it-IT", { weekday: "short", hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { weekday: "short", hour: "2-digit", minute: "2-digit" });
 }
 
 // Suggested baking temp/time by bread type; adjusted for fan ovens.

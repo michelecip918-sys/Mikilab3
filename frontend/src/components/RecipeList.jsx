@@ -274,6 +274,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onUnlock, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
   const de = lang === "de";
+  const tri = (i_, d_, e_) => (de ? d_ : lang === "en" ? e_ : i_);
   const isPanettone = recipeCategory(r).key === "panettoni";
   const [farro, setFarro] = useState(false);
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
@@ -409,16 +410,17 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             }`}>
             <Wheat className="w-4 h-4" />
             {farro
-              ? (de ? "Dinkel-Version aktiv — zur Weizen-Version" : "Versione al Farro attiva — torna al grano")
-              : (de ? "In Dinkel (Farro) umwandeln" : "Converti in Farro")}
+              ? tri("Versione al Farro attiva — torna al grano", "Dinkel-Version aktiv — zur Weizen-Version", "Spelt version active — back to wheat")
+              : tri("Converti in Farro", "In Dinkel (Farro) umwandeln", "Convert to Spelt")}
           </button>
         )}
 
         {isPanettone && !r.locked && farro && (
           <div data-testid={`farro-banner-${r.id}`} className="rounded-xl bg-[#6B8E62]/12 border border-[#6B8E62]/30 p-3 text-sm text-[#4A3B34] dark:text-[#C9BBB0] leading-relaxed">
-            🌾 {de
-              ? "DINKEL-VERSION: Da das Dinkelgluten zerbrechlicher ist, wurde die Hydratation ~4% reduziert. Kürzer und schonender kneten (Überhitzung vermeiden); Butter und Eigelb in kleinen Portionen fraktioniert einarbeiten. Lievito-Madre-Führung, Glasur und Ablauf bleiben unverändert."
-              : "VERSIONE AL FARRO: essendo il glutine del farro più fragile e tenace, l'idratazione è stata ridotta di ~4%. Impasta per meno tempo e più delicatamente (evita il surriscaldamento); inserisci burro e tuorli in piccole dosi frazionate. Gestione del lievito madre, glassa e procedimento restano invariati."}
+            🌾 {tri(
+              "VERSIONE AL FARRO: essendo il glutine del farro più fragile e tenace, l'idratazione è stata ridotta di ~4%. Impasta per meno tempo e più delicatamente (evita il surriscaldamento); inserisci burro e tuorli in piccole dosi frazionate. Gestione del lievito madre, glassa e procedimento restano invariati.",
+              "DINKEL-VERSION: Da das Dinkelgluten zerbrechlicher ist, wurde die Hydratation ~4% reduziert. Kürzer und schonender kneten (Überhitzung vermeiden); Butter und Eigelb in kleinen Portionen fraktioniert einarbeiten. Lievito-Madre-Führung, Glasur und Ablauf bleiben unverändert.",
+              "SPELT VERSION: as spelt gluten is more fragile and tenacious, hydration was reduced by ~4%. Knead shorter and more gently (avoid overheating); add butter and yolks in small fractioned portions. Sourdough management, glaze and procedure stay unchanged.")}
           </div>
         )}
 
@@ -488,15 +490,14 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
               <Lock className="w-6 h-6" />
             </div>
             <p className="font-display text-lg font-bold">
-              {de ? "Vollständiges Rezept mit PRO freischalten" : "Sblocca la ricetta completa con PRO"}
+              {tri("Sblocca la ricetta completa con PRO", "Vollständiges Rezept mit PRO freischalten", "Unlock the full recipe with PRO")}
             </p>
             <p className="text-white/85 text-sm mt-1.5">
-              {de ? "Prozedur Schritt für Schritt, alle Zutaten, Arbeitsphasen und Werkzeuge des Labors."
-                  : "Procedimento passo-passo, tutti gli ingredienti, le fasi di lavorazione e gli strumenti del laboratorio."}
+              {tri("Procedimento passo-passo, tutti gli ingredienti, le fasi di lavorazione e gli strumenti del laboratorio.", "Prozedur Schritt für Schritt, alle Zutaten, Arbeitsphasen und Werkzeuge des Labors.", "Step-by-step procedure, all ingredients, work phases and lab tools.")}
             </p>
             <button data-testid={`recipe-unlock-${r.id}`} onClick={onUnlock}
               className="mt-4 inline-flex items-center gap-2 bg-white text-[#8C3A1D] font-bold px-5 py-2.5 rounded-xl active:scale-97 transition-all">
-              <Crown className="w-4 h-4" /> {de ? "PRO freischalten · €9,99/Monat" : "Passa a PRO · €9,99/mese"}
+              <Crown className="w-4 h-4" /> {tri("Passa a PRO · €9,99/mese", "PRO freischalten · €9,99/Monat", "Go PRO · €9.99/month")}
             </button>
           </div>
         )}
@@ -669,6 +670,7 @@ const PAN_GLAZE = [
 
 function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange }) {
   const de = lang === "de";
+  const tri = (i_, d_, e_) => (de ? d_ : lang === "en" ? e_ : i_);
   const [glazeTot, setGlazeTot] = useState(150);
   const targetVal = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
   const fct = flourG > 0 ? targetVal / flourG : 1;
@@ -705,7 +707,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
       )}
 
       <div className="rounded-xl bg-[#B34A26]/8 border border-[#B34A26]/25 p-3">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">🌾 {de ? "Führung Lievito Madre (pH)" : "Gestione Lievito Madre (pH)"}</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">🌾 {tri("Gestione Lievito Madre (pH)", "Führung Lievito Madre (pH)", "Sourdough management (pH)")}</p>
         <div className="space-y-1">
           {PAN_MY[de ? "de" : "it"].map((m, i) => (
             <div key={i} className="flex items-start justify-between gap-2 text-sm">
@@ -717,14 +719,14 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
       </div>
 
       <div className="rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3 overflow-x-auto">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{de ? "Zutaten: 1./2. Teig · Gesamt" : "Ingredienti: 1° e 2° Impasto · Totale"}</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26] mb-2">{tri("Ingredienti: 1° e 2° Impasto · Totale", "Zutaten: 1./2. Teig · Gesamt", "Ingredients: 1st/2nd dough · Total")}</p>
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="text-[10px] uppercase text-[#8C7567]">
-              <th className="text-left font-semibold pb-1">{de ? "Zutat" : "Ingrediente"}</th>
+              <th className="text-left font-semibold pb-1">{tri("Ingrediente", "Zutat", "Ingredient")}</th>
               <th className="text-right font-semibold pb-1">1°</th>
               <th className="text-right font-semibold pb-1">2°</th>
-              <th className="text-right font-semibold pb-1">{de ? "Ges." : "Tot."}</th>
+              <th className="text-right font-semibold pb-1">{tri("Tot.", "Ges.", "Tot.")}</th>
               <th className="text-right font-semibold pb-1">%</th>
             </tr>
           </thead>
@@ -744,14 +746,14 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
             })}
           </tbody>
         </table>
-        <p className="text-[10px] text-[#8C7567] mt-2">{de ? "g · % auf das Gesamtmehl. Suspensionen immer am Ende, langsam einarbeiten." : "g · % sul peso della farina totale. Sospensioni sempre a fine impasto, a bassa velocità."}</p>
+        <p className="text-[10px] text-[#8C7567] mt-2">{tri("g · % sul peso della farina totale. Sospensioni sempre a fine impasto, a bassa velocità.", "g · % auf das Gesamtmehl. Suspensionen immer am Ende, langsam einarbeiten.", "g · % of total flour. Add suspensions at the very end, at low speed.")}</p>
       </div>
 
       <div className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A]">{de ? "Glasur-Modul (automatisch)" : "Modulo Glassa (automatico)"}</p>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A]">{tri("Modulo Glassa (automatico)", "Glasur-Modul (automatisch)", "Glaze module (automatic)")}</p>
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-[#8C7567]">{de ? "Gesamt" : "Totale"}</span>
+            <span className="text-[10px] text-[#8C7567]">{tri("Totale", "Gesamt", "Total")}</span>
             <input data-testid={`glaze-total-${r.id}`} type="number" value={glazeTot}
               onChange={(e) => setGlazeTot(e.target.value)}
               className="w-16 text-right font-mono-data text-xs font-bold text-[#8C3A1D] dark:text-[#E5AC3A] bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-md px-1.5 py-1 outline-none" />

@@ -32,7 +32,7 @@ export default function Maestro() {
     { id: "check", title: t("tool_check"), desc: t("tool_check_desc"), Icon: ListChecks },
     { id: "spesa", title: t("tool_spesa"), desc: t("tool_spesa_desc"), Icon: ShoppingCart },
     { id: "turni", title: t("tool_turni"), desc: t("tool_turni_desc"), Icon: Users },
-    { id: "freezer", title: lang === "de" ? "Freezer-Bestand" : "Giacenze Freezer", desc: "", Icon: Snowflake },
+    { id: "freezer", title: lang === "de" ? "Freezer-Bestand" : lang === "en" ? "Freezer stock" : "Giacenze Freezer", desc: "", Icon: Snowflake },
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
     { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
     { id: "termo", title: t("tool_termo"), desc: t("tool_termo_desc"), Icon: Thermometer },

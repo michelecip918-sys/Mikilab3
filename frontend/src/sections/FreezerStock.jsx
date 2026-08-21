@@ -25,19 +25,18 @@ export default function FreezerStock() {
     try {
       const payload = { items: items.filter((x) => (x.name || "").trim()).map((x) => ({ name: x.name.trim(), qty: Number(x.qty) || 0, min_qty: Number(x.min_qty) || 0 })) };
       const r = await api.put(`/freezer?lang=${lang}`, payload);
-      toast.success(de ? "Gespeichert" : "Salvato");
-      if (r.data.emailed) toast.warning(de ? "Niedriger Bestand: E-Mail gesendet!" : "Scorta bassa: email inviata!");
-    } catch { toast.error(de ? "Fehler" : "Errore"); }
+      toast.success(de ? "Gespeichert" : lang === "en" ? "Saved" : "Salvato");
+      if (r.data.emailed) toast.warning(de ? "Niedriger Bestand: E-Mail gesendet!" : lang === "en" ? "Low stock: email sent!" : "Scorta bassa: email inviata!");
+    } catch { toast.error(de ? "Fehler" : lang === "en" ? "Error" : "Errore"); }
     finally { setSaving(false); }
   };
 
   return (
     <div data-testid="freezer-stock" className="pb-4">
       <div className="rounded-2xl bg-gradient-to-br from-[#4d6b45] to-[#374f31] text-white p-5 mb-4">
-        <h1 className="font-display text-2xl font-bold flex items-center gap-2"><Snowflake className="w-6 h-6" /> {de ? "Freezer-Bestand" : "Giacenze Freezer"}</h1>
+        <h1 className="font-display text-2xl font-bold flex items-center gap-2"><Snowflake className="w-6 h-6" /> {de ? "Freezer-Bestand" : lang === "en" ? "Freezer stock" : "Giacenze Freezer"}</h1>
         <p className="text-white/85 text-sm mt-1">
-          {de ? "Setze Menge und Mindestmenge. Sinkt etwas darunter, bekommst du eine E-Mail an dein Konto."
-              : "Imposta quantità e soglia minima. Se qualcosa scende sotto, ricevi un'email al tuo indirizzo."}
+          {de ? "Setze Menge und Mindestmenge. Sinkt etwas darunter, bekommst du eine E-Mail an dein Konto." : lang === "en" ? "Set quantity and minimum. If something drops below, you get an email to your account." : "Imposta quantità e scorta minima. Se qualcosa scende sotto, ricevi una email al tuo account."}
         </p>
       </div>
 
@@ -45,7 +44,7 @@ export default function FreezerStock() {
         <div data-testid="freezer-low-warning" className="mb-3 rounded-xl bg-[#B4442A]/10 border border-[#B4442A]/30 p-3 flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-[#B4442A] shrink-0 mt-0.5" />
           <p className="text-sm text-[#8C3A1D] dark:text-[#E5AC3A]">
-            {de ? "Unter Mindestmenge: " : "Sotto la soglia: "}<b>{low.map((x) => x.name).join(", ")}</b>
+            {de ? "Unter Mindestmenge: " : lang === "en" ? "Below minimum: " : "Sotto la soglia: "}<b>{low.map((x) => x.name).join(", ")}</b>
           </p>
         </div>
       )}
@@ -53,10 +52,10 @@ export default function FreezerStock() {
       <div className="space-y-2">
         {items.map((it, i) => (
           <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-2.5">
-            <input value={it.name} onChange={(e) => set(i, { name: e.target.value })} placeholder={de ? "Produkt" : "Prodotto"}
+            <input value={it.name} onChange={(e) => set(i, { name: e.target.value })} placeholder={de ? "Produkt" : lang === "en" ? "Product" : "Prodotto"}
               className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#2C221E] dark:text-[#F5EFE6]" />
             <div className="flex items-center gap-1">
-              <input type="number" value={it.qty} onChange={(e) => set(i, { qty: e.target.value })} title={de ? "Bestand" : "Scorta"}
+              <input type="number" value={it.qty} onChange={(e) => set(i, { qty: e.target.value })} title={de ? "Bestand" : lang === "en" ? "Stock" : "Scorta"}
                 className="w-16 text-center font-mono-data text-sm bg-[#F5EFE6] dark:bg-[#332823] rounded-lg py-1.5 outline-none" />
               <span className="text-[10px] text-[#8C7567]">/</span>
               <input type="number" value={it.min_qty} onChange={(e) => set(i, { min_qty: e.target.value })} title={de ? "Min." : "Min."}
@@ -68,10 +67,10 @@ export default function FreezerStock() {
       </div>
 
       <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#E8DEC8] dark:border-[#3D302A] text-[#8C7567] rounded-xl py-2.5 active:scale-98">
-        <Plus className="w-4 h-4" /> {de ? "Produkt hinzufügen" : "Aggiungi prodotto"}
+        <Plus className="w-4 h-4" /> {de ? "Produkt hinzufügen" : lang === "en" ? "Add product" : "Aggiungi prodotto"}
       </button>
       <button data-testid="freezer-save" onClick={save} disabled={saving} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#B34A26] disabled:opacity-50 text-white font-semibold rounded-2xl py-3 active:scale-98">
-        <Save className="w-5 h-5" /> {de ? "Speichern" : "Salva"}
+        <Save className="w-5 h-5" /> {de ? "Speichern" : lang === "en" ? "Save" : "Salva"}
       </button>
     </div>
   );

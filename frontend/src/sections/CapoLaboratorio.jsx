@@ -277,13 +277,13 @@ export default function CapoLaboratorio() {
           </div>
         )}
         <div className="mt-3">
-          <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Triebmittel / Vorteig" : "Lievito / Prefermento"}</label>
+          <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Triebmittel / Vorteig" : lang === "en" ? "Leaven / Preferment" : "Lievito / Prefermento"}</label>
           <select data-testid="capo-preferment" value={preferment} onChange={(e) => setPreferment(e.target.value)}
             className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 text-sm outline-none focus:border-[#B34A26]">
-            <option value="solido">{lang === "de" ? "Fester Lievito Madre" : "Lievito Madre solido"}</option>
-            <option value="licoli">LiCoLi ({lang === "de" ? "Flüssighefe" : "lievito in coltura liquida"})</option>
+            <option value="solido">{lang === "de" ? "Fester Lievito Madre" : lang === "en" ? "Solid sourdough" : "Lievito Madre solido"}</option>
+            <option value="licoli">LiCoLi ({lang === "de" ? "Flüssighefe" : lang === "en" ? "liquid starter" : "lievito in coltura liquida"})</option>
             <option value="poolish">Poolish</option>
-            <option value="lievito_birra">{lang === "de" ? "Hefe (Bierhefe)" : "Lievito di birra"}</option>
+            <option value="lievito_birra">{lang === "de" ? "Hefe (Bierhefe)" : lang === "en" ? "Baker's yeast" : "Lievito di birra"}</option>
           </select>
           {(preferment === "licoli" || preferment === "poolish") && (
             <div data-testid="capo-preferment-banner" className="mt-2 rounded-xl bg-[#D99B26]/15 border border-[#D99B26]/40 p-3 text-sm text-[#8C3A1D] dark:text-[#E5AC3A] leading-relaxed">
@@ -341,10 +341,10 @@ export default function CapoLaboratorio() {
 
 function RecipePrint({ r, lang, t }) {
   const ing = [
-    [lang === "de" ? "Mehl" : "Farina", r.flour_grams],
-    [lang === "de" ? "Wasser" : "Acqua", r.water_grams],
-    [lang === "de" ? "Vorteig/Sauerteig" : "Prefermento/Lievito madre", r.sourdough_grams],
-    [lang === "de" ? "Salz" : "Sale", r.salt_grams],
+    [lang === "de" ? "Mehl" : lang === "en" ? "Flour" : "Farina", r.flour_grams],
+    [lang === "de" ? "Wasser" : lang === "en" ? "Water" : "Acqua", r.water_grams],
+    [lang === "de" ? "Vorteig/Sauerteig" : lang === "en" ? "Preferment/Sourdough" : "Prefermento/Lievito madre", r.sourdough_grams],
+    [lang === "de" ? "Salz" : lang === "en" ? "Salt" : "Sale", r.salt_grams],
   ].filter(([, g]) => Number(g) > 0);
   const proc = rLoc(r, "procedure", lang);
   return (

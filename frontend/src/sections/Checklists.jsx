@@ -56,8 +56,8 @@ export default function Checklists() {
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 rounded-2xl bg-[#B34A26] flex items-center justify-center"><ListChecks className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{lang === "de" ? "Checklisten" : "Check-list"}</h1>
-          <p className="text-sm text-[#8C7567]">{lang === "de" ? "Standard-Kontrollen der Backstube" : "Controlli standard del laboratorio"}</p>
+          <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{lang === "de" ? "Checklisten" : lang === "en" ? "Checklists" : "Check-list"}</h1>
+          <p className="text-sm text-[#8C7567]">{lang === "de" ? "Standard-Kontrollen der Backstube" : lang === "en" ? "Standard bakery checks" : "Controlli standard del laboratorio"}</p>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export default function Checklists() {
       </div>
 
       <button data-testid="cl-reset" onClick={reset} className="mt-3 text-sm text-[#8C7567] flex items-center gap-1 mx-auto">
-        <RotateCcw className="w-4 h-4" /> {lang === "de" ? "Zurücksetzen" : "Azzera"}
+        <RotateCcw className="w-4 h-4" /> {lang === "de" ? "Zurücksetzen" : lang === "en" ? "Reset" : "Azzera"}
       </button>
     </div>
   );

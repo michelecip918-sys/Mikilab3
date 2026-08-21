@@ -83,7 +83,7 @@ export default function VoiceAssistant({ onNavigate }) {
     setTranscript("");
     const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
     const rec = new Rec();
-    rec.lang = lang === "de" ? "de-DE" : "it-IT";
+    rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
     rec.interimResults = false;
     rec.maxAlternatives = 1;
     rec.continuous = false;

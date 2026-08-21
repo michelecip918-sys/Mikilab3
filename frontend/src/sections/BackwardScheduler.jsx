@@ -21,7 +21,7 @@ function toDateToday(hhmm) {
   d.setHours(h, m || 0, 0, 0);
   return d;
 }
-const fmt = (d, lang) => d.toLocaleTimeString(lang === "de" ? "de-DE" : "it-IT", { hour: "2-digit", minute: "2-digit" });
+const fmt = (d, lang) => d.toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" });
 
 export default function BackwardScheduler() {
   const { t, lang } = useLang();
@@ -75,17 +75,17 @@ export default function BackwardScheduler() {
         <div className="w-11 h-11 rounded-2xl bg-[#B34A26] flex items-center justify-center"><Clock className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">{t("tool_inversa")}</h1>
-          <p className="text-sm text-[#8C7567]">{lang === "de" ? "Zeiten rückwärts ab Öffnung/Verkauf berechnen" : "Calcola gli orari a ritroso dall'apertura/vendita"}</p>
+          <p className="text-sm text-[#8C7567]">{lang === "de" ? "Zeiten rückwärts ab Öffnung/Verkauf berechnen" : lang === "en" ? "Compute times backwards from opening/sale" : "Calcola gli orari a ritroso dall'apertura/vendita"}</p>
         </div>
       </div>
 
       <div className="rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] p-4 mb-4">
-        <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Fertig / Öffnung um" : "Pronto / Apertura alle"}</label>
+        <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Fertig / Öffnung um" : lang === "en" ? "Ready / Opening at" : "Pronto / Apertura alle"}</label>
         <input data-testid="bs-end-time" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
           className="mt-1 w-full bg-[#F5EFE6] dark:bg-[#332823] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-3 text-lg font-mono-data font-bold outline-none focus:border-[#B34A26]" />
       </div>
 
-      <p className="text-xs font-bold uppercase tracking-wide text-[#8C7567] mb-2">{lang === "de" ? "Dauer je Phase (Min.)" : "Durata di ogni fase (min)"}</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#8C7567] mb-2">{lang === "de" ? "Dauer je Phase (Min.)" : lang === "en" ? "Duration per phase (min)" : "Durata di ogni fase (min)"}</p>
       <div className="space-y-2 mb-4">
         {PHASES.map((p) => (
           <div key={p.id} className="flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-xl p-2.5">
@@ -99,8 +99,8 @@ export default function BackwardScheduler() {
 
       <div data-testid="bs-schedule" className="rounded-2xl overflow-hidden border border-[#E8DEC8] dark:border-[#3D302A] mb-4">
         <div className="bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white px-4 py-3">
-          <p className="text-xs uppercase tracking-wide text-white/80">{lang === "de" ? "Zeitplan" : "Scansione oraria"}</p>
-          <p className="font-display text-lg font-bold">{lang === "de" ? "Ende" : "Fine"} · {fmt(end, lang)}</p>
+          <p className="text-xs uppercase tracking-wide text-white/80">{lang === "de" ? "Zeitplan" : lang === "en" ? "Timetable" : "Scansione oraria"}</p>
+          <p className="font-display text-lg font-bold">{lang === "de" ? "Ende" : lang === "en" ? "End" : "Fine"} · {fmt(end, lang)}</p>
         </div>
         <ol>
           {schedule.map((s, i) => (
@@ -114,7 +114,7 @@ export default function BackwardScheduler() {
 
       <div className="flex items-center gap-2 bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl px-4 py-3">
         <Bell className="w-4 h-4 text-[#B34A26]" />
-        <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{lang === "de" ? "Wecker für jede Phase" : "Sveglie per ogni fase"}</span>
+        <span className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] flex-1">{lang === "de" ? "Wecker für jede Phase" : lang === "en" ? "Alarms for each phase" : "Sveglie per ogni fase"}</span>
         <button data-testid="bs-alarm-toggle" onClick={toggleAlarms}
           className={`w-11 h-6 rounded-full transition-colors relative ${alarms ? "bg-[#6B8E62]" : "bg-[#C9BBB0] dark:bg-[#3D302A]"}`}>
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${alarms ? "left-[22px]" : "left-0.5"}`} />
@@ -122,7 +122,7 @@ export default function BackwardScheduler() {
       </div>
 
       <button data-testid="bs-reset" onClick={() => setDur(Object.fromEntries(PHASES.map((p) => [p.id, p.def])))}
-        className="mt-3 text-sm text-[#8C7567] flex items-center gap-1 mx-auto"><RotateCcw className="w-4 h-4" /> {lang === "de" ? "Standardzeiten" : "Tempi predefiniti"}</button>
+        className="mt-3 text-sm text-[#8C7567] flex items-center gap-1 mx-auto"><RotateCcw className="w-4 h-4" /> {lang === "de" ? "Standardzeiten" : lang === "en" ? "Default times" : "Tempi predefiniti"}</button>
     </div>
   );
 }

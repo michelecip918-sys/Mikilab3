@@ -9,7 +9,7 @@ const INT_KEY = "mikilab_lm_interval";
 const ON_KEY = "mikilab_lm_remind";
 
 function fmt(ts, lang) {
-  return new Date(ts).toLocaleString(lang === "de" ? "de-DE" : "it-IT", {
+  return new Date(ts).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", {
     weekday: "short", hour: "2-digit", minute: "2-digit",
   });
 }

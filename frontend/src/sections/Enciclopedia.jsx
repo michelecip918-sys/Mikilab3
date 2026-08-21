@@ -33,7 +33,7 @@ const ENTRIES = {
 export default function Enciclopedia() {
   const { t, lang } = useLang();
   const [open, setOpen] = useState(0);
-  const list = ENTRIES[lang === "de" ? "de" : "it"];
+  const list = ENTRIES[lang] || ENTRIES.it;
 
   return (
     <div data-testid="enciclopedia" className="pb-4">

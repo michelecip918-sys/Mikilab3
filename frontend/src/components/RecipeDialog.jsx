@@ -178,12 +178,12 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           </div>
 
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Echter Name (optional)" : "Nome reale (opzionale)"}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#8C7567]">{lang === "de" ? "Echter Name (optional)" : lang === "en" ? "Real name (optional)" : "Nome reale (opzionale)"}</label>
             <input
               data-testid="recipe-realname-input"
               value={form.real_name || ""}
               onChange={(e) => set("real_name", e.target.value)}
-              placeholder={lang === "de" ? "z. B. Kartoffelbrot" : "es. Pane alle Patate"}
+              placeholder={lang === "de" ? "z. B. Kartoffelbrot" : lang === "en" ? "e.g. Potato bread" : "es. Pane alle Patate"}
               className="mt-1 w-full bg-white dark:bg-[#241D19] border border-[#E8DEC8] dark:border-[#3D302A] focus:border-[#B34A26] focus:ring-2 focus:ring-[#B34A26]/20 rounded-xl p-3 text-base outline-none"
             />
           </div>

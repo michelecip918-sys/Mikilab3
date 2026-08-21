@@ -30,8 +30,8 @@ export default function SupplierOrder({ totals }) {
 
   const sendEmail = () => {
     const to = (email || supplier.email || "").trim();
-    const subject = lang === "de" ? "Bestellung Mikilab" : "Ordine Mikilab";
-    const body = orderText() + (lang === "de" ? "\n\nDanke!" : "\n\nGrazie!");
+    const subject = lang === "de" ? "Bestellung Mikilab" : lang === "en" ? "Mikilab order" : "Ordine Mikilab";
+    const body = orderText() + (lang === "de" ? "\n\nDanke!" : lang === "en" ? "\n\nThanks!" : "\n\nGrazie!");
     if (to) localStorage.setItem(EMAIL_KEY, to);
     window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };

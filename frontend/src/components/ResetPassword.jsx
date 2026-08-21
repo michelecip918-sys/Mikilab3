@@ -5,7 +5,7 @@ import { authApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function ResetPassword({ token, onDone }) {
-  const { lang } = useLang();
+  const { lang, tri } = useLang();
   const de = lang === "de";
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -13,15 +13,15 @@ export default function ResetPassword({ token, onDone }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (password.length < 6) { toast.error(de ? "Mind. 6 Zeichen" : "Almeno 6 caratteri"); return; }
-    if (password !== confirm) { toast.error(de ? "Passwörter stimmen nicht überein" : "Le password non coincidono"); return; }
+    if (password.length < 6) { toast.error(tri("Almeno 6 caratteri", "Mind. 6 Zeichen", "At least 6 characters")); return; }
+    if (password !== confirm) { toast.error(tri("Le password non coincidono", "Passwörter stimmen nicht überein", "Passwords do not match")); return; }
     setBusy(true);
     try {
       await authApi.reset(token, password);
-      toast.success(de ? "Passwort geändert! Melde dich an." : "Password aggiornata! Accedi ora.");
+      toast.success(tri("Password aggiornata! Accedi ora.", "Passwort geändert! Melde dich an.", "Password updated! Sign in now."));
       onDone();
     } catch (err) {
-      toast.error(err?.response?.data?.detail || (de ? "Fehler" : "Errore"));
+      toast.error(err?.response?.data?.detail || tri("Errore", "Fehler", "Error"));
     } finally { setBusy(false); }
   };
 
@@ -37,24 +37,24 @@ export default function ResetPassword({ token, onDone }) {
             <KeyRound className="w-8 h-8 text-[#B34A26]" />
           </div>
           <h1 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#F5EFE6]">
-            {de ? "Neues Passwort" : "Nuova password"}
+            {tri("Nuova password", "Neues Passwort", "New password")}
           </h1>
-          <p className="text-sm text-[#8C7567] mt-1">{de ? "Wähle ein neues Passwort für dein Konto." : "Scegli una nuova password per il tuo account."}</p>
+          <p className="text-sm text-[#8C7567] mt-1">{tri("Scegli una nuova password per il tuo account.", "Wähle ein neues Passwort für dein Konto.", "Choose a new password for your account.")}</p>
         </div>
         <form onSubmit={submit} className="space-y-3">
           <Field icon={<Lock className="w-4 h-4" />}>
             <input data-testid="reset-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder={de ? "Neues Passwort" : "Nuova password"}
+              placeholder={tri("Nuova password", "Neues Passwort", "New password")}
               className="flex-1 bg-transparent outline-none text-sm text-[#2C221E] dark:text-[#F5EFE6]" />
           </Field>
           <Field icon={<Lock className="w-4 h-4" />}>
             <input data-testid="reset-confirm" type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)}
-              placeholder={de ? "Passwort bestätigen" : "Conferma password"}
+              placeholder={tri("Conferma password", "Passwort bestätigen", "Confirm password")}
               className="flex-1 bg-transparent outline-none text-sm text-[#2C221E] dark:text-[#F5EFE6]" />
           </Field>
           <button data-testid="reset-submit" type="submit" disabled={busy}
             className="w-full flex items-center justify-center gap-2 bg-[#B34A26] hover:bg-[#963B1C] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
-            {de ? "Passwort ändern" : "Cambia password"}
+            {tri("Cambia password", "Passwort ändern", "Change password")}
           </button>
         </form>
       </div>

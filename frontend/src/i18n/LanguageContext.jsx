@@ -30,8 +30,11 @@ export function LanguageProvider({ children }) {
     [lang]
   );
 
+  // Helper per stringhe inline trilingue: tri(it, de, en). EN ricade su IT se mancante.
+  const tri = useCallback((it_, de_, en_) => (lang === "de" ? de_ : lang === "en" ? (en_ ?? it_) : it_), [lang]);
+
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>
+    <LanguageContext.Provider value={{ lang, setLang, t, tri }}>
       {children}
     </LanguageContext.Provider>
   );

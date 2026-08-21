@@ -47,7 +47,7 @@ export default function Header() {
         <div data-testid="header-clock" className="hidden min-[420px]:flex items-center gap-1.5 bg-[#F5EFE6] dark:bg-[#332823] rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] px-2.5 py-1.5">
           <Clock className="w-3.5 h-3.5 text-[#B34A26]" />
           <span className="font-mono-data text-xs font-bold text-[#2C221E] dark:text-[#F5EFE6]">
-            {now.toLocaleTimeString(lang === "de" ? "de-DE" : "it-IT", { hour: "2-digit", minute: "2-digit" })}
+            {now.toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" })}
           </span>
         </div>
 
