@@ -491,3 +491,7 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **Fumetto avatar leggibile**: sfondo scuro semitrasparente (#1A1412/85) + testo bianco bold text-[15px] + ombra + backdrop-blur; icone smartphone/PC spostate in basso a destra (bottom-6) per non sovrapporsi al testo/titolo.
 - **FAB Radio/Parla**: da bottom-24 z-50 → bottom-28 z-40 + marginBottom safe-area; BottomNav resta z-50 con paddingBottom safe-area (iPhone). Evita sovrapposizioni su mobile.
 - Verificato su viewport 430px: accordion, leggibilità e FAB OK, nessun errore.
+
+## v38 (2026-06) — 4 suoni ambient + 6 nuovi gusti panettone
+- **Suoni ambient (Radio)**: `ambientMusic.js` ora sintetizza 4 modalità — fire (scoppiettio forno), rain (pioggia), mixer (impastatrice, ronzio ritmico), morning (mattino, chirp). `setMode()` in ambient + AmbientContext (mode/setMode). Selettore 4 pulsanti in RadioFornaio (`ambient-mode-<id>`) + slider volume. Verificato.
+- **6 nuovi gusti Panettone** (17 totali, 49 ricette): Limoncello, Albicocca e Cioccolato, Zafferano, Mela e Cannella, Tiramisù, Cocco e Cioccolato. Clonati dalla base Classico (446 farina, 179 acqua, 140 LM, metodo indiretto 2 impasti) con sospensioni per gusto in extra_ingredients e zucchero bilanciato (34% per gusti dolci, 41% zafferano). Naming "Panettone Artigianale MikiLab — [Gusto]". Glassa automatica dal modulo frontend. SEED_VERSION v38. Verificato render (struttura pH + tabella 1°/2°/Totale + glassa + sospensioni + Converti in Farro). NOTA: procedure_de dei nuovi gusti = fallback testo IT (notes_de tradotte).

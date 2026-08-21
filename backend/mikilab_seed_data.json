@@ -2724,5 +2724,595 @@
     "real_name": "Bretzel integrale",
     "real_name_de": "Vollkorn-Brezel",
     "menu_category": "pane"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Scorza di limone candita",
+          "cost": 0.5
+        },
+        {
+          "name": "Gocce di cioccolato bianco",
+          "cost": 0.5
+        },
+        {
+          "name": "Pasta di limone",
+          "cost": 0.5
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.8,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-21T15:34:19.214162+00:00",
+    "updated_at": "2026-08-21T15:34:19.214162+00:00",
+    "name": "Panettone Artigianale MikiLab — Limoncello",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_classico.jpg",
+    "notes": "Fresco e agrumato: limone candito, cioccolato bianco e pasta di limone.\n\nStessa ricetta base del Panettone Artigianale MikiLab (lievito madre, metodo indiretto, 2 impasti). Sospensioni: Scorza di limone candita 15%, Gocce di cioccolato bianco 15%, Pasta di limone 3% (sul peso della farina).\n\n⚙️ Aggiungi le sospensioni SEMPRE a fine impasto, a bassa velocità. Se sono umide/sciroppate o paste grasse, riduci leggermente l'acqua per non alzare l'idratazione. La GLASSA è nel modulo automatico della scheda.\nLievitazione 24-28°C; raffreddamento capovolto 12 h.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Scorza di limone candita + Gocce di cioccolato bianco + Pasta di limone) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Scorza di limone candita",
+        "percent": 15
+      },
+      {
+        "name": "Gocce di cioccolato bianco",
+        "percent": 15
+      },
+      {
+        "name": "Pasta di limone",
+        "percent": 3
+      }
+    ],
+    "origin": "it",
+    "name_de": "Panettone Artigianale MikiLab — Limoncello",
+    "notes_de": "Frisch und zitronig: kandierte Zitrone, weiße Schokolade und Zitronenpaste.\n\nSelbes Grundrezept wie der Panettone Artigianale MikiLab (Lievito Madre, indirekt, 2 Teige). Einlagen immer am Ende bei niedriger Geschwindigkeit zugeben. Die GLASUR ist im automatischen Modul der Karte.\nGare 24-28°C; Abkühlen kopfüber 12 Std.",
+    "procedure_de": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Scorza di limone candita + Gocce di cioccolato bianco + Pasta di limone) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni",
+    "real_name": "Panettone Limoncello (lievito madre, 2 impasti)",
+    "real_name_de": "Panettone Limoncello (Lievito Madre, 2 Teige)"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Albicocche disidratate a cubetti",
+          "cost": 0.5
+        },
+        {
+          "name": "Gocce di cioccolato fondente",
+          "cost": 0.5
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.8,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-21T15:34:19.214162+00:00",
+    "updated_at": "2026-08-21T15:34:19.214162+00:00",
+    "name": "Panettone Artigianale MikiLab — Albicocca e Cioccolato",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_classico.jpg",
+    "notes": "Albicocche morbide disidratate e gocce di cioccolato fondente.\n\nStessa ricetta base del Panettone Artigianale MikiLab (lievito madre, metodo indiretto, 2 impasti). Sospensioni: Albicocche disidratate a cubetti 20%, Gocce di cioccolato fondente 15% (sul peso della farina).\n\n⚙️ Aggiungi le sospensioni SEMPRE a fine impasto, a bassa velocità. Se sono umide/sciroppate o paste grasse, riduci leggermente l'acqua per non alzare l'idratazione. La GLASSA è nel modulo automatico della scheda.\nLievitazione 24-28°C; raffreddamento capovolto 12 h.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Albicocche disidratate a cubetti + Gocce di cioccolato fondente) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Albicocche disidratate a cubetti",
+        "percent": 20
+      },
+      {
+        "name": "Gocce di cioccolato fondente",
+        "percent": 15
+      }
+    ],
+    "origin": "it",
+    "name_de": "Panettone Artigianale MikiLab — Aprikose und Schokolade",
+    "notes_de": "Weiche getrocknete Aprikosen und Zartbitter-Schokotropfen.\n\nSelbes Grundrezept wie der Panettone Artigianale MikiLab (Lievito Madre, indirekt, 2 Teige). Einlagen immer am Ende bei niedriger Geschwindigkeit zugeben. Die GLASUR ist im automatischen Modul der Karte.\nGare 24-28°C; Abkühlen kopfüber 12 Std.",
+    "procedure_de": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Albicocche disidratate a cubetti + Gocce di cioccolato fondente) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni",
+    "real_name": "Panettone Albicocca e Cioccolato (lievito madre, 2 impasti)",
+    "real_name_de": "Panettone Aprikose und Schokolade (Lievito Madre, 2 Teige)"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Uvetta sultanina",
+          "cost": 0.5
+        },
+        {
+          "name": "Arancia candita",
+          "cost": 0.5
+        },
+        {
+          "name": "Zafferano in pistilli",
+          "cost": 0.5
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.8,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-21T15:34:19.214162+00:00",
+    "updated_at": "2026-08-21T15:34:19.214162+00:00",
+    "name": "Panettone Artigianale MikiLab — Zafferano",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_classico.jpg",
+    "notes": "Aromatico e tradizionale: zafferano, uvetta e arancia candita.\n\nStessa ricetta base del Panettone Artigianale MikiLab (lievito madre, metodo indiretto, 2 impasti). Sospensioni: Uvetta sultanina 20%, Arancia candita 10%, Zafferano in pistilli 0.2% (sul peso della farina).\n\n⚙️ Aggiungi le sospensioni SEMPRE a fine impasto, a bassa velocità. Se sono umide/sciroppate o paste grasse, riduci leggermente l'acqua per non alzare l'idratazione. La GLASSA è nel modulo automatico della scheda.\nLievitazione 24-28°C; raffreddamento capovolto 12 h.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Uvetta sultanina + Arancia candita + Zafferano in pistilli) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 41
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Uvetta sultanina",
+        "percent": 20
+      },
+      {
+        "name": "Arancia candita",
+        "percent": 10
+      },
+      {
+        "name": "Zafferano in pistilli",
+        "percent": 0.2
+      }
+    ],
+    "origin": "it",
+    "name_de": "Panettone Artigianale MikiLab — Safran",
+    "notes_de": "Aromatisch und traditionell: Safran, Rosinen und kandierte Orange.\n\nSelbes Grundrezept wie der Panettone Artigianale MikiLab (Lievito Madre, indirekt, 2 Teige). Einlagen immer am Ende bei niedriger Geschwindigkeit zugeben. Die GLASUR ist im automatischen Modul der Karte.\nGare 24-28°C; Abkühlen kopfüber 12 Std.",
+    "procedure_de": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Uvetta sultanina + Arancia candita + Zafferano in pistilli) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni",
+    "real_name": "Panettone Zafferano (lievito madre, 2 impasti)",
+    "real_name_de": "Panettone Safran (Lievito Madre, 2 Teige)"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Mela disidratata a cubetti",
+          "cost": 0.5
+        },
+        {
+          "name": "Uvetta sultanina",
+          "cost": 0.5
+        },
+        {
+          "name": "Cannella in polvere",
+          "cost": 0.5
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.8,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-21T15:34:19.214162+00:00",
+    "updated_at": "2026-08-21T15:34:19.214162+00:00",
+    "name": "Panettone Artigianale MikiLab — Mela e Cannella",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_classico.jpg",
+    "notes": "Avvolgente: mela disidratata, uvetta e cannella.\n\nStessa ricetta base del Panettone Artigianale MikiLab (lievito madre, metodo indiretto, 2 impasti). Sospensioni: Mela disidratata a cubetti 20%, Uvetta sultanina 10%, Cannella in polvere 0.6% (sul peso della farina).\n\n⚙️ Aggiungi le sospensioni SEMPRE a fine impasto, a bassa velocità. Se sono umide/sciroppate o paste grasse, riduci leggermente l'acqua per non alzare l'idratazione. La GLASSA è nel modulo automatico della scheda.\nLievitazione 24-28°C; raffreddamento capovolto 12 h.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Mela disidratata a cubetti + Uvetta sultanina + Cannella in polvere) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Mela disidratata a cubetti",
+        "percent": 20
+      },
+      {
+        "name": "Uvetta sultanina",
+        "percent": 10
+      },
+      {
+        "name": "Cannella in polvere",
+        "percent": 0.6
+      }
+    ],
+    "origin": "it",
+    "name_de": "Panettone Artigianale MikiLab — Apfel und Zimt",
+    "notes_de": "Wohlig: getrockneter Apfel, Rosinen und Zimt.\n\nSelbes Grundrezept wie der Panettone Artigianale MikiLab (Lievito Madre, indirekt, 2 Teige). Einlagen immer am Ende bei niedriger Geschwindigkeit zugeben. Die GLASUR ist im automatischen Modul der Karte.\nGare 24-28°C; Abkühlen kopfüber 12 Std.",
+    "procedure_de": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Mela disidratata a cubetti + Uvetta sultanina + Cannella in polvere) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni",
+    "real_name": "Panettone Mela e Cannella (lievito madre, 2 impasti)",
+    "real_name_de": "Panettone Apfel und Zimt (Lievito Madre, 2 Teige)"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Gocce di cioccolato fondente",
+          "cost": 0.5
+        },
+        {
+          "name": "Pasta di caffè",
+          "cost": 0.5
+        },
+        {
+          "name": "Cacao amaro (spolvero)",
+          "cost": 0.5
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.8,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-21T15:34:19.214162+00:00",
+    "updated_at": "2026-08-21T15:34:19.214162+00:00",
+    "name": "Panettone Artigianale MikiLab — Tiramisù",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_classico.jpg",
+    "notes": "Goloso: gocce di cioccolato e caffè; spolvero di cacao. Facoltativa la farcitura al mascarpone dopo cottura.\n\nStessa ricetta base del Panettone Artigianale MikiLab (lievito madre, metodo indiretto, 2 impasti). Sospensioni: Gocce di cioccolato fondente 18%, Pasta di caffè 3%, Cacao amaro (spolvero) 1% (sul peso della farina).\n\n⚙️ Aggiungi le sospensioni SEMPRE a fine impasto, a bassa velocità. Se sono umide/sciroppate o paste grasse, riduci leggermente l'acqua per non alzare l'idratazione. La GLASSA è nel modulo automatico della scheda.\nLievitazione 24-28°C; raffreddamento capovolto 12 h.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Gocce di cioccolato fondente + Pasta di caffè + Cacao amaro (spolvero)) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Gocce di cioccolato fondente",
+        "percent": 18
+      },
+      {
+        "name": "Pasta di caffè",
+        "percent": 3
+      },
+      {
+        "name": "Cacao amaro (spolvero)",
+        "percent": 1
+      }
+    ],
+    "origin": "it",
+    "name_de": "Panettone Artigianale MikiLab — Tiramisù",
+    "notes_de": "Verführerisch: Schokotropfen und Kaffee; Kakao-Bestäubung. Optional eine Mascarpone-Füllung nach dem Backen.\n\nSelbes Grundrezept wie der Panettone Artigianale MikiLab (Lievito Madre, indirekt, 2 Teige). Einlagen immer am Ende bei niedriger Geschwindigkeit zugeben. Die GLASUR ist im automatischen Modul der Karte.\nGare 24-28°C; Abkühlen kopfüber 12 Std.",
+    "procedure_de": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Gocce di cioccolato fondente + Pasta di caffè + Cacao amaro (spolvero)) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni",
+    "real_name": "Panettone Tiramisù (lievito madre, 2 impasti)",
+    "real_name_de": "Panettone Tiramisù (Lievito Madre, 2 Teige)"
+  },
+  {
+    "collection_name": "mikilab",
+    "costing": {
+      "flour_kg": 1.2,
+      "water_l": 0.002,
+      "sourdough_kg": 1.0,
+      "salt_kg": 0.5,
+      "extras": [
+        {
+          "name": "Zucchero",
+          "cost": 0.18
+        },
+        {
+          "name": "Tuorlo",
+          "cost": 1.09
+        },
+        {
+          "name": "Burro",
+          "cost": 2.65
+        },
+        {
+          "name": "Miele",
+          "cost": 0.22
+        },
+        {
+          "name": "Cocco rapé",
+          "cost": 0.5
+        },
+        {
+          "name": "Gocce di cioccolato fondente",
+          "cost": 0.5
+        }
+      ],
+      "overhead": 0.7,
+      "pieces": 2,
+      "markup": 0,
+      "cost_500g": 1.8,
+      "cost_100g": 0.36,
+      "b2b_500g": 7.5,
+      "b2b_100g": 2.5
+    },
+    "created_at": "2026-08-21T15:34:19.214162+00:00",
+    "updated_at": "2026-08-21T15:34:19.214162+00:00",
+    "name": "Panettone Artigianale MikiLab — Cocco e Cioccolato",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "hydration_percent": 40,
+    "flour_grams": 446,
+    "water_grams": 179,
+    "sourdough_grams": 140,
+    "salt_grams": 7,
+    "preferment_type": "lm",
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "oven_type": "statico",
+    "image_url": "/recipes/pan_classico.jpg",
+    "notes": "Esotico: cocco rapé e cioccolato fondente.\n\nStessa ricetta base del Panettone Artigianale MikiLab (lievito madre, metodo indiretto, 2 impasti). Sospensioni: Cocco rapé 12%, Gocce di cioccolato fondente 18% (sul peso della farina).\n\n⚙️ Aggiungi le sospensioni SEMPRE a fine impasto, a bassa velocità. Se sono umide/sciroppate o paste grasse, riduci leggermente l'acqua per non alzare l'idratazione. La GLASSA è nel modulo automatico della scheda.\nLievitazione 24-28°C; raffreddamento capovolto 12 h.",
+    "procedure": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Cocco rapé + Gocce di cioccolato fondente) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "method_type": "indiretto",
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 34
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 61
+      },
+      {
+        "name": "Burro",
+        "percent": 66
+      },
+      {
+        "name": "Miele",
+        "percent": 5.6
+      },
+      {
+        "name": "Cocco rapé",
+        "percent": 12
+      },
+      {
+        "name": "Gocce di cioccolato fondente",
+        "percent": 18
+      }
+    ],
+    "origin": "it",
+    "name_de": "Panettone Artigianale MikiLab — Kokos und Schokolade",
+    "notes_de": "Exotisch: Kokosraspeln und Zartbitter-Schokolade.\n\nSelbes Grundrezept wie der Panettone Artigianale MikiLab (Lievito Madre, indirekt, 2 Teige). Einlagen immer am Ende bei niedriger Geschwindigkeit zugeben. Die GLASUR ist im automatischen Modul der Karte.\nGare 24-28°C; Abkühlen kopfüber 12 Std.",
+    "procedure_de": "GESTIONE LIEVITO MADRE: bagnetto 15 min a 28°C, poi 2 rinfreschi (1:1:0,5) a 28°C; 2° rinfresco fino a pH 4,1-4,3.\n\n1° IMPASTO (sera): acqua + zucchero + lievito madre, poi metà farina, infine tuorli e burro a filo. Lievitazione 12-14 h a 24-26°C fino a triplicare.\n\n2° IMPASTO (mattina): riprendi corda con la farina residua, poi zucchero e tuorli in più volte, miele e sale sciolti, burro a filo; per ultime le sospensioni (Cocco rapé + Gocce di cioccolato fondente) a bassa velocità.\nPuntata 45 min a 28°C, pirlatura, appretto 4-6 h a 28°C fino a ~2 cm dal bordo. Glassatura col modulo glassa, mandorle e granella. Cottura 150°C fino a 92°C al cuore. Capovolgi per 12 h.",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni",
+    "real_name": "Panettone Cocco e Cioccolato (lievito madre, 2 impasti)",
+    "real_name_de": "Panettone Kokos und Schokolade (Lievito Madre, 2 Teige)"
   }
 ]

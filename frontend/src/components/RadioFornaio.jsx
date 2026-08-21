@@ -20,8 +20,14 @@ const STATIONS = {
 };
 
 export default function RadioFornaio() {
-  const { t } = useLang();
-  const { on: ambientOn, toggle: toggleAmbient, volume: ambientVol, setVolume: setAmbientVol } = useAmbient();
+  const { t, lang } = useLang();
+  const { on: ambientOn, toggle: toggleAmbient, volume: ambientVol, setVolume: setAmbientVol, mode: ambientMode, setMode: setAmbientMode } = useAmbient();
+  const AMB = [
+    { id: "fire", label: lang === "de" ? "Ofen" : lang === "en" ? "Oven" : "Forno", emoji: "🔥" },
+    { id: "rain", label: lang === "de" ? "Regen" : lang === "en" ? "Rain" : "Pioggia", emoji: "🌧️" },
+    { id: "mixer", label: lang === "de" ? "Kneter" : lang === "en" ? "Mixer" : "Impastatrice", emoji: "🌀" },
+    { id: "morning", label: lang === "de" ? "Morgen" : lang === "en" ? "Morning" : "Mattino", emoji: "🌅" },
+  ];
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(null); // station id
   const [status, setStatus] = useState("idle"); // idle | loading | playing | error
@@ -131,14 +137,26 @@ export default function RadioFornaio() {
               </span>
             </button>
             {ambientOn && (
-              <div className="flex items-center gap-2 -mt-1 mb-3 px-1">
-                <Flame className="w-4 h-4 text-[#B34A26] shrink-0" />
-                <input
-                  data-testid="ambient-volume"
-                  type="range" min="0" max="1" step="0.05" value={ambientVol}
-                  onChange={(e) => setAmbientVol(Number(e.target.value))}
-                  className="flex-1 accent-[#B34A26]"
-                />
+              <div className="-mt-1 mb-3">
+                <div data-testid="ambient-modes" className="grid grid-cols-4 gap-1.5 mb-2">
+                  {AMB.map((a) => (
+                    <button key={a.id} data-testid={`ambient-mode-${a.id}`} onClick={() => setAmbientMode(a.id)}
+                      className={`flex flex-col items-center gap-0.5 py-1.5 rounded-xl border text-[10px] font-semibold transition-all active:scale-95 ${
+                        ambientMode === a.id ? "bg-[#B34A26] text-white border-[#B34A26]" : "bg-white dark:bg-[#241D19] text-[#8C7567] border-[#E8DEC8] dark:border-[#3D302A]"
+                      }`}>
+                      <span className="text-base leading-none">{a.emoji}</span>{a.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 px-1">
+                  <Flame className="w-4 h-4 text-[#B34A26] shrink-0" />
+                  <input
+                    data-testid="ambient-volume"
+                    type="range" min="0" max="1" step="0.05" value={ambientVol}
+                    onChange={(e) => setAmbientVol(Number(e.target.value))}
+                    className="flex-1 accent-[#B34A26]"
+                  />
+                </div>
               </div>
             )}
 
