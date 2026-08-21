@@ -34,7 +34,7 @@ export default function FreezerStock() {
   return (
     <div data-testid="freezer-stock" className="pb-4">
       <div className="rounded-2xl bg-gradient-to-br from-[#4d6b45] to-[#374f31] text-white p-5 mb-4">
-        <h1 className="font-display text-2xl font-bold flex items-center gap-2"><Snowflake className="w-6 h-6" /> {de ? "Gefrier-Bestand" : "Scorte Freezer"}</h1>
+        <h1 className="font-display text-2xl font-bold flex items-center gap-2"><Snowflake className="w-6 h-6" /> {de ? "Freezer-Bestand" : "Giacenze Freezer"}</h1>
         <p className="text-white/85 text-sm mt-1">
           {de ? "Setze Menge und Mindestmenge. Sinkt etwas darunter, bekommst du eine E-Mail an dein Konto."
               : "Imposta quantità e soglia minima. Se qualcosa scende sotto, ricevi un'email al tuo indirizzo."}

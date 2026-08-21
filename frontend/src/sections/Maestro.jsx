@@ -24,18 +24,18 @@ export default function Maestro() {
   const { t, lang } = useLang();
 
   const TOOLS = [
-    { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
-    { id: "settimana", title: t("tool_settimana"), desc: t("tool_settimana_desc"), Icon: CalendarDays },
-    { id: "inversa", title: t("tool_inversa"), desc: t("tool_inversa_desc"), Icon: Clock },
     { id: "lavoro", title: t("tool_lavoro"), desc: t("tool_lavoro_desc"), Icon: ChefHat },
+    { id: "inversa", title: t("tool_inversa"), desc: t("tool_inversa_desc"), Icon: Clock },
     { id: "adatta", title: t("tool_adatta"), desc: t("tool_adatta_desc"), Icon: Flame },
-    { id: "termo", title: t("tool_termo"), desc: t("tool_termo_desc"), Icon: Thermometer },
-    { id: "freezer", title: lang === "de" ? "Gefrier-Bestand" : "Scorte Freezer", desc: "", Icon: Snowflake },
+    { id: "settimana", title: t("tool_settimana"), desc: t("tool_settimana_desc"), Icon: CalendarDays },
+    { id: "check", title: t("tool_check"), desc: t("tool_check_desc"), Icon: ListChecks },
     { id: "spesa", title: t("tool_spesa"), desc: t("tool_spesa_desc"), Icon: ShoppingCart },
     { id: "turni", title: t("tool_turni"), desc: t("tool_turni_desc"), Icon: Users },
-    { id: "check", title: t("tool_check"), desc: t("tool_check_desc"), Icon: ListChecks },
-    { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
+    { id: "freezer", title: lang === "de" ? "Freezer-Bestand" : "Giacenze Freezer", desc: "", Icon: Snowflake },
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
+    { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
+    { id: "termo", title: t("tool_termo"), desc: t("tool_termo_desc"), Icon: Thermometer },
+    { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
   ];
 
   const STEPS = [
