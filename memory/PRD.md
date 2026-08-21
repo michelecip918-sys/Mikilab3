@@ -415,3 +415,8 @@ Direttiva completa salvata in `/app/memory/DIRETTIVA_GLOBALE.md` (10 punti, 5 fa
 ## v27 (2026-06) — Riordino/rinomina moduli "Il Tuo Laboratorio"
 Griglia riordinata per priorità d'uso quotidiano (Maestro.jsx TOOLS) + rinomini (IT/DE in translations.js):
 1.Produzione Oggi(lavoro) 2.Calcolo Orari d'Inizio(inversa) 3.Parametri Forno(adatta) 4.Programma Settimana(settimana) 5.Check-list Laboratorio(check) 6.Lista della Spesa(spesa) 7.Turni & Mansioni(turni) 8.Giacenze Freezer(freezer) 9.Aggiungi Ricetta(aggiungi) 10.Scansiona Ricetta(scan) 11.Meteo & Laboratorio(termo, ex Termostato&Clima) 12.Impostazione Macchine(capo, ex Capo Laboratorio).
+
+## v28 (2026-06) — Foto reali Home/Shop + didascalie Metodo e Laboratorio
+- **Foto reali**: schede concetto Home ora usano le foto reali di Michele (cosa→bio-dough, chi→bio-photo, metodo→bio-dough-2, serenita→bio-dough-3). Shop usa foto reali locali dei panettoni (/recipes/pan_classico|pan_cioc_noci|pan_pistacchio.jpg) e pani (r_panettone_base, r_cuore). Reseed shop_products.
+- **"Il mio Metodo"** (scheda Home concetto metodo): testo aggiornato al testo esatto fornito (IT+DE).
+- **Didascalia "Il Tuo Laboratorio"** (card professionisti home-audiences): "Piano di produzione giornaliero/settimanale, calcolo costi, gestione celle e pulizie, affiancato dall'IA per rigenerare impasti e processi." (IT+DE).

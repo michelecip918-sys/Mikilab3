@@ -13,7 +13,7 @@ const CONCEPTS = {
     { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
       body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato Mikilab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
     { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
-      body: "Il mio metodo unisce la tradizione italiana alla precisione tedesca: prefermenti (lievito madre, poolish, biga), la farina giusta al momento giusto e i tempi sempre rispettati. Sono le piccole idee — e l'esperienza — che rivoluzionano il lavoro in laboratorio, rendendolo più semplice, costante e sereno." },
+      body: "Il mio metodo rende la gestione dell'app identica a quella di un laboratorio reale: ricette collaudate, pianificazione del piano giornaliero e settimanale, e gestione efficiente delle scorte per lavorare con costanza e serenità." },
     { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
       body: "Lavora in totale serenità e zero stress: con Mikilab è praticamente come avere me al tuo fianco in forno a guidarti passaggio dopo passaggio… con il vantaggio che io non ti urlo dietro se sbagli un rinfresco! 😄" },
   ],
@@ -23,15 +23,17 @@ const CONCEPTS = {
     { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#D99B26] to-[#B8801a]",
       body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. Mikilab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
     { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
-      body: "Meine Methode verbindet italienische Tradition mit deutscher Präzision: Vorteige (Lievito Madre, Poolish, Biga), das richtige Mehl zur richtigen Zeit und stets eingehaltene Zeiten. Es sind die kleinen Ideen – und die Erfahrung – die die Arbeit in der Backstube revolutionieren: einfacher, gleichmäßiger und entspannter." },
+      body: "Meine Methode macht die Nutzung der App identisch mit einer echten Backstube: erprobte Rezepte, Planung des Tages- und Wochenplans und effiziente Bestandsverwaltung, um konstant und entspannt zu arbeiten." },
     { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
       body: "Arbeite völlig entspannt und ohne Stress: Mit Mikilab ist es fast so, als stünde ich neben dir am Ofen und führe dich Schritt für Schritt … mit dem Vorteil, dass ich dich nicht anschreie, wenn du eine Auffrischung verpatzt! 😄" },
   ],
 };
 
 const CONCEPT_PHOTOS = {
-  chi: `${process.env.PUBLIC_URL}/michele-cartoon.jpg`,
+  cosa: `${process.env.PUBLIC_URL}/bio-dough.jpg`,
+  chi: `${process.env.PUBLIC_URL}/bio-photo.jpg`,
   metodo: `${process.env.PUBLIC_URL}/bio-dough-2.jpg`,
+  serenita: `${process.env.PUBLIC_URL}/bio-dough-3.jpg`,
 };
 
 const JOKES = {
@@ -156,8 +158,8 @@ export default function Home({ onNavigate }) {
               <Wrench className="w-4 h-4 text-[#B34A26]" /> {de ? "Für Profis · „Dein Labor“" : "Per professionisti · «Il Tuo Laboratorio»"}
             </p>
             <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-snug">
-              {de ? "Arbeitsplan, automatische Berechnungen (Kosten in €), Kühlzellen-Verteilung und dynamische Panettone-Rezepte."
-                  : "Piano di lavoro, calcoli automatici (costi in €), smistamento celle e ricette panettone dinamiche."}
+              {de ? "Täglicher/wöchentlicher Produktionsplan, Kostenrechnung, Zellen- und Reinigungsverwaltung, unterstützt von der KI zum Regenerieren von Teigen und Prozessen."
+                  : "Piano di produzione giornaliero/settimanale, calcolo costi, gestione celle e pulizie, affiancato dall'IA per rigenerare impasti e processi."}
             </p>
           </div>
           <div className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4">
