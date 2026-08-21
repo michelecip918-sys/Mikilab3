@@ -13,6 +13,7 @@ import Shop from "@/sections/Shop";
 import PaywallGate from "@/components/PaywallGate";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
+import WhatsAppFab from "@/components/WhatsAppFab";
 import IntroGuide from "@/components/IntroGuide";
 import InstallBanner from "@/components/InstallBanner";
 import AuthScreen from "@/components/AuthScreen";
@@ -82,6 +83,7 @@ function App() {
       <BottomNav active={tab} onChange={navigate} />
       <VoiceAssistant onNavigate={navigate} />
       <RadioFornaio />
+      <WhatsAppFab />
       {!resetToken && <IntroGuide />}
 
       <AnimatePresence>

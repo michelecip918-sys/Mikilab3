@@ -1,0 +1,29 @@
+{
+  "summary": "Frontend-only testing (mobile 430x900) of the two new features: global WhatsApp FAB and the 5-step 'Il Tuo Laboratorio' wizard. Logged in as admin@mikilab.de (PRO). WhatsApp FAB renders with the correct href (https://wa.me/491601253378?text=...) and does not overlap the bottom navigation, Radio or Parla buttons (both remain clickable). The wizard structure is fully correct: stepper with maestro-step-1..5, panels 1-5 with the expected tool cards, prev disabled on step 1, maestro-done replacing maestro-next on step 5, stepper-circle jumps work, and tool open/back (maestro-tool-acqua -> maestro-back-btn) returns to the correct step. ONE CRITICAL BLOCKER: the WhatsApp FAB (fixed right-4 bottom-44) sits exactly on top of the wizard's 'Avanti' (maestro-next) button on steps 2, 3 and 4, intercepting pointer events so the user CANNOT advance the wizard with Next on those steps (Playwright normal clicks time out; document.elementFromPoint over the Avanti button returns whatsapp-fab).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "WhatsAppFab / Maestro wizard", "issue": "WhatsApp FAB (fixed right-4 bottom-44, z-40, rect x 357-414 / y ~654-724) overlays the wizard 'Avanti' button (maestro-next rect x 301-414 / y ~647-702 on steps 2/3/4) and intercepts pointer events. Normal click on maestro-next times out; elementFromPoint at the button center and right edge returns 'whatsapp-fab'. Users cannot advance the wizard via Next on steps 2-4. Fix: move the FAB (e.g. bottom-56 / left side) or add bottom padding to the wizard nav row so they never collide.", "selector": "[data-testid=\"whatsapp-fab\"] over [data-testid=\"maestro-next\"]", "priority": "CRITICAL"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Lab wizard (mobile 430px)", "issues": ["Floating overlay stack (Radio, WhatsApp, Parla) sits over page content at ~y650-790; the WhatsApp 'WhatsApp' caption is visually adjacent to the Parla mic, cramped but still clickable.", "Two 401 console errors on load (pre-login subscription/auth probe) — cosmetic noise, not blocking."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "CRITICAL: reposition the WhatsApp FAB (or add safe bottom spacing to the Maestro wizard nav) so it never covers maestro-next/'Avanti'. Verify on steps 2, 3 and 4 at 430px width.",
+    "Optional: suppress the two 401 console errors fired before login."
+  ],
+  "critical_code_review_comments": [
+    "WhatsAppFab.jsx uses a hardcoded fixed offset (bottom-44) that collides with in-page fixed/flow content; consider a dedicated FAB stack container with consistent spacing, and add bottom padding (pb-40) to page containers with sticky action rows."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "90% (all wizard structure/nav checks pass except Next button blocked by FAB overlay)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Login flow: close intro-close-btn -> header login-btn -> auth-email/password/auth-submit -> intro modal may reappear, close again. Wizard verified: panels 1-5 tool cards all present; maestro-prev disabled on step 1; maestro-done only on step 5; step circles jump correctly; maestro-tool-acqua opens WaterTempCalc and maestro-back-btn returns to the same step (4). Only retest the FAB-vs-'Avanti' overlap after the fix, using page.evaluate elementFromPoint on maestro-next at steps 2/3/4 plus a normal (non-force) click.",
+  "rca_of_the_issue": "WhatsAppFab is rendered with `fixed z-40 right-4 bottom-44`, placing its ~57x70px hit area at viewport y 654-724 on a 900px-tall mobile viewport. The Maestro wizard's nav row ('Indietro'/'Avanti') lands at y 647-702 for steps 2-4 (taller panels), so the anchor sits on top of the right-aligned Avanti button and swallows the click. Step 1 has a shorter panel (button at y 534) so it works there, which is why the bug is intermittent by step."
+}
