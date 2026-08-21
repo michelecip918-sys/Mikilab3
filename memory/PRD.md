@@ -520,3 +520,11 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - FASE3: (4) restyle palette verde/blu salvia + testi antracite + foto reale figura intera (usare michele-photo.jpg esistente). CONFERMATO su tutta l'app.
 - FASE4: (6) i18n dinamico 100%.
 - FASE5: (2) Wizard Laboratorio 5 passi (Macchine/Ricette/Produzione/Termostato BT/Dashboard IA-HACCP).
+
+## v41 (2026-06) — FASE 2 direttiva: schede tecniche ricette (P3) + riorganizzazione Ricette (P5)
+- **P3A Croissant** (`Cornetto Sfogliato`): batch reale 3,4 kg farina → 96 croissant. flour_grams 3400, water_grams 1840, salt 68 (2%), hydration 54%; aggiunto extra "Uova (Eier)" 5,9% (~200 g). Note: Acqua + Uova = 60% del peso farina. (seed)
+- **P3B Biga/Vorteig a 2 fasi** (`Treccia del Sole`, `Carezza Dolce`, preferment=biga): nuovo campo backend `biga` {flour_g,water_g,yeast_g,hours/de/en} (aggiunto a Recipe model + azzerato in `_teaser_recipe`). RecipeDetail ora rende una card "Fase 1 · Vorteig (Biga)" (Farina/Acqua/Lievito + nota maturazione), separatore tratteggiato, poi "Fase 2 · Impasto principale" con farina/acqua RESIDUE (il lievito non è duplicato). Treccia: uova extra portate a 20% (~200 g, era 0%).
+- **P3C Brezel Integrali**: Vk (Farina Integrale) 1300 g (era 1000), acqua 500 g, hydration 38%, salt 29 g (2,2% come Brezel classica), note corrette ("Vk 1300 g · Acqua 500 g").
+- **P5 Ricette (RecipeList.jsx)**: barra di ricerca (`recipe-search` + `recipe-search-clear`, cerca nome/real_name/farina/note/badge), chip filtro categoria (`recipe-filter-all|basi|pane|panini|panettoni`), categorie come ACCORDION espandibili (`cat-accordion-*` con conteggio+chevron; forzate aperte durante la ricerca), badge sintetici per riga (`recipe-badges-<id>`: LM, LDB, Vk, Rg, Poolish, Biga, numeri farina 300/380/405/550/630/812/1050/1600 + W###) al posto del testo lungo flour_type.
+- SEED_VERSION → v42-treccia-uova. Testato iteration_27: frontend 95% → i 2 rilievi (uova 0% Treccia, badge "0" spurio) CORRETTI e riverificati.
+### RESTA (direttiva): P1 fotocamera doppia (Scatta/Allega) ovunque · P4 restyle palette verde/blu salvia + antracite (TUTTA l'app) · P6 i18n dinamico 100% (default lingua ancora EN al posto di IT — da rivedere) · P2 wizard Laboratorio 5 passi. NOTA UX: FAB Radio/Parla si sovrappongono alle righe ricetta su mobile (da sistemare col restyle).

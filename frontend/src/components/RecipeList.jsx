@@ -1,7 +1,7 @@
-import { useEffect, useState, Fragment } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X } from "lucide-react";
 import { recipesApi, subscriptionApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
@@ -24,7 +24,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [toDelete, setToDelete] = useState(null);
   const [scaling, setScaling] = useState(null);
   const [viewing, setViewing] = useState(null);
+  const [query, setQuery] = useState("");
+  const [catFilter, setCatFilter] = useState("all");
+  const [openCats, setOpenCats] = useState({});
   const { t, lang } = useLang();
+  const triM = (i_, d_, e_) => (lang === "de" ? d_ : lang === "en" ? e_ : i_);
   const { user, setAuthOpen } = useAuth();
   // Mikilab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
   const canEdit = collectionName === "mikilab" ? user?.role === "admin" : true;
@@ -158,56 +162,150 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           <Wheat className="w-10 h-10 text-[#D99B26] mx-auto mb-3" />
           <p className="text-[#736055] dark:text-[#A89689]">{emptyText}</p>
         </div>
-      ) : (
-        <div className="space-y-2.5">
-          {recipes.map((r, i) => {
-            const cat = recipeCategory(r);
-            const showHeader = collectionName === "mikilab" && (i === 0 || recipeCategory(recipes[i - 1]).key !== cat.key);
-            return (
-            <Fragment key={r.id}>
-              {showHeader && (
-                <div data-testid={`cat-${cat.key}`} className="flex items-center gap-2 pt-3 pb-1 first:pt-0">
-                  <span className="text-lg">{cat.icon}</span>
-                  <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B34A26]">{t(cat.label)}</h2>
-                  <span className="flex-1 h-px bg-[#E8DEC8] dark:bg-[#3D302A]" />
-                </div>
-              )}
-            <motion.button
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: Math.min(i * 0.02, 0.3) }}
-              onClick={() => setViewing(r)}
-              data-testid={`recipe-row-${r.id}`}
-              className="relative overflow-hidden w-full text-left bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-[0.99] hover:border-[#D99B26]/60 transition-all flex items-center gap-3"
-            >
-              {countryColors(r.origin) && (
-                <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
-                  {countryColors(r.origin).map((c, k) => (
-                    <div key={k} className="flex-1" style={{ background: c }} />
-                  ))}
-                </div>
-              )}
-              {r.image_url && recipeCategory(r).key === "panettoni" && (
-                <img src={r.image_url} alt="" loading="lazy"
-                  className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#E8DEC8] dark:border-[#3D302A]" />
-              )}
-              <div className="min-w-0 flex-1">
-                <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
-                  {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
-                  {rLoc(r, "name", lang)}
-                </h3>
-                {rLoc(r, "real_name", lang) ? <p className="text-xs font-medium text-[#B34A26] truncate">{rLoc(r, "real_name", lang)}</p> : null}
-                {r.flour_type ? <p className="text-xs text-[#8C7567] truncate">{rLoc(r, "flour_type", lang)}</p> : null}
+      ) : (() => {
+        const q = query.trim().toLowerCase();
+        const matches = (r) => {
+          if (catFilter !== "all" && recipeCategory(r).key !== catFilter) return false;
+          if (!q) return true;
+          const hay = [rLoc(r, "name", lang), rLoc(r, "real_name", lang), rLoc(r, "flour_type", lang), r.notes || "", recipeBadges(r).join(" ")].join(" ").toLowerCase();
+          return hay.includes(q);
+        };
+        const filtered = recipes.filter(matches);
+        const CATS = [
+          { key: "basi", label: "cat_basi", icon: "✨" },
+          { key: "pane", label: "cat_pane", icon: "🍞" },
+          { key: "panini", label: "cat_panini", icon: "🥖" },
+          { key: "panettoni", label: "cat_panettoni", icon: "🎁" },
+        ];
+        const isMikilab = collectionName === "mikilab";
+
+        const Row = (r, i) => (
+          <motion.button
+            key={r.id}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: Math.min(i * 0.015, 0.2) }}
+            onClick={() => setViewing(r)}
+            data-testid={`recipe-row-${r.id}`}
+            className="relative overflow-hidden w-full text-left bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl p-4 shadow-sm active:scale-[0.99] hover:border-[#D99B26]/60 transition-all flex items-center gap-3"
+          >
+            {countryColors(r.origin) && (
+              <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
+                {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
               </div>
-              {r.locked
-                ? <Lock data-testid={`recipe-locked-${r.id}`} className="w-4 h-4 text-[#D99B26] shrink-0" />
-                : <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />}
-            </motion.button>
-            </Fragment>
-            );
-          })}
-        </div>
-      )}
+            )}
+            {r.image_url && recipeCategory(r).key === "panettoni" && (
+              <img src={r.image_url} alt="" loading="lazy" className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#E8DEC8] dark:border-[#3D302A]" />
+            )}
+            <div className="min-w-0 flex-1">
+              <h3 className="font-display text-lg font-semibold text-[#2C221E] dark:text-[#F5EFE6] truncate">
+                {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
+                {rLoc(r, "name", lang)}
+              </h3>
+              {rLoc(r, "real_name", lang) ? <p className="text-xs font-medium text-[#B34A26] truncate">{rLoc(r, "real_name", lang)}</p> : null}
+              {(() => {
+                const badges = recipeBadges(r);
+                return badges.length > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1 mt-1.5" data-testid={`recipe-badges-${r.id}`}>
+                    {badges.slice(0, 5).map((b) => (
+                      <span key={b} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${badgeClass(b)}`}>{b}</span>
+                    ))}
+                  </div>
+                ) : (r.flour_type ? <p className="text-xs text-[#8C7567] truncate mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null);
+              })()}
+            </div>
+            {r.locked
+              ? <Lock data-testid={`recipe-locked-${r.id}`} className="w-4 h-4 text-[#D99B26] shrink-0" />
+              : <MoreHorizontal className="w-5 h-5 text-[#C9BBB0] shrink-0" />}
+          </motion.button>
+        );
+
+        return (
+          <div>
+            {/* Barra di ricerca */}
+            <div className="relative mb-3">
+              <Search className="w-4 h-4 text-[#8C7567] absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                data-testid="recipe-search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={triM("Cerca ricetta, farina, badge…", "Rezept, Mehl, Badge suchen…", "Search recipe, flour, badge…")}
+                className="w-full pl-9 pr-9 py-2.5 rounded-2xl bg-white dark:bg-[#2A211D] border border-[#E8DEC8] dark:border-[#3D302A] text-sm text-[#2C221E] dark:text-[#F5EFE6] outline-none focus:border-[#D99B26]"
+              />
+              {query && (
+                <button data-testid="recipe-search-clear" onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8C7567]" aria-label="clear">
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Filtri categoria */}
+            {isMikilab && (
+              <div className="flex flex-wrap gap-1.5 mb-4" data-testid="recipe-filters">
+                {[{ key: "all", label: triM("Tutte", "Alle", "All"), icon: "🍽️" }, ...CATS].map((c) => (
+                  <button
+                    key={c.key}
+                    data-testid={`recipe-filter-${c.key}`}
+                    onClick={() => setCatFilter(c.key)}
+                    className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
+                      catFilter === c.key
+                        ? "bg-[#B34A26] text-white border-[#B34A26]"
+                        : "bg-white dark:bg-[#2A211D] text-[#8C7567] border-[#E8DEC8] dark:border-[#3D302A]"
+                    }`}
+                  >
+                    <span className="mr-1">{c.icon}</span>{c.key === "all" ? c.label : t(c.label)}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {filtered.length === 0 ? (
+              <p className="text-center text-[#8C7567] py-8 text-sm" data-testid="recipe-no-results">
+                {triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
+              </p>
+            ) : !isMikilab ? (
+              <div className="space-y-2.5">{filtered.map((r, i) => Row(r, i))}</div>
+            ) : (
+              <div className="space-y-2.5">
+                {CATS.map((cat) => {
+                  const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
+                  if (items.length === 0) return null;
+                  const open = q ? true : (openCats[cat.key] ?? true);
+                  return (
+                    <div key={cat.key} className="border border-[#E8DEC8] dark:border-[#3D302A] rounded-2xl overflow-hidden bg-white/40 dark:bg-[#2A211D]/40">
+                      <button
+                        data-testid={`cat-accordion-${cat.key}`}
+                        onClick={() => setOpenCats((s) => ({ ...s, [cat.key]: !open }))}
+                        className="w-full flex items-center gap-2 px-4 py-3 text-left"
+                      >
+                        <span className="text-lg">{cat.icon}</span>
+                        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B34A26] flex-1">{t(cat.label)}</h2>
+                        <span className="text-xs font-mono-data text-[#8C7567]">{items.length}</span>
+                        <ChevronDown className={`w-4 h-4 text-[#8C7567] transition-transform ${open ? "rotate-180" : ""}`} />
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {open && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-2.5 pb-2.5 space-y-2.5">
+                              {items.map((r, i) => Row(r, i))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Finestra ricetta */}
       <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
@@ -285,13 +383,18 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   // In modalità farro l'idratazione dell'impasto principale è ridotta ~4%.
   const gWater = (v) => { const b = g(v); return b == null ? null : (farro ? Math.round(b * 0.96) : b); };
   const pct = (v) => (flourG > 0 && v != null ? ` · ${Math.round((Number(v) / flourG) * 1000) / 10}%` : "");
+  const biga = (!r.locked && r.preferment_type === "biga" && r.biga) ? r.biga : null;
+  const bFlour = biga ? Math.round((Number(biga.flour_g) || 0) * f) : 0;
+  const bWater = biga ? Math.round((Number(biga.water_g) || 0) * f) : 0;
+  const bYeast = biga ? Math.round((Number(biga.yeast_g) || 0) * f) : 0;
   const rows = [];
-  if (r.flour_grams != null) rows.push([t("ing_flour"), `${g(r.flour_grams)} g${flourG > 0 ? " · 100%" : ""}`]);
-  if (r.water_grams != null) rows.push([t("ing_water"), `${gWater(r.water_grams)} g${pct(farro ? Number(r.water_grams) * 0.96 : r.water_grams)}`]);
+  if (r.flour_grams != null) rows.push([t("ing_flour"), `${g(r.flour_grams) - bFlour} g${pct(Number(r.flour_grams) - (biga ? Number(biga.flour_g) || 0 : 0))}`]);
+  if (r.water_grams != null) rows.push([t("ing_water"), `${gWater(r.water_grams) - bWater} g${pct((farro ? Number(r.water_grams) * 0.96 : Number(r.water_grams)) - (biga ? Number(biga.water_g) || 0 : 0))}`]);
   if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
   if (r.salt_grams != null) rows.push([t("ing_salt"), `${g(r.salt_grams)} g${pct(r.salt_grams)}`]);
   (r.extra_ingredients || []).forEach((e) => {
     if (e && e.name && e.percent != null && e.percent !== "") {
+      if (biga && /lievito di birra|hefe/i.test(e.name)) return; // il lievito è nel Vorteig
       const grams = flourG > 0 ? Math.round(target * (Number(e.percent) / 100)) : null;
       rows.push([ingLoc(e.name, lang), grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
     }
@@ -443,9 +546,22 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         {isPanettone && !r.locked ? (
           <PanettoneStructure r={r} t={t} lang={lang} flourG={flourG} farro={farro} scaleVal={scaleVal} onScaleChange={onScaleChange} />
         ) : rows.length > 0 ? (
+          <>
+          {biga && (
+            <div data-testid={`recipe-biga-${r.id}`} className="rounded-xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-3">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C3A1D] dark:text-[#E5AC3A] mb-2">🥖 {tri("Fase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)")}</p>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-sm"><span className="text-[#4A3B34] dark:text-[#C9BBB0]">{t("ing_flour")}</span><span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{bFlour} g</span></div>
+                <div className="flex items-center justify-between text-sm"><span className="text-[#4A3B34] dark:text-[#C9BBB0]">{t("ing_water")}</span><span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{bWater} g</span></div>
+                {bYeast > 0 && <div className="flex items-center justify-between text-sm"><span className="text-[#4A3B34] dark:text-[#C9BBB0]">{tri("Lievito di birra", "Hefe", "Fresh yeast")}</span><span className="font-mono-data font-semibold text-[#8C3A1D] dark:text-[#E5AC3A]">{bYeast} g</span></div>}
+              </div>
+              {(biga.hours || biga.hours_de) && <p className="text-[11px] text-[#8C7567] mt-2 leading-relaxed">{de ? (biga.hours_de || biga.hours) : (lang === "en" ? (biga.hours_en || biga.hours) : biga.hours)}</p>}
+            </div>
+          )}
+          {biga && <div className="border-t border-dashed border-[#D99B26]/50 my-1" aria-hidden />}
           <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#F5EFE6] dark:bg-[#332823] p-3">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{t("recipe_ingredients")}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#B34A26]">{biga ? tri("Fase 2 · Impasto principale", "Phase 2 · Hauptteig", "Phase 2 · Main dough") : t("recipe_ingredients")}</p>
               {flourG > 0 && (
                 <div className="flex items-center gap-1">
                   <span className="text-[10px] text-[#8C7567]">{t("recipe_scale")}</span>
@@ -475,6 +591,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
               })}
             </div>
           </div>
+          </>
         ) : null}
 
         {r.procedure ? (
@@ -560,6 +677,39 @@ function fmtTemp(v) {
 
 // Categoria e ordine di visualizzazione: Backmittel -> Lievito Madre -> Panettoni -> Pane -> Panini
 const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre Solido", "LiCoLi (Lievito in Coltura Liquida)", "Lievito Madre di Segale", "Poolish", "Kochstück"];
+
+// Badge sintetici derivati dalla ricetta (LM, LDB, Vk, Rg, Poolish, Biga, numeri farina).
+function recipeBadges(r) {
+  const out = [];
+  const pref = (r.preferment_type || "").toLowerCase();
+  const ft = (r.flour_type || "").toLowerCase();
+  const notes = (r.notes || "").toLowerCase();
+  const extras = r.extra_ingredients || [];
+  if (/segale|roggen|\brg\b|rye/.test(ft) || pref.includes("segale")) out.push("Rg");
+  if (/licoli|lievito madre|lievito naturale|pasta madre|sauerteig|sourdough/.test(pref + " " + ft)) out.push("LM");
+  if (/poolish/.test(pref + " " + notes)) out.push("Poolish");
+  if (pref === "biga" || /\bbiga\b|vorteig/.test(ft) || (r.biga && r.preferment_type === "biga")) out.push("Biga");
+  if (/integrale|vollkorn|\bvk\b/.test(ft + " " + notes)) out.push("Vk");
+  if (extras.some((e) => /lievito di birra|hefe/i.test(e && e.name))) out.push("LDB");
+  // numeri farina (630, 550, 405, 812, 1050, 00, W380…)
+  const wm = (r.flour_type || "").match(/w\s?\d{3}/gi);
+  if (wm) wm.forEach((w) => out.push(w.replace(/\s/g, "").toUpperCase()));
+  const nums = (r.flour_type || "").match(/\b(300|380|405|550|630|812|1050|1600)\b/g);
+  if (nums) nums.forEach((n) => { if (!out.includes(n)) out.push(n); });
+  return [...new Set(out)];
+}
+
+const BADGE_STYLE = {
+  LM: "bg-[#6B8E62]/15 text-[#4d6b45] border-[#6B8E62]/40",
+  LDB: "bg-[#B34A26]/12 text-[#8C3A1D] border-[#B34A26]/35",
+  Rg: "bg-[#8C5A2B]/12 text-[#7A4A20] border-[#8C5A2B]/35",
+  Vk: "bg-[#A6803A]/12 text-[#7A5E24] border-[#A6803A]/35",
+  Poolish: "bg-[#3F7CAC]/12 text-[#2E5E82] border-[#3F7CAC]/35",
+  Biga: "bg-[#3F7CAC]/12 text-[#2E5E82] border-[#3F7CAC]/35",
+};
+function badgeClass(b) {
+  return BADGE_STYLE[b] || "bg-[#D99B26]/15 text-[#8C3A1D] border-[#D99B26]/35";
+}
 
 function recipeCategory(r) {
   const cat = r.menu_category;

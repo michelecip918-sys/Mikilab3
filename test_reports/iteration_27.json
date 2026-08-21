@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only verification (mobile 430px, admin@mikilab.de logged in, PRO/admin) of RECIPES tab points 3A/3B/3C and PUNTO 5 (search, category filter chips, accordions, synthetic badges). All 7 requested items render correctly. One data bug found: 'Treccia del Sole' shows an ingredient row 'Uova (Eier) 4 → 0 g · 0%' (seed percent=0). Minor design overlap of floating Radio/Talk FABs over recipe rows.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeDetail - Treccia del Sole ingredients", "issue": "Ingredient row 'Uova (Eier) 4' renders as '0 g · 0%' because seed extra_ingredients percent=0 in /app/backend/mikilab_seed_data.json. Either give a real percent/gram value (e.g. 4 eggs ~200 g = 20%) or drop the row.", "selector": "[data-testid^='recipe-ingredients-'] (Treccia del Sole)", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipes list (mobile 430px)", "issues": ["Fixed floating 'Radio' (left) and 'Talk' (right) FABs (z-index 40, y~711) sit on top of recipe rows and cover part of the row title/badges; row clicks still work (verified with a normal, non-forced click) but content is visually obscured — consider extra bottom/side padding or lowering FAB footprint.", "App defaults to EN even though Italian is the primary language; recipe field labels showed 'Flour/Water/Salt' while ingredient names remain Italian (mixed-language rows). Programmatic click on the 'IT' header toggle did not resolve to an element in the automation run — worth verifying the language toggle has a data-testid."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix seed data for 'Treccia del Sole': extra ingredient 'Uova (Eier) 4' has percent 0 → renders 0 g · 0%.",
+    "Optional: add data-testid to header language toggles (IT/DE/EN) for testability; review FAB overlap over recipe rows on mobile."
+  ],
+  "critical_code_review_comments": [
+    "/app/frontend/src/components/RecipeList.jsx is 925 lines — split RecipeDetail, recipeBadges/category helpers and the list/filter shell into separate modules.",
+    "recipeBadges() flour-number regex can emit a bare '0' badge (from 'tipo 0'); confirmed rendering 'W300' + '0' on Lievito Madre Solido — visually ambiguous, consider prefixing 'T0'."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested", "frontend": "95%" },
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked, PRO/admin, full recipes visible)",
+  "context_for_next_testing_agent": "Verified results: PUNTO 3A Cornetto Sfogliato → Flour 3400 g/100%, Water 1840 g/54.1%, Salt 68 g/2%, 'Uova (Eier)' 201 g · 5.9%, hydration badge 54% — PASS; notes mention Acqua+Uova=60%, 96 croissant. PUNTO 3B Treccia del Sole & Carezza Dolce → 'Fase 1 · Vorteig (Biga)' card renders ABOVE (y=295) the 'Fase 2 · Impasto principale' block (y=489) with Farina 100 g / Acqua 50 g / Lievito di birra 15 g + maturation note; dashed separator present; Fase 2 shows Farina 900 g (90%) and Acqua 450 g (45%); yeast NOT duplicated in Fase 2 — PASS. PUNTO 3C Brezel Integrali → 1300 g / 500 g (38.5%) / Salt 29 g, badge 38% hydr., notes 'Farina Integrale (Vk) 1300 g · Acqua 500 g' — PASS. PUNTO 5: recipe-search filters 49→2 rows on 'brezel' (only Brezel, Brezel Integrali) and forces matching accordions open; recipe-search-clear resets to 49; recipe-filter-panettoni shows only panettoni accordion (17 rows), recipe-filter-all restores 4 accordions/49 rows; cat-accordion-pane collapses 49→27 and reopens; badges render (e.g. Biga|LDB|630, Vk|LDB, LM|W380) and badge text is searchable ('biga' → Carezza Dolce + Treccia del Sole). No console errors observed. Note: the intro modal (intro-close-btn) appears once per load and closing it before login works reliably.",
+  "rca_of_the_issue": "The 0 g egg row originates from seed data: mikilab_seed_data.json → Treccia del Sole → extra_ingredients contains {name: 'Uova (Eier) 4', percent: 0}. The UI faithfully computes percent*flour = 0 g; fix belongs in seed data (or filter out zero-percent extras in the row builder)."
+}

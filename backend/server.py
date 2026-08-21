@@ -124,6 +124,7 @@ class Recipe(BaseModel):
     menu_category: Optional[str] = None  # basi | pane | panini | panettoni
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
+    biga: Optional[dict] = None  # Vorteig/Biga: {flour_g, water_g, yeast_g, hours, hours_de, hours_en}
     costing: Optional[dict] = None
     locked: Optional[bool] = None  # True = versione "assaggio" (metodo bloccato per non-PRO)
     created_at: str = Field(default_factory=now_iso)
@@ -307,7 +308,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v39-foto-prezzi-gusti"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v42-treccia-uova"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro",
@@ -526,6 +527,7 @@ def _teaser_recipe(doc: dict) -> dict:
     d["notes_de"] = ""
     d["work_phases"] = []
     d["extra_ingredients"] = []
+    d["biga"] = None
     d["costing"] = None
     d["locked"] = True
     return d
