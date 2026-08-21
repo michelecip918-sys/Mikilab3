@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Radio, X, Play, Square, Loader2, Volume2, Flame } from "lucide-react";
+import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAmbient } from "@/audio/AmbientContext";
 
@@ -11,16 +11,20 @@ const STATIONS = {
     { id: "rtl", name: "RTL 102.5", url: "https://streamingv2.shoutcast.com/rtl-1025" },
     { id: "r105", name: "Radio 105", url: "https://icy.unitedradio.it/Radio105.mp3" },
     { id: "virgin", name: "Virgin Radio", url: "https://icy.unitedradio.it/Virgin.mp3" },
+    { id: "deejay", name: "Radio Deejay", url: "https://radiodeejay-lh.akamaihd.net/i/RadioDeejay_Live_1@189857/master.m3u8" },
+    { id: "kisskiss", name: "Radio Kiss Kiss", url: "https://ice07.fluidstream.net/KissKiss.mp3" },
   ],
   de: [
     { id: "swr3", name: "SWR3", url: "https://liveradio.swr.de/sw282p3/swr3/play.mp3" },
+    { id: "antenne1", name: "Antenne 1", url: "https://stream.antenne1.de/a1stg/mp3-128/" },
     { id: "antenne", name: "Antenne Bayern", url: "https://stream.antenne.de/antenne/stream/mp3" },
     { id: "bigfm", name: "bigFM", url: "https://stream.bigfm.de/berlin/aac-128" },
+    { id: "swr1bw", name: "SWR1 BW", url: "https://liveradio.swr.de/sw282p3/swr1bw/play.mp3" },
   ],
 };
 
 export default function RadioFornaio() {
-  const { t, lang } = useLang();
+  const { t, lang, tri } = useLang();
   const { on: ambientOn, toggle: toggleAmbient, volume: ambientVol, setVolume: setAmbientVol, mode: ambientMode, setMode: setAmbientMode } = useAmbient();
   const AMB = [
     { id: "fire", label: lang === "de" ? "Ofen" : lang === "en" ? "Oven" : "Forno", emoji: "🔥" },
@@ -74,6 +78,28 @@ export default function RadioFornaio() {
   };
 
   const allStations = [...STATIONS.it, ...STATIONS.de];
+
+  const [listening, setListening] = useState(false);
+  const listenStation = () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { setListening(false); alert(t("voice_unsupported")); return; }
+    const rec = new SR();
+    rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
+    rec.onresult = (e) => {
+      const said = (e.results[0][0].transcript || "").toLowerCase();
+      setListening(false);
+      if (/\b(stop|spegni|ferma|aus|halt)\b/.test(said)) { stop(); return; }
+      const match = allStations.find((s) => {
+        const n = s.name.toLowerCase();
+        return said.includes(n) || n.split(/\s+/).some((w) => w.length > 2 && said.includes(w));
+      });
+      if (match) { setOpen(true); playStation(match); }
+    };
+    rec.onerror = () => setListening(false);
+    rec.onend = () => setListening(false);
+    setListening(true);
+    try { rec.start(); } catch (err) { setListening(false); }
+  };
   const nowPlaying = allStations.find((s) => s.id === current);
 
   const renderGroup = (label, list) => (
@@ -119,6 +145,11 @@ export default function RadioFornaio() {
                 <p className="text-sm font-bold text-[#2C221E] dark:text-[#F5EFE6] leading-none">{t("radio_title")}</p>
                 <p className="text-[11px] text-[#8C7567] mt-0.5">{t("radio_sub")}</p>
               </div>
+              <button data-testid="radio-voice" onClick={listenStation}
+                className={`p-1.5 rounded-lg mr-1 ${listening ? "bg-[#B34A26] text-white animate-pulse" : "text-[#B34A26]"}`}
+                aria-label="voice" title={tri("Cambia stazione a voce", "Sender per Stimme wechseln", "Change station by voice")}>
+                <Mic className="w-4 h-4" />
+              </button>
               <button data-testid="radio-close" onClick={() => setOpen(false)} className="text-[#8C7567] p-1"><X className="w-4 h-4" /></button>
             </div>
 

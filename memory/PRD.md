@@ -511,3 +511,12 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - Ogni etichetta stampabile (PanettoneLabels.jsx) mostra ora: foto del gusto, sospensioni, **Peso netto ~1 kg** e riga **Allergeni** trilingue (base: glutine/frumento, uova, latte, frutta a guscio mandorle/nocciole + "può contenere tracce di soia"; aggiunge pistacchi/cocco se presenti nelle sospensioni). testid `label-allergens-<id>`.
 - Verificato admin: 17 etichette con foto (tutte caricate), 17 righe allergeni, listino 17 righe con colonne 500g/100g e prezzi. Accesso: Ricette → "Etichette Panettoni" (testid ricette-labels-btn).
 - Prezzi B2B impostati da agente (l'utente li aggiusterà); sospensioni dei nuovi gusti restano di default in attesa dei valori esatti dell'utente.
+
+## v40 (2026-06) — FASE 1a: Radio upgrade (Punto 7)
+- **Radio**: microfono vocale nel pannello (`radio-voice`) per cambiare stazione a voce (webkitSpeechRecognition, match per nome; "stop/spegni" ferma). Stazioni aggiornate — IT: +Radio Deejay, Radio Kiss Kiss; DE: +Antenne 1 (Stoccarda), +SWR1 BW (oltre a SWR3, Antenne Bayern, bigFM). Verificato: pannello mostra tutte le stazioni + mic, compila.
+### DIRETTIVA GRANDE (in corso, ordine concordato A→): 
+- FASE1: (7 Radio ✓) · (1) Fotocamera doppia opzione (scatta/allega) OVUNQUE — DA FARE.
+- FASE2: (3) fix schede tecniche Croissant/Biga-Vorteig/Brezel Vk1300 · (5) Ricette accordion+ricerca+badge.
+- FASE3: (4) restyle palette verde/blu salvia + testi antracite + foto reale figura intera (usare michele-photo.jpg esistente). CONFERMATO su tutta l'app.
+- FASE4: (6) i18n dinamico 100%.
+- FASE5: (2) Wizard Laboratorio 5 passi (Macchine/Ricette/Produzione/Termostato BT/Dashboard IA-HACCP).
