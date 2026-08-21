@@ -459,3 +459,10 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 
 ## v32.1 (2026-06) — Home card "finto video" animato
 - Card in alto Home = scena animata (framer-motion, opzione B): avatar cartoon con zoom morbido (ken-burns), icone Smartphone e PC che fluttuano, fumetti di testo a rotazione (IT/DE) che spiegano l'app. Titolo "MikiLab Avatar / Il tuo compagno digitale". `HomeAvatarScene` in Home.jsx (testid `home-founder-photo`, `home-scene-bubble`). Nessun audio (scelta utente). Foto reale resta copertina in Ricette.
+
+## v33 (2026-06) — Trilingue (EN), header pulito, suono del forno
+- **EN (trilingue)**: `LanguageContext` rileva e supporta `en`; aggiunto dizionario `translations.en` CURATO (nav, home, header, intro, azioni base) con fallback all'italiano per le chiavi mancanti e per le stringhe inline `lang==='de'?...:...` (limite noto: EN parziale, da completare). Chip lingua header ora IT|DE|EN.
+- **Popup benvenuto trilingue** (`IntroGuide.jsx` riscritto): avatar + titolo localizzato ("La Tua Guida alla Panificazione" / "Your Baking Guide" / "Dein Backleitfaden"), saluto, descrizione, chip lingua IT/DE/EN (testid `intro-lang-<id>`), CTA "Inizia Ora →".
+- **Header pulito** (`Header.jsx`): rimossi avatar Michele + testo "Mikilab/sottotitolo" sovrapposti e l'icona audio (music-toggle). Resta: logo grafico, orologio, chip lingua, theme, admin(se admin), Accedi.
+- **Suono del forno** (`lib/ambientMusic.js` riscritto): niente più melodie per sezione; ora scoppiettio del forno a legna (brown-noise filtrato passa-basso + crepitii bandpass casuali via Web Audio). Toggle spostato NELLA Radio (`ambient-toggle` in RadioFornaio), rimosso dall'header. `setSection` è no-op.
+- Verificato via screenshot (nessun errore). RESTA: completare il dizionario EN (molte stringhe ancora IT in fallback).

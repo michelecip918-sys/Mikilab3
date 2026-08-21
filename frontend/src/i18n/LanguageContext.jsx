@@ -12,6 +12,7 @@ export function LanguageProvider({ children }) {
     for (const l of langs) {
       const code = (l || "").toLowerCase();
       if (code.startsWith("de")) return "de";
+      if (code.startsWith("en")) return "en";
       if (code.startsWith("it")) return "it";
     }
     return "it";

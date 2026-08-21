@@ -1,8 +1,7 @@
-import { Wheat, Moon, Sun, MapPin, Clock, LogOut, LogIn, Music, VolumeX, Crown } from "lucide-react";
+import { Moon, Sun, Clock, LogOut, LogIn, Crown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
-import { useAmbient } from "@/audio/AmbientContext";
 import AdminPanel from "@/components/AdminPanel";
 
 export default function Header() {
@@ -11,7 +10,6 @@ export default function Header() {
   const [adminOpen, setAdminOpen] = useState(false);
   const { lang, setLang, t } = useLang();
   const { user, logout, setAuthOpen } = useAuth();
-  const { on: musicOn, toggle: toggleMusic } = useAmbient();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
@@ -38,23 +36,9 @@ export default function Header() {
       </div>
 
       <div className="px-4 py-3 flex items-center justify-between gap-2">
-      <div className="flex items-center gap-2 min-w-0">
-        <div className="flex items-center -space-x-2 shrink-0">
-          <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#2A211D] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70">
-            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-full h-full object-cover" />
-          </div>
-          <img src={`${process.env.PUBLIC_URL}/michele-cartoon.jpg`} alt="Michele"
-            data-testid="header-michele"
-            className="w-9 h-9 rounded-full object-cover object-top ring-2 ring-white dark:ring-[#1A1412] shadow-sm bg-[#B34A26]"
-            onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        </div>
-        <div className="leading-none min-w-0">
-          <div className="font-display text-lg font-bold text-[#2C221E] dark:text-[#F5EFE6] truncate">
-            Mikilab
-          </div>
-          <div className="text-[10px] tracking-wide font-semibold text-[#8C7567] flex items-center gap-1 truncate">
-            <span>🇮🇹</span> <span className="truncate">{t("brand_subtitle")}</span> <span>🇩🇪</span>
-          </div>
+      <div className="flex items-center min-w-0">
+        <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#2A211D] flex items-center justify-center shadow-sm ring-2 ring-[#FFCE00]/70 shrink-0">
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-full h-full object-cover" />
         </div>
       </div>
 
@@ -73,7 +57,7 @@ export default function Header() {
           className="flex items-center bg-[#F5EFE6] dark:bg-[#332823] rounded-xl border border-[#E8DEC8] dark:border-[#3D302A] p-0.5"
           aria-label={t("lang_label")}
         >
-          {["it", "de"].map((l) => (
+          {["it", "de", "en"].map((l) => (
             <button
               key={l}
               data-testid={`lang-${l}`}
@@ -88,20 +72,6 @@ export default function Header() {
             </button>
           ))}
         </div>
-
-        <button
-          data-testid="music-toggle"
-          onClick={toggleMusic}
-          className={`w-10 h-10 rounded-xl border flex items-center justify-center active:scale-95 transition-all ${
-            musicOn
-              ? "bg-[#B34A26] border-[#B34A26] text-white"
-              : "bg-[#F5EFE6] dark:bg-[#332823] border-[#E8DEC8] dark:border-[#3D302A] text-[#B34A26]"
-          }`}
-          aria-label={t("music_toggle")}
-          title={t("music_toggle")}
-        >
-          {musicOn ? <Music className="w-4.5 h-4.5" /> : <VolumeX className="w-4.5 h-4.5" />}
-        </button>
 
         <button
           data-testid="theme-toggle"

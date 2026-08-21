@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { Radio, X, Play, Square, Loader2, Volume2 } from "lucide-react";
+import { Radio, X, Play, Square, Loader2, Volume2, Flame } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAmbient } from "@/audio/AmbientContext";
 
 const STATIONS = {
   it: [
@@ -20,6 +21,7 @@ const STATIONS = {
 
 export default function RadioFornaio() {
   const { t } = useLang();
+  const { on: ambientOn, toggle: toggleAmbient } = useAmbient();
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(null); // station id
   const [status, setStatus] = useState("idle"); // idle | loading | playing | error
@@ -113,6 +115,21 @@ export default function RadioFornaio() {
               </div>
               <button data-testid="radio-close" onClick={() => setOpen(false)} className="text-[#8C7567] p-1"><X className="w-4 h-4" /></button>
             </div>
+
+            {/* Sottofondo d'ambiente: scoppiettio del forno */}
+            <button
+              data-testid="ambient-toggle"
+              onClick={toggleAmbient}
+              className={`w-full mb-3 flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left transition-all active:scale-98 ${
+                ambientOn ? "bg-[#B34A26] text-white border-[#B34A26]" : "bg-[#D99B26]/10 text-[#8C3A1D] dark:text-[#E5AC3A] border-[#D99B26]/40"
+              }`}
+            >
+              <Flame className={`w-5 h-5 shrink-0 ${ambientOn ? "text-white" : "text-[#B34A26]"}`} />
+              <span className="flex-1 min-w-0">
+                <span className="block text-sm font-semibold">{t("ambient_fire_title")}</span>
+                <span className={`block text-[11px] ${ambientOn ? "text-white/80" : "text-[#8C7567]"}`}>{ambientOn ? t("ambient_on") : t("ambient_off")}</span>
+              </span>
+            </button>
 
             {renderGroup(`🇮🇹 ${t("radio_it")}`, STATIONS.it)}
             {renderGroup(`🇩🇪 ${t("radio_de")}`, STATIONS.de)}
