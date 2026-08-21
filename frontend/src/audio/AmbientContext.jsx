@@ -5,6 +5,7 @@ const AmbientContext = createContext(null);
 
 export function AmbientProvider({ children }) {
   const [on, setOn] = useState(false);
+  const [volume, setVolumeState] = useState(0.5);
 
   const toggle = useCallback(() => {
     setOn((prev) => {
@@ -14,15 +15,20 @@ export function AmbientProvider({ children }) {
     });
   }, []);
 
+  const setVolume = useCallback((v) => {
+    setVolumeState(v);
+    ambient.setVolume(v);
+  }, []);
+
   const setSection = useCallback((name) => ambient.setSection(name), []);
 
   return (
-    <AmbientContext.Provider value={{ on, toggle, setSection }}>
+    <AmbientContext.Provider value={{ on, toggle, setSection, volume, setVolume }}>
       {children}
     </AmbientContext.Provider>
   );
 }
 
 export function useAmbient() {
-  return useContext(AmbientContext) || { on: false, toggle: () => {}, setSection: () => {} };
+  return useContext(AmbientContext) || { on: false, toggle: () => {}, setSection: () => {}, volume: 0.5, setVolume: () => {} };
 }

@@ -466,3 +466,10 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **Header pulito** (`Header.jsx`): rimossi avatar Michele + testo "Mikilab/sottotitolo" sovrapposti e l'icona audio (music-toggle). Resta: logo grafico, orologio, chip lingua, theme, admin(se admin), Accedi.
 - **Suono del forno** (`lib/ambientMusic.js` riscritto): niente più melodie per sezione; ora scoppiettio del forno a legna (brown-noise filtrato passa-basso + crepitii bandpass casuali via Web Audio). Toggle spostato NELLA Radio (`ambient-toggle` in RadioFornaio), rimosso dall'header. `setSection` è no-op.
 - Verificato via screenshot (nessun errore). RESTA: completare il dizionario EN (molte stringhe ancora IT in fallback).
+
+## v34 (2026-06) — EN completo, banner Installa, scheda LiCoLi, volume forno
+- **EN (trilingue reale)**: `translations.en` COMPLETO (666 chiavi = pari a it/de) → tutte le stringhe `t()` ora in inglese. Home resa trilingue anche negli inline: CONCEPTS/JOKES/SCENE_PHRASES con array `en`, helper `L(it,de,en)` per promo, sezioni, card info, link legali, sottotitolo scena. Rilevamento lingua `en` in LanguageContext. LIMITE NOTO: alcune schermate secondarie (AdminPanel, AuthScreen, Shop, FreezerStock, scheduler, ResetPassword, CapoLaboratorio) hanno ancora stringhe inline `de?..:..` che in EN ricadono sull'italiano — da rifinire se serve.
+- **Banner Installa App** (`InstallBanner.jsx`, montato in App.js): banner discreto e dismissibile al primo accesso (localStorage `mikilab_install_dismissed`), usa `beforeinstallprompt`, fuori dalla bottom nav. Chiavi `install_banner_title` (it/de/en).
+- **Scheda LiCoLi**: base "Lievito Madre / Licoli (Liko)" rinominata "Lievito Madre Solido" + nuova ricetta dedicata "LiCoLi (Lievito in Coltura Liquida)" (rinfresco 1:1:1, pH 4,1-4,3, note su scomputo acqua 100%). SEED_VERSION v34, vecchio nome ritirato. Ora 43 ricette. BASI_ORDER aggiornato.
+- **Volume forno**: `ambientMusic.setVolume()`, esposto da AmbientContext; slider `ambient-volume` nella Radio (compare quando l'ambient è ON).
+- Testato iteration_26: backend 8/8, frontend tutti i flussi + regressioni (panettoni, farro, auth) OK, 0 bug.

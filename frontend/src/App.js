@@ -14,6 +14,7 @@ import PaywallGate from "@/components/PaywallGate";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
+import InstallBanner from "@/components/InstallBanner";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import { useAuth } from "@/auth/AuthContext";
@@ -59,6 +60,7 @@ function App() {
         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/michele-cartoon.jpg)`, backgroundSize: "min(70vw, 420px)" }} />
       <div className="relative z-10">
       <Header />
+      <InstallBanner />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-48">
         <AnimatePresence mode="wait">
           <motion.div

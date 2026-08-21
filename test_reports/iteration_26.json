@@ -1,0 +1,33 @@
+{
+  "summary": "Tested the new batch (EN i18n, LiCoLi recipe, oven-ambience controls, install banner) plus regressions after the v34 reseed. Backend: 8/8 pytest checks pass (admin login, bad-password rejection, 43 mikilab recipes, LiCoLi separated from Lievito Madre Solido with 1:1:1 refresh + pH 4,1-4,3, retired name 'Licoli (Liko)' gone, 11 panettoni correctly named, menu_category 'basi' contains both starters, no _id leakage). Frontend (mobile 390x844): EN chip in intro popup and header lang-en switch the whole public UI to English (nav Home/Recipes/Your Lab/Learn/Diagnosis, promo, concept modal 'What is MikiLab', jokes, home sections); IT and DE switching still work. Radio: ambient-toggle shows/hides ambient-volume slider, slider drag sets 0.8, zero console errors. Recipes: 'Basi & Lieviti' lists both Lievito Madre Solido and LiCoLi (Lievito in Coltura Liquida); LiCoLi detail shows its own procedure (1:1:1, pH 4,1-4,3). Admin login + panettone technical structure (panettone-structure-<id>) + 'Converti in Farro' toggle (renames to 'Panettone Artigianale al Farro' and shows farro banner) all still work.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipes list (mobile)", "issues": ["Floating 'Radio' and 'Parla/Talk' FABs sit on top of recipe rows near the bottom of the list (they visually cover the LiCoLi / Lievito Madre di Segale row text). Consider adding bottom padding to the list or offsetting the FABs."]},
+      {"screen": "Home - founder photo scene bubble", "issues": ["Scene bubble text is clipped/overflowing at the top-left of the photo card (e.g. 'compute doses, hydration and costs' cut off at the edge)."]},
+      {"screen": "Home - Mikilab bio card / Recipes list", "issues": ["Bio card subtitle still shows only 2 flags (IT/DE) while the avatar card shows 3 — inconsistent now that EN exists.", "Recipe names are prefixed with a flag emoji with no space ('\ud83c\uddee\ud83c\uddf9Panettone Artigianale MikiLab \u2014 ...')."]},
+      {"screen": "Recipes list in EN", "issues": ["Category headers/UI are English but recipe names and subtitles stay Italian (seed data has name_de but no name_en). Acceptable per brief, but EN users see Italian recipe titles."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter26_v34.py", "/app/test_reports/pytest/iter26.xml"],
+  "action_items": [
+    "Optional: add bottom padding to RecipeList so the Radio/Talk FABs don't overlap the last visible rows",
+    "Optional: fix Home scene-bubble text clipping on the founder photo",
+    "Optional: add EN flag to the bio card subtitle and a space after the flag emoji in recipe names",
+    "Optional: consider name_en/procedure_en in seed data for full EN recipe coverage"
+  ],
+  "critical_code_review_comments": [
+    "No GET /api/recipes/{id} endpoint exists — detail data comes from the list payload; fine today but PRO gating logic is duplicated per-list-item, keep in mind if recipes grow.",
+    "translations.js is ~2100 lines with 3 locales inline; consider splitting per-locale files to keep it maintainable."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter26_v34.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "None (read-only tests; no test records created)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked)",
+  "context_for_next_testing_agent": "Backend regression suite for v34 is /app/backend/tests/test_iter26_v34.py (uses menu_category, not category; recipe detail comes from the list endpoint). Install banner (data-testid install-banner) never rendered in headless Chromium because beforeinstallprompt is not fired -> NOT-APPLICABLE, not a failure; it is correctly rendered from App.js and absent from bottom nav. Language choice persists in localStorage across sessions, so reset lang via header lang-it/lang-de/lang-en at the start of each Playwright run.",
+  "rca_of_the_issue": "N/A - no functional defects found in this iteration."
+}

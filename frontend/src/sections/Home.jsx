@@ -28,6 +28,16 @@ const CONCEPTS = {
     { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
       body: "Entspannt zu arbeiten bedeutet, die Backstube in eine organisierte, effiziente und stressfreie Umgebung zu verwandeln. Mit sorgfältiger Planung der Gärzeiten, präzisen Standards und zuverlässigen Techniken werden Überraschungen ausgeschlossen. Kleine praktische Einsichten, verbunden mit Erfahrung, vereinfachen den Alltag und machen die Arbeit gleichmäßig, sicher und angenehm. Mit Gelassenheit zu backen ist das Geheimnis für höchste Qualität, ohne je die Leidenschaft für dieses Handwerk zu verlieren." },
   ],
+  en: [
+    { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#B34A26] to-[#8C3A1D]",
+      body: "MikiLab is my creative, scientific digital lab dedicated to the baking art. It was born to blend artisan passion with the methodical study of flours and fermentation. Here baking is not a mere sequence of gestures but a constant pursuit of excellence, where every ingredient is calibrated to the milligram for perfect structures, extreme digestibility and authentic flavours. It's where the tradition of baking meets innovation and precision." },
+    { id: "chi", title: "About me", icon: ChefHat, grad: "from-[#6B8E62] to-[#4d6b45]",
+      body: "I'm Michele, a baker by passion even before by trade. I love spelt, sourdough and the scent of freshly baked bread. I created Mikilab to put my recipes and my way of working into every baker's pocket, with the same care I bring to the bakery every day." },
+    { id: "metodo", title: "My method", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
+      body: "My method blends the great Italian tradition with German technical precision. I work daily with both direct and indirect methods, though I clearly prefer the latter: preferments such as sourdough, poolish, biga and pre-cooks like kochstück are the true soul of my recipes. Choosing indirect means giving time to time, letting enzymes transform the raw material for unique aromatic complexity, a fragrant crust and an open crumb. Yet I love every nuance of baking: the right flour at the right moment and strict respect for timings are the key to mastering any dough." },
+    { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#3a2d27] to-[#1A1412]",
+      body: "Working with peace of mind means turning the bakery into an organised, efficient and stress-free environment. With careful planning of fermentation times, precise standards and reliable techniques, surprises are eliminated. Small practical insights, combined with hands-on experience, simplify daily operations and make the work steady, safe and pleasant. Baking calmly is the secret to expressing top quality without ever losing the passion for this craft." },
+  ],
 };
 
 const CONCEPT_PHOTOS = {
@@ -50,6 +60,12 @@ const JOKES = {
     "Ein Bäcker gerät nie in die Krise: Er weiß immer, wie man die Ärmel hochkrempelt und knetet! 💪",
     "Das Geheimnis des perfekten Brots? Geduld, gutes Mehl … und den Ofen nicht alle zwei Minuten öffnen! 😅",
   ],
+  en: [
+    "Freshly baked bread never asks questions… but it always knows how to make itself heard! 🍞",
+    "Why is sourdough so wise? Because it spent so many nights fermenting and pondering life. 😄",
+    "A baker never has a crisis: he always knows how to roll up his sleeves and knead! 💪",
+    "The secret to perfect bread? Patience, good flour… and don't open the oven every two minutes! 😅",
+  ],
 };
 
 const SCENE_PHRASES = {
@@ -65,10 +81,17 @@ const SCENE_PHRASES = {
     "Ich berechne Mengen, Hydratation und Kosten 🧮",
     "Ich begleite dich per Smartphone und PC 📱💻",
   ],
+  en: [
+    "I organise your recipes 📋",
+    "I plan production in the bakery ⏱️",
+    "I compute doses, hydration and costs 🧮",
+    "I follow you on smartphone and PC 📱💻",
+  ],
 };
 
-function HomeAvatarScene({ de }) {
-  const phrases = SCENE_PHRASES[de ? "de" : "it"];
+function HomeAvatarScene({ lang }) {
+  const de = lang === "de";
+  const phrases = SCENE_PHRASES[lang] || SCENE_PHRASES.it;
   const [idx, setIdx] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setIdx((i) => (i + 1) % phrases.length), 3000);
@@ -122,7 +145,7 @@ function HomeAvatarScene({ de }) {
       {/* Titolo */}
       <div className="absolute bottom-0 left-0 p-5 z-20">
         <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪</p>
+        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : lang === "en" ? "Your digital companion" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪 🇬🇧</p>
       </div>
     </div>
   );
@@ -133,28 +156,29 @@ export default function Home({ onNavigate }) {
   const [chat, setChat] = useState(false);
   const [legal, setLegal] = useState(false);
   const [open, setOpen] = useState(null);
-  const concepts = CONCEPTS[lang === "de" ? "de" : "it"];
+  const concepts = CONCEPTS[lang] || CONCEPTS.it;
   const activeConcept = concepts.find((c) => c.id === open) || null;
   const go = (tab) => onNavigate && onNavigate(tab);
-  const jokes = JOKES[lang === "de" ? "de" : "it"];
+  const jokes = JOKES[lang] || JOKES.it;
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
+  const L = (it_, de_, en_) => (de ? de_ : lang === "en" ? en_ : it_);
 
   const SECTIONS = [
     { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#B34A26] to-[#8C3A1D]",
-      sub: de ? "43 Rezepte mit meiner Methode (Gratis-Vorschau)" : "43 ricette col mio metodo (assaggio gratis)" },
+      sub: L("43 ricette col mio metodo (assaggio gratis)", "43 Rezepte mit meiner Methode (Gratis-Vorschau)", "43 recipes with my method (free preview)") },
     { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]",
-      sub: de ? "Für Anfänger: Grundlagen & einfache Rezepte" : "Per chi inizia: basi e ricette semplici" },
+      sub: L("Per chi inizia: basi e ricette semplici", "Für Anfänger: Grundlagen & einfache Rezepte", "For beginners: basics & easy recipes") },
     { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
-      sub: de ? "Neuigkeiten aus IT, Stuttgart und DE" : "Novità da Italia, Stoccarda e Germania" },
+      sub: L("Novità da Italia, Stoccarda e Germania", "Neuigkeiten aus IT, Stuttgart und DE", "News from Italy, Stuttgart and Germany") },
     { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#D99B26] to-[#B8801a]",
-      sub: de ? "Für Profis: Arbeitsplan, Kosten, Teige (PRO)" : "Per professionisti: piano, costi, impasti (PRO)" },
+      sub: L("Per professionisti: piano, costi, impasti (PRO)", "Für Profis: Arbeitsplan, Kosten, Teige (PRO)", "For pros: plan, costs, doughs (PRO)") },
     { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#8C7567] to-[#5f4f45]",
-      sub: de ? "Brotfehler per Foto erkennen (PRO)" : "Scopri i difetti del pane da una foto (PRO)" },
+      sub: L("Scopri i difetti del pane da una foto (PRO)", "Brotfehler per Foto erkennen (PRO)", "Spot bread defects from a photo (PRO)") },
     { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#3a2d27] to-[#1A1412]",
-      sub: de ? "Alle Grundlagen erklärt" : "Tutte le basi spiegate" },
-    { tab: "shop", label: de ? "Shop & Academy" : "Shop & Academy", Icon: ShoppingBag, grad: "from-[#8C3A1D] to-[#5f2410]",
-      sub: de ? "Panettoni & Kurse — bald verfügbar" : "Panettoni & corsi — in arrivo" },
+      sub: L("Tutte le basi spiegate", "Alle Grundlagen erklärt", "All the basics explained") },
+    { tab: "shop", label: "Shop & Academy", Icon: ShoppingBag, grad: "from-[#8C3A1D] to-[#5f2410]",
+      sub: L("Panettoni & corsi — in arrivo", "Panettoni & Kurse — bald verfügbar", "Panettoni & courses — coming soon") },
   ];
 
   if (chat) {
@@ -182,7 +206,7 @@ export default function Home({ onNavigate }) {
   return (
     <div className="pb-2 space-y-6">
       {/* Card in alto: avatar digitale animato (finto video) */}
-      <HomeAvatarScene de={de} />
+      <HomeAvatarScene lang={lang} />
 
       {/* Hero compatto */}
       <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#B34A26] to-[#8C3A1D] text-white shadow-xl p-7 text-center">
@@ -198,9 +222,11 @@ export default function Home({ onNavigate }) {
           className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#D99B26]/50 shrink-0"
           onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <p className="text-sm text-[#4A3B34] dark:text-[#E9DCCB] leading-relaxed">
-          {de
-            ? "Eine Website, die die Arbeit genau so organisiert, wie du es tun würdest. Von der detaillierten Rezeptverwaltung über die Einkaufsliste bis zur präzisen Produktionsplanung in der Backstube. Und mit Hilfe der KI kannst du jede Phase ohne Fehler berechnen, anpassen und steuern: Du kümmerst dich um die Backstube, um den Rest kümmern wir uns."
-            : "Un sito pensato per organizzare il lavoro proprio come lo faresti tu. Dalla gestione dettagliata delle ricette alla lista della spesa, fino alla pianificazione precisa della produzione in laboratorio. In più, con l'aiuto dell'AI potrai calcolare, adattare e gestire ogni fase senza margine di errore: tu pensi al laboratorio, al resto ci pensiamo noi."}
+          {L(
+            "Un sito pensato per organizzare il lavoro proprio come lo faresti tu. Dalla gestione dettagliata delle ricette alla lista della spesa, fino alla pianificazione precisa della produzione in laboratorio. In più, con l'aiuto dell'AI potrai calcolare, adattare e gestire ogni fase senza margine di errore: tu pensi al laboratorio, al resto ci pensiamo noi.",
+            "Eine Website, die die Arbeit genau so organisiert, wie du es tun würdest. Von der detaillierten Rezeptverwaltung über die Einkaufsliste bis zur präzisen Produktionsplanung in der Backstube. Und mit Hilfe der KI kannst du jede Phase ohne Fehler berechnen, anpassen und steuern: Du kümmerst dich um die Backstube, um den Rest kümmern wir uns.",
+            "A website designed to organise the work exactly as you would. From detailed recipe management to the shopping list, all the way to precise production planning in the bakery. Plus, with AI's help you can calculate, adapt and manage every stage with no margin for error: you focus on the bakery, we take care of the rest."
+          )}
         </p>
       </div>
 
@@ -258,20 +284,22 @@ export default function Home({ onNavigate }) {
         <div data-testid="home-audiences" className="grid grid-cols-1 gap-2.5 mb-3">
           <div className="rounded-2xl bg-[#D99B26]/10 border border-[#D99B26]/30 p-4">
             <p className="font-display text-base font-bold text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
-              <Wrench className="w-4 h-4 text-[#B34A26]" /> {de ? "Für Profis · „Dein Labor“" : "Per professionisti · «Il Tuo Laboratorio»"}
+              <Wrench className="w-4 h-4 text-[#B34A26]" /> {L("Per professionisti · «Il Tuo Laboratorio»", "Für Profis · „Dein Labor“", "For pros · “Your Lab”")}
             </p>
             <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-snug">
-              {de ? "Täglicher/wöchentlicher Produktionsplan, Kostenrechnung, Zellen- und Reinigungsverwaltung, unterstützt von der KI zum Regenerieren von Teigen und Prozessen."
-                  : "Piano di produzione giornaliero/settimanale, calcolo costi, gestione celle e pulizie, affiancato dall'IA per rigenerare impasti e processi."}
+              {L("Piano di produzione giornaliero/settimanale, calcolo costi, gestione celle e pulizie, affiancato dall'IA per rigenerare impasti e processi.",
+                 "Täglicher/wöchentlicher Produktionsplan, Kostenrechnung, Zellen- und Reinigungsverwaltung, unterstützt von der KI zum Regenerieren von Teigen und Prozessen.",
+                 "Daily/weekly production plan, cost calculation, cell and cleaning management, backed by AI to regenerate doughs and processes.")}
             </p>
           </div>
           <div className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4">
             <p className="font-display text-base font-bold text-[#2C221E] dark:text-[#F5EFE6] flex items-center gap-2">
-              <GraduationCap className="w-4 h-4 text-[#4d6b45]" /> {de ? "Für Anfänger · Sektion Anfänger" : "Per chi inizia · Sezione Principianti"}
+              <GraduationCap className="w-4 h-4 text-[#4d6b45]" /> {L("Per chi inizia · Sezione Principianti", "Für Anfänger · Sektion Anfänger", "For beginners · Beginners section")}
             </p>
             <p className="text-sm text-[#4A3B34] dark:text-[#C9BBB0] mt-1 leading-snug">
-              {de ? "Erste Schritte in der Backkunst: geführte Anleitungen, Grundlagen und vereinfachte Rezepte."
-                  : "I primi passi nell'Arte Bianca: guide passo-passo, basi della panificazione e ricette semplificate."}
+              {L("I primi passi nell'Arte Bianca: guide passo-passo, basi della panificazione e ricette semplificate.",
+                 "Erste Schritte in der Backkunst: geführte Anleitungen, Grundlagen und vereinfachte Rezepte.",
+                 "First steps in the baking art: step-by-step guides, baking basics and simplified recipes.")}
             </p>
           </div>
         </div>
@@ -316,7 +344,7 @@ export default function Home({ onNavigate }) {
       {/* Footer legale */}
       <button data-testid="home-legal-link" onClick={() => setLegal(true)}
         className="w-full text-center text-xs text-[#8C7567] underline underline-offset-2 py-2">
-        {lang === "de" ? "Impressum & Datenschutz" : "Note legali & Privacy"}
+        {L("Note legali & Privacy", "Impressum & Datenschutz", "Legal notice & Privacy")}
       </button>
     </div>
   );

@@ -21,7 +21,7 @@ const STATIONS = {
 
 export default function RadioFornaio() {
   const { t } = useLang();
-  const { on: ambientOn, toggle: toggleAmbient } = useAmbient();
+  const { on: ambientOn, toggle: toggleAmbient, volume: ambientVol, setVolume: setAmbientVol } = useAmbient();
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(null); // station id
   const [status, setStatus] = useState("idle"); // idle | loading | playing | error
@@ -130,6 +130,17 @@ export default function RadioFornaio() {
                 <span className={`block text-[11px] ${ambientOn ? "text-white/80" : "text-[#8C7567]"}`}>{ambientOn ? t("ambient_on") : t("ambient_off")}</span>
               </span>
             </button>
+            {ambientOn && (
+              <div className="flex items-center gap-2 -mt-1 mb-3 px-1">
+                <Flame className="w-4 h-4 text-[#B34A26] shrink-0" />
+                <input
+                  data-testid="ambient-volume"
+                  type="range" min="0" max="1" step="0.05" value={ambientVol}
+                  onChange={(e) => setAmbientVol(Number(e.target.value))}
+                  className="flex-1 accent-[#B34A26]"
+                />
+              </div>
+            )}
 
             {renderGroup(`🇮🇹 ${t("radio_it")}`, STATIONS.it)}
             {renderGroup(`🇩🇪 ${t("radio_de")}`, STATIONS.de)}

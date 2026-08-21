@@ -34,8 +34,8 @@
     "procedure_de": "1) Zutaten abwiegen und trocken gut vermischen.\n2) In einem geschlossenen Glas kühl und trocken lagern.\n3) VERWENDUNG: 2% der Mischung direkt zu Beginn des Knetens zum Mehl geben."
   },
   {
-    "name": "Lievito Madre / Licoli (Liko)",
-    "name_de": "Lievito Madre (Sauerteig)",
+    "name": "Lievito Madre Solido",
+    "name_de": "Fester Sauerteig",
     "real_name": "Pasta madre solida",
     "real_name_de": "Fester Sauerteig",
     "flour_type": "Farina 0 / W300",
@@ -44,10 +44,26 @@
     "method_type": "lm",
     "menu_category": "basi",
     "image_url": "/recipes/r_cuore.jpg",
-    "notes": "Base viva del laboratorio. Idratazione 45-50%. Da conservare a 4°C tra un rinfresco e l'altro. In alternativa puoi gestirlo come Licoli (lievito madre in coltura liquida, idratazione 100%): più pratico e reattivo, con percentuale d'uso aumentata (fino al 25-35% sul peso della farina).",
-    "notes_de": "Lebende Basis der Backstube. Hydration 45-50%. Zwischen den Auffrischungen bei 4°C lagern. Alternativ als Licoli führbar (flüssiger Sauerteig, 100% Hydration): praktischer und reaktiver, mit erhöhtem Einsatz (bis 25-35% auf das Mehl).",
+    "notes": "Base viva del laboratorio. Idratazione 45-50%. Da conservare a 4°C tra un rinfresco e l'altro. Percentuale d'uso: pani 15-20% sul peso farina; grandi lievitati 25-30%.",
+    "notes_de": "Lebende Basis der Backstube. Hydration 45-50%. Zwischen den Auffrischungen bei 4°C lagern. Einsatz: Brote 15-20% auf das Mehl; große Hefegebäcke 25-30%.",
     "procedure": "RINFRESCO (rapporto 1:1:0,5)\n1) 100 g lievito madre + 100 g farina forte + 45-50 g acqua a 24°C.\n2) Impasta 4-5', forma un cilindro, incidi a croce.\n3) Lievitazione 3-4 h a 26-28°C fino al raddoppio.\n4) Pronto all'uso; l'eccedenza torna in frigo a 4°C.\nESEMPI D'USO: pani 15-20% sul peso farina; grandi lievitati 25-30%.",
     "procedure_de": "AUFFRISCHUNG (Verhältnis 1:1:0,5)\n1) 100 g Sauerteig + 100 g starkes Mehl + 45-50 g Wasser bei 24°C.\n2) 4-5' kneten, zu einer Rolle formen, kreuzweise einschneiden.\n3) 3-4 h bei 26-28°C bis zur Verdopplung.\n4) Einsatzbereit; Rest zurück in den Kühlschrank bei 4°C.\nANWENDUNG: Brote 15-20% auf das Mehl; große Hefegebäcke 25-30%."
+  },
+  {
+    "name": "LiCoLi (Lievito in Coltura Liquida)",
+    "name_de": "LiCoLi (flüssiger Sauerteig)",
+    "real_name": "Pasta madre liquida (idratazione 100%)",
+    "real_name_de": "Flüssiger Sauerteig (100% Hydration)",
+    "flour_type": "Farina 0 / W300",
+    "flour_type_de": "Mehl Typ 550 / W300",
+    "preferment_type": "licoli",
+    "method_type": "lm",
+    "menu_category": "basi",
+    "image_url": "/recipes/r_cuore.jpg",
+    "notes": "Lievito madre in coltura liquida, idratazione 100% (acqua = farina). Più pratico e reattivo del solido, ottimo per pani soffici e panettoni. Conservazione a 4°C tra i rinfreschi. Percentuale d'uso: pani 20-30%, grandi lievitati fino al 25-35% sul peso della farina.\n\nIMPORTANTE: essendo al 100% di idratazione, quando lo usi al posto del lievito solido riduci l'acqua dell'impasto scomputando la metà del peso del LiCoLi (che è acqua) per mantenere invariata l'idratazione finale.",
+    "notes_de": "Flüssiger Sauerteig, 100% Hydration (Wasser = Mehl). Praktischer und reaktiver als der feste, ideal für lockere Brote und Panettone. Lagerung bei 4°C zwischen den Auffrischungen. Einsatz: Brote 20-30%, große Hefegebäcke bis 25-35% auf das Mehl.\n\nWICHTIG: Bei 100% Hydration beim Ersatz des festen Sauerteigs das Wasser im Teig um die Hälfte des LiCoLi-Gewichts (das ist Wasser) reduzieren, damit die Endhydratation gleich bleibt.",
+    "procedure": "RINFRESCO LiCoLi (rapporto 1:1:1)\n1) 50 g LiCoLi + 50 g farina forte + 50 g acqua a 24°C.\n2) Mescola bene fino a pastella liscia e omogenea.\n3) Lascia a 26-28°C per 3-4 h fino al raddoppio (bolle in superficie).\n4) Pronto all'uso; l'eccedenza in frigo a 4°C.\nCONTROLLO: pH ideale 4,1-4,3; profumo lattico-acidulo, mai acetico pungente.",
+    "procedure_de": "AUFFRISCHUNG LiCoLi (Verhältnis 1:1:1)\n1) 50 g LiCoLi + 50 g starkes Mehl + 50 g Wasser bei 24°C.\n2) Zu einem glatten, homogenen Teig verrühren.\n3) 3-4 h bei 26-28°C bis zur Verdopplung (Blasen an der Oberfläche).\n4) Einsatzbereit; Rest in den Kühlschrank bei 4°C.\nKONTROLLE: idealer pH 4,1-4,3; milchig-säuerlicher Duft, nie stechend essigsauer."
   },
   {
     "name": "Lievito Madre di Segale",

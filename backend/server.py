@@ -307,10 +307,11 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v32-panettoni-artigianali"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v34-licoli-scheda"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro",
+    "Lievito Madre / Licoli (Liko)",
     "Panettone Mikilab",
     "Panettone Mikilab — Amarena e Cioccolato", "Panettone Mikilab — Arancia e Cioccolato Fondente",
     "Panettone Mikilab — Caffè e Nocciola", "Panettone Mikilab — Cioccolato e Noci",

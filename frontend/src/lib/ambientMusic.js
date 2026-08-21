@@ -10,6 +10,14 @@ class AmbientMusic {
     this.timer = null;
     this.section = "home";
     this.on = false;
+    this.vol = 0.16;
+  }
+
+  setVolume(v) {
+    this.vol = Math.max(0, Math.min(1, Number(v) || 0)) * 0.32;
+    if (this.on && this.master && this.ctx) {
+      this.master.gain.setTargetAtTime(this.vol, this.ctx.currentTime, 0.2);
+    }
   }
 
   _noiseBuffer(seconds = 2) {
@@ -89,7 +97,7 @@ class AmbientMusic {
     if (this.ctx.state === "suspended") this.ctx.resume();
     this.on = true;
     this._startBed();
-    this.master.gain.setTargetAtTime(0.16, this.ctx.currentTime, 0.6);
+    this.master.gain.setTargetAtTime(this.vol, this.ctx.currentTime, 0.6);
     if (!this.timer) this._schedule();
     return true;
   }

@@ -558,7 +558,7 @@ function fmtTemp(v) {
 }
 
 // Categoria e ordine di visualizzazione: Backmittel -> Lievito Madre -> Panettoni -> Pane -> Panini
-const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre / Licoli (Liko)", "Lievito Madre", "Lievito Madre di Segale", "Poolish", "Kochstück"];
+const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre Solido", "LiCoLi (Lievito in Coltura Liquida)", "Lievito Madre di Segale", "Poolish", "Kochstück"];
 
 function recipeCategory(r) {
   const cat = r.menu_category;
