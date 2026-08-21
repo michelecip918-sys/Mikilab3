@@ -1,0 +1,65 @@
+{
+  "summary": "Iter24 — Riorganizzazione sezione Ricette (IT+DE). Backend: nuovo pytest /app/backend/tests/test_iter24_categorie.py (14 test, 12 pass). Verificati 43 ricette con menu_category valorizzato, schede ritirate rimosse (Miglioratore Naturale al Malto, Bretzel del Maestro), Brezel + Brezel Integrali presenti, panini = 4 esatti, basi = 5 esatte, contenuto Miglioratore Naturale Pro (2% + lupino 1% / malto diastasico 0,5% / psillio 0,5% / vit.C 0,02%), Anima Integrale con 'Miglioratore Naturale Pro (2% sul peso della farina)' e nessun 'Vollkorn' nei campi italiani, teaser anonimo (41 lucchetti, solo Cuore Italiano + Panettone Classico sbloccati, nessun leak di procedure/work_phases), paywall maestro/diagnosi attivo da anonimo. Frontend (mobile 390px, IT e DE): ordine categorie cat-basi -> cat-pane -> cat-panini -> cat-panettoni CORRETTO, Enciclopedia con le 5 nuove voci nell'ordine richiesto (Kochstück con Haferflocken) e testo 2% Diretto/Indiretto, Home 'Il Tuo Laboratorio' senza 'Panettone'. TROVATI 2 BUG REALI + 1 copy stale.",
+  "backend_issues": {
+    "critical": [
+      {
+        "endpoint": "GET /api/recipes?collection_name=mikilab (seed: mikilab_seed_data.json)",
+        "issue": "ID DUPLICATO: 'Brezel' e 'Brezel Integrali' condividono lo stesso id '7d432668-ec89-4dd8-b18a-de44cb98e843' (copia-incolla nel seed file, confermato sia nel JSON che in Mongo). Conseguenze: (1) React 'Encountered two children with the same key' in RecipeList (2 errori console ad ogni render della lista), (2) PUT/DELETE /api/recipes/{id} colpisce solo UNA delle due schede -> l'altra diventa non modificabile/non cancellabile da admin, (3) qualunque lookup per id e' ambiguo. Fix: assegnare un id nuovo a 'Brezel Integrali' nel seed, bumpare SEED_VERSION e rimuovere/riallineare il doc esistente in Mongo (l'upsert e' per 'name', quindi l'id sbagliato resta con $setOnInsert).",
+        "priority": "CRITICAL"
+      }
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "RecipeList.jsx — recipeCategory() (riga ~541)",
+        "issue": "BUG ORDINE/CATEGORIA: 'Baguette con Poolish' (menu_category='pane') viene mostrata sotto 'Basi & Lieviti' come 6a scheda. Causa: il fallback regex viene valutato in OR con menu_category: `if (cat === 'basi' || /migliorator|backmittel|lievito madre|poolish|kochst/.test(name))`, e il nome contiene 'poolish'. Risultato reale IT: ['Miglioratore Naturale Pro','Lievito Madre','Lievito Madre di Segale','Poolish','Kochstück','Baguette con Poolish'] (atteso: solo le prime 5); PANE scende a 21 invece di 22. Stesso bug in DE ('Baguette mit Poolish'). Fix: usare il regex SOLO come fallback quando menu_category e' assente (es. `if (cat === 'basi' || (!cat && regex.test(name)))`) e applicare la stessa logica a panettoni.",
+        "selector": "[data-testid=\"cat-basi\"]",
+        "priority": "HIGH"
+      },
+      {
+        "component": "Home.jsx — SECTIONS (riga 67)",
+        "issue": "Copy stale: il sottotitolo della card Ricette dice '38 ricette col mio metodo' / '38 Rezepte mit meiner Methode' ma le ricette ora sono 43. Da aggiornare a 43 (o renderlo dinamico).",
+        "selector": "[data-testid=\"home-section-ricette\"]",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Globale (console)",
+        "issues": [
+          "Warning ripetuto: 'Missing `Description` or `aria-describedby={undefined}` for {DialogContent}' — aggiungere DialogDescription nei DialogContent (IntroGuide/RecipeDialog) per accessibilita'.",
+          "Due 401 in console al primo load da anonimo (chiamata a endpoint autenticato senza sessione): rumore innocuo ma da gestire evitando la chiamata quando !user."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter24_categorie.py",
+    "/app/test_reports/pytest/iter24.xml"
+  ],
+  "action_items": [
+    "CRITICAL: dare un id univoco a 'Brezel Integrali' in /app/backend/mikilab_seed_data.json, bumpare SEED_VERSION e forzare il riallineamento in Mongo (l'id errato non viene sovrascritto dall'upsert per via di $setOnInsert).",
+    "HIGH: in RecipeList.jsx recipeCategory(), usare il regex sui nomi SOLO come fallback quando r.menu_category e' assente, altrimenti 'Baguette con Poolish' resta sotto 'Basi & Lieviti'.",
+    "MEDIUM: aggiornare il sottotitolo Home della card Ricette da '38 ricette'/'38 Rezepte' a 43.",
+    "LOW: aggiungere DialogDescription (o aria-describedby) ai DialogContent per eliminare i warning a11y."
+  ],
+  "critical_code_review_comments": [
+    "mikilab_seed_data.json: nessun vincolo di unicita' sugli id del seed — aggiungere un assert/validazione all'avvio (set di id univoci) per intercettare i copia-incolla; 5 voci hanno anche id=null (generato a runtime), quindi la validazione va fatta solo sugli id espliciti.",
+    "seed_mikilab_if_empty(): l'upsert e' su {collection_name, name} con l'id in $setOnInsert; quindi correggere un id sbagliato nel seed NON aggiorna i documenti esistenti. Serve una migrazione esplicita (delete + reinsert) oltre al bump di SEED_VERSION.",
+    "RecipeList.jsx recipeCategory(): la classificazione mista (campo DB + regex sul nome) e' fragile e produce falsi positivi. Ora che menu_category e' popolato al 100% (verificato su 43/43), il regex dovrebbe essere solo fallback.",
+    "RecipeList.jsx e' a 614 righe con RecipeCard/GLOSSARY/recipeCategory nello stesso file: valutare l'estrazione di recipeCategory+BASI_ORDER in un modulo condiviso, cosi' la stessa logica di ordinamento e' riusabile e testabile."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter24_categorie.py"
+  ],
+  "success_rate": {"backend": "86% (12/14 — i 2 fail sono i bug reali sopra)", "frontend": "88% (7/8 requisiti; fallisce solo il sotto-ordine di Basi & Lieviti)"},
+  "seed_data_creation": "Nessun dato creato: solo letture (GET) su ricette mikilab, nessuna mutazione della collezione seed.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante, login via [data-testid=login-btn] -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "Eseguire `pytest /app/backend/tests/test_iter24_categorie.py -v` : la classe TestIter24Regressions contiene i 2 test che documentano i bug (test_recipe_ids_are_unique, test_no_pane_recipe_leaks_into_basi_by_name) e devono diventare verdi dopo il fix. Per la UI: il modale intro-close-btn compare dopo OGNI navigazione di tab, chiuderlo sempre. Le card ricetta hanno data-testid=recipe-row-<id> (NON recipe-card-*), le intestazioni cat-basi/cat-pane/cat-panini/cat-panettoni. Header login = [data-testid=login-btn]. Verificato OK: ordine 4 categorie (IT e DE), Enciclopedia 5 voci + testo 2% Diretto/Indiretto (IT e DE), panini esattamente 4, Miglioratore Naturale Pro con 4 ingredienti e percentuali, Anima Integrale con 'Miglioratore Naturale Pro (2% sul peso della farina)' e 'Farina Integrale 900 + 630 100 (Dinkel)' senza 'Vollkorn' nei testi IT, teaser anonimo + paywall maestro/diagnosi. Non serve ritestare questi punti se non toccati. NB: aprire la scheda 'Brezel Integrali' dalla lista mostra correttamente Brezel Integrali (il dialog usa il riferimento all'oggetto, non l'id), quindi l'id duplicato NON si vede nel flusso di lettura: si manifesta su edit/delete e nei warning React.",
+  "rca_of_the_issue": "BUG 1 (id duplicato): in mikilab_seed_data.json la nuova voce 'Brezel Integrali' e' stata creata copiando 'Brezel' senza cambiare il campo 'id' -> Counter sugli id restituisce {'7d432668-...': 2}. Poiche' seed_mikilab_if_empty fa upsert per 'name' con l'id in $setOnInsert, entrambi i documenti sono stati inseriti con lo stesso id e nessun bump di SEED_VERSION potra' correggerlo senza una delete esplicita. Riproduzione: GET /api/recipes?collection_name=mikilab con Bearer admin -> due elementi con id identico; in UI 2 errori console 'Encountered two children with the same key' ad ogni render della lista Ricette. BUG 2 (Baguette in Basi): recipeCategory() valuta `cat === 'basi' || regex.test(name)` in OR; 'Baguette con Poolish' (menu_category='pane') matcha 'poolish' e ottiene rank 0 con sub=99, quindi viene ordinata in coda al blocco Basi e mostrata sotto l'header 'Basi & Lieviti'. Mitigazione: rendere il regex un fallback condizionato a !menu_category."
+}

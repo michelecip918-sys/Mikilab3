@@ -420,3 +420,13 @@ Griglia riordinata per priorità d'uso quotidiano (Maestro.jsx TOOLS) + rinomini
 - **Foto reali**: schede concetto Home ora usano le foto reali di Michele (cosa→bio-dough, chi→bio-photo, metodo→bio-dough-2, serenita→bio-dough-3). Shop usa foto reali locali dei panettoni (/recipes/pan_classico|pan_cioc_noci|pan_pistacchio.jpg) e pani (r_panettone_base, r_cuore). Reseed shop_products.
 - **"Il mio Metodo"** (scheda Home concetto metodo): testo aggiornato al testo esatto fornito (IT+DE).
 - **Didascalia "Il Tuo Laboratorio"** (card professionisti home-audiences): "Piano di produzione giornaliero/settimanale, calcolo costi, gestione celle e pulizie, affiancato dall'IA per rigenerare impasti e processi." (IT+DE).
+
+## v29-30 (2026-06) — Riorganizzazione Ricette + Basi + Miglioratore unico
+- **Categorie Ricette** (campo `menu_category`): ordine fisso Basi & Lieviti → Pane → Panini e Snack → Panettoni. RecipeList raggruppa per categoria (recipeCategory usa menu_category, regex solo fallback). Basi in ordine: Miglioratore Naturale Pro, Lievito Madre, Lievito Madre di Segale, Poolish, Kochstück.
+- **Miglioratore Naturale Pro** (unico): create scheda esatta (lupino 1%, malto diastasico 0,5%, psillio 0,5%, vit.C 0,02%, uso 2%). Eliminate vecchie ("Miglioratore Naturale al Malto") via SEED_RETIRED_NAMES. Sostituito in tutte le ricette: extra_ingredient "Miglioratore Naturale Pro (2% sul peso della farina)".
+- **Nuove basi**: Lievito Madre, Lievito Madre di Segale, Poolish, Kochstück (con Haferflocken) — bozze professionali (script apply_phase_recipes.py). Tot ricette 38→43.
+- **Brezel**: "Bretzel del Maestro" rinominato "Brezel" (classico) + nuovo "Brezel Integrali" (Farina Integrale + Miglioratore Pro 2%). Fix id duplicato (v30).
+- **Vollkorn→Farina Integrale** in tutti i testi ITALIANI.
+- **Guida Metodi** (Enciclopedia): 5 basi in cima nell'ordine corretto + testo "Miglioratore Naturale Pro al 2% per Diretto e Indiretto".
+- **Home "Il Tuo Laboratorio"**: rimossa parola "Panettone" dalle didascalie (→ impasti/produzione). Card Ricette: 38→43.
+- Panini e Snack = Taralli, Friselle, Puccia, Focaccia. Test iter24: 14/14 pytest verdi; frontend ordine categorie OK (IT+DE). SEED_VERSION v30.

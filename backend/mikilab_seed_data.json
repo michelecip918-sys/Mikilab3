@@ -1,12 +1,110 @@
 [
   {
+    "name": "Miglioratore Naturale Pro",
+    "name_de": "Natürlicher Pro-Backmittel",
+    "real_name": "Miglioratore universale",
+    "real_name_de": "Universal-Backmittel",
+    "flour_type": "Universale (Diretto e Indiretto)",
+    "flour_type_de": "Universell (Direkt & Indirekt)",
+    "preferment_type": "diretto",
+    "method_type": "diretto",
+    "menu_category": "basi",
+    "image_url": "/recipes/r_panettone_base.jpg",
+    "extra_ingredients": [
+      {
+        "name": "Farina di lupino dolce",
+        "percent": 1
+      },
+      {
+        "name": "Malto diastasico in polvere",
+        "percent": 0.5
+      },
+      {
+        "name": "Buccia di psillio",
+        "percent": 0.5
+      },
+      {
+        "name": "Vitamina C (Acido ascorbico)",
+        "percent": 0.02
+      }
+    ],
+    "notes": "Formula unica 100% naturale a quadrupla azione: il malto nutre i lieviti e dona colore e croccantezza; lupino e vitamina C rinforzano la maglia glutinica e la tenuta; lo psillio trattiene l'idratazione mantenendo il pane morbido più a lungo.",
+    "notes_de": "Einzigartige, 100% natürliche Formel mit vierfacher Wirkung: Malz nährt die Hefen und gibt Farbe und Kruste; Lupine und Vitamin C stärken das Glutennetz; Flohsamenschalen halten die Feuchtigkeit und das Brot länger weich.",
+    "procedure": "1) Pesa gli ingredienti e mescolali bene a secco.\n2) Conserva in un barattolo chiuso al fresco e all'asciutto.\n3) USO: aggiungi il 2% del mix totale direttamente alla farina all'inizio dell'impasto.",
+    "procedure_de": "1) Zutaten abwiegen und trocken gut vermischen.\n2) In einem geschlossenen Glas kühl und trocken lagern.\n3) VERWENDUNG: 2% der Mischung direkt zu Beginn des Knetens zum Mehl geben."
+  },
+  {
+    "name": "Lievito Madre",
+    "name_de": "Lievito Madre (Sauerteig)",
+    "real_name": "Pasta madre solida",
+    "real_name_de": "Fester Sauerteig",
+    "flour_type": "Farina 0 / W300",
+    "flour_type_de": "Mehl Typ 550 / W300",
+    "preferment_type": "lm",
+    "method_type": "lm",
+    "menu_category": "basi",
+    "image_url": "/recipes/r_cuore.jpg",
+    "notes": "Base viva del laboratorio. Idratazione 45-50%. Da conservare a 4°C tra un rinfresco e l'altro.",
+    "notes_de": "Lebende Basis der Backstube. Hydration 45-50%. Zwischen den Auffrischungen bei 4°C lagern.",
+    "procedure": "RINFRESCO (rapporto 1:1:0,5)\n1) 100 g lievito madre + 100 g farina forte + 45-50 g acqua a 24°C.\n2) Impasta 4-5', forma un cilindro, incidi a croce.\n3) Lievitazione 3-4 h a 26-28°C fino al raddoppio.\n4) Pronto all'uso; l'eccedenza torna in frigo a 4°C.\nESEMPI D'USO: pani 15-20% sul peso farina; grandi lievitati 25-30%.",
+    "procedure_de": "AUFFRISCHUNG (Verhältnis 1:1:0,5)\n1) 100 g Sauerteig + 100 g starkes Mehl + 45-50 g Wasser bei 24°C.\n2) 4-5' kneten, zu einer Rolle formen, kreuzweise einschneiden.\n3) 3-4 h bei 26-28°C bis zur Verdopplung.\n4) Einsatzbereit; Rest zurück in den Kühlschrank bei 4°C.\nANWENDUNG: Brote 15-20% auf das Mehl; große Hefegebäcke 25-30%."
+  },
+  {
+    "name": "Lievito Madre di Segale",
+    "name_de": "Roggen-Sauerteig",
+    "real_name": "Pasta madre di segale",
+    "real_name_de": "Roggensauerteig",
+    "flour_type": "Farina di segale integrale",
+    "flour_type_de": "Roggenvollkornmehl",
+    "preferment_type": "lm",
+    "method_type": "lm",
+    "menu_category": "basi",
+    "image_url": "/recipes/r_bruno.jpg",
+    "notes": "Sauerteig di segale, più acido e attivo. Idratazione 100% (liquido). Ideale per pani di segale e misti.",
+    "notes_de": "Roggensauerteig, säuerlicher und aktiver. Hydration 100% (flüssig). Ideal für Roggen- und Mischbrote.",
+    "procedure": "RINFRESCO (rapporto 1:1:1)\n1) 50 g madre di segale + 100 g farina di segale + 100 g acqua a 30°C.\n2) Mescola bene fino a pastella liscia.\n3) Fermentazione 12-16 h a 26-28°C.\n4) Pronto quando è gonfio, bolloso e profuma di acido lattico.\nUSO: 20-30% sul peso della farina nei pani di segale.",
+    "procedure_de": "AUFFRISCHUNG (Verhältnis 1:1:1)\n1) 50 g Roggenanstellgut + 100 g Roggenmehl + 100 g Wasser bei 30°C.\n2) Zu einem glatten Brei verrühren.\n3) 12-16 h bei 26-28°C reifen lassen.\n4) Reif, wenn aufgegangen, blasig und milchsauer im Duft.\nANWENDUNG: 20-30% auf das Mehl bei Roggenbroten."
+  },
+  {
+    "name": "Poolish",
+    "name_de": "Poolish",
+    "real_name": "Prefermento liquido",
+    "real_name_de": "Flüssiger Vorteig",
+    "flour_type": "Farina forte W300",
+    "flour_type_de": "Starkes Mehl W300",
+    "preferment_type": "pre",
+    "method_type": "indiretto",
+    "menu_category": "basi",
+    "image_url": "/recipes/r_baguette.jpg",
+    "notes": "Prefermento liquido (idratazione 100%). Dona alveolatura, digeribilità e aroma. Lievito in base alle ore.",
+    "notes_de": "Flüssiger Vorteig (100% Hydration). Gibt Porung, Bekömmlichkeit und Aroma. Hefe je nach Reifezeit.",
+    "procedure": "RICETTA (parti uguali farina/acqua)\n1) 500 g farina + 500 g acqua a 20°C + lievito di birra fresco:\n   • 1,5 g per 12-16 h a 18°C  • 3 g per 8 h  • 7 g per 3-4 h.\n2) Mescola fino a pastella, copri.\n3) Pronto quando è cupolato e sta per cedere al centro.\nUSO: 30-40% di poolish sul peso totale della farina.",
+    "procedure_de": "REZEPT (Mehl/Wasser gleiche Teile)\n1) 500 g Mehl + 500 g Wasser bei 20°C + frische Hefe:\n   • 1,5 g für 12-16 h bei 18°C  • 3 g für 8 h  • 7 g für 3-4 h.\n2) Zu einem Teigbrei verrühren, abdecken.\n3) Reif, wenn gewölbt und in der Mitte gerade einsinkend.\nANWENDUNG: 30-40% Poolish auf das Gesamtmehl."
+  },
+  {
+    "name": "Kochstück",
+    "name_de": "Kochstück",
+    "real_name": "Farinata cotta (con fiocchi d'avena)",
+    "real_name_de": "Kochstück mit Haferflocken",
+    "flour_type": "Fiocchi d'avena (Haferflocken)",
+    "flour_type_de": "Haferflocken",
+    "preferment_type": "diretto",
+    "method_type": "diretto",
+    "menu_category": "basi",
+    "image_url": "/recipes/r_sinfonia.jpg",
+    "notes": "Impasto cotto (tipo tangzhong) con fiocchi d'avena: trattiene acqua, dona morbidezza e lunga conservazione.",
+    "notes_de": "Gekochtes Stück (wie Tangzhong) mit Haferflocken: bindet Wasser, macht weich und länger haltbar.",
+    "procedure": "RICETTA (rapporto 1:4 avena/acqua)\n1) 100 g fiocchi d'avena (Haferflocken) + 400 g acqua + 10 g sale.\n2) Porta a bollore e cuoci 3-4' mescolando fino a crema densa.\n3) Copri a contatto e raffredda a 4°C (meglio la sera prima).\n4) USO: aggiungi il Kochstück all'impasto principale (10-20% sul peso farina),\n   riducendo un po' l'acqua della ricetta.",
+    "procedure_de": "REZEPT (Verhältnis 1:4 Hafer/Wasser)\n1) 100 g Haferflocken + 400 g Wasser + 10 g Salz.\n2) Aufkochen und 3-4' unter Rühren zu einer dicken Creme kochen.\n3) Mit Folie bedecken und auf 4°C abkühlen (am besten über Nacht).\n4) VERWENDUNG: Kochstück in den Hauptteig geben (10-20% auf das Mehl),\n   dabei die Wassermenge etwas reduzieren."
+  },
+  {
     "id": "b3db8e20-8b7b-423a-9f0f-1c5f51fcb7b8",
     "collection_name": "mikilab",
     "costing": null,
     "created_at": "2026-08-19T07:47:43.982804+00:00",
     "updated_at": "2026-08-19T07:47:43.999169+00:00",
     "name": "Anima Integrale",
-    "flour_type": "Vollkorn 900 + 630 100 (Dinkel)",
+    "flour_type": "Farina Integrale 900 + 630 100 (Dinkel)",
     "hydration_percent": 88,
     "flour_grams": 1000,
     "water_grams": 880,
@@ -19,7 +117,7 @@
     "image_url": "/recipes/r_anima.jpg",
     "notes": "Impasto integrale con 20% di poolish. Alveolatura fitta e mollica umida.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 22 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 22 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
     "extra_ingredients": [
       {
         "name": "Psyllium (Psy)",
@@ -42,7 +140,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -68,7 +166,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) Stockgare bei Raumtemperatur (~24-26°C) mit Dehnen/Falten alle 30-40'; Kühlung (4°C) nur zur Zeitsteuerung.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 230 °C für 22 Minuten, mit Schwaden in den ersten 10 Minuten.\n\n👉 Brötchen mit DEMSELBEN Teig: nach der Ruhezeit in Stücke von ca. 90 g abstechen, straff rundwirken, gären lassen, einschneiden und bei 230 °C ca. 18 Minuten mit Schwaden backen.",
     "flour_type_de": "Vollkorn 900 + 630 100 (Dinkel)",
     "real_name": "Pane Integrale",
-    "real_name_de": "Vollkornbrot"
+    "real_name_de": "Vollkornbrot",
+    "menu_category": "pane"
   },
   {
     "id": "e5e6fa92-d9db-4ed6-af88-089340ab3a40",
@@ -110,7 +209,8 @@
     "name_de": "Baguette mit Poolish",
     "notes_de": "Baguette mit Poolish: flüssiger Vorteig für Aroma und Porung. Hydration ca. 70 %. Mit Schwaden backen für eine dünne, knusprige Kruste.",
     "procedure_de": "Das klassische französische Baguette mit POOLISH (flüssiger Vorteig).\n1) POOLISH (Vorabend): 500 g Mehl + 500 g Wasser bei 15 °C + 2 g Hefe. Verrühren, abdecken und 12–16 Std. bei Raumtemperatur stehen lassen, bis der Poolish voller Blasen ist.\n2) TEIG: Poolish mit den restlichen 500 g Mehl, ca. 200 g Wasser, 6 g Hefe und zuletzt 20 g Salz vereinen. 10 Minuten kneten, bis der Teig ausgeknutet ist.\n3) STOCKGARE: ca. 2 Std. mit 1–2 Faltvorgängen.\n4) ABSTECHEN und leichtes VORWIRKEN; 20 Minuten Teigruhe.\n5) FORMEN zum langen Strang (Baguette); Stückgare ca. 1 Std. auf dem Bäckertuch (Couche).\n6) Schräge EINSCHNITTE (Grignes); BACKEN bei 250 °C mit Schwaden in den ersten 10 Minuten, dann 230 °C, ca. 22 Minuten. Knusprige Kruste und unregelmäßige Porung.",
-    "flour_type_de": "Mehl T65 (W270) — mit Poolish"
+    "flour_type_de": "Mehl T65 (W270) — mit Poolish",
+    "menu_category": "pane"
   },
   {
     "id": "7d432668-ec89-4dd8-b18a-de44cb98e843",
@@ -118,8 +218,8 @@
     "costing": null,
     "created_at": "2026-08-19T07:47:43.985100+00:00",
     "updated_at": "2026-08-19T07:47:44.004028+00:00",
-    "name": "Bretzel del Maestro",
-    "flour_type": "630 1,5kg + Vollkorn 1,3kg",
+    "name": "Brezel",
+    "flour_type": "630 1,5kg + Farina Integrale 1,3kg",
     "hydration_percent": 50,
     "flour_grams": 1000,
     "water_grams": 500,
@@ -132,7 +232,7 @@
     "image_url": "/recipes/r_bretzel.jpg",
     "notes": "Con Vorteig (H2o Vk 850 g). Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Glutine (Di.Glutin)",
@@ -163,7 +263,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -180,12 +280,13 @@
       }
     ],
     "origin": "de",
-    "name_de": "Bretzel des Meisters",
+    "name_de": "Brezel",
     "notes_de": "Mit Vorteig (Wasser Vk 850 g). Vor dem Backen in Natronlauge (Lauge) tauchen, grobe Salzkörner auf der Oberfläche.",
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) KÜHLSCHRANK direkt nach dem Kneten: über Nacht im Kühlschrank (4–6 °C) reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 220 °C für 15 Minuten, mit Schwaden in den ersten 10 Minuten.",
     "flour_type_de": "630 1,5 kg + Vollkorn 1,3 kg",
-    "real_name": "Bretzel",
-    "real_name_de": "Laugenbrezel"
+    "real_name": "Bretzel classico",
+    "real_name_de": "Klassische Brezel",
+    "menu_category": "pane"
   },
   {
     "id": "676c3f25-b8ba-447c-96e7-d9e18219ab2e",
@@ -194,7 +295,7 @@
     "created_at": "2026-08-19T07:47:43.983641+00:00",
     "updated_at": "2026-08-19T07:47:44.014487+00:00",
     "name": "Bruno d'Autunno",
-    "flour_type": "630 + Vollkorn + segale integrale (Rg.Vk)",
+    "flour_type": "630 + Farina Integrale + segale integrale (Rg.Vk)",
     "hydration_percent": 42,
     "flour_grams": 1000,
     "water_grams": 420,
@@ -207,7 +308,7 @@
     "image_url": "/recipes/r_bruno.jpg",
     "notes": "Sauerteig 10%. Pane scuro e saporito, con semi ammollati (Quellstück).",
     "method_type": "indiretto",
-    "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca il Sauerteig (lievito madre di segale) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca il Sauerteig (lievito madre di segale) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Segale integrale (Rg.Vk)",
@@ -234,7 +335,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -264,7 +365,8 @@
     "procedure_de": "🌙 WENN SAATEN VERWENDET WERDEN, QUELLSTÜCK VORBEREITEN: Am Vorabend die Saaten abwiegen und mit gleichem Gewicht lauwarmem Wasser (1:1) bedecken. Abdecken und über Nacht quellen lassen. Am nächsten Tag abgießen und zum Teig geben: So entziehen die Saaten dem Teig kein Wasser und die Krume bleibt lange weich und feucht.\n\n1) Vorteig: Sauerteig (Roggensauerteig) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) GÄRKAMMER BEI 16 °C direkt nach dem Kneten: Ruhezeit MAXIMAL 6 Stunden.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 230 °C für 45 Minuten, mit Schwaden in den ersten 10 Minuten.",
     "flour_type_de": "630 + Vollkorn + Roggenvollkorn (Rg.Vk)",
     "real_name": "Pane di Segale",
-    "real_name_de": "Roggenbrot"
+    "real_name_de": "Roggenbrot",
+    "menu_category": "pane"
   },
   {
     "id": "805b813c-4fdf-47f7-9fd6-9cfe3e2488f6",
@@ -286,14 +388,14 @@
     "image_url": "/recipes/r_carezza.jpg",
     "notes": "Con Vorteig (Mehl 10% + Wasser 5% + Hefe 10%). Impasto arricchito e soffice, dolce.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Psyllium (Psy)",
         "percent": 1.1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -343,7 +445,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) KÜHLSCHRANK direkt nach dem Kneten: über Nacht im Kühlschrank (4–6 °C) reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 180 °C für 30 Minuten, mit Schwaden in den ersten 10 Minuten.",
     "flour_type_de": "Mehl 630 + Vorteig",
     "real_name": "Pane al Latte",
-    "real_name_de": "Milchbrot"
+    "real_name_de": "Milchbrot",
+    "menu_category": "pane"
   },
   {
     "id": "dccccb01-5bae-4dd7-95e0-c79df42e479e",
@@ -365,7 +468,7 @@
     "image_url": "/recipes/r_cornetto.jpg",
     "notes": "Impasto con acqua + uova (60%). Sfogliatura con burro/margarina (2 pieghe da 20%). Riposo in cella 16°C tra le pieghe.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 190°C per 20 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 190°C per 20 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Margarina (Marg)",
@@ -384,7 +487,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -408,7 +511,8 @@
     "name_de": "Geblättertes Hörnchen",
     "notes_de": "Teig mit Wasser + Eiern (60 %). Tourierung mit Butter/Margarine (2 Touren à 20 %). Ruhezeit in der Gärkammer bei 16 °C zwischen den Touren.",
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) KÜHLSCHRANK direkt nach dem Kneten: über Nacht im Kühlschrank (4–6 °C) reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 190 °C für 20 Minuten, mit Schwaden in den ersten 10 Minuten.",
-    "flour_type_de": "Mehl 630 + Eier"
+    "flour_type_de": "Mehl 630 + Eier",
+    "menu_category": "pane"
   },
   {
     "id": "c167ca08-705f-4a40-bf05-49cccc23477b",
@@ -430,7 +534,7 @@
     "image_url": "/recipes/r_cuore.jpg",
     "notes": "Lievito madre 20%. Stile italiano con semola: crosta croccante e alveoli aperti.",
     "method_type": "diretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 40 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 40 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
     "extra_ingredients": [
       {
         "name": "Malto (Malz)",
@@ -459,7 +563,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Leinsamen, Flohsamenschalen, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett einarbeiten, sobald der Teig eine glatte Kugel bildet; als letztes Olivenöl, Apfelessig und Salz zugeben.\n5) SOFORT nach dem Kneten in die GÄRZELLE bei 16 °C: Ruhezeit MAXIMAL 6 Stunden.\n6) Aufteilen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 240 °C für 40 Minuten, mit Dampf in den ersten 10 Minuten.\n\n👉 Brötchen mit DEMSELBEN Teig: nach der Ruhezeit in Stücke à ca. 90 g aufteilen, straff zu Kugeln schleifen, gären lassen, die Oberfläche einschneiden und bei 230 °C ca. 18 Minuten mit Dampf backen.",
     "flour_type_de": "Hartweizengries 800 + W550 200",
     "real_name": "Pane Bianco Italiano",
-    "real_name_de": "Italienisches Weißbrot"
+    "real_name_de": "Italienisches Weißbrot",
+    "menu_category": "pane"
   },
   {
     "id": "42064ae2-8b16-4e54-920e-99ba64a57e9c",
@@ -481,7 +586,7 @@
     "image_url": "/recipes/r_cipolla.jpg",
     "notes": "Lievito madre. Cipolle stufate dorate aggiunte durante le pieghe.",
     "method_type": "diretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 225°C per 40 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 225°C per 40 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Cipolle stufate dolci",
@@ -500,7 +605,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       }
     ],
@@ -510,7 +615,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Leinsamen, Flohsamenschalen, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett einarbeiten, sobald der Teig eine glatte Kugel bildet; als letztes Olivenöl, Apfelessig und Salz zugeben.\n5) SOFORT nach dem Kneten in die GÄRZELLE bei 16 °C: Ruhezeit MAXIMAL 6 Stunden.\n6) Aufteilen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 225 °C für 40 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "Weizenmehl Type 1",
     "real_name": "Pane alle Cipolle Caramellate",
-    "real_name_de": "Karamellisiertes Zwiebelbrot"
+    "real_name_de": "Karamellisiertes Zwiebelbrot",
+    "menu_category": "pane"
   },
   {
     "id": "22075a26-fc13-4876-910d-119b59656630",
@@ -532,7 +638,7 @@
     "image_url": "/recipes/r_filo.jpg",
     "notes": "Lievito madre 20%. Crosta sottile e cantante, alveoli aperti. Vapore abbondante.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 22 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 240°C per 22 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Malto (Malz)",
@@ -551,7 +657,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -565,7 +671,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Leinsamen, Flohsamenschalen, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett einarbeiten, sobald der Teig eine glatte Kugel bildet; als letztes Olivenöl, Apfelessig und Salz zugeben.\n5) SOFORT nach dem Kneten in die GÄRZELLE bei 16 °C: Ruhezeit MAXIMAL 6 Stunden.\n6) Aufteilen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 240 °C für 22 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "Weizenmehl 630 / W550",
     "real_name": "Pane Francese (Baguette)",
-    "real_name_de": "Französisches Brot (Baguette)"
+    "real_name_de": "Französisches Brot (Baguette)",
+    "menu_category": "pane"
   },
   {
     "id": "dc029210-cb00-4346-b8c0-356afb952c8f",
@@ -607,7 +714,8 @@
     "name_de": "Focaccia Barese",
     "notes_de": "Die Focaccia aus Bari: Die Kartoffel macht sie lange saftig und weich. Kirschtomaten, baresische Oliven und Oregano sind ihr Markenzeichen.",
     "procedure_de": "1) Am Vorabend einen Poolish ansetzen (gleiche Teile Mehl und Wasser + wenig Hefe).\n2) Hartweizengries, Tipo 0, zerdrückte gekochte Kartoffel, Poolish und Wasser verkneten; Salz am Ende einarbeiten.\n3) Stockgare ca. 2 Stunden.\n4) Ein rundes Backblech großzügig mit Öl einfetten, den Teig mit geölten Händen ausbreiten und 1,5 Stunden gären lassen.\n5) Mit den Fingern Vertiefungen eindrücken, mit zerdrückten Kirschtomaten, baresischen Oliven, Oregano, grobem Salz und einem Schuss Öl belegen.\n6) Bei 230 °C 25 Minuten backen: knusprige Ränder und weiches Inneres.",
-    "flour_type_de": "Hartweizengries + Tipo 0 + gekochte Kartoffel"
+    "flour_type_de": "Hartweizengries + Tipo 0 + gekochte Kartoffel",
+    "menu_category": "panini"
   },
   {
     "id": "3d8337f4-f173-409b-a76a-a54f38c8c9e1",
@@ -639,7 +747,8 @@
     "name_de": "Apulische Friselle",
     "notes_de": "Die Frisella wird zweimal gebacken (Zwieback), weshalb sie sich monatelang hält. Sie wird erst beim Servieren angefeuchtet und belegt: ein geniales Arme-Leute-Gericht aus dem Salento.",
     "procedure_de": "1) Hartweizengries, Wasser, Lievito Madre und Salz zu einem eher festen Teig verkneten.\n2) Stockgare ca. 3 Stunden.\n3) Teigstränge formen und zu Ringen (Kringeln) schließen.\n4) Ca. 1 Stunde gären lassen, dann erste Backstufe bei 200 °C für ca. 25 Minuten.\n5) Aus dem Ofen nehmen und mit einem Faden oder Messer horizontal halbieren.\n6) Beide Hälften (Schnittfläche nach oben) bei 160 °C für ca. 20 Minuten zurück in den Ofen geben: Sie sollen trocknen und knusprig werden.\n7) Zum Servieren: kurz unter Wasser tauchen ('sponzare'), dann mit Tomate, Oregano, Salz und Öl belegen.",
-    "flour_type_de": "Hartweizengrieß (oder Gerste)"
+    "flour_type_de": "Hartweizengrieß (oder Gerste)",
+    "menu_category": "panini"
   },
   {
     "id": "9e5ffbfb-00b9-444e-9268-d5c4c09fbef3",
@@ -683,7 +792,8 @@
     "procedure_de": "Netzbrot / Genetztes (Württemberg-Schwaben): sehr feuchte Krume und hohe Hydratation. Vorteige: flüssiger POOLISH (150 g Mehl + 150 g Wasser + 1,5 g Hefe, 12–16 Std. bei Raumtemperatur) + reifer flüssiger SAUERTEIG (ca. 250 g).\n1) AUTOLYSE: Poolish, Sauerteig, Mehl und den Großteil des Wassers vermischen, 20–30 Minuten ruhen lassen.\n2) TEIG: Salz zugeben; kneten bis der Teig Glutenstruktur entwickelt, weicher und klebriger Teig (letztes Wasser per Bassinage einarbeiten).\n3) STOCKGARE: ca. 3 Stunden mit 2–3 Faltvorgängen in der Schüssel.\n4) KEIN Formen auf der Arbeitsfläche: Aufgrund der hohen Feuchtigkeit wird der Teig direkt aus der Schüssel (Schapf) auf das Backblech oder den Backstein gegossen.\n5) BACKEN: 240 °C mit Dampf, dann 210–220 °C, ca. 40 Minuten. Rustikale Kruste, feuchte und porige Krume.",
     "flour_type_de": "Weizenmehl Type 550/630 — mit Poolish und flüssigem Sauerteig",
     "real_name": "Pane Bagnato Svevo (Genetztes)",
-    "real_name_de": "Genetztes Brot"
+    "real_name_de": "Genetztes Brot",
+    "menu_category": "pane"
   },
   {
     "id": "cc8f48ef-c606-41e0-b34b-bbdfcd0b322b",
@@ -692,7 +802,7 @@
     "created_at": "2026-08-19T07:47:43.983948+00:00",
     "updated_at": "2026-08-19T07:47:44.002435+00:00",
     "name": "Gran Riserva",
-    "flour_type": "630 30% + Vollkorn 60% + segale (Rg.Vk)",
+    "flour_type": "630 30% + Farina Integrale 60% + segale (Rg.Vk)",
     "hydration_percent": 82,
     "flour_grams": 1000,
     "water_grams": 820,
@@ -705,7 +815,7 @@
     "image_url": "/recipes/r_granriserva.jpg",
     "notes": "Sauerteig 10%. Pane rustico ad alta idratazione, mollica aperta.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il Sauerteig (lievito madre di segale) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 42 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il Sauerteig (lievito madre di segale) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 42 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Segale integrale (Rg.Vk)",
@@ -728,7 +838,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -758,31 +868,8 @@
     "procedure_de": "1) Vorteig: Sauerteig (Roggensauerteig) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett einarbeiten, wenn der Teig zusammengekommen ist; zuletzt Olivenöl, Apfelessig und Salz.\n5) KÜHLZELLE BEI 16°C direkt nach dem Kneten: Ruhezeit MAXIMAL 6 Stunden.\n6) Teig teilen, formen und zur Stückgare stellen, bis die Gare abgeschlossen ist.\n7) Backen: 230°C für 42 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "630 30% + Vollkorn 60% + Roggen (Rg.Vk)",
     "real_name": "Pane di Grano Antico",
-    "real_name_de": "Urgetreidebrot"
-  },
-  {
-    "id": "acfd4e86-adc9-4da0-badc-582aeb6b1260",
-    "collection_name": "mikilab",
-    "costing": null,
-    "created_at": "2026-08-19T07:47:43.986457+00:00",
-    "updated_at": "2026-08-19T07:47:44.005926+00:00",
-    "name": "Miglioratore Naturale al Malto",
-    "flour_type": "Malto d’orzo diastasico puro",
-    "preferment_type": "none",
-    "image_url": "/recipes/r_migliora.jpg",
-    "notes": "Il mio miglioratore 100% naturale a base di MALTO PURO (malto d’orzo diastasico). È l’ingrediente più FORTE: nutre i lieviti, dà colore e croccantezza alla crosta e migliora l’alveolatura. Dose consigliata ~0,5% sul peso della farina (max 1%): se esageri l’impasto diventa colloso. Aggiungilo alle farine all’inizio dell’impasto.",
-    "procedure": "Uso: pesa il malto diastasico puro allo 0,5% sul peso della farina della ricetta e aggiungilo insieme alle farine all’inizio dell’impasto. Conserva il malto in barattolo chiuso, al fresco e all’asciutto. Nota: è puro, quindi molto attivo — parti sempre da dosi basse.",
-    "method_type": "diretto",
-    "extra_ingredients": [
-      {
-        "name": "Malto diastasico puro (Diastasemalz)",
-        "percent": 0.5
-      }
-    ],
-    "name_de": "Natürliches Backmittel — Diastasemalz",
-    "notes_de": "Mein 100% natürliches Backmittel aus REINEM MALZ (Gersten-Diastasemalz). Es ist die STÄRKSTE Zutat: nährt die Hefe, gibt Farbe und Krustenknusprigkeit und verbessert die Porung. Empfohlene Dosierung ca. 0,5% bezogen auf das Mehlgewicht (max. 1%): zu viel macht den Teig klebrig. Zu Beginn des Knetens zum Mehl geben.",
-    "procedure_de": "Verwendung: Reines Diastasemalz mit 0,5% bezogen auf das Mehlgewicht des Rezepts abwiegen und zu Beginn des Knetens zusammen mit dem Mehl zugeben. Malz verschlossen, kühl und trocken lagern. Hinweis: Es ist rein und daher sehr aktiv — immer mit niedriger Dosis starten.",
-    "flour_type_de": "Reines Gersten-Diastasemalz"
+    "real_name_de": "Urgetreidebrot",
+    "menu_category": "pane"
   },
   {
     "id": "eb689d6e-1bb6-486c-b1f0-4a1bab7532eb",
@@ -791,7 +878,7 @@
     "created_at": "2026-08-19T07:47:43.984226+00:00",
     "updated_at": "2026-08-19T07:47:44.002924+00:00",
     "name": "Nuvola in Cassetta",
-    "flour_type": "630 + Vollkorn",
+    "flour_type": "630 + Farina Integrale",
     "hydration_percent": 87,
     "flour_grams": 1000,
     "water_grams": 870,
@@ -804,7 +891,7 @@
     "image_url": "/recipes/r_nuvola.jpg",
     "notes": "Poolish 20%. Pane morbido da toast, mollica soffice e regolare. Cuoci nello stampo con coperchio.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 200°C per 30 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 200°C per 30 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Psyllium (Psy)",
@@ -831,7 +918,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -869,7 +956,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett einarbeiten, wenn der Teig zusammengekommen ist; zuletzt Olivenöl, Apfelessig und Salz.\n5) Stockgare bei Raumtemperatur (~24-26°C) mit Dehnen/Falten alle 30-40'; Kühlung (4°C) nur zur Zeitsteuerung.\n6) Teig teilen, formen und zur Stückgare stellen, bis die Gare abgeschlossen ist.\n7) Backen: 200°C für 30 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "630 + Vollkorn",
     "real_name": "Pane in Cassetta (Toast)",
-    "real_name_de": "Toastbrot"
+    "real_name_de": "Toastbrot",
+    "menu_category": "pane"
   },
   {
     "id": "7221f3ca-6f32-4ab7-970e-d9ba65a298df",
@@ -878,7 +966,7 @@
     "created_at": "2026-08-19T07:47:43.983282+00:00",
     "updated_at": "2026-08-19T07:47:43.999586+00:00",
     "name": "Oro di Terra",
-    "flour_type": "630 + Vollkorn (50/50) + patate lessate",
+    "flour_type": "630 + Farina Integrale (50/50) + patate lessate",
     "hydration_percent": 52,
     "flour_grams": 1000,
     "water_grams": 520,
@@ -891,7 +979,7 @@
     "image_url": "/recipes/r_oro.jpg",
     "notes": "Lievito madre 10%. Patate lavate e lessate con la buccia, usate il giorno dopo. Mollica soffice, lunga conservazione.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) CELLA A 16°C subito dopo l'impasto: riposo MASSIMO 6 ore.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 45 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Patate lessate (Kart.Fr)",
@@ -910,7 +998,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -932,7 +1020,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett einarbeiten, wenn der Teig zusammengekommen ist; zuletzt Olivenöl, Apfelessig und Salz.\n5) KÜHLZELLE BEI 16°C direkt nach dem Kneten: Ruhezeit MAXIMAL 6 Stunden.\n6) Teig teilen, formen und zur Stückgare stellen, bis die Gare abgeschlossen ist.\n7) Backen: 230°C für 45 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "630 + Vollkorn (50/50) + gekochte Kartoffeln",
     "real_name": "Pane alle Patate",
-    "real_name_de": "Kartoffelbrot"
+    "real_name_de": "Kartoffelbrot",
+    "menu_category": "pane"
   },
   {
     "id": "6c3d0d73-707b-4097-8f27-d460f5c77a16",
@@ -964,7 +1053,8 @@
     "name_de": "Pane di Altamura DOP",
     "notes_de": "Das große Brot der Murgia, 100% zweifach gemahlener Hartweizengrieß. Knusprige Kruste und lange Frischhaltung. Der Stolz von Altamura.",
     "procedure_de": "1) Lievito Madre auffrischen und reif verwenden.\n2) Hartweizengrieß, Wasser und Lievito Madre verkneten; Salz am Ende des Knetens (15 Min.) zugeben.\n3) Stockgare 4 Stunden bei ca. 24°C, nach 1 Stunde einmal falten.\n4) Den typischen hohen Laib ('accavallata') formen und 1,5–2 Stunden garen lassen.\n5) Bei 240°C mit Dampf in den ersten 10 Minuten einschießen, dann auf 210°C reduzieren.\n6) Gesamtbackzeit ca. 55 Minuten: Kruste über 3 mm dick, gelbe und aromatische Krume.",
-    "flour_type_de": "Zweifach gemahlener Hartweizengrieß (Apulien)"
+    "flour_type_de": "Zweifach gemahlener Hartweizengrieß (Apulien)",
+    "menu_category": "pane"
   },
   {
     "id": "9bd50f04-7cf6-4ce3-ae14-e60f4e3c701e",
@@ -996,7 +1086,8 @@
     "name_de": "Pane di Matera IGP",
     "notes_de": "Das Brot meiner Heimatstadt Matera. Hörnchenform, gelbe Krume und dunkle Kruste: entstanden aus lukanischem Hartweizen und Lievito Madre.",
     "procedure_de": "1) Aktiven Lievito Madre und lukanischen Hartweizengrieß verwenden.\n2) Lange kneten (15–16 Min.) für eine gute Glutenentwicklung; Salz am Ende des Knetens zugeben.\n3) Stockgare 4 Stunden mit 2 Faltvorgängen.\n4) Die typische 'Hörnchenform' (oder hohe Form mit Kamm) formen und ca. 2 Stunden garen lassen.\n5) Bei 250°C mit Dampf einschießen, dann auf 210°C reduzieren.\n6) Ca. 1 Stunde backen: gelbe, porige Krume mit intensivem Weizenduft.",
-    "flour_type_de": "Lukanischer Hartweizengrieß"
+    "flour_type_de": "Lukanischer Hartweizengrieß",
+    "menu_category": "pane"
   },
   {
     "id": "2c86b3e8-8f23-4e05-af55-98ddf761218e",
@@ -1051,7 +1142,8 @@
     "procedure_de": "LIEVITO MADRE PFLEGE: Bad 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + Lievito Madre ~4 Min., dann Mehl ~4 Min., zuletzt Eigelb und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Zitronat/Orangeat + Rosinen) 450 g hinzufügen:\nGluten mit Mehl wieder aufbauen, dann Zucker/Eigelb in mehreren Schritten einarbeiten, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach einarbeiten; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken (Pirlatura), Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Backform.\nBacken 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umkehren und 12 Std. kopfüber ruhen lassen.",
     "flour_type_de": "Hochkraftmehl W380 + Lievito Madre",
     "real_name": "Panettone Artigianale",
-    "real_name_de": "Handwerklicher Panettone"
+    "real_name_de": "Handwerklicher Panettone",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1150,7 +1242,8 @@
     "name_de": "Panettone Mikilab — Sauerkirsche und Schokolade",
     "notes_de": "Sauerkirschen und Zartbitterschokolade: süß mit einer leicht sauren Note.\n\nGleiches Grundrezept wie Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre-Basis. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit einarbeiten. Wenn sie PASTEN (Pistazie, Haselnuss) oder FRÜCHTE IN SIRUP/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um die gleiche Konsistenz beizubehalten (die Hydration darf nicht steigen). Fetthaltige Pasten schwächen das Glutennetz: vor dem Einarbeiten gut auskneten.\n(Für diese Geschmacksrichtung ist das Wasser bereits um ~28 g gegenüber dem Grundrezept reduziert, um die Pasten/feuchten Früchte zu kompensieren.)\n\n🍬 Zucker reduziert (34 % statt 41 %), weil diese Einlage bereits sehr süß ist: so bleibt der Panettone ausgewogen.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "LIEVITO MADRE PFLEGE: Bad 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + Lievito Madre ~4 Min., dann Mehl ~4 Min., zuletzt Eigelb und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Zitronat/Orangeat + Rosinen) 450 g hinzufügen:\nGluten mit Mehl wieder aufbauen, dann Zucker/Eigelb in mehreren Schritten einarbeiten, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach einarbeiten; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken (Pirlatura), Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Backform.\nBacken 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umkehren und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre"
+    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1249,7 +1342,8 @@
     "name_de": "Panettone Mikilab — Orange und Zartbitterschokolade",
     "notes_de": "Kandierte Orange und Zartbitterschokolade, intensives Aroma.\n\nGleiches Grundrezept wie Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre-Basis. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit einarbeiten. Wenn sie PASTEN (Pistazie, Haselnuss) oder FRÜCHTE IN SIRUP/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um die gleiche Konsistenz beizubehalten (die Hydration darf nicht steigen). Fetthaltige Pasten schwächen das Glutennetz: vor dem Einarbeiten gut auskneten.\n\n🍬 Zucker reduziert (34 % statt 41 %), weil diese Einlage bereits sehr süß ist: so bleibt der Panettone ausgewogen.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "LIEVITO MADRE PFLEGE: Bad 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + Lievito Madre ~4 Min., dann Mehl ~4 Min., zuletzt Eigelb und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Zitronat/Orangeat + Rosinen) 450 g hinzufügen:\nGluten mit Mehl wieder aufbauen, dann Zucker/Eigelb in mehreren Schritten einarbeiten, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach einarbeiten; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken (Pirlatura), Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Backform.\nBacken 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umkehren und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre"
+    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1356,7 +1450,8 @@
     "name_de": "Panettone Mikilab — Kaffee und Haselnuss",
     "notes_de": "Kaffee und Haselnuss: aromatisch und verführerisch, für alle, die kräftige Aromen lieben.\n\nGleiches Grundrezept wie Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre-Basis. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit einarbeiten. Wenn sie PASTEN (Pistazie, Haselnuss) oder FRÜCHTE IN SIRUP/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um die gleiche Konsistenz beizubehalten (die Hydration darf nicht steigen). Fetthaltige Pasten schwächen das Glutennetz: vor dem Einarbeiten gut auskneten.\n(Für diese Geschmacksrichtung ist das Wasser bereits um ~13 g gegenüber dem Grundrezept reduziert, um die Pasten/feuchten Früchte zu kompensieren.)\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "LIEVITO MADRE PFLEGE: Bad 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + Lievito Madre ~4 Min., dann Mehl ~4 Min., zuletzt Eigelb und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Zitronat/Orangeat + Rosinen) 450 g hinzufügen:\nGluten mit Mehl wieder aufbauen, dann Zucker/Eigelb in mehreren Schritten einarbeiten, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach einarbeiten; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken (Pirlatura), Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Backform.\nBacken 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umkehren und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre"
+    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1455,7 +1550,8 @@
     "name_de": "Panettone Mikilab — Schokolade und Walnüsse",
     "notes_de": "Verführerisch: Zartbitterschokoladentropfen und Walnüsse. Einlagen am Ende des Knetens vorsichtig einarbeiten.\n\nGleiches Grundrezept wie Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre-Basis. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit einarbeiten. Wenn sie PASTEN (Pistazie, Haselnuss) oder FRÜCHTE IN SIRUP/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um die gleiche Konsistenz beizubehalten (die Hydration darf nicht steigen). Fetthaltige Pasten schwächen das Glutennetz: vor dem Einarbeiten gut auskneten.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "LIEVITO MADRE PFLEGE: Bad 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + Lievito Madre ~4 Min., dann Mehl ~4 Min., zuletzt Eigelb und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Zitronat/Orangeat + Rosinen) 450 g hinzufügen:\nGluten mit Mehl wieder aufbauen, dann Zucker/Eigelb in mehreren Schritten einarbeiten, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach einarbeiten; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken (Pirlatura), Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Backform.\nBacken 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umkehren und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre"
+    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1554,7 +1650,8 @@
     "name_de": "Panettone Mikilab — Feigen und Mandeln",
     "notes_de": "Mediterran: getrocknete Feigen und geröstete Mandeln.\n\nGleiches Grundrezept wie Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre-Basis. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit einarbeiten. Wenn sie PASTEN (Pistazie, Haselnuss) oder FRÜCHTE IN SIRUP/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um die gleiche Konsistenz beizubehalten (die Hydration darf nicht steigen). Fetthaltige Pasten schwächen das Glutennetz: vor dem Einarbeiten gut auskneten.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "LIEVITO MADRE PFLEGE: Bad 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + Lievito Madre ~4 Min., dann Mehl ~4 Min., zuletzt Eigelb und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Zitronat/Orangeat + Rosinen) 450 g hinzufügen:\nGluten mit Mehl wieder aufbauen, dann Zucker/Eigelb in mehreren Schritten einarbeiten, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach einarbeiten; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken (Pirlatura), Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Backform.\nBacken 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umkehren und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre"
+    "flour_type_de": "Hochkraftmehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1661,7 +1758,8 @@
     "name_de": "Panettone Mikilab — Waldfrüchte",
     "notes_de": "Getrocknete Waldfrüchte und weiße Schokolade: frisch und farbenfroh.\n\nSelbes Grundrezept wie der Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für die Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit zugeben. Wenn sie PASTEN (Pistazien, Haselnuss) oder EINGEMACHTE/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um dieselbe Konsistenz beizubehalten (die Hydration darf nicht steigen). Fettreiche Pasten schwächen das Glutengerüst: Vor dem Einarbeiten gut auskneten.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "PFLEGE DES LIEVITO MADRE: Bad für 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + LM ~4 Min., dann Mehl ~4 Min., zuletzt Eigelbe und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Früchte) 450 g zugeben:\nGlutennetz mit Mehl wieder aufbauen, dann Zucker/Eigelbe in mehreren Portionen, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken, Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Form.\nBacken bei 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umdrehen und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Starkes Mehl W380 + Lievito Madre"
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1760,7 +1858,8 @@
     "name_de": "Panettone Mikilab — Marron Glacé (Kastanien)",
     "notes_de": "Marron Glacé und weiße Schokolade: elegant und weihnachtlich.\n\nSelbes Grundrezept wie der Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für die Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit zugeben. Wenn sie PASTEN (Pistazien, Haselnuss) oder EINGEMACHTE/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um dieselbe Konsistenz beizubehalten (die Hydration darf nicht steigen). Fettreiche Pasten schwächen das Glutengerüst: Vor dem Einarbeiten gut auskneten.\n(Für diesen Geschmack wurde das Wasser bereits um ~15 g gegenüber dem Basis-Panettone reduziert, um die Pasten/feuchten Früchte auszugleichen.)\n\n🍬 Zucker reduziert (34 % statt 41 %), da diese Einlage bereits sehr süß ist: So bleibt der Panettone ausgewogen.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "PFLEGE DES LIEVITO MADRE: Bad für 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + LM ~4 Min., dann Mehl ~4 Min., zuletzt Eigelbe und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Früchte) 450 g zugeben:\nGlutennetz mit Mehl wieder aufbauen, dann Zucker/Eigelbe in mehreren Portionen, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken, Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Form.\nBacken bei 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umdrehen und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Starkes Mehl W380 + Lievito Madre"
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1859,7 +1958,8 @@
     "name_de": "Panettone Mikilab — Birne und Schokolade",
     "notes_de": "Getrocknete Birnen und dunkle Schokolade: süß und ausgewogen.\n\nSelbes Grundrezept wie der Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für die Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit zugeben. Wenn sie PASTEN (Pistazien, Haselnuss) oder EINGEMACHTE/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um dieselbe Konsistenz beizubehalten (die Hydration darf nicht steigen). Fettreiche Pasten schwächen das Glutengerüst: Vor dem Einarbeiten gut auskneten.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "PFLEGE DES LIEVITO MADRE: Bad für 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + LM ~4 Min., dann Mehl ~4 Min., zuletzt Eigelbe und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Früchte) 450 g zugeben:\nGlutennetz mit Mehl wieder aufbauen, dann Zucker/Eigelbe in mehreren Portionen, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken, Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Form.\nBacken bei 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umdrehen und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Starkes Mehl W380 + Lievito Madre"
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -1966,7 +2066,8 @@
     "name_de": "Panettone Mikilab — Pistazie und weiße Schokolade",
     "notes_de": "Raffiniert: Pistazienpaste im Teig, gehackte Pistazien und weiße Schokolade als Einlagen.\n\nSelbes Grundrezept wie der Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für die Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit zugeben. Wenn sie PASTEN (Pistazien, Haselnuss) oder EINGEMACHTE/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um dieselbe Konsistenz beizubehalten (die Hydration darf nicht steigen). Fettreiche Pasten schwächen das Glutengerüst: Vor dem Einarbeiten gut auskneten.\n(Für diesen Geschmack wurde das Wasser bereits um ~13 g gegenüber dem Basis-Panettone reduziert, um die Pasten/feuchten Früchte auszugleichen.)\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "PFLEGE DES LIEVITO MADRE: Bad für 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + LM ~4 Min., dann Mehl ~4 Min., zuletzt Eigelbe und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (Früchte) 450 g zugeben:\nGlutennetz mit Mehl wieder aufbauen, dann Zucker/Eigelbe in mehreren Portionen, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken, Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Form.\nBacken bei 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umdrehen und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Starkes Mehl W380 + Lievito Madre"
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "collection_name": "mikilab",
@@ -2065,7 +2166,8 @@
     "name_de": "Panettone Mikilab — Rosinen und Früchte (Klassisch)",
     "notes_de": "Der Klassiker: eingeweichte Rosinen und kandierte Orangen- und Zitronenschale. Die Einlagen am Ende des Knetens bei niedriger Geschwindigkeit zugeben, um das Glutengerüst nicht zu zerstören.\n\nSelbes Grundrezept wie der Panettone Mikilab (Lievito Madre, indirektes Verfahren).\n\nMein Panettone, klassische Methode mit ZWEI TEIGEN auf Lievito Madre. Gesamtmengen für ~2 kg Teig:\nMehl 446 g · Wasser 179 g · Lievito Madre 140 g · Zucker 184 g · Eigelb 279 g · Butter 295 g · Honig 25 g · Salz 7 g · Einlagen 450 g · Orangenpaste 10 g.\n\n⚙️ Regel für die Einlagen: IMMER am Ende des Knetens bei niedriger Geschwindigkeit zugeben. Wenn sie PASTEN (Pistazien, Haselnuss) oder EINGEMACHTE/FEUCHTE FRÜCHTE enthalten, die Wassermenge im Teig leicht reduzieren, um dieselbe Konsistenz beizubehalten (die Hydration darf nicht steigen). Fettreiche Pasten schwächen das Glutengerüst: Vor dem Einarbeiten gut auskneten.\n\n🍬 Zucker reduziert (34 % statt 41 %), da diese Einlage bereits sehr süß ist: So bleibt der Panettone ausgewogen.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "procedure_de": "PFLEGE DES LIEVITO MADRE: Bad für 15 Min. in Wasser bei 31 °C, dann 3 aufeinanderfolgende Auffrischungen (1:1:0,5) bei 28 °C alle 3–4 Std., bis zur Verdreifachung in ~3 Std. und pH 4,1–4,3.\n\n1. TEIG (abends) — Mehl 223 g, Wasser 123 g, Lievito Madre 140 g, Zucker 83 g, Eigelb 87 g, Butter 123 g:\nWasser + Zucker + LM ~4 Min., dann Mehl ~4 Min., zuletzt Eigelbe und Butter nach und nach einarbeiten. Teig glatt, aber NICHT elastisch. Gare ~12 Std. bei 24–26 °C bis zur VERDREIFACHUNG.\n\n2. TEIG (morgens) — Mehl 223 g, Zucker 101 g, Eigelb 192 g, Butter 172 g, Honig 25 g, Salz 7 g, Orangenpaste 10 g, dann die Einlagen (kandierte Früchte + Rosinen) 450 g zugeben:\nGlutennetz mit Mehl wieder aufbauen, dann Zucker/Eigelbe in mehreren Portionen, Honig und Salz in wenig Wasser aufgelöst, Butter nach und nach; die Einlagen zuletzt.\nStockgare ~45 Min. bei 28 °C, Rundwirken, Stückgare ~6 Std. bei 28 °C bis ~2 cm unter den Rand der Form.\nBacken bei 165 °C Ober-/Unterhitze ~50 Min., Kerntemperatur 92–94 °C. Sofort umdrehen und 12 Std. kopfüber ruhen lassen.",
-    "flour_type_de": "Starkes Mehl W380 + Lievito Madre"
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "menu_category": "panettoni"
   },
   {
     "id": "65e7fe8e-6544-4705-8c10-c9b496d7a0b6",
@@ -2103,7 +2205,8 @@
     "name_de": "Apulisches Puccia-Brot",
     "notes_de": "Das runde Brötchen aus dem Salento, weich und ideal zum Belegen. Häufig werden entkernte schwarze Oliven direkt in den Teig gegeben.",
     "procedure_de": "1) Mehle, Wasser und Lievito Madre verkneten; Öl und Salz am Ende einarbeiten.\n2) Stockgare ~3 Stunden mit einer Dehnen-und-Falten-Einheit.\n3) Teiglinge von ~200 g formen und leicht flachdrücken.\n4) Stückgare ~1,5 Stunden.\n5) Bei 230 °C ~18 Minuten backen: Die Brötchen sollen hell und weich bleiben.\n6) Noch lauwarm belegen (Oliven, Gemüse, Thunfisch, Aufschnitt).",
-    "flour_type_de": "Mehl Typ 0 + Hartweizengrieß (fein gemahlen)"
+    "flour_type_de": "Mehl Typ 0 + Hartweizengrieß (fein gemahlen)",
+    "menu_category": "panini"
   },
   {
     "id": "295d02bf-2a7e-44b5-a731-b911dc7858d2",
@@ -2125,7 +2228,7 @@
     "image_url": "/recipes/r_quotidiano.jpg",
     "notes": "Poolish / L.M 20%. Pane da tutti i giorni, morbido e leggero.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 35 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 230°C per 35 minuti, con vapore nei primi 10 minuti.\n\n👉 Panini (Brötchen) con lo STESSO impasto: dopo il riposo, spezza in pezzi da ~90 g, arrotonda in palline strette, lascia lievitare, incidi in superficie e cuoci a 230°C per ~18 minuti con vapore.",
     "extra_ingredients": [
       {
         "name": "Psyllium (Psy)",
@@ -2148,7 +2251,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -2170,7 +2273,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) hinzufügen und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) SOFORT NACH DEM KNETEN IN DEN KÜHLSCHRANK: Teig im Kühlschrank (4–6 °C) über Nacht reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Teig abstechen, formen und zur Gare stellen, bis die Stückgare abgeschlossen ist.\n7) Backen: 230 °C für 35 Minuten, mit Dampf in den ersten 10 Minuten.\n\n👉 Brötchen mit DEMSELBEN Teig: nach der Ruhezeit in Stücke von ca. 90 g abstechen, zu festen Kugeln rundwirken, aufgehen lassen, einschneiden und bei 230 °C ca. 18 Minuten mit Dampf backen.",
     "flour_type_de": "Mehl Type 630",
     "real_name": "Pane di Casa",
-    "real_name_de": "Hausbrot"
+    "real_name_de": "Hausbrot",
+    "menu_category": "pane"
   },
   {
     "id": "4b762bc5-0a91-4a42-a9e9-4003c6d18b47",
@@ -2192,7 +2296,7 @@
     "image_url": "/recipes/r_rustico.jpg",
     "notes": "Lievito madre. Noci e uvetta a fine impasto. Ottimo con formaggi.",
     "method_type": "diretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 38 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 38 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Noci tostate",
@@ -2215,7 +2319,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       }
     ],
@@ -2225,7 +2329,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) hinzufügen und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) SOFORT NACH DEM KNETEN IN DIE GÄRZELLE BEI 16 °C: Ruhezeit MAXIMAL 6 Stunden.\n6) Teig abstechen, formen und zur Gare stellen, bis die Stückgare abgeschlossen ist.\n7) Backen: 220 °C für 38 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "Mehl Type 1",
     "real_name": "Pane con Noci e Uvetta",
-    "real_name_de": "Walnuss-Rosinen-Brot"
+    "real_name_de": "Walnuss-Rosinen-Brot",
+    "menu_category": "pane"
   },
   {
     "id": "9325a24c-55ca-425e-8797-df8b07518db2",
@@ -2263,7 +2368,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -2293,7 +2398,8 @@
     "procedure_de": "🌙 AM VORABEND — Quellstück (eingeweichte Samen): Die 5-Getreide-/Samen-Mischung (Sonnenblume, Lein, Sesam, Hafer, Hirse) abwiegen und mit dem gleichen Gewicht an lauwarmem Wasser bedecken (Verhältnis 1:1). Abdecken und über Nacht bei Raumtemperatur ruhen lassen: Die Samen werden weich, entziehen dem Teig kein Wasser und sorgen für eine weiche und feuchte Krume.\n\nAM NÄCHSTEN TAG:\n1) Vorteig: Lievito Madre / Poolish auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Backmittel) hinzufügen und auskneten.\n4) Das abgetropfte Quellstück und die Samen einarbeiten; dann Kokosfett bei Kugelbildung; zuletzt Öl, Essig und Salz.\n5) SOFORT NACH DEM KNETEN IN DIE GÄRZELLE BEI 16 °C: Ruhezeit MAXIMAL 6 Stunden.\n6) Teig abstechen, formen (oder Brötchen formen), in Samen wälzen und zur Stückgare stellen.\n7) Backen: 225 °C für 40 Minuten (Brötchen ca. 18 Min.), mit Dampf in den ersten 10 Minuten.\n\n👉 Körnerbrötchen mit DEMSELBEN Teig: Stücke von ca. 90 g abstechen, rundwirken und in Samen wälzen.",
     "flour_type_de": "5-Getreide-Mischung + Quellstück (eingeweichte Samen)",
     "real_name": "Pane ai 5 Cereali",
-    "real_name_de": "Mehrkornbrot"
+    "real_name_de": "Mehrkornbrot",
+    "menu_category": "pane"
   },
   {
     "id": "342d01a0-ca87-4808-9587-9458eee9a053",
@@ -2337,7 +2443,8 @@
     "name_de": "Apulische Taralli",
     "notes_de": "Der klassische Tarallo aus Apulien: Olivenöl, Weißwein und Fenchelsamen. Erst blanchieren, dann backen: So bleiben sie mürbe und halten sich lange. Varianten: schwarzer Pfeffer, Chili, Zwiebel.",
     "procedure_de": "1) Mehl, Salz und Fenchelsamen in einer Schüssel vermengen.\n2) Olivenöl und Weißwein bei Raumtemperatur hinzufügen; 10–12 Minuten kneten, bis ein glatter und fester Teig entsteht (kein Wasser: die Hydratation kommt vom Wein).\n3) Abdecken und 30 Minuten ruhen lassen.\n4) Kleine Teigstücke abnehmen, Stränge von ca. 1 cm formen und die Enden überlappend zu Ringen schließen.\n5) Einen Topf Wasser zum Kochen bringen: die Taralli in kleinen Mengen einlegen und abschöpfen, sobald sie an die Oberfläche steigen.\n6) Auf einem Tuch abtropfen lassen, dann auf dem Backblech anordnen.\n7) Bei 200 °C Umluft 25–30 Minuten backen, bis sie goldbraun und knusprig sind.",
-    "flour_type_de": "Weizenmehl Type 00"
+    "flour_type_de": "Weizenmehl Type 00",
+    "menu_category": "panini"
   },
   {
     "id": "145e4c9e-19c7-4a89-a112-09409af4b23c",
@@ -2359,14 +2466,14 @@
     "image_url": "/recipes/r_treccia.jpg",
     "notes": "Con Vorteig. Treccia dolce profumata al limone. Spennella con uovo prima di cuocere.",
     "method_type": "indiretto",
-    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 180°C per 30 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Uova (Eier) 4",
         "percent": 0
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       },
       {
@@ -2424,7 +2531,8 @@
     "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) hinzufügen und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) SOFORT NACH DEM KNETEN IN DEN KÜHLSCHRANK: Teig im Kühlschrank (4–6 °C) über Nacht reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Teig abstechen, formen und zur Gare stellen, bis die Stückgare abgeschlossen ist.\n7) Backen: 180 °C für 30 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "Mehl Type 630 + Vorteig + Eier",
     "real_name": "Treccia Dolce",
-    "real_name_de": "Hefezopf"
+    "real_name_de": "Hefezopf",
+    "menu_category": "pane"
   },
   {
     "id": "42578e87-e808-4157-b2c1-0b960b2d5c79",
@@ -2446,7 +2554,7 @@
     "image_url": "/recipes/r_canapa.jpg",
     "notes": "Lievito madre. Semi di canapa in impasto e in copertura.",
     "method_type": "diretto",
-    "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Backmittel) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 40 minuti, con vapore nei primi 10 minuti.",
+    "procedure": "🌙 SE CI SONO SEMI, FAI IL QUELLSTÜCK: la sera prima pesa i semi e coprili con pari peso di acqua tiepida (1:1). Copri e lascia riposare tutta la notte. Il giorno dopo scolali e aggiungili all'impasto: così i semi non rubano acqua all'impasto e la mollica resta morbida e umida a lungo.\n\n1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) Puntata a temperatura ambiente (~24-26°C) con pieghe ogni 30-40'; usa il frigo (4°C) solo per gestire i tempi.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 40 minuti, con vapore nei primi 10 minuti.",
     "extra_ingredients": [
       {
         "name": "Semi di canapa decorticati",
@@ -2465,7 +2573,7 @@
         "percent": 1
       },
       {
-        "name": "Miglioratore naturale (Backmittel)",
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
         "percent": 2
       }
     ],
@@ -2475,7 +2583,8 @@
     "procedure_de": "🌙 WENN SAMEN VERWENDET WERDEN, QUELLSTÜCK ANSETZEN: Am Vorabend die Samen abwiegen und mit dem gleichen Gewicht an lauwarmem Wasser bedecken (1:1). Abdecken und über Nacht ruhen lassen. Am nächsten Tag abtropfen lassen und in den Teig einarbeiten: So entziehen die Samen dem Teig kein Wasser und die Krume bleibt lange weich und feucht.\n\n1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser mischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) hinzufügen und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) SOFORT NACH DEM KNETEN IN DIE GÄRZELLE BEI 16 °C: Ruhezeit MAXIMAL 6 Stunden.\n6) Teig abstechen, formen und zur Gare stellen, bis die Stückgare abgeschlossen ist.\n7) Backen: 220 °C für 40 Minuten, mit Dampf in den ersten 10 Minuten.",
     "flour_type_de": "Mehl Type 1 + Hanfsamen",
     "real_name": "Pane ai Semi di Canapa",
-    "real_name_de": "Hanfsamenbrot"
+    "real_name_de": "Hanfsamenbrot",
+    "menu_category": "pane"
   },
   {
     "id": "22e85fcb-0fb0-4a64-aeaa-2cb9a128b0a3",
@@ -2519,7 +2628,8 @@
     "procedure_de": "Rezept mit hoher Hydration (TA ~182). Vorteige: flüssiger POOLISH (150 g Mehl + 150 g Wasser bei 15°C + 1,5 g Hefe; 2–3 Std. bei Raumtemperatur, dann im Kühlschrank bei 4°C) + reifer flüssiger WEIZENSAUERTEIG (~300 g).\n1) AUTOLYSE: Sauerteig, Poolish, Mehl und das erste Wasser (~650 g) zusammenführen, 30 Min. ruhen lassen.\n2) TEIGBEREITUNG: Salz hinzufügen, 10 Min. langsam mischen, dann schnell kneten bis zur Glutenentwicklung (Backmittel nach Belieben).\n3) BASSINAGE: ~10% des Wassers (~80 g) zurückbehalten und nach und nach in den ausgekneteten Teig einarbeiten.\n4) STOCKGARE: 3 Std. im geölten Behälter bei Raumtemperatur mit 2 Faltvorgängen (Stretch & Fold). Optional: 18–24 Std. im Kühlschrank bei 4°C zur Verbesserung der Porung.\n5) FORMGEBUNG: Den Teig vorsichtig auf die bemehlte Arbeitsfläche stürzen, Streifen schneiden und diese zu einer Spirale VERDREHEN (ohne den Teig zu entgasen).\n6) BACKEN: 250°C mit kräftigem Dampf, dann auf 220–230°C reduzieren, ~25 Min. Knusprige Kruste, unregelmäßige Poren.",
     "flour_type_de": "Mehl Tipo 0 (W300) — mit Poolish und flüssigem Weizensauerteig",
     "real_name": "Pane Radice",
-    "real_name_de": "Wurzelbrot"
+    "real_name_de": "Wurzelbrot",
+    "menu_category": "pane"
   },
   {
     "id": "012014aa-e965-4884-9374-254fd596c5c2",
@@ -2572,6 +2682,83 @@
         "percent": 5
       }
     ],
-    "origin": "IT"
+    "origin": "IT",
+    "menu_category": "panettoni"
+  },
+  {
+    "id": "5b5eab23-173e-4712-bd9f-7ed6bb5fc80f",
+    "collection_name": "mikilab",
+    "costing": null,
+    "created_at": "2026-08-19T07:47:43.985100+00:00",
+    "updated_at": "2026-08-19T07:47:44.004028+00:00",
+    "name": "Brezel Integrali",
+    "flour_type": "Farina Integrale",
+    "hydration_percent": 50,
+    "flour_grams": 1000,
+    "water_grams": 500,
+    "sourdough_grams": 0,
+    "salt_grams": 22,
+    "preferment_type": "none",
+    "bake_temp": 220,
+    "bake_minutes": 15,
+    "oven_type": "ventilato",
+    "image_url": "/recipes/r_bretzel.jpg",
+    "notes": "Con Vorteig (H2o Vk 850 g). Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
+    "method_type": "indiretto",
+    "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",
+    "extra_ingredients": [
+      {
+        "name": "Glutine (Di.Glutin)",
+        "percent": 2
+      },
+      {
+        "name": "Psyllium (Psy)",
+        "percent": 1
+      },
+      {
+        "name": "Fiocchi di patate (Kart.Fl)",
+        "percent": 1
+      },
+      {
+        "name": "Margarina",
+        "percent": 5
+      },
+      {
+        "name": "Kokosfett",
+        "percent": 1
+      },
+      {
+        "name": "Olio d'oliva (Öl)",
+        "percent": 1
+      },
+      {
+        "name": "Aceto di mele (Essig)",
+        "percent": 1
+      },
+      {
+        "name": "Malto (Malz)",
+        "percent": 1
+      },
+      {
+        "name": "Latte in polvere (Milk.Pu)",
+        "percent": 2
+      },
+      {
+        "name": "Lievito di birra (Hefe)",
+        "percent": 1
+      },
+      {
+        "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
+        "percent": 2
+      }
+    ],
+    "origin": "de",
+    "name_de": "Vollkorn-Brezel",
+    "notes_de": "Mit Vorteig (Wasser Vk 850 g). Vor dem Backen in Natronlauge (Lauge) tauchen, grobe Salzkörner auf der Oberfläche.",
+    "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) KÜHLSCHRANK direkt nach dem Kneten: über Nacht im Kühlschrank (4–6 °C) reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 220 °C für 15 Minuten, mit Schwaden in den ersten 10 Minuten.",
+    "flour_type_de": "Vollkornmehl",
+    "real_name": "Bretzel integrale",
+    "real_name_de": "Vollkorn-Brezel",
+    "menu_category": "pane"
   }
 ]

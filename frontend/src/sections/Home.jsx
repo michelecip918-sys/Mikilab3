@@ -64,13 +64,13 @@ export default function Home({ onNavigate }) {
 
   const SECTIONS = [
     { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#B34A26] to-[#8C3A1D]",
-      sub: de ? "38 Rezepte mit meiner Methode (Gratis-Vorschau)" : "38 ricette col mio metodo (assaggio gratis)" },
+      sub: de ? "43 Rezepte mit meiner Methode (Gratis-Vorschau)" : "43 ricette col mio metodo (assaggio gratis)" },
     { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]",
       sub: de ? "Für Anfänger: Grundlagen & einfache Rezepte" : "Per chi inizia: basi e ricette semplici" },
     { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
       sub: de ? "Neuigkeiten aus IT, Stuttgart und DE" : "Novità da Italia, Stoccarda e Germania" },
     { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#D99B26] to-[#B8801a]",
-      sub: de ? "Für Profis: Arbeitsplan, Kosten, Panettone (PRO)" : "Per professionisti: piano, costi, panettone (PRO)" },
+      sub: de ? "Für Profis: Arbeitsplan, Kosten, Teige (PRO)" : "Per professionisti: piano, costi, impasti (PRO)" },
     { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#8C7567] to-[#5f4f45]",
       sub: de ? "Brotfehler per Foto erkennen (PRO)" : "Scopri i difetti del pane da una foto (PRO)" },
     { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#3a2d27] to-[#1A1412]",

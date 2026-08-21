@@ -121,6 +121,7 @@ class Recipe(BaseModel):
     procedure_de: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
+    menu_category: Optional[str] = None  # basi | pane | panini | panettoni
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -159,6 +160,7 @@ class RecipeCreate(BaseModel):
     procedure_de: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
+    menu_category: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -189,6 +191,7 @@ class RecipeUpdate(BaseModel):
     procedure: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
+    menu_category: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -303,7 +306,9 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v25-realname-coldchain"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v30-brezel-id-fix"  # bump quando cambia mikilab_seed_data.json
+# Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
+SEED_RETIRED_NAMES = ["Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro"]
 LEGACY_STALE_NAMES = ["Ciabatta ad Alta Idratazione", "Pane Rustico al Farro e Miele"]
 
 
@@ -348,6 +353,11 @@ async def seed_mikilab_if_empty(force: bool = False):
         {"$set": {"_key": "mikilab_meta", "seed_version": SEED_VERSION, "synced_at": now_iso()}},
         upsert=True,
     )
+    # Rimuovo le vecchie schede ritirate (solo se non modificate a mano da Michele).
+    for old_name in SEED_RETIRED_NAMES:
+        ex = await db.recipes.find_one({"collection_name": "mikilab", "name": old_name}, {"_id": 0, "user_edited": 1})
+        if ex and not ex.get("user_edited"):
+            await db.recipes.delete_one({"collection_name": "mikilab", "name": old_name})
     return await db.recipes.count_documents({"collection_name": "mikilab"})
 
 

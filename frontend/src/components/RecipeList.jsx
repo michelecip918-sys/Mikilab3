@@ -36,6 +36,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       list.sort((a, b) => {
         const ca = recipeCategory(a), cb = recipeCategory(b);
         if (ca.rank !== cb.rank) return ca.rank - cb.rank;
+        if (ca.sub !== cb.sub) return ca.sub - cb.sub;
         return (a.name || "").localeCompare(b.name || "");
       });
       setRecipes(list);
@@ -531,13 +532,20 @@ function fmtTemp(v) {
 }
 
 // Categoria e ordine di visualizzazione: Backmittel -> Lievito Madre -> Panettoni -> Pane -> Panini
+const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre", "Lievito Madre di Segale", "Poolish", "Kochstück"];
+
 function recipeCategory(r) {
+  const cat = r.menu_category;
   const name = (r.name || "").toLowerCase();
-  if (/migliorator|backmittel/.test(name)) return { rank: 0, key: "backmittel", label: "cat_backmittel", icon: "✨" };
-  if (/panettone/.test(name)) return { rank: 2, key: "panettoni", label: "cat_panettoni", icon: "🎁" };
-  if (/puccia|bretzel|taralli|frisell|panino|panini/.test(name)) return { rank: 4, key: "panini", label: "cat_panini", icon: "🥖" };
-  if (r.preferment_type === "lm") return { rank: 1, key: "lm", label: "cat_lm", icon: "🌾" };
-  return { rank: 3, key: "pane", label: "cat_pane", icon: "🍞" };
+  // Ordine categorie: Basi & Lieviti → Pane → Panini e Snack → Panettoni
+  // (il regex sul nome è SOLO fallback quando manca menu_category)
+  if (cat === "basi" || (!cat && /migliorator|backmittel|lievito madre|poolish|kochst/.test(name))) {
+    const sub = BASI_ORDER.indexOf(r.name);
+    return { rank: 0, sub: sub < 0 ? 99 : sub, key: "basi", label: "cat_basi", icon: "✨" };
+  }
+  if (cat === "panettoni" || (!cat && /panettone/.test(name))) return { rank: 3, sub: 0, key: "panettoni", label: "cat_panettoni", icon: "🎁" };
+  if (cat === "panini") return { rank: 2, sub: 0, key: "panini", label: "cat_panini", icon: "🥖" };
+  return { rank: 1, sub: 0, key: "pane", label: "cat_pane", icon: "🍞" };
 }
 
 const GLOSSARY = {
