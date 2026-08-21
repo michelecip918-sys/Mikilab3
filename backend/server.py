@@ -307,7 +307,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v34-licoli-scheda"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v35-miglioratore-5ing-dedup"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro",
@@ -369,6 +369,18 @@ async def seed_mikilab_if_empty(force: bool = False):
         ex = await db.recipes.find_one({"collection_name": "mikilab", "name": old_name}, {"_id": 0, "user_edited": 1})
         if ex and not ex.get("user_edited"):
             await db.recipes.delete_one({"collection_name": "mikilab", "name": old_name})
+    # Dedup: per ogni nome del seed tieni UNA sola scheda (rimuove i doppioni, es. Miglioratore duplicato).
+    seed_names = {dict(it).get("name") for it in items}
+    for nm in seed_names:
+        docs = []
+        async for dd in db.recipes.find({"collection_name": "mikilab", "name": nm}, {"_id": 1, "user_edited": 1}):
+            docs.append(dd)
+        if len(docs) <= 1:
+            continue
+        keep = next((x for x in docs if x.get("user_edited")), docs[0])
+        for x in docs:
+            if x["_id"] != keep["_id"]:
+                await db.recipes.delete_one({"_id": x["_id"]})
     return await db.recipes.count_documents({"collection_name": "mikilab"})
 
 

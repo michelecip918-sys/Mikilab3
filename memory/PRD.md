@@ -473,3 +473,9 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **Scheda LiCoLi**: base "Lievito Madre / Licoli (Liko)" rinominata "Lievito Madre Solido" + nuova ricetta dedicata "LiCoLi (Lievito in Coltura Liquida)" (rinfresco 1:1:1, pH 4,1-4,3, note su scomputo acqua 100%). SEED_VERSION v34, vecchio nome ritirato. Ora 43 ricette. BASI_ORDER aggiornato.
 - **Volume forno**: `ambientMusic.setVolume()`, esposto da AmbientContext; slider `ambient-volume` nella Radio (compare quando l'ambient è ON).
 - Testato iteration_26: backend 8/8, frontend tutti i flussi + regressioni (panettoni, farro, auth) OK, 0 bug.
+
+## v35 (2026-06) — Miglioratore a 5 ingredienti + dedup + Poolish/Segale arricchite
+- **Miglioratore Naturale Pro** ora a 5 INGREDIENTI con malto specificato: Malto d'orzo diastasico 0,5% · Farina di lupino dolce 1% · Acerola in polvere (Vit. C naturale) 0,3% · Farina di lino dorato 2% · Buccia di psillio 0,5%. Note aggiornate (tipo di malto = malto d'orzo diastasico, azione completa, dosaggio 2-4%). real_name "Miglioratore universale (5 ingredienti)".
+- **Fix duplicati**: aggiunto DEDUP nel seed (`seed_mikilab_if_empty`): per ogni nome del seed tiene UNA sola scheda (rimuove i doppioni non user_edited). Testato su preview: 4 Miglioratore → 1. In PRODUZIONE i 4 duplicati verranno rimossi al prossimo Redeploy (SEED_VERSION v35).
+- **Poolish** e **Lievito Madre di Segale** arricchite con struttura dettagliata come LiCoLi: note (descrizione + dosaggio + scomputo acqua), procedimento numerato con maturazione/controllo (Segale: pH 3,5-3,8; Poolish: dosi lievito per ore).
+- Verificato via DB + screenshot (43 ricette, dedup OK, 5 ingredienti presenti).

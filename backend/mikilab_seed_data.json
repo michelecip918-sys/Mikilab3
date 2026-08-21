@@ -2,8 +2,8 @@
   {
     "name": "Miglioratore Naturale Pro",
     "name_de": "Natürlicher Pro-Backmittel",
-    "real_name": "Miglioratore universale",
-    "real_name_de": "Universal-Backmittel",
+    "real_name": "Miglioratore universale (5 ingredienti)",
+    "real_name_de": "Universal-Backmittel (5 Zutaten)",
     "flour_type": "Universale (Diretto e Indiretto)",
     "flour_type_de": "Universell (Direkt & Indirekt)",
     "preferment_type": "diretto",
@@ -12,26 +12,30 @@
     "image_url": "/recipes/r_panettone_base.jpg",
     "extra_ingredients": [
       {
+        "name": "Malto d'orzo diastasico in polvere",
+        "percent": 0.5
+      },
+      {
         "name": "Farina di lupino dolce",
         "percent": 1
       },
       {
-        "name": "Malto diastasico in polvere",
-        "percent": 0.5
+        "name": "Acerola in polvere (Vitamina C naturale)",
+        "percent": 0.3
+      },
+      {
+        "name": "Farina di lino dorato",
+        "percent": 2
       },
       {
         "name": "Buccia di psillio",
         "percent": 0.5
-      },
-      {
-        "name": "Vitamina C (Acido ascorbico)",
-        "percent": 0.02
       }
     ],
-    "notes": "Formula unica 100% naturale a quadrupla azione: il malto nutre i lieviti e dona colore e croccantezza; lupino e vitamina C rinforzano la maglia glutinica e la tenuta; lo psillio trattiene l'idratazione mantenendo il pane morbido più a lungo.",
-    "notes_de": "Einzigartige, 100% natürliche Formel mit vierfacher Wirkung: Malz nährt die Hefen und gibt Farbe und Kruste; Lupine und Vitamin C stärken das Glutennetz; Flohsamenschalen halten die Feuchtigkeit und das Brot länger weich.",
-    "procedure": "1) Pesa gli ingredienti e mescolali bene a secco.\n2) Conserva in un barattolo chiuso al fresco e all'asciutto.\n3) USO: aggiungi il 2% del mix totale direttamente alla farina all'inizio dell'impasto.",
-    "procedure_de": "1) Zutaten abwiegen und trocken gut vermischen.\n2) In einem geschlossenen Glas kühl und trocken lagern.\n3) VERWENDUNG: 2% der Mischung direkt zu Beginn des Knetens zum Mehl geben."
+    "notes": "Formula unica 100% naturale a 5 ingredienti (azione completa). Il MALTO usato è MALTO D'ORZO DIASTASICO in polvere: nutre i lieviti, dona colore e croccantezza. La farina di lupino dolce e l'acerola (vitamina C naturale) rinforzano la maglia glutinica e la tenuta. La farina di lino dorato aggiunge struttura e omega. La buccia di psillio trattiene l'idratazione mantenendo il pane morbido piu' a lungo.\n\nDOSAGGIO: 2-4% sul peso della farina (indiretto 2-3%, diretto 3-4%).",
+    "notes_de": "Einzigartige, 100% natuerliche Formel mit 5 Zutaten (Rundum-Wirkung). Verwendetes MALZ: DIASTATISCHES GERSTENMALZ in Pulverform - naehrt die Hefen, gibt Farbe und Kruste. Suesslupinenmehl und Acerola (natuerliches Vitamin C) staerken das Glutennetz und die Stabilitaet. Goldleinmehl gibt Struktur und Omega. Flohsamenschalen halten die Feuchtigkeit und das Brot laenger weich.\n\nDOSIERUNG: 2-4% auf das Mehl (indirekt 2-3%, direkt 3-4%).",
+    "procedure": "PREPARAZIONE (mix a secco)\n1) Pesa con precisione i 5 ingredienti: Malto d'orzo diastasico 0,5% - Lupino dolce 1% - Acerola 0,3% - Lino dorato 2% - Psillio 0,5% (percentuali sul peso della farina della ricetta).\n2) Mescola bene a secco fino a polvere omogenea.\n3) Conserva in barattolo chiuso, al fresco e all'asciutto (validita' alcuni mesi).\nUSO: aggiungi il mix alla farina all'inizio dell'impasto (2-4% totale). Con l'indiretto usa la dose minore, con il diretto la maggiore.",
+    "procedure_de": "ZUBEREITUNG (Trockenmischung)\n1) Die 5 Zutaten genau abwiegen: diastatisches Gerstenmalz 0,5% - Suesslupine 1% - Acerola 0,3% - Goldlein 2% - Flohsamen 0,5% (Prozente auf das Mehl des Rezepts).\n2) Trocken gut zu einem homogenen Pulver mischen.\n3) In geschlossenem Glas kuehl und trocken lagern (mehrere Monate haltbar).\nVERWENDUNG: die Mischung zu Beginn des Knetens zum Mehl geben (2-4% gesamt). Indirekt die kleinere, direkt die groessere Dosis."
   },
   {
     "name": "Lievito Madre Solido",
@@ -68,18 +72,18 @@
   {
     "name": "Lievito Madre di Segale",
     "name_de": "Roggen-Sauerteig",
-    "real_name": "Pasta madre di segale",
-    "real_name_de": "Roggensauerteig",
+    "real_name": "Pasta madre di segale (idratazione 100%)",
+    "real_name_de": "Roggensauerteig (100% Hydration)",
     "flour_type": "Farina di segale integrale",
     "flour_type_de": "Roggenvollkornmehl",
     "preferment_type": "lm",
     "method_type": "lm",
     "menu_category": "basi",
     "image_url": "/recipes/r_bruno.jpg",
-    "notes": "Sauerteig di segale, più acido e attivo. Idratazione 100% (liquido). Ideale per pani di segale e misti.",
-    "notes_de": "Roggensauerteig, säuerlicher und aktiver. Hydration 100% (flüssig). Ideal für Roggen- und Mischbrote.",
-    "procedure": "RINFRESCO (rapporto 1:1:1)\n1) 50 g madre di segale + 100 g farina di segale + 100 g acqua a 30°C.\n2) Mescola bene fino a pastella liscia.\n3) Fermentazione 12-16 h a 26-28°C.\n4) Pronto quando è gonfio, bolloso e profuma di acido lattico.\nUSO: 20-30% sul peso della farina nei pani di segale.",
-    "procedure_de": "AUFFRISCHUNG (Verhältnis 1:1:1)\n1) 50 g Roggenanstellgut + 100 g Roggenmehl + 100 g Wasser bei 30°C.\n2) Zu einem glatten Brei verrühren.\n3) 12-16 h bei 26-28°C reifen lassen.\n4) Reif, wenn aufgegangen, blasig und milchsauer im Duft.\nANWENDUNG: 20-30% auf das Mehl bei Roggenbroten."
+    "notes": "Sauerteig di segale, piu' acido e attivo del grano tenero: la segale ha pochissimo glutine ma tanti enzimi, quindi fermenta in fretta. Idratazione 100% (liquido). Ideale per pani di segale e misti, dona acidita', aroma e ottima conservazione.\n\nDOSAGGIO: 20-30% sul peso della farina nei pani di segale.",
+    "notes_de": "Roggensauerteig, saeuerlicher und aktiver als Weizen: Roggen hat wenig Gluten, aber viele Enzyme und gaert daher schnell. Hydration 100% (fluessig). Ideal fuer Roggen- und Mischbrote; gibt Saeure, Aroma und lange Haltbarkeit.\n\nDOSIERUNG: 20-30% auf das Mehl bei Roggenbroten.",
+    "procedure": "RINFRESCO (rapporto 1:1:1)\n1) 50 g madre di segale + 100 g farina di segale integrale + 100 g acqua a 30 gradi.\n2) Mescola bene fino a pastella liscia e omogenea (la segale resta appiccicosa: e' normale).\n3) FERMENTAZIONE 12-16 h a 26-28 gradi.\n4) Pronto quando e' gonfio, molto bolloso e profuma di acido lattico.\nCONTROLLO: pH ideale 3,5-3,8 (piu' acido del grano); mai odore acetico pungente.\nUSO: 20-30% sul peso della farina.",
+    "procedure_de": "AUFFRISCHUNG (Verhaeltnis 1:1:1)\n1) 50 g Roggensauerteig + 100 g Roggenvollkornmehl + 100 g Wasser bei 30 Grad.\n2) Zu glattem, homogenem Teig ruehren (Roggen bleibt klebrig: normal).\n3) GAERUNG 12-16 h bei 26-28 Grad.\n4) Bereit, wenn aufgegangen, stark blasig und milchsauer duftend.\nKONTROLLE: idealer pH 3,5-3,8 (saeurer als Weizen); nie stechend essigsauer.\nVERWENDUNG: 20-30% auf das Mehl."
   },
   {
     "name": "Poolish",
@@ -92,10 +96,10 @@
     "method_type": "indiretto",
     "menu_category": "basi",
     "image_url": "/recipes/r_baguette.jpg",
-    "notes": "Prefermento liquido (idratazione 100%). Dona alveolatura, digeribilità e aroma. Lievito in base alle ore.",
-    "notes_de": "Flüssiger Vorteig (100% Hydration). Gibt Porung, Bekömmlichkeit und Aroma. Hefe je nach Reifezeit.",
-    "procedure": "RICETTA (parti uguali farina/acqua)\n1) 500 g farina + 500 g acqua a 20°C + lievito di birra fresco:\n   • 1,5 g per 12-16 h a 18°C  • 3 g per 8 h  • 7 g per 3-4 h.\n2) Mescola fino a pastella, copri.\n3) Pronto quando è cupolato e sta per cedere al centro.\nUSO: 30-40% di poolish sul peso totale della farina.",
-    "procedure_de": "REZEPT (Mehl/Wasser gleiche Teile)\n1) 500 g Mehl + 500 g Wasser bei 20°C + frische Hefe:\n   • 1,5 g für 12-16 h bei 18°C  • 3 g für 8 h  • 7 g für 3-4 h.\n2) Zu einem Teigbrei verrühren, abdecken.\n3) Reif, wenn gewölbt und in der Mitte gerade einsinkend.\nANWENDUNG: 30-40% Poolish auf das Gesamtmehl."
+    "notes": "Prefermento liquido (idratazione 100%: acqua = farina). Dona alveolatura aperta, aroma, digeribilita' ed estensibilita'. Il lievito di birra si dosa in base alle ore di maturazione a temperatura ambiente.\n\nDOSAGGIO: 30-40% di poolish sul peso totale della farina. Ricordati di scomputare l'acqua del poolish dall'impasto principale (meta' del suo peso e' acqua).",
+    "notes_de": "Fluessiger Vorteig (100% Hydration: Wasser = Mehl). Gibt offene Porung, Aroma, Bekoemmlichkeit und Dehnbarkeit. Die Hefe wird je nach Reifezeit bei Raumtemperatur dosiert.\n\nDOSIERUNG: 30-40% Poolish auf das Gesamtmehl. Das Wasser des Poolish vom Hauptteig abziehen (die Haelfte seines Gewichts ist Wasser).",
+    "procedure": "RICETTA (parti uguali farina/acqua)\n1) 500 g farina forte + 500 g acqua a 20 gradi + lievito di birra fresco:\n   - 1,5 g per 12-16 h a 18 gradi\n   - 3 g per 8 h a 20 gradi\n   - 7 g per 3-4 h a 22-24 gradi.\n2) Mescola solo fino a pastella liscia, copri a contatto.\n3) MATURAZIONE: pronto quando e' cupolato, pieno di bolle e sta per cedere al centro (segno di massima attivita').\nCONTROLLO: profumo lattico e leggermente alcolico; se collassa e' troppo maturo.\nUSO: 30-40% sul peso totale della farina, scomputando l'acqua.",
+    "procedure_de": "REZEPT (Mehl/Wasser zu gleichen Teilen)\n1) 500 g starkes Mehl + 500 g Wasser bei 20 Grad + frische Hefe:\n   - 1,5 g fuer 12-16 h bei 18 Grad\n   - 3 g fuer 8 h bei 20 Grad\n   - 7 g fuer 3-4 h bei 22-24 Grad.\n2) Nur zu glattem Teig ruehren, abgedeckt.\n3) REIFE: bereit, wenn gewoelbt, voller Blasen und in der Mitte nachgibt (hoechste Aktivitaet).\nKONTROLLE: milchiger, leicht alkoholischer Duft; kollabiert er, ist er ueberreif.\nVERWENDUNG: 30-40% auf das Gesamtmehl, Wasser abziehen."
   },
   {
     "name": "Kochstück",
