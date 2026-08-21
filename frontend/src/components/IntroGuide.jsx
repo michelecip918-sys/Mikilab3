@@ -4,9 +4,9 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { useLang } from "@/i18n/LanguageContext";
 
 const CONTENT = {
-  it: { title: "La Tua Guida alla Panificazione", greet: "Ciao! Ti do il benvenuto nella mia cucina digitale.", desc: "Ricette, calcoli di laboratorio e supporto intelligente sempre a portata di mano.", start: "Inizia Ora" },
-  de: { title: "Dein Backleitfaden", greet: "Hallo! Willkommen in meiner digitalen Küche.", desc: "Rezepte, Laborberechnungen und smarte Unterstützung – immer griffbereit.", start: "Jetzt starten" },
-  en: { title: "Your Baking Guide", greet: "Hi! Welcome to my digital kitchen.", desc: "Recipes, lab calculations and smart support, always at hand.", start: "Start now" },
+  it: { title: "La Tua Guida alla Panificazione", greet: "Ciao! Ti do il benvenuto nel mio panificio digitale.", desc: "Ricette, calcoli di laboratorio e supporto intelligente sempre a portata di mano.", start: "Inizia Ora" },
+  de: { title: "Dein Backleitfaden", greet: "Hallo! Willkommen in meiner digitalen Backstube.", desc: "Rezepte, Laborberechnungen und smarte Unterstützung – immer griffbereit.", start: "Jetzt starten" },
+  en: { title: "Your Baking Guide", greet: "Hi! Welcome to my digital bakery.", desc: "Recipes, lab calculations and smart support, always at hand.", start: "Start now" },
 };
 
 const LANGS = [
