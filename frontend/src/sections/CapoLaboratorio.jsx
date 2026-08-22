@@ -219,13 +219,6 @@ export default function CapoLaboratorio() {
 
       {/* Prodotti da preparare */}
       <Section icon={<Sparkles className="w-4 h-4" />} title={t("capo_products_title")}>
-        {weeklyItems.length > 0 && (
-          <label data-testid="capo-use-weekly" className="flex items-center gap-2 mb-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF] bg-[#6B8E62]/10 border border-[#6B8E62]/25 rounded-xl px-3 py-2.5 cursor-pointer">
-            <input type="checkbox" checked={useWeekly} onChange={(e) => setUseWeekly(e.target.checked)} className="accent-[#6B8E62] w-4 h-4" />
-            <CalendarDays className="w-4 h-4 text-[#6B8E62]" />
-            <span>{t("capo_use_weekly")} <b>({weeklyItems.length})</b></span>
-          </label>
-        )}
         <div className="space-y-2" data-testid="capo-products">
           {products.map((p, i) => (
             <div key={i} className="bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5 space-y-2">

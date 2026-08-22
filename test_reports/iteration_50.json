@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only FASE B verification of MikiLab 'Il Tuo Laboratorio' (mobile 390x844 + desktop 1920). Unlocked via the non-registered 7-day local trial. Verified: (1) new 6th step 'Conclusione Lavorazione' with maestro-conclusione banner (3 checklist items) + closing tools sessioni/lotti/haccp + 'Passo 6/6' + maestro-done 'Completo' (maestro-next absent on last step); (2) Capo Laboratorio has NO capo-use-weekly checkbox (0 checkboxes on page) while capo-products and machine/cell config render; (3) Mohammadreza rename: avatar loads (1024x1024, /mohammed-avatar.jpg), role label 'Mohammadreza Jafari · Assistente di Michele (MikiLab)', heading 'Ciao, sono Mohammadreza', Michele-creator copy, toggle 'Chiedi a Mohammadreza', no 'Mohammed' string left in the card; chat streamed a full coherent Italian reply; (4) Regressions OK: local-trial-start -> local-trial-banner 'Prova gratuita — restano 7 giorni', steps 1-5 tool grids render (5/3/4/6/8 tools) with conclusione banner only on step 6, maestro-back-btn and browser back both close an opened tool, maestro-prev/maestro-next clickable with normal (non-forced) clicks and hit-tests resolve to themselves. No console/page errors. All FASE B acceptance criteria PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Il Tuo Laboratorio (mobile 390px) / Capo Laboratorio", "issues": ["Floating 'Radio' (bottom-left) and 'Parla' (bottom-right) FABs overlay page content: on the Capo Laboratorio form they partially cover the 'ORA DI INIZIO' time input and the 'TEMP LAB OGGI' field (text '00 AM' visually clipped); on the stepper they visually sit over the footer/Michele card. Hit-test shows nav buttons still clickable, so cosmetic only, but add bottom padding / raise z-index ordering so FABs never sit over inputs."]},
+      {"screen": "Step 6 panel", "issues": ["3 closing tools in a 2-column grid leave an empty cell next to 'Registro HACCP' (cosmetic; consider col-span for the 3rd card or a 3-col layout on desktop)."]},
+      {"screen": "Desktop 1920", "issues": ["Content column stays mobile-width and the decorative bakery photo on the bottom-right is cropped/floating oddly behind the 'Parla' FAB."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: keep FABs from overlapping form inputs in Capo Laboratorio (padding/safe-area).",
+    "Optional cleanup: CapoLaboratorio.jsx still declares useWeekly/setUseWeekly and fetches weeklyApi.get(); with the checkbox removed setUseWeekly is never called, so all use_weekly branches (lines 58, 67, 93, 121, 123) are dead code and the weekly fetch is a wasted request. Remove or re-scope."
+  ],
+  "critical_code_review_comments": [
+    "Maestro.jsx comment still says 'Stepper 5 passi' though STEPS.length is 6 - stale comment.",
+    "MohammedAssistant.jsx: component/file/testids/localStorage key/API path still use 'mohammed' while UI copy is 'Mohammadreza'; acceptable for stability but note the naming inconsistency (avatar file is still mohammed-avatar.jpg).",
+    "CapoLaboratorio.jsx: unused setUseWeekly setter after checkbox removal (dead state)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (4/4 feature groups pass)"},
+  "seed_data_creation": "None. Only localStorage keys mikilab_onboarding and mikilab_local_trial set in the test browser; one chat_messages session created by the Mohammadreza streaming test (session id in localStorage mikilab_mohammed_sid).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Not needed - unlocked with the non-registered 7-day local trial (data-testid local-trial-start).",
+  "context_for_next_testing_agent": "Setup recipe that works: set localStorage mikilab_onboarding={\"done\":true} + reload, then dismiss the welcome Dialog by clicking the text 'Inizia Ora' (a Radix DialogOverlay intercepts nav clicks otherwise - localStorage alone does NOT suppress that modal). Then click nav-tab-maestro, remove localStorage mikilab_local_trial to see local-trial-start. NOTE: inner_text() returns UPPERCASE for the assistant role label and 'PASSO 6/6' due to CSS text-transform - assert case-insensitively.",
+  "rca_of_the_issue": "No functional defects found. Two earlier script failures were test-side: (a) Radix dialog overlay blocking nav clicks (fixed by clicking 'Inizia Ora'), (b) case-sensitive assertions against text-transform:uppercase content."
+}

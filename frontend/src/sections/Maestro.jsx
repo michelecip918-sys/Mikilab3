@@ -80,6 +80,7 @@ export default function Maestro() {
     { icon: CalendarDays, title: tri("Pianificazione", "Planung", "Planning"), sub: tri("Produzione giornaliera e settimanale, tempi a ritroso e timer", "Tages- und Wochenproduktion, Rückwärtsplanung und Timer", "Daily & weekly production, backward timing and timers"), tools: ["lavoro", "settimana", "inversa", "timer"] },
     { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità, meteo, Digital Twin, pH e acqua d'impasto", "Temperatur/Feuchte, Wetter, Teig-Zwilling, pH und Teigwasser", "Temperature/humidity, weather, dough twin, pH and dough water"), tools: ["termo", "meteo", "twin", "sessioni", "acqua", "ph"] },
     { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP, tracciabilità e turni", "Bedarf, Food Cost, Shelf-Life, HACCP, Rückverfolgung und Schichten", "Needs, Food Cost, Shelf-Life, HACCP, traceability and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "haccp", "lotti", "check", "turni"] },
+    { icon: CheckSquare, title: tri("Conclusione Lavorazione", "Abschluss der Arbeit", "Work wrap-up"), sub: tri("Chiudi la giornata: registra la sessione impasto, crea il lotto e completa i controlli HACCP", "Schließe den Tag ab: Teig-Sitzung speichern, Charge erstellen und HACCP abschließen", "Close the day: log the dough session, create the batch and complete HACCP checks"), tools: ["sessioni", "lotti", "haccp"], conclusione: true },
   ];
   const current = STEPS[step];
 
@@ -156,13 +157,23 @@ export default function Maestro() {
             <current.icon className="w-6 h-6 text-white" />
           </div>
           <div className="min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[#5E8B7E]">{tri("Passo", "Schritt", "Step")} {step + 1}/5</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#5E8B7E]">{tri("Passo", "Schritt", "Step")} {step + 1}/{STEPS.length}</p>
             <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC] leading-tight">{current.title}</h2>
             <p className="text-xs text-[#7E8A93] leading-snug mt-0.5">{current.sub}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2.5">
+          {current.conclusione && (
+            <div data-testid="maestro-conclusione" className="col-span-2 rounded-2xl bg-[#6B8E62]/12 border border-[#6B8E62]/30 p-3.5 mb-1">
+              <div className="flex items-center gap-2 text-[#4d6b45] dark:text-[#9ec48f] font-bold text-sm"><CheckSquare className="w-4 h-4" /> {tri("Hai finito? Chiudi la lavorazione", "Fertig? Arbeit abschließen", "Done? Wrap up the work")}</div>
+              <ul className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1.5 space-y-0.5 list-disc list-inside">
+                <li>{tri("Registra la sessione impasto (temperature)", "Teig-Sitzung speichern (Temperaturen)", "Log the dough session (temperatures)")}</li>
+                <li>{tri("Crea il lotto per la tracciabilità", "Charge für die Rückverfolgung erstellen", "Create the batch for traceability")}</li>
+                <li>{tri("Completa i controlli HACCP", "HACCP-Kontrollen abschließen", "Complete the HACCP checks")}</li>
+              </ul>
+            </div>
+          )}
           {current.tools.map((id, i) => {
             const tItem = toolById[id];
             if (!tItem) return null;
