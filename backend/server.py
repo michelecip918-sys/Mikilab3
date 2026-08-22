@@ -2070,6 +2070,115 @@ async def admin_shop_waitlist(admin: dict = Depends(require_admin)):
     return rows
 
 
+# ---------------------------------------------------------------------------
+# Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri
+# ---------------------------------------------------------------------------
+COMMUNITY_CATEGORIES = {"consiglio", "foto", "ricetta", "domanda"}
+
+
+class CommunityPostReq(BaseModel):
+    category: str = "consiglio"
+    text: str = Field("", max_length=4000)
+    image_url: Optional[str] = None
+
+
+class CommunityCommentReq(BaseModel):
+    text: str = Field(..., max_length=1000)
+
+
+def _post_public(doc: dict, user: Optional[dict]) -> dict:
+    likes = doc.get("likes", []) or []
+    return {
+        "id": doc["id"],
+        "author_id": doc.get("author_id"),
+        "author_name": doc.get("author_name") or "Fornaio",
+        "category": doc.get("category", "consiglio"),
+        "text": doc.get("text", ""),
+        "image_url": doc.get("image_url"),
+        "created_at": doc.get("created_at"),
+        "like_count": len(likes),
+        "liked_by_me": bool(user and user.get("user_id") in likes),
+        "comments": doc.get("comments", []) or [],
+        "can_delete": bool(user and (user.get("user_id") == doc.get("author_id") or user.get("role") == "admin")),
+    }
+
+
+@api_router.get("/community/posts")
+async def community_list(request: Request, limit: int = 200):
+    user = await optional_user(request)
+    limit = max(1, min(limit, 500))
+    docs = await db.community_posts.find({}, {"_id": 0}).sort("created_at", -1).to_list(limit)
+    return [_post_public(d, user) for d in docs]
+
+
+@api_router.post("/community/posts")
+async def community_create(body: CommunityPostReq, user: dict = Depends(current_user)):
+    text = (body.text or "").strip()
+    if not text and not body.image_url:
+        raise HTTPException(400, "Scrivi un messaggio o allega una foto")
+    cat = body.category if body.category in COMMUNITY_CATEGORIES else "consiglio"
+    doc = {
+        "id": str(uuid.uuid4()),
+        "author_id": user["user_id"],
+        "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
+        "category": cat,
+        "text": text,
+        "image_url": body.image_url,
+        "created_at": now_iso(),
+        "likes": [],
+        "comments": [],
+    }
+    await db.community_posts.insert_one(doc)
+    return _post_public(doc, user)
+
+
+@api_router.post("/community/posts/{post_id}/like")
+async def community_like(post_id: str, user: dict = Depends(current_user)):
+    doc = await db.community_posts.find_one({"id": post_id}, {"_id": 0})
+    if not doc:
+        raise HTTPException(404, "Post non trovato")
+    likes = set(doc.get("likes", []) or [])
+    uid_ = user["user_id"]
+    if uid_ in likes:
+        likes.discard(uid_)
+    else:
+        likes.add(uid_)
+    await db.community_posts.update_one({"id": post_id}, {"$set": {"likes": list(likes)}})
+    doc["likes"] = list(likes)
+    return _post_public(doc, user)
+
+
+@api_router.post("/community/posts/{post_id}/comments")
+async def community_comment(post_id: str, body: CommunityCommentReq, user: dict = Depends(current_user)):
+    text = (body.text or "").strip()
+    if not text:
+        raise HTTPException(400, "Commento vuoto")
+    doc = await db.community_posts.find_one({"id": post_id}, {"_id": 0})
+    if not doc:
+        raise HTTPException(404, "Post non trovato")
+    comment = {
+        "id": str(uuid.uuid4()),
+        "author_id": user["user_id"],
+        "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
+        "text": text,
+        "created_at": now_iso(),
+    }
+    await db.community_posts.update_one({"id": post_id}, {"$push": {"comments": comment}})
+    doc.setdefault("comments", []).append(comment)
+    return _post_public(doc, user)
+
+
+@api_router.delete("/community/posts/{post_id}")
+async def community_delete(post_id: str, user: dict = Depends(current_user)):
+    doc = await db.community_posts.find_one({"id": post_id}, {"_id": 0})
+    if not doc:
+        raise HTTPException(404, "Post non trovato")
+    if doc.get("author_id") != user["user_id"] and user.get("role") != "admin":
+        raise HTTPException(403, "Non puoi eliminare questo post")
+    await db.community_posts.delete_one({"id": post_id})
+    return {"ok": True}
+
+
 app.include_router(api_router)
 
 app.add_middleware(

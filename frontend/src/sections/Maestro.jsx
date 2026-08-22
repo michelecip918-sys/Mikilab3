@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -27,6 +27,7 @@ import AntiWaste from "@/sections/AntiWaste";
 import Timer from "@/sections/Timer";
 import Meteo from "@/sections/Meteo";
 import Marketplace from "@/sections/Marketplace";
+import BatchTraceability from "@/sections/BatchTraceability";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 
@@ -58,6 +59,7 @@ export default function Maestro() {
     { id: "timer", title: lang === "de" ? "Backstuben-Timer" : lang === "en" ? "Lab timer" : "Timer da Laboratorio", desc: "", Icon: TimerIcon },
     { id: "meteo", title: lang === "de" ? "Wetter & Backstube" : lang === "en" ? "Weather & bakery" : "Meteo & Laboratorio", desc: "", Icon: CloudSun },
     { id: "market", title: lang === "de" ? "Gebraucht-Markt" : lang === "en" ? "Used market" : "Marketplace Usato", desc: "", Icon: Store },
+    { id: "lotti", title: lang === "de" ? "Chargen-Rückverfolgung" : lang === "en" ? "Batch traceability" : "Tracciabilità Lotti", desc: "", Icon: QrCode },
   ];
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
@@ -66,7 +68,7 @@ export default function Maestro() {
     { icon: BookOpen, title: tri("Ricette Personali", "Eigene Rezepte", "Your Recipes"), sub: tri("Inserisci o scansiona le tue ricette e adatta il forno con l'IA", "Rezepte erfassen/scannen und Ofen mit KI anpassen", "Add or scan recipes and adapt the oven with AI"), tools: ["aggiungi", "scan", "adatta"] },
     { icon: CalendarDays, title: tri("Pianificazione", "Planung", "Planning"), sub: tri("Produzione giornaliera e settimanale, tempi a ritroso e timer", "Tages- und Wochenproduktion, Rückwärtsplanung und Timer", "Daily & weekly production, backward timing and timers"), tools: ["lavoro", "settimana", "inversa", "timer"] },
     { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità, meteo, pH e acqua d'impasto", "Temperatur/Feuchte, Wetter, pH und Teigwasser", "Temperature/humidity, weather, pH and dough water"), tools: ["termo", "meteo", "acqua", "ph"] },
-    { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP e turni", "Bedarf, Food Cost, Shelf-Life, HACCP und Schichten", "Needs, Food Cost, Shelf-Life, HACCP and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "check", "turni"] },
+    { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP, tracciabilità e turni", "Bedarf, Food Cost, Shelf-Life, HACCP, Rückverfolgung und Schichten", "Needs, Food Cost, Shelf-Life, HACCP, traceability and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "lotti", "check", "turni"] },
   ];
   const current = STEPS[step];
 
@@ -90,6 +92,7 @@ export default function Maestro() {
         {tool === "timer" && <Timer />}
         {tool === "meteo" && <Meteo />}
         {tool === "market" && <Marketplace />}
+        {tool === "lotti" && <BatchTraceability />}
         {tool === "settimana" && <WeeklyPlan />}
         {tool === "inversa" && <BackwardScheduler />}
         {tool === "lavoro" && <StartDoughs />}

@@ -78,11 +78,18 @@ export const subscriptionApi = {
   trial: (hours) => api.post(`/trial/activate`, { hours }).then((r) => r.data),
 };
 
-export const adminApi = {
-  entitlements: () => api.get(`/admin/entitlements`).then((r) => r.data),
+export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).then((r) => r.data),
   grant: (email, days) => api.post(`/admin/grant`, { email, days }).then((r) => r.data),
   revoke: (email) => api.post(`/admin/revoke`, { email }).then((r) => r.data),
   shopSettings: () => api.get(`/admin/shop/settings`).then((r) => r.data),
   setShop: (enabled) => api.put(`/admin/shop/settings`, { enabled }).then((r) => r.data),
   shopWaitlist: () => api.get(`/admin/shop/waitlist`).then((r) => r.data),
+};
+
+export const communityApi = {
+  list: () => api.get(`/community/posts`).then((r) => r.data).catch(() => []),
+  create: (data) => api.post(`/community/posts`, data).then((r) => r.data),
+  like: (id) => api.post(`/community/posts/${id}/like`).then((r) => r.data),
+  comment: (id, text) => api.post(`/community/posts/${id}/comments`, { text }).then((r) => r.data),
+  remove: (id) => api.delete(`/community/posts/${id}`).then((r) => r.data),
 };

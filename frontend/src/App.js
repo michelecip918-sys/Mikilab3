@@ -22,6 +22,7 @@ import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import { useAuth } from "@/auth/AuthContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
+import { TimerProvider } from "@/audio/TimerContext";
 import ambient from "@/lib/ambientMusic";
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
 
   return (
     <AmbientProvider>
+    <TimerProvider>
     <div className="App min-h-screen bg-[#F6F8F5] dark:bg-[#1B2127]">
       {/* Sfondo tematico cartone (leggero, su ogni pagina) */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-no-repeat bg-right-bottom opacity-[0.05] dark:opacity-[0.07]"
@@ -118,6 +120,7 @@ function App() {
       )}
       </div>
     </div>
+    </TimerProvider>
     </AmbientProvider>
   );
 }
