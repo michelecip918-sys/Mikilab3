@@ -17,7 +17,7 @@ if (typeof window !== "undefined" && "speechSynthesis" in window) {
 export function speak(text, lang = "it") {
   try {
     if (!("speechSynthesis" in window) || !text) return;
-    const target = lang === "de" ? "de-DE" : "it-IT";
+    const target = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
     const u = new SpeechSynthesisUtterance(text);
     u.lang = target;
     u.rate = 1;

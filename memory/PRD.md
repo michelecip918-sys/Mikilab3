@@ -658,3 +658,14 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - Quando un altro utente mette like o commenta un tuo post nella Community ricevi una notifica. Campanella nell'Header (solo loggati) `NotificationBell` con badge non-lette (notif-bell, notif-badge), pannello elenco (notif-panel, notif-item-<id>), mark-read all'apertura, polling 45s, chiusura al click-fuori. notif-empty se vuoto.
 - Backend: helper `_notify` (non notifica sé stessi), hook in community_like/community_comment; `GET /api/notifications` (items+unread, max 50), `POST /api/notifications/read`. Collezione `notifications`. community_delete ora elimina anche le notifiche del post (no orfane). NotificationBell fa resync se il mark-read fallisce.
 - Testato: iteration_42 — backend 8/8 pytest, frontend 100% (badge conteggio, apertura pannello+mark-read, persistenza letto dopo reload, assente da anonimo, no self-notify, E2E like/commento reale). Nessun difetto. Dati di test ripuliti (0 notifiche/post residui).
+
+## v61 (2026-06) — i18n EN: rifinitura testi mancanti
+- Dizionario `t()` (translations.js) verificato COMPLETO: 666 chiavi in IT/DE/EN, 0 mancanti (le 14 "identiche" IT=EN sono nomi propri/unità: Mikilab, News, Home, kg, poolish, biga, freezer…).
+- Colmate le lacune EN nei contenuti/funzioni che avevano solo IT/DE:
+  - `lib/shopping.js`: etichette lista spesa in EN (Water/Salt/Preferment-Sourdough, "Mikilab shopping list", FLOURS/OTHER INGREDIENTS, flour fallback "Flour").
+  - `sections/Checklists.jsx`: aggiunti titoli e voci EN ai 4 template (apertura/chiusura/celle/manutenzione) + selettore lingua include "en".
+  - `sections/ShiftRoles.jsx`: array ruoli EN + selettore include "en".
+  - `lib/voice.js`: sintesi vocale usa en-GB per EN.
+  - `lib/loc.js`: `rLoc` ora preferisce campi `_en` se presenti; `ingLoc` traduce gli ingredienti anche in EN (mappa INGREDIENT_EN ~60 voci) usata da lista spesa e ricette.
+- Verificato: compilazione pulita; logica funzioni pure corretta.
+### SCOPE / NOTA IMPORTANTE: l'INTERFACCIA è ora sostanzialmente 100% EN. I TESTI DELLE RICETTE (nomi, descrizioni, passaggi) nel database `data/content.js` esistono solo in IT + DE (campi `_de`); non ci sono ancora i campi `_en`, quindi in modalità EN i contenuti-ricetta mostrano l'italiano come fallback. Tradurre l'intero DB ricette in EN è un lavoro separato più ampio (serve conferma tono/terminologia o traduzione automatica batch): `rLoc` è già predisposto a usare i campi `_en` quando verranno aggiunti.

@@ -4,31 +4,35 @@ import { useLang } from "@/i18n/LanguageContext";
 
 const TEMPLATES = [
   {
-    id: "apertura", Icon: DoorOpen, it: "Apertura Laboratorio", de: "Öffnung der Backstube",
+    id: "apertura", Icon: DoorOpen, it: "Apertura Laboratorio", de: "Öffnung der Backstube", en: "Opening the Lab",
     items: {
       it: ["Accendere forni e preriscaldare", "Controllare temperature celle frigo/freezer", "Verificare lievito madre / prefermenti", "Preparare postazioni e attrezzi", "Controllare scorte farina e ingredienti", "Igiene mani e divisa"],
       de: ["Öfen einschalten und vorheizen", "Temperaturen der Kühl-/Gefrierzellen prüfen", "Sauerteig / Vorteige kontrollieren", "Arbeitsplätze und Werkzeuge vorbereiten", "Mehl- und Zutatenvorräte prüfen", "Händehygiene und Arbeitskleidung"],
+      en: ["Turn on and preheat the ovens", "Check fridge/freezer cell temperatures", "Check sourdough / preferments", "Prepare stations and tools", "Check flour and ingredient stock", "Hand hygiene and uniform"],
     },
   },
   {
-    id: "chiusura", Icon: DoorClosed, it: "Chiusura Laboratorio", de: "Schließung der Backstube",
+    id: "chiusura", Icon: DoorClosed, it: "Chiusura Laboratorio", de: "Schließung der Backstube", en: "Closing the Lab",
     items: {
       it: ["Spegnere forni e macchinari", "Pulire piani e attrezzi", "Coprire e riporre impasti/prefermenti", "Svuotare e pulire impastatrici", "Controllare chiusura celle", "Portare fuori i rifiuti", "Chiudere acqua e gas"],
       de: ["Öfen und Maschinen ausschalten", "Flächen und Werkzeuge reinigen", "Teige/Vorteige abdecken und lagern", "Kneter leeren und reinigen", "Zellen-Verschluss prüfen", "Müll rausbringen", "Wasser und Gas schließen"],
+      en: ["Turn off ovens and machines", "Clean surfaces and tools", "Cover and store doughs/preferments", "Empty and clean the mixers", "Check the cells are closed", "Take out the rubbish", "Shut off water and gas"],
     },
   },
   {
-    id: "celle", Icon: Snowflake, it: "Controllo Celle & Frigoriferi", de: "Kontrolle Zellen & Kühlschränke",
+    id: "celle", Icon: Snowflake, it: "Controllo Celle & Frigoriferi", de: "Kontrolle Zellen & Kühlschränke", en: "Cells & Fridges Check",
     items: {
       it: ["Temperatura cella frigo (0–4°C)", "Temperatura freezer (-18°C)", "Temperatura/umidità cella lievitazione", "Pulizia guarnizioni e ripiani", "Verifica assenza brina/ghiaccio", "Registrare le temperature (HACCP)"],
       de: ["Temperatur Kühlzelle (0–4°C)", "Temperatur Gefrierzelle (-18°C)", "Temperatur/Feuchte Gärzelle", "Dichtungen und Regale reinigen", "Auf Reif/Eis prüfen", "Temperaturen dokumentieren (HACCP)"],
+      en: ["Fridge cell temperature (0–4°C)", "Freezer temperature (-18°C)", "Proofing cell temperature/humidity", "Clean seals and shelves", "Check for frost/ice", "Record temperatures (HACCP)"],
     },
   },
   {
-    id: "manutenzione", Icon: Wrench, it: "Manutenzione & Sanificazione Macchine", de: "Wartung & Reinigung Maschinen",
+    id: "manutenzione", Icon: Wrench, it: "Manutenzione & Sanificazione Macchine", de: "Wartung & Reinigung Maschinen", en: "Machine Maintenance & Sanitising",
     items: {
       it: ["Pulire e sanificare impastatrici", "Controllare cinghie/olio impastatrice", "Pulire camere e teglie del forno", "Verificare sonde e vapore forno", "Pulire spezzatrice/formatrice", "Segnalare guasti o pezzi da ordinare"],
       de: ["Kneter reinigen und desinfizieren", "Riemen/Öl des Kneters prüfen", "Ofenkammern und Bleche reinigen", "Sonden und Dampf des Ofens prüfen", "Teigteiler/Former reinigen", "Störungen oder Ersatzteile melden"],
+      en: ["Clean and sanitise the mixers", "Check mixer belts/oil", "Clean oven chambers and trays", "Check oven probes and steam", "Clean divider/moulder", "Report faults or parts to order"],
     },
   },
 ];
@@ -37,7 +41,7 @@ const KEY = "mikilab_checklists";
 
 export default function Checklists() {
   const { lang } = useLang();
-  const L = lang === "de" ? "de" : "it";
+  const L = lang === "de" ? "de" : lang === "en" ? "en" : "it";
   const [active, setActive] = useState("apertura");
   const [checked, setChecked] = useState(() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; } });
 

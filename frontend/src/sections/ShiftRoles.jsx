@@ -6,11 +6,12 @@ const KEY = "mikilab_shifts";
 const ROLES = {
   it: ["Operatore Impastatrice", "Operatore Formatura / Tavolo", "Operatore Forni", "Celle & Lievitazione", "Pulizie & Sanificazione", "Vendita / Banco"],
   de: ["Kneter-Bediener", "Formen / Tisch", "Öfen-Bediener", "Gärzellen", "Reinigung & Hygiene", "Verkauf / Theke"],
+  en: ["Mixer operator", "Shaping / Bench", "Oven operator", "Cells & Proofing", "Cleaning & Sanitising", "Sales / Counter"],
 };
 
 export default function ShiftRoles() {
   const { lang } = useLang();
-  const roles = ROLES[lang === "de" ? "de" : "it"];
+  const roles = ROLES[lang === "de" ? "de" : lang === "en" ? "en" : "it"];
   const [people, setPeople] = useState(() => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; } });
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(people)); }, [people]);
