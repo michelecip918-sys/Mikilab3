@@ -139,6 +139,14 @@ const BEGINNERS = {
     { title: "Backen zu Hause", body: "Ofen gut heiß (230°C). Ein Schälchen Wasser für die ersten 10 Minuten sorgt für Dampf: schönere Kruste. Fertig, wenn goldbraun und hohl klingend." },
     { title: "Nicht entmutigen lassen", body: "Die ersten Brote werden nicht perfekt – das ist normal. Jeder Ofengang lehrt etwas: wir waren alle mal Anfänger. Wichtig ist weiterzumachen." },
   ],
+  en: [
+    { title: "The four ingredients", body: "To make bread you only need flour, water, salt and a leaven. Weigh everything on a scale: precision is already half the result." },
+    { title: "The right water", body: "Use lukewarm water, never hot. A bit warmer in winter, cooler in summer: this way the dough rises calmly." },
+    { title: "Knead without rushing", body: "Mix, rest 20 minutes, then carry on: the dough becomes smooth almost by itself. A few folds beat lots of force." },
+    { title: "Let it rise", body: "Cover the bowl and let it double in a warm spot. Slow is better than fast: more flavour, more digestibility." },
+    { title: "Baking at home", body: "Well-heated oven (230°C). Put a small pan of water in the oven for the first 10 minutes for steam: a nicer crust. It's ready when golden and it sounds hollow underneath." },
+    { title: "Don't get discouraged", body: "Your first loaves won't be perfect, and that's normal. Every bake teaches something: we were all beginners once. What matters is starting again." },
+  ],
 };
 
 const FAMOUS = [
@@ -186,6 +194,13 @@ const QUIZ = {
     { q: "Was gibst du in den Ofen für eine schönere Kruste?", options: ["Zucker", "Ein Schälchen Wasser für Dampf", "Einen Löffel Öl"], correct: 1 },
     { q: "Woran erkennst du, dass das Brot fertig ist?", options: ["Wenn es noch weiß ist", "Wenn es goldbraun ist und hohl klingt", "Nach genau 5 Minuten"], correct: 1 },
     { q: "Welche Gärung gibt mehr Geschmack?", options: ["Schnell und sehr warm", "Langsam und geduldig", "Gärung ist unnötig"], correct: 1 },
+  ],
+  en: [
+    { q: "How warm should the water be for mixing?", options: ["Boiling", "Lukewarm", "Ice-cold"], correct: 1 },
+    { q: "How many basic ingredients does bread have?", options: ["Two", "Four (flour, water, salt, leaven)", "Eight"], correct: 1 },
+    { q: "What do you put in the oven for a nicer crust?", options: ["Sugar", "A small pan of water for steam", "A spoon of oil"], correct: 1 },
+    { q: "How do you know the bread is baked?", options: ["When it's still white", "When it's golden and sounds hollow underneath", "After exactly 5 minutes"], correct: 1 },
+    { q: "Which leavening gives more flavour?", options: ["Fast and very warm", "Slow and patient", "No need to let it rise"], correct: 1 },
   ],
 };
 

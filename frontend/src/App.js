@@ -23,11 +23,14 @@ import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import PublicBatch from "@/sections/PublicBatch";
 import { useAuth } from "@/auth/AuthContext";
+import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
 import ambient from "@/lib/ambientMusic";
 
 function App() {
+  const { lang } = useLang();
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
   const [onboarded, setOnboarded] = useState(() => !!getProfile());
   const [showIntro] = useState(() => !!getProfile());
@@ -85,9 +88,9 @@ function App() {
           >
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
-            {tab === "maestro" && <PaywallGate feature="lab" sectionName="Il Tuo Laboratorio"><Maestro /></PaywallGate>}
+            {tab === "maestro" && <PaywallGate feature="lab" sectionName={tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}><Maestro /></PaywallGate>}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} />}
-            {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName="Diagnosi"><PhotoDiagnosi /></PaywallGate>}
+            {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
             {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
             {tab === "shop" && <><Academy /><Shop hideCourses /></>}
           </motion.div>

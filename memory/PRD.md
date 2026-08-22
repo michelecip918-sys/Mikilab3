@@ -669,3 +669,13 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
   - `lib/loc.js`: `rLoc` ora preferisce campi `_en` se presenti; `ingLoc` traduce gli ingredienti anche in EN (mappa INGREDIENT_EN ~60 voci) usata da lista spesa e ricette.
 - Verificato: compilazione pulita; logica funzioni pure corretta.
 ### SCOPE / NOTA IMPORTANTE: l'INTERFACCIA è ora sostanzialmente 100% EN. I TESTI DELLE RICETTE (nomi, descrizioni, passaggi) nel database `data/content.js` esistono solo in IT + DE (campi `_de`); non ci sono ancora i campi `_en`, quindi in modalità EN i contenuti-ricetta mostrano l'italiano come fallback. Tradurre l'intero DB ricette in EN è un lavoro separato più ampio (serve conferma tono/terminologia o traduzione automatica batch): `rLoc` è già predisposto a usare i campi `_en` quando verranno aggiunti.
+
+## v62 (2026-06) — i18n EN completata (interfaccia)
+- Aggiunto blocco `en` completo a `data/content.js` (Maestro: suggerimenti, enciclopedia, news, video, corsi, guida Lievito Madre).
+- Tradotti in EN: Enciclopedia (ENTRIES.en), Beginners (BEGINNERS.en + QUIZ.en), Checklists (en), ShiftRoles (en), lista spesa (shopping.js), ingredienti (loc.js ingLoc + INGREDIENT_EN), sintesi vocale (voice.js en-GB), Shop (name_en/desc_en/allergens_en + Shop.jsx pick per lingua), Academy (heading + duration_en/_de per corsi/consulenza).
+- PaywallGate reso TRI-LINGUA completo: helper tri(), FEATURES con array `en` per lab/diagnosi/enterprise/beginners, tutti i testi (header, corpo, prezzi, prova, login, toast checkout) tradotti; rimosso `const it` morto.
+- sectionName del paywall localizzati (App.js: Your Lab/Diagnosis/Enterprise; LearnHub: Beginners Section).
+- rLoc predisposto per campi `_en`. Seed shop idempotente applica i campi _en anche ai prodotti esistenti.
+- Testato: iteration_43 (75%→fix) e iteration_44 (86%, unico leak = FEATURES senza en → RISOLTO ora aggiungendo gli array en). 0 crash in IT/DE/EN.
+### NOTA: i TESTI DELLE RICETTE del DB restano IT/DE (fallback IT in EN) — traduzione automatica/curata del DB ricette è un lavoro separato ancora da fare.
+### STATO RICHIESTE UTENTE "finire tutto tranne PayPal": FATTO tutto ciò che è fattibile senza dati esterni. IN SOSPESO per volontà utente: PayPal. IN ATTESA DI DATI UTENTE: video reali Academy, valori nutrizionali reali. Traduzione EN del DB ricette: da valutare (automatica vs curata).

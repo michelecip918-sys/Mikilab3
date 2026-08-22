@@ -97,6 +97,55 @@ export const content = {
       ],
     },
   },
+  en: {
+    promptSuggestions: [
+      "How do I fix a dough that is too wet and sticky?",
+      "Which German flour matches Italian Tipo 00 or Tipo 1?",
+      "How do I know when the proofed bread is ready to bake?",
+      "How do I refresh my sourdough starter before a big dough?",
+    ],
+    encyclopedia: [
+      { title: "German flours for Italian bakers", body: "In Stuttgart the German 'Type' classification applies. Handy matches: Type 405 ≈ 00, Type 550 ≈ 0, Type 812 ≈ 1, Type 1050 ≈ 2. For spelt look for 'Dinkelmehl' (Type 630 fine, 1050 semi-wholemeal)." },
+      { title: "The science of autolyse", body: "By mixing only flour and water and resting 30–60 minutes, enzymes start developing the gluten. The result is a more extensible dough and better crumb structure." },
+      { title: "Lactic vs acetic acid", body: "Sourdough kept warm and hydrated → more lactic acid (mild notes). Kept cold and stiff → more acetic acid (sharp notes). Adjust temperature and hydration to manage acidity." },
+      { title: "Hydration: what changes", body: "More water = a more open crumb but a harder dough. To start, stay between 70–75% with medium flours; go above 80% only with strong flours (W300+)." },
+    ],
+    news: [
+      { region: "stoccarda", highlight: true, tag: "Stuttgart", title: "Stone-milled organic flours around Stuttgart", body: "More regional mills now offer spelt (Dinkel) Type 630 and 1050: great for rustic breads and naturally-leavened panettone." },
+      { region: "stoccarda", highlight: true, tag: "Stuttgart", title: "Cold season: allow more time", body: "At 18–20°C at home, proofing slows down. Raise the water temperature and keep the dough around 24–25°C." },
+      { region: "germania", tag: "Germany", title: "Dinkel is trending again in German bakeries", body: "Across Germany the demand for Dinkelbrot is growing: spelt flour absorbs more water, start with +3–5% hydration." },
+      { region: "germania", tag: "Germany", title: "Sauerteig culture: starter swaps", body: "Baker communities across Germany organise swaps of sourdough starter and ancient grains." },
+      { region: "italia", tag: "Italy", title: "Artisan panettone: the big-leavened season", body: "In Italy, sourdough training for panettone is in full swing: regular refreshes and a steady temperature are key." },
+      { region: "italia", tag: "Italy", title: "Ancient grains and short-supply-chain flours", body: "Stone-milled ancient-grain flours are on the rise in Italy: more flavour, but hydration and strength must be managed." },
+    ],
+    youtubeVideos: [
+      { title: "Dough & preferment: the start (sponge)", category: "Dough technique", url: "https://www.youtube.com/embed/SCmgZw4QXE4" },
+      { title: "Baking & scoring of big leavened cakes", category: "Baking & Finish", url: "https://www.youtube.com/embed/C_7Xft7HRVQ" },
+    ],
+    freeCourses: [
+      { title: "Artisan panettone: the professional method", category: "Panettone", source: "Eater · Martesana Milano", level: "Professional", url: "https://www.youtube.com/embed/nwCiW_BH3lU", isNew: true },
+      { title: "Sourdough starter: feeding and refreshing", category: "Sourdough", source: "Ricette di Caterina", level: "Professional", url: "https://www.youtube.com/embed/eN6BnMnfRUE", isNew: true },
+      { title: "Focaccia Genovese with biga: crunchy crust and open crumb", category: "Focaccia", source: "Chef Billy Parisi", level: "Professional", url: "https://www.youtube.com/embed/nyu15TqG038", isNew: false },
+      { title: "Sourdough starter from scratch, no additives", category: "Sourdough", source: "Bread Ritual", level: "Professional", url: "https://www.youtube.com/embed/GSJmK9IU4tQ", isNew: false },
+    ],
+    lievitoMadre: {
+      intro: "The sourdough starter (lievito madre) is the heart of my work. Here I explain everything: what it is, the difference between stiff starter, Li.Co.Li and German Sauerteig, what autolyse is and how I manage my starter day by day.",
+      sections: [
+        { title: "What sourdough starter is", body: "It is a dough of flour and water spontaneously fermented by wild yeasts and lactic bacteria. It gives natural rise, aroma, digestibility and long shelf life. The STIFF starter has low hydration (~45-50%), is stable and smells sweet/honeyed." },
+        { title: "What Li.Co.Li is", body: "Li.Co.Li = liquid-culture starter: a high-hydration starter (100%, i.e. equal weight of flour and water). It is easier to manage (you stir, not knead), ferments faster and gives slightly more acidic notes. Great for everyday breads; for big leavened cakes I prefer the stiff one." },
+        { title: "Sauerteig and sourdough starter", body: "In Germany 'Sauerteig' is often rye-based, more acidic and used for dark breads. The Italian 'lievito madre' is usually wheat-based, milder, ideal for panettone and light breads. I use both: Sauerteig for rustic German breads, lievito madre for big leavened cakes." },
+        { title: "Autolyse", body: "Autolyse is resting flour and water only (no yeast or salt) for 30-60 minutes before mixing. The enzymes start developing the gluten on their own: the dough becomes more extensible, easier to work and the crumb improves. With wholegrain and Dinkel it greatly helps water absorption." },
+        { title: "My routine (Millebolle 50-50)", body: "Every day: bathe the starter 15 min in water at 31°C. First refresh: 100 g starter + 200 g flour, hydration ~35%, rest ~4 hours until pH 4.2-4.3. After the first refresh I keep a portion for the next day. A further refresh at 16-24°C for 18-24 hours at 45% when I need it for big leavened cakes. I always check the pH: it is my compass for the starter's strength." },
+        { title: "Refreshing step by step", body: "Refreshing means feeding the starter: discard a portion and add fresh flour and water. Typical ratio 1:1:0.5 (100 g starter + 100 g flour + 45-50 g water for the stiff one). Before a big leavened cake I do 2-3 close refreshes (every 3-4 hours) at 28°C: the starter becomes sweet, puffy and ready." },
+        { title: "How I know it is ready", body: "It is ready when it doubles/triples in 3-4 hours, smells of yoghurt and honey (not vinegar or solvent), and the cut shows a tight, even crumb. Trick: a small piece dropped in water should float. If it is sour, sluggish or smells bad, it needs more refreshes or is too warm/cold." },
+        { title: "Temperature and water", body: "Temperature rules everything. 26-28°C = sweet, fast fermentation; below 20°C it slows down and turns more acidic. I use water at ~31°C for the bath and set the dough-water temperature (see 'Climate & temperature') to hit the final temperature of starter and dough." },
+        { title: "Autolyse and starter together", body: "I often do autolyse (flour + water only, 30-60 min) BEFORE adding the starter: the gluten network starts on its own, the dough takes on more water and stays extensible. Then I develop it with the starter and finally the salt. With spelt and wholegrain this step makes a big difference." },
+        { title: "Common problems and fixes", body: "Too acidic → more frequent refreshes, lower temperature, less water. Sluggish/weak → close refreshes at 28°C, stronger flour. Dry crust on top → cover well or store under water/bath. Mould → throw it away and start over (it cannot be saved). Acetone smell → it is hungry: refresh it right away." },
+        { title: "Storage", body: "In the fridge (4°C) after a refresh, well sealed: it lasts 5-7 days between refreshes. For long breaks: dry it into flakes and keep it in a jar, or bind it tightly and keep it in water (bath method). Before using it, bring it back to strength with 2-3 refreshes." },
+      ],
+    },
+  },
+
 };
 
 // Fallback lingua: finché i contenuti EN non sono tradotti, EN usa l'italiano

@@ -24,6 +24,14 @@ const FEATURES = {
       [ScanLine, "Rezept scannen", "Rezept fotografieren → bearbeitbarer Text"],
       [Sparkles, "Panettone dynamisch", "Mengen und Einlagen für 10+ Sorten neu berechnen"],
     ],
+    en: [
+      [ClipboardList, "Lab Manager", "Smart work plan: mixers, cells and schedules"],
+      [CalendarDays, "Weekly plan", "Organise recipes and quantities for each day"],
+      [Flame, "Oven adapt", "The right degrees and minutes when the oven changes"],
+      [Thermometer, "Costs & Shopping", "Cost calculation in € and a supplier shopping list"],
+      [ScanLine, "Scan a recipe", "Photograph a recipe and turn it into editable text"],
+      [Sparkles, "Dynamic panettone", "Recalculated doses and swaps across 10+ flavours"],
+    ],
   },
   diagnosi: {
     it: [
@@ -37,6 +45,12 @@ const FEATURES = {
       [Camera, "Teigzustand", "Erkenne, ob reif, zu früh oder übergar"],
       [ScanLine, "Alle Zutaten", "Wahrscheinliches Rezept mit geschätzten Prozenten per Foto"],
       [Flame, "Maschinen & Störungen", "Liest Fehlercodes vom Display und erklärt Lösungen"],
+    ],
+    en: [
+      [Camera, "Defects & fixes", "Full analysis of crust, crumb, bake and how to correct"],
+      [Camera, "Dough status", "Understand if it's ready, underproofed or overproofed"],
+      [ScanLine, "All the ingredients", "Likely recipe with estimated percentages from a photo"],
+      [Flame, "Machines & faults", "Reads error codes from the display and explains fixes"],
     ],
   },
   enterprise: {
@@ -52,6 +66,12 @@ const FEATURES = {
       [CalendarClock, "Personalplanung", "Schichten im Wochenkalender planen, Stunden pro Person"],
       [Sparkles, "Alles gespeichert", "Daten sicher in deinem Konto, auf jedem Gerät"],
     ],
+    en: [
+      [Store, "Multi-store", "Manage several locations, each with its own orders and data"],
+      [Truck, "Supplier orders", "Create purchase orders and send them via Email, WhatsApp or print"],
+      [CalendarClock, "Staff shifts", "Plan shifts on a weekly calendar with total hours per person"],
+      [Sparkles, "All saved", "Your data stays safe in your account, on every device"],
+    ],
   },
   beginners: {
     it: [
@@ -66,6 +86,12 @@ const FEATURES = {
       [ClipboardList, "Mengen ohne Geräte", "Mengenberechnung auch ohne Profi-Ausstattung"],
       [Sparkles, "Bäcker-Quiz", "Lerne mit Spaß und teste dein Wissen"],
     ],
+    en: [
+      [GraduationCap, "Step-by-step basics", "Home bread, pan pizza and focaccia explained well"],
+      [BookOpen, "Interactive glossary", "Technical terms and dough phases explained simply"],
+      [ClipboardList, "Doses without tools", "Work out quantities even without professional gear"],
+      [Sparkles, "Baker's Quiz", "Learn while having fun and test your knowledge"],
+    ],
   },
 };
 
@@ -73,7 +99,8 @@ const FEATURES = {
 export default function PaywallGate({ children, sectionName, feature = "lab" }) {
   const { user, setAuthOpen } = useAuth();
   const { lang } = useLang();
-  const it = lang !== "de";
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const flang = lang === "de" ? "de" : lang === "en" ? "en" : "it";
   const email = user?.email;
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -105,17 +132,17 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   const subscribe = async (plan) => {
     try {
       const d = await subscriptionApi.checkout(plan);
-      if (d.url) window.location.href = d.url; else toast.error("Errore checkout");
-    } catch { toast.error("Errore checkout"); }
+      if (d.url) window.location.href = d.url; else toast.error(tri("Errore checkout", "Checkout-Fehler", "Checkout error"));
+    } catch { toast.error(tri("Errore checkout", "Checkout-Fehler", "Checkout error")); }
   };
 
   const startTrial = async (hours) => {
     try {
       await subscriptionApi.trial(hours);
-      toast.success(it ? "Prova attivata!" : "Test aktiviert!");
+      toast.success(tri("Prova attivata!", "Test aktiviert!", "Trial activated!"));
       load();
     } catch (e) {
-      toast.error(e?.response?.data?.detail || (it ? "Prova non disponibile" : "Test nicht verfügbar"));
+      toast.error(e?.response?.data?.detail || tri("Prova non disponibile", "Test nicht verfügbar", "Trial not available"));
     }
   };
 
@@ -127,7 +154,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
       <>
         {status.source === "trial" && left && (
           <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/40 px-3 py-2 text-sm font-semibold text-[#33564E] dark:text-[#8FB0C2]">
-            <Clock className="w-4 h-4" /> {it ? "Prova PRO — resta:" : "PRO-Test — verbleibend:"} <span className="font-mono-data">{left}</span>
+            <Clock className="w-4 h-4" /> {tri("Prova PRO — resta:", "PRO-Test — verbleibend:", "PRO trial — left:")} <span className="font-mono-data">{left}</span>
           </div>
         )}
         {children}
@@ -145,20 +172,22 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
         <h2 className="font-display text-2xl font-bold">{sectionName} · PRO</h2>
         <p className="text-white/85 text-sm mt-2">
           {feature === "beginners"
-            ? (it ? "La Sezione Principianti è inclusa nell'accesso PRO. Sblocca guide, basi e ricette semplici."
-                  : "Die Sektion Anfänger ist im PRO-Zugang enthalten. Schalte Anleitungen, Grundlagen und einfache Rezepte frei.")
-            : (it ? "Questa sezione è riservata agli abbonati PRO. Sblocca tutti gli strumenti del laboratorio."
-                  : "Dieser Bereich ist PRO-Abonnenten vorbehalten. Schalte alle Werkzeuge frei.")}
+            ? tri("La Sezione Principianti è inclusa nell'accesso PRO. Sblocca guide, basi e ricette semplici.",
+                  "Die Sektion Anfänger ist im PRO-Zugang enthalten. Schalte Anleitungen, Grundlagen und einfache Rezepte frei.",
+                  "The Beginners section is included with PRO. Unlock guides, basics and simple recipes.")
+            : tri("Questa sezione è riservata agli abbonati PRO. Sblocca tutti gli strumenti del laboratorio.",
+                  "Dieser Bereich ist PRO-Abonnenten vorbehalten. Schalte alle Werkzeuge frei.",
+                  "This section is reserved for PRO members. Unlock all the lab tools.")}
         </p>
       </div>
 
       {/* "Guarda cosa fa" — anteprima funzioni prima del prezzo */}
       <div data-testid="paywall-preview" className="mt-5">
         <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-3">
-          {it ? "Guarda cosa fa 👇" : "Sieh, was es kann 👇"}
+          {tri("Guarda cosa fa 👇", "Sieh, was es kann 👇", "See what it does 👇")}
         </h3>
         <div className="space-y-2.5">
-          {(FEATURES[feature]?.[it ? "it" : "de"] || []).map(([Icon, title, desc], i) => (
+          {(FEATURES[feature]?.[flang] || FEATURES[feature]?.it || []).map(([Icon, title, desc], i) => (
             <div key={i} data-testid={`paywall-feature-${i}`}
               className="flex items-start gap-3 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center shrink-0">
@@ -174,14 +203,14 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
           ))}
         </div>
         <p className="text-center text-sm font-semibold text-[#5E8B7E] mt-4">
-          {it ? "Provalo gratis o abbonati per sbloccare tutto 👇" : "Kostenlos testen oder abonnieren, um alles freizuschalten 👇"}
+          {tri("Provalo gratis o abbonati per sbloccare tutto 👇", "Kostenlos testen oder abonnieren, um alles freizuschalten 👇", "Try it free or subscribe to unlock everything 👇")}
         </p>
       </div>
 
       {!email ? (
         <button data-testid="paywall-login" onClick={() => setAuthOpen(true)}
           className="mt-5 w-full bg-[#5E8B7E] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
-          {it ? "Accedi per continuare" : "Anmelden, um fortzufahren"}
+          {tri("Accedi per continuare", "Anmelden, um fortzufahren", "Log in to continue")}
         </button>
       ) : (
         <div className="mt-5 space-y-3">
@@ -190,27 +219,27 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
               className="rounded-2xl border-2 border-[#5E8B7E] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#232A31]">
               <Crown className="w-6 h-6 text-[#5E8B7E] mx-auto" />
               <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€9,99</p>
-              <p className="text-xs text-[#7E8A93]">{it ? "al mese" : "pro Monat"}</p>
+              <p className="text-xs text-[#7E8A93]">{tri("al mese", "pro Monat", "per month")}</p>
             </button>
             <button data-testid="sub-yearly" onClick={() => subscribe("yearly")}
               className="rounded-2xl border-2 border-[#6E8CA0] p-4 text-center active:scale-97 transition-all bg-[#6E8CA0]/10 relative">
               <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#6B8E62] text-white px-1.5 py-0.5 rounded-full">-17%</span>
               <Crown className="w-6 h-6 text-[#6E8CA0] mx-auto" />
               <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€99</p>
-              <p className="text-xs text-[#7E8A93]">{it ? "all'anno" : "pro Jahr"}</p>
+              <p className="text-xs text-[#7E8A93]">{tri("all'anno", "pro Jahr", "per year")}</p>
             </button>
           </div>
 
           {!status?.trial_used && (
             <div className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4">
               <p className="flex items-center gap-2 text-sm font-semibold text-[#4d6b45] dark:text-[#9ec48f]">
-                <Sparkles className="w-4 h-4" /> {it ? "Prova gratis (una volta)" : "Kostenlos testen (einmalig)"}
+                <Sparkles className="w-4 h-4" /> {tri("Prova gratis (una volta)", "Kostenlos testen (einmalig)", "Free trial (once)")}
               </p>
               <div className="grid grid-cols-2 gap-2 mt-2">
                 <button data-testid="trial-1h" onClick={() => startTrial(1)}
-                  className="bg-[#6B8E62] text-white font-semibold py-2.5 rounded-xl active:scale-97">{it ? "1 ora" : "1 Stunde"}</button>
+                  className="bg-[#6B8E62] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("1 ora", "1 Stunde", "1 hour")}</button>
                 <button data-testid="trial-24h" onClick={() => startTrial(24)}
-                  className="bg-[#6B8E62] text-white font-semibold py-2.5 rounded-xl active:scale-97">{it ? "24 ore" : "24 Stunden"}</button>
+                  className="bg-[#6B8E62] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("24 ore", "24 Stunden", "24 hours")}</button>
               </div>
             </div>
           )}

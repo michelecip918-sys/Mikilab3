@@ -1699,20 +1699,21 @@ ACADEMY_COURSES = [
      "desc": "Crea e gestisci il tuo lievito madre solido e LiCoLi, dalla nascita al panettone.",
      "desc_de": "Erstelle und pflege deinen festen Sauerteig und LiCoLi, von Anfang bis Panettone.",
      "desc_en": "Create and manage your stiff sourdough and LiCoLi, from birth to panettone.",
-     "price_cents": 4900, "duration": "8 lezioni · 2h", "video_url": _DEMO_VIDEO},
+     "price_cents": 4900, "duration": "8 lezioni · 2h", "duration_de": "8 Lektionen · 2h", "duration_en": "8 lessons · 2h", "video_url": _DEMO_VIDEO},
     {"id": "corso-panettone", "title": "Panettone Perfetto", "title_de": "Perfekter Panettone", "title_en": "Perfect Panettone",
      "desc": "Il metodo completo per un panettone soffice: impasti, pieghe, cottura e conservazione.",
      "desc_de": "Die komplette Methode für einen fluffigen Panettone: Teige, Faltungen, Backen, Lagerung.",
      "desc_en": "The complete method for a fluffy panettone: doughs, folds, baking and storage.",
-     "price_cents": 7900, "duration": "12 lezioni · 3h", "video_url": _DEMO_VIDEO},
+     "price_cents": 7900, "duration": "12 lezioni · 3h", "duration_de": "12 Lektionen · 3h", "duration_en": "12 lessons · 3h", "video_url": _DEMO_VIDEO},
     {"id": "corso-brezel", "title": "Brezel & Laugengebäck", "title_de": "Brezel & Laugengebäck", "title_en": "Pretzels & Lye Bakes",
      "desc": "Tecnica tedesca: impasto, formatura, bagno in soda e cottura professionale.",
      "desc_de": "Deutsche Technik: Teig, Formen, Laugenbad und professionelles Backen.",
      "desc_en": "German technique: dough, shaping, lye bath and professional baking.",
-     "price_cents": 3900, "duration": "6 lezioni · 1.5h", "video_url": _DEMO_VIDEO},
+     "price_cents": 3900, "duration": "6 lezioni · 1.5h", "duration_de": "6 Lektionen · 1.5h", "duration_en": "6 lessons · 1.5h", "video_url": _DEMO_VIDEO},
 ]
 CONSULT = {"id": "consult-1to1", "title": "Consulenza 1-to-1 con il Maestro", "title_de": "1-zu-1-Beratung mit dem Meister",
-           "title_en": "1-to-1 consultation with the Master", "price_cents": 12000, "duration": "60 min · videochiamata"}
+           "title_en": "1-to-1 consultation with the Master", "price_cents": 12000, "duration": "60 min · videochiamata",
+           "duration_de": "60 Min · Videocall", "duration_en": "60 min · video call"}
 _COURSE_BY_ID = {c["id"]: c for c in ACADEMY_COURSES}
 
 
@@ -1988,24 +1989,24 @@ async def save_freezer(body: FreezerSave, lang: str = "it", user: dict = Depends
 # Shop & Academy ("Coming Soon") — catalogo + lista d'attesa + toggle admin
 # ---------------------------------------------------------------------------
 SHOP_SEED = [
-    {"id": "p-classico", "kind": "panettone", "name": "Panettone Classico", "name_de": "Panettone Klassik",
-     "desc": "Uvetta e canditi, lievito madre, 36h di lievitazione.", "desc_de": "Rosinen und kandierte Früchte, Sauerteig, 36h Gärung.",
+    {"id": "p-classico", "kind": "panettone", "name": "Panettone Classico", "name_de": "Panettone Klassik", "name_en": "Classic Panettone",
+     "desc": "Uvetta e canditi, lievito madre, 36h di lievitazione.", "desc_de": "Rosinen und kandierte Früchte, Sauerteig, 36h Gärung.", "desc_en": "Raisins and candied fruit, sourdough, 36h leavening.",
      "sizes": ["500g", "750g", "1000g"], "image_url": "/recipes/pan_classico.jpg",
-     "allergens": "Glutine, Uova, Latte", "active": True},
-    {"id": "p-cioccolato", "kind": "panettone", "name": "Panettone Cioccolato e Noci", "name_de": "Panettone Schokolade & Nüsse",
-     "desc": "Gocce di cioccolato fondente e noci.", "desc_de": "Zartbitter-Schokostückchen und Walnüsse.",
+     "allergens": "Glutine, Uova, Latte", "allergens_de": "Gluten, Eier, Milch", "allergens_en": "Gluten, Eggs, Milk", "active": True},
+    {"id": "p-cioccolato", "kind": "panettone", "name": "Panettone Cioccolato e Noci", "name_de": "Panettone Schokolade & Nüsse", "name_en": "Chocolate & Walnut Panettone",
+     "desc": "Gocce di cioccolato fondente e noci.", "desc_de": "Zartbitter-Schokostückchen und Walnüsse.", "desc_en": "Dark chocolate chips and walnuts.",
      "sizes": ["500g", "1000g"], "image_url": "/recipes/pan_cioc_noci.jpg",
-     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "active": True},
-    {"id": "p-pistacchio", "kind": "panettone", "name": "Panettone Pistacchio", "name_de": "Panettone Pistazie",
-     "desc": "Cioccolato bianco e pistacchio.", "desc_de": "Weiße Schokolade und Pistazie.",
+     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "allergens_de": "Gluten, Eier, Milch, Schalenfrüchte", "allergens_en": "Gluten, Eggs, Milk, Nuts", "active": True},
+    {"id": "p-pistacchio", "kind": "panettone", "name": "Panettone Pistacchio", "name_de": "Panettone Pistazie", "name_en": "Pistachio Panettone",
+     "desc": "Cioccolato bianco e pistacchio.", "desc_de": "Weiße Schokolade und Pistazie.", "desc_en": "White chocolate and pistachio.",
      "sizes": ["500g", "1000g"], "image_url": "/recipes/pan_pistacchio.jpg",
-     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "active": True},
-    {"id": "c-lievitati", "kind": "corso", "name": "Masterclass Grandi Lievitati", "name_de": "Masterclass Große Hefegebäcke",
-     "desc": "Corso online sul panettone col metodo Mikilab (lievito madre, 2 impasti).", "desc_de": "Online-Kurs zum Panettone nach Mikilab-Methode (Sauerteig, 2 Teige).",
+     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "allergens_de": "Gluten, Eier, Milch, Schalenfrüchte", "allergens_en": "Gluten, Eggs, Milk, Nuts", "active": True},
+    {"id": "c-lievitati", "kind": "corso", "name": "Masterclass Grandi Lievitati", "name_de": "Masterclass Große Hefegebäcke", "name_en": "Big Leavened Cakes Masterclass",
+     "desc": "Corso online sul panettone col metodo Mikilab (lievito madre, 2 impasti).", "desc_de": "Online-Kurs zum Panettone nach Mikilab-Methode (Sauerteig, 2 Teige).", "desc_en": "Online panettone course with the Mikilab method (sourdough, 2 doughs).",
      "sizes": ["Online"], "image_url": "/recipes/r_panettone_base.jpg",
      "allergens": "", "active": True},
-    {"id": "c-basi", "kind": "corso", "name": "Corso Basi del Pane", "name_de": "Kurs Brot-Grundlagen",
-     "desc": "Per principianti: pane casereccio, pizza in teglia, focaccia.", "desc_de": "Für Anfänger: Hausbrot, Blechpizza, Focaccia.",
+    {"id": "c-basi", "kind": "corso", "name": "Corso Basi del Pane", "name_de": "Kurs Brot-Grundlagen", "name_en": "Bread Basics Course",
+     "desc": "Per principianti: pane casereccio, pizza in teglia, focaccia.", "desc_de": "Für Anfänger: Hausbrot, Blechpizza, Focaccia.", "desc_en": "For beginners: home bread, pan pizza, focaccia.",
      "sizes": ["Online"], "image_url": "/recipes/r_cuore.jpg",
      "allergens": "", "active": True},
 ]
@@ -2014,6 +2015,12 @@ SHOP_SEED = [
 async def seed_shop_if_empty():
     if await db.shop_products.count_documents({}) == 0:
         await db.shop_products.insert_many([dict(p) for p in SHOP_SEED])
+    else:
+        # patch idempotente delle traduzioni EN/DE sui prodotti già esistenti
+        for p in SHOP_SEED:
+            tr = {k: v for k, v in p.items() if k.endswith("_en") or k.endswith("_de")}
+            if tr:
+                await db.shop_products.update_one({"id": p["id"]}, {"$set": tr})
     if not await db.app_meta.find_one({"_key": "shop_settings"}):
         await db.app_meta.update_one({"_key": "shop_settings"},
             {"$set": {"_key": "shop_settings", "enabled": False}}, upsert=True)  # default: Coming Soon

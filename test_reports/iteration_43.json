@@ -1,0 +1,38 @@
+{
+  "summary": "Frontend-only EN localisation test on preview (430x900, admin@mikilab.de PRO). Language switcher IT/DE/EN works with zero console/page errors and no white screens. Verified EN in: News, Photo-Diagnosis page (incl. its Bread Encyclopedia which DOES show 'German flours for Italian bakers'), Shop products + Academy courses (Classic/Chocolate & Walnut/Pistachio Panettone, Big Leavened Cakes Masterclass, Bread Basics Course, EN descriptions + 'Allergens: Gluten, Eggs, Milk'), Checklists (all 4 EN templates + EN items), Shopping List (EN header/labels, empty state), Maestro chat suggestions, Home concept blocks, plus IT and DE regression. Found 4 residual Italian/German leaks in EN mode (Learn>Encyclopedia tab, Beginners cards+quiz, PaywallGate, Academy header/duration) and one dead-code file holding the EN sourdough guide.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "sections/Enciclopedia.jsx", "issue": "ENTRIES has only it/de keys -> `ENTRIES[lang] || ENTRIES.it` falls back to ITALIAN when lang=en. Learn > Encyclopedia tab in EN shows 'Miglioratore Naturale Pro', 'Per tutti gli impasti...', 'Kochstueck (con Haferflocken)', 'Autolisi', 'Idratazione'. The requested EN entries exist in data/content.js but are only rendered by sections/Encyclopedia.jsx (Diagnosis page), not by this tab.", "selector": "[data-testid=learn-tab-enciclopedia]", "priority": "HIGH"},
+      {"component": "sections/Beginners.jsx", "issue": "BEGINNERS (6 cards) and QUIZ objects have only it/de -> in EN the beginner cards show Italian ('I quattro ingredienti', 'Per fare il pane bastano farina, acqua...') and the Baker Quiz is Italian, although the page header/planner are correctly EN.", "selector": "[data-testid=nav-tab-impara]", "priority": "HIGH"},
+      {"component": "components/PaywallGate.jsx", "issue": "Language handling is binary (`const it = lang !== 'de'`), so EN users see ITALIAN paywall copy ('La Sezione Principianti e inclusa nell'accesso PRO...', 'Guarda cosa fa', 'Accedi per continuare', 'Basi passo-passo', 'Quiz del Fornaio'). Additionally the sectionName passed in is wrong for EN: LearnHub.jsx uses `t('nav_impara')==='Impara' ? IT : DE` -> EN shows GERMAN 'Sektion Anfaenger'; App.js passes hardcoded Italian sectionNames ('Il Tuo Laboratorio', 'Diagnosi', 'Sezione Principianti').", "selector": "n/a (logged-out / non-PRO Learn, Your Lab, Diagnosis, Enterprise)", "priority": "MEDIUM"},
+      {"component": "sections/Academy.jsx + backend COURSES seed", "issue": "Heading 'Academy & Servizi' is hardcoded Italian in all languages; course duration strings come from backend as Italian only ('8 lezioni - 2h', '12 lezioni - 3h', '6 lezioni - 1.5h') with no duration_en/duration_de -> Italian shown in EN and DE. Course titles/descriptions themselves are correctly EN.", "selector": "[data-testid^=academy-course-]", "priority": "MEDIUM"},
+      {"component": "sections/Mikilab.jsx", "issue": "Dead code: Mikilab.jsx (the only consumer of content[lang].lievitoMadre, i.e. the Sourdough Starter guide with 'What sourdough starter is') is not imported/rendered anywhere in the app (App.js has no 'mikilab' tab). The new EN lievitoMadre translations are therefore unreachable in the UI and could not be verified.", "selector": "[data-testid=lievito-open-btn] (never rendered)", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Learn > Learn (beginners planner)", "issues": ["Recipe/day pickers use native browser <select> elements instead of the shadcn Select used elsewhere (pre-existing, cosmetic)"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Add an `en` block to ENTRIES in sections/Enciclopedia.jsx (or make LearnHub reuse sections/Encyclopedia.jsx which already reads content[lang].encyclopedia).",
+    "Add `en` blocks to BEGINNERS and QUIZ in sections/Beginners.jsx.",
+    "Make PaywallGate.jsx tri-lingual (it/de/en) and fix sectionName passing in LearnHub.jsx (currently returns German for EN) and App.js (hardcoded Italian).",
+    "Translate Academy heading ('Academy & Services') and add duration_en/duration_de to the backend COURSES seed.",
+    "Decide on sections/Mikilab.jsx: either wire it into a route/tab (so the EN sourdough guide is reachable) or delete the dead file."
+  ],
+  "critical_code_review_comments": [
+    "Localisation is duplicated across per-component dictionaries (Enciclopedia ENTRIES, Beginners BEGINNERS/QUIZ, Home CONCEPTS, Checklists TEMPLATES) with inconsistent fallbacks; several use `X[lang] || X.it` which silently regresses to Italian when a locale is missing. Consider centralising in data/content.js and adding a dev-time assertion that every dictionary has it/de/en keys.",
+    "Binary language checks (`lang !== 'de'`, `const de = lang === 'de'`) remain in PaywallGate.jsx and Shop.jsx-style components; grep for them and replace with the tri() helper.",
+    "Backend seed data mixes translated fields (name_en/desc_en present) with untranslated ones (duration) - add *_en/*_de for every user-visible string."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "~75% (7/9 EN areas fully English; Encyclopedia tab + Beginners cards/quiz still Italian)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login via header [data-testid=login-btn]; login is optional at boot)",
+  "context_for_next_testing_agent": "Nav: header [data-testid=lang-it|lang-de|lang-en]; Shop/Academy reachable only via URL ?academy=1 (no bottom-nav tab); Checklists via nav-tab-maestro -> maestro-step-5 -> maestro-tool-check; Shopping list via maestro-tool-spesa (shows empty state unless a weekly plan is saved, so Water/Salt/Flours labels were NOT verified with data). DB recipe names stay Italian in EN by design (not a bug). 401s on /api/subscription/status before login are expected.",
+  "rca_of_the_issue": "The new EN translations were added to data/content.js, but three UI areas keep their own local dictionaries with only it/de keys (Enciclopedia.jsx ENTRIES, Beginners.jsx BEGINNERS & QUIZ) and PaywallGate.jsx uses a binary it/de flag, so lang='en' falls through to Italian (or German for the sectionName ternary in LearnHub.jsx)."
+}

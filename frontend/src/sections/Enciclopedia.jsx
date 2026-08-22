@@ -28,13 +28,24 @@ const ENTRIES = {
     { t: "Autolyse", b: "Ruhezeit von Mehl + Wasser (ohne Hefe und Salz) 20-60 Min vor dem Kneten. Entwickelt das Gluten von selbst: dehnbarerer Teig, weniger Knetarbeit." },
     { t: "Hydratation", b: "Wasseranteil bezogen auf das Mehlgewicht. Höher = offenere Porung, aber schwierigerer Teig. An Mehl (W) und Methode anpassen." },
   ],
+  en: [
+    { t: "Natural Improver Pro", b: "For every dough (Direct and Indirect method) use only the Natural Improver Pro at 2% of the flour weight. A single universal formula for lift, stability and softness." },
+    { t: "Sourdough / Li.Co.Li (Liko)", b: "Stiff sourdough (45-50% hydration) or Li.Co.Li liquid culture (100% hydration, more reactive). Kept alive with regular refreshes. In breads 15-20% of the flour weight, with Li.Co.Li up to 25-35%; in big leavened cakes 25-30%." },
+    { t: "Rye Sourdough", b: "Rye Sauerteig, more acidic and active (100% hydration, liquid). Ferments 12-16 h at 26-28°C. Perfect for rye and mixed breads (20-30% of the flour)." },
+    { t: "Poolish", b: "Liquid preferment (equal weight of water and flour + a little yeast). Matures 12-16 h at 18°C. Gives open crumb, extensibility and aroma. Use 30-40% of the total flour." },
+    { t: "Kochstück (with oat flakes)", b: "Oat flakes (Haferflocken) cooked with water and salt (1:4) into a thick cream, then cooled. They hold water: softer, longer-lasting bread. Add 10-20% of the flour weight, reducing water a little." },
+    { t: "Biga", b: "Italian stiff preferment (little water, ~45%). Gives strength and structure to the dough, clean aroma. Great for big leavened cakes and highly hydrated breads." },
+    { t: "Quellstück (soaked seeds)", b: "Seeds and grains soaked the night before. They hydrate, don't steal water from the dough and don't cut the gluten. Essential for seeded breads." },
+    { t: "Malt", b: "From sprouted grain: feeds the yeast and gives colour and crust crispness. Diastatic malt is the 'strongest' — dose it carefully. Already included in the Natural Improver Pro." },
+    { t: "Autolyse", b: "Rest of flour + water (no yeast or salt) for 20-60 min before mixing. It develops the gluten on its own: a more extensible dough with less kneading." },
+    { t: "Hydration", b: "Percentage of water on the flour weight. Higher = open crumb but harder dough. Adapt it to the flour (W) and method." },
+  ],
 };
 
 export default function Enciclopedia() {
   const { t, lang } = useLang();
   const [open, setOpen] = useState(0);
   const list = ENTRIES[lang] || ENTRIES.it;
-
   return (
     <div data-testid="enciclopedia" className="pb-4">
       <MikiAvatar label="Michele" subtitle={t("enc_title")} className="mb-4" />

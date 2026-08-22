@@ -28,19 +28,21 @@ export default function Shop({ hideCourses = false }) {
   const panettoni = data.products.filter((p) => p.kind === "panettone");
   const corsi = data.products.filter((p) => p.kind === "corso");
 
+  const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : lang === "en" ? (p[`${base}_en`] || p[base]) : p[base];
+
   const Card = ({ p }) => (
     <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] shadow-sm">
-      {p.image_url && <img src={p.image_url.startsWith("http") ? p.image_url : `${process.env.PUBLIC_URL}${p.image_url}`} alt={p.name} loading="lazy" className="w-full h-40 object-cover"
+      {p.image_url && <img src={p.image_url.startsWith("http") ? p.image_url : `${process.env.PUBLIC_URL}${p.image_url}`} alt={pick(p, "name")} loading="lazy" className="w-full h-40 object-cover"
         onError={(e) => { e.currentTarget.style.display = "none"; }} />}
       <div className="p-4">
-        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">{de ? (p.name_de || p.name) : p.name}</h3>
-        <p className="text-sm text-[#7E8A93] mt-1 leading-snug">{de ? (p.desc_de || p.desc) : p.desc}</p>
+        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">{pick(p, "name")}</h3>
+        <p className="text-sm text-[#7E8A93] mt-1 leading-snug">{pick(p, "desc")}</p>
         {p.sizes?.length ? (
           <div className="flex flex-wrap gap-1.5 mt-2">
             {p.sizes.map((s) => <span key={s} className="text-xs font-mono-data bg-[#6E8CA0]/15 text-[#33564E] dark:text-[#8FB0C2] px-2 py-0.5 rounded-full border border-[#6E8CA0]/30">{s}</span>)}
           </div>
         ) : null}
-        {p.allergens ? <p className="text-[11px] text-[#7E8A93] mt-2"><b>{tri("Allergeni","Allergene","Allergens")}:</b> {p.allergens}</p> : null}
+        {p.allergens ? <p className="text-[11px] text-[#7E8A93] mt-2"><b>{tri("Allergeni","Allergene","Allergens")}:</b> {pick(p, "allergens")}</p> : null}
         {data.enabled ? (
           <button data-testid={`shop-buy-${p.id}`} onClick={() => join(p.id)}
             className="mt-3 w-full bg-[#5E8B7E] text-white font-semibold py-2 rounded-xl active:scale-98 text-sm">

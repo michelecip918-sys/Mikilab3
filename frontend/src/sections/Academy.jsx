@@ -80,12 +80,13 @@ export default function Academy() {
 
   const title = (c) => (lang === "de" ? c.title_de : lang === "en" ? c.title_en : c.title) || c.title;
   const desc = (c) => (lang === "de" ? c.desc_de : lang === "en" ? c.desc_en : c.desc) || c.desc;
+  const dur = (c) => (lang === "de" ? c.duration_de : lang === "en" ? c.duration_en : c.duration) || c.duration;
 
   return (
     <div data-testid="academy-page" className="pb-4 space-y-6">
       <div className="rounded-3xl bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-7 text-center shadow-xl">
         <GraduationCap className="w-12 h-12 mx-auto mb-2" />
-        <h1 className="font-display text-3xl font-bold">Academy &amp; Servizi</h1>
+        <h1 className="font-display text-3xl font-bold">{tri("Academy & Servizi", "Academy & Services", "Academy & Services")}</h1>
         <p className="text-white/85 text-sm mt-2">
           {tri("Corsi video del Maestro e consulenze 1-to-1 su misura.", "Video-Kurse vom Meister und maßgeschneiderte 1-zu-1-Beratungen.", "The Master's video courses and tailored 1-to-1 consultations.")}
         </p>
@@ -107,7 +108,7 @@ export default function Academy() {
                     <span className="shrink-0 font-mono-data font-bold text-[#5E8B7E]">{euro(c.price_cents)}</span>
                   </div>
                   <p className="text-sm text-[#7E8A93] mt-1 leading-snug">{desc(c)}</p>
-                  <p className="text-[11px] text-[#7E8A93] mt-1.5 flex items-center gap-1"><PlayCircle className="w-3.5 h-3.5" /> {c.duration}</p>
+                  <p className="text-[11px] text-[#7E8A93] mt-1.5 flex items-center gap-1"><PlayCircle className="w-3.5 h-3.5" /> {dur(c)}</p>
 
                   {isOwned ? (
                     <div className="mt-3">
@@ -141,7 +142,7 @@ export default function Academy() {
               </p>
               <span className="shrink-0 font-mono-data font-bold text-[#5E8B7E]">{euro(cat.consult.price_cents)}</span>
             </div>
-            <p className="text-[11px] text-[#7E8A93] mt-1">{cat.consult.duration}</p>
+            <p className="text-[11px] text-[#7E8A93] mt-1">{dur(cat.consult)}</p>
             <div className="grid grid-cols-1 gap-2 mt-3">
               <input data-testid="consult-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Il tuo nome", "Dein Name", "Your name")}
                 className="w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC]" />

@@ -38,7 +38,7 @@ export default function LearnHub({ initial = "impara" }) {
       </div>
 
       {sub === "impara" && (
-        <PaywallGate feature="beginners" sectionName={t("nav_impara") === "Impara" ? "Sezione Principianti" : "Sektion Anfänger"}><Beginners /></PaywallGate>
+        <PaywallGate feature="beginners" sectionName={tri("Sezione Principianti", "Sektion Anfänger", "Beginners Section")}><Beginners /></PaywallGate>
       )}
       {sub === "news" && <NewsPage />}
       {sub === "enciclopedia" && <Enciclopedia />}

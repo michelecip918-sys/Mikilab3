@@ -1,0 +1,32 @@
+{
+  "summary": "Final EN-mode verification (frontend only, viewport 430x900) of the 6 requested areas + IT/DE regression. 5 of 6 areas are now fully English. ONE remaining leak: PaywallGate feature-preview list ('See what it does') still renders ITALIAN in EN mode for ALL features (lab, diagnosi, enterprise, beginners) because the FEATURES constant in PaywallGate.jsx only defines `it` and `de` keys — no `en`, so flang='en' falls back to FEATURES[feature].it. Zero JS page errors (pageerror listener) in EN, DE and IT across Home, Recipes, Your Lab, Learn (Learn/News/Encyclopedia/Community), Diagnosis, Academy/Shop, Maestro step 5, Checklists, Quiz.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PaywallGate.jsx (FEATURES const, lines 9-70)", "issue": "In EN mode the whole 'See what it does 👇' feature list is in ITALIAN. FEATURES.lab/.diagnosi/.enterprise/.beginners have only `it` and `de` keys; line 165 `FEATURES[feature]?.[flang] || FEATURES[feature]?.it` falls back to Italian for lang='en'. Verified: Your Lab paywall shows 'Capo Laboratorio / Piano settimanale / Adatta al forno / Costi & Spesa / Scansiona ricetta / Panettone dinamico'; Enterprise shows 'Multi-Negozio / Ordini Fornitori / Turni del Personale / Tutto salvato'; Diagnosis shows 'Difetti e rimedi / Stato dell'impasto / Tutti gli ingredienti / Macchine & guasti'; Beginners Section shows 'Basi passo-passo / Glossario interattivo / Dosi senza attrezzi / Quiz del Fornaio'. All other paywall strings (header sectionName 'Your Lab'/'Diagnosis'/'Enterprise'/'Beginners Section', 'This section is reserved for PRO members…', 'See what it does', 'Try it free or subscribe…', 'Log in to continue', 'per month'/'per year', 'Free trial (once)', '1 hour'/'24 hours') are correct EN.", "selector": "[data-testid='paywall-feature-0..5']", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Learn sub-nav (430px)", "issues": ["Tab labels truncated: 'Encyclo…' and 'Commu…' in EN (data-testid learn-tab-enciclopedia / learn-tab-community). Cosmetic only."]},
+      {"screen": "Beginners 'Plan your bread at home'", "issues": ["Uses native browser <select> for recipe/quantity/day and native date-like controls instead of the shadcn Select component (inconsistent with the rest of the app)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Add `en` arrays to FEATURES.lab, FEATURES.diagnosi, FEATURES.enterprise and FEATURES.beginners in /app/frontend/src/components/PaywallGate.jsx (only remaining EN leak).",
+    "Optional: shorten/scroll Learn sub-nav labels so 'Encyclopedia'/'Community' are not truncated at 430px."
+  ],
+  "critical_code_review_comments": [
+    "PaywallGate.jsx: the `|| FEATURES[feature]?.it` fallback silently hides missing translations. Consider falling back to `en` (or asserting key presence) so future language gaps are visible.",
+    "PaywallGate.jsx line 76: `const it = lang !== \"de\"` is now dead/unused after the tri() refactor — remove to avoid confusion.",
+    "PaywallGate.jsx lines 110-111: toast.error(\"Errore checkout\") is hardcoded Italian — should use tri()."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "86% (6/7 areas fully EN; PaywallGate feature list fails)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login worked, admin=PRO, unlocked Maestro step 5 + Beginners)",
+  "context_for_next_testing_agent": "VERIFIED OK in EN: Enciclopedia (Natural Improver Pro, Sourdough / Li.Co.Li (Liko), Rye Sourdough, Poolish, Kochstück, Biga, Quellstück, Malt, Autolyse, Hydration — no Italian); Beginners cards ('The four ingredients','The right water','Knead without rushing','Let it rise','Baking at home','Don't get discouraged') + quiz ('BAKER'S QUIZ','Start the quiz','How warm should the water be for mixing?','Boiling/Lukewarm/Ice-cold'); Academy heading 'Academy & Services', courses 'Sourdough from Scratch/Perfect Panettone/Pretzels & Lye Bakes' with '8 lessons · 2h','12 lessons · 3h','6 lessons · 1.5h', consult '60 min · video call'; Shop products 'Classic Panettone','Chocolate & Walnut Panettone','Pistachio Panettone','Big Leavened Cakes Masterclass','Bread Basics Course'; Checklists 'Opening the Lab','Closing the Lab','Cells & Fridges Check','Machine Maintenance & Sanitising' with EN items. DB recipe names remain Italian (expected fallback, not a bug). DE and IT paywalls fully correct in their own language. Only re-test the paywall feature list after adding FEATURES.en.",
+  "rca_of_the_issue": "PaywallGate.jsx computes flang='en' for English but the FEATURES lookup table was never extended with `en` entries, so `FEATURES[feature]?.[flang] || FEATURES[feature]?.it` resolves to the Italian array. Repro: open app anonymous, set lang EN via [data-testid=lang-en], tap [data-testid=nav-tab-maestro] → [data-testid=paywall] shows Italian feature titles/descriptions. Fix: add `en:` arrays mirroring the it/de ones for lab, diagnosi, enterprise, beginners."
+}
