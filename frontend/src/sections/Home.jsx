@@ -5,6 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
+import { getProfile } from "@/components/Onboarding";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const CONCEPTS = {
@@ -160,6 +161,8 @@ export default function Home({ onNavigate }) {
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
   const L = (it_, de_, en_) => (de ? de_ : lang === "en" ? en_ : it_);
+  const profile = getProfile();
+  const focusChip = ({ panettoni: L("Tracker pH Lievito", "pH-Tracker", "pH Tracker"), pane: L("Avvia impasti", "Teige starten", "Start doughs"), brezel: L("Il mio laboratorio", "Meine Backstube", "My lab"), dolci: L("Il mio laboratorio", "Meine Backstube", "My lab") })[profile && profile.focus] || L("Il mio laboratorio", "Meine Backstube", "My lab");
 
   const SECTIONS = [
     { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#5E8B7E] to-[#33564E]",
@@ -204,6 +207,26 @@ export default function Home({ onNavigate }) {
     <div className="pb-2 space-y-6">
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
+
+      {/* Dashboard personalizzata dall'onboarding */}
+      {profile && (
+        <div data-testid="home-personal" className="rounded-3xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4">
+          <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">
+            {L("Ciao", "Hallo", "Hi")}{profile.labName ? `, ${profile.labName}` : ""}! 👋
+          </p>
+          <p className="text-xs text-[#7E8A93] mb-3">{L("Le tue scorciatoie rapide", "Deine Schnellzugriffe", "Your quick shortcuts")}</p>
+          <div className="flex flex-wrap gap-2">
+            <button data-testid="home-quick-ricette" onClick={() => go("ricette")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#5E8B7E] text-white text-sm font-semibold active:scale-97">
+              <BookOpen className="w-4 h-4" /> {L("Le mie ricette", "Meine Rezepte", "My recipes")}
+            </button>
+            <button data-testid="home-quick-focus" onClick={() => go("maestro")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#6E8CA0]/40 text-[#2B303B] dark:text-[#EAF0EC] text-sm font-semibold active:scale-97">
+              <Wrench className="w-4 h-4 text-[#6E8CA0]" /> {focusChip}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Hero compatto */}
       <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-xl p-7 text-center">
