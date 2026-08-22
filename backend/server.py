@@ -2499,12 +2499,13 @@ class DoughSessionReq(BaseModel):
     humidity: Optional[float] = None            # umidità %
     water_temp_c: Optional[float] = None        # temperatura acqua usata
     flour_temp_c: Optional[float] = None        # temperatura farina (opz.)
+    source: Optional[str] = Field("", max_length=40)   # es. "pesata" (Pesata Guidata) o "" (manuale)
     note: Optional[str] = Field("", max_length=1000)
 
 
 def _dough_session_public(d: dict) -> dict:
     return {k: d.get(k) for k in ("id", "recipe_id", "recipe_name", "date", "target_temp_c",
-            "dough_temp_c", "room_temp_c", "humidity", "water_temp_c", "flour_temp_c", "note", "created_at")}
+            "dough_temp_c", "room_temp_c", "humidity", "water_temp_c", "flour_temp_c", "source", "note", "created_at")}
 
 
 @api_router.get("/dough-sessions")

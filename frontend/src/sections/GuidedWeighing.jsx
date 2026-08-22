@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Scale, Bluetooth, Volume2, VolumeX, AlertTriangle, ArrowRight, Plus, Trash2, Layers, Droplet, Wheat, Euro, RotateCcw, Thermometer, Save, CheckCircle2 } from "lucide-react";
+import { Scale, Bluetooth, Volume2, VolumeX, AlertTriangle, ArrowRight, Plus, Trash2, Layers, Droplet, Wheat, Euro, RotateCcw, Thermometer, Save, CheckCircle2, QrCode } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { doughSessionsApi } from "@/lib/api";
@@ -109,7 +109,10 @@ export default function GuidedWeighing() {
     }).filter((r) => Math.abs(r.diff) >= Math.max(3, r.planned * 0.03));
     setSummary({ rows, byRole, realHyd, plannedHyd, totalReal, cost, extras });
     setStarted(false);
-    speak(tri("Pesata completata", "Wiegen abgeschlossen", "Weighing complete"));
+    // Feature: voce riepilogo — legge idratazione reale e costo a fine pesata
+    const hydTxt = realHyd > 0 ? tri(`Idratazione reale ${realHyd.toFixed(0)} percento`, `Reale Hydration ${realHyd.toFixed(0)} Prozent`, `Real hydration ${realHyd.toFixed(0)} percent`) : "";
+    const costTxt = cost > 0 ? tri(`, costo ${cost.toFixed(2)} euro`, `, Kosten ${cost.toFixed(2)} Euro`, `, cost ${cost.toFixed(2)} euro`) : "";
+    speak(tri("Pesata completata. ", "Wiegen abgeschlossen. ", "Weighing complete. ") + hydTxt + costTxt);
     toast.success(tri("Pesata completata! 🎉", "Fertig! 🎉", "Done! 🎉"));
   }, [ingredients, factor, batchFactor, batches]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -155,8 +158,8 @@ export default function GuidedWeighing() {
     r.start(); toast.message(tri("Di' 'Avanti'…", "Sag 'Weiter'…", "Say 'Next'…"));
   };
 
-  const reset = () => { setSummary(null); setIdx(0); setBatch(0); setWeight(0); logRef.current = []; setSessOpen(false); setSessSaved(false); setSess({ recipe_name: "", target_temp_c: "", dough_temp_c: "", room_temp_c: "", water_temp_c: "" }); };
-  const startRun = () => { logRef.current = []; setSummary(null); setSessOpen(false); setSessSaved(false); setStarted(true); setIdx(0); setBatch(0); setWeight(0); };
+  const reset = () => { setSummary(null); setIdx(0); setBatch(0); setWeight(0); logRef.current = []; setSessOpen(false); setSessSaved(false); setBatchSaved(false); setSess({ recipe_name: "", target_temp_c: "", dough_temp_c: "", room_temp_c: "", water_temp_c: "" }); };
+  const startRun = () => { logRef.current = []; setSummary(null); setSessOpen(false); setSessSaved(false); setBatchSaved(false); setStarted(true); setIdx(0); setBatch(0); setWeight(0); };
 
   const saveAsSession = async () => {
     if (!user) { setAuthOpen(true); return; }
@@ -169,12 +172,39 @@ export default function GuidedWeighing() {
         dough_temp_c: Number(sess.dough_temp_c),
         room_temp_c: sess.room_temp_c !== "" ? Number(sess.room_temp_c) : null,
         water_temp_c: sess.water_temp_c !== "" ? Number(sess.water_temp_c) : null,
+        source: "pesata",
         note: summary ? tri(`Idratazione reale ${summary.realHyd.toFixed(1)}%, food cost € ${summary.cost.toFixed(2)}`, `Reale Hydration ${summary.realHyd.toFixed(1)}%, Kosten € ${summary.cost.toFixed(2)}`, `Real hydration ${summary.realHyd.toFixed(1)}%, food cost € ${summary.cost.toFixed(2)}`) : "",
       });
       setSessSaved(true);
       toast.success(tri("Sessione salvata nel Diario Impasti", "Im Teig-Tagebuch gespeichert", "Saved to the Dough Log"));
     } catch { toast.error(tri("Errore nel salvataggio", "Speichern fehlgeschlagen", "Save failed")); }
     setSessSaving(false);
+  };
+
+  const [batchSaved, setBatchSaved] = useState(false);
+  const createBatch = () => {
+    if (!summary) return;
+    const d = new Date(); const p = (n) => String(n).padStart(2, "0");
+    const code = `LOT-${String(d.getFullYear()).slice(2)}${p(d.getMonth() + 1)}${p(d.getDate())}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
+    const flourIng = ingredients.find((i) => i.role === "flour");
+    const entry = {
+      id: Math.random().toString(36).slice(2, 9),
+      code,
+      product: (sess.recipe_name || tri("Pesata", "Wiegen", "Weighing")).trim(),
+      prodDate: new Date().toISOString().slice(0, 10),
+      flour: flourIng ? flourIng.name : "",
+      flourLot: "",
+      qty: `${(summary.totalReal / 1000).toFixed(2)} kg`,
+      expiry: "",
+      operator: user?.name || "",
+      note: tri(`Idratazione reale ${summary.realHyd.toFixed(1)}% · food cost € ${summary.cost.toFixed(2)} · da Pesata Guidata`, `Reale Hydration ${summary.realHyd.toFixed(1)}% · Kosten € ${summary.cost.toFixed(2)} · aus geführtem Wiegen`, `Real hydration ${summary.realHyd.toFixed(1)}% · food cost € ${summary.cost.toFixed(2)} · from Guided Weighing`),
+    };
+    try {
+      const list = JSON.parse(localStorage.getItem("mikilab_batches") || "[]");
+      localStorage.setItem("mikilab_batches", JSON.stringify([entry, ...list]));
+      setBatchSaved(true);
+      toast.success(tri("Lotto creato in Tracciabilità Lotti", "Charge in Rückverfolgung erstellt", "Batch created in Batch Traceability"));
+    } catch { toast.error(tri("Errore", "Fehler", "Error")); }
   };
 
   const inp = "w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]";
@@ -285,6 +315,11 @@ export default function GuidedWeighing() {
             </div>
           )}
         </div>
+
+        {/* Crea lotto tracciabilità dai pesi reali */}
+        <button data-testid="gw-create-batch" onClick={createBatch} disabled={batchSaved} className="w-full flex items-center justify-center gap-2 bg-[#6B8E62] hover:bg-[#5a7a53] disabled:opacity-60 text-white font-semibold py-3 rounded-2xl mb-4 active:scale-98">
+          {batchSaved ? <><CheckCircle2 className="w-5 h-5" /> {tri("Lotto creato ✓", "Charge erstellt ✓", "Batch created ✓")}</> : <><QrCode className="w-5 h-5" /> {tri("Crea lotto in Tracciabilità", "Charge in Rückverfolgung", "Create batch in Traceability")}</>}
+        </button>
 
         <button data-testid="gw-summary-reset" onClick={reset} className="w-full flex items-center justify-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-bold py-4 rounded-2xl active:scale-98"><RotateCcw className="w-5 h-5" /> {tri("Nuova pesata", "Neu wiegen", "New weighing")}</button>
       </div>

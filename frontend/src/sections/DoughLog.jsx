@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Thermometer, Save, Trash2, Sparkles, Droplet, CheckCircle2, Flame, Snowflake, History, LogIn } from "lucide-react";
+import { Thermometer, Save, Trash2, Sparkles, Droplet, CheckCircle2, Flame, Snowflake, History, LogIn, Scale, TrendingUp } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { doughSessionsApi, recipesApi } from "@/lib/api";
@@ -156,6 +157,33 @@ export default function DoughLog() {
         );
       })()}
 
+      {/* Grafico andamento temperature (Giorno Dopo trend) */}
+      {(() => {
+        const withTemp = [...sessions].filter((s) => s.dough_temp_c != null).reverse().slice(-8);
+        if (withTemp.length < 2) return null;
+        const data = withTemp.map((s, i) => ({
+          name: s.date ? s.date.slice(5) : String(i + 1),
+          impasto: s.dough_temp_c,
+          target: s.target_temp_c != null ? s.target_temp_c : null,
+        }));
+        return (
+          <div className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 mb-4" data-testid="doughlog-chart">
+            <p className="text-xs font-bold uppercase text-[#5E8B7E] mb-2 flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5" /> {tri("Andamento temperatura impasto", "Verlauf Teigtemperatur", "Dough temperature trend")}</p>
+            <ResponsiveContainer width="100%" height={180}>
+              <LineChart data={data} margin={{ top: 6, right: 8, left: -18, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#D7E1DB" strokeOpacity={0.4} />
+                <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#7E8A93" }} />
+                <YAxis tick={{ fontSize: 10, fill: "#7E8A93" }} domain={["dataMin - 1", "dataMax + 1"]} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 12 }} formatter={(v) => `${v}°C`} />
+                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <Line type="monotone" dataKey="impasto" name={tri("Impasto", "Teig", "Dough")} stroke="#C0574D" strokeWidth={2.5} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="target" name="Target" stroke="#6B8E62" strokeWidth={2} strokeDasharray="5 4" dot={false} connectNulls />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        );
+      })()}
+
       {/* Storico */}
       {sessions.length > 0 && (
         <div data-testid="doughlog-history">
@@ -163,8 +191,11 @@ export default function DoughLog() {
           <div className="space-y-2">
             {sessions.map((s) => (
               <div key={s.id} data-testid={`doughlog-item-${s.id}`} className="flex items-center justify-between bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2">
-                <div>
-                  <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{s.recipe_name}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-1.5">
+                    {s.recipe_name}
+                    {s.source === "pesata" && <span data-testid={`doughlog-badge-${s.id}`} className="inline-flex items-center gap-0.5 bg-[#5E8B7E]/15 text-[#5E8B7E] text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0"><Scale className="w-2.5 h-2.5" /> {tri("da Pesata", "aus Wiegen", "from Weighing")}</span>}
+                  </p>
                   <p className="text-[11px] text-[#7E8A93] font-mono-data">{s.date} · {tri("impasto", "Teig", "dough")} {s.dough_temp_c}°C{s.target_temp_c != null ? ` / target ${s.target_temp_c}°C` : ""}{s.water_temp_c != null ? ` · ${tri("acqua", "Wasser", "water")} ${s.water_temp_c}°C` : ""}</p>
                 </div>
                 <button data-testid={`doughlog-remove-${s.id}`} onClick={() => remove(s.id)} className="text-[#7E8A93] hover:text-[#C0574D] shrink-0"><Trash2 className="w-4 h-4" /></button>

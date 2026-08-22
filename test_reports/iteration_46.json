@@ -1,0 +1,29 @@
+{
+  "summary": "Frontend-only E2E test of the 5 new 'Laboratorio Smart' features on the preview URL, logged in as admin@mikilab.de. All 5 features PASSED plus the regression set. Flow used: dismiss IntroGuide + localStorage mikilab_onboarding, login via header 'Accedi' (no auth screen at startup; the Laboratorio tab shows a PRO paywall until login), then nav-tab-maestro wizard. (1) Pesata Guidata full run (4 default ingredients via gw-manual + 2s auto-advance) reached gw-summary with gw-real-hyd=65.0% and gw-real-cost=€1.20/€2.00; gw-create-batch showed toast 'Lotto creato in Tracciabilità Lotti', switched to 'Lotto creato ✓' (disabled), wrote to localStorage mikilab_batches with note 'Idratazione reale 65.0% · food cost € 2.00 · da Pesata Guidata', and Step 5 → Tracciabilità Lotti rendered batch-list with 1 batch-card (LOT-260822-6D8, 1.87 kg, operator Michele, QR). (2) DoughLog: after 2 manual sessions for the same recipe with target 24°C and dough 25.5/23.0°C, doughlog-chart rendered with 2 recharts lines (Impasto/Target) above the history. (3) HACCP: haccp-expiry is type=date; past date → red 'Scaduto' badge (rgb(192,87,77)), +3d → amber 'Scade tra 3g' (rgb(224,164,88)), +200d → no badge; haccp-alert-banner showed '2 materia/e in scadenza o scaduta/e'. (4) Voice: window.speechSynthesis.speak intercepted — final utterance 'Pesata completata. Idratazione reale 65 percento, costo 1.20 euro'; no JS/page errors at completion. (5) Session saved from the Pesata summary (gw-savesession-open → gw-sess-save) appears in DoughLog with doughlog-badge 'da Pesata'; the 2 manually created sessions have no badge. Regression OK: gw-savesession panel, doughlog-dayafter (verdict 'Troppo freddo · -1°C', doughlog-suggest-water 17°C), Claude AI advice (doughlog-ai returned a coherent Italian answer in <20s), Bilancia Smart, Meteo & Laboratorio, Marketplace Usato all open. All test data cleaned up (3 HACCP entries and 3 dough sessions deleted; batch localStorage is per-browser-context and not persisted).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Maestro → Marketplace Usato", "issues": ["Page renders with almost no content (only header/empty state, ~274 chars of text) — no empty-state message/CTA visible; not part of the 5 features but worth a look"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "OPTIONAL (low): gw-create-batch uses sess.recipe_name for the batch 'product', so if the user clicks 'Crea lotto' before naming/saving the dough session the batch is labelled generically 'Pesata'. Consider prompting for a product name (or reusing the last recipe) so traceability cards are not all named 'Pesata'.",
+    "OPTIONAL (low): batch entries created from Pesata leave flourLot and expiry empty — acceptable, but HACCP/lot linkage could be prefilled from the latest HACCP entry."
+  ],
+  "critical_code_review_comments": [
+    "GuidedWeighing.jsx is ~390 lines with setup/run/summary in one component — still manageable, but the summary block could be split for maintainability.",
+    "HaccpLog.jsx daysToExpiry() correctly handles YYYY-MM-DD / DD.MM.YYYY / DD/MM/YYYY; verified end-to-end.",
+    "/api/auth/me returns 401 before login and is logged as a console error — expected behaviour, but could be silenced to keep the console clean."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "100% (5/5 features + regression)"},
+  "seed_data_creation": "Temporary: 3 HACCP entries (TEST_HACCP_Past/Soon/Far), 3 dough sessions (TEST_PesataQA, 2x TEST_QA_Chart), 2 localStorage batches. All deleted / not persisted after testing.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (works; login must be opened from the header 'Accedi' button — no forced auth screen at startup)",
+  "context_for_next_testing_agent": "Laboratorio tab is PRO-gated: without login it shows a paywall, so login FIRST (header 'Accedi' → auth-email/auth-password/auth-submit). Onboarding can be bypassed with localStorage mikilab_onboarding={\"done\":true}; IntroGuide via intro-close-btn. Tool testids: maestro-step-{1..5} then maestro-tool-{pesata|sessioni|haccp|lotti|bilancia|meteo|market}; back via maestro-back-btn. Pesata run: fill gw-manual with the target read from gw-panel and wait ~3s per ingredient for auto-advance. mikilab_batches is localStorage-only, so create-batch and the Tracciabilità check must happen in the SAME browser context.",
+  "rca_of_the_issue": "No defects found; the only earlier test failure was in the test script itself (missing login before the PRO-gated Laboratorio tab and a wrong tool testid 'marketplace' instead of 'market')."
+}

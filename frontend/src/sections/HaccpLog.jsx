@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ScanLine, Camera, X, Save, Trash2, ShieldCheck, LogIn, Thermometer } from "lucide-react";
+import { ScanLine, Camera, X, Save, Trash2, ShieldCheck, LogIn, Thermometer, AlertTriangle, Clock } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { haccpApi } from "@/lib/api";
@@ -90,6 +90,26 @@ export default function HaccpLog() {
 
   const inp = "w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]";
 
+  // parsing scadenza (YYYY-MM-DD, DD/MM/YYYY, DD.MM.YYYY) → giorni residui (null se non parsabile)
+  const daysToExpiry = (raw) => {
+    if (!raw) return null;
+    let d = null;
+    let m;
+    if ((m = /^(\d{4})-(\d{2})-(\d{2})/.exec(raw))) d = new Date(+m[1], +m[2] - 1, +m[3]);
+    else if ((m = /^(\d{1,2})[/.](\d{1,2})[/.](\d{2,4})/.exec(raw))) { const y = +m[3] < 100 ? 2000 + +m[3] : +m[3]; d = new Date(y, +m[2] - 1, +m[1]); }
+    if (!d || isNaN(d)) return null;
+    const t0 = new Date(); t0.setHours(0, 0, 0, 0);
+    return Math.round((d - t0) / 86400000);
+  };
+  const expBadge = (raw) => {
+    const dd = daysToExpiry(raw);
+    if (dd === null) return null;
+    if (dd < 0) return { color: "#C0574D", label: tri("Scaduto", "Abgelaufen", "Expired") };
+    if (dd <= 7) return { color: "#E0A458", label: tri(`Scade tra ${dd}g`, `Läuft in ${dd}T ab`, `Expires in ${dd}d`) };
+    return null;
+  };
+  const alerts = logs.map((l) => expBadge(l.expiry)).filter(Boolean).length;
+
   return (
     <div className="pb-40" data-testid="haccp">
       <div className="flex items-center gap-3 mb-4">
@@ -126,7 +146,7 @@ export default function HaccpLog() {
         </div>
         <div className="grid grid-cols-2 gap-2">
           <input data-testid="haccp-lot" value={form.lot} onChange={(e) => setForm((f) => ({ ...f, lot: e.target.value }))} placeholder={tri("Lotto fornitore", "Lieferanten-Charge", "Supplier lot")} className={inp} />
-          <input data-testid="haccp-expiry" value={form.expiry} onChange={(e) => setForm((f) => ({ ...f, expiry: e.target.value }))} placeholder={tri("Scadenza", "Ablauf", "Expiry")} className={inp} />
+          <input data-testid="haccp-expiry" type="date" value={form.expiry} onChange={(e) => setForm((f) => ({ ...f, expiry: e.target.value }))} title={tri("Scadenza", "Ablauf", "Expiry")} className={inp} />
           <input data-testid="haccp-supplier" value={form.supplier} onChange={(e) => setForm((f) => ({ ...f, supplier: e.target.value }))} placeholder={tri("Fornitore", "Lieferant", "Supplier")} className={inp} />
           <label className="flex items-center gap-1 bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3">
             <Thermometer className="w-4 h-4 text-[#7E8A93]" />
@@ -138,17 +158,28 @@ export default function HaccpLog() {
 
       {logs.length > 0 && (
         <div data-testid="haccp-list">
+          {alerts > 0 && (
+            <div data-testid="haccp-alert-banner" className="flex items-center gap-2 bg-[#C0574D]/10 border border-[#C0574D]/30 rounded-xl px-3 py-2 mb-2 text-[#C0574D] text-sm font-semibold">
+              <AlertTriangle className="w-4 h-4 shrink-0" /> {tri(`${alerts} materia/e in scadenza o scaduta/e`, `${alerts} Rohstoff(e) bald ablaufend/abgelaufen`, `${alerts} material(s) expiring or expired`)}
+            </div>
+          )}
           <p className="text-xs font-bold uppercase text-[#7E8A93] mb-2">{tri("Voci registrate", "Erfasste Einträge", "Logged entries")}</p>
           <div className="space-y-2">
-            {logs.map((l) => (
-              <div key={l.id} data-testid={`haccp-item-${l.id}`} className="flex items-center justify-between bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2">
+            {logs.map((l) => {
+              const eb = expBadge(l.expiry);
+              return (
+              <div key={l.id} data-testid={`haccp-item-${l.id}`} className="flex items-center justify-between bg-white dark:bg-[#232A31] border rounded-xl px-3 py-2" style={eb ? { borderColor: eb.color + "66" } : {}}>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{l.material}</p>
+                  <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate flex items-center gap-1.5">
+                    {l.material}
+                    {eb && <span data-testid={`haccp-expbadge-${l.id}`} className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style={{ background: eb.color + "22", color: eb.color }}><Clock className="w-2.5 h-2.5" /> {eb.label}</span>}
+                  </p>
                   <p className="text-[11px] text-[#7E8A93] font-mono-data truncate">{[l.code, l.lot ? `${tri("lotto", "Charge", "lot")} ${l.lot}` : "", l.expiry ? `${tri("scad.", "MHD", "exp.")} ${l.expiry}` : "", l.temp_c != null ? `${l.temp_c}°C` : ""].filter(Boolean).join(" · ")}</p>
                 </div>
                 <button data-testid={`haccp-remove-${l.id}`} onClick={() => remove(l.id)} className="text-[#7E8A93] hover:text-[#C0574D] shrink-0"><Trash2 className="w-4 h-4" /></button>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

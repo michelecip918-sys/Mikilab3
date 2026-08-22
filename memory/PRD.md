@@ -700,3 +700,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 
 ## v64.1 (2026-06) — Collegamento Pesata → Diario Impasti
 - Dal riepilogo della Pesata Guidata (`gw-summary`) nuovo pannello `gw-savesession`: "Salva come sessione impasto (Giorno Dopo)" apre 4 input temperatura (target/finale/ambiente/acqua) + nome pre-compilato con la data; salva su `doughSessionsApi.create` includendo nota con idratazione reale + food cost. Login richiesto (→ auth modal). Stato salvato `gw-savesession-ok`. testid: gw-savesession-open, gw-sess-name/target/dough/room/water, gw-sess-save. Collega Fase 1 (Pesata) → Fase 2 (Diario/Giorno Dopo). Riusa endpoint già testato in iteration_45; compila pulito.
+
+## v65 (2026-06) — Laboratorio Smart: 5 potenziamenti (Next Action Items)
+- **Pesata → Lotto**: dal riepilogo Pesata Guidata pulsante `gw-create-batch` crea un lotto in Tracciabilità Lotti (localStorage `mikilab_batches`) con prodotto, qty in kg (peso reale), operatore e nota (idratazione reale + food cost + "da Pesata Guidata"). Stato `Lotto creato ✓`.
+- **Grafico Giorno Dopo** (`doughlog-chart`): recharts LineChart in Diario Impasti con andamento temperatura Impasto vs Target sulle ultime ≤8 sessioni (compare con ≥2 sessioni).
+- **Alert scadenze HACCP**: `haccp-expiry` ora date picker; helper `daysToExpiry`/`expBadge` → badge per voce (`haccp-expbadge-<id>`: rosso "Scaduto", ambra "Scade tra Xg" entro 7gg) + banner conteggio `haccp-alert-banner`.
+- **Voce riepilogo**: a fine pesata la voce legge idratazione reale e costo (SpeechSynthesis, guardia voiceOn).
+- **Badge "da Pesata"**: backend `DoughSessionReq.source` (opz.); le sessioni salvate dalla Pesata hanno `source:"pesata"` e mostrano badge `doughlog-badge-<id>` nello storico; quelle manuali no.
+- Testato: iteration_46 — frontend 100% (5/5 feature + regressione), 0 bug. Note opzionali low: nome lotto generico "Pesata" se non si nomina prima la sessione. Backend `source` verificato via curl. Dati di test ripuliti.
