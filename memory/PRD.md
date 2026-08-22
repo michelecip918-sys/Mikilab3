@@ -679,3 +679,10 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - Testato: iteration_43 (75%→fix) e iteration_44 (86%, unico leak = FEATURES senza en → RISOLTO ora aggiungendo gli array en). 0 crash in IT/DE/EN.
 ### NOTA: i TESTI DELLE RICETTE del DB restano IT/DE (fallback IT in EN) — traduzione automatica/curata del DB ricette è un lavoro separato ancora da fare.
 ### STATO RICHIESTE UTENTE "finire tutto tranne PayPal": FATTO tutto ciò che è fattibile senza dati esterni. IN SOSPESO per volontà utente: PayPal. IN ATTESA DI DATI UTENTE: video reali Academy, valori nutrizionali reali. Traduzione EN del DB ricette: da valutare (automatica vs curata).
+
+## v63 (2026-06) — Traduzione EN del database ricette (49 ricette)
+- Tradotte automaticamente in inglese (Claude via Emergent LLM key) tutte le 49 ricette di `mikilab_seed_data.json`: aggiunti campi `name_en, real_name_en, flour_type_en, notes_en, procedure_en` (accanto ai `_de` esistenti). Script riutilizzabile: `backend/translate_recipes_en.py` (idempotente, salta i campi già tradotti/vuoti).
+- Modello `Recipe`/`RecipeCreate` esteso con i campi `_en`. SEED_VERSION bumpata a `2026-06-v44-en-recipes` → al riavvio il seed fa upsert dei `_en` su tutte le ricette non `user_edited` (rispetta le modifiche manuali di Michele).
+- `rLoc` (già predisposto) ora restituisce i campi `_en` in modalità EN; i componenti ricette (RecipeShowcase, RecipeList, CapoLaboratorio) usano rLoc → le ricette si mostrano in inglese (nome, procedimento, note, tipo farina).
+- Verificato: DB via API 49/49 con name_en + procedure_en; catena rLoc→componenti confermata. Nomi propri tedeschi (es. Wurzelbrot, Brezel) restano invariati in EN (corretto).
+### ✅ i18n EN ora COMPLETA: interfaccia + contenuti Maestro + ricette. Restano solo IN SOSPESO per volontà utente: PayPal; IN ATTESA DATI: video Academy, valori nutrizionali reali.

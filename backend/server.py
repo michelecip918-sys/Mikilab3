@@ -119,8 +119,13 @@ class Recipe(BaseModel):
     flour_type_de: Optional[str] = None
     notes_de: Optional[str] = None
     procedure_de: Optional[str] = None
+    name_en: Optional[str] = None
+    flour_type_en: Optional[str] = None
+    notes_en: Optional[str] = None
+    procedure_en: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
+    real_name_en: Optional[str] = None
     menu_category: Optional[str] = None  # basi | pane | panini | panettoni
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
@@ -159,8 +164,13 @@ class RecipeCreate(BaseModel):
     flour_type_de: Optional[str] = None
     notes_de: Optional[str] = None
     procedure_de: Optional[str] = None
+    name_en: Optional[str] = None
+    flour_type_en: Optional[str] = None
+    notes_en: Optional[str] = None
+    procedure_en: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
+    real_name_en: Optional[str] = None
     menu_category: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
@@ -308,7 +318,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v43-hidden-flag"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v44-en-recipes"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Miglioratore Naturale al Malto", "Miglioratore Naturale", "Miglioratore al Malto", "Bretzel del Maestro",
