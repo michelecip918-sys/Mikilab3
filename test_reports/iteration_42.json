@@ -1,0 +1,26 @@
+{
+  "summary": "Iter 42 — Testate le NOTIFICHE COMMUNITY (backend + UI). Backend: 8/8 pytest verdi (auth richiesta, shape items/unread senza _id, no self-notify su like e commento, like+commento da fornaio → 2 unread per admin, unlike non notifica, POST /notifications/read → 0 unread con items persistenti, isolamento destinatario). Frontend (430x900): anonimo → notif-bell assente; login admin → notif-bell + notif-badge='2'; click → notif-panel con 9 notif-item-<id> (attore + azione IT + snippet + tempo relativo), badge sparisce (POST /api/notifications/read), pannello si chiude al click fuori; reload → badge assente e items ancora presenti. E2E reale: like + commento fatti da fornaio VIA UI in Impara>Community su un post admin → admin vede badge '2' e le 2 nuove voci in cima con snippet corretto. Nessun errore console (a parte i 401 attesi di /auth/me da anonimo). Dati di test ripuliti.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Pannello notifiche (mobile 430px)", "issues": ["Le voci non sono cliccabili: cliccare una notifica non porta al post nella Community (solo UX opzionale)", "Nessun pulsante 'segna tutte come lette'/svuota: la lista cresce indefinitamente (max 50 lato API)"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter42_notifications.py", "/app/backend/tests/_setup_iter42_notif.py", "/app/backend/tests/_cleanup_iter42.py"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "NotificationBell: unread azzerato ottimisticamente prima della POST /notifications/read; se la chiamata falisce (catch silenzioso) il badge resta a 0 fino al polling successivo (45s) — accettabile ma andrebbe fatto un reload() in caso di errore.",
+    "Nessun indice su notifications.user_id/read: aggiungere indice composto se il volume cresce.",
+    "Le notifiche non vengono cancellate quando il post viene eliminato (community_delete) → voci orfane che puntano a post inesistenti."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter42_notifications.py", "/app/backend/tests/_setup_iter42_notif.py", "/app/backend/tests/_cleanup_iter42.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Creato temporaneamente un post admin TEST_iter42 con like/commento da fornaio; tutto rimosso via _cleanup_iter42.py (1 post, 8 notifiche, 1 commento UI). Restano 3 notifiche preesistenti (già lette) dell'admin.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! ; fornaio@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Testid utili: notif-bell, notif-badge, notif-panel, notif-item-<id>, notif-empty; Community: learn-tab-community, community-like-<id>, community-comment-toggle-<id>, community-comment-input-<id>, community-comment-send-<id>. Per rigenerare notifiche unread: python /app/backend/tests/_setup_iter42_notif.py setup, poi cleanup con _cleanup_iter42.py. Attenzione: cliccare community-like su un post già piaciuto è un UNLIKE e (correttamente) non genera notifica.",
+  "rca_of_the_issue": "Nessun difetto trovato. Un FAIL intermedio nel mio primo giro E2E era dovuto al test (avevo cliccato un like già attivo → unlike, che per design non notifica), non all'app."
+}

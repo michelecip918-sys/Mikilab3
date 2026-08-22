@@ -653,3 +653,8 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 ### ✅ MODULO ENTERPRISE COMPLETO (a→e): a Multi-Negozio (21), b Ordini Multi-Fornitore (23), c Digital Twin Impasto (22), d QR Pubblico Lotto (25), e Pianificazione Turni. Tutto PRO, scoped per utente/negozio, trilingue.
 ### Nota design ricorrente (app-wide): i FAB flottanti (Radio/WhatsApp/Parla) coprono a volte i contenuti in fondo su viewport 430px — da valutare offset/hide su schermate specifiche.
 ### Backlog residuo 25 punti: i18n EN 100%; Academy video+prezzi+PayPal (attesa dati utente); valori nutrizionali reali (attesa dati laboratorio); Community notifiche (spark).
+
+## v60 (2026-06) — Notifiche Community (like/commenti)
+- Quando un altro utente mette like o commenta un tuo post nella Community ricevi una notifica. Campanella nell'Header (solo loggati) `NotificationBell` con badge non-lette (notif-bell, notif-badge), pannello elenco (notif-panel, notif-item-<id>), mark-read all'apertura, polling 45s, chiusura al click-fuori. notif-empty se vuoto.
+- Backend: helper `_notify` (non notifica sé stessi), hook in community_like/community_comment; `GET /api/notifications` (items+unread, max 50), `POST /api/notifications/read`. Collezione `notifications`. community_delete ora elimina anche le notifiche del post (no orfane). NotificationBell fa resync se il mark-read fallisce.
+- Testato: iteration_42 — backend 8/8 pytest, frontend 100% (badge conteggio, apertura pannello+mark-read, persistenza letto dopo reload, assente da anonimo, no self-notify, E2E like/commento reale). Nessun difetto. Dati di test ripuliti (0 notifiche/post residui).

@@ -2139,12 +2139,15 @@ async def community_like(post_id: str, user: dict = Depends(current_user)):
         raise HTTPException(404, "Post non trovato")
     likes = set(doc.get("likes", []) or [])
     uid_ = user["user_id"]
+    added = uid_ not in likes
     if uid_ in likes:
         likes.discard(uid_)
     else:
         likes.add(uid_)
     await db.community_posts.update_one({"id": post_id}, {"$set": {"likes": list(likes)}})
     doc["likes"] = list(likes)
+    if added:
+        await _notify(doc.get("author_id"), uid_, "like", post_id, user.get("name") or (user.get("email") or "Fornaio").split("@")[0], doc.get("text", ""))
     return _post_public(doc, user)
 
 
@@ -2156,15 +2159,17 @@ async def community_comment(post_id: str, body: CommunityCommentReq, user: dict 
     doc = await db.community_posts.find_one({"id": post_id}, {"_id": 0})
     if not doc:
         raise HTTPException(404, "Post non trovato")
+    actor = user.get("name") or (user.get("email") or "Fornaio").split("@")[0]
     comment = {
         "id": str(uuid.uuid4()),
         "author_id": user["user_id"],
-        "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
+        "author_name": actor,
         "text": text,
         "created_at": now_iso(),
     }
     await db.community_posts.update_one({"id": post_id}, {"$push": {"comments": comment}})
     doc.setdefault("comments", []).append(comment)
+    await _notify(doc.get("author_id"), user["user_id"], "comment", post_id, actor, text)
     return _post_public(doc, user)
 
 
@@ -2176,6 +2181,31 @@ async def community_delete(post_id: str, user: dict = Depends(current_user)):
     if doc.get("author_id") != user["user_id"] and user.get("role") != "admin":
         raise HTTPException(403, "Non puoi eliminare questo post")
     await db.community_posts.delete_one({"id": post_id})
+    await db.notifications.delete_many({"post_id": post_id})
+    return {"ok": True}
+
+
+# --- Notifiche Community (like/commenti sui propri post) ---
+async def _notify(recipient_id, actor_id, ntype, post_id, actor_name, snippet):
+    if not recipient_id or recipient_id == actor_id:
+        return  # non notificare sé stessi
+    await db.notifications.insert_one({
+        "id": str(uuid.uuid4()), "user_id": recipient_id, "actor_id": actor_id,
+        "type": ntype, "post_id": post_id, "actor_name": actor_name,
+        "snippet": (snippet or "")[:80], "read": False, "created_at": now_iso(),
+    })
+
+
+@api_router.get("/notifications")
+async def notifications_list(user: dict = Depends(current_user)):
+    docs = await db.notifications.find({"user_id": user["user_id"]}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    unread = await db.notifications.count_documents({"user_id": user["user_id"], "read": False})
+    return {"items": docs, "unread": unread}
+
+
+@api_router.post("/notifications/read")
+async def notifications_read(user: dict = Depends(current_user)):
+    await db.notifications.update_many({"user_id": user["user_id"], "read": False}, {"$set": {"read": True}})
     return {"ok": True}
 
 

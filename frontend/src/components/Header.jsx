@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import AdminPanel from "@/components/AdminPanel";
+import NotificationBell from "@/components/NotificationBell";
 
 export default function Header() {
   const [dark, setDark] = useState(false);
@@ -92,6 +93,8 @@ export default function Header() {
             <Crown className="w-4.5 h-4.5" />
           </button>
         )}
+
+        {user && <NotificationBell />}
 
         {user ? (
           <button

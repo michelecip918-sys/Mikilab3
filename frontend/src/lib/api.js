@@ -120,3 +120,8 @@ export const shiftsApi = {
   update: (id, data) => api.put(`/shifts/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/shifts/${id}`).then((r) => r.data),
 };
+
+export const notificationsApi = {
+  list: () => api.get(`/notifications`).then((r) => r.data).catch(() => ({ items: [], unread: 0 })),
+  markRead: () => api.post(`/notifications/read`).then((r) => r.data),
+};
