@@ -595,3 +595,9 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - **Scorciatoia attrezzatura in Home** (`home-quick-equip`): il banner personalizzato aggiunge una chip in base all'attrezzatura scelta nell'onboarding — abbattitore/cella → "Shelf-Life & Freschezza"; forno rotativo/statico → "Adatta il forno" (→ Laboratorio).
 - Compilazione pulita. Verifica: logica deterministica (default pane/pH4,3/18h → ~4 giorni + bollino Alta Digeribilità).
 ### PROSSIMO: Anti-Spreco (Punto 20) — ricette di recupero dagli esuberi con ricalcolo margini.
+
+## v53 (2026-06) — Anti-Spreco (Punto 20) + fix overlap FAB wizard
+- **Anti-Spreco** (`sections/AntiWaste.jsx`, Lab Passo 5 `maestro-tool-spreco`): inserisci esubero (kg) e costo €/kg, scegli ricetta di recupero (pangrattato 0.7/€4, biscotti 0.9/€12, fette tostate 0.8/€8, budino 1.0/€6) → prodotto recuperato kg, valore recuperato, e GUADAGNO netto (recuperato − costo esubero). data-testid: aw-kg, aw-cost, aw-rec-*, aw-result, aw-recovered, aw-gain. Trilingue.
+- Wizard Laboratorio root pb-4 → pb-28 per non far coprire "Completo"/tile dai FAB Radio/Parla.
+- Testato iteration_34: 3/3 PASS (Shelf-Life pane 4gg + Alta Digeribilità; Anti-Spreco pangrattato €2,60 guadagno; scorciatoia attrezzatura Home). Unico appunto FAB overlap ora mitigato con pb-28.
+### Avanzati ancora da fare: Meteo IA(12), Timer rumorosi(14), Marketplace(17), Tracciabilità lotti(19), Enterprise(21), Digital Twin(22), Ordini multi-fornitore(23), QR/Blockchain(25), Community B2B, i18n EN 100%, menu 6-sezioni. Rinviati: video/prezzi corsi, PayPal, valori nutrizionali reali.

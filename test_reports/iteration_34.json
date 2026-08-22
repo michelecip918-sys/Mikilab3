@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only verification of 3 new additions on mobile 430px as admin (PRO): (A) Shelf-Life & Digeribilità, (B) Anti-Spreco (both Maestro Step 5 tools), (C) Home personalized banner equipment shortcut. All requested scenarios PASSED. Shelf-Life: defaults pane/pH 4.3/18h -> '4 giorni' + badge 'Alta Digeribilità'; hours=4 -> '3 giorni' + requirement message (pH 4,0-4,6 e almeno 12 h); typing '18' char-by-char kept focus on sl-hours; panettone -> '37 giorni' (base 30). Anti-Spreco: defaults kg=2, cost=1.5, pangrattato -> 1.4 kg, € 5.60 recuperato, € 3.00 costo, Guadagno € 2.60; biscotti -> € 21.60 recovered / gain € 18.60; typing '12' in aw-kg kept focus -> 10.8 kg, € 129.60, gain € 111.60. Home: home-personal banner shows home-quick-equip chip labelled 'Shelf-Life & Freschezza' and navigates to Il Tuo Laboratorio (5 steps visible). maestro-back-btn returns to tool grid correctly.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Maestro tools (mobile 430px)", "issues": ["Floating 'Radio' and 'Parla' FABs sit over the bottom of the tool pages (also noted in iteration 33); on Step 5 they partially overlap the 'Check-list laboratorio' tile text and the 'Completo' button area."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ShelfLife.jsx / AntiWaste.jsx: numeric inputs have no min/step validation - negative kg, negative cost or negative pH/hours are accepted (e.g. aw-kg=-5 yields negative recovered value). Consider min=0 clamping.",
+    "Clicking the already-active nav-tab-maestro while inside an open tool does not reset the tool view (setTool(null)); the Step-5 grid is only reachable via maestro-back-btn. Minor UX inconsistency observed during testing.",
+    "Tri-language helper `tri()` is duplicated in ShelfLife.jsx and AntiWaste.jsx (and other sections); extract to a shared hook to keep DRY."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% (all requested scenarios A/B/C passed)"},
+  "seed_data_creation": "localStorage mikilab_onboarding pre-set to {labName:'Panificio Michele',type:'panificio',equip:['abbattitore'],focus:'panettoni',done:true} to skip onboarding overlay.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Login order matters: close intro-close-btn modal FIRST (its Dialog overlay intercepts pointer events on login-btn), then login-btn -> auth-email/auth-password/auth-submit. Onboarding can be skipped by pre-setting localStorage mikilab_onboarding. ShelfLife and AntiWaste keep state in React only (no localStorage), so defaults reappear on remount. Two 401 console errors on anonymous first load (/api/auth/me style) are expected pre-login.",
+  "rca_of_the_issue": "N/A - no defects found in the tested features."
+}

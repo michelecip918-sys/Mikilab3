@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -23,6 +23,7 @@ import SourdoughTracker from "@/sections/SourdoughTracker";
 import SmartScale from "@/sections/SmartScale";
 import FoodCost from "@/sections/FoodCost";
 import ShelfLife from "@/sections/ShelfLife";
+import AntiWaste from "@/sections/AntiWaste";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 
@@ -50,6 +51,7 @@ export default function Maestro() {
     { id: "bilancia", title: lang === "de" ? "Smarte Waage" : lang === "en" ? "Smart scale" : "Bilancia Smart", desc: "", Icon: Scale },
     { id: "foodcost", title: lang === "de" ? "Food Cost & Energie" : lang === "en" ? "Food cost & energy" : "Food Cost & Energia", desc: "", Icon: Euro },
     { id: "shelf", title: lang === "de" ? "Shelf-Life & Verdaulichkeit" : lang === "en" ? "Shelf-life & digestibility" : "Shelf-Life & Digeribilità", desc: "", Icon: CalendarDays },
+    { id: "spreco", title: lang === "de" ? "Anti-Verschwendung" : lang === "en" ? "Anti-waste" : "Anti-Spreco", desc: "", Icon: Recycle },
   ];
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
@@ -58,7 +60,7 @@ export default function Maestro() {
     { icon: BookOpen, title: tri("Ricette Personali", "Eigene Rezepte", "Your Recipes"), sub: tri("Inserisci o scansiona le tue ricette e adatta il forno con l'IA", "Rezepte erfassen/scannen und Ofen mit KI anpassen", "Add or scan recipes and adapt the oven with AI"), tools: ["aggiungi", "scan", "adatta"] },
     { icon: CalendarDays, title: tri("Pianificazione", "Planung", "Planning"), sub: tri("Produzione giornaliera e settimanale, tempi a ritroso", "Tages- und Wochenproduktion, Rückwärtsplanung", "Daily & weekly production, backward timing"), tools: ["lavoro", "settimana", "inversa"] },
     { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità Bluetooth, pH e acqua d'impasto", "Temperatur/Feuchte via Bluetooth, pH und Teigwasser", "Bluetooth temp/humidity, pH and dough water"), tools: ["termo", "acqua", "ph"] },
-    { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP e turni", "Bedarf, Food Cost, Shelf-Life, HACCP und Schichten", "Needs, Food Cost, Shelf-Life, HACCP and shifts"), tools: ["spesa", "foodcost", "shelf", "check", "turni"] },
+    { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP e turni", "Bedarf, Food Cost, Shelf-Life, HACCP und Schichten", "Needs, Food Cost, Shelf-Life, HACCP and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "check", "turni"] },
   ];
   const current = STEPS[step];
 
@@ -78,6 +80,7 @@ export default function Maestro() {
         {tool === "bilancia" && <SmartScale />}
         {tool === "foodcost" && <FoodCost />}
         {tool === "shelf" && <ShelfLife />}
+        {tool === "spreco" && <AntiWaste />}
         {tool === "settimana" && <WeeklyPlan />}
         {tool === "inversa" && <BackwardScheduler />}
         {tool === "lavoro" && <StartDoughs />}
@@ -95,7 +98,7 @@ export default function Maestro() {
   }
 
   return (
-    <div className="pb-4">
+    <div className="pb-28">
       <MikiAvatar label="Michele" subtitle={t("maestro_title")} className="mb-4" />
       <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{t("maestro_title")}</h1>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Configura il tuo laboratorio passo dopo passo", "Richte deine Backstube Schritt für Schritt ein", "Set up your bakery step by step")}</p>
