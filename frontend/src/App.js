@@ -16,6 +16,7 @@ import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import IntroGuide from "@/components/IntroGuide";
+import Onboarding, { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
@@ -25,6 +26,8 @@ import ambient from "@/lib/ambientMusic";
 
 function App() {
   const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
+  const [onboarded, setOnboarded] = useState(() => !!getProfile());
+  const [showIntro] = useState(() => !!getProfile());
   const tabRef = useRef("home");
   const { user, authOpen, setAuthOpen } = useAuth();
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
@@ -85,7 +88,8 @@ function App() {
       <VoiceAssistant onNavigate={navigate} />
       <RadioFornaio />
       {tab !== "home" && tab !== "maestro" && <WhatsAppFab />}
-      {!resetToken && <IntroGuide />}
+      {!resetToken && showIntro && <IntroGuide />}
+      {!resetToken && !onboarded && <Onboarding onDone={() => setOnboarded(true)} />}
 
       <AnimatePresence>
         {authOpen && !user && (
