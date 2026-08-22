@@ -28,6 +28,7 @@ import Timer from "@/sections/Timer";
 import Meteo from "@/sections/Meteo";
 import Marketplace from "@/sections/Marketplace";
 import BatchTraceability from "@/sections/BatchTraceability";
+import DoughTwin from "@/sections/DoughTwin";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 
@@ -58,6 +59,7 @@ export default function Maestro() {
     { id: "spreco", title: lang === "de" ? "Anti-Verschwendung" : lang === "en" ? "Anti-waste" : "Anti-Spreco", desc: "", Icon: Recycle },
     { id: "timer", title: lang === "de" ? "Backstuben-Timer" : lang === "en" ? "Lab timer" : "Timer da Laboratorio", desc: "", Icon: TimerIcon },
     { id: "meteo", title: lang === "de" ? "Wetter & Backstube" : lang === "en" ? "Weather & bakery" : "Meteo & Laboratorio", desc: "", Icon: CloudSun },
+    { id: "twin", title: lang === "de" ? "Teig-Zwilling" : lang === "en" ? "Dough twin" : "Digital Twin Impasto", desc: "", Icon: FlaskConical },
     { id: "market", title: lang === "de" ? "Gebraucht-Markt" : lang === "en" ? "Used market" : "Marketplace Usato", desc: "", Icon: Store },
     { id: "lotti", title: lang === "de" ? "Chargen-Rückverfolgung" : lang === "en" ? "Batch traceability" : "Tracciabilità Lotti", desc: "", Icon: QrCode },
   ];
@@ -67,7 +69,7 @@ export default function Maestro() {
     { icon: Cog, title: tri("Parco Macchine", "Maschinenpark", "Machines"), sub: tri("Impastatrici, forni, celle, giacenze, bilancia e mercato usato", "Kneter, Öfen, Gärzellen, Bestände, Waage und Gebraucht-Markt", "Mixers, ovens, cells, stock, scale and used market"), tools: ["capo", "bilancia", "freezer", "market"] },
     { icon: BookOpen, title: tri("Ricette Personali", "Eigene Rezepte", "Your Recipes"), sub: tri("Inserisci o scansiona le tue ricette e adatta il forno con l'IA", "Rezepte erfassen/scannen und Ofen mit KI anpassen", "Add or scan recipes and adapt the oven with AI"), tools: ["aggiungi", "scan", "adatta"] },
     { icon: CalendarDays, title: tri("Pianificazione", "Planung", "Planning"), sub: tri("Produzione giornaliera e settimanale, tempi a ritroso e timer", "Tages- und Wochenproduktion, Rückwärtsplanung und Timer", "Daily & weekly production, backward timing and timers"), tools: ["lavoro", "settimana", "inversa", "timer"] },
-    { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità, meteo, pH e acqua d'impasto", "Temperatur/Feuchte, Wetter, pH und Teigwasser", "Temperature/humidity, weather, pH and dough water"), tools: ["termo", "meteo", "acqua", "ph"] },
+    { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità, meteo, Digital Twin, pH e acqua d'impasto", "Temperatur/Feuchte, Wetter, Teig-Zwilling, pH und Teigwasser", "Temperature/humidity, weather, dough twin, pH and dough water"), tools: ["termo", "meteo", "twin", "acqua", "ph"] },
     { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP, tracciabilità e turni", "Bedarf, Food Cost, Shelf-Life, HACCP, Rückverfolgung und Schichten", "Needs, Food Cost, Shelf-Life, HACCP, traceability and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "lotti", "check", "turni"] },
   ];
   const current = STEPS[step];
@@ -91,6 +93,7 @@ export default function Maestro() {
         {tool === "spreco" && <AntiWaste />}
         {tool === "timer" && <Timer />}
         {tool === "meteo" && <Meteo />}
+        {tool === "twin" && <DoughTwin />}
         {tool === "market" && <Marketplace />}
         {tool === "lotti" && <BatchTraceability />}
         {tool === "settimana" && <WeeklyPlan />}

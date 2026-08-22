@@ -628,3 +628,11 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - Testato: iteration_38 — backend 17/17 pytest, frontend 100% (gating PRO, CRUD negozi + negozio attivo + persistenza, CRUD ordini scoped, invio email/whatsapp/stampa + transizioni stato). Fix post-test: require_pro server-side.
 ### Ordine moduli Enterprise scelto dall'utente: a→e. FATTI: a (Multi-Negozio), b (Ordini). PROSSIMI: c (Digital Twin impasto, 22), d (QR/Blockchain pubblico, 25), e (Pianificazione Turni personale).
 ### Nota design nota (app-wide, pre-esistente): i FAB flottanti (Radio/WhatsApp/Parla) si sovrappongono ai CTA in fondo su alcune schermate paywall — mitigato con pb-40, non bloccante.
+
+## v57 (2026-06) — ENTERPRISE (c): Digital Twin dell'Impasto (Punto 22) [PRO]
+- Nuovo strumento **Digital Twin Impasto** nel wizard "Il Tuo Laboratorio" (Maestro, PRO), Passo 4 'Termostato & Sensori', tool id 'twin' (`maestro-tool-twin`). `sections/DoughTwin.jsx`. Pura computazione client-side, nessun backend.
+- Input (slider + toggle): idratazione %, forza W farina, temperatura °C, tipo lievito (birra/madre) + dose %, sale %. testid stabili: twin-slider-hyd/w/temp/dose/salt, twin-type-ldb/madre.
+- Output simulati: tempo di lievitazione al picco (twin-time), volume di picco × (twin-volume), idratazione ideale consigliata (twin-rechyd), alveolatura attesa con punteggio ed etichetta (twin-alveo), CURVA di lievitazione recharts con ReferenceLine sul picco (twin-chart), anteprima grafica mollica con bolle deterministiche (twin-crumb), consigli automatici (twin-advice).
+- Modello: velocità di fermentazione ~×2 ogni 9°C, freno del sale, curva logistica con collasso da sovra-maturazione; Vmax legato a W; idratazione ideale ~55+(W-180)/6; score alveolatura da idratazione+W+durata.
+- Testato: iteration_39 — rendering + logica simulazione 100% corretti (reattività verificata: temp↑/dose↑ → tempo↓; idratazione↑ → alveolatura più aperta; madre → tempi maggiori; curva recharts ok). Bug HIGH trovato e RISOLTO: il sub-componente `Slider` era definito dentro il body → remount degli <input range> a ogni render (drag/tastiera rotti). Fix: `Slider` spostato a livello di modulo (canonico). 
+### Ordine moduli Enterprise (a→e). FATTI: a (Multi-Negozio 21), b (Ordini 23), c (Digital Twin 22). PROSSIMI: d (QR/Blockchain pubblico 25), e (Pianificazione Turni personale).
