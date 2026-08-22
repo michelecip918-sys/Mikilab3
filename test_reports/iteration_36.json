@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only retest (mobile 430x900, admin PRO login admin@mikilab.de) focused on the Timer wall-clock fix in Maestro > Passo 3 > maestro-tool-timer. ALL checks PASS. (1) WALL-CLOCK FIX CONFIRMED: custom timer 'Prova' 1' created (00:59), left tool via maestro-back-btn, waited 9s, reopened -> 00:49 (delta 10s real time, no freeze). (2) On-screen tick: 49->46 in 3s, regular 1s countdown. (3) ALARM: 1-minute timer left running on screen expired -> timer-alarm-overlay appeared (striped flashing overlay + 'TEMPO SCADUTO / Alarme'), timer-time showed 00:00, timer-alarm-dismiss closed it, no re-fire after 4s, toggle correctly disabled when done. (4) BACKGROUND EXPIRY: a timer seeded with endsAt=+4s expired while the tool was unmounted; on remount the alarm overlay fired correctly (elapsed-time reconciliation works). (5) CONTROLS: timer-toggle pause froze the value (00:45 -> 00:45 after 4s), resume restarted from the paused value (00:45 -> 00:44), timer-reset restored 01:00, timer-remove deleted the card, preset timer-preset-cottura added a 40' timer (39:59). (6) REGRESSION: Meteo search 'Stuttgart' resolved to 'Stoccarda, Germania' 17C/67%/13km/h with acqua 34.4C and lievitazione 214 min (no hang, timeout fix fine); Marketplace loaded with filters + 'Pubblica un annuncio', no market-error element, empty-state message correct. Only console errors are the expected pre-login 401s.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Maestro tools (mobile 430px)", "issues": ["A faint watermark/illustration image is still visible behind the Radio/Parla FAB strip above the bottom nav (visible on Marketplace/Meteo screens) - confirm it is intentional", "Marketplace price 'it-IT' grouping could not be re-verified (no listings present at test time); previously reported as cosmetic LOW"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Timer.jsx: alarm detection still lives inside the Timer component, so while the user is on another tool/tab no sound or Notification is emitted; it only fires on remount. Wall-clock accounting is now correct (the reported HIGH bug is fixed), but for a true background alarm the ticking/expiry effect would need to be hoisted to app level or moved to a Service Worker. Low priority / product decision.",
+    "Timer.jsx line 58 effect depends on `tri` which is re-created every render; the early-return keeps it cheap, but wrapping tri in useCallback would avoid the per-render effect execution.",
+    "Timer.jsx: 'remaining' is persisted alongside endsAt and becomes stale while running (only endsAt is used) - harmless but slightly redundant state."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100%"},
+  "seed_data_creation": "Transient localStorage only (mikilab_timers test entries) - removed at end of run.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin/PRO)",
+  "context_for_next_testing_agent": "Setup: add_init_script setting localStorage mikilab_onboarding={done:true,type:'panificio'} and mikilab_seen_intro='1', then close intro-close-btn if present, login via login-btn -> auth-email/auth-password/auth-submit, then nav-tab-maestro, maestro-step-N, tool tiles maestro-tool-{market,timer,meteo}, maestro-back-btn returns to the grid. Note Timer component state (timer-mins) resets to default 30 when the tool is unmounted - expected. Timer wall-clock + alarm overlay verified fully working in iteration_36; nothing open.",
+  "rca_of_the_issue": "Previous HIGH issue (interval-only countdown) is resolved: Timer.jsx now persists an absolute endsAt in localStorage and derives remaining via remainingOf(t)=endsAt-Date.now(), reconciling on mount and visibilitychange, with a ringing queue for multiple simultaneous expirations."
+}
