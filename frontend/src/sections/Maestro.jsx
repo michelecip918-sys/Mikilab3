@@ -29,6 +29,9 @@ import Meteo from "@/sections/Meteo";
 import Marketplace from "@/sections/Marketplace";
 import BatchTraceability from "@/sections/BatchTraceability";
 import DoughTwin from "@/sections/DoughTwin";
+import GuidedWeighing from "@/sections/GuidedWeighing";
+import DoughLog from "@/sections/DoughLog";
+import HaccpLog from "@/sections/HaccpLog";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 
@@ -54,6 +57,9 @@ export default function Maestro() {
     { id: "ph", title: lang === "de" ? "pH-Tracker" : lang === "en" ? "pH Tracker" : "Tracker pH Lievito", desc: "", Icon: FlaskConical },
     { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
     { id: "bilancia", title: lang === "de" ? "Smarte Waage" : lang === "en" ? "Smart scale" : "Bilancia Smart", desc: "", Icon: Scale },
+    { id: "pesata", title: lang === "de" ? "Geführtes Wiegen" : lang === "en" ? "Guided weighing" : "Pesata Guidata", desc: "", Icon: Scale },
+    { id: "sessioni", title: lang === "de" ? "Teig-Tagebuch" : lang === "en" ? "Dough log" : "Diario Impasti", desc: "", Icon: Thermometer },
+    { id: "haccp", title: lang === "de" ? "HACCP-Register" : lang === "en" ? "HACCP log" : "Registro HACCP", desc: "", Icon: ScanLine },
     { id: "foodcost", title: lang === "de" ? "Food Cost & Energie" : lang === "en" ? "Food cost & energy" : "Food Cost & Energia", desc: "", Icon: Euro },
     { id: "shelf", title: lang === "de" ? "Shelf-Life & Verdaulichkeit" : lang === "en" ? "Shelf-life & digestibility" : "Shelf-Life & Digeribilità", desc: "", Icon: CalendarDays },
     { id: "spreco", title: lang === "de" ? "Anti-Verschwendung" : lang === "en" ? "Anti-waste" : "Anti-Spreco", desc: "", Icon: Recycle },
@@ -66,11 +72,11 @@ export default function Maestro() {
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
   const STEPS = [
-    { icon: Cog, title: tri("Parco Macchine", "Maschinenpark", "Machines"), sub: tri("Impastatrici, forni, celle, giacenze, bilancia e mercato usato", "Kneter, Öfen, Gärzellen, Bestände, Waage und Gebraucht-Markt", "Mixers, ovens, cells, stock, scale and used market"), tools: ["capo", "bilancia", "freezer", "market"] },
+    { icon: Cog, title: tri("Parco Macchine", "Maschinenpark", "Machines"), sub: tri("Impastatrici, forni, celle, giacenze, bilancia e mercato usato", "Kneter, Öfen, Gärzellen, Bestände, Waage und Gebraucht-Markt", "Mixers, ovens, cells, stock, scale and used market"), tools: ["capo", "bilancia", "pesata", "freezer", "market"] },
     { icon: BookOpen, title: tri("Ricette Personali", "Eigene Rezepte", "Your Recipes"), sub: tri("Inserisci o scansiona le tue ricette e adatta il forno con l'IA", "Rezepte erfassen/scannen und Ofen mit KI anpassen", "Add or scan recipes and adapt the oven with AI"), tools: ["aggiungi", "scan", "adatta"] },
     { icon: CalendarDays, title: tri("Pianificazione", "Planung", "Planning"), sub: tri("Produzione giornaliera e settimanale, tempi a ritroso e timer", "Tages- und Wochenproduktion, Rückwärtsplanung und Timer", "Daily & weekly production, backward timing and timers"), tools: ["lavoro", "settimana", "inversa", "timer"] },
-    { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità, meteo, Digital Twin, pH e acqua d'impasto", "Temperatur/Feuchte, Wetter, Teig-Zwilling, pH und Teigwasser", "Temperature/humidity, weather, dough twin, pH and dough water"), tools: ["termo", "meteo", "twin", "acqua", "ph"] },
-    { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP, tracciabilità e turni", "Bedarf, Food Cost, Shelf-Life, HACCP, Rückverfolgung und Schichten", "Needs, Food Cost, Shelf-Life, HACCP, traceability and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "lotti", "check", "turni"] },
+    { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità, meteo, Digital Twin, pH e acqua d'impasto", "Temperatur/Feuchte, Wetter, Teig-Zwilling, pH und Teigwasser", "Temperature/humidity, weather, dough twin, pH and dough water"), tools: ["termo", "meteo", "twin", "sessioni", "acqua", "ph"] },
+    { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP, tracciabilità e turni", "Bedarf, Food Cost, Shelf-Life, HACCP, Rückverfolgung und Schichten", "Needs, Food Cost, Shelf-Life, HACCP, traceability and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "haccp", "lotti", "check", "turni"] },
   ];
   const current = STEPS[step];
 
@@ -88,6 +94,9 @@ export default function Maestro() {
         {tool === "scan" && <ScanRecipe />}
         {tool === "capo" && <CapoLaboratorio />}
         {tool === "bilancia" && <SmartScale />}
+        {tool === "pesata" && <GuidedWeighing />}
+        {tool === "sessioni" && <DoughLog />}
+        {tool === "haccp" && <HaccpLog />}
         {tool === "foodcost" && <FoodCost />}
         {tool === "shelf" && <ShelfLife />}
         {tool === "spreco" && <AntiWaste />}

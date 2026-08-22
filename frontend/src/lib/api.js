@@ -125,3 +125,17 @@ export const notificationsApi = {
   list: () => api.get(`/notifications`).then((r) => r.data).catch(() => ({ items: [], unread: 0 })),
   markRead: () => api.post(`/notifications/read`).then((r) => r.data),
 };
+
+export const doughSessionsApi = {
+  list: (recipeId) => api.get(`/dough-sessions`, { params: recipeId ? { recipe_id: recipeId } : {} }).then((r) => r.data).catch(() => []),
+  create: (data) => api.post(`/dough-sessions`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/dough-sessions/${id}`).then((r) => r.data),
+  dayAfter: (data) => api.post(`/dough-sessions/day-after`, data).then((r) => r.data),
+  aiAdvice: (data) => api.post(`/dough-sessions/ai-advice`, data).then((r) => r.data),
+};
+
+export const haccpApi = {
+  list: () => api.get(`/haccp-logs`).then((r) => r.data).catch(() => []),
+  create: (data) => api.post(`/haccp-logs`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/haccp-logs/${id}`).then((r) => r.data),
+};

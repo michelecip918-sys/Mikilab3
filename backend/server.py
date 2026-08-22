@@ -2486,6 +2486,192 @@ async def shifts_delete(shift_id: str, user: dict = Depends(require_pro)):
     return {"ok": True}
 
 
+# ---------------------------------------------------------------------------
+# Laboratorio Smart — Sessioni Impasto & Algoritmo "Giorno Dopo" (Fase 2)
+# ---------------------------------------------------------------------------
+class DoughSessionReq(BaseModel):
+    recipe_id: Optional[str] = Field("", max_length=80)
+    recipe_name: str = Field(..., max_length=160)
+    date: Optional[str] = Field("", max_length=40)
+    target_temp_c: Optional[float] = None      # temperatura impasto desiderata
+    dough_temp_c: float                         # temperatura impasto finale misurata
+    room_temp_c: Optional[float] = None         # temperatura ambiente / camera
+    humidity: Optional[float] = None            # umidità %
+    water_temp_c: Optional[float] = None        # temperatura acqua usata
+    flour_temp_c: Optional[float] = None        # temperatura farina (opz.)
+    note: Optional[str] = Field("", max_length=1000)
+
+
+def _dough_session_public(d: dict) -> dict:
+    return {k: d.get(k) for k in ("id", "recipe_id", "recipe_name", "date", "target_temp_c",
+            "dough_temp_c", "room_temp_c", "humidity", "water_temp_c", "flour_temp_c", "note", "created_at")}
+
+
+@api_router.get("/dough-sessions")
+async def dough_sessions_list(user: dict = Depends(current_user), recipe_id: Optional[str] = None):
+    q = {"owner_id": user["user_id"]}
+    if recipe_id:
+        q["recipe_id"] = recipe_id
+    docs = await db.dough_sessions.find(q, {"_id": 0}).sort("created_at", -1).to_list(500)
+    return [_dough_session_public(d) for d in docs]
+
+
+@api_router.post("/dough-sessions")
+async def dough_sessions_create(body: DoughSessionReq, user: dict = Depends(current_user)):
+    doc = {"id": str(uuid.uuid4()), "owner_id": user["user_id"], "created_at": now_iso(), **body.dict()}
+    if not doc.get("date"):
+        doc["date"] = now_iso()[:10]
+    await db.dough_sessions.insert_one(doc)
+    return _dough_session_public(doc)
+
+
+@api_router.delete("/dough-sessions/{session_id}")
+async def dough_sessions_delete(session_id: str, user: dict = Depends(current_user)):
+    res = await db.dough_sessions.delete_one({"id": session_id, "owner_id": user["user_id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Sessione non trovata")
+    return {"ok": True}
+
+
+def _day_after_analysis(last: dict, today_room, today_humidity):
+    """Analisi deterministica 'Giorno Dopo' (regola pratica dell'acqua d'impasto)."""
+    target = last.get("target_temp_c")
+    actual = last.get("dough_temp_c")
+    y_water = last.get("water_temp_c")
+    y_room = last.get("room_temp_c")
+    res = {"has_target": target is not None, "delta": None, "verdict": "unknown", "suggested_water_c": None}
+    if target is None or actual is None:
+        return res
+    delta = round(actual - target, 1)   # >0 troppo caldo, <0 troppo freddo
+    res["delta"] = delta
+    if abs(delta) <= 0.5:
+        res["verdict"] = "on_target"
+    elif delta > 0:
+        res["verdict"] = "too_warm"
+    else:
+        res["verdict"] = "too_cold"
+    if y_water is not None:
+        # per ogni grado di scostamento impasto → correggo l'acqua di ~2°C nel verso opposto
+        suggested = y_water - delta * 2.0
+        # compenso la differenza di temperatura ambiente rispetto a ieri (1:1 sull'acqua)
+        if today_room is not None and y_room is not None:
+            suggested -= (today_room - y_room)
+        res["suggested_water_c"] = round(max(1.0, min(45.0, suggested)), 1)
+    return res
+
+
+class DayAfterReq(BaseModel):
+    recipe_id: Optional[str] = ""
+    recipe_name: Optional[str] = ""
+    today_room_c: Optional[float] = None
+    today_humidity: Optional[float] = None
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/dough-sessions/day-after")
+async def dough_sessions_day_after(body: DayAfterReq, user: dict = Depends(current_user)):
+    q = {"owner_id": user["user_id"]}
+    if body.recipe_id:
+        q["recipe_id"] = body.recipe_id
+    elif body.recipe_name:
+        q["recipe_name"] = body.recipe_name
+    last = await db.dough_sessions.find(q, {"_id": 0}).sort("created_at", -1).to_list(1)
+    if not last:
+        return {"has_history": False}
+    analysis = _day_after_analysis(last[0], body.today_room_c, body.today_humidity)
+    return {"has_history": True, "last": _dough_session_public(last[0]), "analysis": analysis}
+
+
+async def _claude_text(system: str, prompt: str, session: str = "gen") -> str:
+    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=session, system_message=system).with_model("anthropic", "claude-sonnet-4-6")
+    out = ""
+    async for ev in chat.stream_message(UserMessage(text=prompt)):
+        if isinstance(ev, TextDelta):
+            out += ev.content
+        elif isinstance(ev, StreamDone):
+            break
+    return out.strip()
+
+
+DAYAFTER_SYSTEM = (
+    "Sei un mastro panettiere esperto di reologia degli impasti e del controllo della temperatura. "
+    "Analizzi i dati delle sessioni di impasto PRECEDENTI e dai consigli PRATICI e BREVI su come "
+    "correggere la temperatura dell'acqua e la gestione della lievitazione OGGI, per centrare la "
+    "temperatura impasto desiderata. Rispondi in massimo 5 frasi, concrete e operative, senza premesse."
+)
+
+
+@api_router.post("/dough-sessions/ai-advice")
+async def dough_sessions_ai_advice(body: DayAfterReq, user: dict = Depends(current_user)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(500, "LLM key non configurata")
+    q = {"owner_id": user["user_id"]}
+    if body.recipe_id:
+        q["recipe_id"] = body.recipe_id
+    elif body.recipe_name:
+        q["recipe_name"] = body.recipe_name
+    docs = await db.dough_sessions.find(q, {"_id": 0}).sort("created_at", -1).to_list(5)
+    if not docs:
+        return {"advice": ""}
+    lang = body.lang or "it"
+    hist = []
+    for d in docs:
+        hist.append(
+            f"- {d.get('date','')}: impasto {d.get('dough_temp_c')}°C (target {d.get('target_temp_c')}°C), "
+            f"ambiente {d.get('room_temp_c')}°C, umidità {d.get('humidity')}%, acqua {d.get('water_temp_c')}°C"
+        )
+    det = _day_after_analysis(docs[0], body.today_room_c, body.today_humidity)
+    lang_line = {"it": "Rispondi in italiano.", "de": "Antworte auf Deutsch.", "en": "Answer in English."}.get(lang, "Rispondi in italiano.")
+    prompt = (
+        f"Ricetta: {body.recipe_name or docs[0].get('recipe_name')}\n"
+        f"Storico ultime sessioni:\n" + "\n".join(hist) + "\n"
+        f"Oggi: ambiente {body.today_room_c}°C, umidità {body.today_humidity}%.\n"
+        f"Analisi automatica: scostamento {det.get('delta')}°C, acqua consigliata {det.get('suggested_water_c')}°C.\n"
+        f"Dai consigli pratici per centrare oggi la temperatura impasto. {lang_line}"
+    )
+    advice = await _claude_text(DAYAFTER_SYSTEM, prompt, session=f"dayafter-{user['user_id']}")
+    return {"advice": advice, "analysis": det}
+
+
+# ---------------------------------------------------------------------------
+# Laboratorio Smart — Registro HACCP materie prime (Fase 3)
+# ---------------------------------------------------------------------------
+class HaccpLogReq(BaseModel):
+    material: str = Field(..., max_length=200)      # nome materia prima
+    code: Optional[str] = Field("", max_length=200) # barcode / QR scansionato
+    lot: Optional[str] = Field("", max_length=160)  # lotto fornitore
+    expiry: Optional[str] = Field("", max_length=40)
+    supplier: Optional[str] = Field("", max_length=200)
+    temp_c: Optional[float] = None                  # temperatura ricevimento (catena del freddo)
+    qty: Optional[str] = Field("", max_length=80)
+    note: Optional[str] = Field("", max_length=1000)
+
+
+def _haccp_public(d: dict) -> dict:
+    return {k: d.get(k) for k in ("id", "material", "code", "lot", "expiry", "supplier", "temp_c", "qty", "note", "created_at")}
+
+
+@api_router.get("/haccp-logs")
+async def haccp_list(user: dict = Depends(current_user)):
+    docs = await db.haccp_logs.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("created_at", -1).to_list(500)
+    return [_haccp_public(d) for d in docs]
+
+
+@api_router.post("/haccp-logs")
+async def haccp_create(body: HaccpLogReq, user: dict = Depends(current_user)):
+    doc = {"id": str(uuid.uuid4()), "owner_id": user["user_id"], "created_at": now_iso(), **body.dict()}
+    await db.haccp_logs.insert_one(doc)
+    return _haccp_public(doc)
+
+
+@api_router.delete("/haccp-logs/{log_id}")
+async def haccp_delete(log_id: str, user: dict = Depends(current_user)):
+    res = await db.haccp_logs.delete_one({"id": log_id, "owner_id": user["user_id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Voce non trovata")
+    return {"ok": True}
+
+
 app.include_router(api_router)
 
 app.add_middleware(

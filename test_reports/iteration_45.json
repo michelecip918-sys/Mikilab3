@@ -1,0 +1,27 @@
+{
+  "summary": "Full E2E of the new 'Laboratorio Smart e Pesata Guidata' module (3 phases). Backend: 15 pytest cases (auth gating, dough-sessions CRUD, deterministic Day-After too_warm/too_cold/on_target/no-history, Claude AI advice, HACCP CRUD, validation) — all passed. Frontend: Phase 1 GuidedWeighing full run (setup -> run -> summary -> reset) with real hydration 67.7% and food cost EUR 1.84 correctly computed from actual weights, deviation shown in gw-extras; Phase 2 DoughLog save -> Day-After panel (verdict 'Troppo caldo +2.5C', suggested water 13C) -> Claude advice (692 chars) -> history + delete; Phase 3 HACCP manual entry -> list -> delete, scan button degrades gracefully in headless. Regression: bilancia, meteo, market, lotti all open with zero console errors. All test data cleaned (dough_sessions and haccp_logs collections empty).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Any tool page (mobile 390px)", "issues": ["Floating 'Radio' and 'Parla' FABs sit above page content near the bottom and overlap list rows / the Giorno Dopo panel; they can obstruct taps on the last visible row (all tested clicks still worked, but consider extra bottom padding or hiding FABs inside tools)"]},
+      {"screen": "Registro HACCP list row", "issues": ["Cosmetic: separator dots render empty segments when optional fields are missing, e.g. '8001234567890 · lotto TEST_LOT9 · · 4.5°C' (HaccpLog.jsx line 147 — join non-empty parts instead of concatenating ' · ')"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter45_lab_smart.py", "/app/test_reports/pytest/iter45.xml"],
+  "action_items": ["Optional: fix double '·' separator in HaccpLog list row when expiry/supplier empty", "Optional: avoid Radio/Parla FAB overlap with bottom list content in tool views"],
+  "critical_code_review_comments": [
+    "server.py is 2719 lines — well over the 700-line guideline; consider splitting the new lab-smart routers (dough sessions / HACCP) into separate modules.",
+    "GuidedWeighing run view: gw-next is disabled for both 'under' and 'over' states, so a real over-pour cannot be logged/advanced without lowering the weight — deviations can only be recorded in the 95-99% band. Consider allowing 'confirm anyway' for over-pours.",
+    "DoughLog dayAfter refresh only depends on form.recipe_name (useEffect dep), so changing room temp/humidity does not re-run the day-after suggestion until save or name change — the suggested water can therefore be stale relative to today's inputs shown in the form."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter45_lab_smart.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Temporary TEST_ dough sessions and HACCP logs under admin@mikilab.de; all deleted (collections verified empty).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (note: app allows anonymous browsing; 'Il Tuo Laboratorio' tab is PRO/login gated, so the doughlog-login/haccp-login inner gates are unreachable for anonymous users — gating happens one level up via the PRO paywall)",
+  "context_for_next_testing_agent": "Login is via header 'Accedi' button (no forced auth screen at startup). Onboarding modal dismissed with data-testid ob-skip; IntroGuide via intro-close-btn. Wizard tools use data-testid maestro-tool-<id> (pesata step 1, sessioni step 4, haccp step 5) and maestro-step-<n> for steps. GuidedWeighing auto-advances after 2s of green (99-101% of target); default ingredients Farina 1000 / Acqua 650 / Lievito 200 / Sale 20 persist in localStorage key mikilab_gw_ing. Backend regression file: /app/backend/tests/test_iter45_lab_smart.py (run without -x; class-level id lists are not shared across xdist workers).",
+  "rca_of_the_issue": "N/A — no functional defects found. Only cosmetic separator formatting and FAB overlay observations."
+}
