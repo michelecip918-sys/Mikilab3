@@ -2312,6 +2312,63 @@ async def orders_delete(order_id: str, user: dict = Depends(require_pro)):
     return {"ok": True}
 
 
+# ---------------------------------------------------------------------------
+# QR pubblico del Lotto (25) — pubblica una scheda lotto e servi una pagina
+# pubblica di tracciabilità (nessuna autenticazione in lettura).
+# ---------------------------------------------------------------------------
+class PubBatchReq(BaseModel):
+    code: str = Field(..., max_length=60)
+    product: str = Field(..., max_length=160)
+    prod_date: Optional[str] = Field("", max_length=40)
+    expiry: Optional[str] = Field("", max_length=40)
+    flour: Optional[str] = Field("", max_length=200)
+    flour_lot: Optional[str] = Field("", max_length=120)
+    qty: Optional[str] = Field("", max_length=80)
+    operator: Optional[str] = Field("", max_length=120)
+    note: Optional[str] = Field("", max_length=1000)
+    store_name: Optional[str] = Field("", max_length=160)
+
+
+def _pub_batch_public(d: dict) -> dict:
+    return {
+        "id": d["id"], "code": d.get("code"), "product": d.get("product"),
+        "prod_date": d.get("prod_date", ""), "expiry": d.get("expiry", ""),
+        "flour": d.get("flour", ""), "flour_lot": d.get("flour_lot", ""),
+        "qty": d.get("qty", ""), "operator": d.get("operator", ""),
+        "note": d.get("note", ""), "store_name": d.get("store_name", ""),
+        "created_at": d.get("created_at"),
+    }
+
+
+@api_router.post("/batches")
+async def pub_batch_create(body: PubBatchReq, user: dict = Depends(require_pro)):
+    doc = {"id": str(uuid.uuid4()), "owner_id": user["user_id"], "created_at": now_iso(), **body.dict()}
+    await db.pub_batches.insert_one(doc)
+    return _pub_batch_public(doc)
+
+
+@api_router.get("/batches")
+async def pub_batch_list(user: dict = Depends(require_pro)):
+    docs = await db.pub_batches.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("created_at", -1).to_list(500)
+    return [_pub_batch_public(d) for d in docs]
+
+
+@api_router.delete("/batches/{batch_id}")
+async def pub_batch_delete(batch_id: str, user: dict = Depends(require_pro)):
+    res = await db.pub_batches.delete_one({"id": batch_id, "owner_id": user["user_id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Lotto non trovato")
+    return {"ok": True}
+
+
+@api_router.get("/public/batch/{batch_id}")
+async def pub_batch_get(batch_id: str):
+    doc = await db.pub_batches.find_one({"id": batch_id}, {"_id": 0})
+    if not doc:
+        raise HTTPException(404, "Lotto non trovato")
+    return _pub_batch_public(doc)
+
+
 app.include_router(api_router)
 
 app.add_middleware(

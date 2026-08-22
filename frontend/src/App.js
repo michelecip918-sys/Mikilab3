@@ -21,6 +21,7 @@ import Onboarding, { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
+import PublicBatch from "@/sections/PublicBatch";
 import { useAuth } from "@/auth/AuthContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
@@ -33,6 +34,7 @@ function App() {
   const tabRef = useRef("home");
   const { user, authOpen, setAuthOpen } = useAuth();
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
+  const publicBatch = new URLSearchParams(window.location.search).get("lotto");
 
   // Gestione tasto Indietro: sincronizza i tab con la history del browser.
   const navigate = useCallback((next) => {
@@ -58,6 +60,9 @@ function App() {
 
   // Sottofondo musicale: cambia melodia in base alla sezione attiva.
   useEffect(() => { ambient.setSection(tab); }, [tab]);
+
+  // Pagina pubblica del lotto (QR): nessun login, nessuna navigazione.
+  if (publicBatch) return <PublicBatch id={publicBatch} />;
 
   return (
     <AmbientProvider>

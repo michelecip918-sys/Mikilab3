@@ -107,3 +107,9 @@ export const ordersApi = {
   update: (id, data) => api.put(`/purchase-orders/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/purchase-orders/${id}`).then((r) => r.data),
 };
+
+export const batchesApi = {
+  create: (data) => api.post(`/batches`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/batches/${id}`).then((r) => r.data),
+  publicGet: (id) => api.get(`/public/batch/${id}`).then((r) => r.data),
+};

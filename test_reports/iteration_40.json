@@ -1,0 +1,20 @@
+{
+  "summary": "Iteration 40 — QR PUBBLICO DEL LOTTO. Backend: new pytest suite (6 tests, 100% pass) for POST/GET/DELETE /api/batches (PRO gated) and public GET /api/public/batch/{id}: auth required on create (401), create returns id without owner_id/_id, public read without auth returns all fields matching payload, list contains created batch, 422 on missing product, unknown id -> 404, delete -> public 404 + second delete 404. Frontend (430x900, admin@mikilab.de): /?lotto=<invalid> renders public-batch-error 'Lotto non trovato'; login via header login-btn -> Maestro > Passo 5 > maestro-tool-lotti; created batch (batch-add/product/flour/flourlot/operator/save); QR generated for unpublished batch; batch-publish-<id> -> toast 'QR pubblico generato!' and batch-public-<id> with batch-copy/batch-open; QR image regenerated (src changed => now encodes public URL); href = /?lotto=<uuid> opens public page with matching product, code, flour, flour lot, operator; publish state persists after full reload (publicId in localStorage); batch-remove-<id> deletes local card and the server batch (public page then shows public-batch-error); batch-print present. No console errors other than expected 401 (pre-login /me) and 404 (invalid lotto).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": ["/app/backend/tests/test_iter40_public_batch.py", "/app/test_reports/pytest/iter40.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "BatchTraceability.publish() ignores store_name (backend supports it and PublicBatch renders 'Punto vendita'), so the public page never shows the shop name — consider passing the store/profile name.",
+    "remove() swallows batchesApi.remove errors silently: if the server delete fails the local card disappears while the public page stays live (orphan pub_batches doc). Consider surfacing a toast on failure.",
+    "GET /api/batches is never consumed by the UI; published batches only survive in localStorage, so clearing browser storage orphans server records with no way to manage/delete them."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter40_public_batch.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Test batches TEST_LOT-40A/40B (pytest) and TEST_Pane QR 40 (UI) all deleted after testing; localStorage batch removed.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (PRO admin)",
+  "context_for_next_testing_agent": "Public batch page is reached at /?lotto=<uuid> and renders standalone (no auth). For PRO UI tests: add_init_script with mikilab_onboarding={done:true,type:'panificio'} + mikilab_seen_intro='1' does NOT log you in — you must click [data-testid=login-btn] in the header then fill auth-email/auth-password/auth-submit, otherwise Maestro shows the PRO paywall and maestro-step-5 is absent. Backend suite: /app/backend/tests/test_iter40_public_batch.py.",
+  "rca_of_the_issue": "N/A — no defects found in the reviewed feature."
+}

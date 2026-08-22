@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import QRCode from "qrcode";
-import { QrCode, Plus, Trash2, Printer, Wheat } from "lucide-react";
+import { QrCode, Plus, Trash2, Printer, Wheat, Globe, Copy, Loader2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { batchesApi } from "@/lib/api";
+import { getProfile } from "@/components/Onboarding";
+import { toast } from "sonner";
 
 // Punto 19 — Tracciabilità Lotti: schede lotto con QR stampabile per tracciare
 // ogni infornata dalla farina al prodotto finito. Bacheca LOCALE (localStorage).
@@ -23,25 +26,33 @@ export default function BatchTraceability() {
   });
   const [qr, setQr] = useState({}); // id -> dataURL
   const [showForm, setShowForm] = useState(false);
+  const [publishing, setPublishing] = useState(null); // local id in corso di pubblicazione
   const [form, setForm] = useState({ code: genCode(), product: "", prodDate: today(), flour: "", flourLot: "", qty: "", expiry: "", operator: "", note: "" });
+
+  const pubUrl = (pid) => `${window.location.origin}/?lotto=${pid}`;
 
   useEffect(() => { try { localStorage.setItem("mikilab_batches", JSON.stringify(batches)); } catch { /* quota */ } }, [batches]);
 
-  // genera i QR per ogni lotto
+  // genera i QR per ogni lotto (pubblico → URL della pagina; altrimenti testo)
   useEffect(() => {
     let alive = true;
     (async () => {
       const map = {};
       for (const b of batches) {
-        const payload = [
-          `LOTTO: ${b.code}`,
-          `${tri("Prodotto", "Produkt", "Product")}: ${b.product}`,
-          `${tri("Produzione", "Produktion", "Produced")}: ${b.prodDate}`,
-          b.flour ? `${tri("Farina", "Mehl", "Flour")}: ${b.flour}${b.flourLot ? " / " + b.flourLot : ""}` : "",
-          b.expiry ? `${tri("Scadenza", "MHD", "Expiry")}: ${b.expiry}` : "",
-          b.qty ? `${tri("Quantità", "Menge", "Qty")}: ${b.qty}` : "",
-          b.operator ? `${tri("Operatore", "Bediener", "Operator")}: ${b.operator}` : "",
-        ].filter(Boolean).join("\n");
+        let payload;
+        if (b.publicId) {
+          payload = pubUrl(b.publicId);
+        } else {
+          payload = [
+            `LOTTO: ${b.code}`,
+            `${tri("Prodotto", "Produkt", "Product")}: ${b.product}`,
+            `${tri("Produzione", "Produktion", "Produced")}: ${b.prodDate}`,
+            b.flour ? `${tri("Farina", "Mehl", "Flour")}: ${b.flour}${b.flourLot ? " / " + b.flourLot : ""}` : "",
+            b.expiry ? `${tri("Scadenza", "MHD", "Expiry")}: ${b.expiry}` : "",
+            b.qty ? `${tri("Quantità", "Menge", "Qty")}: ${b.qty}` : "",
+            b.operator ? `${tri("Operatore", "Bediener", "Operator")}: ${b.operator}` : "",
+          ].filter(Boolean).join("\n");
+        }
         try { map[b.id] = await QRCode.toDataURL(payload, { margin: 1, width: 240 }); } catch { /* */ }
       }
       if (alive) setQr(map);
@@ -55,7 +66,24 @@ export default function BatchTraceability() {
     setForm({ code: genCode(), product: "", prodDate: today(), flour: "", flourLot: "", qty: "", expiry: "", operator: "", note: "" });
     setShowForm(false);
   };
-  const remove = (id) => setBatches((p) => p.filter((b) => b.id !== id));
+  const remove = async (id) => {
+    const b = batches.find((x) => x.id === id);
+    if (b?.publicId) { try { await batchesApi.remove(b.publicId); } catch { toast.error(tri("Pagina pubblica non rimossa, riprova", "Öffentliche Seite nicht entfernt", "Public page not removed, retry")); return; } }
+    setBatches((p) => p.filter((x) => x.id !== id));
+  };
+
+  const publish = async (b) => {
+    setPublishing(b.id);
+    try {
+      const storeName = (getProfile() || {}).labName || "";
+      const r = await batchesApi.create({ code: b.code, product: b.product, prod_date: b.prodDate || "", expiry: b.expiry || "", flour: b.flour || "", flour_lot: b.flourLot || "", qty: b.qty || "", operator: b.operator || "", note: b.note || "", store_name: storeName });
+      setBatches((p) => p.map((x) => (x.id === b.id ? { ...x, publicId: r.id } : x)));
+      toast.success(tri("QR pubblico generato!", "Öffentlicher QR erstellt!", "Public QR generated!"));
+    } catch (e) {
+      toast.error(e?.response?.status === 403 ? tri("Funzione riservata ai PRO", "Nur für PRO", "PRO only") : tri("Pubblicazione non riuscita", "Veröffentlichung fehlgeschlagen", "Publish failed"));
+    } finally { setPublishing(null); }
+  };
+  const copyLink = (pid) => { try { navigator.clipboard.writeText(pubUrl(pid)); toast.success(tri("Link copiato", "Link kopiert", "Link copied")); } catch { /* */ } };
 
   const inp = "w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]";
   const lbl = "text-[11px] font-semibold uppercase text-[#7E8A93]";
@@ -137,6 +165,25 @@ export default function BatchTraceability() {
               {b.operator && <><span className="text-[#7E8A93]">{tri("Operatore", "Bediener", "Operator")}</span><span className="text-right break-words">{b.operator}</span></>}
             </div>
             {b.note && <p className="text-[11px] text-[#7E8A93] mt-2 whitespace-pre-line border-t border-[#EAF0EC] pt-1">{b.note}</p>}
+
+            {/* QR pubblico */}
+            <div className="no-print mt-3 pt-2 border-t border-[#EAF0EC] dark:border-[#38424B]">
+              {b.publicId ? (
+                <div data-testid={`batch-public-${b.id}`}>
+                  <p className="text-[11px] font-semibold text-[#6B8E62] flex items-center gap-1 mb-1.5"><Globe className="w-3.5 h-3.5" /> {tri("QR pubblico attivo", "Öffentlicher QR aktiv", "Public QR active")}</p>
+                  <div className="flex gap-1.5">
+                    <button data-testid={`batch-copy-${b.id}`} onClick={() => copyLink(b.publicId)} className="flex-1 flex items-center justify-center gap-1 bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC] text-xs font-semibold py-2 rounded-lg active:scale-95"><Copy className="w-3.5 h-3.5" /> {tri("Copia link", "Link kopieren", "Copy link")}</button>
+                    <a data-testid={`batch-open-${b.id}`} href={pubUrl(b.publicId)} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-[#5E8B7E] text-white text-xs font-semibold py-2 rounded-lg active:scale-95"><Globe className="w-3.5 h-3.5" /> {tri("Apri pagina", "Seite öffnen", "Open page")}</a>
+                  </div>
+                </div>
+              ) : (
+                <button data-testid={`batch-publish-${b.id}`} onClick={() => publish(b)} disabled={publishing === b.id}
+                  className="w-full flex items-center justify-center gap-1.5 bg-[#6B8E62] hover:bg-[#5a7a53] text-white text-xs font-semibold py-2.5 rounded-lg active:scale-98 disabled:opacity-50">
+                  {publishing === b.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />} {tri("Genera QR pubblico", "Öffentlichen QR erstellen", "Generate public QR")}
+                </button>
+              )}
+            </div>
+
             <button data-testid={`batch-remove-${b.id}`} onClick={() => remove(b.id)} className="no-print mt-2 text-xs text-[#7E8A93] hover:text-[#E4572E] flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Elimina", "Löschen", "Delete")}</button>
           </div>
         ))}
