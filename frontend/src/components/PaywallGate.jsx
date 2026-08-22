@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check, Store, Truck } from "lucide-react";
+import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check, Store, Truck, CalendarClock } from "lucide-react";
 import { subscriptionApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
@@ -43,13 +43,13 @@ const FEATURES = {
     it: [
       [Store, "Multi-Negozio", "Gestisci più punti vendita, ognuno con i suoi ordini e dati"],
       [Truck, "Ordini Fornitori", "Crea ordini di acquisto e inviali via Email, WhatsApp o stampa"],
-      [ClipboardList, "Storico e stato", "Tieni traccia di bozze, ordini inviati e merce ricevuta"],
+      [CalendarClock, "Turni del Personale", "Pianifica i turni sul calendario settimanale con totale ore per persona"],
       [Sparkles, "Tutto salvato", "I dati restano al sicuro sul tuo account, su ogni dispositivo"],
     ],
     de: [
       [Store, "Multi-Filiale", "Verwalte mehrere Standorte, jeder mit eigenen Bestellungen"],
       [Truck, "Lieferantenbestellungen", "Bestellungen erstellen und per E-Mail, WhatsApp oder Druck senden"],
-      [ClipboardList, "Verlauf & Status", "Entwürfe, gesendete Bestellungen und Wareneingang verfolgen"],
+      [CalendarClock, "Personalplanung", "Schichten im Wochenkalender planen, Stunden pro Person"],
       [Sparkles, "Alles gespeichert", "Daten sicher in deinem Konto, auf jedem Gerät"],
     ],
   },

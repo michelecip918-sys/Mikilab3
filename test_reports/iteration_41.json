@@ -1,0 +1,31 @@
+{
+  "summary": "Iter 41 — Enterprise module (e) PIANIFICAZIONE TURNI tested end-to-end. Backend: 9/9 pytest passed (/api/shifts CRUD, hours calc 06:00-14:30=8.5h, night wrap 22:00-06:00=8h, PUT recompute 9.25h, store scoping, 422 validation, 401 anon, 403 non-PRO, 404 delete-inexistent). Frontend UI (430x900): admin PRO login -> home-section-enterprise -> enterprise-hub -> shifts-need-store shown with no store -> created store in Negozi tab -> enterprise-tab-turni -> shifts-manager with week navigator; added 2 shifts (Mon 06:00-14:30 = 8.5h, Wed 22:00-06:00 = 8h), per-shift hours correct, shifts-hours summary TEST_Luca 16.5h correct, week total in header; shift-week-next shows 0 shifts (date-bound, correct) and prev restores 2; delete removed card and summary updated to 8h. Non-PRO (fornaio@) sees PaywallGate instead of the hub. Regression: Negozi and Ordini tabs render without errors. Test data cleaned up (0 TEST_ shifts/stores left).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Enterprise > Turni (bottom of list) and Enterprise paywall", "issues": ["Floating 'Radio' and 'Parla' FABs overlap the 'ORE PER PERSONA' summary rows and the paywall CTA text/buttons on 430px viewport; content is partially hidden behind them (pb-40 not enough / FABs not offset)."]},
+      {"screen": "Enterprise paywall (non-PRO)", "issues": ["Feature list still advertises only Multi-Negozio/Ordini; the new 'Turni' module is not mentioned in the paywall preview."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter41_shifts.py", "/app/backend/tests/_cleanup_iter41.py"],
+  "action_items": [
+    "Optional: raise bottom padding / offset floating Radio-Parla FABs so the hours summary and paywall CTA are not covered on small viewports.",
+    "Optional: add 'Turni' to the Enterprise paywall feature preview list.",
+    "Optional hardening: ShiftsManager iso() uses Date.toISOString() on a local-midnight date; in timezones with positive UTC offset the week grid could shift by one day. Use local YYYY-MM-DD formatting instead."
+  ],
+  "critical_code_review_comments": [
+    "ShiftsManager.jsx: iso() = d.toISOString().slice(0,10) on a local-midnight Date is timezone-fragile (UTC+X shifts day back by 1). Build the ISO string from getFullYear/getMonth/getDate.",
+    "shiftsApi.list swallows all errors with .catch(() => []) — a 403/500 renders as an empty calendar with no error state; surface an error/toast.",
+    "server.py is ~2486 lines; consider splitting routers (shifts/stores/orders) into modules per the <700-line guideline."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter41_shifts.py", "/app/backend/tests/_cleanup_iter41.py"],
+  "success_rate": { "backend": "100%", "frontend": "100%" },
+  "seed_data_creation": "Temporary store TEST_UI_Negozio + TEST_ shifts created via UI/API; all deleted at the end (verified 0 remaining).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (PRO), fornaio@mikilab.de / Mikilab2026! (non-PRO)",
+  "context_for_next_testing_agent": "Turni module fully green (backend + UI). Reusable pytest: /app/backend/tests/test_iter41_shifts.py. Enterprise reachable only via home card home-section-enterprise (no bottom-nav tab); login must be explicit via login-btn -> auth-email/auth-password/auth-submit. Day/form testids embed local ISO date (monday of current week).",
+  "rca_of_the_issue": "No functional defects found. Only cosmetic overlap of floating action buttons over bottom content and timezone-fragile ISO date helper (not reproducible in UTC container)."
+}

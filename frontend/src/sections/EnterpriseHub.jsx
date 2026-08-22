@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { Building2, Store, Truck, ChevronDown } from "lucide-react";
+import { Building2, Store, Truck, ChevronDown, CalendarClock } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { storesApi } from "@/lib/api";
 import StoresManager from "@/sections/StoresManager";
 import OrdersManager from "@/sections/OrdersManager";
+import ShiftsManager from "@/sections/ShiftsManager";
 
 const STORE_KEY = "mikilab_current_store";
 
@@ -32,6 +33,7 @@ export default function EnterpriseHub() {
   const TABS = [
     { id: "negozi", label: tri("Negozi", "Filialen", "Stores"), Icon: Store },
     { id: "ordini", label: tri("Ordini", "Bestellungen", "Orders"), Icon: Truck },
+    { id: "turni", label: tri("Turni", "Schichten", "Shifts"), Icon: CalendarClock },
   ];
   const currentStore = stores.find((s) => s.id === current) || null;
 
@@ -41,7 +43,7 @@ export default function EnterpriseHub() {
         <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#33564E] to-[#1B2127] flex items-center justify-center"><Building2 className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Enterprise", "Enterprise", "Enterprise")}</h1>
-          <p className="text-sm text-[#7E8A93]">{tri("Gestione multi-negozio e ordini fornitori", "Multi-Filial- & Lieferantenbestellungen", "Multi-store & supplier orders")}</p>
+          <p className="text-sm text-[#7E8A93]">{tri("Gestione multi-negozio, ordini e turni", "Multi-Filiale, Bestellungen & Schichten", "Multi-store, orders & shifts")}</p>
         </div>
       </div>
 
@@ -58,10 +60,10 @@ export default function EnterpriseHub() {
       )}
 
       {/* Sotto-schede */}
-      <div className="grid grid-cols-2 gap-1.5 bg-[#EAF0EC] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-5 border border-[#D7E1DB] dark:border-[#38424B]">
+      <div className="grid grid-cols-3 gap-1.5 bg-[#EAF0EC] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-5 border border-[#D7E1DB] dark:border-[#38424B]">
         {TABS.map(({ id, label, Icon }) => (
           <button key={id} data-testid={`enterprise-tab-${id}`} onClick={() => setSub(id)}
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all ${sub === id ? "bg-[#5E8B7E] text-white shadow" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>
+            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${sub === id ? "bg-[#5E8B7E] text-white shadow" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>
             <Icon className="w-4 h-4" /> {label}
           </button>
         ))}
@@ -72,6 +74,11 @@ export default function EnterpriseHub() {
         stores.length === 0
           ? <p data-testid="orders-need-store" className="text-center text-sm text-[#7E8A93] py-10">{tri("Crea prima un negozio nella scheda «Negozi».", "Erstelle zuerst eine Filiale im Tab „Filialen“.", "Create a store first in the “Stores” tab.")}</p>
           : <OrdersManager store={current} stores={stores} />
+      )}
+      {sub === "turni" && (
+        stores.length === 0
+          ? <p data-testid="shifts-need-store" className="text-center text-sm text-[#7E8A93] py-10">{tri("Crea prima un negozio nella scheda «Negozi».", "Erstelle zuerst eine Filiale im Tab „Filialen“.", "Create a store first in the “Stores” tab.")}</p>
+          : <ShiftsManager store={current} storeName={(currentStore || {}).name || tri("Negozio", "Filiale", "Store")} />
       )}
     </div>
   );

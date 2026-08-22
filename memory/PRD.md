@@ -644,3 +644,12 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 - Il publish invia anche store_name (nome laboratorio dall'onboarding). remove() elimina anche il record backend e mostra toast se fallisce.
 - Testato: iteration_40 — backend 6/6 pytest + frontend 100% (publish→QR URL→pagina pubblica con dati corrispondenti, persistenza publicId, errore lotto inesistente, delete→404, regressione stampa/QR-testo/elimina). Nessun difetto.
 ### Ordine moduli Enterprise (a→e). FATTI: a (Multi-Negozio 21), b (Ordini 23), c (Digital Twin 22), d (QR Pubblico 25). ULTIMO: e (Pianificazione Turni personale).
+
+## v59 (2026-06) — ENTERPRISE (e): Pianificazione Turni Personale [PRO] — MODULO ENTERPRISE COMPLETO
+- Ultima scheda dell'hub Enterprise: **Turni** (enterprise-tab-turni). `sections/ShiftsManager.jsx`. Calendario SETTIMANALE (lun-dom) per il negozio attivo, navigatore settimana (shift-week-prev/next), aggiunta turno inline per giorno (shift-add-<ISO> → shift-form: shift-employee, shift-role, shift-station, shift-start, shift-end, shift-save), card turno (shift-card-<id>) con orario e ore calcolate, eliminazione (shift-remove-<id>). Riepilogo ORE PER PERSONA della settimana (shifts-hours, shift-hours-<nome>) + totale settimana nell'header.
+- Backend: collezione `shifts`, endpoint `GET /api/shifts?store_id=`, `POST/PUT/DELETE /api/shifts/{id}` (require_pro, owner+store scoped). `_shift_hours` calcola le ore includendo i turni notturni (wrap +24h). Frontend api: shiftsApi.
+- Fix: `iso()` in ShiftsManager ora costruisce la data locale YYYY-MM-DD (niente più shift di un giorno in fusi UTC+1/+2 come IT/DE). Aggiunto 'Turni' all'anteprima del PaywallGate enterprise.
+- Testato: iteration_41 — backend 9/9 pytest (calcolo ore diurno/notturno/PUT, scope, 401/403/404/422), frontend 100% (crea negozio→turni, ore per turno, riepilogo ore-persona, navigazione settimana date-bound, elimina, gating PRO non-PRO→paywall). Nessun difetto funzionale.
+### ✅ MODULO ENTERPRISE COMPLETO (a→e): a Multi-Negozio (21), b Ordini Multi-Fornitore (23), c Digital Twin Impasto (22), d QR Pubblico Lotto (25), e Pianificazione Turni. Tutto PRO, scoped per utente/negozio, trilingue.
+### Nota design ricorrente (app-wide): i FAB flottanti (Radio/WhatsApp/Parla) coprono a volte i contenuti in fondo su viewport 430px — da valutare offset/hide su schermate specifiche.
+### Backlog residuo 25 punti: i18n EN 100%; Academy video+prezzi+PayPal (attesa dati utente); valori nutrizionali reali (attesa dati laboratorio); Community notifiche (spark).

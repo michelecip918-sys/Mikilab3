@@ -2369,6 +2369,76 @@ async def pub_batch_get(batch_id: str):
     return _pub_batch_public(doc)
 
 
+# ---------------------------------------------------------------------------
+# Enterprise (e) — Pianificazione Turni del personale (scoped owner + negozio)
+# ---------------------------------------------------------------------------
+class ShiftReq(BaseModel):
+    store_id: Optional[str] = None
+    employee: str = Field(..., max_length=120)
+    role: Optional[str] = Field("", max_length=80)
+    day: str = Field(..., max_length=20)          # YYYY-MM-DD
+    start: str = Field(..., max_length=5)          # HH:MM
+    end: str = Field(..., max_length=5)            # HH:MM
+    station: Optional[str] = Field("", max_length=80)
+    note: Optional[str] = Field("", max_length=300)
+
+
+def _shift_hours(start: str, end: str) -> float:
+    try:
+        sh, sm = [int(x) for x in start.split(":")]
+        eh, em = [int(x) for x in end.split(":")]
+        mins = (eh * 60 + em) - (sh * 60 + sm)
+        if mins < 0:
+            mins += 24 * 60  # turno notturno
+        return round(mins / 60, 2)
+    except Exception:
+        return 0.0
+
+
+def _shift_public(d: dict) -> dict:
+    return {"id": d["id"], "store_id": d.get("store_id"), "employee": d.get("employee"),
+            "role": d.get("role", ""), "day": d.get("day"), "start": d.get("start"),
+            "end": d.get("end"), "station": d.get("station", ""), "note": d.get("note", ""),
+            "hours": d.get("hours", 0)}
+
+
+@api_router.get("/shifts")
+async def shifts_list(user: dict = Depends(require_pro), store_id: Optional[str] = None):
+    q = {"owner_id": user["user_id"]}
+    if store_id:
+        q["store_id"] = store_id
+    docs = await db.shifts.find(q, {"_id": 0}).sort("day", 1).to_list(2000)
+    return [_shift_public(d) for d in docs]
+
+
+@api_router.post("/shifts")
+async def shifts_create(body: ShiftReq, user: dict = Depends(require_pro)):
+    doc = {"id": str(uuid.uuid4()), "owner_id": user["user_id"], "created_at": now_iso(),
+           "hours": _shift_hours(body.start, body.end), **body.dict()}
+    doc["employee"] = body.employee.strip()
+    await db.shifts.insert_one(doc)
+    return _shift_public(doc)
+
+
+@api_router.put("/shifts/{shift_id}")
+async def shifts_update(shift_id: str, body: ShiftReq, user: dict = Depends(require_pro)):
+    doc = await db.shifts.find_one({"id": shift_id, "owner_id": user["user_id"]}, {"_id": 0})
+    if not doc:
+        raise HTTPException(404, "Turno non trovato")
+    upd = {**body.dict(), "employee": body.employee.strip(), "hours": _shift_hours(body.start, body.end)}
+    await db.shifts.update_one({"id": shift_id}, {"$set": upd})
+    doc.update(upd)
+    return _shift_public(doc)
+
+
+@api_router.delete("/shifts/{shift_id}")
+async def shifts_delete(shift_id: str, user: dict = Depends(require_pro)):
+    res = await db.shifts.delete_one({"id": shift_id, "owner_id": user["user_id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Turno non trovato")
+    return {"ok": True}
+
+
 app.include_router(api_router)
 
 app.add_middleware(

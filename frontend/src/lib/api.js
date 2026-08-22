@@ -113,3 +113,10 @@ export const batchesApi = {
   remove: (id) => api.delete(`/batches/${id}`).then((r) => r.data),
   publicGet: (id) => api.get(`/public/batch/${id}`).then((r) => r.data),
 };
+
+export const shiftsApi = {
+  list: (storeId) => api.get(`/shifts`, { params: storeId ? { store_id: storeId } : {} }).then((r) => r.data).catch(() => []),
+  create: (data) => api.post(`/shifts`, data).then((r) => r.data),
+  update: (id, data) => api.put(`/shifts/${id}`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/shifts/${id}`).then((r) => r.data),
+};
