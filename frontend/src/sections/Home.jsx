@@ -163,6 +163,12 @@ export default function Home({ onNavigate }) {
   const L = (it_, de_, en_) => (de ? de_ : lang === "en" ? en_ : it_);
   const profile = getProfile();
   const focusChip = ({ panettoni: L("Tracker pH Lievito", "pH-Tracker", "pH Tracker"), pane: L("Avvia impasti", "Teige starten", "Start doughs"), brezel: L("Il mio laboratorio", "Meine Backstube", "My lab"), dolci: L("Il mio laboratorio", "Meine Backstube", "My lab") })[profile && profile.focus] || L("Il mio laboratorio", "Meine Backstube", "My lab");
+  const _eq = (profile && profile.equip) || [];
+  const equipChip = _eq.includes("abbattitore") || _eq.includes("cella")
+    ? L("Shelf-Life & Freschezza", "Shelf-Life & Frische", "Shelf-life & freshness")
+    : (_eq.includes("forno_rotativo") || _eq.includes("forno_statico"))
+      ? L("Adatta il forno", "Ofen anpassen", "Adapt the oven")
+      : null;
 
   const SECTIONS = [
     { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#5E8B7E] to-[#33564E]",
@@ -224,6 +230,12 @@ export default function Home({ onNavigate }) {
               className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#6E8CA0]/40 text-[#2B303B] dark:text-[#EAF0EC] text-sm font-semibold active:scale-97">
               <Wrench className="w-4 h-4 text-[#6E8CA0]" /> {focusChip}
             </button>
+            {equipChip && (
+              <button data-testid="home-quick-equip" onClick={() => go("maestro")}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#6E8CA0]/40 text-[#2B303B] dark:text-[#EAF0EC] text-sm font-semibold active:scale-97">
+                <Wrench className="w-4 h-4 text-[#6E8CA0]" /> {equipChip}
+              </button>
+            )}
           </div>
         </div>
       )}

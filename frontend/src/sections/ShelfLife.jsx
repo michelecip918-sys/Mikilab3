@@ -1,0 +1,72 @@
+import { useState } from "react";
+import { CalendarClock, BadgeCheck, FlaskConical } from "lucide-react";
+import { useLang } from "@/i18n/LanguageContext";
+
+const PRODUCTS = [
+  { id: "pane", base: 3 }, { id: "panettone", base: 30 }, { id: "brezel", base: 2 }, { id: "dolci", base: 5 },
+];
+
+export default function ShelfLife() {
+  const { lang } = useLang();
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const [prod, setProd] = useState("pane");
+  const [ph, setPh] = useState("4.3");
+  const [hours, setHours] = useState("18");
+
+  const PLABEL = { pane: tri("Pane", "Brot", "Bread"), panettone: "Panettone", brezel: "Brezel", dolci: tri("Dolci", "Süßes", "Sweets") };
+  const base = (PRODUCTS.find((p) => p.id === prod) || PRODUCTS[0]).base;
+  const h = Number(hours) || 0;
+  const p = Number(ph) || 0;
+  // Fermentazione lunga = staling più lento → più giorni di freschezza.
+  const days = Math.round(base * (1 + Math.min(h, 48) / 48 * 0.6));
+  const highDigest = p >= 4.0 && p <= 4.6 && h >= 12;
+
+  const inp = "w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#EAF0EC]";
+
+  return (
+    <div className="pb-40">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-11 h-11 rounded-2xl bg-[#6B8E62] flex items-center justify-center"><CalendarClock className="w-6 h-6 text-white" /></div>
+        <div>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">Shelf-Life &amp; {tri("Digeribilità", "Verdaulichkeit", "Digestibility")}</h1>
+          <p className="text-sm text-[#7E8A93]">{tri("Freschezza e bollino da pH e lievitazione", "Frische & Siegel aus pH und Gärung", "Freshness & badge from pH and fermentation")}</p>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-2">
+          {PRODUCTS.map((x) => (
+            <button key={x.id} data-testid={`sl-prod-${x.id}`} onClick={() => setProd(x.id)}
+              className={`px-3 py-2.5 rounded-xl text-sm font-semibold border ${prod === x.id ? "bg-[#6B8E62] text-white border-[#6B8E62]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#D7E1DB] dark:border-[#38424B]"}`}>{PLABEL[x.id]}</button>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="text-[11px] font-semibold uppercase text-[#7E8A93]">pH {tri("finale", "final", "final")}
+            <input data-testid="sl-ph" type="number" step="0.1" value={ph} onChange={(e) => setPh(e.target.value)} className={inp + " mt-1"} /></label>
+          <label className="text-[11px] font-semibold uppercase text-[#7E8A93]">{tri("Ore lievitazione", "Gärstunden", "Fermentation hrs")}
+            <input data-testid="sl-hours" type="number" value={hours} onChange={(e) => setHours(e.target.value)} className={inp + " mt-1"} /></label>
+        </div>
+      </div>
+
+      <div data-testid="sl-result" className="mt-5 rounded-3xl bg-gradient-to-br from-[#6B8E62] to-[#374f31] text-white p-6 text-center shadow-lg">
+        <p className="text-white/80 text-sm uppercase tracking-wider font-semibold">{tri("Freschezza stimata", "Geschätzte Frische", "Estimated freshness")}</p>
+        <p data-testid="sl-days" className="font-mono-data text-5xl font-bold mt-1">{days} {tri("giorni", "Tage", "days")}</p>
+        <p className="text-white/80 text-xs mt-2">{tri("Fermentazioni lunghe = pane che resta fresco più a lungo.", "Lange Gärung = länger frisches Brot.", "Long fermentation = bread that stays fresh longer.")}</p>
+      </div>
+
+      <div data-testid="sl-badge" className={`mt-4 rounded-2xl p-4 flex items-center gap-3 border ${highDigest ? "bg-[#6B8E62]/12 border-[#6B8E62]/40" : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+        {highDigest ? <BadgeCheck className="w-9 h-9 text-[#4d6b45] shrink-0" /> : <FlaskConical className="w-8 h-8 text-[#7E8A93] shrink-0" />}
+        <div>
+          {highDigest ? (
+            <>
+              <p className="font-display font-bold text-[#33564E] dark:text-[#9ec48f]">{tri("Alta Digeribilità", "Hohe Verdaulichkeit", "High Digestibility")}</p>
+              <p className="text-xs text-[#7E8A93]">{tri("Fermentazione Controllata (pH 4,0–4,6 · ≥12 h). Puoi applicare il bollino.", "Kontrollierte Gärung (pH 4,0–4,6 · ≥12 Std.). Siegel anwendbar.", "Controlled fermentation (pH 4.0–4.6 · ≥12 h). Badge eligible.")}</p>
+            </>
+          ) : (
+            <p className="text-sm text-[#7E8A93]">{tri("Per il bollino 'Alta Digeribilità' servono pH 4,0–4,6 e almeno 12 h di lievitazione.", "Für das Siegel: pH 4,0–4,6 und mind. 12 Std. Gärung.", "For the 'High Digestibility' badge: pH 4.0–4.6 and at least 12 h of fermentation.")}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

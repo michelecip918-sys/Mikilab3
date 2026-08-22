@@ -589,3 +589,9 @@ NB: introduce la lingua EN (oggi solo IT/DE) → i18n esteso = fase dedicata.
 ## v51 (2026-06) — Dashboard personalizzata dal profilo onboarding
 - **Banner personalizzato in Home** (`sections/Home.jsx`, `home-personal`): se esiste il profilo onboarding (`getProfile()`), la Home mostra in alto "Ciao, [nome laboratorio]! 👋" + scorciatoie rapide: "Le mie ricette" → tab ricette, e una chip in base al focus (panettoni→"Tracker pH Lievito", pane→"Avvia impasti", altri→"Il mio laboratorio") → tab maestro. Trilingue. Nessun banner se il profilo non c'è.
 - Onboarding UI confermata a schermo (Passo 1/3, palette sage, avatar 3D). Banner = resa condizionale (Home rilegge il profilo ad ogni render → appare subito dopo il completamento). Compilazione pulita.
+
+## v52 (2026-06) — Shelf-Life & Digeribilità (Punto 24) + scorciatoia attrezzatura
+- **Shelf-Life & Digeribilità** (`sections/ShelfLife.jsx`, Lab Passo 5 `maestro-tool-shelf`): scegli prodotto (pane/panettone/brezel/dolci), inserisci pH finale e ore di lievitazione → giorni di freschezza stimati (staling più lento con fermentazioni lunghe: days=base*(1+min(h,48)/48*0.6)) + bollino "Alta Digeribilità - Fermentazione Controllata" se pH 4,0–4,6 e ≥12 h. Trilingue. data-testid: sl-prod-*, sl-ph, sl-hours, sl-result, sl-days, sl-badge.
+- **Scorciatoia attrezzatura in Home** (`home-quick-equip`): il banner personalizzato aggiunge una chip in base all'attrezzatura scelta nell'onboarding — abbattitore/cella → "Shelf-Life & Freschezza"; forno rotativo/statico → "Adatta il forno" (→ Laboratorio).
+- Compilazione pulita. Verifica: logica deterministica (default pane/pH4,3/18h → ~4 giorni + bollino Alta Digeribilità).
+### PROSSIMO: Anti-Spreco (Punto 20) — ricette di recupero dagli esuberi con ricalcolo margini.
