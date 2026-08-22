@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Scale, Bluetooth, Volume2, VolumeX, AlertTriangle, ArrowRight, Plus, Trash2, Layers, Droplet, Wheat, Euro, RotateCcw } from "lucide-react";
+import { Scale, Bluetooth, Volume2, VolumeX, AlertTriangle, ArrowRight, Plus, Trash2, Layers, Droplet, Wheat, Euro, RotateCcw, Thermometer, Save, CheckCircle2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
+import { doughSessionsApi } from "@/lib/api";
 import { toast } from "sonner";
 
 // FASE 1 — Pesata Guidata & Bilancia Smart (semaforo, voce, riscalamento, multi-impastata,
@@ -25,6 +27,7 @@ const DEFAULT = [
 export default function GuidedWeighing() {
   const { lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const { user, setAuthOpen } = useAuth();
 
   const [ingredients, setIngredients] = useState(() => {
     try {
@@ -42,6 +45,10 @@ export default function GuidedWeighing() {
   const [voiceOn, setVoiceOn] = useState(true);
   const [bleOn, setBleOn] = useState(false);
   const [summary, setSummary] = useState(null);
+  const [sessOpen, setSessOpen] = useState(false);
+  const [sess, setSess] = useState({ recipe_name: "", target_temp_c: "", dough_temp_c: "", room_temp_c: "", water_temp_c: "" });
+  const [sessSaved, setSessSaved] = useState(false);
+  const [sessSaving, setSessSaving] = useState(false);
   const stableRef = useRef(null);
   const logRef = useRef([]);
 
@@ -148,8 +155,27 @@ export default function GuidedWeighing() {
     r.start(); toast.message(tri("Di' 'Avanti'…", "Sag 'Weiter'…", "Say 'Next'…"));
   };
 
-  const reset = () => { setSummary(null); setIdx(0); setBatch(0); setWeight(0); logRef.current = []; };
-  const startRun = () => { logRef.current = []; setSummary(null); setStarted(true); setIdx(0); setBatch(0); setWeight(0); };
+  const reset = () => { setSummary(null); setIdx(0); setBatch(0); setWeight(0); logRef.current = []; setSessOpen(false); setSessSaved(false); setSess({ recipe_name: "", target_temp_c: "", dough_temp_c: "", room_temp_c: "", water_temp_c: "" }); };
+  const startRun = () => { logRef.current = []; setSummary(null); setSessOpen(false); setSessSaved(false); setStarted(true); setIdx(0); setBatch(0); setWeight(0); };
+
+  const saveAsSession = async () => {
+    if (!user) { setAuthOpen(true); return; }
+    if (!sess.recipe_name.trim() || sess.dough_temp_c === "") { toast.error(tri("Inserisci nome e temperatura finale impasto", "Name und End-Teigtemperatur angeben", "Enter name and final dough temperature")); return; }
+    setSessSaving(true);
+    try {
+      await doughSessionsApi.create({
+        recipe_name: sess.recipe_name.trim(),
+        target_temp_c: sess.target_temp_c !== "" ? Number(sess.target_temp_c) : null,
+        dough_temp_c: Number(sess.dough_temp_c),
+        room_temp_c: sess.room_temp_c !== "" ? Number(sess.room_temp_c) : null,
+        water_temp_c: sess.water_temp_c !== "" ? Number(sess.water_temp_c) : null,
+        note: summary ? tri(`Idratazione reale ${summary.realHyd.toFixed(1)}%, food cost € ${summary.cost.toFixed(2)}`, `Reale Hydration ${summary.realHyd.toFixed(1)}%, Kosten € ${summary.cost.toFixed(2)}`, `Real hydration ${summary.realHyd.toFixed(1)}%, food cost € ${summary.cost.toFixed(2)}`) : "",
+      });
+      setSessSaved(true);
+      toast.success(tri("Sessione salvata nel Diario Impasti", "Im Teig-Tagebuch gespeichert", "Saved to the Dough Log"));
+    } catch { toast.error(tri("Errore nel salvataggio", "Speichern fehlgeschlagen", "Save failed")); }
+    setSessSaving(false);
+  };
 
   const inp = "w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]";
 
@@ -236,6 +262,29 @@ export default function GuidedWeighing() {
             <p className="text-[11px] text-[#7E8A93] mt-2">{tri("Idratazione e food cost sono ricalcolati sui pesi reali.", "Hydration und Kosten wurden auf die realen Gewichte neu berechnet.", "Hydration and food cost are recomputed on the real weights.")}</p>
           </div>
         )}
+
+        {/* Salva come sessione impasto (collegamento Diario Impasti) */}
+        <div className="rounded-2xl bg-[#5E8B7E]/10 border border-[#5E8B7E]/30 p-4 mb-4" data-testid="gw-savesession">
+          {sessSaved ? (
+            <div className="flex items-center gap-2 text-[#6B8E62] font-semibold text-sm" data-testid="gw-savesession-ok"><CheckCircle2 className="w-5 h-5" /> {tri("Salvata nel Diario Impasti", "Im Teig-Tagebuch gespeichert", "Saved to the Dough Log")}</div>
+          ) : !sessOpen ? (
+            <button data-testid="gw-savesession-open" onClick={() => { setSessOpen(true); setSess((s) => ({ ...s, recipe_name: s.recipe_name || tri("Pesata del ", "Wiegen vom ", "Weighing of ") + new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT") })); }} className="w-full flex items-center justify-center gap-2 text-[#5E8B7E] font-semibold py-1">
+              <Thermometer className="w-4 h-4" /> {tri("Salva come sessione impasto (Giorno Dopo)", "Als Teig-Sitzung speichern (Tag danach)", "Save as dough session (Day After)")}
+            </button>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-xs font-bold uppercase text-[#5E8B7E]">{tri("Aggiungi le temperature", "Temperaturen ergänzen", "Add the temperatures")}</p>
+              <input data-testid="gw-sess-name" value={sess.recipe_name} onChange={(e) => setSess((s) => ({ ...s, recipe_name: e.target.value }))} placeholder={tri("Nome impasto", "Teig-Name", "Dough name")} className={inp} />
+              <div className="grid grid-cols-2 gap-2">
+                <label className="text-[11px] text-[#7E8A93]">{tri("Target °C", "Ziel °C", "Target °C")}<input data-testid="gw-sess-target" type="number" step="0.1" value={sess.target_temp_c} onChange={(e) => setSess((s) => ({ ...s, target_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
+                <label className="text-[11px] text-[#7E8A93]">{tri("Finale impasto °C", "End-Teig °C", "Final dough °C")}<input data-testid="gw-sess-dough" type="number" step="0.1" value={sess.dough_temp_c} onChange={(e) => setSess((s) => ({ ...s, dough_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
+                <label className="text-[11px] text-[#7E8A93]">{tri("Ambiente °C", "Raum °C", "Room °C")}<input data-testid="gw-sess-room" type="number" step="0.1" value={sess.room_temp_c} onChange={(e) => setSess((s) => ({ ...s, room_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
+                <label className="text-[11px] text-[#7E8A93]">{tri("Acqua °C", "Wasser °C", "Water °C")}<input data-testid="gw-sess-water" type="number" step="0.1" value={sess.water_temp_c} onChange={(e) => setSess((s) => ({ ...s, water_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
+              </div>
+              <button data-testid="gw-sess-save" onClick={saveAsSession} disabled={sessSaving} className="w-full flex items-center justify-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {sessSaving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva nel Diario", "Ins Tagebuch", "Save to log")}</button>
+            </div>
+          )}
+        </div>
 
         <button data-testid="gw-summary-reset" onClick={reset} className="w-full flex items-center justify-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-bold py-4 rounded-2xl active:scale-98"><RotateCcw className="w-5 h-5" /> {tri("Nuova pesata", "Neu wiegen", "New weighing")}</button>
       </div>
