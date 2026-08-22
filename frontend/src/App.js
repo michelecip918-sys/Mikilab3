@@ -11,6 +11,7 @@ import LearnHub from "@/sections/LearnHub";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import Shop from "@/sections/Shop";
 import Academy from "@/sections/Academy";
+import EnterpriseHub from "@/sections/EnterpriseHub";
 import PaywallGate from "@/components/PaywallGate";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
@@ -82,6 +83,7 @@ function App() {
             {tab === "maestro" && <PaywallGate feature="lab" sectionName="Il Tuo Laboratorio"><Maestro /></PaywallGate>}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} />}
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName="Diagnosi"><PhotoDiagnosi /></PaywallGate>}
+            {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
             {tab === "shop" && <><Academy /><Shop hideCourses /></>}
           </motion.div>
         </AnimatePresence>

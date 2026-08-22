@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor, Building2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import LegalPage from "@/sections/LegalPage";
@@ -181,6 +181,8 @@ export default function Home({ onNavigate }) {
       sub: L("Per professionisti: piano, costi, impasti (PRO)", "Für Profis: Arbeitsplan, Kosten, Teige (PRO)", "For pros: plan, costs, doughs (PRO)") },
     { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#7E8A93] to-[#6B7680]",
       sub: L("Scopri i difetti del pane da una foto (PRO)", "Brotfehler per Foto erkennen (PRO)", "Spot bread defects from a photo (PRO)") },
+    { tab: "enterprise", label: "Enterprise", Icon: Building2, grad: "from-[#33564E] to-[#1B2127]",
+      sub: L("Multi-negozio e ordini fornitori (PRO)", "Multi-Filiale und Lieferantenbestellungen (PRO)", "Multi-store and supplier orders (PRO)") },
     { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#33564E] to-[#1B2127]",
       sub: L("Tutte le basi spiegate", "Alle Grundlagen erklärt", "All the basics explained") },
     { tab: "shop", label: "Shop & Academy", Icon: ShoppingBag, grad: "from-[#33564E] to-[#33564E]",

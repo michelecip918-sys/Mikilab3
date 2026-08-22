@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check } from "lucide-react";
+import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check, Store, Truck } from "lucide-react";
 import { subscriptionApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
@@ -37,6 +37,20 @@ const FEATURES = {
       [Camera, "Teigzustand", "Erkenne, ob reif, zu früh oder übergar"],
       [ScanLine, "Alle Zutaten", "Wahrscheinliches Rezept mit geschätzten Prozenten per Foto"],
       [Flame, "Maschinen & Störungen", "Liest Fehlercodes vom Display und erklärt Lösungen"],
+    ],
+  },
+  enterprise: {
+    it: [
+      [Store, "Multi-Negozio", "Gestisci più punti vendita, ognuno con i suoi ordini e dati"],
+      [Truck, "Ordini Fornitori", "Crea ordini di acquisto e inviali via Email, WhatsApp o stampa"],
+      [ClipboardList, "Storico e stato", "Tieni traccia di bozze, ordini inviati e merce ricevuta"],
+      [Sparkles, "Tutto salvato", "I dati restano al sicuro sul tuo account, su ogni dispositivo"],
+    ],
+    de: [
+      [Store, "Multi-Filiale", "Verwalte mehrere Standorte, jeder mit eigenen Bestellungen"],
+      [Truck, "Lieferantenbestellungen", "Bestellungen erstellen und per E-Mail, WhatsApp oder Druck senden"],
+      [ClipboardList, "Verlauf & Status", "Entwürfe, gesendete Bestellungen und Wareneingang verfolgen"],
+      [Sparkles, "Alles gespeichert", "Daten sicher in deinem Konto, auf jedem Gerät"],
     ],
   },
   beginners: {

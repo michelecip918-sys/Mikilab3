@@ -2179,6 +2179,139 @@ async def community_delete(post_id: str, user: dict = Depends(current_user)):
     return {"ok": True}
 
 
+# ---------------------------------------------------------------------------
+# Enterprise — Multi-Negozio (21) + Ordini Multi-Fornitore (23)
+# Dati salvati sul backend e separati per proprietario (user) e per negozio.
+# ---------------------------------------------------------------------------
+class StoreReq(BaseModel):
+    name: str = Field(..., max_length=120)
+    address: Optional[str] = Field("", max_length=300)
+    phone: Optional[str] = Field("", max_length=60)
+    note: Optional[str] = Field("", max_length=1000)
+
+
+def _store_public(d: dict) -> dict:
+    return {"id": d["id"], "name": d.get("name"), "address": d.get("address", ""), "phone": d.get("phone", ""), "note": d.get("note", ""), "created_at": d.get("created_at")}
+
+
+@api_router.get("/stores")
+async def stores_list(user: dict = Depends(require_pro)):
+    docs = await db.stores.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("created_at", 1).to_list(200)
+    return [_store_public(d) for d in docs]
+
+
+@api_router.post("/stores")
+async def stores_create(body: StoreReq, user: dict = Depends(require_pro)):
+    doc = {"id": str(uuid.uuid4()), "owner_id": user["user_id"], "name": body.name.strip(), "address": (body.address or "").strip(), "phone": (body.phone or "").strip(), "note": (body.note or "").strip(), "created_at": now_iso()}
+    await db.stores.insert_one(doc)
+    return _store_public(doc)
+
+
+@api_router.put("/stores/{store_id}")
+async def stores_update(store_id: str, body: StoreReq, user: dict = Depends(require_pro)):
+    doc = await db.stores.find_one({"id": store_id, "owner_id": user["user_id"]}, {"_id": 0})
+    if not doc:
+        raise HTTPException(404, "Negozio non trovato")
+    upd = {"name": body.name.strip(), "address": (body.address or "").strip(), "phone": (body.phone or "").strip(), "note": (body.note or "").strip()}
+    await db.stores.update_one({"id": store_id}, {"$set": upd})
+    doc.update(upd)
+    return _store_public(doc)
+
+
+@api_router.delete("/stores/{store_id}")
+async def stores_delete(store_id: str, user: dict = Depends(require_pro)):
+    res = await db.stores.delete_one({"id": store_id, "owner_id": user["user_id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Negozio non trovato")
+    return {"ok": True}
+
+
+ORDER_STATUSES = {"bozza", "inviato", "ricevuto"}
+
+
+class OrderItem(BaseModel):
+    name: str = Field(..., max_length=160)
+    qty: float = 0
+    unit: str = Field("kg", max_length=20)
+    price: Optional[float] = None
+
+
+class OrderReq(BaseModel):
+    store_id: Optional[str] = None
+    supplier: str = Field(..., max_length=160)
+    supplier_email: Optional[str] = Field("", max_length=160)
+    items: List[OrderItem] = []
+    note: Optional[str] = Field("", max_length=1000)
+    status: Optional[str] = "bozza"
+
+
+def _order_total(items: List[dict]) -> float:
+    tot = 0.0
+    for it in items:
+        q = it.get("qty") or 0
+        p = it.get("price")
+        if p is not None:
+            tot += float(q) * float(p)
+    return round(tot, 2)
+
+
+def _order_public(d: dict) -> dict:
+    return {
+        "id": d["id"], "store_id": d.get("store_id"), "supplier": d.get("supplier"),
+        "supplier_email": d.get("supplier_email", ""), "items": d.get("items", []),
+        "note": d.get("note", ""), "status": d.get("status", "bozza"),
+        "total": d.get("total", 0), "created_at": d.get("created_at"),
+    }
+
+
+@api_router.get("/purchase-orders")
+async def orders_list(user: dict = Depends(require_pro), store_id: Optional[str] = None):
+    q = {"owner_id": user["user_id"]}
+    if store_id:
+        q["store_id"] = store_id
+    docs = await db.purchase_orders.find(q, {"_id": 0}).sort("created_at", -1).to_list(500)
+    return [_order_public(d) for d in docs]
+
+
+@api_router.post("/purchase-orders")
+async def orders_create(body: OrderReq, user: dict = Depends(require_pro)):
+    items = [i.dict() for i in body.items]
+    status = body.status if body.status in ORDER_STATUSES else "bozza"
+    doc = {
+        "id": str(uuid.uuid4()), "owner_id": user["user_id"], "store_id": body.store_id,
+        "supplier": body.supplier.strip(), "supplier_email": (body.supplier_email or "").strip(),
+        "items": items, "note": (body.note or "").strip(), "status": status,
+        "total": _order_total(items), "created_at": now_iso(),
+    }
+    await db.purchase_orders.insert_one(doc)
+    return _order_public(doc)
+
+
+@api_router.put("/purchase-orders/{order_id}")
+async def orders_update(order_id: str, body: OrderReq, user: dict = Depends(require_pro)):
+    doc = await db.purchase_orders.find_one({"id": order_id, "owner_id": user["user_id"]}, {"_id": 0})
+    if not doc:
+        raise HTTPException(404, "Ordine non trovato")
+    items = [i.dict() for i in body.items]
+    status = body.status if body.status in ORDER_STATUSES else doc.get("status", "bozza")
+    upd = {
+        "store_id": body.store_id, "supplier": body.supplier.strip(),
+        "supplier_email": (body.supplier_email or "").strip(), "items": items,
+        "note": (body.note or "").strip(), "status": status, "total": _order_total(items),
+    }
+    await db.purchase_orders.update_one({"id": order_id}, {"$set": upd})
+    doc.update(upd)
+    return _order_public(doc)
+
+
+@api_router.delete("/purchase-orders/{order_id}")
+async def orders_delete(order_id: str, user: dict = Depends(require_pro)):
+    res = await db.purchase_orders.delete_one({"id": order_id, "owner_id": user["user_id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Ordine non trovato")
+    return {"ok": True}
+
+
 app.include_router(api_router)
 
 app.add_middleware(

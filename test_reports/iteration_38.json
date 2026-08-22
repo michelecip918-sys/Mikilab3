@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 38 — Enterprise module (Multi-Negozio + Ordini Multi-Fornitore). Backend: 17/17 pytest passed (stores CRUD, orders CRUD, total computation, status transitions, store filter, owner scoping, auth guards, PRO status). Frontend (430x900 mobile): PRO gating verified (anonymous + non-PRO fornaio see paywall; admin sees enterprise-hub), full stores CRUD with active-store logic + picker + persistence after reload, full orders flow (create with datalist supplier, item add/remove, total 21.5 computed, scoping per active store, email/whatsapp/print send with bozza->inviato transition, mark received, delete, persistence). Quick regression on Impara/Community and Maestro tabs OK. Test data cleaned up.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/stores, /api/purchase-orders", "issue": "Endpoints only require authentication (current_user), not require_pro. A non-PRO authenticated user could use the Enterprise API directly via curl even though the UI is behind PaywallGate. Feature is advertised as PRO-only — consider server-side blindatura like /api/maestro/vision."},
+      {"endpoint": "PUT /api/purchase-orders/{id}", "issue": "Invalid status values are silently coerced to the previous status instead of returning 422; acceptable but hides client bugs."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "PaywallGate (Enterprise / Impara) at 430x900", "issues": ["Floating FABs (Radio bottom-left, WhatsApp/Parla bottom-right) overlap the paywall CTA text 'Provalo gratis o abbonati per sbloccare tutto' and partially cover the sub-monthly/sub-yearly buttons. Pre-existing app-wide FAB overlap, not specific to Enterprise."]},
+      {"screen": "OrdersManager / StoresManager", "issues": ["Same FAB overlap over bottom content, mitigated by pb-40 padding; no functional blockage (all clicks worked with normal, non-forced clicks)."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter38_enterprise.py", "/app/test_reports/pytest/iter38.xml", "/app/backend/tests/_cleanup_iter38.py"],
+  "action_items": [
+    "OPTIONAL (security/consistency): add require_pro (or PRO check) to /api/stores and /api/purchase-orders so the Enterprise data API matches the UI PaywallGate.",
+    "OPTIONAL (design): raise the paywall CTA/subscription buttons above the floating FABs or hide the Radio/Voice FABs on paywalled screens."
+  ],
+  "critical_code_review_comments": [
+    "Enterprise endpoints are correctly owner-scoped and exclude MongoDB _id; total is server-computed (good, client cannot forge it).",
+    "OrdersManager.sendEmail uses window.location.href = mailto: — works, but on desktop browsers without a mail handler nothing happens while status still flips to 'inviato'. Consider anchor click + user confirmation.",
+    "SUPPLIERS entries have empty email fields, so selecting 'BÄKO' does not autofill order-email (verified expected behaviour, not a bug) — user must type the address; consider a hint in the UI.",
+    "StoresManager/OrdersManager sizes are fine (<200 lines each); no DRY or async issues found."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter38_enterprise.py", "/app/backend/tests/_cleanup_iter38.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Created and deleted TEST_ stores (TEST_Forno Centro, TEST_Forno Stazione, TEST_Store B) and TEST/BÄKO purchase orders under admin@mikilab.de. DB verified empty of stores/orders afterwards.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (PRO/admin); fornaio@mikilab.de / Mikilab2026! (NON-PRO -> correctly sees paywall)",
+  "context_for_next_testing_agent": "Enterprise hub reachable only from Home card home-section-enterprise (no bottom-nav tab). Login flow via paywall-login -> auth-screen works and returns straight into the enterprise tab. Store picker is a native <select> inside [data-testid=enterprise-store-picker]; use select_option with the store id. Order item row testids use random client ids, read them from div[data-testid^='order-item-']. Stub window.print in add_init_script to avoid headless print dialogs; wa.me opens a popup (api.whatsapp.com). Only 2 console errors, both expected 401s from /api/auth/me while anonymous.",
+  "rca_of_the_issue": "No functional defect found. Only gap: PRO entitlement for Enterprise is enforced client-side (PaywallGate) but not server-side on /api/stores and /api/purchase-orders."
+}

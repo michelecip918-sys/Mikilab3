@@ -93,3 +93,17 @@ export const communityApi = {
   comment: (id, text) => api.post(`/community/posts/${id}/comments`, { text }).then((r) => r.data),
   remove: (id) => api.delete(`/community/posts/${id}`).then((r) => r.data),
 };
+
+export const storesApi = {
+  list: () => api.get(`/stores`).then((r) => r.data).catch(() => []),
+  create: (data) => api.post(`/stores`, data).then((r) => r.data),
+  update: (id, data) => api.put(`/stores/${id}`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/stores/${id}`).then((r) => r.data),
+};
+
+export const ordersApi = {
+  list: (storeId) => api.get(`/purchase-orders`, { params: storeId ? { store_id: storeId } : {} }).then((r) => r.data).catch(() => []),
+  create: (data) => api.post(`/purchase-orders`, data).then((r) => r.data),
+  update: (id, data) => api.put(`/purchase-orders/${id}`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/purchase-orders/${id}`).then((r) => r.data),
+};
