@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend-only testing of the new 'Mohammed' assistant in 'Il Tuo Laboratorio' (mobile 390x844, preview URL). Flow verified end-to-end: intro guide dismissal, admin login (admin@mikilab.de), PRO paywall passed, lab tab. Mohammed intro card renders at the TOP of the wizard (assistant y=225 vs maestro-stepper y=475) with avatar image loading correctly (1024x1024, /mohammed-avatar.jpg) and heading 'Ciao, sono Mohammed'. Chat toggle opens mohammed-chat with 3 suggestion chips; both chip-click and input+send flows stream replies via POST /api/mohammed/chat. IN-SCOPE question ('Come imposto la cottura nel forno?') returned practical numbered/bulleted Italian baker guidance referencing app tools (Termostato & Sensori, HACCP). OUT-OF-SCOPE ('Che tempo fa domani?') returned the refusal string EXACTLY as specified (byte-for-byte match after whitespace normalisation). EN language switch works: card copy switches to English and reply came back in English while keeping persona/scope. Markdown renders (13 <li>, 14 <strong>), send button correctly disabled while busy, loader shown before first delta. No console errors during chat (only two pre-login 401s from auth/me, expected).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "MohammedAssistant", "issue": "Auto-scroll bug: endRef.scrollIntoView({behavior:'smooth'}) scrolls the WHOLE page (not just the inner chat container). After sending a message the chat panel ends up completely above the viewport (measured bounding box y = -299 with window.scrollY = 746 on 390x844), so the user does not see Mohammed's streamed reply unless they manually scroll back up. Reply content itself is correct when scrolled into view.", "selector": "[data-testid=\"mohammed-chat\"]", "priority": "HIGH"},
+      {"component": "Maestro / floating FABs", "issue": "Floating 'Radio' (left) and 'Parla' (right) circular buttons overlay the bottom-left/right corners of the Mohammed chat panel and the wizard's Indietro/Avanti buttons on mobile, partially covering text/controls.", "selector": "[data-testid=\"mohammed-chat\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Il Tuo Laboratorio (mobile)", "issues": ["Chat panel max-h-72 combined with the page-level auto-scroll makes long replies hard to follow", "FAB overlap over wizard nav buttons"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix Mohammed chat auto-scroll: scroll only the inner messages container (e.g. container.scrollTop = container.scrollHeight, or scrollIntoView({block:'nearest'})) so the page doesn't jump the chat out of the viewport during streaming.",
+    "Raise z-index / reposition of the Radio & Parla FABs so they don't overlap the chat panel and wizard nav buttons on mobile."
+  ],
+  "critical_code_review_comments": [
+    "MohammedAssistant.send(): `res.body.getReader()` is used without checking res.ok — a non-200 (e.g. 402 paywall, 500) yields an empty assistant bubble or generic catch message; check res.ok and surface an error state.",
+    "No abort handling: switching tabs/unmounting during streaming leaves the fetch running and setState on unmounted component; consider AbortController.",
+    "GET /api/mohammed/history/{session_id} is never consumed by the UI — chat history is lost on remount even though the session id persists in localStorage."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "90% (6/6 functional checks pass, 1 HIGH scroll UX bug)"},
+  "seed_data_creation": "Created chat_messages under session ids mohammed-* (test chats). Not cleaned up; safe to drop sessions starting with 'mohammed-'.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked, PRO/admin)",
+  "context_for_next_testing_agent": "Access recipe: set localStorage mikilab_onboarding={\"done\":true} + reload, then dismiss IntroGuide via [data-testid=intro-close-btn] (this modal is separate from Onboarding and blocks all clicks), then login-btn -> auth-email/auth-password/auth-submit, then nav-tab-maestro. Mohammed streaming takes ~10-20s for a full reply; poll inner_text of [data-testid=mohammed-chat]. Remember the page auto-scrolls away — use window.scrollTo(0,0) before screenshots.",
+  "rca_of_the_issue": "Scroll bug root cause: the useEffect calls endRef.current.scrollIntoView({behavior:'smooth'}) on every messages change; because the sentinel is inside an overflow-y-auto container that is itself inside the normally-scrolling document, the browser scrolls the nearest scrollable ancestor AND the document, pushing the whole assistant card above the viewport."
+}

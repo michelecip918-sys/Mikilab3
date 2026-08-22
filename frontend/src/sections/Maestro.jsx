@@ -35,6 +35,7 @@ import HaccpLog from "@/sections/HaccpLog";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 import { useBackClose } from "@/lib/backNav";
+import MohammedAssistant from "@/sections/MohammedAssistant";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
@@ -128,6 +129,8 @@ export default function Maestro() {
       <MikiAvatar label="Michele" subtitle={t("maestro_title")} className="mb-4" />
       <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{t("maestro_title")}</h1>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Configura il tuo laboratorio passo dopo passo", "Richte deine Backstube Schritt für Schritt ein", "Set up your bakery step by step")}</p>
+
+      <MohammedAssistant />
 
       {/* Stepper 5 passi */}
       <div className="flex items-center mb-5" data-testid="maestro-stepper">

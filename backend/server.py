@@ -1031,6 +1031,83 @@ async def maestro_history(session_id: str):
 
 
 # ---------------------------------------------------------------------------
+# Mohammed — assistente di "Il Tuo Laboratorio" (Claude Sonnet 4.6, streaming)
+# ---------------------------------------------------------------------------
+MOHAMMED_SYSTEM = (
+    "Sei 'Mohammed', l'assistente virtuale e mastro panettiere della sezione 'Il Tuo Laboratorio' di MikiLab. "
+    "COMPITI PRINCIPALI: 1) Accogli l'utente e guidalo passo-passo nell'organizzazione ottimale del suo "
+    "forno/laboratorio di panificazione. 2) Spiega in modo semplice e pratico come gestire: stoccaggio e "
+    "organizzazione delle materie prime (farine, lieviti, acqua, sale); flusso di lavoro (impasto, lievitazione, "
+    "formatura, gestione delle teglie/carrelli); programmazione dei cicli di cottura e gestione delle temperature "
+    "del forno; pulizia, manutenzione ordinaria e norme igieniche del laboratorio (HACCP). 3) Spiega come usare le "
+    "funzionalita operative dell'app relative al laboratorio: Capo Laboratorio (pianificazione), Bilancia Smart e "
+    "Pesata Guidata, Diario Impasti e algoritmo 'Giorno Dopo', Termostato & sensori, Registro HACCP, Food Cost, "
+    "Tracciabilita Lotti, Pianificazione turni. "
+    "REGOLE FONDAMENTALI: AMBITO ESCLUSIVO - rispondi SOLO a domande legate alla sezione 'Il Tuo Laboratorio', alla "
+    "gestione del forno e all'uso dei relativi strumenti dell'app. FUORI AMBITO - se l'utente fa domande NON pertinenti "
+    "al laboratorio o al forno (es. meteo, programmazione, ricette generiche non legate all'organizzazione del forno), "
+    "rispondi garbatamente ESATTAMENTE: \"Sono Mohammed, il tuo assistente per 'Il Tuo Laboratorio'. Posso aiutarti "
+    "esclusivamente nell'organizzazione del tuo forno e nell'uso degli strumenti di questa sezione!\". "
+    "TONO DI VOCE: professionale, pratico, chiaro, accogliente e da vero collega panettiere. "
+    "FORMATO RISPOSTE: usa SEMPRE elenchi puntati o passaggi numerati (1, 2, 3...) per rendere le spiegazioni "
+    "'passo per passo' facili e veloci da leggere durante il lavoro. Non essere prolisso."
+)
+MOHAMMED_LANG = {
+    "it": " Rispondi SEMPRE in italiano.",
+    "de": " Antworte IMMER auf Deutsch. Wenn du eine Standardantwort geben musst, uebersetze sie sinngemaess.",
+    "en": " Always answer in English. Translate the fixed out-of-scope reply accordingly.",
+}
+
+
+async def _lab_assistant_stream(system: str, lang_map: dict, session_id: str, message: str, lang: str = "it"):
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=session_id,
+        system_message=system + lang_map.get(lang, lang_map["it"]),
+    ).with_model("anthropic", "claude-sonnet-4-6")
+
+    prior = await db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1).to_list(200)
+    await db.chat_messages.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session_id,
+        "role": "user", "content": message, "created_at": now_iso(),
+    })
+    context_prefix = ""
+    if prior:
+        lines = [f"{'Utente' if m['role'] == 'user' else 'Mohammed'}: {m['content']}" for m in prior[-10:]]
+        context_prefix = "Conversazione precedente:\n" + "\n".join(lines) + "\n\nNuova domanda:\n"
+
+    full_text = ""
+    async for event in chat.stream_message(UserMessage(text=context_prefix + message)):
+        if isinstance(event, TextDelta):
+            full_text += event.content
+            yield f"data: {json.dumps({'d': event.content})}\n\n"
+        elif isinstance(event, StreamDone):
+            break
+    await db.chat_messages.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session_id,
+        "role": "assistant", "content": full_text, "created_at": now_iso(),
+    })
+    yield f"data: {json.dumps({'done': True})}\n\n"
+
+
+@api_router.post("/mohammed/chat")
+async def mohammed_chat(payload: ChatRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        _lab_assistant_stream(MOHAMMED_SYSTEM, MOHAMMED_LANG, payload.session_id, payload.message, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+@api_router.get("/mohammed/history/{session_id}")
+async def mohammed_history(session_id: str):
+    docs = await db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1).to_list(500)
+    return docs
+
+
+# ---------------------------------------------------------------------------
 # Capo Laboratorio — pianificazione intelligente del lavoro (Claude, streaming)
 # ---------------------------------------------------------------------------
 CAPO_SYSTEM = (
