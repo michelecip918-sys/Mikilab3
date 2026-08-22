@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only verification of FASE B asset/feature updates on the preview URL (mobile 390x844, IT default). Verified: (1) page-footer with michele-real-lab.jpg on Home and Ricette, (2) MikiAvatar/michele-avatar.jpg load on 'Il Tuo Laboratorio', (3) NON-registered 7-day local device trial on both nav-tab-maestro and nav-tab-diagnosi (paywall -> local-trial-start -> content unlocked + local-trial-banner '7 giorni', persisted in localStorage mikilab_local_trial across reload), (4) Mohammadreza rename on mohammed-assistant card + out-of-scope chat refusal starting with 'Sono Mohammadreza, il tuo assistente per ...'. All 4 requested items PASS. Note: IntroGuide dialog overlay must be dismissed (intro-close-btn) before bottom-nav is clickable.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "MohammedAssistant", "issue": "Chat toggle label still says 'Chiedi a Mohammed' / 'Mohammed fragen' / 'Ask Mohammed' — rename to Mohammadreza missed on this string (MohammedAssistant.jsx line 87). Card heading, role label and input placeholder are correctly renamed.", "selector": "[data-testid=\"mohammed-toggle\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Global (all tabs)", "issues": ["IntroGuide dialog opens on every page load for users who already completed onboarding (showIntro = !!getProfile()) and its dark overlay (bg-black/80) blocks the bottom nav until closed — returning users see the intro modal on every visit/reload; no localStorage 'seen' flag.", "Floating Radio/Parla FABs overlap footer/content cards near the bottom of the page (footer photo partially covered by the Radio button on mobile)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Rename toggle label 'Chiedi a Mohammed' -> 'Chiedi a Mohammadreza' (and DE/EN variants) in /app/frontend/src/sections/MohammedAssistant.jsx:87",
+    "Persist an 'intro guide seen' flag so IntroGuide does not reappear (and block bottom nav) on every reload",
+    "Reduce overlap of floating Radio/Parla buttons with footer content on mobile"
+  ],
+  "critical_code_review_comments": [
+    "PaywallGate local trial is device-local only (localStorage) and trivially resettable by clearing storage; no server-side enforcement. PRO backend endpoints (/api/maestro/vision, /api/capo/plan mode=pro) still require auth, so trial users will get 401s inside the unlocked section — verify which sub-features actually work during a non-registered trial.",
+    "Multiple 401 console errors on every page load for anonymous visitors (auth/session or subscription status calls) — guard these calls when no session exists to keep console clean."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100% of 4 requested features (1 minor label miss)"},
+  "seed_data_creation": "One anonymous Mohammadreza chat message ('Che ore sono?') may exist in chat_messages; no user/account data created.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (not needed — trial flow tested unauthenticated)",
+  "context_for_next_testing_agent": "To test app UI: add_init_script setting localStorage mikilab_onboarding={\"done\":true}, then after load click [data-testid=\"intro-close-btn\"] to dismiss the IntroGuide overlay, otherwise all bottom-nav clicks are intercepted by the dialog overlay. To retest the fresh trial button, clear localStorage 'mikilab_local_trial' and reload (don't clear it inside add_init_script, or reload-persistence checks will falsely fail).",
+  "rca_of_the_issue": "No functional defect found in the new features. The initial nav-click failures were caused by the IntroGuide Radix DialogOverlay covering the bottom nav, and the initial persistence failure was a test-script artifact (init script removed the trial key on every navigation)."
+}

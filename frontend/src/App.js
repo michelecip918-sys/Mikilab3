@@ -96,6 +96,14 @@ function App() {
             {tab === "shop" && <><Academy /><Shop hideCourses /></>}
           </motion.div>
         </AnimatePresence>
+
+        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#D7E1DB] dark:border-[#38424B] flex items-center gap-3">
+          <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele — MikiLab" loading="lazy" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#A9C5D4]/60 shadow-sm shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <div className="min-w-0">
+            <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#EAF0EC]">MikiLab · Michele</p>
+            <p className="text-[11px] text-[#7E8A93]">{tri("Panificazione artigianale — Stoccarda", "Handwerksbäckerei — Stuttgart", "Artisan bakery — Stuttgart")}</p>
+          </div>
+        </footer>
       </main>
       <BottomNav active={tab} onChange={navigate} />
       <VoiceAssistant onNavigate={navigate} />

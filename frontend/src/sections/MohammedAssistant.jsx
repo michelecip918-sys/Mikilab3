@@ -68,15 +68,15 @@ export default function MohammedAssistant() {
   return (
     <div data-testid="mohammed-assistant" className="rounded-3xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white p-5 mb-5 shadow-lg">
       <div className="flex items-start gap-3">
-        <img src={AVATAR} alt="Mohammed" data-testid="mohammed-avatar" className="w-16 h-16 rounded-2xl object-cover ring-2 ring-white/70 shadow-md shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <img src={AVATAR} alt="Mohammadreza Jafari" data-testid="mohammed-avatar" className="w-16 h-16 rounded-2xl object-cover ring-2 ring-white/70 shadow-md shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-white/70">{tri("Il tuo assistente di laboratorio", "Dein Labor-Assistent", "Your lab assistant")}</p>
-          <h2 className="font-display text-xl font-bold leading-tight">{tri("Ciao, sono Mohammed 👋", "Hallo, ich bin Mohammed 👋", "Hi, I'm Mohammed 👋")}</h2>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-white/70">{tri("Mohammadreza Jafari · Assistente di Michele (MikiLab)", "Mohammadreza Jafari · Mich-eles Assistent (MikiLab)", "Mohammadreza Jafari · Michele's assistant (MikiLab)")}</p>
+          <h2 className="font-display text-xl font-bold leading-tight">{tri("Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋")}</h2>
           <p className="text-sm text-white/90 mt-1 leading-snug">
             {tri(
-              "Ti guido passo-passo a organizzare forno e laboratorio: materie prime, impasto e lievitazione, cotture e temperature, igiene HACCP e uso di tutti gli strumenti di questa sezione.",
-              "Ich führe dich Schritt für Schritt: Rohstoffe, Teig & Gärung, Backen & Temperaturen, HACCP-Hygiene und die Nutzung aller Werkzeuge dieses Bereichs.",
-              "I guide you step by step: raw materials, dough & proofing, baking & temperatures, HACCP hygiene and how to use every tool in this section."
+              "Sono l'assistente di Michele, il creatore di MikiLab. Ti guido passo-passo a organizzare forno e laboratorio: materie prime, impasto e lievitazione, cotture e temperature, igiene HACCP e uso di tutti gli strumenti di questa sezione.",
+              "Ich bin Micheles Assistent (Gründer von MikiLab). Ich führe dich Schritt für Schritt: Rohstoffe, Teig & Gärung, Backen & Temperaturen, HACCP-Hygiene und die Nutzung aller Werkzeuge dieses Bereichs.",
+              "I'm Michele's assistant (the creator of MikiLab). I guide you step by step: raw materials, dough & proofing, baking & temperatures, HACCP hygiene and how to use every tool in this section."
             )}
           </p>
         </div>
@@ -84,7 +84,7 @@ export default function MohammedAssistant() {
 
       <button data-testid="mohammed-toggle" onClick={() => setOpen((o) => !o)}
         className="mt-3 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur px-4 py-2 rounded-xl text-sm font-semibold active:scale-97 transition-all">
-        <Sparkles className="w-4 h-4" /> {open ? tri("Chiudi assistente", "Assistent schließen", "Close assistant") : tri("Chiedi a Mohammed", "Mohammed fragen", "Ask Mohammed")}
+        <Sparkles className="w-4 h-4" /> {open ? tri("Chiudi assistente", "Assistent schließen", "Close assistant") : tri("Chiedi a Mohammadreza", "Mohammadreza fragen", "Ask Mohammadreza")}
         {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </button>
 
@@ -111,7 +111,7 @@ export default function MohammedAssistant() {
           </div>
           <div className="flex items-center gap-2 mt-2">
             <input data-testid="mohammed-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder={tri("Scrivi a Mohammed…", "Schreibe an Mohammed…", "Message Mohammed…")}
+              placeholder={tri("Scrivi a Mohammadreza…", "Schreibe an Mohammadreza…", "Message Mohammadreza…")}
               className="flex-1 bg-[#F6F8F5] dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]" />
             <button data-testid="mohammed-send" onClick={() => send()} disabled={busy || !input.trim()}
               className="w-11 h-11 rounded-xl bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">

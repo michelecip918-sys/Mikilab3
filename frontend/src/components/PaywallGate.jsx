@@ -105,6 +105,13 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [left, setLeft] = useState("");
+  // Prova gratuita 7 giorni per visitatori NON registrati (a livello di dispositivo)
+  const [localTrial, setLocalTrial] = useState(() => localStorage.getItem("mikilab_local_trial"));
+  const TRIAL_MS = 7 * 24 * 3600 * 1000;
+  const localMsLeft = localTrial ? (new Date(localTrial).getTime() + TRIAL_MS - Date.now()) : 0;
+  const localTrialActive = !user && localMsLeft > 0;
+  const localDaysLeft = Math.ceil(localMsLeft / 86400000);
+  const startLocalTrial = () => { const iso = new Date().toISOString(); localStorage.setItem("mikilab_local_trial", iso); setLocalTrial(iso); };
 
   const load = useCallback(async () => {
     if (!email) { setStatus(null); setLoading(false); return; }
@@ -147,6 +154,18 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   };
 
   if (loading) return <div className="py-20 text-center text-[#7E8A93]">…</div>;
+
+  // Prova gratuita 7 giorni (dispositivo, senza registrazione) → contenuto sbloccato
+  if (localTrialActive) {
+    return (
+      <>
+        <div data-testid="local-trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#6B8E62]/15 border border-[#6B8E62]/40 px-3 py-2 text-sm font-semibold text-[#4d6b45] dark:text-[#9ec48f]">
+          <Sparkles className="w-4 h-4" /> {tri("Prova gratuita — restano", "Kostenlose Testphase — verbleibend", "Free trial — left")} <span className="font-mono-data">{localDaysLeft} {tri(localDaysLeft === 1 ? "giorno" : "giorni", localDaysLeft === 1 ? "Tag" : "Tage", localDaysLeft === 1 ? "day" : "days")}</span>
+        </div>
+        {children}
+      </>
+    );
+  }
 
   // PRO / prova attiva → contenuto sbloccato (+ banner countdown se prova)
   if (status?.pro) {
@@ -208,10 +227,22 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
       </div>
 
       {!email ? (
-        <button data-testid="paywall-login" onClick={() => setAuthOpen(true)}
-          className="mt-5 w-full bg-[#5E8B7E] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
-          {tri("Accedi per continuare", "Anmelden, um fortzufahren", "Log in to continue")}
-        </button>
+        <div className="mt-5 space-y-3">
+          {!localTrial ? (
+            <button data-testid="local-trial-start" onClick={startLocalTrial}
+              className="w-full bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-bold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+              <Sparkles className="w-5 h-5" /> {tri("Prova gratis 7 giorni (senza registrazione)", "7 Tage kostenlos testen (ohne Anmeldung)", "Try free for 7 days (no sign-up)")}
+            </button>
+          ) : (
+            <p data-testid="local-trial-ended" className="text-center text-sm text-[#7E8A93]">
+              {tri("La tua prova gratuita di 7 giorni è terminata. Accedi o abbonati per continuare.", "Deine 7-tägige Testphase ist beendet. Melde dich an oder abonniere.", "Your 7-day free trial has ended. Log in or subscribe to continue.")}
+            </p>
+          )}
+          <button data-testid="paywall-login" onClick={() => setAuthOpen(true)}
+            className="w-full bg-[#5E8B7E] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
+            {tri("Accedi per continuare", "Anmelden, um fortzufahren", "Log in to continue")}
+          </button>
+        </div>
       ) : (
         <div className="mt-5 space-y-3">
           <div className="grid grid-cols-2 gap-3">
