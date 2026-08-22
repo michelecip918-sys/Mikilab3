@@ -34,12 +34,14 @@ import DoughLog from "@/sections/DoughLog";
 import HaccpLog from "@/sections/HaccpLog";
 import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
+import { useBackClose } from "@/lib/backNav";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
   const [step, setStep] = useState(0);
   const { t, lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  useBackClose(!!tool, () => setTool(null));
 
   const TOOLS = [
     { id: "lavoro", title: t("tool_lavoro"), desc: t("tool_lavoro_desc"), Icon: ChefHat },

@@ -5,7 +5,6 @@ import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
-import Encyclopedia from "@/sections/Encyclopedia";
 import { HeroAvatar } from "@/components/MikiAvatar";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 
@@ -184,10 +183,6 @@ export default function PhotoDiagnosi() {
           <ReactMarkdown>{result}</ReactMarkdown>
         </div>
       )}
-
-      <div className="mt-8 pt-6 border-t border-[#D7E1DB] dark:border-[#38424B]">
-        <Encyclopedia />
-      </div>
     </div>
   );
 }

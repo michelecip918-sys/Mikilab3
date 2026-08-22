@@ -3,6 +3,7 @@ import { Truck, Plus, Trash2, Mail, MessageCircle, Printer, X, Check, Loader2, P
 import { useLang } from "@/i18n/LanguageContext";
 import { ordersApi } from "@/lib/api";
 import { SUPPLIERS } from "@/data/suppliers";
+import WhatsAppHelp from "@/components/WhatsAppHelp";
 import { toast } from "sonner";
 
 const UNITS = ["kg", "g", "L", "pz", "sacchi", "cartoni"];
@@ -99,6 +100,8 @@ export default function OrdersManager({ store, stores }) {
         className="w-full flex items-center justify-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
         <Plus className="w-5 h-5" /> {tri("Nuovo ordine", "Neue Bestellung", "New order")}
       </button>
+
+      <WhatsAppHelp context="ordini" className="mb-4" />
 
       {showForm && (
         <div data-testid="order-form" className="bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 rounded-2xl p-4 mb-5 space-y-3">

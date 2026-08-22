@@ -4,10 +4,12 @@ import RecipeList from "@/components/RecipeList";
 import PanettoneLabels from "@/sections/PanettoneLabels";
 import GuidaMetodi from "@/sections/GuidaMetodi";
 import { useLang } from "@/i18n/LanguageContext";
+import { useBackClose } from "@/lib/backNav";
 
 export default function Ricette() {
   const { t } = useLang();
   const [view, setView] = useState("main");
+  useBackClose(view !== "main", () => setView("main"));
 
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
   if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /></Sub>;

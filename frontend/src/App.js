@@ -15,13 +15,13 @@ import EnterpriseHub from "@/sections/EnterpriseHub";
 import PaywallGate from "@/components/PaywallGate";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
-import WhatsAppFab from "@/components/WhatsAppFab";
 import IntroGuide from "@/components/IntroGuide";
 import Onboarding, { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import PublicBatch from "@/sections/PublicBatch";
+import { consumeBack } from "@/lib/backNav";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
@@ -50,6 +50,7 @@ function App() {
   useEffect(() => {
     window.history.replaceState({ tab: "home" }, "");
     const onPop = (e) => {
+      if (consumeBack()) return; // chiude prima le viste profonde aperte
       const next = (e.state && e.state.tab) || "home";
       tabRef.current = next;
       setTab(next);
@@ -99,7 +100,6 @@ function App() {
       <BottomNav active={tab} onChange={navigate} />
       <VoiceAssistant onNavigate={navigate} />
       <RadioFornaio />
-      {tab !== "home" && tab !== "maestro" && <WhatsAppFab />}
       {!resetToken && showIntro && <IntroGuide />}
       {!resetToken && !onboarded && <Onboarding onDone={() => setOnboarded(true)} />}
 

@@ -8,6 +8,7 @@ import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
+import { useBackClose } from "@/lib/backNav";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
@@ -28,6 +29,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [catFilter, setCatFilter] = useState("all");
   const [openCats, setOpenCats] = useState({});
   const { t, lang } = useLang();
+  useBackClose(!!viewing, () => setViewing(null));
+  useBackClose(dialogOpen, () => setDialogOpen(false));
+  useBackClose(!!scaling, () => setScaling(null));
   const triM = (i_, d_, e_) => (lang === "de" ? d_ : lang === "en" ? e_ : i_);
   const { user, setAuthOpen } = useAuth();
   // Mikilab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
@@ -198,7 +202,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <img src={r.image_url} alt="" loading="lazy" className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#D7E1DB] dark:border-[#38424B]" />
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">
+              <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight line-clamp-3">
                 {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
                 {rLoc(r, "name", lang)}
               </h3>
@@ -208,7 +212,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 return badges.length > 0 ? (
                   <div className="flex flex-wrap items-center gap-1 mt-1.5" data-testid={`recipe-badges-${r.id}`}>
                     {badges.slice(0, 5).map((b) => (
-                      <span key={b} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${badgeClass(b)}`}>{b}</span>
+                      <span key={b} title={badgeTitle(b, lang)} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${badgeClass(b)}`}>{badgeLabel(b, lang)}</span>
                     ))}
                   </div>
                 ) : (r.flour_type ? <p className="text-xs text-[#7E8A93] truncate mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null);
@@ -709,6 +713,35 @@ const BADGE_STYLE = {
 };
 function badgeClass(b) {
   return BADGE_STYLE[b] || "bg-[#6E8CA0]/15 text-[#33564E] border-[#6E8CA0]/35";
+}
+
+// Etichetta badge localizzata: sigle comprensibili per lingua.
+const BADGE_LABEL = {
+  Vk: { it: "INT", de: "VK", en: "WW" },        // integrale / Vollkorn / wholewheat
+  LDB: { it: "LDB", de: "Frischhefe", en: "Yeast" },
+  Rg: { it: "Segale", de: "Roggen", en: "Rye" },
+  LM: { it: "LM", de: "Sauerteig", en: "Sourdough" },
+};
+function badgeLabel(b, lang) {
+  const m = BADGE_LABEL[b];
+  return m ? (m[lang] || m.it) : b;
+}
+// Spiegazione farine tedesche (Type) → cereale/equivalente italiano.
+const FLOUR_INFO = {
+  "300": { it: "Farina debole", de: "Schwaches Mehl", en: "Weak flour" },
+  "380": { it: "W380 · farina forte", de: "W380 · starkes Mehl", en: "W380 · strong flour" },
+  "405": { it: "≈ Farina 00 (grano tenero)", de: "Weizen Type 405", en: "≈ soft wheat 00" },
+  "550": { it: "≈ Farina 0 (grano tenero)", de: "Weizen Type 550", en: "≈ soft wheat type 0" },
+  "630": { it: "Farro · Dinkel (Type 630)", de: "Dinkelmehl Type 630", en: "Spelt (Type 630)" },
+  "812": { it: "≈ Farina Tipo 1", de: "Weizen Type 812", en: "≈ type 1 flour" },
+  "1050": { it: "≈ Tipo 2 · semi-integrale", de: "Weizen Type 1050", en: "≈ type 2 / high-extraction" },
+  "1600": { it: "≈ Farina integrale", de: "Vollkorn Type 1600", en: "≈ wholemeal" },
+};
+function badgeTitle(b, lang) {
+  if (FLOUR_INFO[b]) return FLOUR_INFO[b][lang] || FLOUR_INFO[b].it;
+  if (/^W\d{3}$/.test(b)) return { it: "Farina forte (indice W)", de: "Starkes Mehl (W-Wert)", en: "Strong flour (W index)" }[lang] || "";
+  const desc = { Vk: { it: "Farina integrale", de: "Vollkornmehl", en: "Wholewheat" }, LDB: { it: "Lievito di birra", de: "Frischhefe", en: "Fresh yeast" }, Rg: { it: "Segale", de: "Roggen", en: "Rye" }, LM: { it: "Lievito madre", de: "Sauerteig", en: "Sourdough" }, Poolish: { it: "Prefermento liquido", de: "Poolish-Vorteig", en: "Poolish preferment" }, Biga: { it: "Prefermento solido (Biga)", de: "Biga-Vorteig", en: "Biga preferment" } }[b];
+  return desc ? (desc[lang] || desc.it) : "";
 }
 
 function recipeCategory(r) {

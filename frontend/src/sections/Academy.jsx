@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
+import WhatsAppHelp from "@/components/WhatsAppHelp";
 
 const euro = (cents) => "€ " + (cents / 100).toFixed(cents % 100 === 0 ? 0 : 2);
 
@@ -163,6 +164,10 @@ export default function Academy() {
           </div>
         </div>
       )}
+
+      {/* Assistenza & info corsi via WhatsApp (contestuale) */}
+      <WhatsAppHelp context="corsi" />
+      <WhatsAppHelp context="assistenza" />
     </div>
   );
 }

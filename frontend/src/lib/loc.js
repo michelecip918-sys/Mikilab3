@@ -66,6 +66,12 @@ const INGREDIENT_DE = {
   "cannella": "Zimt",
   "scorza di limone": "Zitronenschale",
   "scorza d'arancia": "Orangenschale",
+  "malto diastasico puro in polvere": "Reines diastatisches Malzpulver",
+  "farina di lupino dolce": "Süßlupinenmehl",
+  "acerola in polvere (vitamina c naturale)": "Acerolapulver (natürliches Vitamin C)",
+  "acerola in polvere": "Acerolapulver",
+  "farina di lino dorato": "Goldleinmehl",
+  "buccia di psillio": "Flohsamenschalen",
 };
 
 export function ingLoc(name, lang) {
@@ -132,5 +138,11 @@ const INGREDIENT_EN = {
   "cannella": "Cinnamon",
   "scorza di limone": "Lemon zest",
   "scorza d'arancia": "Orange zest",
+  "malto diastasico puro in polvere": "Pure diastatic malt powder",
+  "farina di lupino dolce": "Sweet lupin flour",
+  "acerola in polvere (vitamina c naturale)": "Acerola powder (natural vitamin C)",
+  "acerola in polvere": "Acerola powder",
+  "farina di lino dorato": "Golden flaxseed flour",
+  "buccia di psillio": "Psyllium husk",
 };
 

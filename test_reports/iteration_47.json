@@ -1,0 +1,38 @@
+{
+  "summary": "FASE A frontend-only verification (no backend tests, as requested) on the preview URL as admin (admin@mikilab.de). Verified multi-level back button (recipe dialog, Ricette sub-views Guida/Etichette, Maestro tool, tab chain), Enciclopedia dedup, WhatsApp FAB removal + contextual WhatsAppHelp, Diagnosi dual photo buttons, IT/EN/DE translations of 'Miglioratore Naturale Pro', localized badges (INT / Frischhefe) and long recipe title wrapping. 6 of 7 requested items PASS; recipe title readability still FAILS (still ellipsis-truncated).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList title (h3 line-clamp-2)", "issue": "Long panettone names are STILL cut off with ellipsis. Measured on 390px viewport: h3 clientWidth=202px, scrollHeight=68px vs clientHeight=45px (needs 3 lines) -> 'Panettone Artigianale MikiLab — Amarena e…'. line-clamp-2 is applied but the title column is too narrow (thumbnail + flag emoji + right action area). Fix: allow 3 lines on narrow viewports or widen the text column.", "selector": "[data-testid^=\"recipe-row-\"] h3", "priority": "MEDIUM"},
+      {"component": "IntroGuide", "issue": "IntroGuide modal has NO persistence (useEffect always setOpen(true), no localStorage key). It reappears on every page load/reload even after 'Inizia Ora'. The documented 'mikilab_seen_intro' flag does not exist in the code.", "selector": "[data-testid=\"intro-guide\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Enterprise -> Ordini -> wa-help-ordini", "issue": "Could not verify wa-help-ordini in the UI: with no store created, EnterpriseHub renders orders-need-store instead of OrdersManager, so the WhatsApp ordini block never mounts. Code-level presence confirmed (OrdersManager.jsx:104). Needs a store to verify (not created - read-only run).", "affected_selectors": ["[data-testid=\"wa-help-ordini\"]", "[data-testid=\"orders-need-store\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Academy / Shop (booking form)", "issues": ["Native browser date input used (renders as mm/dd/yyyy, US format, inconsistent with Italian-primary UI) instead of the shadcn calendar component"]},
+      {"screen": "All pages (floating Radio / Parla FABs)", "issues": ["The two fixed FABs visually overlap list content (recipe thumbnails, first row of Ricette/Diagnosi). Hit-testing showed photo-take/photo-attach still clickable (elementFromPoint == the button), so visual overlap only, not a blocking overlay."]},
+      {"screen": "Console (Maestro tool view)", "issues": ["React warning: '<span> cannot be a child of <option>' - invalid DOM nesting in a select inside a Maestro tool"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Recipe list titles: still truncated for long panettone names - allow 3 lines / widen the title column (line-clamp-2 insufficient at 202px width).",
+    "Persist IntroGuide dismissal in localStorage (it currently reopens on every load).",
+    "Fix invalid DOM nesting (<span> inside <option>) reported in console on the Maestro tool view.",
+    "Optional: replace the native date input in the Academy booking form with the shadcn calendar.",
+    "Retest wa-help-ordini after creating a store (or render WhatsAppHelp ordini even without stores)."
+  ],
+  "critical_code_review_comments": [
+    "backNav.releaseBack() removes the stack entry but leaves the pushed history entry behind. After closing a deep view via the X/UI button, the next browser BACK pops a stale {_bk:n} state whose e.state.tab is undefined, so App falls back to tab 'home' - one 'phantom' back press that jumps to Home instead of the previous tab. Consider storing the current tab in the pushed state or silently consuming the history entry on UI close.",
+    "IntroGuide has no persistence key; onboarding gating relies only on mikilab_onboarding."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "86% (6/7 requested items pass)"},
+  "seed_data_creation": "none (read-only)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked, admin/PRO unlocked Laboratorio + Diagnosi + Enterprise)",
+  "context_for_next_testing_agent": "Setup: goto preview URL, set localStorage mikilab_onboarding={\"done\":true}, reload, click [data-testid=intro-close-btn] (IntroGuide always shows), then login-btn -> email/password -> submit. PASS: (a) back closes recipe-detail dialog, stays on ricette-page; (b) back from Guida/Etichette sub-views returns to Ricette main; (c) back from maestro tool returns to the 5-tool grid; (d) tab chain Impara->Ricette->Home; Enciclopedia only under Impara (learn-tab-enciclopedia), no encyclopedia text on Diagnosi; whatsapp-fab count = 0 on all 5 tabs and Academy; wa-help-corsi/assistenza + wa-help-btn-* present on ?academy=1 with correct wa.me hrefs; photo-take + photo-attach + 5 photo-mode buttons on Diagnosi; Miglioratore recipe fully localized in EN ('Natural Pro Improver', 'Pure diastatic malt powder', 'Psyllium husk') and DE ('Natürlicher Pro-Backmittel', 'Flohsamenschalen'); badges IT 'INT'/'LDB' vs DE 'VK'/'Frischhefe'/'Sauerteig'. FAIL: long recipe titles still ellipsis-truncated.",
+  "rca_of_the_issue": "Title truncation: h3 uses line-clamp-2 but available width in the recipe row is only ~202px on a 390px viewport (thumbnail + flag emoji + right action zone), so a 55-char panettone name needs 3 lines (scrollHeight 68 vs clientHeight 45) and is clipped by the clamp."
+}
