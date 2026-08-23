@@ -1,4 +1,4 @@
-import { Home, BookOpen, Wrench, GraduationCap, Camera } from "lucide-react";
+import { Home, BookOpen, Wrench, GraduationCap, Users } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 
 export default function BottomNav({ active, onChange }) {
@@ -10,7 +10,7 @@ export default function BottomNav({ active, onChange }) {
     { id: "ricette", label: t("nav_ricette"), Icon: BookOpen },
     { id: "maestro", label: t("nav_maestro"), Icon: Wrench },
     { id: "impara", label: t("nav_impara"), Icon: GraduationCap },
-    { id: "diagnosi", label: t("nav_foto"), Icon: Camera },
+    { id: "community", label: t("nav_community"), Icon: Users },
   ];
 
   return (

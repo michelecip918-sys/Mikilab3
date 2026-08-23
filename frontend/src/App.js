@@ -8,6 +8,7 @@ import Home from "@/sections/Home";
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import LearnHub from "@/sections/LearnHub";
+import Community from "@/sections/Community";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import Shop from "@/sections/Shop";
 import Academy from "@/sections/Academy";
@@ -91,7 +92,23 @@ function App() {
     } else if (p.get("sub") === "cancel") { clean(); }
   }, []); // eslint-disable-line
 
-  // Sottofondo musicale: cambia melodia in base alla sezione attiva.
+  // Notifica "nuovi contenuti": avvisa se sono state aggiunte nuove ricette dall'ultima visita.
+  useEffect(() => {
+    const API = process.env.REACT_APP_BACKEND_URL;
+    if (!API) return;
+    fetch(`${API}/api/recipes?collection_name=mikilab`).then((r) => r.json()).then((list) => {
+      if (!Array.isArray(list)) return;
+      const count = list.length;
+      const prev = parseInt(localStorage.getItem("mikilab_recipe_count") || "0", 10);
+      if (prev > 0 && count > prev) {
+        const n = count - prev;
+        toast.success(tri(`${n} nuove ricette disponibili nel ricettario!`, `${n} neue Rezepte im Rezeptbuch verfügbar!`, `${n} new recipes available in the recipe book!`), { icon: "🥖", duration: 6000 });
+      }
+      localStorage.setItem("mikilab_recipe_count", String(count));
+    }).catch(() => {});
+  }, []); // eslint-disable-line
+
+
   useEffect(() => { ambient.setSection(tab); }, [tab]);
 
   // Pagina pubblica del lotto (QR): nessun login, nessuna navigazione.
@@ -121,6 +138,7 @@ function App() {
             {tab === "maestro" && <PaywallGate feature="lab" sectionName={tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}><Maestro /></PaywallGate>}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} onNavigate={navigate} />}
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
+            {tab === "community" && <Community />}
             {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
             {tab === "shop" && <><Academy /><Shop hideCourses /></>}
           </motion.div>

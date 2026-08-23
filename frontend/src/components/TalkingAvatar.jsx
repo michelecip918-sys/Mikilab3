@@ -7,9 +7,9 @@ import { useLang } from "@/i18n/LanguageContext";
 const BASE = process.env.PUBLIC_URL || "";
 
 const TRANSCRIPT = {
-  it: "Ciao! Sono Michele. Scopri MikiLab: ricette con dosi automatiche, laboratorio smart, diagnosi con una foto e l'Academy «Impara da Casa».",
-  de: "Hallo! Ich bin Michele. Entdecke MikiLab: Rezepte mit automatischen Mengen, smartes Labor, Foto-Diagnose und die Academy «Von zu Hause lernen».",
-  en: "Hi! I'm Michele. Discover MikiLab: recipes with automatic doses, a smart lab, photo diagnosis and the «Learn from Home» Academy.",
+  it: "Ciao! Sono Michele. MikiLab ti aiuta a panificare come un pro: Ricette con dosi precise, il Tuo Laboratorio per pianificare e calcolare, la Diagnosi con foto, la sezione Impara (video mentore, ricettario, Enciclopedia) e la Community.",
+  de: "Hallo! Ich bin Michele. MikiLab hilft dir, wie ein Profi zu backen: Rezepte mit genauen Mengen, dein Labor zum Planen und Berechnen, die Foto-Diagnose, der Bereich Lernen (Mentor-Videos, Rezeptbuch, Brot-Lexikon) und die Community.",
+  en: "Hi! I'm Michele. MikiLab helps you bake like a pro: Recipes with precise doses, Your Lab to plan and calculate, photo Diagnosis, the Learn section (mentor videos, recipe book, Bread Encyclopedia) and the Community.",
 };
 
 export default function TalkingAvatar({ className = "", testid = "talking-avatar", showTranscript = true }) {

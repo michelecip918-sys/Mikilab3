@@ -1,9 +1,20 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Calculator, Wheat, Camera, Printer } from "lucide-react";
+import { GraduationCap, Calculator, Wheat, Camera, Printer, Crown, PlayCircle } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { subscriptionApi } from "@/lib/api";
-import { FLOURS, CALC_RECIPES } from "@/data/academy";
+import { FLOURS, CALC_RECIPES, ACADEMY_VIDEOS } from "@/data/academy";
 import Beginners from "@/sections/Beginners";
+
+function MentorEmbed({ yt, title }) {
+  return (
+    <div className="relative w-64 shrink-0 overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: "16 / 9" }}>
+      <iframe className="absolute inset-0 w-full h-full"
+        src={`https://www.youtube.com/embed/${yt}?rel=0&modestbranding=1&playsinline=1&cc_load_policy=1`}
+        title={title} loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen" allowFullScreen />
+    </div>
+  );
+}
 
 export default function AcademyHome({ onNavigate }) {
   const { lang } = useLang();
@@ -16,6 +27,13 @@ export default function AcademyHome({ onNavigate }) {
 
   const diagUsed = status?.diagnosi_used ?? 0;
   const diagLimit = status?.diagnosi_limit;
+
+  const upgradePro = async () => {
+    try {
+      const d = await subscriptionApi.checkout("monthly", "lab");
+      if (d.url) window.location.href = d.url;
+    } catch (e) { /* noop */ }
+  };
 
   const TABS = [
     { id: "ricettario", label: tri("Ricettario", "Rezeptbuch", "Recipes"), Icon: Calculator },
@@ -36,6 +54,23 @@ export default function AcademyHome({ onNavigate }) {
             <Camera className="w-4 h-4" /> {tri("Diagnosi Foto", "Foto-Diagnosen", "Photo diagnoses")}: {diagUsed}/{diagLimit} {tri("questo mese", "diesen Monat", "this month")}
           </div>
         )}
+      </div>
+
+      {/* Video Mentore — showcase in alto (Header/Hero) */}
+      <div className="mb-5" data-testid="mentor-showcase">
+        <div className="flex items-center gap-2 mb-2">
+          <PlayCircle className="w-4 h-4 text-[#6B8E62]" />
+          <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Video Mentore", "Mentor-Videos", "Mentor Videos")}</p>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
+          {ACADEMY_VIDEOS.map((v) => (
+            <div key={v.id} data-testid={`mentor-video-${v.id}`} className="shrink-0">
+              <MentorEmbed yt={v.yt} title={L(v.title)} />
+              <p className="w-64 mt-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight truncate">{L(v.title)}</p>
+              <p className="w-64 text-[11px] text-[#7E8A93]">{v.duration} · CC IT·DE·EN</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Sub-nav */}
@@ -64,10 +99,21 @@ export default function AcademyHome({ onNavigate }) {
             {typeof diagLimit === "number" && (
               <p className="text-xs font-semibold text-[#5E8B7E] mt-2">{tri("Hai usato", "Du hast", "You've used")} {diagUsed}/{diagLimit} {tri("Diagnosi questo mese", "Diagnosen diesen Monat", "diagnoses this month")}</p>
             )}
-            <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
-              className="mt-4 inline-flex items-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
-              <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis")}
-            </button>
+            {typeof diagLimit === "number" && diagLimit > 0 && diagUsed >= diagLimit ? (
+              <div data-testid="diagnosi-limit-upsell" className="mt-4 rounded-2xl bg-[#B34A26]/10 border border-[#B34A26]/30 p-4">
+                <p className="text-sm font-semibold text-[#B34A26]">{tri("Hai finito le Diagnosi del mese!", "Deine Diagnosen sind aufgebraucht!", "You've used all your diagnoses this month!")}</p>
+                <p className="text-xs text-[#7E8A93] mt-1">{tri("Passa a PRO per Diagnosi illimitate e tutti gli strumenti del laboratorio.", "Wechsle zu PRO für unbegrenzte Diagnosen und alle Labor-Tools.", "Go PRO for unlimited diagnoses and all lab tools.")}</p>
+                <button data-testid="diagnosi-upgrade-pro" onClick={upgradePro}
+                  className="mt-3 inline-flex items-center gap-2 bg-[#B34A26] hover:bg-[#963c1f] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all">
+                  <Crown className="w-4 h-4" /> {tri("Passa a PRO · €29,99/mese", "PRO · €29,99/Monat", "Go PRO · €29.99/month")}
+                </button>
+              </div>
+            ) : (
+              <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
+                className="mt-4 inline-flex items-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+                <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis")}
+              </button>
+            )}
           </div>
         </div>
       )}

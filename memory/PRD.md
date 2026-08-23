@@ -750,3 +750,17 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **ACADEMY — RIMOZIONE MENTORI**: su richiesta utente ("voce e video non mi piace"), rimossa la tab "Video Mentore" e tutta la logica mentori/difficoltà da `AcademyHome.jsx` (MENTORS/ACADEMY_VIDEOS non più usati, restano in data/academy.js).
 - **ACADEMY — TAB DIAGNOSI**: nuova tab "Diagnosi" con card "Diagnosi Foto IA", contatore X/10 al mese e pulsante `academy-open-diagnosi` → `onNavigate("diagnosi")` (thread onNavigate: App→LearnHub→AcademyHome). VERIFICATO naviga alla Diagnosi.
 - Tabs Academy finali: Ricettario · Farine · Diagnosi · Corsi & Quiz.
+
+## v72 (2026-06) — Refactoring navigazione/layout + notifiche + upsell Diagnosi + avatar riscritto
+- **BOTTOM BAR**: ora Home · Ricette · Il Tuo Laboratorio · Impara · Community. Rimossa "Diagnosi" dalla barra (accessibile da Home + Academy). BottomNav usa icona Users per Community; nuova key i18n `nav_community`.
+- **IMPARA (LearnHub)**: tab superiori ridotti a 3 → "Video Mentore" · "News" · "Enciclopedia del Pane". Rimossa "Community". Il tab Video Mentore mostra in alto (hero) lo showcase dei 6 video mentore YouTube (scroll orizzontale), poi i sotto-tab Ricettario/Farine/Diagnosi/Corsi.
+- **COMMUNITY**: spostata da Impara → tab dedicato in Bottom Bar (`tab==="community"` in App.js renderizza `Community`) + card dedicata in Home (`home-community-card`).
+- **ENCICLOPEDIA vs RICETTARIO**: Enciclopedia già solo teoria/wiki (Poolish, Biga, LM, tecniche) — nessuna ricetta (verificato). Ricettario/calcolatori restano operativi.
+- **HOME**: aggiunti chip rapido "Diagnosi Foto" (`home-quick-diagnosi` → tab diagnosi) e card Community.
+- **DIAGNOSI — UPSELL PRO**: nella card Diagnosi dell'Academy, quando l'utente Home ha usato 10/10 diagnosi del mese, compare invito "Passa a PRO · €29,99/mese" (`diagnosi-upgrade-pro` → checkout lab).
+- **NOTIFICHE NUOVI CONTENUTI**: all'avvio l'app confronta il numero di ricette con l'ultima visita (localStorage) e mostra un toast "N nuove ricette disponibili".
+- **AVATAR PARLANTE — TESTO RISCRITTO**: nuovo copione che spiega TUTTO il sito (Ricette, Il Tuo Laboratorio, Diagnosi, Impara, Community) in IT/DE/EN; rigenerati i 6 file `michele-explainer-{it,de,en}.{mp4,webm}` (~42s). Transcript aggiornato in TalkingAvatar.
+- **PENDING**: voce ElevenLabs italiana nativa per l'avatar → richiede API key utente (da https://elevenlabs.io/app/settings/api-keys). La chiave universale Emergent NON copre ElevenLabs.
+
+## v73 (2026-06) — Voce ElevenLabs per l'avatar
+- **VOCE AVATAR → ELEVENLABS**: integrata ElevenLabs (chiave utente in `backend/.env` → `ELEVEN_API_KEY`, letta da env, non hardcodata). Script `backend/gen_avatar_eleven.py`: modello `eleven_multilingual_v2`, voce maschile profonda (Adam, `pNInz6obpgDQGcFmaJgB`), genera narrazioni IT/DE/EN. Rigenerati i 6 file `michele-explainer-{it,de,en}.{mp4,webm}` (~55s, ~1.2MB) con la nuova voce. Verificato: avatar riproduce l'audio ElevenLabs, cambia lingua con l'app. NOTA: per una voce con accento italiano nativo specifico, l'utente può indicare un voice_id/nome dalla propria libreria ElevenLabs e si rigenera.

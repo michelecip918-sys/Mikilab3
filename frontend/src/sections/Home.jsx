@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor, Building2 } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor, Building2, Users } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import TalkingAvatar from "@/components/TalkingAvatar";
@@ -224,6 +224,10 @@ export default function Home({ onNavigate }) {
               className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#5E8B7E] text-white text-sm font-semibold active:scale-97">
               <BookOpen className="w-4 h-4" /> {L("Le mie ricette", "Meine Rezepte", "My recipes")}
             </button>
+            <button data-testid="home-quick-diagnosi" onClick={() => go("diagnosi")}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#B34A26] text-white text-sm font-semibold active:scale-97">
+              <Camera className="w-4 h-4" /> {L("Diagnosi Foto", "Foto-Diagnose", "Photo diagnosis")}
+            </button>
             <button data-testid="home-quick-focus" onClick={() => go("maestro")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#6E8CA0]/40 text-[#2B303B] dark:text-[#EAF0EC] text-sm font-semibold active:scale-97">
               <Wrench className="w-4 h-4 text-[#6E8CA0]" /> {focusChip}
@@ -238,7 +242,21 @@ export default function Home({ onNavigate }) {
         </div>
       )}
 
-      {/* Hero compatto */}
+      {/* Card Community */}
+      <button data-testid="home-community-card" onClick={() => go("community")}
+        className="w-full text-left rounded-3xl overflow-hidden p-5 text-white flex items-center gap-4 active:scale-98 transition-all shadow-lg mb-4"
+        style={{ backgroundImage: "linear-gradient(135deg,#6E8CA0,#3f5b6b)" }}>
+        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <Users className="w-6 h-6" />
+        </div>
+        <div className="min-w-0">
+          <p className="font-display text-lg font-bold">{L("Community MikiLab", "MikiLab Community", "MikiLab Community")}</p>
+          <p className="text-sm text-white/85">{L("Confrontati con altri fornai: domande, foto e consigli.", "Tausche dich mit anderen Bäckern aus: Fragen, Fotos, Tipps.", "Connect with other bakers: questions, photos and tips.")}</p>
+        </div>
+        <ChevronRight className="w-5 h-5 ml-auto shrink-0" />
+      </button>
+
+
       <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-xl p-7 text-center">
         <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
           className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-4" />

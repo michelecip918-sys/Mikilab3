@@ -44,6 +44,7 @@ export const translations = {
 
     nav_home: "Home",
     nav_ricette: "Ricette",
+    nav_community: "Community",
     home_chat_btn: "Chiedi al Maestro",
     home_chat_sub: "La chat AI che sa tutto sul pane",
     maestro_guide_title: "Come organizzare la produzione",
@@ -768,6 +769,7 @@ export const translations = {
 
     nav_home: "Home",
     nav_ricette: "Rezepte",
+    nav_community: "Community",
     home_chat_btn: "Frag den Meister",
     home_chat_sub: "Der KI-Chat, der alles über Brot weiß",
     maestro_guide_title: "So organisierst du die Produktion",
@@ -1483,6 +1485,7 @@ export const translations = {
     step4_desc: "AI plan, dough sequence, climate and alarms",
     nav_home: "Home",
     nav_ricette: "Recipes",
+    nav_community: "Community",
     home_chat_btn: "Ask the Master",
     home_chat_sub: "The AI chat that knows all about bread",
     maestro_guide_title: "How to organise production",

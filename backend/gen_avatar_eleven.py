@@ -1,8 +1,9 @@
-import asyncio, os
+import os
 from dotenv import load_dotenv
-from emergentintegrations.llm.openai import OpenAITextToSpeech
+from elevenlabs import ElevenLabs, VoiceSettings
 
 load_dotenv()
+client = ElevenLabs(api_key=os.getenv("ELEVEN_API_KEY"))
 
 SCRIPTS = {
     "it": (
@@ -34,15 +35,37 @@ SCRIPTS = {
     ),
 }
 
+# Scegli una voce maschile calda/profonda tra quelle disponibili
+PREFER = ["giovanni", "matteo", "marco", "adam", "antoni", "daniel", "george", "bill", "brian", "charlie"]
+voices = client.voices.get_all().voices
+chosen = None
+for name in PREFER:
+    for v in voices:
+        if name in (v.name or "").lower():
+            chosen = v
+            break
+    if chosen:
+        break
+if not chosen:
+    for v in voices:
+        lab = getattr(v, "labels", {}) or {}
+        if str(lab.get("gender", "")).lower() == "male":
+            chosen = v
+            break
+if not chosen:
+    chosen = voices[0]
+print("VOICE CHOSEN:", chosen.name, chosen.voice_id, getattr(chosen, "labels", {}))
 
-async def main():
-    tts = OpenAITextToSpeech(api_key=os.getenv("EMERGENT_LLM_KEY"))
-    for lang, text in SCRIPTS.items():
-        audio = await tts.generate_speech(text=text, model="tts-1-hd", voice="onyx", speed=1.0)
-        with open(f"/tmp/narration-{lang}.mp3", "wb") as f:
-            f.write(audio)
-        print(lang, "MP3 bytes:", len(audio))
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+settings = VoiceSettings(stability=0.55, similarity_boost=0.8, style=0.15, use_speaker_boost=True)
+for lang, text in SCRIPTS.items():
+    stream = client.text_to_speech.convert(
+        text=text, voice_id=chosen.voice_id, model_id="eleven_multilingual_v2",
+        voice_settings=settings, output_format="mp3_44100_128",
+    )
+    data = b""
+    for chunk in stream:
+        if chunk:
+            data += chunk
+    with open(f"/tmp/narration-{lang}.mp3", "wb") as f:
+        f.write(data)
+    print(lang, "bytes:", len(data))
