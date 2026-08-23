@@ -248,7 +248,7 @@
     "bulk_fermentation_hours": 2,
     "proofing_hours": 1,
     "origin": "fr",
-    "image_url": "/recipes/r_filo.jpg",
+    "image_url": "/recipes/r_baguette_poolish.jpg",
     "extra_ingredients": [
       {
         "name": "Poolish (500 g farina + 500 g acqua + 2 g lievito)",
@@ -2877,7 +2877,7 @@
     "bake_temp": 220,
     "bake_minutes": 15,
     "oven_type": "ventilato",
-    "image_url": "/recipes/r_bretzel.jpg",
+    "image_url": "/recipes/r_brezel_integrali.jpg",
     "notes": "Farina Integrale (Vk) 1300 g · Acqua 500 g. Stesse percentuali di spezie, sale e lievito della Brezel classica. Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
     "method_type": "indiretto",
     "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",

@@ -22,7 +22,7 @@ export default function PianoProduzioneAI() {
   const [labTemp, setLabTemp] = useState("");
   const [startTime, setStartTime] = useState("05:00");
   const [notes, setNotes] = useState("");
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([{ recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "" }]);
   const [recipes, setRecipes] = useState([]);
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
@@ -81,6 +81,10 @@ export default function PianoProduzioneAI() {
         standard_temp_c: Number(stdTemp) || 26, notes, lang, preferment_choice: preferment,
       }),
     });
+    if (!res.ok) {
+      toast.error(res.status === 402 || res.status === 403 ? (lang === "de" ? "PRO erforderlich" : lang === "en" ? "PRO required" : "Serve l'abbonamento PRO") : t("chat_error"));
+      return false;
+    }
     if (headerLabel) setPlan((p) => p + (p ? "\n\n" : "") + `## ${headerLabel}\n\n`);
     const reader = res.body.getReader();
     const decoder = new TextDecoder();

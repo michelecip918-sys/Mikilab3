@@ -9,27 +9,27 @@ import { toast } from "sonner";
 const FEATURES = {
   lab: {
     it: [
-      [ClipboardList, "Capo Laboratorio", "Piano di lavoro intelligente: impastatrici, celle e orari"],
+      [ClipboardList, "Impostazione Macchine", "Configura impastatrici, celle, frigo e dispositivi"],
       [CalendarDays, "Piano settimanale", "Organizza ricette e quantità per ogni giorno"],
       [Flame, "Adatta al forno", "Gradi e minuti giusti cambiando tipo di forno"],
       [Thermometer, "Costi & Spesa", "Calcolo costi in € e lista della spesa per fornitori"],
-      [ScanLine, "Scansiona ricetta", "Fotografi una ricetta e diventa testo modificabile"],
+      [ScanLine, "Le Mie Ricette", "Aggiungi o scansiona: la foto diventa testo modificabile"],
       [Sparkles, "Panettone dinamico", "Ricalcolo dosi e sospensioni sui 10+ gusti"],
     ],
     de: [
-      [ClipboardList, "Backstuben-Chef", "Intelligenter Arbeitsplan: Kneter, Zellen und Zeiten"],
+      [ClipboardList, "Maschinen einrichten", "Kneter, Gärzellen, Kühlschrank und Geräte konfigurieren"],
       [CalendarDays, "Wochenplan", "Rezepte und Mengen für jeden Tag organisieren"],
       [Flame, "Ofen anpassen", "Richtige Grad und Minuten bei anderem Ofen"],
       [Thermometer, "Kosten & Einkauf", "Kostenrechnung in € und Einkaufsliste für Lieferanten"],
-      [ScanLine, "Rezept scannen", "Rezept fotografieren → bearbeitbarer Text"],
+      [ScanLine, "Meine Rezepte", "Hinzufügen oder scannen: Foto → bearbeitbarer Text"],
       [Sparkles, "Panettone dynamisch", "Mengen und Einlagen für 10+ Sorten neu berechnen"],
     ],
     en: [
-      [ClipboardList, "Lab Manager", "Smart work plan: mixers, cells and schedules"],
+      [ClipboardList, "Machine Setup", "Configure mixers, cells, fridge and devices"],
       [CalendarDays, "Weekly plan", "Organise recipes and quantities for each day"],
       [Flame, "Oven adapt", "The right degrees and minutes when the oven changes"],
       [Thermometer, "Costs & Shopping", "Cost calculation in € and a supplier shopping list"],
-      [ScanLine, "Scan a recipe", "Photograph a recipe and turn it into editable text"],
+      [ScanLine, "My Recipes", "Add or scan: the photo becomes editable text"],
       [Sparkles, "Dynamic panettone", "Recalculated doses and swaps across 10+ flavours"],
     ],
   },

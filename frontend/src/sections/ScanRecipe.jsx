@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import RecipeDialog from "@/components/RecipeDialog";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 
-export default function ScanRecipe() {
+export default function ScanRecipe({ embedded = false }) {
   const { t, lang } = useLang();
   const [loading, setLoading] = useState(false);
   const [scanned, setScanned] = useState(null);
@@ -58,16 +58,23 @@ export default function ScanRecipe() {
   };
 
   return (
-    <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
-        <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#6B8E62]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
+    <div className={embedded ? "" : "pb-24"}>
+      {embedded ? (
+        <div className="flex items-center gap-2 mb-2 text-[#5E8B7E]">
+          <ScanLine className="w-4 h-4" />
+          <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{t("scan_title")}</h2>
         </div>
-        <ScanLine className="w-7 h-7 mb-2" />
-        <h1 className="font-display text-2xl font-bold">{t("scan_title")}</h1>
-        <p className="text-white/85 text-sm mt-1">{t("scan_sub")}</p>
-      </div>
+      ) : (
+        <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
+          <div className="absolute top-0 left-0 right-0 flex h-1.5">
+            <div className="flex-1 bg-[#6B8E62]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
+            <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
+          </div>
+          <ScanLine className="w-7 h-7 mb-2" />
+          <h1 className="font-display text-2xl font-bold">{t("scan_title")}</h1>
+          <p className="text-white/85 text-sm mt-1">{t("scan_sub")}</p>
+        </div>
+      )}
 
       <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-6 text-center">
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{t("scan_hint")}</p>

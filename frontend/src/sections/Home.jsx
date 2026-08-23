@@ -178,7 +178,7 @@ export default function Home({ onNavigate }) {
 
   const SECTIONS = [
     { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#5E8B7E] to-[#33564E]",
-      sub: L("43 ricette col mio metodo (assaggio gratis)", "43 Rezepte mit meiner Methode (Gratis-Vorschau)", "43 recipes with my method (free preview)") },
+      sub: L("Le ricette col mio metodo (assaggio gratis)", "Rezepte mit meiner Methode (Gratis-Vorschau)", "Recipes with my method (free preview)") },
     { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]",
       sub: L("Per chi inizia: basi e ricette semplici", "Für Anfänger: Grundlagen & einfache Rezepte", "For beginners: basics & easy recipes") },
     { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",

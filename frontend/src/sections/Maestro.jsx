@@ -56,8 +56,7 @@ export default function Maestro() {
     { id: "spesa", title: t("tool_spesa"), desc: t("tool_spesa_desc"), Icon: ShoppingCart },
     { id: "turni", title: t("tool_turni"), desc: t("tool_turni_desc"), Icon: Users },
     { id: "freezer", title: lang === "de" ? "Freezer-Bestand" : lang === "en" ? "Freezer stock" : "Giacenze Freezer", desc: "", Icon: Snowflake },
-    { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
-    { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
+    { id: "aggiungi", title: lang === "de" ? "Meine Rezepte (hinzufügen/scannen)" : lang === "en" ? "My Recipes (add/scan)" : "Le Mie Ricette (aggiungi/scansiona)", desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
     { id: "termo", title: lang === "de" ? "Thermostat & Klima" : lang === "en" ? "Thermostat & Climate" : "Termostato & Clima", desc: "", Icon: Thermometer },
     { id: "acqua", title: lang === "de" ? "Wasser-Temperatur" : lang === "en" ? "Water temperature" : "Temperatura Acqua", desc: "", Icon: Droplets },
     { id: "ph", title: lang === "de" ? "pH-Tracker" : lang === "en" ? "pH Tracker" : "Tracker pH Lievito", desc: "", Icon: FlaskConical },
@@ -81,7 +80,7 @@ export default function Maestro() {
 
   const STEPS = [
     { icon: Cog, title: tri("Prima Configurazione Hardware", "Hardware-Einrichtung", "Hardware Setup"), sub: tri("Macchine, impastatrici, celle, frigo, giacenze e connessione dispositivi (bilancia, termostati)", "Maschinen, Kneter, Gärzellen, Kühlschrank, Bestände und Geräte (Waage, Thermostate)", "Machines, mixers, cells, fridge, stock and device connection (scale, thermostats)"), tools: ["capo", "freezer", "bilancia", "termo", "market"] },
-    { icon: BookOpen, title: tri("Le Mie Ricette & Parametri", "Meine Rezepte & Parameter", "My Recipes & Parameters"), sub: tri("Inserisci o scansiona le tue ricette e imposta i parametri del forno", "Rezepte erfassen/scannen und Ofenparameter einstellen", "Add or scan recipes and set oven parameters"), tools: ["aggiungi", "scan", "adatta"] },
+    { icon: BookOpen, title: tri("Le Mie Ricette & Parametri", "Meine Rezepte & Parameter", "My Recipes & Parameters"), sub: tri("Inserisci o scansiona le tue ricette e imposta i parametri del forno", "Rezepte erfassen/scannen und Ofenparameter einstellen", "Add or scan recipes and set oven parameters"), tools: ["aggiungi", "adatta"] },
     { icon: Store, title: tri("Logistica & Punti Vendita", "Logistik & Verkaufspunkte", "Logistics & Sales Points"), sub: tri("Configura i punti vendita e gestisci personale e turni", "Verkaufspunkte einrichten und Personal & Schichten verwalten", "Set up sales points and manage staff & shifts"), tools: ["salespoints", "turni"] },
     { icon: CalendarDays, title: tri("Pianificazione Produzione", "Produktionsplanung", "Production Planning"), sub: tri("Piano settimanale e piano di lavoro di oggi, piano IA, tempi a ritroso, spesa e food cost", "Wochenplan und heutiger Arbeitsplan, KI-Plan, Rückwärtszeiten, Einkauf und Food Cost", "Weekly plan and today's work plan, AI plan, backward timing, shopping and food cost"), tools: ["pianoai", "settimana", "lavoro", "inversa", "spesa", "foodcost"] },
     { icon: Thermometer, title: tri("Operatività In Corso", "Laufender Betrieb", "Live Operations"), sub: tri("Calcolo temperatura acqua, pesata guidata, timer e sensori (meteo, pH, twin)", "Wassertemperatur, geführtes Wiegen, Timer und Sensoren (Wetter, pH, Twin)", "Water temperature, guided weighing, timers and sensors (weather, pH, twin)"), tools: ["acqua", "pesata", "timer", "meteo", "ph", "twin"] },
@@ -98,9 +97,9 @@ export default function Maestro() {
         {tool === "aggiungi" && (
           <RecipeList collectionName="personal"
             heroImage="https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
-            heroTitle={t("personal_hero_title")} heroSubtitle={t("personal_hero_sub")} emptyText={t("personal_empty")} />
+            heroTitle={t("personal_hero_title")} heroSubtitle={t("personal_hero_sub")} emptyText={t("personal_empty")}
+            extraHeader={<ScanRecipe embedded />} />
         )}
-        {tool === "scan" && <ScanRecipe />}
         {tool === "capo" && <CapoLaboratorio />}
         {tool === "pianoai" && <PianoProduzioneAI />}
         {tool === "bilancia" && <SmartScale />}

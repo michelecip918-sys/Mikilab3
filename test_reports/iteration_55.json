@@ -1,0 +1,40 @@
+{
+  "summary": "Frontend-only E2E test (mobile 390x844, preview URL) of the new redesign: recipe VETRINA grid, merged 'Le Mie Ricette (aggiungi/scansiona)', split of 'Impostazione Macchine' vs 'Piano di Produzione (IA)', recipe photos, 6-step Laboratorio and avatars. Found and fixed 1 CRITICAL runtime crash (missing ChefHat import in RecipeList.jsx) that completely broke Step 2 'Le Mie Ricette'. After the fix all requested flows pass. Admin login (admin@mikilab.de) works, admin is PRO (0 locks, no paywall); guest sees locks + 'Sblocca la ricetta completa con PRO'.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList.jsx (Card)", "issue": "FIXED BY TESTER: 'ChefHat is not defined' ReferenceError crashed the whole screen (red runtime overlay) whenever a card had no image_url — reproducible on Laboratorio Passo 2 -> 'Le Mie Ricette (aggiungi/scansiona)' (personal recipe without photo). ChefHat was used at line 230 but not imported from lucide-react. Import added and re-verified.", "selector": "[data-testid^='recipe-row-']", "priority": "CRITICAL"},
+      {"component": "Floating FABs (Radio / Parla)", "issue": "The two circular floating buttons (Radio bottom-left, Parla bottom-right) overlap page content: they cover the first recipe card titles/subtitles in the Ricette vetrina and cover the recipe search bar inside 'Le Mie Ricette'. Content is visually obscured (z-index/padding issue).", "selector": "[data-testid='recipe-search'], [data-testid^='recipe-row-']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "PaywallGate 'Il Tuo Laboratorio · PRO' (guest)", "issues": ["Stale copy in the feature preview list: still shows 'Capo Laboratorio' (renamed to 'Impostazione Macchine') and a separate 'Scansiona ricetta' item (now merged into 'Le Mie Ricette')"]},
+      {"screen": "Home section cards", "issues": ["Ricette card subtitle says '43 ricette col mio metodo' but the mikilab collection now returns 65 recipes"]},
+      {"screen": "Ricette vetrina categories", "issues": ["cat-section-focacce is never rendered: 'Focaccia Barese' and 'Friselle Pugliesi' are grouped under PANE instead of FOCACCE — verify menu_category mapping"]},
+      {"screen": "Piano di Produzione (IA)", "issues": ["'cosa preparare' opens with zero product rows; user must click 'Aggiungi prodotto' before Genera piano (clicking Genera with no product only shows a toast). Consider pre-adding one empty row."]},
+      {"screen": "Console (any select with option)", "issues": ["React warning: 'In HTML, <span> cannot be a child of <option>' — invalid markup inside an <option> element (hydration warning)"]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/iteration_55.json"],
+  "action_items": [
+    "Review the tester fix in RecipeList.jsx (ChefHat import) and audit other components for icons used without import — this crash was only visible on recipes without image_url",
+    "Fix z-index/bottom padding so Radio/Parla FABs don't cover recipe card text and the search input",
+    "Update PaywallGate preview copy ('Capo Laboratorio' -> 'Impostazione Macchine', remove separate 'Scansiona ricetta')",
+    "Update Home 'ricette' subtitle count (43 -> actual count) or make it dynamic",
+    "Check menu_category of Focaccia Barese / Friselle so cat-section-focacce renders",
+    "Fix invalid <span> inside <option> markup"
+  ],
+  "critical_code_review_comments": [
+    "RecipeList.jsx is 1013 lines — split into RecipeCard / RecipeDetail / PurchaseDialog modules (>700 line rule).",
+    "RecipeList.jsx used an undeclared identifier (ChefHat) on a rarely-hit branch; add a lint rule (eslint no-undef / react/jsx-no-undef) to CI to catch this class of crash.",
+    "PianoProduzioneAI.streamPhase does not check res.ok before res.body.getReader(); a 402/403 (require_pro) would throw a generic 'chat_error' toast instead of a paywall message."
+  ],
+  "updated_files": ["/app/frontend/src/components/RecipeList.jsx"],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% of requested flows pass after the ChefHat import fix"},
+  "seed_data_creation": "None. Added one product row in Piano IA (not persisted) and generated one AI plan.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login via header login-btn -> auth-email/auth-password/auth-submit). Note: the app is browsable as guest; no forced login screen.",
+  "context_for_next_testing_agent": "Verified: (1) Ricette vetrina = recipe-search + 2-col grid (grid-template-columns 173px 173px), cat-section-basi/pane/panini/snack/panettoni present, recipe-filters absent, 65 cards all with loaded images (naturalWidth>0), 59 country flags, tricolor strip present; search 'Brezel' -> 2 results, 'zzzzz' -> recipe-no-results, clear -> 65. (2) Photos OK for Puccia Salentina, Baguette con Poolish, Brezel, Brezel Integrali, Gnetze Brot, 'Farina Cotta (Kochstück)', Lievito Madre Solido, LiCoLi, Poolish, Miglioratore. (3) Guest detail shows recipe-teaser + 'Sblocca la ricetta completa con PRO' + recipe-unlock; recipe-signature-<id> shows 'Fatto con le mani di Michele' with loaded photo. Admin: 0 locks, 0 teaser. (4) Steps 1-6 tools verified, no duplicates: 1[capo,freezer,bilancia,termo,market] 2[aggiungi,adatta] 3[salespoints,turni] 4[pianoai,settimana,lavoro,inversa,spesa,foodcost] 5[acqua,pesata,timer,meteo,ph,twin] 6[sessioni,lotti,haccp,check,shelf,spreco]. maestro-tool-scan absent. (5) 'Le Mie Ricette' shows scan-dual/scan-take/scan-attach ABOVE add-recipe-btn + personal recipe list. (6) capo view has capo-mixers/cells/save-config/film-start and NOT capo-products/capo-generate/capo-start-time. (7) pianoai has capo-products/product-add/start-time/preferment/notes/generate and no hardware; real AI streaming via /api/capo/plan produced a 1209-char plan (capo-plan) in <12s. (8) maestro-concludi-giornata opens DayClose. (9) home-avatar-full (michele-avatar-full.jpg, loaded) present, home-talking-avatar absent, maestro-talking-avatar present in Chiedi al Maestro (home-chat-btn) playing michele-explainer-it.webm. (10) Guest clicking 'Il Tuo Laboratorio' gets the PRO paywall.",
+  "rca_of_the_issue": "RCA of the crash: in RecipeList.jsx the vetrina Card fallback renders <ChefHat .../> when r.image_url is falsy, but ChefHat was missing from the lucide-react import list. Mikilab recipes all have image_url so the mikilab grid rendered fine, hiding the bug; the personal collection (Laboratorio Passo 2) contained a recipe without a photo, so the first render threw ReferenceError and React unmounted the tree (dev overlay 'Uncaught runtime errors: ChefHat is not defined'), making the merged add/scan screen completely unusable. Fix: added ChefHat to the lucide-react import; re-ran the flow -> scan block + add-recipe-btn + 1 personal card render, no runtime overlay, no console errors."
+}

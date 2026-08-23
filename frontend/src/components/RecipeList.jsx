@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat } from "lucide-react";
 import { recipesApi, subscriptionApi, recipePurchaseApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
@@ -17,7 +17,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition }) {
+export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition, extraHeader }) {
   const [scale, setScale] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -155,7 +155,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   };
 
   return (
-    <div className="pb-4">
+    <div className="pb-28">
       <div className="relative rounded-3xl overflow-hidden mb-5 h-40">
         <img src={heroImage} alt="" className="w-full h-full object-cover" style={heroPosition ? { objectPosition: heroPosition } : undefined} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/30 to-transparent" />
@@ -164,6 +164,12 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           {heroSubtitle ? <p className="text-white/85 text-sm mt-0.5">{heroSubtitle}</p> : null}
         </div>
       </div>
+
+      {extraHeader ? (
+        <div className="mb-5 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
+          {extraHeader}
+        </div>
+      ) : null}
 
       {canEdit && (
         <button

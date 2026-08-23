@@ -822,3 +822,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Kochstueck rinominato "Farina Cotta (Kochstueck)" (name IT), name_de=Kochstueck, name_en="Cooked Flour (Kochstueck)"; SEED_VERSION bump v45 + "Kochstueck" in SEED_RETIRED_NAMES; reseed applicato in preview.
 - Avatar finale: avatar ORIGINALE (michele-avatar.jpg) editato -> polo verde con stemma MikiLab dorato + orecchino a cerchietto + tatuaggio avambraccio; salvato in michele-avatar.jpg e michele-avatar-full.jpg (usati in Home + hero ricettario).
 - NOTE/LEFTOVER: alcune ricette condividono la stessa foto (Baguette con Poolish & Filo di Francia -> r_filo.jpg; Brezel & Brezel Integrali -> r_bretzel.jpg). Da valutare foto distinte. Regressione completa via testing_agent fatta solo per il Laboratorio (iteration_54); vetrina/PianoIA/avatar verificati via screenshot.
+
+## v71 (2026-06) — Foto extra, fusione Aggiungi/Scansiona, rifiniture post-test (iteration_55, 100%)
+- Foto: Puccia Salentina (non più piadina), Baguette con Poolish (r_baguette_poolish.jpg) e Brezel Integrali (r_brezel_integrali.jpg) ora con foto DISTINTE (niente più immagini condivise). SEED_VERSION v46.
+- Fusione: "Aggiungi ricetta" e "Scansiona ricetta" unite in UN'unica voce "Le Mie Ricette (aggiungi/scansiona)" (Passo 2). ScanRecipe ha prop embedded; RecipeList ha prop extraHeader. Tile 'scan' rimosso.
+- Pagamenti: verificati COMPLETI (Stripe key+webhook presenti; subscription lab/home, academy, recipe unlock, webhook + status polling). Video corsi ancora demo (scelta utente).
+- Fix post-test: ChefHat import mancante in RecipeList (crash su card senza foto) risolto dal tester; PaywallGate copy aggiornata (Impostazione Macchine, Le Mie Ricette); Home 'ricette' senza numero fisso; Piano IA pre-inserisce 1 riga prodotto + streamPhase controlla res.ok (messaggio PRO); RecipeList pb-28 per non coprire coi FAB.
+- Testing: iteration_55 frontend 100% (vetrina, fusione, split macchine/PianoIA, foto, 6 passi, avatar).
