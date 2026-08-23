@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GraduationCap, Newspaper, Library, Users } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-import Beginners from "@/sections/Beginners";
+import AcademyHome from "@/sections/AcademyHome";
 import NewsPage from "@/sections/NewsPage";
 import Enciclopedia from "@/sections/Enciclopedia";
 import Community from "@/sections/Community";
@@ -38,7 +38,7 @@ export default function LearnHub({ initial = "impara" }) {
       </div>
 
       {sub === "impara" && (
-        <PaywallGate feature="beginners" sectionName={tri("Sezione Principianti", "Sektion Anfänger", "Beginners Section")}><Beginners /></PaywallGate>
+        <PaywallGate feature="beginners" sectionName={tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}><AcademyHome /></PaywallGate>
       )}
       {sub === "news" && <NewsPage />}
       {sub === "enciclopedia" && <Enciclopedia />}

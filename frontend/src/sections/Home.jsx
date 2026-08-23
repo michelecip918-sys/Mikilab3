@@ -176,7 +176,7 @@ export default function Home({ onNavigate }) {
     { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]",
       sub: L("Per chi inizia: basi e ricette semplici", "Für Anfänger: Grundlagen & einfache Rezepte", "For beginners: basics & easy recipes") },
     { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
-      sub: L("Novità da Italia, Stoccarda e Germania", "Neuigkeiten aus IT, Stuttgart und DE", "News from Italy, Stuttgart and Germany") },
+      sub: L("Novità da Italia e Germania", "Neuigkeiten aus Italien und Deutschland", "News from Italy and Germany") },
     { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#6E8CA0] to-[#5E7E90]",
       sub: L("Per professionisti: piano, costi, impasti (PRO)", "Für Profis: Arbeitsplan, Kosten, Teige (PRO)", "For pros: plan, costs, doughs (PRO)") },
     { tab: "diagnosi", label: t("nav_foto"), Icon: Camera, grad: "from-[#7E8A93] to-[#6B7680]",

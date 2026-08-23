@@ -75,22 +75,25 @@ const FEATURES = {
   },
   beginners: {
     it: [
-      [GraduationCap, "Basi passo-passo", "Pane casereccio, pizza in teglia e focaccia spiegati bene"],
-      [BookOpen, "Glossario interattivo", "Termini tecnici e fasi dell'impasto spiegati semplici"],
-      [ClipboardList, "Dosi senza attrezzi", "Calcolo delle dosi anche senza strumenti professionali"],
-      [Sparkles, "Quiz del Fornaio", "Impara divertendoti e metti alla prova le tue conoscenze"],
+      [GraduationCap, "Corsi passo-passo", "Home-baking spiegato bene: pane, pizza in teglia, focaccia"],
+      [Sparkles, "Video Mentore", "Scegli il tuo mentore e segui i tutorial di pane e pasticceria"],
+      [ClipboardList, "Ricettario dinamico", "Dosi calcolate automaticamente in base a teglia e farina"],
+      [BookOpen, "Database farine", "Trova la farina giusta e le corrispondenze IT/DE"],
+      [Camera, "10 Diagnosi Foto IA/mese", "Correggi errori di cottura e lievitazione da una foto"],
     ],
     de: [
-      [GraduationCap, "Grundlagen Schritt für Schritt", "Hausbrot, Blechpizza und Focaccia gut erklärt"],
-      [BookOpen, "Interaktives Glossar", "Fachbegriffe und Teigphasen einfach erklärt"],
-      [ClipboardList, "Mengen ohne Geräte", "Mengenberechnung auch ohne Profi-Ausstattung"],
-      [Sparkles, "Bäcker-Quiz", "Lerne mit Spaß und teste dein Wissen"],
+      [GraduationCap, "Schritt-für-Schritt-Kurse", "Home-Baking gut erklärt: Brot, Blechpizza, Focaccia"],
+      [Sparkles, "Mentor-Videos", "Wähle deinen Mentor und folge den Tutorials"],
+      [ClipboardList, "Dynamisches Rezeptbuch", "Mengen automatisch nach Blech und Mehl berechnet"],
+      [BookOpen, "Mehl-Datenbank", "Finde das richtige Mehl und die IT/DE-Entsprechungen"],
+      [Camera, "10 Foto-Diagnosen/Monat", "Korrigiere Back- und Gärfehler per Foto"],
     ],
     en: [
-      [GraduationCap, "Step-by-step basics", "Home bread, pan pizza and focaccia explained well"],
-      [BookOpen, "Interactive glossary", "Technical terms and dough phases explained simply"],
-      [ClipboardList, "Doses without tools", "Work out quantities even without professional gear"],
-      [Sparkles, "Baker's Quiz", "Learn while having fun and test your knowledge"],
+      [GraduationCap, "Step-by-step courses", "Home baking explained well: bread, pan pizza, focaccia"],
+      [Sparkles, "Mentor videos", "Choose your mentor and follow the tutorials"],
+      [ClipboardList, "Dynamic recipe book", "Doses auto-calculated from your tin and flour"],
+      [BookOpen, "Flour database", "Find the right flour and IT/DE matches"],
+      [Camera, "10 AI Photo Diagnoses/month", "Fix baking and proofing mistakes from a photo"],
     ],
   },
 };
@@ -102,6 +105,12 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const flang = lang === "de" ? "de" : lang === "en" ? "en" : "it";
   const email = user?.email;
+  // Tier: "home" (€12,99) per Academy/Principianti · "lab" (€29,99) per il laboratorio.
+  const tierForFeature = (feature === "beginners" || feature === "home") ? "home" : "lab";
+  const usesAcademy = ["beginners", "home", "diagnosi"].includes(feature);
+  const PRICES = tierForFeature === "home"
+    ? { monthly: "€12,99", yearly: "€99", disc: "-36%" }
+    : { monthly: "€29,99", yearly: "€249", disc: "-31%" };
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [left, setLeft] = useState("");
@@ -138,7 +147,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
 
   const subscribe = async (plan) => {
     try {
-      const d = await subscriptionApi.checkout(plan);
+      const d = await subscriptionApi.checkout(plan, tierForFeature);
       if (d.url) window.location.href = d.url; else toast.error(tri("Errore checkout", "Checkout-Fehler", "Checkout error"));
     } catch { toast.error(tri("Errore checkout", "Checkout-Fehler", "Checkout error")); }
   };
@@ -168,7 +177,8 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   }
 
   // PRO / prova attiva → contenuto sbloccato (+ banner countdown se prova)
-  if (status?.pro) {
+  const hasAccess = usesAcademy ? (status?.academy || status?.pro) : status?.pro;
+  if (hasAccess) {
     return (
       <>
         {status.source === "trial" && left && (
@@ -188,12 +198,12 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
         <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-4">
           <Lock className="w-8 h-8" />
         </div>
-        <h2 className="font-display text-2xl font-bold">{sectionName} · PRO</h2>
+        <h2 className="font-display text-2xl font-bold">{sectionName} · {tierForFeature === "home" ? "Academy" : "PRO"}</h2>
         <p className="text-white/85 text-sm mt-2">
-          {feature === "beginners"
-            ? tri("La Sezione Principianti è inclusa nell'accesso PRO. Sblocca guide, basi e ricette semplici.",
-                  "Die Sektion Anfänger ist im PRO-Zugang enthalten. Schalte Anleitungen, Grundlagen und einfache Rezepte frei.",
-                  "The Beginners section is included with PRO. Unlock guides, basics and simple recipes.")
+          {feature === "beginners" || feature === "home"
+            ? tri("«Impara da Casa» — la tua Academy completa a €12,99/mese: corsi, video mentore, ricettario dinamico e 10 Diagnosi Foto al mese.",
+                  "«Von zu Hause lernen» — deine komplette Academy für €12,99/Monat: Kurse, Mentor-Videos, dynamisches Rezeptbuch und 10 Foto-Diagnosen/Monat.",
+                  "«Learn from Home» — your complete Academy at €12.99/month: courses, mentor videos, dynamic recipe book and 10 photo diagnoses/month.")
             : tri("Questa sezione è riservata agli abbonati PRO. Sblocca tutti gli strumenti del laboratorio.",
                   "Dieser Bereich ist PRO-Abonnenten vorbehalten. Schalte alle Werkzeuge frei.",
                   "This section is reserved for PRO members. Unlock all the lab tools.")}
@@ -249,14 +259,14 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             <button data-testid="sub-monthly" onClick={() => subscribe("monthly")}
               className="rounded-2xl border-2 border-[#5E8B7E] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#232A31]">
               <Crown className="w-6 h-6 text-[#5E8B7E] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€29,99</p>
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">{PRICES.monthly}</p>
               <p className="text-xs text-[#7E8A93]">{tri("al mese", "pro Monat", "per month")}</p>
             </button>
             <button data-testid="sub-yearly" onClick={() => subscribe("yearly")}
               className="rounded-2xl border-2 border-[#6E8CA0] p-4 text-center active:scale-97 transition-all bg-[#6E8CA0]/10 relative">
-              <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#6B8E62] text-white px-1.5 py-0.5 rounded-full">-31%</span>
+              <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#6B8E62] text-white px-1.5 py-0.5 rounded-full">{PRICES.disc}</span>
               <Crown className="w-6 h-6 text-[#6E8CA0] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€249</p>
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">{PRICES.yearly}</p>
               <p className="text-xs text-[#7E8A93]">{tri("all'anno", "pro Jahr", "per year")}</p>
             </button>
           </div>

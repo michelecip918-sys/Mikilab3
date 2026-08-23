@@ -287,14 +287,14 @@ class Announcement(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     details: Optional[str] = ""
-    region: Optional[str] = "stoccarda"
+    region: Optional[str] = "germania"
     created_at: str = Field(default_factory=now_iso)
 
 
 class AnnouncementCreate(BaseModel):
     title: str
     details: Optional[str] = ""
-    region: Optional[str] = "stoccarda"
+    region: Optional[str] = "germania"
 
 
 class WeeklyItem(BaseModel):
@@ -530,6 +530,54 @@ async def require_admin(user: dict = Depends(current_user)):
     return user
 
 
+# --- Accesso Academy ("Impara da Casa") + acquisto singolo ricette -----------
+RECIPE_PRICES = {"single": 499, "panettoni": 2999, "all": 14900}  # centesimi EUR
+DIAGNOSI_MONTHLY_LIMIT = 10  # per il piano "Impara da Casa" (home)
+
+
+def _ent_active(ent: Optional[dict]) -> bool:
+    if not ent:
+        return False
+    exp = ent.get("expires_at")
+    return True if not exp else exp > now_iso()
+
+
+async def user_academy_access(user: Optional[dict]) -> bool:
+    """Accesso all'Academy: PRO completo, piano home attivo, oppure admin."""
+    if not user:
+        return False
+    if user.get("role") == "admin":
+        return True
+    if await user_is_pro(user):
+        return True
+    ent = await db.entitlements.find_one({"email": (user.get("email") or "").strip().lower()}, {"_id": 0})
+    return bool(ent and ent.get("academy")) and _ent_active(ent)
+
+
+def _is_panettone_recipe(doc: dict) -> bool:
+    if (doc.get("menu_category") or "") == "panettoni":
+        return True
+    return bool(re.search(r"panettone", (doc.get("name") or ""), re.I))
+
+
+async def require_diagnosi(user: dict = Depends(current_user)):
+    """Diagnosi: illimitata per PRO/admin; fino a 10/mese per il piano 'Impara da Casa' (home)."""
+    if await user_is_pro(user):
+        return user
+    email = (user.get("email") or "").strip().lower()
+    ent = await db.entitlements.find_one({"email": email}, {"_id": 0})
+    if not (ent and ent.get("academy") and _ent_active(ent)):
+        raise HTTPException(status_code=403, detail="Abbonamento richiesto")
+    mk = datetime.now(timezone.utc).strftime("%Y-%m")
+    used = int(ent.get("diagnosi_count") or 0) if ent.get("diagnosi_month") == mk else 0
+    if used >= DIAGNOSI_MONTHLY_LIMIT:
+        raise HTTPException(status_code=429, detail=f"Limite mensile Diagnosi raggiunto ({DIAGNOSI_MONTHLY_LIMIT}/mese). Passa a PRO per l'accesso illimitato.")
+    await db.entitlements.update_one({"email": email},
+        {"$set": {"diagnosi_month": mk, "diagnosi_count": used + 1, "updated_at": now_iso()}})
+    return user
+
+
+
 def _teaser_recipe(doc: dict) -> dict:
     """Versione 'assaggio': mostra nome/foto/ingredienti base, blocca metodo ed extra."""
     d = dict(doc)
@@ -653,9 +701,22 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
         await seed_mikilab_if_empty()
         docs = await db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0}).sort("name", 1).to_list(1000)
         # Modalità "assaggio": i non-PRO vedono nome/foto/ingredienti base, il metodo è bloccato.
-        # Eccezione: 2 ricette DEMO restano complete come vetrina gratuita.
+        # Eccezione: 2 ricette DEMO + ricette sbloccate con acquisto singolo restano complete.
         if not await user_is_pro(user):
-            docs = [d if d.get("name") in DEMO_RECIPE_NAMES else _teaser_recipe(d) for d in docs]
+            ent = {}
+            if user:
+                ent = await db.entitlements.find_one({"email": (user.get("email") or "").strip().lower()}, {"_id": 0}) or {}
+            unlock_all = bool(ent.get("unlock_all"))
+            unlock_pan = bool(ent.get("unlock_panettoni"))
+            unlocked = set(ent.get("unlocked_recipes") or [])
+
+            def _visible(d):
+                if d.get("name") in DEMO_RECIPE_NAMES or unlock_all:
+                    return True
+                if unlock_pan and _is_panettone_recipe(d):
+                    return True
+                return d.get("id") in unlocked
+            docs = [d if _visible(d) else _teaser_recipe(d) for d in docs]
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
@@ -884,17 +945,22 @@ async def save_recipe_temp(payload: RecipeTemp):
 # ---------------------------------------------------------------------------
 ANNOUNCEMENT_SEED = [
     {
-        "title": "Mulini di qualità nell'area di Stoccarda",
-        "details": "Cerca farina biologica macinata a pietra nei mulini regionali (Schwabenmühle e mercati Bio locali). Chiedi la 'Type' per scegliere la forza giusta.",
+        "title": "Mulini di qualità in Germania",
+        "details": "Cerca farina biologica macinata a pietra nei mulini regionali. Chiedi la 'Type' per scegliere la forza giusta.",
     },
     {
-        "title": "Scambio lievito madre — zona Cannstatt & Mitte",
-        "details": "Incontri informali tra appassionati italiani e tedeschi: scambio di pasta madre, grani antichi e consigli di cottura nella zona di Stoccarda.",
+        "title": "Scambio lievito madre tra appassionati",
+        "details": "Incontri informali tra appassionati italiani e tedeschi: scambio di pasta madre, grani antichi e consigli di cottura.",
     },
 ]
 
 
 async def seed_announcements_if_empty():
+    # Migrazione legale: rimuovi gli annunci storici con riferimenti a Stoccarda/Stuttgart.
+    await db.announcements.delete_many({"$or": [
+        {"title": {"$regex": "Stoccarda|Stuttgart|Cannstatt", "$options": "i"}},
+        {"details": {"$regex": "Stoccarda|Stuttgart|Cannstatt", "$options": "i"}},
+    ]})
     if await db.announcements.count_documents({}) == 0:
         for item in ANNOUNCEMENT_SEED:
             ann = Announcement(**item)
@@ -946,12 +1012,11 @@ async def delete_announcement(ann_id: str):
 MAESTRO_SYSTEM = (
     "Sei 'Il Maestro del Pane', un mastro panettiere artigiano esperto di panificazione "
     "a lievitazione naturale, con profonda conoscenza sia della tradizione italiana sia "
-    "delle farine e delle abitudini tedesche (zona Stoccarda, Baden-Württemberg). "
+    "delle farine e delle abitudini tedesche. "
     "Rispondi in modo caldo, chiaro e pratico, come un maestro che "
     "insegna a un allievo. Dai consigli concreti su idratazione, lievito madre, farine "
     "(inclusa la corrispondenza tra tipi italiani 00/0/1/2 e tedeschi Type 405/550/812/1050, "
     "e Dinkelmehl per il farro), temperature, tempi, cottura e vapore. "
-    "Quando utile, cita fonti locali di Stoccarda (mulini, mercati bio, grani antichi). "
     "Il motto della sezione è: 'Chiedi e ti sarà dato'. Sii incoraggiante e mai prolisso. "
     "Quando l'utente chiede di 'imparare un metodo' o 'insegnami un metodo', rispondi SEMPRE "
     "con un metodo logico passo-passo NUMERATO e ordinato: 1) scelta di farina e prefermento "
@@ -1548,7 +1613,7 @@ async def vision_stream(mode: str, image_b64: str, lang: str = "it"):
 
 
 @api_router.post("/maestro/vision")
-async def maestro_vision(payload: VisionRequest, user: dict = Depends(require_pro)):
+async def maestro_vision(payload: VisionRequest, user: dict = Depends(require_diagnosi)):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
     return StreamingResponse(
@@ -1651,9 +1716,8 @@ async def get_news():
     if cached and cached.get("date") == today and cached.get("items"):
         return cached["items"]
     items = []
-    items += _fetch_rss("Bäckerei OR Brot Stuttgart", "de", "DE", "DE:de", "stoccarda", 4)
-    items += _fetch_rss("Handwerksbäckerei OR Sauerteig Deutschland", "de", "DE", "DE:de", "germania", 3)
-    items += _fetch_rss("panificazione OR pane artigianale OR lievito madre", "it", "IT", "IT:it", "italia", 3)
+    items += _fetch_rss("Handwerksbäckerei OR Sauerteig OR Brot Deutschland", "de", "DE", "DE:de", "germania", 6)
+    items += _fetch_rss("panificazione OR pane artigianale OR lievito madre", "it", "IT", "IT:it", "italia", 4)
     if items:
         await db.news_cache.update_one(
             {"_key": "news"}, {"$set": {"_key": "news", "date": today, "items": items}}, upsert=True
@@ -1669,9 +1733,18 @@ _stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 PRICE_LOOKUP = {"monthly": "pro_monthly", "yearly": "pro_yearly"}
 
+# Listino interno (prezzi gestiti lato codice, in centesimi EUR)
+INTERNAL_PRICES = {
+    ("lab", "monthly"): {"amount": 2999, "interval": "month", "name": "Il Tuo Laboratorio — Mensile"},
+    ("lab", "yearly"): {"amount": 24900, "interval": "year", "name": "Il Tuo Laboratorio — Annuale"},
+    ("home", "monthly"): {"amount": 1299, "interval": "month", "name": "Impara da Casa — Mensile"},
+    ("home", "yearly"): {"amount": 9900, "interval": "year", "name": "Impara da Casa — Annuale"},
+}
+
 
 class CheckoutReq(BaseModel):
     plan: str = "monthly"        # monthly | yearly
+    tier: str = "lab"           # lab (Il Tuo Laboratorio) | home (Impara da Casa)
     origin_url: str
     coupon: Optional[str] = None
 
@@ -1679,44 +1752,53 @@ class CheckoutReq(BaseModel):
 @api_router.post("/subscription/checkout")
 async def create_checkout(body: CheckoutReq, user: dict = Depends(current_user)):
     email = user["email"]
-    lookup = PRICE_LOOKUP.get(body.plan, "pro_monthly")
-    prices = _stripe.Price.list(lookup_keys=[lookup], active=True, limit=1).data
-    if not prices:
-        raise HTTPException(400, "Prezzo non configurato")
+    p = INTERNAL_PRICES.get((body.tier, body.plan)) or INTERNAL_PRICES[("lab", "monthly")]
     # Cliente per email (riuso se esiste)
     existing = _stripe.Customer.list(email=email, limit=1).data
     customer = existing[0] if existing else _stripe.Customer.create(email=email)
     session = _stripe.checkout.Session.create(
         mode="subscription",
         customer=customer.id,
-        line_items=[{"price": prices[0].id, "quantity": 1}],
+        line_items=[{"price_data": {"currency": "eur", "unit_amount": p["amount"],
+                                    "recurring": {"interval": p["interval"]},
+                                    "product_data": {"name": p["name"]}}, "quantity": 1}],
         allow_promotion_codes=True,
         success_url=body.origin_url.rstrip("/") + "/?sub=success&session_id={CHECKOUT_SESSION_ID}",
         cancel_url=body.origin_url.rstrip("/") + "/?sub=cancel",
-        metadata={"email": email, "plan": body.plan},
+        metadata={"email": email, "plan": body.plan, "tier": body.tier},
     )
     await db.payment_transactions.insert_one({
         "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
-        "plan": body.plan, "amount": prices[0].unit_amount, "currency": prices[0].currency,
+        "plan": body.plan, "amount": p["amount"], "currency": "eur",
         "payment_status": "initiated", "created_at": now_iso(),
     })
     return {"url": session.url, "session_id": session.id}
 
 
-async def _grant_from_email(email, source="stripe", days=None):
+async def _grant_from_email(email, source="stripe", days=None, tier="lab"):
+    """Concede accesso. tier='lab' → PRO completo (laboratorio). tier='home' → solo Academy 'Impara da Casa'."""
     email = (email or "").strip().lower()
     exp = None
     if days:
         exp = (datetime.now(timezone.utc) + timedelta(days=int(days))).isoformat()
+    is_lab = tier != "home"
     await db.entitlements.update_one({"email": email},
-        {"$set": {"email": email, "pro": True, "source": source, "expires_at": exp, "updated_at": now_iso()}},
+        {"$set": {"email": email, "pro": is_lab, "academy": True, "plan_tier": tier,
+                  "source": source, "expires_at": exp, "updated_at": now_iso()}},
         upsert=True)
+
+
+# --- Accesso Academy ("Impara da Casa") + acquisto singolo ricette -----------
+
+
 
 
 @api_router.get("/subscription/status")
 async def subscription_status(user: Optional[dict] = Depends(optional_user)):
     if not user:
-        return {"pro": False, "source": None, "expires_at": None, "trial_used": False, "is_admin": False}
+        return {"pro": False, "academy": False, "plan_tier": None, "source": None, "expires_at": None,
+                "trial_used": False, "is_admin": False, "unlock_all": False, "unlock_panettoni": False,
+                "unlocked_recipes": [], "diagnosi_used": 0, "diagnosi_limit": 0}
     email = user["email"].strip().lower()
     ent = await db.entitlements.find_one({"email": email}, {"_id": 0})
     is_admin = user.get("role") == "admin"
@@ -1724,10 +1806,24 @@ async def subscription_status(user: Optional[dict] = Depends(optional_user)):
     if ent and ent.get("pro"):
         exp = ent.get("expires_at")
         pro = True if not exp else exp > now_iso()
-    return {"pro": pro, "source": "admin" if (is_admin and not (ent or {}).get("source")) else (ent or {}).get("source"),
+    academy = pro or (bool((ent or {}).get("academy")) and _ent_active(ent))
+    plan_tier = "lab" if pro else ((ent or {}).get("plan_tier") if academy else None)
+    # Uso Diagnosi del mese corrente (limite solo per piano home, illimitato per PRO/admin)
+    diag_used = 0
+    if academy and not pro:
+        mk = datetime.now(timezone.utc).strftime("%Y-%m")
+        if (ent or {}).get("diagnosi_month") == mk:
+            diag_used = int((ent or {}).get("diagnosi_count") or 0)
+    return {"pro": pro, "academy": academy, "plan_tier": plan_tier,
+            "source": "admin" if (is_admin and not (ent or {}).get("source")) else (ent or {}).get("source"),
             "expires_at": (ent or {}).get("expires_at"),
             "trial_used": bool((ent or {}).get("trial_used")),
-            "is_admin": is_admin}
+            "is_admin": is_admin,
+            "unlock_all": bool((ent or {}).get("unlock_all")),
+            "unlock_panettoni": bool((ent or {}).get("unlock_panettoni")),
+            "unlocked_recipes": list((ent or {}).get("unlocked_recipes") or []),
+            "diagnosi_used": diag_used,
+            "diagnosi_limit": (None if pro else (DIAGNOSI_MONTHLY_LIMIT if academy else 0))}
 
 
 class TrialReq(BaseModel):
@@ -1763,11 +1859,13 @@ async def stripe_webhook(request: Request):
         email = meta.get("email") or obj.get("customer_email")
         if meta.get("academy_kind"):
             await _academy_fulfill(obj)
+        elif meta.get("recipe_kind"):
+            await _recipe_fulfill(obj)
         else:
             await db.payment_transactions.update_one({"session_id": obj.get("id")},
                 {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
             if email:
-                await _grant_from_email(email, "stripe")
+                await _grant_from_email(email, "stripe", tier=meta.get("tier", "lab"))
     elif t == "customer.subscription.deleted":
         cust = obj.get("customer")
         try:
@@ -1893,11 +1991,91 @@ async def academy_checkout_status(session_id: str, user: dict = Depends(current_
 
 
 # ---------------------------------------------------------------------------
+# Acquisto SINGOLO ricette (pagamento una tantum, senza abbonamento)
+# ---------------------------------------------------------------------------
+class RecipeCheckoutReq(BaseModel):
+    kind: str                       # "single" | "panettoni" | "all"
+    origin_url: str
+    recipe_id: Optional[str] = None
+
+
+@api_router.post("/recipe/checkout")
+async def recipe_checkout(body: RecipeCheckoutReq, user: dict = Depends(current_user)):
+    email = user["email"].strip().lower()
+    cents = RECIPE_PRICES.get(body.kind)
+    if not cents:
+        raise HTTPException(400, "Tipo non valido")
+    if body.kind == "single":
+        if not body.recipe_id:
+            raise HTTPException(400, "Ricetta mancante")
+        rec = await db.recipes.find_one({"id": body.recipe_id}, {"_id": 0})
+        if not rec:
+            raise HTTPException(404, "Ricetta non trovata")
+        title = f"Ricetta: {rec.get('name', '')}"
+    elif body.kind == "panettoni":
+        title = "Tutti i Panettoni MikiLab"
+    else:
+        title = "Tutte le ricette MikiLab"
+    origin = body.origin_url.rstrip("/")
+    session = _stripe.checkout.Session.create(
+        mode="payment",
+        customer_email=email,
+        line_items=[{"price_data": {"currency": "eur", "product_data": {"name": title}, "unit_amount": cents}, "quantity": 1}],
+        success_url=origin + "/?recipe=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=origin + "/?recipe=cancel",
+        metadata={"email": email, "recipe_kind": body.kind, "recipe_id": body.recipe_id or ""},
+    )
+    await db.recipe_orders.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "kind": body.kind, "recipe_id": body.recipe_id, "amount": cents, "currency": "eur",
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
+
+
+async def _recipe_fulfill(session_obj):
+    order = await db.recipe_orders.find_one({"session_id": session_obj.get("id")})
+    meta = session_obj.get("metadata") or {}
+    email = (order or {}).get("email") or meta.get("email")
+    kind = (order or {}).get("kind") or meta.get("recipe_kind")
+    rid = (order or {}).get("recipe_id") or meta.get("recipe_id")
+    if not email or not kind:
+        return order
+    if order and order.get("payment_status") == "paid":
+        return order
+    email = email.strip().lower()
+    if kind == "all":
+        upd = {"$set": {"unlock_all": True, "updated_at": now_iso()}}
+    elif kind == "panettoni":
+        upd = {"$set": {"unlock_panettoni": True, "updated_at": now_iso()}}
+    else:
+        upd = {"$addToSet": {"unlocked_recipes": rid}, "$set": {"updated_at": now_iso()}}
+    await db.entitlements.update_one({"email": email}, {**upd, "$setOnInsert": {"email": email}}, upsert=True)
+    if order:
+        await db.recipe_orders.update_one({"session_id": session_obj.get("id")},
+            {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
+    return {**(order or {}), "payment_status": "paid"}
+
+
+@api_router.get("/recipe/checkout/status/{session_id}")
+async def recipe_checkout_status(session_id: str, user: dict = Depends(current_user)):
+    try:
+        s = _stripe.checkout.Session.retrieve(session_id)
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    paid = s.get("payment_status") == "paid"
+    if paid:
+        await _recipe_fulfill(s)
+    return {"payment_status": s.get("payment_status"), "paid": paid}
+
+
+# ---------------------------------------------------------------------------
 # Admin: coupon / inviti VIP (accesso PRO gratuito, illimitato o a tempo)
 # ---------------------------------------------------------------------------
 class GrantReq(BaseModel):
     email: str
     days: Optional[int] = None   # None = illimitato
+    tier: str = "lab"            # "lab" (PRO completo) | "home" (Academy)
 
 
 @api_router.get("/admin/entitlements")
@@ -1917,7 +2095,7 @@ async def admin_grant(body: GrantReq, admin: dict = Depends(require_admin)):
     email = (body.email or "").strip().lower()
     if not email or "@" not in email:
         raise HTTPException(400, "Email non valida")
-    await _grant_from_email(email, source="vip", days=body.days)
+    await _grant_from_email(email, source="vip", days=body.days, tier=body.tier)
     ent = await db.entitlements.find_one({"email": email}, {"_id": 0})
     return {"ok": True, "email": email, "expires_at": (ent or {}).get("expires_at")}
 
@@ -1926,7 +2104,7 @@ async def admin_grant(body: GrantReq, admin: dict = Depends(require_admin)):
 async def admin_revoke(body: GrantReq, admin: dict = Depends(require_admin)):
     email = (body.email or "").strip().lower()
     await db.entitlements.update_one({"email": email},
-        {"$set": {"pro": False, "updated_at": now_iso()}})
+        {"$set": {"pro": False, "academy": False, "plan_tier": None, "expires_at": None, "updated_at": now_iso()}})
     return {"ok": True, "email": email}
 
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X } from "lucide-react";
-import { recipesApi, subscriptionApi } from "@/lib/api";
+import { recipesApi, subscriptionApi, recipePurchaseApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import { useLang } from "@/i18n/LanguageContext";
@@ -25,6 +25,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [toDelete, setToDelete] = useState(null);
   const [scaling, setScaling] = useState(null);
   const [viewing, setViewing] = useState(null);
+  const [unlockRecipe, setUnlockRecipe] = useState(null);
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("all");
   const [openCats, setOpenCats] = useState({});
@@ -129,11 +130,25 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     if (target) setViewing(target);
   };
 
-  // "Assaggio": sblocca la ricetta completa abbonandosi (o accede se anonimo).
-  const handleUnlock = async () => {
+  // "Assaggio": apre le opzioni di acquisto (singola / panettoni / tutte) o abbonamento.
+  const handleUnlock = () => {
     if (!user) { setAuthOpen(true); toast.info(t("gate_save_login")); return; }
+    setUnlockRecipe(viewing);
+  };
+
+  const isViewingPanettone = unlockRecipe ? recipeCategory(unlockRecipe).key === "panettoni" : false;
+
+  const buyRecipe = async (kind) => {
+    if (!user) { setAuthOpen(true); return; }
     try {
-      const d = await subscriptionApi.checkout("monthly");
+      const d = await recipePurchaseApi.checkout(kind, unlockRecipe?.id);
+      if (d.url) window.location.href = d.url;
+    } catch { toast.error(t("toast_load_error")); }
+  };
+
+  const subscribePro = async () => {
+    try {
+      const d = await subscriptionApi.checkout("monthly", "lab");
       if (d.url) window.location.href = d.url;
     } catch { toast.error(t("toast_load_error")); }
   };
@@ -351,6 +366,53 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         initial={editing}
         onSave={handleSave}
       />
+
+      {/* Acquisto singolo ricette (pay-per-item) */}
+      <Dialog open={!!unlockRecipe} onOpenChange={(o) => !o && setUnlockRecipe(null)}>
+        <DialogContent className="bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B] max-w-md">
+          <DialogTitle className="font-display text-xl">{triM("Sblocca la ricetta", "Rezept freischalten", "Unlock the recipe")}</DialogTitle>
+          <DialogDescription className="text-[#7E8A93]">
+            {triM("Scegli come sbloccare la ricetta completa (procedimento, dosi e fasi).", "Wähle, wie du das vollständige Rezept freischaltest.", "Choose how to unlock the full recipe.")}
+          </DialogDescription>
+          <div className="space-y-2.5 mt-1">
+            <button data-testid="buy-single" onClick={() => buyRecipe("single")}
+              className="w-full flex items-center justify-between bg-white dark:bg-[#232A31] border-2 border-[#5E8B7E] rounded-2xl px-4 py-3 active:scale-98 transition-all">
+              <span className="text-left">
+                <span className="block font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{triM("Questa ricetta", "Dieses Rezept", "This recipe")}</span>
+                <span className="block text-xs text-[#7E8A93]">{triM("Accesso a vita a questa ricetta", "Lebenslanger Zugang zu diesem Rezept", "Lifetime access to this recipe")}</span>
+              </span>
+              <span className="font-display text-lg font-bold text-[#5E8B7E]">€4,99</span>
+            </button>
+
+            {isViewingPanettone && (
+              <button data-testid="buy-panettoni" onClick={() => buyRecipe("panettoni")}
+                className="w-full flex items-center justify-between bg-[#6E8CA0]/10 border-2 border-[#6E8CA0] rounded-2xl px-4 py-3 active:scale-98 transition-all">
+                <span className="text-left">
+                  <span className="block font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{triM("Tutti i Panettoni", "Alle Panettone", "All Panettoni")}</span>
+                  <span className="block text-xs text-[#7E8A93]">{triM("Tutti i gusti di panettone MikiLab", "Alle MikiLab-Panettone-Sorten", "All MikiLab panettone flavours")}</span>
+                </span>
+                <span className="font-display text-lg font-bold text-[#6E8CA0]">€29,99</span>
+              </button>
+            )}
+
+            <button data-testid="buy-all" onClick={() => buyRecipe("all")}
+              className="w-full flex items-center justify-between bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white rounded-2xl px-4 py-3 active:scale-98 transition-all">
+              <span className="text-left">
+                <span className="block font-semibold">{triM("Tutte le ricette", "Alle Rezepte", "All recipes")}</span>
+                <span className="block text-xs text-white/80">{triM("Ricettario MikiLab completo, per sempre", "Komplettes MikiLab-Rezeptbuch, für immer", "Complete MikiLab recipe book, forever")}</span>
+              </span>
+              <span className="font-display text-lg font-bold">€149</span>
+            </button>
+
+            <div className="pt-1 text-center">
+              <button data-testid="buy-subscribe-pro" onClick={subscribePro}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#5E8B7E] hover:underline">
+                <Crown className="w-4 h-4" /> {triM("oppure abbonati PRO · €29,99/mese", "oder PRO abonnieren · €29,99/Monat", "or subscribe PRO · €29.99/month")}
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <ScaleDialog
         recipe={scaling}
@@ -628,7 +690,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             </p>
             <button data-testid={`recipe-unlock-${r.id}`} onClick={onUnlock}
               className="mt-4 inline-flex items-center gap-2 bg-white text-[#33564E] font-bold px-5 py-2.5 rounded-xl active:scale-97 transition-all">
-              <Crown className="w-4 h-4" /> {tri("Passa a PRO · €9,99/mese", "PRO freischalten · €9,99/Monat", "Go PRO · €9.99/month")}
+              <Crown className="w-4 h-4" /> {tri("Sblocca questa ricetta", "Dieses Rezept freischalten", "Unlock this recipe")}
             </button>
           </div>
         )}

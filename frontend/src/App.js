@@ -27,6 +27,8 @@ import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
 import ambient from "@/lib/ambientMusic";
+import { recipePurchaseApi, subscriptionApi } from "@/lib/api";
+import { toast } from "sonner";
 
 function App() {
   const { lang } = useLang();
@@ -73,6 +75,21 @@ function App() {
 
   // chiudi il modale login appena l'utente è autenticato
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
+
+  // Ritorno da Stripe: conferma acquisto ricetta / abbonamento e pulisce l'URL.
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const clean = () => { const u = new URL(window.location.href); ["recipe", "sub", "session_id"].forEach((k) => u.searchParams.delete(k)); window.history.replaceState({ tab: "home" }, "", u.toString()); };
+    if (p.get("recipe") === "success" && p.get("session_id")) {
+      recipePurchaseApi.status(p.get("session_id")).then((r) => {
+        if (r?.paid) toast.success(tri("Ricetta sbloccata! Buon lavoro 👨‍🍳", "Rezept freigeschaltet! 👨‍🍳", "Recipe unlocked! 👨‍🍳"));
+        clean();
+      }).catch(clean);
+    } else if (p.get("recipe") === "cancel") { clean(); }
+    else if (p.get("sub") === "success") {
+      subscriptionApi.status().then(() => toast.success(tri("Abbonamento attivo! Grazie 🙏", "Abo aktiv! Danke 🙏", "Subscription active! Thank you 🙏"))).finally(clean);
+    } else if (p.get("sub") === "cancel") { clean(); }
+  }, []); // eslint-disable-line
 
   // Sottofondo musicale: cambia melodia in base alla sezione attiva.
   useEffect(() => { ambient.setSection(tab); }, [tab]);

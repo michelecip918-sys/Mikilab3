@@ -1,0 +1,57 @@
+{
+  "summary": "Test backend+frontend della monetizzazione multi-tier (LAB/HOME), gating Diagnosi, acquisto singolo ricette e pulizia legale. Backend: 30 test pytest (26 pass / 4 fail). Frontend: paywall Academy anonimo, Academy sbloccata (admin), separazione tier home vs lab, dialog acquisto singolo — tutti funzionanti tranne un prezzo obsoleto nel teaser ricetta. Bug principale: /api/admin/revoke non azzera academy/plan_tier, quindi un utente revocato conserva Academy + 10 Diagnosi/mese (gating 403 non scatta).",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "POST /api/admin/revoke", "issue": "Imposta solo pro:false. academy, plan_tier ed expires_at restano invariati: dopo il revoke /api/subscription/status torna {pro:false, academy:true, plan_tier:'home', diagnosi_limit:10} e POST /api/maestro/vision risponde 200 invece di 403. Serve $set {pro:false, academy:false, plan_tier:null} (o unset).", "priority": "HIGH"},
+      {"endpoint": "POST/PUT/DELETE /api/announcements, /api/oven-profiles, /api/production-plan, /api/weekly-plan, /api/lab-config, /api/recipe-temp", "issue": "Nessuna dependency di auth: qualunque anonimo puo creare/modificare/cancellare questi dati (mutazioni pubbliche). Aggiungere Depends(current_user)/require_admin.", "priority": "HIGH"}
+    ],
+    "minor": [
+      {"endpoint": "GET /api/subscription/status (anonimo)", "issue": "Ritorna diagnosi_limit: null invece di 0 (per l'utente loggato senza abbonamento torna correttamente 0). Incoerenza con la specifica."},
+      {"endpoint": "GET /api/announcements", "issue": "Pulizia legale incompleta: i documenti storici in DB contengono ancora 'Mulini di qualita nell'area di Stoccarda' e 'Scambio lievito madre — zona Cannstatt & Mitte'. seed_announcements_if_empty() inserisce il seed pulito solo se la collection e vuota → serve una migrazione/upsert. Inoltre Announcement.region ha default 'stoccarda'."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList.jsx:693 (teaser ricetta bloccata)", "issue": "CTA mostra 'Passa a PRO · €9,99/mese' (DE/EN identici): prezzo obsoleto, il tier LAB costa €29,99/mese come indicato correttamente nel dialog buy-subscribe-pro.", "selector": "[data-testid^='recipe-teaser-']", "priority": "HIGH"},
+      {"component": "MaestroSaTutto.jsx", "issue": "StoccardaPanel() (~130 righe, gestione annunci 'Stoccarda') definito ma MAI renderizzato: codice morto che mantiene riferimenti legali rimossi.", "selector": "n/a", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Academy → Ricettario", "issues": ["I selettori 'Ricetta' e 'Farina' usano <select> nativo del browser invece del componente Select shadcn (stile incoerente con il resto dell'app)"]},
+      {"screen": "Academy → Video Mentore", "issues": ["La riga dei chip mentore va in overflow orizzontale a 1920px: 'Chef Bi...' risulta tagliato dal bordo del contenitore"]},
+      {"screen": "Tutte le pagine desktop", "issues": ["Colonna contenuto fissa ~440px centrata: a 1920px restano grandi aree vuote e l'immagine decorativa a destra appare tagliata/parziale"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter52_multitier.py",
+    "/app/backend/tests/test_iter52_freshuser.py",
+    "/app/test_reports/pytest/iter52.xml"
+  ],
+  "action_items": [
+    "admin/revoke: azzerare anche academy, plan_tier ed expires_at (altrimenti il gating Diagnosi/Academy resta aperto dopo la revoca)",
+    "subscription/status anonimo: diagnosi_limit deve essere 0, non null",
+    "Aggiornare/ripulire i documenti 'announcements' in DB (migrazione) e rimuovere il default region='stoccarda' dai model Announcement/AnnouncementCreate",
+    "Correggere il prezzo nel teaser RecipeList (€9,99 → €29,99) nelle 3 lingue",
+    "Proteggere con auth gli endpoint di scrittura attualmente pubblici (announcements, oven-profiles, production-plan, weekly-plan, lab-config, recipe-temp)",
+    "Rimuovere il codice morto StoccardaPanel in MaestroSaTutto.jsx"
+  ],
+  "critical_code_review_comments": [
+    "server.py e 2971 righe: superato di molto il limite di 700; splittare in router (auth, recipes, billing, academy, ai).",
+    "admin_revoke e _grant_from_email non sono simmetrici: grant scrive pro/academy/plan_tier, revoke tocca solo pro → stato incoerente in 'entitlements'.",
+    "GET /api/admin/entitlements non espone academy/plan_tier: l'admin non puo distinguere abbonati home da lab dal pannello.",
+    "Mutazioni non autenticate su piu router (vedi backend_issues) — rischio di manomissione dati in preview/produzione.",
+    "_recipe_fulfill viene invocato sia da webhook sia da /recipe/checkout/status: l'idempotenza dipende da recipe_orders.payment_status; se l'ordine non esiste (metadata-only) lo sblocco puo essere applicato piu volte."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter52_multitier.py",
+    "/app/backend/tests/test_iter52_freshuser.py",
+    "/app/backend/tests/_cleanup_iter52.py"
+  ],
+  "success_rate": {"backend": "87% (26/30)", "frontend": "92%"},
+  "seed_data_creation": "Nessun dato permanente. Grant temporanei su fornaio@mikilab.de (tier home/lab) rimossi a fine test: entitlement di fornaio@mikilab.de eliminato (stato pulito, non-pro/non-academy). Utente temporaneo test_*@mikilab.test creato e cancellato dallo script di test.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin), fornaio@mikilab.de / Mikilab2026! (user, senza entitlement)",
+  "context_for_next_testing_agent": "Eseguire i test con -n 0 (pytest.ini usa xdist: in parallelo i test che fanno grant/revoke sullo stesso utente fornaio si disturbano a vicenda e generano falsi fallimenti). Test verificati OK: anon status, admin status, grant home/lab + status, checkout subscription 4 combinazioni (cs_test), recipe checkout single/panettoni/all + 400/404, teaser lock (63/65 bloccate, 2 DEMO libere), admin vede tutto sbloccato, tier home lascia le ricette bloccate, diagnosi home 200 + incremento diagnosi_used, anon 401, utente nuovo 403 e diagnosi_limit 0, /api/news solo regioni germania/italia. Fallimenti reali attesi finche non si correggono i bug: test_revoke_clears_academy, TestDiagnosiGating::test_no_access_403 (dipende dal revoke), test_anon_status (diagnosi_limit), test_announcements_no_stuttgart. Frontend verificato: paywall anonimo Impara (€12,99 + 5 anteprime + trial 7 giorni + Accedi), Academy admin (academy-home, 4 sotto-tab, 12 video, diff-facile 6 / diff-avanzato 4, mentor-martesana 4, calc 30x40→660g e 50x60→1650g, flour-search 'Dinkel' 2 righe), dialog acquisto (buy-single €4,99, buy-panettoni €29,99, buy-all €149, buy-subscribe-pro €29,99), tier home: Impara sbloccata, Il Tuo Laboratorio ancora a paywall €29,99, Diagnosi accessibile. Nota: la sub-tab News sta dentro la sezione 'Impara' (cliccare prima nav-tab-impara).",
+  "rca_of_the_issue": "admin_revoke esegue update_one({'email':...},{'$set':{'pro':False}}) senza toccare academy/plan_tier. subscription_status calcola academy = pro or (ent.academy and _ent_active(ent)) e require_diagnosi controlla ent.academy: quindi dopo il revoke l'utente mantiene academy=true, plan_tier='home' e 10 diagnosi/mese. Riproduzione: admin grant {email:fornaio, tier:home} → admin revoke {email:fornaio} → GET /api/subscription/status mostra academy:true; POST /api/maestro/vision risponde 200 invece di 403. Fix: nel revoke fare $set {pro:false, academy:false, plan_tier:null, expires_at:null} (mantenendo unlock_* degli acquisti una tantum)."
+}

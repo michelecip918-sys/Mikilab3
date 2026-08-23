@@ -74,12 +74,17 @@ export const authApi = {
 
 export const subscriptionApi = {
   status: () => api.get(`/subscription/status`).then((r) => r.data),
-  checkout: (plan) => api.post(`/subscription/checkout`, { plan, origin_url: window.location.origin }).then((r) => r.data),
+  checkout: (plan, tier = "lab") => api.post(`/subscription/checkout`, { plan, tier, origin_url: window.location.origin }).then((r) => r.data),
   trial: (hours) => api.post(`/trial/activate`, { hours }).then((r) => r.data),
 };
 
+export const recipePurchaseApi = {
+  checkout: (kind, recipe_id) => api.post(`/recipe/checkout`, { kind, recipe_id, origin_url: window.location.origin }).then((r) => r.data),
+  status: (session_id) => api.get(`/recipe/checkout/status/${session_id}`).then((r) => r.data),
+};
+
 export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).then((r) => r.data),
-  grant: (email, days) => api.post(`/admin/grant`, { email, days }).then((r) => r.data),
+  grant: (email, days, tier = "lab") => api.post(`/admin/grant`, { email, days, tier }).then((r) => r.data),
   revoke: (email) => api.post(`/admin/revoke`, { email }).then((r) => r.data),
   shopSettings: () => api.get(`/admin/shop/settings`).then((r) => r.data),
   setShop: (enabled) => api.put(`/admin/shop/settings`, { enabled }).then((r) => r.data),

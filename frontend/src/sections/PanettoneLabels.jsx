@@ -97,7 +97,7 @@ export default function PanettoneLabels() {
                 })}
               </tbody>
             </table>
-            <p className="text-center text-[10px] text-[#7E8A93] italic p-3">Il Laboratorio di Michele · Stoccarda 🇮🇹🇩🇪 · mikilab.de</p>
+            <p className="text-center text-[10px] text-[#7E8A93] italic p-3">MikiLab · Michele 🇮🇹🇩🇪 · mikilab.de</p>
           </div>
         </div>
       ) : (
@@ -163,7 +163,7 @@ export default function PanettoneLabels() {
                     ))}
                   </tbody>
                 </table>
-                <p className="text-[9px] text-[#7E8A93] mt-2 italic">Il Laboratorio di Michele · Stoccarda 🇮🇹🇩🇪</p>
+                <p className="text-[9px] text-[#7E8A93] mt-2 italic">MikiLab · Michele 🇮🇹🇩🇪</p>
               </div>
             );
           })}
