@@ -1,0 +1,29 @@
+{
+  "summary": "Frontend-only verification (mobile 390x844, admin@mikilab.de PRO) of the two new additions: (1) 'Diagnosi Recenti' list in Photo Diagnosis (render, thumb, expand markdown, accordion, delete + persistence, both entry paths Home card and Lab tool) and (2) expanded Momy Lab onboarding tour (10 slides incl. 'Tutti i miei strumenti', base-filter slide and updated commands slide, scrollable body, done/close/replay). BOTH FEATURES PASS. No functional defects found. Only note: the admin account had 1 (not 2) saved diagnosis at start and its thumbnail rendered broken; I re-seeded 3 valid test diagnoses via /api/diagnosi/save and everything rendered correctly.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Photo Diagnosis - Diagnosi Recenti (mobile)", "issues": ["The floating 'Radio' and 'Parla' FABs sit on top of the last item of the Diagnosi Recenti list (delete/chevron buttons of the last row are partially covered). Clicks still succeeded (no overlay interception) but consider extra bottom padding below the list."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/seed_diagnosi.py"],
+  "action_items": [
+    "Optional: increase bottom padding of PhotoDiagnosi (pb-4 -> pb-24) so the Radio/Parla FABs do not overlap the last 'Diagnosi Recenti' row on mobile.",
+    "Verify the thumb stored by the pre-existing (curl-seeded) diagnosis: it was NOT a valid data URL and rendered as a broken <img> (naturalWidth=0). Real app flow (makeThumb) produces a valid data:image/jpeg URL and renders fine, so this is only a seeding artefact — but consider guarding the <img> with onError fallback to the Camera icon."
+  ],
+  "critical_code_review_comments": [
+    "PhotoDiagnosi.deleteRecent() removes the item from state optimistically and swallows any DELETE error (empty catch) — a failed delete silently reappears only after reload. Consider re-loading/reverting on failure.",
+    "loadRecent() swallows errors silently; no loading/error state for the Diagnosi Recenti list (guideline: every API call should have loading/success/error states).",
+    "<img src={d.thumb}> has no onError handler; a corrupt/invalid thumb shows a broken-image icon instead of the existing Camera fallback."
+  ],
+  "updated_files": ["/app/backend/tests/seed_diagnosi.py (new seed helper, no app code changed)"],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (2/2 features, 0 defects)"},
+  "seed_data_creation": "Created 3 diagnoses for admin@mikilab.de via POST /api/diagnosi/save (modes difetti, impasto, macchine; results prefixed TEST_; two with a valid 60x60 JPEG thumb, one with thumb=null to test the Camera fallback). One was deleted during the delete test; 2 TEST_ items remain intentionally so the next agent/main agent can see the list. Script: /app/backend/tests/seed_diagnosi.py",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login via header [data-testid=login-btn] -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "DIAGNOSI RECENTI verified in detail: GET /api/diagnosi/recent loads on mount; list shown under [data-testid=diagnosi-recenti] with heading 'Diagnosi Recenti' + hint 'Rivedi causa e soluzione senza rifare la foto.'; ordering is newest-first (macchine, impasto, difetti); thumbs render (naturalWidth=60) and the thumb-less item shows the Camera icon fallback; [data-testid=diagnosi-open-<id>] expands and ReactMarkdown renders headings/bullets (h2=2, li=2) and collapses on second click; only ONE item stays open at a time (accordion behaviour confirmed); [data-testid=diagnosi-delete-<id>] removes the row immediately and the deletion PERSISTS after reload (3 -> 2). Both entry paths show the list: Home [data-testid=home-diagnosi-card] and Lab (nav-tab-maestro -> close lab-onboarding -> maestro-step-5 -> maestro-tool-diagnosi). No real AI analysis was triggered. LAB TOUR verified: auto-opens when localStorage 'mikilab_lab_tour_done' is absent; exactly 10 slides / 10 dots: 1 Ciao sono Michele, 2 Passo 1 Hardware, 3 Passo 2 Ricette & Forno, 4 'Trova le ricette per Base', 5 Passo 3 Logistica, 6 Passo 4 Pianificazione, 7 Passo 5 Operativita, 8 Passo 6 Chiusura, 9 'Tutti i miei strumenti' (570 chars, lists all lab tools, body scrollable max-h-[40vh] 341/338), 10 'E i miei comandi' (mentions Diagnosi Foto AND 'Diagnosi Recenti'). lab-onboarding-done closes and sets flag=1; [data-testid=mohammed-replay-tour] re-opens it; lab-onboarding-close (X) closes it. No console errors other than the expected pre-login 401 from /api/auth/me.",
+  "rca_of_the_issue": "N/A - no defects. The initially reported '2 saved diagnoses' was actually 1 in the DB (GET /api/diagnosi/recent returned a single doc), and its thumb was not a valid data URL so the <img> rendered broken; re-seeded valid data confirmed correct rendering."
+}

@@ -1623,6 +1623,41 @@ async def maestro_vision(payload: VisionRequest, user: dict = Depends(require_di
     )
 
 
+class DiagnosiSave(BaseModel):
+    mode: str
+    result: str
+    thumb: Optional[str] = None
+
+
+@api_router.post("/diagnosi/save")
+async def diagnosi_save(payload: DiagnosiSave, user: dict = Depends(current_user)):
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["user_id"],
+        "mode": payload.mode,
+        "result": (payload.result or "")[:6000],
+        "thumb": payload.thumb,
+        "created_at": now_iso(),
+    }
+    await db.diagnoses.insert_one(dict(doc))
+    # Conserva solo le ultime 10 diagnosi per utente.
+    olds = await db.diagnoses.find({"user_id": user["user_id"]}, {"_id": 0, "id": 1, "created_at": 1}).sort("created_at", -1).to_list(1000)
+    for o in olds[10:]:
+        await db.diagnoses.delete_one({"id": o["id"]})
+    return {"ok": True, "id": doc["id"]}
+
+
+@api_router.get("/diagnosi/recent")
+async def diagnosi_recent(user: dict = Depends(current_user)):
+    return await db.diagnoses.find({"user_id": user["user_id"]}, {"_id": 0}).sort("created_at", -1).to_list(10)
+
+
+@api_router.delete("/diagnosi/{diag_id}")
+async def diagnosi_delete(diag_id: str, user: dict = Depends(current_user)):
+    await db.diagnoses.delete_one({"id": diag_id, "user_id": user["user_id"]})
+    return {"ok": True}
+
+
 class ScanRecipeRequest(BaseModel):
     image_base64: str
     lang: str = "it"

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper, Cog } from "lucide-react";
+import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper, Cog, History, Trash2, ChevronDown } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
@@ -51,12 +51,34 @@ function videoToFrameBase64(file, maxDim = 1024, quality = 0.8) {
   });
 }
 
+// Crea una miniatura leggera (base64 jpeg) da un data URL immagine.
+function makeThumb(dataUrl, maxDim = 220, quality = 0.55) {
+  return new Promise((resolve) => {
+    try {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxDim) { height = Math.round(height * maxDim / width); width = maxDim; }
+        else if (height > maxDim) { width = Math.round(width * maxDim / height); height = maxDim; }
+        const canvas = document.createElement("canvas");
+        canvas.width = width; canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => resolve(null);
+      img.src = dataUrl;
+    } catch { resolve(null); }
+  });
+}
+
 export default function PhotoDiagnosi() {
   const [mode, setMode] = useState("difetti");
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
   const [praised, setPraised] = useState(false);
+  const [recent, setRecent] = useState([]);
+  const [openRec, setOpenRec] = useState(null);
   const { t, lang } = useLang();
 
   const MODES = [
@@ -66,6 +88,20 @@ export default function PhotoDiagnosi() {
     { id: "scopri", label: t("photo_mode_discover"), desc: t("photo_mode_discover_desc"), Icon: Lightbulb },
     { id: "macchine", label: t("photo_mode_machines"), desc: t("photo_mode_machines_desc"), Icon: Cog },
   ];
+  const modeLabel = (id) => (MODES.find((m) => m.id === id) || {}).label || id;
+
+  const loadRecent = async () => {
+    try {
+      const res = await fetch(`${API}/diagnosi/recent`, { credentials: "include" });
+      if (res.ok) setRecent(await res.json());
+    } catch { /* ignore */ }
+  };
+  useEffect(() => { loadRecent(); /* eslint-disable-next-line */ }, []);
+
+  const deleteRecent = async (id) => {
+    setRecent((r) => r.filter((x) => x.id !== id));
+    try { await fetch(`${API}/diagnosi/${id}`, { method: "DELETE", credentials: "include" }); } catch { /* */ }
+  };
 
   const onPick = async (file) => {
     if (!file) return;
@@ -117,13 +153,27 @@ export default function PhotoDiagnosi() {
     } catch {
       toast.error(t("toast_analyze_error"));
     } finally {
-      setResult((r) => r.replace(/\[OK\]|\[FIX\]/g, "").trim());
+      const clean = full.replace(/\[OK\]|\[FIX\]/g, "").trim();
+      setResult(clean);
       setAnalyzing(false);
+      // Salva la diagnosi tra le "recenti" (senza rifare la foto).
+      if (clean) {
+        try {
+          const thumb = await makeThumb(preview);
+          const res = await fetch(`${API}/diagnosi/save`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ mode, result: clean, thumb }),
+          });
+          if (res.ok) loadRecent();
+        } catch { /* salvataggio best-effort */ }
+      }
     }
   };
 
   return (
-    <div className="pb-4">
+    <div className="pb-24">
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
         <HeroAvatar />
         <Camera className="w-7 h-7 mb-2" />
@@ -181,6 +231,46 @@ export default function PhotoDiagnosi() {
       {result && (
         <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">
           <ReactMarkdown>{result}</ReactMarkdown>
+        </div>
+      )}
+
+      {recent.length > 0 && (
+        <div data-testid="diagnosi-recenti" className="mt-8">
+          <div className="flex items-center gap-2 mb-3 text-[#5E8B7E]">
+            <History className="w-5 h-5" />
+            <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">
+              {lang === "de" ? "Letzte Diagnosen" : lang === "en" ? "Recent diagnoses" : "Diagnosi Recenti"}
+            </h2>
+          </div>
+          <p className="text-xs text-[#7E8A93] mb-3">
+            {lang === "de" ? "Sieh dir Ursache & Lösung erneut an, ohne ein neues Foto zu machen." : lang === "en" ? "Review cause & fix again, without taking a new photo." : "Rivedi causa e soluzione senza rifare la foto."}
+          </p>
+          <div className="space-y-2.5">
+            {recent.map((d) => {
+              const isOpen = openRec === d.id;
+              return (
+                <div key={d.id} data-testid={`diagnosi-item-${d.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
+                  <div className="flex items-center gap-3 p-3">
+                    <div className="w-12 h-12 rounded-xl bg-[#EAF0EC] dark:bg-[#1F252B] flex items-center justify-center shrink-0 overflow-hidden relative">
+                      <Camera className="w-5 h-5 text-[#7E8A93]" />
+                      {d.thumb && <img src={d.thumb} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} className="absolute inset-0 w-full h-full object-cover" />}
+                    </div>
+                    <button data-testid={`diagnosi-open-${d.id}`} onClick={() => setOpenRec(isOpen ? null : d.id)} className="flex-1 min-w-0 text-left">
+                      <p className="font-semibold text-sm text-[#2B303B] dark:text-[#EAF0EC] truncate">{modeLabel(d.mode)}</p>
+                      <p className="text-[11px] text-[#7E8A93]">{new Date(d.created_at).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
+                    </button>
+                    <button data-testid={`diagnosi-delete-${d.id}`} onClick={() => deleteRecent(d.id)} className="p-2 text-[#C0574D] active:scale-90 shrink-0" aria-label="delete"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => setOpenRec(isOpen ? null : d.id)} className="p-1 text-[#7E8A93] shrink-0" aria-label="toggle"><ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} /></button>
+                  </div>
+                  {isOpen && (
+                    <div className="markdown-body px-4 pb-4 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC] border-t border-[#EAF0EC] dark:border-[#38424B] pt-3">
+                      <ReactMarkdown>{d.result}</ReactMarkdown>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

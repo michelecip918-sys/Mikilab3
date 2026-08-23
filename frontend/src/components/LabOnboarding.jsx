@@ -83,11 +83,19 @@ function buildSlides(lang) {
     },
     {
       who: "mohammed", avatar: MOHAMMED,
+      title: tri("Tutti i miei strumenti 🧰", "Alle meine Werkzeuge 🧰", "All my tools 🧰"),
+      body: tri(
+        "Ecco tutto quello che trovi qui: Capo Laboratorio (macchine), Giacenze Freezer, Bilancia Smart, Termostato & Clima, Marketplace usato · Le Mie Ricette (aggiungi/scansiona), Tabella Farine, Adatta il Forno · Punti Vendita, Turni & Ruoli · Piano IA, Piano Settimanale, Piano di Lavoro, Tempi a Ritroso, Lista Spesa, Food Cost & Energia · Temperatura Acqua, Pesata Guidata a voce, Timer, Meteo, Tracker pH, Digital Twin dell'impasto · Diario Impasti, Tracciabilità Lotti (QR), Registro HACCP, Checklist, Shelf-Life, Anti-Spreco. Un unico posto per tutto il tuo laboratorio.",
+        "Das findest du hier alles: Werkstattleiter (Maschinen), Freezer-Bestand, Smarte Waage, Thermostat & Klima, Gebraucht-Markt · Meine Rezepte (hinzufügen/scannen), Mehl-Tabelle, Ofen anpassen · Verkaufspunkte, Schichten & Rollen · KI-Plan, Wochenplan, Arbeitsplan, Rückwärtsplanung, Einkaufsliste, Food Cost & Energie · Wassertemperatur, geführtes Wiegen per Stimme, Timer, Wetter, pH-Tracker, Digital Twin des Teigs · Teig-Tagebuch, Chargen-Rückverfolgung (QR), HACCP-Register, Checklisten, Shelf-Life, Anti-Verschwendung. Alles an einem Ort.",
+        "Here's everything you'll find: Lab Manager (machines), Freezer Stock, Smart Scale, Thermostat & Climate, Used Marketplace · My Recipes (add/scan), Flour Table, Adapt the Oven · Sales Points, Shifts & Roles · AI Plan, Weekly Plan, Work Plan, Backward Timing, Shopping List, Food Cost & Energy · Water Temperature, voice Guided Weighing, Timers, Weather, pH Tracker, dough Digital Twin · Dough Log, Batch Traceability (QR), HACCP register, Checklists, Shelf-Life, Anti-Waste. One place for your whole lab."),
+    },
+    {
+      who: "mohammed", avatar: MOHAMMED,
       title: tri("E i miei comandi 🎧", "Und meine Befehle 🎧", "And my commands 🎧"),
       body: tri(
-        "Sono sempre con te. Hai le mani nell'impasto? Usa l'assistente VOCALE: parla e io navigo ed eseguo per te. Accendi la Radio Fornaio per lavorare in musica. E con la Diagnosi Foto (qui nel Laboratorio o dal menu) fotografi un impasto venuto male, un pane con difetti o una macchina rotta: ti dico subito causa e soluzione. Oppure scrivimi in chat per ogni dubbio. Rivedi questa guida quando vuoi dal mio riquadro.",
-        "Ich bin immer dabei. Hände im Teig? Nutze den SPRACH-Assistenten: sprich und ich navigiere und erledige für dich. Schalte das Bäcker-Radio ein. Und mit der Foto-Diagnose (hier in der Backstube oder im Menü) fotografierst du einen misslungenen Teig, ein fehlerhaftes Brot oder eine kaputte Maschine: ich nenne sofort Ursache und Lösung. Oder schreib mir im Chat. Diese Anleitung kannst du jederzeit aus meinem Feld erneut ansehen.",
-        "I'm always with you. Hands in the dough? Use the VOICE assistant: talk and I navigate and act for you. Turn on the Baker Radio. And with Photo Diagnosis (here in the Lab or from the menu) you snap a failed dough, a defective bread or a broken machine: I instantly tell you the cause and the fix. Or message me in chat. Replay this guide anytime from my panel."),
+        "Sono sempre con te. Hai le mani nell'impasto? Usa l'assistente VOCALE: parla e io navigo ed eseguo per te. Accendi la Radio Fornaio per lavorare in musica. Con la Diagnosi Foto (qui nel Laboratorio o dal menu) leggo difetti del pane, stato dell'impasto, ingredienti e persino macchine rotte — da foto o video — e ti dico causa e soluzione. Trovi anche le «Diagnosi Recenti» per rivedere tutto senza rifare la foto. Oppure scrivimi in chat per ogni dubbio. Rivedi questa guida quando vuoi dal mio riquadro.",
+        "Ich bin immer dabei. Hände im Teig? Nutze den SPRACH-Assistenten: sprich und ich navigiere und erledige für dich. Schalte das Bäcker-Radio ein. Mit der Foto-Diagnose (hier oder im Menü) erkenne ich Brotfehler, Teigzustand, Zutaten und sogar kaputte Maschinen — per Foto oder Video — und nenne Ursache und Lösung. Es gibt auch «Letzte Diagnosen» zum erneuten Ansehen ohne neues Foto. Oder schreib mir im Chat. Diese Anleitung kannst du jederzeit aus meinem Feld erneut ansehen.",
+        "I'm always with you. Hands in the dough? Use the VOICE assistant: talk and I navigate and act for you. Turn on the Baker Radio. With Photo Diagnosis (here or from the menu) I read bread defects, dough state, ingredients and even broken machines — from a photo or video — and tell you the cause and fix. There's also «Recent diagnoses» to review everything without re-taking the photo. Or message me in chat. Replay this guide anytime from my panel."),
     },
   ];
 }
@@ -166,7 +174,7 @@ export default function LabOnboarding() {
             </div>
             {/* body */}
             <div className="p-5">
-              <p data-testid="lab-onboarding-body" className="text-[15px] text-[#2B303B] dark:text-[#EAF0EC] leading-relaxed">{cur.body}</p>
+              <p data-testid="lab-onboarding-body" className="text-[15px] text-[#2B303B] dark:text-[#EAF0EC] leading-relaxed max-h-[40vh] overflow-y-auto">{cur.body}</p>
               {/* dots */}
               <div className="flex items-center justify-center gap-1.5 mt-5">
                 {slides.map((_, k) => (

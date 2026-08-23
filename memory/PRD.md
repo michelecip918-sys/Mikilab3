@@ -870,3 +870,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v50.1 (2026-06) — Rifiniture
 - Home: card "Diagnosi Foto" prominente e SEMPRE visibile (accesso rapido, terracotta) sopra la Community. data-testid home-diagnosi-card -> go("diagnosi").
 - Tour Momy: aggiunta slide "Trova le ricette per Base" che spiega i chip filtro (Poolish, Lievito Madre, Segale...).
+
+## v50.2 (2026-06) — Diagnosi Recenti + Tour completo
+- Diagnosi Recenti: ogni diagnosi foto viene salvata (POST /api/diagnosi/save) con miniatura + risultato; lista ultime 10 per utente (GET /api/diagnosi/recent, DELETE /api/diagnosi/{id}). UI in PhotoDiagnosi: sezione "Diagnosi Recenti" (data-testid diagnosi-recenti/diagnosi-item-*/diagnosi-open-*/diagnosi-delete-*) — rivedi causa+soluzione senza rifare la foto. Collezione Mongo `diagnoses` (user_id, mode, result, thumb, created_at).
+- Tour Momy espanso: slide "Tutti i miei strumenti" (elenco completo dei 27 strumenti raggruppati) + slide comandi aggiornata (Diagnosi legge difetti/impasto/ingredienti/macchine da foto o video + Diagnosi Recenti). Body slide scrollabile (max-h-40vh).
+- Rifiniture: PhotoDiagnosi pb-24 (no overlap FAB), thumb con fallback icona Camera onError.
+- Testing: iteration_59 frontend 100% (2/2). Backend diagnosi verificato via curl.
