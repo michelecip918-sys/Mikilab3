@@ -307,6 +307,7 @@ class WeeklyItem(BaseModel):
     to_proof: Optional[float] = None    # pezzi in cella lievitazione (per oggi)
     to_fridge: Optional[float] = None   # pezzi in frigo (per domani)
     to_freezer: Optional[float] = None  # pezzi in freezer (il resto)
+    sale_point: Optional[str] = None    # destinazione: punto vendita (nome)
 
 
 class WeeklyPlan(BaseModel):

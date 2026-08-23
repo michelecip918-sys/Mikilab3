@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -32,8 +32,9 @@ import DoughTwin from "@/sections/DoughTwin";
 import GuidedWeighing from "@/sections/GuidedWeighing";
 import DoughLog from "@/sections/DoughLog";
 import HaccpLog from "@/sections/HaccpLog";
+import SalesPoints from "@/sections/SalesPoints";
+import DayClose from "@/sections/DayClose";
 import { useLang } from "@/i18n/LanguageContext";
-import { MikiAvatar } from "@/components/MikiAvatar";
 import { useBackClose } from "@/lib/backNav";
 import MohammedAssistant from "@/sections/MohammedAssistant";
 import { toast } from "sonner";
@@ -56,7 +57,7 @@ export default function Maestro() {
     { id: "freezer", title: lang === "de" ? "Freezer-Bestand" : lang === "en" ? "Freezer stock" : "Giacenze Freezer", desc: "", Icon: Snowflake },
     { id: "aggiungi", title: t("tool_aggiungi"), desc: t("tool_aggiungi_desc"), Icon: PlusCircle },
     { id: "scan", title: t("tool_scan"), desc: t("tool_scan_desc"), Icon: ScanLine },
-    { id: "termo", title: t("tool_termo"), desc: t("tool_termo_desc"), Icon: Thermometer },
+    { id: "termo", title: lang === "de" ? "Thermostat & Klima" : lang === "en" ? "Thermostat & Climate" : "Termostato & Clima", desc: "", Icon: Thermometer },
     { id: "acqua", title: lang === "de" ? "Wasser-Temperatur" : lang === "en" ? "Water temperature" : "Temperatura Acqua", desc: "", Icon: Droplets },
     { id: "ph", title: lang === "de" ? "pH-Tracker" : lang === "en" ? "pH Tracker" : "Tracker pH Lievito", desc: "", Icon: FlaskConical },
     { id: "capo", title: t("tool_capo"), desc: t("tool_capo_desc"), Icon: ClipboardList },
@@ -72,16 +73,17 @@ export default function Maestro() {
     { id: "twin", title: lang === "de" ? "Teig-Zwilling" : lang === "en" ? "Dough twin" : "Digital Twin Impasto", desc: "", Icon: FlaskConical },
     { id: "market", title: lang === "de" ? "Gebraucht-Markt" : lang === "en" ? "Used market" : "Marketplace Usato", desc: "", Icon: Store },
     { id: "lotti", title: lang === "de" ? "Chargen-Rückverfolgung" : lang === "en" ? "Batch traceability" : "Tracciabilità Lotti", desc: "", Icon: QrCode },
+    { id: "salespoints", title: lang === "de" ? "Verkaufspunkte" : lang === "en" ? "Sales points" : "Punti Vendita", desc: "", Icon: Store },
   ];
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
   const STEPS = [
-    { icon: Cog, title: tri("Parco Macchine", "Maschinenpark", "Machines"), sub: tri("Impastatrici, forni, celle, giacenze, bilancia e mercato usato", "Kneter, Öfen, Gärzellen, Bestände, Waage und Gebraucht-Markt", "Mixers, ovens, cells, stock, scale and used market"), tools: ["capo", "bilancia", "pesata", "freezer", "market"] },
-    { icon: BookOpen, title: tri("Ricette Personali", "Eigene Rezepte", "Your Recipes"), sub: tri("Inserisci o scansiona le tue ricette e adatta il forno con l'IA", "Rezepte erfassen/scannen und Ofen mit KI anpassen", "Add or scan recipes and adapt the oven with AI"), tools: ["aggiungi", "scan", "adatta"] },
-    { icon: CalendarDays, title: tri("Pianificazione", "Planung", "Planning"), sub: tri("Produzione giornaliera e settimanale, tempi a ritroso e timer", "Tages- und Wochenproduktion, Rückwärtsplanung und Timer", "Daily & weekly production, backward timing and timers"), tools: ["lavoro", "settimana", "inversa", "timer"] },
-    { icon: Thermometer, title: tri("Termostato & Sensori", "Thermostat & Sensoren", "Thermostat & Sensors"), sub: tri("Temperatura/umidità, meteo, Digital Twin, pH e acqua d'impasto", "Temperatur/Feuchte, Wetter, Teig-Zwilling, pH und Teigwasser", "Temperature/humidity, weather, dough twin, pH and dough water"), tools: ["termo", "meteo", "twin", "sessioni", "acqua", "ph"] },
-    { icon: LayoutDashboard, title: tri("Dashboard IA & HACCP", "KI-Dashboard & HACCP", "AI Dashboard & HACCP"), sub: tri("Fabbisogno, Food Cost, Shelf-Life, HACCP, tracciabilità e turni", "Bedarf, Food Cost, Shelf-Life, HACCP, Rückverfolgung und Schichten", "Needs, Food Cost, Shelf-Life, HACCP, traceability and shifts"), tools: ["spesa", "foodcost", "shelf", "spreco", "haccp", "lotti", "check", "turni"] },
-    { icon: CheckSquare, title: tri("Conclusione Lavorazione", "Abschluss der Arbeit", "Work wrap-up"), sub: tri("Chiudi la giornata: registra la sessione impasto, crea il lotto e completa i controlli HACCP", "Schließe den Tag ab: Teig-Sitzung speichern, Charge erstellen und HACCP abschließen", "Close the day: log the dough session, create the batch and complete HACCP checks"), tools: ["sessioni", "lotti", "haccp"], conclusione: true },
+    { icon: Cog, title: tri("Prima Configurazione Hardware", "Hardware-Einrichtung", "Hardware Setup"), sub: tri("Macchine, impastatrici, celle, frigo, giacenze e connessione dispositivi (bilancia, termostati)", "Maschinen, Kneter, Gärzellen, Kühlschrank, Bestände und Geräte (Waage, Thermostate)", "Machines, mixers, cells, fridge, stock and device connection (scale, thermostats)"), tools: ["capo", "freezer", "bilancia", "termo", "market"] },
+    { icon: BookOpen, title: tri("Le Mie Ricette & Parametri", "Meine Rezepte & Parameter", "My Recipes & Parameters"), sub: tri("Inserisci o scansiona le tue ricette e imposta i parametri del forno", "Rezepte erfassen/scannen und Ofenparameter einstellen", "Add or scan recipes and set oven parameters"), tools: ["aggiungi", "scan", "adatta"] },
+    { icon: Store, title: tri("Logistica & Punti Vendita", "Logistik & Verkaufspunkte", "Logistics & Sales Points"), sub: tri("Configura i punti vendita e gestisci personale e turni", "Verkaufspunkte einrichten und Personal & Schichten verwalten", "Set up sales points and manage staff & shifts"), tools: ["salespoints", "turni"] },
+    { icon: CalendarDays, title: tri("Pianificazione Produzione", "Produktionsplanung", "Production Planning"), sub: tri("Piano settimanale e piano di lavoro di oggi, tempi a ritroso, spesa e food cost", "Wochenplan und heutiger Arbeitsplan, Rückwärtszeiten, Einkauf und Food Cost", "Weekly plan and today's work plan, backward timing, shopping and food cost"), tools: ["settimana", "lavoro", "inversa", "spesa", "foodcost"] },
+    { icon: Thermometer, title: tri("Operatività In Corso", "Laufender Betrieb", "Live Operations"), sub: tri("Calcolo temperatura acqua, pesata guidata, timer e sensori (meteo, pH, twin)", "Wassertemperatur, geführtes Wiegen, Timer und Sensoren (Wetter, pH, Twin)", "Water temperature, guided weighing, timers and sensors (weather, pH, twin)"), tools: ["acqua", "pesata", "timer", "meteo", "ph", "twin"] },
+    { icon: CheckSquare, title: tri("Chiusura & Tracciabilità", "Abschluss & Rückverfolgung", "Closing & Traceability"), sub: tri("Chiudi la giornata: Diario Impasti, Tracciabilità Lotti, Registro HACCP e controlli finali", "Tag abschließen: Teig-Tagebuch, Chargen-Rückverfolgung, HACCP und Endkontrollen", "Close the day: Dough Log, Batch Traceability, HACCP and final checks"), tools: ["sessioni", "lotti", "haccp", "check", "shelf", "spreco"], conclusione: true },
   ];
   const current = STEPS[step];
 
@@ -122,13 +124,22 @@ export default function Maestro() {
         {tool === "turni" && <ShiftRoles />}
         {tool === "check" && <Checklists />}
         {tool === "sveglia" && <SvegliaLievito />}
+        {tool === "salespoints" && <SalesPoints />}
+        {tool === "dayclose" && <DayClose />}
       </div>
     );
   }
 
   return (
     <div className="pb-28">
-      <MikiAvatar label="Michele" subtitle={t("maestro_title")} className="mb-4" />
+      <div data-testid="maestro-hero-tattoo" className="relative rounded-3xl overflow-hidden mb-4 h-40 shadow-md">
+        <img src={`${process.env.PUBLIC_URL || ""}/bio-dough.jpg`} alt="Michele" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/25 to-transparent" />
+        <div className="absolute bottom-3 left-4 right-4">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-white/80">{tri("Il Tuo Laboratorio", "Deine Backstube", "Your Lab")}</p>
+          <h2 className="font-display text-lg font-bold text-white leading-tight">{tri("Le mani nell'impasto, la testa organizzata", "Hände im Teig, Kopf organisiert", "Hands in the dough, head organized")}</h2>
+        </div>
+      </div>
       <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{t("maestro_title")}</h1>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Configura il tuo laboratorio passo dopo passo", "Richte deine Backstube Schritt für Schritt ein", "Set up your bakery step by step")}</p>
 
@@ -165,12 +176,12 @@ export default function Maestro() {
         <div className="grid grid-cols-2 gap-2.5">
           {current.conclusione && (
             <div data-testid="maestro-conclusione" className="col-span-2 rounded-2xl bg-[#6B8E62]/12 border border-[#6B8E62]/30 p-3.5 mb-1">
-              <div className="flex items-center gap-2 text-[#4d6b45] dark:text-[#9ec48f] font-bold text-sm"><CheckSquare className="w-4 h-4" /> {tri("Hai finito? Chiudi la lavorazione", "Fertig? Arbeit abschließen", "Done? Wrap up the work")}</div>
-              <ul className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1.5 space-y-0.5 list-disc list-inside">
-                <li>{tri("Registra la sessione impasto (temperature)", "Teig-Sitzung speichern (Temperaturen)", "Log the dough session (temperatures)")}</li>
-                <li>{tri("Crea il lotto per la tracciabilità", "Charge für die Rückverfolgung erstellen", "Create the batch for traceability")}</li>
-                <li>{tri("Completa i controlli HACCP", "HACCP-Kontrollen abschließen", "Complete the HACCP checks")}</li>
-              </ul>
+              <div className="flex items-center gap-2 text-[#4d6b45] dark:text-[#9ec48f] font-bold text-sm"><CheckSquare className="w-4 h-4" /> {tri("Hai finito? Chiudi la giornata", "Fertig? Tag abschließen", "Done? Close the day")}</div>
+              <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1.5 leading-snug">{tri("Concludi la giornata: vedi il riepilogo e archivia le sessioni del Diario Impasti e le voci HACCP.", "Schließe den Tag ab: Übersicht ansehen und Teig-Tagebuch-Sitzungen sowie HACCP-Einträge archivieren.", "Close the day: see the summary and archive Dough Log sessions and HACCP entries.")}</p>
+              <button data-testid="maestro-concludi-giornata" onClick={() => setTool("dayclose")}
+                className="mt-2.5 w-full flex items-center justify-center gap-2 bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-bold py-2.5 rounded-xl active:scale-98 transition-all">
+                <CalendarCheck className="w-5 h-5" /> {tri("Concludi Giornata", "Tag abschließen", "Close the Day")}
+              </button>
             </div>
           )}
           {current.tools.map((id, i) => {

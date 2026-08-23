@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText } from "lucide-react";
+import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty } from "@/lib/shopping";
+import { getSalesPoints } from "@/lib/salesPoints";
 import { jsPDF } from "jspdf";
 
 const DAYS = [
@@ -33,7 +34,15 @@ export default function WeeklyPlan() {
   const [recipes, setRecipes] = useState([]);
   const [items, setItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [salesPoints, setSalesPoints] = useState([]);
   const { t } = useLang();
+
+  useEffect(() => {
+    setSalesPoints(getSalesPoints());
+    const onChange = () => setSalesPoints(getSalesPoints());
+    window.addEventListener("mikilab-salespoints-changed", onChange);
+    return () => window.removeEventListener("mikilab-salespoints-changed", onChange);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -80,12 +89,13 @@ export default function WeeklyPlan() {
   const save = async () => {
     try {
       await weeklyApi.save({
-        items: items.map(({ id, day, recipe_id, recipe_name, pieces, grams_per_piece, to_proof, to_fridge, to_freezer }) => ({
+        items: items.map(({ id, day, recipe_id, recipe_name, pieces, grams_per_piece, to_proof, to_fridge, to_freezer, sale_point }) => ({
           id, day, recipe_id, recipe_name,
           pieces: Number(pieces || 0), grams_per_piece: Number(grams_per_piece || 0),
           to_proof: to_proof === "" || to_proof == null ? null : Number(to_proof),
           to_fridge: to_fridge === "" || to_fridge == null ? null : Number(to_fridge),
           to_freezer: to_freezer === "" || to_freezer == null ? null : Number(to_freezer),
+          sale_point: sale_point || null,
         })),
       });
       toast.success(t("toast_weekly_saved"));
@@ -247,6 +257,7 @@ export default function WeeklyPlan() {
                       item={it}
                       recipes={recipes}
                       recipe={recipeById[it.recipe_id]}
+                      salesPoints={salesPoints}
                       t={t}
                       onRecipeChange={(rid) => onRecipeChange(it.id, rid)}
                       onChange={(patch) => updateItem(it.id, patch)}
@@ -295,7 +306,7 @@ export default function WeeklyPlan() {
   );
 }
 
-function WeeklyItemRow({ item, recipes, recipe, t, onRecipeChange, onChange, onRemove }) {
+function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, onChange, onRemove }) {
   const pieces = Number(item.pieces || 0);
   const gpp = Number(item.grams_per_piece || 0);
   const totalDough = pieces * gpp;
@@ -382,6 +393,24 @@ function WeeklyItemRow({ item, recipes, recipe, t, onRecipeChange, onChange, onR
         </div>
         <p className="text-[10px] text-[#9AA6AE] mt-1 leading-snug">{t("weekly_dest_hint")}</p>
       </div>
+
+      {/* Destinazione: Punto Vendita (dai Punti Vendita del Passo 3) */}
+      {salesPoints.length > 0 && (
+        <div className="mt-2 flex items-center gap-2">
+          <Store className="w-4 h-4 text-[#5E8B7E] shrink-0" />
+          <select
+            data-testid={`weekly-salepoint-${item.id}`}
+            value={item.sale_point || ""}
+            onChange={(e) => onChange({ sale_point: e.target.value })}
+            className="flex-1 min-w-0 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none focus:border-[#5E8B7E] text-[#2B303B] dark:text-[#EAF0EC]"
+          >
+            <option value="">{t("weekly_salepoint_none")}</option>
+            {salesPoints.map((p) => (
+              <option key={p.id} value={p.name}>{p.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
     </div>
   );
 }

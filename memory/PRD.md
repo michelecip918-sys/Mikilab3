@@ -803,3 +803,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **AVATAR TAGLIATO A METÀ**: TalkingAvatar video/poster da `object-cover` → `object-contain` (bg nero). Ora l'avatar si vede INTERO in Home e in Chiedi al Maestro (verificato).
 - **PANETTONI SINGOLI**: confermato — ogni panettone è acquistabile singolarmente a €4,99 (dialog acquisto ricetta: buy-single €4,99; buy-panettoni €29,99 = tutti; buy-all €149). In Home ogni panettone mostra badge €4,99.
 - **PENDING — LABORATORIO 6 PASSI**: non ancora eseguito (intervento ampio, richiede sessione dedicata con budget pieno). Struttura definita in v77. Da fare come priorità nel prossimo turno.
+
+## v69 (2026-06) — Laboratorio in 6 passi + Punti Vendita + Concludi Giornata
+- **"Il Tuo Laboratorio" ora a 6 PASSI stretti, zero duplicazioni** (Maestro.jsx STEPS): 1) Prima Configurazione Hardware (capo/freezer/bilancia/termo/market) 2) Le Mie Ricette & Parametri (aggiungi/scan/adatta) 3) Logistica & Punti Vendita (salespoints/turni) 4) Pianificazione Produzione (settimana/lavoro/inversa/spesa/foodcost) 5) Operativita In Corso (acqua/pesata/timer/meteo/ph/twin) 6) Chiusura & Tracciabilita (sessioni/lotti/haccp/check/shelf/spreco). Ogni strumento appare in UN SOLO passo.
+- **Nuovo tool "Punti Vendita"** (SalesPoints.jsx, lib/salesPoints.js, localStorage `mikilab_sales_points`): CRUD nome/indirizzo/orari. Fix collisione etichetta: tool "termo" rinominato "Termostato & Clima" per distinguerlo da "Meteo & Laboratorio" (meteo).
+- **Punti Vendita → Piano Settimanale**: selettore destinazione punto vendita per riga in WeeklyPlan (aggiornamento live via evento `mikilab-salespoints-changed`); campo `sale_point` aggiunto a WeeklyItem (backend server.py) e al salvataggio. i18n `weekly_salepoint_none` (it/de/en).
+- **"Concludi Giornata"** (DayClose.jsx, Passo 6): riepilogo di chiusura (sessioni Diario Impasti + voci HACCP di oggi), nota facoltativa, archivio chiusura in localStorage `mikilab_day_closures` con ultima chiusura mostrata.
+- **Foto braccio tatuato piu presente**: banner hero `bio-dough.jpg` in cima a "Il Tuo Laboratorio" + usato nelle nuove sezioni.
+- Avatar video (object-contain) e "MikiLab Shop & Corsi" in Home: gia completati nella sessione precedente, confermati OK in preview.
+- Testato via preview (admin): wizard 6 passi, CRUD Punti Vendita, integrazione Piano Settimanale, Concludi Giornata → tutto OK.
