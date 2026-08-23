@@ -124,7 +124,7 @@ function App() {
       <div className="relative z-10">
       <Header />
       <InstallBanner />
-      <main className="max-w-xl mx-auto px-4 pt-4 pb-48">
+      <main className="max-w-xl mx-auto px-4 pt-4 pb-64">
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}

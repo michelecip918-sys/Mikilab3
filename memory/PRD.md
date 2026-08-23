@@ -771,3 +771,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **AVATAR — PLAYER NATIVO**: `TalkingAvatar` ora usa `<video controls playsInline preload=metadata>` con source per lingua (mp4 prima, poi webm) → riproduzione affidabile su iOS/Android/desktop (risolve "il video non parte"). Voce ElevenLabs (Adam multilingua) rigenerata per i 3 video.
 - **REGRESSIONE (iteration_53)**: backend 15/15 PASS (monetizzazione, legale, sicurezza), frontend tutto PASS (5 tab bottom bar, Community, 3 sotto-tab Impara, zero mentori, Academy 4 tool, ricettario+PDF trilingue, farine, avatar nativo 3 lingue). Nessun bug bloccante.
 - Backlog opzionale (non richiesto): sostituire <select> nativi con shadcn Select (warning hydration); padding-bottom mobile per FAB; rimuovere dead code StoccardaPanel in MaestroSaTutto.jsx.
+
+## v75 (2026-06) — Rifinitura mobile + verifica Community Foto
+- **RIFINITURA MOBILE**: `<main>` in App.js pb-48 → pb-64 (256px) così le ultime card non vengono coperte dai FAB Radio (bottom-28 sx) e Parla (bottom-28 dx). Verificato: footer visibile e libero.
+- **COMMUNITY FOTO**: verificato che era GIÀ completo — composer con pulsante "Foto" (community-photo-btn) → uploadApi.image (/api/upload → URL assoluto), anteprima con pulsante rimuovi (community-photo-clear), immagine mostrata nel post (image_url). Backend `CommunityPostReq.image_url` + `_post_public` già presenti. Upload testato: 200 OK.
