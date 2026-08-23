@@ -5,6 +5,7 @@ import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty } from "@/lib/shopping";
 import { getSalesPoints } from "@/lib/salesPoints";
+import { fireHighFive } from "@/components/HighFive";
 import { jsPDF } from "jspdf";
 
 const DAYS = [
@@ -99,6 +100,7 @@ export default function WeeklyPlan() {
         })),
       });
       toast.success(t("toast_weekly_saved"));
+      fireHighFive(t("toast_weekly_saved"));
     } catch {
       toast.error(t("toast_save_error"));
     }

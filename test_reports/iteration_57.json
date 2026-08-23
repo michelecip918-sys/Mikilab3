@@ -1,0 +1,28 @@
+{
+  "summary": "Frontend-only regression test (mobile 390x844) of the two new fixes: global 'Batti il 5' HighFive overlay inside open Maestro tools, and trilingual FlourTable in Maestro Step 2 + 'Le Mie Ricette'. Logged in as admin@mikilab.de via header login-btn -> auth modal. All 5 requested scenarios PASSED: (1) login OK; (2) Maestro stepper shows 6 steps, Step 2 panel contains collapsible flour-table which expands to 16 rows with 'Farina 00', 'Dinkel 630', 'LiCoLi'; (3) Capo Laboratorio (Step 1) save of machine config -> highfive overlay rendered with both avatars + confetti + toast 'Configurazione salvata' (regression fixed); (4) Weekly Plan (Step 4) save -> highfive overlay rendered with 'Piano settimanale salvato'; (5) FlourTable visible in personal 'Le Mie Ricette' and absent (count=0) in the official MikiLab Ricettario. No console errors, no error elements found.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "FlourTable (Maestro Step 2 & Le Mie Ricette) on mobile 390px", "issues": ["The floating 'Radio' and 'Parla' FAB buttons overlay the flour table rows, covering the DE/IT columns of some rows", "The 4th column 'Metodo' is cut off at the right edge; horizontal scroll works but there is no visual affordance (no scroll hint/shadow)"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional polish: add bottom padding / reduce FAB overlap so the FlourTable rows are not covered by the Radio/Parla floating buttons on mobile",
+    "Optional: add a scroll hint or shrink columns so the 'Metodo' column is not clipped on 390px screens"
+  ],
+  "critical_code_review_comments": [
+    "HighFive is now mounted in both Maestro render branches; note that mounting two instances would double-fire if both branches ever render simultaneously (currently mutually exclusive, so OK). A single top-level mount in App.js would be cleaner and avoid future duplication.",
+    "Maestro.jsx is ~240 lines but declares 27 tools inline; consider extracting the TOOLS/STEPS config into a separate module for maintainability."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% (5/5 scenarios)"},
+  "seed_data_creation": "Saved a Capo Laboratorio mixer named 'TEST Impastatrice QA' (50kg) on the admin account config, and re-saved the existing weekly plan (no new items added).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked)",
+  "context_for_next_testing_agent": "Login is NOT auto-modal on load: click header [data-testid=login-btn] first, then auth-email/auth-password/auth-submit. 'Le Mie Ricette' is reached via nav-tab-maestro -> maestro-step-2 -> maestro-tool-aggiungi. HighFive overlay auto-dismisses after 3.4s; assert within ~1.5s of the save click.",
+  "rca_of_the_issue": "Previous regression (HighFive not rendering when a tool was open) was caused by <HighFive/> being mounted only in the non-tool branch of Maestro.jsx; the fix mounts it inside the `if (tool)` branch too (line 96) and is confirmed working for both Capo Laboratorio and Weekly Plan saves."
+}

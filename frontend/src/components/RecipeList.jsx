@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layer
 import { recipesApi, subscriptionApi, recipePurchaseApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
+import FlourTable from "@/components/FlourTable";
 import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -29,6 +30,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [unlockRecipe, setUnlockRecipe] = useState(null);
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("all");
+  const [baseFilter, setBaseFilter] = useState("all");
   const [openCats, setOpenCats] = useState({});
   const { t, lang, setLang } = useLang();
   useBackClose(!!viewing, () => setViewing(null));
@@ -171,6 +173,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       ) : null}
 
+      {collectionName !== "mikilab" && <FlourTable />}
+
       {canEdit && (
         <button
           data-testid="add-recipe-btn"
@@ -192,11 +196,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         const q = query.trim().toLowerCase();
         const matches = (r) => {
           if (catFilter !== "all" && recipeCategory(r).key !== catFilter) return false;
+          if (baseFilter !== "all" && !recipeBase(r).includes(baseFilter)) return false;
           if (!q) return true;
           const hay = [rLoc(r, "name", lang), rLoc(r, "real_name", lang), rLoc(r, "flour_type", lang), r.notes || "", recipeBadges(r).join(" ")].join(" ").toLowerCase();
           return hay.includes(q);
         };
         const filtered = recipes.filter(matches);
+        const baseChips = ["all", ...BASE_KEYS];
         const CATS = [
           { key: "basi", label: "cat_basi", icon: "✨" },
           { key: "pane", label: "cat_pane", icon: "🍞" },
@@ -267,6 +273,21 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 </button>
               )}
             </div>
+
+            {/* Filtro per Base / prefermento */}
+            {baseChips.length > 1 && (
+              <div data-testid="recipe-base-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1 scrollbar-none">
+                {baseChips.map((b) => (
+                  <button key={b} data-testid={`base-filter-${b}`} onClick={() => setBaseFilter(b)}
+                    className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${
+                      baseFilter === b
+                        ? "bg-[#5E8B7E] text-white border-[#5E8B7E] shadow-sm"
+                        : "bg-white dark:bg-[#232A31] text-[#5E8B7E] border-[#D7E1DB] dark:border-[#38424B] hover:border-[#5E8B7E]/60"}`}>
+                    {baseLabel(b, lang)}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {filtered.length === 0 ? (
               <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
@@ -800,6 +821,40 @@ function badgeTitle(b, lang) {
   return desc ? (desc[lang] || desc.it) : "";
 }
 
+// Basi/prefermenti presenti in una ricetta → per il filtro "per Base".
+const BASE_KEYS = ["poolish", "biga", "lm", "segale", "licoli", "kochstuck", "diretto"];
+function recipeBase(r) {
+  const pref = (r.preferment_type || "").toLowerCase();
+  const ft = (r.flour_type || "").toLowerCase();
+  const notes = (r.notes || "").toLowerCase();
+  const name = (r.name || "").toLowerCase();
+  const extras = (r.extra_ingredients || []).map((e) => ((e && e.name) || "").toLowerCase()).join(" ");
+  const hay = [pref, ft, notes, name, extras].join(" ");
+  const out = [];
+  if (/poolish/.test(hay)) out.push("poolish");
+  if (pref === "biga" || /\bbiga\b|vorteig/.test(hay) || r.biga) out.push("biga");
+  if (/licoli/.test(hay)) out.push("licoli");
+  if (/segale|roggen|\brye\b/.test(hay)) out.push("segale");
+  if (pref === "lm" || /lievito madre|pasta madre|lievito naturale|sauerteig|sourdough/.test(hay)) out.push("lm");
+  if (/kochst|farina cotta/.test(hay)) out.push("kochstuck");
+  if (out.length === 0 || pref === "diretto" || pref === "none" || pref === "") out.push("diretto");
+  return [...new Set(out)];
+}
+function baseLabel(k, lang) {
+  const de = lang === "de", en = lang === "en";
+  switch (k) {
+    case "all": return de ? "Alle" : en ? "All" : "Tutte";
+    case "poolish": return "Poolish";
+    case "biga": return "Biga";
+    case "lm": return de ? "Sauerteig" : en ? "Sourdough" : "Lievito Madre";
+    case "segale": return de ? "Roggen-ST" : en ? "Rye sourdough" : "LM di Segale";
+    case "licoli": return "LiCoLi";
+    case "kochstuck": return de ? "Kochstück" : en ? "Cooked flour" : "Farina Cotta";
+    case "diretto": return de ? "Direkt" : en ? "Direct" : "Diretto";
+    default: return k;
+  }
+}
+
 function recipeCategory(r) {
   const cat = r.menu_category;
   const name = (r.name || "").toLowerCase();
@@ -966,10 +1021,10 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
           <thead>
             <tr className="text-[10px] uppercase text-[#7E8A93]">
               <th className="text-left font-semibold pb-1">{tri("Ingrediente", "Zutat", "Ingredient")}</th>
-              <th className="text-right font-semibold pb-1">1°</th>
-              <th className="text-right font-semibold pb-1">2°</th>
-              <th className="text-right font-semibold pb-1">{tri("Tot.", "Ges.", "Tot.")}</th>
-              <th className="text-right font-semibold pb-1">%</th>
+              <th className="text-right font-semibold pb-1 pl-4">1°</th>
+              <th className="text-right font-semibold pb-1 pl-4">2°</th>
+              <th className="text-right font-semibold pb-1 pl-4">{tri("Tot.", "Ges.", "Tot.")}</th>
+              <th className="text-right font-semibold pb-1 pl-4">%</th>
             </tr>
           </thead>
           <tbody>
@@ -979,10 +1034,10 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
               return (
                 <tr key={i} className="border-t border-[#D7E1DB]/60 dark:border-[#38424B]">
                   <td className="py-1 text-[#3F4A54] dark:text-[#AEB8BF] pr-2">{it.name}</td>
-                  <td className="py-1 text-right font-mono-data text-[#7E8A93]">{first > 0 ? first : "—"}</td>
-                  <td className="py-1 text-right font-mono-data text-[#7E8A93]">{second > 0 ? second : "—"}</td>
-                  <td className="py-1 text-right font-mono-data font-semibold text-[#33564E] dark:text-[#8FB0C2]">{it.tot}</td>
-                  <td className="py-1 text-right font-mono-data text-[#7E8A93]">{pctOf(it.tot)}</td>
+                  <td className="py-1 text-right font-mono-data text-[#7E8A93] pl-4 whitespace-nowrap">{first > 0 ? first : "—"}</td>
+                  <td className="py-1 text-right font-mono-data text-[#7E8A93] pl-4 whitespace-nowrap">{second > 0 ? second : "—"}</td>
+                  <td className="py-1 text-right font-mono-data font-semibold text-[#33564E] dark:text-[#8FB0C2] pl-4 whitespace-nowrap">{it.tot}</td>
+                  <td className="py-1 text-right font-mono-data text-[#7E8A93] pl-4 whitespace-nowrap">{pctOf(it.tot)}</td>
                 </tr>
               );
             })}

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { X, Cog, Snowflake, Wind, Thermometer, Video, Camera, ImagePlus } from "lucide-react";
 import { API, labConfigApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { fireHighFive } from "@/components/HighFive";
 
 const CELL_TYPES = ["frigo", "freezer", "lievitazione", "lievitazione_frigo"];
 
@@ -41,6 +42,7 @@ export default function CapoLaboratorio() {
         standard_temp_c: Number(stdTemp) || 26,
       });
       toast.success(t("capo_config_saved"));
+      fireHighFive(t("capo_config_saved"));
     } catch { toast.error(t("toast_save_error")); }
   };
 

@@ -853,3 +853,16 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Foto: generate 10 foto locali per i Panino* (niente piu icona vuota).
 - DayClose: animazione "batti il cinque" tra avatar Michele e Mohammed alla conferma "Concludi Giornata" (data-testid dayclose-celebrate).
 - SEED_VERSION v49.
+
+## v50 (2026-06) — Filtri per Base, ricette Kochstück, Snack/Brezel, Tour Momy, Diagnosi nel Lab
+- HighFive globale: montato anche nel ramo "strumento aperto" di Maestro (appare su salvataggio macchine/piano/IA). iteration_57 100%.
+- FlourTable (tabella farine trilingue DE/IT/EN) inserita in "Le Mie Ricette" (collapsible) e nel Passo 2 del Laboratorio.
+- Filtri "per Base" cliccabili (chip) su TUTTE le liste ricette: Tutte, Poolish, Biga, Lievito Madre, LM di Segale, LiCoLi, Farina Cotta, Diretto. recipeBase()/BASE_KEYS in RecipeList.jsx. Mostrati SEMPRE tutti.
+- 3 nuove ricette con Farina Cotta (Kochstück) IT/DE/EN: Pan Latte in Cassetta (pane), Pane Morbido ai Cereali (pane), Panini al Latte Soffici (panini).
+- 3 nuovi snack farciti: Croissant Farcito Salato, Panino Farcito all'Italiana, Panino Bavarese al Bretzel Farcito.
+- Brezel + Brezel Integrali spostati da Pane -> Snack. Rimosso doppione base "Kochstück" (resta "Farina Cotta (Kochstück)").
+- Snack esistenti (grissini, crackers, ecc.) portati nel seed JSON per la persistenza in produzione. TOT 88 ricette. SEED_VERSION v50.
+- Tabella panettoni: colonne 1°/2°/Tot/% con padding-left + whitespace-nowrap (numeri distanziati).
+- Tour guidato "LabOnboarding.jsx": intro avatar Michele + spiegazione dei 6 passi da Momy + slide comandi globali (voce/radio/diagnosi). Audio (SpeechSynthesis) + testo. Auto-apertura UNA volta (localStorage mikilab_lab_tour_done), ri-apertura da "Rivedi la guida" (mohammed-replay-tour / openLabTour).
+- Diagnosi Foto aggiunta come strumento del Laboratorio (Passo 5) con banner esplicativo (impasti venuti male / macchine rotte -> foto -> causa+soluzione). PhotoDiagnosi renderizzato in Maestro.
+- Testing: iteration_58 frontend 100% (6/6 feature), nessun difetto.

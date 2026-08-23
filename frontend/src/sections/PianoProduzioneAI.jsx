@@ -7,6 +7,7 @@ import { API, labConfigApi, recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
+import { fireHighFive } from "@/components/HighFive";
 import { rLoc } from "@/lib/loc";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -119,6 +120,7 @@ export default function PianoProduzioneAI() {
         ok = await streamPhase("daily", null);
       }
       if (!ok) toast.warning(t("capo_plan_incomplete"));
+      else fireHighFive(lang === "de" ? "Plan erstellt! 👏" : lang === "en" ? "Plan generated! 👏" : "Piano generato! 👏");
     } catch { toast.error(t("chat_error")); }
     finally { setGenerating(false); }
   };

@@ -1,0 +1,22 @@
+{
+  "summary": "Frontend-only verification (mobile 390x844, admin@mikilab.de PRO) of 6 new MikiLab features: (A) per-Base filter chips, (B) 3 new Kochstueck recipes + 3 new filled snacks, (C) Brezel moved to Snack + single Kochstueck base, (D) Panettone ingredient table spacing, (E) Lab onboarding tour by Michele/Momy, (F) Photo Diagnosis tool inside the Lab. ALL 6 features PASSED, no defects found.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "RecipeList.jsx is 1071 lines - consider splitting (recipe card, category grouping, panettone table, base filters) into separate modules for maintainability.",
+    "recipeBase() falls back to 'diretto' when out.length===0 AND also pushes 'diretto' whenever preferment_type is empty even if a base was detected via notes/name; verified harmless today but a recipe with preferment_type='' + poolish in notes will appear under BOTH Poolish and Diretto chips (intended? worth confirming)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (6/6 features)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (PRO/admin) - works, login via header [data-testid=login-btn]",
+  "context_for_next_testing_agent": "Verified results in detail: (A) recipe-base-filters row present with all 8 chips (all/poolish/biga/lm/segale/licoli/kochstuck/diretto). Unfiltered mikilab list = 88 cards. base-filter-poolish -> 8 recipes (Poolish, Baguette con Poolish, Anima Integrale, Gnetze Brot, Nuvola in Cassetta, Quotidiano del Fornaio, Sinfonia di Cereali, Wurzelbrot). base-filter-kochstuck -> 4 (Farina Cotta (Kochstueck), Pan Latte in Cassetta, Pane Morbido ai Cereali, Panini al Latte Soffici). base-filter-all resets to 88. (B) All 6 new recipes found via recipe-search, open in dialog, each has an image and IT procedure text. (C) cat-section-snack contains Brezel, Brezel Integrali, Croissant Farcito Salato, Panino Bavarese al Bretzel Farcito, Panino Farcito all'Italiana (+ existing snacks); cat-section-pane contains NO Brezel; cat-section-basi has exactly 6 entries with only ONE 'Farina Cotta (Kochstueck)' - no duplicate plain 'Kochstueck'. (D) Panettone '1 e 2 Impasto - Totale' table headers at x=177/218/259/300 with pl-4 spacing, columns visually separated (screenshot confirmed). (E) lab-onboarding auto-opened on first Lab entry (localStorage flag was null); slide 1 title 'Ciao, sono Michele!', prev disabled on slide 1, skip button present, audio toggle works; exactly 8 slides (Michele + 6 steps + 'E i miei comandi'); prev navigates back; lab-onboarding-done closes and sets mikilab_lab_tour_done=1; NOT shown on re-entry; mohammed-replay-tour re-opens it; lab-onboarding-close closes it. (F) maestro-step-5 shows maestro-diagnosi-info banner ('Diagnosi Foto: fotografa e risolvi...'), maestro-tool-diagnosi opens the PhotoDiagnosi UI (modes: Difetti e rimedi / Stato impasto / Tutti gli ingredienti / Scopri qualcosa / Macchine & Guasti, 'Scatta ora' + 'Allega' + disabled 'Analizza'); maestro-back-btn returns to maestro-panel-5. No AI diagnosis was run (token cost avoided). Only console errors seen were the expected 401s from the pre-login /api/auth/me probe."
+}
