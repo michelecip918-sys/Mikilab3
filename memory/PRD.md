@@ -792,3 +792,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 6. AVATAR = statico? no: video presentazione con voce ElevenLabs (player nativo), spiega tutto il sito, in 3 lingue. Per cambiarlo servono nuovi file in /public.
 7. SICUREZZA: mutazioni protette da login/admin. Nessuna operazione DB distruttiva (annunci legacy filtrati in lettura).
 8. INTEGRAZIONI: Claude (chat), Gemini Nano Banana (immagini), OpenAI/ElevenLabs (voce), Stripe (pagamenti, key da env). Deferiti: PayPal, valori nutrizionali reali.
+
+## v77 (2026-06) — Home "MikiLab Shop & Corsi" + note fix video
+- **HOME SHOP & CORSI**: sostituita la card "I nostri Panettoni" con la sezione `home-shop-corsi` a 2 tab: (1) "Ricettari & Premium" (scroll panettoni €4,99 + CTA "Sblocca ricette e masterclass" → Ricette) · (2) "Corsi & Formazione" (`shop-corsi-content`, badge "Prossimamente · In Arrivo"). Verificato.
+- **FIX VIDEO AVATAR HOME**: il "blocco" al tap è SOLO su produzione (build vecchia). In preview il player è già NATIVO (controls) e funziona → si risolve col REDEPLOY.
+- **DA FARE (PROSSIMO INTERVENTO DEDICATO)**: riorganizzazione "Il Tuo Laboratorio" in 6 passi SENZA duplicati:
+  P1 Config hardware (macchine/celle/frigo/dispositivi smart, no orari/piani) · P2 Le Mie Ricette & parametri forno · P3 Logistica & punti vendita (personale/turni) · P4 Pianificazione (Piano Settimanale + Piano Oggi con import automatico) · P5 Operatività (temp acqua, pesata guidata, timer autolisi/puntata/appretto, sensori) · P6 Chiusura & tracciabilità (Diario Impasti, Lotti, HACCP). Riorganizzare gli strumenti esistenti eliminando doppioni, senza perdere funzioni.
