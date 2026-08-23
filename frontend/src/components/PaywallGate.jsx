@@ -249,14 +249,14 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             <button data-testid="sub-monthly" onClick={() => subscribe("monthly")}
               className="rounded-2xl border-2 border-[#5E8B7E] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#232A31]">
               <Crown className="w-6 h-6 text-[#5E8B7E] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€9,99</p>
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€29,99</p>
               <p className="text-xs text-[#7E8A93]">{tri("al mese", "pro Monat", "per month")}</p>
             </button>
             <button data-testid="sub-yearly" onClick={() => subscribe("yearly")}
               className="rounded-2xl border-2 border-[#6E8CA0] p-4 text-center active:scale-97 transition-all bg-[#6E8CA0]/10 relative">
-              <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#6B8E62] text-white px-1.5 py-0.5 rounded-full">-17%</span>
+              <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#6B8E62] text-white px-1.5 py-0.5 rounded-full">-31%</span>
               <Crown className="w-6 h-6 text-[#6E8CA0] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€99</p>
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">€249</p>
               <p className="text-xs text-[#7E8A93]">{tri("all'anno", "pro Jahr", "per year")}</p>
             </button>
           </div>
