@@ -812,3 +812,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Foto braccio tatuato piu presente**: banner hero `bio-dough.jpg` in cima a "Il Tuo Laboratorio" + usato nelle nuove sezioni.
 - Avatar video (object-contain) e "MikiLab Shop & Corsi" in Home: gia completati nella sessione precedente, confermati OK in preview.
 - Testato via preview (admin): wizard 6 passi, CRUD Punti Vendita, integrazione Piano Settimanale, Concludi Giornata → tutto OK.
+
+## v70 (2026-06) — Vetrina ricette, split Impostazione Macchine, avatar verde
+- Ricette: nuovo menu VETRINA a griglia 2/riga con foto, raggruppate per categoria (no chip, no fisarmoniche); strisciolina tricolore + bandierina Paese su ogni card. Scheda ricetta + paywall + firma-tatuaggio invariati (verificato).
+- Impostazione Macchine (CapoLaboratorio) ora SOLO attrezzature/celle + "Filma il laboratorio". La parte "cosa preparare" + generazione piano IA spostata in nuovo tool "Piano di Produzione (IA)" nel Passo 4 (PianoProduzioneAI.jsx).
+- Home: rimosso avatar parlante (video) -> mostra avatar completo statico. Avatar parlante resta SOLO in "Chiedi al Maestro" con frase dedicata (transcript override, IT/DE/EN).
+- Shop & Corsi spostato in fondo alla Home (prima di Condividi/Installa).
+- Foto: generate 6 foto dedicate per le basi/prefermenti (LM solido/segale, LiCoLi, Poolish, Kochstueck, Miglioratore); corretta la foto di "Gnetze Brot" (pagnotta tonda craquele, non treccia). File in /public/recipes.
+- Kochstueck rinominato "Farina Cotta (Kochstueck)" (name IT), name_de=Kochstueck, name_en="Cooked Flour (Kochstueck)"; SEED_VERSION bump v45 + "Kochstueck" in SEED_RETIRED_NAMES; reseed applicato in preview.
+- Avatar finale: avatar ORIGINALE (michele-avatar.jpg) editato -> polo verde con stemma MikiLab dorato + orecchino a cerchietto + tatuaggio avambraccio; salvato in michele-avatar.jpg e michele-avatar-full.jpg (usati in Home + hero ricettario).
+- NOTE/LEFTOVER: alcune ricette condividono la stessa foto (Baguette con Poolish & Filo di Francia -> r_filo.jpg; Brezel & Brezel Integrali -> r_bretzel.jpg). Da valutare foto distinte. Regressione completa via testing_agent fatta solo per il Laboratorio (iteration_54); vetrina/PianoIA/avatar verificati via screenshot.
