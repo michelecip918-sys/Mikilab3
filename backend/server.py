@@ -1759,6 +1759,7 @@ async def create_checkout(body: CheckoutReq, user: dict = Depends(current_user))
     customer = existing[0] if existing else _stripe.Customer.create(email=email)
     session = _stripe.checkout.Session.create(
         mode="subscription",
+        managed_payments={"enabled": False},
         customer=customer.id,
         line_items=[{"price_data": {"currency": "eur", "unit_amount": p["amount"],
                                     "recurring": {"interval": p["interval"]},
@@ -1947,6 +1948,7 @@ async def academy_checkout(body: AcademyCheckoutReq, user: dict = Depends(curren
     session = _stripe.checkout.Session.create(
         mode="payment",
         customer_email=email,
+        managed_payments={"enabled": False},
         line_items=[{"price_data": {"currency": "eur", "product_data": {"name": title}, "unit_amount": cents}, "quantity": 1}],
         success_url=origin + "/?academy=success&session_id={CHECKOUT_SESSION_ID}",
         cancel_url=origin + "/?academy=cancel",
@@ -2021,6 +2023,7 @@ async def recipe_checkout(body: RecipeCheckoutReq, user: dict = Depends(current_
     session = _stripe.checkout.Session.create(
         mode="payment",
         customer_email=email,
+        managed_payments={"enabled": False},
         line_items=[{"price_data": {"currency": "eur", "product_data": {"name": title}, "unit_amount": cents}, "quantity": 1}],
         success_url=origin + "/?recipe=success&session_id={CHECKOUT_SESSION_ID}",
         cancel_url=origin + "/?recipe=cancel",

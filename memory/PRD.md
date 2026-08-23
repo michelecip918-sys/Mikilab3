@@ -829,3 +829,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Pagamenti: verificati COMPLETI (Stripe key+webhook presenti; subscription lab/home, academy, recipe unlock, webhook + status polling). Video corsi ancora demo (scelta utente).
 - Fix post-test: ChefHat import mancante in RecipeList (crash su card senza foto) risolto dal tester; PaywallGate copy aggiornata (Impostazione Macchine, Le Mie Ricette); Home 'ricette' senza numero fisso; Piano IA pre-inserisce 1 riga prodotto + streamPhase controlla res.ok (messaggio PRO); RecipeList pb-28 per non coprire coi FAB.
 - Testing: iteration_55 frontend 100% (vetrina, fusione, split macchine/PianoIA, foto, 6 passi, avatar).
+
+## v48-live (2026-06) — Stripe LIVE + categoria Focacce
+- Focaccia Barese spostata in categoria "focacce" (seed + reseed, SEED_VERSION v47). La sezione FOCACCE ora compare in vetrina.
+- Stripe LIVE: inserite chiavi live dell'utente in backend/.env (STRIPE_SECRET_KEY sk_live_..., STRIPE_WEBHOOK_SECRET whsec_... del webhook di produzione https://mikilab.de/api/webhook/stripe).
+- Fix "Managed Payments": aggiunto managed_payments={"enabled": False} a tutte e 3 le sessioni checkout (subscription, academy, recipe) per evitare il requisito tax_code. Testati tutti e 3: creano sessioni cs_live_ correttamente.
+- Per PRODUZIONE: serve REDEPLOY per propagare le chiavi live + il fix managed_payments.
