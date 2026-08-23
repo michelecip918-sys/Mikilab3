@@ -201,7 +201,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         ];
         const isMikilab = collectionName === "mikilab";
 
-        const Row = (r, i) => (
+        const Card = (r, i) => (
           <motion.button
             key={r.id}
             initial={{ opacity: 0, y: 6 }}
@@ -209,36 +209,35 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             transition={{ delay: Math.min(i * 0.015, 0.2) }}
             onClick={() => setViewing(r)}
             data-testid={`recipe-row-${r.id}`}
-            className="relative overflow-hidden w-full text-left bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 shadow-sm active:scale-[0.99] hover:border-[#6E8CA0]/60 transition-all flex items-center gap-3"
+            className="relative overflow-hidden text-left bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl shadow-sm active:scale-[0.98] hover:border-[#6E8CA0]/60 transition-all flex flex-col"
           >
+            {/* strisciolina tricolore del Paese d'origine */}
             {countryColors(r.origin) && (
-              <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
+              <div aria-hidden className="absolute top-0 left-0 right-0 z-10 flex h-1.5">
                 {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
               </div>
             )}
-            {r.image_url && (r.image_url.startsWith("http") || recipeCategory(r).key === "panettoni") && (
-              <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#D7E1DB] dark:border-[#38424B]" />
-            )}
-            <div className="min-w-0 flex-1">
-              <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight line-clamp-3">
-                {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
+            {/* foto vetrina */}
+            <div className="relative w-full aspect-[4/3] bg-[#EAF0EC] dark:bg-[#1F252B]">
+              {r.image_url
+                ? <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="w-full h-full object-cover" />
+                : <div className="w-full h-full flex items-center justify-center"><ChefHat className="w-9 h-9 text-[#B34A26]/40" /></div>}
+              {r.origin && flagEmoji(r.origin) && (
+                <span title={countryName(r.origin)} className="absolute top-2.5 right-2 text-xl drop-shadow-md">{flagEmoji(r.origin)}</span>
+              )}
+              {r.locked && (
+                <span className="absolute bottom-2 right-2 bg-white/90 dark:bg-[#232A31]/90 rounded-full p-1.5 shadow">
+                  <Lock data-testid={`recipe-locked-${r.id}`} className="w-3.5 h-3.5 text-[#6E8CA0]" />
+                </span>
+              )}
+            </div>
+            {/* testo */}
+            <div className="p-3 min-w-0 flex-1">
+              <h3 className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight line-clamp-2">
                 {rLoc(r, "name", lang)}
               </h3>
-              {rLoc(r, "real_name", lang) ? <p className="text-xs font-medium text-[#5E8B7E] truncate">{rLoc(r, "real_name", lang)}</p> : null}
-              {(() => {
-                const badges = recipeBadges(r);
-                return badges.length > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1 mt-1.5" data-testid={`recipe-badges-${r.id}`}>
-                    {badges.slice(0, 5).map((b) => (
-                      <span key={b} title={badgeTitle(b, lang)} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${badgeClass(b)}`}>{badgeLabel(b, lang)}</span>
-                    ))}
-                  </div>
-                ) : (r.flour_type ? <p className="text-xs text-[#7E8A93] truncate mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null);
-              })()}
+              {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-medium text-[#5E8B7E] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
             </div>
-            {r.locked
-              ? <Lock data-testid={`recipe-locked-${r.id}`} className="w-4 h-4 text-[#6E8CA0] shrink-0" />
-              : <MoreHorizontal className="w-5 h-5 text-[#AEB8BF] shrink-0" />}
           </motion.button>
         );
 
@@ -261,65 +260,27 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               )}
             </div>
 
-            {/* Filtri categoria */}
-            {isMikilab && (
-              <div className="flex flex-wrap gap-1.5 mb-4" data-testid="recipe-filters">
-                {[{ key: "all", label: triM("Tutte", "Alle", "All"), icon: "🍽️" }, ...CATS].map((c) => (
-                  <button
-                    key={c.key}
-                    data-testid={`recipe-filter-${c.key}`}
-                    onClick={() => setCatFilter(c.key)}
-                    className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
-                      catFilter === c.key
-                        ? "bg-[#5E8B7E] text-white border-[#5E8B7E]"
-                        : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"
-                    }`}
-                  >
-                    <span className="mr-1">{c.icon}</span>{c.key === "all" ? c.label : t(c.label)}
-                  </button>
-                ))}
-              </div>
-            )}
-
             {filtered.length === 0 ? (
               <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
                 {triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
               </p>
             ) : !isMikilab ? (
-              <div className="space-y-2.5">{filtered.map((r, i) => Row(r, i))}</div>
+              <div className="grid grid-cols-2 gap-3">{filtered.map((r, i) => Card(r, i))}</div>
             ) : (
-              <div className="space-y-2.5">
+              <div className="space-y-6">
                 {CATS.map((cat) => {
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
-                  const open = q ? true : (openCats[cat.key] ?? true);
                   return (
-                    <div key={cat.key} className="border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl overflow-hidden bg-white/40 dark:bg-[#232A31]/40">
-                      <button
-                        data-testid={`cat-accordion-${cat.key}`}
-                        onClick={() => setOpenCats((s) => ({ ...s, [cat.key]: !open }))}
-                        className="w-full flex items-center gap-2 px-4 py-3 text-left"
-                      >
+                    <div key={cat.key} data-testid={`cat-section-${cat.key}`}>
+                      <div className="flex items-center gap-2 mb-2.5 px-1">
                         <span className="text-lg">{cat.icon}</span>
                         <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#5E8B7E] flex-1">{t(cat.label)}</h2>
                         <span className="text-xs font-mono-data text-[#7E8A93]">{items.length}</span>
-                        <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform ${open ? "rotate-180" : ""}`} />
-                      </button>
-                      <AnimatePresence initial={false}>
-                        {open && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="px-2.5 pb-2.5 space-y-2.5">
-                              {items.map((r, i) => Row(r, i))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        {items.map((r, i) => Card(r, i))}
+                      </div>
                     </div>
                   );
                 })}
