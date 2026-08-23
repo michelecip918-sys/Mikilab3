@@ -831,14 +831,14 @@ async def get_oven_profiles():
 
 
 @api_router.post("/oven-profiles", response_model=OvenProfile)
-async def create_oven_profile(payload: OvenProfileCreate):
+async def create_oven_profile(payload: OvenProfileCreate, user: dict = Depends(current_user)):
     profile = OvenProfile(**payload.model_dump())
     await db.oven_profiles.insert_one(profile.model_dump())
     return profile
 
 
 @api_router.put("/oven-profiles/{profile_id}", response_model=OvenProfile)
-async def update_oven_profile(profile_id: str, payload: OvenProfileCreate):
+async def update_oven_profile(profile_id: str, payload: OvenProfileCreate, user: dict = Depends(current_user)):
     existing = await db.oven_profiles.find_one({"id": profile_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Profilo non trovato")
@@ -848,7 +848,7 @@ async def update_oven_profile(profile_id: str, payload: OvenProfileCreate):
 
 
 @api_router.delete("/oven-profiles/{profile_id}")
-async def delete_oven_profile(profile_id: str):
+async def delete_oven_profile(profile_id: str, user: dict = Depends(current_user)):
     res = await db.oven_profiles.delete_one({"id": profile_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Profilo non trovato")
@@ -865,7 +865,7 @@ async def get_production_plan():
 
 
 @api_router.put("/production-plan", response_model=ProductionPlan)
-async def save_production_plan(payload: ProductionPlan):
+async def save_production_plan(payload: ProductionPlan, user: dict = Depends(current_user)):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.production_plan.update_one(
@@ -884,7 +884,7 @@ async def get_weekly_plan():
 
 
 @api_router.put("/weekly-plan", response_model=WeeklyPlan)
-async def save_weekly_plan(payload: WeeklyPlan):
+async def save_weekly_plan(payload: WeeklyPlan, user: dict = Depends(current_user)):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.weekly_plan.update_one(
@@ -903,7 +903,7 @@ async def get_lab_config():
 
 
 @api_router.put("/lab-config", response_model=LabConfig)
-async def save_lab_config(payload: LabConfig):
+async def save_lab_config(payload: LabConfig, user: dict = Depends(current_user)):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.lab_config.update_one(
@@ -930,7 +930,7 @@ async def list_recipe_temp():
 
 
 @api_router.post("/recipe-temp", response_model=RecipeTemp)
-async def save_recipe_temp(payload: RecipeTemp):
+async def save_recipe_temp(payload: RecipeTemp, user: dict = Depends(current_user)):
     payload.date = now_iso()
     doc = payload.model_dump()
     await db.recipe_temps.update_one(
@@ -975,7 +975,7 @@ async def get_announcements():
 
 
 @api_router.post("/announcements", response_model=Announcement)
-async def create_announcement(payload: AnnouncementCreate):
+async def create_announcement(payload: AnnouncementCreate, admin: dict = Depends(require_admin)):
     if not payload.title.strip():
         raise HTTPException(status_code=422, detail="Il titolo è obbligatorio")
     data = payload.model_dump()
@@ -986,7 +986,7 @@ async def create_announcement(payload: AnnouncementCreate):
 
 
 @api_router.put("/announcements/{ann_id}", response_model=Announcement)
-async def update_announcement(ann_id: str, payload: AnnouncementCreate):
+async def update_announcement(ann_id: str, payload: AnnouncementCreate, admin: dict = Depends(require_admin)):
     if not payload.title.strip():
         raise HTTPException(status_code=422, detail="Il titolo è obbligatorio")
     existing = await db.announcements.find_one({"id": ann_id}, {"_id": 0})
@@ -999,7 +999,7 @@ async def update_announcement(ann_id: str, payload: AnnouncementCreate):
 
 
 @api_router.delete("/announcements/{ann_id}")
-async def delete_announcement(ann_id: str):
+async def delete_announcement(ann_id: str, admin: dict = Depends(require_admin)):
     res = await db.announcements.delete_one({"id": ann_id})
     if res.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Annuncio non trovato")
