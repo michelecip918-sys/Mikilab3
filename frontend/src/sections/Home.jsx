@@ -252,6 +252,20 @@ export default function Home({ onNavigate }) {
         </div>
       )}
 
+      {/* Card Diagnosi Foto — accesso rapido sempre visibile */}
+      <button data-testid="home-diagnosi-card" onClick={() => go("diagnosi")}
+        className="w-full text-left rounded-3xl overflow-hidden p-5 text-white flex items-center gap-4 active:scale-98 transition-all shadow-lg mb-4"
+        style={{ backgroundImage: "linear-gradient(135deg,#B34A26,#8a3319)" }}>
+        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <Camera className="w-6 h-6" />
+        </div>
+        <div className="min-w-0">
+          <p className="font-display text-lg font-bold">{L("Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis")}</p>
+          <p className="text-sm text-white/85">{L("Impasto venuto male o macchina rotta? Scatta una foto e ti dico causa e soluzione.", "Misslungener Teig oder kaputte Maschine? Mach ein Foto und ich nenne Ursache & Lösung.", "Failed dough or broken machine? Snap a photo and I'll tell you the cause and fix.")}</p>
+        </div>
+        <ChevronRight className="w-5 h-5 ml-auto shrink-0" />
+      </button>
+
       {/* Card Community */}
       <button data-testid="home-community-card" onClick={() => go("community")}
         className="w-full text-left rounded-3xl overflow-hidden p-5 text-white flex items-center gap-4 active:scale-98 transition-all shadow-lg mb-4"

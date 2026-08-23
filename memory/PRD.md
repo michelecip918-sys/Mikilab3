@@ -866,3 +866,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Tour guidato "LabOnboarding.jsx": intro avatar Michele + spiegazione dei 6 passi da Momy + slide comandi globali (voce/radio/diagnosi). Audio (SpeechSynthesis) + testo. Auto-apertura UNA volta (localStorage mikilab_lab_tour_done), ri-apertura da "Rivedi la guida" (mohammed-replay-tour / openLabTour).
 - Diagnosi Foto aggiunta come strumento del Laboratorio (Passo 5) con banner esplicativo (impasti venuti male / macchine rotte -> foto -> causa+soluzione). PhotoDiagnosi renderizzato in Maestro.
 - Testing: iteration_58 frontend 100% (6/6 feature), nessun difetto.
+
+## v50.1 (2026-06) — Rifiniture
+- Home: card "Diagnosi Foto" prominente e SEMPRE visibile (accesso rapido, terracotta) sopra la Community. data-testid home-diagnosi-card -> go("diagnosi").
+- Tour Momy: aggiunta slide "Trova le ricette per Base" che spiega i chip filtro (Poolish, Lievito Madre, Segale...).

@@ -42,6 +42,14 @@ function buildSlides(lang) {
         "Add or scan your recipes and use the Flour Table (630, 550, spelt…). With «Adapt the Oven» I convert every recipe to YOUR oven: temperature, steam and timing. Benefit: always perfect bakes, no trial and error."),
     },
     {
+      who: "mohammed", avatar: MOHAMMED,
+      title: tri("Trova le ricette per Base 🔎", "Rezepte nach Basis finden 🔎", "Find recipes by Base 🔎"),
+      body: tri(
+        "Nelle tue ricette, in alto, trovi i filtri «per Base»: tocca Poolish, Lievito Madre, LM di Segale, Biga, LiCoLi, Farina Cotta o Diretto e vedi SUBITO solo le ricette che usano quella base. Così scegli in un attimo il metodo giusto per la giornata, senza scorrere tutto.",
+        "In deinen Rezepten findest du oben die «Basis»-Filter: tippe auf Poolish, Sauerteig, Roggen-Sauerteig, Biga, LiCoLi, Kochstück oder Direkt und siehst SOFORT nur die Rezepte mit dieser Basis. So wählst du im Nu die richtige Methode für den Tag.",
+        "In your recipes, at the top, you'll find the «by Base» filters: tap Poolish, Sourdough, Rye sourdough, Biga, LiCoLi, Cooked flour or Direct and INSTANTLY see only the recipes using that base. Pick the right method for the day in a second."),
+    },
+    {
       who: "mohammed", avatar: MOHAMMED, step: 3,
       title: tri("Passo 3 · Logistica & Punti Vendita", "Schritt 3 · Logistik & Verkaufspunkte", "Step 3 · Logistics & Sales Points"),
       body: tri(
