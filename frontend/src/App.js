@@ -16,7 +16,7 @@ import PaywallGate from "@/components/PaywallGate";
 import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
-import Onboarding, { getProfile } from "@/components/Onboarding";
+import { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
@@ -32,8 +32,20 @@ function App() {
   const { lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
-  const [onboarded, setOnboarded] = useState(() => !!getProfile());
-  const [showIntro] = useState(() => !!getProfile());
+  useState(() => {
+    // Ingresso diretto: niente più schermata di domande. Semino un profilo di default completo.
+    if (!getProfile()) {
+      try {
+        localStorage.setItem("mikilab_onboarding", JSON.stringify({
+          labName: "", type: "panificio",
+          equip: ["impastatrice", "forno_rotativo", "forno_statico", "cella", "abbattitore"],
+          focus: "pane", done: true, at: new Date().toISOString(),
+        }));
+      } catch { /* */ }
+    }
+    return true;
+  });
+  const [showIntro] = useState(() => false);
   const tabRef = useRef("home");
   const { user, authOpen, setAuthOpen } = useAuth();
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
@@ -109,7 +121,7 @@ function App() {
       <VoiceAssistant onNavigate={navigate} />
       <RadioFornaio />
       {!resetToken && showIntro && <IntroGuide />}
-      {!resetToken && !onboarded && <Onboarding onDone={() => setOnboarded(true)} />}
+      {/* Onboarding a domande rimosso: ingresso diretto (profilo di default seminato) */}
 
       <AnimatePresence>
         {authOpen && !user && (
