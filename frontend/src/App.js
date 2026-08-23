@@ -119,7 +119,7 @@ function App() {
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
             {tab === "maestro" && <PaywallGate feature="lab" sectionName={tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}><Maestro /></PaywallGate>}
-            {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} />}
+            {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} onNavigate={navigate} />}
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
             {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
             {tab === "shop" && <><Academy /><Shop hideCourses /></>}

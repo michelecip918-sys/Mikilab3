@@ -8,7 +8,7 @@ import Community from "@/sections/Community";
 import PaywallGate from "@/components/PaywallGate";
 
 // Pagina unica: Impara + News + Enciclopedia + Community con sotto-schede.
-export default function LearnHub({ initial = "impara" }) {
+export default function LearnHub({ initial = "impara", onNavigate }) {
   const { t, lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [sub, setSub] = useState(["impara", "news", "enciclopedia", "community"].includes(initial) ? initial : "impara");
@@ -38,7 +38,7 @@ export default function LearnHub({ initial = "impara" }) {
       </div>
 
       {sub === "impara" && (
-        <PaywallGate feature="beginners" sectionName={tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}><AcademyHome /></PaywallGate>
+        <PaywallGate feature="beginners" sectionName={tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}><AcademyHome onNavigate={onNavigate} /></PaywallGate>
       )}
       {sub === "news" && <NewsPage />}
       {sub === "enciclopedia" && <Enciclopedia />}

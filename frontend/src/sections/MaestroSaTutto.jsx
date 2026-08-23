@@ -5,6 +5,7 @@ import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper, Pl
 import { API, announcementsApi } from "@/lib/api";
 import { content } from "@/data/content";
 import { useLang } from "@/i18n/LanguageContext";
+import TalkingAvatar from "@/components/TalkingAvatar";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -19,6 +20,11 @@ export default function MaestroSaTutto() {
         <Sparkles className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("satutto_title")}</h1>
         <p className="text-white/85 text-sm mt-1 italic">{t("satutto_tagline")}</p>
+      </div>
+
+      {/* Avatar parlante di Michele (presentazione tradotta IT/DE/EN) */}
+      <div data-testid="satutto-avatar-card" className="mb-4">
+        <TalkingAvatar testid="maestro-talking-avatar" className="w-full h-56" />
       </div>
 
       <div data-testid="satutto-intro-card" className="mb-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
