@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only E2E test (Playwright, mobile 390x844, preview URL, admin@mikilab.de) of the reorganized 'Il Tuo Laboratorio' 6-step wizard: stepper structure, anti-duplication across all 6 steps, Punti Vendita CRUD, integration with Piano Settimanale (sale_point selector + backend persistence after reload), Concludi Giornata (DayClose) archive, tattoo signatures (recipe detail + Home 'Chi sono io'), and recipe list regression. ALL requested checks PASSED; no blocking issues found.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "All sections (mobile)", "issues": ["The floating 'Radio' and 'Parla' FABs sit directly over page content just above the bottom nav (e.g. they cover part of the 'Bilancia Smart'/'Termostato & Clima' tiles in Passo 1 and weekly-plan rows). Content remains clickable via scroll, but consider extra bottom padding or moving the FABs to avoid visual overlap."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Maestro.jsx STEPS covers 27 tool ids with zero duplicates, but tool ids 'sveglia' is still routed in the if(tool) block while not present in any step (dead branch) - harmless, optionally clean up.",
+    "WeeklyPlan stores sale_point by localStorage id; if the sales point is deleted (or the user opens the plan from another device/browser where localStorage is empty) the saved id no longer resolves and the selector silently shows '- Nessun punto vendita -'. Consider storing the sale point name alongside the id, or moving sales points to the backend.",
+    "DayClose archive is localStorage-only ('mikilab_day_closures'), so closures are device-bound and not auditable server-side - acceptable per spec, but note for traceability/HACCP use cases."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (all 15 requested checks passed)"},
+  "seed_data_creation": "Created transient localStorage sales points 'TEST_Forno QA' / 'TEST_PV Persist' / 'TEST_ToRemove' (removed or context-scoped) and one weekly plan row on Lunedi/Martedi with sale_point set (persisted server-side via /api/weekly-plan), plus one day-closure record with note 'TEST_nota chiusura QA' in localStorage.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login via header login-btn -> auth-screen; admin is always PRO, no paywall on Laboratorio). NB: without login the Maestro tab shows the PRO paywall.",
+  "context_for_next_testing_agent": "Verified results: stepper has exactly 6 steps (maestro-step-1..6) + maestro-hero-tattoo (bio-dough.jpg loads, naturalWidth 1024). Tools per step exactly as specified: S1 capo/freezer/bilancia/termo/market, S2 aggiungi/scan/adatta, S3 salespoints/turni, S4 settimana/lavoro/inversa/spesa/foodcost, S5 acqua/pesata/timer/meteo/ph/twin, S6 sessioni/lotti/haccp/check/shelf/spreco + maestro-concludi-giornata. 27 unique tool ids, DUPLICATES: NONE. Punti Vendita add/list/remove + empty-name validation toast OK (localStorage mikilab_sales_points). Weekly plan: weekly-salepoint-<id> selector appears live after creating a point, selection saved ('Piano settinanale salvato' toast) and still selected after full page reload. DayClose: stats (0 sessioni / 0 HACCP for the admin today), note, confirm -> dayclose-last + success toast + mikilab_day_closures record. Signatures: recipe-signature-<id> and home-chi-signature both render 'Fatto con le mani di Michele' + MikiLab with the tattoo photo. Recipes tab: 65 recipe-row-* items in 6 cat-accordion groups. maestro-prev disabled at step1, maestro-next chain to step6, maestro-done toast + reset to panel-1. Only console error seen is an Emergent dev-overlay hydration warning about a <span> inside <option> in CapoLaboratorio (instrumentation artifact, not app code).",
+  "rca_of_the_issue": "N/A - no defects reproduced."
+}

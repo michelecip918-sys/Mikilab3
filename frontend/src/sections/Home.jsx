@@ -4,6 +4,7 @@ import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, 
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import TalkingAvatar from "@/components/TalkingAvatar";
+import { TattooSignature } from "@/components/TattooSignature";
 import { recipesApi } from "@/lib/api";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
@@ -366,6 +367,11 @@ export default function Home({ onNavigate }) {
                           onError={(e) => { e.currentTarget.style.display = "none"; }} />
                       )}
                       <p className="p-6 text-[15px] leading-relaxed text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line">{c.body}</p>
+                      {c.id === "chi" && (
+                        <div className="px-6 pb-6 -mt-2">
+                          <TattooSignature testid="home-chi-signature" />
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}

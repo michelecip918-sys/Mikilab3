@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layer
 import { recipesApi, subscriptionApi, recipePurchaseApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
+import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
@@ -728,6 +729,8 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         )}
 
         {priceBlock}
+
+        <TattooSignature className="mt-1" testid={`recipe-signature-${r.id}`} />
       </div>
     </div>
   );
