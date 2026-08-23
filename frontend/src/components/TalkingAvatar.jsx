@@ -12,7 +12,7 @@ const TRANSCRIPT = {
   en: "Hi! I'm Michele. MikiLab helps you bake like a pro: Recipes with precise doses, Your Lab to plan and calculate, photo Diagnosis, the Learn section and the Community.",
 };
 
-export default function TalkingAvatar({ className = "", testid = "talking-avatar", showTranscript = true }) {
+export default function TalkingAvatar({ className = "", testid = "talking-avatar", showTranscript = true, transcript = null }) {
   const { lang } = useLang();
   const videoRef = useRef(null);
 
@@ -45,7 +45,7 @@ export default function TalkingAvatar({ className = "", testid = "talking-avatar
 
       {showTranscript && (
         <p data-testid={`${testid}-transcript`} className="mt-2 text-xs text-[#7E8A93] flex items-start gap-1.5 leading-snug">
-          <Volume2 className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {TRANSCRIPT[lang] || TRANSCRIPT.it}
+          <Volume2 className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {transcript || TRANSCRIPT[lang] || TRANSCRIPT.it}
         </p>
       )}
     </div>

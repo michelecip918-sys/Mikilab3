@@ -12,7 +12,12 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function MaestroSaTutto() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const chatIntro = lang === "de"
+    ? "Hallo! Ich bin Michele. Frag mich alles rund ums Brot: Rezepte, Teige, Gärung, Backen, Fehler und Kniffe. Ich helfe dir Schritt für Schritt."
+    : lang === "en"
+    ? "Hi! I'm Michele. Ask me anything about bread: recipes, doughs, fermentation, baking, defects and tricks of the trade. I'll help you step by step."
+    : "Ciao! Sono Michele. Chiedimi qualsiasi cosa sul pane: ricette, impasti, lievitazione, cotture, difetti e trucchi del mestiere. Ti aiuto passo dopo passo.";
 
   return (
     <div className="pb-4">
@@ -22,9 +27,9 @@ export default function MaestroSaTutto() {
         <p className="text-white/85 text-sm mt-1 italic">{t("satutto_tagline")}</p>
       </div>
 
-      {/* Avatar parlante di Michele (presentazione tradotta IT/DE/EN) */}
+      {/* Avatar parlante di Michele (frase dedicata alla chat, tradotta IT/DE/EN) */}
       <div data-testid="satutto-avatar-card" className="mb-4">
-        <TalkingAvatar testid="maestro-talking-avatar" className="w-full h-56" />
+        <TalkingAvatar testid="maestro-talking-avatar" className="w-full h-56" transcript={chatIntro} />
       </div>
 
       <div data-testid="satutto-intro-card" className="mb-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
