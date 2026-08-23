@@ -33,7 +33,7 @@ export default function TalkingAvatar({ className = "", testid = "talking-avatar
           playsInline
           preload="metadata"
           poster={BASE + "/michele-avatar-talk.jpg"}
-          className="w-full h-full object-cover object-top"
+          className="w-full h-full object-contain bg-black"
         >
           <source src={`${BASE}/michele-explainer-${lang}.mp4`} type="video/mp4" />
           <source src={`${BASE}/michele-explainer-${lang}.webm`} type="video/webm" />

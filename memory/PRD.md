@@ -798,3 +798,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **FIX VIDEO AVATAR HOME**: il "blocco" al tap è SOLO su produzione (build vecchia). In preview il player è già NATIVO (controls) e funziona → si risolve col REDEPLOY.
 - **DA FARE (PROSSIMO INTERVENTO DEDICATO)**: riorganizzazione "Il Tuo Laboratorio" in 6 passi SENZA duplicati:
   P1 Config hardware (macchine/celle/frigo/dispositivi smart, no orari/piani) · P2 Le Mie Ricette & parametri forno · P3 Logistica & punti vendita (personale/turni) · P4 Pianificazione (Piano Settimanale + Piano Oggi con import automatico) · P5 Operatività (temp acqua, pesata guidata, timer autolisi/puntata/appretto, sensori) · P6 Chiusura & tracciabilità (Diario Impasti, Lotti, HACCP). Riorganizzare gli strumenti esistenti eliminando doppioni, senza perdere funzioni.
+
+## v78 (2026-06) — Fix avatar tagliato + nota panettoni singoli
+- **AVATAR TAGLIATO A METÀ**: TalkingAvatar video/poster da `object-cover` → `object-contain` (bg nero). Ora l'avatar si vede INTERO in Home e in Chiedi al Maestro (verificato).
+- **PANETTONI SINGOLI**: confermato — ogni panettone è acquistabile singolarmente a €4,99 (dialog acquisto ricetta: buy-single €4,99; buy-panettoni €29,99 = tutti; buy-all €149). In Home ogni panettone mostra badge €4,99.
+- **PENDING — LABORATORIO 6 PASSI**: non ancora eseguito (intervento ampio, richiede sessione dedicata con budget pieno). Struttura definita in v77. Da fare come priorità nel prossimo turno.
