@@ -2955,6 +2955,35 @@ async def seed_mikilab_endpoint():
     return {"status": "synced", "count": n}
 
 
+WELCOME_POST_TEXT = (
+    "Benvenuti nella community di MikiLab! \U0001F956\U0001F525\n\n"
+    "Ciao a tutti e benvenuti nel nostro nuovo spazio interamente dedicato all'arte della panificazione, pasticceria e pizzeria!\n\n"
+    "Ho creato questa community per riunire fornai, pasticceri, pizzaioli, professionisti e appassionati del settore: un luogo dove scambiarsi consigli, condividere ricette, confrontarsi su tecniche di lievitazione, farine e macchinari, ma soprattutto per far crescere insieme le nostre attivit\u00e0.\n\n"
+    "Cosa troverete in questa community?\n"
+    "\u2022 Confronto diretto: spazio aperto per dubbi, consigli pratici e soluzioni ai problemi quotidiani in laboratorio.\n"
+    "\u2022 Aggiornamenti e Risorse: contenuti esclusivi, novit\u00e0 sul mondo della panificazione e strumenti per ottimizzare il lavoro.\n"
+    "\u2022 Networking: l'opportunit\u00e0 di entrare in contatto con colleghi di tutta Italia.\n\n"
+    "L'arte del pane, dei lievitati e della pizza unisce tradizione e innovazione, e da oggi abbiamo una casa comune per far valere il nostro mestiere.\n\n"
+    "Mettetevi comodi, presentatevi nei commenti qui sotto e diteci da dove lavorate e qual \u00e8 la vostra specialit\u00e0!\n\n"
+    "Buon lavoro e buona lievitazione a tutti! \U0001F33E\U0001F4AA"
+)
+
+
+async def seed_welcome_post():
+    """Crea (una sola volta) il post di benvenuto ufficiale nella Community."""
+    exists = await db.community_posts.find_one({"text": {"$regex": "^Benvenuti nella community di MikiLab"}})
+    if exists:
+        return
+    admin = await db.users.find_one({"email": "admin@mikilab.de"})
+    aid = (admin or {}).get("id") or (admin or {}).get("user_id") or "admin"
+    doc = {
+        "id": str(uuid.uuid4()), "author_id": aid, "author_name": "Michele — MikiLab",
+        "category": "consiglio", "text": WELCOME_POST_TEXT, "image_url": None,
+        "created_at": now_iso(), "likes": [], "comments": [], "pinned": True,
+    }
+    await db.community_posts.insert_one(doc)
+
+
 @app.on_event("startup")
 async def on_startup_seed_mikilab():
     """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab, senza cancellare nulla."""
@@ -2968,6 +2997,10 @@ async def on_startup_seed_mikilab():
         await seed_shop_if_empty()
     except Exception as e:
         logging.getLogger(__name__).error(f"Shop seed error: {e}")
+    try:
+        await seed_welcome_post()
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Welcome post seed error: {e}")
     try:
         init_storage()
         logging.getLogger(__name__).info("Archivio immagini inizializzato")

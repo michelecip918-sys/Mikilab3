@@ -810,7 +810,9 @@ function recipeCategory(r) {
   if (cat === "focacce") return { rank: 4, sub: 0, key: "focacce", label: "cat_focacce", icon: "🫓" };
   if (cat === "snack") return { rank: 3, sub: 0, key: "snack", label: "cat_snack", icon: "🥨" };
   if (cat === "panini") return { rank: 2, sub: 0, key: "panini", label: "cat_panini", icon: "🥖" };
-  return { rank: 1, sub: 0, key: "pane", label: "cat_pane", icon: "🍞" };
+  // Pane: tengo le baguette/filoni vicini in cima alla sezione
+  const isBaguette = /baguette|filo di francia|ficelle|bacchett/.test(name);
+  return { rank: 1, sub: isBaguette ? 0 : 1, key: "pane", label: "cat_pane", icon: "🍞" };
 }
 
 const GLOSSARY = {
