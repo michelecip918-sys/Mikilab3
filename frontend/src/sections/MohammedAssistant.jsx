@@ -25,10 +25,36 @@ export default function MohammedAssistant() {
   useEffect(() => { if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight; }, [messages, open]);
 
   const suggestions = [
+    tri("Cos'è «Il Tuo Laboratorio»?", "Was ist «Deine Backstube»?", "What is «Your Lab»?"),
     tri("Come organizzo le farine?", "Wie organisiere ich die Mehle?", "How do I organise the flours?"),
-    tri("Come imposto la cottura?", "Wie stelle ich das Backen ein?", "How do I set up baking?"),
     tri("Come funziona la Pesata Guidata?", "Wie funktioniert das geführte Wiegen?", "How does Guided Weighing work?"),
   ];
+
+  // Guida passo-passo: ogni voce chiede a Mohammadreza di spiegare quel passo del laboratorio.
+  const GUIDE = [
+    { n: 1, q: tri("Spiegami il Passo 1: materie prime e farine. Come inizio nel laboratorio?",
+                   "Erkläre mir Schritt 1: Rohstoffe und Mehle. Wie fange ich in der Backstube an?",
+                   "Explain Step 1: raw materials and flours. How do I start in the lab?"),
+      t: tri("Passo 1 · Materie prime e farine", "Schritt 1 · Rohstoffe & Mehle", "Step 1 · Raw materials & flours") },
+    { n: 2, q: tri("Spiegami il Passo 2: impasto e Pesata Guidata. Come peso gli ingredienti?",
+                   "Erkläre mir Schritt 2: Teig und geführtes Wiegen. Wie wiege ich die Zutaten?",
+                   "Explain Step 2: dough and Guided Weighing. How do I weigh ingredients?"),
+      t: tri("Passo 2 · Impasto e Pesata Guidata", "Schritt 2 · Teig & geführtes Wiegen", "Step 2 · Dough & Guided Weighing") },
+    { n: 3, q: tri("Spiegami il Passo 3: lievitazione, temperature e diario impasti.",
+                   "Erkläre mir Schritt 3: Gärung, Temperaturen und Teig-Tagebuch.",
+                   "Explain Step 3: proofing, temperatures and the dough log."),
+      t: tri("Passo 3 · Lievitazione e temperature", "Schritt 3 · Gärung & Temperaturen", "Step 3 · Proofing & temperatures") },
+    { n: 4, q: tri("Spiegami il Passo 4: cottura, forno e vapore. Come imposto tutto?",
+                   "Erkläre mir Schritt 4: Backen, Ofen und Dampf. Wie stelle ich alles ein?",
+                   "Explain Step 4: baking, oven and steam. How do I set everything up?"),
+      t: tri("Passo 4 · Cottura e forno", "Schritt 4 · Backen & Ofen", "Step 4 · Baking & oven") },
+    { n: 5, q: tri("Spiegami il Passo 5: igiene HACCP, lotti e tracciabilità.",
+                   "Erkläre mir Schritt 5: HACCP-Hygiene, Chargen und Rückverfolgbarkeit.",
+                   "Explain Step 5: HACCP hygiene, batches and traceability."),
+      t: tri("Passo 5 · HACCP e tracciabilità", "Schritt 5 · HACCP & Rückverfolgung", "Step 5 · HACCP & traceability") },
+  ];
+
+  const askGuide = (q) => { setOpen(true); send(q); };
 
   const send = async (text) => {
     const msg = (text ?? input).trim();
@@ -80,6 +106,18 @@ export default function MohammedAssistant() {
             )}
           </p>
         </div>
+      </div>
+
+      {/* Guida passo-passo del laboratorio */}
+      <div data-testid="mohammed-guide" className="mt-4 grid grid-cols-1 gap-1.5">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-white/70 mb-0.5">{tri("Guida passo-passo del laboratorio", "Schritt-für-Schritt-Anleitung", "Step-by-step lab guide")}</p>
+        {GUIDE.map((g) => (
+          <button key={g.n} data-testid={`mohammed-guide-${g.n}`} onClick={() => askGuide(g.q)}
+            className="w-full flex items-center gap-2.5 bg-white/12 hover:bg-white/22 rounded-xl px-3 py-2 text-left active:scale-98 transition-all">
+            <span className="w-6 h-6 rounded-full bg-white/90 text-[#33564E] font-bold text-xs flex items-center justify-center shrink-0">{g.n}</span>
+            <span className="text-sm font-medium">{g.t}</span>
+          </button>
+        ))}
       </div>
 
       <button data-testid="mohammed-toggle" onClick={() => setOpen((o) => !o)}

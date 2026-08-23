@@ -4,6 +4,7 @@ import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, 
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import TalkingAvatar from "@/components/TalkingAvatar";
+import { recipesApi } from "@/lib/api";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import { getProfile } from "@/components/Onboarding";
@@ -158,6 +159,14 @@ export default function Home({ onNavigate }) {
   const de = lang === "de";
   const L = (it_, de_, en_) => (de ? de_ : lang === "en" ? en_ : it_);
   const profile = getProfile();
+
+  const [panettoni, setPanettoni] = useState([]);
+  useEffect(() => {
+    recipesApi.list("mikilab").then((rs) => {
+      const p = (rs || []).filter((r) => (r.menu_category === "panettoni") || /panettone/i.test(r.name || "")).slice(0, 8);
+      setPanettoni(p);
+    }).catch(() => {});
+  }, []);
   const focusChip = ({ panettoni: L("Tracker pH Lievito", "pH-Tracker", "pH Tracker"), pane: L("Avvia impasti", "Teige starten", "Start doughs"), brezel: L("Il mio laboratorio", "Meine Backstube", "My lab"), dolci: L("Il mio laboratorio", "Meine Backstube", "My lab") })[profile && profile.focus] || L("Il mio laboratorio", "Meine Backstube", "My lab");
   const _eq = (profile && profile.equip) || [];
   const equipChip = _eq.includes("abbattitore") || _eq.includes("cella")
@@ -239,6 +248,37 @@ export default function Home({ onNavigate }) {
               </button>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Vetrina Panettoni */}
+      {panettoni.length > 0 && (
+        <div data-testid="home-panettoni-showcase" className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">{L("I nostri Panettoni", "Unsere Panettone", "Our Panettoni")}</p>
+            <button data-testid="home-panettoni-all" onClick={() => go("ricette")}
+              className="text-xs font-semibold text-[#B34A26] flex items-center gap-0.5">
+              {L("Vedi tutti", "Alle ansehen", "See all")} <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
+            {panettoni.map((r) => (
+              <button key={r.id} data-testid={`home-panettone-${r.id}`} onClick={() => go("ricette")}
+                className="shrink-0 w-36 text-left active:scale-97 transition-all">
+                <div className="w-36 h-36 rounded-2xl overflow-hidden bg-[#EAF0EC] dark:bg-[#232A31] relative">
+                  {r.image_url
+                    ? <img src={r.image_url} alt={r.name} className="w-full h-full object-cover" />
+                    : <div className="w-full h-full flex items-center justify-center"><ChefHat className="w-8 h-8 text-[#B34A26]/50" /></div>}
+                  <span className="absolute bottom-1 right-1 text-[10px] font-bold bg-[#B34A26] text-white px-1.5 py-0.5 rounded-full">€4,99</span>
+                </div>
+                <p className="mt-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight line-clamp-2">{r.name}</p>
+              </button>
+            ))}
+          </div>
+          <button data-testid="home-panettoni-cta" onClick={() => go("ricette")}
+            className="w-full mt-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#B34A26] to-[#8a3a1e] text-white font-semibold px-4 py-2.5 rounded-2xl active:scale-98 transition-all">
+            {L("Sblocca tutti i Panettoni · €29,99", "Alle Panettone freischalten · €29,99", "Unlock all Panettoni · €29.99")}
+          </button>
         </div>
       )}
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2 } from "lucide-react";
 import { recipesApi, subscriptionApi, recipePurchaseApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
@@ -552,6 +552,17 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
     }
   }
 
+  const shareRecipe = async () => {
+    const url = `${window.location.origin}/?ricetta=${r.id}`;
+    const title = rLoc(r, "name", lang);
+    const textMsg = tri(`Guarda questa ricetta su MikiLab: ${title}`, `Schau dir dieses Rezept auf MikiLab an: ${title}`, `Check out this recipe on MikiLab: ${title}`);
+    try {
+      if (navigator.share) { await navigator.share({ title: `MikiLab · ${title}`, text: textMsg, url }); return; }
+    } catch (e) { /* utente ha annullato */ return; }
+    try { await navigator.clipboard.writeText(url); toast.success(tri("Link copiato!", "Link kopiert!", "Link copied!")); }
+    catch { toast.error(tri("Impossibile copiare il link", "Link kann nicht kopiert werden", "Couldn't copy the link")); }
+  };
+
   return (
     <div data-testid={`recipe-detail-${r.id}`}>
       {r.image_url && isPanettone && (
@@ -576,6 +587,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         </div>
 
         <div className="flex gap-1.5">
+          <ActionBtn testid={`share-recipe-${r.id}`} onClick={shareRecipe} color="#6E8CA0" label={tri("Condividi", "Teilen", "Share")}><Share2 className="w-4 h-4" /></ActionBtn>
           <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#6B8E62" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
           {canEdit && <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#7E8A93" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#5E8B7E"><Pencil className="w-4 h-4" /></ActionBtn>}

@@ -775,3 +775,20 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v75 (2026-06) — Rifinitura mobile + verifica Community Foto
 - **RIFINITURA MOBILE**: `<main>` in App.js pb-48 → pb-64 (256px) così le ultime card non vengono coperte dai FAB Radio (bottom-28 sx) e Parla (bottom-28 dx). Verificato: footer visibile e libero.
 - **COMMUNITY FOTO**: verificato che era GIÀ completo — composer con pulsante "Foto" (community-photo-btn) → uploadApi.image (/api/upload → URL assoluto), anteprima con pulsante rimuovi (community-photo-clear), immagine mostrata nel post (image_url). Backend `CommunityPostReq.image_url` + `_post_public` già presenti. Upload testato: 200 OK.
+
+## v76 (2026-06) — Vetrina Panettoni + Condivisione Ricette + Mohammed guida + revisione direttive
+- **VETRINA PANETTONI (Home)**: `home-panettoni-showcase` — scroll orizzontale dei panettoni (thumbnail + badge €4,99), CTA "Sblocca tutti i Panettoni · €29,99", link "Vedi tutti" → tab Ricette. Fetch da recipesApi.list("mikilab") filtrato panettoni.
+- **CONDIVISIONE RICETTE**: pulsante Condividi (`share-recipe-<id>`) nel dettaglio ricetta → navigator.share o copia link `${origin}/?ricetta=<id>`. App.js legge `?ricetta=` → apre tab Ricette + toast (trilingue).
+- **MOHAMMED (Il Tuo Laboratorio)**: `<MohammedAssistant/>` spostato IN FONDO alla pagina Maestro. Aggiunta GUIDA PASSO-PASSO (`mohammed-guide`, 5 step: materie prime/farine → impasto & Pesata → lievitazione & temperature → cottura & forno → HACCP & tracciabilità); ogni step invia a Mohammadreza una domanda che spiega quel passo. Suggerimenti aggiornati.
+- **RIFINITURA MOBILE**: main pb-48 → pb-64 (FAB Radio/Parla non coprono le card).
+- **VOCE AVATAR**: confermata voce attuale (ElevenLabs) per TUTTE le lingue IT/DE/EN; NIENTE voce su misura (scelta utente).
+
+### DIRETTIVE OPERATIVE CONSOLIDATE (source of truth)
+1. LINGUA: l'utente parla ITALIANO; rispondere sempre in italiano. Tutta la UND/UX trilingue IT/DE/EN.
+2. LEGALE: nessun riferimento a "Stoccarda/azienda"; presentarsi come "Michele / MikiLab" (singola persona).
+3. MONETIZZAZIONE: Lab €29,99/mese·€249/anno (PRO completo) · "Impara da Casa" €12,99/mese·€99/anno (Academy + 10 Diagnosi/mese) · acquisto singolo ricette €4,99 / panettoni €29,99 / tutte €149. Prezzi gestiti nel backend (INTERNAL_PRICES/RECIPE_PRICES), NON dal dashboard Stripe.
+4. NAVIGAZIONE: Bottom bar = Home · Ricette · Il Tuo Laboratorio · Impara · Community. Diagnosi accessibile da Home (chip) e Academy. Impara = Impara da Casa · News · Enciclopedia del Pane (NIENTE Video Mentore, rimosso su richiesta).
+5. ENCICLOPEDIA = solo teoria/wiki (nessuna ricetta). RICETTARIO = operativo (dosi/calcolatori).
+6. AVATAR = statico? no: video presentazione con voce ElevenLabs (player nativo), spiega tutto il sito, in 3 lingue. Per cambiarlo servono nuovi file in /public.
+7. SICUREZZA: mutazioni protette da login/admin. Nessuna operazione DB distruttiva (annunci legacy filtrati in lettura).
+8. INTEGRAZIONI: Claude (chat), Gemini Nano Banana (immagini), OpenAI/ElevenLabs (voce), Stripe (pagamenti, key da env). Deferiti: PayPal, valori nutrizionali reali.

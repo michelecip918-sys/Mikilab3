@@ -132,8 +132,6 @@ export default function Maestro() {
       <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{t("maestro_title")}</h1>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Configura il tuo laboratorio passo dopo passo", "Richte deine Backstube Schritt für Schritt ein", "Set up your bakery step by step")}</p>
 
-      <MohammedAssistant />
-
       {/* Stepper 5 passi */}
       <div className="flex items-center mb-5" data-testid="maestro-stepper">
         {STEPS.map((s, i) => (
@@ -210,6 +208,11 @@ export default function Maestro() {
             <CheckSquare className="w-5 h-5" /> {tri("Completa", "Abschließen", "Complete")}
           </button>
         )}
+      </div>
+
+      {/* Assistente Mohammadreza + guida passo-passo (in fondo alla pagina) */}
+      <div className="mt-6">
+        <MohammedAssistant />
       </div>
     </div>
   );

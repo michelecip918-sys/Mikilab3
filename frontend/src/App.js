@@ -90,6 +90,12 @@ function App() {
     else if (p.get("sub") === "success") {
       subscriptionApi.status().then(() => toast.success(tri("Abbonamento attivo! Grazie 🙏", "Abo aktiv! Danke 🙏", "Subscription active! Thank you 🙏"))).finally(clean);
     } else if (p.get("sub") === "cancel") { clean(); }
+    else if (p.get("ricetta")) {
+      setTab("ricette");
+      const u = new URL(window.location.href); u.searchParams.delete("ricetta");
+      window.history.replaceState({ tab: "ricette" }, "", u.toString());
+      toast.success(tri("Ecco le ricette di MikiLab 🥖", "Hier sind die MikiLab-Rezepte 🥖", "Here are the MikiLab recipes 🥖"));
+    }
   }, []); // eslint-disable-line
 
   // Notifica "nuovi contenuti": avvisa se sono state aggiunte nuove ricette dall'ultima visita.
