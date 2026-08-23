@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { CheckSquare, Thermometer, ShieldCheck, Archive, CalendarCheck, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
@@ -19,6 +20,7 @@ export default function DayClose() {
   const [note, setNote] = useState("");
   const [closing, setClosing] = useState(false);
   const [lastClosure, setLastClosure] = useState(null);
+  const [celebrate, setCelebrate] = useState(false);
 
   const load = useCallback(async () => {
     if (!user) return;
@@ -53,6 +55,7 @@ export default function DayClose() {
       localStorage.setItem(CLOSURES_KEY, JSON.stringify(arr));
       setLastClosure(record);
       setNote("");
+      setCelebrate(true);
       toast.success(tri("Giornata conclusa e archiviata ✅", "Tag abgeschlossen und archiviert ✅", "Day closed and archived ✅"));
     } catch {
       toast.error(tri("Errore nell'archiviazione", "Archivierung fehlgeschlagen", "Archiving failed"));
@@ -111,6 +114,38 @@ export default function DayClose() {
           </div>
         </div>
       )}
+
+      <AnimatePresence>
+        {celebrate && (
+          <motion.div data-testid="dayclose-celebrate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setCelebrate(false)}
+            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#1A1412]/85 backdrop-blur-sm px-6 cursor-pointer">
+            <div className="relative flex items-center justify-center">
+              <motion.img src={`${process.env.PUBLIC_URL || ""}/michele-avatar-full.jpg`} alt="Michele"
+                initial={{ x: -140, rotate: -10, opacity: 0 }} animate={{ x: -4, rotate: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 130, damping: 12, delay: 0.1 }}
+                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-2xl" />
+              <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.5, 1], opacity: 1 }}
+                transition={{ delay: 0.55, duration: 0.5 }} className="mx-1 text-5xl drop-shadow-lg">🙌</motion.div>
+              <motion.img src={`${process.env.PUBLIC_URL || ""}/mohammed-avatar.jpg`} alt="Mohammed"
+                initial={{ x: 140, rotate: 10, opacity: 0 }} animate={{ x: 4, rotate: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 130, damping: 12, delay: 0.1 }}
+                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-2xl" />
+            </div>
+            <motion.h2 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.65 }}
+              className="mt-6 font-display text-2xl font-bold text-white text-center">
+              {tri("Complimenti, Maestro! 👏", "Glückwunsch, Meister! 👏", "Well done, Master! 👏")}
+            </motion.h2>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+              className="mt-1 text-white/85 text-sm text-center max-w-xs">
+              {tri("Michele e Mohammed battono il cinque per la tua giornata di lavoro!", "Michele und Mohammed geben dir ein High-Five für deinen Arbeitstag!", "Michele and Mohammed high-five you for a great work day!")}
+            </motion.p>
+            <button data-testid="dayclose-celebrate-close" className="mt-6 bg-white text-[#2B303B] font-bold px-7 py-2.5 rounded-full active:scale-95">
+              {tri("Grazie!", "Danke!", "Thanks!")}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

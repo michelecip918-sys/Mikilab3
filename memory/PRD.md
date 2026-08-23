@@ -845,3 +845,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Posizionamento: copy IT/DE/EN allargata a fornai, pasticceri, pizzaioli e chi usa ricette/calcoli (assistente IA, 'Chi sono', share, paywall).
 - Stripe LIVE configurato (chiavi utente) + fix Managed Payments su tutte le sessioni; 3 flussi testati (cs_live_).
 - Testing: iteration_56 frontend 100%. Note minori non bloccanti: FAB overlap (ridotto padding), warning console span-in-option inesistente nel codice (falso positivo).
+
+## v49 (2026-06) — Carote, ricette gratis, nota farina, high-five
+- Panino alle Carote aggiunto (foto + procedimento IT/DE/EN). Totale 82 ricette.
+- Ricette GRATIS (DEMO_RECIPE_NAMES): "Cuore Italiano" + "Focaccia Genovese" (visibili complete ai non-PRO).
+- Card ricetta: aggiunta nota "Farina: ..." (Mehl/Flour) sotto il nome.
+- Foto: generate 10 foto locali per i Panino* (niente piu icona vuota).
+- DayClose: animazione "batti il cinque" tra avatar Michele e Mohammed alla conferma "Concludi Giornata" (data-testid dayclose-celebrate).
+- SEED_VERSION v49.

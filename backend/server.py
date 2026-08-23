@@ -319,7 +319,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v48-focacce-pani"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v49-carote-free"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -597,7 +597,7 @@ def _teaser_recipe(doc: dict) -> dict:
 
 
 # 2 ricette DEMO sempre complete (vetrina gratuita per non-PRO): una semplice + un panettone.
-DEMO_RECIPE_NAMES = {"Cuore Italiano", "Panettone Artigianale MikiLab — Uvetta e Canditi (Classico)"}
+DEMO_RECIPE_NAMES = {"Cuore Italiano", "Focaccia Genovese"}
 
 
 async def _translate_recipe_de(doc):

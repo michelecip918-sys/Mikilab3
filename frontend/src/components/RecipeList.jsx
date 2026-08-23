@@ -244,6 +244,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {rLoc(r, "name", lang)}
               </h3>
               {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-medium text-[#5E8B7E] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
+              {rLoc(r, "flour_type", lang) ? <p className="text-[10px] text-[#7E8A93] truncate mt-0.5">{(lang === "de" ? "Mehl: " : lang === "en" ? "Flour: " : "Farina: ")}{rLoc(r, "flour_type", lang)}</p> : null}
             </div>
           </motion.button>
         );

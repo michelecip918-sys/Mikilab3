@@ -3600,7 +3600,7 @@
     "work_phases": [],
     "biga": null,
     "costing": null,
-    "locked": true
+    "locked": false
   },
   {
     "name": "Focaccia di Matera",
@@ -4010,7 +4010,7 @@
     "work_phases": [],
     "biga": null,
     "costing": null,
-    "locked": true
+    "locked": false
   },
   {
     "name": "Pane alle Olive",
@@ -4215,6 +4215,566 @@
     "work_phases": [],
     "biga": null,
     "costing": null,
+    "locked": true
+  },
+  {
+    "name": "Panino Integrale",
+    "bake_minutes": 17.0,
+    "bake_temp": 220.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 4
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2
+      },
+      {
+        "name": "Crusca (per finitura)",
+        "percent": 3
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina integrale + tipo 0 (50/50)",
+    "flour_type_de": "Vollkornmehl + Type 550 (50/50)",
+    "flour_type_en": "Whole wheat flour + type 0 flour (50/50)",
+    "hydration_percent": 68,
+    "image_url": "/recipes/pn_integrale.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Vollkornbrötchen",
+    "name_en": "Whole Wheat Roll",
+    "notes": "Panino integrale rustico e digeribile, ricco di fibra. La farina integrale assorbe più acqua: regola l'idratazione.",
+    "notes_de": "Rustikales und bekömmliches Vollkornbrötchen, reich an Ballaststoffen. Vollkornmehl bindet mehr Wasser: die Hydration entsprechend anpassen.",
+    "notes_en": "Rustic and easily digestible whole wheat roll, rich in fiber. Whole wheat flour absorbs more water: adjust the hydration accordingly.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Sciogli il lievito nell'acqua tiepida.\n2) Unisci le farine, aggiungi acqua e impasta 8 minuti; unisci il sale e l'olio e continua fino a incordatura (12-14 min).\n3) Fai puntare l'impasto coperto 1 ora con una piega a metà.\n4) Spezza in pezzi da 80-90 g e forma i panini.\n5) Disponi su teglia e fai lievitare 60-90 minuti fino al raddoppio.\n6) Spennella d'acqua e cospargi di crusca o fiocchi d'avena; pratica un taglio.\n7) Cuoci a 220°C con vapore iniziale 16-18 minuti.\n8) Raffredda su griglia.",
+    "procedure_de": "1) Hefe im lauwarmen Wasser auflösen.\n2) Die Mehle vermengen, Wasser hinzufügen und 8 Minuten kneten; Salz und Öl einarbeiten und bis zur vollen Glutenentwicklung weiterkneten (12-14 Min.).\n3) Den Teig abgedeckt 1 Stunde mit einer Streckfalte in der Mitte ruhen lassen.\n4) In Stücke von 80-90 g teilen und die Brötchen formen.\n5) Auf dem Backblech anordnen und 60-90 Minuten bis zur Verdopplung gehen lassen.\n6) Mit Wasser abstreichen und mit Kleie oder Haferflocken bestreuen; einen Schnitt einritzen.\n7) Bei 220°C mit anfänglichem Dampf 16-18 Minuten backen.\n8) Auf einem Gitter auskühlen lassen.",
+    "procedure_en": "1) Dissolve the yeast in lukewarm water.\n2) Combine the flours, add the water and mix for 8 minutes; add the salt and oil and continue until full gluten development (12-14 min).\n3) Allow the dough to bulk ferment covered for 1 hour with one fold halfway through.\n4) Divide into 80-90 g pieces and shape the rolls.\n5) Place on a baking tray and proof for 60-90 minutes until doubled in size.\n6) Brush with water and sprinkle with bran or rolled oats; score the tops.\n7) Bake at 220°C with initial steam for 16-18 minutes.\n8) Cool on a wire rack.",
+    "proofing_hours": 1.5,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 680.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino Multicereali ai 5 Cereali",
+    "bake_minutes": 18.0,
+    "bake_temp": 220.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Mix 5 cereali (avena, orzo, farro, segale, miglio)",
+        "percent": 25
+      },
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 4
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 1 + mix 5 cereali",
+    "flour_type_de": "Mehl Typ 1 + 5-Kornmischung",
+    "flour_type_en": "Type 1 flour + 5-grain mix",
+    "hydration_percent": 70,
+    "image_url": "/recipes/pn_multicereali.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Mehrkornbrötchen mit 5 Getreidesorten",
+    "name_en": "Five-Grain Multigrain Roll",
+    "notes": "Panino multicereali ricco e saporito. L'ammollo dei cereali evita che rubino acqua all'impasto.",
+    "notes_de": "Reichhaltiges und schmackhaftes Mehrkornbrötchen. Das Einweichen der Getreideflocken verhindert, dass sie dem Teig Wasser entziehen.",
+    "notes_en": "A rich and flavorful multigrain roll. Soaking the grains prevents them from absorbing water from the dough.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Ammolla il mix di semi/fiocchi in acqua tiepida 20 minuti.\n2) Sciogli il lievito nell'acqua.\n3) Unisci farina, mix ammollato e acqua; impasta 8 minuti, poi sale e olio fino a incordatura.\n4) Punta 1 ora con una piega.\n5) Forma panini da 85 g.\n6) Lievita 75 minuti.\n7) Spennella e cospargi di fiocchi; cuoci a 220°C con vapore 17-19 minuti.\n8) Raffredda.",
+    "procedure_de": "1) Den Samen-/Flockenmixx 20 Minuten in lauwarmem Wasser einweichen.\n2) Die Hefe im Wasser auflösen.\n3) Mehl, eingeweichte Mischung und Wasser zusammenfügen; 8 Minuten kneten, dann Salz und Öl bis zur vollständigen Glutenentwicklung einarbeiten.\n4) Stockgare 1 Stunde mit einer Dehnen-und-Falten-Einheit.\n5) Brötchen zu je 85 g formen.\n6) 75 Minuten garen lassen.\n7) Bestreichen und mit Flocken bestreuen; bei 220°C mit Dampf 17-19 Minuten backen.\n8) Auskühlen lassen.",
+    "procedure_en": "1) Soak the seed/flake mix in warm water for 20 minutes.\n2) Dissolve the yeast in the water.\n3) Combine the flour, soaked mix and water; knead for 8 minutes, then add salt and oil until full gluten development.\n4) Bulk ferment for 1 hour with one fold.\n5) Shape rolls at 85 g each.\n6) Proof for 75 minutes.\n7) Brush and sprinkle with flakes; bake at 220°C with steam for 17-19 minutes.\n8) Cool.",
+    "proofing_hours": 1.3,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 700.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino ai Semi di Papavero",
+    "bake_minutes": 16.0,
+    "bake_temp": 200.0,
+    "bulk_fermentation_hours": null,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Latte intero",
+        "percent": 15
+      },
+      {
+        "name": "Burro",
+        "percent": 6
+      },
+      {
+        "name": "Semi di papavero",
+        "percent": 6
+      },
+      {
+        "name": "Uovo (per spennellare)",
+        "percent": 8
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 3
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Type 0 flour",
+    "hydration_percent": 58,
+    "image_url": "/recipes/pn_papavero.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Mohnbrötchen",
+    "name_en": "Poppy Seed Roll",
+    "notes": "Panino soffice ai semi di papavero, elegante e profumato. Perfetto per colazioni salate e buffet.",
+    "notes_de": "Weiches Mohnbrötchen, elegant und aromatisch. Perfekt für herzhafte Frühstücke und Buffets.",
+    "notes_en": "Soft poppy seed roll, elegant and fragrant. Perfect for savory breakfasts and buffets.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Sciogli il lievito nell'acqua tiepida con un pizzico di zucchero.\n2) Unisci farina e acqua, impasta 8 minuti; aggiungi sale, latte e burro fino a incordatura.\n3) Punta 1 ora.\n4) Forma panini ovali da 80 g.\n5) Spennella con uovo e cospargi generosamente di semi di papavero.\n6) Lievita 60 minuti.\n7) Cuoci a 200°C 15-17 minuti fino a doratura.\n8) Raffredda.",
+    "procedure_de": "1) Hefe in lauwarmem Wasser mit einer Prise Zucker auflösen.\n2) Mehl und Wasser zusammenfügen, 8 Minuten kneten; Salz, Milch und Butter bis zur vollständigen Glutenentwicklung einarbeiten.\n3) Teigruhe 1 Stunde.\n4) Ovale Brötchen zu je 80 g formen.\n5) Mit Ei bestreichen und großzügig mit Mohnsamen bestreuen.\n6) 60 Minuten gehen lassen.\n7) Bei 200°C 15-17 Minuten backen, bis sie goldbraun sind.\n8) Auskühlen lassen.",
+    "procedure_en": "1) Dissolve the yeast in lukewarm water with a pinch of sugar.\n2) Combine flour and water, knead for 8 minutes; add salt, milk and butter until full gluten development.\n3) Bulk ferment for 1 hour.\n4) Shape into oval rolls of 80 g.\n5) Egg wash and generously sprinkle with poppy seeds.\n6) Proof for 60 minutes.\n7) Bake at 200°C for 15-17 minutes until golden brown.\n8) Cool.",
+    "proofing_hours": 1,
+    "rest_minutes": null,
+    "salt_grams": 18.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 580.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino al Farro",
+    "bake_minutes": 17.0,
+    "bake_temp": 220.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 4
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina di farro tipo 1 + tipo 0 (60/40)",
+    "flour_type_de": "Dinkelmehl Typ 1 + Typ 0 (60/40)",
+    "flour_type_en": "Type 1 spelt flour + type 0 spelt flour (60/40)",
+    "hydration_percent": 63,
+    "image_url": "/recipes/pn_farro.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Dinkelbrötchen",
+    "name_en": "Spelt Roll",
+    "notes": "Panino al farro dal gusto aromatico e rustico. Impasta con delicatezza: il glutine del farro è più tenace ma fragile.",
+    "notes_de": "Dinkelbrötchen mit aromatisch-rustikalem Geschmack. Sanft kneten: das Dinkelgluten ist zwar kräftig, aber empfindlich.",
+    "notes_en": "A spelt roll with an aromatic, rustic flavour. Knead gently: spelt gluten is stronger but more fragile.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Sciogli il lievito nell'acqua tiepida.\n2) Unisci le farine e l'acqua, impasta con delicatezza 8-10 minuti (il farro ha glutine più fragile); aggiungi sale e olio.\n3) Punta 1 ora con una piega leggera.\n4) Forma panini da 85 g.\n5) Lievita 75 minuti.\n6) Spennella e cospargi di farina di farro.\n7) Cuoci a 220°C con vapore 16-18 minuti.\n8) Raffredda.",
+    "procedure_de": "1) Hefe im lauwarmen Wasser auflösen.\n2) Mehle und Wasser zusammengeben, sanft 8-10 Minuten kneten (Dinkel hat ein empfindlicheres Gluten); Salz und Öl hinzufügen.\n3) Teigruhe 1 Stunde mit einer leichten Faltung.\n4) Teiglinge zu je 85 g formen.\n5) 75 Minuten gären lassen.\n6) Abstreichen und mit Dinkelmehl bestäuben.\n7) Bei 220°C mit Schwaden 16-18 Minuten backen.\n8) Auskühlen lassen.",
+    "procedure_en": "1) Dissolve the yeast in lukewarm water.\n2) Combine the flours and water, knead gently for 8-10 minutes (spelt has a more delicate gluten structure); add salt and oil.\n3) Bulk ferment for 1 hour with one light fold.\n4) Shape into 85 g rolls.\n5) Proof for 75 minutes.\n6) Brush and dust with spelt flour.\n7) Bake at 220°C with steam for 16-18 minutes.\n8) Cool.",
+    "proofing_hours": 1.3,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 630.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino al Latte per Hamburger",
+    "bake_minutes": 15.0,
+    "bake_temp": 190.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Latte intero",
+        "percent": 45
+      },
+      {
+        "name": "Burro",
+        "percent": 12
+      },
+      {
+        "name": "Uovo",
+        "percent": 10
+      },
+      {
+        "name": "Zucchero",
+        "percent": 8
+      },
+      {
+        "name": "Semi di sesamo",
+        "percent": 4
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 3
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0 (W300)",
+    "flour_type_de": "Mehl Typ 0 (W300)",
+    "flour_type_en": "Type 0 flour (W300)",
+    "hydration_percent": 15,
+    "image_url": "/recipes/pn_hamburger.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Milchbrötchen für Hamburger",
+    "name_en": "Milk Bun for Hamburger",
+    "notes": "Il bun morbido per hamburger: dolce, lucido e sofficissimo. Ottimo anche per panini gourmet.",
+    "notes_de": "Das weiche Hamburgerbrötchen: leicht süß, glänzend und besonders locker. Hervorragend auch für Gourmet-Sandwiches.",
+    "notes_en": "The soft hamburger bun: sweet, glossy and incredibly fluffy. Also perfect for gourmet sandwiches.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Sciogli il lievito nel latte tiepido con lo zucchero.\n2) Unisci farina, uovo e latte; impasta 8 minuti, poi aggiungi sale e burro morbido a pezzi fino a incordatura completa.\n3) Punta 1 ora coperto.\n4) Forma palline da 75 g ben pirlate.\n5) Disponi su teglia, spennella con uovo e latte, cospargi di sesamo.\n6) Lievita 90 minuti fino a gonfiore.\n7) Cuoci a 190°C 14-16 minuti.\n8) Raffredda: mollica sofficissima.",
+    "procedure_de": "1) Hefe im lauwarmen Milch mit dem Zucker auflösen.\n2) Mehl, Ei und Milch hinzufügen; 8 Minuten kneten, dann Salz und weiche Butter in Stücken bis zur vollständigen Teigentwicklung einarbeiten.\n3) Teigruhe 1 Stunde abgedeckt.\n4) Teiglinge zu je 75 g formen und gut schleifen.\n5) Auf dem Blech anordnen, mit Ei-Milch-Gemisch abstreichen und mit Sesam bestreuen.\n6) 90 Minuten bis zur vollen Gare aufgehen lassen.\n7) Bei 190°C 14-16 Minuten backen.\n8) Auskühlen lassen: besonders lockere Krume.",
+    "procedure_en": "1) Dissolve the yeast in the warm milk with the sugar.\n2) Add the flour, egg and milk; knead for 8 minutes, then add the salt and soft butter in pieces until full gluten development.\n3) Bulk ferment for 1 hour, covered.\n4) Shape into well-rounded 75 g balls.\n5) Place on a baking tray, brush with egg and milk, sprinkle with sesame seeds.\n6) Proof for 90 minutes until well risen.\n7) Bake at 190°C for 14-16 minutes.\n8) Cool: an exceptionally soft crumb.",
+    "proofing_hours": 1.5,
+    "rest_minutes": null,
+    "salt_grams": 18.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 0.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino al Mais",
+    "bake_minutes": 17.0,
+    "bake_temp": 220.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 4
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2
+      },
+      {
+        "name": "Semola di mais (per finitura)",
+        "percent": 3
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0 + farina di mais fioretto (80/20)",
+    "flour_type_de": "Mehl Typ 0 + feines Maismehl (80/20)",
+    "flour_type_en": "Type 0 flour + fine corn flour (80/20)",
+    "hydration_percent": 66,
+    "image_url": "/recipes/pn_mais.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Maisbrötchen",
+    "name_en": "Corn Roll",
+    "notes": "Panino al mais dal colore dorato e sapore dolce. La scottatura del mais lo rende più morbido e conservabile.",
+    "notes_de": "Maisbrötchen mit goldener Farbe und mildem, süßlichem Geschmack. Das Verbrühen des Maismehls macht das Brötchen weicher und verlängert die Frischhaltung.",
+    "notes_en": "A golden-coloured corn roll with a mild, sweet flavour. Scalding the corn flour makes the rolls softer and extends their shelf life.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Scotta brevemente la farina di mais con parte dell'acqua calda e lascia intiepidire.\n2) Sciogli il lievito nell'acqua rimanente.\n3) Unisci le farine e l'impasto di mais, impasta 8 minuti; aggiungi sale e olio fino a incordatura.\n4) Punta 1 ora coperto.\n5) Forma panini da 80 g.\n6) Lievita 75 minuti.\n7) Spennella e cospargi di semola di mais; cuoci a 220°C 16-18 minuti.\n8) Raffredda.",
+    "procedure_de": "1) Das Maismehl kurz mit einem Teil des heißen Wassers verbrühen und abkühlen lassen.\n2) Die Hefe im restlichen Wasser auflösen.\n3) Die Mehle und den Maisansatz zusammenführen, 8 Minuten kneten; Salz und Öl bis zur vollständigen Glutenentwicklung einarbeiten.\n4) Teigruhe 1 Stunde abgedeckt.\n5) Brötchen zu je 80 g formen.\n6) 75 Minuten gären lassen.\n7) Abstreichen und mit Maisgrieß bestreuen; bei 220°C 16–18 Minuten backen.\n8) Auskühlen lassen.",
+    "procedure_en": "1) Briefly scald the corn flour with part of the hot water and let it cool to lukewarm.\n2) Dissolve the yeast in the remaining water.\n3) Combine the flours and the corn mixture, knead for 8 minutes; add salt and oil until full gluten development.\n4) Bulk ferment for 1 hour, covered.\n5) Shape into 80 g rolls.\n6) Proof for 75 minutes.\n7) Brush and sprinkle with corn semolina; bake at 220°C for 16-18 minutes.\n8) Cool.",
+    "proofing_hours": 1.3,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 660.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino al Sesamo",
+    "bake_minutes": 16.0,
+    "bake_temp": 200.0,
+    "bulk_fermentation_hours": null,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Latte intero",
+        "percent": 15
+      },
+      {
+        "name": "Burro",
+        "percent": 8
+      },
+      {
+        "name": "Semi di sesamo",
+        "percent": 6
+      },
+      {
+        "name": "Zucchero",
+        "percent": 4
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 3
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Type 0 flour",
+    "hydration_percent": 58,
+    "image_url": "/recipes/pn_sesamo.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Sesambrötchen",
+    "name_en": "Sesame Roll",
+    "notes": "Il classico panino morbido al sesamo, tipo bun. Latte e burro danno una mollica soffice e vellutata.",
+    "notes_de": "Das klassische weiche Sesambrötchen im Bun-Stil. Milch und Butter sorgen für eine lockere, samtweiche Krume.",
+    "notes_en": "The classic soft sesame roll, burger bun style. Milk and butter give a soft, velvety crumb.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Sciogli il lievito nell'acqua tiepida con un cucchiaino di zucchero.\n2) Unisci farina e acqua, impasta 8 minuti; aggiungi sale, burro morbido e latte fino a incordatura.\n3) Punta 1 ora.\n4) Forma panini tondi da 80 g.\n5) Spennella con latte e cospargi di semi di sesamo.\n6) Lievita 60 minuti.\n7) Cuoci a 200°C 15-17 minuti fino a doratura.\n8) Raffredda.",
+    "procedure_de": "1) Hefe in lauwarmem Wasser mit einem Teelöffel Zucker auflösen.\n2) Mehl und Wasser zusammenfügen, 8 Minuten kneten; Salz, weiche Butter und Milch zugeben und bis zur vollen Glutenentwicklung auskneten.\n3) Teigruhe 1 Stunde.\n4) Runde Brötchen zu je 80 g formen.\n5) Mit Milch abstreichen und mit Sesamsamen bestreuen.\n6) 60 Minuten garen lassen.\n7) Bei 200°C 15-17 Minuten backen, bis sie goldbraun sind.\n8) Auskühlen lassen.",
+    "procedure_en": "1) Dissolve the yeast in lukewarm water with a teaspoon of sugar.\n2) Combine flour and water, knead for 8 minutes; add salt, softened butter and milk until full gluten development.\n3) Bulk ferment for 1 hour.\n4) Shape into round rolls of 80 g each.\n5) Brush with milk and sprinkle with sesame seeds.\n6) Proof for 60 minutes.\n7) Bake at 200°C for 15-17 minutes until golden brown.\n8) Cool.",
+    "proofing_hours": 1,
+    "rest_minutes": null,
+    "salt_grams": 18.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 580.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino alla Zucca",
+    "bake_minutes": 17.0,
+    "bake_temp": 210.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Purea di zucca",
+        "percent": 35
+      },
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 5
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2.5
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0",
+    "flour_type_de": "Mehl Typ 0",
+    "flour_type_en": "Type 0 flour",
+    "hydration_percent": 45,
+    "image_url": "/recipes/pn_zucca.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Kürbisbrötchen",
+    "name_en": "Pumpkin Roll",
+    "notes": "Panino autunnale alla zucca: colore arancio, mollica umida e leggermente dolce. Riduci l'acqua perché la zucca ne apporta.",
+    "notes_de": "Herbstliches Kürbisbrötchen: orange Farbe, feuchte und leicht süße Krume. Wassermenge reduzieren, da der Kürbis bereits Feuchtigkeit einbringt.",
+    "notes_en": "Autumn pumpkin roll: orange colour, moist and slightly sweet crumb. Reduce the water as the pumpkin already adds moisture.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Cuoci a vapore e frulla la zucca; lasciala intiepidire.\n2) Sciogli il lievito nell'acqua tiepida.\n3) Unisci farina, purea di zucca e poca acqua; impasta 8 minuti, poi sale e olio fino a impasto liscio.\n4) Punta 1 ora.\n5) Forma panini da 85 g; con un tarocco segna gli spicchi a zucca.\n6) Lievita 60 minuti.\n7) Cuoci a 210°C 16-18 minuti.\n8) Raffredda.",
+    "procedure_de": "1) Kürbis dämpfen und pürieren; abkühlen lassen.\n2) Hefe in lauwarmem Wasser auflösen.\n3) Mehl, Kürbispüree und etwas Wasser hinzufügen; 8 Minuten kneten, dann Salz und Öl unterarbeiten bis ein glatter Teig entsteht.\n4) Teigruhe 1 Stunde.\n5) Teiglinge zu je 85 g formen; mit einer Teigkarte Kürbisspalten eindrücken.\n6) 60 Minuten gären lassen.\n7) Bei 210°C 16-18 Minuten backen.\n8) Auskühlen lassen.",
+    "procedure_en": "1) Steam and blend the pumpkin; let it cool slightly.\n2) Dissolve the yeast in lukewarm water.\n3) Combine flour, pumpkin purée and a little water; knead for 8 minutes, then add salt and oil until the dough is smooth.\n4) Bulk ferment for 1 hour.\n5) Shape rolls of 85 g; use a dough scraper to score pumpkin segments.\n6) Proof for 60 minutes.\n7) Bake at 210°C for 16-18 minutes.\n8) Cool.",
+    "proofing_hours": 1,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 450.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino alle Olive",
+    "bake_minutes": 18.0,
+    "bake_temp": 220.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Olive taggiasche denocciolate",
+        "percent": 20
+      },
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 5
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0",
+    "flour_type_de": "Mehl Typ 0",
+    "flour_type_en": "Type 0 flour",
+    "hydration_percent": 64,
+    "image_url": "/recipes/pn_olive.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Olivenbrötchen",
+    "name_en": "Olive Roll",
+    "notes": "Panino mediterraneo alle olive: profumato e saporito. Usa olive ben sgocciolate per non bagnare l'impasto.",
+    "notes_de": "Mediterranes Olivenbrötchen: aromatisch und würzig. Gut abgetropfte Oliven verwenden, damit der Teig nicht zu feucht wird.",
+    "notes_en": "Mediterranean olive roll: fragrant and full of flavour. Use well-drained olives to avoid adding excess moisture to the dough.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Sciogli il lievito nell'acqua tiepida.\n2) Unisci farina e acqua, impasta 8 minuti; aggiungi sale e olio fino a incordatura.\n3) Incorpora le olive taggiasche denocciolate a mano, senza rompere l'impasto.\n4) Punta 1 ora con una piega.\n5) Forma panini o filoncini da 90 g.\n6) Lievita 60-75 minuti.\n7) Cuoci a 220°C con vapore 17-19 minuti.\n8) Raffredda.",
+    "procedure_de": "1) Hefe im lauwarmen Wasser auflösen.\n2) Mehl und Wasser zusammenführen, 8 Minuten kneten; Salz und Öl bis zur Teigbildung einarbeiten.\n3) Die entsteinten Taggiasca-Oliven vorsichtig von Hand einarbeiten, ohne den Teig zu beschädigen.\n4) Teigruhe 1 Stunde mit einer Streckfalte.\n5) Brötchen oder Brötchenstangen zu je 90 g formen.\n6) 60-75 Minuten gären lassen.\n7) Bei 220°C mit Schwaden 17-19 Minuten backen.\n8) Auskühlen lassen.",
+    "procedure_en": "1) Dissolve the yeast in lukewarm water.\n2) Combine flour and water, knead for 8 minutes; add salt and oil until full gluten development.\n3) Fold in the pitted Taggiasca olives by hand, without tearing the dough.\n4) Bulk ferment for 1 hour with one fold.\n5) Shape into rolls or small baguettes of 90 g.\n6) Proof for 60-75 minutes.\n7) Bake at 220°C with steam for 17-19 minutes.\n8) Cool.",
+    "proofing_hours": 1.2,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 640.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino alle Patate",
+    "bake_minutes": 17.0,
+    "bake_temp": 210.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Patate lesse",
+        "percent": 30
+      },
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 5
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2.5
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0",
+    "flour_type_de": "Mehl Type 0",
+    "flour_type_en": "Type 0 flour",
+    "hydration_percent": 52,
+    "image_url": "/recipes/pn_patate.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Kartoffelbrötchen",
+    "name_en": "Potato Roll",
+    "notes": "Panino alle patate: mollica soffice e a lunga conservazione grazie all'amido della patata. Ottimo per hamburger.",
+    "notes_de": "Kartoffelbrötchen: Durch die Stärke der Kartoffel entsteht eine weiche Krume mit langer Frischhaltung. Hervorragend geeignet für Hamburger.",
+    "notes_en": "Potato roll: soft crumb with extended shelf life thanks to the starch in the potato. Excellent for hamburgers.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Lessa e schiaccia le patate; lasciale intiepidire.\n2) Sciogli il lievito nell'acqua tiepida.\n3) Unisci farina, purè di patate e acqua; impasta 8 minuti, poi aggiungi sale e olio fino a impasto liscio.\n4) Punta 1 ora.\n5) Forma panini da 85 g.\n6) Lievita 60-75 minuti.\n7) Cuoci a 210°C 16-18 minuti.\n8) Raffredda su griglia.",
+    "procedure_de": "1) Kartoffeln kochen und stampfen; abkühlen lassen.\n2) Hefe im lauwarmen Wasser auflösen.\n3) Mehl, Kartoffelpüree und Wasser zusammenfügen; 8 Minuten kneten, dann Salz und Öl zugeben bis zu einem glatten Teig.\n4) Teigruhe 1 Stunde.\n5) Brötchen zu je 85 g formen.\n6) 60-75 Minuten gären lassen.\n7) Bei 210°C 16-18 Minuten backen.\n8) Auf einem Gitterrost auskühlen lassen.",
+    "procedure_en": "1) Boil and mash the potatoes; allow to cool slightly.\n2) Dissolve the yeast in lukewarm water.\n3) Combine the flour, mashed potatoes and water; mix for 8 minutes, then add the salt and oil until the dough is smooth.\n4) Bulk ferment for 1 hour.\n5) Divide and shape into 85 g rolls.\n6) Proof for 60-75 minutes.\n7) Bake at 210°C for 16-18 minutes.\n8) Cool on a wire rack.",
+    "proofing_hours": 1.2,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 520.0,
+    "water_temp_c": 18.0,
+    "work_phases": null
+  },
+  {
+    "name": "Panino alle Carote",
+    "bake_minutes": 17.0,
+    "bake_temp": 220.0,
+    "bulk_fermentation_hours": 1,
+    "costing": null,
+    "dough_category": "diretto",
+    "extra_ingredients": [
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 4
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 2
+      }
+    ],
+    "flour_grams": 1000.0,
+    "flour_type": "Farina tipo 0 + carote grattugiate",
+    "flour_type_de": "Mehl Typo 0 + geriebene Karotten",
+    "flour_type_en": "Type 0 flour + grated carrots",
+    "hydration_percent": 63,
+    "image_url": "/recipes/pn_carote.jpg",
+    "menu_category": "panini",
+    "method_type": "diretto",
+    "mix_minutes": 12.0,
+    "name_de": "Panino alle Carote (Karotten)",
+    "name_en": "Carrot Bread Roll",
+    "notes": "Panino al farro dal gusto aromatico e rustico. Impasta con delicatezza: il glutine del farro è più tenace ma fragile.",
+    "notes_de": "Dinkelbrötchen mit aromatisch-rustikalem Geschmack. Sanft kneten: das Dinkelgluten ist zwar kräftig, aber empfindlich.",
+    "notes_en": "A spelt roll with an aromatic, rustic flavour. Knead gently: spelt gluten is stronger but more fragile.",
+    "origin": "IT",
+    "oven_type": "statico",
+    "preferment_type": "none",
+    "procedure": "1) Grattugia finemente 150 g di carote per kg di farina.\n2) Autolisi di farina e acqua, poi impasta con lievito madre, sale e le carote.\n3) Puntata 2 h con una piega.\n4) Forma dei panini da 80-100 g.\n5) Appretto 1,5-2 h.\n6) Cuoci a 210°C per 16-18 min fino a doratura.",
+    "procedure_de": "1) 150 g Karotten je kg Mehl fein reiben.\n2) Autolyse, dann mit Sauerteig, Salz und Karotten kneten.\n3) Stockgare 2 Std. mit einer Faltung.\n4) Brötchen zu 80-100 g formen.\n5) Stückgare 1,5-2 Std.\n6) Bei 210°C 16-18 Min. goldbraun backen.",
+    "procedure_en": "1) Finely grate 150 g carrots per kg of flour.\n2) Autolyse, then mix with sourdough, salt and carrots.\n3) Bulk 2 h with one fold.\n4) Shape 80-100 g rolls.\n5) Proof 1.5-2 h.\n6) Bake at 210C for 16-18 min until golden.",
+    "proofing_hours": 1.3,
+    "rest_minutes": null,
+    "salt_grams": 20.0,
+    "sourdough_grams": 0.0,
+    "water_grams": 630.0,
+    "water_temp_c": 18.0,
+    "work_phases": null,
     "locked": true
   }
 ]
