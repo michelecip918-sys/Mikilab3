@@ -200,8 +200,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
               </div>
             )}
-            {r.image_url && recipeCategory(r).key === "panettoni" && (
-              <img src={r.image_url} alt="" loading="lazy" className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#D7E1DB] dark:border-[#38424B]" />
+            {r.image_url && (r.image_url.startsWith("http") || recipeCategory(r).key === "panettoni") && (
+              <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="w-14 h-14 rounded-xl object-cover shrink-0 border border-[#D7E1DB] dark:border-[#38424B]" />
             )}
             <div className="min-w-0 flex-1">
               <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight line-clamp-3">

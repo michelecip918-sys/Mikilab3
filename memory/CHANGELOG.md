@@ -25,3 +25,16 @@
 - **Sicurezza**: `_teaser_recipe` ora oscura anche procedure_en/notes_en (prima il metodo PRO era leggibile in EN via API). Verificato: 0 leak.
 - Testato iteration_51: frontend 95% (tutte le feature categorie/ricette/traduzioni PASS). Note: nomi ingredienti extra ancora in IT (rifinitura minore); FAB Radio/Parla si sovrappongono su mobile (app-wide). Le nuove ricette sono PRO-gated come le altre (sbloccabili con prova 7gg o login).
 ### Resta solo FASE D: avatar VIDEO animato in Home + "Chiedi al Maestro" (userò il 2° video quando caricato) e tatuaggio sull'avatar Michele.
+
+## v71 (2026-06) — Foto nuove ricette + AUDIT spec
+- **16 foto prodotto** generate (Gemini) e collegate alle nuove ricette (image_url = CDN); miniatura in lista abilitata per foto http + panettoni (onError nasconde rotte). Aumenta la presenza foto (punto 8).
+- Verificato: salvataggio Piano Settimanale (PUT /api/weekly-plan) funziona (200, persiste). Il bug "Continua" segnalato NON è il weekly save → serve reproduzione schermata.
+### AUDIT spec 8 punti — stato:
+1. Nav&Indietro: dedup ✅, Indietro passo-passo ✅, Mio-vs-Utente ⚠️parziale(tab già separati).
+2. Home&Avatar: link Home ⚠️da verificare, Chiedi-al-Maestro avatar animato ❌TODO(Fase D, serve video).
+3. Laboratorio: didascalia ✅, no-PianoSettimanale-in-macchine ✅, Bluetooth facoltativo ✅, prova 7gg ✅, step Conclusione ✅; bug "Continua" ❓da riprodurre; foto reale in Lab ⚠️(c'è nel footer); scorciatoia 'Solo Laboratorio' PWA ❌TODO; procedimenti più guidati ⚠️parziale.
+4. Impara da Casa più dinamica ❌TODO.
+5. Ricette: Focacce/Taralli spostati ✅, Snack+6 ✅, +10 panini ✅, procedimenti estesi ✅.
+6. Traduzioni: Miglioratore ✅, titoli leggibili ✅, INT/Frischhefe ✅, mappatura farine ✅.
+7. Diagnosi fotocamera ✅.
+8. Foto prodotti ✅, footer immagine ✅, WhatsApp solo Corsi/Assistenza/Ordini ✅.
