@@ -835,3 +835,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Stripe LIVE: inserite chiavi live dell'utente in backend/.env (STRIPE_SECRET_KEY sk_live_..., STRIPE_WEBHOOK_SECRET whsec_... del webhook di produzione https://mikilab.de/api/webhook/stripe).
 - Fix "Managed Payments": aggiunto managed_payments={"enabled": False} a tutte e 3 le sessioni checkout (subscription, academy, recipe) per evitare il requisito tax_code. Testati tutti e 3: creano sessioni cs_live_ correttamente.
 - Per PRODUZIONE: serve REDEPLOY per propagare le chiavi live + il fix managed_payments.
+
+## v48-final (2026-06) — Ricettario ampliato + Community + posizionamento
+- +16 ricette: 10 focacce (Genovese, Matera, Altamura, Cipolla di Tropea, Patate&Rosmarino, Olive&Rosmarino, Integrale ai Semi, Pomodorini Secchi, Dolce all'Uva, Cereali&Miele) e 6 pani (Ciabatta, Pane alle Olive, Pane Pugliese, Pane Casereccio, Pane Toscano, Filone di Semola). Tutte con foto locali in /public/recipes e procedimento IT/DE/EN. Totale 81 ricette visibili.
+- Card ricetta: fallback icona ChefHat SEMPRE dietro la foto -> nessuna card vuota anche se un'immagine tarda/fallisce.
+- Baguette (Baguette con Poolish + Filo di Francia) raggruppate in cima alla sezione Pane.
+- Doppioni: ritiro INCONDIZIONATO dei nomi legacy (panettoni/panini vecchi) -> spariscono in produzione al redeploy. SEED_VERSION v48.
+- Community: post di benvenuto ufficiale (autore 'Michele — MikiLab') pubblicato + seeder di avvio per la produzione. Testo allargato a fornai/pasticceri/pizzaioli.
+- Posizionamento: copy IT/DE/EN allargata a fornai, pasticceri, pizzaioli e chi usa ricette/calcoli (assistente IA, 'Chi sono', share, paywall).
+- Stripe LIVE configurato (chiavi utente) + fix Managed Payments su tutte le sessioni; 3 flussi testati (cs_live_).
+- Testing: iteration_56 frontend 100%. Note minori non bloccanti: FAB overlap (ridotto padding), warning console span-in-option inesistente nel codice (falso positivo).

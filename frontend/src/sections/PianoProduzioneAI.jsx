@@ -124,7 +124,7 @@ export default function PianoProduzioneAI() {
   };
 
   return (
-    <div className="pb-24">
+    <div className="pb-40">
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
           <div className="flex-1 bg-[#6B8E62]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />

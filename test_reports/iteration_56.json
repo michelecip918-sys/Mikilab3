@@ -1,0 +1,39 @@
+{
+  "summary": "Frontend-only testing (Italian UI, mobile 390x844) of the new MikiLab recipe showcase: 10 new focacce + 6 new breads, photo fallback (no empty cards), no duplicates, recipe detail/paywall, Community welcome post and 'Il Tuo Laboratorio' 6-step regression as admin. All requested checks PASSED. Ricette tab verified anonymously (public, paywall visible) and as admin (full procedure visible).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Il Tuo Laboratorio > Piano di Produzione (IA) / Passo 4 grid", "issues": ["Floating FABs (Radio bottom-left, Parla bottom-right) overlap form fields and tool cards while scrolling (e.g. 'ORA DI INIZIO' time input and 'Produzione Oggi' card are partially covered). Consider extra bottom padding or hiding the FABs inside tool forms."]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/iteration_56.json"],
+  "action_items": [
+    "Minor: React DOM validity console error on Piano di Produzione (IA): 'In HTML, <span> cannot be a child of <option>' -> hydration warning; remove span/emoji wrapper inside <option> in PianoProduzioneAI.jsx (select 'Scegli una ricetta...').",
+    "Optional: reduce FAB overlap on Laboratorio tool forms (see design_issues)."
+  ],
+  "critical_code_review_comments": [
+    "RecipeList Card renders the ChefHat fallback always behind the <img> and hides the img onError — verified robust: 0 empty cards across all 81 recipes.",
+    "Anonymous users get two 401 console errors at boot (/api/auth/me style calls). Functionally harmless but noisy; consider suppressing expected 401 logging."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100%"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login OK, PRO/admin features visible)",
+  "detailed_results": {
+    "grid_counts": "81 cards total: basi 6, pane 28, panini 13, snack 6, focacce 11, panettoni 17 — matches expectation. All cat-section-<key> headers present.",
+    "empty_cards": "0 cards without photo or fallback icon; 0 cards with broken/unloaded photo (all 81 images loaded, incl. PANINI 13 and PANE 28).",
+    "focacce": "All 11 expected focacce present with loaded photos (Genovese, Matera, Altamura, Cipolla di Tropea, Patate e Rosmarino, Olive e Rosmarino, Integrale ai Semi, Pomodorini Secchi e Origano, Dolce all'Uva (Schiacciata), Cereali e Miele, Barese).",
+    "pani": "All 6 new breads present (Ciabatta, Pane alle Olive, Pane Pugliese, Pane Casereccio, Pane Toscano (sciapo), Filone di Semola al Sesamo). 'Baguette con Poolish' idx=0 and 'Filo di Francia' idx=1 -> adjacent at top of Pane section.",
+    "duplicates": "No duplicate card names across all categories.",
+    "kochstuck": "Only 'Farina Cotta (Kochstück)' present; standalone 'Kochstück' retired.",
+    "recipe_detail": "Anonymous: Focaccia Genovese detail opens, ingredients shown, paywall teaser 'Sblocca la ricetta completa con PRO' + recipe-signature-<id> present, procedure hidden (expected). Admin: full step-by-step PROCEDIMENTO (483 chars) + signature shown, no paywall.",
+    "community": "Exactly 1 post; first post is 'Benvenuti nella community di MikiLab!' by 'Michele — MikiLab'.",
+    "laboratorio_admin": "6 steps (maestro-step-1..6) all render panels; Passo 1 'Prima Configurazione Hardware' with 'Impostazione Macchine' (hardware-only tools), Passo 2 shows single tool 'Le Mie Ricette (aggiungi/scansiona)' + 'Parametri Forno', Passo 4 'Pianificazione Produzione' with 'Piano di Produzione (IA)'. Piano IA tool opens without crash."
+  },
+  "context_for_next_testing_agent": "Backend not tested this iteration (frontend-only request). Ricette tab is reachable without login (anonymous shows paywall teaser). Login flow: click 'Accedi' in header, then auth-email/auth-password/auth-submit. Card names read from h3 inside [data-testid^='recipe-row-']; image health checked via img.complete && naturalWidth>0 after scrolling to trigger lazy loading.",
+  "rca_of_the_issue": "N/A — no functional defects found; only a React <option> child DOM warning and FAB overlap cosmetics."
+}

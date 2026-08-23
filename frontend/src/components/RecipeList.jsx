@@ -225,9 +225,10 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             )}
             {/* foto vetrina */}
             <div className="relative w-full aspect-[4/3] bg-[#EAF0EC] dark:bg-[#1F252B]">
-              {r.image_url
-                ? <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="w-full h-full object-cover" />
-                : <div className="w-full h-full flex items-center justify-center"><ChefHat className="w-9 h-9 text-[#B34A26]/40" /></div>}
+              <div className="absolute inset-0 flex items-center justify-center"><ChefHat className="w-9 h-9 text-[#B34A26]/40" /></div>
+              {r.image_url && (
+                <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="relative z-[1] w-full h-full object-cover" />
+              )}
               {r.origin && flagEmoji(r.origin) && (
                 <span title={countryName(r.origin)} className="absolute top-2.5 right-2 text-xl drop-shadow-md">{flagEmoji(r.origin)}</span>
               )}

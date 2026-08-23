@@ -319,7 +319,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v47-focacce"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v48-focacce-pani"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -378,12 +378,11 @@ async def seed_mikilab_if_empty(force: bool = False):
         {"$set": {"_key": "mikilab_meta", "seed_version": SEED_VERSION, "synced_at": now_iso()}},
         upsert=True,
     )
-    # Le vecchie schede ritirate NON vengono cancellate: le nascondo soltanto (non distruttivo).
+    # Le vecchie schede ritirate vengono SEMPRE nascoste (sono nomi legacy noti, da eliminare
+    # anche se erano state modificate a mano): così i doppioni con i nomi nuovi spariscono.
     for old_name in SEED_RETIRED_NAMES:
-        ex = await db.recipes.find_one({"collection_name": "mikilab", "name": old_name}, {"_id": 0, "user_edited": 1})
-        if ex and not ex.get("user_edited"):
-            await db.recipes.update_one({"collection_name": "mikilab", "name": old_name},
-                {"$set": {"hidden": True, "updated_at": now_iso()}})
+        await db.recipes.update_one({"collection_name": "mikilab", "name": old_name},
+            {"$set": {"hidden": True, "updated_at": now_iso()}})
     # Dedup: per ogni nome del seed tieni UNA sola scheda visibile; i doppioni vengono NASCOSTI (non cancellati).
     seed_names = {dict(it).get("name") for it in items}
     for nm in seed_names:
