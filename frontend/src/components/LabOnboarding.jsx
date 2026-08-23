@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Volume2, VolumeX, ChevronLeft, ChevronRight, X, Check } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
+import { API } from "@/lib/api";
 
 const DONE_KEY = "mikilab_lab_tour_done";
 const base = process.env.PUBLIC_URL || "";
@@ -109,6 +110,32 @@ export default function LabOnboarding() {
   const slides = buildSlides(lang);
   const cur = slides[i];
   const startedRef = useRef(false);
+  const audioElRef = useRef(null);
+
+  const stopAudio = () => {
+    try {
+      if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current.src = ""; audioElRef.current = null; }
+      window.speechSynthesis && window.speechSynthesis.cancel();
+    } catch { /* */ }
+  };
+
+  // Voce umana ElevenLabs; fallback alla voce del dispositivo se non disponibile.
+  const playVoice = async (text) => {
+    stopAudio();
+    try {
+      const res = await fetch(`${API}/tts`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ text, lang }),
+      });
+      if (!res.ok) throw new Error("tts");
+      const blob = await res.blob();
+      const a = new Audio(URL.createObjectURL(blob));
+      audioElRef.current = a;
+      await a.play().catch(() => {});
+    } catch {
+      speak(text, lang);
+    }
+  };
 
   // Apri automaticamente al primo ingresso, o su richiesta via evento.
   useEffect(() => {
@@ -120,14 +147,14 @@ export default function LabOnboarding() {
 
   // Leggi ad alta voce la slide corrente (se audio attivo).
   useEffect(() => {
-    if (!show) { window.speechSynthesis && window.speechSynthesis.cancel(); return; }
-    if (audio && cur) speak(`${cur.title}. ${cur.body}`, lang);
+    if (!show) { stopAudio(); return; }
+    if (audio && cur) playVoice(`${cur.title}. ${cur.body}`);
     // eslint-disable-next-line
   }, [show, i, audio]);
 
   const close = () => {
     localStorage.setItem(DONE_KEY, "1");
-    window.speechSynthesis && window.speechSynthesis.cancel();
+    stopAudio();
     setShow(false);
   };
   const next = () => { if (i < slides.length - 1) setI(i + 1); else close(); };
@@ -137,8 +164,8 @@ export default function LabOnboarding() {
     if (!startedRef.current) { primeVoice(); startedRef.current = true; }
     setAudio((a) => {
       const na = !a;
-      if (!na) window.speechSynthesis && window.speechSynthesis.cancel();
-      else if (cur) speak(`${cur.title}. ${cur.body}`, lang);
+      if (!na) stopAudio();
+      else if (cur) playVoice(`${cur.title}. ${cur.body}`);
       return na;
     });
   };

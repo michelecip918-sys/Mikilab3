@@ -33,6 +33,7 @@ export default function SoundDiagnosi() {
   const [recording, setRecording] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState("");
+  const [wave, setWave] = useState([]);
   const recRef = useRef(false);
   const stopRef = useRef(null);
 
@@ -88,10 +89,13 @@ export default function SoundDiagnosi() {
       an.getByteTimeDomainData(buf);
       let sum = 0;
       for (let i = 0; i < buf.length; i++) { const v = (buf[i] - 128) / 128; sum += v * v; }
-      samples.push(Math.sqrt(sum / buf.length));
+      const rms = Math.sqrt(sum / buf.length);
+      samples.push(rms);
+      setWave((w) => [...w.slice(-47), rms]);
       if (Date.now() - t0 < 8000) setTimeout(tick, 60);
       else finish(samples, (Date.now() - t0) / 1000, cleanup);
     };
+    setWave([]);
     tick();
   };
 
@@ -120,6 +124,19 @@ export default function SoundDiagnosi() {
           className="w-full bg-[#C0574D] hover:bg-[#a8483f] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 animate-pulse">
           <Square className="w-5 h-5" /> {tri("Sto ascoltando… tocca per fermare", "Ich höre zu… tippen zum Stoppen", "Listening… tap to stop")}
         </button>
+      )}
+
+      {recording && (
+        <div data-testid="sound-wave" className="mt-4 rounded-2xl bg-[#33564E] p-4">
+          <div className="flex items-end justify-center gap-[3px] h-16">
+            {wave.length === 0 && <span className="text-white/50 text-xs self-center">{tri("Avvicina il telefono all'impastatrice…", "Handy an den Kneter halten…", "Bring the phone near the mixer…")}</span>}
+            {wave.map((v, k) => (
+              <div key={k} className="w-1.5 rounded-full bg-gradient-to-t from-[#8FB0C2] to-[#EAF0EC] transition-all duration-75"
+                style={{ height: `${Math.max(6, Math.min(100, v * 320))}%` }} />
+            ))}
+          </div>
+          <p className="text-center text-white/70 text-xs mt-2">{tri("Ritmo dell'impasto in tempo reale", "Teig-Rhythmus in Echtzeit", "Dough rhythm in real time")}</p>
+        </div>
       )}
 
       {result && (

@@ -884,3 +884,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Diagnosi Sonora (SoundDiagnosi.jsx + POST /api/diagnosi/sound): registra ~8s il suono dell'impastatrice, estrae feature (loudness/variabilità/regolarità ritmo) e Claude interpreta lo stato impasto (Ancora duro/In incordatura/Pronto) — stima "a orecchio" beta. Strumento nel Lab Passo 5; salva in Diagnosi Recenti (mode suono).
 - Base Quark: aggiunto chip filtro "Quark" + 2 ricette (Panini al Quark/Quarkbrötchen [panini], Frittelle al Quark/Quarkbällchen [snack]) IT/DE/EN.
 - FIX Brezel + Brezel Integrali: erano method_type=indiretto con "Vorteig" nelle note (venivano agganciate al filtro Biga). Ora impasto DIRETTO con autolisi, niente prefermento. SEED_VERSION v51. TOT 90 ricette.
+
+## v52 (2026-06) — Voce ElevenLabs, Condivisione estesa, Diagnosi Sonora Pro
+- Voce Momy ElevenLabs: endpoint POST /api/tts (voice_id Adam maschile, eleven_multilingual_v2) → mp3. LabOnboarding riproduce l'audio ElevenLabs con fallback alla voce del dispositivo (speak). Verificato via curl (mp3 44KB, HTTP 200). NB: elevenlabs==2.64.0 aggiunto a requirements.txt (mancava → avrebbe rotto il deploy).
+- Condivisione estesa: aggiunto tasto Condividi (lib/share.js) a Lista Spesa (usa buildShoppingText) e Food Cost (riepilogo costi/margine). Ora share su: Diagnosi Foto+Sonora, Piano IA, Piano Settimanale, Lista Spesa, Food Cost.
+- Diagnosi Sonora Pro: metro del ritmo in tempo reale durante la registrazione (barre animate da RMS live, data-testid sound-wave).
+- ELEVEN_API_KEY già presente in backend/.env. MOMY_VOICE_ID override via env (default Adam).

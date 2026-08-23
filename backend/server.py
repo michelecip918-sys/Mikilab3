@@ -18,6 +18,7 @@ import secrets
 from datetime import datetime, timezone, timedelta
 
 from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone, ImageContent
+from elevenlabs import ElevenLabs, VoiceSettings
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -1696,6 +1697,38 @@ async def diagnosi_sound(payload: SoundDiagnosiReq, user: dict = Depends(require
         logger.exception("sound diagnosi error")
         raise HTTPException(status_code=500, detail="Errore analisi")
     return {"result": full.strip()}
+
+
+_ELEVEN_KEY = os.environ.get("ELEVEN_API_KEY")
+_eleven_client = ElevenLabs(api_key=_ELEVEN_KEY) if _ELEVEN_KEY else None
+MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "pNInz6obpgDQGcFmaJgB")  # Adam (voce maschile naturale)
+
+
+class TTSReq(BaseModel):
+    text: str
+    lang: str = "it"
+
+
+@api_router.post("/tts")
+def tts_generate(payload: TTSReq):
+    """Genera audio TTS (voce umana ElevenLabs) per l'avatar del laboratorio."""
+    if not _eleven_client:
+        raise HTTPException(status_code=503, detail="TTS non configurato")
+    text = (payload.text or "").strip()[:1200]
+    if not text:
+        raise HTTPException(status_code=400, detail="Testo vuoto")
+    try:
+        gen = _eleven_client.text_to_speech.convert(
+            text=text,
+            voice_id=MOMY_VOICE_ID,
+            model_id="eleven_multilingual_v2",
+            voice_settings=VoiceSettings(stability=0.5, similarity_boost=0.75, style=0.15, use_speaker_boost=True),
+        )
+        audio = b"".join(gen)
+    except Exception:
+        logger.exception("tts error")
+        raise HTTPException(status_code=502, detail="Errore TTS")
+    return StreamingResponse(iter([audio]), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400"})
 
 
 class ScanRecipeRequest(BaseModel):

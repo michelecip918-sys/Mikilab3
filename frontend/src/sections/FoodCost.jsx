@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Euro, Zap, TrendingUp, Plus, Trash2, Flame } from "lucide-react";
+import { Euro, Zap, TrendingUp, Plus, Trash2, Flame, Share2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { shareContent } from "@/lib/share";
 
 const STORE = "mikilab_foodcost";
 const load = () => { try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) return s; } catch { /* */ } return null; };
@@ -117,6 +118,22 @@ export default function FoodCost() {
           </p>
         )}
       </div>
+
+      <button data-testid="fc-share" onClick={() => {
+        const L = tri("Food Cost — MikiLab", "Food Cost — MikiLab", "Food Cost — MikiLab");
+        const txt = [
+          `${tri("Materie prime", "Rohstoffe", "Ingredients")}: ${eur(ingrCost)}`,
+          `${tri("Energia", "Energie", "Energy")} (${kwh.toFixed(1)} kWh): ${eur(energyCost)}`,
+          `${tri("Costo totale", "Gesamtkosten", "Total cost")}: ${eur(total)}`,
+          `${tri("Costo per pezzo", "Kosten/Stück", "Cost/piece")}: ${eur(costPiece)}`,
+          `${tri("Prezzo vendita/pezzo", "VK/Stück", "Sell/piece")}: ${eur(num(s.sell))}`,
+          margin != null ? `${tri("Margine", "Marge", "Margin")}: ${margin.toFixed(0)}%` : "",
+        ].filter(Boolean).join("\n");
+        shareContent(L, txt, lang);
+      }}
+        className="mt-3 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-5 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
+        <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
+      </button>
     </div>
   );
 }
