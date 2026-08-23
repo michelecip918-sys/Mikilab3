@@ -13,7 +13,7 @@ export default function LearnHub({ initial = "impara", onNavigate }) {
   const [sub, setSub] = useState(["impara", "news", "enciclopedia"].includes(initial) ? initial : "impara");
 
   const TABS = [
-    { id: "impara", label: tri("Video Mentore", "Mentor-Videos", "Mentor Videos"), Icon: GraduationCap },
+    { id: "impara", label: tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home"), Icon: GraduationCap },
     { id: "news", label: t("nav_news"), Icon: Newspaper },
     { id: "enciclopedia", label: tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia"), Icon: Library },
   ];

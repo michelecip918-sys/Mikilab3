@@ -1,0 +1,35 @@
+{
+  "summary": "Regressione completa post-refactoring navigazione + rimozione Video Mentore. Backend: 15/15 test pytest PASS (/app/backend/tests/test_iter53_regression.py) su monetizzazione multi-tier, legale e sicurezza. Frontend: bottom bar con esattamente 5 tab (nessuna Diagnosi), Community raggiungibile da tab e card Home, Impara con 3 sotto-tab, ZERO tracce di mentori, Academy con 4 sotto-tab (ricettario/farine/diagnosi/corsi), ricettario dinamico + PDF trilingue, ricerca farine, gating tier home vs lab, avatar con player nativo funzionante nelle 3 lingue. Nessun bug bloccante trovato. Grant temporaneo su fornaio@mikilab.de revocato a fine test (status: pro:false, academy:false, plan_tier:null, diagnosi_limit:0).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Impara / Academy (mobile 390px)", "issues": ["I FAB flottanti 'Radio' (in basso a sinistra) e 'Parla' (in basso a destra) coprono parzialmente il contenuto delle card in fondo alla lista (es. testo 'Database farine · Trova la farina giusta e le corrispondenze IT/DE' risulta tagliato). Aggiungere padding-bottom alla colonna contenuto."]},
+      {"screen": "Academy → Ricettario", "issues": ["I selettori 'Ricetta' e 'Farina' (calc-recipe / calc-flour) usano ancora <select> nativo invece del componente Select shadcn: stile incoerente e genera un warning React di hydration in console (<span> child of <option>)."]},
+      {"screen": "Tutte le pagine desktop 1920px", "issues": ["Layout resta una colonna ~440px centrata: ampie aree vuote sui lati (già segnalato in iter52, non bloccante)."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter53_regression.py",
+    "/app/test_reports/pytest/iter53.xml"
+  ],
+  "action_items": [
+    "Opzionale: sostituire i <select> nativi in AcademyHome (calc-recipe/calc-flour) con il Select shadcn (rimuove anche il warning di hydration).",
+    "Opzionale: aggiungere padding-bottom al contenitore delle sezioni per evitare che i FAB Radio/Parla coprano le ultime card su mobile.",
+    "Opzionale (pulizia): rimuovere il codice morto StoccardaPanel() in sections/MaestroSaTutto.jsx (~130 righe, mai renderizzato) — segnalato già in iter52 e ancora presente."
+  ],
+  "critical_code_review_comments": [
+    "server.py 2975 righe: continua a superare largamente il limite di 700 → splittare in router (auth, recipes, billing, academy, ai).",
+    "get_announcements applica il filtro legale in lettura con $not/$regex su title+details ad ogni richiesta e chiama seed_announcements_if_empty() per ogni GET: corretto funzionalmente ma non indicizzabile; considerare una migrazione one-shot + indice.",
+    "admin_revoke ora azzera pro/academy/plan_tier/expires_at correttamente (bug iter52 risolto), ma 'source' resta 'vip' dopo la revoca: cosmetico, valutare l'unset."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter53_regression.py"],
+  "success_rate": {"backend": "100% (15/15)", "frontend": "100% dei controlli richiesti"},
+  "seed_data_creation": "Nessun dato permanente. Grant tier=home temporaneo su fornaio@mikilab.de (per test UI Academy/Diagnosi) → REVOCATO a fine test e verificato (academy:false, plan_tier:null, diagnosi_limit:0). Annuncio TEST_iter53 creato e cancellato.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin), fornaio@mikilab.de / Mikilab2026! (user senza entitlement)",
+  "context_for_next_testing_agent": "Eseguire i test con -n 0 (pytest.ini usa xdist; grant/revoke sullo stesso utente in parallelo si disturbano). Verificato PASS: subscription/status anon {pro:false,academy:false,plan_tier:null,diagnosi_limit:0}; grant tier=home su fornaio → {academy:true, plan_tier:'home', diagnosi_limit:10}; revoke azzera tutto; checkout subscription monthly home+lab → URL Stripe cs_test; recipe/checkout single → URL, single senza recipe_id → 400; announcements/news puliti da Stoccarda/Stuttgart/Cannstatt; POST /api/oven-profiles anon 401, PUT /api/weekly-plan anon 401, POST /api/announcements anon 403 e admin 200. Frontend: la login screen NON compare all'avvio (app pubblica) → per autenticarsi cliccare [data-testid='login-btn'] nell'header, poi auth-email/auth-password/auth-submit. Verificato: bottom-nav 5 tab esatte, Community 'Community dei Panettieri', learn-subnav 3 tab (Impara da Casa/News/Enciclopedia del Pane), mentor-showcase/mentor-video/academy-tab-mentori assenti e nessun testo 'Mentore' in pagina, academy-subnav = ricettario/farine/diagnosi/corsi, calc 30x40→660g farina e 50x60→1650g, calc-print apre popup con contenuto IT+DE+EN (Farina/Mehl/Flour, Teglia/Blech/Tin), flour-search 'Dinkel' 11→2 righe, academy-diag-usage '0/10 questo mese' con tier home, academy-open-diagnosi apre Diagnosi (non paywalled con tier home) mentre 'Il Tuo Laboratorio' resta a paywall PRO, home-quick-diagnosi e home-community-card navigano correttamente, home-talking-avatar <video controls> con currentSrc michele-explainer-{it,de,en}.webm e currentTime che avanza (2.37s dopo play).",
+  "rca_of_the_issue": "Nessun difetto funzionale riprodotto in questa iterazione. I bug di iter52 (revoke non azzerava academy/plan_tier, diagnosi_limit null per anonimo, annunci con riferimenti a Stoccarda, mutazioni non autenticate) risultano tutti corretti e verificati."
+}

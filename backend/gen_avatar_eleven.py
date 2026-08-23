@@ -11,7 +11,7 @@ SCRIPTS = {
         "Nella sezione Ricette trovi tutte le mie ricette, con dosi e ingredienti precisi per pane, focacce e panettoni. "
         "Nel Tuo Laboratorio pianifichi la produzione, calcoli idratazione e costi e gestisci fermentazioni e igiene. "
         "Con la Diagnosi scatti una foto dell'impasto o della crosta e l'intelligenza artificiale ti dice cosa migliorare. "
-        "Nella sezione Impara cresci con i video mentore, il ricettario dinamico e l'Enciclopedia del Pane. "
+        "Nella sezione Impara cresci con corsi passo-passo, il ricettario dinamico con calcolo delle dosi e l'Enciclopedia del Pane. "
         "E nella Community ci confrontiamo tutti insieme, tra appassionati. "
         "Inizia subito: tu pensi al pane, al resto pensiamo noi."
     ),
@@ -20,7 +20,7 @@ SCRIPTS = {
         "Im Bereich Rezepte findest du alle meine Rezepte, mit genauen Mengen und Zutaten für Brot, Focaccia und Panettone. "
         "In deinem Labor planst du die Produktion, berechnest Hydration und Kosten und verwaltest Gärung und Hygiene. "
         "Mit der Diagnose machst du ein Foto vom Teig oder von der Kruste, und die künstliche Intelligenz sagt dir, was du verbessern kannst. "
-        "Im Bereich Lernen wächst du mit Mentor-Videos, dem dynamischen Rezeptbuch und dem Brot-Lexikon. "
+        "Im Bereich Lernen wächst du mit Schritt-für-Schritt-Kursen, dem dynamischen Rezeptbuch und dem Brot-Lexikon. "
         "Und in der Community tauschen wir uns alle gemeinsam aus. "
         "Leg gleich los: Du denkst ans Brot, um den Rest kümmern wir uns."
     ),
@@ -29,7 +29,7 @@ SCRIPTS = {
         "In the Recipes section you'll find all my recipes, with precise doses and ingredients for bread, focaccia and panettone. "
         "In Your Lab you plan production, calculate hydration and costs, and manage fermentation and hygiene. "
         "With Diagnosis you take a photo of your dough or crust, and the artificial intelligence tells you what to improve. "
-        "In the Learn section you grow with mentor videos, the dynamic recipe book and the Bread Encyclopedia. "
+        "In the Learn section you grow with step-by-step courses, the dynamic recipe book and the Bread Encyclopedia. "
         "And in the Community we all share and help each other. "
         "Get started now: you think about the bread, we'll handle the rest."
     ),

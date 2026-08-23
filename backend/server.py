@@ -956,11 +956,7 @@ ANNOUNCEMENT_SEED = [
 
 
 async def seed_announcements_if_empty():
-    # Migrazione legale: rimuovi gli annunci storici con riferimenti a Stoccarda/Stuttgart.
-    await db.announcements.delete_many({"$or": [
-        {"title": {"$regex": "Stoccarda|Stuttgart|Cannstatt", "$options": "i"}},
-        {"details": {"$regex": "Stoccarda|Stuttgart|Cannstatt", "$options": "i"}},
-    ]})
+    # Solo inserimento se la collezione è vuota (nessuna cancellazione: sicuro anche per richiesta).
     if await db.announcements.count_documents({}) == 0:
         for item in ANNOUNCEMENT_SEED:
             ann = Announcement(**item)
@@ -970,7 +966,10 @@ async def seed_announcements_if_empty():
 @api_router.get("/announcements", response_model=List[Announcement])
 async def get_announcements():
     await seed_announcements_if_empty()
-    docs = await db.announcements.find({}, {"_id": 0}).sort("created_at", 1).to_list(500)
+    # Filtro legale in LETTURA (non distruttivo): nasconde eventuali annunci storici con riferimenti locali.
+    query = {"title": {"$not": {"$regex": "Stoccarda|Stuttgart|Cannstatt", "$options": "i"}},
+             "details": {"$not": {"$regex": "Stoccarda|Stuttgart|Cannstatt", "$options": "i"}}}
+    docs = await db.announcements.find(query, {"_id": 0}).sort("created_at", 1).to_list(500)
     return docs
 
 

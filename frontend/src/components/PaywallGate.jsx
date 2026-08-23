@@ -76,21 +76,18 @@ const FEATURES = {
   beginners: {
     it: [
       [GraduationCap, "Corsi passo-passo", "Home-baking spiegato bene: pane, pizza in teglia, focaccia"],
-      [Sparkles, "Video Mentore", "Scegli il tuo mentore e segui i tutorial di pane e pasticceria"],
       [ClipboardList, "Ricettario dinamico", "Dosi calcolate automaticamente in base a teglia e farina"],
       [BookOpen, "Database farine", "Trova la farina giusta e le corrispondenze IT/DE"],
       [Camera, "10 Diagnosi Foto IA/mese", "Correggi errori di cottura e lievitazione da una foto"],
     ],
     de: [
       [GraduationCap, "Schritt-für-Schritt-Kurse", "Home-Baking gut erklärt: Brot, Blechpizza, Focaccia"],
-      [Sparkles, "Mentor-Videos", "Wähle deinen Mentor und folge den Tutorials"],
       [ClipboardList, "Dynamisches Rezeptbuch", "Mengen automatisch nach Blech und Mehl berechnet"],
       [BookOpen, "Mehl-Datenbank", "Finde das richtige Mehl und die IT/DE-Entsprechungen"],
       [Camera, "10 Foto-Diagnosen/Monat", "Korrigiere Back- und Gärfehler per Foto"],
     ],
     en: [
       [GraduationCap, "Step-by-step courses", "Home baking explained well: bread, pan pizza, focaccia"],
-      [Sparkles, "Mentor videos", "Choose your mentor and follow the tutorials"],
       [ClipboardList, "Dynamic recipe book", "Doses auto-calculated from your tin and flour"],
       [BookOpen, "Flour database", "Find the right flour and IT/DE matches"],
       [Camera, "10 AI Photo Diagnoses/month", "Fix baking and proofing mistakes from a photo"],
@@ -201,9 +198,9 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
         <h2 className="font-display text-2xl font-bold">{sectionName} · {tierForFeature === "home" ? "Academy" : "PRO"}</h2>
         <p className="text-white/85 text-sm mt-2">
           {feature === "beginners" || feature === "home"
-            ? tri("«Impara da Casa» — la tua Academy completa a €12,99/mese: corsi, video mentore, ricettario dinamico e 10 Diagnosi Foto al mese.",
-                  "«Von zu Hause lernen» — deine komplette Academy für €12,99/Monat: Kurse, Mentor-Videos, dynamisches Rezeptbuch und 10 Foto-Diagnosen/Monat.",
-                  "«Learn from Home» — your complete Academy at €12.99/month: courses, mentor videos, dynamic recipe book and 10 photo diagnoses/month.")
+            ? tri("«Impara da Casa» — la tua Academy completa a €12,99/mese: corsi, ricettario dinamico, database farine e 10 Diagnosi Foto al mese.",
+                  "«Von zu Hause lernen» — deine komplette Academy für €12,99/Monat: Kurse, dynamisches Rezeptbuch, Mehl-Datenbank und 10 Foto-Diagnosen/Monat.",
+                  "«Learn from Home» — your complete Academy at €12.99/month: courses, dynamic recipe book, flour database and 10 photo diagnoses/month.")
             : tri("Questa sezione è riservata agli abbonati PRO. Sblocca tutti gli strumenti del laboratorio.",
                   "Dieser Bereich ist PRO-Abonnenten vorbehalten. Schalte alle Werkzeuge frei.",
                   "This section is reserved for PRO members. Unlock all the lab tools.")}

@@ -1,20 +1,9 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Calculator, Wheat, Camera, Printer, Crown, PlayCircle } from "lucide-react";
+import { GraduationCap, Calculator, Wheat, Camera, Printer, Crown } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { subscriptionApi } from "@/lib/api";
-import { FLOURS, CALC_RECIPES, ACADEMY_VIDEOS } from "@/data/academy";
+import { FLOURS, CALC_RECIPES } from "@/data/academy";
 import Beginners from "@/sections/Beginners";
-
-function MentorEmbed({ yt, title }) {
-  return (
-    <div className="relative w-64 shrink-0 overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: "16 / 9" }}>
-      <iframe className="absolute inset-0 w-full h-full"
-        src={`https://www.youtube.com/embed/${yt}?rel=0&modestbranding=1&playsinline=1&cc_load_policy=1`}
-        title={title} loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen" allowFullScreen />
-    </div>
-  );
-}
 
 export default function AcademyHome({ onNavigate }) {
   const { lang } = useLang();
@@ -54,23 +43,6 @@ export default function AcademyHome({ onNavigate }) {
             <Camera className="w-4 h-4" /> {tri("Diagnosi Foto", "Foto-Diagnosen", "Photo diagnoses")}: {diagUsed}/{diagLimit} {tri("questo mese", "diesen Monat", "this month")}
           </div>
         )}
-      </div>
-
-      {/* Video Mentore — showcase in alto (Header/Hero) */}
-      <div className="mb-5" data-testid="mentor-showcase">
-        <div className="flex items-center gap-2 mb-2">
-          <PlayCircle className="w-4 h-4 text-[#6B8E62]" />
-          <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Video Mentore", "Mentor-Videos", "Mentor Videos")}</p>
-        </div>
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
-          {ACADEMY_VIDEOS.map((v) => (
-            <div key={v.id} data-testid={`mentor-video-${v.id}`} className="shrink-0">
-              <MentorEmbed yt={v.yt} title={L(v.title)} />
-              <p className="w-64 mt-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight truncate">{L(v.title)}</p>
-              <p className="w-64 text-[11px] text-[#7E8A93]">{v.duration} · CC IT·DE·EN</p>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Sub-nav */}
