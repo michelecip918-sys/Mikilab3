@@ -17,7 +17,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false }) {
+export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition }) {
   const [scale, setScale] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -157,7 +157,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   return (
     <div className="pb-4">
       <div className="relative rounded-3xl overflow-hidden mb-5 h-40">
-        <img src={heroImage} alt="" className="w-full h-full object-cover" />
+        <img src={heroImage} alt="" className="w-full h-full object-cover" style={heroPosition ? { objectPosition: heroPosition } : undefined} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/30 to-transparent" />
         <div className="absolute bottom-0 left-0 p-5">
           <h1 className="font-display text-3xl font-bold text-white">{heroTitle}</h1>
@@ -728,7 +728,7 @@ function fmtTemp(v) {
 }
 
 // Categoria e ordine di visualizzazione: Backmittel -> Lievito Madre -> Panettoni -> Pane -> Panini
-const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre Solido", "LiCoLi (Lievito in Coltura Liquida)", "Lievito Madre di Segale", "Poolish", "Kochstück"];
+const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre Solido", "LiCoLi (Lievito in Coltura Liquida)", "Lievito Madre di Segale", "Poolish", "Farina Cotta (Kochstück)"];
 
 // Badge sintetici derivati dalla ricetta (LM, LDB, Vk, Rg, Poolish, Biga, numeri farina).
 function recipeBadges(r) {
