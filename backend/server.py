@@ -319,7 +319,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v50-basi-snack-kochstuck"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v51-brezel-diretto-quark"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -1656,6 +1656,46 @@ async def diagnosi_recent(user: dict = Depends(current_user)):
 async def diagnosi_delete(diag_id: str, user: dict = Depends(current_user)):
     await db.diagnoses.delete_one({"id": diag_id, "user_id": user["user_id"]})
     return {"ok": True}
+
+
+class SoundDiagnosiReq(BaseModel):
+    features: dict
+    lang: str = "it"
+
+
+@api_router.post("/diagnosi/sound")
+async def diagnosi_sound(payload: SoundDiagnosiReq, user: dict = Depends(require_diagnosi)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    f = payload.features or {}
+    prompt = (
+        "Sei un mastro fornaio esperto. Un fornaio ha registrato il SUONO dell'impastatrice mentre lavora l'impasto. "
+        "Non hai l'audio, solo queste misure acustiche estratte dal microfono: "
+        f"volume medio={f.get('loudness')}, variabilita del volume={f.get('variability')}, "
+        f"regolarita del ritmo (0=irregolare, 1=molto ritmico)={f.get('regularity')}, durata s={f.get('duration')}. "
+        "Regola d'interpretazione: un ritmo REGOLARE (regolarita alta) con schiaffo netto indica impasto BEN INCORDATO/quasi pronto; "
+        "un suono IRREGOLARE, con carico pesante e poca ritmicita (regolarita bassa, alta variabilita) indica impasto ANCORA DURO/non incordato. "
+        "Rispondi BREVE (max 6 righe) con: 1) Stato stimato (Ancora duro / In incordatura / Pronto), "
+        "2) Cosa fare adesso (es. continua N minuti, aggiungi acqua a filo, cambia velocita), 3) Tra quanto ricontrollare. "
+        "Precisa che e una stima 'a orecchio', non un sensore di laboratorio."
+    )
+    prompt += LANG_DIRECTIVE.get(payload.lang, LANG_DIRECTIVE["it"])
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"sound-{uuid.uuid4()}",
+        system_message="Sei 'Il Maestro del Pane', esperto di panificazione artigianale.",
+    ).with_model("anthropic", "claude-sonnet-4-6")
+    full = ""
+    try:
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+    except Exception:
+        logger.exception("sound diagnosi error")
+        raise HTTPException(status_code=500, detail="Errore analisi")
+    return {"result": full.strip()}
 
 
 class ScanRecipeRequest(BaseModel):

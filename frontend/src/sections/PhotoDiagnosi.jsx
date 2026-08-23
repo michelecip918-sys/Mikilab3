@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper, Cog, History, Trash2, ChevronDown } from "lucide-react";
+import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper, Cog, History, Trash2, ChevronDown, Share2 } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
+import { shareContent } from "@/lib/share";
 import { HeroAvatar } from "@/components/MikiAvatar";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 
@@ -88,7 +89,7 @@ export default function PhotoDiagnosi() {
     { id: "scopri", label: t("photo_mode_discover"), desc: t("photo_mode_discover_desc"), Icon: Lightbulb },
     { id: "macchine", label: t("photo_mode_machines"), desc: t("photo_mode_machines_desc"), Icon: Cog },
   ];
-  const modeLabel = (id) => (MODES.find((m) => m.id === id) || {}).label || id;
+  const modeLabel = (id) => (id === "suono" ? (lang === "de" ? "Klang-Diagnose" : lang === "en" ? "Sound diagnosis" : "Diagnosi Sonora") : (MODES.find((m) => m.id === id) || {}).label || id);
 
   const loadRecent = async () => {
     try {
@@ -233,6 +234,12 @@ export default function PhotoDiagnosi() {
           <ReactMarkdown>{result}</ReactMarkdown>
         </div>
       )}
+      {result && (
+        <button data-testid="photo-share-btn" onClick={() => shareContent(`${modeLabel(mode)} — MikiLab`, result, lang)}
+          className="mt-2 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
+          <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : "Condividi"}
+        </button>
+      )}
 
       {recent.length > 0 && (
         <div data-testid="diagnosi-recenti" className="mt-8">
@@ -259,6 +266,7 @@ export default function PhotoDiagnosi() {
                       <p className="font-semibold text-sm text-[#2B303B] dark:text-[#EAF0EC] truncate">{modeLabel(d.mode)}</p>
                       <p className="text-[11px] text-[#7E8A93]">{new Date(d.created_at).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
                     </button>
+                    <button data-testid={`diagnosi-share-${d.id}`} onClick={() => shareContent(`${modeLabel(d.mode)} — MikiLab`, d.result, lang)} className="p-2 text-[#5E8B7E] active:scale-90 shrink-0" aria-label="share"><Share2 className="w-4 h-4" /></button>
                     <button data-testid={`diagnosi-delete-${d.id}`} onClick={() => deleteRecent(d.id)} className="p-2 text-[#C0574D] active:scale-90 shrink-0" aria-label="delete"><Trash2 className="w-4 h-4" /></button>
                     <button onClick={() => setOpenRec(isOpen ? null : d.id)} className="p-1 text-[#7E8A93] shrink-0" aria-label="toggle"><ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} /></button>
                   </div>

@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2 } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
+import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -237,6 +238,10 @@ export default function PianoProduzioneAI() {
             <button data-testid="capo-print" onClick={() => window.print()}
               className="no-print mt-3 w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {t("capo_print")}
+            </button>
+            <button data-testid="capo-share" onClick={() => shareContent(lang === "de" ? "Produktionsplan — MikiLab" : lang === "en" ? "Production plan — MikiLab" : "Piano di Produzione — MikiLab", plan, lang)}
+              className="no-print mt-2 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-5 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] active:scale-98 transition-all flex items-center justify-center gap-2">
+              <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : "Condividi"}
             </button>
 
             <div className="print-area mt-4 space-y-4">

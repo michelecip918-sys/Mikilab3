@@ -876,3 +876,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Tour Momy espanso: slide "Tutti i miei strumenti" (elenco completo dei 27 strumenti raggruppati) + slide comandi aggiornata (Diagnosi legge difetti/impasto/ingredienti/macchine da foto o video + Diagnosi Recenti). Body slide scrollabile (max-h-40vh).
 - Rifiniture: PhotoDiagnosi pb-24 (no overlap FAB), thumb con fallback icona Camera onError.
 - Testing: iteration_59 frontend 100% (2/2). Backend diagnosi verificato via curl.
+
+## v51 (2026-06) — Voce, Condivisione, Diagnosi Sonora, Quark, fix Brezel
+- Voce tour Lab (voice.js): preferenza voce maschile + non-femminile, pitch 0.9 / rate 0.95 (più fluida, meno robotica).
+- FlourTable ora visibile in TUTTE le liste ricette (anche Ricettario MikiLab), non solo personali.
+- Condivisione universale (lib/share.js, Web Share API + fallback copia): aggiunta a Diagnosi Foto (risultato + ogni voce recente), Piano IA (capo-share), Diagnosi Sonora. WeeklyPlan la aveva già.
+- Diagnosi Sonora (SoundDiagnosi.jsx + POST /api/diagnosi/sound): registra ~8s il suono dell'impastatrice, estrae feature (loudness/variabilità/regolarità ritmo) e Claude interpreta lo stato impasto (Ancora duro/In incordatura/Pronto) — stima "a orecchio" beta. Strumento nel Lab Passo 5; salva in Diagnosi Recenti (mode suono).
+- Base Quark: aggiunto chip filtro "Quark" + 2 ricette (Panini al Quark/Quarkbrötchen [panini], Frittelle al Quark/Quarkbällchen [snack]) IT/DE/EN.
+- FIX Brezel + Brezel Integrali: erano method_type=indiretto con "Vorteig" nelle note (venivano agganciate al filtro Biga). Ora impasto DIRETTO con autolisi, niente prefermento. SEED_VERSION v51. TOT 90 ricette.

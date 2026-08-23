@@ -173,7 +173,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       ) : null}
 
-      {collectionName !== "mikilab" && <FlourTable />}
+      <FlourTable />
 
       {canEdit && (
         <button
@@ -822,7 +822,7 @@ function badgeTitle(b, lang) {
 }
 
 // Basi/prefermenti presenti in una ricetta → per il filtro "per Base".
-const BASE_KEYS = ["poolish", "biga", "lm", "segale", "licoli", "kochstuck", "diretto"];
+const BASE_KEYS = ["poolish", "biga", "lm", "segale", "licoli", "kochstuck", "quark", "diretto"];
 function recipeBase(r) {
   const pref = (r.preferment_type || "").toLowerCase();
   const ft = (r.flour_type || "").toLowerCase();
@@ -837,6 +837,7 @@ function recipeBase(r) {
   if (/segale|roggen|\brye\b/.test(hay)) out.push("segale");
   if (pref === "lm" || /lievito madre|pasta madre|lievito naturale|sauerteig|sourdough/.test(hay)) out.push("lm");
   if (/kochst|farina cotta/.test(hay)) out.push("kochstuck");
+  if (/quark/.test(hay)) out.push("quark");
   if (out.length === 0 || pref === "diretto" || pref === "none" || pref === "") out.push("diretto");
   return [...new Set(out)];
 }
@@ -850,6 +851,7 @@ function baseLabel(k, lang) {
     case "segale": return de ? "Roggen-ST" : en ? "Rye sourdough" : "LM di Segale";
     case "licoli": return "LiCoLi";
     case "kochstuck": return de ? "Kochstück" : en ? "Cooked flour" : "Farina Cotta";
+    case "quark": return "Quark";
     case "diretto": return de ? "Direkt" : en ? "Direct" : "Diretto";
     default: return k;
   }

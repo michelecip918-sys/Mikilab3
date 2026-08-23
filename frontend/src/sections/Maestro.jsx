@@ -39,6 +39,7 @@ import HighFive from "@/components/HighFive";
 import FlourTable from "@/components/FlourTable";
 import LabOnboarding from "@/components/LabOnboarding";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
+import SoundDiagnosi from "@/sections/SoundDiagnosi";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import MohammedAssistant from "@/sections/MohammedAssistant";
@@ -80,6 +81,7 @@ export default function Maestro() {
     { id: "salespoints", title: lang === "de" ? "Verkaufspunkte" : lang === "en" ? "Sales points" : "Punti Vendita", desc: "", Icon: Store },
     { id: "pianoai", title: lang === "de" ? "Produktionsplan (KI)" : lang === "en" ? "Production plan (AI)" : "Piano di Produzione (IA)", desc: "", Icon: Sparkles },
     { id: "diagnosi", title: lang === "de" ? "Foto-Diagnose (Teig & Maschinen)" : lang === "en" ? "Photo Diagnosis (dough & machines)" : "Diagnosi Foto (Impasti & Macchine)", desc: "", Icon: Camera },
+    { id: "suono", title: lang === "de" ? "Klang-Diagnose (Kneter)" : lang === "en" ? "Sound Diagnosis (mixer)" : "Diagnosi Sonora (Impastatrice)", desc: "", Icon: Camera },
   ];
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
@@ -88,7 +90,7 @@ export default function Maestro() {
     { icon: BookOpen, title: tri("Le Mie Ricette & Parametri", "Meine Rezepte & Parameter", "My Recipes & Parameters"), sub: tri("Inserisci o scansiona le tue ricette e imposta i parametri del forno", "Rezepte erfassen/scannen und Ofenparameter einstellen", "Add or scan recipes and set oven parameters"), tools: ["aggiungi", "adatta"], flourTable: true },
     { icon: Store, title: tri("Logistica & Punti Vendita", "Logistik & Verkaufspunkte", "Logistics & Sales Points"), sub: tri("Configura i punti vendita e gestisci personale e turni", "Verkaufspunkte einrichten und Personal & Schichten verwalten", "Set up sales points and manage staff & shifts"), tools: ["salespoints", "turni"] },
     { icon: CalendarDays, title: tri("Pianificazione Produzione", "Produktionsplanung", "Production Planning"), sub: tri("Piano settimanale e piano di lavoro di oggi, piano IA, tempi a ritroso, spesa e food cost", "Wochenplan und heutiger Arbeitsplan, KI-Plan, Rückwärtszeiten, Einkauf und Food Cost", "Weekly plan and today's work plan, AI plan, backward timing, shopping and food cost"), tools: ["pianoai", "settimana", "lavoro", "inversa", "spesa", "foodcost"] },
-    { icon: Thermometer, title: tri("Operatività In Corso", "Laufender Betrieb", "Live Operations"), sub: tri("Calcolo temperatura acqua, pesata guidata, timer e sensori (meteo, pH, twin)", "Wassertemperatur, geführtes Wiegen, Timer und Sensoren (Wetter, pH, Twin)", "Water temperature, guided weighing, timers and sensors (weather, pH, twin)"), tools: ["acqua", "pesata", "timer", "meteo", "ph", "twin", "diagnosi"], diagnosiInfo: true },
+    { icon: Thermometer, title: tri("Operatività In Corso", "Laufender Betrieb", "Live Operations"), sub: tri("Calcolo temperatura acqua, pesata guidata, timer e sensori (meteo, pH, twin)", "Wassertemperatur, geführtes Wiegen, Timer und Sensoren (Wetter, pH, Twin)", "Water temperature, guided weighing, timers and sensors (weather, pH, twin)"), tools: ["acqua", "pesata", "timer", "meteo", "ph", "twin", "diagnosi", "suono"], diagnosiInfo: true },
     { icon: CheckSquare, title: tri("Chiusura & Tracciabilità", "Abschluss & Rückverfolgung", "Closing & Traceability"), sub: tri("Chiudi la giornata: Diario Impasti, Tracciabilità Lotti, Registro HACCP e controlli finali", "Tag abschließen: Teig-Tagebuch, Chargen-Rückverfolgung, HACCP und Endkontrollen", "Close the day: Dough Log, Batch Traceability, HACCP and final checks"), tools: ["sessioni", "lotti", "haccp", "check", "shelf", "spreco"], conclusione: true },
   ];
   const current = STEPS[step];
@@ -135,6 +137,7 @@ export default function Maestro() {
         {tool === "salespoints" && <SalesPoints />}
         {tool === "dayclose" && <DayClose />}
         {tool === "diagnosi" && <PhotoDiagnosi />}
+        {tool === "suono" && <SoundDiagnosi />}
       </div>
     );
   }

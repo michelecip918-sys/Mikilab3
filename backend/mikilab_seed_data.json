@@ -289,8 +289,8 @@
   "bake_minutes": 15,
   "oven_type": "ventilato",
   "image_url": "/recipes/r_bretzel.jpg",
-  "notes": "Con Vorteig (H2o Vk 850 g). Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
-  "method_type": "indiretto",
+  "notes": "Impasto DIRETTO con autolisi (riposo iniziale di farina e acqua 20-30 min prima di sale e lievito): niente biga ne prefermento. Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
+  "method_type": "diretto",
   "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",
   "extra_ingredients": [
    {
@@ -340,7 +340,7 @@
   ],
   "origin": "de",
   "name_de": "Brezel",
-  "notes_de": "Mit Vorteig (Wasser Vk 850 g). Vor dem Backen in Natronlauge (Lauge) tauchen, grobe Salzkörner auf der Oberfläche.",
+  "notes_de": "DIREKTER Teig mit Autolyse (Mehl und Wasser 20-30 Min. ruhen lassen, vor Salz und Hefe): kein Vorteig, keine Biga. Vor dem Backen in Natronlauge tauchen, grobes Salz obenauf.",
   "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) KÜHLSCHRANK direkt nach dem Kneten: über Nacht im Kühlschrank (4–6 °C) reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 220 °C für 15 Minuten, mit Schwaden in den ersten 10 Minuten.",
   "flour_type_de": "630 1,5 kg + Vollkorn 1,3 kg",
   "real_name": "Bretzel classico",
@@ -349,8 +349,9 @@
   "name_en": "Brezel",
   "real_name_en": "Classic Bretzel",
   "flour_type_en": "630 1.5kg + Wholemeal Flour 1.3kg",
-  "notes_en": "With Vorteig (Water WG 850 g). Dip in lye solution (Lauge) before baking, coarse salt on top.",
-  "procedure_en": "1) Pre-ferment: refresh the sourdough starter (or poolish) and let it mature until doubled.\n2) Autolyse: mix flour and water, rest for 30 minutes.\n3) Mixing: add the pre-ferment, then the dry ingredients (gluten, malt, golden flax, psyllium, potato flakes, Natural Improver Pro) and develop the gluten well.\n4) Add the Kokosfett when the dough is smooth and comes together; add olive oil, apple cider vinegar and salt last.\n5) FRIDGE immediately after mixing: cold retard in the refrigerator (4-6°C) overnight (12-18 h), then work the dough.\n6) Divide, shape and place in final proof until ready.\n7) Baking: 220°C for 15 minutes, with steam for the first 10 minutes."
+  "notes_en": "DIRECT dough with autolyse (rest flour and water 20-30 min before salt and yeast): no preferment, no biga. Dip in soda solution (Lauge) before baking, coarse salt on top.",
+  "procedure_en": "1) Pre-ferment: refresh the sourdough starter (or poolish) and let it mature until doubled.\n2) Autolyse: mix flour and water, rest for 30 minutes.\n3) Mixing: add the pre-ferment, then the dry ingredients (gluten, malt, golden flax, psyllium, potato flakes, Natural Improver Pro) and develop the gluten well.\n4) Add the Kokosfett when the dough is smooth and comes together; add olive oil, apple cider vinegar and salt last.\n5) FRIDGE immediately after mixing: cold retard in the refrigerator (4-6°C) overnight (12-18 h), then work the dough.\n6) Divide, shape and place in final proof until ready.\n7) Baking: 220°C for 15 minutes, with steam for the first 10 minutes.",
+  "dough_category": "diretto"
  },
  {
   "id": "676c3f25-b8ba-447c-96e7-d9e18219ab2e",
@@ -2878,8 +2879,8 @@
   "bake_minutes": 15,
   "oven_type": "ventilato",
   "image_url": "/recipes/r_brezel_integrali.jpg",
-  "notes": "Farina Integrale (Vk) 1300 g · Acqua 500 g. Stesse percentuali di spezie, sale e lievito della Brezel classica. Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
-  "method_type": "indiretto",
+  "notes": "Farina Integrale (Vk) 1300 g - Acqua 500 g. Impasto DIRETTO con autolisi, niente prefermento. Stesse percentuali di spezie, sale e lievito della Brezel classica. Immergi in soluzione di soda (Lauge) prima di infornare, sale grosso in superficie.",
+  "method_type": "diretto",
   "procedure": "1) Prefermento: rinfresca il lievito madre (o poolish) e fallo maturare fino a raddoppio.\n2) Autolisi: mescola farina e acqua, riposo 30 minuti.\n3) Impasto: unisci il prefermento, poi gli ingredienti secchi (glutine, malto, lino dorato, psillio, fiocchi di patate, Miglioratore Naturale Pro) e incorda bene.\n4) Aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.\n5) FRIGO subito dopo l'impasto: matura in frigorifero (4-6°C) tutta la notte (12-18 h), poi lavora.\n6) Spezza, forma e metti in appretto fino a lievitazione pronta.\n7) Cottura: 220°C per 15 minuti, con vapore nei primi 10 minuti.",
   "extra_ingredients": [
    {
@@ -2929,7 +2930,7 @@
   ],
   "origin": "de",
   "name_de": "Vollkorn-Brezel",
-  "notes_de": "Vollkornmehl (Vk) 1300 g · Wasser 500 g. Gleiche Prozentsätze an Gewürzen, Salz und Hefe wie die klassische Brezel. Vor dem Backen in Natronlauge (Lauge) tauchen, grobes Salz obenauf.",
+  "notes_de": "Vollkornmehl (Vk) 1300 g - Wasser 500 g. DIREKTER Teig mit Autolyse, kein Vorteig. Gleiche Prozentsaetze an Gewuerzen, Salz und Hefe wie die klassische Brezel. Vor dem Backen in Natronlauge tauchen, grobes Salz obenauf.",
   "procedure_de": "1) Vorteig: Lievito Madre (oder Poolish) auffrischen und bis zur Verdopplung reifen lassen.\n2) Autolyse: Mehl und Wasser vermischen, 30 Minuten ruhen lassen.\n3) Teig: Vorteig einarbeiten, dann die trockenen Zutaten (Gluten, Malz, goldener Lein, Psyllium, Kartoffelflocken, Backmittel) zugeben und gut auskneten.\n4) Kokosfett hinzufügen, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.\n5) KÜHLSCHRANK direkt nach dem Kneten: über Nacht im Kühlschrank (4–6 °C) reifen lassen (12–18 Std.), dann weiterverarbeiten.\n6) Abstechen, formen und zur Stückgare stellen, bis die Gare erreicht ist.\n7) Backen: 220 °C für 15 Minuten, mit Schwaden in den ersten 10 Minuten.",
   "flour_type_de": "Vollkornmehl",
   "real_name": "Bretzel integrale",
@@ -2938,8 +2939,9 @@
   "name_en": "Whole Wheat Pretzels",
   "real_name_en": "Whole Wheat Pretzel",
   "flour_type_en": "Whole Wheat Flour",
-  "notes_en": "Whole Wheat Flour (Vk) 1300 g · Water 500 g. Same percentages of spices, salt and yeast as the classic Pretzel. Dip in lye solution (Lauge) before baking, coarse salt on top.",
-  "procedure_en": "1) Pre-ferment: refresh the sourdough starter (or poolish) and let it mature until doubled.\n2) Autolyse: mix flour and water, rest 30 minutes.\n3) Dough: incorporate the pre-ferment, then the dry ingredients (gluten, malt, golden flax, psyllium, potato flakes, Natural Improver Pro) and develop the gluten structure thoroughly.\n4) Add the Kokosfett once the dough comes together into a ball; add olive oil, apple cider vinegar and salt last.\n5) REFRIGERATE immediately after mixing: cold retard in the refrigerator (4-6°C) overnight (12-18 h), then work the dough.\n6) Divide, shape and place in final proof until ready to bake.\n7) Baking: 220°C for 15 minutes, with steam for the first 10 minutes."
+  "notes_en": "Wholewheat (Vk) 1300 g - Water 500 g. DIRECT dough with autolyse, no preferment. Same spice, salt and yeast percentages as the classic Brezel. Dip in soda solution (Lauge) before baking, coarse salt on top.",
+  "procedure_en": "1) Pre-ferment: refresh the sourdough starter (or poolish) and let it mature until doubled.\n2) Autolyse: mix flour and water, rest 30 minutes.\n3) Dough: incorporate the pre-ferment, then the dry ingredients (gluten, malt, golden flax, psyllium, potato flakes, Natural Improver Pro) and develop the gluten structure thoroughly.\n4) Add the Kokosfett once the dough comes together into a ball; add olive oil, apple cider vinegar and salt last.\n5) REFRIGERATE immediately after mixing: cold retard in the refrigerator (4-6°C) overnight (12-18 h), then work the dough.\n6) Divide, shape and place in final proof until ready to bake.\n7) Baking: 220°C for 15 minutes, with steam for the first 10 minutes.",
+  "dough_category": "diretto"
  },
  {
   "collection_name": "mikilab",
@@ -5430,5 +5432,117 @@
   "procedure": "1) Impasta farina, acqua, burro, malto, lievito e sale 12 min.\n2) Puntata 60 min.\n3) Dividi in pezzi da 90 g, forma panini, appretto 45 min.\n4) Prepara il bagno alcalino (soda 4% in acqua fredda, usa i guanti) e immergi i panini 10 sec.\n5) Incidi la superficie, cospargi di sale grosso.\n6) Cuoci a 210°C statico 16-18 min.\n7) Raffredda, apri e farcisci con Leberkäse o affettati, senape dolce e sottaceti.",
   "procedure_de": "1) Mehl, Wasser, Butter, Malz, Hefe und Salz 12 Min. kneten.\n2) Stockgare 60 Min.\n3) In 90-g-Stücke teilen, Brötchen formen, Stückgare 45 Min.\n4) Lauge ansetzen (4% Natronlauge in kaltem Wasser, Handschuhe!) und Brötchen 10 Sek. tauchen.\n5) Einschneiden, mit grobem Salz bestreuen.\n6) Bei 210°C Ober-/Unterhitze 16-18 Min. backen.\n7) Abkühlen, aufschneiden und mit Leberkäse oder Aufschnitt, süßem Senf und Gurken füllen.",
   "procedure_en": "1) Knead flour, water, butter, malt, yeast and salt 12 min.\n2) Bulk 60 min.\n3) Divide into 90 g pieces, shape rolls, final proof 45 min.\n4) Prepare the lye bath (4% soda in cold water, wear gloves!) and dip the rolls 10 sec.\n5) Score the top, sprinkle with coarse salt.\n6) Bake at 210°C 16-18 min.\n7) Cool, open and fill with Leberkäse or cold cuts, sweet mustard and pickles."
+ },
+ {
+  "name": "Panini al Quark (Quarkbrötchen)",
+  "name_de": "Quarkbrötchen",
+  "name_en": "Quark Rolls",
+  "real_name": "Panini soffici al quark",
+  "real_name_de": "Weiche Quarkbrötchen",
+  "real_name_en": "Soft quark rolls",
+  "flour_type": "Farina di grano tenero tipo 0 (W300)",
+  "flour_type_de": "Weizenmehl Type 550",
+  "flour_type_en": "Soft wheat type 0",
+  "hydration_percent": 40,
+  "flour_grams": 1000,
+  "water_grams": 180,
+  "sourdough_grams": 0,
+  "salt_grams": 16,
+  "preferment_type": "none",
+  "method_type": "diretto",
+  "dough_category": "diretto",
+  "mix_minutes": 12,
+  "bulk_fermentation_hours": 1,
+  "proofing_hours": 1,
+  "bake_temp": 200,
+  "bake_minutes": 18,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30692762/pexels-photo-30692762.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "origin": "DE",
+  "menu_category": "panini",
+  "extra_ingredients": [
+   {
+    "name": "Quark (formaggio fresco / Magerquark)",
+    "percent": 40
+   },
+   {
+    "name": "Burro",
+    "percent": 10
+   },
+   {
+    "name": "Uovo",
+    "percent": 10
+   },
+   {
+    "name": "Zucchero",
+    "percent": 6
+   },
+   {
+    "name": "Lievito di birra fresco (Hefe)",
+    "percent": 3
+   }
+  ],
+  "notes": "Panini soffici a base QUARK (formaggio fresco tedesco): mollica umida e leggera, restano morbidi a lungo. Impasto diretto.",
+  "notes_de": "Weiche Brötchen auf QUARK-Basis: saftige, lockere Krume, bleiben lange frisch. Direkter Teig.",
+  "notes_en": "Soft QUARK-based rolls: moist, light crumb, stay fresh for long. Direct dough.",
+  "procedure": "1) Impasta farina, quark, uovo, zucchero e lievito 6 min; aggiungi sale e burro fino a impasto liscio.\n2) Puntata 60 min.\n3) Dividi in pezzi da 70 g, forma palline.\n4) Appretto 60 min, spennella con uovo, incidi a croce.\n5) Cuoci a 200°C statico 16-18 min.",
+  "procedure_de": "1) Mehl, Quark, Ei, Zucker und Hefe 6 Min. kneten; Salz und Butter bis zur Teigentwicklung.\n2) Stockgare 60 Min.\n3) In 70-g-Stücke teilen, Kugeln formen.\n4) Stückgare 60 Min., mit Ei bestreichen, kreuzweise einschneiden.\n5) Bei 200°C Ober-/Unterhitze 16-18 Min. backen.",
+  "procedure_en": "1) Knead flour, quark, egg, sugar and yeast 6 min; add salt and butter to full development.\n2) Bulk 60 min.\n3) Divide into 70 g pieces, shape balls.\n4) Final proof 60 min, brush with egg, score a cross.\n5) Bake at 200°C 16-18 min."
+ },
+ {
+  "name": "Frittelle al Quark (Quarkbällchen)",
+  "name_de": "Quarkbällchen",
+  "name_en": "Quark Fritters",
+  "real_name": "Frittelle dolci al quark",
+  "real_name_de": "Süße Quarkbällchen",
+  "real_name_en": "Sweet quark fritters",
+  "flour_type": "Farina di grano tenero tipo 00",
+  "flour_type_de": "Weizenmehl Type 405",
+  "flour_type_en": "Soft wheat 00",
+  "hydration_percent": 0,
+  "flour_grams": 500,
+  "water_grams": 0,
+  "sourdough_grams": 0,
+  "salt_grams": 4,
+  "preferment_type": "none",
+  "method_type": "diretto",
+  "dough_category": "diretto",
+  "mix_minutes": 6,
+  "bulk_fermentation_hours": 0,
+  "proofing_hours": 0,
+  "bake_temp": 175,
+  "bake_minutes": 4,
+  "oven_type": "frittura",
+  "image_url": "https://images.unsplash.com/photo-1583872548706-bdbf14cc19b9?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+  "origin": "DE",
+  "menu_category": "snack",
+  "extra_ingredients": [
+   {
+    "name": "Quark (formaggio fresco)",
+    "percent": 100
+   },
+   {
+    "name": "Uova",
+    "percent": 40
+   },
+   {
+    "name": "Zucchero",
+    "percent": 30
+   },
+   {
+    "name": "Lievito per dolci (Backpulver)",
+    "percent": 6
+   },
+   {
+    "name": "Zucchero a velo (finitura)",
+    "percent": 0
+   }
+  ],
+  "notes": "Dolcetti fritti a base QUARK: palline soffici da friggere, spolverate di zucchero a velo. Niente lievitazione, pronte subito.",
+  "notes_de": "Frittierte Süßigkeiten auf QUARK-Basis: lockere Bällchen, mit Puderzucker bestäubt. Keine Gehzeit, sofort fertig.",
+  "notes_en": "Fried QUARK-based treats: fluffy balls, dusted with icing sugar. No proofing, ready right away.",
+  "procedure": "1) Mescola quark, uova e zucchero.\n2) Unisci farina, lievito per dolci e sale fino a impasto morbido.\n3) Con due cucchiai forma palline e friggi in olio a 170-175°C finché dorate (3-4 min), girandole.\n4) Scola e spolvera di zucchero a velo.",
+  "procedure_de": "1) Quark, Eier und Zucker verrühren.\n2) Mehl, Backpulver und Salz zu einem weichen Teig verrühren.\n3) Mit zwei Löffeln Bällchen formen und in Öl bei 170-175°C goldbraun ausbacken (3-4 Min.), wenden.\n4) Abtropfen und mit Puderzucker bestäuben.",
+  "procedure_en": "1) Mix quark, eggs and sugar.\n2) Add flour, baking powder and salt to a soft batter.\n3) With two spoons form balls and fry in oil at 170-175°C until golden (3-4 min), turning.\n4) Drain and dust with icing sugar."
  }
 ]
