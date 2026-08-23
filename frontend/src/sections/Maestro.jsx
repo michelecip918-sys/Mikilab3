@@ -36,6 +36,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { MikiAvatar } from "@/components/MikiAvatar";
 import { useBackClose } from "@/lib/backNav";
 import MohammedAssistant from "@/sections/MohammedAssistant";
+import { toast } from "sonner";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
@@ -204,9 +205,10 @@ export default function Maestro() {
             {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
           </button>
         ) : (
-          <span data-testid="maestro-done" className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#6B8E62] text-white font-semibold">
-            <CheckSquare className="w-5 h-5" /> {tri("Completo", "Fertig", "Done")}
-          </span>
+          <button data-testid="maestro-done" onClick={() => { toast.success(tri("Programmazione completata! 🎉 Buon lavoro", "Planung abgeschlossen! 🎉 Gute Arbeit", "Planning completed! 🎉 Enjoy your work")); setTool(null); setStep(0); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-semibold active:scale-97 transition-all">
+            <CheckSquare className="w-5 h-5" /> {tri("Completa", "Abschließen", "Complete")}
+          </button>
         )}
       </div>
     </div>

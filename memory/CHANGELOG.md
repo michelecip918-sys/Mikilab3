@@ -43,3 +43,7 @@
 - **Punto 4**: rimossa la schermata onboarding con le domande (che macchine hai, ecc.). App.js ora semina un profilo di default completo (tutte le macchine) e NON mostra più il modale: ingresso diretto in Home. Rimossa anche l'intro forzata (showIntro=false). Verificato via screenshot: Home carica diretta.
 - **Punto 1 (legale)**: footer senza sede ("Panificazione artigianale & passione", niente "Stoccarda").
 ### Ancora aperti: audit GDPR completo; rimozione completa riferimenti "Stoccarda" (sezione Stoccarda.jsx + Home/News/content/translations) DA DECIDERE con l'utente; avatar con orecchino+tatuaggi+occhi scuri (rigenerazione); video animato + card intro "Mohamedd" in Home (serve video); Impara da Casa prova 7gg + prezzo inferiore; bug "Continua" (serve screenshot); scorciatoia PWA "Solo Laboratorio".
+
+## v73 (2026-06) — Fix tasto "Completa" + chiarimento Stoccarda
+- **Bug "Completa" (era "Completo")**: nell'ultimo passo del wizard Il Tuo Laboratorio il tasto era uno <span> inerte (nessuna azione) → ora è un <button> reale: mostra conferma "Programmazione completata!", chiude lo strumento e riporta al passo 1. (Il piano giorno/settimana si salva nel proprio strumento, che funziona.)
+- **Stoccarda**: rimosso solo dalla tagline di sede (footer già fatto). La città non è usata come tagline visibile altrove; la sezione News regionale "Stoccarda" resta come contenuto (voluto dall'utente).
