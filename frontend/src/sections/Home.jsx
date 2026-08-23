@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor, Building2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
-import TalkingAvatar from "@/components/TalkingAvatar";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import { getProfile } from "@/components/Onboarding";
@@ -102,11 +101,16 @@ function HomeAvatarScene({ lang }) {
 
   return (
     <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl h-80 bg-[#2B303B]">
-      {/* Avatar PARLANTE di Michele (tocca per riprodurre) */}
-      <TalkingAvatar testid="home-talking-avatar" poster="/michele-avatar.jpg" label=""
-        className="absolute inset-0 w-full h-full !rounded-none" />
-      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#6B8E62] via-[#6E8CA0] to-[#A9C5D4]" />
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
+      {/* Avatar con zoom morbido (finto video) */}
+      <motion.img
+        src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="Michele"
+        className="absolute inset-0 w-full h-full object-cover object-top"
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        onError={(e) => { e.currentTarget.style.display = "none"; }}
+      />
+      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 bg-gradient-to-r from-[#6B8E62] via-[#6E8CA0] to-[#A9C5D4]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
 
       {/* Smartphone & PC che fluttuano */}
       <motion.div

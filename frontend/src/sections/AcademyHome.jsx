@@ -186,6 +186,58 @@ function DynamicRecipes() {
   const flourG = Math.round(area * r.flourPerCm2);
   const g = (pct) => Math.round(flourG * pct / 100);
 
+  // Scheda ricetta scaricabile/stampabile TRILINGUE (IT · DE · EN) → salva come PDF.
+  const downloadPdf = () => {
+    const L3 = (o) => ({ it: o.it, de: o.de || o.it, en: o.en || o.it });
+    const nm = L3(r.name), ht = L3(r.hint);
+    const LBL = {
+      it: { flour: "Farina", water: "Acqua", salt: "Sale", oil: "Olio EVO", yeast: "Lievito di birra", tin: "Teglia" },
+      de: { flour: "Mehl", water: "Wasser", salt: "Salz", oil: "Olivenöl", yeast: "Frischhefe", tin: "Blech" },
+      en: { flour: "Flour", water: "Water", salt: "Salt", oil: "Olive oil", yeast: "Fresh yeast", tin: "Tin" },
+    };
+    const rows = (lng) => {
+      const b = LBL[lng];
+      const line = (k, v) => `<tr><td>${k}</td><td style="text-align:right;font-family:monospace">${v} g</td></tr>`;
+      let out = line(`<b>${b.flour}</b>`, `<b>${flourG}</b>`) + line(b.water, g(r.bp.water)) + line(b.salt, g(r.bp.salt));
+      if (r.bp.oil > 0) out += line(b.oil, g(r.bp.oil));
+      out += line(b.yeast, g(r.bp.yeast));
+      return out;
+    };
+    const block = (lng) => `
+      <div class="card">
+        <h2>${nm[lng]} · ${flour}</h2>
+        <p class="sub">${LBL[lng].tin} ${width}×${length} cm</p>
+        <table>${rows(lng)}</table>
+        <p class="hint">💡 ${ht[lng]}</p>
+      </div>`;
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>MikiLab · ${nm.it}</title>
+      <style>
+        body{font-family:Georgia,serif;color:#2B303B;margin:24px;background:#fff}
+        .head{text-align:center;border-bottom:3px solid #6B8E62;padding-bottom:10px;margin-bottom:18px}
+        .head h1{margin:0;color:#4d6b45}
+        .head p{margin:2px 0 0;color:#7E8A93;font-size:13px}
+        .card{border:1px solid #D7E1DB;border-radius:12px;padding:14px 18px;margin-bottom:14px;page-break-inside:avoid}
+        .card h2{margin:0 0 2px;font-size:18px}
+        .sub{margin:0 0 8px;color:#7E8A93;font-size:12px}
+        table{width:100%;border-collapse:collapse}
+        td{padding:4px 0;border-bottom:1px solid #EAF0EC;font-size:15px}
+        .hint{margin:10px 0 0;color:#4d6b45;font-size:13px}
+        .flag{font-size:12px;font-weight:bold;color:#6B8E62;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px}
+        .foot{text-align:center;color:#7E8A93;font-size:11px;margin-top:16px}
+      </style></head><body>
+      <div class="head"><h1>MikiLab · Michele</h1><p>${nm.it} — ${LBL.it.tin} ${width}×${length} cm · ${flour}</p></div>
+      <p class="flag">🇮🇹 Italiano</p>${block("it")}
+      <p class="flag">🇩🇪 Deutsch</p>${block("de")}
+      <p class="flag">🇬🇧 English</p>${block("en")}
+      <p class="foot">MikiLab · mikilab.de</p>
+      <script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script>
+      </body></html>`;
+    const w = window.open("", "_blank");
+    if (!w) return;
+    w.document.write(html);
+    w.document.close();
+  };
+
   return (
     <div className="space-y-4" data-testid="dynamic-recipes">
       <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4 space-y-3">
@@ -234,9 +286,9 @@ function DynamicRecipes() {
         <p className="text-sm text-[#4d6b45] dark:text-[#9ec48f] mt-3">💡 {L(r.hint)}</p>
       </div>
 
-      <button data-testid="calc-print" onClick={() => window.print()}
+      <button data-testid="calc-print" onClick={downloadPdf}
         className="w-full flex items-center justify-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
-        <Printer className="w-5 h-5" /> {tri("Scarica / Stampa scheda (PDF)", "Karte herunterladen / drucken (PDF)", "Download / print card (PDF)")}
+        <Printer className="w-5 h-5" /> {tri("Scarica scheda PDF (IT · DE · EN)", "PDF-Karte herunterladen (IT · DE · EN)", "Download recipe card PDF (IT · DE · EN)")}
       </button>
     </div>
   );
