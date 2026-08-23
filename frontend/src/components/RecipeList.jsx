@@ -28,7 +28,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("all");
   const [openCats, setOpenCats] = useState({});
-  const { t, lang } = useLang();
+  const { t, lang, setLang } = useLang();
   useBackClose(!!viewing, () => setViewing(null));
   useBackClose(dialogOpen, () => setDialogOpen(false));
   useBackClose(!!scaling, () => setScaling(null));
@@ -179,6 +179,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           { key: "basi", label: "cat_basi", icon: "✨" },
           { key: "pane", label: "cat_pane", icon: "🍞" },
           { key: "panini", label: "cat_panini", icon: "🥖" },
+          { key: "snack", label: "cat_snack", icon: "🥨" },
+          { key: "focacce", label: "cat_focacce", icon: "🫓" },
           { key: "panettoni", label: "cat_panettoni", icon: "🎁" },
         ];
         const isMikilab = collectionName === "mikilab";
@@ -316,6 +318,14 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B] p-0">
           <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
           <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
+          <div className="sticky top-0 z-10 flex justify-end gap-1 px-4 pt-3 pb-2 bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 backdrop-blur">
+            {["it", "de", "en"].map((lc) => (
+              <button key={lc} data-testid={`recipe-lang-${lc}`} onClick={() => setLang(lc)}
+                className={`text-[11px] font-bold uppercase px-2.5 py-1 rounded-lg border transition-all ${lang === lc ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+                {lc}
+              </button>
+            ))}
+          </div>
           {viewing && (
             <RecipeDetail
               r={viewing}
@@ -747,13 +757,14 @@ function badgeTitle(b, lang) {
 function recipeCategory(r) {
   const cat = r.menu_category;
   const name = (r.name || "").toLowerCase();
-  // Ordine categorie: Basi & Lieviti → Pane → Panini e Snack → Panettoni
-  // (il regex sul nome è SOLO fallback quando manca menu_category)
+  // Ordine: Basi → Pane → Panini → Snack → Focacce → Panettoni
   if (cat === "basi" || (!cat && /migliorator|backmittel|lievito madre|poolish|kochst/.test(name))) {
     const sub = BASI_ORDER.indexOf(r.name);
     return { rank: 0, sub: sub < 0 ? 99 : sub, key: "basi", label: "cat_basi", icon: "✨" };
   }
-  if (cat === "panettoni" || (!cat && /panettone/.test(name))) return { rank: 3, sub: 0, key: "panettoni", label: "cat_panettoni", icon: "🎁" };
+  if (cat === "panettoni" || (!cat && /panettone/.test(name))) return { rank: 5, sub: 0, key: "panettoni", label: "cat_panettoni", icon: "🎁" };
+  if (cat === "focacce") return { rank: 4, sub: 0, key: "focacce", label: "cat_focacce", icon: "🫓" };
+  if (cat === "snack") return { rank: 3, sub: 0, key: "snack", label: "cat_snack", icon: "🥨" };
   if (cat === "panini") return { rank: 2, sub: 0, key: "panini", label: "cat_panini", icon: "🥖" };
   return { rank: 1, sub: 0, key: "pane", label: "cat_pane", icon: "🍞" };
 }

@@ -535,8 +535,10 @@ def _teaser_recipe(doc: dict) -> dict:
     d = dict(doc)
     d["procedure"] = ""
     d["procedure_de"] = ""
+    d["procedure_en"] = ""
     d["notes"] = ""
     d["notes_de"] = ""
+    d["notes_en"] = ""
     d["work_phases"] = []
     d["extra_ingredients"] = []
     d["biga"] = None

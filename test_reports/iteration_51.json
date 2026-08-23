@@ -1,0 +1,41 @@
+{
+  "summary": "FASE C frontend testing (Ricette tab) on preview URL, mobile 390x844. Verified new category filter chips (Tutte/Basi/Pane/Panini/Snack/Focacce/Panettoni), grouping of the 16 new recipes, moved recipes, new-recipe detail with numbered step procedures, IT/DE/EN switching, and regressions (search, accordion, browser-back). All FASE C UI requirements PASS when authenticated (admin/PRO). One backend paywall data-leak found (procedure_en/notes_en not stripped for locked recipes) and one expectation mismatch: anonymous users cannot see any procedure (paywall teaser strips IT/DE procedure).",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "GET /api/recipes?collection_name=mikilab (anonymous)", "issue": "_teaser_recipe() (server.py ~line 533) blanks procedure, procedure_de, notes, notes_de but NOT procedure_en / notes_en / real_name_en. Anonymous/non-PRO API responses therefore return the FULL English procedure and notes for all 63 locked recipes -> PRO paywall bypass via API (verified with curl: e.g. 'Panino al Sesamo' procedure_en 388 chars, notes_en 91 chars). UI happens not to render it (render gated on the IT field), so it is not user-visible today, but the data is exposed.", "priority": "HIGH"}
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Header language switcher + Recipe detail Dialog", "issue": "With a recipe detail dialog open the header lang buttons are covered by the Radix DialogOverlay, so language CANNOT be switched while a recipe is open (Playwright normal click times out, overlay intercepts pointer events). The requested flow 'with Panino al Sesamo open switch to EN then DE' is not possible; the user must close the dialog, switch language, and reopen. Consider adding a language control inside the dialog or keeping the header above the overlay.", "selector": "[data-testid=\"lang-en\"] / [data-testid=\"lang-de\"]", "priority": "MEDIUM"},
+      {"component": "Floating FABs (Radio / Parla)", "issue": "The two round floating buttons overlap recipe rows in the list on mobile (390px), covering recipe names/subtitles (e.g. 'Lievito Madre Solido', 'Friselle Pugliesi').", "selector": "recipe-row-*", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "New recipe procedure for anonymous visitor", "issue": "Review request expects 'Panino alle Patate detail shows step-by-step procedure' with no login. Anonymous is served the teaser (locked:true, procedure blanked) so only ingredients + 'Sblocca la ricetta completa con PRO' show; no procedure block in IT or DE. Confirmed correct/complete (8 numbered steps IT, DE, EN) once logged in as admin. Clarify intent: either these new recipes should be unlocked, or the acceptance criterion needs login.", "affected_selectors": ["recipe-procedure-*", "recipe-teaser-*"]}
+    ],
+    "design_issues": [
+      {"screen": "Ricette detail (EN/DE)", "issues": ["Extra-ingredient labels stay Italian in EN/DE ('Latte intero', 'Lievito di birra fresco') - known minor per handoff note, ingLoc map lacks these keys"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests (existing regression suites, not re-run: frontend-only request)"],
+  "action_items": [
+    "server.py _teaser_recipe(): also blank procedure_en and notes_en (and any other *_en localized long-form fields) so the PRO paywall is not bypassable via the API.",
+    "Decide/confirm whether new snack/panini/focacce recipes should be readable without PRO; today anonymous sees no procedure at all.",
+    "Allow language switching while a recipe dialog is open (or add lang toggle inside the dialog).",
+    "Optional: add 'latte intero' / 'lievito di birra fresco' to ingLoc DE/EN maps."
+  ],
+  "critical_code_review_comments": [
+    "_teaser_recipe strips only IT/DE localized fields - it should iterate over a whitelist of protected fields with all locale suffixes to avoid future leaks when new languages are added.",
+    "RecipeList.jsx is 961 lines; RecipeDetail/PanettoneStructure/glossary should be split into separate modules (>700 line guideline).",
+    "Procedure block visibility is gated on the Italian field (r.procedure) rather than rLoc(r,'procedure',lang) - a recipe with only EN/DE procedure would never render it."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request); 1 security issue found via API inspection", "frontend": "95%"},
+  "seed_data_creation": "none (read-only testing, admin login used for PRO view)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Onboarding: the 3-step wizard must be dismissed by clicking text 'Salta' (setting localStorage mikilab_onboarding before reload did NOT work reliably). Verified counts on Ricette: basi 6, pane 22, panini 10, snack 7, focacce 3, panettoni 17 (total 65). Panini chip lists exactly the 10 new panini; Focaccia Barese/Friselle/Puccia only under Focacce; Taralli only under Snack. Chip labels localize: Panini/Brotchen/Rolls, Snack/Snacks, Focacce/Focaccia. EN 'Sesame Roll' + DE 'Sesambrotchen' names and procedures verified while logged in as admin. Search ('grissini', clear, no-results), accordion collapse/expand and browser-back-closes-detail all pass.",
+  "rca_of_the_issue": "Anonymous API responses appear to have empty IT/DE procedures for almost all recipes; root cause is the freemium teaser transform _teaser_recipe(), not missing DB data (admin token shows IT/DE/EN procedures fully populated for all 20 snack/focacce/panini recipes). The same function forgets the *_en fields, which is the actual defect."
+}
