@@ -32,6 +32,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
   const [preferment, setPreferment] = useState("solido");
+  const [bizType, setBizType] = useState("");
   const [plan, setPlan] = useState("");
   const [generating, setGenerating] = useState(false);
 
@@ -111,6 +112,21 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     return done;
   };
 
+  const applyBiz = (v) => {
+    setBizType(v);
+    if (v === "casa") {
+      setPreferment("lievito_birra");
+      setStdTemp(22);
+      setNotes((n) => (n && n.trim() ? n : tri3(lang,
+        "Impasto casalingo: piccole quantità e forno di casa. Spiega tutto passo-passo in modo semplice.",
+        "Hausgemacht: kleine Mengen und Haushaltsofen. Erkläre alles einfach Schritt für Schritt.",
+        "Home baking: small quantities and home oven. Explain everything simply, step by step.")));
+    } else {
+      setPreferment("solido");
+      setStdTemp(26);
+    }
+  };
+
   const generate = async () => {
     if (products.length === 0 && !(useWeekly && weeklyItems.length)) { toast.error(t("capo_no_products")); return; }
     setGenerating(true); setPlan("");
@@ -173,6 +189,33 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             : "Suggerimento: configura prima le tue macchine nel Passo 1 «Prima Configurazione Hardware», così l'IA userà impastatrici e celle."}
         </div>
       )}
+
+      {/* Dove impasti: professionista o a casa (imparo da casa) */}
+      <div data-testid="capo-biztype" className="mb-4">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">
+          {tri3(lang, "Dove impasti?", "Wo backst du?", "Where do you bake?")}
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { id: "pro", label: tri3(lang, "In laboratorio", "In der Backstube", "In the bakery"), emoji: "🧑‍🍳" },
+            { id: "casa", label: tri3(lang, "A casa (imparo)", "Zu Hause (lernen)", "At home (learning)"), emoji: "🏠" },
+          ].map((b) => (
+            <button key={b.id} data-testid={`capo-biztype-${b.id}`} onClick={() => applyBiz(b.id)}
+              className={`flex items-center justify-center gap-2 rounded-2xl p-3 text-center border transition-all active:scale-95 ${
+                bizType === b.id
+                  ? "bg-[#A64B2A] text-white border-[#A64B2A] shadow"
+                  : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC]"}`}>
+              <span className="text-lg leading-none">{b.emoji}</span>
+              <span className="text-sm font-semibold leading-tight">{b.label}</span>
+            </button>
+          ))}
+        </div>
+        {bizType === "casa" && (
+          <p className="text-[11px] text-[#7E8A93] mt-2 leading-snug">
+            {tri3(lang, "Modalità casa: piccole quantità, forno di casa e spiegazioni semplici passo-passo.", "Heim-Modus: kleine Mengen, Haushaltsofen und einfache Schritt-für-Schritt-Erklärungen.", "Home mode: small quantities, home oven and simple step-by-step explanations.")}
+          </p>
+        )}
+      </div>
 
       <Section icon={<Sparkles className="w-4 h-4" />} title={t("capo_products_title")}>
         <div className="space-y-2" data-testid="capo-products">
@@ -265,7 +308,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <>
             <button data-testid="capo-print" onClick={() => window.print()}
               className="no-print mt-3 w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
-              <Printer className="w-5 h-5" /> {t("capo_print")}
+              <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
             </button>
             <button data-testid="capo-share" onClick={() => shareContent(lang === "de" ? "Produktionsplan — MikiLab" : lang === "en" ? "Production plan — MikiLab" : "Piano di Produzione — MikiLab", plan, lang)}
               className="no-print mt-2 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-5 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] active:scale-98 transition-all flex items-center justify-center gap-2">
