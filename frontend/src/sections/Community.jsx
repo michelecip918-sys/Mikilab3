@@ -96,6 +96,18 @@ export default function Community() {
       </div>
 
       {/* Composer */}
+      {(() => {
+        let done = false;
+        try { const p = JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); done = ["ricettario", "farine", "corsi"].every((x) => p.includes(x)); } catch { /* */ }
+        if (!done) return null;
+        return (
+          <div data-testid="community-badge" className="flex items-center gap-2 mb-4 rounded-2xl bg-gradient-to-r from-[#6B8E62] to-[#4d6b45] text-white px-4 py-2.5 shadow">
+            <span className="text-lg">🏅</span>
+            <p className="text-sm font-semibold">{tri("Hai il badge «Fornaio Diplomato» — condividilo con i colleghi!", "Du hast das Abzeichen «Diplom-Bäcker» — teile es mit Kollegen!", "You have the «Certified Baker» badge — share it with peers!")}</p>
+          </div>
+        );
+      })()}
+
       <div className="bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 rounded-2xl p-4 mb-5">
         <div className="grid grid-cols-4 gap-1.5 mb-2">
           {CATS.map(({ id, Icon, color }) => (

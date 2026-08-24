@@ -647,11 +647,11 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             </div>
           )}
           {biga && <div className="border-t border-dashed border-[#6E8CA0]/50 my-1" aria-hidden />}
-          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] p-3">
+          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] p-3 print-table">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E]">{biga ? tri("Fase 2 · Impasto principale", "Phase 2 · Hauptteig", "Phase 2 · Main dough") : t("recipe_ingredients")}</p>
               {flourG > 0 && (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 no-print">
                   <span className="text-[10px] text-[#7E8A93]">{t("recipe_scale")}</span>
                   <input
                     data-testid={`recipe-scale-${r.id}`} type="number" value={scaleVal ?? flourG}

@@ -921,3 +921,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v57 (2026-06) — Voce/PDF nel Ricettario + badge obiettivo
 - Scheda ricetta (RecipeDetail in RecipeList.jsx): pulsanti "Ascolta" (listen-recipe-*, legge nome+procedimento con voce Momy via playTTS) e "PDF/Stampa" (pdf-recipe-*, window.print). Visibili solo su ricette SBLOCCATE con procedimento. Contenuto avvolto in .print-area con PrintHeader (logo). Verificato a schermo (admin).
 - Badge "Fornaio Diplomato" in Home dashboard ora SEMPRE visibile: grigio+lucchetto ("obiettivo", tappabile → Impara) se percorso incompleto, verde+medaglia se completato (home-badge-diplomato).
+
+## v58 (2026-06) — Ascolta multilingua, badge Community, PDF tabella dosi
+- Ascolta ricetta multilingua: già funzionante — RecipeDetail usa lang globale impostata dai tasti IT/DE/EN della scheda; playTTS invia lang (eleven_multilingual_v2 legge nella lingua giusta).
+- Badge "Fornaio Diplomato" mostrato anche in Community (community-badge, banner) quando il percorso Impara è completato (localStorage mikilab_impara_path).
+- PDF ricetta: aggiunta classe .print-table alla tabella ingredienti + CSS di stampa (bordi/righe puliti) e no-print sul campo scala; il PDF esce con tabella dosi ben formattata.
