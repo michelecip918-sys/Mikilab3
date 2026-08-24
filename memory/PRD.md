@@ -926,3 +926,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Ascolta ricetta multilingua: già funzionante — RecipeDetail usa lang globale impostata dai tasti IT/DE/EN della scheda; playTTS invia lang (eleven_multilingual_v2 legge nella lingua giusta).
 - Badge "Fornaio Diplomato" mostrato anche in Community (community-badge, banner) quando il percorso Impara è completato (localStorage mikilab_impara_path).
 - PDF ricetta: aggiunta classe .print-table alla tabella ingredienti + CSS di stampa (bordi/righe puliti) e no-print sul campo scala; il PDF esce con tabella dosi ben formattata.
+
+## v59 (2026-06) — Ascolta il Piano + Livelli Badge
+- Ascolta il Piano: ListenButton (capo-listen) nel Piano di Produzione IA — legge il piano a mani libere con la voce Momy.
+- Livelli Badge: in Home il badge è ora un LIVELLO progressivo (🥖 Apprendista 0/3 → 🥐 Fornaio 1-2/3 → 🏅 Maestro 3/3) basato sul percorso Impara (localStorage). Tap → Impara.
+- DEFERITO: PDF Multi-Ricetta (unico PDF con tutte le ricette del piano settimanale) — richiede una vista di stampa dedicata che raccoglie e formatta ogni ricetta del piano; da fare nel prossimo giro.
