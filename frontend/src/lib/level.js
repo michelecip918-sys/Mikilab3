@@ -19,3 +19,17 @@ export function getLevel(L = (i) => i) {
   if (total >= 4) return { icon: "🥐", name: L("Fornaio", "Bäcker", "Baker"), cls: "bg-[#C9A24B] text-white", total };
   return { icon: "🥖", name: L("Apprendista", "Lehrling", "Apprentice"), cls: "bg-[#D7E1DB] dark:bg-[#38424B] text-[#7E8A93]", total };
 }
+
+// Progresso verso il prossimo livello: punti mancanti e percentuale barra.
+export function getLevelProgress(L = (i) => i) {
+  const lvl = getLevel(L);
+  const total = lvl.total;
+  if (total >= 10) return { ...lvl, isMax: true, remaining: 0, pct: 100, nextName: null };
+  const base = total >= 4 ? 4 : 0;
+  const target = total >= 4 ? 10 : 4;
+  const nextIcon = total >= 4 ? "🏅" : "🥐";
+  const nextName = total >= 4 ? L("Maestro", "Meister", "Master") : L("Fornaio", "Bäcker", "Baker");
+  const remaining = Math.max(0, target - total);
+  const pct = Math.min(100, Math.max(4, Math.round(((total - base) / (target - base)) * 100)));
+  return { ...lvl, isMax: false, remaining, target, nextName, nextIcon, pct };
+}

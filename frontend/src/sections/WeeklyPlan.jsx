@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store } from "lucide-react";
+import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store, Tag } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty } from "@/lib/shopping";
@@ -350,6 +350,58 @@ export default function WeeklyPlan() {
     return salesPoints.filter((p) => used.has(p.name)).map((p) => p.name);
   }, [items, salesPoints]);
 
+  // Etichette Sacchetti: foglio di etichette stampabili (nome pane, peso, data, negozio),
+  // una per pezzo (max 40 per prodotto), da attaccare ai sacchetti.
+  const printLabels = (filterItem = () => true, subtitle = "") => {
+    const rows = items.filter(filterItem).map((it) => {
+      const r = recipeById[it.recipe_id];
+      return {
+        name: rLoc(r, "name", lang) || it.recipe_name,
+        weight: Number(it.grams_per_piece || 0),
+        pieces: Number(it.pieces || 0),
+        shop: it.sale_point || "",
+      };
+    }).filter((x) => x.name);
+    if (rows.length === 0) { toast.error(t("weekly_empty_share")); return; }
+    const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const date = new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT");
+    const CAP = 40;
+    const labels = [];
+    rows.forEach((x) => {
+      const n = Math.min(Math.max(1, x.pieces || 1), CAP);
+      for (let i = 0; i < n; i++) labels.push(x);
+    });
+    const title = tri("Etichette Sacchetti", "Beutel-Etiketten", "Bag Labels");
+    const cards = labels.map((x) => `
+      <div class="label">
+        <div class="brand">🌾 MikiLab</div>
+        <div class="name">${esc(x.name)}</div>
+        <div class="meta">${x.weight ? `<span class="w">${fmtQty(x.weight)}</span>` : "<span></span>"}<span class="d">${esc(date)}</span></div>
+        ${x.shop ? `<div class="shop">🏪 ${esc(x.shop)}</div>` : ""}
+      </div>`).join("");
+    const w = window.open("", "_blank");
+    if (!w) return;
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}${subtitle ? " · " + esc(subtitle) : ""}</title>
+      <style>
+        *{box-sizing:border-box}
+        body{font-family:Georgia,serif;margin:0;padding:10mm;color:#2B303B}
+        .grid{display:flex;flex-wrap:wrap;gap:4mm}
+        .label{width:58mm;height:34mm;border:1px dashed #9AA6AE;border-radius:6px;padding:3mm 4mm;display:flex;flex-direction:column;justify-content:space-between;page-break-inside:avoid}
+        .brand{font-size:9px;font-weight:800;color:#5E8B7E;letter-spacing:.04em}
+        .name{font-size:15px;font-weight:800;line-height:1.1;color:#2B303B}
+        .meta{display:flex;justify-content:space-between;align-items:flex-end;font-size:11px}
+        .meta .w{font-weight:800;color:#33564E}
+        .meta .d{color:#7E8A93}
+        .shop{font-size:10px;font-weight:700;color:#5E8B7E;border-top:1px solid #EAF0EC;padding-top:2px}
+        @media print{ @page{margin:8mm} .label{border-color:#c9c9c9} }
+      </style></head><body>
+      <div class="grid">${cards}</div>
+      </body></html>`);
+    w.document.close();
+    w.focus();
+    setTimeout(() => w.print(), 500);
+  };
+
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
@@ -450,30 +502,50 @@ export default function WeeklyPlan() {
         <FileText className="w-5 h-5" /> {tri("PDF Multi-Ricetta", "PDF Mehr-Rezepte", "Multi-Recipe PDF")}
       </button>
 
+      <button
+        data-testid="weekly-labels-btn"
+        onClick={() => printLabels()}
+        className="w-full mt-2 bg-[#C9A24B] hover:bg-[#b38f3f] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+      >
+        <Tag className="w-5 h-5" /> {tri("Etichette Sacchetti", "Beutel-Etiketten", "Bag Labels")}
+      </button>
+
       {assignedPoints.length > 0 && (
         <div data-testid="weekly-salepoint-pdf" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
           <div className="flex items-center gap-2 mb-1">
             <Store className="w-5 h-5 text-[#5E8B7E]" />
             <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">
-              {tri("PDF per Punto Vendita", "PDF pro Verkaufspunkt", "PDF per Sales Point")}
+              {tri("Per Punto Vendita", "Pro Verkaufspunkt", "Per Sales Point")}
             </h3>
           </div>
           <p className="text-xs text-[#7E8A93] mb-3 leading-snug">
-            {tri("Un PDF separato per ogni negozio, con solo le sue ricette e le dosi giuste — pronto da consegnare al team.",
-                 "Ein separates PDF pro Laden, mit nur seinen Rezepten und den richtigen Mengen — bereit fürs Team.",
-                 "A separate PDF per shop, with only its recipes and the right doses — ready to hand to the team.")}
+            {tri("Per ogni negozio: il PDF con solo le sue ricette e le etichette per i suoi sacchetti — pronti da consegnare al team.",
+                 "Für jeden Laden: das PDF mit nur seinen Rezepten und die Etiketten für seine Beutel — bereit fürs Team.",
+                 "For each shop: the PDF with only its recipes and the labels for its bags — ready to hand to the team.")}
           </p>
-          <div className="grid grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 gap-2.5">
             {assignedPoints.map((name) => (
-              <button
-                key={name}
-                data-testid={`weekly-salepoint-pdf-${name}`}
-                onClick={() => pdfPerSalePoint(name)}
-                className="flex items-center justify-between gap-2 bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-3 rounded-xl border border-[#D7E1DB] dark:border-[#38424B] active:scale-98 transition-all"
-              >
-                <span className="flex items-center gap-2 min-w-0"><Store className="w-4 h-4 text-[#5E8B7E] shrink-0" /><span className="truncate">{name}</span></span>
-                <FileText className="w-5 h-5 text-[#6B8E62] shrink-0" />
-              </button>
+              <div key={name} className="rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] p-3">
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] mb-2 min-w-0">
+                  <Store className="w-4 h-4 text-[#5E8B7E] shrink-0" /><span className="truncate">{name}</span>
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    data-testid={`weekly-salepoint-pdf-${name}`}
+                    onClick={() => pdfPerSalePoint(name)}
+                    className="flex items-center justify-center gap-1.5 bg-[#6B8E62] hover:bg-[#5a7a53] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
+                  >
+                    <FileText className="w-4 h-4" /> {tri("Ricette PDF", "Rezepte PDF", "Recipes PDF")}
+                  </button>
+                  <button
+                    data-testid={`weekly-salepoint-labels-${name}`}
+                    onClick={() => printLabels((x) => (x.sale_point || "") === name, name)}
+                    className="flex items-center justify-center gap-1.5 bg-[#C9A24B] hover:bg-[#b38f3f] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
+                  >
+                    <Tag className="w-4 h-4" /> {tri("Etichette", "Etiketten", "Labels")}
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </div>

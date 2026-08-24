@@ -8,7 +8,7 @@ import { recipesApi } from "@/lib/api";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import { getProfile } from "@/components/Onboarding";
-import { getLevel } from "@/lib/level";
+import { getLevelProgress } from "@/lib/level";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const CONCEPTS = {
@@ -241,12 +241,36 @@ export default function Home({ onNavigate }) {
             {L("Ciao", "Hallo", "Hi")}{profile.labName ? `, ${profile.labName}` : ""}! 👋
           </p>
           {(() => {
-            const lvl = getLevel(L);
+            const lvl = getLevelProgress(L);
             return (
-              <button data-testid="home-badge-diplomato" onClick={() => go("impara")}
-                className={`inline-flex items-center gap-1.5 mb-2 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wide active:scale-95 transition-all ${lvl.cls}`}>
-                {lvl.icon} {L("Livello", "Level", "Level")}: {lvl.name}
-              </button>
+              <div className="mb-2">
+                <button data-testid="home-badge-diplomato" onClick={() => go("impara")}
+                  className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wide active:scale-95 transition-all ${lvl.cls}`}>
+                  {lvl.icon} {L("Livello", "Level", "Level")}: {lvl.name}
+                </button>
+                {lvl.isMax ? (
+                  <p data-testid="home-level-progress" className="text-[11px] font-semibold text-[#6B8E62] mt-1.5">
+                    {L("🏅 Livello massimo raggiunto — sei un Maestro!", "🏅 Höchstes Level erreicht — du bist ein Meister!", "🏅 Top level reached — you're a Master!")}
+                  </p>
+                ) : (
+                  <div data-testid="home-level-progress" className="mt-1.5">
+                    <p className="text-[11px] text-[#3F4A54] dark:text-[#AEB8BF]">
+                      {L(`Ti mancano `, `Dir fehlen noch `, `You need `)}
+                      <b className="text-[#B34A26]">{lvl.remaining}</b>
+                      {L(` punti per diventare `, ` Punkte bis `, ` more points to become `)}
+                      <b>{lvl.nextIcon} {lvl.nextName}</b>
+                    </p>
+                    <div className="mt-1 h-2 w-full max-w-[240px] rounded-full bg-[#D7E1DB] dark:bg-[#38424B] overflow-hidden">
+                      <div className="h-full rounded-full bg-[#C9A24B] transition-all" style={{ width: `${lvl.pct}%` }} />
+                    </div>
+                    <p className="text-[10px] text-[#9AA6AE] mt-1 leading-snug">
+                      {L("Guadagni punti creando ricette, facendo diagnosi e chiudendo la giornata.",
+                         "Punkte sammelst du mit Rezepten, Diagnosen und dem Tagesabschluss.",
+                         "Earn points by creating recipes, running diagnoses and closing the day.")}
+                    </p>
+                  </div>
+                )}
+              </div>
             );
           })()}
           <p className="text-xs text-[#7E8A93] mb-3">{L("Le tue scorciatoie rapide", "Deine Schnellzugriffe", "Your quick shortcuts")}</p>
