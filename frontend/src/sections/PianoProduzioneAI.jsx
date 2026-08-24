@@ -135,8 +135,20 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     }
   };
 
+  const validProducts = useMemo(
+    () => products.filter((p) => p.recipe_id && Number(p.qty) > 0),
+    [products]
+  );
+  const canGenerate = validProducts.length > 0 || (useWeekly && weeklyItems.length > 0);
+
   const generate = async () => {
-    if (products.length === 0 && !(useWeekly && weeklyItems.length)) { toast.error(t("capo_no_products")); return; }
+    if (!canGenerate) {
+      toast.error(tri3(lang,
+        "Seleziona almeno una ricetta con la quantità (oppure attiva il Piano Settimanale).",
+        "Wähle mindestens ein Rezept mit Menge (oder aktiviere den Wochenplan).",
+        "Select at least one recipe with a quantity (or enable the Weekly Plan)."));
+      return;
+    }
     setGenerating(true); setPlan("");
     const twoPhase = useWeekly || products.some((p) => p.day);
     try {
@@ -155,11 +167,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
   return (
     <div className="pb-40">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
-        <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#6B8E62]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
-        </div>
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#4A7265] to-[#33564E] p-6 text-white">
+        <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <Sparkles className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Produktionsplan mit KI" : lang === "en" ? "AI Production Plan" : "Piano di Produzione con IA"}</h1>
         <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Wähle, was du vorbereiten willst, und lass den Plan generieren" : lang === "en" ? "Choose what to prepare and generate the plan" : "Scegli cosa preparare e genera il piano di lavoro"}</p>
@@ -343,10 +352,17 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#5E8B7E] resize-none" />
         </div>
 
-        <button data-testid="capo-generate" onClick={generate} disabled={generating}
-          className="mt-3 w-full bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="capo-generate" onClick={generate} disabled={generating || !canGenerate}
+          className="mt-3 w-full bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("capo_generate")}
         </button>
+        {!canGenerate && (
+          <p data-testid="capo-generate-hint" className="text-[11px] text-[#B34A26] mt-1.5 text-center">
+            {tri3(lang, "⚠️ Obbligatorio: scegli almeno una ricetta e la quantità per generare il piano.",
+              "⚠️ Pflicht: Wähle mindestens ein Rezept und die Menge, um den Plan zu erstellen.",
+              "⚠️ Required: choose at least one recipe and quantity to generate the plan.")}
+          </p>
+        )}
 
         {plan && (
           <>

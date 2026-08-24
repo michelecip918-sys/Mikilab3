@@ -1019,3 +1019,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - frontend PianoProduzioneAI: carica GET /freezer all'avvio (setFreezerStock) e invia freezer_stock nel payload /capo/plan.
 - VERIFICATO E2E: freezer 150 baguette (min 50) + ordine 600 gio → l'AI calcola 100 utilizzabili, 500 da produrre, ripartizione oggi/domani/freezer + tabella fabbisogno + avvisi. Tutti i marker presenti (freezer, giacenze, precotte, 150, oggi, domani, scorta, avvisi).
 - NB formato payload prodotti: il frontend invia items:[{recipe_id,name,quantity,unit,day}] (quantity, NON qty).
+
+## v76 (2026-06) — Campi obbligatori nel Piano IA
+- PianoProduzioneAI: validProducts = prodotti con recipe_id && qty>0. canGenerate = validProducts>0 || (useWeekly && weeklyItems>0). Il pulsante capo-generate è DISABILITATO finché non c'è almeno una ricetta con quantità; mostrato hint capo-generate-hint "Obbligatorio: scegli almeno una ricetta e la quantità". generate() blocca con toast se non valido.
+- Hero del Piano IA aggiornato a .it-de-ribbon (coerenza col resto).
+- Verificato a schermo: disabilitato+hint senza ricetta → abilitato dopo ricetta+qty.
