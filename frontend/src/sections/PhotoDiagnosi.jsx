@@ -6,6 +6,8 @@ import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
 import { shareContent } from "@/lib/share";
+import ListenButton from "@/components/ListenButton";
+import PrintHeader from "@/components/PrintHeader";
 import { HeroAvatar } from "@/components/MikiAvatar";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 
@@ -230,9 +232,16 @@ export default function PhotoDiagnosi() {
       )}
 
       {result && (
-        <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">
-          <ReactMarkdown>{result}</ReactMarkdown>
+        <div className="print-area">
+          <PrintHeader title={modeLabel(mode)} lang={lang} />
+          <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">
+            <ReactMarkdown>{result}</ReactMarkdown>
+          </div>
         </div>
+      )}
+      {result && (
+        <ListenButton text={result} who="momy" testid="photo-listen-btn"
+          className="no-print mt-2 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
       )}
       {result && (
         <button data-testid="photo-share-btn" onClick={() => shareContent(`${modeLabel(mode)} — MikiLab`, result, lang)}

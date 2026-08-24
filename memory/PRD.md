@@ -912,3 +912,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Ricompensa percorso Impara: badge "Fornaio Diplomato" al completamento 3/3 (academy-path-complete).
 - Condividi come PDF: pulsante window.print() aggiunto a Lista Spesa (spesa-pdf) e Diagnosi (photo-pdf-btn); i piani avevano già la stampa.
 - NON fatto (per scelta/limite): video masterclass (rimandato dall'utente); rigenerazione audio del VIDEO di Michele in Home con voce George → limite tecnico (l'avatar video ha lip-sync sull'audio registrato, sostituirlo desincronizza le labbra). Il selettore voci applica George alla voce TTS di Michele (tour), non al video preregistrato.
+
+## v56 (2026-06) — Voce nella Diagnosi, badge profilo, PDF col logo
+- lib/tts.js (playTTS/stopTTS, pulizia markdown/emoji) + ListenButton.jsx: pulsante "Ascolta" con voce scelta. Aggiunto a Diagnosi Foto (photo-listen-btn) e Diagnosi Sonora (sound-listen-btn) — legge causa/soluzione.
+- Badge "Fornaio Diplomato" nella dashboard personale Home (home-badge-diplomato) al completamento del percorso Impara (localStorage mikilab_impara_path).
+- PDF col logo: PrintHeader.jsx (logo-256.png + titolo + data, classe .print-only) aggiunto nelle aree stampabili di Diagnosi Foto e Lista Spesa (avvolte in .print-area). Stili .print-only in index.css.

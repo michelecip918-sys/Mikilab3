@@ -239,6 +239,11 @@ export default function Home({ onNavigate }) {
           <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">
             {L("Ciao", "Hallo", "Hi")}{profile.labName ? `, ${profile.labName}` : ""}! 👋
           </p>
+          {(() => { try { const p = JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); return ["ricettario", "farine", "corsi"].every((x) => p.includes(x)); } catch { return false; } })() && (
+            <span data-testid="home-badge-diplomato" className="inline-flex items-center gap-1.5 mb-2 text-[11px] font-bold bg-[#6B8E62] text-white px-3 py-1 rounded-full uppercase tracking-wide">
+              🏅 {L("Fornaio Diplomato", "Diplom-Bäcker", "Certified Baker")}
+            </span>
+          )}
           <p className="text-xs text-[#7E8A93] mb-3">{L("Le tue scorciatoie rapide", "Deine Schnellzugriffe", "Your quick shortcuts")}</p>
           <div className="flex flex-wrap gap-2">
             <button data-testid="home-quick-ricette" onClick={() => go("ricette")}

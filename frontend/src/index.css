@@ -103,4 +103,7 @@ body {
   .print-area, .print-area * { visibility: visible !important; }
   .print-area { position: absolute; top: 0; left: 0; width: 100%; }
   .no-print { display: none !important; }
+  .print-only { display: block !important; visibility: visible !important; }
+  .print-only * { visibility: visible !important; }
 }
+.print-only { display: none; }

@@ -5,6 +5,7 @@ import { Mic, Square, Loader2, Volume2, Share2 } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { shareContent } from "@/lib/share";
+import ListenButton from "@/components/ListenButton";
 
 // Estrae feature acustiche semplici dall'inviluppo di volume campionato.
 function computeFeatures(samples, duration) {
@@ -148,6 +149,8 @@ export default function SoundDiagnosi() {
             className="mt-2 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
           </button>
+          <ListenButton text={result} who="momy" testid="sound-listen-btn"
+            className="mt-2 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
         </div>
       )}
     </div>

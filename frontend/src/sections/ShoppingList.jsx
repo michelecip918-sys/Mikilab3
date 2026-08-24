@@ -6,6 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping, hasShoppingData, buildShoppingText } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { shareContent } from "@/lib/share";
+import PrintHeader from "@/components/PrintHeader";
 
 export default function ShoppingList() {
   const { t, lang } = useLang();
@@ -50,7 +51,10 @@ export default function ShoppingList() {
         </div>
       ) : (
         <>
-          <SupplierOrder totals={totals} />
+          <div className="print-area">
+            <PrintHeader title={lang === "de" ? "Einkaufsliste" : lang === "en" ? "Shopping list" : "Lista della spesa"} lang={lang} />
+            <SupplierOrder totals={totals} />
+          </div>
           <button data-testid="spesa-share" onClick={() => shareContent(lang === "de" ? "Einkaufsliste — MikiLab" : lang === "en" ? "Shopping list — MikiLab" : "Lista della spesa — MikiLab", buildShoppingText(totals, lang), lang)}
             className="mt-3 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-5 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : "Condividi"}
