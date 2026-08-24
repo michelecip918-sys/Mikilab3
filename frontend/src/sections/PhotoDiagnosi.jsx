@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper, Cog, History, Trash2, ChevronDown, Share2 } from "lucide-react";
+import { Camera, Bug, Sparkles, Upload, RefreshCw, Wheat, Lightbulb, PartyPopper, Cog, History, Trash2, ChevronDown, Share2, Printer } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
@@ -238,6 +238,12 @@ export default function PhotoDiagnosi() {
         <button data-testid="photo-share-btn" onClick={() => shareContent(`${modeLabel(mode)} — MikiLab`, result, lang)}
           className="mt-2 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
           <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : "Condividi"}
+        </button>
+      )}
+      {result && (
+        <button data-testid="photo-pdf-btn" onClick={() => window.print()}
+          className="no-print mt-2 w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
+          <Printer className="w-5 h-5" /> {lang === "de" ? "Als PDF / Drucken" : lang === "en" ? "PDF / Print" : "PDF / Stampa"}
         </button>
       )}
 

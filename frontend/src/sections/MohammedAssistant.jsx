@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { Sparkles, Send, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { Sparkles, Send, ChevronDown, ChevronUp, Loader2, Volume2 } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { openLabTour } from "@/components/LabOnboarding";
+import VoiceSettings from "@/components/VoiceSettings";
 
 const AVATAR = `${process.env.PUBLIC_URL}/mohammed-avatar.jpg`;
 const sid = () => {
@@ -20,6 +21,7 @@ export default function MohammedAssistant() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [voiceOpen, setVoiceOpen] = useState(false);
   const listRef = useRef(null);
   const sessionId = useRef(sid());
 
@@ -125,6 +127,12 @@ export default function MohammedAssistant() {
         className="mt-2.5 w-full flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur px-4 py-2.5 rounded-xl text-sm font-semibold active:scale-97 transition-all">
         <Sparkles className="w-4 h-4" /> {tri("Rivedi la guida di Momy 🎧", "Momys Anleitung erneut ansehen 🎧", "Replay Momy's guide 🎧")}
       </button>
+
+      <button data-testid="mohammed-voice-btn" onClick={() => setVoiceOpen(true)}
+        className="mt-2 w-full flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur px-4 py-2.5 rounded-xl text-sm font-semibold active:scale-97 transition-all">
+        <Volume2 className="w-4 h-4" /> {tri("Scegli le voci (Momy e Michele) 🎙️", "Stimmen wählen (Momy & Michele) 🎙️", "Choose voices (Momy & Michele) 🎙️")}
+      </button>
+      <VoiceSettings open={voiceOpen} onClose={() => setVoiceOpen(false)} />
 
       <button data-testid="mohammed-toggle" onClick={() => setOpen((o) => !o)}
         className="mt-3 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur px-4 py-2 rounded-xl text-sm font-semibold active:scale-97 transition-all">

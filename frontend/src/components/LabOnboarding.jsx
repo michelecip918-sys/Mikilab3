@@ -4,6 +4,7 @@ import { Volume2, VolumeX, ChevronLeft, ChevronRight, X, Check } from "lucide-re
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
 import { API } from "@/lib/api";
+import { getVoiceId } from "@/components/VoiceSettings";
 
 const DONE_KEY = "mikilab_lab_tour_done";
 const base = process.env.PUBLIC_URL || "";
@@ -153,7 +154,7 @@ export default function LabOnboarding() {
     try {
       const res = await fetch(`${API}/tts`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
-        body: JSON.stringify({ text, lang, voice: who }),
+        body: JSON.stringify({ text, lang, voice: who, voice_id: getVoiceId(who) }),
       });
       if (!res.ok) throw new Error("tts");
       const blob = await res.blob();

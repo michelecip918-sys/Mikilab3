@@ -320,7 +320,7 @@ class WeeklyPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v52-lm-focaccia-pane"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v53-baguette-integrale-lm"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -1710,6 +1710,7 @@ class TTSReq(BaseModel):
     text: str
     lang: str = "it"
     voice: str = "momy"
+    voice_id: Optional[str] = None
 
 
 @api_router.post("/tts")
@@ -1720,7 +1721,7 @@ def tts_generate(payload: TTSReq):
     text = (payload.text or "").strip()[:1200]
     if not text:
         raise HTTPException(status_code=400, detail="Testo vuoto")
-    voice_id = _VOICE_MAP.get((payload.voice or "momy").lower(), MOMY_VOICE_ID)
+    voice_id = payload.voice_id or _VOICE_MAP.get((payload.voice or "momy").lower(), MOMY_VOICE_ID)
     try:
         gen = _eleven_client.text_to_speech.convert(
             text=text,

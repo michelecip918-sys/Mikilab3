@@ -5636,5 +5636,93 @@
   "procedure": "1) Rinfresca il lievito madre.\n2) Autolisi farina + acqua 30-60 min.\n3) Aggiungi lievito madre e sale, impasta.\n4) Puntata 4 h con 3 pieghe.\n5) Forma e metti in cestino, appretto 3 h (o in frigo 12 h).\n6) Ribalta, incidi.\n7) Cuoci a 240°C con vapore 15 min, poi 220°C fino a 45 min totali.",
   "procedure_de": "1) Lievito Madre auffrischen.\n2) Autolyse Mehl + Wasser 30-60 Min.\n3) Sauerteig und Salz zugeben, kneten.\n4) Stockgare 4 Std. mit 3 Faltungen.\n5) Formen, in Gaerkoerbchen, Stueckgare 3 Std. (oder 12 Std. im Kuehlschrank).\n6) Stuerzen, einschneiden.\n7) Bei 240°C mit Dampf 15 Min., dann 220°C bis 45 Min. gesamt.",
   "procedure_en": "1) Refresh the sourdough.\n2) Autolyse flour + water 30-60 min.\n3) Add sourdough and salt, knead.\n4) Bulk 4 h with 3 folds.\n5) Shape, place in banneton, final proof 3 h (or 12 h in fridge).\n6) Turn out, score.\n7) Bake at 240°C with steam 15 min, then 220°C to 45 min total."
+ },
+ {
+  "name": "Baguette a Lievito Madre",
+  "name_de": "Baguette mit Sauerteig",
+  "name_en": "Sourdough Baguette",
+  "real_name": "Baguette croccante a lievito madre",
+  "real_name_de": "Knusprige Baguette mit Lievito Madre",
+  "real_name_en": "Crusty sourdough baguette",
+  "flour_type": "Farina tipo 0 (W280)",
+  "flour_type_de": "Weizenmehl Type 550 (W280)",
+  "flour_type_en": "Soft wheat type 0 (W280)",
+  "hydration_percent": 72,
+  "flour_grams": 1000,
+  "water_grams": 720,
+  "sourdough_grams": 200,
+  "salt_grams": 20,
+  "preferment_type": "lm",
+  "method_type": "indiretto",
+  "dough_category": "indiretto",
+  "mix_minutes": 10,
+  "bulk_fermentation_hours": 3,
+  "proofing_hours": 1.5,
+  "bake_temp": 250,
+  "bake_minutes": 22,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30826793/pexels-photo-30826793.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "origin": "IT",
+  "menu_category": "pane",
+  "extra_ingredients": [
+   {
+    "name": "Lievito Madre solido (rinfrescato)",
+    "percent": 20
+   },
+   {
+    "name": "Malto d orzo",
+    "percent": 1
+   }
+  ],
+  "notes": "Baguette a LIEVITO MADRE: crosta sottile e croccante, mollica alveolata. Metodo indiretto, cottura con vapore.",
+  "notes_de": "Baguette mit LIEVITO MADRE: duenne, knusprige Kruste, offene Krume. Indirekte Methode, Backen mit Dampf.",
+  "notes_en": "SOURDOUGH baguette: thin crisp crust, open crumb. Indirect method, bake with steam.",
+  "procedure": "1) Rinfresca il lievito madre.\n2) Autolisi farina+acqua 40 min.\n3) Aggiungi lievito madre e sale, impasta.\n4) Puntata 3 h con 2 pieghe.\n5) Preforma, riposo 20 min, forma i filoncini.\n6) Appretto 90 min su telo infarinato.\n7) Incidi e cuoci a 250°C con vapore 10 min, poi 230°C fino a 22 min.",
+  "procedure_de": "1) Sauerteig auffrischen.\n2) Autolyse Mehl+Wasser 40 Min.\n3) Sauerteig und Salz zugeben, kneten.\n4) Stockgare 3 Std. mit 2 Faltungen.\n5) Vorformen, 20 Min. Ruhe, Baguettes formen.\n6) Stueckgare 90 Min. auf bemehltem Tuch.\n7) Einschneiden, bei 250°C mit Dampf 10 Min., dann 230°C bis 22 Min.",
+  "procedure_en": "1) Refresh the sourdough.\n2) Autolyse flour+water 40 min.\n3) Add sourdough and salt, knead.\n4) Bulk 3 h with 2 folds.\n5) Pre-shape, rest 20 min, shape baguettes.\n6) Final proof 90 min on floured couche.\n7) Score, bake at 250°C with steam 10 min, then 230°C to 22 min."
+ },
+ {
+  "name": "Pane Integrale a Lievito Madre",
+  "name_de": "Vollkornbrot mit Sauerteig",
+  "name_en": "Wholewheat Sourdough Bread",
+  "real_name": "Pane integrale a lievito madre",
+  "real_name_de": "Vollkornbrot mit Lievito Madre",
+  "real_name_en": "Wholewheat sourdough loaf",
+  "flour_type": "Farina integrale (W250)",
+  "flour_type_de": "Vollkornmehl (W250)",
+  "flour_type_en": "Wholewheat flour (W250)",
+  "hydration_percent": 80,
+  "flour_grams": 1000,
+  "water_grams": 800,
+  "sourdough_grams": 220,
+  "salt_grams": 22,
+  "preferment_type": "lm",
+  "method_type": "indiretto",
+  "dough_category": "indiretto",
+  "mix_minutes": 12,
+  "bulk_fermentation_hours": 4,
+  "proofing_hours": 3,
+  "bake_temp": 240,
+  "bake_minutes": 50,
+  "oven_type": "statico",
+  "image_url": "https://images.unsplash.com/photo-1599819055803-717bba43890f?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+  "origin": "IT",
+  "menu_category": "pane",
+  "extra_ingredients": [
+   {
+    "name": "Lievito Madre solido (rinfrescato)",
+    "percent": 22
+   },
+   {
+    "name": "Semi misti (opzionale)",
+    "percent": 10
+   }
+  ],
+  "notes": "Pane 100% INTEGRALE a LIEVITO MADRE: ricco di fibre, gusto intenso, alta idratazione. Metodo indiretto, ottima digeribilita e lunga conservazione.",
+  "notes_de": "100% VOLLKORNBROT mit LIEVITO MADRE: ballaststoffreich, kraeftiger Geschmack, hohe Hydratation. Indirekte Methode, bekoemmlich und lange haltbar.",
+  "notes_en": "100% WHOLEWHEAT SOURDOUGH: high fibre, intense flavour, high hydration. Indirect method, digestible and long keeping.",
+  "procedure": "1) Rinfresca il lievito madre.\n2) Autolisi farina integrale + acqua 1 h (assorbe piu acqua).\n3) Aggiungi lievito madre e sale, impasta.\n4) Puntata 4 h con 3 pieghe.\n5) Forma, in cestino, appretto 3 h o 12-18 h in frigo.\n6) Ribalta, incidi.\n7) Cuoci a 240°C con vapore 15 min, poi 220°C fino a 50 min totali.",
+  "procedure_de": "1) Sauerteig auffrischen.\n2) Autolyse Vollkornmehl + Wasser 1 Std.\n3) Sauerteig und Salz zugeben, kneten.\n4) Stockgare 4 Std. mit 3 Faltungen.\n5) Formen, in Koerbchen, Stueckgare 3 Std. oder 12-18 Std. im Kuehlschrank.\n6) Stuerzen, einschneiden.\n7) Bei 240°C mit Dampf 15 Min., dann 220°C bis 50 Min.",
+  "procedure_en": "1) Refresh the sourdough.\n2) Autolyse wholewheat + water 1 h.\n3) Add sourdough and salt, knead.\n4) Bulk 4 h with 3 folds.\n5) Shape, into banneton, proof 3 h or 12-18 h in fridge.\n6) Turn out, score.\n7) Bake at 240°C with steam 15 min, then 220°C to 50 min total."
  }
 ]

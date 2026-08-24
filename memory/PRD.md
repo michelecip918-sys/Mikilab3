@@ -905,3 +905,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Impara: "Da dove inizio?" ora è un PERCORSO A TAPPE che segna i passi completati (localStorage mikilab_impara_path), badge X/3 + spunte + messaggio di completamento. Verificato a schermo.
 
 - v54.1: Michele si presenta ("Ciao sono Michele") una sola volta (flag mikilab_michele_greeted); poi la voce legge solo il contenuto. Deploy check PASS.
+
+## v55 (2026-06) — Selettore voci, ricette LM, ricompensa percorso, PDF
+- Selettore voci (VoiceSettings.jsx): scelta + ANTEPRIMA ("ascolta") di 5 voci ElevenLabs per Momy e Michele; salvate in localStorage (mikilab_voice_momy/michele); /api/tts accetta voice_id raw; LabOnboarding usa getVoiceId(who). Aperto da MohammedAssistant (mohammed-voice-btn). Verificato a schermo.
+- Ricette LM: Baguette a Lievito Madre + Pane Integrale a Lievito Madre (pane, indiretto), IT/DE/EN. SEED_VERSION v53. TOT 94 ricette.
+- Ricompensa percorso Impara: badge "Fornaio Diplomato" al completamento 3/3 (academy-path-complete).
+- Condividi come PDF: pulsante window.print() aggiunto a Lista Spesa (spesa-pdf) e Diagnosi (photo-pdf-btn); i piani avevano già la stampa.
+- NON fatto (per scelta/limite): video masterclass (rimandato dall'utente); rigenerazione audio del VIDEO di Michele in Home con voce George → limite tecnico (l'avatar video ha lip-sync sull'audio registrato, sostituirlo desincronizza le labbra). Il selettore voci applica George alla voce TTS di Michele (tour), non al video preregistrato.

@@ -86,7 +86,12 @@ export default function AcademyHome({ onNavigate }) {
           })}
         </div>
         {pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length === 3 && (
-          <p data-testid="academy-path-complete" className="mt-2 text-center text-sm font-semibold text-[#6B8E62]">🎉 {tri("Percorso completato! Sei pronto per il Laboratorio.", "Pfad abgeschlossen! Bereit für die Backstube.", "Path complete! You're ready for the Lab.")}</p>
+          <div data-testid="academy-path-complete" className="mt-3 rounded-2xl bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white p-4 text-center shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-2"><CheckCircle2 className="w-7 h-7" /></div>
+            <p className="font-display text-lg font-bold">🎉 {tri("Percorso completato!", "Pfad abgeschlossen!", "Path complete!")}</p>
+            <p className="text-sm text-white/85 mt-0.5">{tri("Hai sbloccato il badge «Fornaio Diplomato». Sei pronto per Il Tuo Laboratorio!", "Du hast das Abzeichen «Diplom-Bäcker» freigeschaltet. Bereit für deine Backstube!", "You unlocked the «Certified Baker» badge. Ready for Your Lab!")}</p>
+            <span className="inline-block mt-2 text-[11px] font-bold bg-white/20 px-3 py-1 rounded-full uppercase tracking-wide">🏅 {tri("Fornaio Diplomato", "Diplom-Bäcker", "Certified Baker")}</span>
+          </div>
         )}
       </div>
 
