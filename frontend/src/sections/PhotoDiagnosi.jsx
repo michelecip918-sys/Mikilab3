@@ -179,10 +179,12 @@ export default function PhotoDiagnosi() {
 
   return (
     <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#4A7265] to-[#325046] p-6 text-white">
+        <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <HeroAvatar />
         <Camera className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("photo_title")}</h1>
+        <div className="h-1 w-12 rounded-full bg-[#C88A2B] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("photo_subtitle")}</p>
       </div>
 

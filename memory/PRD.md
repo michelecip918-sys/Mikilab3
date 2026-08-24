@@ -1000,3 +1000,16 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - PIANO IA RIFATTO (utente insoddisfatto, "rifallo"): quicklinks riorganizzati → 4 PRINCIPALI in evidenza (card verdi 2x2): Inserisci Ricette (aggiungi), Piano Giornaliero (lavoro), Produzione Settimanale (settimana), Celle Frigo & Freezer (capo). Sotto "Altri strumenti (opzionali)" (card bianche): Orari (inversa), Lista Spesa (spesa), Food Cost (foodcost), Punti Vendita (salespoints), Turni (turni). NULLA eliminato (il sito resta com'è).
 - Raccolta MAGGIORI DATI: aggiunti al form capo-staff (Personale in turno) e capo-std-temp (Temp standard lab), oltre a start-time e lab-temp esistenti; celle/impastatrici/temp arrivano da labConfig. Backend /capo/plan usa già mixers+cells (frigo/freezer/lievitazione)+staff+temp e genera destinazioni celle/freezer nel piano settimanale. Tip aggiornato → "Celle Frigo & Freezer".
 - Verificato a schermo: 4 voci principali + 5 opzionali, staff field, "Inserisci Ricette" apre la schermata ricette.
+
+## v73 (2026-06) — Restyling altre sezioni (accenti IT/DE)
+- NewsPage: sostituita vecchia fascia bandiere con .it-de-ribbon + filo oro (#C88A2B) sotto il titolo; hero gradient → #4A7265/#325046 (salvia calma).
+- PhotoDiagnosi: hero con .it-de-ribbon + filo oro; gradient salvia.
+- Enciclopedia + Community: filo oro sotto l'h1, icona chip → #4A7265 (verde salvia italiano).
+- Coerenza con Ricette/Impara/Header. Verificato a schermo (News + Enciclopedia).
+
+## v74 (2026-06) — Logica freezer + avvisi automatici nel Piano IA
+- backend /capo/plan: aggiunta direttiva condivisa (IT/DE, tutte le fasi weekly/daily) che impone:
+  1) Ripartizione per OGNI prodotto: oggi / domani (frigo) / resto in FREEZER come scorta, con stima di DURATA della scorta in base al consumo giornaliero (es. Baguette gio 600 → 100 oggi, 100 domani, 400 freezer, scorta fino a venerdì). Tabella/elenco per prodotto: oggi/domani/freezer/scorta fino a.
+  2) AVVISI AUTOMATICI con orario/innesco: quando attaccare impasti/prefermenti (giorno prima), rinfrescare LM, tirare fuori da freezer/frigo, e AVVISO quando la scorta freezer sta per finire. "Il panettiere non deve calcolare nulla."
+- Verificato: direttiva presente nell'output template (freezer/oggi/domani/avvisi compaiono). Verifica end-to-end della ripartizione numerica DA FARE dall'app con prodotto reale (il curl di test non passava i prodotti nel formato giusto).
+- Conferma struttura Lab (richiesta utente): tutto interconnesso via hub Piano IA; "sezione 2" = strumenti opzionali che restano disponibili ma non obbligatori.

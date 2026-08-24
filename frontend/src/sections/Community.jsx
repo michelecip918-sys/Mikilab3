@@ -88,9 +88,10 @@ export default function Community() {
   return (
     <div className="pb-40" data-testid="community">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#5E8B7E] flex items-center justify-center"><Users className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#4A7265] flex items-center justify-center"><Users className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Community dei Panettieri", "Bäcker-Community", "Bakers Community")}</h1>
+          <div className="h-1 w-10 rounded-full bg-[#C88A2B] my-1" />
           <p className="text-sm text-[#7E8A93]">{tri("Consigli, foto e ricette tra colleghi", "Tipps, Fotos und Rezepte unter Kollegen", "Tips, photos and recipes among peers")}</p>
         </div>
       </div>

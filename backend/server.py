@@ -1471,6 +1471,30 @@ async def capo_plan_stream(payload: CapoPlanRequest):
             prompt += (f"\n\nIMPORTANTE (prefermento {pref_name}): si usa il {pref_name} (idratazione 100%, liquido). "
                        "Riduci l'acqua dell'impasto principale scomputando l'acqua già presente nel prefermento (con idratazione al 100% la metà del suo peso è acqua), così l'idratazione finale resta invariata. Spiega brevemente lo scomputo.")
 
+    # Direttiva — logica freezer (oggi/domani/scorta) + AVVISI automatici (l'AI fa tutto).
+    if de:
+        prompt += (
+            "\n\nWICHTIG — GEFRIER-LOGIK & AUTOMATISCHE HINWEISE:\n"
+            "Für JEDES Produkt teile die Menge sinnvoll auf: eine Portion für HEUTE, eine für MORGEN (Kühlschrank), "
+            "der REST ins Gefrierfach als Vorrat. Schätze anhand des Tagesverbrauchs, WIE LANGE der Gefriervorrat reicht "
+            "(z. B. „600 Baguette am Do: 100 heute, 100 morgen, 400 tiefgekühlt — Vorrat bis Freitag“). "
+            "Gib eine kurze Tabelle/Liste pro Produkt: heute / morgen / Gefrierfach / Vorrat reicht bis.\n"
+            "Füge AUTOMATISCHE HINWEISE mit Uhrzeit/Auslöser hinzu: wann die Teige/Vorteige (am Vortag) ansetzen, "
+            "wann den Sauerteig auffrischen, wann aus Gefrierfach/Kühlschrank herausnehmen und auftauen/wieder aufgehen lassen, "
+            "und eine WARNUNG, wann der Gefriervorrat zur Neige geht und nachproduziert werden muss. Der Bäcker soll nichts selbst berechnen müssen."
+        )
+    else:
+        prompt += (
+            "\n\nIMPORTANTE — LOGICA FREEZER (oggi/domani/scorta) + AVVISI AUTOMATICI:\n"
+            "Per OGNI prodotto ripartisci la quantità con logica: una parte per OGGI, una per DOMANI (frigo), "
+            "il RESTO in freezer come scorta. Stima in base al consumo giornaliero PER QUANTO dura la scorta congelata "
+            "(es. «Baguette giovedì 600 pezzi: 100 oggi, 100 domani, 400 in freezer — scorta fino a venerdì»). "
+            "Dai una breve tabella/elenco per prodotto: oggi / domani / freezer / scorta fino a.\n"
+            "Inserisci AVVISI AUTOMATICI con orario/innesco: quando attaccare gli impasti/prefermenti (il giorno prima), "
+            "quando rinfrescare il lievito madre, quando tirare fuori dal freezer/frigo e scongelare/far riprendere, "
+            "e un AVVISO di quando la scorta in freezer sta per finire e va riprodotta. Il panettiere non deve calcolare nulla da solo."
+        )
+
     prompt += lang_instr
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,

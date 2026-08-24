@@ -9,14 +9,12 @@ export default function NewsPage() {
   const news = content[lang].news || [];
   return (
     <div data-testid="news-page" className="pb-4">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] p-6 text-white">
-        <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#6B8E62]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
-        </div>
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#4A7265] to-[#325046] p-6 text-white">
+        <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <HeroAvatar />
         <Newspaper className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("news_page_title")}</h1>
+        <div className="h-1 w-12 rounded-full bg-[#C88A2B] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("news_page_sub")}</p>
       </div>
 
