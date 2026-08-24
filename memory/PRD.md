@@ -989,3 +989,14 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - PianoProduzioneAI: streamPhase ora invia mode = (bizType==="casa" ? "home" : "pro"). Il backend /capo/plan ha già la branch mode=="home" (linguaggio semplice, piano passo-passo per principianti). Verificato: request body mode="home".
 - WeeklyPlan PDF: aggiunto nastro tricolore IT/DE (4px, verde→crema→rosso→oro→carbone) in cima ai 3 documenti stampabili (writeRecipesPdf, printLabels, pdfShoppingPerShop).
 - RIORDINO VOCI HOME (utente: "Enterprise fa parte del laboratorio? Metti le voci al posto giusto, non cancellare nulla"): rimosse dalla griglia "Esplora MikiLab" le card `enterprise` e `diagnosi` (doppioni/funzioni PRO da laboratorio). Enterprise SPOSTATO dentro Maestro (Il Tuo Laboratorio) Passo 2 come tool `enterprise` → <EnterpriseHub/> (import aggiunto, icona Building2). Diagnosi resta nel Passo 3 del lab + card dedicata in Home. Nulla eliminato, solo ricollocato. Verificato a schermo.
+
+## v71 (2026-06) — Piano IA semplificato (ricette panettiere in cima + 2 campi)
+- PianoProduzioneAI: caricamento ricette ordina le PERSONALI (panettiere, flag _own) PRIMA delle mikilab. Il select prodotto usa 2 optgroup: "Le mie ricette (panettiere)" + "Ricette MikiLab".
+- Riga prodotto ridotta a 2 CAMPI: Ricetta + Quantità (con suffisso pezzi/kg). unit/gpp/giorno spostati sotto un toggle per-riga "Opzioni" (capo-product-opts-{i}, campo _opts sul prodotto), nascosti di default.
+- Verificato: default mostra solo recipe+qty, "Opzioni" rivela unit/gpp/day, optgroup labels corretti.
+
+## v72 (2026-06) — Restyle sezioni + Piano IA rifatto (richiesta utente)
+- RESTYLE (step a): RecipeList hero e AcademyHome hero ora hanno il nastro tricolore .it-de-ribbon in cima + filo oro (#C88A2B) sotto il titolo; overlay hero passato a #1E1B18 (carbone). Verdi calmi mantenuti (accento italiano). Header globale già con .it-de-ribbon.
+- PIANO IA RIFATTO (utente insoddisfatto, "rifallo"): quicklinks riorganizzati → 4 PRINCIPALI in evidenza (card verdi 2x2): Inserisci Ricette (aggiungi), Piano Giornaliero (lavoro), Produzione Settimanale (settimana), Celle Frigo & Freezer (capo). Sotto "Altri strumenti (opzionali)" (card bianche): Orari (inversa), Lista Spesa (spesa), Food Cost (foodcost), Punti Vendita (salespoints), Turni (turni). NULLA eliminato (il sito resta com'è).
+- Raccolta MAGGIORI DATI: aggiunti al form capo-staff (Personale in turno) e capo-std-temp (Temp standard lab), oltre a start-time e lab-temp esistenti; celle/impastatrici/temp arrivano da labConfig. Backend /capo/plan usa già mixers+cells (frigo/freezer/lievitazione)+staff+temp e genera destinazioni celle/freezer nel piano settimanale. Tip aggiornato → "Celle Frigo & Freezer".
+- Verificato a schermo: 4 voci principali + 5 opzionali, staff field, "Inserisci Ricette" apre la schermata ricette.

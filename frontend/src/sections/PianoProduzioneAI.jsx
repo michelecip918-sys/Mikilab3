@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
@@ -49,7 +49,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       } catch { /* first run */ }
       try {
         const [mk, ps, wp] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal"), weeklyApi.get()]);
-        setRecipes([...(mk || []), ...(ps || [])].sort((a, b) => (a.name || "").localeCompare(b.name || "")));
+        const byName = (a, b) => (a.name || "").localeCompare(b.name || "");
+        const own = (ps || []).map((r) => ({ ...r, _own: true })).sort(byName);
+        const lib = (mk || []).sort(byName);
+        setRecipes([...own, ...lib]);  // le ricette del panettiere in cima
         if (wp && wp.items) setWeeklyItems(wp.items);
       } catch { /* */ }
     })();
@@ -162,18 +165,33 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">
             {lang === "de" ? "Alles an einem Ort" : lang === "en" ? "Everything in one place" : "Tutto in un posto"}
           </p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {[
-              { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Programma Settimana", "Wochenplan", "Weekly Plan") },
-              { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Produzione Oggi", "Heute Produktion", "Today's Production") },
-              { id: "inversa", Icon: Clock, label: tri3(lang, "Orari d'Inizio", "Startzeiten", "Start Times") },
-              { id: "spesa", Icon: ShoppingCart, label: tri3(lang, "Lista Spesa", "Einkaufsliste", "Shopping List") },
-              { id: "foodcost", Icon: Euro, label: tri3(lang, "Food Cost & Prezzi", "Food Cost & Preise", "Food Cost & Prices") },
-              { id: "salespoints", Icon: Store, label: tri3(lang, "Punti Vendita", "Verkaufspunkte", "Sales Points") },
-              { id: "turni", Icon: Users, label: tri3(lang, "Turni & Ruoli", "Schichten & Rollen", "Shifts & Roles") },
+              { id: "aggiungi", Icon: BookOpen, label: tri3(lang, "Inserisci Ricette", "Rezepte hinzufügen", "Add Recipes") },
+              { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Piano Giornaliero", "Tagesplan", "Daily Plan") },
+              { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
+              { id: "capo", Icon: Snowflake, label: tri3(lang, "Celle Frigo & Freezer", "Kammern & Gefrier", "Cells & Freezer") },
             ].map(({ id, Icon, label }) => (
               <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
-                className="flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[76px]">
+                className="flex items-center gap-2 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
+                <Icon className="w-5 h-5 shrink-0" />
+                <span className="text-[12px] font-bold leading-tight">{label}</span>
+              </button>
+            ))}
+          </div>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mt-3 mb-2">
+            {tri3(lang, "Altri strumenti (opzionali)", "Weitere Werkzeuge (optional)", "Other tools (optional)")}
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { id: "inversa", Icon: Clock, label: tri3(lang, "Orari d'Inizio", "Startzeiten", "Start Times") },
+              { id: "spesa", Icon: ShoppingCart, label: tri3(lang, "Lista Spesa", "Einkaufsliste", "Shopping List") },
+              { id: "foodcost", Icon: Euro, label: tri3(lang, "Food Cost", "Food Cost", "Food Cost") },
+              { id: "salespoints", Icon: Store, label: tri3(lang, "Punti Vendita", "Verkaufspunkte", "Sales Points") },
+              { id: "turni", Icon: Users, label: tri3(lang, "Turni & Ruoli", "Schichten", "Shifts") },
+            ].map(({ id, Icon, label }) => (
+              <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
+                className="flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px]">
                 <Icon className="w-5 h-5 text-[#5E8B7E]" />
                 <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{label}</span>
               </button>
@@ -183,10 +201,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       )}
 
       {mixers.length === 0 && cells.length === 0 && (
-        <div className="mb-4 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-3.5 text-sm text-[#33564E] dark:text-[#8FB0C2]">
-          {lang === "de" ? "Tipp: Richte zuerst deine Maschinen im Schritt 1 „Hardware-Einrichtung“ ein, damit die KI Kneter und Zellen berücksichtigt."
-            : lang === "en" ? "Tip: set up your machines first in Step 1 “Hardware Setup”, so the AI can use mixers and cells."
-            : "Suggerimento: configura prima le tue macchine nel Passo 1 «Prima Configurazione Hardware», così l'IA userà impastatrici e celle."}
+        <div className="mb-4 rounded-2xl bg-[#C88A2B]/12 border border-[#C88A2B]/35 p-3.5 text-sm text-[#33564E] dark:text-[#8FB0C2]">
+          {lang === "de" ? "Tipp: Richte zuerst deine Kammern & Maschinen über „Kammern & Gefrier“ ein, damit die KI Kneter, Kühl-/Gär-/Gefrierzellen berücksichtigt."
+            : lang === "en" ? "Tip: set up your cells & machines first via “Cells & Freezer”, so the AI can use mixers and cold/proofing/freezer cells."
+            : "Suggerimento: configura prima celle e macchine da «Celle Frigo & Freezer», così l'IA userà impastatrici e celle di lievitazione/frigo/freezer."}
         </div>
       )}
 
@@ -226,34 +244,53 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
                   className="flex-1 min-w-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]">
                   <option value="">{t("capo_pick_recipe")}</option>
-                  {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                  {recipes.some((r) => r._own) && (
+                    <optgroup label={tri3(lang, "Le mie ricette (panettiere)", "Meine Rezepte", "My recipes")}>
+                      {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                    </optgroup>
+                  )}
+                  <optgroup label={tri3(lang, "Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}>
+                    {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                  </optgroup>
                 </select>
                 <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
               <div className="flex items-center gap-2">
-                <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
-                  onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-                  className="w-16 shrink-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]" />
-                <select data-testid={`capo-product-unit-${i}`} value={p.unit}
-                  onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))}
-                  className="w-[72px] shrink-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]">
-                  <option value="pezzi">{t("capo_unit_pieces")}</option>
-                  <option value="kg">{t("capo_unit_kg")}</option>
-                </select>
-                {p.unit === "pezzi" && (
-                  <div className="relative w-[72px] shrink-0">
-                    <input data-testid={`capo-product-gpp-${i}`} type="number" value={p.gpp ?? ""} placeholder="g/pz"
-                      onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, gpp: e.target.value } : x))}
-                      className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#5E8B7E]" />
-                    <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">g</span>
-                  </div>
-                )}
-                <select data-testid={`capo-product-day-${i}`} value={p.day || ""}
-                  onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-                  className="flex-1 min-w-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]">
-                  {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
-                </select>
+                <div className="relative flex-1">
+                  <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Quantità", "Menge", "Quantity")}
+                    onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
+                    className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 pr-12 text-sm outline-none focus:border-[#5E8B7E]" />
+                  <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
+                </div>
+                <button type="button" data-testid={`capo-product-opts-${i}`}
+                  onClick={() => setProducts((l) => l.map((x, k) => k === i ? { ...x, _opts: !x._opts } : x))}
+                  className="shrink-0 text-xs font-semibold text-[#5E8B7E] px-2.5 py-2 rounded-lg border border-[#D7E1DB] dark:border-[#38424B] active:scale-95 transition-all">
+                  {p._opts ? tri3(lang, "Meno", "Weniger", "Less") : tri3(lang, "Opzioni", "Optionen", "Options")}
+                </button>
               </div>
+              {p._opts && (
+                <div className="flex items-center gap-2 flex-wrap">
+                  <select data-testid={`capo-product-unit-${i}`} value={p.unit}
+                    onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))}
+                    className="w-[80px] shrink-0 bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]">
+                    <option value="pezzi">{t("capo_unit_pieces")}</option>
+                    <option value="kg">{t("capo_unit_kg")}</option>
+                  </select>
+                  {p.unit === "pezzi" && (
+                    <div className="relative w-[80px] shrink-0">
+                      <input data-testid={`capo-product-gpp-${i}`} type="number" value={p.gpp ?? ""} placeholder="g/pz"
+                        onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, gpp: e.target.value } : x))}
+                        className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#5E8B7E]" />
+                      <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">g</span>
+                    </div>
+                  )}
+                  <select data-testid={`capo-product-day-${i}`} value={p.day || ""}
+                    onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
+                    className="flex-1 min-w-[110px] bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]">
+                    {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
+                  </select>
+                </div>
+              )}
             </div>
           ))}
           <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "" }])} className="text-sm font-medium text-[#5E8B7E] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
@@ -269,6 +306,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         <div className="grid grid-cols-2 gap-3 mt-4">
           <LabelInput testid="capo-start-time" label={t("capo_start_time")} type="time" value={startTime} onChange={setStartTime} />
           <LabelInput testid="capo-lab-temp" label={t("capo_lab_temp")} type="number" value={labTemp} onChange={setLabTemp} unit="°C" />
+          <LabelInput testid="capo-staff" label={tri3(lang, "Personale in turno oggi", "Personal heute", "Staff on shift today")} type="number" value={staff} onChange={setStaff} />
+          <LabelInput testid="capo-std-temp" label={tri3(lang, "Temp. standard laboratorio", "Standardtemperatur", "Standard lab temp")} type="number" value={stdTemp} onChange={setStdTemp} unit="°C" />
         </div>
         {tempMsg && (
           <div data-testid="capo-temp-msg" className={`mt-2 text-sm rounded-xl px-3 py-2 border ${tempDelta && Math.abs(tempDelta) >= 1 ? "bg-[#6E8CA0]/15 border-[#6E8CA0]/40 text-[#33564E] dark:text-[#8FB0C2]" : "bg-[#6B8E62]/12 border-[#6B8E62]/30 text-[#4d6b45] dark:text-[#9ec48f]"}`}>

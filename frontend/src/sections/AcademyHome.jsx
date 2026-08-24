@@ -43,9 +43,11 @@ export default function AcademyHome({ onNavigate }) {
   return (
     <div className="pb-4" data-testid="academy-home">
       {/* Hero */}
-      <div className="relative rounded-3xl overflow-hidden mb-4 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-4 bg-gradient-to-br from-[#4A7265] to-[#325046] p-6 text-white">
+        <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <GraduationCap className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}</h1>
+        <div className="h-1 w-12 rounded-full bg-[#C88A2B] mt-1.5" />
         <p className="text-white/85 text-sm mt-1 max-w-md">{tri("La tua Academy: ricettario dinamico, database farine, diagnosi delle cotture e corsi passo-passo.", "Deine Academy: dynamisches Rezeptbuch, Mehl-Datenbank, Back-Diagnose und Schritt-für-Schritt-Kurse.", "Your Academy: dynamic recipe book, flour database, bake diagnosis and step-by-step courses.")}</p>
         {typeof diagLimit === "number" && (
           <div data-testid="academy-diag-usage" className="mt-3 inline-flex items-center gap-2 rounded-xl bg-white/15 border border-white/25 px-3 py-1.5 text-sm font-semibold">
