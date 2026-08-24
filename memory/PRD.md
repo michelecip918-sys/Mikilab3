@@ -917,3 +917,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - lib/tts.js (playTTS/stopTTS, pulizia markdown/emoji) + ListenButton.jsx: pulsante "Ascolta" con voce scelta. Aggiunto a Diagnosi Foto (photo-listen-btn) e Diagnosi Sonora (sound-listen-btn) — legge causa/soluzione.
 - Badge "Fornaio Diplomato" nella dashboard personale Home (home-badge-diplomato) al completamento del percorso Impara (localStorage mikilab_impara_path).
 - PDF col logo: PrintHeader.jsx (logo-256.png + titolo + data, classe .print-only) aggiunto nelle aree stampabili di Diagnosi Foto e Lista Spesa (avvolte in .print-area). Stili .print-only in index.css.
+
+## v57 (2026-06) — Voce/PDF nel Ricettario + badge obiettivo
+- Scheda ricetta (RecipeDetail in RecipeList.jsx): pulsanti "Ascolta" (listen-recipe-*, legge nome+procedimento con voce Momy via playTTS) e "PDF/Stampa" (pdf-recipe-*, window.print). Visibili solo su ricette SBLOCCATE con procedimento. Contenuto avvolto in .print-area con PrintHeader (logo). Verificato a schermo (admin).
+- Badge "Fornaio Diplomato" in Home dashboard ora SEMPRE visibile: grigio+lucchetto ("obiettivo", tappabile → Impara) se percorso incompleto, verde+medaglia se completato (home-badge-diplomato).

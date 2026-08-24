@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer } from "lucide-react";
 import { recipesApi, subscriptionApi, recipePurchaseApi } from "@/lib/api";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import FlourTable from "@/components/FlourTable";
+import PrintHeader from "@/components/PrintHeader";
+import { playTTS } from "@/lib/tts";
 import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -567,7 +569,8 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           <div className="absolute inset-0 bg-gradient-to-t from-[#1B2127]/70 to-transparent" />
         </div>
       )}
-      <div className="p-5 space-y-4">
+      <div className="p-5 space-y-4 print-area">
+        <PrintHeader title={rLoc(r, "name", lang)} lang={lang} />
         <div>
           <h2 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">
             {r.origin && flagEmoji(r.origin) && <span className="mr-1" title={countryName(r.origin)}>{flagEmoji(r.origin)}</span>}
@@ -577,8 +580,14 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           {r.flour_type ? <p className="text-sm text-[#7E8A93] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
         </div>
 
-        <div className="flex gap-1.5">
+        <div className="flex gap-1.5 no-print flex-wrap">
           <ActionBtn testid={`share-recipe-${r.id}`} onClick={shareRecipe} color="#6E8CA0" label={tri("Condividi", "Teilen", "Share")}><Share2 className="w-4 h-4" /></ActionBtn>
+          {!r.locked && rLoc(r, "procedure", lang) && (
+            <ActionBtn testid={`listen-recipe-${r.id}`} onClick={() => playTTS(`${rLoc(r, "name", lang)}. ${rLoc(r, "procedure", lang)}`, { who: "momy", lang }).catch(() => {})} color="#5E8B7E" label={tri("Ascolta", "Anhören", "Listen")}><Volume2 className="w-4 h-4" /></ActionBtn>
+          )}
+          {!r.locked && (
+            <ActionBtn testid={`pdf-recipe-${r.id}`} onClick={() => window.print()} color="#6B8E62" label={tri("PDF / Stampa", "PDF / Drucken", "PDF / Print")}><Printer className="w-4 h-4" /></ActionBtn>
+          )}
           <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#6B8E62" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
           {canEdit && <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#7E8A93" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#5E8B7E"><Pencil className="w-4 h-4" /></ActionBtn>}
