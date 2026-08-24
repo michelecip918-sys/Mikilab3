@@ -973,3 +973,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - PianoProduzioneAI.jsx: nuovo prop onOpenTool + barra "Tutto in un posto" (capo-quicklinks) con 7 scorciatoie rapide (capo-quicklink-{settimana,lavoro,inversa,spesa,foodcost,salespoints,turni}) che chiamano onOpenTool(id) → aprono lo strumento direttamente senza tornare indietro. Passato da Maestro: <PianoProduzioneAI onOpenTool={setTool} />.
 - Verificato con automazione: 3 step, step1=Ricette, step2 hub+card+tool, 7 quicklink, navigazione quicklink→WeeklyPlan OK.
 - NOTA: richiesta utente "semplificare anche la Home" NON ancora affrontata (Home attuale è già una griglia di scorciatoie + badge livello).
+
+## v68 (2026-06) — Home semplificata e riorganizzata
+- Home.jsx riordinata (nulla eliminato): ordine nuovo = Avatar hero → Dashboard personale (saluto + livello/progress + scorciatoie) → "Esplora MikiLab" (audiences cliccabili + griglia SECTIONS spostata IN ALTO per accesso immediato) → Accesso rapido (Diagnosi + Community, card compatte affiancate) → Chiedi al Maestro → blocco richiudibile "Scopri MikiLab" (home-story-toggle) che raccoglie bio-card + home-promo + 4 concetti + battuta (chiuso di default) → Shop & Corsi → ShareInstall → legale.
+- Nuovo stato storyOpen. Rimosse ridondanze minori (chip diagnosi doppione, testo "come guadagni punti") per pulizia. Verificato a schermo (sezioni in alto, story collassato, espansione OK).
+- RICHIESTA APERTA utente: "riordinare TUTTO il sito, renderlo moderno/unico/adatto a tutte le aziende, senza cancellare nulla". Da affrontare via design_agent (blueprint coerente) e applicare sezione per sezione.

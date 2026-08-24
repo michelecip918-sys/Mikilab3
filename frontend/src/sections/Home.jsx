@@ -163,6 +163,7 @@ export default function Home({ onNavigate }) {
   const [chat, setChat] = useState(false);
   const [legal, setLegal] = useState(false);
   const [open, setOpen] = useState(null);
+  const [storyOpen, setStoryOpen] = useState(false);
   const concepts = CONCEPTS[lang] || CONCEPTS.it;
   const activeConcept = concepts.find((c) => c.id === open) || null;
   const go = (tab) => onNavigate && onNavigate(tab);
@@ -263,11 +264,6 @@ export default function Home({ onNavigate }) {
                     <div className="mt-1 h-2 w-full max-w-[240px] rounded-full bg-[#D7E1DB] dark:bg-[#38424B] overflow-hidden">
                       <div className="h-full rounded-full bg-[#C9A24B] transition-all" style={{ width: `${lvl.pct}%` }} />
                     </div>
-                    <p className="text-[10px] text-[#9AA6AE] mt-1 leading-snug">
-                      {L("Guadagni punti creando ricette, facendo diagnosi e chiudendo la giornata.",
-                         "Punkte sammelst du mit Rezepten, Diagnosen und dem Tagesabschluss.",
-                         "Earn points by creating recipes, running diagnoses and closing the day.")}
-                    </p>
                   </div>
                 )}
               </div>
@@ -278,10 +274,6 @@ export default function Home({ onNavigate }) {
             <button data-testid="home-quick-ricette" onClick={() => go("ricette")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#5E8B7E] text-white text-sm font-semibold active:scale-97">
               <BookOpen className="w-4 h-4" /> {L("Le mie ricette", "Meine Rezepte", "My recipes")}
-            </button>
-            <button data-testid="home-quick-diagnosi" onClick={() => go("diagnosi")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#B34A26] text-white text-sm font-semibold active:scale-97">
-              <Camera className="w-4 h-4" /> {L("Diagnosi Foto", "Foto-Diagnose", "Photo diagnosis")}
             </button>
             <button data-testid="home-quick-focus" onClick={() => go("maestro")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#6E8CA0]/40 text-[#2B303B] dark:text-[#EAF0EC] text-sm font-semibold active:scale-97">
@@ -297,125 +289,33 @@ export default function Home({ onNavigate }) {
         </div>
       )}
 
-      {/* Card Diagnosi Foto — accesso rapido sempre visibile */}
-      <button data-testid="home-diagnosi-card" onClick={() => go("diagnosi")}
-        className="w-full text-left rounded-3xl overflow-hidden p-5 text-white flex items-center gap-4 active:scale-98 transition-all shadow-lg mb-4"
-        style={{ backgroundImage: "linear-gradient(135deg,#B34A26,#8a3319)" }}>
-        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-          <Camera className="w-6 h-6" />
-        </div>
-        <div className="min-w-0">
-          <p className="font-display text-lg font-bold">{L("Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis")}</p>
-          <p className="text-sm text-white/85">{L("Impasto venuto male o macchina rotta? Scatta una foto e ti dico causa e soluzione.", "Misslungener Teig oder kaputte Maschine? Mach ein Foto und ich nenne Ursache & Lösung.", "Failed dough or broken machine? Snap a photo and I'll tell you the cause and fix.")}</p>
-        </div>
-        <ChevronRight className="w-5 h-5 ml-auto shrink-0" />
-      </button>
-
-      {/* Card Community */}
-      <button data-testid="home-community-card" onClick={() => go("community")}
-        className="w-full text-left rounded-3xl overflow-hidden p-5 text-white flex items-center gap-4 active:scale-98 transition-all shadow-lg mb-4"
-        style={{ backgroundImage: "linear-gradient(135deg,#6E8CA0,#3f5b6b)" }}>
-        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-          <Users className="w-6 h-6" />
-        </div>
-        <div className="min-w-0">
-          <p className="font-display text-lg font-bold">{L("Community MikiLab", "MikiLab Community", "MikiLab Community")}</p>
-          <p className="text-sm text-white/85">{L("Confrontati con altri fornai: domande, foto e consigli.", "Tausche dich mit anderen Bäckern aus: Fragen, Fotos, Tipps.", "Connect with other bakers: questions, photos and tips.")}</p>
-        </div>
-        <ChevronRight className="w-5 h-5 ml-auto shrink-0" />
-      </button>
-
-
-      <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-xl p-7 text-center">
-        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
-          className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-4" />
-        <h1 className="font-display text-3xl font-bold">Mikilab</h1>
-        <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
-      </div>
-
-      {/* Blocco promozionale in evidenza */}
-      <div data-testid="home-promo" className="rounded-3xl bg-[#EAF0EC] dark:bg-[#1F252B] border border-[#6E8CA0]/40 shadow-md p-5 flex items-start gap-4">
-        <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="Michele" loading="lazy"
-          className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#6E8CA0]/50 shrink-0"
-          onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <p className="text-sm text-[#3F4A54] dark:text-[#EAF0EC] leading-relaxed">
-          {L(
-            "Un sito pensato per organizzare il lavoro proprio come lo faresti tu. Dalla gestione dettagliata delle ricette alla lista della spesa, fino alla pianificazione precisa della produzione in laboratorio. In più, con l'aiuto dell'AI potrai calcolare, adattare e gestire ogni fase senza margine di errore: tu pensi al laboratorio, al resto ci pensiamo noi.",
-            "Eine Website, die die Arbeit genau so organisiert, wie du es tun würdest. Von der detaillierten Rezeptverwaltung über die Einkaufsliste bis zur präzisen Produktionsplanung in der Backstube. Und mit Hilfe der KI kannst du jede Phase ohne Fehler berechnen, anpassen und steuern: Du kümmerst dich um die Backstube, um den Rest kümmern wir uns.",
-            "A website designed to organise the work exactly as you would. From detailed recipe management to the shopping list, all the way to precise production planning in the bakery. Plus, with AI's help you can calculate, adapt and manage every stage with no margin for error: you focus on the bakery, we take care of the rest."
-          )}
-        </p>
-      </div>
-
-      {/* 4 concetti — accordion: si espandono verso il basso con foto e testo */}
-      <div className="space-y-4">
-        {concepts.map((c) => {
-          const Icon = c.icon;
-          const isOpen = open === c.id;
-          return (
-            <div key={c.id} data-testid={`concept-block-${c.id}`}>
-              <button data-testid={`home-concept-${c.id}`} onClick={() => setOpen(isOpen ? null : c.id)}
-                className={`w-full flex items-center gap-4 rounded-3xl p-6 text-white shadow-lg active:scale-98 transition-all bg-gradient-to-br ${c.grad} ${isOpen ? "rounded-b-none" : ""}`}>
-                <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
-                  <Icon className="w-7 h-7" />
-                </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <h3 className="font-display text-xl font-bold">{c.title}</h3>
-                  <p className="text-white/70 text-[11px] font-medium">{isOpen ? t("home_tap_open") : t("home_tap_open")}</p>
-                </div>
-                <ChevronDown className={`w-6 h-6 text-white/90 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
-              </button>
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
-                    <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#1F252B] border border-t-0 border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
-                      {CONCEPT_PHOTOS[c.id] && (
-                        <img src={CONCEPT_PHOTOS[c.id]} alt={c.title}
-                          data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy"
-                          onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                      )}
-                      <p className="p-6 text-[15px] leading-relaxed text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line">{c.body}</p>
-                      {c.id === "chi" && (
-                        <div className="px-6 pb-6 -mt-2">
-                          <TattooSignature testid="home-chi-signature" />
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Menu principale — subito sotto i blocchi */}
+      {/* ===== ESPLORA: menu principale in alto per accesso immediato ===== */}
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2 px-1">{t("home_tap_open")}</p>
+        <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1 px-1">{L("Esplora MikiLab", "MikiLab entdecken", "Explore MikiLab")}</h2>
+        <p className="text-xs text-[#7E8A93] mb-3 px-1">{L("Scegli dove vuoi andare", "Wähle, wohin du möchtest", "Choose where to go")}</p>
 
         {/* Due mondi: professionisti + principianti */}
         <div data-testid="home-audiences" className="grid grid-cols-1 gap-2.5 mb-3">
-          <div className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4">
+          <button onClick={() => go("maestro")} className="text-left rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4 active:scale-98 transition-all">
             <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
               <Wrench className="w-4 h-4 text-[#5E8B7E]" /> {L("Per professionisti · «Il Tuo Laboratorio»", "Für Profis · „Dein Labor“", "For pros · “Your Lab”")}
             </p>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-snug">
-              {L("Piano di produzione giornaliero/settimanale, calcolo costi, gestione celle e pulizie, affiancato dall'IA per rigenerare impasti e processi.",
-                 "Täglicher/wöchentlicher Produktionsplan, Kostenrechnung, Zellen- und Reinigungsverwaltung, unterstützt von der KI zum Regenerieren von Teigen und Prozessen.",
-                 "Daily/weekly production plan, cost calculation, cell and cleaning management, backed by AI to regenerate doughs and processes.")}
+              {L("Piano di produzione, calcolo costi, gestione e IA per rigenerare impasti e processi.",
+                 "Produktionsplan, Kostenrechnung, Verwaltung und KI zum Regenerieren von Teigen.",
+                 "Production plan, cost calculation, management and AI to regenerate doughs.")}
             </p>
-          </div>
-          <div className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4">
+          </button>
+          <button onClick={() => go("impara")} className="text-left rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4 active:scale-98 transition-all">
             <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
               <GraduationCap className="w-4 h-4 text-[#4d6b45]" /> {L("Per chi inizia · Sezione Principianti", "Für Anfänger · Sektion Anfänger", "For beginners · Beginners section")}
             </p>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-snug">
-              {L("I primi passi nell'Arte Bianca: guide passo-passo, basi della panificazione e ricette semplificate.",
-                 "Erste Schritte in der Backkunst: geführte Anleitungen, Grundlagen und vereinfachte Rezepte.",
-                 "First steps in the baking art: step-by-step guides, baking basics and simplified recipes.")}
+              {L("I primi passi nell'Arte Bianca: guide passo-passo e ricette semplificate.",
+                 "Erste Schritte in der Backkunst: geführte Anleitungen und einfache Rezepte.",
+                 "First steps in the baking art: step-by-step guides and simplified recipes.")}
             </p>
-          </div>
+          </button>
         </div>
 
         <div className="grid grid-cols-2 gap-3" data-testid="home-sections">
@@ -433,23 +333,126 @@ export default function Home({ onNavigate }) {
         </div>
       </div>
 
-      {/* Chiedi al Maestro */}
+      {/* ===== ACCESSO RAPIDO: Diagnosi + Community (compatti, affiancati) ===== */}
+      <div className="grid grid-cols-2 gap-3">
+        <button data-testid="home-diagnosi-card" onClick={() => go("diagnosi")}
+          className="text-left rounded-3xl p-4 text-white flex flex-col gap-2 active:scale-98 transition-all shadow-lg"
+          style={{ backgroundImage: "linear-gradient(135deg,#B34A26,#8a3319)" }}>
+          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Camera className="w-6 h-6" /></div>
+          <p className="font-display text-base font-bold leading-tight">{L("Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{L("Scatta una foto: ti dico causa e soluzione.", "Foto machen: Ursache & Lösung.", "Snap a photo: cause and fix.")}</p>
+        </button>
+        <button data-testid="home-community-card" onClick={() => go("community")}
+          className="text-left rounded-3xl p-4 text-white flex flex-col gap-2 active:scale-98 transition-all shadow-lg"
+          style={{ backgroundImage: "linear-gradient(135deg,#6E8CA0,#3f5b6b)" }}>
+          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Users className="w-6 h-6" /></div>
+          <p className="font-display text-base font-bold leading-tight">{L("Community", "Community", "Community")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{L("Domande, foto e consigli fra fornai.", "Fragen, Fotos & Tipps.", "Questions, photos and tips.")}</p>
+        </button>
+      </div>
+
+      {/* ===== CHIEDI AL MAESTRO ===== */}
       <button data-testid="home-chat-btn" onClick={() => setChat(true)}
-        className="w-full flex items-center gap-4 rounded-3xl p-6 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white shadow-lg active:scale-98 transition-all">
-        <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
-          <MessageCircle className="w-7 h-7" />
+        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white shadow-lg active:scale-98 transition-all">
+        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
+          <MessageCircle className="w-6 h-6" />
         </div>
         <div className="flex-1 min-w-0 text-left">
-          <h3 className="font-display text-xl font-bold">{t("home_chat_btn")}</h3>
+          <h3 className="font-display text-lg font-bold">{t("home_chat_btn")}</h3>
           <p className="text-white/85 text-sm">{t("home_chat_sub")}</p>
         </div>
         <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
       </button>
 
-      {/* Battuta del giorno */}
-      <div data-testid="home-joke" className="flex items-start gap-3 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4">
-        <Laugh className="w-5 h-5 text-[#5E8B7E] shrink-0 mt-0.5" />
-        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] italic leading-relaxed">{joke}</p>
+      {/* ===== SCOPRI MIKILAB: storytelling raccolto (richiudibile) ===== */}
+      <div data-testid="home-story">
+        <button data-testid="home-story-toggle" onClick={() => setStoryOpen((v) => !v)}
+          className="w-full flex items-center gap-3 rounded-3xl p-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-lg active:scale-98 transition-all">
+          <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
+            <Info className="w-6 h-6" />
+          </div>
+          <div className="flex-1 min-w-0 text-left">
+            <h3 className="font-display text-lg font-bold">{L("Scopri MikiLab", "MikiLab kennenlernen", "Discover MikiLab")}</h3>
+            <p className="text-white/85 text-sm">{L("Chi è Michele, il metodo e la filosofia", "Wer Michele ist, die Methode und Philosophie", "Who Michele is, the method and philosophy")}</p>
+          </div>
+          <ChevronDown className={`w-6 h-6 text-white/90 shrink-0 transition-transform duration-300 ${storyOpen ? "rotate-180" : ""}`} />
+        </button>
+
+        <AnimatePresence initial={false}>
+          {storyOpen && (
+            <motion.div key="story" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
+              <div className="space-y-6 pt-6">
+                <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-xl p-7 text-center">
+                  <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
+                    className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-4" />
+                  <h1 className="font-display text-3xl font-bold">Mikilab</h1>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
+                </div>
+
+                <div data-testid="home-promo" className="rounded-3xl bg-[#EAF0EC] dark:bg-[#1F252B] border border-[#6E8CA0]/40 shadow-md p-5 flex items-start gap-4">
+                  <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="Michele" loading="lazy"
+                    className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#6E8CA0]/50 shrink-0"
+                    onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                  <p className="text-sm text-[#3F4A54] dark:text-[#EAF0EC] leading-relaxed">
+                    {L(
+                      "Un sito pensato per organizzare il lavoro proprio come lo faresti tu. Dalla gestione dettagliata delle ricette alla lista della spesa, fino alla pianificazione precisa della produzione in laboratorio. In più, con l'aiuto dell'AI potrai calcolare, adattare e gestire ogni fase senza margine di errore: tu pensi al laboratorio, al resto ci pensiamo noi.",
+                      "Eine Website, die die Arbeit genau so organisiert, wie du es tun würdest. Von der detaillierten Rezeptverwaltung über die Einkaufsliste bis zur präzisen Produktionsplanung in der Backstube. Und mit Hilfe der KI kannst du jede Phase ohne Fehler berechnen, anpassen und steuern: Du kümmerst dich um die Backstube, um den Rest kümmern wir uns.",
+                      "A website designed to organise the work exactly as you would. From detailed recipe management to the shopping list, all the way to precise production planning in the bakery. Plus, with AI's help you can calculate, adapt and manage every stage with no margin for error: you focus on the bakery, we take care of the rest."
+                    )}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {concepts.map((c) => {
+                    const Icon = c.icon;
+                    const isOpen = open === c.id;
+                    return (
+                      <div key={c.id} data-testid={`concept-block-${c.id}`}>
+                        <button data-testid={`home-concept-${c.id}`} onClick={() => setOpen(isOpen ? null : c.id)}
+                          className={`w-full flex items-center gap-4 rounded-3xl p-6 text-white shadow-lg active:scale-98 transition-all bg-gradient-to-br ${c.grad} ${isOpen ? "rounded-b-none" : ""}`}>
+                          <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
+                            <Icon className="w-7 h-7" />
+                          </div>
+                          <div className="flex-1 min-w-0 text-left">
+                            <h3 className="font-display text-xl font-bold">{c.title}</h3>
+                            <p className="text-white/70 text-[11px] font-medium">{t("home_tap_open")}</p>
+                          </div>
+                          <ChevronDown className={`w-6 h-6 text-white/90 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
+                        </button>
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
+                              <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#1F252B] border border-t-0 border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
+                                {CONCEPT_PHOTOS[c.id] && (
+                                  <img src={CONCEPT_PHOTOS[c.id]} alt={c.title}
+                                    data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy"
+                                    onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                                )}
+                                <p className="p-6 text-[15px] leading-relaxed text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line">{c.body}</p>
+                                {c.id === "chi" && (
+                                  <div className="px-6 pb-6 -mt-2">
+                                    <TattooSignature testid="home-chi-signature" />
+                                  </div>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div data-testid="home-joke" className="flex items-start gap-3 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4">
+                  <Laugh className="w-5 h-5 text-[#5E8B7E] shrink-0 mt-0.5" />
+                  <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] italic leading-relaxed">{joke}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* MikiLab Shop & Corsi — in fondo alla Home */}
