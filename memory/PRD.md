@@ -943,3 +943,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v62 (2026-06) — Voce gratuita per Mohammed + pulizia simboli
 - MohammedAssistant.jsx: pulsante "Ascolta"/"Ferma" (mohammed-listen-{i}) su OGNI risposta dell'assistente. Usa speak() di voice.js = voce GRATUITA del dispositivo (Web Speech), forzata MASCHILE (MALE_HINTS + pitch 0.8), nessun costo ElevenLabs. Toggle play/stop, primeVoice per iOS.
 - voice.js: nuova cleanForSpeech() applicata dentro speak() → la voce legge SOLO le parole. Rimuove: blocchi/codice inline, link markdown, emoji, elenchi numerati "1)"/"2.", elenchi puntati/trattini a inizio riga, trattini isolati fra spazi, simboli #*_~>|•·, virgolette caporali. Mantiene i trattini dentro le parole (es. "passo-passo"). Vale per TUTTE le voci gratuite (Mohammed, assistente vocale, diagnosi, sveglia, ecc.). Verificato a schermo (spoken text senza simboli markdown).
+
+## v63 (2026-06) — Voce maschile GRATUITA ovunque
+- tts.js playTTS(): quando ElevenLabs non risponde (es. crediti 0) fa FALLBACK automatico a speak() di voice.js (voce maschile gratuita del dispositivo). Prima restava muto → tutti i pulsanti "Ascolta" (ricette listen-recipe-*, Piano IA capo-listen, DayClose, Diagnosi) ora funzionano gratis. stopTTS() ferma anche speechSynthesis.
+- voice.js speak(): pitch ADATTIVO → 0.85 se trova una voce maschile sul device, 0.55 se non c'è (abbassa molto il tono per timbro maschile anche con voci femminili — unica leva gratuita). onEnd callback opzionale (u.onend/onerror). Nuovo stopSpeak(). cleanForSpeech applicata sempre.
+- GuidedWeighing.jsx: il local speak() usava SpeechSynthesisUtterance grezzo (voce di default = spesso femminile). Ora delega a speakMale (import { speak as speakMale } from lib/voice).
+- MohammedAssistant.jsx: pulsante Ascolta (mohammed-listen-*) con voce maschile gratuita.
+- Verificato a schermo: tour del Laboratorio → fallback speak() con pitch 0.55, testo senza simboli/virgolette.
+- NB PRODUZIONE: le modifiche sono in preview; su mikilab.de servono "Save to GitHub" → Deploy. Per la voce PREMIUM (Brian/George) ricaricare crediti ElevenLabs.

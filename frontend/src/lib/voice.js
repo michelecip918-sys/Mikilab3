@@ -31,24 +31,34 @@ function pickVoice(voices, target) {
     || pool[0];
 }
 
-export function speak(text, lang = "it") {
+export function speak(text, lang = "it", onEnd) {
   try {
-    if (!("speechSynthesis" in window) || !text) return;
+    if (!("speechSynthesis" in window) || !text) { if (onEnd) onEnd(); return; }
     const clean = cleanForSpeech(text);
-    if (!clean) return;
+    if (!clean) { if (onEnd) onEnd(); return; }
     const target = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
     const u = new SpeechSynthesisUtterance(clean);
     u.lang = target;
     u.rate = 0.95;   // leggermente piu lento = piu fluido
-    u.pitch = 0.8;   // tono basso/maschile, meno robotico
     const voices = loadVoices();
     const match = pickVoice(voices, target);
     if (match) u.voice = match;
+    // Se la voce del dispositivo è maschile la teniamo naturale; altrimenti abbassiamo
+    // molto il tono per ottenere comunque un timbro maschile (unica leva gratuita).
+    const isMale = match && MALE_HINTS.test(match.name || "");
+    u.pitch = isMale ? 0.85 : 0.55;
+    if (onEnd) { u.onend = onEnd; u.onerror = onEnd; }
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
   } catch {
+    if (onEnd) onEnd();
     /* voce non disponibile */
   }
+}
+
+// Ferma la voce del dispositivo (Web Speech).
+export function stopSpeak() {
+  try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch { /* */ }
 }
 
 // Pulisce il testo per la sintesi vocale: legge SOLO le parole, niente simboli

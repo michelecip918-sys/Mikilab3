@@ -3,6 +3,7 @@ import { Scale, Bluetooth, Volume2, VolumeX, AlertTriangle, ArrowRight, Plus, Tr
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { doughSessionsApi } from "@/lib/api";
+import { speak as speakMale } from "@/lib/voice";
 import { toast } from "sonner";
 
 // FASE 1 — Pesata Guidata & Bilancia Smart (semaforo, voce, riscalamento, multi-impastata,
@@ -81,7 +82,7 @@ export default function GuidedWeighing() {
   }, []);
   const speak = useCallback((txt) => {
     if (!voiceOn) return;
-    try { const u = new SpeechSynthesisUtterance(txt); u.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT"; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch { /* */ }
+    speakMale(txt, lang);  // voce maschile gratuita + pulizia simboli
   }, [voiceOn, lang]);
 
   useEffect(() => {
