@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Calculator, Wheat, Camera, Printer, Crown } from "lucide-react";
+import { GraduationCap, Calculator, Wheat, Camera, Printer, Crown, CheckCircle2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { subscriptionApi } from "@/lib/api";
 import { FLOURS, CALC_RECIPES } from "@/data/academy";
@@ -11,8 +11,17 @@ export default function AcademyHome({ onNavigate }) {
   const L = (o) => (o ? o[lang] || o.it : "");
   const [sub, setSub] = useState("ricettario");
   const [status, setStatus] = useState(null);
+  const [pathDone, setPathDone] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); } catch { return []; } });
 
   useEffect(() => { subscriptionApi.status().then(setStatus).catch(() => setStatus(null)); }, []);
+  useEffect(() => {
+    if (["ricettario", "farine", "corsi"].includes(sub) && !pathDone.includes(sub)) {
+      const nx = [...pathDone, sub];
+      setPathDone(nx);
+      localStorage.setItem("mikilab_impara_path", JSON.stringify(nx));
+    }
+    // eslint-disable-next-line
+  }, [sub]);
 
   const diagUsed = status?.diagnosi_used ?? 0;
   const diagLimit = status?.diagnosi_limit;
@@ -52,23 +61,33 @@ export default function AcademyHome({ onNavigate }) {
 
       {/* Percorso guidato: da dove inizio? */}
       <div data-testid="academy-path" className="mb-5">
-        <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{tri("Da dove inizio?", "Wo fange ich an?", "Where do I start?")}</p>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Il tuo percorso", "Dein Lernpfad", "Your path")}</p>
+          <span data-testid="academy-path-progress" className="text-xs font-bold text-[#6B8E62]">{pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length}/3 {tri("completati", "erledigt", "done")}</span>
+        </div>
         <div className="grid grid-cols-3 gap-2">
           {[
             { id: "ricettario", n: "1", Icon: Calculator, t: tri("Calcola le dosi", "Mengen berechnen", "Calculate doses") },
             { id: "farine", n: "2", Icon: Wheat, t: tri("Scegli la farina", "Mehl wählen", "Pick the flour") },
             { id: "corsi", n: "3", Icon: GraduationCap, t: tri("Segui i corsi", "Kurse folgen", "Take the courses") },
-          ].map(({ id, n, Icon, t: label }) => (
-            <button key={id} data-testid={`academy-path-${id}`} onClick={() => setSub(id)}
-              className="group rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-3 text-left active:scale-97 transition-all hover:border-[#6B8E62]/60">
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <span className="w-6 h-6 rounded-full bg-[#6B8E62] text-white text-xs font-bold flex items-center justify-center">{n}</span>
-                <Icon className="w-4 h-4 text-[#6B8E62]" />
-              </div>
-              <p className="text-xs font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-snug">{label}</p>
-            </button>
-          ))}
+          ].map(({ id, n, Icon, t: label }) => {
+            const done = pathDone.includes(id);
+            return (
+              <button key={id} data-testid={`academy-path-${id}`} onClick={() => setSub(id)}
+                className={`group relative rounded-2xl border p-3 text-left active:scale-97 transition-all ${done ? "bg-[#6B8E62]/12 border-[#6B8E62]/50" : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B] hover:border-[#6B8E62]/60"}`}>
+                {done && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-[#6B8E62]" data-testid={`academy-path-done-${id}`} />}
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <span className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${done ? "bg-[#6B8E62] text-white" : "bg-[#EAF0EC] dark:bg-[#1F252B] text-[#6B8E62]"}`}>{done ? "✓" : n}</span>
+                  <Icon className="w-4 h-4 text-[#6B8E62]" />
+                </div>
+                <p className="text-xs font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-snug">{label}</p>
+              </button>
+            );
+          })}
         </div>
+        {pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length === 3 && (
+          <p data-testid="academy-path-complete" className="mt-2 text-center text-sm font-semibold text-[#6B8E62]">🎉 {tri("Percorso completato! Sei pronto per il Laboratorio.", "Pfad abgeschlossen! Bereit für die Backstube.", "Path complete! You're ready for the Lab.")}</p>
+        )}
       </div>
 
       {/* Sub-nav */}

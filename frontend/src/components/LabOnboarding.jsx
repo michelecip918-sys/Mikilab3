@@ -119,19 +119,24 @@ export default function LabOnboarding() {
     } catch { /* */ }
   };
 
-  // Testo per la voce: piu corto (solo titolo + prime frasi) per un ascolto leggero.
+  // Testo per la voce: rimuove emoji/simboli (es. saluto con mano) e tiene titolo + prime frasi.
+  const stripForVoice = (s) => (s || "")
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{200D}\u{2022}\u{00B7}]/gu, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
   const voiceText = (s) => {
     if (!s) return "";
-    const parts = (s.body || "").split(". ");
+    const parts = stripForVoice(s.body).split(". ");
     const short = parts.slice(0, 2).join(". ");
-    return `${s.title}. ${short}${short && !short.endsWith(".") ? "." : ""}`;
+    const title = stripForVoice(s.title).replace(/[!?.]+$/, "");
+    return `${title}. ${short}${short && !short.endsWith(".") ? "." : ""}`;
   };
-  const playVoice = async (text) => {
+  const playVoice = async (text, who = "momy") => {
     stopAudio();
     try {
       const res = await fetch(`${API}/tts`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
-        body: JSON.stringify({ text, lang }),
+        body: JSON.stringify({ text, lang, voice: who }),
       });
       if (!res.ok) throw new Error("tts");
       const blob = await res.blob();
@@ -154,7 +159,7 @@ export default function LabOnboarding() {
   // Leggi ad alta voce la slide corrente (se audio attivo).
   useEffect(() => {
     if (!show) { stopAudio(); return; }
-    if (audio && cur) playVoice(voiceText(cur));
+    if (audio && cur) playVoice(voiceText(cur), cur.who === "michele" ? "michele" : "momy");
     // eslint-disable-next-line
   }, [show, i, audio]);
 
@@ -171,7 +176,7 @@ export default function LabOnboarding() {
     setAudio((a) => {
       const na = !a;
       if (!na) stopAudio();
-      else if (cur) playVoice(voiceText(cur));
+      else if (cur) playVoice(voiceText(cur), cur.who === "michele" ? "michele" : "momy");
       return na;
     });
   };

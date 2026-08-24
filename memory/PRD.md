@@ -897,3 +897,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Voce tour Momy accorciata: legge solo titolo + prime 2 frasi (voiceText) → ascolto più leggero.
 - Home HomeAvatarScene: tap sull'avatar → parte il VIDEO parlante di Michele (michele-explainer-{lang}) nella stessa geometria (data-testid home-avatar-play/home-avatar-video). Voce "più umana" del video = rimandata (scelta voce domani).
 - Sezione Impara (AcademyHome): aggiunto percorso guidato "Da dove inizio?" (3 step → sub-tab) + badge statistiche (n. farine, ricette calcolabili, Diagnosi IA) nella hero.
+
+## v54 (2026-06) — Voci Momy/Michele + percorso a tappe + audio più umano
+- Voci ElevenLabs assegnate: Momy=Brian (nPczCjzI2devNBz1zQrb, profondo/rassicurante), Michele=George (JBFqnCBsd6RMkjVDRZzb, caldo/narratore). /api/tts accetta voice=momy|michele (map _VOICE_MAP). Override via env MOMY_VOICE_ID / MICHELE_VOICE_ID.
+- LabOnboarding: slide Michele usa voce michele, resto voce momy (playVoice(text, who)).
+- Audio più umano: rimosse emoji/simboli dal testo letto (stripForVoice) — niente piu "saluto con mano" pronunciato; voice_settings piu espressive (stability .45, style .35, sim .8).
+- Impara: "Da dove inizio?" ora è un PERCORSO A TAPPE che segna i passi completati (localStorage mikilab_impara_path), badge X/3 + spunte + messaggio di completamento. Verificato a schermo.

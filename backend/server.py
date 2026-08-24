@@ -1701,28 +1701,32 @@ async def diagnosi_sound(payload: SoundDiagnosiReq, user: dict = Depends(require
 
 _ELEVEN_KEY = os.environ.get("ELEVEN_API_KEY")
 _eleven_client = ElevenLabs(api_key=_ELEVEN_KEY) if _ELEVEN_KEY else None
-MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "pNInz6obpgDQGcFmaJgB")  # Adam (voce maschile naturale)
+MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "nPczCjzI2devNBz1zQrb")  # Brian — profondo, rassicurante (assistente)
+MICHELE_VOICE_ID = os.environ.get("MICHELE_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb")  # George — caldo, narratore (fondatore)
+_VOICE_MAP = {"momy": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID}
 
 
 class TTSReq(BaseModel):
     text: str
     lang: str = "it"
+    voice: str = "momy"
 
 
 @api_router.post("/tts")
 def tts_generate(payload: TTSReq):
-    """Genera audio TTS (voce umana ElevenLabs) per l'avatar del laboratorio."""
+    """Genera audio TTS (voce umana ElevenLabs) per gli avatar (Momy / Michele)."""
     if not _eleven_client:
         raise HTTPException(status_code=503, detail="TTS non configurato")
     text = (payload.text or "").strip()[:1200]
     if not text:
         raise HTTPException(status_code=400, detail="Testo vuoto")
+    voice_id = _VOICE_MAP.get((payload.voice or "momy").lower(), MOMY_VOICE_ID)
     try:
         gen = _eleven_client.text_to_speech.convert(
             text=text,
-            voice_id=MOMY_VOICE_ID,
+            voice_id=voice_id,
             model_id="eleven_multilingual_v2",
-            voice_settings=VoiceSettings(stability=0.5, similarity_boost=0.75, style=0.15, use_speaker_boost=True),
+            voice_settings=VoiceSettings(stability=0.45, similarity_boost=0.8, style=0.35, use_speaker_boost=True),
         )
         audio = b"".join(gen)
     except Exception:
