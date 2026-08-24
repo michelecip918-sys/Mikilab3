@@ -935,3 +935,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v60 (2026-06) — Livello reale + Ascolta il Diario
 - lib/level.js: XP reale (localStorage mikilab_xp). addXP su: ricetta creata (+2, RecipeList handleSave), diagnosi foto (+1), diagnosi sonora (+1), chiusura giornata (+2, DayClose). getLevel = passi Impara (0-3) + XP: <4 Apprendista, 4-9 Fornaio, 10+ Maestro. Badge Home usa getLevel. Verificato a schermo (Apprendista).
 - Ascolta il Diario: ListenButton (dayclose-listen) in Concludi Giornata legge il riepilogo (sessioni impasto, HACCP, nota) con voce Momy.
+
+## v61 (2026-06) — PDF Multi-Ricetta + causa voce femminile
+- PDF Multi-Ricetta (WeeklyPlan.jsx, pulsante weekly-pdf-multi-btn): unico PDF stampabile con (1) intestazione logo MikiLab, (2) riepilogo del piano, (3) TUTTE le ricette del piano raggruppate per GIORNO, ciascuna con ingredienti SCALATI (pezzi × grammi → base GRAM_FIELDS + extra_ingredients per grammi/percentuale), procedimento, fasi di lavorazione e cottura. Usa window.open + HTML/CSS di stampa (page-break-inside:avoid). Localizzato IT/DE/EN (rLoc/ingLoc). Verificato a schermo (admin, piano di test lun/mer).
+- CAUSA voce femminile di Momy (anche in preview): NON è un bug del codice. I crediti ElevenLabs sono ESAURITI (API 401 quota_exceeded, 0/10000 crediti). Con ElevenLabs KO, l'app ripiega su Web Speech del dispositivo (voce femminile su alcuni device). RIMEDIO utente: ricaricare i crediti su elevenlabs.io. Il fallback in voice.js già forza voce maschile + pitch basso quando possibile.

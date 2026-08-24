@@ -4,6 +4,7 @@ import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty } from "@/lib/shopping";
+import { rLoc, ingLoc } from "@/lib/loc";
 import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
 import { jsPDF } from "jspdf";
@@ -36,7 +37,8 @@ export default function WeeklyPlan() {
   const [items, setItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [salesPoints, setSalesPoints] = useState([]);
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
 
   useEffect(() => {
     setSalesPoints(getSalesPoints());
@@ -213,6 +215,119 @@ export default function WeeklyPlan() {
     }
   };
 
+  // PDF Multi-Ricetta: riepilogo del piano + tutte le ricette complete, raggruppate per
+  // giorno, con dosi SCALATE (pezzi × grammi) e intestazione con logo MikiLab.
+  const buildFullByDay = () => {
+    return DAYS.map((d) => {
+      const dayItems = items.filter((x) => x.day === d.id).map((it) => {
+        const r = recipeById[it.recipe_id];
+        const pieces = Number(it.pieces || 0);
+        const gpp = Number(it.grams_per_piece || 0);
+        const totalDough = pieces * gpp;
+        const baseTotal = r ? GRAM_FIELDS.reduce((s, f) => s + Number(r[f.key] || 0), 0) : 0;
+        const factor = baseTotal > 0 ? totalDough / baseTotal : null;
+        return { it, r, pieces, gpp, totalDough, factor };
+      });
+      return { day: t(`day_${d.id}`), items: dayItems };
+    }).filter((d) => d.items.length > 0);
+  };
+
+  const pdfMultiRicetta = () => {
+    const byDay = buildFullByDay();
+    if (byDay.length === 0) { toast.error(t("weekly_empty_share")); return; }
+    const summary = buildSummary();
+    const origin = window.location.origin + (process.env.PUBLIC_URL || "");
+    const logo = `${origin}/logo-256.png`;
+    const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const L = {
+      ingredients: tri("Ingredienti", "Zutaten", "Ingredients"),
+      procedure: tri("Procedimento", "Zubereitung", "Procedure"),
+      phases: tri("Fasi di lavorazione", "Arbeitsphasen", "Work phases"),
+      bake: tri("Cottura", "Backen", "Baking"),
+      summary: tri("Riepilogo del piano", "Planübersicht", "Plan summary"),
+      recipes: tri("Le ricette del piano", "Die Rezepte des Plans", "The plan's recipes"),
+    };
+
+    const summaryHtml = summary.map((d) => `
+      <div class="sum-day">
+        <h3>${esc(d.day)}</h3>
+        <ul>
+          ${d.items.map((it) => `<li><b>${esc(it.name)}</b> — ${it.pieces} × ${it.gpp}g = <b>${fmtQty(it.totalDough)}</b>${it.doses.length ? ` <span class="doses">(${it.doses.map(esc).join(" · ")})</span>` : ""}</li>`).join("")}
+        </ul>
+      </div>`).join("");
+
+    const recipeHtml = byDay.map((d) => `
+      <section class="day">
+        <h2>${esc(d.day)}</h2>
+        ${d.items.map(({ it, r, pieces, gpp, totalDough, factor }) => {
+          if (!r) return `<div class="recipe"><h3>${esc(it.recipe_name)}</h3><p class="warn">${t("weekly_recipe_gone")}</p></div>`;
+          const ings = [];
+          GRAM_FIELDS.forEach((f) => {
+            if (r[f.key] != null) {
+              const v = factor ? r[f.key] * factor : r[f.key];
+              ings.push(`${t(f.labelKey)}: <b>${fmtQty(v)}</b>`);
+            }
+          });
+          const scaledFlour = (r.flour_grams != null && factor) ? r.flour_grams * factor : r.flour_grams;
+          (r.extra_ingredients || []).forEach((e) => {
+            if (!e || !e.name) return;
+            let g = null;
+            if (e.grams != null) g = factor ? e.grams * factor : e.grams;
+            else if (e.percent != null && scaledFlour != null) g = scaledFlour * e.percent / 100;
+            ings.push(`${esc(ingLoc(e.name, lang))}${g != null ? `: <b>${fmtQty(g)}</b>` : ""}`);
+          });
+          const proc = rLoc(r, "procedure", lang);
+          const phases = (r.work_phases || []).filter((p) => p && (p.name || p.time || p.temp));
+          const bake = [r.bake_temp ? `${r.bake_temp}°C` : "", r.bake_minutes ? `${r.bake_minutes} min` : "", r.oven_type || ""].filter(Boolean).join(" · ");
+          const flourT = rLoc(r, "flour_type", lang);
+          return `
+            <div class="recipe">
+              <h3>${esc(rLoc(r, "name", lang))} <span class="meta">${pieces} × ${gpp}g = ${fmtQty(totalDough)}</span></h3>
+              ${flourT ? `<p class="flour">${esc(flourT)}</p>` : ""}
+              <div class="block"><h4>${L.ingredients}</h4><ul class="ings">${ings.map((x) => `<li>${x}</li>`).join("")}</ul></div>
+              ${proc ? `<div class="block"><h4>${L.procedure}</h4><p class="proc">${esc(proc).replace(/\n/g, "<br>")}</p></div>` : ""}
+              ${phases.length ? `<div class="block"><h4>${L.phases}</h4><ul>${phases.map((p) => `<li>${[p.name, p.time, p.temp].filter(Boolean).map(esc).join(" — ")}</li>`).join("")}</ul></div>` : ""}
+              ${bake ? `<div class="block bake"><h4>${L.bake}</h4><p>${esc(bake)}</p></div>` : ""}
+            </div>`;
+        }).join("")}
+      </section>`).join("");
+
+    const w = window.open("", "_blank");
+    if (!w) return;
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${t("weekly_print_title")}</title>
+      <style>
+        *{box-sizing:border-box}
+        body{font-family:Georgia,serif;color:#2B303B;max-width:760px;margin:0 auto;padding:28px 22px}
+        .head{display:flex;align-items:center;gap:12px;border-bottom:3px solid #5E8B7E;padding-bottom:10px;margin-bottom:18px}
+        .head img{height:44px;width:auto}
+        .head .brand{font-weight:800;font-size:22px;color:#2B303B}
+        .head .sub{font-size:12px;color:#666}
+        h1{color:#33564E;font-size:20px;margin:22px 0 8px}
+        h2{color:#5E8B7E;border-bottom:2px solid #A9C5D4;padding-bottom:4px;margin-top:26px;font-size:18px}
+        .sum-day{margin-bottom:6px} .sum-day h3{margin:8px 0 2px;font-size:14px;color:#33564E}
+        .sum-day ul{margin:0;padding-left:18px} .sum-day li{font-size:13px;margin:2px 0}
+        .doses{color:#5E8B7E;font-size:12px}
+        .recipe{border:1px solid #D7E1DB;border-radius:10px;padding:14px 16px;margin:12px 0;page-break-inside:avoid}
+        .recipe h3{margin:0 0 2px;font-size:16px;color:#2B303B}
+        .recipe h3 .meta{font-size:12px;color:#5E8B7E;font-weight:normal}
+        .flour{margin:0 0 8px;font-size:12px;color:#7E8A93}
+        .block{margin-top:10px} .block h4{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#4d6b45}
+        .block ul{margin:0;padding-left:18px} .block li{font-size:13px;margin:2px 0}
+        .ings li{list-style:none;display:inline-block;background:#EAF0EC;border:1px solid #D7E1DB;border-radius:20px;padding:2px 10px;margin:2px 4px 2px 0;font-size:12px}
+        .proc{font-size:13px;line-height:1.5;margin:0}
+        .bake p{font-size:13px;margin:0;color:#33564E}
+        .warn{color:#C0574D;font-size:13px}
+        @media print{.recipe{page-break-inside:avoid}}
+      </style></head><body>
+      <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
+      <h1>${L.summary}</h1>${summaryHtml}
+      <h1>${L.recipes}</h1>${recipeHtml}
+      </body></html>`);
+    w.document.close();
+    w.focus();
+    setTimeout(() => w.print(), 500);
+  };
+
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
@@ -304,6 +419,14 @@ export default function WeeklyPlan() {
           <Share2 className="w-5 h-5" /> {t("weekly_share")}
         </button>
       </div>
+
+      <button
+        data-testid="weekly-pdf-multi-btn"
+        onClick={pdfMultiRicetta}
+        className="w-full mt-2 bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+      >
+        <FileText className="w-5 h-5" /> {tri("PDF Multi-Ricetta", "PDF Mehr-Rezepte", "Multi-Recipe PDF")}
+      </button>
     </div>
   );
 }

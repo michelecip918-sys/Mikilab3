@@ -38,7 +38,7 @@ export function speak(text, lang = "it") {
     const u = new SpeechSynthesisUtterance(text);
     u.lang = target;
     u.rate = 0.95;   // leggermente piu lento = piu fluido
-    u.pitch = 0.9;   // tono piu basso/maschile, meno robotico
+    u.pitch = 0.8;   // tono basso/maschile, meno robotico
     const voices = loadVoices();
     const match = pickVoice(voices, target);
     if (match) u.voice = match;
