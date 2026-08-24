@@ -6,6 +6,7 @@ import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { shareContent } from "@/lib/share";
 import ListenButton from "@/components/ListenButton";
+import { addXP } from "@/lib/level";
 
 // Estrae feature acustiche semplici dall'inviluppo di volume campionato.
 function computeFeatures(samples, duration) {
@@ -59,6 +60,7 @@ export default function SoundDiagnosi() {
             method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
             body: JSON.stringify({ mode: "suono", result: text, thumb: null }),
           });
+          addXP(1);
         } catch { /* best effort */ }
       }
     } catch {

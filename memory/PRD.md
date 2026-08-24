@@ -931,3 +931,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Ascolta il Piano: ListenButton (capo-listen) nel Piano di Produzione IA — legge il piano a mani libere con la voce Momy.
 - Livelli Badge: in Home il badge è ora un LIVELLO progressivo (🥖 Apprendista 0/3 → 🥐 Fornaio 1-2/3 → 🏅 Maestro 3/3) basato sul percorso Impara (localStorage). Tap → Impara.
 - DEFERITO: PDF Multi-Ricetta (unico PDF con tutte le ricette del piano settimanale) — richiede una vista di stampa dedicata che raccoglie e formatta ogni ricetta del piano; da fare nel prossimo giro.
+
+## v60 (2026-06) — Livello reale + Ascolta il Diario
+- lib/level.js: XP reale (localStorage mikilab_xp). addXP su: ricetta creata (+2, RecipeList handleSave), diagnosi foto (+1), diagnosi sonora (+1), chiusura giornata (+2, DayClose). getLevel = passi Impara (0-3) + XP: <4 Apprendista, 4-9 Fornaio, 10+ Maestro. Badge Home usa getLevel. Verificato a schermo (Apprendista).
+- Ascolta il Diario: ListenButton (dayclose-listen) in Concludi Giornata legge il riepilogo (sessioni impasto, HACCP, nota) con voce Momy.

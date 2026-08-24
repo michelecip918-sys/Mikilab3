@@ -8,6 +8,7 @@ import { recipesApi } from "@/lib/api";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import { getProfile } from "@/components/Onboarding";
+import { getLevel } from "@/lib/level";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const CONCEPTS = {
@@ -240,17 +241,11 @@ export default function Home({ onNavigate }) {
             {L("Ciao", "Hallo", "Hi")}{profile.labName ? `, ${profile.labName}` : ""}! 👋
           </p>
           {(() => {
-            let steps = 0;
-            try { const p = JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); steps = ["ricettario", "farine", "corsi"].filter((x) => p.includes(x)).length; } catch { /* */ }
-            const lvl = steps >= 3
-              ? { icon: "🏅", name: L("Maestro", "Meister", "Master"), cls: "bg-[#6B8E62] text-white" }
-              : steps >= 1
-              ? { icon: "🥐", name: L("Fornaio", "Bäcker", "Baker"), cls: "bg-[#C9A24B] text-white" }
-              : { icon: "🥖", name: L("Apprendista", "Lehrling", "Apprentice"), cls: "bg-[#D7E1DB] dark:bg-[#38424B] text-[#7E8A93]" };
+            const lvl = getLevel(L);
             return (
               <button data-testid="home-badge-diplomato" onClick={() => go("impara")}
                 className={`inline-flex items-center gap-1.5 mb-2 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wide active:scale-95 transition-all ${lvl.cls}`}>
-                {lvl.icon} {L("Livello", "Level", "Level")}: {lvl.name} · {steps}/3
+                {lvl.icon} {L("Livello", "Level", "Level")}: {lvl.name}
               </button>
             );
           })()}

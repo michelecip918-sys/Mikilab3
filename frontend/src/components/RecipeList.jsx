@@ -8,6 +8,7 @@ import ScaleDialog from "@/components/ScaleDialog";
 import FlourTable from "@/components/FlourTable";
 import PrintHeader from "@/components/PrintHeader";
 import { playTTS } from "@/lib/tts";
+import { addXP } from "@/lib/level";
 import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -86,6 +87,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         toast.success(t("toast_recipe_updated"));
       } else {
         await recipesApi.create({ ...payload, collection_name: collectionName });
+        addXP(2);
         toast.success(t("toast_recipe_added"));
       }
       setDialogOpen(false);

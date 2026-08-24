@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckSquare, Thermometer, ShieldCheck, Archive, CalendarCheck, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
+import ListenButton from "@/components/ListenButton";
+import { addXP } from "@/lib/level";
 import { useAuth } from "@/auth/AuthContext";
 import { doughSessionsApi, haccpApi } from "@/lib/api";
 
@@ -56,6 +58,7 @@ export default function DayClose() {
       setLastClosure(record);
       setNote("");
       setCelebrate(true);
+      addXP(2);
       toast.success(tri("Giornata conclusa e archiviata ✅", "Tag abgeschlossen und archiviert ✅", "Day closed and archived ✅"));
     } catch {
       toast.error(tri("Errore nell'archiviazione", "Archivierung fehlgeschlagen", "Archiving failed"));
@@ -114,6 +117,15 @@ export default function DayClose() {
           </div>
         </div>
       )}
+
+      <ListenButton
+        text={tri(
+          `Riepilogo della giornata. Sessioni di impasto: ${doughToday.length}. Voci HACCP: ${haccpToday.length}.${note.trim() ? " Nota: " + note.trim() : (lastClosure && lastClosure.note ? " Nota: " + lastClosure.note : "")}`,
+          `Tageszusammenfassung. Teig-Sitzungen: ${doughToday.length}. HACCP-Einträge: ${haccpToday.length}.${note.trim() ? " Notiz: " + note.trim() : (lastClosure && lastClosure.note ? " Notiz: " + lastClosure.note : "")}`,
+          `Day summary. Dough sessions: ${doughToday.length}. HACCP entries: ${haccpToday.length}.${note.trim() ? " Note: " + note.trim() : (lastClosure && lastClosure.note ? " Note: " + lastClosure.note : "")}`
+        )}
+        who="momy" testid="dayclose-listen"
+        className="mt-3 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
 
       <AnimatePresence>
         {celebrate && (

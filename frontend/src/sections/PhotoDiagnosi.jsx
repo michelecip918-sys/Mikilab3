@@ -8,6 +8,7 @@ import { speak, primeVoice } from "@/lib/voice";
 import { shareContent } from "@/lib/share";
 import ListenButton from "@/components/ListenButton";
 import PrintHeader from "@/components/PrintHeader";
+import { addXP } from "@/lib/level";
 import { HeroAvatar } from "@/components/MikiAvatar";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 
@@ -170,6 +171,7 @@ export default function PhotoDiagnosi() {
             body: JSON.stringify({ mode, result: clean, thumb }),
           });
           if (res.ok) loadRecent();
+          addXP(1);
         } catch { /* salvataggio best-effort */ }
       }
     }
