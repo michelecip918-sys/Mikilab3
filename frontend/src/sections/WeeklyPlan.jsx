@@ -215,11 +215,11 @@ export default function WeeklyPlan() {
     }
   };
 
-  // PDF Multi-Ricetta: riepilogo del piano + tutte le ricette complete, raggruppate per
-  // giorno, con dosi SCALATE (pezzi × grammi) e intestazione con logo MikiLab.
-  const buildFullByDay = () => {
+  // PDF Multi-Ricetta / per Punto Vendita: costruisce le ricette complete raggruppate per
+  // giorno, con dosi SCALATE (pezzi × grammi). `filterItem` permette di filtrare per negozio.
+  const buildFullByDay = (filterItem = () => true) => {
     return DAYS.map((d) => {
-      const dayItems = items.filter((x) => x.day === d.id).map((it) => {
+      const dayItems = items.filter((x) => x.day === d.id && filterItem(x)).map((it) => {
         const r = recipeById[it.recipe_id];
         const pieces = Number(it.pieces || 0);
         const gpp = Number(it.grams_per_piece || 0);
@@ -232,10 +232,9 @@ export default function WeeklyPlan() {
     }).filter((d) => d.items.length > 0);
   };
 
-  const pdfMultiRicetta = () => {
-    const byDay = buildFullByDay();
+  // Scrive il documento PDF stampabile (logo + riepilogo + ricette complete) da un byDay.
+  const writeRecipesPdf = ({ subtitle, byDay }) => {
     if (byDay.length === 0) { toast.error(t("weekly_empty_share")); return; }
-    const summary = buildSummary();
     const origin = window.location.origin + (process.env.PUBLIC_URL || "");
     const logo = `${origin}/logo-256.png`;
     const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -244,15 +243,21 @@ export default function WeeklyPlan() {
       procedure: tri("Procedimento", "Zubereitung", "Procedure"),
       phases: tri("Fasi di lavorazione", "Arbeitsphasen", "Work phases"),
       bake: tri("Cottura", "Backen", "Baking"),
-      summary: tri("Riepilogo del piano", "Planübersicht", "Plan summary"),
-      recipes: tri("Le ricette del piano", "Die Rezepte des Plans", "The plan's recipes"),
+      summary: tri("Riepilogo", "Übersicht", "Summary"),
+      recipes: tri("Le ricette", "Die Rezepte", "The recipes"),
+      doses: t("weekly_doses_label"),
     };
 
-    const summaryHtml = summary.map((d) => `
+    const summaryHtml = byDay.map((d) => `
       <div class="sum-day">
         <h3>${esc(d.day)}</h3>
         <ul>
-          ${d.items.map((it) => `<li><b>${esc(it.name)}</b> — ${it.pieces} × ${it.gpp}g = <b>${fmtQty(it.totalDough)}</b>${it.doses.length ? ` <span class="doses">(${it.doses.map(esc).join(" · ")})</span>` : ""}</li>`).join("")}
+          ${d.items.map(({ it, r, pieces, gpp, totalDough, factor }) => {
+            const doses = (r && factor)
+              ? GRAM_FIELDS.filter((f) => r[f.key] != null).map((f) => `${t(f.labelKey)} ${fmtQty(r[f.key] * factor)}`)
+              : [];
+            return `<li><b>${esc(rLoc(r, "name", lang) || it.recipe_name)}</b> — ${pieces} × ${gpp}g = <b>${fmtQty(totalDough)}</b>${doses.length ? ` <span class="doses">(${doses.map(esc).join(" · ")})</span>` : ""}</li>`;
+          }).join("")}
         </ul>
       </div>`).join("");
 
@@ -292,9 +297,10 @@ export default function WeeklyPlan() {
         }).join("")}
       </section>`).join("");
 
+    const docTitle = subtitle ? `${t("weekly_print_title")} · ${subtitle}` : t("weekly_print_title");
     const w = window.open("", "_blank");
     if (!w) return;
-    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${t("weekly_print_title")}</title>
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(docTitle)}</title>
       <style>
         *{box-sizing:border-box}
         body{font-family:Georgia,serif;color:#2B303B;max-width:760px;margin:0 auto;padding:28px 22px}
@@ -302,7 +308,8 @@ export default function WeeklyPlan() {
         .head img{height:44px;width:auto}
         .head .brand{font-weight:800;font-size:22px;color:#2B303B}
         .head .sub{font-size:12px;color:#666}
-        h1{color:#33564E;font-size:20px;margin:22px 0 8px}
+        .shop{display:inline-block;margin:0 0 6px;background:#5E8B7E;color:#fff;font-weight:800;font-size:15px;padding:4px 14px;border-radius:20px}
+        h1{color:#33564E;font-size:20px;margin:18px 0 8px}
         h2{color:#5E8B7E;border-bottom:2px solid #A9C5D4;padding-bottom:4px;margin-top:26px;font-size:18px}
         .sum-day{margin-bottom:6px} .sum-day h3{margin:8px 0 2px;font-size:14px;color:#33564E}
         .sum-day ul{margin:0;padding-left:18px} .sum-day li{font-size:13px;margin:2px 0}
@@ -320,6 +327,7 @@ export default function WeeklyPlan() {
         @media print{.recipe{page-break-inside:avoid}}
       </style></head><body>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
+      ${subtitle ? `<div class="shop">🏪 ${esc(subtitle)}</div>` : ""}
       <h1>${L.summary}</h1>${summaryHtml}
       <h1>${L.recipes}</h1>${recipeHtml}
       </body></html>`);
@@ -327,6 +335,20 @@ export default function WeeklyPlan() {
     w.focus();
     setTimeout(() => w.print(), 500);
   };
+
+  const pdfMultiRicetta = () => writeRecipesPdf({ byDay: buildFullByDay() });
+
+  // PDF separato per un singolo punto vendita: solo le ricette assegnate a quel negozio.
+  const pdfPerSalePoint = (pointName) => {
+    const byDay = buildFullByDay((x) => (x.sale_point || "") === pointName);
+    writeRecipesPdf({ subtitle: pointName, byDay });
+  };
+
+  // Punti vendita che hanno almeno una ricetta assegnata nel piano.
+  const assignedPoints = useMemo(() => {
+    const used = new Set(items.map((x) => x.sale_point).filter(Boolean));
+    return salesPoints.filter((p) => used.has(p.name)).map((p) => p.name);
+  }, [items, salesPoints]);
 
   return (
     <div className="pb-4">
@@ -427,6 +449,35 @@ export default function WeeklyPlan() {
       >
         <FileText className="w-5 h-5" /> {tri("PDF Multi-Ricetta", "PDF Mehr-Rezepte", "Multi-Recipe PDF")}
       </button>
+
+      {assignedPoints.length > 0 && (
+        <div data-testid="weekly-salepoint-pdf" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Store className="w-5 h-5 text-[#5E8B7E]" />
+            <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">
+              {tri("PDF per Punto Vendita", "PDF pro Verkaufspunkt", "PDF per Sales Point")}
+            </h3>
+          </div>
+          <p className="text-xs text-[#7E8A93] mb-3 leading-snug">
+            {tri("Un PDF separato per ogni negozio, con solo le sue ricette e le dosi giuste — pronto da consegnare al team.",
+                 "Ein separates PDF pro Laden, mit nur seinen Rezepten und den richtigen Mengen — bereit fürs Team.",
+                 "A separate PDF per shop, with only its recipes and the right doses — ready to hand to the team.")}
+          </p>
+          <div className="grid grid-cols-1 gap-2">
+            {assignedPoints.map((name) => (
+              <button
+                key={name}
+                data-testid={`weekly-salepoint-pdf-${name}`}
+                onClick={() => pdfPerSalePoint(name)}
+                className="flex items-center justify-between gap-2 bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-3 rounded-xl border border-[#D7E1DB] dark:border-[#38424B] active:scale-98 transition-all"
+              >
+                <span className="flex items-center gap-2 min-w-0"><Store className="w-4 h-4 text-[#5E8B7E] shrink-0" /><span className="truncate">{name}</span></span>
+                <FileText className="w-5 h-5 text-[#6B8E62] shrink-0" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

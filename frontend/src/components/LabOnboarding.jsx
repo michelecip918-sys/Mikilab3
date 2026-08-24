@@ -151,19 +151,7 @@ export default function LabOnboarding() {
   };
   const playVoice = async (text, who = "momy") => {
     stopAudio();
-    try {
-      const res = await fetch(`${API}/tts`, {
-        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
-        body: JSON.stringify({ text, lang, voice: who, voice_id: getVoiceId(who) }),
-      });
-      if (!res.ok) throw new Error("tts");
-      const blob = await res.blob();
-      const a = new Audio(URL.createObjectURL(blob));
-      audioElRef.current = a;
-      await a.play().catch(() => {});
-    } catch {
-      speak(text, lang);
-    }
+    speak(text, lang);  // voce maschile GRATUITA (nessuna voce premium)
   };
 
   // Apri automaticamente al primo ingresso, o su richiesta via evento.

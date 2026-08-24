@@ -951,3 +951,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - MohammedAssistant.jsx: pulsante Ascolta (mohammed-listen-*) con voce maschile gratuita.
 - Verificato a schermo: tour del Laboratorio → fallback speak() con pitch 0.55, testo senza simboli/virgolette.
 - NB PRODUZIONE: le modifiche sono in preview; su mikilab.de servono "Save to GitHub" → Deploy. Per la voce PREMIUM (Brian/George) ricaricare crediti ElevenLabs.
+
+## v64 (2026-06) — PDF per Punto Vendita + niente voce premium
+- WeeklyPlan.jsx: rifattorizzato writeRecipesPdf({subtitle, byDay}) riusabile; buildFullByDay(filterItem) accetta un filtro. pdfMultiRicetta = tutte le ricette. NUOVO: pdfPerSalePoint(nome) → PDF separato per negozio con SOLO le sue ricette (filtro su item.sale_point), header con badge 🏪 nome negozio, riepilogo + ricette scalate. UI: riquadro "PDF per Punto Vendita" (weekly-salepoint-pdf) con un pulsante per ogni negozio che ha ricette assegnate (weekly-salepoint-pdf-{nome}); assignedPoints = punti vendita usati nel piano. Verificato a schermo (Negozio Centro = solo Anima Integrale, non Baguette).
+- VOCE: rimossa del tutto la voce PREMIUM (ElevenLabs) su richiesta utente. tts.js playTTS() ora usa SOLO speakFree() (voce maschile gratuita del dispositivo), niente fetch /api/tts. LabOnboarding.playVoice() usa speak() diretto. MohammedAssistant: rimosso il pulsante "Scegli le voci (Momy e Michele)" e VoiceSettings (erano per le voci premium). L'endpoint backend /api/tts resta ma non è più chiamato dal frontend.
