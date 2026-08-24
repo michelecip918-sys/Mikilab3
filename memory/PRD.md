@@ -1054,3 +1054,26 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v83 (2026-06) — Avatar Mohammadreza: comandi/suggerimenti aggiornati
 - MohammedAssistant.jsx: aggiornati i 4 suggerimenti chat ai nuovi comandi (genera piano IA, oggi/domani/freezer, quale farina, quando attaccare impasti/rinfrescare). Verificato a schermo (4 suggest visibili).
 - NOTA: il blocco GUIDE ("Guida passo-passo del laboratorio", 5 voci) è ancora sul vecchio schema 5 passi — è contenuto educativo separato dal wizard (ora 2 passi); da rinfrescare in futuro se serve.
+
+## v84 (2026-06) — Piano IA salvato e ripristinato (non si perde)
+- Backend: nuovo modello CapoLastPlan + endpoint GET/PUT/DELETE /api/capo/last-plan (per utente, chiave user_id). Salva plan_text + state (products, useWeekly, staff, temps, startTime, notes, preferment, bizType) + saved_at.
+- Frontend PianoProduzioneAI: al mount ripristina l'ultimo piano (capoPlanApi.get) con testo + stato form. Dopo generate() → persistPlan() salva su backend; banner capo-saved-banner "Piano salvato — resta qui finché non lo chiudi tu / Salvato il …". Bottone capo-new-plan (RotateCcw) cancella (DELETE) e ripulisce. Toast di warning se il salvataggio fallisce.
+- Testato (iteration_60 + 61): persistenza confermata dopo back+reopen e dopo reload pagina; delete persiste.
+
+## v85 (2026-06) — Ricettario condiviso: ricette personali dell'owner agli abbonati/VIP
+- Backend get_recipes (mikilab): oltre alle ricette MikiLab, include ANCHE le ricette collection=personal di owner/admin (OWNER_EMAILS o role=admin), con stesso gating PRO (teaser per non-PRO, complete per PRO/VIP/admin). Esclude le ricette dell'utente corrente per evitare doppioni (le riceve già dalla lista personal). owner_id rimosso dal payload.
+- Testato via curl: non-PRO vede teaser locked, PRO vede complete, admin senza duplicati.
+
+## v86 (2026-06) — "Enciclopedia del mio pane" in Le Mie Ricette + Tabella Farine solo in MikiLab
+- Enciclopedia.jsx: titolo → "Enciclopedia del mio pane" (IT/DE/EN, enc_title/enc_sub). Esporta ENC_ENTRIES. Aggiunte ~17 spiegazioni tecniche (incordatura, prova del velo, puntata, apretto, staglio, pirlatura, pieghe, TFI, fermolievitazione, rinfresco, vapore, valvola, maglia glutinica, W/PL, sale, oven spring, grigne). Nuova prop embedded → pannello collassabile (enciclopedia-embedded / enc-panel-toggle).
+- RecipeList.jsx: FlourTable solo se collectionName==="mikilab"; <Enciclopedia embedded /> solo se collectionName==="personal". LearnHub tab rinominata.
+- Testato (iteration_61): PASS.
+
+## v87 (2026-06) — Il Tuo Laboratorio senza doppioni + Digital Twin da ricetta
+- DoughTwin.jsx: selettore ricetta (twin-recipe) che precompila idratazione/sale/lievito dai grammi; campo ora d'inizio (twin-start-time); banner picco (twin-peak-alert) "Picco tra Xh Ym · verso le HH:MM".
+- PianoProduzioneAI: scorciatoie ampliate con Giacenze Freezer (capo-quicklink-freezer) e Digital Twin (capo-quicklink-twin) → il Piano IA è l'UNICA interfaccia con tutte le voci.
+- Maestro STEPS[1].tools: rimossi capo/freezer/twin (ora solo nel Piano IA) → nessun doppione nel grid strumenti dello Step 2.
+- Testato (iteration_61): PASS (dedup confermato, twin prefill + picco funzionanti).
+
+## v88 (2026-06) — "Panettone dinamico" tolto dall'anteprima del Laboratorio
+- PaywallGate FEATURES.lab: sostituita la voce "Panettone dinamico" (non pertinente al Lab, vive nelle Ricette) con "Piano di Produzione con IA" (IT/DE/EN). Il Panettone dinamico resta nella sezione Ricette (ricette-labels-btn).

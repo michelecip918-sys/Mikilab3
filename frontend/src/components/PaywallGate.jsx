@@ -14,7 +14,7 @@ const FEATURES = {
       [Flame, "Adatta al forno", "Gradi e minuti giusti cambiando tipo di forno"],
       [Thermometer, "Costi & Spesa", "Calcolo costi in € e lista della spesa per fornitori"],
       [ScanLine, "Le Mie Ricette", "Aggiungi o scansiona: la foto diventa testo modificabile"],
-      [Sparkles, "Panettone dinamico", "Ricalcolo dosi e sospensioni sui 10+ gusti"],
+      [Sparkles, "Piano di Produzione con IA", "Genera produzione, spesa, ordini e ricette in un colpo"],
     ],
     de: [
       [ClipboardList, "Maschinen einrichten", "Kneter, Gärzellen, Kühlschrank und Geräte konfigurieren"],
@@ -22,7 +22,7 @@ const FEATURES = {
       [Flame, "Ofen anpassen", "Richtige Grad und Minuten bei anderem Ofen"],
       [Thermometer, "Kosten & Einkauf", "Kostenrechnung in € und Einkaufsliste für Lieferanten"],
       [ScanLine, "Meine Rezepte", "Hinzufügen oder scannen: Foto → bearbeitbarer Text"],
-      [Sparkles, "Panettone dynamisch", "Mengen und Einlagen für 10+ Sorten neu berechnen"],
+      [Sparkles, "Produktionsplan mit KI", "Produktion, Einkauf, Bestellungen und Rezepte auf einmal"],
     ],
     en: [
       [ClipboardList, "Machine Setup", "Configure mixers, cells, fridge and devices"],
@@ -30,7 +30,7 @@ const FEATURES = {
       [Flame, "Oven adapt", "The right degrees and minutes when the oven changes"],
       [Thermometer, "Costs & Shopping", "Cost calculation in € and a supplier shopping list"],
       [ScanLine, "My Recipes", "Add or scan: the photo becomes editable text"],
-      [Sparkles, "Dynamic panettone", "Recalculated doses and swaps across 10+ flavours"],
+      [Sparkles, "AI Production Plan", "Generate production, shopping, orders and recipes at once"],
     ],
   },
   diagnosi: {

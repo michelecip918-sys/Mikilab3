@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake } from "lucide-react";
-import { API, labConfigApi, recipesApi, weeklyApi } from "@/lib/api";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical } from "lucide-react";
+import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
@@ -36,6 +36,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [freezerStock, setFreezerStock] = useState([]);
   const [plan, setPlan] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [savedAt, setSavedAt] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -60,6 +61,24 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         const r = await fetch(`${API}/freezer`, { credentials: "include" });
         if (r.ok) { const d = await r.json(); setFreezerStock(d.items || []); }
       } catch { /* */ }
+      // Ripristina l'ULTIMO piano generato (così non si perde uscendo dal laboratorio).
+      try {
+        const last = await capoPlanApi.get();
+        if (last && last.plan_text) {
+          setPlan(last.plan_text);
+          setSavedAt(last.saved_at || null);
+          const s = last.state || {};
+          if (Array.isArray(s.products) && s.products.length) setProducts(s.products);
+          if (typeof s.useWeekly === "boolean") setUseWeekly(s.useWeekly);
+          if (s.staff !== undefined) setStaff(s.staff);
+          if (s.stdTemp !== undefined) setStdTemp(s.stdTemp);
+          if (s.labTemp !== undefined) setLabTemp(s.labTemp);
+          if (s.startTime) setStartTime(s.startTime);
+          if (s.notes !== undefined) setNotes(s.notes);
+          if (s.preferment) setPreferment(s.preferment);
+          if (s.bizType) setBizType(s.bizType);
+        }
+      } catch { /* nessun piano salvato o non loggato */ }
     })();
   }, []);
 
@@ -97,9 +116,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     });
     if (!res.ok) {
       toast.error(res.status === 402 || res.status === 403 ? (lang === "de" ? "PRO erforderlich" : lang === "en" ? "PRO required" : "Serve l'abbonamento PRO") : t("chat_error"));
-      return false;
+      return { ok: false, text: "" };
     }
-    if (headerLabel) setPlan((p) => p + (p ? "\n\n" : "") + `## ${headerLabel}\n\n`);
+    let acc = "";
+    if (headerLabel) { const h = `## ${headerLabel}\n\n`; acc += h; setPlan((p) => p + (p ? "\n\n" : "") + h); }
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let buffer = "";
@@ -114,10 +134,28 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         if (!line) continue;
         let obj; try { obj = JSON.parse(line); } catch { continue; }
         if (obj.done) { done = true; continue; }
-        if (obj.d) setPlan((p) => p + obj.d);
+        if (obj.d) { acc += obj.d; setPlan((p) => p + obj.d); }
       }
     }
-    return done;
+    return { ok: done, text: acc };
+  };
+
+  const persistPlan = async (text) => {
+    try {
+      const res = await capoPlanApi.save({
+        plan_text: text,
+        state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, bizType },
+      });
+      setSavedAt(res.saved_at || new Date().toISOString());
+    } catch {
+      toast.warning(tri3(lang, "Piano generato ma non salvato: potrebbe perdersi uscendo.", "Plan erstellt, aber nicht gespeichert: geht beim Verlassen evtl. verloren.", "Plan generated but not saved: it may be lost when you leave."));
+    }
+  };
+
+  const clearPlan = async () => {
+    setPlan(""); setSavedAt(null);
+    try { await capoPlanApi.clear(); } catch { /* */ }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const applyBiz = (v) => {
@@ -149,18 +187,24 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         "Select at least one recipe with a quantity (or enable the Weekly Plan)."));
       return;
     }
-    setGenerating(true); setPlan("");
+    setGenerating(true); setPlan(""); setSavedAt(null);
     const twoPhase = useWeekly || products.some((p) => p.day);
     try {
       let ok = true;
+      let fullText = "";
       if (twoPhase) {
-        ok = await streamPhase("weekly", t("capo_phase_weekly"));
-        ok = (await streamPhase("daily", t("capo_phase_daily"))) && ok;
+        const r1 = await streamPhase("weekly", t("capo_phase_weekly"));
+        const r2 = await streamPhase("daily", t("capo_phase_daily"));
+        ok = r1.ok && r2.ok;
+        fullText = [r1.text, r2.text].filter(Boolean).join("\n\n");
       } else {
-        ok = await streamPhase("daily", null);
+        const r1 = await streamPhase("daily", null);
+        ok = r1.ok;
+        fullText = r1.text;
       }
       if (!ok) toast.warning(t("capo_plan_incomplete"));
       else fireHighFive(lang === "de" ? "Plan erstellt! 👏" : lang === "en" ? "Plan generated! 👏" : "Piano generato! 👏");
+      if (fullText.trim()) await persistPlan(fullText);
     } catch { toast.error(t("chat_error")); }
     finally { setGenerating(false); }
   };
@@ -203,6 +247,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               { id: "foodcost", Icon: Euro, label: tri3(lang, "Food Cost", "Food Cost", "Food Cost") },
               { id: "salespoints", Icon: Store, label: tri3(lang, "Punti Vendita", "Verkaufspunkte", "Sales Points") },
               { id: "turni", Icon: Users, label: tri3(lang, "Turni & Ruoli", "Schichten", "Shifts") },
+              { id: "freezer", Icon: Snowflake, label: tri3(lang, "Giacenze Freezer", "Freezer-Bestand", "Freezer Stock") },
+              { id: "twin", Icon: FlaskConical, label: tri3(lang, "Digital Twin", "Teig-Zwilling", "Dough Twin") },
             ].map(({ id, Icon, label }) => (
               <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
                 className="flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px]">
@@ -381,6 +427,27 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
         {plan && (
           <>
+            <div data-testid="capo-saved-banner" className="no-print mt-4 rounded-2xl bg-[#6B8E62]/12 border border-[#6B8E62]/35 p-3.5 flex items-center justify-between gap-3">
+              <div className="flex items-start gap-2 min-w-0">
+                <CheckCircle2 className="w-5 h-5 text-[#5a7a52] shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-[#33564E] dark:text-[#9ec48f] leading-tight">
+                    {savedAt
+                      ? tri3(lang, "Piano salvato — resta qui finché non lo chiudi tu", "Plan gespeichert — bleibt hier, bis du ihn schließt", "Plan saved — it stays here until you close it")
+                      : tri3(lang, "Piano generato", "Plan erstellt", "Plan generated")}
+                  </p>
+                  {savedAt && (
+                    <p className="text-[11px] text-[#7E8A93] mt-0.5">
+                      {tri3(lang, "Salvato il", "Gespeichert am", "Saved on")} {new Date(savedAt).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <button data-testid="capo-new-plan" onClick={clearPlan}
+                className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-[#33564E] dark:text-[#EAF0EC] bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] px-3 py-2 rounded-xl active:scale-95 transition-all">
+                <RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Nuovo piano", "Neuer Plan", "New plan")}
+              </button>
+            </div>
             <button data-testid="capo-print" onClick={() => window.print()}
               className="no-print mt-3 w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}

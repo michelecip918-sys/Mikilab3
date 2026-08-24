@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
-import { FlaskConical, Droplets, Wheat, Thermometer, Clock, TrendingUp, Grid3x3, Sparkles } from "lucide-react";
+import { FlaskConical, Droplets, Wheat, Thermometer, Clock, TrendingUp, Grid3x3, Sparkles, ChefHat, Bell } from "lucide-react";
+import { recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
 // Punto 22 — Digital Twin dell'Impasto: simula forza, idratazione, temperatura e
@@ -31,6 +32,36 @@ export default function DoughTwin() {
   const [yeastType, setYeastType] = useState("ldb"); // ldb | madre
   const [yeast, setYeast] = useState(1);   // % lievito
   const [salt, setSalt] = useState(2);     // % sale
+  const [recipes, setRecipes] = useState([]);
+  const [recipeId, setRecipeId] = useState("");
+  const nowHM = () => { const d = new Date(); return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`; };
+  const [startTime, setStartTime] = useState(nowHM());
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [mk, ps] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal").catch(() => [])]);
+        const byName = (a, b) => (a.name || "").localeCompare(b.name || "");
+        const own = (ps || []).map((r) => ({ ...r, _own: true })).sort(byName);
+        setRecipes([...own, ...(mk || []).sort(byName)]);
+      } catch { /* */ }
+    })();
+  }, []);
+
+  const applyRecipe = (id) => {
+    setRecipeId(id);
+    const r = recipes.find((x) => x.id === id);
+    if (!r) return;
+    const flour = Number(r.flour_grams) || 0;
+    if (flour > 0) {
+      if (r.water_grams) setHyd(clamp(Math.round((Number(r.water_grams) / flour) * 100), 50, 100));
+      if (r.salt_grams) setSalt(clamp(Math.round((Number(r.salt_grams) / flour) * 1000) / 10, 0, 4));
+      if (Number(r.sourdough_grams) > 0) {
+        setYeastType("madre");
+        setYeast(clamp(Math.round((Number(r.sourdough_grams) / flour) * 100), 5, 40));
+      }
+    }
+  };
 
   const sim = useMemo(() => {
     const tempFactor = Math.pow(2, (temp - 24) / 9); // la velocità ~raddoppia ogni 9°C
@@ -82,6 +113,15 @@ export default function DoughTwin() {
 
   const fmtH = (h) => { const H = Math.floor(h); const M = Math.round((h - H) * 60); return `${H}h ${String(M).padStart(2, "0")}m`; };
 
+  const peakClock = useMemo(() => {
+    if (!startTime || !/^\d{1,2}:\d{2}$/.test(startTime)) return null;
+    const [h, m] = startTime.split(":").map(Number);
+    const total = h * 60 + m + Math.round(sim.tPeak * 60);
+    const hh = ((Math.floor(total / 60) % 24) + 24) % 24;
+    const mm = ((total % 60) + 60) % 60;
+    return { hm: `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`, nextDay: total >= 24 * 60 };
+  }, [startTime, sim.tPeak]);
+
   const advice = [];
   if (sim.hydDelta > 8) advice.push(tri("Idratazione alta per questa farina: impasto molle, usa pieghe in ciotola e lievitazione controllata.", "Hohe Hydratation für dieses Mehl: weicher Teig, Dehnen & Falten, kontrollierte Gare.", "High hydration for this flour: slack dough, use folds and controlled proof."));
   else if (sim.hydDelta < -10) advice.push(tri("Impasto piuttosto asciutto: crosta più spessa e mollica compatta. Puoi alzare l'acqua.", "Eher trockener Teig: dickere Kruste, kompakte Krume. Wasser erhöhen möglich.", "Rather dry dough: thicker crust, tight crumb. You can add water."));
@@ -97,6 +137,44 @@ export default function DoughTwin() {
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Digital Twin Impasto", "Digitaler Teig-Zwilling", "Dough Digital Twin")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Simula il risultato prima di impastare", "Simuliere das Ergebnis vor dem Kneten", "Simulate the result before mixing")}</p>
         </div>
+      </div>
+
+      {/* Ricetta di partenza + orario d'inizio */}
+      <div className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 mb-4 space-y-3">
+        <div>
+          <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><ChefHat className="w-3.5 h-3.5 text-[#5E8B7E]" />{tri("Parti da una ricetta", "Von einem Rezept starten", "Start from a recipe")}</span>
+          <select data-testid="twin-recipe" value={recipeId} onChange={(e) => applyRecipe(e.target.value)}
+            className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#5E8B7E]">
+            <option value="">{tri("Manuale (usa i cursori)", "Manuell (Regler nutzen)", "Manual (use sliders)")}</option>
+            {recipes.some((r) => r._own) && (
+              <optgroup label={tri("Le mie ricette", "Meine Rezepte", "My recipes")}>
+                {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+              </optgroup>
+            )}
+            <optgroup label={tri("Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}>
+              {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+            </optgroup>
+          </select>
+        </div>
+        <div>
+          <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><Clock className="w-3.5 h-3.5 text-[#5E8B7E]" />{tri("Ora d'inizio impasto", "Startzeit Teig", "Dough start time")}</span>
+          <input data-testid="twin-start-time" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+            className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#5E8B7E] font-mono-data" />
+        </div>
+      </div>
+
+      {/* Avviso PICCO del volume */}
+      <div data-testid="twin-peak-alert" className="rounded-2xl bg-gradient-to-br from-[#E4572E] to-[#B34A26] text-white p-4 mb-4 shadow-md">
+        <div className="flex items-center gap-2 mb-1"><Bell className="w-5 h-5" /><span className="text-[11px] font-bold uppercase tracking-wide text-white/90">{tri("Avviso picco del volume", "Volumen-Peak Hinweis", "Volume peak alert")}</span></div>
+        <p className="font-display text-xl font-bold leading-tight">
+          {tri("Picco tra", "Peak in", "Peak in")} {fmtH(sim.tPeak)}
+          {peakClock && <> · {tri("verso le", "gegen", "around")} {peakClock.hm}{peakClock.nextDay ? tri(" (domani)", " (morgen)", " (next day)") : ""}</>}
+        </p>
+        <p className="text-white/85 text-xs mt-1 leading-snug">
+          {tri("È il momento migliore per infornare o mettere in frigo. Dopo il picco l'impasto inizia a cedere.",
+            "Der beste Zeitpunkt zum Backen oder Kühlen. Nach dem Peak fällt der Teig ab.",
+            "The best moment to bake or refrigerate. After the peak the dough starts to collapse.")}
+        </p>
       </div>
 
       {/* Parametri */}

@@ -1,0 +1,29 @@
+{
+  "summary": "Frontend-only validation (mobile 390x844, admin@mikilab.de, lab tour skipped via localStorage) of the 4 new changes (A Enciclopedia embedded in 'Le Mie Ricette', B FlourTable only in MikiLab ricettario, C Digital Twin recipe prefill + peak banner, D Piano IA as single interface / Lab step-2 dedup) plus the Piano IA persistence regression. ALL 7 REQUESTED SCENARIOS PASS. Details: (A) Piano IA -> capo-quicklink-aggiungi opens 'Le tue ricette' with enciclopedia-embedded present, enc-panel-toggle expands 27 entries (enc-entry-0..26) and entry accordions open with technical text; NO flour table / 'Tabella Farine' text on that screen. (B) nav-tab-ricette (MikiLab ricettario) shows 'Tabella Farine & Sigle (DE/IT/EN)' and 0 enciclopedia-embedded. (C) Digital Twin opened from capo-quicklink-twin: twin-recipe (96 options, groups 'Le mie ricette'=1 / 'Ricette MikiLab'=94), twin-start-time and twin-peak-alert all visible; banner reads 'Picco tra 4h 00m · verso le 21:29' and after selecting 'Wurzelbrot' hydration jumped 65->82%, salt 2->2.2%, yeast switched to Madre 30%, peak recomputed to 'Picco tra 3h 22m · verso le 20:51'; changing twin-start-time to 05:30 updated the clock to 08:52. (D) capo-quicklinks contains all 11 expected ids including capo-quicklink-freezer and capo-quicklink-twin; Lab Step 2 (maestro-next) grid has exactly 17 tools with NO maestro-tool-capo/freezer/twin and still has adatta/bilancia/diagnosi. Step 1 grid = pianoai + enterprise only. (REG) Plan generated in ~50s (5155 chars), capo-saved-banner 'Piano salvato — resta qui finché non lo chiudi tu / Salvato il 24/08, 17:30'; after maestro-back-btn + reopen the identical plan (same 5155 chars) and qty=40 were restored -> persistence NOT regressed.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Digital Twin / Piano IA / Le Mie Ricette (mobile 390x844)", "issues": ["The floating 'Radio' and 'Parla' FABs still overlap content: they cover the 'Lievitazione ... al picco' result card value in Digital Twin, the 'Digital Twin' quicklink label in Piano IA and the first Enciclopedia entry in 'Le Mie Ricette'. Add bottom/side padding or shift the FABs.", "twin-start-time uses the native <input type=time> which renders as 12h '05:30 AM' in the test locale while the rest of the UI is Italian 24h (banner shows 08:52) - inconsistent formatting."]},
+      {"screen": "Console (Laboratorio / Piano IA / Twin)", "issues": ["React DOM-nesting warning still logged on every entry: 'In HTML, <span> cannot be a child of <option>' (recipe dropdowns) - same as iteration_60, still not fixed."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Cosmetic: fix the <span> inside <option> React DOM-nesting warning in the recipe selects (unchanged since iteration_60).",
+    "Cosmetic: increase bottom padding / reposition the Radio & Parla FABs so they don't cover the Digital Twin result cards, the Piano IA 'Digital Twin' quicklink and the first Enciclopedia entry on mobile."
+  ],
+  "critical_code_review_comments": [
+    "Maestro STEPS[0].tools = ['pianoai','enterprise'] only, so maestro-tool-aggiungi does NOT exist in Step 1 (as stated in the request); 'Le Mie Ricette' is reachable only through capo-quicklink-aggiungi inside Piano IA. Intentional per the dedup change, but the request's expectation of maestro-tool-aggiungi in Step 1 is outdated.",
+    "DoughTwin.applyRecipe silently ignores recipes without flour_grams (locked/assaggio recipes for non-PRO users): selecting one changes nothing and gives no feedback - consider a hint."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (7/7 scenarios passed)"},
+  "seed_data_creation": "A generated production plan (Pane ai Cereali x40) is left saved on admin's /api/capo/last-plan; clear with 'Nuovo piano' (capo-new-plan) if a clean state is needed.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (used, full access)",
+  "context_for_next_testing_agent": "Flow used: load app -> auth modal auto-opens (or click login-btn) -> auth-email/auth-password/auth-submit -> localStorage.setItem('mikilab_lab_tour_done','1') -> nav-tab-maestro. Step 1 grid only has maestro-tool-pianoai/enterprise; all other tools are reached via capo-quicklink-* inside Piano IA (aggiungi, lavoro, settimana, capo, inversa, spesa, foodcost, salespoints, turni, freezer, twin). Lab Step 2 via maestro-next has 17 tools (no capo/freezer/twin). AI plan generation takes ~50s; poll capo-generate label. Twin recipe dropdown has 96 options for admin.",
+  "rca_of_the_issue": "No functional defects found; only pre-existing cosmetic issues (FAB overlap, option/span DOM nesting warning) carried over from iteration_60."
+}

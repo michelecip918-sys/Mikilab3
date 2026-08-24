@@ -15,7 +15,7 @@ export default function LearnHub({ initial = "impara", onNavigate }) {
   const TABS = [
     { id: "impara", label: tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home"), Icon: GraduationCap },
     { id: "news", label: t("nav_news"), Icon: Newspaper },
-    { id: "enciclopedia", label: tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia"), Icon: Library },
+    { id: "enciclopedia", label: tri("Enciclopedia del mio pane", "Lexikon meines Brotes", "Encyclopedia of my bread"), Icon: Library },
   ];
 
   return (

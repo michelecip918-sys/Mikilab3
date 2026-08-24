@@ -317,6 +317,13 @@ class WeeklyPlan(BaseModel):
     updated_at: str = Field(default_factory=now_iso)
 
 
+class CapoLastPlan(BaseModel):
+    """Ultimo Piano di Produzione IA generato: testo + stato del form per il ripristino."""
+    plan_text: str = ""
+    state: dict = {}
+    saved_at: str = Field(default_factory=now_iso)
+
+
 # ---------------------------------------------------------------------------
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
@@ -703,6 +710,21 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
     if collection_name == "mikilab":
         await seed_mikilab_if_empty()
         docs = await db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0}).sort("name", 1).to_list(1000)
+        # Il ricettario del proprietario: includi anche le ricette PERSONALI dell'owner/admin
+        # (le "mie ricette"), così abbonati / VIP / owner possono usarle come parte del ricettario.
+        owner_users = await db.users.find(
+            {"$or": [{"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}, {"role": "admin"}]},
+            {"_id": 0, "user_id": 1},
+        ).to_list(100)
+        # Escludi le ricette dell'utente corrente: le riceve già dalla lista "personal" (no duplicati).
+        owner_ids = [u["user_id"] for u in owner_users if not (user and user.get("user_id") == u["user_id"])]
+        if owner_ids:
+            owner_personal = await db.recipes.find(
+                {"collection_name": "personal", "owner_id": {"$in": owner_ids}, "hidden": {"$ne": True}}, {"_id": 0},
+            ).sort("name", 1).to_list(1000)
+            for d in owner_personal:
+                d.pop("owner_id", None)
+            docs = docs + owner_personal
         # Modalità "assaggio": i non-PRO vedono nome/foto/ingredienti base, il metodo è bloccato.
         # Eccezione: 2 ricette DEMO + ricette sbloccate con acquisto singolo restano complete.
         if not await user_is_pro(user):
@@ -894,6 +916,31 @@ async def save_weekly_plan(payload: WeeklyPlan, user: dict = Depends(current_use
         {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
     )
     return payload
+
+
+# ---------------------------------------------------------------------------
+# Piano di Produzione IA — ultimo piano generato (per utente)
+# ---------------------------------------------------------------------------
+@api_router.get("/capo/last-plan")
+async def get_capo_last_plan(user: dict = Depends(current_user)):
+    doc = await db.capo_last_plan.find_one({"_key": user["user_id"]}, {"_id": 0, "_key": 0})
+    return doc  # null se mai salvato
+
+
+@api_router.put("/capo/last-plan", response_model=CapoLastPlan)
+async def save_capo_last_plan(payload: CapoLastPlan, user: dict = Depends(current_user)):
+    payload.saved_at = now_iso()
+    doc = payload.model_dump()
+    await db.capo_last_plan.update_one(
+        {"_key": user["user_id"]}, {"$set": {**doc, "_key": user["user_id"]}}, upsert=True
+    )
+    return payload
+
+
+@api_router.delete("/capo/last-plan")
+async def delete_capo_last_plan(user: dict = Depends(current_user)):
+    await db.capo_last_plan.delete_one({"_key": user["user_id"]})
+    return {"success": True}
 
 
 # ---------------------------------------------------------------------------

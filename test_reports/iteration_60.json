@@ -1,0 +1,37 @@
+{
+  "summary": "Frontend-only verification (mobile 390x844, admin@mikilab.de) of the two new features: (1) PERSISTENCE of the AI Production Plan in 'Il Tuo Laboratorio' and (2) SHARED RECIPES (owner/admin personal recipes merged into the MikiLab ricettario). BOTH FEATURES PASS. Flow tested end-to-end: login -> nav-tab-maestro -> maestro-step-1 -> maestro-tool-pianoai -> recipe+qty -> capo-generate (AI streaming completed in ~60s) -> capo-plan (5268 chars) + capo-saved-banner showing 'Piano salvato — resta qui finche non lo chiudi tu / Salvato il 24/08, 17:07' -> PUT /api/capo/last-plan 200. Persistence verified twice: (a) maestro-back-btn + reopen pianoai -> identical plan restored (same content, len 5268) with banner AND form state restored (qty=50, recipe_id set); (b) after a FULL page reload + re-navigation the plan is still restored (GET /api/capo/last-plan 200). 'Nuovo piano' (capo-new-plan) clears capo-plan + capo-saved-banner immediately, calls DELETE /api/capo/last-plan (200) and the deletion PERSISTS on reopen (no plan comes back). Recipe selector capo-product-recipe-0 populated with 96 options in 2 optgroups: 'Le mie ricette (panettiere)' = 1 and 'Ricette MikiLab' = 94.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/recipes?collection_name=mikilab", "issue": "Owner personal recipes merged into the mikilab list keep collection_name='personal' in the payload (e.g. 'Pane ai Cereali' for user fornaio@mikilab.de). Not breaking the Piano IA dropdown, but frontend code branching on collection_name (edit/admin actions, _own detection) may misbehave. Gating looks correct: for the non-PRO user the shared recipe is returned with locked=true and grams/procedure stripped, while the admin sees no duplicate (94 items, own recipe only in the personal group)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Piano IA generation (capo-generate)", "issue": "INTERMITTENT / not reproduced: on the very first attempt of the session the generation ended silently after <150s with the button back to 'Genera piano di lavoro', NO capo-plan rendered and no visible error toast (POST /api/capo/plan had returned 200). The same recipe worked via curl and the two subsequent UI attempts succeeded (plan generated + saved). Consider surfacing an explicit error state when the stream closes without any content instead of silently returning to idle.", "affected_selectors": ["capo-generate", "capo-plan"]}
+    ],
+    "design_issues": [
+      {"screen": "Piano di Produzione con IA (Laboratorio)", "issues": ["The floating Radio / Parla FABs overlap the 'Consigliato (non obbligatorio)' hint text and the bottom of the content on mobile 390x844 - consider extra bottom/side padding.", "React dev console warning repeatedly logged when entering the Lab: 'In HTML, <span> cannot be a child of <option>' (DOM nesting/hydration warning) - cosmetic but should be cleaned up."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: show an explicit error/toast when /api/capo/plan stream completes with zero content (silent no-op observed once).",
+    "Optional: normalise collection_name (or add a flag like shared:true) for owner recipes injected into the mikilab list.",
+    "Optional: fix the <span> inside <option> DOM-nesting React warning and the FAB overlap padding on the Piano IA screen."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.persistPlan swallows all errors silently (catch {}); if the save fails the user still sees the plan but the banner says only 'Piano generato' and the plan is lost on exit - consider a warning toast.",
+    "Maestro.jsx is a very large switchboard component (>250 lines of tool wiring, 30 imports); consider splitting the tool registry/renderer into a separate module."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request); spot-checked /api/capo/plan, /api/capo/last-plan and /api/recipes via curl - all 200",
+    "frontend": "100% of the 7 requested scenarios passed (1 flaky first generation attempt)"},
+  "seed_data_creation": "No seed data added. A generated plan was saved and then cleared via 'Nuovo piano', so admin's capo/last-plan is back to null.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (used); fornaio@mikilab.de is NOT pro (pro=false) so the Lab is paywalled for it - shared-recipe gating for that user was verified via API only.",
+  "context_for_next_testing_agent": "Piano IA persistence flow: login -> localStorage.setItem('mikilab_lab_tour_done','1') to skip LabOnboarding -> nav-tab-maestro -> step 1 -> maestro-tool-pianoai. AI generation takes ~50-60s (streaming); poll the capo-generate label until it stops saying 'Sto organizzando il lavoro…' before asserting on capo-saved-banner, otherwise persistPlan has not run yet (closing the page mid-stream leaves /api/capo/last-plan null). capo-new-plan does a real DELETE, so re-generate before re-testing persistence. Recipe dropdown for admin: 96 options, groups 'Le mie ricette (panettiere)'=1 / 'Ricette MikiLab'=94.",
+  "rca_of_the_issue": "No defect in the two new features. The one failed generation attempt: POST /api/capo/plan returned 200 but the client rendered nothing and reset to idle; streamPhase only shows an error toast for non-2xx responses, so an empty/aborted SSE stream fails silently (obj.done never received -> capo_plan_incomplete warning only if text existed). Reproduced only once out of three attempts."
+}

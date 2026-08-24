@@ -41,6 +41,12 @@ export const weeklyApi = {
   save: (data) => api.put(`/weekly-plan`, data).then((r) => r.data),
 };
 
+export const capoPlanApi = {
+  get: () => api.get(`/capo/last-plan`).then((r) => r.data),
+  save: (data) => api.put(`/capo/last-plan`, data).then((r) => r.data),
+  clear: () => api.delete(`/capo/last-plan`).then((r) => r.data),
+};
+
 export const labConfigApi = {
   get: () => api.get(`/lab-config`).then((r) => r.data),
   save: (data) => api.put(`/lab-config`, data).then((r) => r.data),
