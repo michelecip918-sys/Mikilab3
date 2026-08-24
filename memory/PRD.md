@@ -1031,3 +1031,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v78 (2026-06) — Ricette dentro il Piano di Produzione (2 passi)
 - Maestro STEPS: da 3 a 2. Rimosso il passo separato "Le Mie Ricette". Ora Passo 1 = "Piano di Produzione" (pianoHub + flourTable) con tools: pianoai, aggiungi, adatta, settimana, lavoro, inversa, spesa, foodcost, salespoints, turni, enterprise. Passo 2 = "Laboratorio & Chiusura" (invariato). Le ricette si gestiscono dentro la sezione Piano di Produzione + quicklink "Inserisci Ricette" nel Piano IA.
 - Verificato: 2 step, pianoai/aggiungi/adatta presenti nel Passo 1.
+
+## v79 (2026-06) — Ricette solo come scorciatoia nel Piano IA + Shop "in arrivo"
+- Maestro: rimosso "aggiungi" dalle schede del Passo 1 (resta SOLO come quicklink "Inserisci Ricette" / capo-quicklink-aggiungi dentro il Piano IA). "adatta" (Adatta al Forno) spostato dal Passo 1 al Passo 2 (servizio extra, non serve a generare). Passo 1 tools: pianoai, settimana, lavoro, inversa, spesa, foodcost, salespoints, turni, enterprise (+ flourTable).
+- Home: sezione "MikiLab Shop & Corsi" spostata IN FONDO (dopo ShareInstall). Rimossi carousel panettoni e CTA che rimandavano a ricette. Ora shop-coming-soon: tab "Shop Ricette" / "Corsi Online", card "IN ARRIVO A BREVE" (Shop di tutte le mie ricette / Corsi online), nessun redirect. Nastro tricolore sulla card.
+- Verificato a schermo: step1 senza aggiungi/adatta, quicklink Inserisci Ricette presente, adatta nel Passo 2, shop coming-soon in fondo.
