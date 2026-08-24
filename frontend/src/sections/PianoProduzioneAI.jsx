@@ -33,6 +33,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [useWeekly, setUseWeekly] = useState(false);
   const [preferment, setPreferment] = useState("solido");
   const [bizType, setBizType] = useState("");
+  const [freezerStock, setFreezerStock] = useState([]);
   const [plan, setPlan] = useState("");
   const [generating, setGenerating] = useState(false);
 
@@ -54,6 +55,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         const lib = (mk || []).sort(byName);
         setRecipes([...own, ...lib]);  // le ricette del panettiere in cima
         if (wp && wp.items) setWeeklyItems(wp.items);
+      } catch { /* */ }
+      try {
+        const r = await fetch(`${API}/freezer`, { credentials: "include" });
+        if (r.ok) { const d = await r.json(); setFreezerStock(d.items || []); }
       } catch { /* */ }
     })();
   }, []);
@@ -84,7 +89,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
       body: JSON.stringify({
         items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit, day: p.day || null })),
-        mixers, cells, mode: bizType === "casa" ? "home" : "pro", phase, use_weekly: useWeekly,
+        mixers, cells, mode: bizType === "casa" ? "home" : "pro", phase, use_weekly: useWeekly, freezer_stock: freezerStock,
         staff: staff === "" ? null : Number(staff),
         start_time: startTime, lab_temp_c: labTemp === "" ? null : Number(labTemp),
         standard_temp_c: Number(stdTemp) || 26, notes, lang, preferment_choice: preferment,

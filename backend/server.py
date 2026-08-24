@@ -269,6 +269,7 @@ class CapoPlanRequest(BaseModel):
     mode: str = "pro"                # "pro" (laboratorio) | "home" (pane a casa)
     phase: str = "full"              # "full" | "weekly" | "daily" (per evitare troncamenti)
     use_weekly: bool = False         # se True, unisce anche il Piano settimanale salvato
+    freezer_stock: List[dict] = []   # [{name, qty, min_qty}] giacenze freezer attuali
     preferment_choice: Optional[str] = None  # "solido" | "licoli" | "poolish" | "lievito_birra"
     lang: str = "it"
 
@@ -1357,6 +1358,21 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                 for c in cells
             ) or "(nessuna cella indicata)"
 
+        # Giacenze freezer attuali: l'AI deve sapere in DETTAGLIO cosa c'è già congelato.
+        fz = payload.freezer_stock or []
+        if de:
+            freezer_txt = "\n".join(
+                f"- {x.get('name')}: {x.get('qty', 0)} vorrätig"
+                + (f" (Min. {x.get('min_qty')})" if x.get("min_qty") else "")
+                for x in fz if (x.get("name") or "").strip()
+            ) or "(kein Gefrierbestand angegeben)"
+        else:
+            freezer_txt = "\n".join(
+                f"- {x.get('name')}: {x.get('qty', 0)} in giacenza"
+                + (f" (min. {x.get('min_qty')})" if x.get("min_qty") else "")
+                for x in fz if (x.get("name") or "").strip()
+            ) or "(nessuna giacenza freezer indicata)"
+
         temp_note = ""
         std = payload.standard_temp_c or 26.0
         if payload.lab_temp_c not in (None, ""):
@@ -1382,6 +1398,7 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                 f"ZU VORBEREITENDE PRODUKTE:\n{products_txt}\n\n"
                 f"KNETMASCHINEN:\n{mixer_txt}\n\n"
                 f"KAMMERN (Kühlschrank / Gefrierfach / Gärkammer):\n{cell_txt}\n"
+                f"AKTUELLER GEFRIERBESTAND (bereits vorhanden, zuerst verwenden!):\n{freezer_txt}\n"
                 f"{temp_note}\n"
                 + (f"\nNOTIZEN: {payload.notes}\n" if payload.notes else "")
             )
@@ -1392,6 +1409,7 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                 f"PRODOTTI DA PREPARARE:\n{products_txt}\n\n"
                 f"IMPASTATRICI:\n{mixer_txt}\n\n"
                 f"CELLE (frigo / freezer / lievitazione):\n{cell_txt}\n"
+                f"GIACENZE FREEZER ATTUALI (già disponibili, usale per prime!):\n{freezer_txt}\n"
                 f"{temp_note}\n"
                 + (f"\nNOTE: {payload.notes}\n" if payload.notes else "")
             )
@@ -1482,6 +1500,7 @@ async def capo_plan_stream(payload: CapoPlanRequest):
             "Füge AUTOMATISCHE HINWEISE mit Uhrzeit/Auslöser hinzu: wann die Teige/Vorteige (am Vortag) ansetzen, "
             "wann den Sauerteig auffrischen, wann aus Gefrierfach/Kühlschrank herausnehmen und auftauen/wieder aufgehen lassen, "
             "und eine WARNUNG, wann der Gefriervorrat zur Neige geht und nachproduziert werden muss. Der Bäcker soll nichts selbst berechnen müssen."
+            " Berücksichtige den AKTUELLEN GEFRIERBESTAND: nutze ihn ZUERST und produziere nur die Differenz nach; aktualisiere am Ende, was neu ins Gefrierfach geht."
         )
     else:
         prompt += (
@@ -1493,6 +1512,7 @@ async def capo_plan_stream(payload: CapoPlanRequest):
             "Inserisci AVVISI AUTOMATICI con orario/innesco: quando attaccare gli impasti/prefermenti (il giorno prima), "
             "quando rinfrescare il lievito madre, quando tirare fuori dal freezer/frigo e scongelare/far riprendere, "
             "e un AVVISO di quando la scorta in freezer sta per finire e va riprodotta. Il panettiere non deve calcolare nulla da solo."
+            " Tieni conto delle GIACENZE FREEZER ATTUALI: usale PER PRIME e produci solo la differenza mancante; alla fine aggiorna cosa entra di nuovo nel freezer."
         )
 
     prompt += lang_instr

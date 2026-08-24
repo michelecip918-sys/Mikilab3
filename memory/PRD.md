@@ -1013,3 +1013,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
   2) AVVISI AUTOMATICI con orario/innesco: quando attaccare impasti/prefermenti (giorno prima), rinfrescare LM, tirare fuori da freezer/frigo, e AVVISO quando la scorta freezer sta per finire. "Il panettiere non deve calcolare nulla."
 - Verificato: direttiva presente nell'output template (freezer/oggi/domani/avvisi compaiono). Verifica end-to-end della ripartizione numerica DA FARE dall'app con prodotto reale (il curl di test non passava i prodotti nel formato giusto).
 - Conferma struttura Lab (richiesta utente): tutto interconnesso via hub Piano IA; "sezione 2" = strumenti opzionali che restano disponibili ma non obbligatori.
+
+## v75 (2026-06) — L'AI conosce il freezer in dettaglio e genera tutto
+- backend /capo/plan: CapoPlanRequest.freezer_stock: List[dict] ([{name,qty,min_qty}]). Costruito freezer_txt e iniettato nel context (de+it) come "GIACENZE FREEZER ATTUALI (usale per prime!)". Direttiva freezer aggiornata: usa le giacenze PER PRIME, produci solo la differenza, aggiorna cosa entra nel freezer.
+- frontend PianoProduzioneAI: carica GET /freezer all'avvio (setFreezerStock) e invia freezer_stock nel payload /capo/plan.
+- VERIFICATO E2E: freezer 150 baguette (min 50) + ordine 600 gio → l'AI calcola 100 utilizzabili, 500 da produrre, ripartizione oggi/domani/freezer + tabella fabbisogno + avvisi. Tutti i marker presenti (freezer, giacenze, precotte, 150, oggi, domani, scorta, avvisi).
+- NB formato payload prodotti: il frontend invia items:[{recipe_id,name,quantity,unit,day}] (quantity, NON qty).
