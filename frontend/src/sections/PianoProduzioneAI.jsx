@@ -214,11 +214,26 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      {mixers.length === 0 && cells.length === 0 && (
-        <div className="mb-4 rounded-2xl bg-[#C88A2B]/12 border border-[#C88A2B]/35 p-3.5 text-sm text-[#33564E] dark:text-[#8FB0C2]">
-          {lang === "de" ? "Tipp: Richte zuerst deine Kammern & Maschinen über „Kammern & Gefrier“ ein, damit die KI Kneter, Kühl-/Gär-/Gefrierzellen berücksichtigt."
-            : lang === "en" ? "Tip: set up your cells & machines first via “Cells & Freezer”, so the AI can use mixers and cold/proofing/freezer cells."
-            : "Suggerimento: configura prima celle e macchine da «Celle Frigo & Freezer», così l'IA userà impastatrici e celle di lievitazione/frigo/freezer."}
+      {(mixers.length === 0 || cells.length === 0) && (
+        <div data-testid="capo-setup-hint" className="mb-4 rounded-2xl bg-[#C88A2B]/12 border border-[#C88A2B]/35 p-3.5">
+          <p className="text-sm text-[#33564E] dark:text-[#8FB0C2] leading-snug">
+            {(() => {
+              const miss = [];
+              if (mixers.length === 0) miss.push(tri3(lang, "impastatrici", "Kneter", "mixers"));
+              if (cells.length === 0) miss.push(tri3(lang, "celle di lievitazione/frigo/freezer", "Kammern (Gär/Kühl/Gefrier)", "proofing/fridge/freezer cells"));
+              const list = miss.join(tri3(lang, " e ", " und ", " and "));
+              return tri3(lang,
+                `💡 Consigliato (non obbligatorio): aggiungi ${list} da «Celle Frigo & Freezer». Con questi dati l'IA genera un piano molto più preciso (portate macchine, destinazioni celle, tempi).`,
+                `💡 Empfohlen (nicht Pflicht): füge ${list} über „Kammern & Gefrier" hinzu. Damit erstellt die KI einen viel präziseren Plan (Maschinen, Kammern, Zeiten).`,
+                `💡 Recommended (not required): add ${list} via "Cells & Freezer". With this data the AI makes a much more precise plan (machine loads, cell destinations, timing).`);
+            })()}
+          </p>
+          {onOpenTool && (
+            <button data-testid="capo-setup-hint-btn" onClick={() => onOpenTool("capo")}
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#C88A2B] hover:bg-[#b3781f] px-3 py-1.5 rounded-lg active:scale-95 transition-all">
+              <Snowflake className="w-3.5 h-3.5" /> {tri3(lang, "Configura ora", "Jetzt einrichten", "Set up now")}
+            </button>
+          )}
         </div>
       )}
 

@@ -1024,3 +1024,6 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - PianoProduzioneAI: validProducts = prodotti con recipe_id && qty>0. canGenerate = validProducts>0 || (useWeekly && weeklyItems>0). Il pulsante capo-generate è DISABILITATO finché non c'è almeno una ricetta con quantità; mostrato hint capo-generate-hint "Obbligatorio: scegli almeno una ricetta e la quantità". generate() blocca con toast se non valido.
 - Hero del Piano IA aggiornato a .it-de-ribbon (coerenza col resto).
 - Verificato a schermo: disabilitato+hint senza ricetta → abilitato dopo ricetta+qty.
+
+## v77 (2026-06) — Avvisi consigliati (non bloccanti) impastatrici/celle
+- PianoProduzioneAI: banner capo-setup-hint mostrato se mancano mixers O cells (prima solo se mancavano entrambi). Elenca dinamicamente cosa manca (impastatrici e/o celle lievitazione/frigo/freezer) + bottone capo-setup-hint-btn "Configura ora" → onOpenTool("capo"). NON blocca la generazione (solo consigliato). Verificato a schermo.
