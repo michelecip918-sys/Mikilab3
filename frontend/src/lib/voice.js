@@ -34,8 +34,10 @@ function pickVoice(voices, target) {
 export function speak(text, lang = "it") {
   try {
     if (!("speechSynthesis" in window) || !text) return;
+    const clean = cleanForSpeech(text);
+    if (!clean) return;
     const target = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
-    const u = new SpeechSynthesisUtterance(text);
+    const u = new SpeechSynthesisUtterance(clean);
     u.lang = target;
     u.rate = 0.95;   // leggermente piu lento = piu fluido
     u.pitch = 0.8;   // tono basso/maschile, meno robotico
@@ -47,6 +49,23 @@ export function speak(text, lang = "it") {
   } catch {
     /* voce non disponibile */
   }
+}
+
+// Pulisce il testo per la sintesi vocale: legge SOLO le parole, niente simboli
+// (trattini, asterischi, cancelletti, elenchi puntati/numerati, emoji, markdown).
+export function cleanForSpeech(text) {
+  return (text || "")
+    .replace(/```[\s\S]*?```/g, " ")               // blocchi di codice
+    .replace(/`([^`]*)`/g, "$1")                    // codice inline
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")      // link/immagini markdown -> testo
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{200D}]/gu, " ") // emoji
+    .replace(/^[ \t]*\d+[.)]\s+/gm, "")             // elenchi numerati "1) " "2. "
+    .replace(/^[ \t]*[-*+•·–—]\s+/gm, "")           // elenchi puntati/trattini a inizio riga
+    .replace(/(^|\s)[-–—]+(\s|$)/g, "$1$2")         // trattini isolati fra spazi
+    .replace(/[#*_~>|•·►▪◦]/g, " ")                 // simboli markdown / bullet vari
+    .replace(/[«»"“”]/g, " ")                       // virgolette
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 // Sblocca la sintesi vocale su iOS/Safari (richiede un gesto utente).

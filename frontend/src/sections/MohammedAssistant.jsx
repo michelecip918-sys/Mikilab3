@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { Sparkles, Send, ChevronDown, ChevronUp, Loader2, Volume2 } from "lucide-react";
+import { Sparkles, Send, ChevronDown, ChevronUp, Loader2, Volume2, Square } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { openLabTour } from "@/components/LabOnboarding";
 import VoiceSettings from "@/components/VoiceSettings";
+import { speak, primeVoice } from "@/lib/voice";
 
 const AVATAR = `${process.env.PUBLIC_URL}/mohammed-avatar.jpg`;
 const sid = () => {
@@ -22,8 +23,17 @@ export default function MohammedAssistant() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [voiceOpen, setVoiceOpen] = useState(false);
+  const [speakingIdx, setSpeakingIdx] = useState(null);
   const listRef = useRef(null);
   const sessionId = useRef(sid());
+
+  const readAloud = (idx, content) => {
+    primeVoice();
+    try { window.speechSynthesis?.cancel(); } catch { /* */ }
+    if (speakingIdx === idx) { setSpeakingIdx(null); return; }
+    speak(content, lang);
+    setSpeakingIdx(idx);
+  };
 
   useEffect(() => { if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight; }, [messages, open]);
 
@@ -157,6 +167,13 @@ export default function MohammedAssistant() {
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#5E8B7E] text-white" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC]"}`}>
                   {m.role === "assistant" && !m.content ? <Loader2 className="w-4 h-4 animate-spin text-[#5E8B7E]" /> : <ReactMarkdown>{m.content}</ReactMarkdown>}
+                  {m.role === "assistant" && m.content && !busy && (
+                    <button data-testid={`mohammed-listen-${i}`} onClick={() => readAloud(i, m.content)}
+                      className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-[#33564E] dark:text-[#9ec4b8] hover:opacity-80 active:scale-95 transition-all">
+                      {speakingIdx === i ? <Square className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                      {speakingIdx === i ? tri("Ferma", "Stopp", "Stop") : tri("Ascolta", "Anhören", "Listen")}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
