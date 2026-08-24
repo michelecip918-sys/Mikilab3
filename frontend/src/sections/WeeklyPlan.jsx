@@ -340,6 +340,7 @@ export default function WeeklyPlan() {
         .warn{color:#C0574D;font-size:13px}
         @media print{.recipe{page-break-inside:avoid}}
       </style></head><body>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#4A7265 0%,#F6F4EE 30%,#A64B2A 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
       ${subtitle ? `<div class="shop">🏪 ${esc(subtitle)}</div>` : ""}
       <h1>${L.summary}</h1>${summaryHtml}
@@ -414,6 +415,7 @@ export default function WeeklyPlan() {
         .shop{font-size:10px;font-weight:700;color:#5E8B7E;border-top:1px solid #EAF0EC;padding-top:2px}
         @media print{ @page{margin:8mm} .label{border-color:#c9c9c9} }
       </style></head><body>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#4A7265 0%,#F6F4EE 30%,#A64B2A 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="grid">${cards}</div>
       </body></html>`);
     w.document.close();
@@ -476,6 +478,7 @@ export default function WeeklyPlan() {
         .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #D7E1DB;padding:3px 0;font-size:14px}
         .grp li b{font-family:monospace;color:#33564E}
       </style></head><body>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#4A7265 0%,#F6F4EE 30%,#A64B2A 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
       ${sections}
       </body></html>`);

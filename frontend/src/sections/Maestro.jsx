@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -40,6 +40,7 @@ import FlourTable from "@/components/FlourTable";
 import LabOnboarding from "@/components/LabOnboarding";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import SoundDiagnosi from "@/sections/SoundDiagnosi";
+import EnterpriseHub from "@/sections/EnterpriseHub";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import MohammedAssistant from "@/sections/MohammedAssistant";
@@ -79,6 +80,7 @@ export default function Maestro() {
     { id: "market", title: lang === "de" ? "Gebraucht-Markt" : lang === "en" ? "Used market" : "Marketplace Usato", desc: "", Icon: Store },
     { id: "lotti", title: lang === "de" ? "Chargen-Rückverfolgung" : lang === "en" ? "Batch traceability" : "Tracciabilità Lotti", desc: "", Icon: QrCode },
     { id: "salespoints", title: lang === "de" ? "Verkaufspunkte" : lang === "en" ? "Sales points" : "Punti Vendita", desc: "", Icon: Store },
+    { id: "enterprise", title: lang === "de" ? "Enterprise · Multi-Filiale" : lang === "en" ? "Enterprise · Multi-store" : "Enterprise · Multi-negozio", desc: "", Icon: Building2 },
     { id: "pianoai", title: lang === "de" ? "Produktionsplan (KI)" : lang === "en" ? "Production plan (AI)" : "Piano di Produzione (IA)", desc: "", Icon: Sparkles },
     { id: "diagnosi", title: lang === "de" ? "Foto-Diagnose (Teig & Maschinen)" : lang === "en" ? "Photo Diagnosis (dough & machines)" : "Diagnosi Foto (Impasti & Macchine)", desc: "", Icon: Camera },
     { id: "suono", title: lang === "de" ? "Klang-Diagnose (Kneter)" : lang === "en" ? "Sound Diagnosis (mixer)" : "Diagnosi Sonora (Impastatrice)", desc: "", Icon: Camera },
@@ -87,7 +89,7 @@ export default function Maestro() {
 
   const STEPS = [
     { icon: BookOpen, title: tri("Le Mie Ricette", "Meine Rezepte", "My Recipes"), sub: tri("Inizia da qui: inserisci o scansiona le tue ricette e imposta i parametri del forno", "Starte hier: Rezepte erfassen/scannen und Ofenparameter einstellen", "Start here: add or scan your recipes and set oven parameters"), tools: ["aggiungi", "adatta"], flourTable: true },
-    { icon: Sparkles, title: tri("Piano di Produzione", "Produktionsplan", "Production Plan"), sub: tri("Il cuore del laboratorio: organizza settimana, giornata e punti vendita e genera produzione, spesa e costi da un unico posto", "Das Herz der Backstube: Woche, Tag und Verkaufspunkte organisieren und Produktion, Einkauf und Kosten an einem Ort generieren", "The heart of the lab: organize week, day and sales points and generate production, shopping and costs from one place"), tools: ["pianoai", "settimana", "lavoro", "inversa", "spesa", "foodcost", "salespoints", "turni"], pianoHub: true },
+    { icon: Sparkles, title: tri("Piano di Produzione", "Produktionsplan", "Production Plan"), sub: tri("Il cuore del laboratorio: organizza settimana, giornata e punti vendita e genera produzione, spesa e costi da un unico posto", "Das Herz der Backstube: Woche, Tag und Verkaufspunkte organisieren und Produktion, Einkauf und Kosten an einem Ort generieren", "The heart of the lab: organize week, day and sales points and generate production, shopping and costs from one place"), tools: ["pianoai", "settimana", "lavoro", "inversa", "spesa", "foodcost", "salespoints", "turni", "enterprise"], pianoHub: true },
     { icon: Cog, title: tri("Laboratorio & Chiusura", "Backstube & Abschluss", "Lab & Closing"), sub: tri("Macchine e strumenti, operatività in corso, diagnosi e chiusura della giornata", "Maschinen und Werkzeuge, laufender Betrieb, Diagnose und Tagesabschluss", "Machines and tools, live operations, diagnosis and day closing"), tools: ["capo", "freezer", "bilancia", "termo", "market", "acqua", "pesata", "timer", "meteo", "ph", "twin", "diagnosi", "suono", "sessioni", "lotti", "haccp", "check", "shelf", "spreco"], diagnosiInfo: true, conclusione: true },
   ];
   const current = STEPS[step];
@@ -135,6 +137,7 @@ export default function Maestro() {
         {tool === "dayclose" && <DayClose />}
         {tool === "diagnosi" && <PhotoDiagnosi />}
         {tool === "suono" && <SoundDiagnosi />}
+        {tool === "enterprise" && <EnterpriseHub />}
       </div>
     );
   }

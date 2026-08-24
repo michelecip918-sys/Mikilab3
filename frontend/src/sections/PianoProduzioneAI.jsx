@@ -81,7 +81,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
       body: JSON.stringify({
         items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit, day: p.day || null })),
-        mixers, cells, mode: "pro", phase, use_weekly: useWeekly,
+        mixers, cells, mode: bizType === "casa" ? "home" : "pro", phase, use_weekly: useWeekly,
         staff: staff === "" ? null : Number(staff),
         start_time: startTime, lab_temp_c: labTemp === "" ? null : Number(labTemp),
         standard_temp_c: Number(stdTemp) || 26, notes, lang, preferment_choice: preferment,
