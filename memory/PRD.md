@@ -1039,3 +1039,18 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 
 ## v80 (2026-06) — Passo 1 ripulito dai doppioni del Piano IA
 - Maestro Passo 1 tools ridotti a ["pianoai", "enterprise"] (+ flourTable). Rimosse le schede settimana, lavoro, inversa, spesa, foodcost, salespoints, turni perché già presenti come scorciatoie DENTRO il Piano IA (capo-quicklink-*). Enterprise resta (non è nel generatore). Verificato a schermo.
+
+## v81 (2026-06) — Shop unificato + ricette vendibili + quiz evidenziato
+- Home: rimossa card "shop" dalla griglia Esplora (shop ora SOLO nel blocco unico in fondo). Tab "Shop Ricette" (premium) ora ATTIVA/vendibile: badge "Disponibile ora" + bottone shop-recipes-cta → go("ricette"). Tab "Corsi Online" resta "In arrivo a breve". (Le ricette di Michele sono già vendibili; prodotti/corsi no.)
+- AcademyHome: tab "Corsi & Quiz" evidenziata (ring oro #C88A2B + badge 🎯) per mettere in risalto i quiz. Verificato a schermo.
+- IN SOSPESO: riorganizzare le voci del menu Esplora (News/Enciclopedia in una sezione sotto vicino a Community; rivedere Diagnosi Foto/Impara già presenti nel Lab). Richiesta "Rivedi avatar Mohammed con i suoi nuovi comandi" = da chiarire cosa intende per "nuovi comandi".
+
+## v82 (2026-06) — Tabelle & Farine dentro le Ricette + nota culturale
+- Ricette.jsx: nuovo UtilBtn "Tabelle & Farine" (ricette-farine-btn) → view "farine" con hero (nastro tricolore + accento oro) + NOTA PERSONALE di Michele sulla cultura del grano (IT/DE/EN) + <FlourTable embedded />. Griglia util a 3 colonne (Guida, Farine, Etichette).
+- Maestro: rimosso flourTable dal Passo 1 (spostato nelle Ricette).
+- Verificato a schermo (vista farine con nota + tabelle).
+- IN SOSPESO (ask_human aperta): "Rivedi avatar Mohammed con i suoi nuovi comandi" — attendo dall'utente cosa intende per nuovi comandi.
+
+## v83 (2026-06) — Avatar Mohammadreza: comandi/suggerimenti aggiornati
+- MohammedAssistant.jsx: aggiornati i 4 suggerimenti chat ai nuovi comandi (genera piano IA, oggi/domani/freezer, quale farina, quando attaccare impasti/rinfrescare). Verificato a schermo (4 suggest visibili).
+- NOTA: il blocco GUIDE ("Guida passo-passo del laboratorio", 5 voci) è ancora sul vecchio schema 5 passi — è contenuto educativo separato dal wizard (ora 2 passi); da rinfrescare in futuro se serve.

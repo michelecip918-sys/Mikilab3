@@ -36,9 +36,10 @@ export default function MohammedAssistant() {
   useEffect(() => { if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight; }, [messages, open]);
 
   const suggestions = [
-    tri("Cos'è «Il Tuo Laboratorio»?", "Was ist «Deine Backstube»?", "What is «Your Lab»?"),
-    tri("Come organizzo le farine?", "Wie organisiere ich die Mehle?", "How do I organise the flours?"),
-    tri("Come funziona la Pesata Guidata?", "Wie funktioniert das geführte Wiegen?", "How does Guided Weighing work?"),
+    tri("Come genero il piano di produzione con l'IA?", "Wie erstelle ich den Produktionsplan mit der KI?", "How do I generate the production plan with AI?"),
+    tri("Come organizzo oggi, domani e cosa va in freezer?", "Wie teile ich heute, morgen und den Gefrierbestand auf?", "How do I split today, tomorrow and what goes to the freezer?"),
+    tri("Quale farina uso per questo impasto?", "Welches Mehl nehme ich für diesen Teig?", "Which flour do I use for this dough?"),
+    tri("Quando attacco gli impasti e rinfresco il lievito?", "Wann setze ich die Teige an und frische den Sauerteig auf?", "When do I start the doughs and refresh the sourdough?"),
   ];
 
   // Guida passo-passo: ogni voce chiede a Mohammadreza di spiegare quel passo del laboratorio.

@@ -101,10 +101,12 @@ export default function AcademyHome({ onNavigate }) {
       <div data-testid="academy-subnav" className="grid grid-cols-4 gap-1.5 bg-[#EAF0EC] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-5 border border-[#D7E1DB] dark:border-[#38424B]">
         {TABS.map(({ id, label, Icon }) => {
           const on = sub === id;
+          const isQuiz = id === "corsi";
           return (
             <button key={id} data-testid={`academy-tab-${id}`} onClick={() => setSub(id)}
-              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#6B8E62] text-white shadow-md" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#2A323A]"}`}>
+              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#6B8E62] text-white shadow-md" : isQuiz ? "text-[#33564E] dark:text-[#C88A2B] bg-[#C88A2B]/15 ring-2 ring-[#C88A2B]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#2A323A]"}`}>
               <Icon className="w-4 h-4 shrink-0" /><span className="truncate">{label}</span>
+              {isQuiz && !on && <span className="absolute -top-1.5 -right-1 text-[9px] font-black bg-[#C88A2B] text-white px-1.5 py-0.5 rounded-full leading-none">🎯</span>}
             </button>
           );
         })}

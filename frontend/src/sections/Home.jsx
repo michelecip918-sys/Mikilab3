@@ -200,8 +200,6 @@ export default function Home({ onNavigate }) {
       sub: L("Per professionisti: piano, costi, impasti (PRO)", "Für Profis: Arbeitsplan, Kosten, Teige (PRO)", "For pros: plan, costs, doughs (PRO)") },
     { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#33564E] to-[#1B2127]",
       sub: L("Tutte le basi spiegate", "Alle Grundlagen erklärt", "All the basics explained") },
-    { tab: "shop", label: "Shop & Academy", Icon: ShoppingBag, grad: "from-[#33564E] to-[#33564E]",
-      sub: L("Panettoni & corsi — in arrivo", "Panettoni & Kurse — bald verfügbar", "Panettoni & courses — coming soon") },
   ];
 
   if (chat) {
@@ -470,18 +468,25 @@ export default function Home({ onNavigate }) {
 
         <div data-testid="shop-coming-soon" className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#4A7265] to-[#33564E] p-6 text-center text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-          <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-2">
-            {shopTab === "corsi" ? <GraduationCap className="w-6 h-6" /> : <ChefHat className="w-6 h-6" />}
-          </div>
-          <p className="font-display text-lg font-bold">
-            {shopTab === "corsi" ? L("Corsi Online", "Online-Kurse", "Online Courses") : L("Shop di tutte le mie ricette", "Shop all meiner Rezepte", "Shop of all my recipes")}
-          </p>
-          <span className="inline-block mt-2 text-[11px] font-bold bg-[#C88A2B] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("In arrivo a breve", "Kommt bald", "Coming soon")}</span>
-          <p className="text-sm text-white/85 mt-2 leading-snug">
-            {shopTab === "corsi"
-              ? L("I corsi online di panificazione e pasticceria firmati Michele stanno arrivando.", "Micheles Online-Kurse für Backen und Konditorei kommen bald.", "Michele's online baking & pastry courses are coming soon.")
-              : L("Presto potrai acquistare qui tutte le ricette di Michele. Resta sintonizzato!", "Bald kannst du hier alle Rezepte von Michele kaufen. Bleib dran!", "Soon you'll be able to buy all of Michele's recipes here. Stay tuned!")}
-          </p>
+          {shopTab === "premium" ? (
+            <>
+              <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-2"><ChefHat className="w-6 h-6" /></div>
+              <p className="font-display text-lg font-bold">{L("Shop di tutte le mie ricette", "Shop all meiner Rezepte", "Shop of all my recipes")}</p>
+              <span className="inline-block mt-2 text-[11px] font-bold bg-[#6B8E62] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
+              <p className="text-sm text-white/85 mt-2 leading-snug">{L("Sfoglia e acquista le ricette di Michele, complete di dosi e procedimento.", "Stöbere und kaufe Micheles Rezepte, komplett mit Mengen und Zubereitung.", "Browse and buy Michele's recipes, complete with doses and method.")}</p>
+              <button data-testid="shop-recipes-cta" onClick={() => go("ricette")}
+                className="mt-3 inline-flex items-center gap-2 bg-white text-[#33564E] font-bold px-5 py-2.5 rounded-2xl active:scale-95 transition-all">
+                <ShoppingBag className="w-4 h-4" /> {L("Vai alle ricette", "Zu den Rezepten", "Go to recipes")}
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-2"><GraduationCap className="w-6 h-6" /></div>
+              <p className="font-display text-lg font-bold">{L("Corsi Online", "Online-Kurse", "Online Courses")}</p>
+              <span className="inline-block mt-2 text-[11px] font-bold bg-[#C88A2B] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("In arrivo a breve", "Kommt bald", "Coming soon")}</span>
+              <p className="text-sm text-white/85 mt-2 leading-snug">{L("I corsi online di panificazione e pasticceria firmati Michele stanno arrivando.", "Micheles Online-Kurse für Backen und Konditorei kommen bald.", "Michele's online baking & pastry courses are coming soon.")}</p>
+            </>
+          )}
         </div>
       </div>
 
