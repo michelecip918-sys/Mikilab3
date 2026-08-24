@@ -131,6 +131,23 @@ export default function LabOnboarding() {
     const title = stripForVoice(s.title).replace(/[!?.]+$/, "");
     return `${title}. ${short}${short && !short.endsWith(".") ? "." : ""}`;
   };
+
+  // Michele si presenta ("Ciao, sono Michele") una SOLA volta; poi legge solo il contenuto.
+  const MICHELE_GREETED = "mikilab_michele_greeted";
+  const speakSlide = (s) => {
+    if (!s) return;
+    const who = s.who === "michele" ? "michele" : "momy";
+    let txt = voiceText(s);
+    if (s.who === "michele") {
+      if (localStorage.getItem(MICHELE_GREETED)) {
+        const body = stripForVoice(s.body).split(". ").slice(0, 2).join(". ");
+        txt = `${body}${body && !body.endsWith(".") ? "." : ""}`;
+      } else {
+        localStorage.setItem(MICHELE_GREETED, "1");
+      }
+    }
+    playVoice(txt, who);
+  };
   const playVoice = async (text, who = "momy") => {
     stopAudio();
     try {
@@ -159,7 +176,7 @@ export default function LabOnboarding() {
   // Leggi ad alta voce la slide corrente (se audio attivo).
   useEffect(() => {
     if (!show) { stopAudio(); return; }
-    if (audio && cur) playVoice(voiceText(cur), cur.who === "michele" ? "michele" : "momy");
+    if (audio && cur) speakSlide(cur);
     // eslint-disable-next-line
   }, [show, i, audio]);
 
@@ -176,7 +193,7 @@ export default function LabOnboarding() {
     setAudio((a) => {
       const na = !a;
       if (!na) stopAudio();
-      else if (cur) playVoice(voiceText(cur), cur.who === "michele" ? "michele" : "momy");
+      else if (cur) speakSlide(cur);
       return na;
     });
   };

@@ -903,3 +903,5 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - LabOnboarding: slide Michele usa voce michele, resto voce momy (playVoice(text, who)).
 - Audio più umano: rimosse emoji/simboli dal testo letto (stripForVoice) — niente piu "saluto con mano" pronunciato; voice_settings piu espressive (stability .45, style .35, sim .8).
 - Impara: "Da dove inizio?" ora è un PERCORSO A TAPPE che segna i passi completati (localStorage mikilab_impara_path), badge X/3 + spunte + messaggio di completamento. Verificato a schermo.
+
+- v54.1: Michele si presenta ("Ciao sono Michele") una sola volta (flag mikilab_michele_greeted); poi la voce legge solo il contenuto. Deploy check PASS.
