@@ -119,7 +119,13 @@ export default function LabOnboarding() {
     } catch { /* */ }
   };
 
-  // Voce umana ElevenLabs; fallback alla voce del dispositivo se non disponibile.
+  // Testo per la voce: piu corto (solo titolo + prime frasi) per un ascolto leggero.
+  const voiceText = (s) => {
+    if (!s) return "";
+    const parts = (s.body || "").split(". ");
+    const short = parts.slice(0, 2).join(". ");
+    return `${s.title}. ${short}${short && !short.endsWith(".") ? "." : ""}`;
+  };
   const playVoice = async (text) => {
     stopAudio();
     try {
@@ -148,7 +154,7 @@ export default function LabOnboarding() {
   // Leggi ad alta voce la slide corrente (se audio attivo).
   useEffect(() => {
     if (!show) { stopAudio(); return; }
-    if (audio && cur) playVoice(`${cur.title}. ${cur.body}`);
+    if (audio && cur) playVoice(voiceText(cur));
     // eslint-disable-next-line
   }, [show, i, audio]);
 
@@ -165,7 +171,7 @@ export default function LabOnboarding() {
     setAudio((a) => {
       const na = !a;
       if (!na) stopAudio();
-      else if (cur) playVoice(`${cur.title}. ${cur.body}`);
+      else if (cur) playVoice(voiceText(cur));
       return na;
     });
   };

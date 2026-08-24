@@ -43,6 +43,32 @@ export default function AcademyHome({ onNavigate }) {
             <Camera className="w-4 h-4" /> {tri("Diagnosi Foto", "Foto-Diagnosen", "Photo diagnoses")}: {diagUsed}/{diagLimit} {tri("questo mese", "diesen Monat", "this month")}
           </div>
         )}
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold"><Wheat className="w-3.5 h-3.5" /> {FLOURS.length} {tri("farine", "Mehle", "flours")}</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold"><Calculator className="w-3.5 h-3.5" /> {CALC_RECIPES.length} {tri("ricette calcolabili", "berechenbare Rezepte", "calculable recipes")}</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold"><Camera className="w-3.5 h-3.5" /> {tri("Diagnosi IA", "KI-Diagnose", "AI Diagnosis")}</span>
+        </div>
+      </div>
+
+      {/* Percorso guidato: da dove inizio? */}
+      <div data-testid="academy-path" className="mb-5">
+        <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{tri("Da dove inizio?", "Wo fange ich an?", "Where do I start?")}</p>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { id: "ricettario", n: "1", Icon: Calculator, t: tri("Calcola le dosi", "Mengen berechnen", "Calculate doses") },
+            { id: "farine", n: "2", Icon: Wheat, t: tri("Scegli la farina", "Mehl wählen", "Pick the flour") },
+            { id: "corsi", n: "3", Icon: GraduationCap, t: tri("Segui i corsi", "Kurse folgen", "Take the courses") },
+          ].map(({ id, n, Icon, t: label }) => (
+            <button key={id} data-testid={`academy-path-${id}`} onClick={() => setSub(id)}
+              className="group rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-3 text-left active:scale-97 transition-all hover:border-[#6B8E62]/60">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <span className="w-6 h-6 rounded-full bg-[#6B8E62] text-white text-xs font-bold flex items-center justify-center">{n}</span>
+                <Icon className="w-4 h-4 text-[#6B8E62]" />
+              </div>
+              <p className="text-xs font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-snug">{label}</p>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Sub-nav */}

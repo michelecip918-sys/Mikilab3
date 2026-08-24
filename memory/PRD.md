@@ -890,3 +890,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Condivisione estesa: aggiunto tasto Condividi (lib/share.js) a Lista Spesa (usa buildShoppingText) e Food Cost (riepilogo costi/margine). Ora share su: Diagnosi Foto+Sonora, Piano IA, Piano Settimanale, Lista Spesa, Food Cost.
 - Diagnosi Sonora Pro: metro del ritmo in tempo reale durante la registrazione (barre animate da RMS live, data-testid sound-wave).
 - ELEVEN_API_KEY già presente in backend/.env. MOMY_VOICE_ID override via env (default Adam).
+
+## v53 (2026-06) — Indiretto, ricette LM, voce breve, video avatar Home, Impara
+- Filtro base "Indiretto" aggiunto (BASE_KEYS + recipeBase: method_type indiretto o presenza prefermento → indiretto; altrimenti diretto). Molte ricette usano metodo indiretto.
+- Ricette a lievito madre: "Focaccia a Lievito Madre" (focacce) + "Pane Casereccio a Lievito Madre" (pane), IT/DE/EN, pref lm, indiretto. SEED_VERSION v52-lm. TOT 92 ricette.
+- Voce tour Momy accorciata: legge solo titolo + prime 2 frasi (voiceText) → ascolto più leggero.
+- Home HomeAvatarScene: tap sull'avatar → parte il VIDEO parlante di Michele (michele-explainer-{lang}) nella stessa geometria (data-testid home-avatar-play/home-avatar-video). Voce "più umana" del video = rimandata (scelta voce domani).
+- Sezione Impara (AcademyHome): aggiunto percorso guidato "Da dove inizio?" (3 step → sub-tab) + badge statistiche (n. farine, ricette calcolabili, Diagnosi IA) nella hero.

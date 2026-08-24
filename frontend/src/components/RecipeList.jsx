@@ -822,7 +822,7 @@ function badgeTitle(b, lang) {
 }
 
 // Basi/prefermenti presenti in una ricetta → per il filtro "per Base".
-const BASE_KEYS = ["poolish", "biga", "lm", "segale", "licoli", "kochstuck", "quark", "diretto"];
+const BASE_KEYS = ["poolish", "biga", "lm", "segale", "licoli", "kochstuck", "quark", "indiretto", "diretto"];
 function recipeBase(r) {
   const pref = (r.preferment_type || "").toLowerCase();
   const ft = (r.flour_type || "").toLowerCase();
@@ -838,7 +838,11 @@ function recipeBase(r) {
   if (pref === "lm" || /lievito madre|pasta madre|lievito naturale|sauerteig|sourdough/.test(hay)) out.push("lm");
   if (/kochst|farina cotta/.test(hay)) out.push("kochstuck");
   if (/quark/.test(hay)) out.push("quark");
-  if (out.length === 0 || pref === "diretto" || pref === "none" || pref === "") out.push("diretto");
+  const method = (r.method_type || "").toLowerCase();
+  const hasPref = out.some((k) => ["poolish", "biga", "lm", "licoli", "segale"].includes(k));
+  const isIndirect = method === "indiretto" || hasPref;
+  if (isIndirect) out.push("indiretto");
+  if (!isIndirect && (pref === "diretto" || pref === "none" || pref === "" || out.length === 0)) out.push("diretto");
   return [...new Set(out)];
 }
 function baseLabel(k, lang) {
@@ -852,6 +856,7 @@ function baseLabel(k, lang) {
     case "licoli": return "LiCoLi";
     case "kochstuck": return de ? "Kochstück" : en ? "Cooked flour" : "Farina Cotta";
     case "quark": return "Quark";
+    case "indiretto": return de ? "Indirekt" : en ? "Indirect" : "Indiretto";
     case "diretto": return de ? "Direkt" : en ? "Direct" : "Diretto";
     default: return k;
   }

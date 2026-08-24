@@ -5544,5 +5544,97 @@
   "procedure": "1) Mescola quark, uova e zucchero.\n2) Unisci farina, lievito per dolci e sale fino a impasto morbido.\n3) Con due cucchiai forma palline e friggi in olio a 170-175°C finché dorate (3-4 min), girandole.\n4) Scola e spolvera di zucchero a velo.",
   "procedure_de": "1) Quark, Eier und Zucker verrühren.\n2) Mehl, Backpulver und Salz zu einem weichen Teig verrühren.\n3) Mit zwei Löffeln Bällchen formen und in Öl bei 170-175°C goldbraun ausbacken (3-4 Min.), wenden.\n4) Abtropfen und mit Puderzucker bestäuben.",
   "procedure_en": "1) Mix quark, eggs and sugar.\n2) Add flour, baking powder and salt to a soft batter.\n3) With two spoons form balls and fry in oil at 170-175°C until golden (3-4 min), turning.\n4) Drain and dust with icing sugar."
+ },
+ {
+  "name": "Focaccia a Lievito Madre",
+  "name_de": "Focaccia mit Sauerteig",
+  "name_en": "Sourdough Focaccia",
+  "real_name": "Focaccia soffice a lievito madre",
+  "real_name_de": "Weiche Focaccia mit Lievito Madre",
+  "real_name_en": "Soft focaccia with sourdough starter",
+  "flour_type": "Farina tipo 0 (W300)",
+  "flour_type_de": "Weizenmehl Type 550 (W300)",
+  "flour_type_en": "Soft wheat type 0 (W300)",
+  "hydration_percent": 80,
+  "flour_grams": 1000,
+  "water_grams": 800,
+  "sourdough_grams": 250,
+  "salt_grams": 20,
+  "preferment_type": "lm",
+  "method_type": "indiretto",
+  "dough_category": "indiretto",
+  "mix_minutes": 12,
+  "bulk_fermentation_hours": 4,
+  "proofing_hours": 2,
+  "bake_temp": 230,
+  "bake_minutes": 22,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/30666811/pexels-photo-30666811.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "origin": "IT",
+  "menu_category": "focacce",
+  "extra_ingredients": [
+   {
+    "name": "Lievito Madre solido (rinfrescato)",
+    "percent": 25
+   },
+   {
+    "name": "Olio extravergine d oliva",
+    "percent": 6
+   },
+   {
+    "name": "Emulsione acqua/olio/sale (finitura)",
+    "percent": 0
+   }
+  ],
+  "notes": "Focaccia ad alta idratazione a LIEVITO MADRE: alveolatura aperta, profumo intenso e maggiore digeribilita. Metodo indiretto con lunga puntata.",
+  "notes_de": "Focaccia mit hoher Hydratation und LIEVITO MADRE: offene Porung, intensives Aroma, bekoemmlicher. Indirekte Methode mit langer Stockgare.",
+  "notes_en": "High-hydration SOURDOUGH focaccia: open crumb, intense aroma, more digestible. Indirect method with long bulk.",
+  "procedure": "1) Rinfresca il lievito madre 3-4 ore prima.\n2) Autolisi: mescola farina e 90% acqua, riposo 30 min.\n3) Aggiungi lievito madre, sale e acqua restante con olio; impasta fino a incordatura.\n4) Puntata 4 h con pieghe ogni 45 min.\n5) Stendi in teglia oliata, appretto 2 h.\n6) Condisci con emulsione acqua/olio/sale, forma i buchi.\n7) Cuoci a 230°C statico 20-22 min.",
+  "procedure_de": "1) Lievito Madre 3-4 Std. vorher auffrischen.\n2) Autolyse: Mehl und 90% Wasser mischen, 30 Min. ruhen.\n3) Sauerteig, Salz und restliches Wasser mit Oel zugeben; bis zur Teigentwicklung kneten.\n4) Stockgare 4 Std. mit Faltungen alle 45 Min.\n5) In geoeltes Blech ziehen, Stueckgare 2 Std.\n6) Mit Wasser/Oel/Salz-Emulsion betraeufeln, Loecher druecken.\n7) Bei 230°C Ober-/Unterhitze 20-22 Min. backen.",
+  "procedure_en": "1) Refresh the sourdough 3-4 h before.\n2) Autolyse: mix flour and 90% water, rest 30 min.\n3) Add sourdough, salt and remaining water with oil; knead to full development.\n4) Bulk 4 h with folds every 45 min.\n5) Stretch into an oiled tray, final proof 2 h.\n6) Top with water/oil/salt emulsion, dimple.\n7) Bake at 230°C 20-22 min."
+ },
+ {
+  "name": "Pane Casereccio a Lievito Madre",
+  "name_de": "Rustikales Brot mit Sauerteig",
+  "name_en": "Rustic Sourdough Bread",
+  "real_name": "Pane italiano casereccio a lievito madre",
+  "real_name_de": "Italienisches Landbrot mit Lievito Madre",
+  "real_name_en": "Italian country bread with sourdough starter",
+  "flour_type": "Farina tipo 1 (W280)",
+  "flour_type_de": "Weizenmehl Type 1050 (W280)",
+  "flour_type_en": "Type 1 flour (W280)",
+  "hydration_percent": 75,
+  "flour_grams": 1000,
+  "water_grams": 750,
+  "sourdough_grams": 200,
+  "salt_grams": 20,
+  "preferment_type": "lm",
+  "method_type": "indiretto",
+  "dough_category": "indiretto",
+  "mix_minutes": 12,
+  "bulk_fermentation_hours": 4,
+  "proofing_hours": 3,
+  "bake_temp": 240,
+  "bake_minutes": 45,
+  "oven_type": "statico",
+  "image_url": "https://images.pexels.com/photos/37703580/pexels-photo-37703580.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+  "origin": "IT",
+  "menu_category": "pane",
+  "extra_ingredients": [
+   {
+    "name": "Lievito Madre solido (rinfrescato)",
+    "percent": 20
+   },
+   {
+    "name": "Malto d orzo (opzionale)",
+    "percent": 1
+   }
+  ],
+  "notes": "Classico pane italiano a LIEVITO MADRE: crosta croccante, mollica alveolata, lunga conservazione. Metodo indiretto, ottima digeribilita. Cottura con vapore.",
+  "notes_de": "Klassisches italienisches Brot mit LIEVITO MADRE: knusprige Kruste, offene Krume, lange haltbar. Indirekte Methode. Backen mit Dampf.",
+  "notes_en": "Classic Italian SOURDOUGH bread: crisp crust, open crumb, long keeping. Indirect method. Bake with steam.",
+  "procedure": "1) Rinfresca il lievito madre.\n2) Autolisi farina + acqua 30-60 min.\n3) Aggiungi lievito madre e sale, impasta.\n4) Puntata 4 h con 3 pieghe.\n5) Forma e metti in cestino, appretto 3 h (o in frigo 12 h).\n6) Ribalta, incidi.\n7) Cuoci a 240°C con vapore 15 min, poi 220°C fino a 45 min totali.",
+  "procedure_de": "1) Lievito Madre auffrischen.\n2) Autolyse Mehl + Wasser 30-60 Min.\n3) Sauerteig und Salz zugeben, kneten.\n4) Stockgare 4 Std. mit 3 Faltungen.\n5) Formen, in Gaerkoerbchen, Stueckgare 3 Std. (oder 12 Std. im Kuehlschrank).\n6) Stuerzen, einschneiden.\n7) Bei 240°C mit Dampf 15 Min., dann 220°C bis 45 Min. gesamt.",
+  "procedure_en": "1) Refresh the sourdough.\n2) Autolyse flour + water 30-60 min.\n3) Add sourdough and salt, knead.\n4) Bulk 4 h with 3 folds.\n5) Shape, place in banneton, final proof 3 h (or 12 h in fridge).\n6) Turn out, score.\n7) Bake at 240°C with steam 15 min, then 220°C to 45 min total."
  }
 ]
