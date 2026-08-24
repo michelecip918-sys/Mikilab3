@@ -1036,3 +1036,6 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Maestro: rimosso "aggiungi" dalle schede del Passo 1 (resta SOLO come quicklink "Inserisci Ricette" / capo-quicklink-aggiungi dentro il Piano IA). "adatta" (Adatta al Forno) spostato dal Passo 1 al Passo 2 (servizio extra, non serve a generare). Passo 1 tools: pianoai, settimana, lavoro, inversa, spesa, foodcost, salespoints, turni, enterprise (+ flourTable).
 - Home: sezione "MikiLab Shop & Corsi" spostata IN FONDO (dopo ShareInstall). Rimossi carousel panettoni e CTA che rimandavano a ricette. Ora shop-coming-soon: tab "Shop Ricette" / "Corsi Online", card "IN ARRIVO A BREVE" (Shop di tutte le mie ricette / Corsi online), nessun redirect. Nastro tricolore sulla card.
 - Verificato a schermo: step1 senza aggiungi/adatta, quicklink Inserisci Ricette presente, adatta nel Passo 2, shop coming-soon in fondo.
+
+## v80 (2026-06) — Passo 1 ripulito dai doppioni del Piano IA
+- Maestro Passo 1 tools ridotti a ["pianoai", "enterprise"] (+ flourTable). Rimosse le schede settimana, lavoro, inversa, spesa, foodcost, salespoints, turni perché già presenti come scorciatoie DENTRO il Piano IA (capo-quicklink-*). Enterprise resta (non è nel generatore). Verificato a schermo.
