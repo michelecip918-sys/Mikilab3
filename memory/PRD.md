@@ -964,3 +964,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v66 (2026-06) — Lista Spesa per Negozio + Etichette con scadenza
 - WeeklyPlan.jsx pdfShoppingPerShop() (weekly-shopping-shop-btn): PDF unico con la lista della spesa DIVISA per punto vendita. Raggruppa items per sale_point (+ "Senza negozio"), calcola gli ingredienti con computeShopping(items[{recipe_id,grams}], recipeById, lang). Ogni negozio: sezioni Farine (flourByType), Base impasto (Acqua/Prefermento/Sale via otherLabel), Altri ingredienti (extras via ingLoc). Header logo. Verificato (Negozio Centro/Stazione con farine, acqua, extra corretti).
 - Etichette con scadenza: nuovo recipeShelfDays(r) in WeeklyPlan.jsx — base per tipo (panettone 30, brezel 2, baguette/panini/ciabatta 2, dolci/focaccia 4, pane 3) × fattore fermentazione (bulk+proofing, come Shelf-Life). printLabels ora aggiunge riga "Da consumarsi entro: <data>" (oggi + giorni). Altezza etichetta 34→38mm. Verificato (Baguette 26/08 = +2gg, Anima Integrale 27/08 = +3gg).
+
+## v67 (2026-06) — Ristrutturazione "Il Tuo Laboratorio" (6→3 passi)
+- Maestro.jsx: STEPS ridotti da 6 a 3, si PARTE dalle ricette (step index 0):
+  * Passo 1 "Le Mie Ricette": tools aggiungi, adatta + FlourTable (start).
+  * Passo 2 "Piano di Produzione" (pianoHub): banner maestro-piano-hub-info + scheda pianoai in evidenza (col-span-2, gradient verde) + settimana, lavoro, inversa, spesa, foodcost, salespoints, turni.
+  * Passo 3 "Laboratorio & Chiusura": tutto il resto (capo, freezer, bilancia, termo, market, acqua, pesata, timer, meteo, ph, twin, diagnosi, suono, sessioni, lotti, haccp, check, shelf, spreco) con diagnosiInfo + conclusione. NULLA eliminato.
+- PianoProduzioneAI.jsx: nuovo prop onOpenTool + barra "Tutto in un posto" (capo-quicklinks) con 7 scorciatoie rapide (capo-quicklink-{settimana,lavoro,inversa,spesa,foodcost,salespoints,turni}) che chiamano onOpenTool(id) → aprono lo strumento direttamente senza tornare indietro. Passato da Maestro: <PianoProduzioneAI onOpenTool={setTool} />.
+- Verificato con automazione: 3 step, step1=Ricette, step2 hub+card+tool, 7 quicklink, navigazione quicklink→WeeklyPlan OK.
+- NOTA: richiesta utente "semplificare anche la Home" NON ancora affrontata (Home attuale è già una griglia di scorciatoie + badge livello).

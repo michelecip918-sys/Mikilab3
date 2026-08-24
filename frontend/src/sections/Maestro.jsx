@@ -86,12 +86,9 @@ export default function Maestro() {
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
   const STEPS = [
-    { icon: Cog, title: tri("Prima Configurazione Hardware", "Hardware-Einrichtung", "Hardware Setup"), sub: tri("Macchine, impastatrici, celle, frigo, giacenze e connessione dispositivi (bilancia, termostati)", "Maschinen, Kneter, Gärzellen, Kühlschrank, Bestände und Geräte (Waage, Thermostate)", "Machines, mixers, cells, fridge, stock and device connection (scale, thermostats)"), tools: ["capo", "freezer", "bilancia", "termo", "market"] },
-    { icon: BookOpen, title: tri("Le Mie Ricette & Parametri", "Meine Rezepte & Parameter", "My Recipes & Parameters"), sub: tri("Inserisci o scansiona le tue ricette e imposta i parametri del forno", "Rezepte erfassen/scannen und Ofenparameter einstellen", "Add or scan recipes and set oven parameters"), tools: ["aggiungi", "adatta"], flourTable: true },
-    { icon: Store, title: tri("Logistica & Punti Vendita", "Logistik & Verkaufspunkte", "Logistics & Sales Points"), sub: tri("Configura i punti vendita e gestisci personale e turni", "Verkaufspunkte einrichten und Personal & Schichten verwalten", "Set up sales points and manage staff & shifts"), tools: ["salespoints", "turni"] },
-    { icon: CalendarDays, title: tri("Pianificazione Produzione", "Produktionsplanung", "Production Planning"), sub: tri("Piano settimanale e piano di lavoro di oggi, piano IA, tempi a ritroso, spesa e food cost", "Wochenplan und heutiger Arbeitsplan, KI-Plan, Rückwärtszeiten, Einkauf und Food Cost", "Weekly plan and today's work plan, AI plan, backward timing, shopping and food cost"), tools: ["pianoai", "settimana", "lavoro", "inversa", "spesa", "foodcost"] },
-    { icon: Thermometer, title: tri("Operatività In Corso", "Laufender Betrieb", "Live Operations"), sub: tri("Calcolo temperatura acqua, pesata guidata, timer e sensori (meteo, pH, twin)", "Wassertemperatur, geführtes Wiegen, Timer und Sensoren (Wetter, pH, Twin)", "Water temperature, guided weighing, timers and sensors (weather, pH, twin)"), tools: ["acqua", "pesata", "timer", "meteo", "ph", "twin", "diagnosi", "suono"], diagnosiInfo: true },
-    { icon: CheckSquare, title: tri("Chiusura & Tracciabilità", "Abschluss & Rückverfolgung", "Closing & Traceability"), sub: tri("Chiudi la giornata: Diario Impasti, Tracciabilità Lotti, Registro HACCP e controlli finali", "Tag abschließen: Teig-Tagebuch, Chargen-Rückverfolgung, HACCP und Endkontrollen", "Close the day: Dough Log, Batch Traceability, HACCP and final checks"), tools: ["sessioni", "lotti", "haccp", "check", "shelf", "spreco"], conclusione: true },
+    { icon: BookOpen, title: tri("Le Mie Ricette", "Meine Rezepte", "My Recipes"), sub: tri("Inizia da qui: inserisci o scansiona le tue ricette e imposta i parametri del forno", "Starte hier: Rezepte erfassen/scannen und Ofenparameter einstellen", "Start here: add or scan your recipes and set oven parameters"), tools: ["aggiungi", "adatta"], flourTable: true },
+    { icon: Sparkles, title: tri("Piano di Produzione", "Produktionsplan", "Production Plan"), sub: tri("Il cuore del laboratorio: organizza settimana, giornata e punti vendita e genera produzione, spesa e costi da un unico posto", "Das Herz der Backstube: Woche, Tag und Verkaufspunkte organisieren und Produktion, Einkauf und Kosten an einem Ort generieren", "The heart of the lab: organize week, day and sales points and generate production, shopping and costs from one place"), tools: ["pianoai", "settimana", "lavoro", "inversa", "spesa", "foodcost", "salespoints", "turni"], pianoHub: true },
+    { icon: Cog, title: tri("Laboratorio & Chiusura", "Backstube & Abschluss", "Lab & Closing"), sub: tri("Macchine e strumenti, operatività in corso, diagnosi e chiusura della giornata", "Maschinen und Werkzeuge, laufender Betrieb, Diagnose und Tagesabschluss", "Machines and tools, live operations, diagnosis and day closing"), tools: ["capo", "freezer", "bilancia", "termo", "market", "acqua", "pesata", "timer", "meteo", "ph", "twin", "diagnosi", "suono", "sessioni", "lotti", "haccp", "check", "shelf", "spreco"], diagnosiInfo: true, conclusione: true },
   ];
   const current = STEPS[step];
 
@@ -109,7 +106,7 @@ export default function Maestro() {
             extraHeader={<ScanRecipe embedded />} />
         )}
         {tool === "capo" && <CapoLaboratorio />}
-        {tool === "pianoai" && <PianoProduzioneAI />}
+        {tool === "pianoai" && <PianoProduzioneAI onOpenTool={setTool} />}
         {tool === "bilancia" && <SmartScale />}
         {tool === "pesata" && <GuidedWeighing />}
         {tool === "sessioni" && <DoughLog />}
@@ -194,6 +191,15 @@ export default function Maestro() {
         )}
 
         <div className="grid grid-cols-2 gap-2.5">
+          {current.pianoHub && (
+            <div data-testid="maestro-piano-hub-info" className="col-span-2 rounded-2xl bg-[#5E8B7E]/10 border border-[#5E8B7E]/30 p-3.5 mb-1">
+              <div className="flex items-center gap-2 text-[#33564E] dark:text-[#9ec4b8] font-bold text-sm"><Sparkles className="w-4 h-4" /> {tri("Il cuore del tuo laboratorio", "Das Herz deiner Backstube", "The heart of your lab")}</div>
+              <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1.5 leading-snug">{tri(
+                "Apri il Piano di Produzione (IA): da lì scrivi cosa produrre, richiami il piano settimanale e generi tutto — produzione del giorno, lista della spesa, ordine fornitori e ricette — pronto da stampare o condividere col team.",
+                "Öffne den Produktionsplan (KI): dort schreibst du, was zu produzieren ist, rufst den Wochenplan ab und generierst alles — Tagesproduktion, Einkaufsliste, Lieferantenbestellung und Rezepte — druck- und teilbereit fürs Team.",
+                "Open the AI Production Plan: from there write what to produce, pull the weekly plan and generate everything — daily production, shopping list, supplier order and recipes — ready to print or share with the team.")}</p>
+            </div>
+          )}
           {current.diagnosiInfo && (
             <div data-testid="maestro-diagnosi-info" className="col-span-2 rounded-2xl bg-[#B34A26]/10 border border-[#B34A26]/30 p-3.5 mb-1">
               <div className="flex items-center gap-2 text-[#B34A26] font-bold text-sm"><Camera className="w-4 h-4" /> {tri("Diagnosi Foto: fotografa e risolvi", "Foto-Diagnose: fotografieren und lösen", "Photo Diagnosis: snap and solve")}</div>
@@ -217,14 +223,19 @@ export default function Maestro() {
             const tItem = toolById[id];
             if (!tItem) return null;
             const { title, Icon } = tItem;
+            const isHub = id === "pianoai";
             return (
               <motion.button key={id} data-testid={`maestro-tool-${id}`} onClick={() => setTool(id)}
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i * 0.04, 0.3) }}
-                className="flex flex-col items-start gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm active:scale-97 hover:border-[#6E8CA0]/60 transition-all text-left min-h-[104px]">
-                <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-[#5E8B7E]" />
+                className={`flex flex-col items-start gap-2 rounded-2xl p-3.5 shadow-sm active:scale-97 transition-all text-left min-h-[104px] ${
+                  isHub
+                    ? "col-span-2 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] border border-[#33564E] text-white"
+                    : "bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] hover:border-[#6E8CA0]/60"}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isHub ? "bg-white/20 border border-white/30" : "bg-[#6E8CA0]/15 border border-[#6E8CA0]/30"}`}>
+                  <Icon className={`w-5 h-5 ${isHub ? "text-white" : "text-[#5E8B7E]"}`} />
                 </div>
-                <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight">{title}</h3>
+                <h3 className={`font-display text-base font-semibold leading-tight ${isHub ? "text-white" : "text-[#2B303B] dark:text-[#EAF0EC]"}`}>{title}</h3>
+                {isHub && <p className="text-[11px] text-white/85 leading-snug">{tri("Genera e condividi tutta la produzione", "Erzeuge und teile die gesamte Produktion", "Generate and share the whole production")}</p>}
               </motion.button>
             );
           })}

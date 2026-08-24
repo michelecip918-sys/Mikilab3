@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2 } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
@@ -14,9 +14,11 @@ import { rLoc } from "@/lib/loc";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
+const tri3 = (lang, i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+
 // Piano di Produzione con IA (spostato dalla "Impostazione Macchine").
 // Config macchine/celle letta in sola lettura per alimentare l'IA.
-export default function PianoProduzioneAI() {
+export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
   const [mixers, setMixers] = useState([]);
   const [cells, setCells] = useState([]);
@@ -138,6 +140,31 @@ export default function PianoProduzioneAI() {
         <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Produktionsplan mit KI" : lang === "en" ? "AI Production Plan" : "Piano di Produzione con IA"}</h1>
         <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Wähle, was du vorbereiten willst, und lass den Plan generieren" : lang === "en" ? "Choose what to prepare and generate the plan" : "Scegli cosa preparare e genera il piano di lavoro"}</p>
       </div>
+
+      {onOpenTool && (
+        <div data-testid="capo-quicklinks" className="mb-5">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">
+            {lang === "de" ? "Alles an einem Ort" : lang === "en" ? "Everything in one place" : "Tutto in un posto"}
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Programma Settimana", "Wochenplan", "Weekly Plan") },
+              { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Produzione Oggi", "Heute Produktion", "Today's Production") },
+              { id: "inversa", Icon: Clock, label: tri3(lang, "Orari d'Inizio", "Startzeiten", "Start Times") },
+              { id: "spesa", Icon: ShoppingCart, label: tri3(lang, "Lista Spesa", "Einkaufsliste", "Shopping List") },
+              { id: "foodcost", Icon: Euro, label: tri3(lang, "Food Cost & Prezzi", "Food Cost & Preise", "Food Cost & Prices") },
+              { id: "salespoints", Icon: Store, label: tri3(lang, "Punti Vendita", "Verkaufspunkte", "Sales Points") },
+              { id: "turni", Icon: Users, label: tri3(lang, "Turni & Ruoli", "Schichten & Rollen", "Shifts & Roles") },
+            ].map(({ id, Icon, label }) => (
+              <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
+                className="flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[76px]">
+                <Icon className="w-5 h-5 text-[#5E8B7E]" />
+                <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {mixers.length === 0 && cells.length === 0 && (
         <div className="mb-4 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-3.5 text-sm text-[#33564E] dark:text-[#8FB0C2]">
