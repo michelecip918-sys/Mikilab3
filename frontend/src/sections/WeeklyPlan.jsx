@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store, Tag } from "lucide-react";
+import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store, Tag, ShoppingBasket } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
-import { fmtQty } from "@/lib/shopping";
+import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
@@ -31,6 +31,20 @@ const GRAM_FIELDS = [
   { key: "sourdough_grams", labelKey: "ing_sourdough" },
   { key: "salt_grams", labelKey: "ing_salt" },
 ];
+
+// Giorni di conservazione consigliati per tipo di prodotto (come Shelf-Life):
+// fermentazioni lunghe = pane fresco più a lungo.
+function recipeShelfDays(r) {
+  if (!r) return 3;
+  const n = `${r.name || ""} ${r.menu_category || ""} ${r.dough_category || ""}`.toLowerCase();
+  let base = 3;
+  if (n.includes("panettone") || (r.menu_category || "") === "panettoni") base = 30;
+  else if (n.includes("brezel") || n.includes("brezn") || n.includes("bretzel")) base = 2;
+  else if (n.includes("cornetto") || n.includes("brioche") || n.includes("dolc") || n.includes("croissant") || n.includes("focacc")) base = 4;
+  else if (n.includes("baguette") || n.includes("panin") || n.includes("brötchen") || n.includes("brotchen") || n.includes("ciabatt")) base = 2;
+  const h = Number(r.bulk_fermentation_hours || 0) + Number(r.proofing_hours || 0);
+  return Math.max(1, Math.round(base * (1 + Math.min(h, 48) / 48 * 0.6)));
+}
 
 export default function WeeklyPlan() {
   const [recipes, setRecipes] = useState([]);
@@ -355,11 +369,14 @@ export default function WeeklyPlan() {
   const printLabels = (filterItem = () => true, subtitle = "") => {
     const rows = items.filter(filterItem).map((it) => {
       const r = recipeById[it.recipe_id];
+      const days = recipeShelfDays(r);
+      const exp = new Date(); exp.setDate(exp.getDate() + days);
       return {
         name: rLoc(r, "name", lang) || it.recipe_name,
         weight: Number(it.grams_per_piece || 0),
         pieces: Number(it.pieces || 0),
         shop: it.sale_point || "",
+        expiry: exp.toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT"),
       };
     }).filter((x) => x.name);
     if (rows.length === 0) { toast.error(t("weekly_empty_share")); return; }
@@ -377,6 +394,7 @@ export default function WeeklyPlan() {
         <div class="brand">🌾 MikiLab</div>
         <div class="name">${esc(x.name)}</div>
         <div class="meta">${x.weight ? `<span class="w">${fmtQty(x.weight)}</span>` : "<span></span>"}<span class="d">${esc(date)}</span></div>
+        <div class="exp">${tri("Da consumarsi entro", "Zu verbrauchen bis", "Best before")}: <b>${esc(x.expiry)}</b></div>
         ${x.shop ? `<div class="shop">🏪 ${esc(x.shop)}</div>` : ""}
       </div>`).join("");
     const w = window.open("", "_blank");
@@ -386,16 +404,80 @@ export default function WeeklyPlan() {
         *{box-sizing:border-box}
         body{font-family:Georgia,serif;margin:0;padding:10mm;color:#2B303B}
         .grid{display:flex;flex-wrap:wrap;gap:4mm}
-        .label{width:58mm;height:34mm;border:1px dashed #9AA6AE;border-radius:6px;padding:3mm 4mm;display:flex;flex-direction:column;justify-content:space-between;page-break-inside:avoid}
+        .label{width:58mm;height:38mm;border:1px dashed #9AA6AE;border-radius:6px;padding:3mm 4mm;display:flex;flex-direction:column;justify-content:space-between;page-break-inside:avoid}
         .brand{font-size:9px;font-weight:800;color:#5E8B7E;letter-spacing:.04em}
         .name{font-size:15px;font-weight:800;line-height:1.1;color:#2B303B}
         .meta{display:flex;justify-content:space-between;align-items:flex-end;font-size:11px}
         .meta .w{font-weight:800;color:#33564E}
         .meta .d{color:#7E8A93}
+        .exp{font-size:10px;color:#B34A26}
         .shop{font-size:10px;font-weight:700;color:#5E8B7E;border-top:1px solid #EAF0EC;padding-top:2px}
         @media print{ @page{margin:8mm} .label{border-color:#c9c9c9} }
       </style></head><body>
       <div class="grid">${cards}</div>
+      </body></html>`);
+    w.document.close();
+    w.focus();
+    setTimeout(() => w.print(), 500);
+  };
+
+  // PDF Lista della Spesa divisa per Punto Vendita: ingredienti totali per ogni negozio.
+  const pdfShoppingPerShop = () => {
+    const groups = {};
+    const NOSHOP = tri("Senza negozio assegnato", "Ohne Verkaufspunkt", "No sales point");
+    items.forEach((it) => {
+      const key = it.sale_point || NOSHOP;
+      const grams = Number(it.pieces || 0) * Number(it.grams_per_piece || 0);
+      if (grams <= 0) return;
+      (groups[key] = groups[key] || []).push({ recipe_id: it.recipe_id, grams });
+    });
+    const shopNames = Object.keys(groups);
+    if (shopNames.length === 0) { toast.error(t("weekly_empty_share")); return; }
+    shopNames.sort((a, b) => (a === NOSHOP ? 1 : b === NOSHOP ? -1 : a.localeCompare(b)));
+    const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const origin = window.location.origin + (process.env.PUBLIC_URL || "");
+    const logo = `${origin}/logo-256.png`;
+    const L = {
+      flours: tri("Farine", "Mehle", "Flours"),
+      others: tri("Base impasto", "Teigbasis", "Dough base"),
+      extras: tri("Altri ingredienti", "Weitere Zutaten", "Other ingredients"),
+      title: tri("Lista della Spesa per Punto Vendita", "Einkaufsliste pro Verkaufspunkt", "Shopping List per Sales Point"),
+    };
+
+    const sections = shopNames.map((shop) => {
+      const totals = computeShopping(groups[shop], recipeById, lang);
+      const flours = Object.entries(totals.flourByType).sort((a, b) => b[1] - a[1]);
+      const others = Object.entries(totals.others);
+      const extras = Object.entries(totals.extras).sort((a, b) => b[1] - a[1]);
+      const li = (name, val) => `<li><span>${esc(name)}</span><b>${fmtQty(val)}</b></li>`;
+      return `
+        <section class="shop">
+          <h2>🏪 ${esc(shop)}</h2>
+          ${flours.length ? `<div class="grp"><h3>${L.flours}</h3><ul>${flours.map(([k, v]) => li(k, v)).join("")}</ul></div>` : ""}
+          ${others.length ? `<div class="grp"><h3>${L.others}</h3><ul>${others.map(([f, v]) => li(otherLabel(f, lang), v)).join("")}</ul></div>` : ""}
+          ${extras.length ? `<div class="grp"><h3>${L.extras}</h3><ul>${extras.map(([k, v]) => li(ingLoc(k, lang), v)).join("")}</ul></div>` : ""}
+        </section>`;
+    }).join("");
+
+    const w = window.open("", "_blank");
+    if (!w) return;
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(L.title)}</title>
+      <style>
+        *{box-sizing:border-box}
+        body{font-family:Georgia,serif;color:#2B303B;max-width:720px;margin:0 auto;padding:28px 22px}
+        .head{display:flex;align-items:center;gap:12px;border-bottom:3px solid #5E8B7E;padding-bottom:10px;margin-bottom:14px}
+        .head img{height:44px;width:auto}
+        .head .brand{font-weight:800;font-size:22px;color:#2B303B}
+        .head .sub{font-size:12px;color:#666}
+        .shop{margin-top:18px;page-break-inside:avoid}
+        h2{color:#fff;background:#5E8B7E;display:inline-block;padding:4px 14px;border-radius:20px;font-size:16px;margin:0 0 8px}
+        .grp{margin:6px 0 10px} .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#4d6b45;margin:0 0 4px}
+        .grp ul{list-style:none;margin:0;padding:0}
+        .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #D7E1DB;padding:3px 0;font-size:14px}
+        .grp li b{font-family:monospace;color:#33564E}
+      </style></head><body>
+      <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
+      ${sections}
       </body></html>`);
     w.document.close();
     w.focus();
@@ -508,6 +590,14 @@ export default function WeeklyPlan() {
         className="w-full mt-2 bg-[#C9A24B] hover:bg-[#b38f3f] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <Tag className="w-5 h-5" /> {tri("Etichette Sacchetti", "Beutel-Etiketten", "Bag Labels")}
+      </button>
+
+      <button
+        data-testid="weekly-shopping-shop-btn"
+        onClick={pdfShoppingPerShop}
+        className="w-full mt-2 bg-[#6E8CA0] hover:bg-[#5c788b] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+      >
+        <ShoppingBasket className="w-5 h-5" /> {tri("Lista Spesa per Negozio", "Einkaufsliste pro Laden", "Shopping List per Shop")}
       </button>
 
       {assignedPoints.length > 0 && (
