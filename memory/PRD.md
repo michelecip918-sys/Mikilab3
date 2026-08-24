@@ -1027,3 +1027,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 
 ## v77 (2026-06) — Avvisi consigliati (non bloccanti) impastatrici/celle
 - PianoProduzioneAI: banner capo-setup-hint mostrato se mancano mixers O cells (prima solo se mancavano entrambi). Elenca dinamicamente cosa manca (impastatrici e/o celle lievitazione/frigo/freezer) + bottone capo-setup-hint-btn "Configura ora" → onOpenTool("capo"). NON blocca la generazione (solo consigliato). Verificato a schermo.
+
+## v78 (2026-06) — Ricette dentro il Piano di Produzione (2 passi)
+- Maestro STEPS: da 3 a 2. Rimosso il passo separato "Le Mie Ricette". Ora Passo 1 = "Piano di Produzione" (pianoHub + flourTable) con tools: pianoai, aggiungi, adatta, settimana, lavoro, inversa, spesa, foodcost, salespoints, turni, enterprise. Passo 2 = "Laboratorio & Chiusura" (invariato). Le ricette si gestiscono dentro la sezione Piano di Produzione + quicklink "Inserisci Ricette" nel Piano IA.
+- Verificato: 2 step, pianoai/aggiungi/adatta presenti nel Passo 1.
