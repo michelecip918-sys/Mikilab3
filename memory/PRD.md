@@ -1116,3 +1116,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - RICETTA DEL GIORNO GRATIS (Beginners): DAILY_RECIPES (3 ricette semplici it/de/en: pane base, focaccia, panini al latte) a rotazione giornaliera (recipe-of-day) in cima a Impara.
 - PROGRESSI QUIZ (BakerQuiz in Beginners): best score persistito in localStorage 'mikilab_quiz_best', mostrato come "Il tuo record: X/5" (quiz-best) su start e risultato.
 - DEFERITO ancora: "Costo e margine per ricetta" (serve modello prezzi ingredienti); corsi acquistabili (attesa video).
+
+## v95 (2026-06) — Salva piano, Home dedup, Impara senza video, Percorso, Costo/Margine
+- LAB: tasto "Completa" → "Salva piano" (maestro-done): toast "Piano e dati salvati, la prossima volta li modifichi soltanto". I dati del Piano IA sono già persistiti (v84).
+- HOME: rimosso blocco "Strumenti & Risorse" (home-hub-destinations: enciclopedia/diagnosi/news/enterprise = doppioni). Rimosse icone inutilizzate. Resta home-core + Chiedi al Maestro + Scopri + Shop.
+- IMPARA (Beginners): RIMOSSI i 3 blocchi video YouTube (corsi video, "i nostri video", grandi panettieri) — italiani, confusi su sito trilingue. Aggiunto "Il tuo percorso" (beginner-path): 4 passi con spunte persistite in localStorage 'mikilab_beginner_path' + barra progresso.
+- PIANO IA: card "Costi & Margine" (capo-cost-summary) — riusa recipe.costing + prices.js computeRecipeCostPerPiece(); per prodotto costo/ricavo + totali costo/ricavo/margine%. Hint se manca prezzo/pezzi nella ricetta.
+- Avatar: lasciato a discussione futura (richiesta utente).

@@ -261,9 +261,9 @@ export default function Maestro() {
             {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
           </button>
         ) : (
-          <button data-testid="maestro-done" onClick={() => { toast.success(tri("Programmazione completata! 🎉 Buon lavoro", "Planung abgeschlossen! 🎉 Gute Arbeit", "Planning completed! 🎉 Enjoy your work")); setTool(null); setStep(0); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+          <button data-testid="maestro-done" onClick={() => { toast.success(tri("Piano e dati salvati ✓ La prossima volta li ritrovi e modifichi soltanto quello che vuoi", "Plan und Daten gespeichert ✓ Beim nächsten Mal einfach anpassen", "Plan and data saved ✓ Next time just edit what you want")); setTool(null); setStep(0); window.scrollTo({ top: 0, behavior: "smooth" }); }}
             className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-semibold active:scale-97 transition-all">
-            <CheckSquare className="w-5 h-5" /> {tri("Completa", "Abschließen", "Complete")}
+            <CheckSquare className="w-5 h-5" /> {tri("Salva piano", "Plan speichern", "Save plan")}
           </button>
         )}
       </div>

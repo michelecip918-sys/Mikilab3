@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor, Building2, Play } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Play } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -308,35 +308,6 @@ export default function Home({ onNavigate }) {
             <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
             <p className="text-[11px] text-white/85 leading-snug">{L("Impara da casa: video, quiz e basi", "Von zu Hause lernen: Videos, Quiz", "Learn from home: videos, quiz")}</p>
           </button>
-        </div>
-      </div>
-
-      {/* ===== STRUMENTI & RISORSE: solo destinazioni NON presenti nella barra in basso ===== */}
-      <div>
-        <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1 px-1">{L("Strumenti & Risorse", "Werkzeuge & Ressourcen", "Tools & Resources")}</h2>
-        <p className="text-xs text-[#7E8A93] mb-3 px-1">{L("Scorciatoie utili (Ricette, Laboratorio, Impara e Community sono nella barra in basso)", "Nützliche Verknüpfungen (Rezepte, Labor, Lernen und Community sind in der unteren Leiste)", "Handy shortcuts (Recipes, Lab, Learn and Community are in the bottom bar)")}</p>
-
-        <div className="grid grid-cols-2 gap-3" data-testid="home-hub-destinations">
-          {[
-            { tab: "diagnosi", label: L("Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis"), Icon: Camera, grad: "from-[#B34A26] to-[#8a3319]",
-              sub: L("Scatta: ti dico causa e soluzione", "Foto: Ursache & Lösung", "Snap: cause and fix") },
-            { tab: "enciclopedia", label: L("Enciclopedia del mio pane", "Lexikon meines Brotes", "Encyclopedia of my bread"), Icon: Library, grad: "from-[#33564E] to-[#1B2127]",
-              sub: L("Ingredienti, prefermenti e termini tecnici", "Zutaten, Vorteige & Fachbegriffe", "Ingredients, preferments & technical terms") },
-            { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
-              sub: L("Novità da Italia e Germania", "Neuigkeiten aus Italien und Deutschland", "News from Italy and Germany") },
-            { tab: "enterprise", label: L("Enterprise · Multi-negozio", "Enterprise · Multi-Filiale", "Enterprise · Multi-store"), Icon: Building2, grad: "from-[#6E8CA0] to-[#3f5b6b]",
-              sub: L("Gestisci più punti vendita", "Mehrere Filialen verwalten", "Manage multiple stores") },
-          ].map(({ tab, label, Icon, grad, sub }) => (
-            <button key={tab} data-testid={`home-hub-${tab}`} onClick={() => go(tab)}
-              className={`flex flex-col gap-1 rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br ${grad} min-h-[108px]`}>
-              <div className="flex items-center gap-2">
-                <Icon className="w-6 h-6 shrink-0" />
-                <span className="font-display text-base font-bold text-left leading-tight flex-1">{label}</span>
-                <ChevronRight className="w-5 h-5 text-white/80 shrink-0" />
-              </div>
-              {sub && <span className="text-[11px] text-white/85 leading-snug text-left">{sub}</span>}
-            </button>
-          ))}
         </div>
       </div>
 

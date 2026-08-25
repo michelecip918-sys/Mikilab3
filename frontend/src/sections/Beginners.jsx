@@ -319,10 +319,29 @@ const DAILY_RECIPES = {
 
 export default function Beginners() {
   const { t, lang } = useLang();
+  const tri3 = (l, i, d, e) => (l === "de" ? d : l === "en" ? e : i);
   const beginners = BEGINNERS[lang] || BEGINNERS.it;
   const courses = content[lang].freeCourses || [];
   const daily = DAILY_RECIPES[lang] || DAILY_RECIPES.it;
   const today = daily[Math.floor(Date.now() / 86400000) % daily.length];
+
+  const PATH = [
+    tri3(lang, "Conosci i 4 ingredienti base (leggi i consigli qui sotto)", "Lerne die 4 Grundzutaten (siehe Tipps unten)", "Learn the 4 basic ingredients (see tips below)"),
+    tri3(lang, "Prova la Ricetta del giorno", "Probiere das Rezept des Tages", "Try the Recipe of the day"),
+    tri3(lang, "Crea un piano con «Pianifica il tuo pane a casa»", "Erstelle einen Plan mit „Plane dein Brot zu Hause“", "Make a plan with 'Plan your bread at home'"),
+    tri3(lang, "Supera il Quiz del Fornaio", "Bestehe das Bäcker-Quiz", "Pass the Baker Quiz"),
+  ];
+  const PKEY = "mikilab_beginner_path";
+  const [pathDone, setPathDone] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(PKEY) || "[]"); } catch { return []; }
+  });
+  const toggleStep = (i) => {
+    const next = [...pathDone];
+    next[i] = !next[i];
+    setPathDone(next);
+    try { localStorage.setItem(PKEY, JSON.stringify(next)); } catch { /* */ }
+  };
+  const doneCount = PATH.filter((_, i) => pathDone[i]).length;
 
   return (
     <div data-testid="beginners-page" className="space-y-4 pb-4">
@@ -332,6 +351,32 @@ export default function Beginners() {
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("beginners_title")}</h2>
         </div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_intro")}</p>
+      </div>
+
+      {/* Percorso guidato principianti */}
+      <div data-testid="beginner-path" className="rounded-2xl p-5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B]">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri3(lang, "Il tuo percorso", "Dein Weg", "Your path")}</h3>
+          <span className="text-xs font-bold text-[#6B8E62]">{doneCount}/{PATH.length}</span>
+        </div>
+        <div className="h-2 rounded-full bg-[#EAF0EC] dark:bg-[#2A323A] overflow-hidden mb-3">
+          <div className="h-full bg-[#6B8E62] transition-all" style={{ width: `${(doneCount / PATH.length) * 100}%` }} />
+        </div>
+        <div className="space-y-2">
+          {PATH.map((label, i) => {
+            const ok = !!pathDone[i];
+            return (
+              <button key={i} data-testid={`beginner-step-${i}`} onClick={() => toggleStep(i)}
+                className="w-full flex items-center gap-3 text-left active:scale-99 transition-all">
+                {ok
+                  ? <CheckCircle2 className="w-6 h-6 text-[#6B8E62] shrink-0" />
+                  : <span className="w-6 h-6 rounded-full border-2 border-[#D7E1DB] dark:border-[#4a5560] flex items-center justify-center text-[11px] font-bold text-[#7E8A93] shrink-0">{i + 1}</span>}
+                <span className={`text-sm ${ok ? "line-through text-[#7E8A93]" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+        {doneCount === PATH.length && <p className="text-sm font-semibold text-[#6B8E62] mt-3">🎉 {tri3(lang, "Percorso completato! Sei pronto per il tuo primo pane.", "Weg abgeschlossen! Bereit für dein erstes Brot.", "Path completed! Ready for your first bread.")}</p>}
       </div>
 
       {/* Ricetta del giorno gratis — cambia ogni giorno */}
@@ -354,67 +399,6 @@ export default function Beginners() {
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.body}</p>
         </div>
       ))}
-
-      {/* Video e corsi gratis */}
-      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
-        <Youtube className="w-4 h-4" />
-        <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_courses_title")}</span>
-      </div>
-      <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_courses_sub")}</p>
-      {courses.map((v, i) => (
-        <div key={i} data-testid={`beg-course-${i}`} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl overflow-hidden">
-          <VideoEmbed src={v.url} title={v.title} testid={`beg-course-video-${i}`} />
-          <div className="p-4">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E]">{v.category}</span>
-              {v.isNew && <span className="text-[9px] font-bold uppercase text-white bg-[#6B8E62] px-1.5 py-0.5 rounded-full">New</span>}
-            </div>
-            <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC] mt-0.5">{v.title}</h3>
-            {v.source && <p className="text-xs text-[#7E8A93] mt-0.5 flex items-center gap-1"><PlayCircle className="w-3 h-3" /> {v.source}</p>}
-          </div>
-        </div>
-      ))}
-
-      {/* I nostri video — il metodo di Michele */}
-      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
-        <Youtube className="w-4 h-4" />
-        <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_ours_title")}</span>
-      </div>
-      <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_ours_sub")}</p>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {OUR_VIDEOS.map((v) => (
-          <div key={v.id} data-testid={`our-video-${v.id}`} className="rounded-2xl overflow-hidden border border-[#D7E1DB] dark:border-[#38424B] bg-white dark:bg-[#232A31]">
-            <VideoEmbed src={`https://www.youtube.com/embed/${v.id}`} title={t(v.key)} testid={`our-video-frame-${v.id}`} />
-            <p className="text-xs font-medium text-[#3F4A54] dark:text-[#AEB8BF] p-2.5">{t(v.key)}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Video dei grandi panettieri (link a YouTube) */}
-      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
-        <Star className="w-4 h-4" />
-        <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_famous_title")}</span>
-      </div>
-      <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_famous_sub")}</p>
-      <div className="rounded-xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-3">
-        <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_subtitles_note")}</p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {FAMOUS.map((b, i) => (
-          <a
-            key={i}
-            data-testid={`famous-baker-${i}`}
-            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(b.q)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 active:scale-98 transition-all hover:border-[#5E8B7E]/50"
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#5E8B7E]/10 border border-[#5E8B7E]/25 flex items-center justify-center shrink-0 text-lg">{b.country}</div>
-            <span className="flex-1 min-w-0 font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{b.name}</span>
-            <ExternalLink className="w-4 h-4 text-[#5E8B7E] shrink-0" />
-          </a>
-        ))}
-      </div>
 
       {/* Quiz del Fornaio */}
       <div className="flex items-center gap-2 text-[#7E8A93] pt-2">

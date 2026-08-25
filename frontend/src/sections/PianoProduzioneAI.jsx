@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
 import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
+import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
@@ -477,6 +478,57 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <textarea data-testid="capo-notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#5E8B7E] resize-none" />
         </div>
+
+        {(() => {
+          const num = (x) => Number(x) || 0;
+          const rows = products.map((p) => {
+            if (!p.recipe_id || !(num(p.qty) > 0)) return null;
+            const r = recipes.find((x) => x.id === p.recipe_id);
+            if (!r) return null;
+            const cc = computeRecipeCostPerPiece(r);
+            const cpp = cc && cc.costPerPiece != null ? cc.costPerPiece : null;
+            const sell = num(r.price);
+            if (cpp == null && sell === 0) return null;
+            const qty = num(p.qty);
+            return { name: p.name || r.name, qty, cpp, sell, cost: cpp != null ? cpp * qty : null, rev: sell > 0 ? sell * qty : null };
+          }).filter(Boolean);
+          if (!rows.length) return null;
+          const totCost = rows.reduce((a, x) => a + (x.cost || 0), 0);
+          const totRev = rows.reduce((a, x) => a + (x.rev || 0), 0);
+          const margin = totRev - totCost;
+          const marginPct = totRev > 0 ? (margin / totRev) * 100 : null;
+          const eur = (n) => `€${(n || 0).toFixed(2)}`;
+          const missing = rows.some((x) => x.cpp == null || x.sell === 0);
+          return (
+            <div data-testid="capo-cost-summary" className="mt-4 rounded-2xl bg-[#33564E]/8 border border-[#33564E]/25 p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Euro className="w-4 h-4 text-[#33564E] dark:text-[#9ec48f]" />
+                <span className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f]">{tri3(lang, "Costi & Margine", "Kosten & Marge", "Costs & Margin")}</span>
+              </div>
+              <div className="space-y-1.5">
+                {rows.map((x, i) => (
+                  <div key={i} data-testid={`capo-cost-row-${i}`} className="flex items-center justify-between text-sm">
+                    <span className="text-[#3F4A54] dark:text-[#AEB8BF] truncate flex-1">{x.name} <span className="text-[#7E8A93]">×{x.qty}</span></span>
+                    <span className="font-mono-data text-[#7E8A93] mr-3">{x.cost != null ? eur(x.cost) : "—"}</span>
+                    <span className="font-mono-data font-semibold text-[#33564E] dark:text-[#9ec48f]">{x.rev != null ? eur(x.rev) : "—"}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 pt-3 border-t border-[#33564E]/20 grid grid-cols-3 gap-2 text-center">
+                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Costo", "Kosten", "Cost")}</p><p className="font-mono-data font-bold text-[#B34A26]">{eur(totCost)}</p></div>
+                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Ricavo", "Umsatz", "Revenue")}</p><p className="font-mono-data font-bold text-[#33564E] dark:text-[#9ec48f]">{eur(totRev)}</p></div>
+                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Margine", "Marge", "Margin")}</p><p className="font-mono-data font-bold text-[#5E8B7E]">{eur(margin)}{marginPct != null ? ` · ${marginPct.toFixed(0)}%` : ""}</p></div>
+              </div>
+              {missing && (
+                <p className="text-[11px] text-[#7E8A93] mt-2 leading-snug">
+                  {tri3(lang, "Suggerimento: imposta prezzo di vendita e n° pezzi nella ricetta (sezione costi) per un margine preciso.",
+                    "Tipp: Setze VK-Preis und Stückzahl im Rezept (Kosten) für eine genaue Marge.",
+                    "Tip: set selling price and pieces in the recipe (costing) for an exact margin.")}
+                </p>
+              )}
+            </div>
+          );
+        })()}
 
         <button data-testid="capo-generate" onClick={generate} disabled={generating || !canGenerate}
           className="mt-3 w-full bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">

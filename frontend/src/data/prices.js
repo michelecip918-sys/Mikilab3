@@ -22,3 +22,23 @@ export function standardCosting() {
     extras: [], overhead: "", pieces: "", markup: "",
   };
 }
+
+// Costo ingredienti di una ricetta (batch e per pezzo) usando il suo costing.
+export function computeRecipeCostPerPiece(recipe) {
+  if (!recipe) return null;
+  const num = (x) => Number(x) || 0;
+  const c = recipe.costing || {};
+  const fp = num(c.flour_kg) || STANDARD_PRICES.flour_kg;
+  const wp = c.water_l != null && c.water_l !== "" ? num(c.water_l) : STANDARD_PRICES.water_l;
+  const sp = num(c.sourdough_kg) || STANDARD_PRICES.sourdough_kg;
+  const salp = num(c.salt_kg) || STANDARD_PRICES.salt_kg;
+  const flour = (num(recipe.flour_grams) / 1000) * fp;
+  const water = (num(recipe.water_grams) / 1000) * wp;
+  const sour = (num(recipe.sourdough_grams) / 1000) * sp;
+  const salt = (num(recipe.salt_grams) / 1000) * salp;
+  const extras = Array.isArray(c.extras) ? c.extras.reduce((a, e) => a + num(e.cost), 0) : 0;
+  const overhead = num(c.overhead);
+  const batch = flour + water + sour + salt + extras + overhead;
+  const pieces = num(c.pieces) > 0 ? num(c.pieces) : 0;
+  return { batch, pieces, costPerPiece: pieces > 0 ? batch / pieces : null };
+}
