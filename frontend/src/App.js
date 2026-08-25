@@ -101,6 +101,10 @@ function App() {
       window.history.replaceState({ tab: "ricette" }, "", u.toString());
       toast.success(tri("Ecco le ricette di MikiLab 🥖", "Hier sind die MikiLab-Rezepte 🥖", "Here are the MikiLab recipes 🥖"));
     }
+    else if (p.get("prodotto")) {
+      // Deep-link da QR etichetta: apri il tab Ricette; RecipeList aprirà la scheda prodotto.
+      setTab("ricette");
+    }
   }, []); // eslint-disable-line
 
   // Notifica "nuovi contenuti": avvisa se sono state aggiunte nuove ricette dall'ultima visita.

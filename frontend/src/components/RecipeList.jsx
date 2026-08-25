@@ -82,6 +82,21 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     // eslint-disable-next-line
   }, [collectionName]);
 
+  // Deep-link da QR etichetta (?prodotto=ID): apre la scheda del prodotto MikiLab.
+  useEffect(() => {
+    if (collectionName !== "mikilab" || !recipes.length) return;
+    const pid = new URLSearchParams(window.location.search).get("prodotto");
+    if (!pid) return;
+    const target = recipes.find((x) => x.id === pid);
+    if (target) {
+      setViewing(target);
+      const u = new URL(window.location.href); u.searchParams.delete("prodotto");
+      window.history.replaceState({}, "", u.toString());
+    }
+    // eslint-disable-next-line
+  }, [recipes, collectionName]);
+
+
   // tiene aggiornata la ricetta aperta dopo un salvataggio/scala
   useEffect(() => {
     if (viewing) {

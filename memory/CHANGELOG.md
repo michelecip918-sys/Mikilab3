@@ -86,3 +86,8 @@
 - Visualizzazione (EULabel.jsx): tabella "Dichiarazione nutrizionale per 100 g" nel dettaglio ricetta, gated da hasLabelData (niente riquadro vuoto). Etichetta stampabile conforme (printEULabel) con allergeni in grassetto e peso netto. Trilingue IT/DE/EN.
 - Vale per tutte le ricette (scelta utente). Michele inserisce i valori reali (nessun valore precompilato/inventato).
 - Testato: testing_agent iteration_70 (editor→salva→visualizza→stampa→traduzioni→gating→cleanup 100%). Nessun dato di test residuo.
+
+## v115 (2026-06) — QR sull'etichetta UE + deep-link prodotto
+- printEULabel (EULabel.jsx) ora async: genera un QR (libreria qrcode) verso {origin}/?prodotto={id} e lo stampa in fondo all'etichetta con caption "Scheda prodotto".
+- Deep-link ?prodotto={id}: App.js apre il tab Ricette; RecipeList (useEffect su recipes) apre automaticamente la scheda del prodotto e pulisce l'URL. Funziona da ANONIMO (cliente che scansiona) e da loggato.
+- Testato: testing_agent iteration_71 (deep-link anonimo+admin, 95 ricette caricate, QR img nel print, cleanup — 100%).

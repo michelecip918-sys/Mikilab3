@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only test del deep-link QR ?prodotto e dell'etichetta UE stampabile (MikiLab). Testati: (1) deep-link ANONIMO su /?prodotto=b3db8e20-... → tab Ricette attivo, 95 ricette caricate (nessun 'Caricamento...' bloccato), dialog 'Anima Integrale' aperto automaticamente, param ?prodotto rimosso dall'URL; (2) deep-link da ADMIN loggato → stesso comportamento OK; (3) compilazione campi etichetta UE (energy_kcal 250, fat 1.2, carbs 49, protein 9, salt 1.1, net_weight 500, allergeni Glutine, ingredienti) + salvataggio → [data-testid=eu-label] compare alla riapertura con kJ calcolati (1046 kJ); (4) click [data-testid=eu-label-print-btn] → popup di stampa aperto senza errori/eccezioni JS, con <img> QR data:image/png/base64 renderizzata e etichetta completa (screenshot verificato: QR visibile con caption 'SCHEDA PRODOTTO'); (5) CLEANUP eseguito: campi etichetta svuotati e salvati, eu-label non più presente. Nessun errore console/pageerror rilevato in tutti i flussi.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "RecipeList.jsx: l'effect del deep-link pulisce ?prodotto solo se la ricetta è presente in lista; se l'ID non esiste (ricetta rimossa) il param resta nell'URL e nessun feedback viene mostrato all'utente — considerare un toast 'prodotto non trovato' e rimozione del param.",
+    "Da anonimo la scheda aperta dal QR mostra la ricetta 'locked' (teaser PRO): l'etichetta UE viene comunque renderizzata, quindi il caso cliente funziona; verificare che sia la UX voluta (teaser di vendita visibile al cliente finale che scansiona l'etichetta).",
+    "RecipeList.jsx > 1100 righe: valutare split (RecipeDetail/PanettoneStructure/glossario in moduli separati)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100%"},
+  "seed_data_creation": "Nessuno: etichetta di 'Anima Integrale' compilata temporaneamente e poi ripulita (stato finale = senza etichetta).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante)",
+  "context_for_next_testing_agent": "Deep-link QR ?prodotto verificato funzionante sia anonimo sia loggato (viewport mobile 390x844). Il 'Caricamento...' persistente segnalato era un frame stale dello screenshot tool: il DOM reale carica 95 ricette in pochi secondi. Print popup si apre correttamente in Playwright con context.expect_page; il QR è un img data-url generato da qrcode.toDataURL.",
+  "rca_of_the_issue": "Nessun difetto riprodotto. Il sospetto 'Caricamento...' da anonimo non è reale: GET /api/recipes?collection_name=mikilab risponde e la lista si popola (95 righe) anche senza sessione."
+}

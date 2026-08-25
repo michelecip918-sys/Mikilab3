@@ -1,4 +1,5 @@
 import { Tag, Printer } from "lucide-react";
+import QRCode from "qrcode";
 import { rLoc } from "@/lib/loc";
 
 const L = (lang, i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
@@ -70,17 +71,26 @@ export default function EULabel({ recipe, lang }) {
   );
 }
 
-// Etichetta stampabile (finestra separata) conforme al layout UE.
-export function printEULabel(recipe, lang) {
+// Etichetta stampabile (finestra separata) conforme al layout UE, con QR alla scheda prodotto.
+export async function printEULabel(recipe, lang) {
   const label = recipe.label || {};
   const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const name = rLoc(recipe, "name", lang) || recipe.name;
   const allergens = (label.allergens || "").split(",").map((s) => s.trim()).filter(Boolean);
   const tableRows = rows(label, lang).map(([k, v, bold]) =>
     `<tr><td class="${bold ? "b" : "sub"}">${esc(k)}</td><td class="v">${esc(v)}</td></tr>`).join("");
+  // Apri subito la finestra (gesture utente) con placeholder, poi genera il QR e scrivi.
   const w = window.open("", "_blank");
   if (!w) return;
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(name)} — ${L(lang, "Etichetta", "Etikett", "Label")}</title>
+  w.document.write(`<!doctype html><meta charset="utf-8"><body style="font-family:Arial,sans-serif;padding:20px;color:#555">${L(lang, "Preparazione etichetta…", "Etikett wird vorbereitet…", "Preparing label…")}</body>`);
+  let qrImg = "";
+  try {
+    const origin = window.location.origin + (process.env.PUBLIC_URL || "");
+    const url = `${origin}/?prodotto=${encodeURIComponent(recipe.id)}`;
+    const data = await QRCode.toDataURL(url, { margin: 1, width: 220 });
+    qrImg = `<div class="qr"><img src="${data}" alt="QR" /><span>${L(lang, "Scheda prodotto", "Produktinfo", "Product info")}</span></div>`;
+  } catch { /* QR opzionale */ }
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(name)} — ${L(lang, "Etichetta", "Etikett", "Label")}</title>
     <style>
       *{box-sizing:border-box}
       body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;padding:8mm}
@@ -95,6 +105,9 @@ export function printEULabel(recipe, lang) {
       .ing{font-size:10px;line-height:1.35;margin:6px 0 0}
       .alg b{font-weight:800}
       .net{font-size:11px;font-weight:700;margin-top:4px}
+      .qr{display:flex;flex-direction:column;align-items:center;margin-top:8px;border-top:1px solid #111;padding-top:6px}
+      .qr img{width:22mm;height:22mm}
+      .qr span{font-size:8px;color:#444;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
       @media print{@page{margin:6mm}}
     </style></head><body>
     <div class="label">
@@ -105,8 +118,11 @@ export function printEULabel(recipe, lang) {
       ${(label.ingredients || "").trim() ? `<p class="ing"><b>${L(lang, "Ingredienti", "Zutaten", "Ingredients")}:</b> ${esc(label.ingredients)}</p>` : ""}
       ${allergens.length ? `<p class="ing alg"><b>${L(lang, "Allergeni", "Allergene", "Allergens")}:</b> ${allergens.map((a) => `<b>${esc(a)}</b>`).join(", ")}</p>` : ""}
       ${label.net_weight_g != null && label.net_weight_g !== "" ? `<p class="net">${L(lang, "Peso netto", "Nettogewicht", "Net weight")}: ${esc(label.net_weight_g)} g</p>` : ""}
+      ${qrImg}
     </div>
-  </body></html>`);
+  </body></html>`;
+  w.document.open();
+  w.document.write(html);
   w.document.close();
   w.focus();
   setTimeout(() => w.print(), 400);
