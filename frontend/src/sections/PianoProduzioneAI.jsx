@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2 } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -344,7 +344,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               { id: "aggiungi", Icon: BookOpen, label: tri3(lang, "Inserisci Ricette", "Rezepte hinzufügen", "Add Recipes") },
               { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Piano Giornaliero", "Tagesplan", "Daily Plan") },
               { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
-              { id: "capo", Icon: Snowflake, label: tri3(lang, "Celle Frigo & Freezer", "Kammern & Gefrier", "Cells & Freezer") },
+              { id: "capo", Icon: Snowflake, label: tri3(lang, "Celle & Impastatrici", "Kammern & Kneter", "Cells & Mixers") },
+              { id: "enterprise", Icon: Building2, label: tri3(lang, "Multi-negozio", "Multi-Filiale", "Multi-store") },
+              { id: "dayclose", Icon: CheckCircle2, label: tri3(lang, "Concludi Giornata", "Tag abschließen", "Close the Day") },
             ].map(({ id, Icon, label }) => (
               <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
                 className="flex items-center gap-2 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
@@ -365,7 +367,23 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               { id: "turni", Icon: Users, label: tri3(lang, "Turni & Ruoli", "Schichten", "Shifts") },
               { id: "freezer", Icon: Snowflake, label: tri3(lang, "Giacenze Freezer", "Freezer-Bestand", "Freezer Stock") },
               { id: "twin", Icon: FlaskConical, label: tri3(lang, "Digital Twin", "Teig-Zwilling", "Dough Twin") },
-              { id: "enterprise", Icon: Building2, label: tri3(lang, "Multi-negozio", "Multi-Filiale", "Multi-store") },
+              { id: "adatta", Icon: Flame, label: tri3(lang, "Adatta Forno", "Ofen anpassen", "Adapt Oven") },
+              { id: "bilancia", Icon: Scale, label: tri3(lang, "Bilancia Smart", "Smarte Waage", "Smart Scale") },
+              { id: "termo", Icon: Thermometer, label: tri3(lang, "Termostato & Clima", "Thermostat & Klima", "Thermostat & Climate") },
+              { id: "acqua", Icon: Droplets, label: tri3(lang, "Temp. Acqua", "Wasser-Temp.", "Water Temp.") },
+              { id: "pesata", Icon: Scale, label: tri3(lang, "Pesata Guidata", "Geführtes Wiegen", "Guided Weighing") },
+              { id: "timer", Icon: TimerIcon, label: tri3(lang, "Timer", "Timer", "Timer") },
+              { id: "meteo", Icon: CloudSun, label: tri3(lang, "Meteo", "Wetter", "Weather") },
+              { id: "ph", Icon: FlaskConical, label: tri3(lang, "pH Lievito", "pH Sauerteig", "Sourdough pH") },
+              { id: "diagnosi", Icon: Camera, label: tri3(lang, "Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis") },
+              { id: "suono", Icon: Camera, label: tri3(lang, "Diagnosi Suono", "Klang-Diagnose", "Sound Diagnosis") },
+              { id: "sessioni", Icon: Thermometer, label: tri3(lang, "Diario Impasti", "Teig-Tagebuch", "Dough Log") },
+              { id: "lotti", Icon: QrCode, label: tri3(lang, "Tracciabilità Lotti", "Chargen", "Batch Traceability") },
+              { id: "haccp", Icon: ScanLine, label: tri3(lang, "Registro HACCP", "HACCP-Register", "HACCP Log") },
+              { id: "check", Icon: ListChecks, label: tri3(lang, "Checklist", "Checklisten", "Checklists") },
+              { id: "shelf", Icon: CalendarClock, label: tri3(lang, "Shelf-Life", "Shelf-Life", "Shelf-Life") },
+              { id: "spreco", Icon: Recycle, label: tri3(lang, "Anti-Spreco", "Anti-Verschwendung", "Anti-Waste") },
+              { id: "market", Icon: Store, label: tri3(lang, "Marketplace Usato", "Gebraucht-Markt", "Used Market") },
             ].map(({ id, Icon, label }) => (
               <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
                 className="flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px]">
@@ -401,12 +419,15 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       )}
 
       <Section icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "Moduli del piano (opzionali)", "Plan-Module (optional)", "Plan modules (optional)")}>
-        <p className="text-[11px] text-[#7E8A93] leading-snug mb-3">
-          {tri3(lang,
-            "Accendi solo ciò che ti serve. Il piano base (ricette + quantità) si genera comunque.",
-            "Schalte nur ein, was du brauchst. Der Basisplan (Rezepte + Mengen) wird trotzdem erstellt.",
-            "Turn on only what you need. The base plan (recipes + quantities) is generated anyway.")}
-        </p>
+        <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#C88A2B]/15 border border-[#C88A2B]/45 px-3 py-2.5">
+          <SlidersHorizontal className="w-4 h-4 text-[#A66A15] shrink-0" />
+          <p className="text-[12px] font-bold text-[#7a4e12] dark:text-[#E4C98B] leading-snug">
+            {tri3(lang,
+              "👆 Tocca per accendere solo ciò che ti serve. Il piano base (ricette + quantità) si genera comunque.",
+              "👆 Tippe, um nur das zu aktivieren, was du brauchst. Der Basisplan (Rezepte + Mengen) wird trotzdem erstellt.",
+              "👆 Tap to turn on only what you need. The base plan (recipes + quantities) is generated anyway.")}
+          </p>
+        </div>
         <div data-testid="capo-modules" className="grid grid-cols-3 gap-2">
           {MODULES.map(({ id, Icon, it, de, en }) => {
             const on = !!modules[id];

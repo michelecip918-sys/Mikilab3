@@ -107,7 +107,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B]">
+      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B]">
         <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
           <Crown className="w-5 h-5 text-[#6E8CA0]" /> {de ? "Admin · VIP-Zugänge" : "Admin · Accessi VIP"}
         </DialogTitle>
@@ -152,7 +152,7 @@ export default function AdminPanel({ open, onOpenChange }) {
         </div>
 
         {/* Impostazioni sito editabili — WhatsApp, Fumetti, Copertine */}
-        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4 mt-2 space-y-4">
+        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
           <p className="text-sm font-bold text-[#33564E] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
 
           {/* WhatsApp */}
@@ -206,12 +206,12 @@ export default function AdminPanel({ open, onOpenChange }) {
                 if (imgs.length === 0) return null;
                 const sel = settings.folder_covers?.[cat.key];
                 return (
-                  <div key={cat.key} data-testid={`admin-cover-${cat.key}`}>
+                  <div key={cat.key} data-testid={`admin-cover-${cat.key}`} className="min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <p className="text-[11px] font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{cat.icon} {t(cat.label)}</p>
                       {sel && <button data-testid={`admin-cover-clear-${cat.key}`} onClick={() => setCover(cat.key, "")} className="text-[10px] text-[#C0574D] font-semibold">{de ? "Zurücksetzen" : "Ripristina"}</button>}
                     </div>
-                    <div className="flex gap-2 overflow-x-auto pb-1">
+                    <div className="flex gap-2 overflow-x-auto pb-1 min-w-0 max-w-full">
                       {imgs.map((r) => {
                         const active = sel === r.image_url;
                         return (

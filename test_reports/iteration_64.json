@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only test (mobile 430x900, Chromium) del nuovo Lab unificato di MikiLab su https://edit-33.preview.emergentagent.com con account admin@mikilab.de. Verificati: login, Home avatar solo-foto, assenza FAB voce, tab 'Il Tuo Laboratorio' senza stepper con Piano IA inline + fumetti avatar, 30/30 quicklink presenti senza doppioni, apertura di TUTTI i 30 strumenti con back pill funzionante, callout moduli evidenziato + 9/9 toggle funzionanti, selettori ricette panettiere in Shelf-Life/Anti-Spreco/Food Cost, pannello admin (site settings, WhatsApp, 16 campi fumetti, picker copertine). Tutti i requisiti richiesti risultano SODDISFATTI; trovati solo 2 problemi minori di UI/console.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AdminPanel (DialogContent)", "issue": "Il dialog admin ha overflow orizzontale su mobile: width=430 ma scrollWidth=2306. Input 'admin-grant-email', select giorni, pulsante 'Regala PRO', 'admin-wa-number' e i campi fumetti risultano tagliati sul lato destro (non si vede la parte finale né i pulsanti). Causa probabile: le righe di thumbnail copertine (flex gap-2 overflow-x-auto con figli shrink-0) dentro un contenitore grid senza min-w-0 espandono il dialog.", "selector": "[data-testid=\"admin-panel\"] / [data-testid=\"admin-site-settings\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Il Tuo Laboratorio - pannello Moduli", "issues": ["Il FAB WhatsApp (in basso a destra) si sovrappone visivamente alla chip modulo 'Anti-Spreco' (capo-module-antispreco) sullo scroll: il click funziona solo dopo scroll_into_view. Considerare padding-bottom aggiuntivo o riposizionamento del FAB."]},
+      {"screen": "Console (dev warning)", "issues": ["React hydration warning ricorrente: 'In HTML, <span> cannot be a child of <option>' (emesso dopo il login, stack che risale a un motion.div). Nessun impatto funzionale osservato, ma va ripulito: probabile <span>/icona dentro un <option> di un <select> nativo."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix overflow orizzontale del dialog Admin su mobile (aggiungere overflow-x-hidden al DialogContent e min-w-0 ai wrapper delle righe copertine).",
+    "Risolvere il warning React '<span> cannot be a child of <option>' (individuare il <select> con markup non valido).",
+    "Valutare padding-bottom / offset del FAB WhatsApp per non coprire l'ultima riga di chip moduli."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx è ~790 righe con i 30 quicklink hardcoded inline: estrarre le liste (TOOLS_MAIN / TOOLS_OPTIONAL) in un modulo dati condiviso, così Maestro.jsx (mappa tool->componente) e i quicklink restano in sync ed evitano doppioni futuri.",
+    "Maestro.jsx renderizza 30+ sezioni con catena di ternari: valutare una mappa id->componente + lazy import per ridurre il bundle iniziale del tab Lab.",
+    "Il pulsante TTS 'Ascolta' (listen-recipe-*) resta in RecipeList.jsx: verificare se è voluto, dato il requisito 'avatar solo scritti senza voce' (nel Lab e nell'assistente non compare, ok)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "97%"},
+  "seed_data_creation": "Nessun dato creato; toggle moduli modificati (persistiti in localStorage/preferenze dell'account admin).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante)",
+  "context_for_next_testing_agent": "Verificato in dettaglio: maestro-stepper assente (0), capo-quicklinks presente inline, avatar-bubbles con bubble-michele/bubble-momy presenti, 30/30 quicklink (aggiungi, lavoro, settimana, capo, enterprise, dayclose + 24 opzionali) presenti UNA sola volta, nessun quicklink 'pianoai' duplicato. Tutti i 30 tool aperti: maestro-back-btn sempre presente e il ritorno riporta al Piano IA. sl-recipe/aw-recipe/fc-recipe renderizzati. Home: home-avatar-full=1, home-avatar-play=0, home-avatar-video=0, whatsapp-fab=1, 'Parla'=0, 'Ascolta' nel Lab=0. Admin: admin-site-settings, admin-wa-number, 16/16 admin-bubble-*, 100 elementi admin-cover-* presenti. Non testati: generazione effettiva del piano IA (chiamata LLM) e flussi di salvataggio dei tool.",
+  "rca_of_the_issue": "Overflow admin dialog: il DialogContent (grid, max-w-md) non ha overflow-x-hidden e le righe thumbnail copertine (flex con figli w-16 shrink-0, molti item) non hanno un wrapper con min-w-0, quindi la traccia scrollabile espande la colonna della grid a ~2306px, tagliando tutti i controlli del pannello su viewport 430px."
+}

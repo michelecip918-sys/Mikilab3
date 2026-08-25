@@ -1205,3 +1205,14 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Home avatar SOLO foto**: rimossi video parlante, audio, poster e pulsante Play (home-avatar-play/video eliminati). Resta la foto (home-avatar-full) con fumetti scritti che ruotano. Coerente con "avatar solo scritti".
 - **lib/recipeCats.js**: modulo condiviso (CATS + recipeCategory) usato da RecipeList, AdminPanel, ShelfLife.
 - Compila pulito. Verificato a schermo (Home solo foto, fumetti Lab, titolo unico, descrizioni Passo 2, Shelf-Life picker, back pill). REDEPLOY per mikilab.de.
+
+## v106 (2026-06) — Laboratorio: UNA sola sezione (Piano IA hub con tutti gli strumenti)
+- Rimosso lo stepper a 2 passi in Maestro (eliminati step/STEPS/TOOLS/toolById/TOOL_DESC + pannello + nav prev/next). Ora "Il Tuo Laboratorio" mostra INLINE `<PianoProduzioneAI onOpenTool={setTool} />` sotto hero + AvatarBubbles(lab). Sottotitolo → "Tutto in un unico posto".
+- Quicklink del Piano IA ora contengono TUTTI gli strumenti, senza doppioni: gruppo "Tutto in un posto" (aggiungi, lavoro, settimana, capo=Celle&Impastatrici, enterprise=Multi-negozio, dayclose=Concludi Giornata) + "Altri strumenti (opzionali)" (inversa, spesa, foodcost, salespoints, turni, freezer, twin, adatta, bilancia, termo, acqua, pesata, timer, meteo, ph, diagnosi, suono, sessioni, lotti, haccp, check, shelf, spreco, market). Ogni tool apre via onOpenTool → render full-screen con back pill.
+- Evidenziata la scritta moduli: nuovo callout `capo-modules-hint` "👆 Tocca per accendere solo ciò che ti serve…" (bg ambra) per far capire che i moduli si cliccano.
+- Verificato a schermo: stepper assente, quicklinks completi (enterprise+spreco presenti), hint evidenziato, toggle moduli sotto. Compila pulito. REDEPLOY per mikilab.de.
+
+## v106b — Test frontend Lab (iteration_64) + fix
+- testing_agent (iteration_64): TUTTI i requisiti soddisfatti — 30/30 quicklink senza doppioni, 9/9 toggle, apertura di tutti gli strumenti con back pill, selettori ricette (sl/aw/fc-recipe), Home solo foto, niente FAB voce, pannello admin completo.
+- Fix applicato (MEDIUM): overflow orizzontale del dialog Admin su mobile causato dalle righe thumbnail copertine → aggiunto overflow-x-hidden al DialogContent + min-w-0/max-w-full ai wrapper. Verificato: admin-panel clientWidth==scrollWidth (446), nessun taglio.
+- Restano 2 minori NON critici (non da queste modifiche): FAB WhatsApp può sfiorare l'ultima riga chip moduli su scroll (click ok); warning console pre-esistente "<span> cannot be child of <option>" (nessun impatto funzionale).
