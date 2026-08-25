@@ -1232,3 +1232,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - "Compila per generare": nuovo blocco `capo-source-choice` (visibile se c'è un Piano Settimanale) con 2 scelte: `capo-source-weekly` ("Piano Settimanale · Usa quello inserito, modificabile" → setUseWeekly(true), nasconde il picker manuale `capo-products`) e `capo-source-manual` ("Scegli ricette ora"). Nota `capo-weekly-note` rimanda a Produzione Settimanale per modifiche. Rimosso il vecchio checkbox `capo-use-weekly` (ridondante). Impasto di partenza sempre selezionabile ("Parti da qui" / preferment).
 - Tasto indietro Lab (Maestro): openTool(id) salva window.scrollY e scrolla a 0; back()=setTool(null); useEffect ripristina lo scroll salvato al ritorno (torna ESATTAMENTE dove eri, un solo passo). useBackClose usa back. Verificato: 1910→0→1910.
 - Controllo generale odierno: OK (una sezione, INIZIA/SCEGLI ANCHE, Mohammed sotto avatar, FAB auto-hide, selettori ricette nei calcolatori, Home solo foto). Compila pulito. REDEPLOY per mikilab.de.
+
+## v109b — Scelta sorgente SEMPRE visibile
+- capo-source-choice ora reso incondizionato (era guardato da weeklyItems.length>0). Sempre mostrato in "Compila per generare".
+- Se useWeekly && nessun piano settimanale: hint capo-weekly-empty + bottone capo-weekly-create → onOpenTool("settimana"). Verificato a schermo (source-choice sempre presente). REDEPLOY per mikilab.de.

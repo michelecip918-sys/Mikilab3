@@ -450,8 +450,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       </Section>
 
       <Section icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
-        {weeklyItems.length > 0 && (
-          <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
+        <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
             <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
               className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#9ec48f] border-[#D7E1DB] dark:border-[#38424B]"}`}>
               <CalendarDays className="w-5 h-5 mb-1" />
@@ -464,6 +463,21 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Scegli ricette ora", "Rezepte jetzt wählen", "Pick recipes now")}</p>
               <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "Inserisci prodotti a mano", "Produkte manuell", "Add products manually")}</p>
             </button>
+        </div>
+        {useWeekly && weeklyItems.length === 0 && (
+          <div data-testid="capo-weekly-empty" className="mb-3 rounded-xl bg-[#C88A2B]/12 border border-[#C88A2B]/40 px-3 py-2.5">
+            <p className="text-[12px] text-[#7a4e12] dark:text-[#E4C98B] leading-snug mb-2">
+              {tri3(lang,
+                "Non hai ancora un Piano Settimanale. Creane uno per generare da lì (potrai modificarlo quando vuoi).",
+                "Du hast noch keinen Wochenplan. Erstelle einen, um daraus zu generieren (jederzeit änderbar).",
+                "You don't have a Weekly Plan yet. Create one to generate from it (editable anytime).")}
+            </p>
+            {onOpenTool && (
+              <button data-testid="capo-weekly-create" onClick={() => onOpenTool("settimana")}
+                className="w-full flex items-center justify-center gap-2 bg-[#C88A2B] text-white font-bold py-2 rounded-xl active:scale-98 transition-all text-sm">
+                <CalendarDays className="w-4 h-4" /> {tri3(lang, "Apri Produzione Settimanale", "Wochenproduktion öffnen", "Open Weekly Production")}
+              </button>
+            )}
           </div>
         )}
         {useWeekly && weeklyItems.length > 0 && (
