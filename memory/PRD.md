@@ -1216,3 +1216,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - testing_agent (iteration_64): TUTTI i requisiti soddisfatti — 30/30 quicklink senza doppioni, 9/9 toggle, apertura di tutti gli strumenti con back pill, selettori ricette (sl/aw/fc-recipe), Home solo foto, niente FAB voce, pannello admin completo.
 - Fix applicato (MEDIUM): overflow orizzontale del dialog Admin su mobile causato dalle righe thumbnail copertine → aggiunto overflow-x-hidden al DialogContent + min-w-0/max-w-full ai wrapper. Verificato: admin-panel clientWidth==scrollWidth (446), nessun taglio.
 - Restano 2 minori NON critici (non da queste modifiche): FAB WhatsApp può sfiorare l'ultima riga chip moduli su scroll (click ok); warning console pre-esistente "<span> cannot be child of <option>" (nessun impatto funzionale).
+
+## v107 (2026-06) — Piano IA: INIZIA / SCEGLI ANCHE + Mohammed sotto gli avatar
+- "Tutto in un posto" → titolo "INIZIA" (passi base, mostrati come obbligatori): aggiungi, lavoro, settimana, enterprise, dayclose. RIMOSSO "Celle & Impastatrici" da INIZIA (ora scelta manuale in SCEGLI ANCHE).
+- "Moduli del piano (opzionali)" + "Altri strumenti (opzionali)" UNIFICATI in un unico blocco con UN SOLO titolo "SCEGLI ANCHE": in alto le 9 chip toggle (celle, orari, freezer, turni, clima, spesa, foodcost, punti, antispreco) + hint "👆 Tocca…", poi (divisore) la griglia con TUTTI gli strumenti incl. Celle & Impastatrici (capo). Tutte le voci cliccabili manualmente. Rimosso il sotto-titolo "Strumenti".
+- Maestro: "Chiedi a Mohammadreza" (MohammedAssistant) spostato SOTTO i due avatar (AvatarBubbles lab) e PRIMA del menu (PianoProduzioneAI). Ordine: hero → titolo → 2 avatar → Chiedi Mohammed → menu.
+- Verificato a schermo: capo assente da INIZIA (count 0), presente in SCEGLI ANCHE (count 1), Mohammed sotto gli avatar. Compila pulito.
+- Pendente (Next Action Item approvato): rifiniture minori (FAB WhatsApp overlap, warning console "<span> in <option>"). REDEPLOY per mikilab.de.

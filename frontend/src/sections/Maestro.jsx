@@ -118,13 +118,13 @@ export default function Maestro() {
 
       <AvatarBubbles variant="lab" />
 
-      {/* UNICA sezione: il Piano di Produzione IA con TUTTI gli strumenti al suo interno */}
-      <PianoProduzioneAI onOpenTool={setTool} />
-
-      {/* Assistente Mohammadreza + guida passo-passo (in fondo alla pagina) */}
-      <div className="mt-6">
+      {/* Chiedi a Mohammed: subito sotto i due avatar, prima del menu */}
+      <div className="mb-5">
         <MohammedAssistant />
       </div>
+
+      {/* UNICA sezione: il Piano di Produzione IA con TUTTI gli strumenti al suo interno */}
+      <PianoProduzioneAI onOpenTool={setTool} />
     </div>
   );
 }
