@@ -450,7 +450,34 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       </Section>
 
       <Section icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
-        <div className="space-y-2" data-testid="capo-products">
+        {weeklyItems.length > 0 && (
+          <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
+            <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
+              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#9ec48f] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+              <CalendarDays className="w-5 h-5 mb-1" />
+              <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Piano Settimanale", "Wochenplan", "Weekly Plan")}</p>
+              <p className={`text-[10.5px] leading-snug ${useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "Usa quello inserito (modificabile)", "Bereits erfasst (änderbar)", "Use what you entered (editable)")}</p>
+            </button>
+            <button data-testid="capo-source-manual" onClick={() => setUseWeekly(false)}
+              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${!useWeekly ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#9ec48f] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+              <ChefHat className="w-5 h-5 mb-1" />
+              <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Scegli ricette ora", "Rezepte jetzt wählen", "Pick recipes now")}</p>
+              <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "Inserisci prodotti a mano", "Produkte manuell", "Add products manually")}</p>
+            </button>
+          </div>
+        )}
+        {useWeekly && weeklyItems.length > 0 && (
+          <div data-testid="capo-weekly-note" className="mb-3 rounded-xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/35 px-3 py-2.5 flex items-start gap-2">
+            <CalendarDays className="w-4 h-4 text-[#33564E] dark:text-[#8FB0C2] shrink-0 mt-0.5" />
+            <p className="text-[12px] text-[#33564E] dark:text-[#8FB0C2] leading-snug">
+              {tri3(lang,
+                `Genero dal Piano Settimanale (${weeklyItems.length} voci). Per cambiare quantità o giorni apri «Produzione Settimanale». Puoi scegliere l'impasto di partenza qui sotto.`,
+                `Ich generiere aus dem Wochenplan (${weeklyItems.length} Einträge). Zum Ändern öffne „Wochenproduktion". Den Start-Teig kannst du unten wählen.`,
+                `Generating from the Weekly Plan (${weeklyItems.length} items). To change quantities/days open 'Weekly Production'. You can pick the starting dough below.`)}
+            </p>
+          </div>
+        )}
+        <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">
           {products.map((p, i) => (
             <div key={i} className="bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5 space-y-2">
               <div className="flex items-center gap-2">
@@ -580,13 +607,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               </div>
             </div>
           </div>
-        )}
-
-        {weeklyItems.length > 0 && (
-          <label data-testid="capo-use-weekly" className="mt-3 flex items-center gap-2 text-sm text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">
-            <input type="checkbox" checked={useWeekly} onChange={(e) => setUseWeekly(e.target.checked)} className="w-4 h-4 accent-[#5E8B7E]" />
-            {lang === "de" ? "Auch den gespeicherten Wochenplan verwenden" : lang === "en" ? "Also use the saved weekly plan" : "Usa anche il Piano Settimanale salvato"}
-          </label>
         )}
 
         <div className="grid grid-cols-2 gap-3 mt-4">

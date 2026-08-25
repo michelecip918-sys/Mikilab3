@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
@@ -49,15 +49,22 @@ import { toast } from "sonner";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
+  const scrollRef = useRef(0);
+  const openTool = (id) => { scrollRef.current = window.scrollY; setTool(id); window.scrollTo(0, 0); };
+  const back = () => setTool(null);
+  useEffect(() => {
+    if (!tool) requestAnimationFrame(() => window.scrollTo(0, scrollRef.current || 0));
+    else window.scrollTo(0, 0);
+  }, [tool]);
   const { t, lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
-  useBackClose(!!tool, () => setTool(null));
+  useBackClose(!!tool, back);
 
   if (tool) {
     return (
       <div>
         <HighFive />
-        <button data-testid="maestro-back-btn" onClick={() => setTool(null)}
+        <button data-testid="maestro-back-btn" onClick={back}
           className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-[#33564E] dark:text-[#9ec48f] font-semibold text-sm shadow-sm active:scale-95 transition-all">
           <ChevronLeft className="w-4.5 h-4.5" /> {tri("Torna agli strumenti", "Zurück zu den Werkzeugen", "Back to tools")}
         </button>
@@ -68,7 +75,7 @@ export default function Maestro() {
             extraHeader={<ScanRecipe embedded />} />
         )}
         {tool === "capo" && <CapoLaboratorio />}
-        {tool === "pianoai" && <PianoProduzioneAI onOpenTool={setTool} />}
+        {tool === "pianoai" && <PianoProduzioneAI onOpenTool={openTool} />}
         {tool === "bilancia" && <SmartScale />}
         {tool === "pesata" && <GuidedWeighing />}
         {tool === "sessioni" && <DoughLog />}
@@ -124,7 +131,7 @@ export default function Maestro() {
       </div>
 
       {/* UNICA sezione: il Piano di Produzione IA con TUTTI gli strumenti al suo interno */}
-      <PianoProduzioneAI onOpenTool={setTool} />
+      <PianoProduzioneAI onOpenTool={openTool} />
     </div>
   );
 }

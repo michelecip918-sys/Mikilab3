@@ -1227,3 +1227,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v108 (2026-06) — Rifiniture minori
 - FAB WhatsApp (WhatsAppFab.jsx): auto-hide durante lo scroll (opacity/translate + timeout 700ms), come il FAB Radio → risolta la sovrapposizione con le chip moduli/SCEGLI ANCHE.
 - Warning console "<span> cannot be child of <option>": investigato tutto il sorgente, NESSUN <option> contiene <span> (SupplierOrder/RecipeDialog/AdminPanel/PianoProduzioneAI usano solo testo+emoji). Non proviene dal nostro codice (probabile artefatto estensione/portal), innocuo → nessuna modifica.
+
+## v109 (2026-06) — Scelta sorgente piano + back con ripristino scroll
+- "Compila per generare": nuovo blocco `capo-source-choice` (visibile se c'è un Piano Settimanale) con 2 scelte: `capo-source-weekly` ("Piano Settimanale · Usa quello inserito, modificabile" → setUseWeekly(true), nasconde il picker manuale `capo-products`) e `capo-source-manual` ("Scegli ricette ora"). Nota `capo-weekly-note` rimanda a Produzione Settimanale per modifiche. Rimosso il vecchio checkbox `capo-use-weekly` (ridondante). Impasto di partenza sempre selezionabile ("Parti da qui" / preferment).
+- Tasto indietro Lab (Maestro): openTool(id) salva window.scrollY e scrolla a 0; back()=setTool(null); useEffect ripristina lo scroll salvato al ritorno (torna ESATTAMENTE dove eri, un solo passo). useBackClose usa back. Verificato: 1910→0→1910.
+- Controllo generale odierno: OK (una sezione, INIZIA/SCEGLI ANCHE, Mohammed sotto avatar, FAB auto-hide, selettori ricette nei calcolatori, Home solo foto). Compila pulito. REDEPLOY per mikilab.de.
