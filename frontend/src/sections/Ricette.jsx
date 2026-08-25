@@ -57,20 +57,22 @@ export default function Ricette() {
 function UtilBtn({ testid, Icon, label, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick}
-      className="flex items-center gap-2.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm active:scale-97 hover:border-[#6E8CA0]/60 transition-all">
+      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#6E8CA0]/60 transition-all min-w-0">
       <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center shrink-0">
         <Icon className="w-5 h-5 text-[#5E8B7E]" />
       </div>
-      <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] text-left leading-tight">{label}</span>
+      <span className="w-full font-display text-xs sm:text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] text-center leading-tight break-words hyphens-auto">{label}</span>
     </button>
   );
 }
 
 function Sub({ onBack, children }) {
+  const { lang } = useLang();
+  const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : "Ricette";
   return (
     <div className="pb-4">
       <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
-        <ChevronLeft className="w-5 h-5" /> Ricette
+        <ChevronLeft className="w-5 h-5" /> {backLabel}
       </button>
       {children}
     </div>

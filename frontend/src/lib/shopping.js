@@ -1,4 +1,4 @@
-import { rLoc } from "@/lib/loc";
+import { rLoc, ingLoc } from "@/lib/loc";
 
 const GRAM_FIELDS = ["flour_grams", "water_grams", "sourdough_grams", "salt_grams"];
 
@@ -33,7 +33,8 @@ export function computeShopping(items, recipeById, lang) {
     (r.extra_ingredients || []).forEach((e) => {
       if (e && e.name && e.percent != null && e.percent !== "") {
         const g = Number(r.flour_grams || 0) * factor * (Number(e.percent) / 100);
-        if (g > 0) extras[e.name] = (extras[e.name] || 0) + g;
+        const label = ingLoc(e.name, lang);
+        if (g > 0) extras[label] = (extras[label] || 0) + g;
       }
     });
   });

@@ -5,12 +5,12 @@ import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
 
 const PHASES = [
-  { id: "rinfresco", it: "Rinfresco lievito / Pre-impasti (Poolish, Sauerteig, Biga)", de: "Sauerteig auffrischen / Vorteige (Poolish, Sauerteig, Biga)", def: 720 },
-  { id: "impasto", it: "Inizio primo impasto", de: "Erster Teig – Start", def: 20 },
-  { id: "puntata", it: "Puntatura / Lievitazione in massa", de: "Stockgare / Teigruhe", def: 90 },
-  { id: "formatura", it: "Formatura e spianatura", de: "Formen und Wirken", def: 20 },
-  { id: "appretto", it: "Appretto (lievitazione finale)", de: "Stückgare (Endgare)", def: 120 },
-  { id: "cottura", it: "Infornatura / Cottura", de: "Einschießen / Backen", def: 30 },
+  { id: "rinfresco", it: "Rinfresco lievito / Pre-impasti (Poolish, Sauerteig, Biga)", de: "Sauerteig auffrischen / Vorteige (Poolish, Sauerteig, Biga)", en: "Starter refresh / Preferments (Poolish, Sauerteig, Biga)", def: 720 },
+  { id: "impasto", it: "Inizio primo impasto", de: "Erster Teig – Start", en: "Start of first dough", def: 20 },
+  { id: "puntata", it: "Puntatura / Lievitazione in massa", de: "Stockgare / Teigruhe", en: "Bulk fermentation", def: 90 },
+  { id: "formatura", it: "Formatura e spianatura", de: "Formen und Wirken", en: "Shaping", def: 20 },
+  { id: "appretto", it: "Appretto (lievitazione finale)", de: "Stückgare (Endgare)", en: "Final proof", def: 120 },
+  { id: "cottura", it: "Infornatura / Cottura", de: "Einschießen / Backen", en: "Loading / Baking", def: 30 },
 ];
 
 const KEY = "mikilab_bs_durations";
@@ -58,7 +58,7 @@ export default function BackwardScheduler() {
       const delay = s.start.getTime() - Date.now();
       if (delay > 0 && delay < 24 * 3600 * 1000) {
         count++;
-        const label = lang === "de" ? s.de : s.it;
+        const label = lang === "de" ? s.de : lang === "en" ? s.en : s.it;
         timers.current.push(setTimeout(() => {
           speak(label, lang);
           toast(label, { icon: "⏰", duration: 9000 });
@@ -66,7 +66,7 @@ export default function BackwardScheduler() {
         }, delay));
       }
     });
-    toast.success(lang === "de" ? `${count} Wecker gesetzt` : `${count} sveglie impostate`);
+    toast.success(lang === "de" ? `${count} Wecker gesetzt` : lang === "en" ? `${count} alarms set` : `${count} sveglie impostate`);
   };
 
   return (
@@ -89,7 +89,7 @@ export default function BackwardScheduler() {
       <div className="space-y-2 mb-4">
         {PHASES.map((p) => (
           <div key={p.id} className="flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5">
-            <span className="flex-1 min-w-0 text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? p.de : p.it}</span>
+            <span className="flex-1 min-w-0 text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? p.de : lang === "en" ? p.en : p.it}</span>
             <input data-testid={`bs-dur-${p.id}`} type="number" min="0" value={dur[p.id]}
               onChange={(e) => setDur((d) => ({ ...d, [p.id]: e.target.value === "" ? "" : Number(e.target.value) }))}
               className="w-20 text-right font-mono-data font-bold text-[#33564E] dark:text-[#8FB0C2] bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-1.5 outline-none" />
@@ -106,7 +106,7 @@ export default function BackwardScheduler() {
           {schedule.map((s, i) => (
             <li key={s.id} data-testid={`bs-row-${s.id}`} className="flex items-center gap-3 px-4 py-3 border-t border-[#D7E1DB] dark:border-[#38424B] bg-white dark:bg-[#232A31]">
               <span className="font-mono-data text-lg font-extrabold text-[#5E8B7E] w-16 shrink-0">{fmt(s.start, lang)}</span>
-              <span className="text-sm text-[#2B303B] dark:text-[#EAF0EC]">{lang === "de" ? s.de : s.it}</span>
+              <span className="text-sm text-[#2B303B] dark:text-[#EAF0EC]">{lang === "de" ? s.de : lang === "en" ? s.en : s.it}</span>
             </li>
           ))}
         </ol>

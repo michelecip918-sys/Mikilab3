@@ -1,0 +1,44 @@
+{
+  "summary": "Collaudo frontend trilingue (IT/DE/EN) di MikiLab su preview pubblica. Verificati: selettore lingua header, navigazione 5 tab bottom-nav, Home (accordion concetti, blocco MikiLab Shop & Corsi, link legale), Ricette (dialog ricetta, glossario asterisco, cartelle), Il Tuo Laboratorio (menu Piano IA, quicklink INIZIA, chip moduli, 4 strumenti + maestro-back-btn), Enciclopedia (30 voci incl. metodi Poolish/LM/Roggen/Backmittel), Community (login gating, post, like, commento, filtri) e responsività a 390x844 / 768x1024 / 1440x900. Eseguita anche analisi statica (script) su tutte le chiamate tri() e su tutti i dizionari it/de/en. Funzionalmente tutto passa; trovati 6 punti con testo italiano residuo in EN (il più grave: pagina Note legali & Privacy interamente in italiano) e alcune imperfezioni di layout mobile.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "sections/LegalPage.jsx", "issue": "Il dizionario T ha solo it e de: con lingua EN la pagina 'Note legali & Privacy' (aperta da home-legal-link) è INTERAMENTE in italiano (titolo, intro e tutte le sezioni). Serve il ramo en.", "selector": "[data-testid=\"legal-page\"]", "priority": "HIGH"},
+      {"component": "components/RecipeList.jsx (const PAN_MY, riga ~1009)", "issue": "Manca il ramo en: nelle schede panettone (blocco 'SOURDOUGH MANAGEMENT (PH)') in EN si leggono 'Bagnetto / 15 min in acqua a 28°C — pH 3,9', '1° Rinfresco', '2° Rinfresco 28°C per 3,5–4 h', 'Legato in sacco 16°C per 16–18 h'.", "selector": "[data-testid^=\"panettone-structure-\"]", "priority": "HIGH"},
+      {"component": "components/RecipeList.jsx (const PAN_GLAZE, riga ~1023)", "issue": "Array con sole coppie [it, de]: nel 'GLAZE MODULE (AUTOMATIC)' in EN restano Zucchero, Mandorle grezze, Albumi, Nocciole, Armelline, Farina MP, Farina Fioretto, Fecola.", "selector": "[data-testid^=\"glaze-total-\"]", "priority": "HIGH"},
+      {"component": "Dati ricette (backend/seed)", "issue": "Alcuni nomi ingrediente/farina non hanno traduzione EN e restano in italiano nelle schede: 'Albicocche disidratate a cubetti', 'Gocce di cioccolato fondente' (Panettone Albicocca e Cioccolato), campo Flour 'Farina di grano tenero'. In Lista Spesa (IT/DE/EN) compare 'Miglioratore Naturale Pro (2% sul peso della farina)'.", "selector": "[data-testid^=\"recipe-ingredients-\"], [data-testid=\"spesa-share\"]", "priority": "MEDIUM"},
+      {"component": "components/AdminPanel.jsx", "issue": "Le label variant (Laboratorio/Impara/Community/Shop) e le durate (Illimitato/7 giorni/30 giorni/...) hanno solo it/de: in EN mostrano italiano. Solo pannello admin.", "selector": "[data-testid=\"admin-btn\"]", "priority": "LOW"},
+      {"component": "components/RadioFornaio.jsx (const STATIONS)", "issue": "Nessun ramo en: con lingua EN la lista stazioni ricade su quella italiana (probabilmente accettabile, ma da confermare).", "selector": "Radio FAB", "priority": "LOW"},
+      {"component": "sections/PianoProduzioneAI.jsx:642", "issue": "Warning React ripetuto in console: 'In HTML, <span> cannot be a child of <option>' sulla select capo-preferment (espressione dinamica dentro <option>). Non blocca ma inquina la console e può causare hydration error.", "selector": "[data-testid=\"capo-preferment\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Ricette (mobile 390)", "issues": ["I 3 quicklink in cima (Enciclopedia / Tabelle & Farine / Etichette Panettoni — Encyclopedia / Tables & Flours / Panettone Labels) hanno testo troncato e che esce dal riquadro: in IT si legge 'Enciclope', in EN 'Encyclop' e 'Panettone Labels' sfora il bordo destro. Serve testo più piccolo/troncamento o griglia scorrevole.", "Overflow orizzontale del documento di 9px causato dalla riga chip base-filter-* (overflow-x-auto non clippa a livello documento)."]},
+      {"screen": "Tutte le sezioni (mobile 390)", "issues": ["Il FAB 'Radio' in basso a sinistra e il FAB WhatsApp a destra coprono testo/card (es. titolo card ricetta 'Filo di Francia', voci accordion Enciclopedia 'Hydration', primo post del feed Community). Valutare offset o nascondere durante lo scroll."]},
+      {"screen": "Desktop 1440x900", "issues": ["Layout mobile-first centrato: illustrazione decorativa del footer visibile e tagliata nella colonna destra vuota; nessun overflow ma la resa desktop resta povera."]}
+    ]
+  },
+  "test_report_links": ["/app/tests/check_tri.py", "/app/tests/check_i18n.py", "/app/tests/check_dicts.py"],
+  "action_items": [
+    "Aggiungere il ramo en a T in sections/LegalPage.jsx (pagina legale/privacy).",
+    "Aggiungere en a PAN_MY e terze voci EN a PAN_GLAZE in components/RecipeList.jsx.",
+    "Tradurre in EN i nomi ingrediente residui nei dati ricetta (albicocche, gocce di cioccolato, farina di grano tenero) e la voce 'Miglioratore Naturale Pro (2% sul peso della farina)' usata nella Lista Spesa.",
+    "Correggere <option> in PianoProduzioneAI.jsx:642 usando una stringa semplice (nessun nodo figlio dinamico) per eliminare il warning React.",
+    "Sistemare i 3 quicklink in cima a Ricette (testo troncato/fuoriuscita) e i 9px di overflow orizzontale della riga filtri su mobile.",
+    "Rivalutare posizione dei FAB Radio/WhatsApp che coprono contenuto su mobile.",
+    "Opzionale: en per AdminPanel e RadioFornaio."
+  ],
+  "critical_code_review_comments": [
+    "Verifica statica: tutte le chiamate tri()/tri3() nel progetto hanno 3 argomenti (0 mancanze) e il dizionario translations.js è allineato (665 chiavi it/de, 670 en). I soli dizionari senza ramo en sono LegalPage.T, RecipeList.PAN_MY e RadioFornaio.STATIONS (+ PAN_GLAZE con coppie it/de).",
+    "components/RecipeList.jsx supera 1100 righe: consigliato split (RecipeCard, RecipeDetail, PanettoneStructure, Glossary) per manutenibilità.",
+    "In RecipeList lo stato openCats è indicizzato solo su cat.key: se la stessa istanza rendesse più collezioni, lo stato aperto/chiuso si sovrapporrebbe fra 'mikilab' e 'personal'. La logica di default (personal chiuse, mikilab aperte) è comunque corretta."
+  ],
+  "updated_files": ["/app/tests/check_tri.py", "/app/tests/check_i18n.py", "/app/tests/check_dicts.py"],
+  "success_rate": {"backend": "not tested (frontend only)", "frontend": "funzionalità 100% (navigazione, Home, shop CTA, strumenti Lab + back, Community CRUD, Enciclopedia, responsività); i18n EN ~93% (6 aree con testo italiano residuo)"},
+  "seed_data_creation": "Creato e poi ELIMINATO un post Community di test (utente fornaio@mikilab.de, testo 'TEST_QA post ...') con relativo like e commento 'TEST_QA comment'. Feed ripulito, resta solo il post di benvenuto di Michele.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin) e fornaio@mikilab.de / Mikilab2026! (utente) — entrambe funzionanti via header login-btn > auth-screen.",
+  "context_for_next_testing_agent": "Il login si apre da [data-testid=login-btn] (non c'è gate all'avvio). Il tab 'Il Tuo Laboratorio' mostra PaywallGate se non loggati: usare admin. Gli strumenti si aprono dai chip [data-testid=capo-quicklink-<id>] (inversa/spesa/foodcost/spreco...) e si torna con maestro-back-btn. Enciclopedia: nav-tab-impara > learn-tab-enciclopedia > enc-entry-N (30 voci, EN verificato). Community: community-cat-*/community-text/community-submit/community-like-<id>/community-comment-toggle-<id>/community-comment-input-<id>/community-comment-send-<id>/community-filter-* tutti funzionanti; ricordarsi di cancellare i post di test con community-delete-<id>. Traduzioni: usare /app/tests/check_tri.py e /app/tests/check_dicts.py per rilevare rami en mancanti dopo le fix.",
+  "rca_of_the_issue": "Le regressioni EN residue derivano da dizionari di contenuto definiti come oggetti {it, de} (LegalPage.T, PAN_MY, STATIONS) o array di coppie [it, de] (PAN_GLAZE): il fallback in codice (T[lang] || T.it) restituisce silenziosamente l'italiano quando lang='en'. I 4 array citati nella richiesta (GuidaMetodi.SECTIONS, BackwardScheduler.PHASES, RecipeList.GLOSSARY, data/suppliers.js) sono invece corretti e verificati a runtime in EN e DE."
+}

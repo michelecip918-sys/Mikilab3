@@ -26,6 +26,18 @@ const T = {
     ],
     note: "Alles wird ordnungsgemäß und unter Wahrung der Vertraulichkeit verwaltet.",
   },
+  en: {
+    title: "Legal notice & Privacy",
+    intro: "Mikilab is a personal tool for organising bakery work. The site is purely organisational and educational, with no commercial purpose: it collects recipes, notes and work tools for personal and training use.",
+    sections: [
+      { h: "Purpose of the site", b: "This site is an application that supports artisan work (production planning, recipes, reminders). It is not an online shop and does not sell products or services." },
+      { h: "Personal data (privacy)", b: "Only the minimum data needed to log in is processed: the email and name provided at registration, used solely to identify the user and save their personal recipes. We do not sell or share data with third parties. A technical session cookie is used at login (required to stay signed in)." },
+      { h: "Content and recipes", b: "Recipes and content reflect the author's personal experience and are provided for information. The user is responsible for professional use (hygiene, HACCP, safety)." },
+      { h: "Data deletion", b: "You can request deletion of your account and your personal recipes at any time by contacting the site operator." },
+      { h: "Contact", b: "For any request regarding privacy and data: noreply@mikilab.de" },
+    ],
+    note: "Everything is handled properly and with respect for confidentiality.",
+  },
 };
 
 export default function LegalPage() {

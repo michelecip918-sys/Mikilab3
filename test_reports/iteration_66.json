@@ -1,0 +1,39 @@
+{
+  "summary": "RETEST MIRATO traduzioni EN (post-fix iteration_65) + regressione layout mobile + spot-check DE, su preview pubblica con login admin (admin@mikilab.de). VERIFICATE E RISOLTE tutte le 6 aree EN segnalate: (1) pagina 'Legal notice & Privacy' ora interamente in inglese (0 parole IT rilevate); (2) blocco 'SOURDOUGH MANAGEMENT (PH)' in EN -> 'Bath (bagnetto) / 1st refresh / 2nd refresh / Bound in cloth'; (3) 'GLAZE MODULE (AUTOMATIC)' in EN -> Sugar / Raw almonds / Egg whites / Hazelnuts / Apricot kernels / Wheat flour / Fine corn flour / Potato starch; (4) nomi ingredienti tradotti ('Diced dried apricots', 'Dark chocolate chips', 'Natural improver Pro' anche in Lista Spesa) e flour_type EN ('High-strength flour W380 + sourdough starter'); (5) tool 'Start-Time Calculator' con tutte le fasi in inglese; (6) Enciclopedia (Poolish, Sourdough/Lievito Madre, Rye sourdough, Backmittel, Natural Improver Pro) e glossario asterisco ('Final proof (appretto)') in inglese; descrizioni fornitori in Lista Spesa completamente in inglese (0 parole IT). Layout mobile 390x844: i 3 quicklink Ricette sono ora verticali (icona sopra, testo centrato su 2 righe, nessun troncamento, span dentro il riquadro con 13px di margine) in IT/DE/EN e NON c'e' overflow orizzontale del documento (scrollWidth 390 == clientWidth 390); la riga [data-testid=recipe-base-filters] scrolla solo internamente (scrollW 821 vs clientW 358, contenuta nel box 16..374). Spot-check DE: legal, struttura LM, glassa, ingredienti, scheduler e fornitori tutti corretti in tedesco. Navigazione 5 tab + sotto-viste Ricette OK, nessun elemento di errore in pagina. Trovati 3 residui minori (vedi sotto), nessuno bloccante.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/recipes (collection=mikilab) — dati seed", "issue": "6 panettoni hanno procedure_de IDENTICO al testo italiano (Panettone MikiLab Albicocca e Cioccolato, Cocco e Cioccolato, Limoncello, Mela e Cannella, Tiramisu, Zafferano): in DE il blocco 'VERFAHREN' mostra procedimento interamente in italiano ('GESTIONE LIEVITO MADRE... 1° IMPASTO (sera)...'). procedure_en invece e' corretto per tutte le 94 ricette."},
+      {"endpoint": "/api/recipes", "issue": "15-16 ricette senza notes_de/notes_en, ma anche notes base vuoto -> impatto nullo in UI (solo segnalazione)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "sections/Ricette.jsx (componente Sub, riga ~74)", "issue": "Label del pulsante back HARDCODED 'Ricette' in tutte le lingue: aprendo Encyclopedia / Tables & Flours / Panettone Labels in EN e in DE si legge 'Ricette' (atteso 'Recipes' / 'Rezepte').", "selector": "[data-testid=\"ricette-back-btn\"]", "priority": "MEDIUM"},
+      {"component": "lib/loc.js (INGREDIENT_EN/DE) + Lista Spesa", "issue": "Residui non tradotti nella Lista Spesa in EN: 'Lievito Madre solido (rinfrescato)', 'Glutine (Di.Glutin)', 'Aceto di mele (Essig)', 'Lino dorato (Gold)', 'Lievito di birra (Hefe)', 'Malto d orzo', 'Kokosfett' (tedesco), 'Wholemeal Flour 900 + 630 100 (Dinkel)' (misto). Mancano le chiavi corrispondenti nelle mappe ingredienti.", "selector": "[data-testid=\"supplier-shopping\"]", "priority": "MEDIUM"},
+      {"component": "components/RecipeList.jsx — categorie cartelle", "issue": "In EN la cartella si chiama 'PANETTONI' (plurale italiano); accettabile come nome proprio ma da confermare (in EN il quicklink usa 'Panettone Labels').", "selector": "[data-testid=\"cat-folder-panettoni\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Ricette mobile 390x844 (IT/DE/EN)", "issues": ["RISOLTO: quicklink ora verticali con testo a capo, nessun troncamento (truncated=false, overflowRight=-13px) e nessun overflow orizzontale del documento."]}
+    ]
+  },
+  "test_report_links": ["/app/tests/check_dicts.py"],
+  "action_items": [
+    "Tradurre la label del back button in sections/Ricette.jsx (Sub) con tri()/t(): 'Ricette'/'Rezepte'/'Recipes'.",
+    "Aggiungere in lib/loc.js le chiavi mancanti per gli item Lista Spesa: lievito madre solido (rinfrescato), glutine (di.glutin), aceto di mele (essig), lino dorato (gold), lievito di birra (hefe), malto d'orzo, kokosfett, psyllium, farina integrale 900+630 (Dinkel).",
+    "Popolare procedure_de reale (attualmente = italiano) per i 6 panettoni: Albicocca e Cioccolato, Cocco e Cioccolato, Limoncello, Mela e Cannella, Tiramisu, Zafferano."
+  ],
+  "critical_code_review_comments": [
+    "sections/Ricette.jsx: il componente Sub contiene testo statico italiano — unica stringa hardcoded rimasta trovata nel flusso Ricette.",
+    "Controllo statico /app/tests/check_dicts.py segnala solo RadioFornaio.STATIONS (intenzionale): nessun altro dizionario privo del ramo en."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend only)", "frontend": "92%"},
+  "seed_data_creation": "Nessun dato creato; solo lettura con account admin esistente.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante, login via [data-testid=login-btn] -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "Le 6 aree EN di iteration_65 sono confermate risolte, così come i 2 problemi di layout mobile. Restano: back-btn 'Ricette' hardcoded (EN/DE), residui ingredienti Lista Spesa non mappati in loc.js, e procedure_de italiano per 6 panettoni. Selettori utili: nav-tab-{home,ricette,maestro,impara,community}, ricette-guida-btn/farine-btn/labels-btn, recipe-search (cerca in lingua attiva: 'Apricot' in EN, 'Aprikose' in DE), capo-quicklink-inversa e capo-quicklink-spesa nel tab Your Lab, supplier-dir-toggle per l'elenco fornitori.",
+  "rca_of_the_issue": "Residui: (a) stringa statica italiana nel componente Sub di Ricette.jsx (mai passata da i18n); (b) i nomi item della Lista Spesa provengono da chiavi non presenti in INGREDIENT_EN/DE, e ingLoc() fa fallback al nome originale; (c) i 6 panettoni hanno il campo procedure_de popolato con la stringa italiana nel seed, quindi il rendering DE è corretto ma il dato è sbagliato."
+}

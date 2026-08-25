@@ -51,3 +51,13 @@
 ## v74 (2026-06) — Prezzi Il Tuo Laboratorio allineati (punto 3, parziale)
 - PaywallGate: etichette abbonamento aggiornate a €29,99/mese e €249/anno (badge -31%). ATTENZIONE: l'importo REALE addebitato è definito su Stripe (lookup_key pro_monthly/pro_yearly) → l'owner deve impostare 29,99/249 su Stripe perché l'addebito combaci.
 ### Monetizzazione RESTANTE (sessione dedicata): tier separato "Impara da Casa" €12,99/mese-€99/anno (prova 7gg, più economico); Le Mie Ricette acquisto singolo (base €4,99, Panettoni €29,99, sblocco totale €149); Corsi €79–199 da admin. Richiede rework PaywallGate multi-tier + prezzi Stripe + admin.
+
+## v111 (2026-06) — Collaudo trilingue IT/DE/EN + fix EN residui
+- Dizionario t() già completo (670 chiavi × IT/DE/EN). Community/Home/Beginners/Enciclopedia già trilingui.
+- Aggiunto EN mancante nei content-array (prima cadevano su IT): GuidaMetodi.jsx SECTIONS (4, usati anche in Enciclopedia metodi), BackwardScheduler.jsx PHASES (6) + toast, RecipeList.jsx GLOSSARY (9) + PAN_MY + PAN_GLAZE, data/suppliers.js SUPPLIERS + SUPPLIER_CATEGORIES. Render corretti a 3 rami (de/en/it).
+- sections/LegalPage.jsx: aggiunto blocco EN completo (Legal notice & Privacy).
+- lib/loc.js: aggiunte chiavi ingredienti (albicocche, gocce cioccolato fondente, miglioratore naturale pro, lievito madre solido, glutine, aceto di mele, lino dorato, lievito di birra, malto d'orzo, kokosfett/grasso di cocco) in DE+EN. lib/shopping.js ora applica ingLoc ai nomi extra della Lista Spesa.
+- sections/Ricette.jsx: back-btn ora tradotto (Ricette/Rezepte/Recipes); UtilBtn 3 quicklink resi verticali (testo a capo, nessun troncamento/overflow su mobile 390px). RecipeList recipe-base-filters: rimosso -mx-1 (niente overflow orizzontale del documento).
+- Seed data: 6 panettoni (Albicocca e Cioccolato, Cocco e Cioccolato, Limoncello, Mela e Cannella, Tiramisù, Zafferano) avevano procedure_de = testo italiano → tradotti in tedesco reale in DB + mikilab_seed_data.json; SEED_VERSION bump a v54. Verificato via API admin (procedure_de = "SAUERTEIGFÜHRUNG...").
+- Deferito (LOW): AdminPanel EN (solo-admin, IT/DE completo), RadioFornaio STATIONS (nomi propri emittenti, EN→stazioni IT).
+- Testato: testing_agent iteration_65 (funzionalità 100%) + iteration_66 (6 aree EN + 2 layout mobile CONFERMATI risolti, frontend 92%). REDEPLOY per mikilab.de.

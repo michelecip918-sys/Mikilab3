@@ -38,6 +38,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [baseFilter, setBaseFilter] = useState("all");
   const [openCats, setOpenCats] = useState({});
   const [folderCovers, setFolderCovers] = useState({});
+  const [translating, setTranslating] = useState(false);
   const { t, lang, setLang } = useLang();
   useBackClose(!!viewing, () => setViewing(null));
   useBackClose(dialogOpen, () => setDialogOpen(false));
@@ -298,7 +299,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
             {/* Filtro per Base / prefermento */}
             {baseChips.length > 1 && (
-              <div data-testid="recipe-base-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1 scrollbar-none">
+              <div data-testid="recipe-base-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 px-0.5 scrollbar-none max-w-full">
                 {baseChips.map((b) => (
                   <button key={b} data-testid={`base-filter-${b}`} onClick={() => setBaseFilter(b)}
                     className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${
@@ -320,7 +321,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {CATS.map((cat) => {
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
-                  const open = openCats[cat.key] !== false; // cartelle aperte di default
+                  const open = openCats[cat.key] !== undefined ? openCats[cat.key] : (collectionName !== "personal"); // Le Mie Ricette: cartelle chiuse di default
                   const coverSrc = (() => {
                     const chosen = folderCovers[cat.key];
                     const raw = chosen || (items.find((r) => r.image_url) || {}).image_url;
@@ -369,7 +370,23 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#F6F8F5] dark:bg-[#1B2127] border-[#D7E1DB] dark:border-[#38424B] p-0">
           <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
           <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
-          <div className="sticky top-0 z-10 flex justify-end gap-1 px-4 pt-3 pb-2 bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 backdrop-blur">
+          <div className="sticky top-0 z-10 flex justify-end items-center gap-1 px-4 pt-3 pb-2 bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 backdrop-blur">
+            {canEdit && viewing && (lang === "de" || lang === "en") && !viewing[`name_${lang}`] && (
+              <button data-testid="recipe-translate-btn" disabled={translating}
+                onClick={async () => {
+                  setTranslating(true);
+                  try {
+                    const up = await recipesApi.translate(viewing.id, lang);
+                    setViewing(up); load();
+                    toast.success(triM("Ricetta tradotta ✓", "Rezept übersetzt ✓", "Recipe translated ✓"));
+                  } catch (e) {
+                    toast.error(e?.response?.status === 403 ? triM("Funzione PRO", "PRO-Funktion", "PRO feature") : triM("Traduzione non riuscita", "Übersetzung fehlgeschlagen", "Translation failed"));
+                  } finally { setTranslating(false); }
+                }}
+                className="mr-auto text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#C88A2B] text-white disabled:opacity-60 active:scale-95 transition-all">
+                {translating ? "…" : triM(`Traduci in ${lang.toUpperCase()}`, `Auf ${lang.toUpperCase()} übersetzen`, `Translate to ${lang.toUpperCase()}`)}
+              </button>
+            )}
             {["it", "de", "en"].map((lc) => (
               <button key={lc} data-testid={`recipe-lang-${lc}`} onClick={() => setLang(lc)}
                 className={`text-[11px] font-bold uppercase px-2.5 py-1 rounded-lg border transition-all ${lang === lc ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"}`}>
@@ -917,46 +934,55 @@ const GLOSSARY = {
   bassinage: {
     it: "Bassinage: si trattiene una parte dell'acqua (~10%) e la si aggiunge poco a poco all'impasto GIÀ incordato, per raggiungere alte idratazioni senza smontare la maglia glutinica.",
     de: "Bassinage: Man hält ca. 10% des Wassers zurück und arbeitet es erst in den FERTIG gekneteten Teig ein – so erreicht man hohe Hydratation, ohne das Glutengerüst zu zerstören.",
+    en: "Bassinage: hold back part of the water (~10%) and work it into the ALREADY developed dough little by little, to reach high hydration without breaking the gluten network.",
     match: ["bassinage"],
   },
   autolisi: {
     it: "Autolisi: riposo iniziale di farina e acqua (20-40 min) prima di sale e lievito; sviluppa glutine e rende l'impasto più estensibile.",
     de: "Autolyse: anfängliche Ruhezeit von Mehl und Wasser (20-40 Min.) vor Salz und Hefe; entwickelt Gluten und macht den Teig dehnbarer.",
+    en: "Autolyse: an initial rest of flour and water (20-40 min) before salt and yeast; it develops gluten and makes the dough more extensible.",
     match: ["autolisi", "autolyse"],
   },
   poolish: {
     it: "Poolish: prefermento liquido (farina e acqua in parti uguali + poco lievito), matura 8-16 h; dà aroma e sofficità.",
     de: "Poolish: flüssiger Vorteig (Mehl und Wasser zu gleichen Teilen + wenig Hefe), reift 8-16 h; gibt Aroma und Lockerheit.",
+    en: "Poolish: a liquid preferment (equal parts flour and water + a little yeast), ripens 8-16 h; adds aroma and softness.",
     match: ["poolish"],
   },
   stockgare: {
     it: "Stockgare (puntata): prima lievitazione in massa dopo l'impasto, spesso con pieghe.",
     de: "Stockgare: erste Teigruhe in der Masse nach dem Kneten, oft mit Dehnen und Falten.",
+    en: "Stockgare (bulk proof): the first bulk fermentation after mixing, often with folds.",
     match: ["stockgare"],
   },
   quellstuck: {
     it: "Quellstück: semi/cereali messi in ammollo (spesso la sera prima) così assorbono acqua e non rubano umidità all'impasto.",
     de: "Quellstück: Saaten/Körner werden eingeweicht (oft am Vorabend), damit sie Wasser aufnehmen und dem Teig keine Feuchtigkeit entziehen.",
+    en: "Quellstück: seeds/grains soaked (often the night before) so they absorb water and don't steal moisture from the dough.",
     match: ["quellstück", "quellstuck"],
   },
   sauerteig: {
     it: "Sauerteig: lievito naturale (pasta acida). Il Weizensauerteig è di frumento, il Roggensauerteig di segale.",
     de: "Sauerteig: natürliches Triebmittel. Weizensauerteig aus Weizen, Roggensauerteig aus Roggen.",
+    en: "Sauerteig: natural sourdough. Weizensauerteig is wheat-based, Roggensauerteig is rye-based.",
     match: ["sauerteig", "weizensauerteig", "roggensauerteig"],
   },
   incordare: {
     it: "Incordare: impastare fino a che l'impasto diventa liscio, elastico e si stacca dalle pareti (glutine ben sviluppato).",
     de: "Auskneten (incordare): kneten, bis der Teig glatt, elastisch ist und sich von der Schüssel löst (Gluten gut entwickelt).",
+    en: "Full development (incordare): knead until the dough is smooth, elastic and pulls away from the bowl (gluten fully developed).",
     match: ["incorda", "incordat"],
   },
   appretto: {
     it: "Appretto: seconda lievitazione dopo la formatura, prima della cottura.",
     de: "Stückgare (appretto): zweite Gare nach dem Formen, vor dem Backen.",
+    en: "Final proof (appretto): the second proof after shaping, before baking.",
     match: ["appretto"],
   },
   ta: {
     it: "TA (Teigausbeute): resa dell'impasto = (farina+acqua)/farina ×100. Es. TA 182 ≈ 82% di idratazione.",
     de: "TA (Teigausbeute): (Mehl+Wasser)/Mehl ×100. Z. B. TA 182 ≈ 82% Hydratation.",
+    en: "TA (Teigausbeute / dough yield): (flour+water)/flour ×100. E.g. TA 182 ≈ 82% hydration.",
     match: ["teigausbeute", "ta ~", "ta182", "ta 18"],
   },
 };
@@ -971,7 +997,7 @@ function GlossaryBox({ text }) {
       <p className="text-[10px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#8FB0C2] mb-1.5">{t("gloss_title")} *</p>
       <ul className="space-y-1.5">
         {found.map((g, i) => (
-          <li key={i} className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">* {lang === "de" ? g.de : g.it}</li>
+          <li key={i} className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">* {lang === "de" ? g.de : lang === "en" ? g.en : g.it}</li>
         ))}
       </ul>
     </div>
@@ -993,17 +1019,23 @@ const PAN_MY = {
     { s: "2. Auffrischung", d: "28°C für 3,5–4 h — pH 4,1–4,3" },
     { s: "Gebunden im Sack", d: "16°C für 16–18 h" },
   ],
+  en: [
+    { s: "Bath (bagnetto)", d: "15 min in water at 28°C — pH 3.9" },
+    { s: "1st refresh", d: "1:1:0.5 at 28°C — pH 3.9" },
+    { s: "2nd refresh", d: "28°C for 3.5–4 h — pH 4.1–4.3" },
+    { s: "Bound in cloth", d: "16°C for 16–18 h" },
+  ],
 };
 
 const PAN_GLAZE = [
-  ["Zucchero", "Zucker", 54.55],
-  ["Mandorle grezze", "Rohe Mandeln", 18.18],
-  ["Albumi", "Eiweiß", 18.18],
-  ["Nocciole", "Haselnüsse", 3.64],
-  ["Armelline", "Bittermandeln (Aprikosenkerne)", 1.82],
-  ["Farina MP", "Mehl", 1.82],
-  ["Farina Fioretto", "Maismehl (fein)", 0.91],
-  ["Fecola", "Kartoffelstärke", 0.91],
+  ["Zucchero", "Zucker", "Sugar", 54.55],
+  ["Mandorle grezze", "Rohe Mandeln", "Raw almonds", 18.18],
+  ["Albumi", "Eiweiß", "Egg whites", 18.18],
+  ["Nocciole", "Haselnüsse", "Hazelnuts", 3.64],
+  ["Armelline", "Bittermandeln (Aprikosenkerne)", "Apricot kernels", 1.82],
+  ["Farina MP", "Mehl", "Wheat flour", 1.82],
+  ["Farina Fioretto", "Maismehl (fein)", "Fine corn flour", 0.91],
+  ["Fecola", "Kartoffelstärke", "Potato starch", 0.91],
 ];
 
 function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange }) {
@@ -1047,7 +1079,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
       <div className="rounded-xl bg-[#5E8B7E]/8 border border-[#5E8B7E]/25 p-3">
         <p className="text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E] mb-2">🌾 {tri("Gestione Lievito Madre (pH)", "Führung Lievito Madre (pH)", "Sourdough management (pH)")}</p>
         <div className="space-y-1">
-          {PAN_MY[de ? "de" : "it"].map((m, i) => (
+          {PAN_MY[de ? "de" : lang === "en" ? "en" : "it"].map((m, i) => (
             <div key={i} className="flex items-start justify-between gap-2 text-sm">
               <span className="font-medium text-[#3F4A54] dark:text-[#AEB8BF] shrink-0">{m.s}</span>
               <span className="text-right text-[#7E8A93]">{m.d}</span>
@@ -1099,9 +1131,9 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
           </div>
         </div>
         <div className="space-y-1">
-          {PAN_GLAZE.map(([itn, den, p], i) => (
+          {PAN_GLAZE.map(([itn, den, enn, p], i) => (
             <div key={i} className="flex items-center justify-between text-sm">
-              <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{de ? den : itn}</span>
+              <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{de ? den : lang === "en" ? enn : itn}</span>
               <span className="font-mono-data text-[#33564E] dark:text-[#8FB0C2]">{Math.round((Number(glazeTot) || 0) * p / 100)} g · {p}%</span>
             </div>
           ))}

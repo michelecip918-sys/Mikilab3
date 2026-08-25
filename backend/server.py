@@ -329,7 +329,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v53-baguette-integrale-lm"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v54-panettoni-procedure-de"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -831,6 +831,57 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depe
     await db.recipes.update_one({"id": recipe_id}, {"$set": updates})
     merged = {**existing, **updates}
     return merged
+
+
+_LANG_NAMES = {"it": "italiano", "de": "tedesco", "en": "inglese"}
+
+
+async def _translate_recipe_lang(doc, target):
+    """Traduce nome + campi ricetta nella lingua target (it/de/en). Ritorna dict {campo_<lang>: valore}."""
+    if target not in ("it", "de", "en"):
+        return {}
+    try:
+        fields = {k: doc.get(k) for k in ["name", "flour_type", "notes", "procedure"] if doc.get(k)}
+        if not fields:
+            return {}
+        lang_name = _LANG_NAMES[target]
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"trrec-{target}-{doc.get('id', 'x')}",
+            system_message=(f"Traduttore per panificazione artigianale verso il {lang_name}. Mantieni invariati i termini tecnici "
+                            "(Lievito Madre, Poolish, Biga, Sauerteig, Panettone, Backmittel, Kochstück, Quellstück) e i nomi propri "
+                            "(Mikilab, Michele). Rispondi SOLO con JSON valido."),
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
+        prompt = (f"Traduci in {lang_name} e restituisci un JSON con SOLO le chiavi name_{target}, flour_type_{target}, "
+                  f"notes_{target}, procedure_{target} corrispondenti ai campi forniti:\n" + json.dumps(fields, ensure_ascii=False))
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        return json.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logging.warning(f"translate {target} failed: {e}")
+        return {}
+
+
+@api_router.post("/recipes/{recipe_id}/translate")
+async def translate_recipe(recipe_id: str, lang: str = "en", user: dict = Depends(require_pro)):
+    existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Ricetta non trovata")
+    if existing.get("collection_name") == "mikilab":
+        if user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Non autorizzato")
+    elif existing.get("owner_id") != user["user_id"]:
+        raise HTTPException(status_code=403, detail="Non autorizzato")
+    tr = await _translate_recipe_lang(existing, lang)
+    if not tr:
+        raise HTTPException(status_code=502, detail="Traduzione non riuscita, riprova")
+    await db.recipes.update_one({"id": recipe_id}, {"$set": {**tr, "updated_at": now_iso()}})
+    return {**existing, **tr}
+
 
 
 @api_router.delete("/recipes/{recipe_id}")

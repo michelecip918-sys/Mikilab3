@@ -37,7 +37,6 @@ import SalesPoints from "@/sections/SalesPoints";
 import DayClose from "@/sections/DayClose";
 import HighFive from "@/components/HighFive";
 import FlourTable from "@/components/FlourTable";
-import LabOnboarding from "@/components/LabOnboarding";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import SoundDiagnosi from "@/sections/SoundDiagnosi";
 import EnterpriseHub from "@/sections/EnterpriseHub";
@@ -112,7 +111,6 @@ export default function Maestro() {
   return (
     <div className="pb-28">
       <HighFive />
-      <LabOnboarding />
       <div data-testid="maestro-hero-tattoo" className="relative rounded-3xl overflow-hidden mb-4 h-40 shadow-md">
         <img src={`${process.env.PUBLIC_URL || ""}/bio-dough.jpg`} alt="Michele" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/25 to-transparent" />

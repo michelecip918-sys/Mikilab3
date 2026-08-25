@@ -121,7 +121,7 @@ export default function SupplierOrder({ totals }) {
                   <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC] flex-1 min-w-0 truncate">{s.name}</span>
                   <span className="text-[9px] font-bold uppercase text-[#33564E] dark:text-[#8FB0C2] bg-[#6E8CA0]/15 px-1.5 py-0.5 rounded-full shrink-0">{cats[s.category] || s.category}</span>
                 </div>
-                <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1.5 leading-relaxed">{lang === "de" ? s.de : s.it}</p>
+                <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1.5 leading-relaxed">{lang === "de" ? s.de : lang === "en" ? s.en : s.it}</p>
                 <div className="flex items-center gap-3 mt-2">
                   <a href={s.web} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-[#5E8B7E]">
                     <ExternalLink className="w-3 h-3" /> {t("shop_visit_site")}

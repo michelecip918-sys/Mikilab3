@@ -1236,3 +1236,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v109b — Scelta sorgente SEMPRE visibile
 - capo-source-choice ora reso incondizionato (era guardato da weeklyItems.length>0). Sempre mostrato in "Compila per generare".
 - Se useWeekly && nessun piano settimanale: hint capo-weekly-empty + bottone capo-weekly-create → onOpenTool("settimana"). Verificato a schermo (source-choice sempre presente). REDEPLOY per mikilab.de.
+
+## v110 (2026-06) — 3 fix: guida Momy off, traduzione ricette PRO, cartelle chiuse
+- Rimossa la guida onboarding del Lab: eliminato <LabOnboarding /> + import da Maestro e il pulsante "Rivedi la guida di Momy" (mohammed-replay-tour) + import openLabTour da MohammedAssistant.
+- Traduzione ricette PRO: backend POST /api/recipes/{id}/translate?lang=it|de|en (Depends require_pro; _translate_recipe_lang via LlmChat claude-sonnet-4-6, salva name_<lang>/flour_type_<lang>/notes_<lang>/procedure_<lang>; gate proprietà: proprie ricette o admin per mikilab). api.js recipesApi.translate. RecipeList dialog: pulsante recipe-translate-btn (visibile se canEdit && lang de/en && manca name_<lang>) → traduce e ricarica. Testato via curl (name_en ok).
+- "Le Mie Ricette" (collection personal): cartelle CHIUSE di default (open = openCats[key] ?? collectionName!=="personal"). Mikilab resta aperto di default.
+- Compila pulito. REDEPLOY per mikilab.de.
