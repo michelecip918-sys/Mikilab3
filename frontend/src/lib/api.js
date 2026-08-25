@@ -48,6 +48,12 @@ export const capoPlanApi = {
   clear: () => api.delete(`/capo/last-plan`).then((r) => r.data),
 };
 
+export const plansArchiveApi = {
+  list: (kind) => api.get(`/plans/archive`, { params: kind ? { kind } : {} }).then((r) => r.data),
+  save: (data) => api.post(`/plans/archive`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/plans/archive/${id}`).then((r) => r.data),
+};
+
 export const labConfigApi = {
   get: () => api.get(`/lab-config`).then((r) => r.data),
   save: (data) => api.put(`/lab-config`, data).then((r) => r.data),

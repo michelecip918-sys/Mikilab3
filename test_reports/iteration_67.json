@@ -1,0 +1,30 @@
+{
+  "summary": "Collaudo FRONTEND (mobile 390x844, preview URL) dell'ARCHIVIO PIANI DI LAVORO, del badge admin traduzioni e della traduzione ricette personali. Archivio Piano Settimanale: flusso completo salva→lista→Usa questo piano→elimina PASS. Archivio Piano Capo: riquadro presente, pulsante salva correttamente disabilitato senza piano e abilitato con piano ripristinato. Badge admin traduzioni: sezione presente con stato 'Tutte le 94 ricette verificate (IT/DE/EN)'. Traduzione ricetta personale: UI PASS (admin) e API PASS come fornaio NON-PRO (HTTP 200, name_en/procedure_en tradotti, nessun 402/403). BLOCCO UX: la sezione 'Le Mie Ricette' (ricette personali) è raggiungibile solo dentro 'Il Tuo Laboratorio' che è PRO-gated, quindi un utente NON-PRO non può usare il pulsante di traduzione dall'interfaccia.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PianoProduzioneAI (select capo-preferment)", "issue": "React error in console: 'In HTML, <option> cannot be a child of <span> ... This will cause a hydration error' (option con wrapper dinamico, PianoProduzioneAI.jsx ~riga 661). Non blocca il flusso ma inquina la console.", "selector": "[data-testid=capo-preferment]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Traduzione ricette personali senza PRO (utente fornaio@mikilab.de)", "issue": "Il percorso UI verso le ricette personali passa solo da 'Il Tuo Laboratorio' → quicklink 'Inserisci Ricette' (tool 'aggiungi'), sezione protetta da PaywallGate PRO. Per un utente NON-PRO viene mostrato il paywall: nessun add-recipe-btn, nessun dialog ricetta, quindi il pulsante recipe-translate-btn è irraggiungibile. Il backend però consente correttamente la traduzione (verificato: POST /api/recipes (personal) 200 + POST /api/recipes/{id}/translate?target=en 200 con procedure_en tradotto, come fornaio non-PRO). Serve un accesso non-PRO alle proprie ricette personali (es. voce in tab 'Ricette' o tool fuori dal gate) altrimenti la feature non è utilizzabile dal target.", "affected_selectors": ["[data-testid=capo-quicklink-aggiungi]", "[data-testid=add-recipe-btn]", "[data-testid=recipe-translate-btn]"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Esporre le ricette PERSONALI (Le Mie Ricette) anche agli utenti NON-PRO (o almeno il dialog ricetta + traduzione), altrimenti la nuova regola 'traduzione personale senza PRO' resta inaccessibile via UI.",
+    "Pulire il warning React <option> figlio di <span> nel select capo-preferment (PianoProduzioneAI.jsx ~661)."
+  ],
+  "critical_code_review_comments": [
+    "PlanArchive: buon riuso; nota che l'elenco piani non ha stato di errore visibile (catch silenzioso in load()) — un fallimento della GET /api/plans/archive appare come 'Nessun piano salvato ancora'.",
+    "RecipeList: il chip lingua nel dialog (recipe-lang-de/en) cambia la lingua GLOBALE dell'app (header passa a EN). Verificare che sia il comportamento voluto."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only run; 2 chiamate API verificate come non-PRO: 100%)", "frontend": "90% (4/5 scenari PASS, 1 non verificabile via UI per PRO gate)"},
+  "seed_data_creation": "Creata e poi CANCELLATA la ricetta personale 'TEST QA Pane Rustico' (admin) e 'TEST QA Focaccia NonPro' (fornaio, via API). Creato e poi eliminato il piano archiviato 'Settimana Test QA'. Nessun dato di test residuo.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! ; fornaio@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Login: cliccare [data-testid=login-btn] poi auth-email/auth-password/auth-submit (la sessione non persiste tra run del tool). Percorso Piano Settimanale: nav-tab-maestro → capo-quicklink-settimana. Ricette personali: nav-tab-maestro → capo-quicklink-aggiungi (PRO-gated; con admin ok; le cartelle categoria sono chiuse per 'personal', usare recipe-search + cat-folder-*). Archivio capo: plan-archive-capo in fondo a PianoProduzioneAI; capo-new-plan azzera il piano e disabilita plan-archive-save-btn-capo. Non è stato eseguito il salvataggio di un piano capo (nessun piano generato, LLM lungo) — l'elenco/Ripeti del componente PlanArchive è però validato sul kind weekly.",
+  "rca_of_the_issue": "La traduzione senza PRO è implementata correttamente lato server (translate_recipe usa Depends(current_user) e permette le ricette personali proprie), ma lato client l'unico ingresso alle ricette personali è il tool 'aggiungi' dentro Maestro/Il Tuo Laboratorio, avvolto in PaywallGate feature='lab': per un utente non-PRO viene renderizzato il paywall e nessun elemento della lista ricette, rendendo la feature inaccessibile dall'interfaccia."
+}

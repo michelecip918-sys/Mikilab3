@@ -10,6 +10,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
+import PlanArchive from "@/components/PlanArchive";
 import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
 
@@ -74,6 +75,24 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   });
   const removeByRecipe = (id) => setProducts((l) => { const n = l.filter((p) => p.recipe_id !== id); return n.length ? n : [{ recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }]; });
   const restorePrevPlan = () => { if (savedProducts.length) { setProducts(savedProducts); toast.success(tri3(lang, "Ricette dell'ultimo piano ricaricate: cambia solo le quantità.", "Rezepte des letzten Plans geladen: nur Mengen anpassen.", "Last plan's recipes loaded: just adjust quantities.")); } };
+
+  // "Ripeti questo piano" dall'archivio: ricarica impostazioni + prodotti + testo,
+  // così Michele può ritoccare e rigenerare per la settimana prossima.
+  const repeatArchivedPlan = (payload) => {
+    const s = (payload && payload.state) || {};
+    if (Array.isArray(s.products) && s.products.length) { setProducts(s.products); setSavedProducts(s.products); }
+    if (typeof s.useWeekly === "boolean") setUseWeekly(s.useWeekly);
+    if (s.staff !== undefined) setStaff(s.staff);
+    if (s.stdTemp !== undefined) setStdTemp(s.stdTemp);
+    if (s.labTemp !== undefined) setLabTemp(s.labTemp);
+    if (s.startTime) setStartTime(s.startTime);
+    if (s.notes !== undefined) setNotes(s.notes);
+    if (s.preferment) setPreferment(s.preferment);
+    if (s.bizType) setBizType(s.bizType);
+    if (s.modules && typeof s.modules === "object") setModules((m) => ({ ...m, ...s.modules }));
+    if (payload && payload.plan_text) { setPlan(payload.plan_text); setSavedAt(null); }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     (async () => {
@@ -639,7 +658,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <select data-testid="capo-preferment" value={preferment} onChange={(e) => setPreferment(e.target.value)}
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#5E8B7E]">
             <option value="solido">{lang === "de" ? "Fester Lievito Madre" : lang === "en" ? "Solid sourdough" : "Lievito Madre solido"}</option>
-            <option value="licoli">LiCoLi ({lang === "de" ? "Flüssighefe" : lang === "en" ? "liquid starter" : "lievito in coltura liquida"})</option>
+            <option value="licoli">{lang === "de" ? "LiCoLi (Flüssighefe)" : lang === "en" ? "LiCoLi (liquid starter)" : "LiCoLi (lievito in coltura liquida)"}</option>
             <option value="poolish">Poolish</option>
             <option value="lievito_birra">{lang === "de" ? "Hefe (Bierhefe)" : lang === "en" ? "Baker's yeast" : "Lievito di birra"}</option>
           </select>
@@ -770,6 +789,20 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
           </>
         )}
+
+        <PlanArchive
+          kind="capo"
+          canSave={!!(plan && plan.trim())}
+          getPayload={() => (plan && plan.trim()
+            ? { plan_text: plan, state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, bizType, modules } }
+            : null)}
+          onRepeat={repeatArchivedPlan}
+          repeatLabel={tri3(lang, "Usa per settimana prossima", "Für nächste Woche", "Use next week")}
+          describe={(p) => {
+            const n = ((p.state && p.state.products) || []).filter((x) => x && x.recipe_id).length;
+            return tri3(lang, `${n} ricette`, `${n} Rezepte`, `${n} recipes`);
+          }}
+        />
       </Section>
     </div>
   );

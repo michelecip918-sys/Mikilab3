@@ -61,3 +61,15 @@
 - Seed data: 6 panettoni (Albicocca e Cioccolato, Cocco e Cioccolato, Limoncello, Mela e Cannella, Tiramisù, Zafferano) avevano procedure_de = testo italiano → tradotti in tedesco reale in DB + mikilab_seed_data.json; SEED_VERSION bump a v54. Verificato via API admin (procedure_de = "SAUERTEIGFÜHRUNG...").
 - Deferito (LOW): AdminPanel EN (solo-admin, IT/DE completo), RadioFornaio STATIONS (nomi propri emittenti, EN→stazioni IT).
 - Testato: testing_agent iteration_65 (funzionalità 100%) + iteration_66 (6 aree EN + 2 layout mobile CONFERMATI risolti, frontend 92%). REDEPLOY per mikilab.de.
+
+## v112 (2026-06) — Archivio Piani di Lavoro + traduzione ricette personali no-PRO + badge admin
+- **Archivio piani** (nuovo, per-utente, collection `saved_plans`): GET/POST `/api/plans/archive` (?kind=weekly|capo), DELETE `/api/plans/archive/{id}`. Salva più piani con NOME + data. api.js: `plansArchiveApi`.
+- **Componente riusabile** `components/PlanArchive.jsx` (kind weekly|capo): "I Miei Piani Salvati" con salva-con-nome, lista, "Ripeti questo piano", elimina.
+- **Piano Settimanale** (WeeklyPlan.jsx): archivio kind=weekly; "Usa questo piano" clona gli item nell'editor (nuovi id) per modificarli e risalvare. Estratto `cleanItems()`.
+- **Piano AI "Capo"** (PianoProduzioneAI.jsx): archivio kind=capo (plan_text + state); "Usa per settimana prossima" → `repeatArchivedPlan()` ricarica impostazioni/prodotti/testo per ritoccare e rigenerare.
+- **Traduzione ricette personali senza PRO**: `translate_recipe` ora `Depends(current_user)` (prima require_pro). MikiLab resta admin-only; personali = solo proprietario, nessun PRO. Verificato: fornaio (non-PRO) POST translate → 200.
+- **Accesso ricette personali per tutti i loggati**: Ricette.jsx ora ha selettore [ricette-tab-mikilab | ricette-tab-personal]. Prima "Le Mie Ricette" era solo dentro il Lab PRO-gated → i non-PRO non potevano tradurle. Ora accessibili + traducibili dal tab Ricette.
+- **Badge admin traduzioni** (AdminPanel.jsx): sezione `admin-translation-coverage` "Traduzioni ricette IT/DE/EN" → "Tutte le N verificate ✓" oppure lista ricette incomplete con badge DE/EN.
+- **Fix**: warning React "<option> child of <span>" nel select capo-preferment (option 'licoli' resa testo singolo). Cartelle ricette si auto-espandono con ricerca/filtro attivo.
+- Piano AI 7 giorni: nessuna modifica (scelta utente: segue i prodotti inseriti).
+- Testato: testing_agent iteration_67 (4/5, trovato blocco accesso personali) + iteration_68 (4/4 PASS dopo fix). REDEPLOY per mikilab.de.

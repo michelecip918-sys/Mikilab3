@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only retest del fix 'ricette personali accessibili ai NON-PRO'. Testato end-to-end con fornaio@mikilab.de (NON-PRO): tab Ricette -> selettore collezione visibile, switch su 'Le Mie Ricette' senza paywall, add-recipe-btn presente, creazione ricetta (TEST_QA Pane Prova), apertura dialog, switch lingua EN e traduzione 'in un tocco' riuscita (nome 'TEST_QA Test Bread', procedimento e ingredienti in inglese) senza 402/403/paywall, poi eliminazione ricetta di test. Verificato con admin@mikilab.de il select capo-preferment nel Piano di Produzione IA: nessun warning React '<option> cannot be a child of <span>' (opzioni solido/licoli/poolish/lievito_birra, selezione funzionante). Regressione tab Ricette: switch avanti/indietro x2 senza errori console; su mikilab i 3 quicklink e 94 ricette caricate.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Le Mie Ricette (RecipeList collection personal)", "issues": ["La ricerca (recipe-search) non espande automaticamente le cartelle categoria chiuse: cercando 'TEST_QA' l'utente vede solo la cartella 'PANE (1)' e deve toccarla per trovare la ricetta. Consigliato aprire le cartelle quando il campo ricerca e' valorizzato."]},
+      {"screen": "Piano di Produzione IA", "issues": ["Il campo lievito/prefermento e l'ora di inizio usano i picker nativi del browser (<select> / <input type=time>) invece dei componenti shadcn: coerenza visiva minore (non bloccante)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": ["Opzionale (minor UX): auto-espandere le cartelle categoria in 'Le Mie Ricette' quando c'e' una query di ricerca attiva."],
+  "critical_code_review_comments": [
+    "RecipeList.jsx: filtro/ricerca applicato ma il rendering resta dentro cartelle collapsed (openCats default false per collection 'personal') -> risultati di ricerca non immediatamente visibili.",
+    "Console: 2 errori 401 su risorse durante il primo caricamento pre-login (chiamate autenticate eseguite prima della sessione) - rumore innocuo ma da silenziare."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100% (4/4 scenari PASS)"},
+  "seed_data_creation": "Creata e poi eliminata la ricetta personale 'TEST_QA Pane Prova' sull'account fornaio@mikilab.de. Nessun dato residuo.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "fornaio@mikilab.de / Mikilab2026! (NON-PRO), admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Tab Lab = data-testid nav-tab-maestro (non nav-tab-lab). In 'Le Mie Ricette' le cartelle categoria sono chiuse di default: cliccare [data-testid^=cat-folder-] prima di cercare [data-testid^=recipe-row-]. Il pulsante di traduzione compare nel dialog dopo aver cliccato [data-testid=recipe-lang-en] (selettore interno al dialog). La traduzione richiede ~10-15s.",
+  "rca_of_the_issue": "Fix confermato: il selettore collezione in Ricette.jsx e' renderizzato per ogni utente autenticato e RecipeList collection 'personal' usa canEdit=true, quindi add/translate funzionano anche senza PRO; backend translate_recipe con Depends(current_user) restituisce 200 per ricette personali proprie."
+}

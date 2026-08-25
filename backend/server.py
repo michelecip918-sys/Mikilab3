@@ -867,15 +867,18 @@ async def _translate_recipe_lang(doc, target):
 
 
 @api_router.post("/recipes/{recipe_id}/translate")
-async def translate_recipe(recipe_id: str, lang: str = "en", user: dict = Depends(require_pro)):
+async def translate_recipe(recipe_id: str, lang: str = "en", user: dict = Depends(current_user)):
     existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Ricetta non trovata")
     if existing.get("collection_name") == "mikilab":
+        # Le ricette MikiLab restano modificabili/traducibili solo dall'admin (Michele).
         if user.get("role") != "admin":
             raise HTTPException(status_code=403, detail="Non autorizzato")
-    elif existing.get("owner_id") != user["user_id"]:
-        raise HTTPException(status_code=403, detail="Non autorizzato")
+    else:
+        # Ricette personali: ogni utente può tradurre le PROPRIE (nessun PRO richiesto).
+        if existing.get("owner_id") != user["user_id"]:
+            raise HTTPException(status_code=403, detail="Non autorizzato")
     tr = await _translate_recipe_lang(existing, lang)
     if not tr:
         raise HTTPException(status_code=502, detail="Traduzione non riuscita, riprova")
@@ -993,6 +996,51 @@ async def save_capo_last_plan(payload: CapoLastPlan, user: dict = Depends(curren
 async def delete_capo_last_plan(user: dict = Depends(current_user)):
     await db.capo_last_plan.delete_one({"_key": user["user_id"]})
     return {"success": True}
+
+
+# ---------------------------------------------------------------------------
+# Archivio Piani di Lavoro salvati (per utente): più piani con nome + data.
+# kind: "weekly" (Piano settimanale) | "capo" (Piano IA). Payload libero.
+# ---------------------------------------------------------------------------
+class SavedPlanCreate(BaseModel):
+    name: str
+    kind: str  # "weekly" | "capo"
+    payload: dict = {}
+
+
+@api_router.get("/plans/archive")
+async def list_saved_plans(kind: Optional[str] = None, user: dict = Depends(current_user)):
+    q = {"user_id": user["user_id"]}
+    if kind in ("weekly", "capo"):
+        q["kind"] = kind
+    docs = await db.saved_plans.find(q, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return docs
+
+
+@api_router.post("/plans/archive")
+async def create_saved_plan(payload: SavedPlanCreate, user: dict = Depends(current_user)):
+    if payload.kind not in ("weekly", "capo"):
+        raise HTTPException(status_code=400, detail="kind non valido")
+    name = (payload.name or "").strip()[:80]
+    if not name:
+        raise HTTPException(status_code=400, detail="Nome richiesto")
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["user_id"],
+        "name": name,
+        "kind": payload.kind,
+        "payload": payload.payload or {},
+        "created_at": now_iso(),
+        "updated_at": now_iso(),
+    }
+    await db.saved_plans.insert_one(dict(doc))
+    return doc
+
+
+@api_router.delete("/plans/archive/{plan_id}")
+async def delete_saved_plan(plan_id: str, user: dict = Depends(current_user)):
+    res = await db.saved_plans.delete_one({"id": plan_id, "user_id": user["user_id"]})
+    return {"success": res.deleted_count > 0}
 
 
 # ---------------------------------------------------------------------------

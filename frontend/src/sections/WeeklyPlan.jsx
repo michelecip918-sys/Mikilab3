@@ -7,6 +7,7 @@ import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
+import PlanArchive from "@/components/PlanArchive";
 import { jsPDF } from "jspdf";
 
 const DAYS = [
@@ -98,6 +99,23 @@ export default function WeeklyPlan() {
   const updateItem = (id, patch) => setItems((it) => it.map((x) => x.id === id ? { ...x, ...patch } : x));
   const removeItem = (id) => setItems((it) => it.filter((x) => x.id !== id));
 
+  // Items "puliti" per il salvataggio (piano corrente e archivio).
+  const cleanItems = () => items.map(({ id, day, recipe_id, recipe_name, pieces, grams_per_piece, to_proof, to_fridge, to_freezer, sale_point }) => ({
+    id, day, recipe_id, recipe_name,
+    pieces: Number(pieces || 0), grams_per_piece: Number(grams_per_piece || 0),
+    to_proof: to_proof === "" || to_proof == null ? null : Number(to_proof),
+    to_fridge: to_fridge === "" || to_fridge == null ? null : Number(to_fridge),
+    to_freezer: to_freezer === "" || to_freezer == null ? null : Number(to_freezer),
+    sale_point: sale_point || null,
+  }));
+
+  // "Ripeti questo piano": clona gli item dall'archivio nell'editor (nuovi id per evitare collisioni).
+  const repeatPlan = (payload) => {
+    const src = (payload && payload.items) || [];
+    setItems(src.map((it) => ({ ...it, id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}` })));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const onRecipeChange = (id, recipeId) => {
     const r = recipeById[recipeId];
     updateItem(id, { recipe_id: recipeId, recipe_name: r?.name || "", grams_per_piece: defaultGrams(r?.name) });
@@ -105,16 +123,7 @@ export default function WeeklyPlan() {
 
   const save = async () => {
     try {
-      await weeklyApi.save({
-        items: items.map(({ id, day, recipe_id, recipe_name, pieces, grams_per_piece, to_proof, to_fridge, to_freezer, sale_point }) => ({
-          id, day, recipe_id, recipe_name,
-          pieces: Number(pieces || 0), grams_per_piece: Number(grams_per_piece || 0),
-          to_proof: to_proof === "" || to_proof == null ? null : Number(to_proof),
-          to_fridge: to_fridge === "" || to_fridge == null ? null : Number(to_fridge),
-          to_freezer: to_freezer === "" || to_freezer == null ? null : Number(to_freezer),
-          sale_point: sale_point || null,
-        })),
-      });
+      await weeklyApi.save({ items: cleanItems() });
       toast.success(t("toast_weekly_saved"));
       fireHighFive(t("toast_weekly_saved"));
     } catch {
@@ -643,6 +652,18 @@ export default function WeeklyPlan() {
           </div>
         </div>
       )}
+
+      <PlanArchive
+        kind="weekly"
+        canSave={items.length > 0}
+        getPayload={() => (items.length ? { items: cleanItems() } : null)}
+        onRepeat={repeatPlan}
+        repeatLabel={tri("Usa questo piano", "Diesen Plan nutzen", "Use this plan")}
+        describe={(p) => {
+          const n = (p.items || []).length;
+          return tri(`${n} lavorazioni`, `${n} Arbeiten`, `${n} items`);
+        }}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save } from "lucide-react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
@@ -104,6 +104,19 @@ export default function AdminPanel({ open, onOpenChange }) {
     { v: "90", it: "90 giorni", de: "90 Tage" },
     { v: "365", it: "1 anno", de: "1 Jahr" },
   ];
+
+  // Copertura traduzioni ricette MikiLab (IT/DE/EN): rileva quelle senza nome o
+  // procedimento tradotti, così Michele sa quali completare.
+  const trCoverage = useMemo(() => {
+    const has = (v) => !!(v && String(v).trim());
+    const rows = (mkRecipes || []).map((r) => {
+      const miss = [];
+      if (!has(r.name_de) || !has(r.procedure_de)) miss.push("DE");
+      if (!has(r.name_en) || !has(r.procedure_en)) miss.push("EN");
+      return { id: r.id, name: r.name, miss };
+    });
+    return { total: rows.length, incomplete: rows.filter((x) => x.miss.length) };
+  }, [mkRecipes]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -232,6 +245,47 @@ export default function AdminPanel({ open, onOpenChange }) {
             className="w-full flex items-center justify-center gap-2 bg-[#33564E] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all">
             <Save className="w-4 h-4" /> {de ? "Einstellungen speichern" : "Salva impostazioni sito"}
           </button>
+        </div>
+
+        {/* Copertura traduzioni ricette IT/DE/EN */}
+        <div data-testid="admin-translation-coverage" className="rounded-2xl bg-[#C9A24B]/10 border border-[#C9A24B]/35 p-4 mt-2">
+          <p className="flex items-center gap-1.5 text-sm font-bold text-[#8a6f2c] dark:text-[#d8bd76] mb-2">
+            <Languages className="w-4 h-4" /> {de ? "Rezept-Übersetzungen IT/DE/EN" : "Traduzioni ricette IT/DE/EN"}
+          </p>
+          {trCoverage.incomplete.length === 0 ? (
+            <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-xl bg-[#6B8E62]/12 border border-[#6B8E62]/35 px-3 py-2.5">
+              <CheckCircle2 className="w-5 h-5 text-[#5a7a52] shrink-0" />
+              <p className="text-sm font-semibold text-[#4d6b45] dark:text-[#9ec48f]">
+                {de ? `Alle ${trCoverage.total} Rezepte verifiziert ✓ (IT/DE/EN)` : `Tutte le ${trCoverage.total} ricette verificate ✓ (IT/DE/EN)`}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-2 rounded-xl bg-[#C88A2B]/12 border border-[#C88A2B]/40 px-3 py-2.5 mb-2">
+                <AlertTriangle className="w-5 h-5 text-[#C88A2B] shrink-0" />
+                <p data-testid="admin-translation-count" className="text-sm font-semibold text-[#8a5a1a] dark:text-[#e0b877]">
+                  {de ? `${trCoverage.incomplete.length} von ${trCoverage.total} Rezepten unvollständig` : `${trCoverage.incomplete.length} ricette su ${trCoverage.total} da completare`}
+                </p>
+              </div>
+              <p className="text-[11px] text-[#7E8A93] mb-2 leading-snug">
+                {de ? "Öffne das Rezept und tippe auf «übersetzen», um DE/EN zu ergänzen."
+                    : "Apri la ricetta e tocca «traduci» per completare DE/EN."}
+              </p>
+              <div className="space-y-1.5 max-h-44 overflow-y-auto">
+                {trCoverage.incomplete.map((r) => (
+                  <div key={r.id} data-testid={`admin-translation-missing-${r.id}`}
+                    className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2.5 py-2">
+                    <span className="text-xs text-[#2B303B] dark:text-[#EAF0EC] truncate">{r.name}</span>
+                    <span className="shrink-0 flex gap-1">
+                      {r.miss.map((l) => (
+                        <span key={l} className="text-[10px] font-bold text-[#C0574D] bg-[#C0574D]/12 border border-[#C0574D]/30 rounded px-1.5 py-0.5">{l}</span>
+                      ))}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex items-center justify-between mt-2 mb-1">

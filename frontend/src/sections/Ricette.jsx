@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { ChevronLeft, Tag, BookOpen, Wheat } from "lucide-react";
+import { ChevronLeft, Tag, BookOpen, Wheat, ChefHat, User } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import PanettoneLabels from "@/sections/PanettoneLabels";
 import GuidaMetodi from "@/sections/Enciclopedia";
 import FlourTable from "@/components/FlourTable";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import { useBackClose } from "@/lib/backNav";
 
 export default function Ricette() {
   const { t, lang } = useLang();
+  const { user } = useAuth();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [view, setView] = useState("main");
+  const [coll, setColl] = useState("mikilab");
   useBackClose(view !== "main", () => setView("main"));
 
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
@@ -37,19 +40,51 @@ export default function Ricette() {
 
   return (
     <div data-testid="ricette-page">
-      <div className="grid grid-cols-3 gap-2.5 mb-4">
-        <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia")} onClick={() => setView("guida")} />
-        <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours")} onClick={() => setView("farine")} />
-        <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
-      </div>
-      <RecipeList
-        collectionName="mikilab"
-        heroImage={`${process.env.PUBLIC_URL}/michele-avatar-full.jpg`}
-        heroPosition="50% 15%"
-        heroTitle={t("brand_subtitle")}
-        heroSubtitle={t("mikilab_subtitle")}
-        emptyText={t("mikilab_empty")}
-      />
+      {user && (
+        <div data-testid="ricette-collection-switch" className="grid grid-cols-2 gap-2 mb-3 bg-[#EAF0EC] dark:bg-[#2A323A] rounded-2xl p-1">
+          <button
+            data-testid="ricette-tab-mikilab"
+            onClick={() => setColl("mikilab")}
+            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "mikilab" ? "bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
+          >
+            <ChefHat className="w-4 h-4" /> {tri("Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}
+          </button>
+          <button
+            data-testid="ricette-tab-personal"
+            onClick={() => setColl("personal")}
+            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "personal" ? "bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
+          >
+            <User className="w-4 h-4" /> {tri("Le Mie Ricette", "Meine Rezepte", "My Recipes")}
+          </button>
+        </div>
+      )}
+
+      {coll === "mikilab" && (
+        <div className="grid grid-cols-3 gap-2.5 mb-4">
+          <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia")} onClick={() => setView("guida")} />
+          <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours")} onClick={() => setView("farine")} />
+          <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
+        </div>
+      )}
+
+      {coll === "mikilab" ? (
+        <RecipeList
+          collectionName="mikilab"
+          heroImage={`${process.env.PUBLIC_URL}/michele-avatar-full.jpg`}
+          heroPosition="50% 15%"
+          heroTitle={t("brand_subtitle")}
+          heroSubtitle={t("mikilab_subtitle")}
+          emptyText={t("mikilab_empty")}
+        />
+      ) : (
+        <RecipeList
+          collectionName="personal"
+          heroImage="https://images.unsplash.com/photo-1732565649629-eb4932a1ec09?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
+          heroTitle={t("personal_hero_title")}
+          heroSubtitle={t("personal_hero_sub")}
+          emptyText={t("personal_empty")}
+        />
+      )}
     </div>
   );
 }
