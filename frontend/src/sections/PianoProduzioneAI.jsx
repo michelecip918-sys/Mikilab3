@@ -38,6 +38,21 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [plan, setPlan] = useState("");
   const [generating, setGenerating] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickSearch, setPickSearch] = useState("");
+  const [savedProducts, setSavedProducts] = useState([]);
+
+  const addRecipes = (ids) => setProducts((l) => {
+    const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
+    const base = l.filter((p) => p.recipe_id || p.name || p.qty);
+    const toAdd = ids.filter((id) => !existing.has(id)).map((id) => {
+      const r = recipes.find((x) => x.id === id);
+      return { recipe_id: id, name: r ? r.name : "", qty: "", unit: "pezzi", gpp: "", day: "", start: false };
+    });
+    return [...base, ...toAdd];
+  });
+  const removeByRecipe = (id) => setProducts((l) => { const n = l.filter((p) => p.recipe_id !== id); return n.length ? n : [{ recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }]; });
+  const restorePrevPlan = () => { if (savedProducts.length) { setProducts(savedProducts); toast.success(tri3(lang, "Ricette dell'ultimo piano ricaricate: cambia solo le quantità.", "Rezepte des letzten Plans geladen: nur Mengen anpassen.", "Last plan's recipes loaded: just adjust quantities.")); } };
 
   useEffect(() => {
     (async () => {
@@ -52,10 +67,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       } catch { /* first run */ }
       try {
         const [mk, ps, wp] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal"), weeklyApi.get()]);
-        const byName = (a, b) => (a.name || "").localeCompare(b.name || "");
-        const own = (ps || []).map((r) => ({ ...r, _own: true })).sort(byName);
-        const lib = (mk || []).sort(byName);
-        setRecipes([...own, ...lib]);  // le ricette del panettiere in cima
+        let usage = {}; try { usage = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); } catch { /* */ }
+        const sortFn = (a, b) => ((usage[b.id] || 0) - (usage[a.id] || 0)) || (a.name || "").localeCompare(b.name || "");
+        const own = (ps || []).map((r) => ({ ...r, _own: true })).sort(sortFn);
+        const lib = (mk || []).sort(sortFn);
+        setRecipes([...own, ...lib]);  // le più usate in cima, ricette del panettiere prima
         if (wp && wp.items) setWeeklyItems(wp.items);
       } catch { /* */ }
       try {
@@ -69,7 +85,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           setPlan(last.plan_text);
           setSavedAt(last.saved_at || null);
           const s = last.state || {};
-          if (Array.isArray(s.products) && s.products.length) setProducts(s.products);
+          if (Array.isArray(s.products) && s.products.length) { setProducts(s.products); setSavedProducts(s.products); }
           if (typeof s.useWeekly === "boolean") setUseWeekly(s.useWeekly);
           if (s.staff !== undefined) setStaff(s.staff);
           if (s.stdTemp !== undefined) setStdTemp(s.stdTemp);
@@ -251,7 +267,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       }
       if (!ok) toast.warning(t("capo_plan_incomplete"));
       else fireHighFive(lang === "de" ? "Plan erstellt! 👏" : lang === "en" ? "Plan generated! 👏" : "Piano generato! 👏");
-      if (fullText.trim()) { await persistPlan(fullText); await updateFreezerAfterPlan(); }
+      if (fullText.trim()) { await persistPlan(fullText); await updateFreezerAfterPlan();
+        try { const u = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); products.forEach((p) => { if (p.recipe_id && Number(p.qty) > 0) u[p.recipe_id] = (u[p.recipe_id] || 0) + 1; }); localStorage.setItem("mikilab_recipe_usage", JSON.stringify(u)); } catch { /* */ }
+      }
     } catch { toast.error(t("chat_error")); }
     finally { setGenerating(false); }
   };
@@ -401,7 +419,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               )}
             </div>
           ))}
-          <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#5E8B7E] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+          <div className="flex flex-wrap items-center gap-2 mt-1">
+            <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#5E8B7E] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+            <button data-testid="capo-open-picker" onClick={() => { setPickSearch(""); setPickerOpen(true); }} className="text-sm font-semibold text-white bg-[#5E8B7E] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><ChefHat className="w-4 h-4" /> {tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</button>
+            {savedProducts.length > 0 && (
+              <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#33564E] dark:text-[#9ec48f] bg-[#6B8E62]/12 border border-[#6B8E62]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
+            )}
+          </div>
           <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
             <Flag className="w-3.5 h-3.5 text-[#A64B2A] shrink-0 mt-0.5" />
             {tri3(lang, "Scegli tu l'impasto da cui partire: tocca «Parti da qui». L'IA organizzerà la sequenza iniziando da quello.",
@@ -409,6 +433,40 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               "Choose the dough to start from: tap 'Start here'. The AI will sequence the work starting from it.")}
           </p>
         </div>
+
+        {pickerOpen && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center" onClick={() => setPickerOpen(false)}>
+            <div className="bg-white dark:bg-[#1B2127] w-full sm:max-w-md max-h-[82vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <div className="p-4 border-b border-[#D7E1DB] dark:border-[#38424B]">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</h3>
+                  <button data-testid="capo-picker-close" onClick={() => setPickerOpen(false)} className="text-[#7E8A93] p-1"><X className="w-5 h-5" /></button>
+                </div>
+                <input data-testid="capo-picker-search" value={pickSearch} onChange={(e) => setPickSearch(e.target.value)} autoFocus
+                  placeholder={tri3(lang, "Cerca ricetta…", "Rezept suchen…", "Search recipe…")}
+                  className="w-full bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#5E8B7E]" />
+              </div>
+              <div className="overflow-y-auto p-2 flex-1">
+                {recipes.filter((r) => (r.name || "").toLowerCase().includes(pickSearch.toLowerCase())).map((r) => {
+                  const sel = products.some((p) => p.recipe_id === r.id);
+                  return (
+                    <button key={r.id} data-testid={`capo-pick-${r.id}`} onClick={() => (sel ? removeByRecipe(r.id) : addRecipes([r.id]))}
+                      className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#5E8B7E]/12 border border-[#5E8B7E]/40" : "hover:bg-[#EAF0EC] dark:hover:bg-[#2A323A] border border-transparent"}`}>
+                      {sel ? <CheckCircle2 className="w-5 h-5 text-[#5E8B7E] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#D7E1DB] dark:border-[#4a5560] shrink-0" />}
+                      <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#EAF0EC] truncate">{r.name}</span>
+                      {r._own && <span className="text-[10px] text-[#C88A2B]">★</span>}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="p-3 border-t border-[#D7E1DB] dark:border-[#38424B]">
+                <button data-testid="capo-picker-done" onClick={() => setPickerOpen(false)} className="w-full bg-[#5E8B7E] text-white font-semibold py-2.5 rounded-xl active:scale-98">
+                  {tri3(lang, "Fatto", "Fertig", "Done")} ({products.filter((p) => p.recipe_id).length})
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {weeklyItems.length > 0 && (
           <label data-testid="capo-use-weekly" className="mt-3 flex items-center gap-2 text-sm text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">

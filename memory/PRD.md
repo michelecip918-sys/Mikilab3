@@ -1152,3 +1152,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - canGenerate ora richiede almeno 1 ricetta con quantità (validProducts>0); rimosso il fallback "solo Piano Settimanale". Alert/hint aggiornati (obbligatorio ricetta+qty).
 - Struttura 2 macro-step (1. Piano IA, 2. Strumenti) e layout card (Inserisci Ricette, Piano Giornaliero, Produzione Settimanale, Celle Frigo) invariati. Compilazione pulita, nessun errore console su Home/Lab.
 - DA FARE (grande): moduli opzionali come toggle/checkbox on/off (Orari, Spesa, Food Cost, Punti Vendita, Turni, Digital Twin, Termostato, pH, Diagnosi, Diario, Anti-Spreco) senza bloccare il piano base; supporto Bilancia Smart Bluetooth (dati pesata realtime, fallback manuale); salvataggio stati moduli opzionali in sessione.
+
+## v99 (2026-06) — Piano IA scalabile con 100+ ricette (b+c+d)
+- (b) Selettore multiplo con RICERCA: bottone "Aggiungi ricette" (capo-open-picker) apre modale (capo-picker-search) con lista filtrabile + spunta multipla (capo-pick-<id>), "Fatto (n)". addRecipes/removeByRecipe.
+- (c) Più usate in cima: ordinamento ricette per contatore localStorage 'mikilab_recipe_usage' (incrementato alla generazione) + ricette proprie (★) prima.
+- (d) "Riparti dall'ultimo piano" (capo-restore-prev): ricarica i prodotti dell'ultimo piano salvato (savedProducts), si cambia solo la quantità.
+- Verificato via screenshot: ricerca "pane" → 27 risultati, selezione multipla, prodotti aggiunti.
