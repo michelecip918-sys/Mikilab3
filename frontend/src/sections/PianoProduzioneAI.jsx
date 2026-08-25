@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag } from "lucide-react";
-import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal } from "lucide-react";
+import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
@@ -19,8 +20,26 @@ const tri3 = (lang, i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
 
 // Piano di Produzione con IA (spostato dalla "Impostazione Macchine").
 // Config macchine/celle letta in sola lettura per alimentare l'IA.
+const isPanettoneRecipe = (r) => /panettone/i.test(r?.name || "") || /panettone/i.test(r?.menu_category || "");
+
+// Moduli opzionali del Piano IA: si accendono/spengono senza bloccare il piano base.
+const DEFAULT_MODULES = { celle: true, orari: true, freezer: true, spesa: true, foodcost: true, turni: false, clima: false, punti: false, antispreco: false };
+const MODULES = [
+  { id: "celle", Icon: Wrench, it: "Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers" },
+  { id: "orari", Icon: Clock, it: "Orari d'inizio", de: "Startzeiten", en: "Start times" },
+  { id: "freezer", Icon: Snowflake, it: "Giacenze Freezer", de: "Gefrierbestand", en: "Freezer stock" },
+  { id: "turni", Icon: Users, it: "Turni & Personale", de: "Schichten & Personal", en: "Shifts & staff" },
+  { id: "clima", Icon: Thermometer, it: "Meteo & Clima", de: "Wetter & Klima", en: "Weather & climate" },
+  { id: "spesa", Icon: ShoppingCart, it: "Lista Spesa", de: "Einkaufsliste", en: "Shopping list" },
+  { id: "foodcost", Icon: Euro, it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & margin" },
+  { id: "punti", Icon: Store, it: "Punti Vendita", de: "Verkaufspunkte", en: "Sales points" },
+  { id: "antispreco", Icon: Recycle, it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-waste" },
+];
+
 export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
   const [mixers, setMixers] = useState([]);
   const [cells, setCells] = useState([]);
   const [staff, setStaff] = useState("");
@@ -41,6 +60,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickSearch, setPickSearch] = useState("");
   const [savedProducts, setSavedProducts] = useState([]);
+  const [modules, setModules] = useState(DEFAULT_MODULES);
+  const toggleMod = (id) => setModules((m) => ({ ...m, [id]: !m[id] }));
 
   const addRecipes = (ids) => setProducts((l) => {
     const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
@@ -66,11 +87,28 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         }
       } catch { /* first run */ }
       try {
-        const [mk, ps, wp] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal"), weeklyApi.get()]);
+        const [mk, ps, wp, st] = await Promise.all([
+          recipesApi.list("mikilab"),
+          recipesApi.list("personal"),
+          weeklyApi.get(),
+          subscriptionApi.status().catch(() => ({})),
+        ]);
         let usage = {}; try { usage = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); } catch { /* */ }
         const sortFn = (a, b) => ((usage[b.id] || 0) - (usage[a.id] || 0)) || (a.name || "").localeCompare(b.name || "");
         const own = (ps || []).map((r) => ({ ...r, _own: true })).sort(sortFn);
-        const lib = (mk || []).sort(sortFn);
+        // Ricette MikiLab (proprietarie di Michele): visibili nel generatore SOLO all'owner/admin
+        // oppure a chi le ha ACQUISTATE (acquisto singolo / panettoni / tutte). L'abbonamento al
+        // Laboratorio (PRO) NON dà accesso al ricettario: gli altri usano solo le proprie ricette.
+        const hasFullAccess = !!(st && st.unlock_all);
+        const unlockPan = !!(st && st.unlock_panettoni);
+        const unlockedIds = new Set((st && st.unlocked_recipes) || []);
+        const canUseMikilab = (r) => {
+          if (isAdmin) return true;
+          if (hasFullAccess) return true;
+          if (unlockPan && isPanettoneRecipe(r)) return true;
+          return unlockedIds.has(r.id) && r.locked !== true;
+        };
+        const lib = (mk || []).filter(canUseMikilab).sort(sortFn);
         setRecipes([...own, ...lib]);  // le più usate in cima, ricette del panettiere prima
         if (wp && wp.items) setWeeklyItems(wp.items);
       } catch { /* */ }
@@ -94,6 +132,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           if (s.notes !== undefined) setNotes(s.notes);
           if (s.preferment) setPreferment(s.preferment);
           if (s.bizType) setBizType(s.bizType);
+          if (s.modules && typeof s.modules === "object") setModules((m) => ({ ...m, ...s.modules }));
         }
       } catch { /* nessun piano salvato o non loggato */ }
     })();
@@ -125,10 +164,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
       body: JSON.stringify({
         items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit, day: p.day || null, start: !!p.start })),
-        mixers, cells, mode: bizType === "casa" ? "home" : "pro", phase, use_weekly: useWeekly, freezer_stock: freezerStock,
-        staff: staff === "" ? null : Number(staff),
-        start_time: startTime, lab_temp_c: labTemp === "" ? null : Number(labTemp),
+        mixers: modules.celle ? mixers : [], cells: modules.celle ? cells : [], mode: bizType === "casa" ? "home" : "pro", phase, use_weekly: useWeekly,
+        freezer_stock: modules.freezer ? freezerStock : [],
+        staff: modules.turni && staff !== "" ? Number(staff) : null,
+        start_time: modules.orari ? startTime : null,
+        lab_temp_c: modules.clima && labTemp !== "" ? Number(labTemp) : null,
         standard_temp_c: Number(stdTemp) || 26, notes, lang, preferment_choice: preferment,
+        active_modules: Object.keys(modules).filter((k) => modules[k]),
       }),
     });
     if (!res.ok) {
@@ -161,7 +203,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     try {
       const res = await capoPlanApi.save({
         plan_text: text,
-        state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, bizType },
+        state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, bizType, modules },
       });
       setSavedAt(res.saved_at || new Date().toISOString());
     } catch {
@@ -177,6 +219,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
   // Aggiorna da solo le giacenze freezer: scala i pezzi usati (match per nome, anche parziale).
   const updateFreezerAfterPlan = async () => {
+    if (!modules.freezer) return;
     if (!freezerStock.length) return;
     const norm = (s) => (s || "").toLowerCase().trim();
     const planned = products
@@ -325,7 +368,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      {(mixers.length === 0 || cells.length === 0) && (
+      {(mixers.length === 0 || cells.length === 0) && modules.celle && (
         <div data-testid="capo-setup-hint" className="mb-4 rounded-2xl bg-[#C88A2B]/12 border border-[#C88A2B]/35 p-3.5">
           <p className="text-sm text-[#33564E] dark:text-[#8FB0C2] leading-snug">
             {(() => {
@@ -348,6 +391,30 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
+      <Section icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "Moduli del piano (opzionali)", "Plan-Module (optional)", "Plan modules (optional)")}>
+        <p className="text-[11px] text-[#7E8A93] leading-snug mb-3">
+          {tri3(lang,
+            "Accendi solo ciò che ti serve. Il piano base (ricette + quantità) si genera comunque.",
+            "Schalte nur ein, was du brauchst. Der Basisplan (Rezepte + Mengen) wird trotzdem erstellt.",
+            "Turn on only what you need. The base plan (recipes + quantities) is generated anyway.")}
+        </p>
+        <div data-testid="capo-modules" className="grid grid-cols-3 gap-2">
+          {MODULES.map(({ id, Icon, it, de, en }) => {
+            const on = !!modules[id];
+            return (
+              <button key={id} type="button" data-testid={`capo-module-${id}`} aria-pressed={on} onClick={() => toggleMod(id)}
+                className={`flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 text-center transition-all active:scale-95 border min-h-[74px] ${
+                  on
+                    ? "bg-[#5E8B7E] text-white border-[#5E8B7E] shadow-sm"
+                    : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+                <Icon className={`w-5 h-5 ${on ? "text-white" : "text-[#9aa4ac]"}`} />
+                <span className="text-[10.5px] font-semibold leading-tight">{tri3(lang, it, de, en)}</span>
+              </button>
+            );
+          })}
+        </div>
+      </Section>
+
       <Section icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
         <div className="space-y-2" data-testid="capo-products">
           {products.map((p, i) => (
@@ -362,9 +429,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                       {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
                     </optgroup>
                   )}
-                  <optgroup label={tri3(lang, "Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}>
-                    {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
-                  </optgroup>
+                  {recipes.some((r) => !r._own) && (
+                    <optgroup label={tri3(lang, "Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}>
+                      {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                    </optgroup>
+                  )}
                 </select>
                 <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
@@ -432,6 +501,17 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               "Wähle den Start-Teig: tippe auf „Hier starten“. Die KI ordnet die Reihenfolge ab diesem Teig.",
               "Choose the dough to start from: tap 'Start here'. The AI will sequence the work starting from it.")}
           </p>
+          {!isAdmin && !recipes.some((r) => !r._own) && (
+            <div data-testid="capo-mikilab-buy-hint" className="mt-2 rounded-xl border border-[#C88A2B]/40 bg-[#C88A2B]/10 p-3 flex items-start gap-2">
+              <BookOpen className="w-4 h-4 text-[#C88A2B] shrink-0 mt-0.5" />
+              <p className="text-xs text-[#5b4a2a] dark:text-[#E4C98B] leading-snug">
+                {tri3(lang,
+                  "Qui usi le TUE ricette (scansionate o scritte a mano). Vuoi usare anche le ricette di MikiLab nel piano? Acquistale nella sezione «Ricette» e compariranno qui.",
+                  "Hier verwendest du DEINE Rezepte (gescannt oder handschriftlich). Möchtest du auch MikiLab-Rezepte im Plan nutzen? Kaufe sie im Bereich „Rezepte“, dann erscheinen sie hier.",
+                  "Here you use YOUR recipes (scanned or handwritten). Want to use MikiLab recipes in the plan too? Buy them in the 'Recipes' section and they'll appear here.")}
+              </p>
+            </div>
+          )}
         </div>
 
         {pickerOpen && (
@@ -476,12 +556,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         )}
 
         <div className="grid grid-cols-2 gap-3 mt-4">
-          <LabelInput testid="capo-start-time" label={t("capo_start_time")} type="time" value={startTime} onChange={setStartTime} />
-          <LabelInput testid="capo-lab-temp" label={t("capo_lab_temp")} type="number" value={labTemp} onChange={setLabTemp} unit="°C" />
-          <LabelInput testid="capo-staff" label={tri3(lang, "Personale in turno oggi", "Personal heute", "Staff on shift today")} type="number" value={staff} onChange={setStaff} />
-          <LabelInput testid="capo-std-temp" label={tri3(lang, "Temp. standard laboratorio", "Standardtemperatur", "Standard lab temp")} type="number" value={stdTemp} onChange={setStdTemp} unit="°C" />
+          {modules.orari && <LabelInput testid="capo-start-time" label={t("capo_start_time")} type="time" value={startTime} onChange={setStartTime} />}
+          {modules.clima && <LabelInput testid="capo-lab-temp" label={t("capo_lab_temp")} type="number" value={labTemp} onChange={setLabTemp} unit="°C" />}
+          {modules.turni && <LabelInput testid="capo-staff" label={tri3(lang, "Personale in turno oggi", "Personal heute", "Staff on shift today")} type="number" value={staff} onChange={setStaff} />}
+          {modules.clima && <LabelInput testid="capo-std-temp" label={tri3(lang, "Temp. standard laboratorio", "Standardtemperatur", "Standard lab temp")} type="number" value={stdTemp} onChange={setStdTemp} unit="°C" />}
         </div>
-        {tempMsg && (
+        {modules.clima && tempMsg && (
           <div data-testid="capo-temp-msg" className={`mt-2 text-sm rounded-xl px-3 py-2 border ${tempDelta && Math.abs(tempDelta) >= 1 ? "bg-[#6E8CA0]/15 border-[#6E8CA0]/40 text-[#33564E] dark:text-[#8FB0C2]" : "bg-[#6B8E62]/12 border-[#6B8E62]/30 text-[#4d6b45] dark:text-[#9ec48f]"}`}>
             <Thermometer className="w-4 h-4 inline mr-1" />{tempMsg}
           </div>
@@ -510,7 +590,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#5E8B7E] resize-none" />
         </div>
 
-        {(() => {
+        {modules.foodcost && (() => {
           const num = (x) => Number(x) || 0;
           const rows = products.map((p) => {
             if (!p.recipe_id || !(num(p.qty) > 0)) return null;
@@ -613,7 +693,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <ReactMarkdown>{plan}</ReactMarkdown>
               </div>
 
-              <SupplierOrder totals={shopTotals} />
+              {modules.spesa && <SupplierOrder totals={shopTotals} />}
 
               {usedRecipes.length > 0 && (
                 <div data-testid="capo-recipes" className="space-y-3">

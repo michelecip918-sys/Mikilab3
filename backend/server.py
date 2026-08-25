@@ -271,6 +271,7 @@ class CapoPlanRequest(BaseModel):
     use_weekly: bool = False         # se True, unisce anche il Piano settimanale salvato
     freezer_stock: List[dict] = []   # [{name, qty, min_qty}] giacenze freezer attuali
     preferment_choice: Optional[str] = None  # "solido" | "licoli" | "poolish" | "lievito_birra"
+    active_modules: Optional[List[str]] = None  # moduli opzionali attivi; None = tutti attivi (retrocompat)
     lang: str = "it"
 
 
@@ -1337,6 +1338,10 @@ async def capo_plan_stream(payload: CapoPlanRequest):
             })
 
     de = payload.lang == "de"
+    _mods = payload.active_modules
+    _all_on = _mods is None
+    def mod_on(name):
+        return _all_on or (name in (_mods or []))
     products_txt, has_days = await _capo_build_products_block(items, payload.lang)
     # Il panettiere può scegliere la PRIMA ricetta da cui far partire la produzione.
     start_names = [str(it.get("name")) for it in items if it.get("start") and it.get("name")]
@@ -1550,30 +1555,46 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                        "Riduci l'acqua dell'impasto principale scomputando l'acqua già presente nel prefermento (con idratazione al 100% la metà del suo peso è acqua), così l'idratazione finale resta invariata. Spiega brevemente lo scomputo.")
 
     # Direttiva — logica freezer (oggi/domani/scorta) + AVVISI automatici (l'AI fa tutto).
-    if de:
-        prompt += (
-            "\n\nWICHTIG — GEFRIER-LOGIK & AUTOMATISCHE HINWEISE:\n"
-            "Für JEDES Produkt teile die Menge sinnvoll auf: eine Portion für HEUTE, eine für MORGEN (Kühlschrank), "
-            "der REST ins Gefrierfach als Vorrat. Schätze anhand des Tagesverbrauchs, WIE LANGE der Gefriervorrat reicht "
-            "(z. B. „600 Baguette am Do: 100 heute, 100 morgen, 400 tiefgekühlt — Vorrat bis Freitag“). "
-            "Gib eine kurze Tabelle/Liste pro Produkt: heute / morgen / Gefrierfach / Vorrat reicht bis.\n"
-            "Füge AUTOMATISCHE HINWEISE mit Uhrzeit/Auslöser hinzu: wann die Teige/Vorteige (am Vortag) ansetzen, "
-            "wann den Sauerteig auffrischen, wann aus Gefrierfach/Kühlschrank herausnehmen und auftauen/wieder aufgehen lassen, "
-            "und eine WARNUNG, wann der Gefriervorrat zur Neige geht und nachproduziert werden muss. Der Bäcker soll nichts selbst berechnen müssen."
-            " Berücksichtige den AKTUELLEN GEFRIERBESTAND: nutze ihn ZUERST und produziere nur die Differenz nach; aktualisiere am Ende, was neu ins Gefrierfach geht."
-        )
-    else:
-        prompt += (
-            "\n\nIMPORTANTE — LOGICA FREEZER (oggi/domani/scorta) + AVVISI AUTOMATICI:\n"
-            "Per OGNI prodotto ripartisci la quantità con logica: una parte per OGGI, una per DOMANI (frigo), "
-            "il RESTO in freezer come scorta. Stima in base al consumo giornaliero PER QUANTO dura la scorta congelata "
-            "(es. «Baguette giovedì 600 pezzi: 100 oggi, 100 domani, 400 in freezer — scorta fino a venerdì»). "
-            "Dai una breve tabella/elenco per prodotto: oggi / domani / freezer / scorta fino a.\n"
-            "Inserisci AVVISI AUTOMATICI con orario/innesco: quando attaccare gli impasti/prefermenti (il giorno prima), "
-            "quando rinfrescare il lievito madre, quando tirare fuori dal freezer/frigo e scongelare/far riprendere, "
-            "e un AVVISO di quando la scorta in freezer sta per finire e va riprodotta. Il panettiere non deve calcolare nulla da solo."
-            " Tieni conto delle GIACENZE FREEZER ATTUALI: usale PER PRIME e produci solo la differenza mancante; alla fine aggiorna cosa entra di nuovo nel freezer."
-        )
+    if payload.mode != "home" and mod_on("freezer"):
+        if de:
+            prompt += (
+                "\n\nWICHTIG — GEFRIER-LOGIK & AUTOMATISCHE HINWEISE:\n"
+                "Für JEDES Produkt teile die Menge sinnvoll auf: eine Portion für HEUTE, eine für MORGEN (Kühlschrank), "
+                "der REST ins Gefrierfach als Vorrat. Schätze anhand des Tagesverbrauchs, WIE LANGE der Gefriervorrat reicht "
+                "(z. B. „600 Baguette am Do: 100 heute, 100 morgen, 400 tiefgekühlt — Vorrat bis Freitag“). "
+                "Gib eine kurze Tabelle/Liste pro Produkt: heute / morgen / Gefrierfach / Vorrat reicht bis.\n"
+                "Füge AUTOMATISCHE HINWEISE mit Uhrzeit/Auslöser hinzu: wann die Teige/Vorteige (am Vortag) ansetzen, "
+                "wann den Sauerteig auffrischen, wann aus Gefrierfach/Kühlschrank herausnehmen und auftauen/wieder aufgehen lassen, "
+                "und eine WARNUNG, wann der Gefriervorrat zur Neige geht und nachproduziert werden muss. Der Bäcker soll nichts selbst berechnen müssen."
+                " Berücksichtige den AKTUELLEN GEFRIERBESTAND: nutze ihn ZUERST und produziere nur die Differenz nach; aktualisiere am Ende, was neu ins Gefrierfach geht."
+            )
+        else:
+            prompt += (
+                "\n\nIMPORTANTE — LOGICA FREEZER (oggi/domani/scorta) + AVVISI AUTOMATICI:\n"
+                "Per OGNI prodotto ripartisci la quantità con logica: una parte per OGGI, una per DOMANI (frigo), "
+                "il RESTO in freezer come scorta. Stima in base al consumo giornaliero PER QUANTO dura la scorta congelata "
+                "(es. «Baguette giovedì 600 pezzi: 100 oggi, 100 domani, 400 in freezer — scorta fino a venerdì»). "
+                "Dai una breve tabella/elenco per prodotto: oggi / domani / freezer / scorta fino a.\n"
+                "Inserisci AVVISI AUTOMATICI con orario/innesco: quando attaccare gli impasti/prefermenti (il giorno prima), "
+                "quando rinfrescare il lievito madre, quando tirare fuori dal freezer/frigo e scongelare/far riprendere, "
+                "e un AVVISO di quando la scorta in freezer sta per finire e va riprodotta. Il panettiere non deve calcolare nulla da solo."
+                " Tieni conto delle GIACENZE FREEZER ATTUALI: usale PER PRIME e produci solo la differenza mancante; alla fine aggiorna cosa entra di nuovo nel freezer."
+            )
+
+    # Moduli opzionali extra (toggle ON dal frontend).
+    if payload.mode != "home":
+        if mod_on("punti"):
+            prompt += ("\n\nVERKAUFSPUNKTE: Berücksichtige die Verteilung auf mehrere Verkaufspunkte — schlage vor, wie viel pro Punkt und wann geliefert/vorbereitet werden soll."
+                       if de else
+                       "\n\nPUNTI VENDITA: considera la distribuzione su più punti vendita — proponi quanto destinare a ciascun punto e quando consegnare/preparare.")
+        if mod_on("antispreco"):
+            prompt += ("\n\nANTI-VERSCHWENDUNG: Gib konkrete Tipps, um Reste/Überschuss zu vermeiden (Mengen anpassen, Reste weiterverwenden, was einfrieren)."
+                       if de else
+                       "\n\nANTI-SPRECO: dai consigli concreti per evitare avanzi/eccedenze (adatta le quantità, riusa gli avanzi, cosa congelare).")
+        if mod_on("spesa"):
+            prompt += ("\n\nEINKAUFSLISTE: Füge am Ende eine kurze Einkaufsliste hinzu (Mehle nach Typ, Wasser, Vorteig, Salz, Zusätze)."
+                       if de else
+                       "\n\nLISTA SPESA: aggiungi in fondo una breve lista della spesa (farine per tipo, acqua, prefermento, sale, extra).")
 
     prompt += lang_instr
     chat = LlmChat(
