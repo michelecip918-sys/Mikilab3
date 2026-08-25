@@ -2825,6 +2825,8 @@ def _post_public(doc: dict, user: Optional[dict]) -> dict:
         "author_name": doc.get("author_name") or "Fornaio",
         "category": doc.get("category", "consiglio"),
         "text": doc.get("text", ""),
+        "text_de": doc.get("text_de"),
+        "text_en": doc.get("text_en"),
         "image_url": doc.get("image_url"),
         "created_at": doc.get("created_at"),
         "like_count": len(likes),

@@ -124,3 +124,11 @@
 - Archivio "I Miei Dati Salvati" (sections/MyData.jsx): 4 tab — Piani (plansArchiveApi, badge IA/Settimanale + Apri), Ricette (personali), Documenti&PDF (nota: PDF on-demand dagli strumenti), Chat AI (segnaposto "in arrivo"). Accessibile dal quicklink INIZIA [capo-quicklink-mydata] del Laboratorio.
 - Testato: testing_agent iteration_74 (100% flussi Fase 4, traduzioni, regressione strumenti, 0 errori console).
 - DEFERITO: Academy a livelli Base/Intermedio/Avanzato — bloccata dai contenuti reali (video/prezzi) che l'utente deve fornire.
+
+## v120 (2026-06) — Revisione ampia FASE 5 (audit traduzioni IT/DE/EN)
+- Verifica statica: dizionario i18n completo (671 chiavi ×3), tutte le tri() a 3 rami, nessuna stringa hardcoded nei nuovi file. Unico dict senza EN: RadioFornaio STATIONS (nomi propri emittenti — intenzionale).
+- Runtime audit (testing_agent iteration_75, 97%) → 2 fix:
+  - FIX HIGH: de.brand_subtitle era in italiano → "Micheles Backstube".
+  - FIX MEDIUM: post di benvenuto Community solo in IT → aggiunte versioni DE/EN (WELCOME_POST_DE/EN), _post_public ora espone text_de/text_en, Community.jsx localizza il testo del post.
+- Esito: nessun testo italiano residuo in EN/DE nelle funzioni delle Fasi 1-5.
+- Revisione ampia (10 punti) completata tranne Academy a livelli (in attesa di video/prezzi reali dall'utente).
