@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -11,6 +11,7 @@ import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
+import { guideFor } from "@/lib/toolGuide";
 import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
 
@@ -56,6 +57,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [freezerStock, setFreezerStock] = useState([]);
   const [plan, setPlan] = useState("");
   const capoArchiveRef = useRef(null);
+  const [guideId, setGuideId] = useState(null); // strumento spiegato da Mohammadreza
   const [generating, setGenerating] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -430,9 +432,28 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
+
+            {/* Mohammadreza spiega lo strumento al tocco della "i" */}
+            {guideId && (
+              <div data-testid="tool-guide-bubble" className="mb-3 flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#2D5A4C] to-[#5E8B7E] text-white p-3 shadow-md">
+                <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-xl object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
+                  <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
+                  <div className="flex gap-2 mt-2">
+                    <button data-testid="tool-guide-open" onClick={() => { const g = guideId; setGuideId(null); onOpenTool(g); }}
+                      className="text-xs font-bold bg-white text-[#2D5A4C] px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Apri strumento", "Werkzeug öffnen", "Open tool")}</button>
+                    <button data-testid="tool-guide-close" onClick={() => setGuideId(null)}
+                      className="text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Chiudi", "Schließen", "Close")}</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-3 gap-2">
               {[
                 { id: "capo", Icon: Snowflake, label: tri3(lang, "Celle & Impastatrici", "Kammern & Kneter", "Cells & Mixers") },
+                { id: "mydata", Icon: Archive, label: tri3(lang, "I Miei Dati", "Meine Daten", "My Data") },
                 { id: "inversa", Icon: Clock, label: tri3(lang, "Orari d'Inizio", "Startzeiten", "Start Times") },
                 { id: "spesa", Icon: ShoppingCart, label: tri3(lang, "Lista Spesa", "Einkaufsliste", "Shopping List") },
                 { id: "foodcost", Icon: Euro, label: tri3(lang, "Food Cost", "Food Cost", "Food Cost") },
@@ -457,11 +478,18 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 { id: "shelf", Icon: CalendarClock, label: tri3(lang, "Shelf-Life", "Shelf-Life", "Shelf-Life") },
                 { id: "spreco", Icon: Recycle, label: tri3(lang, "Anti-Spreco", "Anti-Verschwendung", "Anti-Waste") },
               ].map(({ id, Icon, label }) => (
-                <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
-                  className="flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px]">
+                <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
+                  className="relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px] cursor-pointer">
+                  {guideFor(id, lang) && (
+                    <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
+                      onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#5E8B7E]/12 flex items-center justify-center text-[#5E8B7E] active:scale-90">
+                      <Info className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                   <Icon className="w-5 h-5 text-[#5E8B7E]" />
                   <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{label}</span>
-                </button>
+                </div>
               ))}
             </div>
           </>

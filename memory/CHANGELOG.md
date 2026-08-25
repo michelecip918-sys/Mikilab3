@@ -118,3 +118,9 @@
 - Impara (LearnHub): rimossa scheda News (spostata in Home) — ora rende direttamente Beginners.
 - Marketplace Usato: rimosso dalla griglia strumenti del Laboratorio; inserito in Community ([community-marketplace]).
 - Testato: testing_agent iteration_73 (100% criteri Fase 3: CRUD news admin, vista read-only non-admin/anonimo, traduzioni, Impara senza News, Marketplace in Community e fuori dal Lab). Nessun dato di test residuo.
+
+## v119 (2026-06) — Revisione ampia FASE 4 (guida Mohammadreza + Archivio dati)
+- Mohammadreza guida interattiva: lib/toolGuide.js (descrizioni IT/DE/EN per ~23 strumenti). In PianoProduzioneAI le tile strumento ora sono <div> con icona info (tool-info-<id>): al tocco compare il fumetto tool-guide-bubble con avatar Mohammadreza + spiegazione + Apri/Chiudi (tool-guide-open/close). La tile intera apre lo strumento come prima.
+- Archivio "I Miei Dati Salvati" (sections/MyData.jsx): 4 tab — Piani (plansArchiveApi, badge IA/Settimanale + Apri), Ricette (personali), Documenti&PDF (nota: PDF on-demand dagli strumenti), Chat AI (segnaposto "in arrivo"). Accessibile dal quicklink INIZIA [capo-quicklink-mydata] del Laboratorio.
+- Testato: testing_agent iteration_74 (100% flussi Fase 4, traduzioni, regressione strumenti, 0 errori console).
+- DEFERITO: Academy a livelli Base/Intermedio/Avanzato — bloccata dai contenuti reali (video/prezzi) che l'utente deve fornire.
