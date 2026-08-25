@@ -30,9 +30,13 @@ export default function Header() {
       <div data-testid="flag-strip" aria-hidden className="it-de-ribbon" />
 
       <div className="px-4 py-3 flex items-center justify-between gap-2">
-      <div className="flex items-center min-w-0">
-        <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#232A31] flex items-center justify-center shadow-sm ring-2 ring-[#A9C5D4]/70 shrink-0">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-full h-full object-cover" />
+      <div className="flex items-center gap-2.5 min-w-0">
+        <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#232A31] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-full h-full object-cover" />
+        </div>
+        <div className="min-w-0 leading-none">
+          <p className="font-display text-lg font-extrabold tracking-tight text-[#2D5A4C] dark:text-[#EAF0EC]">MikiLab</p>
+          <p className="hidden min-[380px]:block text-[10px] font-semibold text-[#7E8A93] truncate">{t("brand_subtitle")}</p>
         </div>
       </div>
 

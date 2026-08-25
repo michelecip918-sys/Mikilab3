@@ -132,9 +132,9 @@ function App() {
     <AmbientProvider>
     <TimerProvider>
     <div className="App min-h-screen bg-[#F6F8F5] dark:bg-[#1B2127]">
-      {/* Sfondo tematico cartone (leggero, su ogni pagina) */}
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-no-repeat bg-right-bottom opacity-[0.05] dark:opacity-[0.07]"
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/michele-cartoon.jpg)`, backgroundSize: "min(70vw, 420px)" }} />
+      {/* Sfondo tematico: filigrana grano/farina elegante su ogni pagina (contrasto garantito dalle card) */}
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-repeat opacity-[0.55] dark:opacity-[0.05]"
+        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px" }} />
       <div className="relative z-10">
       <Header />
       <InstallBanner />
@@ -158,12 +158,25 @@ function App() {
           </motion.div>
         </AnimatePresence>
 
-        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#D7E1DB] dark:border-[#38424B] flex items-center gap-3">
-          <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele — MikiLab" loading="lazy" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#A9C5D4]/60 shadow-sm shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          <div className="min-w-0">
-            <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#EAF0EC]">MikiLab · Michele</p>
-            <p className="text-[11px] text-[#7E8A93]">{tri("Panificazione artigianale & passione", "Handwerksbäckerei & Leidenschaft", "Artisan baking & passion")}</p>
+        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#D7E1DB] dark:border-[#38424B]">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2D5A4C] to-[#5E8B7E] text-white p-4 shadow-lg">
+            <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+            <div className="flex items-center gap-4 mt-1">
+              <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele — MikiLab" loading="lazy"
+                className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#D4AF37]/70 shadow-md shrink-0"
+                onError={(e) => { e.currentTarget.src = `${process.env.PUBLIC_URL}/michele-real2.jpg`; }} />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg overflow-hidden bg-[#232A31] ring-1 ring-[#D4AF37]/60 shrink-0">
+                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="ML" className="w-full h-full object-cover" />
+                  </div>
+                  <p className="font-display text-lg font-extrabold tracking-tight">MikiLab · Michele</p>
+                </div>
+                <p className="text-[11px] text-white/85 leading-snug mt-1">{tri("Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli", "Die Handwerkswelt für Bäcker, Konditoren und Pizzabäcker", "The Artisan World for Bakers, Pastry Chefs and Pizzaioli")}</p>
+              </div>
+            </div>
           </div>
+          <p className="text-center text-[10px] text-[#9AA6AE] mt-3">© {new Date().getFullYear()} MikiLab · mikilab.de</p>
         </footer>
       </main>
       <BottomNav active={tab} onChange={navigate} />

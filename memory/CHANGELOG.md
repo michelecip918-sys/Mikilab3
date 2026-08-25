@@ -102,3 +102,12 @@
 - Design blueprint salvato in /app/design_guidelines.json (design_agent).
 - ROADMAP fasi successive: F2 branding visivo (logo ML header+footer, sfondi filigrana grano/farina, palette, footer con foto Michele più grande); F3 News→Home + CRUD admin news, Marketplace→Community; F4 Academy a livelli Base/Intermedio/Avanzato, archivio 'I Miei Dati Salvati' (Piani+Ricette+PDF), Mohammadreza guida interattiva (tooltip testuali); F5 audit traduzioni IT/DE/EN a tappeto.
 - NOTA: voce TTS NON riattivata (l'utente ha confermato: solo fumetti scritti).
+
+## v117 (2026-06) — Revisione ampia FASE 2 (branding visivo)
+- Header (Header.jsx): logo ML + wordmark "MikiLab" + sottotitolo, anello dorato (#D4AF37). Visibile su tutte le pagine.
+- Sfondo tematico: generata filigrana elegante grano/farina/impastatrice (public/wheat-bg.webp), applicata ripetuta e soffusa (opacity 0.55 light / 0.05 dark) dietro OGNI sezione via layout globale in App.js; card con sfondo solido garantiscono leggibilità.
+- Slogan banner in Home (home-slogan) già da F1.
+- Footer (App.js, condiviso da tutte le sezioni): card branded verde salvia con logo ML + FOTO REALE di Michele più grande (80px, michele-real-lab.jpg con fallback), slogan trilingue e © mikilab.de.
+- Palette: accenti dorati aggiunti (ring/dettagli) coerenti col blueprint /app/design_guidelines.json; base salvia/crema mantenuta per non destabilizzare.
+- Verifica: smoke screenshot Home (header+sfondo+slogan OK, contenuti leggibili), compilazione pulita.
+- NOTA: cambi puramente visivi a basso rischio; logiche invariate.
