@@ -95,6 +95,11 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   shopSettings: () => api.get(`/admin/shop/settings`).then((r) => r.data),
   setShop: (enabled) => api.put(`/admin/shop/settings`, { enabled }).then((r) => r.data),
   shopWaitlist: () => api.get(`/admin/shop/waitlist`).then((r) => r.data),
+  setSiteSettings: (data) => api.put(`/admin/site-settings`, data).then((r) => r.data),
+};
+
+export const siteSettingsApi = {
+  get: () => api.get(`/site-settings`).then((r) => r.data).catch(() => ({})),
 };
 
 export const communityApi = {

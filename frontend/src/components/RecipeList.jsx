@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer } from "lucide-react";
-import { recipesApi, subscriptionApi, recipePurchaseApi } from "@/lib/api";
+import { recipesApi, subscriptionApi, recipePurchaseApi, siteSettingsApi } from "@/lib/api";
+import { CATS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import FlourTable from "@/components/FlourTable";
@@ -36,6 +37,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [catFilter, setCatFilter] = useState("all");
   const [baseFilter, setBaseFilter] = useState("all");
   const [openCats, setOpenCats] = useState({});
+  const [folderCovers, setFolderCovers] = useState({});
   const { t, lang, setLang } = useLang();
   useBackClose(!!viewing, () => setViewing(null));
   useBackClose(dialogOpen, () => setDialogOpen(false));
@@ -66,6 +68,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   };
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [collectionName]);
+
+  // Copertine cartelle scelte dall'admin (globali, per categoria).
+  useEffect(() => { siteSettingsApi.get().then((s) => setFolderCovers((s && s.folder_covers) || {})).catch(() => {}); }, []);
 
   // Sblocco immediato: dopo un acquisto ricetta ricarica la lista (no reload manuale).
   useEffect(() => {
@@ -229,14 +234,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         };
         const filtered = recipes.filter(matches);
         const baseChips = ["all", ...BASE_KEYS];
-        const CATS = [
-          { key: "basi", label: "cat_basi", icon: "✨" },
-          { key: "pane", label: "cat_pane", icon: "🍞" },
-          { key: "panini", label: "cat_panini", icon: "🥖" },
-          { key: "snack", label: "cat_snack", icon: "🥨" },
-          { key: "focacce", label: "cat_focacce", icon: "🫓" },
-          { key: "panettoni", label: "cat_panettoni", icon: "🎁" },
-        ];
 
         const Card = (r, i) => (
           <motion.button
@@ -325,10 +322,10 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   if (items.length === 0) return null;
                   const open = openCats[cat.key] !== false; // cartelle aperte di default
                   const coverSrc = (() => {
-                    const withImg = items.find((r) => r.image_url);
-                    if (!withImg) return null;
-                    const u = withImg.image_url;
-                    return u.startsWith("http") ? u : `${process.env.PUBLIC_URL}${u}`;
+                    const chosen = folderCovers[cat.key];
+                    const raw = chosen || (items.find((r) => r.image_url) || {}).image_url;
+                    if (!raw) return null;
+                    return raw.startsWith("http") ? raw : `${process.env.PUBLIC_URL}${raw}`;
                   })();
                   return (
                     <div key={cat.key} data-testid={`cat-section-${cat.key}`}
@@ -812,7 +809,6 @@ function fmtTemp(v) {
 }
 
 // Categoria e ordine di visualizzazione: Backmittel -> Lievito Madre -> Panettoni -> Pane -> Panini
-const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre Solido", "LiCoLi (Lievito in Coltura Liquida)", "Lievito Madre di Segale", "Poolish", "Farina Cotta (Kochstück)"];
 
 // Badge sintetici derivati dalla ricetta (LM, LDB, Vk, Rg, Poolish, Biga, numeri farina).
 function recipeBadges(r) {
@@ -915,23 +911,6 @@ function baseLabel(k, lang) {
     case "diretto": return de ? "Direkt" : en ? "Direct" : "Diretto";
     default: return k;
   }
-}
-
-function recipeCategory(r) {
-  const cat = r.menu_category;
-  const name = (r.name || "").toLowerCase();
-  // Ordine: Basi → Pane → Panini → Snack → Focacce → Panettoni
-  if (cat === "basi" || (!cat && /migliorator|backmittel|lievito madre|poolish|kochst/.test(name))) {
-    const sub = BASI_ORDER.indexOf(r.name);
-    return { rank: 0, sub: sub < 0 ? 99 : sub, key: "basi", label: "cat_basi", icon: "✨" };
-  }
-  if (cat === "panettoni" || (!cat && /panettone/.test(name))) return { rank: 5, sub: 0, key: "panettoni", label: "cat_panettoni", icon: "🎁" };
-  if (cat === "focacce") return { rank: 4, sub: 0, key: "focacce", label: "cat_focacce", icon: "🫓" };
-  if (cat === "snack") return { rank: 3, sub: 0, key: "snack", label: "cat_snack", icon: "🥨" };
-  if (cat === "panini") return { rank: 2, sub: 0, key: "panini", label: "cat_panini", icon: "🥖" };
-  // Pane: tengo le baguette/filoni vicini in cima alla sezione
-  const isBaguette = /baguette|filo di francia|ficelle|bacchett/.test(name);
-  return { rank: 1, sub: isBaguette ? 0 : 1, key: "pane", label: "cat_pane", icon: "🍞" };
 }
 
 const GLOSSARY = {

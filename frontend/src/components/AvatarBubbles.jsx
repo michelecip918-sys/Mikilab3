@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
+import { siteSettingsApi } from "@/lib/api";
 
 const base = process.env.PUBLIC_URL || "";
 const AV = {
@@ -27,8 +29,17 @@ const NAME = { michele: "Michele", momy: "Momy" };
 
 export default function AvatarBubbles({ variant = "impara" }) {
   const { lang } = useLang();
+  const [overrides, setOverrides] = useState({});
+  useEffect(() => { siteSettingsApi.get().then((s) => setOverrides((s && s.avatar_bubbles) || {})).catch(() => {}); }, []);
   const msgs = SCRIPTS[variant] || SCRIPTS.impara;
-  const pick = (m) => (lang === "de" ? m.de : lang === "en" ? m.en : m.it);
+  const pick = (m) => {
+    const ov = overrides[`${variant}.${m.who}`];
+    if (ov) {
+      const txt = lang === "de" ? (ov.de || ov.it) : lang === "en" ? (ov.en || ov.it) : ov.it;
+      if (txt) return txt;
+    }
+    return lang === "de" ? m.de : lang === "en" ? m.en : m.it;
+  };
 
   return (
     <div data-testid="avatar-bubbles" className="mb-5 space-y-3">

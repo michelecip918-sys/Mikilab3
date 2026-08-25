@@ -2586,6 +2586,56 @@ async def admin_shop_waitlist(admin: dict = Depends(require_admin)):
 
 
 # ---------------------------------------------------------------------------
+# Impostazioni sito editabili dall'admin: numero WhatsApp, testi fumetti avatar,
+# copertine delle cartelle ricette. Lettura pubblica, scrittura solo admin.
+# ---------------------------------------------------------------------------
+DEFAULT_SITE_SETTINGS = {
+    "whatsapp_number": "491601253378",
+    "avatar_bubbles": {},   # override keyed "impara.michele" -> {"it": "...", "de": "..."}
+    "folder_covers": {},    # {"pane": "<url>", "panettoni": "<url>", ...}
+}
+
+
+def _merge_site_settings(doc):
+    s = dict(DEFAULT_SITE_SETTINGS)
+    if doc:
+        for k in ("whatsapp_number", "avatar_bubbles", "folder_covers"):
+            if doc.get(k) is not None:
+                s[k] = doc[k]
+    return s
+
+
+@api_router.get("/site-settings")
+async def get_site_settings():
+    doc = await db.app_meta.find_one({"_key": "site_settings"}, {"_id": 0, "_key": 0})
+    return _merge_site_settings(doc)
+
+
+class SiteSettingsReq(BaseModel):
+    whatsapp_number: Optional[str] = None
+    avatar_bubbles: Optional[dict] = None
+    folder_covers: Optional[dict] = None
+
+
+@api_router.put("/admin/site-settings")
+async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(require_admin)):
+    update = {"_key": "site_settings"}
+    if body.whatsapp_number is not None:
+        num = "".join(ch for ch in body.whatsapp_number if ch.isdigit())
+        if num.startswith("00"):
+            num = num[2:]  # 0049... -> 49... (prefisso internazionale per wa.me)
+        update["whatsapp_number"] = num
+    if body.avatar_bubbles is not None:
+        update["avatar_bubbles"] = body.avatar_bubbles
+    if body.folder_covers is not None:
+        update["folder_covers"] = body.folder_covers
+    await db.app_meta.update_one({"_key": "site_settings"}, {"$set": update}, upsert=True)
+    doc = await db.app_meta.find_one({"_key": "site_settings"}, {"_id": 0, "_key": 0})
+    return _merge_site_settings(doc)
+
+
+
+# ---------------------------------------------------------------------------
 # Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri
 # ---------------------------------------------------------------------------
 COMMUNITY_CATEGORIES = {"consiglio", "foto", "ricetta", "domanda"}

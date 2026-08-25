@@ -1,16 +1,20 @@
+import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
+import { siteSettingsApi } from "@/lib/api";
 
-const WA_NUMBER = "491601253378"; // +49 160 1253378
+const WA_DEFAULT = "491601253378"; // +49 160 1253378
 
 export default function WhatsAppFab() {
   const { lang } = useLang();
+  const [num, setNum] = useState(WA_DEFAULT);
+  useEffect(() => { siteSettingsApi.get().then((s) => { if (s && s.whatsapp_number) setNum(s.whatsapp_number); }).catch(() => {}); }, []);
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const msg = tri(
     "Ciao Michele! Ti scrivo da MikiLab.",
     "Hallo Michele! Ich schreibe dir über MikiLab.",
     "Hi Michele! I'm messaging you from MikiLab."
   );
-  const href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  const href = `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
 
   return (
     <a
