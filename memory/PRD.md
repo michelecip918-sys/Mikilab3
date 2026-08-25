@@ -1095,3 +1095,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - SVEGLIA AL PICCO (DoughTwin): pulsante "Avvisami al picco" (twin-alarm-set) → Notification API + navigator.vibrate + beep WebAudio + toast, schedulato a tPeak ore da ora; "Sveglia attiva alle HH:MM · Annulla" (twin-alarm-cancel). NB: setTimeout mentre l'app è aperta (nessun push server-side). Testato (iteration_63).
 - SCORTE FREEZER AUTOMATICHE (PianoProduzioneAI.updateFreezerAfterPlan): dopo generate() scala min(qty_freezer, qty_pianificata) per i prodotti che combaciano col nome della giacenza. Match reso ROBUSTO (uguaglianza normalizzata O contains bidirezionale ≥4 char) per gestire "Baguette precotte" vs "Baguette". Toast di conferma/errore. PUT /api/freezer. Testato (iteration_63: 100→70 + persistenza).
 - FAB (Radio sx / Parla dx): riposizionati a bottom-20 (blueprint) + AUTO-NASCONDIMENTO durante lo scroll (translate-y/opacity, riappaiono a scroll fermo) per non coprire i contenuti. Testato posizione (iteration_63) + smoke Home.
+
+## v92 (2026-06) — Stepper Lab compatto + Guida di Mohammed allineata (2 passi)
+- Maestro stepper: da linea flex-1 (numeri ai bordi) a pillole CENTRATE e vicine "① Piano IA → ② Strumenti" con freccia oro (ChevronRight) e ring oro sull'attivo → i numeri 1/2 danno nell'occhio.
+- MohammedAssistant: intro + GUIDE riscritti per i 2 passi → (1) cose fondamentali per generare il Piano IA (ricette+quantità obbligatorie, "Parti da qui", Genera), (2) opzioni extra via IA (freezer/celle/spesa/food cost/punti vendita/turni/orari/Digital Twin), (3) sfruttare il risultato (sequenza, spesa, ordini, PDF).
+- Backend MOHAMMED_SYSTEM aggiornato al layout a 2 passi (non più i vecchi 5 passi materie prime/cottura/HACCP).
+- Corsi: restano "in arrivo" (utente non ha ancora i video) — nessun acquisto attivato.
+- Verificato via screenshot (stepper + guida) + compilazione pulita.

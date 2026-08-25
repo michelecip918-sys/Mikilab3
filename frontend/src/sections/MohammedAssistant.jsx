@@ -42,28 +42,20 @@ export default function MohammedAssistant() {
     tri("Quando attacco gli impasti e rinfresco il lievito?", "Wann setze ich die Teige an und frische den Sauerteig auf?", "When do I start the doughs and refresh the sourdough?"),
   ];
 
-  // Guida passo-passo: ogni voce chiede a Mohammadreza di spiegare quel passo del laboratorio.
+  // Guida allineata al layout a 2 passi: fondamentali per generare il piano + opzioni extra via IA.
   const GUIDE = [
-    { n: 1, q: tri("Spiegami il Passo 1: materie prime e farine. Come inizio nel laboratorio?",
-                   "Erkläre mir Schritt 1: Rohstoffe und Mehle. Wie fange ich in der Backstube an?",
-                   "Explain Step 1: raw materials and flours. How do I start in the lab?"),
-      t: tri("Passo 1 · Materie prime e farine", "Schritt 1 · Rohstoffe & Mehle", "Step 1 · Raw materials & flours") },
-    { n: 2, q: tri("Spiegami il Passo 2: impasto e Pesata Guidata. Come peso gli ingredienti?",
-                   "Erkläre mir Schritt 2: Teig und geführtes Wiegen. Wie wiege ich die Zutaten?",
-                   "Explain Step 2: dough and Guided Weighing. How do I weigh ingredients?"),
-      t: tri("Passo 2 · Impasto e Pesata Guidata", "Schritt 2 · Teig & geführtes Wiegen", "Step 2 · Dough & Guided Weighing") },
-    { n: 3, q: tri("Spiegami il Passo 3: lievitazione, temperature e diario impasti.",
-                   "Erkläre mir Schritt 3: Gärung, Temperaturen und Teig-Tagebuch.",
-                   "Explain Step 3: proofing, temperatures and the dough log."),
-      t: tri("Passo 3 · Lievitazione e temperature", "Schritt 3 · Gärung & Temperaturen", "Step 3 · Proofing & temperatures") },
-    { n: 4, q: tri("Spiegami il Passo 4: cottura, forno e vapore. Come imposto tutto?",
-                   "Erkläre mir Schritt 4: Backen, Ofen und Dampf. Wie stelle ich alles ein?",
-                   "Explain Step 4: baking, oven and steam. How do I set everything up?"),
-      t: tri("Passo 4 · Cottura e forno", "Schritt 4 · Backen & Ofen", "Step 4 · Baking & oven") },
-    { n: 5, q: tri("Spiegami il Passo 5: igiene HACCP, lotti e tracciabilità.",
-                   "Erkläre mir Schritt 5: HACCP-Hygiene, Chargen und Rückverfolgbarkeit.",
-                   "Explain Step 5: HACCP hygiene, batches and traceability."),
-      t: tri("Passo 5 · HACCP e tracciabilità", "Schritt 5 · HACCP & Rückverfolgung", "Step 5 · HACCP & traceability") },
+    { n: 1, q: tri("Spiegami il PASSO 1: cosa mi serve DAVVERO per generare il Piano di Produzione con l'IA? Quali campi sono obbligatori e da quale impasto conviene partire?",
+                   "Erkläre mir SCHRITT 1: Was brauche ich WIRKLICH, um den KI-Produktionsplan zu erstellen? Welche Felder sind Pflicht und mit welchem Teig starte ich am besten?",
+                   "Explain STEP 1: what do I REALLY need to generate the AI Production Plan? Which fields are required and which dough should I start from?"),
+      t: tri("Passo 1 · Genera il Piano (le cose fondamentali)", "Schritt 1 · Plan erstellen (das Wesentliche)", "Step 1 · Generate the Plan (the essentials)") },
+    { n: 2, q: tri("Spiegami il PASSO 2: quali opzioni extra posso collegare al piano tramite l'IA (freezer, celle frigo, lista spesa, food cost, punti vendita, turni, orari d'inizio, Digital Twin del picco) e a cosa servono?",
+                   "Erkläre mir SCHRITT 2: welche Extra-Optionen kann ich über die KI verbinden (Gefrierbestand, Kühlkammern, Einkaufsliste, Food Cost, Verkaufspunkte, Schichten, Startzeiten, Digital Twin des Peaks) und wozu?",
+                   "Explain STEP 2: which extra options can I connect via AI (freezer, cold cells, shopping list, food cost, sales points, shifts, start times, the peak Digital Twin) and what are they for?"),
+      t: tri("Passo 2 · Opzioni extra collegabili via IA", "Schritt 2 · Extra-Optionen über die KI", "Step 2 · Extra options via AI") },
+    { n: 3, q: tri("Come uso al meglio il risultato del piano: sequenza impasti, lista spesa, ordini fornitori e PDF da stampare?",
+                   "Wie nutze ich das Ergebnis des Plans optimal: Teig-Reihenfolge, Einkaufsliste, Lieferantenbestellungen und PDF zum Ausdrucken?",
+                   "How do I best use the plan result: dough sequence, shopping list, supplier orders and printable PDF?"),
+      t: tri("In più · Sfrutta al meglio il piano", "Extra · Den Plan optimal nutzen", "Extra · Make the most of the plan") },
   ];
 
   const askGuide = (q) => { setOpen(true); send(q); };
@@ -112,9 +104,9 @@ export default function MohammedAssistant() {
           <h2 className="font-display text-xl font-bold leading-tight">{tri("Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋")}</h2>
           <p className="text-sm text-white/90 mt-1 leading-snug">
             {tri(
-              "Sono l'assistente di Michele, il creatore di MikiLab. Ti guido passo-passo a organizzare forno e laboratorio: materie prime, impasto e lievitazione, cotture e temperature, igiene HACCP e uso di tutti gli strumenti di questa sezione.",
-              "Ich bin Micheles Assistent (Gründer von MikiLab). Ich führe dich Schritt für Schritt: Rohstoffe, Teig & Gärung, Backen & Temperaturen, HACCP-Hygiene und die Nutzung aller Werkzeuge dieses Bereichs.",
-              "I'm Michele's assistant (the creator of MikiLab). I guide you step by step: raw materials, dough & proofing, baking & temperatures, HACCP hygiene and how to use every tool in this section."
+              "Sono l'assistente di Michele, il creatore di MikiLab. Ti guido nel cuore del laboratorio: cosa serve DAVVERO per generare il Piano di Produzione con l'IA e quali opzioni extra puoi collegare (freezer, celle, spesa, food cost, punti vendita, turni, Digital Twin del picco).",
+              "Ich bin Micheles Assistent (Gründer von MikiLab). Ich zeige dir das Herz der Backstube: was du WIRKLICH brauchst, um den KI-Produktionsplan zu erstellen, und welche Extra-Optionen du verbinden kannst (Gefrierbestand, Kammern, Einkauf, Food Cost, Verkaufspunkte, Schichten, Digital Twin des Peaks).",
+              "I'm Michele's assistant (creator of MikiLab). I show you the heart of the lab: what you REALLY need to generate the AI Production Plan and which extra options you can connect (freezer, cells, shopping, food cost, sales points, shifts, the peak Digital Twin)."
             )}
           </p>
         </div>

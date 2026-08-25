@@ -156,20 +156,25 @@ export default function Maestro() {
       <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{t("maestro_title")}</h1>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Configura il tuo laboratorio passo dopo passo", "Richte deine Backstube Schritt für Schritt ein", "Set up your bakery step by step")}</p>
 
-      {/* Stepper 5 passi */}
-      <div className="flex items-center mb-5" data-testid="maestro-stepper">
-        {STEPS.map((s, i) => (
-          <div key={i} className="flex items-center flex-1 last:flex-none">
-            <button data-testid={`maestro-step-${i + 1}`} onClick={() => setStep(i)}
-              className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 font-display font-bold text-sm transition-all border-2 ${
-                i === step ? "bg-[#5E8B7E] text-white border-[#5E8B7E] scale-110"
-                : i < step ? "bg-[#6B8E62] text-white border-[#6B8E62]"
-                : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"}`}>
-              {i + 1}
-            </button>
-            {i < STEPS.length - 1 && <div className={`h-0.5 flex-1 mx-1 ${i < step ? "bg-[#6B8E62]" : "bg-[#D7E1DB] dark:bg-[#38424B]"}`} />}
-          </div>
-        ))}
+      {/* Stepper compatto: 1 e 2 vicini e in evidenza */}
+      <div className="flex items-center justify-center gap-2.5 mb-5" data-testid="maestro-stepper">
+        {STEPS.map((s, i) => {
+          const labels = [tri("Piano IA", "KI-Plan", "AI Plan"), tri("Strumenti", "Werkzeuge", "Tools")];
+          const active = i === step;
+          return (
+            <div key={i} className="flex items-center gap-2.5">
+              <button data-testid={`maestro-step-${i + 1}`} onClick={() => setStep(i)}
+                className={`flex items-center gap-2 pl-1.5 pr-4 py-1.5 rounded-full border-2 transition-all active:scale-97 ${
+                  active ? "bg-[#5E8B7E] border-[#5E8B7E] scale-105 shadow-md ring-2 ring-[#C88A2B]/50"
+                  : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+                <span className={`w-9 h-9 rounded-full flex items-center justify-center font-display font-extrabold text-lg shrink-0 ${
+                  active ? "bg-white text-[#5E8B7E]" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#5E8B7E]"}`}>{i + 1}</span>
+                <span className={`font-display text-sm font-bold whitespace-nowrap ${active ? "text-white" : "text-[#33564E] dark:text-[#9ec48f]"}`}>{labels[i]}</span>
+              </button>
+              {i < STEPS.length - 1 && <ChevronRight className="w-5 h-5 text-[#C88A2B] shrink-0" />}
+            </div>
+          );
+        })}
       </div>
 
       {/* Passo corrente */}
