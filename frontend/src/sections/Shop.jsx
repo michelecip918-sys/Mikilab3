@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { ShoppingBag, GraduationCap, Mail, Clock, Check } from "lucide-react";
+import { ShoppingBag, GraduationCap, Mail, Clock, Check, BookOpen, Crown } from "lucide-react";
 import { toast } from "sonner";
-import { api } from "@/lib/api";
+import { api, recipePurchaseApi, subscriptionApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 
 export default function Shop({ hideCourses = false }) {
   const { lang, tri } = useLang();
+  const { user, setAuthOpen } = useAuth();
   const de = lang === "de";
   const [data, setData] = useState({ enabled: false, products: [] });
   const [email, setEmail] = useState("");
@@ -14,6 +16,20 @@ export default function Shop({ hideCourses = false }) {
   useEffect(() => {
     api.get("/shop/products").then((r) => setData(r.data)).catch(() => {});
   }, []);
+
+  const buyRecipes = async (kind) => {
+    if (!user) { setAuthOpen(true); return; }
+    try {
+      const d = await recipePurchaseApi.checkout(kind, null);
+      if (d.url) window.location.href = d.url;
+    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again")); }
+  };
+  const subscribePro = async () => {
+    try {
+      const d = await subscriptionApi.checkout("monthly", "lab");
+      if (d.url) window.location.href = d.url;
+    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again")); }
+  };
 
   const join = async (product_id = null) => {
     const e = email.trim().toLowerCase();
@@ -69,7 +85,46 @@ export default function Shop({ hideCourses = false }) {
         </p>
       </div>
 
-      {/* Lista d'attesa — solo quando lo shop è ancora "In arrivo" */}
+      {/* Ricettario MikiLab — ACQUISTABILE ora (revenue) */}
+      <div data-testid="shop-recipes-block" className="rounded-3xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] shadow-sm overflow-hidden">
+        <div className="p-5">
+          <div className="flex items-center gap-2 mb-1.5">
+            <BookOpen className="w-5 h-5 text-[#5E8B7E]" />
+            <span className="text-[11px] font-bold uppercase tracking-wide text-[#5E8B7E]">{tri("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
+          </div>
+          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Il Ricettario di Michele", "Micheles Rezeptbuch", "Michele's Recipe Book")}</h2>
+          <p className="text-sm text-[#7E8A93] mt-1 leading-snug">
+            {tri("Acquista le mie ricette complete (dosi, procedimento, fasi) e usale anche nel Piano di Produzione IA del tuo laboratorio.",
+              "Kaufe meine vollständigen Rezepte (Mengen, Ablauf, Phasen) und nutze sie auch im KI-Produktionsplan deiner Backstube.",
+              "Buy my complete recipes (quantities, procedure, phases) and use them in your lab's AI Production Plan too.")}
+          </p>
+          <div className="space-y-2.5 mt-4">
+            <button data-testid="shop-buy-all" onClick={() => buyRecipes("all")}
+              className="w-full flex items-center justify-between bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white rounded-2xl px-4 py-3 active:scale-98 transition-all">
+              <span className="text-left">
+                <span className="block font-semibold">{tri("Tutte le ricette", "Alle Rezepte", "All recipes")}</span>
+                <span className="block text-xs text-white/80">{tri("Ricettario completo, per sempre", "Komplettes Rezeptbuch, für immer", "Complete recipe book, forever")}</span>
+              </span>
+              <span className="font-display text-lg font-bold">€149</span>
+            </button>
+            <button data-testid="shop-buy-panettoni" onClick={() => buyRecipes("panettoni")}
+              className="w-full flex items-center justify-between bg-[#6E8CA0]/10 border-2 border-[#6E8CA0] rounded-2xl px-4 py-3 active:scale-98 transition-all">
+              <span className="text-left">
+                <span className="block font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Tutti i Panettoni", "Alle Panettone", "All Panettoni")}</span>
+                <span className="block text-xs text-[#7E8A93]">{tri("Tutti i gusti di panettone MikiLab", "Alle MikiLab-Panettone-Sorten", "All MikiLab panettone flavours")}</span>
+              </span>
+              <span className="font-display text-lg font-bold text-[#33564E] dark:text-[#8FB0C2]">€29,99</span>
+            </button>
+            <div className="text-center pt-0.5">
+              <button data-testid="shop-subscribe-pro" onClick={subscribePro}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[#5E8B7E] hover:underline">
+                <Crown className="w-4 h-4" /> {tri("oppure abbonati PRO · €29,99/mese", "oder PRO abonnieren · €29,99/Monat", "or subscribe PRO · €29.99/month")}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {!data.enabled && (sent ? (
         <div data-testid="shop-waitlist-done" className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-5 text-center">
           <Check className="w-8 h-8 text-[#6B8E62] mx-auto mb-2" />

@@ -11,7 +11,6 @@ import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
 import { shareContent } from "@/lib/share";
-import ListenButton from "@/components/ListenButton";
 import { rLoc } from "@/lib/loc";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -136,6 +135,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         }
       } catch { /* nessun piano salvato o non loggato */ }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const recipeById = useMemo(() => Object.fromEntries(recipes.map((r) => [r.id, r])), [recipes]);
@@ -684,8 +684,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               className="no-print mt-2 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-5 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] active:scale-98 transition-all flex items-center justify-center gap-2">
               <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : "Condividi"}
             </button>
-            <ListenButton text={plan} who="momy" testid="capo-listen"
-              className="no-print mt-2 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
 
             <div className="print-area mt-4 space-y-4">
               <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">

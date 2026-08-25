@@ -229,7 +229,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           { key: "focacce", label: "cat_focacce", icon: "🫓" },
           { key: "panettoni", label: "cat_panettoni", icon: "🎁" },
         ];
-        const isMikilab = collectionName === "mikilab";
 
         const Card = (r, i) => (
           <motion.button
@@ -311,23 +310,33 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
                 {triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
               </p>
-            ) : !isMikilab ? (
-              <div className="grid grid-cols-2 gap-3">{filtered.map((r, i) => Card(r, i))}</div>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-3">
                 {CATS.map((cat) => {
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
+                  const open = openCats[cat.key] !== false; // cartelle aperte di default
                   return (
-                    <div key={cat.key} data-testid={`cat-section-${cat.key}`}>
-                      <div className="flex items-center gap-2 mb-2.5 px-1">
+                    <div key={cat.key} data-testid={`cat-section-${cat.key}`}
+                      className="rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] overflow-hidden bg-white/40 dark:bg-[#232A31]/40">
+                      <button data-testid={`cat-folder-${cat.key}`}
+                        onClick={() => setOpenCats((o) => ({ ...o, [cat.key]: !open }))}
+                        className="w-full flex items-center gap-2 px-3.5 py-3 active:scale-[0.99] transition-all">
                         <span className="text-lg">{cat.icon}</span>
-                        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#5E8B7E] flex-1">{t(cat.label)}</h2>
+                        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#5E8B7E] flex-1 text-left">{t(cat.label)}</h2>
                         <span className="text-xs font-mono-data text-[#7E8A93]">{items.length}</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        {items.map((r, i) => Card(r, i))}
-                      </div>
+                        <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {open && (
+                          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22 }} className="overflow-hidden">
+                            <div className="grid grid-cols-2 gap-3 p-3 pt-0">
+                              {items.map((r, i) => Card(r, i))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   );
                 })}

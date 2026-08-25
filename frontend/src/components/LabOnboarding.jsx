@@ -1,10 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, ChevronLeft, ChevronRight, X, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Check } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-import { speak, primeVoice } from "@/lib/voice";
-import { API } from "@/lib/api";
-import { getVoiceId } from "@/components/VoiceSettings";
 
 const DONE_KEY = "mikilab_lab_tour_done";
 const base = process.env.PUBLIC_URL || "";
@@ -107,51 +104,11 @@ export default function LabOnboarding() {
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [show, setShow] = useState(false);
   const [i, setI] = useState(0);
-  const [audio, setAudio] = useState(true);
   const slides = buildSlides(lang);
   const cur = slides[i];
-  const startedRef = useRef(false);
-  const audioElRef = useRef(null);
 
   const stopAudio = () => {
-    try {
-      if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current.src = ""; audioElRef.current = null; }
-      window.speechSynthesis && window.speechSynthesis.cancel();
-    } catch { /* */ }
-  };
-
-  // Testo per la voce: rimuove emoji/simboli (es. saluto con mano) e tiene titolo + prime frasi.
-  const stripForVoice = (s) => (s || "")
-    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE00}-\u{FE0F}\u{200D}\u{2022}\u{00B7}]/gu, "")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-  const voiceText = (s) => {
-    if (!s) return "";
-    const parts = stripForVoice(s.body).split(". ");
-    const short = parts.slice(0, 2).join(". ");
-    const title = stripForVoice(s.title).replace(/[!?.]+$/, "");
-    return `${title}. ${short}${short && !short.endsWith(".") ? "." : ""}`;
-  };
-
-  // Michele si presenta ("Ciao, sono Michele") una SOLA volta; poi legge solo il contenuto.
-  const MICHELE_GREETED = "mikilab_michele_greeted";
-  const speakSlide = (s) => {
-    if (!s) return;
-    const who = s.who === "michele" ? "michele" : "momy";
-    let txt = voiceText(s);
-    if (s.who === "michele") {
-      if (localStorage.getItem(MICHELE_GREETED)) {
-        const body = stripForVoice(s.body).split(". ").slice(0, 2).join(". ");
-        txt = `${body}${body && !body.endsWith(".") ? "." : ""}`;
-      } else {
-        localStorage.setItem(MICHELE_GREETED, "1");
-      }
-    }
-    playVoice(txt, who);
-  };
-  const playVoice = async (text, who = "momy") => {
-    stopAudio();
-    speak(text, lang);  // voce maschile GRATUITA (nessuna voce premium)
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch { /* */ }
   };
 
   // Apri automaticamente al primo ingresso, o su richiesta via evento.
@@ -162,12 +119,11 @@ export default function LabOnboarding() {
     return () => window.removeEventListener("mikilab-lab-tour", onOpen);
   }, []);
 
-  // Leggi ad alta voce la slide corrente (se audio attivo).
+  // Avatar "che scrivono": nessuna voce/TTS — la guida comunica solo per iscritto (fumetto).
   useEffect(() => {
     if (!show) { stopAudio(); return; }
-    if (audio && cur) speakSlide(cur);
     // eslint-disable-next-line
-  }, [show, i, audio]);
+  }, [show, i]);
 
   const close = () => {
     localStorage.setItem(DONE_KEY, "1");
@@ -176,16 +132,6 @@ export default function LabOnboarding() {
   };
   const next = () => { if (i < slides.length - 1) setI(i + 1); else close(); };
   const prev = () => setI(Math.max(0, i - 1));
-
-  const toggleAudio = () => {
-    if (!startedRef.current) { primeVoice(); startedRef.current = true; }
-    setAudio((a) => {
-      const na = !a;
-      if (!na) stopAudio();
-      else if (cur) speakSlide(cur);
-      return na;
-    });
-  };
 
   return (
     <AnimatePresence>
@@ -201,10 +147,6 @@ export default function LabOnboarding() {
                   {cur.who === "michele" ? tri("Michele · MikiLab", "Michele · MikiLab", "Michele · MikiLab") : tri("Momy · il tuo assistente", "Momy · dein Assistent", "Momy · your assistant")}
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <button data-testid="lab-onboarding-audio" onClick={toggleAudio} title="audio"
-                    className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center active:scale-95 transition-all">
-                    {audio ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                  </button>
                   <button data-testid="lab-onboarding-close" onClick={close} title="close"
                     className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center active:scale-95 transition-all">
                     <X className="w-4 h-4" />
