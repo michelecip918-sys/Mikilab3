@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only test della nuova feature ETICHETTE UE (dichiarazione nutrizionale). Login admin (admin@mikilab.de) → tab Ricette → MikiLab: aperta 'Lievito Madre Solido', verificato GATING (nessun [data-testid=eu-label] senza dati), aperto Modifica, compilata la sezione [data-testid=recipe-label-section] (kcal 250, grassi 1.2, saturi 0.3, carbo 49, zuccheri 1.5, proteine 9, sale 1.1, peso netto 500, allergeni 'Glutine', ingredienti), salvato. Riaperta la ricetta: etichetta UE visualizzata correttamente con Energia '1046 kJ / 250 kcal' (kJ calcolato = 250*4.184), tutte le righe con decimali in formato italiano (1,2 g), riga Ingredienti, Allergeni in grassetto, Peso netto 500 g. Click [data-testid=eu-label-print-btn] senza errori. Traduzioni verificate IT/DE/EN (Energie/Fett/Kohlenhydrate/Eiweiß/Salz/Nettogewicht/Allergene/Zutaten e Energy/Fat/Carbohydrate/Protein/Salt/Net weight/Allergens/Ingredients) sia con il selettore in-dialog (recipe-lang-*) sia con il selettore header (lang-de) impostato prima di aprire il dettaglio. CLEANUP eseguito: svuotati i campi e salvato → eu-label scomparso. REGRESSIONE: creata ricetta personale 'TEST_QA Etichetta' con nome+dosi(1000/700/20)+costi → salvataggio OK, idratazione 70% e blocchi ingredienti/costi calcolati correttamente, nessuna etichetta (gating OK); aggiunta etichetta, verificata PERSISTENZA dopo reload completo della pagina; ricetta eliminata al termine. ZERO errori console in tutti i flussi.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Dettaglio ricetta → Etichetta UE", "issues": ["Testi liberi 'Ingredienti' e 'Allergeni' restano nella lingua di inserimento (IT) anche in DE/EN: solo le intestazioni si traducono. Comportamento atteso per dati reali, ma potrebbe servire un campo per lingua se si vuole stampare l'etichetta in DE per il mercato tedesco."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "EULabel.hasLabelData: il gating ignora net_weight_g — una ricetta con solo il peso netto compilato non mostrerebbe il riquadro (edge case minore, coerente col requisito 'nessun blocco vuoto').",
+    "Il selettore lingua dell'header non è cliccabile mentre il dialog ricetta è aperto (overlay Radix, comportamento standard); la traduzione è comunque coperta dal selettore in-dialog recipe-lang-*.",
+    "printEULabel usa window.open + document.write: se il popup è bloccato la funzione esce silenziosamente (return) senza avvisare l'utente — considerare un toast di fallback."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "non testato (skip su richiesta)", "frontend": "100%"},
+  "seed_data_creation": "Etichetta temporanea su 'Lievito Madre Solido' (mikilab) rimossa al termine; ricetta personale 'TEST_QA Etichetta' creata e cancellata. Nessun dato residuo.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Etichette UE validate end-to-end su ricetta MikiLab e su ricetta personale (editor→salva→visualizza→stampa→traduzioni IT/DE/EN→gating→persistenza post-reload→cleanup). Non testato: contenuto effettivo della finestra di stampa (popup aperto ma non ispezionato) e il campo opzionale 'fibre' (riga condizionale in EULabel).",
+  "rca_of_the_issue": "N/A — nessun difetto rilevato."
+}

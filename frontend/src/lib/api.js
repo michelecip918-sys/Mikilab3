@@ -51,6 +51,7 @@ export const capoPlanApi = {
 export const plansArchiveApi = {
   list: (kind) => api.get(`/plans/archive`, { params: kind ? { kind } : {} }).then((r) => r.data),
   save: (data) => api.post(`/plans/archive`, data).then((r) => r.data),
+  rename: (id, name) => api.patch(`/plans/archive/${id}`, { name }).then((r) => r.data),
   remove: (id) => api.delete(`/plans/archive/${id}`).then((r) => r.data),
 };
 

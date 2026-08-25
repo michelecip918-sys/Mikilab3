@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, useImperativeHandle, forwardRef } from "react";
 import { toast } from "sonner";
-import { Archive, RotateCcw, Trash2, Save, X, Loader2 } from "lucide-react";
+import { Archive, RotateCcw, Trash2, Save, X, Loader2, Pencil, Check } from "lucide-react";
 import { plansArchiveApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
@@ -9,7 +9,8 @@ import { useLang } from "@/i18n/LanguageContext";
 // - canSave: abilita il pulsante "Salva nell'archivio"
 // - onRepeat(payload): richiamato quando l'utente clicca "Ripeti questo piano"
 // - describe(payload): stringa breve di riepilogo per ogni piano (opzionale)
-export default function PlanArchive({ kind, getPayload, canSave, onRepeat, repeatLabel, describe }) {
+// Espone via ref: openSave() → apre l'input nome e scorre in vista (salvataggio con un tocco).
+const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave, onRepeat, repeatLabel, describe }, ref) {
   const { lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [plans, setPlans] = useState([]);
@@ -17,6 +18,9 @@ export default function PlanArchive({ kind, getPayload, canSave, onRepeat, repea
   const [naming, setNaming] = useState(false);
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editName, setEditName] = useState("");
+  const rootRef = useRef(null);
 
   const load = useCallback(async () => {
     try {
@@ -46,6 +50,14 @@ export default function PlanArchive({ kind, getPayload, canSave, onRepeat, repea
     setNaming(true);
   };
 
+  // Salvataggio con un tocco dall'esterno (es. banner "Piano generato").
+  useImperativeHandle(ref, () => ({
+    openSave: () => {
+      openNaming();
+      setTimeout(() => rootRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 60);
+    },
+  }));
+
   const doSave = async () => {
     const payload = getPayload();
     if (!payload) { setNaming(false); return; }
@@ -61,6 +73,21 @@ export default function PlanArchive({ kind, getPayload, canSave, onRepeat, repea
       toast.error(tri("Salvataggio non riuscito.", "Speichern fehlgeschlagen.", "Save failed."));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const startRename = (p) => { setEditingId(p.id); setEditName(p.name); };
+  const doRename = async (id) => {
+    const nm = (editName || "").trim();
+    if (!nm) { setEditingId(null); return; }
+    try {
+      await plansArchiveApi.rename(id, nm);
+      setPlans((ps) => ps.map((p) => (p.id === id ? { ...p, name: nm } : p)));
+      toast.success(tri("Nome aggiornato ✓", "Name aktualisiert ✓", "Name updated ✓"));
+    } catch {
+      toast.error(tri("Rinomina non riuscita.", "Umbenennen fehlgeschlagen.", "Rename failed."));
+    } finally {
+      setEditingId(null);
     }
   };
 
@@ -87,7 +114,7 @@ export default function PlanArchive({ kind, getPayload, canSave, onRepeat, repea
   };
 
   return (
-    <div data-testid={`plan-archive-${kind}`} className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
+    <div ref={rootRef} data-testid={`plan-archive-${kind}`} className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
       <div className="flex items-center gap-2 mb-1">
         <Archive className="w-5 h-5 text-[#5E8B7E]" />
         <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">
@@ -152,30 +179,66 @@ export default function PlanArchive({ kind, getPayload, canSave, onRepeat, repea
               className="flex items-center gap-2 rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] p-2.5"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{p.name}</p>
-                <p className="text-[11px] text-[#7E8A93] truncate">
-                  {fmtDate(p.created_at)}{describe ? ` · ${describe(p.payload || {})}` : ""}
-                </p>
+                {editingId === p.id ? (
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      data-testid={`plan-archive-rename-input-${p.id}`}
+                      autoFocus
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") doRename(p.id); if (e.key === "Escape") setEditingId(null); }}
+                      className="flex-1 min-w-0 bg-white dark:bg-[#1F252B] border border-[#5E8B7E] rounded-lg px-2 py-1.5 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC]"
+                    />
+                    <button
+                      data-testid={`plan-archive-rename-confirm-${p.id}`}
+                      onClick={() => doRename(p.id)}
+                      className="shrink-0 w-8 h-8 rounded-lg bg-[#5E8B7E] text-white flex items-center justify-center"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{p.name}</p>
+                    <p className="text-[11px] text-[#7E8A93] truncate">
+                      {fmtDate(p.created_at)}{describe ? ` · ${describe(p.payload || {})}` : ""}
+                    </p>
+                  </>
+                )}
               </div>
-              <button
-                data-testid={`plan-archive-repeat-btn-${p.id}`}
-                onClick={() => doRepeat(p)}
-                className="shrink-0 flex items-center gap-1.5 bg-[#6B8E62] hover:bg-[#5a7a53] text-white text-xs font-semibold px-3 py-2 rounded-lg active:scale-98 transition-all"
-              >
-                <RotateCcw className="w-3.5 h-3.5" /> {repeatLabel || tri("Ripeti", "Wiederholen", "Repeat")}
-              </button>
-              <button
-                data-testid={`plan-archive-delete-btn-${p.id}`}
-                onClick={() => doRemove(p.id)}
-                className="shrink-0 w-9 h-9 rounded-lg bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center text-[#C0574D]"
-                aria-label="delete"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+              {editingId !== p.id && (
+                <>
+                  <button
+                    data-testid={`plan-archive-rename-btn-${p.id}`}
+                    onClick={() => startRename(p)}
+                    className="shrink-0 w-9 h-9 rounded-lg bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center text-[#7E8A93]"
+                    aria-label="rename"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
+                    data-testid={`plan-archive-repeat-btn-${p.id}`}
+                    onClick={() => doRepeat(p)}
+                    className="shrink-0 flex items-center gap-1.5 bg-[#6B8E62] hover:bg-[#5a7a53] text-white text-xs font-semibold px-3 py-2 rounded-lg active:scale-98 transition-all"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" /> {repeatLabel || tri("Ripeti", "Wiederholen", "Repeat")}
+                  </button>
+                  <button
+                    data-testid={`plan-archive-delete-btn-${p.id}`}
+                    onClick={() => doRemove(p.id)}
+                    className="shrink-0 w-9 h-9 rounded-lg bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center text-[#C0574D]"
+                    aria-label="delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </>
+              )}
             </div>
           ))}
         </div>
       )}
     </div>
   );
-}
+});
+
+export default PlanArchive;

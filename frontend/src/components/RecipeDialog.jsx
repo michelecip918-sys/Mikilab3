@@ -29,6 +29,7 @@ const empty = {
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", image_url: "", extra_ingredients: [], work_phases: [], costing: standardCosting(),
+  label: { energy_kcal: "", fat: "", saturates: "", carbs: "", sugars: "", fibre: "", protein: "", salt: "", allergens: "", ingredients: "", net_weight_g: "" },
 };
 
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
@@ -71,6 +72,10 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   });
   const addIng = () => setForm((f) => ({ ...f, extra_ingredients: [...(f.extra_ingredients || []), { name: "", percent: "" }] }));
   const removeIng = (i) => setForm((f) => ({ ...f, extra_ingredients: (f.extra_ingredients || []).filter((_, idx) => idx !== i) }));
+
+  const emptyLabel = { energy_kcal: "", fat: "", saturates: "", carbs: "", sugars: "", fibre: "", protein: "", salt: "", allergens: "", ingredients: "", net_weight_g: "" };
+  const lab = form.label || emptyLabel;
+  const setLab = (k, v) => setForm((f) => ({ ...f, label: { ...(f.label || emptyLabel), [k]: v } }));
 
   const setPhase = (i, patch) => setForm((f) => { const l = [...(f.work_phases || [])]; l[i] = { ...l[i], ...patch }; return { ...f, work_phases: l }; });
   const addPhase = () => setForm((f) => ({ ...f, work_phases: [...(f.work_phases || []), { name: "", time: "", temp: "" }] }));
@@ -144,6 +149,18 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
       flour_kg: num(c.flour_kg), water_l: num(c.water_l), sourdough_kg: num(c.sourdough_kg), salt_kg: num(c.salt_kg),
       extras: (c.extras || []).filter((e) => e.name || e.cost).map((e) => ({ name: e.name || "", cost: num(e.cost) })),
       overhead: num(c.overhead), pieces: num(c.pieces), markup: num(c.markup),
+    };
+    // Etichetta UE: valori per 100 g (numeri o null) + allergeni/ingredienti (testo) + peso netto.
+    const nz = (v) => (v === "" || v == null ? null : Number(v));
+    const kcal = nz(lab.energy_kcal);
+    payload.label = {
+      energy_kcal: kcal,
+      energy_kj: kcal == null ? null : Math.round(kcal * 4.184),
+      fat: nz(lab.fat), saturates: nz(lab.saturates), carbs: nz(lab.carbs), sugars: nz(lab.sugars),
+      fibre: nz(lab.fibre), protein: nz(lab.protein), salt: nz(lab.salt),
+      net_weight_g: nz(lab.net_weight_g),
+      allergens: (lab.allergens || "").trim(),
+      ingredients: (lab.ingredients || "").trim(),
     };
     try {
       setSaving(true);
@@ -541,6 +558,52 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               </div>
             )}
           </div>
+
+          {/* Etichetta UE — dichiarazione nutrizionale per 100 g + allergeni + ingredienti */}
+          <div className="pt-2 border-t border-[#D7E1DB] dark:border-[#38424B]" data-testid="recipe-label-section">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#5E8B7E] mb-1">{lang === "de" ? "EU-Etikett (Nährwerte)" : lang === "en" ? "EU label (nutrition)" : "Etichetta UE (valori nutrizionali)"}</p>
+            <p className="text-[11px] text-[#7E8A93] mb-2 leading-snug">{lang === "de" ? "Werte pro 100 g. Energie in kJ wird automatisch berechnet." : lang === "en" ? "Values per 100 g. Energy in kJ is auto-calculated." : "Valori per 100 g. L'energia in kJ è calcolata in automatico."}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                ["energy_kcal", lang === "de" ? "Energie (kcal)" : lang === "en" ? "Energy (kcal)" : "Energia (kcal)"],
+                ["fat", lang === "de" ? "Fett (g)" : lang === "en" ? "Fat (g)" : "Grassi (g)"],
+                ["saturates", lang === "de" ? "davon gesättigt (g)" : lang === "en" ? "of which saturates (g)" : "di cui saturi (g)"],
+                ["carbs", lang === "de" ? "Kohlenhydrate (g)" : lang === "en" ? "Carbohydrate (g)" : "Carboidrati (g)"],
+                ["sugars", lang === "de" ? "davon Zucker (g)" : lang === "en" ? "of which sugars (g)" : "di cui zuccheri (g)"],
+                ["fibre", lang === "de" ? "Ballaststoffe (g)" : lang === "en" ? "Fibre (g)" : "Fibre (g)"],
+                ["protein", lang === "de" ? "Eiweiß (g)" : lang === "en" ? "Protein (g)" : "Proteine (g)"],
+                ["salt", lang === "de" ? "Salz (g)" : lang === "en" ? "Salt (g)" : "Sale (g)"],
+                ["net_weight_g", lang === "de" ? "Nettogewicht (g)" : lang === "en" ? "Net weight (g)" : "Peso netto (g)"],
+              ].map(([k, lbl]) => (
+                <div key={k}>
+                  <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{lbl}</label>
+                  <input
+                    data-testid={`label-${k}-input`} type="number" step="0.1" value={lab[k]}
+                    onChange={(e) => setLab(k, e.target.value)}
+                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="mt-2">
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Allergene (durch Komma getrennt)" : lang === "en" ? "Allergens (comma separated)" : "Allergeni (separati da virgola)"}</label>
+              <input
+                data-testid="label-allergens-input" value={lab.allergens}
+                onChange={(e) => setLab("allergens", e.target.value)}
+                placeholder={lang === "de" ? "z. B. Gluten, Milch, Eier" : lang === "en" ? "e.g. Gluten, Milk, Eggs" : "es. Glutine, Latte, Uova"}
+                className="mt-0.5 w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E]"
+              />
+            </div>
+            <div className="mt-2">
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Zutatenliste" : lang === "en" ? "Ingredients list" : "Elenco ingredienti"}</label>
+              <textarea
+                data-testid="label-ingredients-input" rows={2} value={lab.ingredients}
+                onChange={(e) => setLab("ingredients", e.target.value)}
+                placeholder={lang === "de" ? "WEIZENMEHL, Wasser, Sauerteig, Salz…" : lang === "en" ? "WHEAT flour, water, sourdough, salt…" : "Farina di GRANO tenero, acqua, lievito madre, sale…"}
+                className="mt-0.5 w-full bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#5E8B7E] resize-none"
+              />
+            </div>
+          </div>
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
@@ -599,6 +662,12 @@ function normalize(r) {
     salt_kg: has(rc.salt_kg) ? rc.salt_kg : STANDARD_PRICES.salt_kg,
     extras: (rc.extras || []).map((e) => ({ name: e.name || "", cost: e.cost ?? "" })),
     overhead: rc.overhead ?? "", pieces: rc.pieces ?? "", markup: rc.markup ?? "",
+  };
+  const rl = r.label || {};
+  out.label = {
+    energy_kcal: rl.energy_kcal ?? "", fat: rl.fat ?? "", saturates: rl.saturates ?? "",
+    carbs: rl.carbs ?? "", sugars: rl.sugars ?? "", fibre: rl.fibre ?? "", protein: rl.protein ?? "",
+    salt: rl.salt ?? "", net_weight_g: rl.net_weight_g ?? "", allergens: rl.allergens ?? "", ingredients: rl.ingredients ?? "",
   };
   return out;
 }

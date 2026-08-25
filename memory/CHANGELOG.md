@@ -73,3 +73,16 @@
 - **Fix**: warning React "<option> child of <span>" nel select capo-preferment (option 'licoli' resa testo singolo). Cartelle ricette si auto-espandono con ricerca/filtro attivo.
 - Piano AI 7 giorni: nessuna modifica (scelta utente: segue i prodotti inseriti).
 - Testato: testing_agent iteration_67 (4/5, trovato blocco accesso personali) + iteration_68 (4/4 PASS dopo fix). REDEPLOY per mikilab.de.
+
+## v113 (2026-06) — Archivio piani: rinomina + salvataggio rapido
+- Rinomina inline dei piani salvati: PATCH /api/plans/archive/{id} (owner-only, nome vuoto→400); PlanArchive.jsx pulsante matita → input → conferma. api.js plansArchiveApi.rename.
+- "Salva nell'archivio con un tocco" dal banner del Piano AI generato: bottone [capo-quick-archive] → PlanArchive.openSave() (forwardRef + useImperativeHandle) apre l'input nome e scorre in vista.
+- Testato: testing_agent iteration_69 (rinomina weekly 100%, persistenza + edge case Enter/vuoto/Escape). Backend rinomina verificato via curl.
+- IN ATTESA DATI UTENTE: Etichette UE (valori nutrizionali reali per ricetta) — richiesti a Michele.
+
+## v114 (2026-06) — Etichette UE (dichiarazione nutrizionale)
+- Modello ricetta: nuovo campo `label` (dict) su Recipe/Create/Update. Persistenza verificata via curl (PUT/GET).
+- Editor (RecipeDialog.jsx, admin per mikilab / proprietario per personali): sezione recipe-label-section con valori per 100 g (kcal, grassi, saturi, carboidrati, zuccheri, fibre, proteine, sale), peso netto, allergeni (virgola) e lista ingredienti. Energia kJ calcolata automaticamente da kcal (×4,184).
+- Visualizzazione (EULabel.jsx): tabella "Dichiarazione nutrizionale per 100 g" nel dettaglio ricetta, gated da hasLabelData (niente riquadro vuoto). Etichetta stampabile conforme (printEULabel) con allergeni in grassetto e peso netto. Trilingue IT/DE/EN.
+- Vale per tutte le ricette (scelta utente). Michele inserisce i valori reali (nessun valore precompilato/inventato).
+- Testato: testing_agent iteration_70 (editor→salva→visualizza→stampa→traduzioni→gating→cleanup 100%). Nessun dato di test residuo.

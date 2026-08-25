@@ -132,6 +132,7 @@ class Recipe(BaseModel):
     work_phases: Optional[List[dict]] = None
     biga: Optional[dict] = None  # Vorteig/Biga: {flour_g, water_g, yeast_g, hours, hours_de, hours_en}
     costing: Optional[dict] = None
+    label: Optional[dict] = None  # Etichetta UE: valori nutrizionali per 100g + allergeni + ingredienti + peso
     locked: Optional[bool] = None  # True = versione "assaggio" (metodo bloccato per non-PRO)
     created_at: str = Field(default_factory=now_iso)
     updated_at: str = Field(default_factory=now_iso)
@@ -176,6 +177,7 @@ class RecipeCreate(BaseModel):
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
+    label: Optional[dict] = None
 
 
 class RecipeUpdate(BaseModel):
@@ -207,6 +209,7 @@ class RecipeUpdate(BaseModel):
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
+    label: Optional[dict] = None
 
 
 class OvenProfile(BaseModel):
@@ -1041,6 +1044,24 @@ async def create_saved_plan(payload: SavedPlanCreate, user: dict = Depends(curre
 async def delete_saved_plan(plan_id: str, user: dict = Depends(current_user)):
     res = await db.saved_plans.delete_one({"id": plan_id, "user_id": user["user_id"]})
     return {"success": res.deleted_count > 0}
+
+
+class SavedPlanRename(BaseModel):
+    name: str
+
+
+@api_router.patch("/plans/archive/{plan_id}")
+async def rename_saved_plan(plan_id: str, payload: SavedPlanRename, user: dict = Depends(current_user)):
+    name = (payload.name or "").strip()[:80]
+    if not name:
+        raise HTTPException(status_code=400, detail="Nome richiesto")
+    res = await db.saved_plans.update_one(
+        {"id": plan_id, "user_id": user["user_id"]},
+        {"$set": {"name": name, "updated_at": now_iso()}},
+    )
+    if res.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Piano non trovato")
+    return {"success": True, "name": name}
 
 
 # ---------------------------------------------------------------------------

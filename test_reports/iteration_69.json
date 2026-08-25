@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only test of the new inline RENAME feature in the Weekly Plan archive (PlanArchive.jsx). Logged in as admin (admin@mikilab.de), opened Il Tuo Laboratorio → capo-quicklink-settimana, added a lavorazione, saved plan 'QA Rinomina' to the archive, renamed it to 'QA Rinominato' via plan-archive-rename-btn/-input/-confirm, verified list update + persistence after full page reload, verified regression on 'Usa questo piano' (repeat) and delete. Second pass covered edge cases: rename via Enter key, empty-name confirm (no-op, keeps previous name), Escape cancel. All checks passed with zero console errors. capo-quick-archive (AI banner) intentionally not tested (LLM gated), per request.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Weekly Plan → I Miei Piani Salvati (mobile 390px)", "issues": ["Plan name is heavily truncated ('QA Rino…') because the row packs rename + full-width 'Usa questo piano' label + delete; consider shortening the repeat label or letting the name wrap to 2 lines on narrow screens"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PlanArchive.doRename optimistically updates local state only after a successful PATCH — correct; empty name silently cancels (matches backend 400 guard), acceptable but a small toast hint could help UX."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100%"},
+  "seed_data_creation": "Temporary archived plans 'QA Rinomina'→'QA Rinominato' and 'QA Enter Test'→'QA Enter OK' created and deleted at end of each test run. No residual data.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Weekly archive rename fully validated (list update, persistence across reload, Enter/Escape, empty-name guard, repeat + delete regression). Still untested: capo-quick-archive button in the AI plan banner (requires an LLM plan generation) and rename inside the 'capo' kind archive.",
+  "rca_of_the_issue": "N/A — no defects found."
+}
