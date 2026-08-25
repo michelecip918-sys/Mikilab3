@@ -1123,3 +1123,21 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - IMPARA (Beginners): RIMOSSI i 3 blocchi video YouTube (corsi video, "i nostri video", grandi panettieri) — italiani, confusi su sito trilingue. Aggiunto "Il tuo percorso" (beginner-path): 4 passi con spunte persistite in localStorage 'mikilab_beginner_path' + barra progresso.
 - PIANO IA: card "Costi & Margine" (capo-cost-summary) — riusa recipe.costing + prices.js computeRecipeCostPerPiece(); per prodotto costo/ricavo + totali costo/ricavo/margine%. Hint se manca prezzo/pezzi nella ricetta.
 - Avatar: lasciato a discussione futura (richiesta utente).
+
+## v96 (2026-06) — Home cleanup batch 1 (di richiesta ampia in corso)
+- Home: RIMOSSO blocco home-personal (saluto "Ciao" + Livello + 3 tasti "Le mie ricette/Avvia impasti/Shelf-Life").
+- Livello/progresso spostato in IMPARA (Beginners): badge beginners-level in cima.
+- Rinominato "Corsi Online" → "I Miei Corsi" nello Shop della Home.
+- Verificato via screenshot.
+
+### BACKLOG richiesto (grande, da fare in blocchi successivi):
+1. Home: MikiLab Shop & Corsi più in alto + tasto Shop in fondo.
+2. Shop RICETTE: manca il pulsante per COMPRARE le ricette (revenue-critical) — aggiungere checkout.
+3. RICETTE: "Le mie ricette" in cartelle (pane, panini, snack, panettoni, focacce) che si aprono a FOTO/griglia colpo d'occhio.
+4. LAB: spostare strumenti (a mano o tasto "Sposta in Piano IA") dalla voce 2 alla sezione 1 "Compila per generare"; verificare quali servono per generare (bilancia, termostato, antispreco, ecc. collegabili all'IA).
+5. LAB Piano IA: titolo "Cosa preparare" → "Compila per generare"; rimuovere "Modalità da casa"; strumenti opzionali dentro "cosa preparare".
+6. AVATAR: NON devono parlare, solo SCRIVERE (disattivare TTS). 
+7. LAB: avatar di Mo(mmy)/Mohammed in alto come introduzione, spiega tutto (senza voce).
+8. IMPARA: avatar Michele + Mohammed insieme che danno consigli su come imparare (fumetto).
+9. COMMUNITY: Michele + Mommy che cercano nuovi colleghi sui social (fumetto).
+10. NUOVA sezione: Michele + Mommy spiegano come comprare le ricette e lo Shop (stile fumetto). Fumetti nelle ultime 3 sezioni.

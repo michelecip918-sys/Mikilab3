@@ -216,60 +216,6 @@ export default function Home({ onNavigate }) {
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
-      {/* Dashboard personalizzata dall'onboarding */}
-      {profile && (
-        <div data-testid="home-personal" className="rounded-3xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4">
-          <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">
-            {L("Ciao", "Hallo", "Hi")}{profile.labName ? `, ${profile.labName}` : ""}! 👋
-          </p>
-          {(() => {
-            const lvl = getLevelProgress(L);
-            return (
-              <div className="mb-2">
-                <button data-testid="home-badge-diplomato" onClick={() => go("impara")}
-                  className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wide active:scale-95 transition-all ${lvl.cls}`}>
-                  {lvl.icon} {L("Livello", "Level", "Level")}: {lvl.name}
-                </button>
-                {lvl.isMax ? (
-                  <p data-testid="home-level-progress" className="text-[11px] font-semibold text-[#6B8E62] mt-1.5">
-                    {L("🏅 Livello massimo raggiunto — sei un Maestro!", "🏅 Höchstes Level erreicht — du bist ein Meister!", "🏅 Top level reached — you're a Master!")}
-                  </p>
-                ) : (
-                  <div data-testid="home-level-progress" className="mt-1.5">
-                    <p className="text-[11px] text-[#3F4A54] dark:text-[#AEB8BF]">
-                      {L(`Ti mancano `, `Dir fehlen noch `, `You need `)}
-                      <b className="text-[#B34A26]">{lvl.remaining}</b>
-                      {L(` punti per diventare `, ` Punkte bis `, ` more points to become `)}
-                      <b>{lvl.nextIcon} {lvl.nextName}</b>
-                    </p>
-                    <div className="mt-1 h-2 w-full max-w-[240px] rounded-full bg-[#D7E1DB] dark:bg-[#38424B] overflow-hidden">
-                      <div className="h-full rounded-full bg-[#C9A24B] transition-all" style={{ width: `${lvl.pct}%` }} />
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
-          <p className="text-xs text-[#7E8A93] mb-3">{L("Le tue scorciatoie rapide", "Deine Schnellzugriffe", "Your quick shortcuts")}</p>
-          <div className="flex flex-wrap gap-2">
-            <button data-testid="home-quick-ricette" onClick={() => go("ricette")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#5E8B7E] text-white text-sm font-semibold active:scale-97">
-              <BookOpen className="w-4 h-4" /> {L("Le mie ricette", "Meine Rezepte", "My recipes")}
-            </button>
-            <button data-testid="home-quick-focus" onClick={() => go("maestro")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#6E8CA0]/40 text-[#2B303B] dark:text-[#EAF0EC] text-sm font-semibold active:scale-97">
-              <Wrench className="w-4 h-4 text-[#6E8CA0]" /> {focusChip}
-            </button>
-            {equipChip && (
-              <button data-testid="home-quick-equip" onClick={() => go("maestro")}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#6E8CA0]/40 text-[#2B303B] dark:text-[#EAF0EC] text-sm font-semibold active:scale-97">
-                <Wrench className="w-4 h-4 text-[#6E8CA0]" /> {equipChip}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
       <div data-testid="home-core">
         <div className="flex items-center gap-2 mb-1 px-1">
@@ -428,7 +374,7 @@ export default function Home({ onNavigate }) {
           </button>
           <button data-testid="shop-tab-corsi" onClick={() => setShopTab("corsi")}
             className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "corsi" ? "bg-[#5E8B7E] text-white shadow" : "text-[#7E8A93]"}`}>
-            {L("Corsi Online", "Online-Kurse", "Online Courses")}
+            {L("I Miei Corsi", "Meine Kurse", "My Courses")}
           </button>
         </div>
 
@@ -448,7 +394,7 @@ export default function Home({ onNavigate }) {
           ) : (
             <>
               <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-2"><GraduationCap className="w-6 h-6" /></div>
-              <p className="font-display text-lg font-bold">{L("Corsi Online", "Online-Kurse", "Online Courses")}</p>
+              <p className="font-display text-lg font-bold">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
               <span className="inline-block mt-2 text-[11px] font-bold bg-[#C88A2B] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("In arrivo a breve", "Kommt bald", "Coming soon")}</span>
               <p className="text-sm text-white/85 mt-2 leading-snug">{L("I corsi online di panificazione e pasticceria firmati Michele stanno arrivando.", "Micheles Online-Kurse für Backen und Konditorei kommen bald.", "Michele's online baking & pastry courses are coming soon.")}</p>
             </>

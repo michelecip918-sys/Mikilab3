@@ -1,4 +1,5 @@
 import { useLang } from "@/i18n/LanguageContext";
+import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
 import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
@@ -351,6 +352,21 @@ export default function Beginners() {
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("beginners_title")}</h2>
         </div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_intro")}</p>
+        {(() => {
+          const lvl = getLevelProgress((i, d, e) => tri3(lang, i, d, e));
+          return (
+            <div data-testid="beginners-level" className="mt-3">
+              <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wide ${lvl.cls}`}>
+                {lvl.icon} {tri3(lang, "Livello", "Level", "Level")}: {lvl.name}
+              </span>
+              {!lvl.isMax && (
+                <div className="mt-1.5 h-2 w-full max-w-[240px] rounded-full bg-[#D7E1DB] dark:bg-[#38424B] overflow-hidden">
+                  <div className="h-full rounded-full bg-[#C9A24B] transition-all" style={{ width: `${lvl.pct}%` }} />
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* Percorso guidato principianti */}
