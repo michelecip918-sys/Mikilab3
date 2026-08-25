@@ -1,218 +1,105 @@
 {
-  "project_name": "MikiLab Mobile-First Web App - Cleaned Italian & German Artisan Design System",
+  "project_name": "MikiLab",
+  "tagline": "MikiLab - Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli",
   "app_type": "hybrid_fullstack_pwa",
-  "primary_language": "IT",
-  "secondary_languages": ["DE", "EN"],
-  "target_audience": "Professional & Amateur Bakers, Pastry Chefs, Pizzerias & Multi-store Food Businesses in Italy & Germany",
-  "owner": "Michele, Italian baker working in Germany",
-  "core_design_philosophy": {
-    "concept": "Calm Italian & German Artisan Fusion ('Mantieni colori calmi ma aggiungi colori italiani e tedeschi come ordine primario')",
-    "tagline": "Unica al mondo, semplice, senza tempo",
-    "owner_directive": "Eliminare i doppioni nella navigazione e rendere l'interfaccia coerente, ordinata e pulita.",
-    "key_principles": [
-      "No Navigation Duplication: Main tab destinations (Home, Ricette, Il Tuo Laboratorio, Impara, Community) live permanently in the BottomNav. Do NOT repeat them as large redundant callout cards inside Home.",
-      "Clean Visual Hierarchy: Structure the Home page strictly in top-down storytelling and functional tiers.",
-      "Calm IT+DE Cultural Palette: Muted Sage Green (#5E8B7E, #33564E), Terracotta Red (#A64B2A, #B34A26), Sourdough Gold (#C88A2B), German Charcoal (#1E1B18), Flour Cream (#F6F8F5).",
-      "Signature IT/DE Flag Ribbon: Subtle 3px top micro-ribbon (.it-de-ribbon) representing Italian & German artisan heritage.",
-      "Non-Transparent Backdrop Surfaces: All headers, modals, popovers, and bottom bars MUST use non-transparent backdrops (bg-white/90 dark:bg-[#1B2127]/90 with backdrop-blur-md).",
-      "FAB Spacing & Collision Prevention: Floating Action Buttons (Radio & Parla/Voice) positioned at bottom-20 z-40, with pb-32 main container padding so no content is obscured."
-    ]
-  },
-  "home_cleanup_blueprint": {
-    "objective": "Riordino completo della Home SENZA doppioni di navigazione con la BottomNav, organizzata in 7 blocchi sequenziali ad alta gerarchia visiva.",
-    "eliminated_duplicates": [
-      "Rimosse card duplicati 'Per professionisti' (stessa destinazione del tab 'Il Tuo Laboratorio')",
-      "Rimosse card duplicati 'Per chi inizia' (stessa destinazione del tab 'Impara')",
-      "Rimosse card duplicati 'Ricette' ed 'Esplora MikiLab' redundanti con il tab 'Ricette'",
-      "Rimosse card duplicati 'Community' redundanti con il tab 'Community'"
-    ],
-    "ordered_home_sections": [
-      {
-        "step": 1,
-        "section_id": "home-hero-avatar",
-        "component": "HomeAvatarScene",
-        "description": "Avatar video parlante di Michele in alto con nastro IT/DE, bolla di testo animata e tasto Play."
-      },
-      {
-        "step": 2,
-        "section_id": "home-personal-dashboard",
-        "component": "home-personal",
-        "description": "Dashboard benvenuto con livello/XP del panettiere e scorciatoie contestuali rapide (Ricette, Focus, Attrezzatura)."
-      },
-      {
-        "step": 3,
-        "section_id": "home-non-bottom-destinations",
-        "component": "home-hub-destinations",
-        "description": "Griglia pulita 'Strumenti & Risorse MikiLab' dedicata ESCLUSIVAMENTE alle destinazioni non presenti nella barra in basso: News, Enciclopedia del Pane, Diagnosi Foto IA, Enterprise Multi-Negozio."
-      },
-      {
-        "step": 4,
-        "section_id": "home-ask-maestro",
-        "component": "home-chat-btn",
-        "description": "Card tattica ad alto impatto 'Chiedi al Maestro' per avviare la chat assistente IA."
-      },
-      {
-        "step": 5,
-        "section_id": "home-storytelling",
-        "component": "home-story",
-        "description": "Sezione fisarmonica richiudibile 'Scopri MikiLab' (Chi è Michele, Il Metodo, Filosofia, Serenità, Firma tattoo e battuta del giorno)."
-      },
-      {
-        "step": 6,
-        "section_id": "home-shop-courses",
-        "component": "home-shop-corsi",
-        "description": "Modulo in fondo 'MikiLab Shop & Corsi' con tab 'Shop Ricette' (attivo) e 'Corsi Online' (in arrivo a breve)."
-      },
-      {
-        "step": 7,
-        "section_id": "home-footer-legal",
-        "component": "ShareInstall & home-legal-link",
-        "description": "Install banner PWA, pulsante condivisione app e note legali in pie' di pagina."
-      }
-    ]
-  },
-  "color_system": {
-    "description": "Palette artigianale mista italo-tedesca con toni calmi, accenti legnosi e dorati della fermentazione.",
-    "hex_palette": {
-      "sage_green_primary": "#5E8B7E",
-      "sage_green_dark": "#33564E",
-      "terracotta_red": "#A64B2A",
-      "terracotta_red_vibrant": "#B34A26",
-      "sourdough_gold": "#C88A2B",
-      "german_charcoal": "#1E1B18",
-      "slate_dark_bg": "#1B2127",
-      "flour_cream_bg": "#F6F8F5",
-      "border_light": "#D7E1DB",
-      "border_dark": "#38424B",
-      "text_dark": "#2B303B",
-      "text_muted": "#7E8A93"
-    },
-    "signature_ribbon": {
-      "css_class": ".it-de-ribbon",
-      "style": "background: linear-gradient(90deg, #4A7265 0%, #F6F4EE 33%, #A64B2A 66%, #C88A2B 85%, #1E1B18 100%); height: 3px; width: 100%;"
-    }
-  },
+  "target_audience": "Professional Bakers, Pastry Chefs, and Pizza Makers (Panettieri, Pasticcieri e Pizzaioli - Non Hobbisti)",
+  "language_support": ["IT", "DE", "EN"],
+  "design_archetype": "ORGANIC & EARTHY / SWISS HIGH-CONTRAST HYBRID",
   "typography": {
-    "font_heading": "Playfair Display, Georgia, serif",
-    "font_body": "Manrope, system-ui, sans-serif",
-    "font_mono": "JetBrains Mono, monospace",
-    "scale": {
-      "h1": "font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#2B303B] dark:text-[#EAF0EC]",
-      "h2": "font-display text-xl sm:text-2xl font-bold tracking-tight text-[#2B303B] dark:text-[#EAF0EC]",
-      "h3": "font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]",
-      "body": "font-sans text-sm sm:text-base font-normal leading-relaxed text-[#3F4A54] dark:text-[#AEB8BF]",
-      "caption": "font-sans text-xs text-[#7E8A93]"
+    "heading_font": "Cabinet Grotesk, Clash Display, or Playfair Display for editorial impact",
+    "body_font": "Inter or DM Sans for maximum legibility in high-density laboratory tables",
+    "mono_font": "JetBrains Mono for numerical dough formulas, hydration %, and temperatures",
+    "sizes": {
+      "h1": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+      "h3": "text-xl sm:text-2xl font-semibold",
+      "h4": "text-lg sm:text-xl font-medium",
+      "body": "text-sm sm:text-base leading-relaxed",
+      "caption": "text-xs font-mono uppercase tracking-widest opacity-80"
     }
   },
-  "fab_layout_strategy": {
-    "description": "Gestione dei pulsanti flottanti (Radio Fornaio & Voice Assistant/Parla) per evitare sovrapposizioni e coperture di testo.",
-    "radio_fab": {
-      "position": "fixed left-4 bottom-20 z-40",
-      "icon": "Radio icon with equalizer animation when playing",
-      "safe_margin": "style={{ marginBottom: 'env(safe-area-inset-bottom)' }}"
-    },
-    "voice_fab": {
-      "position": "fixed right-4 bottom-20 z-40",
-      "icon": "Mic icon with pulsing border when listening",
-      "safe_margin": "style={{ marginBottom: 'env(safe-area-inset-bottom)' }}"
-    },
-    "bottom_nav": {
-      "position": "fixed bottom-0 inset-x-0 z-50",
-      "height": "min-h-[56px] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
-    },
-    "container_padding": "main content MUST have pb-32 sm:pb-28 to allow bottom scrolling above FABs and BottomNav"
+  "colors": {
+    "primary_base_sage": "#5E8B7E",
+    "primary_deep_sage": "#2D5A4C",
+    "accent_terracotta": "#C85A32",
+    "accent_crostata": "#D96B43",
+    "accent_gold": "#D4AF37",
+    "background_light_cream": "#FAF7F2",
+    "background_soft_cream": "#EAF0EC",
+    "text_charcoal": "#2B303B",
+    "text_graphite": "#1E232A",
+    "dark_mode_bg": "#232A31",
+    "dark_mode_surface": "#1A2026",
+    "dark_mode_border": "#2E363F",
+    "overlay_contrast_light": "bg-white/92 backdrop-blur-md",
+    "overlay_contrast_dark": "bg-[#232A31]/90 backdrop-blur-md"
   },
-  "card_and_hierarchy_system": {
-    "tiers": {
-      "tier_1_standard": "bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] shadow-sm rounded-3xl p-5",
-      "tier_2_accent": "bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-lg rounded-3xl p-5",
-      "tier_3_glass": "backdrop-blur-md bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 border border-[#D7E1DB] dark:border-[#38424B] shadow-xl rounded-2xl p-4",
-      "tier_4_tactical": "bg-[#1E1B18] text-white border-l-4 border-l-[#C88A2B] shadow-xl rounded-3xl p-5"
+  "branding_elements": {
+    "logo": "Stylized 'ML' Logo in Header (Home) and Footer (All Sections)",
+    "watermark_pattern": "Subtle wheat ears, flour dusting, dough mixer filigree background in SVG/CSS on EVERY section (Home, Ricette, Il Tuo Laboratorio, Impara, Community) with heavy contrast overlay for 100% text readability",
+    "slogan_banner": "MikiLab - Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli",
+    "michele_avatar": {
+      "header_avatar": "/michele-avatar.jpg",
+      "real_lab_photos": [
+        "/michele-real.webp",
+        "/michele-real2.jpg",
+        "/michele-real-lab.jpg",
+        "/michele-photo.jpg",
+        "/michele-avatar-full.jpg"
+      ],
+      "footer_feature": "Prominent large real photo of Michele holding sourdough bread in arms showing craft tattoos, placed in the page footer across all sections",
+      "mohammadreza_guide": "/mohammed-avatar.jpg"
     }
   },
-  "component_guidelines_js": {
-    "general_rules": [
-      "All files are React .js / .jsx components.",
-      "Every interactive element MUST include a data-testid attribute (e.g. data-testid='home-quick-ricette').",
-      "Header, Dropdown, BottomNav, and Floating Panels MUST NOT use fully transparent backgrounds. Use backdrop-blur-md bg-white/90 or bg-[#1B2127]/90.",
-      "Use sonner for toast notifications across all user actions."
-    ],
-    "key_components": {
-      "Header_js": {
-        "path": "frontend/src/components/Header.jsx",
-        "styling": "Sticky top-0 z-40 backdrop-blur-md bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 border-b border-[#D7E1DB] dark:border-[#38424B] px-4 py-3 flex items-center justify-between",
-        "required_test_ids": ["app-header", "header-logo", "language-selector", "user-profile-btn"]
-      },
-      "BottomNav_js": {
-        "path": "frontend/src/components/BottomNav.jsx",
-        "styling": "Fixed bottom-0 inset-x-0 z-50 backdrop-blur-md bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 border-t border-[#D7E1DB] dark:border-[#38424B] px-2 py-2 grid grid-cols-5 max-w-xl mx-auto",
-        "required_test_ids": ["bottom-nav", "nav-tab-home", "nav-tab-ricette", "nav-tab-maestro", "nav-tab-impara", "nav-tab-community"]
-      },
-      "Home_js": {
-        "path": "frontend/src/sections/Home.jsx",
-        "styling": "Mobile-first centered max-w-xl mx-auto space-y-6 pb-2",
-        "required_test_ids": [
-          "home-founder-photo",
-          "home-avatar-play",
-          "home-personal",
-          "home-badge-diplomato",
-          "home-quick-ricette",
-          "home-non-bottom-destinations",
-          "home-dest-news",
-          "home-dest-enciclopedia",
-          "home-dest-diagnosi",
-          "home-dest-enterprise",
-          "home-chat-btn",
-          "home-story",
-          "home-story-toggle",
-          "home-shop-corsi",
-          "shop-tab-premium",
-          "shop-tab-corsi"
-        ]
-      }
+  "key_sections_and_fixes": {
+    "home": {
+      "hero": "Prominent ML logo + Slogan banner + Michele real photo badge + Professional target clear callout (Panettieri, Pasticcieri, Pizzaioli)",
+      "news_feed": "'Arte Bianca' live news feed embedded directly in Home with category tags (Grani Antichi, Lievitazione, Trend Mercato, Normative)",
+      "module_cards": "Grid cards linking to Laboratorio, Ricette, Academy, Community, and Archivio Salvati"
+    },
+    "ricette": {
+      "top_bar_fix": "Fix truncated text on 'Enciclopedia' and 'Tabelle & Farine' cards by enforcing flex-wrap, responsive min-widths, and padding p-3 md:p-4 text-center overflow-visible",
+      "category_accordions": "Pane, Panini, Snack, Focacce, Panettoni rendered as CLOSED accordions by default, with down chevron arrow and numeric badge count"
+    },
+    "il_tuo_laboratorio": {
+      "pro_tools": "Gradi Acqua, Calcola Temperatura, Adatta Forno, Gestione Lievito Madre, Backward Scheduler, Food Cost, Haccp Log",
+      "guides": "Mohammedreza AI Assistant + WhatsApp direct support floating FAB"
+    },
+    "impara_academy": {
+      "highlight": "Strongly highlighted Academy section with clear 3-track progression: Base, Intermedio, Avanzato",
+      "content": "Course cards with video previews, duration, skill certificate tags, and interactive quizzes"
+    },
+    "community": {
+      "social_feed": "Feed layout with posts, photo uploads, like/comment buttons, 'A cosa stai lavorando oggi?' composer box, quick filters (Pane, Pastry, Pizza, Farine)",
+      "used_marketplace": "Tab for 'Marketplace Usato' (Impastatrici usate, Forni, Attrezzature professionali)"
+    },
+    "archivio_i_miei_dati": {
+      "tabs": ["Piani Produzione", "Ricette Salvate", "Documenti & PDF", "Chat AI History"]
+    },
+    "language_switcher": {
+      "languages": ["IT", "DE", "EN"],
+      "visual": "Trilingual pill selector with subtle Italian/German Flag accent colors"
     }
   },
-  "image_urls": {
-    "michele_artisan_photo": "frontend/public/michele-real-lab.jpg",
-    "michele_avatar_full": "frontend/public/michele-avatar-full.jpg",
-    "michele_avatar_talk": "frontend/public/michele-avatar-talk.jpg",
-    "michele_avatar_thumb": "frontend/public/michele-avatar.jpg",
-    "bio_dough_1": "frontend/public/bio-dough.jpg",
-    "bio_dough_2": "frontend/public/bio-dough-2.jpg",
-    "bio_dough_3": "frontend/public/bio-dough-3.jpg",
-    "sourdough_kneading": "https://images.unsplash.com/photo-1537734796389-e1fc293cf856?crop=entropy&cs=srgb&fm=jpg&q=85",
-    "artisan_pizza_prep": "https://images.unsplash.com/photo-1572552635104-daf938e0aa1f?crop=entropy&cs=srgb&fm=jpg&q=85"
+  "component_path": "/app/frontend/src",
+  "media_urls": {
+    "michele_real_lab_1": "/michele-real.webp",
+    "michele_real_lab_2": "/michele-real2.jpg",
+    "michele_real_lab_3": "/michele-photo.jpg",
+    "michele_real_lab_4": "/michele-real-lab.jpg",
+    "michele_full_tattoo": "/michele-avatar-full.jpg",
+    "dough_kneading_action": "https://images.pexels.com/photos/6605188/pexels-photo-6605188.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "pizza_dough_prep": "https://images.pexels.com/photos/5056624/pexels-photo-5056624.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "artisan_sourdough_display": "https://images.pexels.com/photos/30826792/pexels-photo-30826792.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "wheat_field_close_up": "https://images.pexels.com/photos/29385833/pexels-photo-29385833.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
   },
-  "prioritized_rollout_order": [
-    {
-      "step": 1,
-      "title": "Home Page De-duplication & Clean Blueprint Alignment",
-      "target_files": ["frontend/src/sections/Home.jsx"],
-      "action": "Remove duplicate cards for Ricette, Impara, Maestro, and Community. Create dedicated non-bottom destinations grid (News, Enciclopedia, Diagnosi, Enterprise)."
-    },
-    {
-      "step": 2,
-      "title": "FAB Positioning & Container Bottom Padding",
-      "target_files": ["frontend/src/components/RadioFornaio.jsx", "frontend/src/components/VoiceAssistant.jsx", "frontend/src/App.js"],
-      "action": "Ensure Radio and Voice FABs sit cleanly at bottom-20 z-40, and main scroll area uses pb-32 sm:pb-28 to eliminate content clipping."
-    },
-    {
-      "step": 3,
-      "title": "BottomNav & Header Backdrop Non-Transparency Verification",
-      "target_files": ["frontend/src/components/Header.jsx", "frontend/src/components/BottomNav.jsx"],
-      "action": "Ensure backdrop-blur with opaque fill bg-[#F6F8F5]/95 and dark:bg-[#1B2127]/95 is consistently enforced with full data-testid attributes."
-    }
-  ],
   "instructions_to_main_agent": [
-    "Read /app/design_guidelines.json completely before modifying any section.",
-    "Strictly enforce data-testid attributes on all interactive buttons, cards, and tabs.",
-    "Never delete functionality or routes; reorganize the Home section to eliminate duplicates with the bottom navbar.",
-    "Maintain the existing calm sage green, terracotta, sourdough gold, and charcoal palette with .it-de-ribbon details.",
-    "Use sonner for toast notifications."
+    "Ensure all interactive elements have data-testid attributes.",
+    "Do NOT use pure transparent backgrounds on headers or dropdown menus.",
+    "Check that the 'Enciclopedia' and 'Tabelle & Farine' buttons on Ricette page never clip or truncate text.",
+    "Verify recipe categories start in a collapsed/closed state by default with arrow indicator.",
+    "Keep the Sage Green (#5E8B7E) and Terracotta (#C85A32) color hierarchy consistent.",
+    "Ensure Michele real photos are embedded throughout all sections, especially the large footer element."
   ],
-  "UNIVERSAL GUIDELINES FOR MAIN AGENT": {
-    "test_id_requirement": "All buttons, inputs, tabs, recipe items, language switchers, and dialog actions MUST retain or add data-testid attributes.",
-    "no_transparent_overlays": "Never use fully transparent header or overlay dropdown backgrounds.",
-    "toast_library": "Use sonner for user feedback toasts."
-  }
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": "Follow mobile-first PWA responsiveness, preserve high contrast over watermark background, never use raw transparent overlays on dropdowns or sticky navigation."
 }

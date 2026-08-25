@@ -6,6 +6,7 @@ import {
   Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
+import WhatsAppHelp from "@/components/WhatsAppHelp";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import StartDoughs from "@/sections/StartDoughs";
 import AdattaForno from "@/sections/AdattaForno";
@@ -130,6 +131,11 @@ export default function Maestro() {
 
       {/* UNICA sezione: il Piano di Produzione IA con TUTTI gli strumenti al suo interno */}
       <PianoProduzioneAI onOpenTool={openTool} />
+
+      {/* WhatsApp SOLO qui (Laboratorio) e nei Corsi */}
+      <div className="mt-4">
+        <WhatsAppHelp context="laboratorio" />
+      </div>
     </div>
   );
 }

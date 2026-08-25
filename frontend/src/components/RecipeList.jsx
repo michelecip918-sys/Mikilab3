@@ -338,7 +338,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
                   const searching = (query || "").trim() !== "" || baseFilter !== "all";
-                  const open = searching ? true : (openCats[cat.key] !== undefined ? openCats[cat.key] : (collectionName !== "personal")); // ricerca attiva: apri le cartelle; altrimenti Le Mie Ricette chiuse di default
+                  const open = searching ? true : (openCats[cat.key] !== undefined ? openCats[cat.key] : false); // ricerca attiva: apri le cartelle; altrimenti TUTTE le categorie chiuse di default
                   const coverSrc = (() => {
                     const chosen = folderCovers[cat.key];
                     const raw = chosen || (items.find((r) => r.image_url) || {}).image_url;

@@ -190,6 +190,13 @@ export default function Home({ onNavigate }) {
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
+      {/* Slogan / posizionamento professionale */}
+      <div data-testid="home-slogan" className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white px-5 py-4 shadow-lg -mt-2">
+        <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+        <p className="font-display text-lg sm:text-xl font-bold leading-tight mt-1">MikiLab</p>
+        <p className="text-sm text-white/90 leading-snug mt-0.5">{t("brand_slogan")}</p>
+      </div>
+
       {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
       <div data-testid="home-core">
         <div className="flex items-center gap-2 mb-1 px-1">

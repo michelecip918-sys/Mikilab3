@@ -1,0 +1,29 @@
+{
+  "summary": "FASE 1 frontend-only verification (IT/DE/EN) on preview URL with admin login (admin@mikilab.de). Verified: (1) home-slogan present under avatar with MikiLab + slogan, correctly translated IT/DE/EN; (2) NO global floating WhatsApp FAB on any tab (checked computed position:fixed wa.me links on home/ricette/maestro/impara/community = 0); wa-help-laboratorio present & visible at bottom of Il Tuo Laboratorio (href wa.me/491601253378), wa-help-corsi present in Academy/Corsi, wa-help-assistenza fully removed; (3) Ricette (mikilab): all 6 category folders CLOSED by default (0 recipe-row rendered), open on click (Pane -> 31 rows), close again, and auto-open during search (query 'pane' -> 44 rows) then collapse again after clearing search; (4) Terminology: planner card title = 'Pianifica la tua Produzione' / 'Plane deine Produktion' / 'Plan your Production' in all languages; (5) Impara: learn-subnav has exactly 2 tabs (learn-tab-impara, learn-tab-news), learn-tab-enciclopedia no longer exists, Enciclopedia quicklink still present in Ricette; (6) Regression: all 5 bottom nav tabs navigate fine, ZERO console errors during the whole session.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Impara -> Per principianti / Il tuo percorso", "issues": ["Step 3 still reads 'Crea un piano con «Pianifica il tuo pane a casa»' (DE: 'Plane dein Brot zu Hause', EN: 'Plan your bread at home') in sections/Beginners.jsx line ~333, while the card is now named 'Pianifica la tua Produzione' — stale label / terminology inconsistency"]},
+      {"screen": "Il Tuo Laboratorio (Piano IA tool)", "issues": ["Large empty vertical gap (~300px) between the saved-plans block and the wa-help-laboratorio block at page bottom"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Update Beginners.jsx (~line 333) step text to the new production terminology so it matches the renamed card 'Pianifica la tua Produzione' (DE/EN equivalents).",
+    "Optional: reduce the excess whitespace above the WhatsApp block at the bottom of Il Tuo Laboratorio."
+  ],
+  "critical_code_review_comments": [
+    "components/WhatsAppFab.jsx is now dead code (no imports anywhere) — delete it to avoid accidental re-introduction of the global FAB.",
+    "i18n beginners_intro still uses 'pane a casa / Brot zu Hause / bread at home'; acceptable in the beginner/home-baking context but review for consistency with the professional positioning."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100% of FASE 1 acceptance criteria passed (2 cosmetic/terminology nits)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login via header 'Accedi'; app is browsable as guest, Laboratorio requires admin/PRO)",
+  "context_for_next_testing_agent": "Bottom nav testids are nav-tab-home/ricette/maestro/impara/community (NOT 'mikilab'/'learn'). Academy/Corsi is reached from Home quicklink [data-testid=home-core-corsi]. Recipe rows use data-testid recipe-row-{id}; category folders cat-folder-{key} (basi/pane/panini/snack/focacce/panettoni). FASE 1 items are all verified working; later phases (branding/backgrounds, News in Home, Marketplace in Community, tiered Academy, data archive) are NOT implemented yet by design.",
+  "rca_of_the_issue": "No functional defect found. Only stale copy in Beginners.jsx referencing the old planner name and a layout whitespace gap in Maestro."
+}

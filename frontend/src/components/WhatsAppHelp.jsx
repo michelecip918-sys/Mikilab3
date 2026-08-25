@@ -24,6 +24,11 @@ export default function WhatsAppHelp({ context = "assistenza", className = "" })
       note: tri("Scrivimi su WhatsApp SOLO per la gestione degli ordini.", "Schreib mir auf WhatsApp NUR zur Bestellverwaltung.", "Message me on WhatsApp ONLY for order management."),
       msg: tri("Ciao Michele! Ho bisogno di aiuto con un ordine.", "Hallo Michele! Ich brauche Hilfe bei einer Bestellung.", "Hi Michele! I need help with an order."),
     },
+    laboratorio: {
+      title: tri("Domande sul laboratorio", "Fragen zum Labor", "Lab questions"),
+      note: tri("Scrivimi su WhatsApp per domande tecniche sul laboratorio e sul metodo.", "Schreib mir auf WhatsApp für technische Fragen zum Labor und zur Methode.", "Message me on WhatsApp for technical questions about the lab and the method."),
+      msg: tri("Ciao Michele! Ho una domanda tecnica sul laboratorio.", "Hallo Michele! Ich habe eine technische Frage zum Labor.", "Hi Michele! I have a technical question about the lab."),
+    },
     assistenza: {
       title: tri("Assistenza tecnica", "Technischer Support", "Technical support"),
       note: tri("Scrivimi su WhatsApp SOLO per problemi tecnici con l'app.", "Schreib mir auf WhatsApp NUR bei technischen Problemen mit der App.", "Message me on WhatsApp ONLY for technical issues with the app."),

@@ -330,7 +330,7 @@ export default function Beginners() {
   const PATH = [
     tri3(lang, "Conosci i 4 ingredienti base (leggi i consigli qui sotto)", "Lerne die 4 Grundzutaten (siehe Tipps unten)", "Learn the 4 basic ingredients (see tips below)"),
     tri3(lang, "Prova la Ricetta del giorno", "Probiere das Rezept des Tages", "Try the Recipe of the day"),
-    tri3(lang, "Crea un piano con «Pianifica il tuo pane a casa»", "Erstelle einen Plan mit „Plane dein Brot zu Hause“", "Make a plan with 'Plan your bread at home'"),
+    tri3(lang, "Crea un piano con «Pianifica la tua Produzione»", "Erstelle einen Plan mit „Plane deine Produktion“", "Make a plan with 'Plan your Production'"),
     tri3(lang, "Supera il Quiz del Fornaio", "Bestehe das Bäcker-Quiz", "Pass the Baker Quiz"),
   ];
   const PKEY = "mikilab_beginner_path";

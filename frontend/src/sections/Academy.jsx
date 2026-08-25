@@ -163,9 +163,8 @@ export default function Academy() {
         </div>
       )}
 
-      {/* Assistenza & info corsi via WhatsApp (contestuale) */}
+      {/* Info corsi via WhatsApp (contestuale) */}
       <WhatsAppHelp context="corsi" />
-      <WhatsAppHelp context="assistenza" />
     </div>
   );
 }

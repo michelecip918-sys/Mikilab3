@@ -91,3 +91,14 @@
 - printEULabel (EULabel.jsx) ora async: genera un QR (libreria qrcode) verso {origin}/?prodotto={id} e lo stampa in fondo all'etichetta con caption "Scheda prodotto".
 - Deep-link ?prodotto={id}: App.js apre il tab Ricette; RecipeList (useEffect su recipes) apre automaticamente la scheda del prodotto e pulisce l'URL. Funziona da ANONIMO (cliente che scansiona) e da loggato.
 - Testato: testing_agent iteration_71 (deep-link anonimo+admin, 95 ricette caricate, QR img nel print, cleanup — 100%).
+
+## v116 (2026-06) — Revisione ampia FASE 1 (branding/UX quick wins)
+- Slogan professionale in Home ([home-slogan]) + key brand_slogan (it/de/en): "Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli".
+- Terminologia professionale: home_plan_title/result → "Pianifica la tua Produzione / Piano di produzione" (it/de/en) + step Beginners allineato.
+- WhatsApp MIRATO: rimosso <WhatsAppFab/> flottante globale (App.js); WhatsApp ora solo in Corsi (Academy: wa-help-corsi; rimosso wa-help-assistenza) e Laboratorio (Maestro: nuovo context 'laboratorio'). OrdersManager (ordini) resta come strumento del Lab.
+- Ricette: categorie CHIUSE di default per TUTTE le collezioni (RecipeList open=false; ricerca → auto-apri).
+- Enciclopedia rimossa da 'Impara' (LearnHub: 2 tab impara+news); resta solo in Ricette.
+- Testato: testing_agent iteration_72 (100% criteri Fase 1, 0 errori console).
+- Design blueprint salvato in /app/design_guidelines.json (design_agent).
+- ROADMAP fasi successive: F2 branding visivo (logo ML header+footer, sfondi filigrana grano/farina, palette, footer con foto Michele più grande); F3 News→Home + CRUD admin news, Marketplace→Community; F4 Academy a livelli Base/Intermedio/Avanzato, archivio 'I Miei Dati Salvati' (Piani+Ricette+PDF), Mohammadreza guida interattiva (tooltip testuali); F5 audit traduzioni IT/DE/EN a tappeto.
+- NOTA: voce TTS NON riattivata (l'utente ha confermato: solo fumetti scritti).

@@ -15,7 +15,6 @@ import Academy from "@/sections/Academy";
 import EnterpriseHub from "@/sections/EnterpriseHub";
 import PaywallGate from "@/components/PaywallGate";
 import RadioFornaio from "@/components/RadioFornaio";
-import WhatsAppFab from "@/components/WhatsAppFab";
 import IntroGuide from "@/components/IntroGuide";
 import { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
@@ -170,7 +169,7 @@ function App() {
       <BottomNav active={tab} onChange={navigate} />
       {/* FAB "Parla" (voce) rimosso: gli avatar comunicano solo per iscritto */}
       <RadioFornaio />
-      <WhatsAppFab />
+      {/* WhatsApp FAB globale rimosso: WhatsApp ora SOLO in Corsi e Il Tuo Laboratorio */}
       {!resetToken && showIntro && <IntroGuide />}
       {/* Onboarding a domande rimosso: ingresso diretto (profilo di default seminato) */}
 
