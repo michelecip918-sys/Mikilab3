@@ -5,6 +5,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
 import { toast } from "sonner";
 import AvatarBubbles from "@/components/AvatarBubbles";
+import Marketplace from "@/sections/Marketplace";
 
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
@@ -200,6 +201,11 @@ export default function Community() {
           })}
         </div>
       )}
+
+      {/* Marketplace Usato — compravendita macchinari/attrezzature tra artigiani */}
+      <div data-testid="community-marketplace" className="mt-8 pt-6 border-t border-[#D7E1DB] dark:border-[#38424B]">
+        <Marketplace />
+      </div>
     </div>
   );
 }

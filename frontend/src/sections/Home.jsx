@@ -7,6 +7,7 @@ import { TattooSignature } from "@/components/TattooSignature";
 import { recipesApi } from "@/lib/api";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
+import HomeNews from "@/components/HomeNews";
 import { getProfile } from "@/components/Onboarding";
 import { getLevelProgress } from "@/lib/level";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -196,6 +197,9 @@ export default function Home({ onNavigate }) {
         <p className="font-display text-lg sm:text-xl font-bold leading-tight mt-1">MikiLab</p>
         <p className="text-sm text-white/90 leading-snug mt-0.5">{t("brand_slogan")}</p>
       </div>
+
+      {/* News · Arte Bianca (curate dall'admin) */}
+      <HomeNews />
 
       {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
       <div data-testid="home-core">

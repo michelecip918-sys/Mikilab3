@@ -1,0 +1,29 @@
+{
+  "summary": "FASE 3 frontend-only verification on preview URL (mobile 390x844). VERIFIED PASS: (1) Home contains [data-testid=home-news] 'News · Arte Bianca'; admin (admin@mikilab.de) sees news-add-btn, editor opens (news-editor), created news 'Nuova farina QA' (+DE/EN titles, body IT, tag 'Mulini') -> news-item-<id> rendered with tag MULINI; edit via news-edit-<id> (form correctly prefilled) -> title updated to 'Nuova farina QA MOD' and persisted; language switch lang-de shows 'QA Neues Mehl', lang-en shows 'QA New flour' (body falls back to IT as expected since only IT body was filled); delete via news-delete-<id> removes item and stays removed after reload. (2) Anonymous AND non-admin (fornaio@mikilab.de) both SEE home-news + news-item but have 0 add/edit/delete buttons; with no news present the block is hidden for non-admins (returns null) - by design. (3) Impara: learn-subnav and learn-tab-news no longer exist; renders Beginners ('Per principianti', 'Il tuo percorso') directly. (4) Community: [data-testid=community-marketplace] present at the bottom with 'Marketplace Usato' + 'Pubblica un annuncio' + category filters; social feed (posts, like/comment) renders above it. (5) Il Tuo Laboratorio: capo-quicklink-market REMOVED (count 0), 29 other quicklinks intact. (6) Regression: Home/Ricette/Laboratorio/Impara/Community all navigate fine, footer (Note legali & Privacy, MikiLab · Michele, (c) 2026) and wheat background present; no JS console errors (only benign 401 from the session-check call when not yet authenticated).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home (mobile)", "issues": ["The floating circular 'Radio' FAB (bottom-left, above the bottom nav) overlaps page content: it covers part of the 'Il cuore di MikiLab' heading and, when the news block is in that region, the news item title/body text is partially hidden behind it. Consider adding bottom-left padding to content or moving/shrinking the FAB."]},
+      {"screen": "Community -> Marketplace (empty state)", "issues": ["Large empty vertical gap (~350px) below 'Nessun annuncio. Pubblica il primo!' before the bottom nav; no footer in this tab."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: fix Radio FAB overlap with Home content (news item / section heading).",
+    "Optional: reduce empty space under the Marketplace empty state in Community."
+  ],
+  "critical_code_review_comments": [
+    "HomeNews.jsx: create/update/delete failures are only toasted; delete has no confirmation dialog - a single mis-tap by admin permanently removes a news item. Consider a confirm step.",
+    "HomeNews.jsx: no loading/empty state for the news list (admins see just the header while loading); catch() in load() swallows errors silently."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100% of FASE 3 acceptance criteria passed"},
+  "seed_data_creation": "Created 1 test news item ('Nuova farina QA' -> 'Nuova farina QA MOD') and DELETED it at the end; /api/news-items list is back to empty.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! ; fornaio@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Nav testids: nav-tab-home/ricette/maestro/impara/community. Header lang buttons: lang-it/lang-de/lang-en. Login: login-btn -> auth-email + input[type=password] -> auth-submit. HomeNews editor fields are unlabeled inputs in order: title IT, title DE, title EN, then 3 textareas (body IT/DE/EN), then tag + link inputs. News list is empty after cleanup, so home-news is hidden for anonymous/non-admin users until admin adds an item.",
+  "rca_of_the_issue": "No functional defect found in FASE 3; only two cosmetic layout nits (Radio FAB overlap, Marketplace empty-state whitespace)."
+}

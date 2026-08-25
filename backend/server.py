@@ -1065,6 +1065,52 @@ async def rename_saved_plan(plan_id: str, payload: SavedPlanRename, user: dict =
 
 
 # ---------------------------------------------------------------------------
+# News curate dall'admin (feed "arte bianca" mostrato in Home). Trilingue.
+# ---------------------------------------------------------------------------
+class NewsItemIn(BaseModel):
+    title: str = ""
+    title_de: str = ""
+    title_en: str = ""
+    body: str = ""
+    body_de: str = ""
+    body_en: str = ""
+    tag: str = ""
+    link: str = ""
+
+
+@api_router.get("/news-items")
+async def list_news_items():
+    return await db.news_items.find({}, {"_id": 0}).sort("created_at", -1).to_list(50)
+
+
+@api_router.post("/news-items")
+async def create_news_item(payload: NewsItemIn, user: dict = Depends(current_user)):
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Non autorizzato")
+    doc = {"id": str(uuid.uuid4()), **payload.model_dump(), "created_at": now_iso(), "updated_at": now_iso()}
+    await db.news_items.insert_one(dict(doc))
+    return doc
+
+
+@api_router.put("/news-items/{nid}")
+async def update_news_item(nid: str, payload: NewsItemIn, user: dict = Depends(current_user)):
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Non autorizzato")
+    res = await db.news_items.update_one({"id": nid}, {"$set": {**payload.model_dump(), "updated_at": now_iso()}})
+    if res.matched_count == 0:
+        raise HTTPException(status_code=404, detail="News non trovata")
+    return {"success": True}
+
+
+@api_router.delete("/news-items/{nid}")
+async def delete_news_item(nid: str, user: dict = Depends(current_user)):
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Non autorizzato")
+    await db.news_items.delete_one({"id": nid})
+    return {"success": True}
+
+
+# ---------------------------------------------------------------------------
 # Capo Laboratorio — configurazione attrezzature/celle (single persisted doc)
 # ---------------------------------------------------------------------------
 @api_router.get("/lab-config")

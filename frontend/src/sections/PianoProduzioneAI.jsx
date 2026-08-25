@@ -456,7 +456,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 { id: "check", Icon: ListChecks, label: tri3(lang, "Checklist", "Checklisten", "Checklists") },
                 { id: "shelf", Icon: CalendarClock, label: tri3(lang, "Shelf-Life", "Shelf-Life", "Shelf-Life") },
                 { id: "spreco", Icon: Recycle, label: tri3(lang, "Anti-Spreco", "Anti-Verschwendung", "Anti-Waste") },
-                { id: "market", Icon: Store, label: tri3(lang, "Marketplace Usato", "Gebraucht-Markt", "Used Market") },
               ].map(({ id, Icon, label }) => (
                 <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
                   className="flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px]">

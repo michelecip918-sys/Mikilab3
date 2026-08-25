@@ -55,6 +55,13 @@ export const plansArchiveApi = {
   remove: (id) => api.delete(`/plans/archive/${id}`).then((r) => r.data),
 };
 
+export const newsItemsApi = {
+  list: () => api.get(`/news-items`).then((r) => r.data),
+  create: (data) => api.post(`/news-items`, data).then((r) => r.data),
+  update: (id, data) => api.put(`/news-items/${id}`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/news-items/${id}`).then((r) => r.data),
+};
+
 export const labConfigApi = {
   get: () => api.get(`/lab-config`).then((r) => r.data),
   save: (data) => api.put(`/lab-config`, data).then((r) => r.data),

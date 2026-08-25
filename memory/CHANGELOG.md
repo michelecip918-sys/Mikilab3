@@ -111,3 +111,10 @@
 - Palette: accenti dorati aggiunti (ring/dettagli) coerenti col blueprint /app/design_guidelines.json; base salvia/crema mantenuta per non destabilizzare.
 - Verifica: smoke screenshot Home (header+sfondo+slogan OK, contenuti leggibili), compilazione pulita.
 - NOTA: cambi puramente visivi a basso rischio; logiche invariate.
+
+## v118 (2026-06) — Revisione ampia FASE 3 (News in Home + Marketplace in Community)
+- News CURATE DA ADMIN: backend /api/news-items (GET pubblico, POST/PUT/DELETE admin, collection news_items, trilingue). api.js newsItemsApi.
+- HomeNews.jsx: feed 'News · Arte Bianca' in Home con editor admin inline (aggiungi/modifica/elimina, tag, link, titoli+testi IT/DE/EN). Non-admin/anonimi vedono in sola lettura; blocco nascosto se nessuna news e non admin.
+- Impara (LearnHub): rimossa scheda News (spostata in Home) — ora rende direttamente Beginners.
+- Marketplace Usato: rimosso dalla griglia strumenti del Laboratorio; inserito in Community ([community-marketplace]).
+- Testato: testing_agent iteration_73 (100% criteri Fase 3: CRUD news admin, vista read-only non-admin/anonimo, traduzioni, Impara senza News, Marketplace in Community e fuori dal Lab). Nessun dato di test residuo.
