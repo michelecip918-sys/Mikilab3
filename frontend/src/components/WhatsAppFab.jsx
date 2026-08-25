@@ -7,7 +7,18 @@ const WA_DEFAULT = "491601253378"; // +49 160 1253378
 export default function WhatsAppFab() {
   const { lang } = useLang();
   const [num, setNum] = useState(WA_DEFAULT);
+  const [hidden, setHidden] = useState(false);
   useEffect(() => { siteSettingsApi.get().then((s) => { if (s && s.whatsapp_number) setNum(s.whatsapp_number); }).catch(() => {}); }, []);
+  useEffect(() => {
+    let timer;
+    const onScroll = () => {
+      setHidden(true);
+      clearTimeout(timer);
+      timer = setTimeout(() => setHidden(false), 700);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); clearTimeout(timer); };
+  }, []);
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const msg = tri(
     "Ciao Michele! Ti scrivo da MikiLab.",
@@ -23,7 +34,7 @@ export default function WhatsAppFab() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"
-      className="fixed z-40 right-4 bottom-44 flex flex-col items-center gap-1"
+      className={`fixed z-40 right-4 bottom-44 flex flex-col items-center gap-1 transition-all duration-300 ${hidden ? "opacity-0 translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"}`}
       style={{ marginBottom: "env(safe-area-inset-bottom)" }}
     >
       <span className="w-12 h-12 rounded-full bg-[#25D366] shadow-lg flex items-center justify-center active:scale-95 transition-transform">

@@ -1223,3 +1223,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Maestro: "Chiedi a Mohammadreza" (MohammedAssistant) spostato SOTTO i due avatar (AvatarBubbles lab) e PRIMA del menu (PianoProduzioneAI). Ordine: hero → titolo → 2 avatar → Chiedi Mohammed → menu.
 - Verificato a schermo: capo assente da INIZIA (count 0), presente in SCEGLI ANCHE (count 1), Mohammed sotto gli avatar. Compila pulito.
 - Pendente (Next Action Item approvato): rifiniture minori (FAB WhatsApp overlap, warning console "<span> in <option>"). REDEPLOY per mikilab.de.
+
+## v108 (2026-06) — Rifiniture minori
+- FAB WhatsApp (WhatsAppFab.jsx): auto-hide durante lo scroll (opacity/translate + timeout 700ms), come il FAB Radio → risolta la sovrapposizione con le chip moduli/SCEGLI ANCHE.
+- Warning console "<span> cannot be child of <option>": investigato tutto il sorgente, NESSUN <option> contiene <span> (SupplierOrder/RecipeDialog/AdminPanel/PianoProduzioneAI usano solo testo+emoji). Non proviene dal nostro codice (probabile artefatto estensione/portal), innocuo → nessuna modifica.
