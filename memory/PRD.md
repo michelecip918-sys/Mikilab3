@@ -1147,3 +1147,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Rimosso blocco "Dove impasti? / Modalità da casa" (bizType forzato "pro"). applyBiz ora inutilizzato (warning).
 - L'IA (capo_plan_stream) già ingerisce: ricette+quantità, impasto di partenza, impastatrici (portate), celle frigo/lievitazione/freezer, giacenze freezer, personale (staff), punti vendita, temperatura lab, orari inizio → genera piano GIORNALIERO e SETTIMANALE. Card "Costi & Margine" (v95) mostra costo/ricavo/margine.
 - DA FARE (Blocco C parte 2): spostare strumenti dalla voce 2 (bilancia, termostato, antispreco...) dentro "Compila per generare" con tasto "Sposta in Piano IA"; collegare i loro dati all'IA.
+
+## v98 (2026-06) — Piano IA: validazione obbligatoria + stabilità
+- canGenerate ora richiede almeno 1 ricetta con quantità (validProducts>0); rimosso il fallback "solo Piano Settimanale". Alert/hint aggiornati (obbligatorio ricetta+qty).
+- Struttura 2 macro-step (1. Piano IA, 2. Strumenti) e layout card (Inserisci Ricette, Piano Giornaliero, Produzione Settimanale, Celle Frigo) invariati. Compilazione pulita, nessun errore console su Home/Lab.
+- DA FARE (grande): moduli opzionali come toggle/checkbox on/off (Orari, Spesa, Food Cost, Punti Vendita, Turni, Digital Twin, Termostato, pH, Diagnosi, Diario, Anti-Spreco) senza bloccare il piano base; supporto Bilancia Smart Bluetooth (dati pesata realtime, fallback manuale); salvataggio stati moduli opzionali in sessione.

@@ -224,14 +224,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     () => products.filter((p) => p.recipe_id && Number(p.qty) > 0),
     [products]
   );
-  const canGenerate = validProducts.length > 0 || (useWeekly && weeklyItems.length > 0);
+  const canGenerate = validProducts.length > 0;
 
   const generate = async () => {
     if (!canGenerate) {
       toast.error(tri3(lang,
-        "Seleziona almeno una ricetta con la quantità (oppure attiva il Piano Settimanale).",
-        "Wähle mindestens ein Rezept mit Menge (oder aktiviere den Wochenplan).",
-        "Select at least one recipe with a quantity (or enable the Weekly Plan)."));
+        "Per generare il piano inserisci almeno una ricetta con la quantità.",
+        "Um den Plan zu erstellen, füge mindestens ein Rezept mit Menge hinzu.",
+        "To generate the plan, add at least one recipe with a quantity."));
       return;
     }
     setGenerating(true); setPlan(""); setSavedAt(null);
