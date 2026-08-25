@@ -44,6 +44,7 @@ import EnterpriseHub from "@/sections/EnterpriseHub";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import MohammedAssistant from "@/sections/MohammedAssistant";
+import AvatarBubbles from "@/components/AvatarBubbles";
 import { toast } from "sonner";
 
 export default function Maestro() {
@@ -87,8 +88,29 @@ export default function Maestro() {
   ];
   const toolById = Object.fromEntries(TOOLS.map((x) => [x.id, x]));
 
+  // Descrizioni brevi per capire subito ogni strumento (soprattutto nel Passo 2).
+  const TOOL_DESC = {
+    adatta: tri("Adatta ricette e tempi al TUO forno", "Rezepte & Zeiten an DEINEN Ofen anpassen", "Adapt recipes & times to YOUR oven"),
+    bilancia: tri("Collega la bilancia Bluetooth e pesa in tempo reale", "Bluetooth-Waage verbinden, live wiegen", "Connect the Bluetooth scale, weigh live"),
+    termo: tri("Controlla temperatura e clima del laboratorio", "Temperatur & Klima der Backstube prüfen", "Check lab temperature & climate"),
+    market: tri("Compra e vendi attrezzatura usata", "Gebrauchte Ausrüstung kaufen/verkaufen", "Buy & sell used equipment"),
+    acqua: tri("Calcola la temperatura dell'acqua d'impasto", "Teigwasser-Temperatur berechnen", "Calculate dough water temperature"),
+    pesata: tri("Pesa gli ingredienti passo-passo con avvisi", "Zutaten Schritt für Schritt wiegen", "Weigh ingredients step by step"),
+    timer: tri("Timer multipli per le fasi di lavoro", "Mehrere Timer für die Arbeitsphasen", "Multiple timers for work phases"),
+    meteo: tri("Meteo locale e consigli per l'impasto", "Lokales Wetter & Teig-Tipps", "Local weather & dough tips"),
+    ph: tri("Traccia il pH del tuo lievito madre", "pH deines Sauerteigs verfolgen", "Track your sourdough pH"),
+    diagnosi: tri("Fotografa impasti/macchine e risolvi", "Teig/Maschinen fotografieren & lösen", "Photograph dough/machines & fix"),
+    suono: tri("Analizza il rumore dell'impastatrice", "Kneter-Geräusch analysieren", "Analyze the mixer's sound"),
+    sessioni: tri("Diario delle sessioni d'impasto", "Tagebuch der Teig-Sessions", "Diary of your dough sessions"),
+    lotti: tri("Tracciabilità dei lotti con QR", "Chargen mit QR rückverfolgen", "Batch traceability with QR"),
+    haccp: tri("Registro HACCP per l'igiene", "HACCP-Register für Hygiene", "HACCP log for hygiene"),
+    check: tri("Checklist di apertura e chiusura", "Öffnungs- & Abschluss-Checklisten", "Opening & closing checklists"),
+    shelf: tri("Shelf-life e digeribilità delle TUE ricette", "Haltbarkeit & Verdaulichkeit DEINER Rezepte", "Shelf-life & digestibility of YOUR recipes"),
+    spreco: tri("Riusa gli avanzi e riduci gli sprechi", "Reste wiederverwenden, Abfall senken", "Reuse leftovers, cut waste"),
+  };
+
   const STEPS = [
-    { icon: Sparkles, title: tri("Piano di Produzione", "Produktionsplan", "Production Plan"), sub: tri("Il cuore del laboratorio: inserisci le ricette, organizza settimana, giornata e punti vendita e genera tutta la produzione da un unico posto", "Das Herz der Backstube: Rezepte erfassen, Woche/Tag/Verkaufspunkte organisieren und die gesamte Produktion an einem Ort generieren", "The heart of the lab: add recipes, organize week/day/sales points and generate the whole production from one place"), tools: ["pianoai", "enterprise"], pianoHub: true },
+    { icon: Sparkles, title: tri("Piano di Produzione", "Produktionsplan", "Production Plan"), sub: tri("Il cuore del laboratorio: inserisci le tue ricette, organizza settimana, giornata e punti vendita — anche il multi-negozio Enterprise — e genera tutta la produzione da un unico posto", "Das Herz der Backstube: deine Rezepte erfassen, Woche/Tag/Verkaufspunkte und Multi-Filiale organisieren und die gesamte Produktion an einem Ort generieren", "The heart of the lab: add your recipes, organize week/day/sales points and multi-store, and generate the whole production from one place"), tools: ["pianoai"], pianoHub: true },
     { icon: Cog, title: tri("Laboratorio & Chiusura", "Backstube & Abschluss", "Lab & Closing"), sub: tri("Macchine e strumenti, operatività in corso, diagnosi e chiusura della giornata", "Maschinen und Werkzeuge, laufender Betrieb, Diagnose und Tagesabschluss", "Machines and tools, live operations, diagnosis and day closing"), tools: ["adatta", "bilancia", "termo", "market", "acqua", "pesata", "timer", "meteo", "ph", "diagnosi", "suono", "sessioni", "lotti", "haccp", "check", "shelf", "spreco"], diagnosiInfo: true, conclusione: true },
   ];
   const current = STEPS[step];
@@ -97,8 +119,9 @@ export default function Maestro() {
     return (
       <div>
         <HighFive />
-        <button data-testid="maestro-back-btn" onClick={() => setTool(null)} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
-          <ChevronLeft className="w-5 h-5" /> {t("tools_back")}
+        <button data-testid="maestro-back-btn" onClick={() => setTool(null)}
+          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-[#33564E] dark:text-[#9ec48f] font-semibold text-sm shadow-sm active:scale-95 transition-all">
+          <ChevronLeft className="w-4.5 h-4.5" /> {tri("Torna agli strumenti", "Zurück zu den Werkzeugen", "Back to tools")}
         </button>
         {tool === "aggiungi" && (
           <RecipeList collectionName="personal"
@@ -149,12 +172,13 @@ export default function Maestro() {
         <img src={`${process.env.PUBLIC_URL || ""}/bio-dough.jpg`} alt="Michele" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/25 to-transparent" />
         <div className="absolute bottom-3 left-4 right-4">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-white/80">{tri("Il Tuo Laboratorio", "Deine Backstube", "Your Lab")}</p>
           <h2 className="font-display text-lg font-bold text-white leading-tight">{tri("Le mani nell'impasto, la testa organizzata", "Hände im Teig, Kopf organisiert", "Hands in the dough, head organized")}</h2>
         </div>
       </div>
       <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{t("maestro_title")}</h1>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Configura il tuo laboratorio passo dopo passo", "Richte deine Backstube Schritt für Schritt ein", "Set up your bakery step by step")}</p>
+
+      <AvatarBubbles variant="lab" />
 
       {/* Stepper compatto: 1 e 2 vicini e in evidenza */}
       <div className="flex items-center justify-center gap-2.5 mb-5" data-testid="maestro-stepper">
@@ -242,7 +266,9 @@ export default function Maestro() {
                   <Icon className={`w-5 h-5 ${isHub ? "text-white" : "text-[#5E8B7E]"}`} />
                 </div>
                 <h3 className={`font-display text-base font-semibold leading-tight ${isHub ? "text-white" : "text-[#2B303B] dark:text-[#EAF0EC]"}`}>{title}</h3>
-                {isHub && <p className="text-[11px] text-white/85 leading-snug">{tri("Genera e condividi tutta la produzione", "Erzeuge und teile die gesamte Produktion", "Generate and share the whole production")}</p>}
+                {isHub
+                  ? <p className="text-[11px] text-white/85 leading-snug">{tri("Genera e condividi tutta la produzione", "Erzeuge und teile die gesamte Produktion", "Generate and share the whole production")}</p>
+                  : TOOL_DESC[id] && <p className="text-[11px] text-[#7E8A93] leading-snug">{TOOL_DESC[id]}</p>}
               </motion.button>
             );
           })}

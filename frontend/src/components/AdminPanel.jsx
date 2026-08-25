@@ -7,6 +7,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const BUBBLE_SECTIONS = [
+  { variant: "lab", it: "Laboratorio", de: "Backstube" },
   { variant: "impara", it: "Impara", de: "Lernen" },
   { variant: "community", it: "Community", de: "Community" },
   { variant: "shop", it: "Shop", de: "Shop" },

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Euro, Zap, TrendingUp, Plus, Trash2, Flame, Share2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { shareContent } from "@/lib/share";
+import RecipePicker from "@/components/RecipePicker";
 
 const STORE = "mikilab_foodcost";
 const load = () => { try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) return s; } catch { /* */ } return null; };
@@ -23,6 +24,16 @@ export default function FoodCost() {
   const { lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [s, setS] = useState(() => load() || DEFAULTS);
+  const [recipe, setRecipe] = useState(null);
+  const onPickRecipe = (r) => {
+    setRecipe(r);
+    if (r) {
+      const patch = {};
+      if (r.price) patch.sell = r.price;
+      if (r.costing?.dough_weight_g) patch.doughG = r.costing.dough_weight_g;
+      if (Object.keys(patch).length) set(patch);
+    }
+  };
   useEffect(() => { localStorage.setItem(STORE, JSON.stringify(s)); }, [s]);
   const set = (patch) => setS((x) => ({ ...x, ...patch }));
   const num = (v) => (Number(v) || 0);
@@ -52,6 +63,9 @@ export default function FoodCost() {
           <p className="text-sm text-[#7E8A93]">{tri("Materie prime + kWh + calo peso = costo reale", "Rohstoffe + kWh + Backverlust = echte Kosten", "Ingredients + kWh + baking loss = real cost")}</p>
         </div>
       </div>
+
+      <RecipePicker testid="fc-recipe" value={recipe?.id} onChange={onPickRecipe}
+        label={tri("Calcola il costo di una TUA ricetta", "Kosten EINES DEINER Rezepte", "Cost of one of YOUR recipes")} />
 
       {/* Materie prime */}
       <h2 className="text-xs font-bold uppercase tracking-wide text-[#5E8B7E] mb-2">{tri("Materie prime", "Rohstoffe", "Ingredients")}</h2>
@@ -101,6 +115,7 @@ export default function FoodCost() {
 
       {/* Risultato */}
       <div data-testid="fc-result" className="rounded-3xl bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-5 shadow-lg">
+        {recipe && <p data-testid="fc-recipe-name" className="text-white/90 font-semibold text-sm mb-2 pb-2 border-b border-white/20">{recipe.name}</p>}
         <div className="grid grid-cols-2 gap-y-2 text-sm">
           <span className="text-white/80">{tri("Materie prime", "Rohstoffe", "Ingredients")}</span><span className="text-right font-mono-data">{eur(ingrCost)}</span>
           <span className="text-white/80">{tri("Energia", "Energie", "Energy")} ({kwh.toFixed(1)} kWh)</span><span className="text-right font-mono-data">{eur(energyCost)}</span>

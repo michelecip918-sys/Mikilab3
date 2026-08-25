@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Recycle, TrendingUp } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import RecipePicker from "@/components/RecipePicker";
 
 export default function AntiWaste() {
   const { lang } = useLang();
@@ -8,6 +9,7 @@ export default function AntiWaste() {
   const [kg, setKg] = useState("2");
   const [cost, setCost] = useState("1.5"); // costo materia già sostenuto €/kg
   const [rec, setRec] = useState("pangrattato");
+  const [source, setSource] = useState(null);
 
   const RECIPES = [
     { id: "pangrattato", label: tri("Pangrattato speciale", "Spezial-Paniermehl", "Special breadcrumbs"), yield: 0.7, sell: 4 },
@@ -33,6 +35,10 @@ export default function AntiWaste() {
         </div>
       </div>
 
+      <RecipePicker testid="aw-recipe" value={source?.id}
+        label={tri("Esubero da quale TUA ricetta", "Rest von welchem DEINER Rezepte", "Leftover from which of YOUR recipes")}
+        onChange={(r) => { setSource(r); if (r?.costing?.cost_per_kg) setCost(String(r.costing.cost_per_kg)); }} />
+
       <div className="grid grid-cols-2 gap-3 mb-3">
         <label className="text-[11px] font-semibold uppercase text-[#7E8A93]">{tri("Esubero kg", "Reste kg", "Leftover kg")}
           <input data-testid="aw-kg" type="number" value={kg} onChange={(e) => setKg(e.target.value)} className={inp + " mt-1"} /></label>
@@ -52,6 +58,7 @@ export default function AntiWaste() {
 
       <div data-testid="aw-result" className="rounded-3xl bg-gradient-to-br from-[#6B8E62] to-[#374f31] text-white p-6 shadow-lg">
         <div className="grid grid-cols-2 gap-y-2 text-sm">
+          {source && <><span className="text-white/80">{tri("Ricetta esubero", "Rest-Rezept", "Leftover recipe")}</span><span data-testid="aw-source-name" className="text-right font-mono-data font-bold">{source.name}</span></>}
           <span className="text-white/80">{tri("Prodotto recuperato", "Gewonnenes Produkt", "Recovered product")}</span><span className="text-right font-mono-data">{outKg} kg</span>
           <span className="text-white/80">{tri("Valore recuperato", "Gewonnener Wert", "Recovered value")}</span><span data-testid="aw-recovered" className="text-right font-mono-data font-bold">€ {recovered.toFixed(2)}</span>
           <span className="text-white/80">{tri("Costo esubero", "Kosten Reste", "Leftover cost")}</span><span className="text-right font-mono-data">€ {wasted.toFixed(2)}</span>

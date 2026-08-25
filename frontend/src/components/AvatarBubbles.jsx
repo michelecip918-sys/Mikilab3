@@ -11,6 +11,10 @@ const AV = {
 
 // Testi "fumetto" (SOLO scritti, nessuna voce) per sezione.
 const SCRIPTS = {
+  lab: [
+    { who: "michele", it: "Benvenuto nel TUO laboratorio! Qui organizzi tutta la produzione partendo dalle tue ricette.", de: "Willkommen in DEINER Backstube! Hier organisierst du die ganze Produktion mit deinen Rezepten.", en: "Welcome to YOUR lab! Here you organize the whole production starting from your recipes." },
+    { who: "momy", it: "Parti dal Piano di Produzione IA: scegli le ricette, accendi i moduli e genera il piano. Ti guido io.", de: "Starte mit dem KI-Produktionsplan: Rezepte wählen, Module aktivieren und Plan erzeugen. Ich führe dich.", en: "Start from the AI Production Plan: pick recipes, turn on modules and generate the plan. I'll guide you." },
+  ],
   impara: [
     { who: "michele", it: "Impara con calma: qui trovi la ricetta del giorno, i video e il tuo percorso passo-passo.", de: "Lerne in Ruhe: hier findest du das Rezept des Tages, Videos und deinen Schritt-für-Schritt-Weg.", en: "Learn calmly: here you'll find the recipe of the day, videos and your step-by-step path." },
     { who: "momy", it: "Fai il Quiz del Fornaio e segna i progressi: ti accompagno io, senza fretta.", de: "Mach das Bäcker-Quiz und verfolge deine Fortschritte: ich begleite dich, ganz entspannt.", en: "Take the Baker's Quiz and track your progress: I'll guide you, no rush." },

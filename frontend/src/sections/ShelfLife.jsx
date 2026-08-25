@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { CalendarClock, BadgeCheck, FlaskConical } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import RecipePicker from "@/components/RecipePicker";
+import { recipeCategory } from "@/lib/recipeCats";
 
 const PRODUCTS = [
   { id: "pane", base: 3 }, { id: "panettone", base: 30 }, { id: "brezel", base: 2 }, { id: "dolci", base: 5 },
 ];
+const CAT_BASE = { basi: 5, pane: 3, panini: 2, snack: 2, focacce: 3, panettoni: 30 };
 
 export default function ShelfLife() {
   const { lang } = useLang();
@@ -12,9 +15,10 @@ export default function ShelfLife() {
   const [prod, setProd] = useState("pane");
   const [ph, setPh] = useState("4.3");
   const [hours, setHours] = useState("18");
+  const [recipe, setRecipe] = useState(null);
 
   const PLABEL = { pane: tri("Pane", "Brot", "Bread"), panettone: "Panettone", brezel: "Brezel", dolci: tri("Dolci", "Süßes", "Sweets") };
-  const base = (PRODUCTS.find((p) => p.id === prod) || PRODUCTS[0]).base;
+  const base = recipe ? (CAT_BASE[recipeCategory(recipe).key] || 3) : (PRODUCTS.find((p) => p.id === prod) || PRODUCTS[0]).base;
   const h = Number(hours) || 0;
   const p = Number(ph) || 0;
   // Fermentazione lunga = staling più lento → più giorni di freschezza.
@@ -34,12 +38,15 @@ export default function ShelfLife() {
       </div>
 
       <div className="space-y-3">
+        <RecipePicker testid="sl-recipe" value={recipe?.id} onChange={(r) => setRecipe(r)} />
+        {!recipe && (
         <div className="grid grid-cols-2 gap-2">
           {PRODUCTS.map((x) => (
             <button key={x.id} data-testid={`sl-prod-${x.id}`} onClick={() => setProd(x.id)}
               className={`px-3 py-2.5 rounded-xl text-sm font-semibold border ${prod === x.id ? "bg-[#6B8E62] text-white border-[#6B8E62]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#D7E1DB] dark:border-[#38424B]"}`}>{PLABEL[x.id]}</button>
           ))}
         </div>
+        )}
         <div className="grid grid-cols-2 gap-3">
           <label className="text-[11px] font-semibold uppercase text-[#7E8A93]">pH {tri("finale", "final", "final")}
             <input data-testid="sl-ph" type="number" step="0.1" value={ph} onChange={(e) => setPh(e.target.value)} className={inp + " mt-1"} /></label>
@@ -50,6 +57,7 @@ export default function ShelfLife() {
 
       <div data-testid="sl-result" className="mt-5 rounded-3xl bg-gradient-to-br from-[#6B8E62] to-[#374f31] text-white p-6 text-center shadow-lg">
         <p className="text-white/80 text-sm uppercase tracking-wider font-semibold">{tri("Freschezza stimata", "Geschätzte Frische", "Estimated freshness")}</p>
+        {recipe && <p data-testid="sl-recipe-name" className="text-white font-semibold text-sm mt-0.5">{recipe.name}</p>}
         <p data-testid="sl-days" className="font-mono-data text-5xl font-bold mt-1">{days} {tri("giorni", "Tage", "days")}</p>
         <p className="text-white/80 text-xs mt-2">{tri("Fermentazioni lunghe = pane che resta fresco più a lungo.", "Lange Gärung = länger frisches Brot.", "Long fermentation = bread that stays fresh longer.")}</p>
       </div>

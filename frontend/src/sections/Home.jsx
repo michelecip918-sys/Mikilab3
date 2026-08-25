@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Play } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -97,7 +97,6 @@ function HomeAvatarScene({ lang }) {
   const de = lang === "de";
   const phrases = SCENE_PHRASES[lang] || SCENE_PHRASES.it;
   const [idx, setIdx] = useState(0);
-  const [playing, setPlaying] = useState(false);
   const BASE = process.env.PUBLIC_URL || "";
   useEffect(() => {
     const id = setInterval(() => setIdx((i) => (i + 1) % phrases.length), 3000);
@@ -106,54 +105,29 @@ function HomeAvatarScene({ lang }) {
 
   return (
     <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl h-80 bg-[#2B303B]">
-      {playing ? (
-        <video
-          key={lang}
-          data-testid="home-avatar-video"
-          controls autoPlay playsInline controlsList="nodownload"
-          poster={`${BASE}/michele-avatar-talk.jpg`}
-          className="absolute inset-0 w-full h-full object-contain bg-black z-10"
-        >
-          <source src={`${BASE}/michele-explainer-${lang}.mp4`} type="video/mp4" />
-          <source src={`${BASE}/michele-explainer-${lang}.webm`} type="video/webm" />
-        </video>
-      ) : (
-        <img src={`${BASE}/michele-avatar-full.jpg`} alt="Michele" data-testid="home-avatar-full"
-          className="absolute inset-0 w-full h-full object-contain" loading="lazy" />
-      )}
+      {/* Solo FOTO: nessun audio/video, l'avatar comunica per iscritto (fumetto) */}
+      <img src={`${BASE}/michele-avatar-full.jpg`} alt="Michele" data-testid="home-avatar-full"
+        className="absolute inset-0 w-full h-full object-contain" loading="lazy" />
       <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#6B8E62] via-[#6E8CA0] to-[#A9C5D4]" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
 
-      {!playing && (
-        <>
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
+      <div className="absolute top-4 left-4 right-4 z-30 pointer-events-none">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={idx} data-testid="home-scene-bubble"
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.4 }}
+            className="inline-block max-w-[85%] bg-[#1B2127]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-tl-md shadow-xl ring-1 ring-white/20"
+          >
+            {phrases[idx]}
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-          {/* Pulsante Play al centro — avvia il video parlante di Michele */}
-          <button data-testid="home-avatar-play" onClick={() => setPlaying(true)}
-            className="absolute inset-0 z-30 flex items-center justify-center group" aria-label="play">
-            <span className="w-16 h-16 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-2xl ring-2 ring-white/60 group-active:scale-95 transition-transform">
-              <Play className="w-7 h-7 text-[#33564E] ml-1" fill="currentColor" />
-            </span>
-          </button>
-
-          <div className="absolute top-4 left-4 right-4 z-30 pointer-events-none">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={idx} data-testid="home-scene-bubble"
-                initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.4 }}
-                className="inline-block max-w-[85%] bg-[#1B2127]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-tl-md shadow-xl ring-1 ring-white/20"
-              >
-                {phrases[idx]}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          <div className="absolute bottom-0 left-0 p-5 z-20 pointer-events-none">
-            <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-            <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : lang === "en" ? "Your digital companion" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪 🇬🇧</p>
-          </div>
-        </>
-      )}
+      <div className="absolute bottom-0 left-0 p-5 z-20 pointer-events-none">
+        <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
+        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : lang === "en" ? "Your digital companion" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪 🇬🇧</p>
+      </div>
     </div>
   );
 }
