@@ -1141,3 +1141,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 8. IMPARA: avatar Michele + Mohammed insieme che danno consigli su come imparare (fumetto).
 9. COMMUNITY: Michele + Mommy che cercano nuovi colleghi sui social (fumetto).
 10. NUOVA sezione: Michele + Mommy spiegano come comprare le ricette e lo Shop (stile fumetto). Fumetti nelle ultime 3 sezioni.
+
+## v97 (2026-06) — Blocco C Laboratorio (parte 1)
+- Piano IA: titolo/sezione "Cosa preparare" → "Compila per generare"; sottotitolo hero aggiornato.
+- Rimosso blocco "Dove impasti? / Modalità da casa" (bizType forzato "pro"). applyBiz ora inutilizzato (warning).
+- L'IA (capo_plan_stream) già ingerisce: ricette+quantità, impasto di partenza, impastatrici (portate), celle frigo/lievitazione/freezer, giacenze freezer, personale (staff), punti vendita, temperatura lab, orari inizio → genera piano GIORNALIERO e SETTIMANALE. Card "Costi & Margine" (v95) mostra costo/ricavo/margine.
+- DA FARE (Blocco C parte 2): spostare strumenti dalla voce 2 (bilancia, termostato, antispreco...) dentro "Compila per generare" con tasto "Sposta in Piano IA"; collegare i loro dati all'IA.

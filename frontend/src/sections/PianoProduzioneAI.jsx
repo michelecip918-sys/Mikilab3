@@ -33,7 +33,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
   const [preferment, setPreferment] = useState("solido");
-  const [bizType, setBizType] = useState("");
+  const [bizType, setBizType] = useState("pro");
   const [freezerStock, setFreezerStock] = useState([]);
   const [plan, setPlan] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -262,7 +262,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <Sparkles className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Produktionsplan mit KI" : lang === "en" ? "AI Production Plan" : "Piano di Produzione con IA"}</h1>
-        <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Wähle, was du vorbereiten willst, und lass den Plan generieren" : lang === "en" ? "Choose what to prepare and generate the plan" : "Scegli cosa preparare e genera il piano di lavoro"}</p>
+        <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Fülle die Daten aus und lass den Plan generieren" : lang === "en" ? "Fill in the data and generate the plan" : "Compila i dati e genera il tuo piano di lavoro"}</p>
       </div>
 
       {onOpenTool && (
@@ -330,34 +330,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      {/* Dove impasti: professionista o a casa (imparo da casa) */}
-      <div data-testid="capo-biztype" className="mb-4">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">
-          {tri3(lang, "Dove impasti?", "Wo backst du?", "Where do you bake?")}
-        </p>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { id: "pro", label: tri3(lang, "In laboratorio", "In der Backstube", "In the bakery"), emoji: "🧑‍🍳" },
-            { id: "casa", label: tri3(lang, "A casa (imparo)", "Zu Hause (lernen)", "At home (learning)"), emoji: "🏠" },
-          ].map((b) => (
-            <button key={b.id} data-testid={`capo-biztype-${b.id}`} onClick={() => applyBiz(b.id)}
-              className={`flex items-center justify-center gap-2 rounded-2xl p-3 text-center border transition-all active:scale-95 ${
-                bizType === b.id
-                  ? "bg-[#A64B2A] text-white border-[#A64B2A] shadow"
-                  : "bg-white dark:bg-[#232A31] border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC]"}`}>
-              <span className="text-lg leading-none">{b.emoji}</span>
-              <span className="text-sm font-semibold leading-tight">{b.label}</span>
-            </button>
-          ))}
-        </div>
-        {bizType === "casa" && (
-          <p className="text-[11px] text-[#7E8A93] mt-2 leading-snug">
-            {tri3(lang, "Modalità casa: piccole quantità, forno di casa e spiegazioni semplici passo-passo.", "Heim-Modus: kleine Mengen, Haushaltsofen und einfache Schritt-für-Schritt-Erklärungen.", "Home mode: small quantities, home oven and simple step-by-step explanations.")}
-          </p>
-        )}
-      </div>
-
-      <Section icon={<Sparkles className="w-4 h-4" />} title={t("capo_products_title")}>
+      <Section icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
         <div className="space-y-2" data-testid="capo-products">
           {products.map((p, i) => (
             <div key={i} className="bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-2.5 space-y-2">
