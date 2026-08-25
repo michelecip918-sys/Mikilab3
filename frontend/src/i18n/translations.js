@@ -728,7 +728,7 @@ export const translations = {
 
   de: {
     // Header
-    brand_subtitle: "Il laboratorio di Michele",
+    brand_subtitle: "Micheles Backstube",
     brand_slogan: "Die Handwerkswelt für Bäcker, Konditoren und Pizzabäcker",
     city: "Deutschland",
     theme_toggle: "Thema wechseln",

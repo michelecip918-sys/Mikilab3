@@ -1,0 +1,37 @@
+{
+  "summary": "FASE 5 — audit traduzioni a tappeto (solo frontend, mobile 390x844, login admin@mikilab.de) su tutte le funzioni delle Fasi 1-4 nei tre linguaggi (IT/DE/EN) tramite selettore header lang-it/de/en. Verificati: HOME (home-slogan, home-news titolo/descrizione, editor News admin con placeholder+Salva+toast di validazione, creazione/lettura/eliminazione di una news TEST_ con titoli IT/DE/EN che cambiano correttamente con la lingua), RICETTE (ricette-tab-mikilab/personal, filtri base, categorie, hero, blocco eu-label reale creato riempiendo i valori nutrizionali di una ricetta personale e poi ripulito), IL TUO LABORATORIO (intro Mohammadreza, guida step-by-step, quicklinks, chip moduli, griglia strumenti, fumetto tool-guide-bubble su tool-info-turni e tool-info-ph con 'Apri strumento/Open tool/Werkzeug öffnen' e 'Chiudi/Close/Schließen'), ARCHIVIO my-data (4 tab + messaggi vuoti + badge), PlanArchive (plan-archive-weekly), COMMUNITY (community-marketplace), IMPARA. Regressione IT ok, nessun errore console (solo 401 su /api/auth/me prima del login). Eseguito anche un audit statico del dizionario i18n (script node) su chiavi mancanti/identiche all'IT.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Header (translations.js -> de.brand_subtitle)", "issue": "In DE il sottotitolo del brand resta in ITALIANO: 'Il laboratorio di Michele' (identico a it.brand_subtitle). Visibile in ogni schermata con lingua DE (header app-header e hero MikiLab in Ricette). Proposta: 'Micheles Backstube'. In EN e' corretto ('Michele's bakery lab').", "selector": "[data-testid=\"app-header\"] / t('brand_subtitle')", "priority": "HIGH"},
+      {"component": "Community feed (post seed di Michele)", "issue": "Con lingua EN/DE il post di benvenuto della community resta interamente in italiano ('Benvenuti nella community di MikiLab! ...'): il contenuto seed non ha campi body_de/body_en come le news. Se il post e' contenuto di prodotto (non UGC) va tradotto o dotato di varianti multilingua.", "selector": "[data-testid=\"nav-tab-community\"] feed", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Ricerca ricette (Le Mie Ricette) in DE/EN", "issue": "La ricerca filtra solo sul nome localizzato: con lingua DE la ricetta 'Pane ai Cereali' (tradotta 'Getreidebrot') non viene trovata cercando 'Pane'/'Cereali' -> mostra 'Kein Rezept gefunden'. Verificare se voluto; consigliato includere anche il nome originale nei campi cercati.", "affected_selectors": ["recipe-search", "recipe-no-results"]}
+    ],
+    "design_issues": [
+      {"screen": "Tutte le sezioni (mobile 390px)", "issues": ["Il FAB 'Radio' in basso a sinistra copre il testo delle card (es. corpo della news in home-news, titoli delle cartelle categoria in Ricette): sovrapposizione persistente su viewport stretti"]},
+      {"screen": "Header (mobile 390px)", "issues": ["Titolo/sottotitolo brand troncati ('M...', 'I l...') — regressione di design gia' segnalata in iteration_74, ancora presente"]},
+      {"screen": "Dettaglio ricetta personale in EN/DE", "issues": ["Contenuti utente (nome ricetta, farina, note) restano in italiano finche' non si usa 'Translate to EN/DE' — comportamento atteso per i dati utente, segnalato solo per completezza"]}
+    ]
+  },
+  "test_report_links": ["/app/tests/i18n_audit.js"],
+  "action_items": [
+    "Tradurre de.brand_subtitle in translations.js (attualmente 'Il laboratorio di Michele') -> es. 'Micheles Backstube'",
+    "Valutare traduzione/varianti DE-EN del post seed di benvenuto della Community",
+    "Valutare inclusione del nome originale nella ricerca ricette quando la lingua attiva e' DE/EN",
+    "Design: evitare che il FAB Radio copra il contenuto delle card su mobile; sistemare troncamento titolo header"
+  ],
+  "critical_code_review_comments": [
+    "translations.js: aggiungere un controllo (o test) che segnali valori DE/EN identici all'IT. Audit eseguito: 0 chiavi mancanti; identiche all'IT in DE = brand_subtitle (BUG), nav_mikilab, nav_foto_sub, nav_news, nav_ai_sub, mikilab_title, weekly_pdf, termo_std (le altre sono nomi propri/termini validi anche in DE); in EN = nav_mikilab, nav_news, mikilab_title, weekly_dest_freezer, weekly_pdf, capo_celltype_freezer, termo_std (tutte accettabili).",
+    "HomeNews.jsx / MyData.jsx: le chiamate API hanno .catch(() => {}) silenzioso (nessuno stato di errore/loading): un fallimento appare come 'nessun contenuto'. Gia' segnalato in iteration_74, ancora presente."
+  ],
+  "updated_files": ["/app/tests/i18n_audit.js"],
+  "success_rate": {"backend": "not tested", "frontend": "97% (1 stringa italiana residua su ~40 aree verificate in DE; EN pulito al 100% per la UI)"},
+  "seed_data_creation": "Creata e poi ELIMINATA una news 'TEST_Titolo IT/TEST_Titel DE/TEST_Title EN'. Riempiti e poi RIPULITI i valori etichetta UE (kcal/grassi/proteine/sale/ingredienti) sulla ricetta personale 'Pane ai Cereali' (verificato eu-label assente dopo cleanup). Nessun dato residuo.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! — funzionante",
+  "context_for_next_testing_agent": "IMPORTANTE per Playwright: i click sul selettore lingua vanno fatti DOPO che il toast 'Benvenuto' e' scomparso (attendere ~8-9s dopo il login) perche' il toast intercetta i pointer event sull'header; force=True NON aiuta (l'evento finisce sull'overlay). Con un dialog aperto (editor ricetta) l'header e' bloccato dal DialogOverlay: chiudere prima il dialog. Le ricette personali sono dentro cartelle categoria: cliccare [data-testid^='cat-folder-'] prima di recipe-row-<id>. La ricerca ricette filtra solo il nome localizzato. Aree verificate tradotte al 100% in EN e DE: home-slogan, home-news (titolo/desc/Aggiungi/editor/placeholder/Salva/toast 'Title required'), ricette-tab-*, filtri e categorie, eu-label (form recipe-label-section + tabella inline: 'Nutrition declaration'/'Nährwertdeklaration'), tool-guide-bubble (turni, ph) con Apri/Chiudi, my-data (4 tab, badge, messaggi vuoti), plan-archive-weekly, community-marketplace, Impara/Learn/Lernen, bottom nav.",
+  "rca_of_the_issue": "Unico difetto di traduzione: in /app/frontend/src/i18n/translations.js la chiave brand_subtitle nel blocco 'de' (riga ~731) e' copiata dall'italiano; il resto del dizionario e' completo (671 chiavi, 0 mancanti) e tutte le tri()/L() nei nuovi componenti hanno i 3 rami corretti."
+}

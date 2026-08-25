@@ -3421,17 +3421,43 @@ WELCOME_POST_TEXT = (
     "Buon lavoro e buona lievitazione a tutti! \U0001F33E\U0001F4AA"
 )
 
+WELCOME_POST_DE = (
+    "Willkommen in der MikiLab-Community! \U0001F956\U0001F525\n\n"
+    "Hallo zusammen und herzlich willkommen in unserem neuen Raum rund um die Kunst des Backens, der Konditorei und der Pizza!\n\n"
+    "Ich habe diese Community geschaffen, um Bäcker, Konditoren, Pizzabäcker, Profis und Enthusiasten zusammenzubringen: ein Ort zum Austauschen von Tipps und Rezepten, für Fragen zu Gare, Mehlen und Maschinen und vor allem, um gemeinsam zu wachsen.\n\n"
+    "Was findest du hier?\n"
+    "\u2022 Direkter Austausch: offener Raum für Fragen und praktische Lösungen aus dem Laboralltag.\n"
+    "\u2022 Updates & Ressourcen: exklusive Inhalte und Werkzeuge zur Optimierung der Arbeit.\n"
+    "\u2022 Networking: Kontakt zu Kolleginnen und Kollegen.\n\n"
+    "Macht es euch bequem, stellt euch in den Kommentaren vor und sagt uns, wo ihr arbeitet und was eure Spezialität ist!\n\n"
+    "Gutes Gelingen und gute Gare! \U0001F33E\U0001F4AA"
+)
+
+WELCOME_POST_EN = (
+    "Welcome to the MikiLab community! \U0001F956\U0001F525\n\n"
+    "Hi everyone and welcome to our new space entirely dedicated to the art of baking, pastry and pizza!\n\n"
+    "I created this community to bring together bakers, pastry chefs, pizzaioli, professionals and enthusiasts: a place to share tips and recipes, to discuss proofing, flours and machines, and above all to grow together.\n\n"
+    "What will you find here?\n"
+    "\u2022 Direct exchange: an open space for questions and practical solutions from daily lab life.\n"
+    "\u2022 Updates & resources: exclusive content and tools to optimise your work.\n"
+    "\u2022 Networking: the chance to connect with colleagues.\n\n"
+    "Make yourself at home, introduce yourself in the comments and tell us where you work and what your specialty is!\n\n"
+    "Good work and good proofing to all! \U0001F33E\U0001F4AA"
+)
+
 
 async def seed_welcome_post():
-    """Crea (una sola volta) il post di benvenuto ufficiale nella Community."""
+    """Crea (una sola volta) il post di benvenuto ufficiale nella Community + assicura le traduzioni."""
     exists = await db.community_posts.find_one({"text": {"$regex": "^Benvenuti nella community di MikiLab"}})
     if exists:
+        if not exists.get("text_de") or not exists.get("text_en"):
+            await db.community_posts.update_one({"id": exists["id"]}, {"$set": {"text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN}})
         return
     admin = await db.users.find_one({"email": "admin@mikilab.de"})
     aid = (admin or {}).get("id") or (admin or {}).get("user_id") or "admin"
     doc = {
         "id": str(uuid.uuid4()), "author_id": aid, "author_name": "Michele — MikiLab",
-        "category": "consiglio", "text": WELCOME_POST_TEXT, "image_url": None,
+        "category": "consiglio", "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN, "image_url": None,
         "created_at": now_iso(), "likes": [], "comments": [], "pinned": True,
     }
     await db.community_posts.insert_one(doc)
