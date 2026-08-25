@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only validation (mobile 390x844, admin@mikilab.de, lab tour skipped) of the 2 new changes: (1) HOME reorganized with 'Il cuore di MikiLab' + 'Strumenti & Risorse' and no duplicate cards; (2) Piano di Produzione IA 'Impasto di partenza' (Parti da qui) mutually-exclusive flag + generation with the flag. ALL 5 REQUESTED SCENARIOS PASS. Details: HOME -> home-core present and visible; home-core-maestro opens 'IL TUO LABORATORIO / Il Tuo Laboratorio ... PASSO 1/2 Piano di Produzione' (no paywall for admin), home-core-ricette opens 'Il laboratorio di Michele / Tabella Farine & Sigle', home-core-corsi opens 'Academy & Servizi / CORSI VIDEO'. home-hub-destinations grid present with home-hub-diagnosi (Diagnosi con foto), enciclopedia (Enciclopedia del mio pane), news (News del Pane), enterprise (Enterprise multi-negozio) - all navigate correctly. Old duplicates home-audiences / home-sections / home-community-card = 0 occurrences (removed). Bottom nav-tab-home/ricette/maestro/impara/community all navigate, no blank pages, no crashes. PIANO IA -> capo-product-add + recipe selection: capo-product-start-0/1 appear only when a recipe is selected, initial label 'Parti da qui'; click start-0 -> becomes 'Impasto di partenza' (highlighted bg #A64B2A) while start-1 stays 'Parti da qui'; click start-1 -> start-1 becomes active and start-0 reverts => mutual exclusion CONFIRMED; re-click toggles OFF and back ON correctly. Network payload of POST /api/capo/plan verified: items carry start flags ['Pane ai Cereali' start:false, 'Anima Integrale' start:true]. Generation with start flag: streaming progressed 511->4939 chars, completed in ~45s, button label returned to 'Genera piano di lavoro', capo-plan rendered full plan (freezer stock premise + '1) SEQUENZA ORARIA'), capo-saved-banner shows 'Piano salvato — resta qui finché non lo chiudi tu · Salvato il 25/08, 03:26'. Zero error elements on page.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home (mobile 390x844)", "issues": ["The floating 'Radio' and 'Parla' FABs overlap the new 'Il cuore di MikiLab' section heading/badge (the Radio FAB sits on top of the title). Add bottom padding / shift the FABs - same pre-existing overlap reported in iteration_61."]},
+      {"screen": "Piano IA (mobile)", "issues": ["FABs also cover the 'ORA INIZIO' time input and the 'Condividi/Ascolta' buttons row; the time input still uses the native 12h picker ('05:00 AM') while the UI is Italian 24h - unchanged from iteration_61."]},
+      {"screen": "Console (all screens with recipe dropdowns)", "issues": ["React DOM-nesting error still logged on every entry: 'In HTML, <span> cannot be a child of <option>' - unchanged since iteration_60/61."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Cosmetic (carry-over): fix <span> inside <option> React DOM-nesting warning in recipe selects.",
+    "Cosmetic (carry-over): reposition/pad the Radio & Parla FABs so they don't cover the new 'Il cuore di MikiLab' heading on Home and the Piano IA time input / action buttons."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI: capo-product-start-N is rendered only when p.recipe_id is set and the toggle sets start=false on all other items (single source of truth) - correct implementation, flag forwarded as start:!!p.start in the /api/capo/plan payload (verified on the wire).",
+    "Home.jsx: 'Strumenti & Risorse' correctly excludes the bottom-bar destinations; no duplicate testids remain. File is ~496 lines - still under the 700-line threshold but growing."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (5/5 scenarios passed)"},
+  "seed_data_creation": "A generated plan (Pane ai Cereali x20 + Anima Integrale x15, start on Anima Integrale) is left saved on admin's /api/capo/last-plan; clear with capo-new-plan if a clean state is needed.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (used, full access)",
+  "context_for_next_testing_agent": "Flow: load app -> click login-btn -> auth-email/auth-password/auth-submit -> localStorage.setItem('mikilab_lab_tour_done','1') -> nav-tab-maestro -> maestro-tool-pianoai. Note: capo-saved-banner appears EARLY (text 'Piano generato') while streaming is still in progress; to detect completion poll the capo-generate label until it stops being 'Sto organizzando il lavoro…' (~45s) and the capo-plan length stabilises (~4900 chars). A restored plan is only persisted if the stream completes.",
+  "rca_of_the_issue": "No functional defects. Only pre-existing cosmetic issues (FAB overlap, option/span DOM nesting warning) carried over from iterations 60/61."
+}

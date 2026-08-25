@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor, Building2, Users, Play } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Camera, Newspaper, Library, Laugh, ShoppingBag, Smartphone, Monitor, Building2, Play } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -189,19 +189,6 @@ export default function Home({ onNavigate }) {
       ? L("Adatta il forno", "Ofen anpassen", "Adapt the oven")
       : null;
 
-  const SECTIONS = [
-    { tab: "ricette", label: t("nav_ricette"), Icon: BookOpen, grad: "from-[#5E8B7E] to-[#33564E]",
-      sub: L("Le ricette col mio metodo (assaggio gratis)", "Rezepte mit meiner Methode (Gratis-Vorschau)", "Recipes with my method (free preview)") },
-    { tab: "impara", label: t("nav_impara"), Icon: GraduationCap, grad: "from-[#6B8E62] to-[#4d6b45]",
-      sub: L("Per chi inizia: basi e ricette semplici", "Für Anfänger: Grundlagen & einfache Rezepte", "For beginners: basics & easy recipes") },
-    { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
-      sub: L("Novità da Italia e Germania", "Neuigkeiten aus Italien und Deutschland", "News from Italy and Germany") },
-    { tab: "maestro", label: t("nav_maestro"), Icon: Wrench, grad: "from-[#6E8CA0] to-[#5E7E90]",
-      sub: L("Per professionisti: piano, costi, impasti (PRO)", "Für Profis: Arbeitsplan, Kosten, Teige (PRO)", "For pros: plan, costs, doughs (PRO)") },
-    { tab: "enciclopedia", label: t("nav_enciclopedia"), Icon: Library, grad: "from-[#33564E] to-[#1B2127]",
-      sub: L("Tutte le basi spiegate", "Alle Grundlagen erklärt", "All the basics explained") },
-  ];
-
   if (chat) {
     return (
       <div className="pb-4">
@@ -283,39 +270,65 @@ export default function Home({ onNavigate }) {
         </div>
       )}
 
-      {/* ===== ESPLORA: menu principale in alto per accesso immediato ===== */}
-      <div>
-        <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1 px-1">{L("Esplora MikiLab", "MikiLab entdecken", "Explore MikiLab")}</h2>
-        <p className="text-xs text-[#7E8A93] mb-3 px-1">{L("Scegli dove vuoi andare", "Wähle, wohin du möchtest", "Choose where to go")}</p>
+      {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
+      <div data-testid="home-core">
+        <div className="flex items-center gap-2 mb-1 px-1">
+          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{L("Il cuore di MikiLab", "Das Herz von MikiLab", "The heart of MikiLab")}</h2>
+          <span className="text-[10px] font-bold uppercase tracking-wide text-[#C88A2B] bg-[#C88A2B]/15 border border-[#C88A2B]/40 px-2 py-0.5 rounded-full">{L("L'anima del sito", "Die Seele", "The soul")}</span>
+        </div>
+        <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3 ml-1" />
 
-        {/* Due mondi: professionisti + principianti */}
-        <div data-testid="home-audiences" className="grid grid-cols-1 gap-2.5 mb-3">
-          <button onClick={() => go("maestro")} className="text-left rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4 active:scale-98 transition-all">
-            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
-              <Wrench className="w-4 h-4 text-[#5E8B7E]" /> {L("Per professionisti · «Il Tuo Laboratorio»", "Für Profis · „Dein Labor“", "For pros · “Your Lab”")}
-            </p>
-            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-snug">
-              {L("Piano di produzione, calcolo costi, gestione e IA per rigenerare impasti e processi.",
-                 "Produktionsplan, Kostenrechnung, Verwaltung und KI zum Regenerieren von Teigen.",
-                 "Production plan, cost calculation, management and AI to regenerate doughs.")}
-            </p>
+        {/* Laboratorio — card grande in evidenza */}
+        <button data-testid="home-core-maestro" onClick={() => go("maestro")}
+          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#5E8B7E] to-[#33564E] ring-2 ring-[#C88A2B]/70 overflow-hidden">
+          <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+          <div className="flex items-center gap-3 mt-1">
+            <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-6 h-6" /></div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="font-display text-lg font-bold">{L("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}</h3>
+                <span className="text-[10px] font-bold bg-[#C88A2B] text-white px-2 py-0.5 rounded-full">PRO</span>
+              </div>
+              <p className="text-white/85 text-sm leading-snug">{L("Piano di produzione IA, costi, celle e impasti — tutto in un posto.", "KI-Produktionsplan, Kosten, Kammern und Teige — alles an einem Ort.", "AI production plan, costs, cells and doughs — all in one place.")}</p>
+            </div>
+            <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
+          </div>
+        </button>
+
+        <div className="grid grid-cols-2 gap-3">
+          <button data-testid="home-core-ricette" onClick={() => go("ricette")}
+            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#A64B2A] to-[#7c3820] min-h-[112px] flex flex-col gap-2">
+            <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
+            <p className="font-display text-base font-bold leading-tight">{L("Le Mie Ricette", "Meine Rezepte", "My Recipes")}</p>
+            <p className="text-[11px] text-white/85 leading-snug">{L("Le ricette col mio metodo", "Rezepte mit meiner Methode", "Recipes with my method")}</p>
           </button>
-          <button onClick={() => go("impara")} className="text-left rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4 active:scale-98 transition-all">
-            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2">
-              <GraduationCap className="w-4 h-4 text-[#4d6b45]" /> {L("Per chi inizia · Sezione Principianti", "Für Anfänger · Sektion Anfänger", "For beginners · Beginners section")}
-            </p>
-            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-snug">
-              {L("I primi passi nell'Arte Bianca: guide passo-passo e ricette semplificate.",
-                 "Erste Schritte in der Backkunst: geführte Anleitungen und einfache Rezepte.",
-                 "First steps in the baking art: step-by-step guides and simplified recipes.")}
-            </p>
+          <button data-testid="home-core-corsi" onClick={() => go("shop")}
+            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] min-h-[112px] flex flex-col gap-2">
+            <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><GraduationCap className="w-6 h-6" /></div>
+            <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
+            <p className="text-[11px] text-white/85 leading-snug">{L("Impara da casa: video, quiz e basi", "Von zu Hause lernen: Videos, Quiz", "Learn from home: videos, quiz")}</p>
           </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-2 gap-3" data-testid="home-sections">
-          {SECTIONS.map(({ tab, label, Icon, grad, sub }) => (
-            <button key={tab} data-testid={`home-section-${tab}`} onClick={() => go(tab)}
-              className={`flex flex-col gap-1 rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br ${grad} min-h-[104px]`}>
+      {/* ===== STRUMENTI & RISORSE: solo destinazioni NON presenti nella barra in basso ===== */}
+      <div>
+        <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1 px-1">{L("Strumenti & Risorse", "Werkzeuge & Ressourcen", "Tools & Resources")}</h2>
+        <p className="text-xs text-[#7E8A93] mb-3 px-1">{L("Scorciatoie utili (Ricette, Laboratorio, Impara e Community sono nella barra in basso)", "Nützliche Verknüpfungen (Rezepte, Labor, Lernen und Community sind in der unteren Leiste)", "Handy shortcuts (Recipes, Lab, Learn and Community are in the bottom bar)")}</p>
+
+        <div className="grid grid-cols-2 gap-3" data-testid="home-hub-destinations">
+          {[
+            { tab: "diagnosi", label: L("Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis"), Icon: Camera, grad: "from-[#B34A26] to-[#8a3319]",
+              sub: L("Scatta: ti dico causa e soluzione", "Foto: Ursache & Lösung", "Snap: cause and fix") },
+            { tab: "enciclopedia", label: L("Enciclopedia del mio pane", "Lexikon meines Brotes", "Encyclopedia of my bread"), Icon: Library, grad: "from-[#33564E] to-[#1B2127]",
+              sub: L("Ingredienti, prefermenti e termini tecnici", "Zutaten, Vorteige & Fachbegriffe", "Ingredients, preferments & technical terms") },
+            { tab: "news", label: t("nav_news"), Icon: Newspaper, grad: "from-[#4d6b45] to-[#374f31]",
+              sub: L("Novità da Italia e Germania", "Neuigkeiten aus Italien und Deutschland", "News from Italy and Germany") },
+            { tab: "enterprise", label: L("Enterprise · Multi-negozio", "Enterprise · Multi-Filiale", "Enterprise · Multi-store"), Icon: Building2, grad: "from-[#6E8CA0] to-[#3f5b6b]",
+              sub: L("Gestisci più punti vendita", "Mehrere Filialen verwalten", "Manage multiple stores") },
+          ].map(({ tab, label, Icon, grad, sub }) => (
+            <button key={tab} data-testid={`home-hub-${tab}`} onClick={() => go(tab)}
+              className={`flex flex-col gap-1 rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br ${grad} min-h-[108px]`}>
               <div className="flex items-center gap-2">
                 <Icon className="w-6 h-6 shrink-0" />
                 <span className="font-display text-base font-bold text-left leading-tight flex-1">{label}</span>
@@ -325,24 +338,6 @@ export default function Home({ onNavigate }) {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* ===== ACCESSO RAPIDO: Diagnosi + Community (compatti, affiancati) ===== */}
-      <div className="grid grid-cols-2 gap-3">
-        <button data-testid="home-diagnosi-card" onClick={() => go("diagnosi")}
-          className="text-left rounded-3xl p-4 text-white flex flex-col gap-2 active:scale-98 transition-all shadow-lg"
-          style={{ backgroundImage: "linear-gradient(135deg,#B34A26,#8a3319)" }}>
-          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Camera className="w-6 h-6" /></div>
-          <p className="font-display text-base font-bold leading-tight">{L("Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{L("Scatta una foto: ti dico causa e soluzione.", "Foto machen: Ursache & Lösung.", "Snap a photo: cause and fix.")}</p>
-        </button>
-        <button data-testid="home-community-card" onClick={() => go("community")}
-          className="text-left rounded-3xl p-4 text-white flex flex-col gap-2 active:scale-98 transition-all shadow-lg"
-          style={{ backgroundImage: "linear-gradient(135deg,#6E8CA0,#3f5b6b)" }}>
-          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Users className="w-6 h-6" /></div>
-          <p className="font-display text-base font-bold leading-tight">{L("Community", "Community", "Community")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{L("Domande, foto e consigli fra fornai.", "Fragen, Fotos & Tipps.", "Questions, photos and tips.")}</p>
-        </button>
       </div>
 
       {/* ===== CHIEDI AL MAESTRO ===== */}

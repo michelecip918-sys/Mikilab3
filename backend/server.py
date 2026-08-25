@@ -1334,6 +1334,15 @@ async def capo_plan_stream(payload: CapoPlanRequest):
 
     de = payload.lang == "de"
     products_txt, has_days = await _capo_build_products_block(items, payload.lang)
+    # Il panettiere può scegliere la PRIMA ricetta da cui far partire la produzione.
+    start_names = [str(it.get("name")) for it in items if it.get("start") and it.get("name")]
+    if start_names:
+        sn = start_names[0]
+        products_txt += (
+            f"\n\n[START] Der Bäcker will die Produktion mit «{sn}» BEGINNEN: setze diesen Teig als ERSTES an (zuerst kneten/ansetzen) und richte alle anderen Zeiten danach aus."
+            if de else
+            f"\n\n[PARTENZA] Il panettiere vuole INIZIARE la produzione da «{sn}»: avvia questo impasto per PRIMO (primo da impastare/avviare) e allinea tutti gli altri tempi di conseguenza."
+        )
     # Direttiva di lingua FORTE, sia in apertura che in chiusura del prompt utente.
     lang_lead = ("[SPRACHE: DEUTSCH] Schreibe den GESAMTEN Plan AUSSCHLIESSLICH auf DEUTSCH.\n\n"
                  if de else "[LINGUA: ITALIANO] Scrivi TUTTO il piano in ITALIANO.\n\n")

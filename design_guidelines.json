@@ -1,263 +1,213 @@
 {
-  "project_name": "MikiLab Mobile-First Web App - Calm Italian & German Artisan Design System",
+  "project_name": "MikiLab Mobile-First Web App - Cleaned Italian & German Artisan Design System",
   "app_type": "hybrid_fullstack_pwa",
-  "target_audience": "Professional & Amateur Bakers, Pastry Chefs, Pizzerias & Multi-store Food Businesses (IT/DE/EN)",
+  "primary_language": "IT",
+  "secondary_languages": ["DE", "EN"],
+  "target_audience": "Professional & Amateur Bakers, Pastry Chefs, Pizzerias & Multi-store Food Businesses in Italy & Germany",
+  "owner": "Michele, Italian baker working in Germany",
   "core_design_philosophy": {
     "concept": "Calm Italian & German Artisan Fusion ('Mantieni colori calmi ma aggiungi colori italiani e tedeschi come ordine primario')",
     "tagline": "Unica al mondo, semplice, senza tempo",
-    "owner_directive": "Mantieni colori calmi ma aggiungi colori italiani e tedeschi come ordine primario. (Keep colors calm, but integrate Italian and German national colors as the primary organizing theme).",
+    "owner_directive": "Eliminare i doppioni nella navigazione e rendere l'interfaccia coerente, ordinata e pulita.",
     "key_principles": [
-      "No Feature Destruction: Refine, harmonize, and elevate existing workflows incrementally without deleting functionality or routes.",
-      "Calm IT+DE Cultural Palette: Muted Italian Sage Green, Shared Terracotta Red, German Sourdough Amber/Gold, German Deep Charcoal, and Warm Flour Cream.",
-      "Signature IT/DE Flag Ribbon: A subtle 3px/4px top micro-ribbon gradient or multi-stripe motif representing Italian (Green/White/Red) and German (Black/Red/Gold) heritage without loud background fills.",
-      "Saturation & Lightness Ceilings: Max 25-45% saturation for card fills and backgrounds, max 60-65% for active accents to maintain a calm, premium, non-garish aesthetic.",
-      "Mobile-First Tactility: High-contrast touch targets, smooth glassmorphism headers, thumb-friendly bottom nav, and high legibility under bakery kitchen lighting."
+      "No Navigation Duplication: Main tab destinations (Home, Ricette, Il Tuo Laboratorio, Impara, Community) live permanently in the BottomNav. Do NOT repeat them as large redundant callout cards inside Home.",
+      "Clean Visual Hierarchy: Structure the Home page strictly in top-down storytelling and functional tiers.",
+      "Calm IT+DE Cultural Palette: Muted Sage Green (#5E8B7E, #33564E), Terracotta Red (#A64B2A, #B34A26), Sourdough Gold (#C88A2B), German Charcoal (#1E1B18), Flour Cream (#F6F8F5).",
+      "Signature IT/DE Flag Ribbon: Subtle 3px top micro-ribbon (.it-de-ribbon) representing Italian & German artisan heritage.",
+      "Non-Transparent Backdrop Surfaces: All headers, modals, popovers, and bottom bars MUST use non-transparent backdrops (bg-white/90 dark:bg-[#1B2127]/90 with backdrop-blur-md).",
+      "FAB Spacing & Collision Prevention: Floating Action Buttons (Radio & Parla/Voice) positioned at bottom-20 z-40, with pb-32 main container padding so no content is obscured."
+    ]
+  },
+  "home_cleanup_blueprint": {
+    "objective": "Riordino completo della Home SENZA doppioni di navigazione con la BottomNav, organizzata in 7 blocchi sequenziali ad alta gerarchia visiva.",
+    "eliminated_duplicates": [
+      "Rimosse card duplicati 'Per professionisti' (stessa destinazione del tab 'Il Tuo Laboratorio')",
+      "Rimosse card duplicati 'Per chi inizia' (stessa destinazione del tab 'Impara')",
+      "Rimosse card duplicati 'Ricette' ed 'Esplora MikiLab' redundanti con il tab 'Ricette'",
+      "Rimosse card duplicati 'Community' redundanti con il tab 'Community'"
+    ],
+    "ordered_home_sections": [
+      {
+        "step": 1,
+        "section_id": "home-hero-avatar",
+        "component": "HomeAvatarScene",
+        "description": "Avatar video parlante di Michele in alto con nastro IT/DE, bolla di testo animata e tasto Play."
+      },
+      {
+        "step": 2,
+        "section_id": "home-personal-dashboard",
+        "component": "home-personal",
+        "description": "Dashboard benvenuto con livello/XP del panettiere e scorciatoie contestuali rapide (Ricette, Focus, Attrezzatura)."
+      },
+      {
+        "step": 3,
+        "section_id": "home-non-bottom-destinations",
+        "component": "home-hub-destinations",
+        "description": "Griglia pulita 'Strumenti & Risorse MikiLab' dedicata ESCLUSIVAMENTE alle destinazioni non presenti nella barra in basso: News, Enciclopedia del Pane, Diagnosi Foto IA, Enterprise Multi-Negozio."
+      },
+      {
+        "step": 4,
+        "section_id": "home-ask-maestro",
+        "component": "home-chat-btn",
+        "description": "Card tattica ad alto impatto 'Chiedi al Maestro' per avviare la chat assistente IA."
+      },
+      {
+        "step": 5,
+        "section_id": "home-storytelling",
+        "component": "home-story",
+        "description": "Sezione fisarmonica richiudibile 'Scopri MikiLab' (Chi è Michele, Il Metodo, Filosofia, Serenità, Firma tattoo e battuta del giorno)."
+      },
+      {
+        "step": 6,
+        "section_id": "home-shop-courses",
+        "component": "home-shop-corsi",
+        "description": "Modulo in fondo 'MikiLab Shop & Corsi' con tab 'Shop Ricette' (attivo) e 'Corsi Online' (in arrivo a breve)."
+      },
+      {
+        "step": 7,
+        "section_id": "home-footer-legal",
+        "component": "ShareInstall & home-legal-link",
+        "description": "Install banner PWA, pulsante condivisione app e note legali in pie' di pagina."
+      }
     ]
   },
   "color_system": {
-    "description": "Sophisticated, calm palette integrating Italian (Green, Cream, Red) and German (Charcoal Black, Terracotta Red, Sourdough Gold) national accents as muted primary organizational tokens.",
-    "cultural_color_mapping": {
-      "shared_red": {
-        "name": "Muted Terracotta / Rust Red",
-        "hex": "#A64B2A",
-        "role": "Shared Italian & German Red accent. Used for primary CTAs, active highlights, key alerts, and primary buttons."
-      },
-      "shared_gold_amber": {
-        "name": "Warm Sourdough Gold / Amber",
-        "hex": "#C88A2B",
-        "role": "Shared German Gold & Sourdough fermentation accent. Used for AI Maestro highlights, sourdough timers, XP badges, and dark-mode micro-glows."
-      },
-      "italian_green": {
-        "name": "Muted Sage / Forest Green",
-        "hex": "#4A7265",
-        "role": "Italian Green national accent. Used for secondary actions, sourdough freshness status, success states, and Pizzeria/Laboratorio tags."
-      },
-      "german_charcoal": {
-        "name": "German Deep Charcoal Black",
-        "hex": "#1E1B18",
-        "role": "German Charcoal Black national accent. Primary body text in light mode, background anchor for dark mode and tactical cards."
-      },
-      "flour_cream": {
-        "name": "Soft Flour Cream / Warm Alabaster",
-        "hex": "#F6F4EE",
-        "role": "Shared Italian & German White/Cream flour surface. Default light-mode background and soft card contrast."
-      }
-    },
-    "saturation_and_lightness_ceilings": {
-      "card_background_saturation": "Maximum 15% saturation in light mode, 14% in dark mode (prevents background visual clutter).",
-      "accent_stroke_saturation": "Maximum 65% saturation for active borders, icons, and status badges (keeps colors calm and earthy).",
-      "dark_mode_anchor": "#12100F (Deep German Charcoal) with subtle gold ambient micro-glow shadow-[0_0_15px_rgba(200,138,43,0.15)]."
-    },
+    "description": "Palette artigianale mista italo-tedesca con toni calmi, accenti legnosi e dorati della fermentazione.",
     "hex_palette": {
-      "terracotta_red_primary": "#A64B2A",
-      "terracotta_red_dark": "#85371B",
-      "sourdough_gold_accent": "#C88A2B",
-      "sourdough_gold_light": "#E0A343",
-      "italian_sage_green": "#4A7265",
-      "italian_sage_dark": "#325046",
-      "german_charcoal_black": "#1E1B18",
-      "german_charcoal_surface": "#2A2521",
-      "flour_cream_bg": "#F6F4EE",
-      "flour_card_light": "#FFFFFF",
-      "dark_mode_bg": "#12100F",
-      "dark_mode_card": "#1B1715",
-      "dark_mode_surface": "#25201C",
-      "text_dark": "#1E1B18",
-      "text_light": "#ECE8E0"
+      "sage_green_primary": "#5E8B7E",
+      "sage_green_dark": "#33564E",
+      "terracotta_red": "#A64B2A",
+      "terracotta_red_vibrant": "#B34A26",
+      "sourdough_gold": "#C88A2B",
+      "german_charcoal": "#1E1B18",
+      "slate_dark_bg": "#1B2127",
+      "flour_cream_bg": "#F6F8F5",
+      "border_light": "#D7E1DB",
+      "border_dark": "#38424B",
+      "text_dark": "#2B303B",
+      "text_muted": "#7E8A93"
     },
-    "css_variables": {
-      "light": {
-        "--background": "40 18% 96%",
-        "--foreground": "20 12% 12%",
-        "--card": "0 0% 100%",
-        "--card-foreground": "20 12% 12%",
-        "--popover": "0 0% 100%",
-        "--popover-foreground": "20 12% 12%",
-        "--primary": "16 60% 41%",
-        "--primary-foreground": "0 0% 100%",
-        "--secondary": "158 21% 37%",
-        "--secondary-foreground": "0 0% 100%",
-        "--muted": "40 12% 90%",
-        "--muted-foreground": "20 8% 40%",
-        "--accent": "37 62% 48%",
-        "--accent-foreground": "20 12% 12%",
-        "--destructive": "6 60% 45%",
-        "--destructive-foreground": "0 0% 98%",
-        "--border": "38 12% 84%",
-        "--input": "38 12% 84%",
-        "--ring": "16 60% 41%",
-        "--radius": "1rem"
-      },
-      "dark": {
-        "--background": "20 14% 6%",
-        "--foreground": "38 12% 92%",
-        "--card": "20 12% 9%",
-        "--card-foreground": "38 12% 92%",
-        "--popover": "20 12% 9%",
-        "--popover-foreground": "38 12% 92%",
-        "--primary": "16 58% 46%",
-        "--primary-foreground": "0 0% 100%",
-        "--secondary": "158 20% 42%",
-        "--secondary-foreground": "0 0% 100%",
-        "--muted": "20 10% 15%",
-        "--muted-foreground": "30 8% 65%",
-        "--accent": "37 65% 50%",
-        "--accent-foreground": "20 14% 6%",
-        "--destructive": "6 55% 48%",
-        "--destructive-foreground": "0 0% 98%",
-        "--border": "20 10% 17%",
-        "--input": "20 10% 17%",
-        "--ring": "37 65% 50%"
-      }
-    },
-    "sector_and_culture_accents": {
-      "italian_identity_accent": {
-        "primary": "#4A7265",
-        "secondary": "#A64B2A",
-        "ribbon_gradient": "bg-gradient-to-r from-[#4A7265] via-[#F6F4EE] to-[#A64B2A]",
-        "badge_bg": "bg-[#4A7265]/10 text-[#325046] dark:bg-[#4A7265]/20 dark:text-[#7BA899]"
-      },
-      "german_identity_accent": {
-        "primary": "#1E1B18",
-        "secondary": "#C88A2B",
-        "ribbon_gradient": "bg-gradient-to-r from-[#1E1B18] via-[#A64B2A] to-[#C88A2B]",
-        "badge_bg": "bg-[#C88A2B]/10 text-[#9C6615] dark:bg-[#C88A2B]/20 dark:text-[#E0A343]"
-      },
-      "shared_it_de_ribbon": {
-        "description": "5-stripe micro-ribbon combining Italian & German national colors seamlessly: Green -> Cream -> Red -> Gold -> Charcoal.",
-        "tailwind_class": "h-1 w-full bg-gradient-to-r from-[#4A7265] via-[#A64B2A] to-[#C88A2B]"
-      }
+    "signature_ribbon": {
+      "css_class": ".it-de-ribbon",
+      "style": "background: linear-gradient(90deg, #4A7265 0%, #F6F4EE 33%, #A64B2A 66%, #C88A2B 85%, #1E1B18 100%); height: 3px; width: 100%;"
     }
   },
   "typography": {
-    "font_family_heading": "Playfair Display, Georgia, serif",
-    "font_family_body": "Manrope, system-ui, sans-serif",
-    "font_family_mono": "JetBrains Mono, monospace",
-    "hierarchy_rules": {
-      "h1_hero": "font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight text-stone-900 dark:text-stone-100",
-      "h2_section": "font-display text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100",
-      "h3_card": "font-sans text-lg sm:text-xl font-bold tracking-snug text-stone-800 dark:text-stone-200",
-      "body_base": "font-sans text-sm sm:text-base font-normal leading-relaxed text-stone-700 dark:text-stone-300",
-      "data_metric": "font-mono-data text-xs sm:text-sm font-medium tracking-wide text-stone-600 dark:text-stone-400",
-      "label_caps": "font-sans text-xs uppercase tracking-widest font-bold text-stone-500 dark:text-stone-400"
+    "font_heading": "Playfair Display, Georgia, serif",
+    "font_body": "Manrope, system-ui, sans-serif",
+    "font_mono": "JetBrains Mono, monospace",
+    "scale": {
+      "h1": "font-display text-3xl sm:text-4xl font-bold tracking-tight text-[#2B303B] dark:text-[#EAF0EC]",
+      "h2": "font-display text-xl sm:text-2xl font-bold tracking-tight text-[#2B303B] dark:text-[#EAF0EC]",
+      "h3": "font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]",
+      "body": "font-sans text-sm sm:text-base font-normal leading-relaxed text-[#3F4A54] dark:text-[#AEB8BF]",
+      "caption": "font-sans text-xs text-[#7E8A93]"
     }
+  },
+  "fab_layout_strategy": {
+    "description": "Gestione dei pulsanti flottanti (Radio Fornaio & Voice Assistant/Parla) per evitare sovrapposizioni e coperture di testo.",
+    "radio_fab": {
+      "position": "fixed left-4 bottom-20 z-40",
+      "icon": "Radio icon with equalizer animation when playing",
+      "safe_margin": "style={{ marginBottom: 'env(safe-area-inset-bottom)' }}"
+    },
+    "voice_fab": {
+      "position": "fixed right-4 bottom-20 z-40",
+      "icon": "Mic icon with pulsing border when listening",
+      "safe_margin": "style={{ marginBottom: 'env(safe-area-inset-bottom)' }}"
+    },
+    "bottom_nav": {
+      "position": "fixed bottom-0 inset-x-0 z-50",
+      "height": "min-h-[56px] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+    },
+    "container_padding": "main content MUST have pb-32 sm:pb-28 to allow bottom scrolling above FABs and BottomNav"
   },
   "card_and_hierarchy_system": {
-    "clutter_elimination_strategy": "Transition from loud full-gradient card grids to 4 disciplined surface tiers with semantic borders, soft ambient elevation, and calm IT/DE micro-accents.",
-    "surface_tiers": {
-      "tier_1_standard_card": {
-        "classes": "bg-white dark:bg-[#1B1715] border border-stone-200/80 dark:border-stone-800/80 shadow-sm rounded-2xl p-5 hover:border-stone-300 dark:hover:border-stone-700 transition-all duration-200",
-        "usage": "Recipe list items, enciclopedia entries, store cards, basic settings, form containers"
-      },
-      "tier_2_hero_accent_card": {
-        "classes": "bg-gradient-to-br from-[#A64B2A] to-[#85371B] text-white shadow-md rounded-2xl p-6 relative overflow-hidden border border-[#A64B2A]/30",
-        "usage": "Primary Dashboard CTA, Michele Talking Avatar Card, Production Plan Hub Hero"
-      },
-      "tier_3_artisan_glass_card": {
-        "classes": "backdrop-blur-md bg-white/85 dark:bg-[#1B1715]/85 border border-stone-200/60 dark:border-stone-800/60 shadow-lg rounded-2xl p-5",
-        "usage": "Sticky Nav bar, Floating action bars, Modal overlays, Sound/Photo diagnosis dialogs"
-      },
-      "tier_4_command_tactical_card": {
-        "classes": "bg-[#1E1B18] text-stone-100 border-l-4 border-l-[#C88A2B] border-stone-800 shadow-xl rounded-2xl p-6",
-        "usage": "AI Maestro Sa Tutto, Piano di Produzione (IA) calculations, Smart Scale & Haccp logs"
-      }
+    "tiers": {
+      "tier_1_standard": "bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] shadow-sm rounded-3xl p-5",
+      "tier_2_accent": "bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-lg rounded-3xl p-5",
+      "tier_3_glass": "backdrop-blur-md bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 border border-[#D7E1DB] dark:border-[#38424B] shadow-xl rounded-2xl p-4",
+      "tier_4_tactical": "bg-[#1E1B18] text-white border-l-4 border-l-[#C88A2B] shadow-xl rounded-3xl p-5"
     }
-  },
-  "signature_visual_elements": {
-    "it_de_flag_ribbon": {
-      "css_class": "bg-gradient-to-r from-[#4A7265] via-[#A64B2A] to-[#C88A2B] h-[3px] w-full",
-      "description": "Signature 3px top border ribbon combining Italian Sage Green, Shared Terracotta Red, and German Gold Amber."
-    },
-    "flour_dust_texture": {
-      "css_class": "bg-flour-texture",
-      "description": "Subtle 2% opacity organic grain overlay on page background that conveys tactile artisanal warmth without impeding legibility."
-    },
-    "golden_crust_glow": {
-      "css_class": "glow-sourdough",
-      "description": "Subtle ambient drop shadow `shadow-[0_0_18px_rgba(200,138,43,0.18)]` used on active XP badges, primary buttons, and live sourdough timers."
-    },
-    "sourdough_pill_badge": {
-      "classes": "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono-data bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20",
-      "description": "Clean pill badge displaying hydration %, dough temperature °C, or fermentation hours."
-    }
-  },
-  "concrete_code_snippets": {
-    "index_css_variables": "@layer base {\n  :root {\n    --background: 40 18% 96%;\n    --foreground: 20 12% 12%;\n    --card: 0 0% 100%;\n    --card-foreground: 20 12% 12%;\n    --popover: 0 0% 100%;\n    --popover-foreground: 20 12% 12%;\n    --primary: 16 60% 41%;\n    --primary-foreground: 0 0% 100%;\n    --secondary: 158 21% 37%;\n    --secondary-foreground: 0 0% 100%;\n    --muted: 40 12% 90%;\n    --muted-foreground: 20 8% 40%;\n    --accent: 37 62% 48%;\n    --accent-foreground: 20 12% 12%;\n    --destructive: 6 60% 45%;\n    --destructive-foreground: 0 0% 98%;\n    --border: 38 12% 84%;\n    --input: 38 12% 84%;\n    --ring: 16 60% 41%;\n    --radius: 0.85rem;\n  }\n  .dark {\n    --background: 20 14% 6%;\n    --foreground: 38 12% 92%;\n    --card: 20 12% 9%;\n    --card-foreground: 38 12% 92%;\n    --popover: 20 12% 9%;\n    --popover-foreground: 38 12% 92%;\n    --primary: 16 58% 46%;\n    --primary-foreground: 0 0% 100%;\n    --secondary: 158 20% 42%;\n    --secondary-foreground: 0 0% 100%;\n    --muted: 20 10% 15%;\n    --muted-foreground: 30 8% 65%;\n    --accent: 37 65% 50%;\n    --accent-foreground: 20 14% 6%;\n    --destructive: 6 55% 48%;\n    --destructive-foreground: 0 0% 98%;\n    --border: 20 10% 17%;\n    --input: 20 10% 17%;\n    --ring: 37 65% 50%;\n  }\n}",
-    "flag_ribbon_utility": ".it-de-ribbon {\n  background: linear-gradient(90deg, #4A7265 0%, #F6F4EE 33%, #A64B2A 66%, #C88A2B 85%, #1E1B18 100%);\n  height: 3px;\n  width: 100%;\n}"
   },
   "component_guidelines_js": {
     "general_rules": [
       "All files are React .js / .jsx components.",
-      "Every interactive element MUST include a data-testid attribute (e.g. data-testid='explore-recipes-btn', data-testid='production-wizard-step-1').",
-      "Header and Dropdown components MUST NOT use fully transparent backgrounds. Use backdrop-blur-md bg-white/90 or bg-[#12100F]/90.",
+      "Every interactive element MUST include a data-testid attribute (e.g. data-testid='home-quick-ricette').",
+      "Header, Dropdown, BottomNav, and Floating Panels MUST NOT use fully transparent backgrounds. Use backdrop-blur-md bg-white/90 or bg-[#1B2127]/90.",
       "Use sonner for toast notifications across all user actions."
     ],
     "key_components": {
       "Header_js": {
         "path": "frontend/src/components/Header.jsx",
-        "styling": "Sticky top-0 z-40 backdrop-blur-xl bg-white/85 dark:bg-[#12100F]/85 border-b border-stone-200/60 dark:border-stone-800/60 px-4 py-3 flex items-center justify-between",
+        "styling": "Sticky top-0 z-40 backdrop-blur-md bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 border-b border-[#D7E1DB] dark:border-[#38424B] px-4 py-3 flex items-center justify-between",
         "required_test_ids": ["app-header", "header-logo", "language-selector", "user-profile-btn"]
       },
       "BottomNav_js": {
         "path": "frontend/src/components/BottomNav.jsx",
-        "styling": "Fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl bg-white/90 dark:bg-[#12100F]/90 border-t border-stone-200/80 dark:border-stone-800/80 px-2 py-2 flex justify-around items-center max-w-lg mx-auto",
-        "required_test_ids": ["bottom-nav", "nav-item-home", "nav-item-laboratorio", "nav-item-ricette", "nav-item-community", "nav-item-maestro"]
+        "styling": "Fixed bottom-0 inset-x-0 z-50 backdrop-blur-md bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 border-t border-[#D7E1DB] dark:border-[#38424B] px-2 py-2 grid grid-cols-5 max-w-xl mx-auto",
+        "required_test_ids": ["bottom-nav", "nav-tab-home", "nav-tab-ricette", "nav-tab-maestro", "nav-tab-impara", "nav-tab-community"]
       },
-      "MikiAvatar_js": {
-        "path": "frontend/src/components/MikiAvatar.jsx",
-        "styling": "Rounded-2xl overflow-hidden shadow-lg border-2 border-[#C88A2B]/30 hover:border-[#C88A2B] transition-all cursor-pointer relative",
-        "required_test_ids": ["michele-avatar-trigger", "video-explainer-toggle"]
-      },
-      "PianoProduzioneAI_js": {
-        "path": "frontend/src/sections/PianoProduzioneAI.jsx",
-        "styling": "Tier 4 Command Tactical Card layout with responsive grid (grid-cols-1 md:grid-cols-3 gap-6), step wizard navigation, printable recipe export triggers.",
-        "required_test_ids": ["production-plan-hub", "generate-ai-plan-btn", "export-pdf-btn", "print-labels-btn"]
+      "Home_js": {
+        "path": "frontend/src/sections/Home.jsx",
+        "styling": "Mobile-first centered max-w-xl mx-auto space-y-6 pb-2",
+        "required_test_ids": [
+          "home-founder-photo",
+          "home-avatar-play",
+          "home-personal",
+          "home-badge-diplomato",
+          "home-quick-ricette",
+          "home-non-bottom-destinations",
+          "home-dest-news",
+          "home-dest-enciclopedia",
+          "home-dest-diagnosi",
+          "home-dest-enterprise",
+          "home-chat-btn",
+          "home-story",
+          "home-story-toggle",
+          "home-shop-corsi",
+          "shop-tab-premium",
+          "shop-tab-corsi"
+        ]
       }
     }
   },
   "image_urls": {
-    "hero_michele_artisan": "frontend/public/michele-real-lab.jpg",
-    "sourdough_kneading": "https://images.unsplash.com/photo-1537734796389-e1fc293cf856?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHwyfHxhcnRpc2FuJTIwYmFrZXIlMjBwaXp6YSUyMGRvdWdoJTIwcGFzdHJ5JTIwY2hlZiUyMG92ZW58ZW58MHx8fHwxNzg3NTg0MjQ0fDA&ixlib=rb-4.1.0&q=85",
-    "artisan_pizza_prep": "https://images.unsplash.com/photo-1572552635104-daf938e0aa1f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHw3fHxhcnRpc2FuJTIwYmFrZXIlMjBwaXp6YSUyMGRvdWdoJTIwcGFzdHJ5JTIwY2hlZiUyMG92ZW58ZW58MHx8fHwxNzg3NTg0MjQ0fDA&ixlib=rb-4.1.0&q=85",
-    "dough_rolling_craft": "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNTl8MHwxfHNlYXJjaHwxfHxhcnRpc2FuJTIwYmFrZXIlMjBwaXp6YSUyMGRvdWdoJTIwcGFzdHJ5JTIwY2hlZiUyMG92ZW58ZW58MHx8fHwxNzg3NTg0MjQ0fDA&ixlib=rb-4.1.0&q=85"
+    "michele_artisan_photo": "frontend/public/michele-real-lab.jpg",
+    "michele_avatar_full": "frontend/public/michele-avatar-full.jpg",
+    "michele_avatar_talk": "frontend/public/michele-avatar-talk.jpg",
+    "michele_avatar_thumb": "frontend/public/michele-avatar.jpg",
+    "bio_dough_1": "frontend/public/bio-dough.jpg",
+    "bio_dough_2": "frontend/public/bio-dough-2.jpg",
+    "bio_dough_3": "frontend/public/bio-dough-3.jpg",
+    "sourdough_kneading": "https://images.unsplash.com/photo-1537734796389-e1fc293cf856?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "artisan_pizza_prep": "https://images.unsplash.com/photo-1572552635104-daf938e0aa1f?crop=entropy&cs=srgb&fm=jpg&q=85"
   },
   "prioritized_rollout_order": [
     {
       "step": 1,
-      "title": "Global Design Tokens & CSS Variables with IT+DE Palette",
-      "target_files": ["frontend/src/index.css", "frontend/tailwind.config.js"],
-      "action": "Inject refined HSL CSS variables for calm Italian Sage Green, Terracotta Red, German Sourdough Gold, and Charcoal Black for light & dark modes."
+      "title": "Home Page De-duplication & Clean Blueprint Alignment",
+      "target_files": ["frontend/src/sections/Home.jsx"],
+      "action": "Remove duplicate cards for Ricette, Impara, Maestro, and Community. Create dedicated non-bottom destinations grid (News, Enciclopedia, Diagnosi, Enterprise)."
     },
     {
       "step": 2,
-      "title": "Header & Bottom Navigation Glassmorphism with Signature IT/DE Micro-Ribbon",
-      "target_files": ["frontend/src/components/Header.jsx", "frontend/src/components/BottomNav.jsx"],
-      "action": "Apply backdrop-blur-xl, top 3px IT/DE flag ribbon motif, remove full transparency, and add data-testid attributes."
+      "title": "FAB Positioning & Container Bottom Padding",
+      "target_files": ["frontend/src/components/RadioFornaio.jsx", "frontend/src/components/VoiceAssistant.jsx", "frontend/src/App.js"],
+      "action": "Ensure Radio and Voice FABs sit cleanly at bottom-20 z-40, and main scroll area uses pb-32 sm:pb-28 to eliminate content clipping."
     },
     {
       "step": 3,
-      "title": "Home Dashboard & Michele Talking Avatar",
-      "target_files": ["frontend/src/sections/Home.jsx", "frontend/src/components/MikiAvatar.jsx", "frontend/src/components/TalkingAvatar.jsx"],
-      "action": "Replace chaotic gradient grids with Tier 1 & 2 cards, clean 'Esplora MikiLab' 7-section grid, and responsive video player overlay."
-    },
-    {
-      "step": 4,
-      "title": "Il Tuo Laboratorio & Piano Produzione AI",
-      "target_files": ["frontend/src/sections/PianificaProduzione.jsx", "frontend/src/sections/PianoProduzioneAI.jsx"],
-      "action": "Unify 3-step wizard with Tier 4 Command Tactical styling, clear supplier order quick-links, and printable label triggers."
-    },
-    {
-      "step": 5,
-      "title": "Catalogues, Diagnosis & Multi-Store Enterprise",
-      "target_files": ["frontend/src/sections/Ricette.jsx", "frontend/src/sections/PhotoDiagnosi.jsx", "frontend/src/sections/EnterpriseHub.jsx", "frontend/src/sections/WeeklyPlan.jsx"],
-      "action": "Standardize recipe cards with sourdough pill badges, calm IT/DE accent tagging, and PDF batch export triggers."
+      "title": "BottomNav & Header Backdrop Non-Transparency Verification",
+      "target_files": ["frontend/src/components/Header.jsx", "frontend/src/components/BottomNav.jsx"],
+      "action": "Ensure backdrop-blur with opaque fill bg-[#F6F8F5]/95 and dark:bg-[#1B2127]/95 is consistently enforced with full data-testid attributes."
     }
   ],
   "instructions_to_main_agent": [
-    "Read /app/design_guidelines.json completely before modifying any component.",
-    "Follow the 5-step prioritized rollout order strictly to prevent regressions.",
-    "Ensure ALL interactive elements receive explicit data-testid attributes.",
-    "Never delete any existing section, route, data model, or helper function; enhance UI/UX and styling incrementally.",
+    "Read /app/design_guidelines.json completely before modifying any section.",
+    "Strictly enforce data-testid attributes on all interactive buttons, cards, and tabs.",
+    "Never delete functionality or routes; reorganize the Home section to eliminate duplicates with the bottom navbar.",
+    "Maintain the existing calm sage green, terracotta, sourdough gold, and charcoal palette with .it-de-ribbon details.",
     "Use sonner for toast notifications."
   ],
   "UNIVERSAL GUIDELINES FOR MAIN AGENT": {

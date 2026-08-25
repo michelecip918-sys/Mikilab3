@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { computeShopping } from "@/lib/shopping";
@@ -27,7 +27,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [labTemp, setLabTemp] = useState("");
   const [startTime, setStartTime] = useState("05:00");
   const [notes, setNotes] = useState("");
-  const [products, setProducts] = useState([{ recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "" }]);
+  const [products, setProducts] = useState([{ recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }]);
   const [recipes, setRecipes] = useState([]);
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
@@ -107,7 +107,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     const res = await fetch(`${API}/capo/plan`, {
       method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
       body: JSON.stringify({
-        items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit, day: p.day || null })),
+        items: products.map((p) => ({ recipe_id: p.recipe_id || null, name: p.name, quantity: p.qty === "" ? null : Number(p.qty), unit: p.unit, day: p.day || null, start: !!p.start })),
         mixers, cells, mode: bizType === "casa" ? "home" : "pro", phase, use_weekly: useWeekly, freezer_stock: freezerStock,
         staff: staff === "" ? null : Number(staff),
         start_time: startTime, lab_temp_c: labTemp === "" ? null : Number(labTemp),
@@ -330,6 +330,19 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 </select>
                 <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
+              {p.recipe_id && (
+                <button type="button" data-testid={`capo-product-start-${i}`}
+                  onClick={() => setProducts((l) => l.map((x, k) => ({ ...x, start: k === i ? !x.start : false })))}
+                  className={`w-full flex items-center justify-center gap-1.5 text-xs font-semibold py-1.5 rounded-lg border transition-all active:scale-97 ${
+                    p.start
+                      ? "bg-[#A64B2A] text-white border-[#A64B2A]"
+                      : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+                  <Flag className="w-3.5 h-3.5" />
+                  {p.start
+                    ? tri3(lang, "Impasto di partenza", "Start-Teig", "Starting dough")
+                    : tri3(lang, "Parti da qui", "Hier starten", "Start here")}
+                </button>
+              )}
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Quantità", "Menge", "Quantity")}
@@ -368,7 +381,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               )}
             </div>
           ))}
-          <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "" }])} className="text-sm font-medium text-[#5E8B7E] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+          <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#5E8B7E] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+          <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
+            <Flag className="w-3.5 h-3.5 text-[#A64B2A] shrink-0 mt-0.5" />
+            {tri3(lang, "Scegli tu l'impasto da cui partire: tocca «Parti da qui». L'IA organizzerà la sequenza iniziando da quello.",
+              "Wähle den Start-Teig: tippe auf „Hier starten“. Die KI ordnet die Reihenfolge ab diesem Teig.",
+              "Choose the dough to start from: tap 'Start here'. The AI will sequence the work starting from it.")}
+          </p>
         </div>
 
         {weeklyItems.length > 0 && (

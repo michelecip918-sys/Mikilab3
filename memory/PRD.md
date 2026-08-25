@@ -1077,3 +1077,16 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 
 ## v88 (2026-06) — "Panettone dinamico" tolto dall'anteprima del Laboratorio
 - PaywallGate FEATURES.lab: sostituita la voce "Panettone dinamico" (non pertinente al Lab, vive nelle Ricette) con "Piano di Produzione con IA" (IT/DE/EN). Il Panettone dinamico resta nella sezione Ricette (ricette-labels-btn).
+
+## v89 (2026-06) — Impasto di partenza scelto dal panettiere (Piano IA)
+- PianoProduzioneAI: per ogni prodotto con ricetta appare "Parti da qui" (capo-product-start-N, icona Flag). Toggle MUTUAMENTE ESCLUSIVO (solo un impasto di partenza). Inviato come items[].start al backend + didascalia esplicativa.
+- Backend capo_plan_stream(): se un item ha start=true, inietta direttiva [PARTENZA]/[START] nel blocco prodotti → l'IA avvia la sequenza da quell'impasto.
+- Testato (iteration_62): mutua esclusione + payload start verificato sul wire + generazione OK.
+
+## v90 (2026-06) — Home riordinata dal design_agent (niente doppioni con la barra)
+- design_agent → blueprint in /app/design_guidelines.json (7 blocchi sequenziali, palette invariata, strategia FAB).
+- Home.jsx: RIMOSSI i doppioni della bottom-nav (home-audiences, home-sections/SECTIONS, home-community-card). 
+- NUOVO blocco evidenziato "Il cuore di MikiLab" (home-core, badge oro "L'anima del sito"): Il Tuo Laboratorio (home-core-maestro, anello oro + PRO), Le Mie Ricette (home-core-ricette), I Miei Corsi (home-core-corsi → tab shop/Academy).
+- NUOVO "Strumenti & Risorse" (home-hub-destinations): solo destinazioni NON nella barra → Diagnosi Foto, Enciclopedia del mio pane, News, Enterprise. Restano Chiedi al Maestro, Scopri MikiLab, Shop & Corsi, footer.
+- Testato (iteration_62): tutte le navigazioni Home + bottom-nav OK, nessun doppione, nessun crash.
+- COSMETICO IN SOSPESO (carry-over 60/61/62): FAB Radio/Parla si sovrappongono ai contenuti su mobile; warning dev "<span> in <option>" nei select ricette; input time nativo 12h.
