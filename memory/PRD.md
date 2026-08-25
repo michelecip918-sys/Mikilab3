@@ -1178,3 +1178,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Sblocco IMMEDIATO dopo acquisto**: App.js su ritorno Stripe `recipe=success` + status paid → `window.dispatchEvent('mikilab-entitlements-updated')` + vai al tab Ricette. RecipeList e PianoProduzioneAI ascoltano l'evento e RICARICANO (load / bump) → la ricetta acquistata compare subito senza reload manuale.
 - **Bilancia in TEMPO REALE**: SmartScale connectBt ora connette GATT `weight_scale` → `weight_measurement` (0x2A9D), startNotifications, parse peso (SI 0.005kg / imperial 0.01lb) → banner `scale-live` "Peso in tempo reale" + auto-fill della riga a fuoco (focusedRef, onFocus) o prima vuota. Fallback manuale invariato se BT/peso non disponibili.
 - Compila pulito (solo warning pre-esistenti). NB: #3 (Stripe live) e #4 (hardware BT) verificati per codice/compile; e2e reale richiede acquisto Stripe / bilancia fisica. REDEPLOY per mikilab.de.
+
+## v103 (2026-06) — Voce disattivata in TUTTA l'app (avatar solo scritti)
+- Scelta utente "B": togliere voce/"Ascolta" ovunque, incluso il FAB "Parla".
+- **lib/voice.js**: `speak()` e `primeVoice()` ora NO-OP (mantenute le firme per non rompere gli import in SvegliaLievito, StartDoughs, GuidedWeighing, SourdoughTracker, BackwardScheduler, MohammedAssistant, LabOnboarding). `stopSpeak`/`cleanForSpeech` mantenute. Rimosso codice voce morto (pickVoice/hint/loadVoices).
+- **ListenButton.jsx**: ora `return null` → spariti TUTTI i pulsanti "Ascolta" (PhotoDiagnosi, DayClose, SoundDiagnosi; Piano IA già rimosso in v101).
+- **App.js**: rimosso il FAB "Parla" (VoiceAssistant) + import. Verificato a schermo: Parla count=0, resta solo Radio FAB.
+- **MohammedAssistant.jsx**: rimosso il pulsante "Ascolta/Ferma" per messaggio + readAloud/speakingIdx + import voce. La chat resta scritta.
+- **StartDoughs.jsx**: rimossa la riga UI "Avvisi vocali" (toggle + test voce); MANTENUTO il beep dell'allarme timer (suono funzionale, non è la voce dell'avatar).
+- NB: i BEEP dei timer/stabilità (StartDoughs, GuidedWeighing) restano attivi: sono suoni funzionali, non voce. File VoiceAssistant.jsx e lib/tts.js restano nel codice ma inutilizzati (innocui). Compila pulito. REDEPLOY per mikilab.de.

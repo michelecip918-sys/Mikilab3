@@ -14,7 +14,6 @@ import Shop from "@/sections/Shop";
 import Academy from "@/sections/Academy";
 import EnterpriseHub from "@/sections/EnterpriseHub";
 import PaywallGate from "@/components/PaywallGate";
-import VoiceAssistant from "@/components/VoiceAssistant";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
 import { getProfile } from "@/components/Onboarding";
@@ -164,7 +163,7 @@ function App() {
         </footer>
       </main>
       <BottomNav active={tab} onChange={navigate} />
-      <VoiceAssistant onNavigate={navigate} />
+      {/* FAB "Parla" (voce) rimosso: gli avatar comunicano solo per iscritto */}
       <RadioFornaio />
       {!resetToken && showIntro && <IntroGuide />}
       {/* Onboarding a domande rimosso: ingresso diretto (profilo di default seminato) */}

@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
-import { ChefHat, Plus, Trash2, AlertTriangle, Cog, Hand, Bell, Users, Flame, Volume2 } from "lucide-react";
+import { ChefHat, Plus, Trash2, AlertTriangle, Cog, Hand, Bell, Users, Flame } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
-import { speak, primeVoice } from "@/lib/voice";
 
 const DAY_IDS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
@@ -55,7 +54,7 @@ export default function StartDoughs() {
   const [maxChunk, setMaxChunk] = useState(30);
   const [people, setPeople] = useState(1);
   const [firstId, setFirstId] = useState("");
-  const [voiceOn, setVoiceOn] = useState(true);
+  const [voiceOn, setVoiceOn] = useState(true);  // eslint-disable-line no-unused-vars
   const [alarmsOn, setAlarmsOn] = useState(false);
   const alarmTimers = useRef([]);
 
@@ -189,7 +188,6 @@ export default function StartDoughs() {
 
   const enableAlarms = async () => {
     if (!schedule) return;
-    primeVoice();
     const ok = await ensureNotify();
     alarmTimers.current.forEach(clearTimeout);
     alarmTimers.current = [];
@@ -202,7 +200,6 @@ export default function StartDoughs() {
           const line = `${t("sd_alarm_title")} — ${it.name}`;
           toast(line);
           if (ok) notify(t("sd_alarm_title"), `${it.name} · ${fmt(it.mixStart, lang)}`);
-          if (voiceOn) speak(`${t("sd_alarm_title")} ${it.name}`, lang);
         }, delay));
       }
     });
@@ -334,27 +331,6 @@ export default function StartDoughs() {
           className="w-16 text-right font-mono-data font-bold text-[#33564E] dark:text-[#8FB0C2] bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-1.5 outline-none"
         />
         <span className="text-xs text-[#7E8A93]">min</span>
-      </div>
-
-      {/* Avvisi vocali */}
-      <div className="mt-3 flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl px-4 py-2.5">
-        <Volume2 className="w-4 h-4 text-[#5E8B7E]" />
-        <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] flex-1">{t("lv_voice")}</span>
-        <button
-          data-testid="lv-voice-test"
-          onClick={() => { primeVoice(); speak(t("sd_alarm_title"), lang); }}
-          className="text-xs font-medium text-[#5E8B7E] mr-2"
-        >
-          {t("lv_voice_test")}
-        </button>
-        <button
-          data-testid="lv-voice-toggle"
-          onClick={() => setVoiceOn((v) => !v)}
-          className={`w-11 h-6 rounded-full transition-colors relative ${voiceOn ? "bg-[#6B8E62]" : "bg-[#AEB8BF] dark:bg-[#38424B]"}`}
-          aria-label={t("lv_voice")}
-        >
-          <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${voiceOn ? "left-[22px]" : "left-0.5"}`} />
-        </button>
       </div>
 
       <button
