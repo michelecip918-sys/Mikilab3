@@ -1090,3 +1090,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - NUOVO "Strumenti & Risorse" (home-hub-destinations): solo destinazioni NON nella barra → Diagnosi Foto, Enciclopedia del mio pane, News, Enterprise. Restano Chiedi al Maestro, Scopri MikiLab, Shop & Corsi, footer.
 - Testato (iteration_62): tutte le navigazioni Home + bottom-nav OK, nessun doppione, nessun crash.
 - COSMETICO IN SOSPESO (carry-over 60/61/62): FAB Radio/Parla si sovrappongono ai contenuti su mobile; warning dev "<span> in <option>" nei select ricette; input time nativo 12h.
+
+## v91 (2026-06) — 3 miglioramenti richiesti dall'utente
+- SVEGLIA AL PICCO (DoughTwin): pulsante "Avvisami al picco" (twin-alarm-set) → Notification API + navigator.vibrate + beep WebAudio + toast, schedulato a tPeak ore da ora; "Sveglia attiva alle HH:MM · Annulla" (twin-alarm-cancel). NB: setTimeout mentre l'app è aperta (nessun push server-side). Testato (iteration_63).
+- SCORTE FREEZER AUTOMATICHE (PianoProduzioneAI.updateFreezerAfterPlan): dopo generate() scala min(qty_freezer, qty_pianificata) per i prodotti che combaciano col nome della giacenza. Match reso ROBUSTO (uguaglianza normalizzata O contains bidirezionale ≥4 char) per gestire "Baguette precotte" vs "Baguette". Toast di conferma/errore. PUT /api/freezer. Testato (iteration_63: 100→70 + persistenza).
+- FAB (Radio sx / Parla dx): riposizionati a bottom-20 (blueprint) + AUTO-NASCONDIMENTO durante lo scroll (translate-y/opacity, riappaiono a scroll fermo) per non coprire i contenuti. Testato posizione (iteration_63) + smoke Home.

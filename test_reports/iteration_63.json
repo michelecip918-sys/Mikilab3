@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only test (mobile 390x844, admin@mikilab.de) of the 3 new MikiLab features. (1) Digital Twin 'Sveglia al picco': PASS - twin-alarm-set shows toast \"⏰ Sveglia impostata: ti avviso al picco verso le 11:15. Tieni l'app aperta.\", button switches to twin-alarm-cancel with label 'Sveglia attiva alle 11:15 · Annulla'; cancel shows toast 'Sveglia annullata' and restores twin-alarm-set (twin-alarm-cancel removed from DOM). (2) Scorte freezer automatiche: PASS functionally - after capo-generate completed (~48s) toast '🧊 Giacenze freezer aggiornate: <prodotto> −30' appeared and the freezer tool (capo-quicklink-freezer) showed the item dropped 100 -> 70 while 'Baguette precotte' (150) and 'Croissant surgelati' (30) stayed unchanged; PUT /api/freezer persisted (verified via API). BUT the pre-seeded item 'Pane ai Cereali' matches NO recipe in /api/recipes (94 recipes, none named 'Pane ai Cereali'), so the scenario as specified could NOT trigger; I re-seeded the freezer with the existing recipe name 'Pane Morbido ai Cereali (Kochstück)' qty=100 to exercise the feature. (3) FAB: PASS - radio-fornaio-btn wrapper class 'fixed z-40 left-4 bottom-20' (box x=16,y=686), voice-assistant-btn wrapper 'fixed z-40 right-4 bottom-20' (x=318,y=686); radio on the left, voice on the right, both above the bottom nav.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Scorte freezer automatiche (Piano IA -> freezer)", "issue": "Seed/data mismatch: freezer item 'Pane ai Cereali' does not correspond to any recipe name, so updateFreezerAfterPlan() can never deduct it. Matching is exact-normalized name equality, so near-identical names ('Pane ai Cereali' vs 'Pane Morbido ai Cereali (Kochstück)') never match. Consider matching by recipe_id or a fuzzy/contains match, or fix the seed.", "affected_selectors": ["capo-product-recipe-0", "capo-quicklink-freezer", "freezer-row-2"]}
+    ],
+    "design_issues": [
+      {"screen": "Home (mobile 390x844)", "issues": ["Radio FAB (left, bottom-20) still overlaps page content when a section scrolls under it: with 'Il cuore di MikiLab' at the bottom of the viewport the FAB covers the first ~2 words of the title. Inherent to a fixed overlay, but if the requirement is 'never cover content' consider adding bottom padding/auto-hide on scroll."]},
+      {"screen": "Giacenze Freezer / Digital Twin (mobile)", "issues": ["Both FABs overlay the bottom-most content of these tools (footer 'MikiLab · Michele', temperature slider) - cosmetic only, content is reachable by scrolling."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix the freezer seed for admin: use a name that exactly matches an existing recipe (e.g. 'Pane Morbido ai Cereali (Kochstück)') or make updateFreezerAfterPlan() match by recipe_id / fuzzy name.",
+    "Optional: dedupe/verify toast durations - the freezer toast is shown only ~4s after a ~50s generation; consider a persistent inline confirmation in the plan area.",
+    "Fix React hydration warning seen in console on the Piano IA screen: 'In HTML, <span> cannot be a child of <option>' (invalid markup inside a <select> option)."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.updateFreezerAfterPlan(): name matching is exact after lower/trim only; recipe/freezer naming drift silently disables the whole feature (no user feedback when nothing matches). Prefer recipe_id linkage on freezer items.",
+    "updateFreezerAfterPlan() swallows PUT /api/freezer errors silently (empty catch) - a failed persistence leaves the UI state unchanged but gives no error toast.",
+    "DoughTwin alarm relies on setTimeout in a mounted component: it is lost on tab close/navigation away from the tool; the toast wording does warn 'Tieni l'app aperta', acceptable but worth noting."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested", "frontend": "100% (3/3 features working; 1 seed-data defect)" },
+  "seed_data_creation": "Replaced admin freezer item 'Pane ai Cereali' (100) with 'Pane Morbido ai Cereali (Kochstück)' qty=100 min=20 via PUT /api/freezer, because no recipe named 'Pane ai Cereali' exists. Current admin freezer state after tests: Baguette precotte 150/50, Croissant surgelati 30/40, Pane Morbido ai Cereali (Kochstück) 70/20. Two production plans were generated and saved for admin.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Digital Twin alarm and FAB positions are verified working. For the freezer auto-deduction, the freezer item name MUST exactly match a recipe name from /api/recipes; use 'Pane Morbido ai Cereali (Kochstück)'. AI plan generation takes ~48s; toasts last ~4s so poll every <=2s (I used a MutationObserver-style setInterval collecting [data-sonner-toast] innerText into window.__toasts). Note capo-plan/capo-saved-banner can appear immediately from a previously saved plan, so they are not reliable 'generation finished' signals.",
+  "rca_of_the_issue": "The freezer auto-deduction feature works as coded (min(qty_freezer, qty_pianificata) subtracted, PUT /api/freezer, success toast). The reported test scenario failed only because the seeded freezer row 'Pane ai Cereali' has no corresponding recipe, and the matching logic requires exact normalized name equality; after re-seeding with a real recipe name the deduction, toast and persistence all worked (100 -> 70)."
+}

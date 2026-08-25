@@ -33,6 +33,13 @@ export default function RadioFornaio() {
     { id: "morning", label: lang === "de" ? "Morgen" : lang === "en" ? "Morning" : "Mattino", emoji: "🌅" },
   ];
   const [open, setOpen] = useState(false);
+  const [scrolling, setScrolling] = useState(false);
+  useEffect(() => {
+    let tId;
+    const onScroll = () => { setScrolling(true); clearTimeout(tId); tId = setTimeout(() => setScrolling(false), 650); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); clearTimeout(tId); };
+  }, []);
   const [current, setCurrent] = useState(null); // station id
   const [status, setStatus] = useState("idle"); // idle | loading | playing | error
   const [volume, setVolume] = useState(0.9);
@@ -217,7 +224,7 @@ export default function RadioFornaio() {
         </div>
       )}
 
-      <div className="fixed z-40 left-4 bottom-28 flex flex-col items-center gap-1" style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
+      <div className={`fixed z-40 left-4 bottom-20 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`} style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
         <button
           data-testid="radio-fornaio-btn"
           onClick={() => setOpen((o) => !o)}

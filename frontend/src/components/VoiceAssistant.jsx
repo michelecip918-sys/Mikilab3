@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Mic, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { API } from "@/lib/api";
@@ -24,6 +24,15 @@ export default function VoiceAssistant({ onNavigate }) {
   const sessionRef = useRef(`voice-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
   const supported = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
+
+  // Nasconde il FAB mentre si scorre, così non copre i contenuti; riappare a scroll fermo.
+  const [scrolling, setScrolling] = useState(false);
+  useEffect(() => {
+    let tId;
+    const onScroll = () => { setScrolling(true); clearTimeout(tId); tId = setTimeout(() => setScrolling(false), 650); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); clearTimeout(tId); };
+  }, []);
 
   const askMaestro = async (q) => {
     setState("thinking");
@@ -127,7 +136,7 @@ export default function VoiceAssistant({ onNavigate }) {
         </div>
       )}
 
-      <div className="fixed z-40 right-4 bottom-28 flex flex-col items-center gap-1" style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
+      <div className={`fixed z-40 right-4 bottom-20 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`} style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
         <button
           data-testid="voice-assistant-btn"
           onClick={state === "listening" ? stop : start}

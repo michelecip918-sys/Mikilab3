@@ -158,6 +158,52 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Aggiorna da solo le giacenze freezer: scala i pezzi usati (match per nome, anche parziale).
+  const updateFreezerAfterPlan = async () => {
+    if (!freezerStock.length) return;
+    const norm = (s) => (s || "").toLowerCase().trim();
+    const planned = products
+      .filter((p) => p.recipe_id && Number(p.qty) > 0)
+      .map((p) => ({ name: norm(p.name), qty: Number(p.qty) }));
+    if (!planned.length) return;
+    const matchQty = (freezerName) => {
+      const fn = norm(freezerName);
+      let total = 0;
+      planned.forEach((pl) => {
+        if (!pl.name || pl.name.length < 3) return;
+        const hit = fn === pl.name || (fn.length >= 4 && pl.name.length >= 4 && (fn.includes(pl.name) || pl.name.includes(fn)));
+        if (hit) total += pl.qty;
+      });
+      return total;
+    };
+    const deducted = [];
+    let changed = false;
+    const newItems = freezerStock.map((it) => {
+      const avail = Number(it.qty) || 0;
+      const u = matchQty(it.name);
+      if (u > 0 && avail > 0) {
+        const take = Math.min(avail, u);
+        if (take > 0) { changed = true; deducted.push(`${it.name} −${take}`); return { ...it, qty: avail - take }; }
+      }
+      return it;
+    });
+    if (!changed) return;
+    try {
+      const r = await fetch(`${API}/freezer?lang=${lang}`, {
+        method: "PUT", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ items: newItems }),
+      });
+      if (!r.ok) throw new Error("save failed");
+      setFreezerStock(newItems);
+      toast.success(tri3(lang,
+        `🧊 Giacenze freezer aggiornate: ${deducted.join(", ")}`,
+        `🧊 Freezer-Bestand aktualisiert: ${deducted.join(", ")}`,
+        `🧊 Freezer stock updated: ${deducted.join(", ")}`));
+    } catch {
+      toast.error(tri3(lang, "Non sono riuscito ad aggiornare le giacenze freezer.", "Freezer-Bestand konnte nicht aktualisiert werden.", "Could not update the freezer stock."));
+    }
+  };
+
   const applyBiz = (v) => {
     setBizType(v);
     if (v === "casa") {
@@ -204,7 +250,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       }
       if (!ok) toast.warning(t("capo_plan_incomplete"));
       else fireHighFive(lang === "de" ? "Plan erstellt! 👏" : lang === "en" ? "Plan generated! 👏" : "Piano generato! 👏");
-      if (fullText.trim()) await persistPlan(fullText);
+      if (fullText.trim()) { await persistPlan(fullText); await updateFreezerAfterPlan(); }
     } catch { toast.error(t("chat_error")); }
     finally { setGenerating(false); }
   };

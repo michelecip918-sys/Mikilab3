@@ -1,8 +1,9 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
-import { FlaskConical, Droplets, Wheat, Thermometer, Clock, TrendingUp, Grid3x3, Sparkles, ChefHat, Bell } from "lucide-react";
+import { FlaskConical, Droplets, Wheat, Thermometer, Clock, TrendingUp, Grid3x3, Sparkles, ChefHat, Bell, BellOff } from "lucide-react";
 import { recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { toast } from "sonner";
 
 // Punto 22 — Digital Twin dell'Impasto: simula forza, idratazione, temperatura e
 // lievito PRIMA di impastare e prevede curva di lievitazione e alveolatura attesa.
@@ -122,6 +123,58 @@ export default function DoughTwin() {
     return { hm: `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`, nextDay: total >= 24 * 60 };
   }, [startTime, sim.tPeak]);
 
+  // Sveglia al picco del volume (Notifica + vibrazione + beep, mentre l'app è aperta).
+  const [alarmAt, setAlarmAt] = useState(null);
+  const alarmTimer = useRef(null);
+  useEffect(() => () => { if (alarmTimer.current) clearTimeout(alarmTimer.current); }, []);
+
+  const beep = () => {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      const ctx = new Ctx();
+      [0, 0.7].forEach((delay) => {
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination); o.type = "sine"; o.frequency.value = 880;
+        const t0 = ctx.currentTime + delay;
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(0.35, t0 + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.5);
+        o.start(t0); o.stop(t0 + 0.55);
+      });
+    } catch { /* audio non disponibile */ }
+  };
+
+  const schedulePeakAlarm = async () => {
+    const delayMs = Math.max(1000, Math.round(sim.tPeak * 3600 * 1000));
+    const target = new Date(Date.now() + delayMs);
+    const hm = `${String(target.getHours()).padStart(2, "0")}:${String(target.getMinutes()).padStart(2, "0")}`;
+    const rName = recipes.find((r) => r.id === recipeId)?.name;
+    const body = tri(
+      `È il momento del picco del volume!${rName ? ` «${rName}»` : ""} Inforna o metti in frigo.`,
+      `Zeit für den Volumen-Peak!${rName ? ` „${rName}“` : ""} Backen oder kühlen.`,
+      `Volume peak time!${rName ? ` "${rName}"` : ""} Bake or refrigerate.`);
+    try { if ("Notification" in window && Notification.permission === "default") await Notification.requestPermission(); } catch { /* */ }
+    if (alarmTimer.current) clearTimeout(alarmTimer.current);
+    alarmTimer.current = setTimeout(() => {
+      try { if ("Notification" in window && Notification.permission === "granted") new Notification("MikiLab · Picco impasto 🍞", { body }); } catch { /* */ }
+      try { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 500]); } catch { /* */ }
+      beep();
+      toast.success(body, { duration: 15000 });
+      setAlarmAt(null);
+    }, delayMs);
+    setAlarmAt(hm);
+    toast.success(tri(
+      `⏰ Sveglia impostata: ti avviso al picco verso le ${hm}. Tieni l'app aperta.`,
+      `⏰ Wecker gestellt: Ich melde mich zum Peak gegen ${hm}. App geöffnet lassen.`,
+      `⏰ Alarm set: I'll alert you at the peak around ${hm}. Keep the app open.`));
+  };
+
+  const cancelAlarm = () => {
+    if (alarmTimer.current) clearTimeout(alarmTimer.current);
+    alarmTimer.current = null; setAlarmAt(null);
+    toast(tri("Sveglia annullata", "Wecker abgebrochen", "Alarm cancelled"));
+  };
+
   const advice = [];
   if (sim.hydDelta > 8) advice.push(tri("Idratazione alta per questa farina: impasto molle, usa pieghe in ciotola e lievitazione controllata.", "Hohe Hydratation für dieses Mehl: weicher Teig, Dehnen & Falten, kontrollierte Gare.", "High hydration for this flour: slack dough, use folds and controlled proof."));
   else if (sim.hydDelta < -10) advice.push(tri("Impasto piuttosto asciutto: crosta più spessa e mollica compatta. Puoi alzare l'acqua.", "Eher trockener Teig: dickere Kruste, kompakte Krume. Wasser erhöhen möglich.", "Rather dry dough: thicker crust, tight crumb. You can add water."));
@@ -175,6 +228,17 @@ export default function DoughTwin() {
             "Der beste Zeitpunkt zum Backen oder Kühlen. Nach dem Peak fällt der Teig ab.",
             "The best moment to bake or refrigerate. After the peak the dough starts to collapse.")}
         </p>
+        {alarmAt ? (
+          <button data-testid="twin-alarm-cancel" onClick={cancelAlarm}
+            className="mt-3 w-full flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 border border-white/40 text-white font-semibold py-2.5 rounded-xl active:scale-97 transition-all">
+            <BellOff className="w-4 h-4" /> {tri(`Sveglia attiva alle ${alarmAt} · Annulla`, `Wecker aktiv um ${alarmAt} · Abbrechen`, `Alarm set for ${alarmAt} · Cancel`)}
+          </button>
+        ) : (
+          <button data-testid="twin-alarm-set" onClick={schedulePeakAlarm}
+            className="mt-3 w-full flex items-center justify-center gap-2 bg-white text-[#B34A26] font-bold py-2.5 rounded-xl active:scale-97 transition-all">
+            <Bell className="w-4 h-4" /> {tri("Avvisami al picco", "Beim Peak wecken", "Alert me at the peak")}
+          </button>
+        )}
       </div>
 
       {/* Parametri */}
