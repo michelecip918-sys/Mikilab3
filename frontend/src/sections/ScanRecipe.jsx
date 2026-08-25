@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Camera, Loader2, ScanLine } from "lucide-react";
+import { Camera, Loader2, ScanLine, PenLine } from "lucide-react";
 import { API, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -8,6 +8,7 @@ import DualPhotoButtons from "@/components/DualPhotoButtons";
 
 export default function ScanRecipe({ embedded = false }) {
   const { t, lang } = useLang();
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [loading, setLoading] = useState(false);
   const [scanned, setScanned] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -84,6 +85,16 @@ export default function ScanRecipe({ embedded = false }) {
           </div>
         ) : (
           <DualPhotoButtons onFile={onPhoto} testid="scan" />
+        )}
+        {/* Scrivere/modificare a mano: dopo lo scatto il testo è già modificabile; qui parti da zero. */}
+        {!loading && (
+          <div className="mt-4 pt-4 border-t border-[#D7E1DB] dark:border-[#38424B]">
+            <p className="text-xs text-[#7E8A93] mb-2">{tri("Dopo la foto puoi correggere il testo. Oppure scrivi la ricetta a mano da zero:", "Nach dem Foto kannst du den Text korrigieren. Oder schreibe das Rezept von Hand:", "After the photo you can edit the text. Or write the recipe by hand:")}</p>
+            <button data-testid="scan-manual-btn" onClick={() => { setScanned(null); setDialogOpen(true); }}
+              className="inline-flex items-center gap-2 bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#EAF0EC] font-semibold px-5 py-3 rounded-2xl border-2 border-[#5E8B7E]/40 active:scale-97 transition-all">
+              <PenLine className="w-5 h-5 text-[#5E8B7E]" /> {tri("Scrivi a mano", "Von Hand schreiben", "Write by hand")}
+            </button>
+          </div>
         )}
       </div>
 

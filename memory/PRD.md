@@ -1110,3 +1110,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - RICETTE MIKILAB: aggiunte bandiere 🇮🇹🇩🇪 nell'hero (badge in alto a destra + accanto al titolo), solo per collectionName mikilab.
 - Verificato via screenshot: Impara free (paywall assente), Academy coming-soon, Enciclopedia unificata (enc-entry-0=Poolish), bandiere MikiLab.
 - DEFERITO: "Costo e margine per ricetta" nel Piano IA (serve modello prezzi ingredienti) — prossimo step.
+
+## v94 (2026-06) — Scan a mano, Ricetta del giorno, Progressi quiz
+- SCAN FOTO (ScanRecipe): dopo lo scatto il testo era già modificabile (RecipeDialog con initial=scanned). Aggiunto pulsante "Scrivi a mano" (scan-manual-btn) che apre RecipeDialog VUOTO per scrivere/creare la ricetta da zero (initial=null → form empty). Verificato via screenshot.
+- RICETTA DEL GIORNO GRATIS (Beginners): DAILY_RECIPES (3 ricette semplici it/de/en: pane base, focaccia, panini al latte) a rotazione giornaliera (recipe-of-day) in cima a Impara.
+- PROGRESSI QUIZ (BakerQuiz in Beginners): best score persistito in localStorage 'mikilab_quiz_best', mostrato come "Il tuo record: X/5" (quiz-best) su start e risultato.
+- DEFERITO ancora: "Costo e margine per ricetta" (serve modello prezzi ingredienti); corsi acquistabili (attesa video).

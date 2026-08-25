@@ -207,6 +207,8 @@ const QUIZ = {
 function BakerQuiz() {
   const { t, lang } = useLang();
   const questions = QUIZ[lang] || QUIZ.it;
+  const QKEY = "mikilab_quiz_best";
+  const [best, setBest] = useState(() => Number(localStorage.getItem(QKEY) || 0));
   const [started, setStarted] = useState(false);
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState(null);
@@ -220,15 +222,28 @@ function BakerQuiz() {
     if (i === questions[idx].correct) setScore((s) => s + 1);
   };
   const next = () => {
-    if (idx + 1 >= questions.length) { setDone(true); return; }
+    if (idx + 1 >= questions.length) {
+      const finalScore = score;
+      if (finalScore > best) { setBest(finalScore); try { localStorage.setItem(QKEY, String(finalScore)); } catch { /* */ } }
+      setDone(true); return;
+    }
     setIdx((n) => n + 1); setPicked(null);
   };
 
+  const record = best > 0 && (
+    <p data-testid="quiz-best" className="text-xs font-semibold text-[#6B8E62] flex items-center justify-center gap-1 mb-2">
+      <Trophy className="w-3.5 h-3.5" /> {lang === "de" ? `Dein Rekord: ${best}/${questions.length}` : lang === "en" ? `Your record: ${best}/${questions.length}` : `Il tuo record: ${best}/${questions.length}`}
+    </p>
+  );
+
   if (!started) {
     return (
-      <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
-        <Trophy className="w-5 h-5" /> {t("quiz_start")}
-      </button>
+      <div>
+        {record}
+        <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
+          <Trophy className="w-5 h-5" /> {t("quiz_start")}
+        </button>
+      </div>
     );
   }
 
@@ -239,7 +254,8 @@ function BakerQuiz() {
         <Trophy className="w-10 h-10 text-[#6B8E62] mx-auto mb-2" />
         <p className="text-sm text-[#7E8A93]">{t("quiz_your_score")}</p>
         <p className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] my-1">{score} / {questions.length}</p>
-        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{msg}</p>
+        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-2">{msg}</p>
+        {record}
         <button data-testid="quiz-restart-btn" onClick={start} className="inline-flex items-center gap-2 bg-[#5E8B7E] text-white font-semibold px-5 py-2.5 rounded-xl">
           <RotateCcw className="w-4 h-4" /> {t("quiz_restart")}
         </button>
@@ -283,10 +299,30 @@ function BakerQuiz() {
   );
 }
 
+const DAILY_RECIPES = {
+  it: [
+    { name: "Pane semplice di casa", ing: "500 g farina · 350 g acqua tiepida · 8 g sale · 5 g lievito di birra", steps: "Sciogli il lievito nell'acqua, unisci farina e sale. Impasta 5 min, copri e lascia raddoppiare (2-3 h). Forma, lievita 1 h, cuoci a 230°C per 30-35 min con un pentolino d'acqua." },
+    { name: "Focaccia morbida", ing: "500 g farina · 400 g acqua · 10 g sale · 5 g lievito · olio evo", steps: "Impasto molto idratato: mescola tutto, 3 pieghe ogni 30 min. Versa in teglia oliata, fossette con le dita, olio e sale grosso. Lievita 1 h, cuoci a 220°C per 20 min." },
+    { name: "Panini al latte", ing: "500 g farina · 250 g latte · 50 g burro · 50 g zucchero · 7 g lievito · 8 g sale", steps: "Impasta tutto fino a incordare, lievita 2 h. Forma palline, lievita 1 h, spennella con latte e cuoci a 180°C per 15-18 min." },
+  ],
+  de: [
+    { name: "Einfaches Hausbrot", ing: "500 g Mehl · 350 g lauwarmes Wasser · 8 g Salz · 5 g Hefe", steps: "Hefe im Wasser lösen, Mehl und Salz zugeben. 5 Min kneten, abgedeckt verdoppeln (2-3 h). Formen, 1 h gehen, bei 230°C 30-35 Min mit Wasserschälchen backen." },
+    { name: "Weiche Focaccia", ing: "500 g Mehl · 400 g Wasser · 10 g Salz · 5 g Hefe · Olivenöl", steps: "Sehr feuchter Teig: alles mischen, 3x dehnen/falten alle 30 Min. In geölte Form, Mulden drücken, Öl und grobes Salz. 1 h gehen, bei 220°C 20 Min backen." },
+    { name: "Milchbrötchen", ing: "500 g Mehl · 250 g Milch · 50 g Butter · 50 g Zucker · 7 g Hefe · 8 g Salz", steps: "Alles kneten bis glatt, 2 h gehen. Kugeln formen, 1 h gehen, mit Milch bestreichen, bei 180°C 15-18 Min backen." },
+  ],
+  en: [
+    { name: "Simple home bread", ing: "500 g flour · 350 g warm water · 8 g salt · 5 g yeast", steps: "Dissolve yeast in water, add flour and salt. Knead 5 min, cover and let double (2-3 h). Shape, prove 1 h, bake at 230°C for 30-35 min with a pan of water." },
+    { name: "Soft focaccia", ing: "500 g flour · 400 g water · 10 g salt · 5 g yeast · olive oil", steps: "Very wet dough: mix all, 3 stretch-and-folds every 30 min. Into an oiled tray, dimple with fingers, oil and coarse salt. Prove 1 h, bake at 220°C for 20 min." },
+    { name: "Milk rolls", ing: "500 g flour · 250 g milk · 50 g butter · 50 g sugar · 7 g yeast · 8 g salt", steps: "Knead all until smooth, prove 2 h. Shape balls, prove 1 h, brush with milk, bake at 180°C for 15-18 min." },
+  ],
+};
+
 export default function Beginners() {
   const { t, lang } = useLang();
   const beginners = BEGINNERS[lang] || BEGINNERS.it;
   const courses = content[lang].freeCourses || [];
+  const daily = DAILY_RECIPES[lang] || DAILY_RECIPES.it;
+  const today = daily[Math.floor(Date.now() / 86400000) % daily.length];
 
   return (
     <div data-testid="beginners-page" className="space-y-4 pb-4">
@@ -296,6 +332,17 @@ export default function Beginners() {
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("beginners_title")}</h2>
         </div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_intro")}</p>
+      </div>
+
+      {/* Ricetta del giorno gratis — cambia ogni giorno */}
+      <div data-testid="recipe-of-day" className="rounded-2xl p-5 text-white bg-gradient-to-br from-[#A64B2A] to-[#7c3820] shadow-md">
+        <div className="flex items-center gap-2 mb-1">
+          <Star className="w-4 h-4" />
+          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages · gratis" : lang === "en" ? "Recipe of the day · free" : "Ricetta del giorno · gratis"}</span>
+        </div>
+        <h3 className="font-display text-xl font-bold leading-tight">{today.name}</h3>
+        <p className="text-sm text-white/90 mt-2"><b>{lang === "de" ? "Zutaten" : lang === "en" ? "Ingredients" : "Ingredienti"}:</b> {today.ing}</p>
+        <p className="text-sm text-white/90 mt-1.5 leading-snug">{today.steps}</p>
       </div>
 
       {/* Pianifica il pane a casa */}
