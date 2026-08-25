@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { GraduationCap, Lock, PlayCircle, Check, CalendarClock, Loader2, Sparkles } from "lucide-react";
+import { GraduationCap, PlayCircle, Check, CalendarClock, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
@@ -117,11 +117,9 @@ export default function Academy() {
                       <video data-testid={`academy-video-${c.id}`} src={owned[c.id]} controls playsInline className="w-full rounded-xl border border-[#D7E1DB] dark:border-[#38424B] bg-black" />
                     </div>
                   ) : (
-                    <button data-testid={`academy-buy-${c.id}`} onClick={() => buy("course", c.id)} disabled={busy === c.id}
-                      className="mt-3 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold py-2.5 rounded-xl active:scale-98 text-sm flex items-center justify-center gap-2 disabled:opacity-60">
-                      {busy === c.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
-                      {tri("Acquista e sblocca", "Kaufen & freischalten", "Buy & unlock")} · {euro(c.price_cents)}
-                    </button>
+                    <div data-testid={`academy-course-soon-${c.id}`} className="mt-3 w-full bg-[#6B8E62]/12 border border-[#6B8E62]/30 text-[#4d6b45] dark:text-[#9ec48f] font-semibold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
+                      <CalendarClock className="w-4 h-4" /> {tri("In arrivo · presto disponibile", "Bald verfügbar", "Coming soon")}
+                    </div>
                   )}
                 </div>
               </div>

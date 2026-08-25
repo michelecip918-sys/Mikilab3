@@ -1,5 +1,5 @@
 import RecipeList from "@/components/RecipeList";
-import GuidaMetodi from "@/sections/GuidaMetodi";
+import GuidaMetodi from "@/sections/Enciclopedia";
 import PanettoneLabels from "@/sections/PanettoneLabels";
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";

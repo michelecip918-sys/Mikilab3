@@ -1102,3 +1102,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Backend MOHAMMED_SYSTEM aggiornato al layout a 2 passi (non più i vecchi 5 passi materie prime/cottura/HACCP).
 - Corsi: restano "in arrivo" (utente non ha ancora i video) — nessun acquisto attivato.
 - Verificato via screenshot (stepper + guida) + compilazione pulita.
+
+## v93 (2026-06) — Shop, Enciclopedia unificata, Impara gratis, bandiere MikiLab
+- SHOP/Academy: corsi ora "In arrivo · presto disponibile" (Academy.jsx, rimosso bottone acquista + import Lock). Ricette restano vendibili; consulenza 1-to-1 resta prenotabile; Shop.jsx panettoni resta waitlist.
+- ENCICLOPEDIA UNIFICATA: GuidaMetodi confluisce in Enciclopedia (un solo titolo "Enciclopedia del mio pane", metodi Poolish/LM pane-vs-panettone/Roggen/Backmittel PRIMA, poi ingredienti+termini). GuidaMetodi.SECTIONS esportata e importata in Enciclopedia; rimossi i "Poolish" brevi duplicati (it/de/en); body con whitespace-pre-line. Ricette.jsx e Mikilab.jsx "guida" → Enciclopedia (bottone rinominato "Enciclopedia").
+- IMPARA GRATIS PER TUTTI: LearnHub tab "impara" → rimosso PaywallGate, ora renderizza Beginners (contiene HomePlanner = "laboratorio in versione semplice" + consigli + video gratis + quiz + grandi panettieri). 
+- RICETTE MIKILAB: aggiunte bandiere 🇮🇹🇩🇪 nell'hero (badge in alto a destra + accanto al titolo), solo per collectionName mikilab.
+- Verificato via screenshot: Impara free (paywall assente), Academy coming-soon, Enciclopedia unificata (enc-entry-0=Poolish), bandiere MikiLab.
+- DEFERITO: "Costo e margine per ricetta" nel Piano IA (serve modello prezzi ingredienti) — prossimo step.

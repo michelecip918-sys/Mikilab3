@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { GraduationCap, Newspaper, Library } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-import AcademyHome from "@/sections/AcademyHome";
+import Beginners from "@/sections/Beginners";
 import NewsPage from "@/sections/NewsPage";
 import Enciclopedia from "@/sections/Enciclopedia";
-import PaywallGate from "@/components/PaywallGate";
 
 // Pagina unica: Impara (Video Mentore) + News + Enciclopedia del Pane con sotto-schede.
 export default function LearnHub({ initial = "impara", onNavigate }) {
@@ -35,9 +34,8 @@ export default function LearnHub({ initial = "impara", onNavigate }) {
         })}
       </div>
 
-      {sub === "impara" && (
-        <PaywallGate feature="beginners" sectionName={tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}><AcademyHome onNavigate={onNavigate} /></PaywallGate>
-      )}
+      {/* Impara: GRATIS per tutti — laboratorio in versione semplice + tutto per il principiante */}
+      {sub === "impara" && <Beginners onNavigate={onNavigate} />}
       {sub === "news" && <NewsPage />}
       {sub === "enciclopedia" && <Enciclopedia />}
     </div>

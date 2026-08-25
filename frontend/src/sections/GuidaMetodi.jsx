@@ -4,7 +4,8 @@ import { ChevronDown, BookOpen } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { HeroAvatar } from "@/components/MikiAvatar";
 
-const SECTIONS = [
+// "Guida ai miei metodi" — ora confluisce nell'Enciclopedia del mio pane (unica sezione).
+export const SECTIONS = [
   {
     id: "poolish", icon: "💧",
     it: { title: "Poolish", body: "Il poolish è un prefermento LIQUIDO: parti uguali di farina e acqua (idratazione 100%) con pochissimo lievito. Riposa 8-16 ore a temperatura ambiente finché è pieno di bolle e leggermente incurvato al centro.\n\nA cosa serve: più profumo, mollica più soffice, migliore digeribilità e crosta più fragrante. Ottimo per baguette, ciabatte e pani soffici.\n\nRegola d'oro: quando lo unisci all'impasto, togli dal totale la farina e l'acqua già presenti nel poolish per non sbagliare l'idratazione." },

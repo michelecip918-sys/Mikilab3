@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, Tag, BookOpen, Wheat } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import PanettoneLabels from "@/sections/PanettoneLabels";
-import GuidaMetodi from "@/sections/GuidaMetodi";
+import GuidaMetodi from "@/sections/Enciclopedia";
 import FlourTable from "@/components/FlourTable";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
@@ -38,7 +38,7 @@ export default function Ricette() {
   return (
     <div data-testid="ricette-page">
       <div className="grid grid-cols-3 gap-2.5 mb-4">
-        <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={t("tool_guida")} onClick={() => setView("guida")} />
+        <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia")} onClick={() => setView("guida")} />
         <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours")} onClick={() => setView("farine")} />
         <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
       </div>

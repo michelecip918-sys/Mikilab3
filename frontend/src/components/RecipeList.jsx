@@ -167,8 +167,17 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <img src={heroImage} alt="" className="w-full h-full object-cover" style={heroPosition ? { objectPosition: heroPosition } : undefined} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1E1B18]/85 via-[#1E1B18]/30 to-transparent" />
         <div className="it-de-ribbon absolute top-0 left-0 right-0 z-10" />
+        {collectionName === "mikilab" && (
+          <div data-testid="mikilab-flags" className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/35 backdrop-blur rounded-full px-2.5 py-1 border border-white/25">
+            <span className="text-lg leading-none" title="Italiano">🇮🇹</span>
+            <span className="text-lg leading-none" title="Deutsch">🇩🇪</span>
+          </div>
+        )}
         <div className="absolute bottom-0 left-0 p-5">
-          <h1 className="font-display text-3xl font-bold text-white">{heroTitle}</h1>
+          <h1 className="font-display text-3xl font-bold text-white flex items-center gap-2">
+            {heroTitle}
+            {collectionName === "mikilab" && <span className="text-xl leading-none">🇮🇹🇩🇪</span>}
+          </h1>
           <div className="h-1 w-12 rounded-full bg-[#C88A2B] mt-1.5 mb-0.5" />
           {heroSubtitle ? <p className="text-white/85 text-sm mt-1">{heroSubtitle}</p> : null}
         </div>
