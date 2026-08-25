@@ -67,6 +67,14 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [collectionName]);
 
+  // Sblocco immediato: dopo un acquisto ricetta ricarica la lista (no reload manuale).
+  useEffect(() => {
+    const onUpd = () => load();
+    window.addEventListener("mikilab-entitlements-updated", onUpd);
+    return () => window.removeEventListener("mikilab-entitlements-updated", onUpd);
+    // eslint-disable-next-line
+  }, [collectionName]);
+
   // tiene aggiornata la ricetta aperta dopo un salvataggio/scala
   useEffect(() => {
     if (viewing) {
@@ -316,22 +324,35 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
                   const open = openCats[cat.key] !== false; // cartelle aperte di default
+                  const coverSrc = (() => {
+                    const withImg = items.find((r) => r.image_url);
+                    if (!withImg) return null;
+                    const u = withImg.image_url;
+                    return u.startsWith("http") ? u : `${process.env.PUBLIC_URL}${u}`;
+                  })();
                   return (
                     <div key={cat.key} data-testid={`cat-section-${cat.key}`}
                       className="rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] overflow-hidden bg-white/40 dark:bg-[#232A31]/40">
                       <button data-testid={`cat-folder-${cat.key}`}
                         onClick={() => setOpenCats((o) => ({ ...o, [cat.key]: !open }))}
-                        className="w-full flex items-center gap-2 px-3.5 py-3 active:scale-[0.99] transition-all">
-                        <span className="text-lg">{cat.icon}</span>
-                        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#5E8B7E] flex-1 text-left">{t(cat.label)}</h2>
-                        <span className="text-xs font-mono-data text-[#7E8A93]">{items.length}</span>
-                        <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+                        className="relative w-full h-24 flex items-end active:scale-[0.99] transition-all overflow-hidden">
+                        {coverSrc && (
+                          <img src={coverSrc} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover"
+                            onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                        )}
+                        <div className={`absolute inset-0 ${coverSrc ? "bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/30 to-[#1A1412]/10" : "bg-[#6B8E62]/12"}`} />
+                        <div className="relative z-10 w-full flex items-center gap-2 px-3.5 py-3">
+                          <span className="text-2xl drop-shadow">{cat.icon}</span>
+                          <h2 className={`font-display text-base font-bold uppercase tracking-wide flex-1 text-left ${coverSrc ? "text-white drop-shadow" : "text-[#5E8B7E]"}`}>{t(cat.label)}</h2>
+                          <span className={`text-xs font-mono-data font-bold px-2 py-0.5 rounded-full ${coverSrc ? "bg-white/25 text-white" : "bg-[#5E8B7E]/15 text-[#5E8B7E]"}`}>{items.length}</span>
+                          <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${coverSrc ? "text-white" : "text-[#7E8A93]"} ${open ? "rotate-180" : ""}`} />
+                        </div>
                       </button>
                       <AnimatePresence initial={false}>
                         {open && (
                           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.22 }} className="overflow-hidden">
-                            <div className="grid grid-cols-2 gap-3 p-3 pt-0">
+                            <div className="grid grid-cols-2 gap-3 p-3">
                               {items.map((r, i) => Card(r, i))}
                             </div>
                           </motion.div>

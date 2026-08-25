@@ -4,6 +4,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
 import { toast } from "sonner";
+import AvatarBubbles from "@/components/AvatarBubbles";
 
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
@@ -95,6 +96,8 @@ export default function Community() {
           <p className="text-sm text-[#7E8A93]">{tri("Consigli, foto e ricette tra colleghi", "Tipps, Fotos und Rezepte unter Kollegen", "Tips, photos and recipes among peers")}</p>
         </div>
       </div>
+
+      <AvatarBubbles variant="community" />
 
       {/* Composer */}
       {(() => {

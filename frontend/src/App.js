@@ -83,7 +83,12 @@ function App() {
     const clean = () => { const u = new URL(window.location.href); ["recipe", "sub", "session_id"].forEach((k) => u.searchParams.delete(k)); window.history.replaceState({ tab: "home" }, "", u.toString()); };
     if (p.get("recipe") === "success" && p.get("session_id")) {
       recipePurchaseApi.status(p.get("session_id")).then((r) => {
-        if (r?.paid) toast.success(tri("Ricetta sbloccata! Buon lavoro 👨‍🍳", "Rezept freigeschaltet! 👨‍🍳", "Recipe unlocked! 👨‍🍳"));
+        if (r?.paid) {
+          toast.success(tri("Ricetta sbloccata! Buon lavoro 👨‍🍳", "Rezept freigeschaltet! 👨‍🍳", "Recipe unlocked! 👨‍🍳"));
+          // Sblocco IMMEDIATO: avvisa le liste ricette / Piano IA di ricaricare (niente reload manuale).
+          window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
+          setTab("ricette");
+        }
         clean();
       }).catch(clean);
     } else if (p.get("recipe") === "cancel") { clean(); }

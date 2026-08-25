@@ -8,6 +8,7 @@ import ReactMarkdown from "react-markdown";
 import { API, recipesApi } from "@/lib/api";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
+import AvatarBubbles from "@/components/AvatarBubbles";
 
 const HOME_DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
@@ -346,6 +347,7 @@ export default function Beginners() {
 
   return (
     <div data-testid="beginners-page" className="space-y-4 pb-4">
+      <AvatarBubbles variant="impara" />
       <div className="rounded-2xl p-5 bg-[#6B8E62]/12 border border-[#6B8E62]/30">
         <div className="flex items-center gap-2 mb-2">
           <Sprout className="w-5 h-5 text-[#4d6b45] dark:text-[#9ec48f]" />

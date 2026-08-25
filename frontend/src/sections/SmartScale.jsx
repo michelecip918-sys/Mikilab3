@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Scale, Bluetooth, Plus, Trash2, RotateCcw, AlertTriangle, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
@@ -21,6 +21,9 @@ export default function SmartScale() {
     return DEFAULT_ROWS;
   });
   const [btBusy, setBtBusy] = useState(false);
+  const [live, setLive] = useState(null); // peso live dalla bilancia (g)
+  const [connected, setConnected] = useState(false);
+  const focusedRef = useRef(null);
 
   useEffect(() => { localStorage.setItem(STORE, JSON.stringify(rows)); }, [rows]);
 
@@ -28,6 +31,16 @@ export default function SmartScale() {
   const addRow = () => setRows((rs) => [...rs, { id: Date.now(), name: "", target: 0, actual: "" }]);
   const delRow = (id) => setRows((rs) => rs.filter((r) => r.id !== id));
   const resetActual = () => setRows((rs) => rs.map((r) => ({ ...r, actual: "" })));
+
+  // Riempi la riga a fuoco (o la prima vuota) col peso live.
+  const applyLive = (grams) => {
+    setRows((rs) => {
+      let targetId = focusedRef.current;
+      if (!targetId) { const empty = rs.find((r) => r.actual === "" || r.actual == null); targetId = empty ? empty.id : null; }
+      if (!targetId) return rs;
+      return rs.map((r) => (r.id === targetId ? { ...r, actual: Math.round(grams) } : r));
+    });
+  };
 
   // Pivot = ingrediente pesato con lo scostamento maggiore (oltre la tolleranza).
   let pivot = null, maxDev = 0;
@@ -49,8 +62,27 @@ export default function SmartScale() {
     }
     setBtBusy(true);
     try {
-      await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: ["weight_scale"] });
-      toast.success(tri("Bilancia collegata. Se non arrivano dati, inserisci a mano.", "Waage verbunden. Falls keine Daten, manuell eingeben.", "Scale connected. If no data, enter manually."));
+      const device = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: ["weight_scale"] });
+      const server = await device.gatt.connect();
+      setConnected(true);
+      toast.success(tri("Bilancia collegata. Metti l'ingrediente sul piatto.", "Waage verbunden. Zutat auf die Waage legen.", "Scale connected. Place the ingredient on the plate."));
+      device.addEventListener("gattserverdisconnected", () => { setConnected(false); setLive(null); });
+      try {
+        const service = await server.getPrimaryService("weight_scale");
+        const ch = await service.getCharacteristic("weight_measurement"); // 0x2A9D
+        await ch.startNotifications();
+        ch.addEventListener("characteristicvaluechanged", (ev) => {
+          const dv = ev.target.value;
+          const flags = dv.getUint8(0);
+          const raw = dv.getUint16(1, true);
+          // bit0: 0 = SI (kg, risoluzione 0.005 kg) · 1 = Imperial (lb, 0.01 lb)
+          const grams = (flags & 0x01) ? raw * 0.01 * 453.592 : raw * 0.005 * 1000;
+          setLive(grams);
+          if (grams > 0) applyLive(grams);
+        });
+      } catch {
+        toast.info(tri("Peso live non disponibile da questa bilancia: inserisci a mano.", "Live-Gewicht von dieser Waage nicht verfügbar: manuell eingeben.", "Live weight not available from this scale: enter manually."));
+      }
     } catch {
       toast.info(tri("Nessuna bilancia selezionata: inserimento manuale.", "Keine Waage gewählt: manuelle Eingabe.", "No scale selected: manual entry."));
     } finally { setBtBusy(false); }
@@ -67,9 +99,16 @@ export default function SmartScale() {
       </div>
 
       <button data-testid="scale-bt-btn" onClick={connectBt} disabled={btBusy}
-        className="w-full mb-4 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC] font-semibold px-4 py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-60">
-        <Bluetooth className="w-5 h-5 text-[#3F7CAC]" /> {tri("Collega bilancia (Bluetooth)", "Waage verbinden (Bluetooth)", "Connect scale (Bluetooth)")}
+        className="w-full mb-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC] font-semibold px-4 py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-60">
+        <Bluetooth className={`w-5 h-5 ${connected ? "text-[#6B8E62]" : "text-[#3F7CAC]"}`} />
+        {connected ? tri("Bilancia collegata ✓", "Waage verbunden ✓", "Scale connected ✓") : tri("Collega bilancia (Bluetooth)", "Waage verbinden (Bluetooth)", "Connect scale (Bluetooth)")}
       </button>
+      {connected && (
+        <div data-testid="scale-live" className="mb-4 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/35 px-4 py-3 flex items-center justify-between">
+          <span className="text-sm font-semibold text-[#33564E] dark:text-[#8FB0C2]">{tri("Peso in tempo reale", "Live-Gewicht", "Live weight")}</span>
+          <span className="font-mono-data text-2xl font-bold text-[#33564E] dark:text-[#8FB0C2]">{live != null ? `${Math.round(live)} g` : "—"}</span>
+        </div>
+      )}
 
       {/* Tabella ingredienti */}
       <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
@@ -90,6 +129,7 @@ export default function SmartScale() {
               <input type="number" value={r.target} onChange={(e) => setRow(r.id, { target: e.target.value })}
                 className="bg-[#F6F8F5] dark:bg-[#1F252B] rounded-lg px-2 py-1 text-sm text-right font-mono-data outline-none" />
               <input data-testid={`scale-actual-${r.id}`} type="number" value={r.actual} onChange={(e) => setRow(r.id, { actual: e.target.value })} placeholder="—"
+                onFocus={() => { focusedRef.current = r.id; }}
                 className={`rounded-lg px-2 py-1 text-sm text-right font-mono-data outline-none ${off ? "bg-[#C0574D]/15 text-[#C0574D] font-bold" : "bg-[#F6F8F5] dark:bg-[#1F252B]"}`} />
               <button data-testid={`scale-del-${r.id}`} onClick={() => delRow(r.id)} className="text-[#C0574D] flex justify-center"><Trash2 className="w-3.5 h-3.5" /></button>
             </div>

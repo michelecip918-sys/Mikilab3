@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { api, recipePurchaseApi, subscriptionApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
+import AvatarBubbles from "@/components/AvatarBubbles";
 
 export default function Shop({ hideCourses = false }) {
   const { lang, tri } = useLang();
@@ -84,6 +85,8 @@ export default function Shop({ hideCourses = false }) {
             : tri("In arrivo: panettoni artigianali e corsi online. Iscriviti alla lista d'attesa!","Bald: handwerkliche Panettoni und Online-Kurse. Trag dich in die Warteliste ein!","Coming soon: artisan panettoni and online courses. Join the waitlist!")}
         </p>
       </div>
+
+      <AvatarBubbles variant="shop" />
 
       {/* Ricettario MikiLab — ACQUISTABILE ora (revenue) */}
       <div data-testid="shop-recipes-block" className="rounded-3xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] shadow-sm overflow-hidden">

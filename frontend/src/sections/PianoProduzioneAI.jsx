@@ -61,6 +61,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [savedProducts, setSavedProducts] = useState([]);
   const [modules, setModules] = useState(DEFAULT_MODULES);
   const toggleMod = (id) => setModules((m) => ({ ...m, [id]: !m[id] }));
+  const [bump, setBump] = useState(0);
 
   const addRecipes = (ids) => setProducts((l) => {
     const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
@@ -136,6 +137,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       } catch { /* nessun piano salvato o non loggato */ }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bump]);
+
+  // Sblocco immediato: dopo un acquisto ricetta ricarica ricette + stato abbonamento.
+  useEffect(() => {
+    const onUpd = () => setBump((n) => n + 1);
+    window.addEventListener("mikilab-entitlements-updated", onUpd);
+    return () => window.removeEventListener("mikilab-entitlements-updated", onUpd);
   }, []);
 
   const recipeById = useMemo(() => Object.fromEntries(recipes.map((r) => [r.id, r])), [recipes]);
