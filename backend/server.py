@@ -3444,6 +3444,7 @@ WELCOME_POST_TEXT = (
     "\u2022 Networking: l'opportunit\u00e0 di entrare in contatto con colleghi di tutta Italia.\n\n"
     "L'arte del pane, dei lievitati e della pizza unisce tradizione e innovazione, e da oggi abbiamo una casa comune per far valere il nostro mestiere.\n\n"
     "Mettetevi comodi, presentatevi nei commenti qui sotto e diteci da dove lavorate e qual \u00e8 la vostra specialit\u00e0!\n\n"
+    "E mi raccomando: pubblicate anche le foto dei VOSTRI prodotti \u2014 pane, lievitati, pizze e dolci \u2014 mostrateli con orgoglio! Aggiungete colleghi e amici, seguite chi vi ispira e leggete i post nella vostra lingua: la community \u00e8 in italiano, tedesco e inglese. \U0001F1EE\U0001F1F9\U0001F1E9\U0001F1EA\U0001F1EC\U0001F1E7\n\n"
     "Buon lavoro e buona lievitazione a tutti! \U0001F33E\U0001F4AA"
 )
 
@@ -3456,6 +3457,7 @@ WELCOME_POST_DE = (
     "\u2022 Updates & Ressourcen: exklusive Inhalte und Werkzeuge zur Optimierung der Arbeit.\n"
     "\u2022 Networking: Kontakt zu Kolleginnen und Kollegen.\n\n"
     "Macht es euch bequem, stellt euch in den Kommentaren vor und sagt uns, wo ihr arbeitet und was eure Spezialität ist!\n\n"
+    "Und ganz wichtig: postet auch Fotos EURER Produkte — Brot, Hefegebäck, Pizza und Süßes — zeigt sie mit Stolz! Fügt Kolleginnen und Freunde hinzu, folgt denen, die euch inspirieren, und lest die Beiträge in eurer Sprache: die Community ist auf Italienisch, Deutsch und Englisch. \U0001F1EE\U0001F1F9\U0001F1E9\U0001F1EA\U0001F1EC\U0001F1E7\n\n"
     "Gutes Gelingen und gute Gare! \U0001F33E\U0001F4AA"
 )
 
@@ -3468,23 +3470,33 @@ WELCOME_POST_EN = (
     "\u2022 Updates & resources: exclusive content and tools to optimise your work.\n"
     "\u2022 Networking: the chance to connect with colleagues.\n\n"
     "Make yourself at home, introduce yourself in the comments and tell us where you work and what your specialty is!\n\n"
+    "And most importantly: post photos of YOUR products too — bread, leavened cakes, pizza and pastries — show them with pride! Add colleagues and friends, follow those who inspire you, and read posts in your own language: the community is in Italian, German and English. \U0001F1EE\U0001F1F9\U0001F1E9\U0001F1EA\U0001F1EC\U0001F1E7\n\n"
     "Good work and good proofing to all! \U0001F33E\U0001F4AA"
 )
 
 
+WELCOME_VERSION = 2
+WELCOME_IMAGE = "/michele-casual.jpg"
+
+
 async def seed_welcome_post():
-    """Crea (una sola volta) il post di benvenuto ufficiale nella Community + assicura le traduzioni."""
+    """Crea/aggiorna (versionato) il post di benvenuto ufficiale nella Community."""
     exists = await db.community_posts.find_one({"text": {"$regex": "^Benvenuti nella community di MikiLab"}})
     if exists:
-        if not exists.get("text_de") or not exists.get("text_en"):
-            await db.community_posts.update_one({"id": exists["id"]}, {"$set": {"text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN}})
+        if exists.get("welcome_version") != WELCOME_VERSION:
+            await db.community_posts.update_one({"id": exists["id"]}, {"$set": {
+                "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN,
+                "image_url": WELCOME_IMAGE, "author_name": "Michele — MikiLab", "pinned": True,
+                "welcome_version": WELCOME_VERSION,
+            }})
         return
     admin = await db.users.find_one({"email": "admin@mikilab.de"})
     aid = (admin or {}).get("id") or (admin or {}).get("user_id") or "admin"
     doc = {
         "id": str(uuid.uuid4()), "author_id": aid, "author_name": "Michele — MikiLab",
-        "category": "consiglio", "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN, "image_url": None,
-        "created_at": now_iso(), "likes": [], "comments": [], "pinned": True,
+        "category": "consiglio", "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN,
+        "image_url": WELCOME_IMAGE,
+        "created_at": now_iso(), "likes": [], "comments": [], "pinned": True, "welcome_version": WELCOME_VERSION,
     }
     await db.community_posts.insert_one(doc)
 

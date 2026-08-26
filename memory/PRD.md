@@ -1340,3 +1340,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **PianoProduzioneAI/GOAL_TEXT + select capo-plan-goal**: aggiunti "grandi" (Solo grandi lievitati) e "lotti" (Pochi impasti, grandi lotti). Totale 6 obiettivi, tutti passati all'AI via note (trilingue).
 - Verificato: select con 6 opzioni [qualita,resa,tempo,spreco,grandi,lotti].
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont18 (2026-06) — Post di benvenuto Community aggiornato (v2)
+- **backend/server.py**: WELCOME_POST_TEXT/DE/EN arricchiti (invito a pubblicare i PROPRI prodotti + aggiungere colleghi/amici + leggere in IT/DE/EN). seed_welcome_post reso VERSIONATO (WELCOME_VERSION=2): aggiorna il post esistente con nuovo testo + image_url="/michele-casual.jpg" + author "Michele — MikiLab", pinned.
+- **public/michele-casual.jpg** (nuovo): avatar 3D di Michele in tuta casual (generato via Nano Banana da michele-avatar.jpg).
+- Verificato: API welcome post con image /michele-casual.jpg + testo prodotti/amici/3 lingue; render in Community con avatar casual.
+- NB: la lettura post in 3 lingue usa il toggle lingua esistente (text_de/text_en). Un vero sistema "aggiungi amici" (follow/social graph) NON è implementato: solo invitato nel messaggio.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
