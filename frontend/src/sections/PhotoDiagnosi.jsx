@@ -11,6 +11,7 @@ import PrintHeader from "@/components/PrintHeader";
 import { addXP } from "@/lib/level";
 import { HeroAvatar } from "@/components/MikiAvatar";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
+import LabTour from "@/components/LabTour";
 
 // Downscale + compress an image file to a base64 JPEG (keeps payload small)
 function fileToCompressedBase64(file, maxDim = 1024, quality = 0.8) {
@@ -84,6 +85,8 @@ export default function PhotoDiagnosi() {
   const [recent, setRecent] = useState([]);
   const [openRec, setOpenRec] = useState(null);
   const { t, lang } = useLang();
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const [tourForce, setTourForce] = useState(0);
 
   const MODES = [
     { id: "difetti", label: t("photo_mode_defects"), desc: t("photo_mode_defects_desc"), Icon: Bug },
@@ -179,6 +182,18 @@ export default function PhotoDiagnosi() {
 
   return (
     <div className="pb-24">
+      <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_diag_tour_v1"
+        labels={{ skip: tri("Salta", "Überspringen", "Skip"), next: tri("Avanti", "Weiter", "Next"), done: tri("Ho capito!", "Verstanden!", "Got it!") }}
+        steps={[
+          { target: null, title: tri("Come funziona la Diagnosi 👋", "So funktioniert die Diagnose 👋", "How Diagnosis works 👋"),
+            body: tri("In 3 passi analizzo il tuo pane da una foto. Ti dico cosa non va e come rimediare.", "In 3 Schritten analysiere ich dein Brot per Foto. Ich sage dir, was nicht stimmt und wie du es behebst.", "In 3 steps I analyse your bread from a photo. I tell you what's wrong and how to fix it.") },
+          { target: "photo-modes", title: tri("1 · Scegli cosa analizzare", "1 · Wähle die Analyse", "1 · Choose what to analyse"),
+            body: tri("Difetti e rimedi, stato dell'impasto, ingredienti, idee o macchine: scegli la modalità giusta.", "Fehler & Lösungen, Teigzustand, Zutaten, Ideen oder Maschinen: wähle den passenden Modus.", "Defects & fixes, dough state, ingredients, ideas or machines: pick the right mode.") },
+          { target: "photo-dual", title: tri("2 · Scatta o carica la foto", "2 · Foto machen oder hochladen", "2 · Take or upload the photo"),
+            body: tri("Fotografa il pane (o carica un video): più è nitida la foto, più precisa è l'analisi.", "Fotografiere das Brot (oder lade ein Video hoch): je schärfer, desto genauer die Analyse.", "Photograph the bread (or upload a video): the sharper the photo, the more precise the analysis.") },
+          { target: "photo-analyze-btn", title: tri("3 · Analizza", "3 · Analysieren", "3 · Analyse"),
+            body: tri("Premi «Analizza»: ti do il risultato con cause e rimedi. È un'analisi al volo — resta salvata tra le Diagnosi recenti.", "Drücke „Analysieren“: du bekommst Ursachen und Lösungen. Es wird bei den letzten Diagnosen gespeichert.", "Press 'Analyse': I give causes and fixes. It's saved under recent Diagnoses.") },
+        ]} />
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#4A7265] to-[#325046] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <HeroAvatar />
@@ -186,9 +201,13 @@ export default function PhotoDiagnosi() {
         <h1 className="font-display text-2xl font-bold">{t("photo_title")}</h1>
         <div className="h-1 w-12 rounded-full bg-[#C88A2B] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("photo_subtitle")}</p>
+        <button data-testid="diag-tour-replay" onClick={() => setTourForce((n) => n + 1)}
+          className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold bg-white/15 hover:bg-white/25 backdrop-blur px-3 py-1.5 rounded-lg active:scale-95 transition-all">
+          {tri("Come si fa?", "Wie geht's?", "How to?")}
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mb-3">
+      <div data-testid="photo-modes" className="grid grid-cols-2 gap-2 mb-3">
         {MODES.map(({ id, label, desc, Icon }) => (
           <button
             key={id}

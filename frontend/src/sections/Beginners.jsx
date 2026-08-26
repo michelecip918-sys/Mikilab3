@@ -9,6 +9,7 @@ import { API, recipesApi } from "@/lib/api";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import AvatarBubbles from "@/components/AvatarBubbles";
+import LabTour from "@/components/LabTour";
 
 const HOME_DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
@@ -344,9 +345,22 @@ export default function Beginners() {
     try { localStorage.setItem(PKEY, JSON.stringify(next)); } catch { /* */ }
   };
   const doneCount = PATH.filter((_, i) => pathDone[i]).length;
+  const [tourForce, setTourForce] = useState(0);
 
   return (
     <div data-testid="beginners-page" className="space-y-4 pb-4">
+      <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_impara_tour_v1"
+        labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip"), next: tri3(lang, "Avanti", "Weiter", "Next"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!") }}
+        steps={[
+          { target: null, title: tri3(lang, "Benvenuto in Impara 👋", "Willkommen bei Lernen 👋", "Welcome to Learn 👋"),
+            body: tri3(lang, "Qui impari a fare il pane a casa, passo dopo passo. Ti mostro come muoverti.", "Hier lernst du Schritt für Schritt Brot backen. Ich zeige dir, wie es geht.", "Here you learn to bake bread at home, step by step. Let me show you around.") },
+          { target: "beginner-path", title: tri3(lang, "1 · Segui il percorso", "1 · Folge dem Weg", "1 · Follow the path"),
+            body: tri3(lang, "Spunta i 4 passi del tuo percorso: ingredienti base, ricetta del giorno, primo piano e quiz.", "Hake die 4 Schritte ab: Grundzutaten, Rezept des Tages, erster Plan und Quiz.", "Tick the 4 steps: basic ingredients, recipe of the day, first plan and quiz.") },
+          { target: "home-planner", title: tri3(lang, "2 · Pianifica il pane a casa", "2 · Plane dein Brot zu Hause", "2 · Plan your home bake"),
+            body: tri3(lang, "Scegli una ricetta e quando ti serve pronto: ti do orari e lista della spesa, semplici.", "Wähle ein Rezept und wann es fertig sein soll: du bekommst Zeiten und Einkaufsliste.", "Pick a recipe and when you need it ready: I give you times and a shopping list.") },
+          { target: "quiz-panel", title: tri3(lang, "3 · Metti alla prova", "3 · Teste dich", "3 · Test yourself"),
+            body: tri3(lang, "Fai il Quiz del Fornaio e sblocca i livelli. Impari divertendoti!", "Mach das Bäcker-Quiz und schalte Level frei. Lernen mit Spaß!", "Take the Baker's Quiz and unlock levels. Learn while having fun!") },
+        ]} />
       <AvatarBubbles variant="impara" />
       <div className="rounded-2xl p-5 bg-[#6B8E62]/12 border border-[#6B8E62]/30">
         <div className="flex items-center gap-2 mb-2">
@@ -354,6 +368,10 @@ export default function Beginners() {
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("beginners_title")}</h2>
         </div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_intro")}</p>
+        <button data-testid="impara-tour-replay" onClick={() => setTourForce((n) => n + 1)}
+          className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#4d6b45] dark:text-[#9ec48f] bg-white dark:bg-[#232A31] border border-[#6B8E62]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
+          {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
+        </button>
         {(() => {
           const lvl = getLevelProgress((i, d, e) => tri3(lang, i, d, e));
           return (

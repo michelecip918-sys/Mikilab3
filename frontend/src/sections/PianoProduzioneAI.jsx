@@ -96,6 +96,25 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [toolPrefs, setToolPrefs] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_prefs") || "{}"); } catch { return {}; } });
   const [editTools, setEditTools] = useState(false);
   const [tourForce, setTourForce] = useState(0);
+  const [toolUsage, setToolUsage] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_usage") || "{}"); } catch { return {}; } });
+  const openToolTracked = (id) => {
+    let next;
+    try {
+      const cur = JSON.parse(localStorage.getItem("mikilab_tool_usage") || "{}");
+      next = { ...cur, [id]: (cur[id] || 0) + 1 };
+      localStorage.setItem("mikilab_tool_usage", JSON.stringify(next));
+    } catch { next = { ...toolUsage, [id]: (toolUsage[id] || 0) + 1 }; }
+    setToolUsage(next);
+    onOpenTool && onOpenTool(id);
+  };
+  const favTools = useMemo(() => {
+    const byId = Object.fromEntries(TOOLS.map((tl) => [tl.id, tl]));
+    return Object.entries(toolUsage)
+      .filter(([id, c]) => byId[id] && c > 0)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([id]) => byId[id]);
+  }, [toolUsage]);
   const savePrefs = (p) => { setToolPrefs(p); try { localStorage.setItem("mikilab_tool_prefs", JSON.stringify(p)); } catch { /* */ } };
   const orderedTools = useMemo(() => {
     const order = Array.isArray(toolPrefs.order) ? toolPrefs.order : [];
@@ -402,7 +421,18 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
   return (
     <div className="pb-40">
-      {onOpenTool && <LabTour force={tourForce} onClose={() => setTourForce(0)} />}
+      {onOpenTool && <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_lab_tour_v1"
+        labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip"), next: tri3(lang, "Avanti", "Weiter", "Next"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!") }}
+        steps={[
+          { target: null, title: tri3(lang, "Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋"),
+            body: tri3(lang, "Ti mostro in 3 passi come creare il tuo primo Piano di Produzione. Meno di un minuto!", "In 3 Schritten zeige ich dir deinen ersten Produktionsplan. Weniger als eine Minute!", "I'll show you in 3 steps how to create your first Production Plan. Under a minute!") },
+          { target: "capo-source-choice", title: tri3(lang, "1 · Scegli le ricette", "1 · Rezepte wählen", "1 · Pick the recipes"),
+            body: tri3(lang, "Tocca «Scegli ricette ora» e aggiungi almeno una ricetta con la quantità. È l'unica cosa davvero obbligatoria.", "Tippe auf „Rezepte jetzt wählen“ und füge mind. ein Rezept mit Menge hinzu. Das ist das Einzige, was Pflicht ist.", "Tap 'Pick recipes now' and add at least one recipe with a quantity. That's the only required thing.") },
+          { target: "capo-modules", title: tri3(lang, "2 · Accendi gli extra (facoltativo)", "2 · Extras aktivieren (optional)", "2 · Turn on extras (optional)"),
+            body: tri3(lang, "Con gli interruttori ON/OFF aggiungi solo ciò che ti serve: orari, freezer, costi… Tocca la «i» e ti spiego ognuno.", "Mit den ON/OFF-Schaltern fügst du nur hinzu, was du brauchst. Tippe auf „i“ für Erklärungen.", "With the ON/OFF switches add only what you need. Tap the 'i' for an explanation of each.") },
+          { target: "capo-generate", title: tri3(lang, "3 · Genera il piano", "3 · Plan erstellen", "3 · Generate the plan"),
+            body: tri3(lang, "Premi «Genera il piano»: creo la sequenza degli impasti, gli orari e la lista. Poi puoi stamparlo o salvarlo.", "Drücke „Plan erstellen“: ich erstelle Teig-Reihenfolge, Zeiten und Liste. Danach drucken oder speichern.", "Press 'Generate the plan': I build the dough sequence, times and list. Then print or save it.") },
+        ]} />}
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#4A7265] to-[#33564E] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <Sparkles className="w-7 h-7 mb-2" />
@@ -516,6 +546,20 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
+            {favTools.length > 0 && !editTools && (
+              <div data-testid="tools-favorites" className="mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-1.5">⭐ {tri3(lang, "I TUOI PREFERITI", "DEINE FAVORITEN", "YOUR FAVORITES")}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {favTools.map(({ id, Icon, it, de, en }) => (
+                    <div key={id} data-testid={`fav-tool-${id}`} onClick={() => openToolTracked(id)}
+                      className="relative flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/10 border border-[#C88A2B]/40 rounded-2xl p-3 text-center active:scale-95 hover:border-[#C88A2B]/70 transition-all min-h-[70px] cursor-pointer">
+                      <Icon className="w-5 h-5 text-[#C88A2B]" />
+                      <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{tri3(lang, it, de, en)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="flex items-center justify-between mb-0.5">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f]">
                 {tri3(lang, "APRI UNO STRUMENTO", "WERKZEUG ÖFFNEN", "OPEN A TOOL")}
@@ -536,7 +580,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 const label = tri3(lang, it, de, en);
                 const isHidden = hiddenTools.has(id);
                 return (
-                  <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => { if (!editTools) onOpenTool(id); }}
+                  <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => { if (!editTools) openToolTracked(id); }}
                     className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-default border-dashed border-[#5E8B7E]/50" : "cursor-pointer border-[#D7E1DB] dark:border-[#38424B] active:scale-95 hover:border-[#5E8B7E]/60"} ${isHidden ? "opacity-40" : ""}`}>
                     {editTools ? (
                       <>

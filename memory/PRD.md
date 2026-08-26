@@ -1262,3 +1262,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Strumenti personalizzabili** (PianoProduzioneAI): estratto array `TOOLS`; preferenze in localStorage `mikilab_tool_prefs` {order[], hidden[]}. Pulsante `tools-edit-toggle` ("Personalizza/Fatto"): in edit ogni tile ha occhio nascondi (`tool-hide-*`) + frecce riordina (`tool-up/down-*`). Fuori edit mostra solo i visibili nell'ordine scelto + nota `tools-hidden-note`.
 - Verificato via screenshot: tour auto-mostrato e chiuso, highlight su "Genera", nascondi/riordina persistiti.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont4 (2026-06) — Preferiti automatici + Tour multi-sezione + fix header
+- **Header (fix logo coperto)**: brand block ora `flex-1 min-w-0` + wordmark `truncate`; lang buttons px ridotto e gap-1 → il logo/"MikiLab" non finisce più sotto i tasti IT/DE/EN. Verificato a 360px.
+- **I tuoi preferiti**: fila `tools-favorites` sopra "Apri uno strumento" con i 3 strumenti più aperti (usage in localStorage `mikilab_tool_usage`, scrittura sincrona in `openToolTracked`). Chip `fav-tool-<id>`.
+- **Tour riutilizzabile**: `LabTour.jsx` reso generico (props steps/storageKey/force/labels). Tour aggiunto a: Laboratorio (`mikilab_lab_tour_v1`), Diagnosi Foto (`mikilab_diag_tour_v1`, target photo-modes/photo-dual/photo-analyze-btn), Impara/Beginners (`mikilab_impara_tour_v1`, target beginner-path/home-planner/quiz-panel). Ogni sezione ha pulsante replay "Come si fa?".
+- Verificato via screenshot (login admin): header ok, preferiti (Timer/Miei Dati/pH), tour diagnosi auto-mostrato.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

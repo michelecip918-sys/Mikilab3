@@ -30,17 +30,17 @@ export default function Header() {
       <div data-testid="flag-strip" aria-hidden className="it-de-ribbon" />
 
       <div className="px-4 py-3 flex items-center justify-between gap-2">
-      <div className="flex items-center gap-2.5 min-w-0">
+      <div className="flex items-center gap-2.5 min-w-0 flex-1">
         <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#232A31] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-full h-full object-cover" />
         </div>
         <div className="min-w-0 leading-none">
-          <p className="font-display text-lg font-extrabold tracking-tight text-[#2D5A4C] dark:text-[#EAF0EC]">MikiLab</p>
+          <p className="font-display text-lg font-extrabold tracking-tight text-[#2D5A4C] dark:text-[#EAF0EC] truncate">MikiLab</p>
           <p className="hidden min-[380px]:block text-[10px] font-semibold text-[#7E8A93] truncate">{t("brand_subtitle")}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 shrink-0">
+      <div className="flex items-center gap-1 shrink-0">
         {/* Orologio (nascosto su schermi molto stretti per non coprire il titolo) */}
         <div data-testid="header-clock" className="hidden min-[420px]:flex items-center gap-1.5 bg-[#EAF0EC] dark:bg-[#2A323A] rounded-xl border border-[#D7E1DB] dark:border-[#38424B] px-2.5 py-1.5">
           <Clock className="w-3.5 h-3.5 text-[#5E8B7E]" />
@@ -60,7 +60,7 @@ export default function Header() {
               key={l}
               data-testid={`lang-${l}`}
               onClick={() => setLang(l)}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
+              className={`px-2 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
                 lang === l
                   ? "bg-[#5E8B7E] text-white shadow-sm"
                   : "text-[#7E8A93]"
