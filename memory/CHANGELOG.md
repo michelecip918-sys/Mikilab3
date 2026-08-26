@@ -132,3 +132,8 @@
   - FIX MEDIUM: post di benvenuto Community solo in IT → aggiunte versioni DE/EN (WELCOME_POST_DE/EN), _post_public ora espone text_de/text_en, Community.jsx localizza il testo del post.
 - Esito: nessun testo italiano residuo in EN/DE nelle funzioni delle Fasi 1-5.
 - Revisione ampia (10 punti) completata tranne Academy a livelli (in attesa di video/prezzi reali dall'utente).
+
+## v121 (2026-06) — Accenti bandiera + post Community Michele
+- Accenti bandiera con colori VERI (index.css .it-de-ribbon): Italia verde(#009246)-bianco-rosso(#CE2B37) + Germania nero-rosso(#DD0000)-oro/giallo(#FFCE00). Ora presenti giallo e rosso vero. Ribbon usato in header/slogan/footer/varie sezioni.
+- Post Community ufficiale di Michele: foto braccio/tatuaggio (/michele-real-lab.jpg) + buongiorno trilingue (text/text_de/text_en), autore "Michele — MikiLab", pinned. Inserito in community_posts; render localizzato da Community.jsx.
+- Verifica: screenshot Home (ribbon colori bandiera visibili, branding OK); post confermato via API (image_url + text_de/text_en).
