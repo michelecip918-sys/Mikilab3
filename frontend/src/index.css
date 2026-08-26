@@ -23,7 +23,7 @@ body {
 
 /* Firma MikiLab: nastro tricolore calmo Italia + Germania (verde → crema → rosso → oro → carbone) */
 .it-de-ribbon {
-  height: 4px;
+  height: 6px;
   width: 100%;
   /* Tricolore Italia (verde-bianco-rosso) + Germania (nero-rosso-oro) con colori veri */
   background: linear-gradient(90deg,
