@@ -198,64 +198,7 @@ export default function Home({ onNavigate }) {
         <p className="text-sm text-white/90 leading-snug mt-0.5">{t("brand_slogan")}</p>
       </div>
 
-      {/* News · Arte Bianca (curate dall'admin) */}
-      <HomeNews />
-
-      {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
-      <div data-testid="home-core">
-        <div className="flex items-center gap-2 mb-1 px-1">
-          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{L("Il cuore di MikiLab", "Das Herz von MikiLab", "The heart of MikiLab")}</h2>
-          <span className="text-[10px] font-bold uppercase tracking-wide text-[#C88A2B] bg-[#C88A2B]/15 border border-[#C88A2B]/40 px-2 py-0.5 rounded-full">{L("L'anima del sito", "Die Seele", "The soul")}</span>
-        </div>
-        <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3 ml-1" />
-
-        {/* Laboratorio — card grande in evidenza */}
-        <button data-testid="home-core-maestro" onClick={() => go("maestro")}
-          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#5E8B7E] to-[#33564E] ring-2 ring-[#C88A2B]/70 overflow-hidden">
-          <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-          <div className="flex items-center gap-3 mt-1">
-            <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-6 h-6" /></div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="font-display text-lg font-bold">{L("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}</h3>
-                <span className="text-[10px] font-bold bg-[#C88A2B] text-white px-2 py-0.5 rounded-full">PRO</span>
-              </div>
-              <p className="text-white/85 text-sm leading-snug">{L("Piano di produzione IA, costi, celle e impasti — tutto in un posto.", "KI-Produktionsplan, Kosten, Kammern und Teige — alles an einem Ort.", "AI production plan, costs, cells and doughs — all in one place.")}</p>
-            </div>
-            <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
-          </div>
-        </button>
-
-        <div className="grid grid-cols-2 gap-3">
-          <button data-testid="home-core-ricette" onClick={() => go("ricette")}
-            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#A64B2A] to-[#7c3820] min-h-[112px] flex flex-col gap-2">
-            <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
-            <p className="font-display text-base font-bold leading-tight">{L("Le Mie Ricette", "Meine Rezepte", "My Recipes")}</p>
-            <p className="text-[11px] text-white/85 leading-snug">{L("Le ricette col mio metodo", "Rezepte mit meiner Methode", "Recipes with my method")}</p>
-          </button>
-          <button data-testid="home-core-corsi" onClick={() => go("shop")}
-            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] min-h-[112px] flex flex-col gap-2">
-            <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><GraduationCap className="w-6 h-6" /></div>
-            <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
-            <p className="text-[11px] text-white/85 leading-snug">{L("Corsi online di Michele (in arrivo)", "Micheles Online-Kurse (bald)", "Michele's online courses (soon)")}</p>
-          </button>
-        </div>
-      </div>
-
-      {/* ===== CHIEDI AL MAESTRO ===== */}
-      <button data-testid="home-chat-btn" onClick={() => setChat(true)}
-        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white shadow-lg active:scale-98 transition-all">
-        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
-          <MessageCircle className="w-6 h-6" />
-        </div>
-        <div className="flex-1 min-w-0 text-left">
-          <h3 className="font-display text-lg font-bold">{t("home_chat_btn")}</h3>
-          <p className="text-white/85 text-sm">{t("home_chat_sub")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
-      </button>
-
-      {/* ===== SCOPRI MIKILAB: storytelling raccolto (richiudibile) ===== */}
+      {/* ===== SCOPRI MIKILAB: subito sotto lo slogan MikiLab ===== */}
       <div data-testid="home-story">
         <button data-testid="home-story-toggle" onClick={() => setStoryOpen((v) => !v)}
           className="w-full flex items-center gap-3 rounded-3xl p-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-lg active:scale-98 transition-all">
@@ -345,6 +288,63 @@ export default function Home({ onNavigate }) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* News · Arte Bianca (curate dall'admin) */}
+      <HomeNews />
+
+      {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
+      <div data-testid="home-core">
+        <div className="flex items-center gap-2 mb-1 px-1">
+          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{L("Il cuore di MikiLab", "Das Herz von MikiLab", "The heart of MikiLab")}</h2>
+          <span className="text-[10px] font-bold uppercase tracking-wide text-[#C88A2B] bg-[#C88A2B]/15 border border-[#C88A2B]/40 px-2 py-0.5 rounded-full">{L("L'anima del sito", "Die Seele", "The soul")}</span>
+        </div>
+        <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3 ml-1" />
+
+        {/* Laboratorio — card grande in evidenza */}
+        <button data-testid="home-core-maestro" onClick={() => go("maestro")}
+          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#5E8B7E] to-[#33564E] ring-2 ring-[#C88A2B]/70 overflow-hidden">
+          <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+          <div className="flex items-center gap-3 mt-1">
+            <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-6 h-6" /></div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="font-display text-lg font-bold">{L("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}</h3>
+                <span className="text-[10px] font-bold bg-[#C88A2B] text-white px-2 py-0.5 rounded-full">PRO</span>
+              </div>
+              <p className="text-white/85 text-sm leading-snug">{L("Piano di produzione IA, costi, celle e impasti — tutto in un posto.", "KI-Produktionsplan, Kosten, Kammern und Teige — alles an einem Ort.", "AI production plan, costs, cells and doughs — all in one place.")}</p>
+            </div>
+            <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
+          </div>
+        </button>
+
+        <div className="grid grid-cols-2 gap-3">
+          <button data-testid="home-core-ricette" onClick={() => go("ricette")}
+            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#A64B2A] to-[#7c3820] min-h-[112px] flex flex-col gap-2">
+            <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
+            <p className="font-display text-base font-bold leading-tight">{L("Le Mie Ricette", "Meine Rezepte", "My Recipes")}</p>
+            <p className="text-[11px] text-white/85 leading-snug">{L("Le ricette col mio metodo", "Rezepte mit meiner Methode", "Recipes with my method")}</p>
+          </button>
+          <button data-testid="home-core-corsi" onClick={() => go("shop")}
+            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] min-h-[112px] flex flex-col gap-2">
+            <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><GraduationCap className="w-6 h-6" /></div>
+            <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
+            <p className="text-[11px] text-white/85 leading-snug">{L("Corsi online di Michele (in arrivo)", "Micheles Online-Kurse (bald)", "Michele's online courses (soon)")}</p>
+          </button>
+        </div>
+      </div>
+
+      {/* ===== CHIEDI AL MAESTRO ===== */}
+      <button data-testid="home-chat-btn" onClick={() => setChat(true)}
+        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white shadow-lg active:scale-98 transition-all">
+        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
+          <MessageCircle className="w-6 h-6" />
+        </div>
+        <div className="flex-1 min-w-0 text-left">
+          <h3 className="font-display text-lg font-bold">{t("home_chat_btn")}</h3>
+          <p className="text-white/85 text-sm">{t("home_chat_sub")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
+      </button>
 
       {/* Condividi & Installa app */}
       <ShareInstall />
