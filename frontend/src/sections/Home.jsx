@@ -237,7 +237,7 @@ export default function Home({ onNavigate }) {
             className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] min-h-[112px] flex flex-col gap-2">
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><GraduationCap className="w-6 h-6" /></div>
             <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
-            <p className="text-[11px] text-white/85 leading-snug">{L("Impara da casa: video, quiz e basi", "Von zu Hause lernen: Videos, Quiz", "Learn from home: videos, quiz")}</p>
+            <p className="text-[11px] text-white/85 leading-snug">{L("Corsi online di Michele (in arrivo)", "Micheles Online-Kurse (bald)", "Michele's online courses (soon)")}</p>
           </button>
         </div>
       </div>
