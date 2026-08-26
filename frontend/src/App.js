@@ -27,7 +27,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
 import ambient from "@/lib/ambientMusic";
-import { recipePurchaseApi, subscriptionApi } from "@/lib/api";
+import { recipePurchaseApi, subscriptionApi, api } from "@/lib/api";
 import { toast } from "sonner";
 
 function App() {
@@ -79,8 +79,18 @@ function App() {
   // Ritorno da Stripe: conferma acquisto ricetta / abbonamento e pulisce l'URL.
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
-    const clean = () => { const u = new URL(window.location.href); ["recipe", "sub", "session_id"].forEach((k) => u.searchParams.delete(k)); window.history.replaceState({ tab: "home" }, "", u.toString()); };
-    if (p.get("recipe") === "success" && p.get("session_id")) {
+    const clean = () => { const u = new URL(window.location.href); ["recipe", "sub", "session_id", "bundle"].forEach((k) => u.searchParams.delete(k)); window.history.replaceState({ tab: "home" }, "", u.toString()); };
+    if (p.get("bundle") === "success" && p.get("session_id")) {
+      api.get(`/recipes/bundle/checkout/status/${p.get("session_id")}?lang=${lang}`).then((r) => {
+        if (r?.data?.paid) {
+          toast.success(tri("Pacchetto sbloccato! Ti abbiamo inviato il PDF via email 📧🥖", "Paket freigeschaltet! Wir haben dir das PDF per E-Mail geschickt 📧🥖", "Pack unlocked! We've emailed you the PDF 📧🥖"));
+          window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
+          setTab("ricette");
+        }
+        clean();
+      }).catch(clean);
+    } else if (p.get("bundle") === "cancel") { clean(); }
+    else if (p.get("recipe") === "success" && p.get("session_id")) {
       recipePurchaseApi.status(p.get("session_id")).then((r) => {
         if (r?.paid) {
           toast.success(tri("Ricetta sbloccata! Buon lavoro 👨‍🍳", "Rezept freigeschaltet! 👨‍🍳", "Recipe unlocked! 👨‍🍳"));

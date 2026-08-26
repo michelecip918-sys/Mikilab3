@@ -548,6 +548,26 @@ async def require_admin(user: dict = Depends(current_user)):
 
 # --- Accesso Academy ("Impara da Casa") + acquisto singolo ricette -----------
 RECIPE_PRICES = {"single": 499, "panettoni": 2999, "all": 14900}  # centesimi EUR
+# Pacchetti ricette per categoria (centesimi EUR)
+BUNDLE_DEFS = {
+    "pane": {"amount": 4000, "name": "Pacchetto Ricette Pane", "cat": "pane"},
+    "panini": {"amount": 2000, "name": "Pacchetto Ricette Panini", "cat": "panini"},
+    "snack": {"amount": 1000, "name": "Pacchetto Ricette Snack", "cat": "snack"},
+    "panettoni": {"amount": 5000, "name": "Pacchetto Grandi Lievitati (Panettoni & Colombe)", "cat": "panettoni"},
+}
+
+
+def _recipe_bundle(d) -> str:
+    if _is_panettone_recipe(d):
+        return "panettoni"
+    s = f"{d.get('category','')} {d.get('menu_category','')} {d.get('name','')}".lower()
+    if "panin" in s:
+        return "panini"
+    if "snack" in s or "grissini" in s or "taralli" in s or "cracker" in s:
+        return "snack"
+    if "pane" in s or "brot" in s or "bread" in s or "ciabatt" in s or "baguette" in s:
+        return "pane"
+    return "pane"
 DIAGNOSI_MONTHLY_LIMIT = 10  # per il piano "Impara da Casa" (home)
 
 
@@ -743,11 +763,14 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
             unlock_all = bool(ent.get("unlock_all"))
             unlock_pan = bool(ent.get("unlock_panettoni"))
             unlocked = set(ent.get("unlocked_recipes") or [])
+            unlocked_bundles = set(ent.get("unlocked_bundles") or [])
 
             def _visible(d):
                 if d.get("name") in DEMO_RECIPE_NAMES or unlock_all:
                     return True
                 if unlock_pan and _is_panettone_recipe(d):
+                    return True
+                if unlocked_bundles and _recipe_bundle(d) in unlocked_bundles:
                     return True
                 return d.get("id") in unlocked
             docs = [d if _visible(d) else _teaser_recipe(d) for d in docs]
@@ -2237,6 +2260,219 @@ async def create_checkout(body: CheckoutReq, user: dict = Depends(current_user))
     return {"url": session.url, "session_id": session.id}
 
 
+class BundleCheckoutReq(BaseModel):
+    bundle: str  # pane | panini | snack | panettoni
+    origin_url: str
+
+
+@api_router.post("/recipes/bundle-checkout")
+async def bundle_checkout(body: BundleCheckoutReq, user: dict = Depends(current_user)):
+    b = BUNDLE_DEFS.get(body.bundle)
+    if not b:
+        raise HTTPException(400, "Pacchetto non valido")
+    email = user["email"]
+    existing = _stripe.Customer.list(email=email, limit=1).data
+    customer = existing[0] if existing else _stripe.Customer.create(email=email)
+    session = _stripe.checkout.Session.create(
+        mode="payment",
+        customer=customer.id,
+        managed_payments={"enabled": False},
+        line_items=[{"price_data": {"currency": "eur", "unit_amount": b["amount"],
+                                    "product_data": {"name": b["name"]}}, "quantity": 1}],
+        success_url=body.origin_url.rstrip("/") + "/?bundle=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=body.origin_url.rstrip("/") + "/?bundle=cancel",
+        metadata={"email": email, "bundle": body.bundle, "kind": "bundle"},
+    )
+    await db.payment_transactions.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "bundle": body.bundle, "amount": b["amount"], "currency": "eur",
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
+
+def _r_field(d: dict, base: str, lang: str) -> str:
+    if lang == "de":
+        return d.get(f"{base}_de") or d.get(base) or ""
+    if lang == "en":
+        return d.get(f"{base}_en") or d.get(base) or ""
+    return d.get(base) or ""
+
+
+def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
+    """PDF con tutte le ricette del pacchetto (nome, ingredienti, procedimento, fasi)."""
+    from io import BytesIO
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import mm
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+    from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, PageBreak)
+
+    L = {"it": {"ing": "Ingredienti", "proc": "Procedimento", "phases": "Fasi di lavorazione",
+                "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab"},
+         "de": {"ing": "Zutaten", "proc": "Zubereitung", "phases": "Arbeitsschritte",
+                "notes": "Notizen", "flour": "Mehl", "hyd": "Hydration", "made": "Erstellt mit MikiLab"},
+         "en": {"ing": "Ingredients", "proc": "Method", "phases": "Work phases",
+                "notes": "Notes", "flour": "Flour", "hyd": "Hydration", "made": "Made with MikiLab"}}.get(lang, None)
+    if L is None:
+        L = {"ing": "Ingredienti", "proc": "Procedimento", "phases": "Fasi di lavorazione",
+             "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab"}
+
+    buf = BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4, topMargin=18 * mm, bottomMargin=18 * mm,
+                            leftMargin=18 * mm, rightMargin=18 * mm, title=bundle_name)
+    ss = getSampleStyleSheet()
+    ACC = colors.HexColor("#234b6e")
+    h1 = ParagraphStyle("h1", parent=ss["Title"], textColor=ACC, fontSize=26, spaceAfter=6)
+    h2 = ParagraphStyle("h2", parent=ss["Heading1"], textColor=ACC, fontSize=17, spaceBefore=6, spaceAfter=4)
+    sub = ParagraphStyle("sub", parent=ss["Normal"], textColor=colors.HexColor("#7E8A93"), fontSize=11, spaceAfter=8)
+    lab = ParagraphStyle("lab", parent=ss["Heading2"], textColor=colors.HexColor("#3f7cac"), fontSize=12, spaceBefore=8, spaceAfter=2)
+    body = ParagraphStyle("body", parent=ss["Normal"], fontSize=10.5, leading=15)
+
+    def esc(s):
+        return (str(s or "")).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    story = [Paragraph(esc(bundle_name), h1),
+             Paragraph("MikiLab · " + L["made"], sub), Spacer(1, 6 * mm)]
+
+    for i, r in enumerate(recipes):
+        if i > 0:
+            story.append(PageBreak())
+        name = _r_field(r, "name", lang) or r.get("name") or ""
+        story.append(Paragraph(esc(name), h2))
+        rn = _r_field(r, "real_name", lang)
+        if rn:
+            story.append(Paragraph(esc(rn), sub))
+        ft = _r_field(r, "flour_type", lang)
+        meta = []
+        if ft:
+            meta.append(f"{L['flour']}: {esc(ft)}")
+        if r.get("hydration_percent"):
+            meta.append(f"{L['hyd']}: {esc(r.get('hydration_percent'))}%")
+        if meta:
+            story.append(Paragraph(" · ".join(meta), body))
+
+        # Ingredienti base + extra
+        ing_lines = []
+        for key, ilabel in [("flour_grams", "Farina"), ("water_grams", "Acqua"),
+                            ("sourdough_grams", "Lievito madre"), ("salt_grams", "Sale")]:
+            v = r.get(key)
+            if v:
+                ing_lines.append(f"{ilabel}: {esc(v)} g")
+        for ex in (r.get("extra_ingredients") or []):
+            nm = ex.get("name") or ""
+            pc = ex.get("percent")
+            gr = ex.get("grams")
+            det = []
+            if gr:
+                det.append(f"{esc(gr)} g")
+            if pc:
+                det.append(f"{esc(pc)}%")
+            ing_lines.append(f"{esc(nm)}" + (f" — {' · '.join(det)}" if det else ""))
+        if ing_lines:
+            story.append(Paragraph(L["ing"], lab))
+            story.append(Paragraph("<br/>".join(ing_lines), body))
+
+        proc = _r_field(r, "procedure", lang)
+        if proc:
+            story.append(Paragraph(L["proc"], lab))
+            story.append(Paragraph(esc(proc).replace("\n", "<br/>"), body))
+
+        phases = r.get("work_phases") or []
+        if phases:
+            story.append(Paragraph(L["phases"], lab))
+            pl = []
+            for ph in phases:
+                t = ph.get("title") or ph.get("name") or ""
+                de = ph.get("desc") or ph.get("detail") or ""
+                pl.append(f"<b>{esc(t)}</b>" + (f" — {esc(de)}" if de else ""))
+            story.append(Paragraph("<br/>".join(pl), body))
+
+        notes = _r_field(r, "notes", lang)
+        if notes:
+            story.append(Paragraph(L["notes"], lab))
+            story.append(Paragraph(esc(notes).replace("\n", "<br/>"), body))
+
+    doc.build(story)
+    return buf.getvalue()
+
+
+def _bundle_email_html(bundle_name: str, lang: str) -> str:
+    if lang == "de":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+                f"<h2 style='color:#234b6e'>Danke für deinen Einkauf! 🥖</h2>"
+                f"<p>Dein Paket <b>{bundle_name}</b> ist freigeschaltet. Alle Rezepte findest du "
+                f"jetzt in deinem Labor in der MikiLab-App.</p>"
+                f"<p>Im Anhang findest du die <b>PDF-Datei</b> mit allen Rezepten des Pakets zum Ausdrucken.</p>"
+                f"<p style='color:#888;font-size:12px'>MikiLab · Das Labor von Michele</p></div>")
+    if lang == "en":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+                f"<h2 style='color:#234b6e'>Thank you for your purchase! 🥖</h2>"
+                f"<p>Your <b>{bundle_name}</b> pack is unlocked. All recipes are now available "
+                f"in your lab inside the MikiLab app.</p>"
+                f"<p>Attached you'll find a <b>PDF</b> with all the recipes in the pack, ready to print.</p>"
+                f"<p style='color:#888;font-size:12px'>MikiLab · Michele's Lab</p></div>")
+    return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+            f"<h2 style='color:#234b6e'>Grazie per il tuo acquisto! 🥖</h2>"
+            f"<p>Il pacchetto <b>{bundle_name}</b> è stato sbloccato. Trovi tutte le ricette "
+            f"nel tuo laboratorio, dentro l'app MikiLab.</p>"
+            f"<p>In allegato trovi un <b>PDF</b> con tutte le ricette del pacchetto, pronto da stampare.</p>"
+            f"<p style='color:#888;font-size:12px'>MikiLab · Il Laboratorio di Michele</p></div>")
+
+
+async def _bundle_fulfill(session_obj, lang: str = "it"):
+    """Sblocca il pacchetto, marca pagato e invia email Resend con PDF (idempotente)."""
+    sid = session_obj.get("id")
+    meta = session_obj.get("metadata") or {}
+    tx = await db.payment_transactions.find_one({"session_id": sid})
+    email = (tx or {}).get("email") or meta.get("email")
+    bundle = (tx or {}).get("bundle") or meta.get("bundle")
+    if not email or bundle not in BUNDLE_DEFS:
+        return
+    email = email.strip().lower()
+    already_paid = bool(tx and tx.get("payment_status") == "paid")
+    # Sblocco entitlement (sempre idempotente via $addToSet)
+    await db.entitlements.update_one({"email": email},
+        {"$addToSet": {"unlocked_bundles": bundle},
+         "$set": {"email": email, "updated_at": now_iso()}}, upsert=True)
+    await db.payment_transactions.update_one({"session_id": sid},
+        {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
+    if already_paid:
+        return  # email già inviata in un fulfillment precedente
+    # Genera PDF + invia email (best-effort)
+    if not RESEND_API_KEY:
+        return
+    try:
+        b = BUNDLE_DEFS[bundle]
+        docs = await db.recipes.find({"collection_name": "mikilab"}, {"_id": 0}).to_list(1000)
+        recipes = [d for d in docs if _recipe_bundle(d) == b["cat"]]
+        recipes.sort(key=lambda d: (d.get("name") or "").lower())
+        pdf_bytes = await asyncio.to_thread(_build_bundle_pdf, recipes, b["name"], lang)
+        subj = {"de": f"MikiLab · Dein Paket: {b['name']}",
+                "en": f"MikiLab · Your pack: {b['name']}"}.get(lang, f"MikiLab · Il tuo pacchetto: {b['name']}")
+        fname = (b["cat"] + "_mikilab.pdf")
+        params = {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [email], "subject": subj,
+                  "html": _bundle_email_html(b["name"], lang),
+                  "attachments": [{"filename": fname, "content": list(pdf_bytes)}]}
+        await asyncio.to_thread(_resend.Emails.send, params)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"bundle email/pdf failed: {e}")
+
+
+@api_router.get("/recipes/bundle/checkout/status/{session_id}")
+async def bundle_checkout_status(session_id: str, lang: str = "it", user: dict = Depends(current_user)):
+    try:
+        s = _stripe.checkout.Session.retrieve(session_id)
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    paid = s.get("payment_status") == "paid"
+    if paid:
+        await _bundle_fulfill(s, lang=lang)
+    return {"payment_status": s.get("payment_status"), "paid": paid}
+
+
+
+
+
 async def _grant_from_email(email, source="stripe", days=None, tier="lab"):
     """Concede accesso. tier='lab' → PRO completo (laboratorio). tier='home' → solo Academy 'Impara da Casa'."""
     email = (email or "").strip().lower()
@@ -2284,6 +2520,7 @@ async def subscription_status(user: Optional[dict] = Depends(optional_user)):
             "unlock_all": bool((ent or {}).get("unlock_all")),
             "unlock_panettoni": bool((ent or {}).get("unlock_panettoni")),
             "unlocked_recipes": list((ent or {}).get("unlocked_recipes") or []),
+            "unlocked_bundles": list((ent or {}).get("unlocked_bundles") or []),
             "diagnosi_used": diag_used,
             "diagnosi_limit": (None if pro else (DIAGNOSI_MONTHLY_LIMIT if academy else 0))}
 
@@ -2323,6 +2560,8 @@ async def stripe_webhook(request: Request):
             await _academy_fulfill(obj)
         elif meta.get("recipe_kind"):
             await _recipe_fulfill(obj)
+        elif meta.get("kind") == "bundle" and email and meta.get("bundle") in BUNDLE_DEFS:
+            await _bundle_fulfill(obj, lang="it")
         else:
             await db.payment_transactions.update_one({"session_id": obj.get("id")},
                 {"$set": {"payment_status": "paid", "paid_at": now_iso()}})

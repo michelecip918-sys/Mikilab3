@@ -1377,3 +1377,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **MachinePark.jsx**: sezione Preset (chip applica preset + "Salva attuali" via prompt + elimina preset utente).
 - Verificato: 4 preset builtin; "Linea Pane" attiva 4 macchine (count 4 attivi), persistite.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont23 (2026-06) — Fix checkout pacchetti + Email/PDF post-acquisto (Resend)
+- **FIX P0 `/api/recipes/bundle-checkout` (Errore 500)**: mancava `managed_payments={"enabled": False}` nella Session.create (Managed Payments attivo sull'account Stripe richiede il product tax code). Aggiunto → il checkout genera l'URL Stripe (verificato via curl, ritorna cs_live_...). NB: chiave Stripe in modalità LIVE.
+- **Email + PDF post-acquisto pacchetto (Resend)**: al pagamento completato viene inviata un'email (IT/DE/EN) con allegato un PDF di TUTTE le ricette del pacchetto (nome, ingredienti, procedimento, fasi, note). Libreria `reportlab==4.2.5`. Funzioni: `_build_bundle_pdf`, `_bundle_email_html`, `_bundle_fulfill` (idempotente: sblocca `unlocked_bundles`, marca `paid`, invia email solo la prima volta).
+- **Fulfillment doppio canale**: `POST /api/webhook/stripe` (checkout.session.completed → `_bundle_fulfill`) + nuovo `GET /api/recipes/bundle/checkout/status/{session_id}?lang=` (polling al ritorno da Stripe, affidabile anche senza webhook configurato in preview).
+- **Frontend** (`App.js`): gestione ritorno `?bundle=success&session_id=...` → polling status, toast "Pacchetto sbloccato + PDF via email", dispatch `mikilab-entitlements-updated`, vai a Ricette; pulizia URL (aggiunto `bundle` alle chiavi). Import `api` da lib.
+- **Test**: PDF generato per tutti e 4 i pacchetti in IT/DE/EN (header %PDF- valido, 49/18/10/17 ricette). Resend accetta l'allegato (test su delivered@resend.dev → id ricevuto). Status endpoint 404 su sessione inesistente. Non testabile un pagamento LIVE reale (serve carta).
+- NB: PREVIEW → REDEPLOY per mikilab.de. Webhook Stripe LIVE: verificare che l'endpoint `/api/webhook/stripe` sia registrato nel dashboard con il WEBHOOK_SECRET corretto per l'account attuale.

@@ -12,12 +12,14 @@ boto3==1.43.72
 botocore==1.43.72
 certifi==2026.7.22
 cffi==2.1.1
+chardet==7.6.0
 charset-normalizer==3.5.1
 click==8.4.2
 cryptography==50.0.0
 distro==1.9.0
 dnspython==2.8.0
 ecdsa==0.19.2
+elevenlabs==2.64.0
 email-validator==2.3.0
 emergentintegrations==0.2.0
 execnet==2.1.2
@@ -98,6 +100,7 @@ pytokens==0.4.1
 PyYAML==6.0.3
 referencing==0.37.0
 regex==2026.7.19
+reportlab==4.2.5
 requests==2.34.2
 requests-oauthlib==2.0.0
 resend==2.37.0
@@ -126,4 +129,3 @@ watchfiles==1.2.0
 websockets==16.1.1
 yarl==1.24.5
 zipp==4.1.0
-elevenlabs==2.64.0

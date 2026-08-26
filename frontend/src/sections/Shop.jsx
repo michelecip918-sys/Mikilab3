@@ -13,10 +13,20 @@ export default function Shop({ hideCourses = false }) {
   const [data, setData] = useState({ enabled: false, products: [] });
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [ent, setEnt] = useState(null);
 
   useEffect(() => {
     api.get("/shop/products").then((r) => setData(r.data)).catch(() => {});
-  }, []);
+    if (user) api.get("/subscription/status").then((r) => setEnt(r.data)).catch(() => {});
+  }, [user]);
+
+  const buyBundle = async (bundle) => {
+    if (!user) { setAuthOpen(true); return; }
+    try {
+      const d = await api.post("/recipes/bundle-checkout", { bundle, origin_url: window.location.origin }).then((r) => r.data);
+      if (d.url) window.location.href = d.url;
+    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again")); }
+  };
 
   const buyRecipes = async (kind) => {
     if (!user) { setAuthOpen(true); return; }
@@ -95,33 +105,35 @@ export default function Shop({ hideCourses = false }) {
             <BookOpen className="w-5 h-5 text-[#3f7cac]" />
             <span className="text-[11px] font-bold uppercase tracking-wide text-[#3f7cac]">{tri("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
           </div>
-          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Il Ricettario di Michele", "Micheles Rezeptbuch", "Michele's Recipe Book")}</h2>
+          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Pacchetti Ricette di Michele", "Micheles Rezept-Pakete", "Michele's Recipe Packs")}</h2>
           <p className="text-sm text-[#7E8A93] mt-1 leading-snug">
-            {tri("Acquista le mie ricette complete (dosi, procedimento, fasi) e usale anche nel Piano di Produzione IA del tuo laboratorio.",
-              "Kaufe meine vollständigen Rezepte (Mengen, Ablauf, Phasen) und nutze sie auch im KI-Produktionsplan deiner Backstube.",
-              "Buy my complete recipes (quantities, procedure, phases) and use them in your lab's AI Production Plan too.")}
+            {tri("Acquista un pacchetto e sblocca SUBITO tutte le ricette della categoria (dosi, procedimento, fasi) nel tuo laboratorio.",
+              "Kaufe ein Paket und schalte SOFORT alle Rezepte der Kategorie frei.",
+              "Buy a pack and INSTANTLY unlock all recipes in that category.")}
           </p>
-          <div className="space-y-2.5 mt-4">
-            <button data-testid="shop-buy-all" onClick={() => buyRecipes("all")}
-              className="w-full flex items-center justify-between bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white rounded-2xl px-4 py-3 active:scale-98 transition-all">
-              <span className="text-left">
-                <span className="block font-semibold">{tri("Tutte le ricette", "Alle Rezepte", "All recipes")}</span>
-                <span className="block text-xs text-white/80">{tri("Ricettario completo, per sempre", "Komplettes Rezeptbuch, für immer", "Complete recipe book, forever")}</span>
-              </span>
-              <span className="font-display text-lg font-bold">€149</span>
-            </button>
-            <button data-testid="shop-buy-panettoni" onClick={() => buyRecipes("panettoni")}
-              className="w-full flex items-center justify-between bg-[#6E8CA0]/10 border-2 border-[#6E8CA0] rounded-2xl px-4 py-3 active:scale-98 transition-all">
-              <span className="text-left">
-                <span className="block font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Tutti i Panettoni", "Alle Panettone", "All Panettoni")}</span>
-                <span className="block text-xs text-[#7E8A93]">{tri("Tutti i gusti di panettone MikiLab", "Alle MikiLab-Panettone-Sorten", "All MikiLab panettone flavours")}</span>
-              </span>
-              <span className="font-display text-lg font-bold text-[#234b6e] dark:text-[#8FB0C2]">€29,99</span>
-            </button>
+          <div className="grid grid-cols-1 gap-2.5 mt-4">
+            {[
+              { b: "pane", it: "Pacchetto Pane", de: "Paket Brot", en: "Bread Pack", price: "€40", grad: true },
+              { b: "panettoni", it: "Grandi Lievitati (Panettoni & Colombe)", de: "Große Hefegebäcke", en: "Large Leavened (Panettoni & Colombe)", price: "€50", grad: true },
+              { b: "panini", it: "Pacchetto Panini", de: "Paket Brötchen", en: "Buns Pack", price: "€20" },
+              { b: "snack", it: "Pacchetto Snack", de: "Paket Snacks", en: "Snacks Pack", price: "€10" },
+            ].map((x) => {
+              const owned = (ent?.unlocked_bundles || []).includes(x.b) || ent?.unlock_all;
+              return (
+                <button key={x.b} data-testid={`shop-bundle-${x.b}`} disabled={owned} onClick={() => buyBundle(x.b)}
+                  className={`w-full flex items-center justify-between rounded-2xl px-4 py-3 active:scale-98 transition-all ${owned ? "bg-[#5aa0cf]/15 border border-[#5aa0cf]/40" : x.grad ? "bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white" : "bg-[#6E8CA0]/10 border-2 border-[#6E8CA0]"}`}>
+                  <span className="text-left min-w-0">
+                    <span className={`block font-semibold truncate ${x.grad && !owned ? "text-white" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{tri(x.it, x.de, x.en)}</span>
+                    <span className={`block text-xs ${x.grad && !owned ? "text-white/80" : "text-[#7E8A93]"}`}>{owned ? tri("Acquistato ✓ — ricette sbloccate", "Gekauft ✓", "Purchased ✓") : tri("Tutte le ricette della categoria, per sempre", "Alle Rezepte der Kategorie, für immer", "All category recipes, forever")}</span>
+                  </span>
+                  <span className={`font-display text-lg font-bold shrink-0 ml-2 ${x.grad && !owned ? "text-white" : "text-[#234b6e] dark:text-[#8FB0C2]"}`}>{owned ? "✓" : x.price}</span>
+                </button>
+              );
+            })}
             <div className="text-center pt-0.5">
               <button data-testid="shop-subscribe-pro" onClick={subscribePro}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-[#3f7cac] hover:underline">
-                <Crown className="w-4 h-4" /> {tri("oppure abbonati PRO · €29,99/mese", "oder PRO abonnieren · €29,99/Monat", "or subscribe PRO · €29.99/month")}
+                <Crown className="w-4 h-4" /> {tri("oppure abbonati PRO (tutto incluso) · €29,99/mese", "oder PRO abonnieren · €29,99/Monat", "or subscribe PRO · €29.99/month")}
               </button>
             </div>
           </div>
