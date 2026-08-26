@@ -6,22 +6,22 @@ import { useLang } from "@/i18n/LanguageContext";
 
 export default function ResetPassword({ token, onDone }) {
   const { lang, tri } = useLang();
-  const de = lang === "de";
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [busy, setBusy] = useState(false);
+  const pwStrong = password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
 
   const submit = async (e) => {
     e.preventDefault();
-    if (password.length < 6) { toast.error(tri("Almeno 6 caratteri", "Mind. 6 Zeichen", "At least 6 characters")); return; }
-    if (password !== confirm) { toast.error(tri("Le password non coincidono", "Passwörter stimmen nicht überein", "Passwords do not match")); return; }
+    if (!pwStrong) { toast.error(tri("La password deve avere almeno 8 caratteri, con lettere e numeri.", "Passwort: min. 8 Zeichen mit Buchstaben und Zahlen.", "Password must be 8+ chars with letters and numbers.", "La contraseña debe tener 8+ caracteres, con letras y números.")); return; }
+    if (password !== confirm) { toast.error(tri("Le password non coincidono", "Passwörter stimmen nicht überein", "Passwords do not match", "Las contraseñas no coinciden")); return; }
     setBusy(true);
     try {
       await authApi.reset(token, password);
-      toast.success(tri("Password aggiornata! Accedi ora.", "Passwort geändert! Melde dich an.", "Password updated! Sign in now."));
+      toast.success(tri("Password aggiornata! Accedi ora.", "Passwort geändert! Melde dich an.", "Password updated! Sign in now.", "¡Contraseña actualizada! Accede ahora."));
       onDone();
     } catch (err) {
-      toast.error(err?.response?.data?.detail || tri("Errore", "Fehler", "Error"));
+      toast.error(err?.response?.data?.detail || tri("Errore", "Fehler", "Error", "Error"));
     } finally { setBusy(false); }
   };
 
@@ -37,24 +37,27 @@ export default function ResetPassword({ token, onDone }) {
             <KeyRound className="w-8 h-8 text-[#3f7cac]" />
           </div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">
-            {tri("Nuova password", "Neues Passwort", "New password")}
+            {tri("Nuova password", "Neues Passwort", "New password", "Nueva contraseña")}
           </h1>
-          <p className="text-sm text-[#7E8A93] mt-1">{tri("Scegli una nuova password per il tuo account.", "Wähle ein neues Passwort für dein Konto.", "Choose a new password for your account.")}</p>
+          <p className="text-sm text-[#7E8A93] mt-1">{tri("Scegli una nuova password per il tuo account.", "Wähle ein neues Passwort für dein Konto.", "Choose a new password for your account.", "Elige una nueva contraseña para tu cuenta.")}</p>
         </div>
         <form onSubmit={submit} className="space-y-3">
           <Field icon={<Lock className="w-4 h-4" />}>
             <input data-testid="reset-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder={tri("Nuova password", "Neues Passwort", "New password")}
+              placeholder={tri("Nuova password", "Neues Passwort", "New password", "Nueva contraseña")}
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
+          <p className={`text-xs ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#C88A2B]") : "text-[#7E8A93]"}`}>
+            {tri("Min 8 caratteri, con lettere e numeri.", "Min. 8 Zeichen, Buchstaben und Zahlen.", "Min 8 characters, letters and numbers.", "Mín. 8 caracteres, con letras y números.")}
+          </p>
           <Field icon={<Lock className="w-4 h-4" />}>
             <input data-testid="reset-confirm" type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)}
-              placeholder={tri("Conferma password", "Passwort bestätigen", "Confirm password")}
+              placeholder={tri("Conferma password", "Passwort bestätigen", "Confirm password", "Confirmar contraseña")}
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
           <button data-testid="reset-submit" type="submit" disabled={busy}
             className="w-full flex items-center justify-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
-            {tri("Cambia password", "Passwort ändern", "Change password")}
+            {tri("Cambia password", "Passwort ändern", "Change password", "Cambiar contraseña")}
           </button>
         </form>
       </div>

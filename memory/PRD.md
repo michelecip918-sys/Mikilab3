@@ -1507,3 +1507,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Test (curl): weak→400, strong→needs_verification, login non verificato→403, brute→429 al 6°, verify-email→sessione+login OK, admin esistente→200. UI verificata via screenshot.
 - ⚠️ PRODUZIONE: (1) il problema "manca Registrati" era su mikilab.de = deploy vecchio → serve **REDEPLOY**. (2) Perché le email di verifica arrivino, il dominio mittente `noreply@mikilab.de` DEVE essere verificato su Resend, altrimenti i NUOVI iscritti non ricevono il link e non possono accedere (gli utenti esistenti non sono impattati).
 
+
+## v43.1 — Reset password 4 lingue + verifica dominio Resend
+- ResetPassword.jsx: policy password forte (8+ lettere+numeri) con hint + conferma, stringhe IT/DE/EN/ES.
+- Dominio Resend mikilab.de VERIFICATO (status: verified, eu-west-1); invio email di prova OK → email di conferma/reset arrivano in produzione.
+- Login Apple/secondo social: ANNULLATO su richiesta utente (restano Google + email/password).
