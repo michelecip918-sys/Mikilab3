@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckSquare, Thermometer, ShieldCheck, Archive, CalendarCheck, LogIn, Package,
   QrCode, Sparkles, ChevronRight, ChevronLeft, Plus, X, Trash2, Boxes, Save, AlertTriangle,
+  FileText, History, Send, Search, Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
@@ -10,6 +11,7 @@ import { addXP } from "@/lib/level";
 import { useAuth } from "@/auth/AuthContext";
 import { capoPlanApi, labConfigApi, recipesApi, inventoryApi, dayCloseApi } from "@/lib/api";
 import { computeShopping } from "@/lib/shopping";
+import { SUPPLIERS } from "@/data/suppliers";
 
 const CLEAN_ITEMS = [
   ["mixers", "Impastatrici", "Kneter"],
@@ -45,6 +47,10 @@ export default function DayClose() {
   const [saving, setSaving] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const [recipeById, setRecipeById] = useState({});
+  const [mode, setMode] = useState("wizard"); // wizard | storico
+  const [closures, setClosures] = useState([]);
+  const [search, setSearch] = useState("");
+  const [lastId, setLastId] = useState(null);
 
   const load = useCallback(async () => {
     if (!user) return;
@@ -97,6 +103,37 @@ export default function DayClose() {
     catch { toast.error(tri("Errore salvataggio magazzino", "Fehler beim Speichern")); }
   };
 
+  const loadClosures = async () => {
+    try { const r = await dayCloseApi.list(); setClosures(r.closures || []); } catch { /* */ }
+  };
+
+  const downloadPdf = async (id, lotName) => {
+    try {
+      const blob = await dayCloseApi.pdf(id, lang);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `chiusura-${(lotName || id)}.pdf`.replace(/\s+/g, "_");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      toast.success(tri("Report PDF scaricato", "PDF-Bericht geladen"));
+    } catch { toast.error(tri("Errore nel generare il PDF", "Fehler beim PDF")); }
+  };
+
+  const lowStockItems = inventory.filter((it) => it.threshold != null && Number(it.qty) <= Number(it.threshold));
+  const supplierOrder = () => {
+    const src = lowStockItems.length ? lowStockItems : inventory;
+    if (!src.length) { toast.message(tri("Nessuna materia da ordinare", "Keine Rohstoffe zu bestellen")); return; }
+    const withEmail = SUPPLIERS.find((s) => s.country === (lang === "de" ? "de" : "it") && s.email) || SUPPLIERS.find((s) => s.email);
+    const to = withEmail ? withEmail.email : "";
+    const subject = tri("Ordine materie prime · MikiLab", "Rohstoffbestellung · MikiLab");
+    const lines = src.map((it) => `- ${it.name}: ${it.qty} ${it.unit || "kg"}${it.threshold != null ? ` (${tri("soglia", "Schwelle")} ${it.threshold})` : ""}`).join("\n");
+    const body = `${tri("Buongiorno,", "Guten Tag,")}\n${tri("vorrei ordinare:", "ich möchte bestellen:")}\n\n${lines}\n\n${tri("Grazie!", "Danke!")}`;
+    window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   const doClose = async () => {
     if (!user) { setAuthOpen(true); return; }
     setSaving(true);
@@ -110,6 +147,7 @@ export default function DayClose() {
         production_lot: lot.trim(), lang,
       });
       setCelebrate(true);
+      setLastId((res.closure && res.closure.id) || null);
       addXP(3);
       toast.success(tri(`Giornata chiusa · ${res.haccp_created} voci nel Registro HACCP ✅`, `Tag abgeschlossen · ${res.haccp_created} HACCP-Einträge ✅`));
     } catch { toast.error(tri("Errore durante la chiusura", "Fehler beim Abschluss")); }
@@ -117,7 +155,7 @@ export default function DayClose() {
   };
 
   const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
-  const lowStock = inventory.filter((it) => it.threshold != null && Number(it.qty) <= Number(it.threshold));
+  const lowStock = lowStockItems;
 
   if (!user) {
     return (
@@ -134,6 +172,45 @@ export default function DayClose() {
     <div className="pb-40" data-testid="dayclose">
       <Header tri={tri} />
 
+      {/* Toggle Nuova chiusura / Storico */}
+      <div data-testid="dayclose-modeswitch" className="grid grid-cols-2 gap-2 mb-4 bg-[#e4eff8] dark:bg-[#2A323A] rounded-2xl p-1">
+        <button data-testid="dayclose-mode-wizard" onClick={() => setMode("wizard")}
+          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "wizard" ? "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
+          <CheckSquare className="w-4 h-4" /> {tri("Nuova chiusura", "Neuer Abschluss")}
+        </button>
+        <button data-testid="dayclose-mode-storico" onClick={() => { setMode("storico"); loadClosures(); }}
+          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "storico" ? "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
+          <History className="w-4 h-4" /> {tri("Storico chiusure", "Archiv")}
+        </button>
+      </div>
+
+      {mode === "storico" ? (
+        <div data-testid="dayclose-storico" className="space-y-3">
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" />
+            <input data-testid="storico-search" value={search} onChange={(e) => setSearch(e.target.value)}
+              placeholder={tri("Cerca per data o lotto…", "Nach Datum oder Charge suchen…")} className={inp + " pl-9"} />
+          </div>
+          {(() => {
+            const q = search.trim().toLowerCase();
+            const list = closures.filter((c) => !q || (c.date || "").toLowerCase().includes(q) || (c.production_lot || "").toLowerCase().includes(q));
+            if (!list.length) return <p data-testid="storico-empty" className="text-sm text-[#7E8A93] text-center py-8">{tri("Nessuna chiusura archiviata.", "Keine archivierten Abschlüsse.")}</p>;
+            return list.map((c) => (
+              <div key={c.id} data-testid={`storico-item-${c.id}`} className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-3.5 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{c.date} · <span className="font-mono-data text-[#234b6e] dark:text-[#8FB0C2]">{c.production_lot || tri("senza lotto", "ohne Charge")}</span></p>
+                  <p className="text-[11px] text-[#7E8A93] mt-0.5">{tri("Operatore", "Bediener")}: {c.operator || "—"} · {(c.produced || []).length} {tri("prodotti", "Produkte")} · {(c.temps || []).filter((t) => t.temp_c != null && t.temp_c !== "").length} {tri("temp.", "Temp.")} · {Object.values(c.cleaning || {}).filter(Boolean).length} {tri("pulizie", "Reinigungen")}</p>
+                </div>
+                <button data-testid={`storico-pdf-${c.id}`} onClick={() => downloadPdf(c.id, c.production_lot)}
+                  className="shrink-0 inline-flex items-center gap-1.5 bg-[#3f7cac] text-white text-xs font-semibold px-3 py-2 rounded-xl active:scale-95">
+                  <FileText className="w-3.5 h-3.5" /> PDF
+                </button>
+              </div>
+            ));
+          })()}
+        </div>
+      ) : (
+      <>
       {/* Stepper */}
       <div data-testid="dayclose-stepper" className="flex items-center gap-1 mb-5">
         {[1, 2, 3].map((n) => (
@@ -177,8 +254,12 @@ export default function DayClose() {
 
           <Card icon={<Boxes className="w-4 h-4" />} title={tri("Magazzino materie prime", "Rohstofflager")}>
             {lowStock.length > 0 && (
-              <div data-testid="dayclose-lowstock" className="flex items-center gap-2 bg-[#C0574D]/10 border border-[#C0574D]/30 rounded-xl px-3 py-2 mb-2 text-[#C0574D] text-xs font-semibold">
+              <div data-testid="dayclose-lowstock" className="flex flex-wrap items-center gap-2 bg-[#C0574D]/10 border border-[#C0574D]/30 rounded-xl px-3 py-2 mb-2 text-[#C0574D] text-xs font-semibold">
                 <AlertTriangle className="w-4 h-4 shrink-0" /> {tri(`${lowStock.length} materie sotto soglia`, `${lowStock.length} Rohstoffe unter Schwelle`)}
+                <button data-testid="dayclose-order-supplier" onClick={supplierOrder}
+                  className="ml-auto inline-flex items-center gap-1.5 bg-[#C0574D] text-white px-2.5 py-1 rounded-full active:scale-95">
+                  <Send className="w-3 h-3" /> {tri("Ordina al fornitore", "Beim Lieferanten bestellen")}
+                </button>
               </div>
             )}
             <div className="space-y-2">
@@ -191,15 +272,15 @@ export default function DayClose() {
                   </div>
                   <div className="flex items-center gap-2">
                     <input data-testid={`inv-qty-${i}`} type="number" value={it.qty} placeholder={tri("Qtà", "Menge")}
-                      onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-20"} />
-                    <select data-testid={`inv-unit-${i}`} value={it.unit} onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))} className={inp + " w-16 px-1"}>
+                      onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " flex-1 min-w-0"} />
+                    <select data-testid={`inv-unit-${i}`} value={it.unit} onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))} className={inp + " w-16 px-1 shrink-0"}>
                       <option>kg</option><option>g</option><option>pz</option><option>L</option>
                     </select>
-                    <div className="flex items-center gap-1 flex-1 min-w-0">
-                      <AlertTriangle className="w-3.5 h-3.5 text-[#C88A2B] shrink-0" />
-                      <input data-testid={`inv-threshold-${i}`} type="number" value={it.threshold ?? ""} placeholder={tri("soglia avviso", "Warnschwelle")}
-                        onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, threshold: e.target.value === "" ? null : Number(e.target.value) } : x))} className={inp + " min-w-0"} />
-                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-1 text-[11px] font-semibold text-[#C88A2B] shrink-0"><AlertTriangle className="w-3.5 h-3.5" /> {tri("Soglia avviso", "Warnschwelle")}</span>
+                    <input data-testid={`inv-threshold-${i}`} type="number" value={it.threshold ?? ""} placeholder={tri("es. 10", "z. B. 10")}
+                      onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, threshold: e.target.value === "" ? null : Number(e.target.value) } : x))} className={inp + " flex-1 min-w-0"} />
                   </div>
                 </div>
               ))}
@@ -316,6 +397,8 @@ export default function DayClose() {
           </button>
         )}
       </div>
+      </>
+      )}
 
       <AnimatePresence>
         {celebrate && (
@@ -342,9 +425,17 @@ export default function DayClose() {
               className="mt-1 text-white/85 text-sm text-center max-w-xs">
               {tri("Registro HACCP aggiornato e magazzino scalato. Buon riposo!", "HACCP-Register aktualisiert und Lager gebucht. Gute Erholung!")}
             </motion.p>
-            <button data-testid="dayclose-celebrate-close" className="mt-6 bg-white text-[#2B303B] font-bold px-7 py-2.5 rounded-full active:scale-95">
-              {tri("Grazie!", "Danke!")}
-            </button>
+            <div className="mt-6 flex flex-col items-center gap-2.5" onClick={(e) => e.stopPropagation()}>
+              {lastId && (
+                <button data-testid="dayclose-download-pdf" onClick={() => downloadPdf(lastId, lot)}
+                  className="inline-flex items-center gap-2 bg-[#5aa0cf] text-white font-bold px-6 py-2.5 rounded-full active:scale-95">
+                  <Download className="w-4 h-4" /> {tri("Scarica report PDF", "PDF-Bericht laden")}
+                </button>
+              )}
+              <button data-testid="dayclose-celebrate-close" onClick={() => setCelebrate(false)} className="bg-white text-[#2B303B] font-bold px-7 py-2.5 rounded-full active:scale-95">
+                {tri("Grazie!", "Danke!")}
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

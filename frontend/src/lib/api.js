@@ -191,4 +191,6 @@ export const inventoryApi = {
 export const dayCloseApi = {
   close: (data) => api.post(`/day-close`, data).then((r) => r.data),
   last: () => api.get(`/day-close/last`).then((r) => r.data).catch(() => ({})),
+  list: () => api.get(`/day-close/list`).then((r) => r.data).catch(() => ({ closures: [] })),
+  pdf: (id, lang = "it") => api.get(`/day-close/${id}/pdf`, { params: { lang }, responseType: "blob" }).then((r) => r.data),
 };

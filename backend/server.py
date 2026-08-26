@@ -3997,6 +3997,105 @@ async def day_close_last(user: dict = Depends(current_user)):
     return d or {}
 
 
+@api_router.get("/day-close/list")
+async def day_close_list(user: dict = Depends(current_user)):
+    docs = await db.day_closures.find({"owner_id": user["user_id"]}, {"_id": 0, "owner_id": 0}).sort("closed_at", -1).to_list(500)
+    return {"closures": docs}
+
+
+def _build_closure_pdf(c: dict, lang: str = "it") -> bytes:
+    from io import BytesIO
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import mm
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+
+    de = lang == "de"
+    L = {
+        "title": "Registro Chiusura Turno · HACCP" if not de else "Schichtabschluss · HACCP",
+        "date": "Data" if not de else "Datum", "lot": "Lotto di produzione" if not de else "Produktionscharge",
+        "operator": "Operatore" if not de else "Bediener",
+        "produced": "Prodotti realizzati" if not de else "Produzierte Produkte",
+        "deducted": "Scarico materie prime" if not de else "Rohstoff-Abbuchung",
+        "temps": "Controllo temperature" if not de else "Temperaturkontrolle",
+        "cleaning": "Pulizie & Sanificazione" if not de else "Reinigung & Sanitisierung",
+        "anomalies": "Anomalie" if not de else "Abweichungen", "note": "Note" if not de else "Notizen",
+        "sign": "Firma operatore" if not de else "Unterschrift Bediener", "none": "—",
+        "qty": "Q.tà" if not de else "Menge", "name": "Nome" if not de else "Name", "temp": "Temp.",
+    }
+    buf = BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4, topMargin=16 * mm, bottomMargin=16 * mm, leftMargin=18 * mm, rightMargin=18 * mm)
+    ss = getSampleStyleSheet()
+    ACC = colors.HexColor("#234b6e")
+    h1 = ParagraphStyle("h1", parent=ss["Title"], textColor=ACC, fontSize=20, spaceAfter=2)
+    meta = ParagraphStyle("meta", parent=ss["Normal"], fontSize=11, spaceAfter=1)
+    lab = ParagraphStyle("lab", parent=ss["Heading2"], textColor=colors.HexColor("#3f7cac"), fontSize=13, spaceBefore=10, spaceAfter=3)
+    body = ParagraphStyle("body", parent=ss["Normal"], fontSize=10.5, leading=15)
+
+    def esc(s):
+        return (str(s if s is not None else "")).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    story = [Paragraph("MikiLab · " + L["title"], h1),
+             Paragraph(f"{L['date']}: <b>{esc(c.get('date'))}</b> · {L['lot']}: <b>{esc(c.get('production_lot')) or L['none']}</b>", meta),
+             Paragraph(f"{L['operator']}: <b>{esc(c.get('operator')) or L['none']}</b>", meta), Spacer(1, 3 * mm)]
+
+    def tbl(rows, headers):
+        data = [headers] + rows
+        t = Table(data, hAlign="LEFT", colWidths=None)
+        t.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e4eff8")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), ACC),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("FONTSIZE", (0, 0), (-1, -1), 9.5),
+            ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#c7d6e5")),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f6fafd")]),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6), ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ]))
+        return t
+
+    prod = [[esc(p.get("name")), f"{esc(p.get('qty'))} {esc(p.get('unit') or 'pz')}"] for p in (c.get("produced") or []) if p.get("name")]
+    story.append(Paragraph(L["produced"], lab))
+    story.append(tbl(prod, [L["name"], L["qty"]]) if prod else Paragraph(L["none"], body))
+
+    ded = [[esc(d.get("name")), f"-{esc(d.get('qty'))} {esc(d.get('unit') or 'kg')}", f"{esc(d.get('remaining'))} {esc(d.get('unit') or 'kg')}"] for d in (c.get("deducted") or [])]
+    story.append(Paragraph(L["deducted"], lab))
+    story.append(tbl(ded, [L["name"], L["qty"], "Restante" if not de else "Rest"]) if ded else Paragraph(L["none"], body))
+
+    tmp = [[esc(t.get("name")), f"{esc(t.get('temp_c'))} °C" if t.get("temp_c") not in (None, "") else L["none"]] for t in (c.get("temps") or []) if t.get("name")]
+    story.append(Paragraph(L["temps"], lab))
+    story.append(tbl(tmp, [L["name"], L["temp"]]) if tmp else Paragraph(L["none"], body))
+
+    clean_on = [k for k, v in (c.get("cleaning") or {}).items() if v]
+    story.append(Paragraph(L["cleaning"], lab))
+    story.append(Paragraph(("✓ " + " · ".join(esc(x) for x in clean_on)) if clean_on else L["none"], body))
+
+    story.append(Paragraph(L["anomalies"], lab))
+    story.append(Paragraph(esc(c.get("anomalies")) or L["none"], body))
+    if (c.get("note") or "").strip():
+        story.append(Paragraph(L["note"], lab))
+        story.append(Paragraph(esc(c.get("note")), body))
+
+    story.append(Spacer(1, 14 * mm))
+    story.append(Paragraph(f"{L['sign']}: {esc(c.get('operator')) or ''} __________________________", body))
+    story.append(Paragraph(f"<font color='#7E8A93' size=8>MikiLab · Il Laboratorio di Michele · {esc(c.get('closed_at'))}</font>", body))
+    doc.build(story)
+    return buf.getvalue()
+
+
+@api_router.get("/day-close/{closure_id}/pdf")
+async def day_close_pdf(closure_id: str, lang: str = "it", user: dict = Depends(current_user)):
+    c = await db.day_closures.find_one({"id": closure_id, "owner_id": user["user_id"]}, {"_id": 0})
+    if not c:
+        raise HTTPException(404, "Chiusura non trovata")
+    pdf = await asyncio.to_thread(_build_closure_pdf, c, lang)
+    fname = f"chiusura_{c.get('date','')}_{(c.get('production_lot') or 'lotto')}.pdf".replace(" ", "_")
+    return Response(content=pdf, media_type="application/pdf",
+                    headers={"Content-Disposition": f'inline; filename="{fname}"'})
+
+
 
 app.include_router(api_router)
 
@@ -4145,12 +4244,68 @@ async def _send_bundle_followups():
             logging.getLogger(__name__).error(f"bundle follow-up email failed: {e}")
 
 
+def _stock_summary_email_html(low: list, near: list, lang: str) -> str:
+    de = lang == "de"
+    def rows(items):
+        return "".join(f"<li><b>{(i.get('name') or '')}</b>: {i.get('qty')} {i.get('unit','kg')} "
+                       f"({'Schwelle' if de else 'soglia'} {i.get('threshold')} {i.get('unit','kg')})</li>" for i in items)
+    parts = []
+    if low:
+        parts.append(("<h3 style='color:#C0574D'>" + ("Unter Schwelle" if de else "Sotto soglia") + "</h3><ul>" + rows(low) + "</ul>"))
+    if near:
+        parts.append(("<h3 style='color:#C88A2B'>" + ("Fast am Limit" if de else "Vicino alla soglia") + "</h3><ul>" + rows(near) + "</ul>"))
+    head = ("Wochenübersicht Bestand" if de else "Riepilogo scorte della settimana")
+    intro = ("Plane deine Bestellungen für die Woche:" if de else "Pianifica gli ordini della settimana:")
+    return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+            f"<h2 style='color:#234b6e'>📦 {head}</h2><p>{intro}</p>{''.join(parts)}"
+            f"<p style='color:#888;font-size:12px'>MikiLab · Magazzino</p></div>")
+
+
+async def _send_weekly_stock_summaries():
+    """Ogni lunedì: email di riepilogo con le materie sotto o vicino (≤ +20%) alla soglia."""
+    if not RESEND_API_KEY:
+        return
+    now = datetime.now(timezone.utc)
+    if now.weekday() != 0:  # 0 = lunedì
+        return
+    week_key = now.strftime("%G-W%V")
+    owner_ids = await db.inventory_items.distinct("owner_id", {"threshold": {"$ne": None}})
+    for uid in owner_ids:
+        sent = await db.weekly_stock_sent.find_one({"owner_id": uid, "week": week_key})
+        if sent:
+            continue
+        u = await db.users.find_one({"user_id": uid})
+        email = (u or {}).get("email")
+        items = await db.inventory_items.find({"owner_id": uid, "threshold": {"$ne": None}}).to_list(500)
+        low, near = [], []
+        for it in items:
+            thr = float(it["threshold"]); q = float(it.get("qty") or 0)
+            if q <= thr:
+                low.append(it)
+            elif q <= thr * 1.2:
+                near.append(it)
+        try:
+            if email and (low or near):
+                params = {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [email],
+                          "subject": "MikiLab · Riepilogo scorte settimanale 📦",
+                          "html": _stock_summary_email_html(low, near, "it")}
+                await asyncio.to_thread(_resend.Emails.send, params)
+            await db.weekly_stock_sent.update_one({"owner_id": uid, "week": week_key},
+                {"$set": {"owner_id": uid, "week": week_key, "sent_at": now_iso()}}, upsert=True)
+        except Exception as e:
+            logging.getLogger(__name__).error(f"weekly stock summary failed: {e}")
+
+
 async def _followup_loop():
     while True:
         try:
             await _send_bundle_followups()
         except Exception as e:
             logging.getLogger(__name__).error(f"follow-up loop error: {e}")
+        try:
+            await _send_weekly_stock_summaries()
+        except Exception as e:
+            logging.getLogger(__name__).error(f"weekly stock loop error: {e}")
         await asyncio.sleep(6 * 3600)  # ogni 6 ore
 
 

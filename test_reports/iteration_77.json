@@ -1,0 +1,40 @@
+{
+  "summary": "Iteration 77 — frontend-only E2E of the DayClose ('Chiusura Turno & Registro HACCP') new features on the public URL as admin@mikilab.de. Verified: mode toggle (dayclose-modeswitch / wizard / storico), Storico archive (empty state, item rendering, search by lotto + date + no-match), full 3-step wizard closure, celebration overlay with 'Scarica report PDF' + close, PDF generation (200 / application/pdf / %PDF- header, popup opened with blob URL), low-stock banner (dayclose-lowstock) triggered by qty<=threshold with a clickable 'Ordina al fornitore' (mailto) button, and full IT/DE rendering of both modes and all 3 steps. No page/JS errors. All test data (1 day_closure, 2 haccp_logs, 1 inventory_item for admin) deleted afterwards.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/auth/me", "issue": "Called twice on cold load pre-login, producing 2 x 401 in the browser console (noise only, no functional impact)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "LabTour", "issue": "Full-screen overlay (div.absolute.inset-0.bg-black/40 pointer-events-auto inside data-testid=lab-tour) re-appears every time 'Il Tuo Laboratorio' is opened and intercepts ALL pointer events, so capo-quicklink-dayclose (and every tool tile) is unclickable until the tour is dismissed. The dismiss controls ('Salta' / 'Avanti' / X) have NO data-testid, making automated dismissal fragile.", "selector": "[data-testid=\"lab-tour\"] .absolute.inset-0", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "PDF download (storico-pdf-<id> and dayclose-download-pdf)", "issue": "downloadPdf() does window.open(blobUrl) AFTER an await (async fetch). In Chromium headless the popup did open and the endpoint returns a valid PDF (verified 200 / application/pdf / %PDF-, 2743 bytes), but an async window.open is commonly suppressed by popup blockers (Safari/iOS, Chrome strict settings) — the user then sees nothing and no error. Recommend an <a download=\"chiusura-<lotto>.pdf\"> anchor click (or open the tab synchronously before the fetch) so the report always reaches the user with a meaningful filename.", "affected_selectors": ["[data-testid^=\"storico-pdf-\"]", "[data-testid=\"dayclose-download-pdf\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "DayClose Step 1 — Magazzino row", "issues": ["The 'soglia avviso' (threshold) input is squeezed between the warning icon and the row edge; with a value entered the number spinner sits half outside the field (see lowstock screenshot). Give the threshold input a min-width or move it to its own line."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/_cleanup_iter77.py"],
+  "action_items": [
+    "Replace window.open(blobUrl) in DayClose.downloadPdf with an anchor-based download (filename e.g. chiusura-<lotto>.pdf) to avoid popup-blocker suppression; add a toast on success.",
+    "Add data-testid to LabTour controls (skip/next/close) and make the overlay non-blocking (or auto-dismiss once seen) — it currently blocks every click in 'Il Tuo Laboratorio'.",
+    "Cosmetic: fix cramped 'soglia avviso' input in the Magazzino row."
+  ],
+  "critical_code_review_comments": [
+    "DayClose.jsx: doClose() does `await saveInventory().catch(()=>{})` — saveInventory already swallows its own errors and returns undefined, so .catch on undefined would throw if it ever rejected; more importantly a failed inventory save still lets the closure proceed and decrement stale server stock.",
+    "loadClosures() silently swallows errors (empty catch) — a failing /api/day-close/list renders the same 'Nessuna chiusura archiviata.' empty state as a genuinely empty archive; add an error state.",
+    "Storico list is only refreshed on clicking dayclose-mode-storico; after a closure created while already in storico mode the list would be stale (minor).",
+    "PREVIOUSLY REPORTED ISSUE APPEARS FIXED: only 2 haccp_logs were created for a closure with 1 temperature + cleaning (empty temperature rows no longer pollute the register)."
+  ],
+  "updated_files": ["/app/backend/tests/_cleanup_iter77.py"],
+  "success_rate": {"backend": "not tested (frontend-only request); PDF endpoint spot-checked 200/application/pdf", "frontend": "100% of tested DayClose flows (mode toggle, storico, search, wizard, celebration, PDF, low-stock/mailto, IT+DE)"},
+  "seed_data_creation": "Temporary: inventory item 'TEST_Farina QA' (qty 2, threshold 10), produced 'TEST_Pane QA', closure lot ML-20260826-28 with 1 temp + 1 cleaning. ALL removed via /app/backend/tests/_cleanup_iter77.py (verified 0 day_closures / 0 haccp_logs / 0 inventory_items for admin).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Playwright: after login you MUST dismiss the LabTour overlay AFTER clicking nav-tab-maestro (it mounts on entering the lab tab, not at login) — click text 'Salta' (IT) / 'Überspringen' (DE) with force=True, then click capo-quicklink-dayclose. Language switch uses [data-testid=\"lang-it\"]/[data-testid=\"lang-de\"] (get_by_text('DE') does NOT work). PDF buttons open a blob popup whose url is ':' in headless — do not assert on new-page load state; verify instead via page.evaluate fetch of /api/day-close/<id>/pdf (expect %PDF-). Cleanup script: /app/backend/tests/_cleanup_iter77.py.",
+  "rca_of_the_issue": "The two initial automation failures were test artifacts, not product bugs: (1) LabTour's pointer-events-auto backdrop intercepted the quicklink click, (2) expect_page().wait_for_load_state on a blob: popup never settles in headless Chromium. The underlying PDF endpoint and UI both work."
+}
