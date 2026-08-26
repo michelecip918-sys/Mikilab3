@@ -1256,3 +1256,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **toolGuide.js**: aggiunte guide per gli id modulo (celle/orari/clima/punti/antispreco) + mydata; arricchite spesa/foodcost/turni/freezer con indicazione se il risultato viene 📄 generato o 💾 salvato.
 - Verificato via screenshot (login admin): 9 interruttori con ON/OFF+i, bolla guida, doppioni assenti, avatar leggibili.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont3 (2026-06) — Tour guidato Mohammadreza + strumenti personalizzabili
+- **LabTour.jsx** (nuovo): mini-tour al primo accesso in "Il Tuo Laboratorio" (localStorage `mikilab_lab_tour_v1`). 4 step trilingui (welcome + capo-source-choice → capo-modules → capo-generate) con evidenziazione (outline) dell'elemento target, dots, Salta/Avanti/Ho capito. Montato in PianoProduzioneAI (solo vista principale, quando onOpenTool). Pulsante replay `lab-tour-replay` ("Come si fa?") nell'header INIZIA.
+- **Strumenti personalizzabili** (PianoProduzioneAI): estratto array `TOOLS`; preferenze in localStorage `mikilab_tool_prefs` {order[], hidden[]}. Pulsante `tools-edit-toggle` ("Personalizza/Fatto"): in edit ogni tile ha occhio nascondi (`tool-hide-*`) + frecce riordina (`tool-up/down-*`). Fuori edit mostra solo i visibili nell'ordine scelto + nota `tools-hidden-note`.
+- Verificato via screenshot: tour auto-mostrato e chiuso, highlight su "Genera", nascondi/riordina persistiti.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

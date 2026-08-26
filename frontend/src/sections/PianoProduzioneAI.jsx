@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -11,6 +11,7 @@ import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
+import LabTour from "@/components/LabTour";
 import { guideFor } from "@/lib/toolGuide";
 import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
@@ -39,6 +40,27 @@ const MODULES = [
 
 // Ogni interruttore-modulo apre lo strumento corrispondente per configurarlo.
 const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco" };
+
+// Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
+const TOOLS = [
+  { id: "mydata", Icon: Archive, it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
+  { id: "twin", Icon: FlaskConical, it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
+  { id: "adatta", Icon: Flame, it: "Adatta Forno", de: "Ofen anpassen", en: "Adapt Oven" },
+  { id: "bilancia", Icon: Scale, it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
+  { id: "termo", Icon: Thermometer, it: "Termostato & Clima", de: "Thermostat & Klima", en: "Thermostat & Climate" },
+  { id: "acqua", Icon: Droplets, it: "Temp. Acqua", de: "Wasser-Temp.", en: "Water Temp." },
+  { id: "pesata", Icon: Scale, it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
+  { id: "timer", Icon: TimerIcon, it: "Timer", de: "Timer", en: "Timer" },
+  { id: "meteo", Icon: CloudSun, it: "Meteo", de: "Wetter", en: "Weather" },
+  { id: "ph", Icon: FlaskConical, it: "pH Lievito", de: "pH Sauerteig", en: "Sourdough pH" },
+  { id: "diagnosi", Icon: Camera, it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
+  { id: "suono", Icon: Camera, it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
+  { id: "sessioni", Icon: Thermometer, it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
+  { id: "lotti", Icon: QrCode, it: "Tracciabilità Lotti", de: "Chargen", en: "Batch Traceability" },
+  { id: "haccp", Icon: ScanLine, it: "Registro HACCP", de: "HACCP-Register", en: "HACCP Log" },
+  { id: "check", Icon: ListChecks, it: "Checklist", de: "Checklisten", en: "Checklists" },
+  { id: "shelf", Icon: CalendarClock, it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
+];
 
 export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
@@ -69,6 +91,34 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [modules, setModules] = useState(DEFAULT_MODULES);
   const toggleMod = (id) => setModules((m) => ({ ...m, [id]: !m[id] }));
   const [bump, setBump] = useState(0);
+
+  // Personalizzazione strumenti (riordina/nascondi) + tour guidato.
+  const [toolPrefs, setToolPrefs] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_prefs") || "{}"); } catch { return {}; } });
+  const [editTools, setEditTools] = useState(false);
+  const [tourForce, setTourForce] = useState(0);
+  const savePrefs = (p) => { setToolPrefs(p); try { localStorage.setItem("mikilab_tool_prefs", JSON.stringify(p)); } catch { /* */ } };
+  const orderedTools = useMemo(() => {
+    const order = Array.isArray(toolPrefs.order) ? toolPrefs.order : [];
+    const byId = Object.fromEntries(TOOLS.map((tl) => [tl.id, tl]));
+    const seen = new Set(); const list = [];
+    order.forEach((id) => { if (byId[id] && !seen.has(id)) { list.push(byId[id]); seen.add(id); } });
+    TOOLS.forEach((tl) => { if (!seen.has(tl.id)) list.push(tl); });
+    return list;
+  }, [toolPrefs]);
+  const hiddenTools = new Set(toolPrefs.hidden || []);
+  const visibleTools = orderedTools.filter((tl) => editTools || !hiddenTools.has(tl.id));
+  const moveTool = (id, dir) => {
+    const ids = orderedTools.map((tl) => tl.id);
+    const i = ids.indexOf(id); const j = i + dir;
+    if (i < 0 || j < 0 || j >= ids.length) return;
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+    savePrefs({ ...toolPrefs, order: ids });
+  };
+  const toggleHideTool = (id) => {
+    const h = new Set(toolPrefs.hidden || []);
+    h.has(id) ? h.delete(id) : h.add(id);
+    savePrefs({ ...toolPrefs, hidden: [...h] });
+  };
 
   const addRecipes = (ids) => setProducts((l) => {
     const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
@@ -352,6 +402,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
   return (
     <div className="pb-40">
+      {onOpenTool && <LabTour force={tourForce} onClose={() => setTourForce(0)} />}
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#4A7265] to-[#33564E] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <Sparkles className="w-7 h-7 mb-2" />
@@ -361,9 +412,15 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
       {onOpenTool && (
         <div data-testid="capo-quicklinks" className="mb-5">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f] mb-0.5">
-            {tri3(lang, "INIZIA", "START", "START")}
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f] mb-0.5">
+              {tri3(lang, "INIZIA", "START", "START")}
+            </p>
+            <button data-testid="lab-tour-replay" onClick={() => setTourForce((n) => n + 1)}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5E8B7E] px-2.5 py-1 rounded-full border border-[#D7E1DB] dark:border-[#38424B] bg-white dark:bg-[#232A31] active:scale-95 transition-all">
+              <HelpCircle className="w-3.5 h-3.5" /> {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
+            </button>
+          </div>
           <p className="text-[10.5px] text-[#7E8A93] mb-2">{tri3(lang, "Passi base per generare il piano", "Basisschritte für den Plan", "Base steps to generate the plan")}</p>
           <div className="grid grid-cols-2 gap-2">
             {[
@@ -459,45 +516,59 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f] mb-0.5">
-              {tri3(lang, "APRI UNO STRUMENTO", "WERKZEUG ÖFFNEN", "OPEN A TOOL")}
+            <div className="flex items-center justify-between mb-0.5">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f]">
+                {tri3(lang, "APRI UNO STRUMENTO", "WERKZEUG ÖFFNEN", "OPEN A TOOL")}
+              </p>
+              <button data-testid="tools-edit-toggle" onClick={() => setEditTools((v) => !v)}
+                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${editTools ? "bg-[#5E8B7E] text-white border-[#5E8B7E]" : "bg-white dark:bg-[#232A31] text-[#5E8B7E] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+                <Settings2 className="w-3.5 h-3.5" /> {editTools ? tri3(lang, "Fatto", "Fertig", "Done") : tri3(lang, "Personalizza", "Anpassen", "Customize")}
+              </button>
+            </div>
+            <p className="text-[10.5px] text-[#7E8A93] mb-2">
+              {editTools
+                ? tri3(lang, "Nascondi ciò che non usi (occhio) e riordina con le frecce.", "Blende Ungenutztes aus (Auge) und ordne mit den Pfeilen.", "Hide what you don't use (eye) and reorder with the arrows.")
+                : tri3(lang, "Tocca per aprirlo e usarlo. La «i» ti spiega a cosa serve.", "Tippe zum Öffnen und Nutzen. Die „i“ erklärt den Zweck.", "Tap to open and use it. The 'i' explains what it's for.")}
             </p>
-            <p className="text-[10.5px] text-[#7E8A93] mb-2">{tri3(lang, "Tocca per aprirlo e usarlo. La «i» ti spiega a cosa serve.", "Tippe zum Öffnen und Nutzen. Die „i“ erklärt den Zweck.", "Tap to open and use it. The 'i' explains what it's for.")}</p>
 
             <div className="grid grid-cols-3 gap-2">
-              {[
-                { id: "mydata", Icon: Archive, label: tri3(lang, "I Miei Dati", "Meine Daten", "My Data") },
-                { id: "twin", Icon: FlaskConical, label: tri3(lang, "Digital Twin", "Teig-Zwilling", "Dough Twin") },
-                { id: "adatta", Icon: Flame, label: tri3(lang, "Adatta Forno", "Ofen anpassen", "Adapt Oven") },
-                { id: "bilancia", Icon: Scale, label: tri3(lang, "Bilancia Smart", "Smarte Waage", "Smart Scale") },
-                { id: "termo", Icon: Thermometer, label: tri3(lang, "Termostato & Clima", "Thermostat & Klima", "Thermostat & Climate") },
-                { id: "acqua", Icon: Droplets, label: tri3(lang, "Temp. Acqua", "Wasser-Temp.", "Water Temp.") },
-                { id: "pesata", Icon: Scale, label: tri3(lang, "Pesata Guidata", "Geführtes Wiegen", "Guided Weighing") },
-                { id: "timer", Icon: TimerIcon, label: tri3(lang, "Timer", "Timer", "Timer") },
-                { id: "meteo", Icon: CloudSun, label: tri3(lang, "Meteo", "Wetter", "Weather") },
-                { id: "ph", Icon: FlaskConical, label: tri3(lang, "pH Lievito", "pH Sauerteig", "Sourdough pH") },
-                { id: "diagnosi", Icon: Camera, label: tri3(lang, "Diagnosi Foto", "Foto-Diagnose", "Photo Diagnosis") },
-                { id: "suono", Icon: Camera, label: tri3(lang, "Diagnosi Suono", "Klang-Diagnose", "Sound Diagnosis") },
-                { id: "sessioni", Icon: Thermometer, label: tri3(lang, "Diario Impasti", "Teig-Tagebuch", "Dough Log") },
-                { id: "lotti", Icon: QrCode, label: tri3(lang, "Tracciabilità Lotti", "Chargen", "Batch Traceability") },
-                { id: "haccp", Icon: ScanLine, label: tri3(lang, "Registro HACCP", "HACCP-Register", "HACCP Log") },
-                { id: "check", Icon: ListChecks, label: tri3(lang, "Checklist", "Checklisten", "Checklists") },
-                { id: "shelf", Icon: CalendarClock, label: tri3(lang, "Shelf-Life", "Shelf-Life", "Shelf-Life") },
-              ].map(({ id, Icon, label }) => (
-                <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
-                  className="relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px] cursor-pointer">
-                  {guideFor(id, lang) && (
-                    <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
-                      onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
-                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#5E8B7E]/12 flex items-center justify-center text-[#5E8B7E] active:scale-90">
-                      <Info className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                  <Icon className="w-5 h-5 text-[#5E8B7E]" />
-                  <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{label}</span>
-                </div>
-              ))}
+              {visibleTools.map(({ id, Icon, it, de, en }) => {
+                const label = tri3(lang, it, de, en);
+                const isHidden = hiddenTools.has(id);
+                return (
+                  <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => { if (!editTools) onOpenTool(id); }}
+                    className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-default border-dashed border-[#5E8B7E]/50" : "cursor-pointer border-[#D7E1DB] dark:border-[#38424B] active:scale-95 hover:border-[#5E8B7E]/60"} ${isHidden ? "opacity-40" : ""}`}>
+                    {editTools ? (
+                      <>
+                        <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onClick={(e) => { e.stopPropagation(); toggleHideTool(id); }}
+                          className="absolute top-1 left-1 w-6 h-6 rounded-full bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#5E8B7E] active:scale-90">
+                          {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        </button>
+                        <div className="absolute top-1 right-1 flex flex-col">
+                          <button type="button" data-testid={`tool-up-${id}`} aria-label="up" onClick={(e) => { e.stopPropagation(); moveTool(id, -1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronUp className="w-3.5 h-3.5" /></button>
+                          <button type="button" data-testid={`tool-down-${id}`} aria-label="down" onClick={(e) => { e.stopPropagation(); moveTool(id, 1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronDown className="w-3.5 h-3.5" /></button>
+                        </div>
+                      </>
+                    ) : (
+                      guideFor(id, lang) && (
+                        <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
+                          onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
+                          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#5E8B7E]/12 flex items-center justify-center text-[#5E8B7E] active:scale-90">
+                          <Info className="w-3.5 h-3.5" />
+                        </button>
+                      )
+                    )}
+                    <Icon className="w-5 h-5 text-[#5E8B7E]" />
+                    <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{label}</span>
+                  </div>
+                );
+              })}
             </div>
+            {!editTools && hiddenTools.size > 0 && (
+              <p data-testid="tools-hidden-note" className="text-[10.5px] text-[#7E8A93] mt-2">
+                {tri3(lang, `${hiddenTools.size} strumenti nascosti · tocca «Personalizza» per rivederli.`, `${hiddenTools.size} Werkzeuge ausgeblendet · „Anpassen“ zum Anzeigen.`, `${hiddenTools.size} tools hidden · tap 'Customize' to show them.`)}
+              </p>
+            )}
           </>
         )}
       </Section>
