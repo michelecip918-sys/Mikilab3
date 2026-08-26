@@ -1269,3 +1269,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Tour riutilizzabile**: `LabTour.jsx` reso generico (props steps/storageKey/force/labels). Tour aggiunto a: Laboratorio (`mikilab_lab_tour_v1`), Diagnosi Foto (`mikilab_diag_tour_v1`, target photo-modes/photo-dual/photo-analyze-btn), Impara/Beginners (`mikilab_impara_tour_v1`, target beginner-path/home-planner/quiz-panel). Ogni sezione ha pulsante replay "Come si fa?".
 - Verificato via screenshot (login admin): header ok, preferiti (Timer/Miei Dati/pH), tour diagnosi auto-mostrato.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont5 (2026-06) — Preferiti manuali + Badge Novità + Etichette UE valori tipici
+- **Preferiti manuali**: in modalità "Personalizza" ogni tile ha stella `tool-pin-<id>`; `mikilab_tool_prefs.pinned[]`. La fila `tools-favorites` mostra i pinned (con Star) + gli automatici (top uso), max 6.
+- **Badge Novità**: pallino/etichetta "NUOVO" (`tool-new-<id>`) sugli strumenti con usage 0 (mai aperti). Sparisce al primo utilizzo.
+- **Etichette UE (RecipeDialog)**: pulsante `label-fill-typical` "Compila valori tipici (da verificare)" → pre-compila valori nutrizionali 100g INDICATIVI per categoria (pane, panettone/lievitati, focaccia/pizza, brezel/laugen, croissant/brioche) + allergeni tipici, tutto editabile. Michele inserisce/verifica i valori reali.
+- Verificato via screenshot (login admin): 17 badge NUOVO, pin Adatta Forno in preferiti, fill focaccia → 270 kcal + Glutine.
+- NB: PREVIEW → REDEPLOY per mikilab.de. I valori reali delle etichette li deve confermare Michele.

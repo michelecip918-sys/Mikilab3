@@ -77,6 +77,23 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const lab = form.label || emptyLabel;
   const setLab = (k, v) => setForm((f) => ({ ...f, label: { ...(f.label || emptyLabel), [k]: v } }));
 
+  // Valori nutrizionali INDICATIVI per 100 g, per categoria (Michele li verifica/modifica).
+  const fillTypicalLabel = () => {
+    const s = `${form.name || ""} ${form.menu_category || ""} ${form.preferment_type || ""}`.toLowerCase();
+    let p;
+    if (/panettone|colomba|pandoro|lievitato/.test(s))
+      p = { energy_kcal: 360, fat: 15, saturates: 8, carbs: 50, sugars: 26, fibre: 2, protein: 7, salt: 0.5, allergens: lang === "de" ? "Gluten, Eier, Milch, Schalenfrüchte" : lang === "en" ? "Gluten, Eggs, Milk, Nuts" : "Glutine, Uova, Latte, Frutta a guscio" };
+    else if (/focaccia|pizza|puccia/.test(s))
+      p = { energy_kcal: 270, fat: 6, saturates: 1, carbs: 45, sugars: 2, fibre: 2.5, protein: 7.5, salt: 1.4, allergens: lang === "de" ? "Gluten" : lang === "en" ? "Gluten" : "Glutine" };
+    else if (/brezel|laugen|taralli|frisell/.test(s))
+      p = { energy_kcal: 300, fat: 4, saturates: 0.8, carbs: 55, sugars: 2, fibre: 2.5, protein: 9, salt: 2.2, allergens: lang === "de" ? "Gluten" : lang === "en" ? "Gluten" : "Glutine" };
+    else if (/croissant|plunder|sfogli|brioche|zopf|latte/.test(s))
+      p = { energy_kcal: 400, fat: 20, saturates: 12, carbs: 45, sugars: 10, fibre: 2, protein: 7, salt: 0.9, allergens: lang === "de" ? "Gluten, Milch, Eier" : lang === "en" ? "Gluten, Milk, Eggs" : "Glutine, Latte, Uova" };
+    else
+      p = { energy_kcal: 250, fat: 1.5, saturates: 0.3, carbs: 49, sugars: 2, fibre: 3.5, protein: 8.5, salt: 1.2, allergens: lang === "de" ? "Gluten" : lang === "en" ? "Gluten" : "Glutine" };
+    setForm((f) => ({ ...f, label: { ...(f.label || emptyLabel), ...p, net_weight_g: (f.label && f.label.net_weight_g) || "" } }));
+  };
+
   const setPhase = (i, patch) => setForm((f) => { const l = [...(f.work_phases || [])]; l[i] = { ...l[i], ...patch }; return { ...f, work_phases: l }; });
   const addPhase = () => setForm((f) => ({ ...f, work_phases: [...(f.work_phases || []), { name: "", time: "", temp: "" }] }));
   const removePhase = (i) => setForm((f) => ({ ...f, work_phases: (f.work_phases || []).filter((_, idx) => idx !== i) }));
@@ -563,6 +580,10 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           <div className="pt-2 border-t border-[#D7E1DB] dark:border-[#38424B]" data-testid="recipe-label-section">
             <p className="text-xs font-bold uppercase tracking-wide text-[#5E8B7E] mb-1">{lang === "de" ? "EU-Etikett (Nährwerte)" : lang === "en" ? "EU label (nutrition)" : "Etichetta UE (valori nutrizionali)"}</p>
             <p className="text-[11px] text-[#7E8A93] mb-2 leading-snug">{lang === "de" ? "Werte pro 100 g. Energie in kJ wird automatisch berechnet." : lang === "en" ? "Values per 100 g. Energy in kJ is auto-calculated." : "Valori per 100 g. L'energia in kJ è calcolata in automatico."}</p>
+            <button type="button" data-testid="label-fill-typical" onClick={fillTypicalLabel}
+              className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#5E8B7E] bg-[#5E8B7E]/10 border border-[#5E8B7E]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
+              ✨ {lang === "de" ? "Typische Werte einsetzen (zu prüfen)" : lang === "en" ? "Fill typical values (to verify)" : "Compila valori tipici (da verificare)"}
+            </button>
             <div className="grid grid-cols-2 gap-2">
               {[
                 ["energy_kcal", lang === "de" ? "Energie (kcal)" : lang === "en" ? "Energy (kcal)" : "Energia (kcal)"],

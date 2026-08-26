@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -138,6 +138,18 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     h.has(id) ? h.delete(id) : h.add(id);
     savePrefs({ ...toolPrefs, hidden: [...h] });
   };
+  const togglePinTool = (id) => {
+    const p = new Set(toolPrefs.pinned || []);
+    p.has(id) ? p.delete(id) : p.add(id);
+    savePrefs({ ...toolPrefs, pinned: [...p] });
+  };
+  const favRow = useMemo(() => {
+    const byId = Object.fromEntries(TOOLS.map((tl) => [tl.id, tl]));
+    const pinned = (toolPrefs.pinned || []).map((id) => byId[id]).filter(Boolean);
+    const pinnedIds = new Set(pinned.map((tl) => tl.id));
+    const auto = favTools.filter((tl) => !pinnedIds.has(tl.id));
+    return [...pinned, ...auto].slice(0, 6).map((tl) => ({ ...tl, pinned: pinnedIds.has(tl.id) }));
+  }, [toolPrefs, favTools]);
 
   const addRecipes = (ids) => setProducts((l) => {
     const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
@@ -546,13 +558,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
-            {favTools.length > 0 && !editTools && (
+            {favRow.length > 0 && !editTools && (
               <div data-testid="tools-favorites" className="mb-3">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-1.5">⭐ {tri3(lang, "I TUOI PREFERITI", "DEINE FAVORITEN", "YOUR FAVORITES")}</p>
                 <div className="grid grid-cols-3 gap-2">
-                  {favTools.map(({ id, Icon, it, de, en }) => (
+                  {favRow.map(({ id, Icon, it, de, en, pinned }) => (
                     <div key={id} data-testid={`fav-tool-${id}`} onClick={() => openToolTracked(id)}
                       className="relative flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/10 border border-[#C88A2B]/40 rounded-2xl p-3 text-center active:scale-95 hover:border-[#C88A2B]/70 transition-all min-h-[70px] cursor-pointer">
+                      {pinned && <Star className="absolute top-1 right-1 w-3.5 h-3.5 text-[#C88A2B] fill-[#C88A2B]" />}
                       <Icon className="w-5 h-5 text-[#C88A2B]" />
                       <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{tri3(lang, it, de, en)}</span>
                     </div>
@@ -571,7 +584,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
             <p className="text-[10.5px] text-[#7E8A93] mb-2">
               {editTools
-                ? tri3(lang, "Nascondi ciò che non usi (occhio) e riordina con le frecce.", "Blende Ungenutztes aus (Auge) und ordne mit den Pfeilen.", "Hide what you don't use (eye) and reorder with the arrows.")
+                ? tri3(lang, "Occhio = nascondi · stella = preferito · frecce = riordina.", "Auge = ausblenden · Stern = Favorit · Pfeile = sortieren.", "Eye = hide · star = favorite · arrows = reorder.")
                 : tri3(lang, "Tocca per aprirlo e usarlo. La «i» ti spiega a cosa serve.", "Tippe zum Öffnen und Nutzen. Die „i“ erklärt den Zweck.", "Tap to open and use it. The 'i' explains what it's for.")}
             </p>
 
@@ -584,23 +597,36 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-default border-dashed border-[#5E8B7E]/50" : "cursor-pointer border-[#D7E1DB] dark:border-[#38424B] active:scale-95 hover:border-[#5E8B7E]/60"} ${isHidden ? "opacity-40" : ""}`}>
                     {editTools ? (
                       <>
-                        <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onClick={(e) => { e.stopPropagation(); toggleHideTool(id); }}
-                          className="absolute top-1 left-1 w-6 h-6 rounded-full bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#5E8B7E] active:scale-90">
-                          {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                        </button>
+                        <div className="absolute top-1 left-1 flex gap-0.5">
+                          <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onClick={(e) => { e.stopPropagation(); toggleHideTool(id); }}
+                            className="w-6 h-6 rounded-full bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#5E8B7E] active:scale-90">
+                            {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                          <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onClick={(e) => { e.stopPropagation(); togglePinTool(id); }}
+                            className={`w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#C88A2B] text-white" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#C88A2B]"}`}>
+                            <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
+                          </button>
+                        </div>
                         <div className="absolute top-1 right-1 flex flex-col">
                           <button type="button" data-testid={`tool-up-${id}`} aria-label="up" onClick={(e) => { e.stopPropagation(); moveTool(id, -1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronUp className="w-3.5 h-3.5" /></button>
                           <button type="button" data-testid={`tool-down-${id}`} aria-label="down" onClick={(e) => { e.stopPropagation(); moveTool(id, 1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronDown className="w-3.5 h-3.5" /></button>
                         </div>
                       </>
                     ) : (
-                      guideFor(id, lang) && (
-                        <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
-                          onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
-                          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#5E8B7E]/12 flex items-center justify-center text-[#5E8B7E] active:scale-90">
-                          <Info className="w-3.5 h-3.5" />
-                        </button>
-                      )
+                      <>
+                        {!toolUsage[id] && (
+                          <span data-testid={`tool-new-${id}`} className="absolute top-1 left-1 flex items-center gap-1 text-[8px] font-extrabold uppercase text-white bg-[#C0574D] px-1.5 py-0.5 rounded-full shadow">
+                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />{tri3(lang, "NUOVO", "NEU", "NEW")}
+                          </span>
+                        )}
+                        {guideFor(id, lang) && (
+                          <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
+                            onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
+                            className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#5E8B7E]/12 flex items-center justify-center text-[#5E8B7E] active:scale-90">
+                            <Info className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </>
                     )}
                     <Icon className="w-5 h-5 text-[#5E8B7E]" />
                     <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{label}</span>
