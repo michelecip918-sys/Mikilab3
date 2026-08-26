@@ -1385,3 +1385,17 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Frontend** (`App.js`): gestione ritorno `?bundle=success&session_id=...` → polling status, toast "Pacchetto sbloccato + PDF via email", dispatch `mikilab-entitlements-updated`, vai a Ricette; pulizia URL (aggiunto `bundle` alle chiavi). Import `api` da lib.
 - **Test**: PDF generato per tutti e 4 i pacchetti in IT/DE/EN (header %PDF- valido, 49/18/10/17 ricette). Resend accetta l'allegato (test su delivered@resend.dev → id ricevuto). Status endpoint 404 su sessione inesistente. Non testabile un pagamento LIVE reale (serve carta).
 - NB: PREVIEW → REDEPLOY per mikilab.de. Webhook Stripe LIVE: verificare che l'endpoint `/api/webhook/stripe` sia registrato nel dashboard con il WEBHOOK_SECRET corretto per l'account attuale.
+
+## v-cont24 (2026-06) — Chiusura HACCP 3 step + Magazzino, Preferiti a stella, Lingue IT/DE, PDF copertina, Email follow-up
+1. **"Concludi Giornata" → "Chiusura Turno & Registro HACCP" (wizard 3 step)** (`DayClose.jsx` riscritto):
+   - Step 1 Tracciabilità & Lotti: lotto di produzione auto (ML-AAAAMMGG-XX, rigenerabile), quantità prodotte, **Magazzino materie prime** (giacenze kg, add/salva), **Scarico** calcolato dal piano (`computeShopping`) e scalato automaticamente alla chiusura.
+   - Step 2 Registro Sanitario: temperature (celle da lab-config), pulizie/sanificazione (Impastatrici/Banchi/Spezzatrici/Pavimenti/Celle/Forni), anomalie.
+   - Step 3 Chiusura: operatore, nota, riepilogo → `POST /api/day-close` archivia + **sincronizza automaticamente il Registro HACCP** (una voce per temperatura con valore + una per pulizie/anomalie). Overlay celebrazione.
+   - Backend nuovo: `GET/PUT /api/inventory` (magazzino per owner), `POST /api/day-close` (scarico magazzino fuzzy-match + crea haccp_logs + archivia in `day_closures`), `GET /api/day-close/last`. api.js: `inventoryApi`, `dayCloseApi`.
+2. **Preferiti strumenti a STELLA (niente auto-aggiunta)** (`PianoProduzioneAI.jsx`): aprire uno strumento NON lo aggiunge più ai preferiti (rimossa la logica auto da `toolUsage`). Ogni card ha una ⭐ (`tool-fav-<id>`) per aggiungere/togliere; nei preferiti la ⭐ (`fav-remove-<id>`) o long-press rimuove; "Personalizza" resta per riordina/nascondi/pin. Badge "NUOVO" ora è un pallino rosso sulla stella (niente più overlap sull'etichetta).
+3. **Tabella Farine unificata** (`FlourTable.jsx`): UNA riga per tipo (sigla DE · nome IT) con W (forza) e proteine%. Rimosso il doppione inline sotto l'avatar in `RecipeList.jsx` (resta solo il pulsante "Tabelle & Farine").
+4. **Lingue solo IT/DE**: selettore header (`Header.jsx`) e popup benvenuto (`IntroGuide.jsx`) → solo IT|DE; `LanguageContext` clampa a it/de (EN disattivato lato UI, traduzioni EN restano nel codice). Rimossi i 🇬🇧 residui in Home/AuthScreen.
+5. **PDF pacchetto con COPERTINA a colori + logo** (`_build_bundle_pdf`): prima pagina navy con logo MikiLab, titolo pacchetto, footer "mikilab.de".
+6. **Email di follow-up** (`_send_bundle_followups` + loop ogni 6h): 3 giorni dopo l'acquisto di un pacchetto (`FOLLOWUP_DAYS=3`), invio UNA sola volta (`followup_sent`) invitando a scoprire gli altri pacchetti (Resend).
+- Test: iteration_76 backend 9/9 pytest + E2E frontend 100% (favoriti no-auto-add, wizard chiusura, lingue). Fix post-test: owner_id non più esposto in day-close/last; niente voci HACCP per temperature vuote; badge NUOVO non copre più le etichette; rimossi 🇬🇧.
+- NB: PREVIEW → REDEPLOY per mikilab.de. Chiave Stripe LIVE.

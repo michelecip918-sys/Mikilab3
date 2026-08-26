@@ -55,7 +55,7 @@ export default function Header() {
           className="flex items-center bg-[#e4eff8] dark:bg-[#2A323A] rounded-xl border border-[#d5e4f0] dark:border-[#38424B] p-0.5"
           aria-label={t("lang_label")}
         >
-          {["it", "de", "en"].map((l) => (
+          {["it", "de"].map((l) => (
             <button
               key={l}
               data-testid={`lang-${l}`}

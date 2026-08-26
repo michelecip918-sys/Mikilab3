@@ -121,14 +121,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     setToolUsage(next);
     onOpenTool && onOpenTool(id);
   };
-  const favTools = useMemo(() => {
-    const byId = Object.fromEntries(TOOLS.map((tl) => [tl.id, tl]));
-    return Object.entries(toolUsage)
-      .filter(([id, c]) => byId[id] && c > 0)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([id]) => byId[id]);
-  }, [toolUsage]);
   const savePrefs = (p) => { setToolPrefs(p); try { localStorage.setItem("mikilab_tool_prefs", JSON.stringify(p)); } catch { /* */ } };
   const orderedTools = useMemo(() => {
     const order = Array.isArray(toolPrefs.order) ? toolPrefs.order : [];
@@ -157,13 +149,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     p.has(id) ? p.delete(id) : p.add(id);
     savePrefs({ ...toolPrefs, pinned: [...p] });
   };
+  // I PREFERITI sono SOLO quelli scelti a mano con la stella (nessuna aggiunta automatica).
   const favRow = useMemo(() => {
     const byId = Object.fromEntries(TOOLS.map((tl) => [tl.id, tl]));
-    const pinned = (toolPrefs.pinned || []).map((id) => byId[id]).filter(Boolean);
-    const pinnedIds = new Set(pinned.map((tl) => tl.id));
-    const auto = favTools.filter((tl) => !pinnedIds.has(tl.id));
-    return [...pinned, ...auto].slice(0, 6).map((tl) => ({ ...tl, pinned: pinnedIds.has(tl.id) }));
-  }, [toolPrefs, favTools]);
+    return (toolPrefs.pinned || []).map((id) => byId[id]).filter(Boolean).map((tl) => ({ ...tl, pinned: true }));
+  }, [toolPrefs]);
 
   const addRecipes = (ids) => setProducts((l) => {
     const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
@@ -602,37 +592,29 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               const pinnedIds = (toolPrefs.pinned || []).filter((id) => TOOLS.some((t) => t.id === id));
               const byId = Object.fromEntries(TOOLS.map((t) => [t.id, t]));
               const pinnedFavs = pinnedIds.map((id) => byId[id]).filter(Boolean);
-              const autoFavs = favRow.filter((t) => !t.pinned);
+              const unpin = (id) => { togglePinTool(id); toast.success(tri3(lang, "Rimosso dai preferiti", "Aus Favoriten entfernt", "Removed from favorites")); };
               return (
                 <div data-testid="tools-favorites" className="mb-3">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-1.5">⭐ {tri3(lang, "I TUOI PREFERITI", "DEINE FAVORITEN", "YOUR FAVORITES")}{pinnedFavs.length > 1 ? ` · ${tri3(lang, "trascina per ordinare", "zum Sortieren ziehen", "drag to reorder")}` : ""}</p>
-                  {pinnedFavs.length > 0 && (
-                    <Reorder.Group as="div" axis="x" values={pinnedIds} onReorder={(ids) => savePrefs({ ...toolPrefs, pinned: ids })}
-                      className="flex gap-2 overflow-x-auto pb-1 mb-2" style={{ scrollbarWidth: "none" }}>
-                      {pinnedFavs.map(({ id, Icon, it, de, en }) => (
-                        <Reorder.Item as="div" key={id} value={id} data-testid={`fav-tool-${id}`}
-                          whileDrag={{ scale: 1.07, zIndex: 5 }}
-                          onDragStart={() => { favDragMoved.current = true; }}
-                          onClick={() => { if (favDragMoved.current) { favDragMoved.current = false; return; } openToolTracked(id); }}
-                          className="relative shrink-0 w-[104px] flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/12 border border-[#C88A2B]/50 rounded-2xl p-3 min-h-[70px] cursor-grab active:cursor-grabbing select-none">
-                          <Star className="absolute top-1 right-1 w-3.5 h-3.5 text-[#C88A2B] fill-[#C88A2B]" />
-                          <Icon className="w-5 h-5 text-[#C88A2B]" />
-                          <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] text-center">{tri3(lang, it, de, en)}</span>
-                        </Reorder.Item>
-                      ))}
-                    </Reorder.Group>
-                  )}
-                  {autoFavs.length > 0 && (
-                    <div className="grid grid-cols-3 gap-2">
-                      {autoFavs.map(({ id, Icon, it, de, en }) => (
-                        <div key={id} data-testid={`fav-tool-${id}`} onClick={() => openToolTracked(id)}
-                          className="relative flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/10 border border-[#C88A2B]/40 rounded-2xl p-3 text-center active:scale-95 hover:border-[#C88A2B]/70 transition-all min-h-[70px] cursor-pointer">
-                          <Icon className="w-5 h-5 text-[#C88A2B]" />
-                          <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, it, de, en)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-1.5">⭐ {tri3(lang, "I TUOI PREFERITI", "DEINE FAVORITEN", "YOUR FAVORITES")}{pinnedFavs.length > 1 ? ` · ${tri3(lang, "trascina per ordinare · tocca la stella per togliere", "ziehen zum Sortieren · Stern zum Entfernen", "drag to reorder · tap star to remove")}` : ` · ${tri3(lang, "tocca la stella per togliere", "Stern zum Entfernen", "tap star to remove")}`}</p>
+                  <Reorder.Group as="div" axis="x" values={pinnedIds} onReorder={(ids) => savePrefs({ ...toolPrefs, pinned: ids })}
+                    className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+                    {pinnedFavs.map(({ id, Icon, it, de, en }) => (
+                      <Reorder.Item as="div" key={id} value={id} data-testid={`fav-tool-${id}`}
+                        whileDrag={{ scale: 1.07, zIndex: 5 }}
+                        onDragStart={() => { favDragMoved.current = true; }}
+                        onContextMenu={(e) => { e.preventDefault(); unpin(id); }}
+                        onClick={() => { if (favDragMoved.current) { favDragMoved.current = false; return; } openToolTracked(id); }}
+                        className="relative shrink-0 w-[104px] flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/12 border border-[#C88A2B]/50 rounded-2xl p-3 pt-6 min-h-[70px] cursor-grab active:cursor-grabbing select-none">
+                        <button type="button" data-testid={`fav-remove-${id}`} aria-label="remove favorite"
+                          onClick={(e) => { e.stopPropagation(); unpin(id); }} onPointerDown={(e) => e.stopPropagation()}
+                          className="absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center bg-[#C88A2B] active:scale-90">
+                          <Star className="w-3.5 h-3.5 text-white fill-white" />
+                        </button>
+                        <Icon className="w-5 h-5 text-[#C88A2B]" />
+                        <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] text-center">{tri3(lang, it, de, en)}</span>
+                      </Reorder.Item>
+                    ))}
+                  </Reorder.Group>
                 </div>
               );
             })()}
@@ -648,7 +630,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <p className="text-[10.5px] text-[#7E8A93] mb-2">
               {editTools
                 ? tri3(lang, "Occhio = nascondi · stella = preferito · frecce = riordina.", "Auge = ausblenden · Stern = Favorit · Pfeile = sortieren.", "Eye = hide · star = favorite · arrows = reorder.")
-                : tri3(lang, "Tocca per aprirlo e usarlo. La «i» ti spiega a cosa serve.", "Tippe zum Öffnen und Nutzen. Die „i“ erklärt den Zweck.", "Tap to open and use it. The 'i' explains what it's for.")}
+                : tri3(lang, "Tocca per aprirlo. La ⭐ lo aggiunge ai preferiti, la «i» spiega a cosa serve.", "Tippe zum Öffnen. Der ⭐ fügt zu Favoriten hinzu, die „i“ erklärt es.", "Tap to open. The ⭐ adds to favorites, the 'i' explains it.")}
             </p>
 
             <div className="grid grid-cols-3 gap-2">
@@ -677,11 +659,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                       </>
                     ) : (
                       <>
-                        {!toolUsage[id] && (
-                          <span data-testid={`tool-new-${id}`} className="absolute top-1 left-1 flex items-center gap-1 text-[8px] font-extrabold uppercase text-white bg-[#C0574D] px-1.5 py-0.5 rounded-full shadow">
-                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />{tri3(lang, "NUOVO", "NEU", "NEW")}
-                          </span>
-                        )}
+                        <button type="button" data-testid={`tool-fav-${id}`} aria-label="favorite"
+                          onClick={(e) => { e.stopPropagation(); const was = (toolPrefs.pinned || []).includes(id); togglePinTool(id); toast.success(was ? tri3(lang, "Rimosso dai preferiti", "Aus Favoriten entfernt", "Removed from favorites") : tri3(lang, "Aggiunto ai preferiti ⭐", "Zu Favoriten hinzugefügt ⭐", "Added to favorites ⭐")); }}
+                          className={`absolute top-1 left-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#C88A2B] text-white" : "bg-[#C88A2B]/12 text-[#C88A2B]"}`}>
+                          <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
+                          {!toolUsage[id] && (
+                            <span data-testid={`tool-new-${id}`} className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#C0574D] border border-white animate-pulse" title={tri3(lang, "Nuovo", "Neu", "New")} />
+                          )}
+                        </button>
                         {guideFor(id, lang) && (
                           <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
                             onClick={(e) => { e.stopPropagation(); setGuideId(id); }}

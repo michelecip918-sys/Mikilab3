@@ -182,3 +182,13 @@ export const haccpApi = {
   create: (data) => api.post(`/haccp-logs`, data).then((r) => r.data),
   remove: (id) => api.delete(`/haccp-logs/${id}`).then((r) => r.data),
 };
+
+export const inventoryApi = {
+  get: () => api.get(`/inventory`).then((r) => r.data).catch(() => ({ items: [] })),
+  save: (items) => api.put(`/inventory`, { items }).then((r) => r.data),
+};
+
+export const dayCloseApi = {
+  close: (data) => api.post(`/day-close`, data).then((r) => r.data),
+  last: () => api.get(`/day-close/last`).then((r) => r.data).catch(() => ({})),
+};

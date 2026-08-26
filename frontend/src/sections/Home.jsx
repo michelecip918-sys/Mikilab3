@@ -127,7 +127,7 @@ function HomeAvatarScene({ lang }) {
 
       <div className="absolute bottom-0 left-0 p-5 z-20 pointer-events-none">
         <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : lang === "en" ? "Your digital companion" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪 🇬🇧</p>
+        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪</p>
       </div>
     </div>
   );

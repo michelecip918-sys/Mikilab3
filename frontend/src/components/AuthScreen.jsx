@@ -78,7 +78,7 @@ export default function AuthScreen({ onClose }) {
         <div className="text-center mb-6">
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-3" />
           <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{T.title}</h1>
-          <p className="text-sm text-[#7E8A93] mt-1">{T.sub} 🇮🇹 🇩🇪 🇬🇧</p>
+          <p className="text-sm text-[#7E8A93] mt-1">{T.sub} 🇮🇹 🇩🇪</p>
         </div>
 
         {mode !== "forgot" && (

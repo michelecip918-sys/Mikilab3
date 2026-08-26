@@ -3,16 +3,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Table2, ChevronDown } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 
-// Tabella trilingue Farine & Sigle (DE / IT / EN-resto del mondo).
+// Tabella Farine unificata: UNA riga per tipo di farina con sigla DE · nome IT, W (forza) e proteine.
 const FLOURS = [
-  ["Weizen 405", "Farina 00", "Cake / pastry flour", "diretto"],
-  ["Weizen 550", "Farina 0", "All-purpose / bread flour", "diretto"],
-  ["Weizen 812", "Farina 1", "High-extraction wheat", "diretto/indiretto"],
-  ["Weizen 1050", "Farina 2", "First clear flour", "indiretto"],
-  ["Dinkel 630", "Farro (spelt)", "Spelt 630", "indiretto"],
-  ["Roggen 1150", "Segale", "Rye 1150", "indiretto"],
-  ["Vollkorn", "Integrale", "Wholewheat", "indiretto"],
-  ["Hartweizen / Semola", "Semola grano duro", "Durum semolina", "diretto/indiretto"],
+  ["Weizen 405 · Farina 00", "90–180 W", "9–11%", "diretto"],
+  ["Weizen 550 · Farina 0", "180–260 W", "11–13%", "diretto"],
+  ["Weizen 812 · Farina 1", "250–320 W", "12–14%", "diretto/indiretto"],
+  ["Weizen 1050 · Farina 2", "220–300 W", "13–14%", "indiretto"],
+  ["Dinkel 630 · Farro", "150–220 W", "12–13%", "indiretto"],
+  ["Roggen 1150 · Segale", "—", "8–10%", "indiretto"],
+  ["Vollkorn · Integrale", "180–280 W", "13–15%", "indiretto"],
+  ["Hartweizen · Semola", "200–300 W", "12–15%", "diretto/indiretto"],
 ];
 const SIGNS = [
   ["H2O", "Acqua", "Wasser", "Water"],
@@ -36,17 +36,18 @@ export default function FlourTable({ embedded = false }) {
   const body = (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-[#2e3d4c] mb-1.5">{tri("Farine — sigle nei 3 mercati", "Mehle — Codes in 3 Märkten", "Flours — codes in 3 markets")}</p>
+        <p className="text-xs font-bold uppercase text-[#2e3d4c] mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
         <div className="overflow-x-auto rounded-xl border border-[#d5e4f0] dark:border-[#38424B]">
           <table className="w-full border-collapse">
             <thead className="bg-[#f0f6fb] dark:bg-[#1F252B]">
-              <tr><th className={th}>🇩🇪 Germania</th><th className={th}>🇮🇹 Italia</th><th className={th}>🌍 EN</th><th className={th}>{tri("Metodo", "Methode", "Method")}</th></tr>
+              <tr><th className={th}>{tri("Tipo (DE · IT)", "Typ (DE · IT)", "Type (DE · IT)")}</th><th className={th}>W {tri("(forza)", "(Stärke)", "(strength)")}</th><th className={th}>{tri("Proteine", "Protein", "Protein")}</th><th className={th}>{tri("Metodo", "Methode", "Method")}</th></tr>
             </thead>
             <tbody>
               {FLOURS.map((r, i) => (
                 <tr key={i} className={i % 2 ? "bg-[#f0f6fb]/50 dark:bg-[#1F252B]/50" : ""}>
-                  <td className={td + " font-mono-data font-semibold"}>{r[0]}</td>
-                  <td className={td}>{r[1]}</td><td className={td}>{r[2]}</td>
+                  <td className={td + " font-semibold"}>{r[0]}</td>
+                  <td className={td + " font-mono-data"}>{r[1]}</td>
+                  <td className={td + " font-mono-data"}>{r[2]}</td>
                   <td className={td + " text-[#7E8A93]"}>{r[3]}</td>
                 </tr>
               ))}

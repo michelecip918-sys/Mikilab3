@@ -6,8 +6,8 @@ const LanguageContext = createContext(null);
 export function LanguageProvider({ children }) {
   const [lang, setLangState] = useState(() => {
     const saved = localStorage.getItem("mikilab_lang");
-    if (saved) return saved;
-    // Lingua di default: ITALIANO (l'utente sceglie DE/EN dal selettore, la scelta è salvata).
+    // Solo IT/DE per ora (EN temporaneamente disattivato lato UI).
+    if (saved === "de") return "de";
     return "it";
   });
 
@@ -16,7 +16,7 @@ export function LanguageProvider({ children }) {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const setLang = useCallback((l) => setLangState(l), []);
+  const setLang = useCallback((l) => setLangState(l === "de" ? "de" : "it"), []);
 
   const t = useCallback(
     (key) => (translations[lang] && translations[lang][key]) || translations.it[key] || key,

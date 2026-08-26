@@ -2334,6 +2334,35 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
     story = [Paragraph(esc(bundle_name), h1),
              Paragraph("MikiLab · " + L["made"], sub), Spacer(1, 6 * mm)]
 
+    LOGO_PATH = "/app/frontend/public/logo.png"
+
+    def _cover(canvas, doc_):
+        w, h = A4
+        canvas.saveState()
+        canvas.setFillColor(colors.HexColor("#234b6e"))
+        canvas.rect(0, 0, w, h, fill=1, stroke=0)
+        canvas.setFillColor(colors.HexColor("#C88A2B"))
+        canvas.rect(0, h * 0.60 - 3, w, 5, fill=1, stroke=0)
+        canvas.rect(0, h * 0.60 + 92 * mm, w, 5, fill=1, stroke=0)
+        try:
+            lw = 46 * mm
+            canvas.drawImage(LOGO_PATH, (w - lw) / 2, h * 0.60 + 30 * mm, width=lw, height=lw,
+                             preserveAspectRatio=True, mask="auto")
+        except Exception:
+            pass
+        canvas.setFillColor(colors.white)
+        canvas.setFont("Helvetica-Bold", 30)
+        canvas.drawCentredString(w / 2, h * 0.60 + 8 * mm, "MikiLab")
+        canvas.setFont("Helvetica-Bold", 19)
+        title = bundle_name if len(bundle_name) <= 42 else bundle_name[:40] + "…"
+        canvas.drawCentredString(w / 2, h * 0.60 - 18 * mm, title)
+        canvas.setFillColor(colors.HexColor("#a9d2ec"))
+        canvas.setFont("Helvetica", 12)
+        canvas.drawCentredString(w / 2, h * 0.60 - 30 * mm, L["made"])
+        canvas.setFont("Helvetica-Oblique", 10)
+        canvas.drawCentredString(w / 2, 22 * mm, "Il Laboratorio di Michele · mikilab.de")
+        canvas.restoreState()
+
     for i, r in enumerate(recipes):
         if i > 0:
             story.append(PageBreak())
@@ -2392,7 +2421,8 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
             story.append(Paragraph(L["notes"], lab))
             story.append(Paragraph(esc(notes).replace("\n", "<br/>"), body))
 
-    doc.build(story)
+    from reportlab.platypus import PageBreak as _PB
+    doc.build([_PB()] + story, onFirstPage=_cover)
     return buf.getvalue()
 
 
@@ -3801,6 +3831,129 @@ async def haccp_delete(log_id: str, user: dict = Depends(current_user)):
     return {"ok": True}
 
 
+# ---------------------------------------------------------------------------
+# MAGAZZINO (giacenze materie prime) + CHIUSURA GIORNATA / Registro HACCP
+# ---------------------------------------------------------------------------
+class InventoryItem(BaseModel):
+    id: Optional[str] = None
+    name: str = Field(..., max_length=160)
+    category: str = Field("farina", max_length=40)   # farina | lievito | altro
+    qty: float = 0                                   # quantità disponibile
+    unit: str = Field("kg", max_length=12)           # kg | g | pz | L
+    lot: Optional[str] = Field("", max_length=120)
+    threshold: Optional[float] = None                # soglia di avviso
+
+
+class InventorySave(BaseModel):
+    items: List[InventoryItem] = []
+
+
+def _inv_public(d: dict) -> dict:
+    return {k: d.get(k) for k in ("id", "name", "category", "qty", "unit", "lot", "threshold")}
+
+
+@api_router.get("/inventory")
+async def inventory_get(user: dict = Depends(current_user)):
+    docs = await db.inventory_items.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("name", 1).to_list(500)
+    return {"items": [_inv_public(d) for d in docs]}
+
+
+@api_router.put("/inventory")
+async def inventory_save(body: InventorySave, user: dict = Depends(current_user)):
+    uid = user["user_id"]
+    await db.inventory_items.delete_many({"owner_id": uid})
+    docs = []
+    for it in body.items:
+        docs.append({"id": it.id or str(uuid.uuid4()), "owner_id": uid, "name": it.name.strip(),
+                     "category": it.category, "qty": float(it.qty or 0), "unit": it.unit,
+                     "lot": (it.lot or "").strip(), "threshold": it.threshold, "updated_at": now_iso()})
+    if docs:
+        await db.inventory_items.insert_many(docs)
+    return {"items": [_inv_public(d) for d in docs]}
+
+
+class DayCloseReq(BaseModel):
+    produced: List[dict] = []          # [{name, qty, unit, lot}]
+    consume: List[dict] = []           # [{name, qty}] scarico materie prime
+    temps: List[dict] = []             # [{name, temp_c}]
+    cleaning: dict = {}                # {mixers, benches, dividers, floors, ...: bool}
+    anomalies: Optional[str] = Field("", max_length=2000)
+    operator: Optional[str] = Field("", max_length=160)
+    note: Optional[str] = Field("", max_length=2000)
+    production_lot: Optional[str] = Field("", max_length=120)
+    lang: str = "it"
+
+
+def _norm(s: str) -> str:
+    return (s or "").strip().lower()
+
+
+@api_router.post("/day-close")
+async def day_close(body: DayCloseReq, user: dict = Depends(current_user)):
+    uid = user["user_id"]
+    now = now_iso()
+    # 1) Scarico magazzino (match per nome, fuzzy come il freezer)
+    deducted = []
+    if body.consume:
+        inv = await db.inventory_items.find({"owner_id": uid}).to_list(500)
+        for c in body.consume:
+            cn = _norm(c.get("name"))
+            want = float(c.get("qty") or 0)
+            if not cn or want <= 0:
+                continue
+            for it in inv:
+                itn = _norm(it.get("name"))
+                if itn == cn or (len(itn) >= 4 and len(cn) >= 4 and (itn in cn or cn in itn)):
+                    avail = float(it.get("qty") or 0)
+                    take = min(avail, want)
+                    if take > 0:
+                        newq = round(avail - take, 3)
+                        await db.inventory_items.update_one({"id": it["id"], "owner_id": uid},
+                            {"$set": {"qty": newq, "updated_at": now}})
+                        it["qty"] = newq
+                        deducted.append({"name": it["name"], "qty": take, "unit": it.get("unit", "kg"), "remaining": newq})
+                    break
+    # 2) Sync automatico → Registro HACCP: crea voci per ogni temperatura + una per pulizie/anomalie
+    haccp_created = 0
+    for tp in body.temps:
+        nm = (tp.get("name") or "").strip()
+        tc = tp.get("temp_c")
+        if not nm or tc in (None, ""):
+            continue  # salta i punti senza valore di temperatura
+        await db.haccp_logs.insert_one({"id": str(uuid.uuid4()), "owner_id": uid, "created_at": now,
+            "material": nm, "code": "", "lot": body.production_lot or "", "expiry": "", "supplier": "",
+            "temp_c": (float(tc) if tc not in (None, "") else None), "qty": "",
+            "note": f"Chiusura giornata {now[:10]}" + (f" · Operatore: {body.operator}" if body.operator else "")})
+        haccp_created += 1
+    clean_on = [k for k, v in (body.cleaning or {}).items() if v]
+    if clean_on or (body.anomalies or "").strip():
+        note_parts = []
+        if clean_on:
+            note_parts.append("Sanificazione: " + ", ".join(clean_on))
+        if (body.anomalies or "").strip():
+            note_parts.append("Anomalie: " + body.anomalies.strip())
+        await db.haccp_logs.insert_one({"id": str(uuid.uuid4()), "owner_id": uid, "created_at": now,
+            "material": "Registro sanitario (chiusura)", "code": "", "lot": body.production_lot or "",
+            "expiry": "", "supplier": "", "temp_c": None, "qty": "",
+            "note": " · ".join(note_parts) + (f" · Operatore: {body.operator}" if body.operator else "")})
+        haccp_created += 1
+    # 3) Archivia chiusura
+    rec = {"id": str(uuid.uuid4()), "owner_id": uid, "date": now[:10], "closed_at": now,
+           "produced": body.produced, "deducted": deducted, "temps": body.temps,
+           "cleaning": body.cleaning, "anomalies": body.anomalies, "operator": body.operator,
+           "note": body.note, "production_lot": body.production_lot, "haccp_created": haccp_created}
+    await db.day_closures.insert_one(rec)
+    rec.pop("_id", None)
+    return {"ok": True, "closure": {k: rec[k] for k in rec if k != "owner_id"}, "deducted": deducted, "haccp_created": haccp_created}
+
+
+@api_router.get("/day-close/last")
+async def day_close_last(user: dict = Depends(current_user)):
+    d = await db.day_closures.find_one({"owner_id": user["user_id"]}, {"_id": 0, "owner_id": 0}, sort=[("closed_at", -1)])
+    return d or {}
+
+
+
 app.include_router(api_router)
 
 app.add_middleware(
@@ -3889,6 +4042,74 @@ async def seed_welcome_post():
     await db.community_posts.insert_one(doc)
 
 
+
+# --- Email di follow-up dopo l'acquisto di un pacchetto (dopo N giorni) ------
+FOLLOWUP_DAYS = 3
+BUNDLE_PRICE_LABEL = {"pane": "€40", "panettoni": "€50", "panini": "€20", "snack": "€10"}
+
+
+def _followup_email_html(bought_name: str, missing: list, lang: str) -> str:
+    def li(b):
+        return f"<li><b>{BUNDLE_DEFS[b]['name']}</b> — {BUNDLE_PRICE_LABEL.get(b, '')}</li>"
+    items = "".join(li(b) for b in missing)
+    if lang == "de":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+                f"<h2 style='color:#234b6e'>Wie läuft es mit deinem Paket? 🥖</h2>"
+                f"<p>Wir hoffen, das Paket <b>{bought_name}</b> gefällt dir! "
+                f"Vielleicht möchtest du auch die anderen Rezept-Pakete von Michele entdecken:</p>"
+                f"<ul>{items}</ul>"
+                f"<p><a href='https://mikilab.de' style='background:#234b6e;color:#fff;text-decoration:none;"
+                f"padding:12px 22px;border-radius:12px;font-weight:bold;display:inline-block'>Weitere Pakete ansehen</a></p>"
+                f"<p style='color:#888;font-size:12px'>MikiLab · Das Labor von Michele</p></div>")
+    return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+            f"<h2 style='color:#234b6e'>Come va con il tuo pacchetto? 🥖</h2>"
+            f"<p>Speriamo che il pacchetto <b>{bought_name}</b> ti stia piacendo! "
+            f"Forse vuoi scoprire anche gli altri pacchetti di ricette di Michele:</p>"
+            f"<ul>{items}</ul>"
+            f"<p><a href='https://mikilab.de' style='background:#234b6e;color:#fff;text-decoration:none;"
+            f"padding:12px 22px;border-radius:12px;font-weight:bold;display:inline-block'>Scopri gli altri pacchetti</a></p>"
+            f"<p style='color:#888;font-size:12px'>MikiLab · Il Laboratorio di Michele</p></div>")
+
+
+async def _send_bundle_followups():
+    """Invia (una sola volta) l'email di follow-up ai clienti che hanno comprato un pacchetto da ≥ N giorni."""
+    if not RESEND_API_KEY:
+        return
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=FOLLOWUP_DAYS)).isoformat()
+    q = {"bundle": {"$exists": True}, "payment_status": "paid",
+         "followup_sent": {"$ne": True}, "paid_at": {"$lte": cutoff}}
+    txs = await db.payment_transactions.find(q).to_list(200)
+    for tx in txs:
+        email = (tx.get("email") or "").strip().lower()
+        bought = tx.get("bundle")
+        if not email or bought not in BUNDLE_DEFS:
+            await db.payment_transactions.update_one({"_id": tx["_id"]}, {"$set": {"followup_sent": True}})
+            continue
+        ent = await db.entitlements.find_one({"email": email}) or {}
+        owned = set(ent.get("unlocked_bundles") or [])
+        if ent.get("unlock_all"):
+            owned = set(BUNDLE_DEFS.keys())
+        missing = [b for b in BUNDLE_DEFS if b not in owned]
+        try:
+            if missing:
+                params = {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [email],
+                          "subject": "MikiLab · Scopri gli altri pacchetti di ricette 🥖",
+                          "html": _followup_email_html(BUNDLE_DEFS[bought]["name"], missing, "it")}
+                await asyncio.to_thread(_resend.Emails.send, params)
+            await db.payment_transactions.update_one({"_id": tx["_id"]}, {"$set": {"followup_sent": True, "followup_at": now_iso()}})
+        except Exception as e:
+            logging.getLogger(__name__).error(f"bundle follow-up email failed: {e}")
+
+
+async def _followup_loop():
+    while True:
+        try:
+            await _send_bundle_followups()
+        except Exception as e:
+            logging.getLogger(__name__).error(f"follow-up loop error: {e}")
+        await asyncio.sleep(6 * 3600)  # ogni 6 ore
+
+
 @app.on_event("startup")
 async def on_startup_seed_mikilab():
     """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab, senza cancellare nulla."""
@@ -3911,6 +4132,11 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Archivio immagini inizializzato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Storage init error: {e}")
+    try:
+        asyncio.create_task(_followup_loop())
+        logging.getLogger(__name__).info("Follow-up email loop avviato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Follow-up loop start error: {e}")
 
 
 @app.on_event("shutdown")

@@ -7,7 +7,6 @@ import { CATS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
 import EULabel from "@/components/EULabel";
 import ScaleDialog from "@/components/ScaleDialog";
-import FlourTable from "@/components/FlourTable";
 import PrintHeader from "@/components/PrintHeader";
 import MachineScheda from "@/components/MachineScheda";
 import { playTTS } from "@/lib/tts";
@@ -219,8 +218,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       ) : null}
 
-      {/* Tabella farine: solo nel ricettario MikiLab. Enciclopedia: solo in Ricette MikiLab (pulsante). */}
-      {collectionName === "mikilab" && <FlourTable />}
+      {/* Tabella farine unificata: accessibile SOLO dal pulsante «Tabelle & Farine» sopra l'avatar
+          (rimosso il doppione qui sotto per evitare due tabelle diverse). */}
 
       {canEdit && (
         <button

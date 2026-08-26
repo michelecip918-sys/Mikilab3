@@ -1,131 +1,311 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckSquare, Thermometer, ShieldCheck, Archive, CalendarCheck, LogIn } from "lucide-react";
+import {
+  CheckSquare, Thermometer, ShieldCheck, Archive, CalendarCheck, LogIn, Package,
+  QrCode, Sparkles, ChevronRight, ChevronLeft, Plus, X, Trash2, Boxes, Save, AlertTriangle,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
-import ListenButton from "@/components/ListenButton";
 import { addXP } from "@/lib/level";
 import { useAuth } from "@/auth/AuthContext";
-import { doughSessionsApi, haccpApi } from "@/lib/api";
+import { capoPlanApi, labConfigApi, recipesApi, inventoryApi, dayCloseApi } from "@/lib/api";
+import { computeShopping } from "@/lib/shopping";
 
-// Passo 6 · "Concludi Giornata" — riepilogo di chiusura + archivio (localStorage).
-const CLOSURES_KEY = "mikilab_day_closures";
-const todayStr = () => new Date().toISOString().slice(0, 10);
+const CLEAN_ITEMS = [
+  ["mixers", "Impastatrici", "Kneter"],
+  ["benches", "Banchi da lavoro", "Arbeitsflächen"],
+  ["dividers", "Spezzatrici / Formatrici", "Teigteiler / Former"],
+  ["floors", "Pavimenti", "Böden"],
+  ["cells", "Celle & Frigo", "Kammern & Kühlung"],
+  ["ovens", "Forni", "Öfen"],
+];
+
+const genLot = () => {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  const rnd = Math.floor(10 + Math.random() * 89);
+  return `ML-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${rnd}`;
+};
 
 export default function DayClose() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d) => (lang === "de" ? d : i);
   const { user, setAuthOpen } = useAuth();
 
-  const [doughToday, setDoughToday] = useState([]);
-  const [haccpToday, setHaccpToday] = useState([]);
+  const [step, setStep] = useState(1);
+  const [produced, setProduced] = useState([]);
+  const [lot, setLot] = useState(genLot());
+  const [inventory, setInventory] = useState([]);
+  const [consume, setConsume] = useState([]);
+  const [temps, setTemps] = useState([]);
+  const [cleaning, setCleaning] = useState({});
+  const [anomalies, setAnomalies] = useState("");
+  const [operator, setOperator] = useState("");
   const [note, setNote] = useState("");
-  const [closing, setClosing] = useState(false);
-  const [lastClosure, setLastClosure] = useState(null);
+  const [saving, setSaving] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
+  const [recipeById, setRecipeById] = useState({});
 
   const load = useCallback(async () => {
     if (!user) return;
-    const today = todayStr();
-    const [sessions, logs] = await Promise.all([doughSessionsApi.list(), haccpApi.list()]);
-    setDoughToday((sessions || []).filter((s) => (s.date || s.created_at || "").slice(0, 10) === today));
-    setHaccpToday((logs || []).filter((l) => (l.date || l.created_at || "").slice(0, 10) === today));
-  }, [user]);
+    setOperator(user.name || user.email || "");
+    // Prodotti dal piano di produzione salvato
+    try {
+      const plan = await capoPlanApi.get();
+      const prods = ((plan && plan.state && plan.state.products) || []).filter((p) => p.recipe_id || p.name);
+      setProduced(prods.length ? prods.map((p) => ({ recipe_id: p.recipe_id || "", name: p.name || "", qty: p.qty || "", unit: p.unit || "pz", gpp: p.gpp || "" })) : [{ recipe_id: "", name: "", qty: "", unit: "pz", gpp: "" }]);
+    } catch { setProduced([{ recipe_id: "", name: "", qty: "", unit: "pz", gpp: "" }]); }
+    // Ricette per calcolo scarico
+    try {
+      const [mk, ps] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal")]);
+      const map = {}; [...(mk || []), ...(ps || [])].forEach((r) => { map[r.id] = r; }); setRecipeById(map);
+    } catch { /* */ }
+    // Magazzino
+    try { const inv = await inventoryApi.get(); setInventory(inv.items || []); } catch { /* */ }
+    // Celle per le temperature
+    try {
+      const cfg = await labConfigApi.get();
+      const cells = (cfg && cfg.cells) || [];
+      setTemps(cells.length ? cells.map((c) => ({ name: c.name || c.type || tri("Cella", "Kammer"), temp_c: "" })) : [
+        { name: tri("Frigo", "Kühlschrank"), temp_c: "" },
+        { name: tri("Cella di lievitazione", "Gärkammer"), temp_c: "" },
+        { name: "Freezer", temp_c: "" },
+      ]);
+    } catch { setTemps([{ name: tri("Frigo", "Kühlschrank"), temp_c: "" }, { name: "Freezer", temp_c: "" }]); }
+  }, [user]); // eslint-disable-line
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => {
-    try {
-      const arr = JSON.parse(localStorage.getItem(CLOSURES_KEY) || "[]");
-      if (Array.isArray(arr) && arr.length) setLastClosure(arr[arr.length - 1]);
-    } catch { /* noop */ }
-  }, []);
 
-  const closeDay = () => {
-    if (!user) { setAuthOpen(true); return; }
-    setClosing(true);
-    try {
-      const record = {
-        id: `${Date.now()}`,
-        date: todayStr(),
-        closed_at: new Date().toISOString(),
-        dough_sessions: doughToday.length,
-        haccp_entries: haccpToday.length,
-        note: note.trim(),
-      };
-      const arr = JSON.parse(localStorage.getItem(CLOSURES_KEY) || "[]");
-      arr.push(record);
-      localStorage.setItem(CLOSURES_KEY, JSON.stringify(arr));
-      setLastClosure(record);
-      setNote("");
-      setCelebrate(true);
-      addXP(2);
-      toast.success(tri("Giornata conclusa e archiviata ✅", "Tag abgeschlossen und archiviert ✅", "Day closed and archived ✅"));
-    } catch {
-      toast.error(tri("Errore nell'archiviazione", "Archivierung fehlgeschlagen", "Archiving failed"));
-    }
-    setClosing(false);
+  // Suggerimento scarico materie prime dal piano (in kg)
+  const suggestConsume = () => {
+    const items = produced.filter((p) => p.recipe_id && Number(p.qty) > 0).map((p) => ({
+      recipe_id: p.recipe_id,
+      grams: p.unit === "kg" ? Number(p.qty) * 1000 : Number(p.qty) * Number(p.gpp || 500),
+    }));
+    const totals = computeShopping(items, recipeById, lang);
+    const rows = [];
+    Object.entries(totals.flourByType).forEach(([k, g]) => rows.push({ name: k, qty: +(g / 1000).toFixed(2) }));
+    if (totals.others.sourdough_grams) rows.push({ name: tri("Lievito madre", "Sauerteig"), qty: +(totals.others.sourdough_grams / 1000).toFixed(2) });
+    Object.entries(totals.extras).forEach(([k, g]) => rows.push({ name: k, qty: +(g / 1000).toFixed(2) }));
+    if (!rows.length) { toast.message(tri("Aggiungi prodotti con ricetta e quantità per calcolare lo scarico.", "Füge Produkte mit Rezept und Menge hinzu.")); return; }
+    setConsume(rows);
+    toast.success(tri("Scarico calcolato dal piano ✓", "Abbuchung aus dem Plan berechnet ✓"));
   };
 
-  const Stat = ({ Icon, value, label }) => (
-    <div className="flex-1 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-3 text-center">
-      <Icon className="w-5 h-5 text-[#3f7cac] mx-auto mb-1" />
-      <p className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{value}</p>
-      <p className="text-[11px] text-[#7E8A93] leading-tight">{label}</p>
-    </div>
-  );
+  const saveInventory = async () => {
+    try { const r = await inventoryApi.save(inventory); setInventory(r.items || inventory); toast.success(tri("Magazzino salvato", "Lager gespeichert")); }
+    catch { toast.error(tri("Errore salvataggio magazzino", "Fehler beim Speichern")); }
+  };
+
+  const doClose = async () => {
+    if (!user) { setAuthOpen(true); return; }
+    setSaving(true);
+    try {
+      await saveInventory().catch(() => {});
+      const res = await dayCloseApi.close({
+        produced: produced.filter((p) => p.name || p.recipe_id),
+        consume: consume.filter((c) => c.name && Number(c.qty) > 0),
+        temps: temps.filter((t) => t.name).map((t) => ({ name: t.name, temp_c: t.temp_c === "" ? null : Number(t.temp_c) })),
+        cleaning, anomalies: anomalies.trim(), operator: operator.trim(), note: note.trim(),
+        production_lot: lot.trim(), lang,
+      });
+      setCelebrate(true);
+      addXP(3);
+      toast.success(tri(`Giornata chiusa · ${res.haccp_created} voci nel Registro HACCP ✅`, `Tag abgeschlossen · ${res.haccp_created} HACCP-Einträge ✅`));
+    } catch { toast.error(tri("Errore durante la chiusura", "Fehler beim Abschluss")); }
+    setSaving(false);
+  };
+
+  const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
+  const lowStock = inventory.filter((it) => it.threshold != null && Number(it.qty) <= Number(it.threshold));
+
+  if (!user) {
+    return (
+      <div className="pb-40" data-testid="dayclose">
+        <Header tri={tri} />
+        <button data-testid="dayclose-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#3F7CAC] text-white font-semibold py-3 rounded-2xl">
+          <LogIn className="w-5 h-5" /> {tri("Accedi per la chiusura turno", "Zum Abschließen anmelden")}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="pb-40" data-testid="dayclose">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#5aa0cf] flex items-center justify-center"><CalendarCheck className="w-6 h-6 text-white" /></div>
-        <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Concludi Giornata", "Tag abschließen", "Close the Day")}</h1>
-          <p className="text-sm text-[#7E8A93]">{tri("Riepilogo di chiusura e archivio Diario/HACCP", "Abschlussübersicht und Archiv Tagebuch/HACCP", "Closing summary and Log/HACCP archive")}</p>
-        </div>
-      </div>
+      <Header tri={tri} />
 
-      {!user && (
-        <button data-testid="dayclose-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#3F7CAC] text-white font-semibold py-3 rounded-2xl mb-4">
-          <LogIn className="w-5 h-5" /> {tri("Accedi per concludere la giornata", "Zum Abschließen anmelden", "Sign in to close the day")}
-        </button>
-      )}
-
-      <div className="flex gap-2.5 mb-4" data-testid="dayclose-stats">
-        <Stat Icon={Thermometer} value={doughToday.length} label={tri("Sessioni impasto oggi", "Teig-Sitzungen heute", "Dough sessions today")} />
-        <Stat Icon={ShieldCheck} value={haccpToday.length} label={tri("Voci HACCP oggi", "HACCP-Einträge heute", "HACCP entries today")} />
-      </div>
-
-      <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4 mb-4">
-        <p className="text-xs font-bold uppercase text-[#3f7cac] mb-2">{tri("Nota di chiusura (facoltativa)", "Abschlussnotiz (optional)", "Closing note (optional)")}</p>
-        <textarea data-testid="dayclose-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)}
-          placeholder={tri("Es. tutto regolare, celle in ordine, forni spenti", "z. B. alles ok, Zellen geordnet, Öfen aus", "e.g. all good, cells tidy, ovens off")}
-          className="w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac] resize-none" />
-      </div>
-
-      <button data-testid="dayclose-confirm" onClick={closeDay} disabled={closing}
-        className="w-full flex items-center justify-center gap-2 bg-[#5aa0cf] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
-        <CheckSquare className="w-5 h-5" /> {closing ? tri("Chiusura…", "Abschluss…", "Closing…") : tri("Concludi e archivia la giornata", "Tag abschließen und archivieren", "Close and archive the day")}
-      </button>
-
-      {lastClosure && (
-        <div data-testid="dayclose-last" className="mt-4 flex items-start gap-2 bg-[#5aa0cf]/12 border border-[#5aa0cf]/30 rounded-2xl p-3.5">
-          <Archive className="w-4 h-4 text-[#2e6690] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
-          <div className="text-xs text-[#3F4A54] dark:text-[#AEB8BF]">
-            <p className="font-bold text-[#2e6690] dark:text-[#a9d2ec]">{tri("Ultima chiusura archiviata", "Letzter archivierter Abschluss", "Last archived closure")}: {lastClosure.date}</p>
-            <p className="mt-0.5">{tri("Sessioni impasto", "Teig-Sitzungen", "Dough sessions")}: {lastClosure.dough_sessions} · HACCP: {lastClosure.haccp_entries}</p>
-            {lastClosure.note && <p className="mt-0.5 italic">"{lastClosure.note}"</p>}
+      {/* Stepper */}
+      <div data-testid="dayclose-stepper" className="flex items-center gap-1 mb-5">
+        {[1, 2, 3].map((n) => (
+          <div key={n} className="flex items-center flex-1">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${step >= n ? "bg-[#3f7cac] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#7E8A93]"}`}>{n}</div>
+            {n < 3 && <div className={`h-1 flex-1 rounded ${step > n ? "bg-[#3f7cac]" : "bg-[#e4eff8] dark:bg-[#2A323A]"}`} />}
           </div>
+        ))}
+      </div>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#3f7cac] mb-3">
+        {step === 1 ? tri("1 · Tracciabilità & Lotti", "1 · Rückverfolgbarkeit & Chargen")
+          : step === 2 ? tri("2 · Registro Sanitario & HACCP", "2 · Hygiene- & HACCP-Register")
+          : tri("3 · Chiusura & Archiviazione", "3 · Abschluss & Archivierung")}
+      </p>
+
+      {/* STEP 1 */}
+      {step === 1 && (
+        <div data-testid="dayclose-step-1" className="space-y-4">
+          <Card icon={<QrCode className="w-4 h-4" />} title={tri("Lotto di produzione", "Produktionscharge")}>
+            <div className="flex gap-2">
+              <input data-testid="dayclose-lot" value={lot} onChange={(e) => setLot(e.target.value)} className={inp + " font-mono-data"} />
+              <button data-testid="dayclose-lot-regen" onClick={() => setLot(genLot())} className="shrink-0 px-3 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] text-[#3f7cac] text-xs font-semibold">{tri("Nuovo", "Neu")}</button>
+            </div>
+            <p className="text-[11px] text-[#7E8A93] mt-1.5">{tri("Assegnato ai prodotti pronti alla vendita.", "Wird den verkaufsfertigen Produkten zugewiesen.")}</p>
+          </Card>
+
+          <Card icon={<CheckSquare className="w-4 h-4" />} title={tri("Quantità prodotte oggi", "Heute produzierte Mengen")}>
+            <div className="space-y-2">
+              {produced.map((p, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input data-testid={`dayclose-prod-name-${i}`} value={p.name} placeholder={tri("Prodotto", "Produkt")}
+                    onChange={(e) => setProduced((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
+                  <input data-testid={`dayclose-prod-qty-${i}`} type="number" value={p.qty} placeholder={tri("Qtà", "Menge")}
+                    onChange={(e) => setProduced((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-24"} />
+                  <button onClick={() => setProduced((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
+              <button data-testid="dayclose-prod-add" onClick={() => setProduced((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pz", gpp: "" }])} className="text-sm font-medium text-[#3f7cac] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi prodotto", "Produkt hinzufügen")}</button>
+            </div>
+          </Card>
+
+          <Card icon={<Boxes className="w-4 h-4" />} title={tri("Magazzino materie prime", "Rohstofflager")}>
+            {lowStock.length > 0 && (
+              <div data-testid="dayclose-lowstock" className="flex items-center gap-2 bg-[#C0574D]/10 border border-[#C0574D]/30 rounded-xl px-3 py-2 mb-2 text-[#C0574D] text-xs font-semibold">
+                <AlertTriangle className="w-4 h-4 shrink-0" /> {tri(`${lowStock.length} materie sotto soglia`, `${lowStock.length} Rohstoffe unter Schwelle`)}
+              </div>
+            )}
+            <div className="space-y-2">
+              {inventory.map((it, i) => (
+                <div key={it.id || i} className="flex items-center gap-2">
+                  <input data-testid={`inv-name-${i}`} value={it.name} placeholder={tri("Materia prima", "Rohstoff")}
+                    onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
+                  <input data-testid={`inv-qty-${i}`} type="number" value={it.qty}
+                    onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-20"} />
+                  <select data-testid={`inv-unit-${i}`} value={it.unit} onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))} className={inp + " w-16 px-1"}>
+                    <option>kg</option><option>g</option><option>pz</option><option>L</option>
+                  </select>
+                  <button onClick={() => setInventory((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><Trash2 className="w-4 h-4" /></button>
+                </div>
+              ))}
+              <div className="flex flex-wrap items-center gap-2">
+                <button data-testid="inv-add" onClick={() => setInventory((l) => [...l, { name: "", category: "farina", qty: 0, unit: "kg" }])} className="text-sm font-medium text-[#3f7cac] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi materia", "Rohstoff")}</button>
+                <button data-testid="inv-save" onClick={saveInventory} className="text-sm font-semibold text-white bg-[#6E8CA0] px-3 py-1.5 rounded-full flex items-center gap-1"><Save className="w-3.5 h-3.5" /> {tri("Salva magazzino", "Lager speichern")}</button>
+              </div>
+            </div>
+          </Card>
+
+          <Card icon={<Package className="w-4 h-4" />} title={tri("Scarico materie prime (dal piano)", "Rohstoff-Abbuchung (aus Plan)")}>
+            <button data-testid="dayclose-suggest" onClick={suggestConsume} className="w-full mb-2 text-sm font-semibold text-white bg-[#3f7cac] py-2 rounded-xl active:scale-98 flex items-center justify-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Calcola scarico dal piano", "Abbuchung aus Plan berechnen")}</button>
+            <div className="space-y-2">
+              {consume.map((c, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input data-testid={`consume-name-${i}`} value={c.name} onChange={(e) => setConsume((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
+                  <input data-testid={`consume-qty-${i}`} type="number" value={c.qty} onChange={(e) => setConsume((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-20"} />
+                  <span className="text-xs text-[#7E8A93] shrink-0">kg</span>
+                  <button onClick={() => setConsume((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
+              <button data-testid="consume-add" onClick={() => setConsume((l) => [...l, { name: "", qty: "" }])} className="text-sm font-medium text-[#3f7cac] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi voce", "Eintrag")}</button>
+              <p className="text-[11px] text-[#7E8A93]">{tri("Alla chiusura queste quantità vengono scalate dal magazzino.", "Beim Abschluss werden diese Mengen vom Lager abgezogen.")}</p>
+            </div>
+          </Card>
         </div>
       )}
 
-      <ListenButton
-        text={tri(
-          `Riepilogo della giornata. Sessioni di impasto: ${doughToday.length}. Voci HACCP: ${haccpToday.length}.${note.trim() ? " Nota: " + note.trim() : (lastClosure && lastClosure.note ? " Nota: " + lastClosure.note : "")}`,
-          `Tageszusammenfassung. Teig-Sitzungen: ${doughToday.length}. HACCP-Einträge: ${haccpToday.length}.${note.trim() ? " Notiz: " + note.trim() : (lastClosure && lastClosure.note ? " Notiz: " + lastClosure.note : "")}`,
-          `Day summary. Dough sessions: ${doughToday.length}. HACCP entries: ${haccpToday.length}.${note.trim() ? " Note: " + note.trim() : (lastClosure && lastClosure.note ? " Note: " + lastClosure.note : "")}`
+      {/* STEP 2 */}
+      {step === 2 && (
+        <div data-testid="dayclose-step-2" className="space-y-4">
+          <Card icon={<Thermometer className="w-4 h-4" />} title={tri("Controllo temperature", "Temperaturkontrolle")}>
+            <div className="space-y-2">
+              {temps.map((tp, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input data-testid={`temp-name-${i}`} value={tp.name} onChange={(e) => setTemps((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
+                  <div className="relative w-24 shrink-0">
+                    <input data-testid={`temp-val-${i}`} type="number" step="0.1" value={tp.temp_c} placeholder="°C"
+                      onChange={(e) => setTemps((l) => l.map((x, k) => k === i ? { ...x, temp_c: e.target.value } : x))} className={inp + " pr-7"} />
+                    <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#7E8A93]">°C</span>
+                  </div>
+                  <button onClick={() => setTemps((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
+              <button data-testid="temp-add" onClick={() => setTemps((l) => [...l, { name: "", temp_c: "" }])} className="text-sm font-medium text-[#3f7cac] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi punto", "Punkt hinzufügen")}</button>
+            </div>
+          </Card>
+
+          <Card icon={<ShieldCheck className="w-4 h-4" />} title={tri("Pulizie & Sanificazione", "Reinigung & Sanitisierung")}>
+            <div className="grid grid-cols-2 gap-2">
+              {CLEAN_ITEMS.map(([key, it, de]) => {
+                const on = !!cleaning[tri(it, de)] || !!cleaning[it];
+                return (
+                  <button key={key} data-testid={`clean-${key}`} onClick={() => setCleaning((c) => ({ ...c, [tri(it, de)]: !on }))}
+                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left border transition-all active:scale-97 ${on ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#2B303B] dark:text-[#e4eff8] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                    <CheckSquare className={`w-4 h-4 shrink-0 ${on ? "text-white" : "text-[#7E8A93]"}`} />
+                    <span className="text-xs font-semibold leading-tight">{tri(it, de)}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+
+          <Card icon={<AlertTriangle className="w-4 h-4" />} title={tri("Registro anomalie", "Abweichungen")}>
+            <textarea data-testid="dayclose-anomalies" rows={3} value={anomalies} onChange={(e) => setAnomalies(e.target.value)}
+              placeholder={tri("Es. scarti, fermo impastatrice, cella fuori temperatura…", "z. B. Ausschuss, Kneter-Stillstand, Kammer außer Temperatur…")}
+              className={inp + " resize-none"} />
+          </Card>
+        </div>
+      )}
+
+      {/* STEP 3 */}
+      {step === 3 && (
+        <div data-testid="dayclose-step-3" className="space-y-4">
+          <Card icon={<CalendarCheck className="w-4 h-4" />} title={tri("Chiusura del registro", "Registerabschluss")}>
+            <label className="text-[11px] font-bold uppercase text-[#7E8A93]">{tri("Operatore", "Bediener")}</label>
+            <input data-testid="dayclose-operator" value={operator} onChange={(e) => setOperator(e.target.value)} className={inp + " mt-1 mb-3"} />
+            <label className="text-[11px] font-bold uppercase text-[#7E8A93]">{tri("Nota di chiusura (facoltativa)", "Abschlussnotiz (optional)")}</label>
+            <textarea data-testid="dayclose-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} className={inp + " mt-1 resize-none"} />
+            <p className="text-[11px] text-[#7E8A93] mt-2">{tri("Data", "Datum")}: {new Date().toLocaleDateString(lang === "de" ? "de-DE" : "it-IT")} · {tri("Lotto", "Charge")}: <span className="font-mono-data">{lot}</span></p>
+          </Card>
+
+          <Card icon={<Archive className="w-4 h-4" />} title={tri("Riepilogo", "Zusammenfassung")}>
+            <ul className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] space-y-1">
+              <li>• {tri("Prodotti", "Produkte")}: {produced.filter((p) => p.name).length}</li>
+              <li>• {tri("Scarico materie prime", "Abbuchungen")}: {consume.filter((c) => c.name && Number(c.qty) > 0).length}</li>
+              <li>• {tri("Temperature registrate", "Temperaturen")}: {temps.filter((t) => t.name && t.temp_c !== "").length}</li>
+              <li>• {tri("Sanificazioni", "Reinigungen")}: {Object.values(cleaning).filter(Boolean).length}</li>
+            </ul>
+            <div className="mt-3 flex items-start gap-2 bg-[#5aa0cf]/12 border border-[#5aa0cf]/30 rounded-xl p-2.5">
+              <ShieldCheck className="w-4 h-4 text-[#2e6690] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
+              <p className="text-[12px] text-[#234b6e] dark:text-[#8FB0C2]">{tri("Alla conferma i dati vengono archiviati e sincronizzati automaticamente nel Registro HACCP.", "Bei Bestätigung werden die Daten archiviert und automatisch ins HACCP-Register übernommen.")}</p>
+            </div>
+          </Card>
+
+          <button data-testid="dayclose-confirm" onClick={doClose} disabled={saving}
+            className="w-full flex items-center justify-center gap-2 bg-[#5aa0cf] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
+            <CheckSquare className="w-5 h-5" /> {saving ? tri("Chiusura…", "Abschluss…") : tri("Concludi turno & archivia", "Schicht abschließen & archivieren")}
+          </button>
+        </div>
+      )}
+
+      {/* Nav */}
+      <div className="flex items-center justify-between mt-5">
+        <button data-testid="dayclose-prev" onClick={() => setStep((s) => Math.max(1, s - 1))} disabled={step === 1}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] text-[#234b6e] dark:text-[#a9d2ec] font-semibold text-sm disabled:opacity-40 active:scale-95">
+          <ChevronLeft className="w-4 h-4" /> {tri("Indietro", "Zurück")}
+        </button>
+        {step < 3 && (
+          <button data-testid="dayclose-next" onClick={() => setStep((s) => Math.min(3, s + 1))}
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#3f7cac] text-white font-semibold text-sm active:scale-95">
+            {tri("Avanti", "Weiter")} <ChevronRight className="w-4 h-4" />
+          </button>
         )}
-        who="momy" testid="dayclose-listen"
-        className="mt-3 w-full bg-[#3f7cac] hover:bg-[#336a94] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
+      </div>
 
       <AnimatePresence>
         {celebrate && (
@@ -146,18 +326,39 @@ export default function DayClose() {
             </div>
             <motion.h2 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.65 }}
               className="mt-6 font-display text-2xl font-bold text-white text-center">
-              {tri("Complimenti, Maestro! 👏", "Glückwunsch, Meister! 👏", "Well done, Master! 👏")}
+              {tri("Turno chiuso, Maestro! 👏", "Schicht abgeschlossen, Meister! 👏")}
             </motion.h2>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
               className="mt-1 text-white/85 text-sm text-center max-w-xs">
-              {tri("Michele e Mohammed battono il cinque per la tua giornata di lavoro!", "Michele und Mohammed geben dir ein High-Five für deinen Arbeitstag!", "Michele and Mohammed high-five you for a great work day!")}
+              {tri("Registro HACCP aggiornato e magazzino scalato. Buon riposo!", "HACCP-Register aktualisiert und Lager gebucht. Gute Erholung!")}
             </motion.p>
             <button data-testid="dayclose-celebrate-close" className="mt-6 bg-white text-[#2B303B] font-bold px-7 py-2.5 rounded-full active:scale-95">
-              {tri("Grazie!", "Danke!", "Thanks!")}
+              {tri("Grazie!", "Danke!")}
             </button>
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+function Header({ tri }) {
+  return (
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-11 h-11 rounded-2xl bg-[#5aa0cf] flex items-center justify-center"><CalendarCheck className="w-6 h-6 text-white" /></div>
+      <div>
+        <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Chiusura Turno & Registro HACCP", "Schichtabschluss & HACCP-Register")}</h1>
+        <p className="text-sm text-[#7E8A93]">{tri("Tracciabilità, registro sanitario e archiviazione in 3 passi", "Rückverfolgbarkeit, Hygiene und Archivierung in 3 Schritten")}</p>
+      </div>
+    </div>
+  );
+}
+
+function Card({ icon, title, children }) {
+  return (
+    <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4">
+      <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#3f7cac] mb-2.5">{icon} {title}</p>
+      {children}
     </div>
   );
 }
