@@ -252,6 +252,23 @@ export default function Home({ onNavigate }) {
                   </p>
                 </div>
 
+                <div data-testid="home-lab-gallery">
+                  <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-2 px-1">{L("Il laboratorio in immagini", "Die Backstube in Bildern", "The bakery in pictures")}</p>
+                  <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
+                    {[
+                      { src: "bio-dough-3.jpg", cap: L("Al forno", "Am Ofen", "At the oven") },
+                      { src: "michele-real2.jpg", cap: L("Tra le teglie", "Zwischen den Blechen", "Among the trays") },
+                      { src: "bio-dough.jpg", cap: L("Impasto in mano", "Teig in der Hand", "Dough in hand") },
+                    ].map((p, i) => (
+                      <div key={i} data-testid={`lab-gallery-${i}`} className="shrink-0 w-60 rounded-2xl overflow-hidden bg-[#2B303B] ring-1 ring-[#C88A2B]/30">
+                        <img src={`${process.env.PUBLIC_URL}/${p.src}`} alt={p.cap} loading="lazy"
+                          className="w-full h-56 object-contain" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                        <p className="text-white/85 text-xs font-medium text-center py-2">{p.cap}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="space-y-4">
                   {concepts.map((c) => {
                     const Icon = c.icon;

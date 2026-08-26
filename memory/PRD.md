@@ -1301,3 +1301,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Home.jsx**: aggiunta `home-lab-photo` (public/michele-real-lab.jpg) in cima al contenuto di "Scopri MikiLab", con overlay gradiente e didascalia trilingue "Michele, nel suo laboratorio". Impatto personale al primo accesso (sezione già aperta).
 - Verificato via screenshot.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont11 (2026-06) — Galleria laboratorio in "Scopri MikiLab"
+- **Home.jsx**: `home-lab-gallery` dopo l'intro Michele — 3 foto reali (bio-dough-3, michele-real2, bio-dough) in scroll orizzontale, mostrate INTERE con `object-contain` su sfondo scuro (nessun crop), didascalie trilingui.
+- Verificato: 3 item presenti, foto intere.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
