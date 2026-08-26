@@ -559,6 +559,30 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
+            {!editTools && (() => {
+              const discovered = TOOLS.filter((t) => toolUsage[t.id]).length;
+              const total = TOOLS.length;
+              const pct = Math.round((discovered / total) * 100);
+              const done = discovered >= total;
+              return (
+                <div data-testid="tools-discovery" className={`mb-3 rounded-2xl border p-3 ${done ? "bg-[#5E8B7E]/10 border-[#5E8B7E]/40" : "bg-[#C88A2B]/10 border-[#C88A2B]/40"}`}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <p className="text-[12px] font-bold text-[#2B303B] dark:text-[#EAF0EC]">
+                      {done
+                        ? tri3(lang, "🎉 Hai scoperto tutti gli strumenti!", "🎉 Du hast alle Werkzeuge entdeckt!", "🎉 You've discovered every tool!")
+                        : tri3(lang, `Hai scoperto ${discovered}/${total} strumenti`, `Du hast ${discovered}/${total} Werkzeuge entdeckt`, `You've discovered ${discovered}/${total} tools`)}
+                    </p>
+                    <span data-testid="tools-discovery-pct" className={`text-[12px] font-extrabold ${done ? "text-[#4C7368]" : "text-[#A66A15]"}`}>{pct}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
+                    <div className={`h-full rounded-full transition-all duration-500 ${done ? "bg-[#5E8B7E]" : "bg-[#C88A2B]"}`} style={{ width: `${pct}%` }} />
+                  </div>
+                  {!done && (
+                    <p className="text-[10.5px] text-[#7E8A93] mt-1.5">{tri3(lang, `Apri quelli con il pallino «NUOVO»: ne restano ${total - discovered}.`, `Öffne die mit „NEU“: noch ${total - discovered} übrig.`, `Open the ones marked 'NEW': ${total - discovered} left.`)}</p>
+                  )}
+                </div>
+              );
+            })()}
             {favRow.length > 0 && !editTools && (() => {
               const pinnedIds = (toolPrefs.pinned || []).filter((id) => TOOLS.some((t) => t.id === id));
               const byId = Object.fromEntries(TOOLS.map((t) => [t.id, t]));

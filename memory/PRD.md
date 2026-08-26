@@ -1281,3 +1281,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **PianoProduzioneAI**: i preferiti appuntati (pinned) ora sono in una riga orizzontale trascinabile con `Reorder`/`Reorder.Item` di framer-motion; l'ordine si salva in `mikilab_tool_prefs.pinned`. Gli automatici restano statici sotto. `favDragMoved` ref evita l'apertura dello strumento al termine del drag. Header mostra "· trascina per ordinare" se >1 pinned.
 - Verificato via drag simulato: ordine pinned [adatta,timer] → [timer,adatta] persistito.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont7 (2026-06) — Barra scoperta strumenti
+- **PianoProduzioneAI**: barra `tools-discovery` sopra i preferiti che mostra "Hai scoperto X/N strumenti" + % + progress bar (dorata; verde a 100% con messaggio 🎉). Basata su `mikilab_tool_usage` vs TOOLS. Suggerisce di aprire quelli con badge NUOVO. Nascosta in modalità edit.
+- Verificato: 0% → 12% dopo aver aperto 2 strumenti; badge NUOVO spariscono di conseguenza.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
