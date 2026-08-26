@@ -8,7 +8,6 @@ import RecipeDialog from "@/components/RecipeDialog";
 import EULabel from "@/components/EULabel";
 import ScaleDialog from "@/components/ScaleDialog";
 import FlourTable from "@/components/FlourTable";
-import Enciclopedia from "@/sections/Enciclopedia";
 import PrintHeader from "@/components/PrintHeader";
 import { playTTS } from "@/lib/tts";
 import { addXP } from "@/lib/level";
@@ -219,9 +218,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </div>
       ) : null}
 
-      {/* Tabella farine: solo nel ricettario MikiLab. Enciclopedia: solo in "Le Mie Ricette". */}
+      {/* Tabella farine: solo nel ricettario MikiLab. Enciclopedia: solo in Ricette MikiLab (pulsante). */}
       {collectionName === "mikilab" && <FlourTable />}
-      {collectionName === "personal" && <Enciclopedia embedded />}
 
       {canEdit && (
         <button
