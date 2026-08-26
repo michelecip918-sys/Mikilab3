@@ -1335,3 +1335,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **backend/server.py**: i due prompt di traduzione ricette (IT->DE e verso lang) ora impongono di preservare fedelmente il processo tecnico (metodo diretto/indiretto, idratazione %, temperature, ordine passaggi, acqua a filo, pre-fermenti a inizio, sospensioni ultime) senza riordinare/semplificare.
 - Verificato: form mostra Obiettivo (no prefermento); backend up (recipes 200).
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont17 (2026-06) — Obiettivi piano extra
+- **PianoProduzioneAI/GOAL_TEXT + select capo-plan-goal**: aggiunti "grandi" (Solo grandi lievitati) e "lotti" (Pochi impasti, grandi lotti). Totale 6 obiettivi, tutti passati all'AI via note (trilingue).
+- Verificato: select con 6 opzioni [qualita,resa,tempo,spreco,grandi,lotti].
+- NB: PREVIEW → REDEPLOY per mikilab.de.

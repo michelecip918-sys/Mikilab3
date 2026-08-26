@@ -47,6 +47,8 @@ const GOAL_TEXT = {
   resa: { it: "Obiettivo: massima resa produttiva — ottimizza l'uso di forni, celle e impastatrici e le quantità.", de: "Ziel: maximaler Output — optimiere Öfen, Kammern, Kneter und Mengen.", en: "Goal: maximum output — optimise ovens, cells, mixers and quantities." },
   tempo: { it: "Obiettivo: risparmio di tempo — proponi sequenze più rapide e accorpa i passaggi dove possibile.", de: "Ziel: Zeit sparen — schnellere Abläufe, Schritte wo möglich bündeln.", en: "Goal: save time — propose faster sequences and combine steps where possible." },
   spreco: { it: "Obiettivo: riduzione degli sprechi — recupera impasti e invenduto e dimensiona con prudenza.", de: "Ziel: weniger Abfall — Teig/Unverkauftes verwerten und vorsichtig dimensionieren.", en: "Goal: reduce waste — reuse dough/unsold and size cautiously." },
+  grandi: { it: "Obiettivo: focus sui grandi lievitati (panettoni, colombe, brioche) — gestisci doppi impasti, tempi lunghi e triplicamenti con cura.", de: "Ziel: Fokus auf große Hefegebäcke (Panettone, Colomba, Brioche) — doppelte Teige, lange Zeiten und Verdreifachung sorgfältig steuern.", en: "Goal: focus on large leavened cakes (panettone, colomba, brioche) — carefully manage double doughs, long times and tripling." },
+  lotti: { it: "Obiettivo: pochi impasti in grandi lotti — accorpa le lavorazioni per ridurre i cambi impasto e ottimizzare impastatrice e forno.", de: "Ziel: wenige Teige in großen Chargen — Arbeitsgänge bündeln, um Teigwechsel zu reduzieren und Kneter/Ofen zu optimieren.", en: "Goal: few doughs in large batches — combine runs to reduce dough changes and optimise mixer and oven." },
 };
 
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
@@ -895,6 +897,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <option value="resa">{lang === "de" ? "📈 Maximaler Output (Öfen/Kammern optimieren)" : lang === "en" ? "📈 Maximum output (optimise ovens/cells)" : "📈 Massima resa (ottimizza forni/celle)"}</option>
             <option value="tempo">{lang === "de" ? "⏱️ Zeit sparen (schnellere Abläufe)" : lang === "en" ? "⏱️ Save time (faster sequences)" : "⏱️ Risparmio di tempo (sequenze più rapide)"}</option>
             <option value="spreco">{lang === "de" ? "♻️ Weniger Abfall (Teig/Unverkauftes verwerten)" : lang === "en" ? "♻️ Less waste (reuse dough/unsold)" : "♻️ Riduci gli sprechi (recupero impasti/invenduto)"}</option>
+            <option value="grandi">{lang === "de" ? "🎁 Nur große Hefegebäcke (Panettone, Colomba…)" : lang === "en" ? "🎁 Large leavened cakes only (panettone, colomba…)" : "🎁 Solo grandi lievitati (panettoni, colombe…)"}</option>
+            <option value="lotti">{lang === "de" ? "📦 Wenige Teige, große Chargen" : lang === "en" ? "📦 Few doughs, large batches" : "📦 Pochi impasti, grandi lotti"}</option>
           </select>
           <p className="mt-1 text-[11px] text-[#7E8A93] leading-snug">{lang === "de" ? "Orientiert die KI bei der Erstellung deines Plans." : lang === "en" ? "Guides the AI when building your plan." : "Orienta l'AI nella generazione del tuo piano."}</p>
         </div>
