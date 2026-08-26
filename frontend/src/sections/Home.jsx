@@ -14,33 +14,33 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 
 const CONCEPTS = {
   it: [
-    { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#5E8B7E] to-[#33564E]",
+    { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#3f7cac] to-[#234b6e]",
       body: "MikiLab è il mio laboratorio creativo e scientifico digitale dedicato all'arte bianca. Nasce per fondere la passione artigianale con lo studio metodico delle farine e dei processi fermentativi. Qui la panificazione non è una semplice sequenza di gesti, ma una costante ricerca dell'eccellenza, dove ogni ingrediente è calibrato al milligrammo per ottenere strutture perfette, digeribilità estrema e sapori autentici. È il luogo in cui la tradizione dell'arte panificatoria incontra l'innovazione e la precisione." },
     { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#6E8CA0] to-[#5E7E90]",
       body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato Mikilab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
-    { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
+    { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#5aa0cf] to-[#2e6690]",
       body: "Il mio metodo unisce la grande tradizione italiana alla precisione tecnica tedesca. Lavoro quotidianamente sia con metodi diretti sia con metodi indiretti, anche se prediligo nettamente questi ultimi: prefermenti come lievito madre, poolish, biga e precotture come il kochstück sono la vera anima delle mie ricette. Prediligere l'indiretto significa dare tempo al tempo, permettendo agli enzimi di trasformare la materia prima per ottenere una complessità aromatica unica, una crosta fragrante e un'alveolatura sviluppata. Tuttavia, amo ogni sfumatura della panificazione: la farina giusta al momento giusto e il rispetto rigoroso dei tempi sono la chiave per dominare ogni tipo di impasto." },
-    { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#33564E] to-[#1B2127]",
+    { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#234b6e] to-[#1B2127]",
       body: "Lavorare in serenità significa trasformare il laboratorio in un ambiente organizzato, efficiente e privo di stress. Con una pianificazione accurata dei tempi di fermentazione, l'uso di standard precisi e la scelta di tecniche affidabili, ogni imprevisto viene eliminato. Le piccole intuizioni pratiche, unite all'esperienza sul campo, semplificano le operazioni quotidiane rendendo il lavoro costante, sicuro e piacevole. Panificare con serenità è il segreto per esprimere la massima qualità senza mai perdere la passione per questo mestiere." },
   ],
   de: [
-    { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#5E8B7E] to-[#33564E]",
+    { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#3f7cac] to-[#234b6e]",
       body: "MikiLab ist mein kreatives und wissenschaftliches digitales Labor für die Backkunst. Es verbindet handwerkliche Leidenschaft mit dem methodischen Studium von Mehlen und Fermentationsprozessen. Hier ist Backen keine bloße Abfolge von Handgriffen, sondern eine ständige Suche nach Exzellenz, bei der jede Zutat auf das Milligramm genau kalibriert wird – für perfekte Strukturen, höchste Bekömmlichkeit und authentische Aromen. Hier trifft die Tradition der Backkunst auf Innovation und Präzision." },
     { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#6E8CA0] to-[#5E7E90]",
       body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. Mikilab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
-    { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
+    { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#5aa0cf] to-[#2e6690]",
       body: "Meine Methode verbindet die große italienische Tradition mit deutscher technischer Präzision. Ich arbeite täglich sowohl mit direkten als auch mit indirekten Methoden, bevorzuge aber klar Letztere: Vorteige wie Lievito Madre, Poolish, Biga und Kochstücke sind die wahre Seele meiner Rezepte. Indirekt zu arbeiten heißt, der Zeit Zeit zu geben, damit die Enzyme den Rohstoff verwandeln – für einzigartige Aromatik, knusprige Kruste und offene Porung. Dennoch liebe ich jede Nuance des Backens: das richtige Mehl zum richtigen Zeitpunkt und die strikte Einhaltung der Zeiten sind der Schlüssel, um jeden Teig zu beherrschen." },
-    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#33564E] to-[#1B2127]",
+    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#234b6e] to-[#1B2127]",
       body: "Entspannt zu arbeiten bedeutet, die Backstube in eine organisierte, effiziente und stressfreie Umgebung zu verwandeln. Mit sorgfältiger Planung der Gärzeiten, präzisen Standards und zuverlässigen Techniken werden Überraschungen ausgeschlossen. Kleine praktische Einsichten, verbunden mit Erfahrung, vereinfachen den Alltag und machen die Arbeit gleichmäßig, sicher und angenehm. Mit Gelassenheit zu backen ist das Geheimnis für höchste Qualität, ohne je die Leidenschaft für dieses Handwerk zu verlieren." },
   ],
   en: [
-    { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#5E8B7E] to-[#33564E]",
+    { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#3f7cac] to-[#234b6e]",
       body: "MikiLab is my creative, scientific digital lab dedicated to the baking art. It was born to blend artisan passion with the methodical study of flours and fermentation. Here baking is not a mere sequence of gestures but a constant pursuit of excellence, where every ingredient is calibrated to the milligram for perfect structures, extreme digestibility and authentic flavours. It's where the tradition of baking meets innovation and precision." },
-    { id: "chi", title: "About me", icon: ChefHat, grad: "from-[#6B8E62] to-[#4d6b45]",
+    { id: "chi", title: "About me", icon: ChefHat, grad: "from-[#5aa0cf] to-[#2e6690]",
       body: "I'm Michele, a baker by passion even before by trade. I love spelt, sourdough and the scent of freshly baked bread. I created Mikilab to put my recipes and my way of working into every baker's pocket, with the same care I bring to the bakery every day." },
-    { id: "metodo", title: "My method", icon: FlaskConical, grad: "from-[#6B8E62] to-[#4d6b45]",
+    { id: "metodo", title: "My method", icon: FlaskConical, grad: "from-[#5aa0cf] to-[#2e6690]",
       body: "My method blends the great Italian tradition with German technical precision. I work daily with both direct and indirect methods, though I clearly prefer the latter: preferments such as sourdough, poolish, biga and pre-cooks like kochstück are the true soul of my recipes. Choosing indirect means giving time to time, letting enzymes transform the raw material for unique aromatic complexity, a fragrant crust and an open crumb. Yet I love every nuance of baking: the right flour at the right moment and strict respect for timings are the key to mastering any dough." },
-    { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#33564E] to-[#1B2127]",
+    { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#234b6e] to-[#1B2127]",
       body: "Working with peace of mind means turning the bakery into an organised, efficient and stress-free environment. With careful planning of fermentation times, precise standards and reliable techniques, surprises are eliminated. Small practical insights, combined with hands-on experience, simplify daily operations and make the work steady, safe and pleasant. Baking calmly is the secret to expressing top quality without ever losing the passion for this craft." },
   ],
 };
@@ -109,7 +109,7 @@ function HomeAvatarScene({ lang }) {
       {/* Solo FOTO: nessun audio/video, l'avatar comunica per iscritto (fumetto) */}
       <img src={`${BASE}/michele-avatar-full.jpg`} alt="Michele" data-testid="home-avatar-full"
         className="absolute inset-0 w-full h-full object-contain" loading="lazy" />
-      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#6B8E62] via-[#6E8CA0] to-[#A9C5D4]" />
+      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#5aa0cf] via-[#6E8CA0] to-[#A9C5D4]" />
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
 
       <div className="absolute top-4 left-4 right-4 z-30 pointer-events-none">
@@ -173,7 +173,7 @@ export default function Home({ onNavigate }) {
   if (chat) {
     return (
       <div className="pb-4">
-        <button data-testid="home-back-btn" onClick={() => setChat(false)} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
+        <button data-testid="home-back-btn" onClick={() => setChat(false)} className="flex items-center gap-1 text-[#3f7cac] font-medium mb-4">
           <ChevronRight className="w-5 h-5 rotate-180" /> Home
         </button>
         <MaestroSaTutto />
@@ -184,7 +184,7 @@ export default function Home({ onNavigate }) {
   if (legal) {
     return (
       <div className="pb-4">
-        <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
+        <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#3f7cac] font-medium mb-4">
           <ChevronRight className="w-5 h-5 rotate-180" /> Home
         </button>
         <LegalPage />
@@ -200,7 +200,7 @@ export default function Home({ onNavigate }) {
       {/* ===== MIKILAB + SCOPRI MIKILAB uniti in un'unica card ===== */}
       <div data-testid="home-story" className="-mt-2">
         <button data-testid="home-story-toggle" onClick={toggleStory}
-          className="w-full text-left relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white shadow-lg active:scale-98 transition-all">
+          className="w-full text-left relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white shadow-lg active:scale-98 transition-all">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="p-5" data-testid="home-slogan">
             <p className="font-display text-lg sm:text-xl font-bold leading-tight mt-1">MikiLab</p>
@@ -232,18 +232,18 @@ export default function Home({ onNavigate }) {
                   </div>
                 </div>
 
-                <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-xl p-7 text-center">
+                <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white shadow-xl p-7 text-center">
                   <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
                     className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-4" />
                   <h1 className="font-display text-3xl font-bold">Mikilab</h1>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
                 </div>
 
-                <div data-testid="home-promo" className="rounded-3xl bg-[#EAF0EC] dark:bg-[#1F252B] border border-[#6E8CA0]/40 shadow-md p-5 flex items-start gap-4">
+                <div data-testid="home-promo" className="rounded-3xl bg-[#e4eff8] dark:bg-[#1F252B] border border-[#6E8CA0]/40 shadow-md p-5 flex items-start gap-4">
                   <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="Michele" loading="lazy"
                     className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#6E8CA0]/50 shrink-0"
                     onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                  <p className="text-sm text-[#3F4A54] dark:text-[#EAF0EC] leading-relaxed">
+                  <p className="text-sm text-[#3F4A54] dark:text-[#e4eff8] leading-relaxed">
                     {L(
                       "Un sito pensato per organizzare il lavoro proprio come lo faresti tu. Dalla gestione dettagliata delle ricette alla lista della spesa, fino alla pianificazione precisa della produzione in laboratorio. In più, con l'aiuto dell'AI potrai calcolare, adattare e gestire ogni fase senza margine di errore: tu pensi al laboratorio, al resto ci pensiamo noi.",
                       "Eine Website, die die Arbeit genau so organisiert, wie du es tun würdest. Von der detaillierten Rezeptverwaltung über die Einkaufsliste bis zur präzisen Produktionsplanung in der Backstube. Und mit Hilfe der KI kannst du jede Phase ohne Fehler berechnen, anpassen und steuern: Du kümmerst dich um die Backstube, um den Rest kümmern wir uns.",
@@ -253,7 +253,7 @@ export default function Home({ onNavigate }) {
                 </div>
 
                 <div data-testid="home-lab-gallery">
-                  <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-2 px-1">{L("Il laboratorio in immagini", "Die Backstube in Bildern", "The bakery in pictures")}</p>
+                  <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2 px-1">{L("Il laboratorio in immagini", "Die Backstube in Bildern", "The bakery in pictures")}</p>
                   <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
                     {[
                       { src: "bio-dough-3.jpg", cap: L("Al forno", "Am Ofen", "At the oven") },
@@ -290,7 +290,7 @@ export default function Home({ onNavigate }) {
                           {isOpen && (
                             <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
-                              <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#1F252B] border border-t-0 border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
+                              <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#1F252B] border border-t-0 border-[#d5e4f0] dark:border-[#38424B] overflow-hidden">
                                 {CONCEPT_PHOTOS[c.id] && (
                                   <img src={CONCEPT_PHOTOS[c.id]} alt={c.title}
                                     data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy"
@@ -312,7 +312,7 @@ export default function Home({ onNavigate }) {
                 </div>
 
                 <div data-testid="home-joke" className="flex items-start gap-3 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4">
-                  <Laugh className="w-5 h-5 text-[#5E8B7E] shrink-0 mt-0.5" />
+                  <Laugh className="w-5 h-5 text-[#3f7cac] shrink-0 mt-0.5" />
                   <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] italic leading-relaxed">{joke}</p>
                 </div>
               </div>
@@ -327,14 +327,14 @@ export default function Home({ onNavigate }) {
       {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
       <div data-testid="home-core">
         <div className="flex items-center gap-2 mb-1 px-1">
-          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{L("Il cuore di MikiLab", "Das Herz von MikiLab", "The heart of MikiLab")}</h2>
+          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Il cuore di MikiLab", "Das Herz von MikiLab", "The heart of MikiLab")}</h2>
           <span className="text-[10px] font-bold uppercase tracking-wide text-[#C88A2B] bg-[#C88A2B]/15 border border-[#C88A2B]/40 px-2 py-0.5 rounded-full">{L("L'anima del sito", "Die Seele", "The soul")}</span>
         </div>
         <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3 ml-1" />
 
         {/* Laboratorio — card grande in evidenza */}
         <button data-testid="home-core-maestro" onClick={() => go("maestro")}
-          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#5E8B7E] to-[#33564E] ring-2 ring-[#C88A2B]/70 overflow-hidden">
+          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#3f7cac] to-[#234b6e] ring-2 ring-[#C88A2B]/70 overflow-hidden">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-3 mt-1">
             <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-6 h-6" /></div>
@@ -351,13 +351,13 @@ export default function Home({ onNavigate }) {
 
         <div className="grid grid-cols-2 gap-3">
           <button data-testid="home-core-ricette" onClick={() => go("ricette")}
-            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#A64B2A] to-[#7c3820] min-h-[112px] flex flex-col gap-2">
+            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#24303c] to-[#16202b] min-h-[112px] flex flex-col gap-2">
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
             <p className="font-display text-base font-bold leading-tight">{L("Le Mie Ricette", "Meine Rezepte", "My Recipes")}</p>
             <p className="text-[11px] text-white/85 leading-snug">{L("Le ricette col mio metodo", "Rezepte mit meiner Methode", "Recipes with my method")}</p>
           </button>
           <button data-testid="home-core-corsi" onClick={() => go("shop")}
-            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] min-h-[112px] flex flex-col gap-2">
+            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#5aa0cf] to-[#2e6690] min-h-[112px] flex flex-col gap-2">
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><GraduationCap className="w-6 h-6" /></div>
             <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
             <p className="text-[11px] text-white/85 leading-snug">{L("Corsi online di Michele (in arrivo)", "Micheles Online-Kurse (bald)", "Michele's online courses (soon)")}</p>
@@ -367,7 +367,7 @@ export default function Home({ onNavigate }) {
 
       {/* ===== CHIEDI AL MAESTRO ===== */}
       <button data-testid="home-chat-btn" onClick={() => setChat(true)}
-        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white shadow-lg active:scale-98 transition-all">
+        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#5aa0cf] to-[#2e6690] text-white shadow-lg active:scale-98 transition-all">
         <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
           <MessageCircle className="w-6 h-6" />
         </div>
@@ -383,28 +383,28 @@ export default function Home({ onNavigate }) {
 
       {/* MikiLab Shop & Corsi — IN FONDO, "in arrivo a breve" (niente redirect alle ricette) */}
       <div data-testid="home-shop-corsi" className="mb-4">
-        <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-2">{L("MikiLab Shop & Corsi", "MikiLab Shop & Kurse", "MikiLab Shop & Courses")}</p>
-        <div className="grid grid-cols-2 gap-1.5 bg-[#EAF0EC] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-3 border border-[#D7E1DB] dark:border-[#38424B]">
+        <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2">{L("MikiLab Shop & Corsi", "MikiLab Shop & Kurse", "MikiLab Shop & Courses")}</p>
+        <div className="grid grid-cols-2 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-3 border border-[#d5e4f0] dark:border-[#38424B]">
           <button data-testid="shop-tab-premium" onClick={() => setShopTab("premium")}
-            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "premium" ? "bg-[#5E8B7E] text-white shadow" : "text-[#7E8A93]"}`}>
+            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "premium" ? "bg-[#3f7cac] text-white shadow" : "text-[#7E8A93]"}`}>
             {L("Shop Ricette", "Rezept-Shop", "Recipe Shop")}
           </button>
           <button data-testid="shop-tab-corsi" onClick={() => setShopTab("corsi")}
-            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "corsi" ? "bg-[#5E8B7E] text-white shadow" : "text-[#7E8A93]"}`}>
+            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "corsi" ? "bg-[#3f7cac] text-white shadow" : "text-[#7E8A93]"}`}>
             {L("I Miei Corsi", "Meine Kurse", "My Courses")}
           </button>
         </div>
 
-        <div data-testid="shop-coming-soon" className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#4A7265] to-[#33564E] p-6 text-center text-white">
+        <div data-testid="shop-coming-soon" className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#234b6e] p-6 text-center text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           {shopTab === "premium" ? (
             <>
               <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-2"><ChefHat className="w-6 h-6" /></div>
               <p className="font-display text-lg font-bold">{L("Shop di tutte le mie ricette", "Shop all meiner Rezepte", "Shop of all my recipes")}</p>
-              <span className="inline-block mt-2 text-[11px] font-bold bg-[#6B8E62] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
+              <span className="inline-block mt-2 text-[11px] font-bold bg-[#5aa0cf] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
               <p className="text-sm text-white/85 mt-2 leading-snug">{L("Sfoglia e acquista le ricette di Michele, complete di dosi e procedimento.", "Stöbere und kaufe Micheles Rezepte, komplett mit Mengen und Zubereitung.", "Browse and buy Michele's recipes, complete with doses and method.")}</p>
               <button data-testid="shop-recipes-cta" onClick={() => go("ricette")}
-                className="mt-3 inline-flex items-center gap-2 bg-white text-[#33564E] font-bold px-5 py-2.5 rounded-2xl active:scale-95 transition-all">
+                className="mt-3 inline-flex items-center gap-2 bg-white text-[#234b6e] font-bold px-5 py-2.5 rounded-2xl active:scale-95 transition-all">
                 <ShoppingBag className="w-4 h-4" /> {L("Vai alle ricette", "Zu den Rezepten", "Go to recipes")}
               </button>
             </>

@@ -4,7 +4,7 @@ export default function PrintHeader({ title = "", lang = "it" }) {
   const d = new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT");
   return (
     <div className="print-only" style={{ marginBottom: 16 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: "2px solid #5E8B7E", paddingBottom: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: "2px solid #3f7cac", paddingBottom: 8 }}>
         <img src={`${base}/logo-256.png`} alt="MikiLab" style={{ height: 38, width: "auto" }} />
         <div>
           <div style={{ fontWeight: 800, fontSize: 18, color: "#2B303B" }}>MikiLab</div>

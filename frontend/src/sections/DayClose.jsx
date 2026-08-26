@@ -67,9 +67,9 @@ export default function DayClose() {
   };
 
   const Stat = ({ Icon, value, label }) => (
-    <div className="flex-1 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center">
-      <Icon className="w-5 h-5 text-[#5E8B7E] mx-auto mb-1" />
-      <p className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{value}</p>
+    <div className="flex-1 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-3 text-center">
+      <Icon className="w-5 h-5 text-[#3f7cac] mx-auto mb-1" />
+      <p className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{value}</p>
       <p className="text-[11px] text-[#7E8A93] leading-tight">{label}</p>
     </div>
   );
@@ -77,9 +77,9 @@ export default function DayClose() {
   return (
     <div className="pb-40" data-testid="dayclose">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#6B8E62] flex items-center justify-center"><CalendarCheck className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#5aa0cf] flex items-center justify-center"><CalendarCheck className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Concludi Giornata", "Tag abschließen", "Close the Day")}</h1>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Concludi Giornata", "Tag abschließen", "Close the Day")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Riepilogo di chiusura e archivio Diario/HACCP", "Abschlussübersicht und Archiv Tagebuch/HACCP", "Closing summary and Log/HACCP archive")}</p>
         </div>
       </div>
@@ -95,23 +95,23 @@ export default function DayClose() {
         <Stat Icon={ShieldCheck} value={haccpToday.length} label={tri("Voci HACCP oggi", "HACCP-Einträge heute", "HACCP entries today")} />
       </div>
 
-      <div className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 mb-4">
-        <p className="text-xs font-bold uppercase text-[#5E8B7E] mb-2">{tri("Nota di chiusura (facoltativa)", "Abschlussnotiz (optional)", "Closing note (optional)")}</p>
+      <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4 mb-4">
+        <p className="text-xs font-bold uppercase text-[#3f7cac] mb-2">{tri("Nota di chiusura (facoltativa)", "Abschlussnotiz (optional)", "Closing note (optional)")}</p>
         <textarea data-testid="dayclose-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)}
           placeholder={tri("Es. tutto regolare, celle in ordine, forni spenti", "z. B. alles ok, Zellen geordnet, Öfen aus", "e.g. all good, cells tidy, ovens off")}
-          className="w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E] resize-none" />
+          className="w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac] resize-none" />
       </div>
 
       <button data-testid="dayclose-confirm" onClick={closeDay} disabled={closing}
-        className="w-full flex items-center justify-center gap-2 bg-[#6B8E62] hover:bg-[#5a7a53] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
+        className="w-full flex items-center justify-center gap-2 bg-[#5aa0cf] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
         <CheckSquare className="w-5 h-5" /> {closing ? tri("Chiusura…", "Abschluss…", "Closing…") : tri("Concludi e archivia la giornata", "Tag abschließen und archivieren", "Close and archive the day")}
       </button>
 
       {lastClosure && (
-        <div data-testid="dayclose-last" className="mt-4 flex items-start gap-2 bg-[#6B8E62]/12 border border-[#6B8E62]/30 rounded-2xl p-3.5">
-          <Archive className="w-4 h-4 text-[#4d6b45] dark:text-[#9ec48f] shrink-0 mt-0.5" />
+        <div data-testid="dayclose-last" className="mt-4 flex items-start gap-2 bg-[#5aa0cf]/12 border border-[#5aa0cf]/30 rounded-2xl p-3.5">
+          <Archive className="w-4 h-4 text-[#2e6690] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
           <div className="text-xs text-[#3F4A54] dark:text-[#AEB8BF]">
-            <p className="font-bold text-[#4d6b45] dark:text-[#9ec48f]">{tri("Ultima chiusura archiviata", "Letzter archivierter Abschluss", "Last archived closure")}: {lastClosure.date}</p>
+            <p className="font-bold text-[#2e6690] dark:text-[#a9d2ec]">{tri("Ultima chiusura archiviata", "Letzter archivierter Abschluss", "Last archived closure")}: {lastClosure.date}</p>
             <p className="mt-0.5">{tri("Sessioni impasto", "Teig-Sitzungen", "Dough sessions")}: {lastClosure.dough_sessions} · HACCP: {lastClosure.haccp_entries}</p>
             {lastClosure.note && <p className="mt-0.5 italic">"{lastClosure.note}"</p>}
           </div>
@@ -125,7 +125,7 @@ export default function DayClose() {
           `Day summary. Dough sessions: ${doughToday.length}. HACCP entries: ${haccpToday.length}.${note.trim() ? " Note: " + note.trim() : (lastClosure && lastClosure.note ? " Note: " + lastClosure.note : "")}`
         )}
         who="momy" testid="dayclose-listen"
-        className="mt-3 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
+        className="mt-3 w-full bg-[#3f7cac] hover:bg-[#336a94] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
 
       <AnimatePresence>
         {celebrate && (

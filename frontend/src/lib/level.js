@@ -15,9 +15,9 @@ export function getLevel(L = (i) => i) {
   let steps = 0;
   try { const p = JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); steps = ["ricettario", "farine", "corsi"].filter((x) => p.includes(x)).length; } catch { /* */ }
   const total = steps + getXP();
-  if (total >= 10) return { icon: "🏅", name: L("Maestro", "Meister", "Master"), cls: "bg-[#6B8E62] text-white", total };
+  if (total >= 10) return { icon: "🏅", name: L("Maestro", "Meister", "Master"), cls: "bg-[#5aa0cf] text-white", total };
   if (total >= 4) return { icon: "🥐", name: L("Fornaio", "Bäcker", "Baker"), cls: "bg-[#C9A24B] text-white", total };
-  return { icon: "🥖", name: L("Apprendista", "Lehrling", "Apprentice"), cls: "bg-[#D7E1DB] dark:bg-[#38424B] text-[#7E8A93]", total };
+  return { icon: "🥖", name: L("Apprendista", "Lehrling", "Apprentice"), cls: "bg-[#d5e4f0] dark:bg-[#38424B] text-[#7E8A93]", total };
 }
 
 // Progresso verso il prossimo livello: punti mancanti e percentuale barra.

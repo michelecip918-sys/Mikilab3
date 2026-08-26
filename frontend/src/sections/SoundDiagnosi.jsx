@@ -106,19 +106,19 @@ export default function SoundDiagnosi() {
 
   return (
     <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#6E8CA0] to-[#33564E] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#6E8CA0] to-[#234b6e] p-6 text-white">
         <Volume2 className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Diagnosi Sonora", "Klang-Diagnose", "Sound Diagnosis")}</h1>
         <p className="text-white/85 text-sm mt-1">{tri("Avvicina il telefono all'impastatrice: dal ritmo del suono capisco se l'impasto è ancora duro o quasi pronto.", "Halte das Handy an den Kneter: am Rhythmus erkenne ich, ob der Teig noch hart oder fast fertig ist.", "Hold the phone near the mixer: from the sound rhythm I can tell if the dough is still hard or almost ready.")}</p>
       </div>
 
-      <div className="rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4 mb-4 text-sm text-[#33564E] dark:text-[#8FB0C2] leading-relaxed">
+      <div className="rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4 mb-4 text-sm text-[#234b6e] dark:text-[#8FB0C2] leading-relaxed">
         ⚠️ {tri("È una stima «a orecchio» (beta), non un sensore di laboratorio. Registra ~8 secondi durante l'impastamento.", "Es ist eine Schätzung «nach Gehör» (Beta), kein Laborsensor. Nimm ~8 Sek. während des Knetens auf.", "It's an «by ear» estimate (beta), not a lab sensor. Record ~8 seconds during kneading.")}
       </div>
 
       {!recording ? (
         <button data-testid="sound-start-btn" onClick={start} disabled={analyzing}
-          className="w-full bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="w-full bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           {analyzing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
           {analyzing ? tri("Analizzo…", "Analysiere…", "Analyzing…") : tri("Registra e analizza", "Aufnehmen & analysieren", "Record & analyze")}
         </button>
@@ -130,11 +130,11 @@ export default function SoundDiagnosi() {
       )}
 
       {recording && (
-        <div data-testid="sound-wave" className="mt-4 rounded-2xl bg-[#33564E] p-4">
+        <div data-testid="sound-wave" className="mt-4 rounded-2xl bg-[#234b6e] p-4">
           <div className="flex items-end justify-center gap-[3px] h-16">
             {wave.length === 0 && <span className="text-white/50 text-xs self-center">{tri("Avvicina il telefono all'impastatrice…", "Handy an den Kneter halten…", "Bring the phone near the mixer…")}</span>}
             {wave.map((v, k) => (
-              <div key={k} className="w-1.5 rounded-full bg-gradient-to-t from-[#8FB0C2] to-[#EAF0EC] transition-all duration-75"
+              <div key={k} className="w-1.5 rounded-full bg-gradient-to-t from-[#8FB0C2] to-[#e4eff8] transition-all duration-75"
                 style={{ height: `${Math.max(6, Math.min(100, v * 320))}%` }} />
             ))}
           </div>
@@ -144,15 +144,15 @@ export default function SoundDiagnosi() {
 
       {result && (
         <div className="mt-5">
-          <div data-testid="sound-result" className="markdown-body bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#EAF0EC]">
+          <div data-testid="sound-result" className="markdown-body bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
             <ReactMarkdown>{result}</ReactMarkdown>
           </div>
           <button data-testid="sound-share-btn" onClick={() => shareContent(tri("Diagnosi Sonora — MikiLab", "Klang-Diagnose — MikiLab", "Sound Diagnosis — MikiLab"), result, lang)}
-            className="mt-2 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-4 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
+            className="mt-2 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
           </button>
           <ListenButton text={result} who="momy" testid="sound-listen-btn"
-            className="mt-2 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
+            className="mt-2 w-full bg-[#3f7cac] hover:bg-[#336a94] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
         </div>
       )}
     </div>

@@ -94,9 +94,9 @@ export default function DoughLog() {
     setLoadingAdvice(false);
   };
 
-  const inp = "w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]";
+  const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
   const VERDICT = {
-    on_target: { color: "#6B8E62", Icon: CheckCircle2, label: tri("Nel target 👌", "Im Ziel 👌", "On target 👌") },
+    on_target: { color: "#5aa0cf", Icon: CheckCircle2, label: tri("Nel target 👌", "Im Ziel 👌", "On target 👌") },
     too_warm: { color: "#C0574D", Icon: Flame, label: tri("Troppo caldo", "Zu warm", "Too warm") },
     too_cold: { color: "#3F7CAC", Icon: Snowflake, label: tri("Troppo freddo", "Zu kalt", "Too cold") },
     unknown: { color: "#7E8A93", Icon: Thermometer, label: tri("Dati incompleti", "Unvollständig", "Incomplete data") },
@@ -105,9 +105,9 @@ export default function DoughLog() {
   return (
     <div className="pb-40" data-testid="doughlog">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#5E8B7E] flex items-center justify-center"><Thermometer className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#3f7cac] flex items-center justify-center"><Thermometer className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Diario Impasti", "Teig-Tagebuch", "Dough Log")}</h1>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Diario Impasti", "Teig-Tagebuch", "Dough Log")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Temperature + algoritmo Giorno Dopo", "Temperaturen + Tag-danach-Algorithmus", "Temperatures + Day-After algorithm")}</p>
         </div>
       </div>
@@ -119,8 +119,8 @@ export default function DoughLog() {
       )}
 
       {/* Form nuova sessione */}
-      <div className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 mb-4 space-y-3">
-        <p className="text-xs font-bold uppercase text-[#5E8B7E]">{tri("Nuova sessione impasto", "Neue Teig-Sitzung", "New dough session")}</p>
+      <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4 mb-4 space-y-3">
+        <p className="text-xs font-bold uppercase text-[#3f7cac]">{tri("Nuova sessione impasto", "Neue Teig-Sitzung", "New dough session")}</p>
         <select data-testid="doughlog-recipe" value={form.recipe_id} onChange={(e) => pickRecipe(e.target.value)} className={inp}>
           <option value="">{tri("— Scegli ricetta (o scrivi sotto) —", "— Rezept wählen (oder unten tippen) —", "— Pick recipe (or type below) —")}</option>
           {recipes.map((r) => <option key={r.id} value={r.id}>{rLoc(r, "name", lang)}</option>)}
@@ -134,7 +134,7 @@ export default function DoughLog() {
           <label className="text-[11px] text-[#7E8A93]">{tri("Temp. acqua °C", "Wassertemp. °C", "Water temp °C")}<input data-testid="doughlog-water" type="number" step="0.1" value={form.water_temp_c} onChange={(e) => setForm((f) => ({ ...f, water_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
         </div>
         <input data-testid="doughlog-note" value={form.note} onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))} placeholder={tri("Note (facoltative)", "Notiz (optional)", "Note (optional)")} className={inp} />
-        <button data-testid="doughlog-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva sessione", "Sitzung speichern", "Save session")}</button>
+        <button data-testid="doughlog-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva sessione", "Sitzung speichern", "Save session")}</button>
       </div>
 
       {/* Giorno Dopo */}
@@ -143,16 +143,16 @@ export default function DoughLog() {
         return (
           <div className="rounded-2xl p-4 mb-4 border" style={{ background: v.color + "1A", borderColor: v.color + "55" }} data-testid="doughlog-dayafter">
             <div className="flex items-center gap-2 text-xs font-bold uppercase" style={{ color: v.color }}><V className="w-4 h-4" /> {tri("Giorno Dopo", "Tag danach", "Day After")}</div>
-            <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] mt-2" data-testid="doughlog-verdict">{v.label}{a.delta !== null && a.verdict !== "on_target" && ` · ${a.delta > 0 ? "+" : ""}${a.delta}°C`}</p>
+            <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] mt-2" data-testid="doughlog-verdict">{v.label}{a.delta !== null && a.verdict !== "on_target" && ` · ${a.delta > 0 ? "+" : ""}${a.delta}°C`}</p>
             <p className="text-[12px] text-[#7E8A93]">{tri("Ieri", "Gestern", "Yesterday")}: {dayAfter.last.dough_temp_c}°C (target {dayAfter.last.target_temp_c ?? "?"}°C), {tri("acqua", "Wasser", "water")} {dayAfter.last.water_temp_c ?? "?"}°C</p>
             {a.suggested_water_c !== null && (
               <div className="flex items-center gap-2 mt-2 bg-[#3F7CAC]/10 border border-[#3F7CAC]/30 rounded-xl px-3 py-2">
                 <Droplet className="w-4 h-4 text-[#3F7CAC]" />
-                <p className="text-sm text-[#2B303B] dark:text-[#EAF0EC]">{tri("Oggi usa acqua a", "Heute Wasser mit", "Today use water at")} <b data-testid="doughlog-suggest-water" className="font-mono-data text-[#3F7CAC]">{a.suggested_water_c}°C</b></p>
+                <p className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{tri("Oggi usa acqua a", "Heute Wasser mit", "Today use water at")} <b data-testid="doughlog-suggest-water" className="font-mono-data text-[#3F7CAC]">{a.suggested_water_c}°C</b></p>
               </div>
             )}
-            <button data-testid="doughlog-ai" onClick={getAdvice} disabled={loadingAdvice} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#5E8B7E] text-white font-semibold py-2.5 rounded-xl disabled:opacity-50 active:scale-98"><Sparkles className="w-4 h-4" /> {loadingAdvice ? tri("Chiedo al Maestro…", "Frage den Meister…", "Asking the Master…") : tri("Consiglio IA del Maestro", "KI-Rat des Meisters", "Master's AI advice")}</button>
-            {advice && <p data-testid="doughlog-advice" className="text-sm text-[#2B303B] dark:text-[#EAF0EC] mt-3 whitespace-pre-line bg-white/60 dark:bg-[#1F252B]/60 rounded-xl p-3">{advice}</p>}
+            <button data-testid="doughlog-ai" onClick={getAdvice} disabled={loadingAdvice} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#3f7cac] text-white font-semibold py-2.5 rounded-xl disabled:opacity-50 active:scale-98"><Sparkles className="w-4 h-4" /> {loadingAdvice ? tri("Chiedo al Maestro…", "Frage den Meister…", "Asking the Master…") : tri("Consiglio IA del Maestro", "KI-Rat des Meisters", "Master's AI advice")}</button>
+            {advice && <p data-testid="doughlog-advice" className="text-sm text-[#2B303B] dark:text-[#e4eff8] mt-3 whitespace-pre-line bg-white/60 dark:bg-[#1F252B]/60 rounded-xl p-3">{advice}</p>}
           </div>
         );
       })()}
@@ -167,17 +167,17 @@ export default function DoughLog() {
           target: s.target_temp_c != null ? s.target_temp_c : null,
         }));
         return (
-          <div className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4 mb-4" data-testid="doughlog-chart">
-            <p className="text-xs font-bold uppercase text-[#5E8B7E] mb-2 flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5" /> {tri("Andamento temperatura impasto", "Verlauf Teigtemperatur", "Dough temperature trend")}</p>
+          <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4 mb-4" data-testid="doughlog-chart">
+            <p className="text-xs font-bold uppercase text-[#3f7cac] mb-2 flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5" /> {tri("Andamento temperatura impasto", "Verlauf Teigtemperatur", "Dough temperature trend")}</p>
             <ResponsiveContainer width="100%" height={180}>
               <LineChart data={data} margin={{ top: 6, right: 8, left: -18, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#D7E1DB" strokeOpacity={0.4} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#d5e4f0" strokeOpacity={0.4} />
                 <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#7E8A93" }} />
                 <YAxis tick={{ fontSize: 10, fill: "#7E8A93" }} domain={["dataMin - 1", "dataMax + 1"]} />
                 <Tooltip contentStyle={{ fontSize: 12, borderRadius: 12 }} formatter={(v) => `${v}°C`} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Line type="monotone" dataKey="impasto" name={tri("Impasto", "Teig", "Dough")} stroke="#C0574D" strokeWidth={2.5} dot={{ r: 3 }} />
-                <Line type="monotone" dataKey="target" name="Target" stroke="#6B8E62" strokeWidth={2} strokeDasharray="5 4" dot={false} connectNulls />
+                <Line type="monotone" dataKey="target" name="Target" stroke="#5aa0cf" strokeWidth={2} strokeDasharray="5 4" dot={false} connectNulls />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -190,11 +190,11 @@ export default function DoughLog() {
           <p className="text-xs font-bold uppercase text-[#7E8A93] mb-2 flex items-center gap-1"><History className="w-3.5 h-3.5" /> {tri("Storico sessioni", "Verlauf", "History")}</p>
           <div className="space-y-2">
             {sessions.map((s) => (
-              <div key={s.id} data-testid={`doughlog-item-${s.id}`} className="flex items-center justify-between bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2">
+              <div key={s.id} data-testid={`doughlog-item-${s.id}`} className="flex items-center justify-between bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2">
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-1.5">
+                  <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1.5">
                     {s.recipe_name}
-                    {s.source === "pesata" && <span data-testid={`doughlog-badge-${s.id}`} className="inline-flex items-center gap-0.5 bg-[#5E8B7E]/15 text-[#5E8B7E] text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0"><Scale className="w-2.5 h-2.5" /> {tri("da Pesata", "aus Wiegen", "from Weighing")}</span>}
+                    {s.source === "pesata" && <span data-testid={`doughlog-badge-${s.id}`} className="inline-flex items-center gap-0.5 bg-[#3f7cac]/15 text-[#3f7cac] text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0"><Scale className="w-2.5 h-2.5" /> {tri("da Pesata", "aus Wiegen", "from Weighing")}</span>}
                   </p>
                   <p className="text-[11px] text-[#7E8A93] font-mono-data">{s.date} · {tri("impasto", "Teig", "dough")} {s.dough_temp_c}°C{s.target_temp_c != null ? ` / target ${s.target_temp_c}°C` : ""}{s.water_temp_c != null ? ` · ${tri("acqua", "Wasser", "water")} ${s.water_temp_c}°C` : ""}</p>
                 </div>

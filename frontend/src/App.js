@@ -131,7 +131,7 @@ function App() {
   return (
     <AmbientProvider>
     <TimerProvider>
-    <div className="App min-h-screen bg-[#F6F8F5] dark:bg-[#1B2127]">
+    <div className="App min-h-screen bg-[#f0f6fb] dark:bg-[#1B2127]">
       {/* Sfondo tematico: filigrana grano/farina elegante su ogni pagina (contrasto garantito dalle card) */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-repeat opacity-[0.55] dark:opacity-[0.05]"
         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px" }} />
@@ -158,8 +158,8 @@ function App() {
           </motion.div>
         </AnimatePresence>
 
-        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#D7E1DB] dark:border-[#38424B]">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2D5A4C] to-[#5E8B7E] text-white p-4 shadow-lg">
+        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#38424B]">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white p-4 shadow-lg">
             <div className="it-de-ribbon absolute top-0 left-0 right-0" />
             <div className="flex items-center gap-4 mt-1">
               <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele — MikiLab" loading="lazy"
@@ -191,7 +191,7 @@ function App() {
           <motion.div
             data-testid="auth-modal"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-[#F6F8F5] dark:bg-[#1B2127] overflow-auto"
+            className="fixed inset-0 z-[70] bg-[#f0f6fb] dark:bg-[#1B2127] overflow-auto"
           >
             <AuthScreen onClose={() => setAuthOpen(false)} />
           </motion.div>

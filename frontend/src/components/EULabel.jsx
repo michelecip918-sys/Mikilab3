@@ -32,23 +32,23 @@ export default function EULabel({ recipe, lang }) {
   if (!hasLabelData(label)) return null;
   const allergens = (label.allergens || "").split(",").map((s) => s.trim()).filter(Boolean);
   return (
-    <div data-testid="eu-label" className="mt-4 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] bg-white dark:bg-[#232A31] p-4">
+    <div data-testid="eu-label" className="mt-4 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31] p-4">
       <div className="flex items-center justify-between gap-2 mb-2">
-        <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#5E8B7E]">
+        <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#3f7cac]">
           <Tag className="w-3.5 h-3.5" /> {L(lang, "Etichetta UE", "EU-Etikett", "EU label")}
         </p>
         <button data-testid="eu-label-print-btn" onClick={() => printEULabel(recipe, lang)}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#33564E] dark:text-[#8FB0C2] bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] px-3 py-1.5 rounded-lg active:scale-95">
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#234b6e] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] px-3 py-1.5 rounded-lg active:scale-95">
           <Printer className="w-3.5 h-3.5" /> {L(lang, "Stampa", "Drucken", "Print")}
         </button>
       </div>
-      <p className="text-xs font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{L(lang, "Dichiarazione nutrizionale (per 100 g)", "Nährwertdeklaration (pro 100 g)", "Nutrition declaration (per 100 g)")}</p>
+      <p className="text-xs font-bold text-[#2B303B] dark:text-[#e4eff8] mb-1">{L(lang, "Dichiarazione nutrizionale (per 100 g)", "Nährwertdeklaration (pro 100 g)", "Nutrition declaration (per 100 g)")}</p>
       <table className="w-full text-xs">
         <tbody>
           {rows(label, lang).map(([k, v, bold], i) => (
-            <tr key={i} className="border-b border-dashed border-[#EAF0EC] dark:border-[#2A323A] last:border-0">
-              <td className={`py-1 ${bold ? "font-semibold text-[#2B303B] dark:text-[#EAF0EC]" : "pl-3 text-[#7E8A93]"}`}>{k}</td>
-              <td className="py-1 text-right font-mono-data text-[#33564E] dark:text-[#8FB0C2]">{v}</td>
+            <tr key={i} className="border-b border-dashed border-[#e4eff8] dark:border-[#2A323A] last:border-0">
+              <td className={`py-1 ${bold ? "font-semibold text-[#2B303B] dark:text-[#e4eff8]" : "pl-3 text-[#7E8A93]"}`}>{k}</td>
+              <td className="py-1 text-right font-mono-data text-[#234b6e] dark:text-[#8FB0C2]">{v}</td>
             </tr>
           ))}
         </tbody>
@@ -95,7 +95,7 @@ export async function printEULabel(recipe, lang) {
       *{box-sizing:border-box}
       body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;padding:8mm}
       .label{width:80mm;border:1px solid #111;border-radius:4px;padding:4mm}
-      .brand{font-size:9px;font-weight:800;color:#5E8B7E;letter-spacing:.05em}
+      .brand{font-size:9px;font-weight:800;color:#3f7cac;letter-spacing:.05em}
       h1{font-size:15px;margin:2px 0 6px}
       h2{font-size:11px;margin:8px 0 2px;border-top:1px solid #111;padding-top:4px}
       table{width:100%;border-collapse:collapse;font-size:11px}

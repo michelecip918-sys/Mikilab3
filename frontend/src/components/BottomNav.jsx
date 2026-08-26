@@ -16,10 +16,10 @@ export default function BottomNav({ active, onChange }) {
   return (
     <nav
       data-testid="bottom-nav"
-      className="fixed bottom-0 inset-x-0 bg-[#F6F8F5]/95 dark:bg-[#1B2127]/95 backdrop-blur-md border-t border-[#D7E1DB] dark:border-[#38424B] z-50 shadow-[0_-4px_20px_rgba(44,34,30,0.06)]"
+      className="fixed bottom-0 inset-x-0 bg-[#f0f6fb]/95 dark:bg-[#1B2127]/95 backdrop-blur-md border-t border-[#d5e4f0] dark:border-[#38424B] z-50 shadow-[0_-4px_20px_rgba(44,34,30,0.06)]"
     >
       <div aria-hidden className="flex h-1 w-full">
-        <div className="flex-1 bg-[#6B8E62]" />
+        <div className="flex-1 bg-[#5aa0cf]" />
         <div className="flex-1 bg-white" />
         <div className="flex-1 bg-[#6E8CA0]" />
         <div className="flex-1 bg-[#2B303B]" />
@@ -35,7 +35,7 @@ export default function BottomNav({ active, onChange }) {
               data-testid={`nav-tab-${id}`}
               onClick={() => onChange(id)}
               className={`flex flex-col items-center justify-center gap-1 py-2 px-0.5 rounded-xl transition-all min-h-[52px] ${
-                on ? "bg-[#5E8B7E] text-white shadow-md" : "text-[#7E8A93] hover:bg-[#EAF0EC] dark:hover:bg-[#2A323A]"
+                on ? "bg-[#3f7cac] text-white shadow-md" : "text-[#7E8A93] hover:bg-[#e4eff8] dark:hover:bg-[#2A323A]"
               }`}
             >
               <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />

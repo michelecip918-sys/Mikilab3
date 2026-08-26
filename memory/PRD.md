@@ -1316,3 +1316,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Community.jsx**: aggiunto `community-marketplace-top-btn` (card dorata "Mercatino dell'Usato") subito sotto l'header; scroll smooth alla sezione `community-marketplace` in fondo. Trilingue.
 - Verificato: pulsante presente, click scrolla al marketplace.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont14 (2026-06) — Nuovo tema celeste + Notifiche/Seed Marketplace
+- **Tema colori (globale)**: swap verde→celeste in tutti i .jsx/.js/.css di frontend/src. Primario #5e8b7e→#3f7cac, scuro #33564e/#2d5a4c→#234b6e, accenti #6b8e62→#5aa0cf, #4c7368→#336a94, #4d6b45→#2e6690, #4a7265/#5a7a52/#5a7a53→azzurri, #9ec48f→#a9d2ec; sfondi #eaf0ec→#e4eff8, #f6f8f5→#f0f6fb, bordi #d7e1db→#d5e4f0. Card "Le Mie Ricette" terracotta #a64b2a/#b34a26/#7c3820→navy/near-black (nota nera). Oro (#c88a2b ecc.) mantenuto come tocco giallo. Colori bandiera IT/DE (.it-de-ribbon) INTATTI.
+- **lib/market.js** (nuovo): dati Marketplace locali + 4 annunci di esempio (impastatrice, forno, cella, sfogliatrice) + marketNewCount/markMarketSeen.
+- **Community.jsx**: badge rosso con conteggio "nuovi annunci" sul pulsante Mercatino; azzerato al tap (markMarketSeen).
+- **Marketplace.jsx**: usa loadMarket() (seed se vuoto) e marca visti all'apertura.
+- Verificato via screenshot: tema coerente, nessun errore di build.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

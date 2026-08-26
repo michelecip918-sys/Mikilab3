@@ -45,14 +45,14 @@ export default function LegalPage() {
   const c = T[lang] || T.it;
   return (
     <div data-testid="legal-page" className="pb-4 space-y-4">
-      <div className="rounded-3xl p-6 bg-gradient-to-br from-[#6B8E62] to-[#4d6b45] text-white">
+      <div className="rounded-3xl p-6 bg-gradient-to-br from-[#5aa0cf] to-[#2e6690] text-white">
         <ShieldCheck className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{c.title}</h1>
         <p className="text-white/90 text-sm mt-2 leading-relaxed">{c.intro}</p>
       </div>
       {c.sections.map((s, i) => (
-        <div key={i} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-5">
-          <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{s.h}</h2>
+        <div key={i} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5">
+          <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{s.h}</h2>
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.b}</p>
         </div>
       ))}

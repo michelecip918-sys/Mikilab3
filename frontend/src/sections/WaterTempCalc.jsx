@@ -8,7 +8,7 @@ function Field({ testid, label, value, onChange, hint }) {
       <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type="number" value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3 pr-8 outline-none focus:border-[#5E8B7E]" />
+          className="w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3 pr-8 outline-none focus:border-[#3f7cac]" />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">°C</span>
       </div>
       {hint ? <p className="text-[10px] text-[#7E8A93] mt-1 leading-snug">{hint}</p> : null}
@@ -38,7 +38,7 @@ export default function WaterTempCalc() {
           <Droplets className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">
             {tri("Temperatura Acqua d'Impasto", "Teigwasser-Temperatur", "Dough Water Temperature")}
           </h1>
           <p className="text-sm text-[#7E8A93]">{tri("Trova i gradi giusti dell'acqua", "Finde die richtige Wassertemperatur", "Find the right water temperature")}</p>

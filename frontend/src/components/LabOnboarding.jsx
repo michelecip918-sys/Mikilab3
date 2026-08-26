@@ -139,9 +139,9 @@ export default function LabOnboarding() {
         <motion.div data-testid="lab-onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           className="fixed inset-0 z-[9998] flex items-end sm:items-center justify-center bg-[#1A1412]/85 backdrop-blur-sm p-3">
           <motion.div key={i} initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28 }}
-            className="w-full max-w-md rounded-3xl bg-[#F6F8F5] dark:bg-[#1B2127] border border-[#D7E1DB] dark:border-[#38424B] shadow-2xl overflow-hidden">
+            className="w-full max-w-md rounded-3xl bg-[#f0f6fb] dark:bg-[#1B2127] border border-[#d5e4f0] dark:border-[#38424B] shadow-2xl overflow-hidden">
             {/* header */}
-            <div className={`p-5 ${cur.who === "michele" ? "bg-gradient-to-br from-[#3F4A54] to-[#5E6B62]" : "bg-gradient-to-br from-[#33564E] to-[#5E8B7E]"} text-white`}>
+            <div className={`p-5 ${cur.who === "michele" ? "bg-gradient-to-br from-[#3F4A54] to-[#5E6B62]" : "bg-gradient-to-br from-[#234b6e] to-[#3f7cac]"} text-white`}>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-bold uppercase tracking-wide text-white/70">
                   {cur.who === "michele" ? tri("Michele · MikiLab", "Michele · MikiLab", "Michele · MikiLab") : tri("Momy · il tuo assistente", "Momy · dein Assistent", "Momy · your assistant")}
@@ -160,27 +160,27 @@ export default function LabOnboarding() {
             </div>
             {/* body */}
             <div className="p-5">
-              <p data-testid="lab-onboarding-body" className="text-[15px] text-[#2B303B] dark:text-[#EAF0EC] leading-relaxed max-h-[40vh] overflow-y-auto">{cur.body}</p>
+              <p data-testid="lab-onboarding-body" className="text-[15px] text-[#2B303B] dark:text-[#e4eff8] leading-relaxed max-h-[40vh] overflow-y-auto">{cur.body}</p>
               {/* dots */}
               <div className="flex items-center justify-center gap-1.5 mt-5">
                 {slides.map((_, k) => (
-                  <span key={k} className={`h-1.5 rounded-full transition-all ${k === i ? "w-5 bg-[#5E8B7E]" : "w-1.5 bg-[#D7E1DB] dark:bg-[#38424B]"}`} />
+                  <span key={k} className={`h-1.5 rounded-full transition-all ${k === i ? "w-5 bg-[#3f7cac]" : "w-1.5 bg-[#d5e4f0] dark:bg-[#38424B]"}`} />
                 ))}
               </div>
               {/* nav */}
               <div className="flex items-center justify-between gap-3 mt-4">
                 <button data-testid="lab-onboarding-prev" onClick={prev} disabled={i === 0}
-                  className="flex items-center gap-1 px-4 py-2.5 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] text-[#2B303B] dark:text-[#EAF0EC] font-medium disabled:opacity-40">
+                  className="flex items-center gap-1 px-4 py-2.5 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] text-[#2B303B] dark:text-[#e4eff8] font-medium disabled:opacity-40">
                   <ChevronLeft className="w-5 h-5" /> {tri("Indietro", "Zurück", "Back")}
                 </button>
                 {i < slides.length - 1 ? (
                   <button data-testid="lab-onboarding-next" onClick={next}
-                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold active:scale-97 transition-all">
                     {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
                   </button>
                 ) : (
                   <button data-testid="lab-onboarding-done" onClick={close}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold active:scale-97 transition-all">
                     <Check className="w-5 h-5" /> {tri("Ho capito, iniziamo!", "Verstanden, los geht's!", "Got it, let's start!")}
                   </button>
                 )}

@@ -31,7 +31,7 @@ export default function ShareInstall() {
     { id: "telegram", label: "Telegram", Icon: Send, color: "#0088cc", href: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}` },
     { id: "facebook", label: "Facebook", Icon: Facebook, color: "#1877F2", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
     { id: "x", label: "X", Icon: Twitter, color: "#111827", href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}` },
-    { id: "email", label: "Email", Icon: Mail, color: "#5E8B7E", href: `mailto:?subject=${enc("Mikilab")}&body=${enc(text + "\n\n" + url)}` },
+    { id: "email", label: "Email", Icon: Mail, color: "#3f7cac", href: `mailto:?subject=${enc("Mikilab")}&body=${enc(text + "\n\n" + url)}` },
   ];
 
   const nativeShare = async () => {
@@ -57,17 +57,17 @@ export default function ShareInstall() {
   };
 
   return (
-    <div data-testid="share-install" className="rounded-3xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-5">
-      <div className="flex items-center gap-2 mb-1 text-[#5E8B7E]">
+    <div data-testid="share-install" className="rounded-3xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5">
+      <div className="flex items-center gap-2 mb-1 text-[#3f7cac]">
         <Share2 className="w-5 h-5" />
-        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("share_title")}</h3>
+        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("share_title")}</h3>
       </div>
       <p className="text-sm text-[#7E8A93] mb-4">{t("share_sub")}</p>
 
       <div className="grid grid-cols-3 gap-2.5" data-testid="share-networks">
         {NETS.map(({ id, label, Icon, color, href }) => (
           <a key={id} data-testid={`share-${id}`} href={href} target="_blank" rel="noopener noreferrer"
-            className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] bg-[#EAF0EC] dark:bg-[#2A323A] py-3 active:scale-95 transition-transform">
+            className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] bg-[#e4eff8] dark:bg-[#2A323A] py-3 active:scale-95 transition-transform">
             <span className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: color }}>
               <Icon className="w-5 h-5 text-white" />
             </span>
@@ -75,25 +75,25 @@ export default function ShareInstall() {
           </a>
         ))}
         <button data-testid="share-copy" onClick={copyLink}
-          className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] bg-[#EAF0EC] dark:bg-[#2A323A] py-3 active:scale-95 transition-transform">
+          className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] bg-[#e4eff8] dark:bg-[#2A323A] py-3 active:scale-95 transition-transform">
           <span className="w-9 h-9 rounded-full flex items-center justify-center bg-[#7E8A93]"><Copy className="w-5 h-5 text-white" /></span>
           <span className="text-[11px] font-medium text-[#3F4A54] dark:text-[#AEB8BF]">{t("share_copy")}</span>
         </button>
       </div>
 
       <button data-testid="share-native" onClick={nativeShare}
-        className="mt-3 w-full bg-[#6B8E62] hover:bg-[#5a7a52] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="mt-3 w-full bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
         <Share2 className="w-5 h-5" /> {t("share_more")}
       </button>
 
       {!installed && (
         <button data-testid="install-app" onClick={install}
-          className="mt-2 w-full bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="mt-2 w-full bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           <Download className="w-5 h-5" /> {t("install_app")}
         </button>
       )}
       {installed && (
-        <p data-testid="install-done" className="mt-3 text-center text-sm text-[#6B8E62] font-medium flex items-center justify-center gap-1.5">
+        <p data-testid="install-done" className="mt-3 text-center text-sm text-[#5aa0cf] font-medium flex items-center justify-center gap-1.5">
           <Smartphone className="w-4 h-4" /> {t("install_done")}
         </p>
       )}

@@ -36,7 +36,7 @@ export default function InstallBanner() {
         </div>
         <p className="flex-1 min-w-0 text-sm font-medium truncate">{t("install_banner_title")}</p>
         <button data-testid="install-banner-btn" onClick={install}
-          className="shrink-0 bg-[#5E8B7E] hover:bg-[#4C7368] text-white text-sm font-semibold px-3 py-1.5 rounded-xl active:scale-95 transition-all">
+          className="shrink-0 bg-[#3f7cac] hover:bg-[#336a94] text-white text-sm font-semibold px-3 py-1.5 rounded-xl active:scale-95 transition-all">
           {t("install_app")}
         </button>
         <button data-testid="install-banner-close" onClick={close} className="shrink-0 text-white/60 hover:text-white p-1" aria-label="close">

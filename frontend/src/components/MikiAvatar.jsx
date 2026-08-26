@@ -10,7 +10,7 @@ export const MikiAvatar = ({ label, subtitle, size = 46, className = "" }) => (
     />
     {(label || subtitle) && (
       <div className="min-w-0 leading-tight">
-        {label && <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#EAF0EC] truncate">{label}</p>}
+        {label && <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] truncate">{label}</p>}
         {subtitle && <p className="text-[11px] text-[#7E8A93] truncate">{subtitle}</p>}
       </div>
     )}

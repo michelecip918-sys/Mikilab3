@@ -21,11 +21,11 @@ export default function RecipeShowcase({ onOpen }) {
   return (
     <div data-testid="home-showcase">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">
+        <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">
           {lang === "de" ? "Meine Rezepte" : lang === "en" ? "My recipes" : "Le mie ricette"}
         </h2>
         <button data-testid="home-recipes-all" onClick={() => onOpen && onOpen()}
-          className="text-sm font-medium text-[#5E8B7E] flex items-center gap-1">
+          className="text-sm font-medium text-[#3f7cac] flex items-center gap-1">
           {lang === "de" ? "Alle" : lang === "en" ? "All" : "Tutte"} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
@@ -41,9 +41,9 @@ export default function RecipeShowcase({ onOpen }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.03, 0.3) }}
-              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] shadow-sm active:scale-[0.98] hover:border-[#6E8CA0]/60 transition-all text-left"
+              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] shadow-sm active:scale-[0.98] hover:border-[#6E8CA0]/60 transition-all text-left"
             >
-              <div className="relative h-36 w-full overflow-hidden bg-[#EAF0EC] dark:bg-[#1F252B]">
+              <div className="relative h-36 w-full overflow-hidden bg-[#e4eff8] dark:bg-[#1F252B]">
                 {r.image_url ? (
                   <img src={r.image_url} alt="" loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -63,7 +63,7 @@ export default function RecipeShowcase({ onOpen }) {
                 )}
               </div>
               <div className="p-3">
-                <h3 className="font-display text-base font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC] line-clamp-2">
+                <h3 className="font-display text-base font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] line-clamp-2">
                   {rLoc(r, "name", lang)}
                 </h3>
                 {r.flour_type ? (

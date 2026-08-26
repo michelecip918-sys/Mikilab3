@@ -40,9 +40,9 @@ export default function EnterpriseHub() {
   return (
     <div data-testid="enterprise-hub">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#33564E] to-[#1B2127] flex items-center justify-center"><Building2 className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#234b6e] to-[#1B2127] flex items-center justify-center"><Building2 className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Enterprise", "Enterprise", "Enterprise")}</h1>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Enterprise", "Enterprise", "Enterprise")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Gestione multi-negozio, ordini e turni", "Multi-Filiale, Bestellungen & Schichten", "Multi-store, orders & shifts")}</p>
         </div>
       </div>
@@ -50,9 +50,9 @@ export default function EnterpriseHub() {
       {/* Selettore negozio attivo */}
       {stores.length > 0 && (
         <div className="relative mb-4" data-testid="enterprise-store-picker">
-          <Store className="w-4 h-4 text-[#5E8B7E] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Store className="w-4 h-4 text-[#3f7cac] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <select value={current || ""} onChange={(e) => setCurrent(e.target.value)}
-            className="w-full appearance-none bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl pl-9 pr-9 py-3 font-semibold text-[#2B303B] dark:text-[#EAF0EC] outline-none focus:border-[#5E8B7E]">
+            className="w-full appearance-none bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl pl-9 pr-9 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3f7cac]">
             {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <ChevronDown className="w-4 h-4 text-[#7E8A93] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -60,10 +60,10 @@ export default function EnterpriseHub() {
       )}
 
       {/* Sotto-schede */}
-      <div className="grid grid-cols-3 gap-1.5 bg-[#EAF0EC] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-5 border border-[#D7E1DB] dark:border-[#38424B]">
+      <div className="grid grid-cols-3 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-5 border border-[#d5e4f0] dark:border-[#38424B]">
         {TABS.map(({ id, label, Icon }) => (
           <button key={id} data-testid={`enterprise-tab-${id}`} onClick={() => setSub(id)}
-            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${sub === id ? "bg-[#5E8B7E] text-white shadow" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>
+            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${sub === id ? "bg-[#3f7cac] text-white shadow" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>
             <Icon className="w-4 h-4" /> {label}
           </button>
         ))}

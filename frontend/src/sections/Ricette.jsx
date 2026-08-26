@@ -21,7 +21,7 @@ export default function Ricette() {
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#4A7265] to-[#33564E] p-6 text-white">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#234b6e] p-6 text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours")}</h1></div>
           <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3" />
@@ -41,18 +41,18 @@ export default function Ricette() {
   return (
     <div data-testid="ricette-page">
       {user && (
-        <div data-testid="ricette-collection-switch" className="grid grid-cols-2 gap-2 mb-3 bg-[#EAF0EC] dark:bg-[#2A323A] rounded-2xl p-1">
+        <div data-testid="ricette-collection-switch" className="grid grid-cols-2 gap-2 mb-3 bg-[#e4eff8] dark:bg-[#2A323A] rounded-2xl p-1">
           <button
             data-testid="ricette-tab-mikilab"
             onClick={() => setColl("mikilab")}
-            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "mikilab" ? "bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
+            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "mikilab" ? "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
           >
             <ChefHat className="w-4 h-4" /> {tri("Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}
           </button>
           <button
             data-testid="ricette-tab-personal"
             onClick={() => setColl("personal")}
-            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "personal" ? "bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
+            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "personal" ? "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
           >
             <User className="w-4 h-4" /> {tri("Le Mie Ricette", "Meine Rezepte", "My Recipes")}
           </button>
@@ -92,11 +92,11 @@ export default function Ricette() {
 function UtilBtn({ testid, Icon, label, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick}
-      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#6E8CA0]/60 transition-all min-w-0">
+      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#6E8CA0]/60 transition-all min-w-0">
       <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-[#5E8B7E]" />
+        <Icon className="w-5 h-5 text-[#3f7cac]" />
       </div>
-      <span className="w-full font-display text-xs sm:text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] text-center leading-tight break-words hyphens-auto">{label}</span>
+      <span className="w-full font-display text-xs sm:text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight break-words hyphens-auto">{label}</span>
     </button>
   );
 }
@@ -106,7 +106,7 @@ function Sub({ onBack, children }) {
   const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : "Ricette";
   return (
     <div className="pb-4">
-      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#5E8B7E] font-medium mb-4">
+      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#3f7cac] font-medium mb-4">
         <ChevronLeft className="w-5 h-5" /> {backLabel}
       </button>
       {children}

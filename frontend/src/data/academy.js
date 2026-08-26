@@ -7,7 +7,7 @@ export const MENTORS = [
     name: "Martesana Milano",
     role: { it: "Grandi Lievitati & Pasticceria", de: "Große Hefegebäcke & Konditorei", en: "Big Leavened & Pastry" },
     field: "pasticceria",
-    color: "#B34A26",
+    color: "#2e3d4c",
     bio: {
       it: "Maestri del panettone e dei grandi lievitati: metodo professionale, cura del lievito madre e delle glasse.",
       de: "Meister von Panettone und großen Hefegebäcken: professionelle Methode, Sauerteig- und Glasurpflege.",
@@ -19,7 +19,7 @@ export const MENTORS = [
     name: "Ricette di Caterina",
     role: { it: "Lievito Madre & Pane di Casa", de: "Sauerteig & Hausbrot", en: "Sourdough & Home Bread" },
     field: "panificazione",
-    color: "#6B8E62",
+    color: "#5aa0cf",
     bio: {
       it: "Gestione del lievito madre passo-passo e pane semplice da fare a casa, con parole facili.",
       de: "Sauerteigpflege Schritt für Schritt und einfaches Hausbrot, in einfachen Worten.",

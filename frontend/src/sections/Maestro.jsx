@@ -66,7 +66,7 @@ export default function Maestro() {
       <div>
         <HighFive />
         <button data-testid="maestro-back-btn" onClick={back}
-          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] text-[#33564E] dark:text-[#9ec48f] font-semibold text-sm shadow-sm active:scale-95 transition-all">
+          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] text-[#234b6e] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
           <ChevronLeft className="w-4.5 h-4.5" /> {tri("Torna agli strumenti", "Zurück zu den Werkzeugen", "Back to tools")}
         </button>
         {tool === "aggiungi" && (
@@ -121,7 +121,7 @@ export default function Maestro() {
           <h2 className="font-display text-lg font-bold text-white leading-tight">{tri("Le mani nell'impasto, la testa organizzata", "Hände im Teig, Kopf organisiert", "Hands in the dough, head organized")}</h2>
         </div>
       </div>
-      <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-1">{t("maestro_title")}</h1>
+      <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8] mb-1">{t("maestro_title")}</h1>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Tutto in un unico posto: ricette, moduli e strumenti", "Alles an einem Ort: Rezepte, Module und Werkzeuge", "Everything in one place: recipes, modules and tools")}</p>
 
       <AvatarBubbles variant="lab" />

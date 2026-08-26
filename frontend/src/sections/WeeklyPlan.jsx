@@ -184,9 +184,9 @@ export default function WeeklyPlan() {
     w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${t("weekly_print_title")}</title>
       <style>
         body{font-family:Georgia,serif;color:#2B303B;max-width:720px;margin:32px auto;padding:0 20px}
-        h1{color:#5E8B7E} h2{color:#33564E;border-bottom:2px solid #A9C5D4;padding-bottom:4px;margin-top:28px}
+        h1{color:#3f7cac} h2{color:#234b6e;border-bottom:2px solid #A9C5D4;padding-bottom:4px;margin-top:28px}
         ul{list-style:none;padding:0} li{padding:10px 0;border-bottom:1px solid #EEE}
-        .doses{font-family:monospace;color:#33564E;font-size:13px;margin-top:4px}
+        .doses{font-family:monospace;color:#234b6e;font-size:13px;margin-top:4px}
         .warn{color:#C0574D;font-size:13px}
       </style></head><body>
       <h1>🌾 ${t("weekly_print_title")}</h1>${rows}
@@ -327,29 +327,29 @@ export default function WeeklyPlan() {
       <style>
         *{box-sizing:border-box}
         body{font-family:Georgia,serif;color:#2B303B;max-width:760px;margin:0 auto;padding:28px 22px}
-        .head{display:flex;align-items:center;gap:12px;border-bottom:3px solid #5E8B7E;padding-bottom:10px;margin-bottom:18px}
+        .head{display:flex;align-items:center;gap:12px;border-bottom:3px solid #3f7cac;padding-bottom:10px;margin-bottom:18px}
         .head img{height:44px;width:auto}
         .head .brand{font-weight:800;font-size:22px;color:#2B303B}
         .head .sub{font-size:12px;color:#666}
-        .shop{display:inline-block;margin:0 0 6px;background:#5E8B7E;color:#fff;font-weight:800;font-size:15px;padding:4px 14px;border-radius:20px}
-        h1{color:#33564E;font-size:20px;margin:18px 0 8px}
-        h2{color:#5E8B7E;border-bottom:2px solid #A9C5D4;padding-bottom:4px;margin-top:26px;font-size:18px}
-        .sum-day{margin-bottom:6px} .sum-day h3{margin:8px 0 2px;font-size:14px;color:#33564E}
+        .shop{display:inline-block;margin:0 0 6px;background:#3f7cac;color:#fff;font-weight:800;font-size:15px;padding:4px 14px;border-radius:20px}
+        h1{color:#234b6e;font-size:20px;margin:18px 0 8px}
+        h2{color:#3f7cac;border-bottom:2px solid #A9C5D4;padding-bottom:4px;margin-top:26px;font-size:18px}
+        .sum-day{margin-bottom:6px} .sum-day h3{margin:8px 0 2px;font-size:14px;color:#234b6e}
         .sum-day ul{margin:0;padding-left:18px} .sum-day li{font-size:13px;margin:2px 0}
-        .doses{color:#5E8B7E;font-size:12px}
-        .recipe{border:1px solid #D7E1DB;border-radius:10px;padding:14px 16px;margin:12px 0;page-break-inside:avoid}
+        .doses{color:#3f7cac;font-size:12px}
+        .recipe{border:1px solid #d5e4f0;border-radius:10px;padding:14px 16px;margin:12px 0;page-break-inside:avoid}
         .recipe h3{margin:0 0 2px;font-size:16px;color:#2B303B}
-        .recipe h3 .meta{font-size:12px;color:#5E8B7E;font-weight:normal}
+        .recipe h3 .meta{font-size:12px;color:#3f7cac;font-weight:normal}
         .flour{margin:0 0 8px;font-size:12px;color:#7E8A93}
-        .block{margin-top:10px} .block h4{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#4d6b45}
+        .block{margin-top:10px} .block h4{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#2e6690}
         .block ul{margin:0;padding-left:18px} .block li{font-size:13px;margin:2px 0}
-        .ings li{list-style:none;display:inline-block;background:#EAF0EC;border:1px solid #D7E1DB;border-radius:20px;padding:2px 10px;margin:2px 4px 2px 0;font-size:12px}
+        .ings li{list-style:none;display:inline-block;background:#e4eff8;border:1px solid #d5e4f0;border-radius:20px;padding:2px 10px;margin:2px 4px 2px 0;font-size:12px}
         .proc{font-size:13px;line-height:1.5;margin:0}
-        .bake p{font-size:13px;margin:0;color:#33564E}
+        .bake p{font-size:13px;margin:0;color:#234b6e}
         .warn{color:#C0574D;font-size:13px}
         @media print{.recipe{page-break-inside:avoid}}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#4A7265 0%,#F6F4EE 30%,#A64B2A 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#24303c 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
       ${subtitle ? `<div class="shop">🏪 ${esc(subtitle)}</div>` : ""}
       <h1>${L.summary}</h1>${summaryHtml}
@@ -415,16 +415,16 @@ export default function WeeklyPlan() {
         body{font-family:Georgia,serif;margin:0;padding:10mm;color:#2B303B}
         .grid{display:flex;flex-wrap:wrap;gap:4mm}
         .label{width:58mm;height:38mm;border:1px dashed #9AA6AE;border-radius:6px;padding:3mm 4mm;display:flex;flex-direction:column;justify-content:space-between;page-break-inside:avoid}
-        .brand{font-size:9px;font-weight:800;color:#5E8B7E;letter-spacing:.04em}
+        .brand{font-size:9px;font-weight:800;color:#3f7cac;letter-spacing:.04em}
         .name{font-size:15px;font-weight:800;line-height:1.1;color:#2B303B}
         .meta{display:flex;justify-content:space-between;align-items:flex-end;font-size:11px}
-        .meta .w{font-weight:800;color:#33564E}
+        .meta .w{font-weight:800;color:#234b6e}
         .meta .d{color:#7E8A93}
-        .exp{font-size:10px;color:#B34A26}
-        .shop{font-size:10px;font-weight:700;color:#5E8B7E;border-top:1px solid #EAF0EC;padding-top:2px}
+        .exp{font-size:10px;color:#2e3d4c}
+        .shop{font-size:10px;font-weight:700;color:#3f7cac;border-top:1px solid #e4eff8;padding-top:2px}
         @media print{ @page{margin:8mm} .label{border-color:#c9c9c9} }
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#4A7265 0%,#F6F4EE 30%,#A64B2A 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#24303c 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="grid">${cards}</div>
       </body></html>`);
     w.document.close();
@@ -476,18 +476,18 @@ export default function WeeklyPlan() {
       <style>
         *{box-sizing:border-box}
         body{font-family:Georgia,serif;color:#2B303B;max-width:720px;margin:0 auto;padding:28px 22px}
-        .head{display:flex;align-items:center;gap:12px;border-bottom:3px solid #5E8B7E;padding-bottom:10px;margin-bottom:14px}
+        .head{display:flex;align-items:center;gap:12px;border-bottom:3px solid #3f7cac;padding-bottom:10px;margin-bottom:14px}
         .head img{height:44px;width:auto}
         .head .brand{font-weight:800;font-size:22px;color:#2B303B}
         .head .sub{font-size:12px;color:#666}
         .shop{margin-top:18px;page-break-inside:avoid}
-        h2{color:#fff;background:#5E8B7E;display:inline-block;padding:4px 14px;border-radius:20px;font-size:16px;margin:0 0 8px}
-        .grp{margin:6px 0 10px} .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#4d6b45;margin:0 0 4px}
+        h2{color:#fff;background:#3f7cac;display:inline-block;padding:4px 14px;border-radius:20px;font-size:16px;margin:0 0 8px}
+        .grp{margin:6px 0 10px} .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#2e6690;margin:0 0 4px}
         .grp ul{list-style:none;margin:0;padding:0}
-        .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #D7E1DB;padding:3px 0;font-size:14px}
-        .grp li b{font-family:monospace;color:#33564E}
+        .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #d5e4f0;padding:3px 0;font-size:14px}
+        .grp li b{font-family:monospace;color:#234b6e}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#4A7265 0%,#F6F4EE 30%,#A64B2A 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#24303c 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
       ${sections}
       </body></html>`);
@@ -499,18 +499,18 @@ export default function WeeklyPlan() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-2xl bg-[#5E8B7E] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#3f7cac] flex items-center justify-center">
           <CalendarDays className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{t("weekly_title")}</h1>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("weekly_title")}</h1>
           <p className="text-sm text-[#7E8A93]">{t("weekly_subtitle")}</p>
         </div>
       </div>
 
       {loaded && recipes.length === 0 && (
         <div className="mt-5 flex items-start gap-3 bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 rounded-2xl p-4">
-          <AlertTriangle className="w-5 h-5 text-[#5E8B7E] shrink-0 mt-0.5" />
+          <AlertTriangle className="w-5 h-5 text-[#3f7cac] shrink-0 mt-0.5" />
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{t("weekly_no_recipes")}</p>
         </div>
       )}
@@ -519,14 +519,14 @@ export default function WeeklyPlan() {
         {DAYS.map((d) => {
           const dayItems = items.filter((x) => x.day === d.id);
           return (
-            <div key={d.id} data-testid={`weekly-day-${d.id}`} className="bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-4">
+            <div key={d.id} data-testid={`weekly-day-${d.id}`} className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{t(`day_${d.id}`)}</h3>
+                <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t(`day_${d.id}`)}</h3>
                 <button
                   data-testid={`weekly-add-${d.id}`}
                   onClick={() => addItem(d.id)}
                   disabled={recipes.length === 0}
-                  className="flex items-center gap-1 text-sm font-medium text-[#5E8B7E] disabled:opacity-40"
+                  className="flex items-center gap-1 text-sm font-medium text-[#3f7cac] disabled:opacity-40"
                 >
                   <Plus className="w-4 h-4" /> {t("weekly_add")}
                 </button>
@@ -559,7 +559,7 @@ export default function WeeklyPlan() {
       <button
         data-testid="weekly-save-btn"
         onClick={save}
-        className="w-full mt-5 bg-[#5E8B7E] hover:bg-[#4C7368] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-5 bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <Save className="w-5 h-5" /> {t("weekly_save")}
       </button>
@@ -568,21 +568,21 @@ export default function WeeklyPlan() {
         <button
           data-testid="weekly-print-btn"
           onClick={printPlan}
-          className="bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-3 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
+          className="bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <Printer className="w-5 h-5" /> {t("weekly_print")}
         </button>
         <button
           data-testid="weekly-pdf-btn"
           onClick={pdfPlan}
-          className="bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-3 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
+          className="bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <FileText className="w-5 h-5" /> {t("weekly_pdf")}
         </button>
         <button
           data-testid="weekly-share-btn"
           onClick={sharePlan}
-          className="bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-3 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
+          className="bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <Share2 className="w-5 h-5" /> {t("weekly_share")}
         </button>
@@ -591,7 +591,7 @@ export default function WeeklyPlan() {
       <button
         data-testid="weekly-pdf-multi-btn"
         onClick={pdfMultiRicetta}
-        className="w-full mt-2 bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-2 bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <FileText className="w-5 h-5" /> {tri("PDF Multi-Ricetta", "PDF Mehr-Rezepte", "Multi-Recipe PDF")}
       </button>
@@ -613,10 +613,10 @@ export default function WeeklyPlan() {
       </button>
 
       {assignedPoints.length > 0 && (
-        <div data-testid="weekly-salepoint-pdf" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4">
+        <div data-testid="weekly-salepoint-pdf" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
           <div className="flex items-center gap-2 mb-1">
-            <Store className="w-5 h-5 text-[#5E8B7E]" />
-            <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">
+            <Store className="w-5 h-5 text-[#3f7cac]" />
+            <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">
               {tri("Per Punto Vendita", "Pro Verkaufspunkt", "Per Sales Point")}
             </h3>
           </div>
@@ -627,15 +627,15 @@ export default function WeeklyPlan() {
           </p>
           <div className="grid grid-cols-1 gap-2.5">
             {assignedPoints.map((name) => (
-              <div key={name} className="rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] p-3">
-                <p className="flex items-center gap-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] mb-2 min-w-0">
-                  <Store className="w-4 h-4 text-[#5E8B7E] shrink-0" /><span className="truncate">{name}</span>
+              <div key={name} className="rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] p-3">
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 min-w-0">
+                  <Store className="w-4 h-4 text-[#3f7cac] shrink-0" /><span className="truncate">{name}</span>
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     data-testid={`weekly-salepoint-pdf-${name}`}
                     onClick={() => pdfPerSalePoint(name)}
-                    className="flex items-center justify-center gap-1.5 bg-[#6B8E62] hover:bg-[#5a7a53] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
+                    className="flex items-center justify-center gap-1.5 bg-[#5aa0cf] hover:bg-[#336a94] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
                   >
                     <FileText className="w-4 h-4" /> {tri("Ricette PDF", "Rezepte PDF", "Recipes PDF")}
                   </button>
@@ -684,19 +684,19 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
   }));
 
   return (
-    <div className="bg-[#EAF0EC] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl p-3">
+    <div className="bg-[#e4eff8] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3">
       <div className="flex items-center gap-2">
         <select
           data-testid={`weekly-recipe-select-${item.id}`}
           value={item.recipe_id}
           onChange={(e) => onRecipeChange(e.target.value)}
-          className="flex-1 min-w-0 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#5E8B7E]"
+          className="flex-1 min-w-0 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#3f7cac]"
         >
           {recipes.map((r) => (
             <option key={r.id} value={r.id}>{r.name}</option>
           ))}
         </select>
-        <button onClick={onRemove} data-testid={`weekly-remove-${item.id}`} className="w-8 h-8 rounded-lg bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center text-[#C0574D] shrink-0">
+        <button onClick={onRemove} data-testid={`weekly-remove-${item.id}`} className="w-8 h-8 rounded-lg bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center text-[#C0574D] shrink-0">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
@@ -707,14 +707,14 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
             data-testid={`weekly-pieces-${item.id}`}
             type="number" value={item.pieces}
             onChange={(e) => onChange({ pieces: e.target.value })}
-            className="w-20 text-right font-mono-data font-bold text-[#33564E] dark:text-[#8FB0C2] bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-1.5 outline-none"
+            className="w-20 text-right font-mono-data font-bold text-[#234b6e] dark:text-[#8FB0C2] bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-2 py-1.5 outline-none"
           />
           <span className="text-xs text-[#7E8A93]">{t("weekly_pieces")}</span>
           <input
             data-testid={`weekly-gpp-${item.id}`}
             type="number" value={item.grams_per_piece}
             onChange={(e) => onChange({ grams_per_piece: e.target.value })}
-            className="w-16 text-right font-mono-data font-bold text-[#33564E] dark:text-[#8FB0C2] bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-1.5 outline-none"
+            className="w-16 text-right font-mono-data font-bold text-[#234b6e] dark:text-[#8FB0C2] bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-2 py-1.5 outline-none"
           />
           <span className="text-xs text-[#7E8A93]">{t("weekly_gpp")}</span>
         </div>
@@ -726,7 +726,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
       ) : factor ? (
         <div className="flex flex-wrap gap-1.5 mt-2" data-testid={`weekly-doses-${item.id}`}>
           {scaled.map((f) => f.value != null && (
-            <span key={f.key} className="inline-flex items-center gap-1 bg-[#6E8CA0]/15 text-[#33564E] dark:text-[#8FB0C2] font-mono-data text-xs px-2 py-0.5 rounded-full font-bold border border-[#6E8CA0]/30">
+            <span key={f.key} className="inline-flex items-center gap-1 bg-[#6E8CA0]/15 text-[#234b6e] dark:text-[#8FB0C2] font-mono-data text-xs px-2 py-0.5 rounded-full font-bold border border-[#6E8CA0]/30">
               <Wheat className="w-3 h-3" /> {t(f.labelKey)} {fmtQty(f.value)}
             </span>
           ))}
@@ -734,7 +734,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
       ) : null}
 
       {/* Destinazione pezzi: lievitazione (oggi) / frigo (domani) / freezer (resto) */}
-      <div className="mt-3 pt-2 border-t border-dashed border-[#D7E1DB] dark:border-[#38424B]">
+      <div className="mt-3 pt-2 border-t border-dashed border-[#d5e4f0] dark:border-[#38424B]">
         <p className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("weekly_dest_title")}</p>
         <div className="grid grid-cols-3 gap-2 mt-1.5">
           {[
@@ -748,7 +748,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
                 data-testid={`weekly-${key}-${item.id}`}
                 type="number" value={item[key] ?? ""} placeholder="—"
                 onChange={(e) => onChange({ [key]: e.target.value })}
-                className="mt-0.5 w-full text-center font-mono-data font-bold text-[#6B8E62] bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-1 py-1.5 outline-none focus:border-[#6B8E62]"
+                className="mt-0.5 w-full text-center font-mono-data font-bold text-[#5aa0cf] bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-1 py-1.5 outline-none focus:border-[#5aa0cf]"
               />
             </div>
           ))}
@@ -759,12 +759,12 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
       {/* Destinazione: Punto Vendita (dai Punti Vendita del Passo 3) */}
       {salesPoints.length > 0 && (
         <div className="mt-2 flex items-center gap-2">
-          <Store className="w-4 h-4 text-[#5E8B7E] shrink-0" />
+          <Store className="w-4 h-4 text-[#3f7cac] shrink-0" />
           <select
             data-testid={`weekly-salepoint-${item.id}`}
             value={item.sale_point || ""}
             onChange={(e) => onChange({ sale_point: e.target.value })}
-            className="flex-1 min-w-0 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none focus:border-[#5E8B7E] text-[#2B303B] dark:text-[#EAF0EC]"
+            className="flex-1 min-w-0 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none focus:border-[#3f7cac] text-[#2B303B] dark:text-[#e4eff8]"
           >
             <option value="">{t("weekly_salepoint_none")}</option>
             {salesPoints.map((p) => (

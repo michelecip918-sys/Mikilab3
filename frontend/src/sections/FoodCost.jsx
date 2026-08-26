@@ -52,14 +52,14 @@ export default function FoodCost() {
   const margin = num(s.sell) > 0 ? ((num(s.sell) - costPiece) / num(s.sell)) * 100 : null;
   const eur = (v) => "€ " + v.toFixed(2);
 
-  const inp = "bg-[#F6F8F5] dark:bg-[#1F252B] rounded-lg px-2 py-1 text-sm font-mono-data outline-none text-[#2B303B] dark:text-[#EAF0EC]";
+  const inp = "bg-[#f0f6fb] dark:bg-[#1F252B] rounded-lg px-2 py-1 text-sm font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#5E8B7E] flex items-center justify-center"><Euro className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#3f7cac] flex items-center justify-center"><Euro className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">Food Cost &amp; {tri("Energia", "Energie", "Energy")}</h1>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">Food Cost &amp; {tri("Energia", "Energie", "Energy")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Materie prime + kWh + calo peso = costo reale", "Rohstoffe + kWh + Backverlust = echte Kosten", "Ingredients + kWh + baking loss = real cost")}</p>
         </div>
       </div>
@@ -68,8 +68,8 @@ export default function FoodCost() {
         label={tri("Calcola il costo di una TUA ricetta", "Kosten EINES DEINER Rezepte", "Cost of one of YOUR recipes")} />
 
       {/* Materie prime */}
-      <h2 className="text-xs font-bold uppercase tracking-wide text-[#5E8B7E] mb-2">{tri("Materie prime", "Rohstoffe", "Ingredients")}</h2>
-      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-2 mb-4">
+      <h2 className="text-xs font-bold uppercase tracking-wide text-[#3f7cac] mb-2">{tri("Materie prime", "Rohstoffe", "Ingredients")}</h2>
+      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-2 mb-4">
         <div className="grid grid-cols-[1fr_64px_72px_28px] gap-1 px-1 pb-1 text-[10px] font-bold uppercase text-[#7E8A93]">
           <span>{tri("Ingrediente", "Zutat", "Ingredient")}</span><span className="text-right">kg</span><span className="text-right">€/kg</span><span />
         </div>
@@ -81,12 +81,12 @@ export default function FoodCost() {
             <button onClick={() => set({ ingr: s.ingr.filter((x) => x.id !== r.id) })} className="text-[#C0574D] flex justify-center"><Trash2 className="w-3.5 h-3.5" /></button>
           </div>
         ))}
-        <button data-testid="fc-add-ingr" onClick={() => set({ ingr: [...s.ingr, { id: Date.now(), name: "", kg: 0, price: 0 }] })} className="text-xs font-semibold text-[#5E8B7E] flex items-center gap-1 mt-1"><Plus className="w-4 h-4" /> {tri("Aggiungi", "Hinzufügen", "Add")}</button>
+        <button data-testid="fc-add-ingr" onClick={() => set({ ingr: [...s.ingr, { id: Date.now(), name: "", kg: 0, price: 0 }] })} className="text-xs font-semibold text-[#3f7cac] flex items-center gap-1 mt-1"><Plus className="w-4 h-4" /> {tri("Aggiungi", "Hinzufügen", "Add")}</button>
       </div>
 
       {/* Energia */}
       <h2 className="text-xs font-bold uppercase tracking-wide text-[#6E8CA0] mb-2 flex items-center gap-1"><Zap className="w-3.5 h-3.5" /> {tri("Energia", "Energie", "Energy")}</h2>
-      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-2 mb-2">
+      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-2 mb-2">
         <div className="grid grid-cols-[1fr_64px_64px_28px] gap-1 px-1 pb-1 text-[10px] font-bold uppercase text-[#7E8A93]">
           <span>{tri("Macchina", "Maschine", "Machine")}</span><span className="text-right">kW</span><span className="text-right">{tri("ore", "Std.", "hrs")}</span><span />
         </div>
@@ -114,7 +114,7 @@ export default function FoodCost() {
       </div>
 
       {/* Risultato */}
-      <div data-testid="fc-result" className="rounded-3xl bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-5 shadow-lg">
+      <div data-testid="fc-result" className="rounded-3xl bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white p-5 shadow-lg">
         {recipe && <p data-testid="fc-recipe-name" className="text-white/90 font-semibold text-sm mb-2 pb-2 border-b border-white/20">{recipe.name}</p>}
         <div className="grid grid-cols-2 gap-y-2 text-sm">
           <span className="text-white/80">{tri("Materie prime", "Rohstoffe", "Ingredients")}</span><span className="text-right font-mono-data">{eur(ingrCost)}</span>
@@ -146,7 +146,7 @@ export default function FoodCost() {
         ].filter(Boolean).join("\n");
         shareContent(L, txt, lang);
       }}
-        className="mt-3 w-full bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC] font-medium px-5 py-3 rounded-2xl border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
+        className="mt-3 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
         <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
       </button>
     </div>

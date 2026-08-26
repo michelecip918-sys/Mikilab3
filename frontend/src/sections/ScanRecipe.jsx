@@ -61,14 +61,14 @@ export default function ScanRecipe({ embedded = false }) {
   return (
     <div className={embedded ? "" : "pb-24"}>
       {embedded ? (
-        <div className="flex items-center gap-2 mb-2 text-[#5E8B7E]">
+        <div className="flex items-center gap-2 mb-2 text-[#3f7cac]">
           <ScanLine className="w-4 h-4" />
-          <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC]">{t("scan_title")}</h2>
+          <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("scan_title")}</h2>
         </div>
       ) : (
-        <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] p-6 text-white">
+        <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#3f7cac] to-[#234b6e] p-6 text-white">
           <div className="absolute top-0 left-0 right-0 flex h-1.5">
-            <div className="flex-1 bg-[#6B8E62]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
+            <div className="flex-1 bg-[#5aa0cf]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
             <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
           </div>
           <ScanLine className="w-7 h-7 mb-2" />
@@ -77,10 +77,10 @@ export default function ScanRecipe({ embedded = false }) {
         </div>
       )}
 
-      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-6 text-center">
+      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-6 text-center">
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{t("scan_hint")}</p>
         {loading ? (
-          <div data-testid="scan-loading" className="inline-flex items-center gap-2 bg-[#5E8B7E] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
+          <div data-testid="scan-loading" className="inline-flex items-center gap-2 bg-[#3f7cac] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
             <Loader2 className="w-5 h-5 animate-spin" /> {t("scan_reading")}
           </div>
         ) : (
@@ -88,11 +88,11 @@ export default function ScanRecipe({ embedded = false }) {
         )}
         {/* Scrivere/modificare a mano: dopo lo scatto il testo è già modificabile; qui parti da zero. */}
         {!loading && (
-          <div className="mt-4 pt-4 border-t border-[#D7E1DB] dark:border-[#38424B]">
+          <div className="mt-4 pt-4 border-t border-[#d5e4f0] dark:border-[#38424B]">
             <p className="text-xs text-[#7E8A93] mb-2">{tri("Dopo la foto puoi correggere il testo. Oppure scrivi la ricetta a mano da zero:", "Nach dem Foto kannst du den Text korrigieren. Oder schreibe das Rezept von Hand:", "After the photo you can edit the text. Or write the recipe by hand:")}</p>
             <button data-testid="scan-manual-btn" onClick={() => { setScanned(null); setDialogOpen(true); }}
-              className="inline-flex items-center gap-2 bg-white dark:bg-[#232A31] text-[#33564E] dark:text-[#EAF0EC] font-semibold px-5 py-3 rounded-2xl border-2 border-[#5E8B7E]/40 active:scale-97 transition-all">
-              <PenLine className="w-5 h-5 text-[#5E8B7E]" /> {tri("Scrivi a mano", "Von Hand schreiben", "Write by hand")}
+              className="inline-flex items-center gap-2 bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#e4eff8] font-semibold px-5 py-3 rounded-2xl border-2 border-[#3f7cac]/40 active:scale-97 transition-all">
+              <PenLine className="w-5 h-5 text-[#3f7cac]" /> {tri("Scrivi a mano", "Von Hand schreiben", "Write by hand")}
             </button>
           </div>
         )}

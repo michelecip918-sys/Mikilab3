@@ -79,14 +79,14 @@ export default function Meteo() {
     ? tri("Aria secca: puoi aumentare l'acqua dell'1-2% e coprire bene gli impasti.", "Trockene Luft: Wasser um 1-2% erhöhen, Teige gut abdecken.", "Dry air: you can add 1-2% water and cover doughs well.")
     : tri("Umidità nella norma: nessuna correzione dell'acqua.", "Normale Feuchte: keine Wasserkorrektur.", "Normal humidity: no water correction.");
 
-  const inp = "w-full bg-[#F6F8F5] dark:bg-[#1F252B] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]";
+  const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
 
   return (
     <div className="pb-40">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 rounded-2xl bg-[#3F7CAC] flex items-center justify-center"><CloudSun className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Meteo & Laboratorio", "Wetter & Backstube", "Weather & Bakery")}</h1>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Meteo & Laboratorio", "Wetter & Backstube", "Weather & Bakery")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Adatta acqua e lievitazione al clima di oggi", "Wasser & Gärung an das heutige Klima anpassen", "Adapt water & proofing to today's climate")}</p>
         </div>
       </div>
@@ -101,7 +101,7 @@ export default function Meteo() {
         <input data-testid="meteo-city" value={city} onChange={(e) => setCity(e.target.value)} onKeyDown={(e) => e.key === "Enter" && searchCity()}
           placeholder={tri("Cerca città…", "Stadt suchen…", "Search city…")} className={inp.replace("font-mono-data ", "")} />
         <button data-testid="meteo-search" onClick={searchCity} disabled={loading}
-          className="px-4 rounded-xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] font-semibold text-[#2B303B] dark:text-[#EAF0EC] disabled:opacity-50">
+          className="px-4 rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] font-semibold text-[#2B303B] dark:text-[#e4eff8] disabled:opacity-50">
           {tri("Cerca", "Suchen", "Search")}
         </button>
       </div>
@@ -130,19 +130,19 @@ export default function Meteo() {
 
           {/* Consigli IA */}
           <div data-testid="meteo-advice" className="space-y-3">
-            <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4 flex items-center gap-3">
+            <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[#3F7CAC]/15 flex items-center justify-center shrink-0"><Droplets className="w-5 h-5 text-[#3F7CAC]" /></div>
               <div className="min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Acqua consigliata", "Empfohlenes Wasser", "Recommended water")}</p>
-                <p data-testid="meteo-water" className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{water}°C</p>
+                <p data-testid="meteo-water" className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{water}°C</p>
                 <p className="text-xs text-[#7E8A93] leading-snug">{humNote}</p>
               </div>
             </div>
-            <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#6B8E62]/15 flex items-center justify-center shrink-0"><Timer className="w-5 h-5 text-[#6B8E62]" /></div>
+            <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#5aa0cf]/15 flex items-center justify-center shrink-0"><Timer className="w-5 h-5 text-[#5aa0cf]" /></div>
               <div className="min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Lievitazione stimata", "Geschätzte Gärung", "Estimated proof")}</p>
-                <p data-testid="meteo-prooftime" className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#EAF0EC]">{adjMin} min</p>
+                <p data-testid="meteo-prooftime" className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{adjMin} min</p>
                 <p className="text-xs text-[#7E8A93] leading-snug">
                   {faster
                     ? tri("Fa caldo: la lievitazione accelera, controlla prima.", "Es ist warm: Gärung beschleunigt, früher prüfen.", "It's warm: proofing speeds up, check earlier.")

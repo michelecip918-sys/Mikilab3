@@ -87,7 +87,7 @@ export default function MohammedAssistant() {
   };
 
   return (
-    <div data-testid="mohammed-assistant" className="rounded-2xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white p-3 mb-4 shadow-md">
+    <div data-testid="mohammed-assistant" className="rounded-2xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white p-3 mb-4 shadow-md">
       <div className="flex items-center gap-2.5">
         <img src={AVATAR} alt="Mohammadreza Jafari" data-testid="mohammed-avatar" className="w-10 h-10 rounded-xl object-cover ring-1 ring-white/70 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
@@ -101,7 +101,7 @@ export default function MohammedAssistant() {
         {GUIDE.map((g) => (
           <button key={g.n} data-testid={`mohammed-guide-${g.n}`} onClick={() => askGuide(g.q)}
             className="w-full flex items-center gap-2 bg-white/12 hover:bg-white/22 rounded-lg px-2.5 py-1.5 text-left active:scale-98 transition-all">
-            <span className="w-5 h-5 rounded-full bg-white/90 text-[#33564E] font-bold text-[11px] flex items-center justify-center shrink-0">{g.n}</span>
+            <span className="w-5 h-5 rounded-full bg-white/90 text-[#234b6e] font-bold text-[11px] flex items-center justify-center shrink-0">{g.n}</span>
             <span className="text-[13px] font-medium leading-tight">{g.t}</span>
           </button>
         ))}
@@ -120,7 +120,7 @@ export default function MohammedAssistant() {
               <div className="flex flex-wrap gap-2">
                 {suggestions.map((s, i) => (
                   <button key={i} data-testid={`mohammed-suggest-${i}`} onClick={() => send(s)}
-                    className="text-xs font-medium bg-[#5E8B7E]/12 text-[#33564E] dark:text-[#9ec4b8] border border-[#5E8B7E]/30 rounded-full px-3 py-1.5 active:scale-97">
+                    className="text-xs font-medium bg-[#3f7cac]/12 text-[#234b6e] dark:text-[#9ec4b8] border border-[#3f7cac]/30 rounded-full px-3 py-1.5 active:scale-97">
                     {s}
                   </button>
                 ))}
@@ -128,8 +128,8 @@ export default function MohammedAssistant() {
             )}
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#5E8B7E] text-white" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC]"}`}>
-                  {m.role === "assistant" && !m.content ? <Loader2 className="w-4 h-4 animate-spin text-[#5E8B7E]" /> : <ReactMarkdown>{m.content}</ReactMarkdown>}
+                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#3f7cac] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8]"}`}>
+                  {m.role === "assistant" && !m.content ? <Loader2 className="w-4 h-4 animate-spin text-[#3f7cac]" /> : <ReactMarkdown>{m.content}</ReactMarkdown>}
                 </div>
               </div>
             ))}
@@ -137,9 +137,9 @@ export default function MohammedAssistant() {
           <div className="flex items-center gap-2 mt-2">
             <input data-testid="mohammed-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder={tri("Scrivi a Mohammadreza…", "Schreibe an Mohammadreza…", "Message Mohammadreza…")}
-              className="flex-1 bg-[#F6F8F5] dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC] focus:border-[#5E8B7E]" />
+              className="flex-1 bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
             <button data-testid="mohammed-send" onClick={() => send()} disabled={busy || !input.trim()}
-              className="w-11 h-11 rounded-xl bg-[#5E8B7E] hover:bg-[#4C7368] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
+              className="w-11 h-11 rounded-xl bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
               {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
             </button>
           </div>

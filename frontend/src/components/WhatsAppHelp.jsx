@@ -40,7 +40,7 @@ export default function WhatsAppHelp({ context = "assistenza", className = "" })
 
   return (
     <div data-testid={`wa-help-${context}`} className={`rounded-2xl bg-[#25D366]/10 border border-[#25D366]/30 p-4 ${className}`}>
-      <p className="text-sm font-bold text-[#2B303B] dark:text-[#EAF0EC]">{c.title}</p>
+      <p className="text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{c.title}</p>
       <p className="text-xs text-[#7E8A93] mt-0.5 mb-3">{c.note}</p>
       <a data-testid={`wa-help-btn-${context}`} href={href} target="_blank" rel="noopener noreferrer"
         className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1eb356] text-white text-sm font-semibold px-4 py-2.5 rounded-xl active:scale-97 transition-all">

@@ -62,7 +62,7 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={panelRef}>
       <button data-testid="notif-bell" onClick={toggle}
-        className="relative w-10 h-10 rounded-xl bg-[#EAF0EC] dark:bg-[#2A323A] border border-[#D7E1DB] dark:border-[#38424B] flex items-center justify-center text-[#5E8B7E] active:scale-95 transition-all"
+        className="relative w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center text-[#3f7cac] active:scale-95 transition-all"
         aria-label={tri("Notifiche", "Benachrichtigungen", "Notifications")}>
         <Bell className="w-4.5 h-4.5" />
         {unread > 0 && (
@@ -71,21 +71,21 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div data-testid="notif-panel" className="absolute right-0 mt-2 w-80 max-w-[90vw] max-h-[70vh] overflow-auto rounded-2xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] shadow-2xl z-50">
-          <div className="px-4 py-3 border-b border-[#EAF0EC] dark:border-[#38424B] sticky top-0 bg-white dark:bg-[#232A31]">
-            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#EAF0EC]">{tri("Notifiche", "Benachrichtigungen", "Notifications")}</p>
+        <div data-testid="notif-panel" className="absolute right-0 mt-2 w-80 max-w-[90vw] max-h-[70vh] overflow-auto rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] shadow-2xl z-50">
+          <div className="px-4 py-3 border-b border-[#e4eff8] dark:border-[#38424B] sticky top-0 bg-white dark:bg-[#232A31]">
+            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Notifiche", "Benachrichtigungen", "Notifications")}</p>
           </div>
           {items.length === 0 ? (
             <p data-testid="notif-empty" className="text-center text-sm text-[#7E8A93] py-8 px-4">{tri("Nessuna notifica per ora. Pubblica nella Community!", "Noch keine. Poste in der Community!", "Nothing yet. Post in the Community!")}</p>
           ) : (
             <div>
               {items.map((n) => (
-                <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#EAF0EC] dark:border-[#38424B] last:border-0 ${!n.read ? "bg-[#5E8B7E]/5" : ""}`}>
+                <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#38424B] last:border-0 ${!n.read ? "bg-[#3f7cac]/5" : ""}`}>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : "bg-[#3F7CAC]/15 text-[#3F7CAC]"}`}>
                     {n.type === "like" ? <Heart className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-[#2B303B] dark:text-[#EAF0EC] leading-snug">
+                    <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] leading-snug">
                       <b>{n.actor_name}</b> {n.type === "like" ? tri("ha messo mi piace al tuo post", "gefällt dein Beitrag", "liked your post") : tri("ha commentato il tuo post", "hat deinen Beitrag kommentiert", "commented on your post")}
                     </p>
                     {n.snippet && <p className="text-xs text-[#7E8A93] truncate">“{n.snippet}”</p>}

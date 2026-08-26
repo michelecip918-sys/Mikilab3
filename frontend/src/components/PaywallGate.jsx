@@ -165,7 +165,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   if (localTrialActive) {
     return (
       <>
-        <div data-testid="local-trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#6B8E62]/15 border border-[#6B8E62]/40 px-3 py-2 text-sm font-semibold text-[#4d6b45] dark:text-[#9ec48f]">
+        <div data-testid="local-trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#5aa0cf]/15 border border-[#5aa0cf]/40 px-3 py-2 text-sm font-semibold text-[#2e6690] dark:text-[#a9d2ec]">
           <Sparkles className="w-4 h-4" /> {tri("Prova gratuita — restano", "Kostenlose Testphase — verbleibend", "Free trial — left")} <span className="font-mono-data">{localDaysLeft} {tri(localDaysLeft === 1 ? "giorno" : "giorni", localDaysLeft === 1 ? "Tag" : "Tage", localDaysLeft === 1 ? "day" : "days")}</span>
         </div>
         {children}
@@ -179,7 +179,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
     return (
       <>
         {status.source === "trial" && left && (
-          <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/40 px-3 py-2 text-sm font-semibold text-[#33564E] dark:text-[#8FB0C2]">
+          <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/40 px-3 py-2 text-sm font-semibold text-[#234b6e] dark:text-[#8FB0C2]">
             <Clock className="w-4 h-4" /> {tri("Prova PRO — resta:", "PRO-Test — verbleibend:", "PRO trial — left:")} <span className="font-mono-data">{left}</span>
           </div>
         )}
@@ -191,7 +191,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   // Paywall
   return (
     <div data-testid="paywall" className="py-6">
-      <div className="rounded-3xl bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white p-7 text-center shadow-xl">
+      <div className="rounded-3xl bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white p-7 text-center shadow-xl">
         <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-4">
           <Lock className="w-8 h-8" />
         </div>
@@ -209,26 +209,26 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
 
       {/* "Guarda cosa fa" — anteprima funzioni prima del prezzo */}
       <div data-testid="paywall-preview" className="mt-5">
-        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mb-3">
+        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mb-3">
           {tri("Guarda cosa fa 👇", "Sieh, was es kann 👇", "See what it does 👇")}
         </h3>
         <div className="space-y-2.5">
           {(FEATURES[feature]?.[flang] || FEATURES[feature]?.it || []).map(([Icon, title, desc], i) => (
             <div key={i} data-testid={`paywall-feature-${i}`}
-              className="flex items-start gap-3 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm">
+              className="flex items-start gap-3 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-[#5E8B7E]" />
+                <Icon className="w-5 h-5 text-[#3f7cac]" />
               </div>
               <div className="min-w-0">
-                <p className="font-display text-base font-semibold text-[#2B303B] dark:text-[#EAF0EC] leading-tight flex items-center gap-1.5">
-                  {title} <Check className="w-3.5 h-3.5 text-[#6B8E62]" />
+                <p className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight flex items-center gap-1.5">
+                  {title} <Check className="w-3.5 h-3.5 text-[#5aa0cf]" />
                 </p>
                 <p className="text-xs text-[#7E8A93] leading-snug mt-0.5">{desc}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-center text-sm font-semibold text-[#5E8B7E] mt-4">
+        <p className="text-center text-sm font-semibold text-[#3f7cac] mt-4">
           {tri("Provalo gratis o abbonati per sbloccare tutto 👇", "Kostenlos testen oder abonnieren, um alles freizuschalten 👇", "Try it free or subscribe to unlock everything 👇")}
         </p>
       </div>
@@ -237,7 +237,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
         <div className="mt-5 space-y-3">
           {!localTrial ? (
             <button data-testid="local-trial-start" onClick={startLocalTrial}
-              className="w-full bg-[#6B8E62] hover:bg-[#5a7a53] text-white font-bold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+              className="w-full bg-[#5aa0cf] hover:bg-[#336a94] text-white font-bold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5" /> {tri("Prova gratis 7 giorni (senza registrazione)", "7 Tage kostenlos testen (ohne Anmeldung)", "Try free for 7 days (no sign-up)")}
             </button>
           ) : (
@@ -246,7 +246,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             </p>
           )}
           <button data-testid="paywall-login" onClick={() => setAuthOpen(true)}
-            className="w-full bg-[#5E8B7E] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
+            className="w-full bg-[#3f7cac] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
             {tri("Accedi per continuare", "Anmelden, um fortzufahren", "Log in to continue")}
           </button>
         </div>
@@ -254,30 +254,30 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
         <div className="mt-5 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <button data-testid="sub-monthly" onClick={() => subscribe("monthly")}
-              className="rounded-2xl border-2 border-[#5E8B7E] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#232A31]">
-              <Crown className="w-6 h-6 text-[#5E8B7E] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">{PRICES.monthly}</p>
+              className="rounded-2xl border-2 border-[#3f7cac] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#232A31]">
+              <Crown className="w-6 h-6 text-[#3f7cac] mx-auto" />
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1">{PRICES.monthly}</p>
               <p className="text-xs text-[#7E8A93]">{tri("al mese", "pro Monat", "per month")}</p>
             </button>
             <button data-testid="sub-yearly" onClick={() => subscribe("yearly")}
               className="rounded-2xl border-2 border-[#6E8CA0] p-4 text-center active:scale-97 transition-all bg-[#6E8CA0]/10 relative">
-              <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#6B8E62] text-white px-1.5 py-0.5 rounded-full">{PRICES.disc}</span>
+              <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#5aa0cf] text-white px-1.5 py-0.5 rounded-full">{PRICES.disc}</span>
               <Crown className="w-6 h-6 text-[#6E8CA0] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] mt-1">{PRICES.yearly}</p>
+              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1">{PRICES.yearly}</p>
               <p className="text-xs text-[#7E8A93]">{tri("all'anno", "pro Jahr", "per year")}</p>
             </button>
           </div>
 
           {!status?.trial_used && (
-            <div className="rounded-2xl bg-[#6B8E62]/10 border border-[#6B8E62]/30 p-4">
-              <p className="flex items-center gap-2 text-sm font-semibold text-[#4d6b45] dark:text-[#9ec48f]">
+            <div className="rounded-2xl bg-[#5aa0cf]/10 border border-[#5aa0cf]/30 p-4">
+              <p className="flex items-center gap-2 text-sm font-semibold text-[#2e6690] dark:text-[#a9d2ec]">
                 <Sparkles className="w-4 h-4" /> {tri("Prova gratis (una volta)", "Kostenlos testen (einmalig)", "Free trial (once)")}
               </p>
               <div className="grid grid-cols-2 gap-2 mt-2">
                 <button data-testid="trial-1h" onClick={() => startTrial(1)}
-                  className="bg-[#6B8E62] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("1 ora", "1 Stunde", "1 hour")}</button>
+                  className="bg-[#5aa0cf] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("1 ora", "1 Stunde", "1 hour")}</button>
                 <button data-testid="trial-24h" onClick={() => startTrial(24)}
-                  className="bg-[#6B8E62] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("24 ore", "24 Stunden", "24 hours")}</button>
+                  className="bg-[#5aa0cf] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("24 ore", "24 Stunden", "24 hours")}</button>
               </div>
             </div>
           )}
