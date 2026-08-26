@@ -1421,3 +1421,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 3. **Email fornitore predefinita (opzione B)** (`DayClose.jsx`): campo `supplier-email` nel Magazzino, salvato in localStorage (`mikilab_supplier_email`); `supplierOrder` usa quell'indirizzo come destinatario del mailto di "Ordine rapido al fornitore" (fallback: fornitore con email da `suppliers.js`). Verificato: persiste al reload, mailto precompilato.
 - Test: iteration_78 frontend 100% (4/4). Note cosmetiche opzionali non bloccanti: striscia colorata sopra header su mobile; 401 pre-login in console.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont28 (2026-06) — Pulizia header mobile + Grafico consumi settimanali
+1. **Pulizia Header** (`Header.jsx`): rimossa la fascia multicolore `it-de-ribbon` dall'header (era la "striscia colorata sopra l'intestazione" segnalata su mobile). Header ora pulito/minimale. Il nastro resta solo come accento decorativo su alcune card (Home, hero) — non nell'header. Verificato: `[data-testid=app-header] [data-testid=flag-strip]` === null.
+2. **Grafico Consumi settimanali** (`DayClose.jsx`, vista Storico): card `consumption-chart` con recharts BarChart che mostra i consumi di **Farina** vs **Lievito** per settimana (ultime 8), calcolati dagli scarichi delle chiusure. Classificazione per nome (farina/mehl/semola/... vs lievit/madre/sauerteig/...), conversione g→kg. Stato vuoto `consumption-empty`.
+   - Backend: `POST /api/day-close` ora persiste anche `consume` (lista dichiarata) nel record, così il grafico riflette i consumi anche quando il magazzino non ha voci corrispondenti (prima usava solo `deducted`).
+   - Frontend memo usa `consume` (dichiarato) se presente, altrimenti `deducted`. Fix asse Y (width 40→52, margin left 2) per non tagliare le etichette kg.
+- Test: iteration_79 frontend — header pulito confermato; grafico renderizza correttamente (6 barre, legenda Farina/Lievito, bucket settimanali, tooltip). Fix post-test: persistenza `consume` (verificata via curl) + asse Y non tagliato.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

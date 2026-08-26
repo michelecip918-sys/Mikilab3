@@ -26,9 +26,6 @@ export default function Header() {
       data-testid="app-header"
       className="sticky top-0 z-40 bg-[#f0f6fb]/95 dark:bg-[#1B2127]/95 backdrop-blur-md border-b border-[#d5e4f0] dark:border-[#38424B]"
     >
-      {/* Fascia bandiere IT/DE (firma MikiLab): Italia verde-crema-rosso + Germania rosso-oro-nero */}
-      <div data-testid="flag-strip" aria-hidden className="it-de-ribbon" />
-
       <div className="px-4 py-3 flex items-center justify-between gap-2">
       <div className="flex items-center gap-2.5 min-w-0 flex-1">
         <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#232A31] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">

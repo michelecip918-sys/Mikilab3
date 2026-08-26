@@ -3982,7 +3982,7 @@ async def day_close(body: DayCloseReq, user: dict = Depends(current_user)):
         haccp_created += 1
     # 3) Archivia chiusura
     rec = {"id": str(uuid.uuid4()), "owner_id": uid, "date": now[:10], "closed_at": now,
-           "produced": body.produced, "deducted": deducted, "temps": body.temps,
+           "produced": body.produced, "consume": body.consume, "deducted": deducted, "temps": body.temps,
            "cleaning": body.cleaning, "anomalies": body.anomalies, "operator": body.operator,
            "note": body.note, "production_lot": body.production_lot, "signature": body.signature or "",
            "haccp_created": haccp_created}

@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only test of (1) header flag-strip removal and (2) weekly flour-vs-yeast consumption chart in DayClose 'Storico'. Header is clean: querySelector('[data-testid=app-header] [data-testid=flag-strip]') === null and no flag-strip exists anywhere in /app/frontend/src. DayClose opens via nav-tab-maestro -> capo-quicklink-dayclose; storico toggle renders consumption-chart card. IMPORTANT: with the pre-existing ML-CHARTSEED-* closures the chart rendered the EMPTY state (consumption-empty, 0 bars) because those seeded day_closures had deducted: [] in MongoDB (no flour/yeast rows at all). After I seeded 3 closures with real deducted rows (Farina 0 / Lievito madre across 3 weeks), the chart rendered correctly: 6 .recharts-bar-rectangle, legend ['Farina','Lievito'] (DE: ['Mehl','Hefe']), weekly X buckets 03/08, 10/08, 17/08, tooltip 'Settimana del 03/08 Farina: 20 kg Lievito: 2 kg'. Storico list, search filter, storico-empty and PDF download (chiusura-ML-CHARTSEED-3.pdf) all work. Wizard mode still renders dayclose-step-1. Language switcher shows only IT/DE. Zero console errors across all runs. All seed data (CHARTSEED + my CHARTBARS) deleted afterwards; admin day_closures collection is now empty.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "DayClose Storico -> consumption chart", "issue": "Chart is computed only from closure.deducted (fallback closure.consume is never persisted by POST /api/day-close, which stores only 'deducted' = items actually matched in the inventory). If a user closes a day with consume items missing from the magazzino, nothing is recorded and the chart stays empty forever. This is why the ML-CHARTSEED-* closures showed consumption-empty.", "affected_selectors": ["consumption-chart", "consumption-empty"]}
+    ],
+    "design_issues": [
+      {"screen": "DayClose Storico consumption chart", "issues": ["Y-axis tick labels are clipped: first digit cut off (shows '3kg' instead of '23kg', '2kg' instead of '12kg') because BarChart margin left:-16 combined with YAxis width:40. Increase YAxis width or use left margin >= 0."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Persist the requested 'consume' list (or unmatched rows) in day_closures so the weekly chart reflects declared consumption even when inventory has no matching item — otherwise chart can stay empty for real users.",
+    "Fix clipped Y-axis tick labels in consumption-chart (YAxis width / chart left margin).",
+    "Note: the ML-CHARTSEED-* seed closures the request assumed had flour/yeast deductions actually had deducted: [] — if you re-seed for demos, populate 'deducted'."
+  ],
+  "critical_code_review_comments": [
+    "DayClose.jsx is 569 lines and mixes wizard, storico, chart and inventory logic — consider extracting the consumption chart and storico list into separate components.",
+    "consumption useMemo treats unit 'pz'/'L' as 0 kg silently; acceptable but worth a note/tooltip so users don't wonder about missing bars."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "95%"},
+  "seed_data_creation": "Temporarily inserted 3 day_closures (TEST_CHARTBARS-1..3) with deducted flour/yeast for the admin owner; deleted afterwards together with the pre-existing ML-CHARTSEED-1..3 docs (admin now has 0 closures).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "All chart-seed data was removed; admin has no day_closures, so DayClose storico now shows storico-empty + consumption-empty. To retest the chart, insert day_closures with non-empty 'deducted' rows (names matching /farin|mehl/ and /lievit|madre|hefe/) for owner_id user_031f10c05aeb across different ISO weeks, then clean up.",
+  "rca_of_the_issue": "Chart empty-state with seeded closures: POST /api/day-close (server.py ~3939-3993) only stores 'deducted' rows that fuzzy-match existing inventory items; the seeded closures had no matching inventory, so deducted=[] and DayClose's consumption useMemo (which falls back to c.consume, a field never persisted) produced no data."
+}

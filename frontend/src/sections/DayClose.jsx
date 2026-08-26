@@ -1,11 +1,12 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckSquare, Thermometer, ShieldCheck, Archive, CalendarCheck, LogIn, Package,
   QrCode, Sparkles, ChevronRight, ChevronLeft, Plus, X, Trash2, Boxes, Save, AlertTriangle,
-  FileText, History, Send, Search, Download, Pencil,
+  FileText, History, Send, Search, Download, Pencil, BarChart3,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
 import { useLang } from "@/i18n/LanguageContext";
 import { addXP } from "@/lib/level";
 import { useAuth } from "@/auth/AuthContext";
@@ -157,6 +158,33 @@ export default function DayClose() {
   };
 
   const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
+
+  // Consumi settimanali (farina vs lievito) dagli scarichi delle chiusure archiviate
+  const consumption = useMemo(() => {
+    const isFlour = (n) => /farin|mehl|semola|integral|vollkorn|hartweizen|dinkel|roggen|weizen|manitob|grano|type ?\d/i.test(n || "");
+    const isYeast = (n) => /lievit|madre|sauerteig|hefe|licoli|poolish|biga|starter/i.test(n || "");
+    const toKg = (q, u) => { const v = Number(q) || 0; if (u === "g") return v / 1000; if (u === "pz" || u === "L") return 0; return v; };
+    const byWeek = {};
+    closures.forEach((c) => {
+      const d = new Date(c.closed_at || c.date);
+      if (isNaN(d.getTime())) return;
+      const off = (d.getDay() + 6) % 7;
+      const monday = new Date(d); monday.setDate(d.getDate() - off);
+      const key = monday.toISOString().slice(0, 10);
+      const label = `${String(monday.getDate()).padStart(2, "0")}/${String(monday.getMonth() + 1).padStart(2, "0")}`;
+      const rows = (c.consume && c.consume.length) ? c.consume.map((x) => ({ name: x.name, qty: x.qty, unit: x.unit || "kg" })) : (c.deducted || []);
+      rows.forEach((r) => {
+        const kg = toKg(r.qty, r.unit || "kg");
+        if (!kg) return;
+        if (!byWeek[key]) byWeek[key] = { key, label, flour: 0, yeast: 0 };
+        if (isFlour(r.name)) byWeek[key].flour += kg;
+        else if (isYeast(r.name)) byWeek[key].yeast += kg;
+      });
+    });
+    return Object.values(byWeek).sort((a, b) => a.key.localeCompare(b.key)).slice(-8)
+      .map((w) => ({ ...w, flour: +w.flour.toFixed(1), yeast: +w.yeast.toFixed(1) }));
+  }, [closures]);
+  const hasConsumption = consumption.some((w) => w.flour > 0 || w.yeast > 0);
   const lowStock = lowStockItems;
 
   if (!user) {
@@ -188,6 +216,24 @@ export default function DayClose() {
 
       {mode === "storico" ? (
         <div data-testid="dayclose-storico" className="space-y-3">
+          <div data-testid="consumption-chart" className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4">
+            <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#3f7cac] mb-3"><BarChart3 className="w-4 h-4" /> {tri("Consumi settimanali (farina e lieviti)", "Wochenverbrauch (Mehl & Hefen)")}</p>
+            {hasConsumption ? (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={consumption} margin={{ top: 6, right: 10, left: 2, bottom: 0 }} barGap={2}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e4eff8" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#7E8A93" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: "#7E8A93" }} axisLine={false} tickLine={false} width={52} unit="kg" />
+                  <Tooltip cursor={{ fill: "rgba(63,124,172,0.08)" }} formatter={(v, n) => [`${v} kg`, n]} labelFormatter={(l) => tri("Settimana del ", "Woche vom ") + l} />
+                  <Legend wrapperStyle={{ fontSize: 12 }} iconType="circle" />
+                  <Bar dataKey="flour" name={tri("Farina", "Mehl")} fill="#3f7cac" radius={[4, 4, 0, 0]} maxBarSize={26} />
+                  <Bar dataKey="yeast" name={tri("Lievito", "Hefe")} fill="#C88A2B" radius={[4, 4, 0, 0]} maxBarSize={26} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p data-testid="consumption-empty" className="text-sm text-[#7E8A93] text-center py-6">{tri("Ancora nessun consumo registrato. Chiudi qualche giornata con lo scarico materie prime per vedere il grafico.", "Noch kein Verbrauch erfasst. Schließe einige Tage mit Rohstoff-Abbuchung ab.")}</p>
+            )}
+          </div>
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" />
             <input data-testid="storico-search" value={search} onChange={(e) => setSearch(e.target.value)}
