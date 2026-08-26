@@ -41,6 +41,14 @@ const MODULES = [
 // Ogni interruttore-modulo apre lo strumento corrispondente per configurarlo.
 const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco" };
 
+// Obiettivo del piano: frase passata all'AI per orientare la generazione.
+const GOAL_TEXT = {
+  qualita: { it: "Obiettivo: massima qualità artigianale — privilegia lievitazioni lente, struttura e sapore.", de: "Ziel: maximale handwerkliche Qualität — bevorzuge langsame Gare, Struktur und Geschmack.", en: "Goal: top artisan quality — favour slow proofing, structure and flavour." },
+  resa: { it: "Obiettivo: massima resa produttiva — ottimizza l'uso di forni, celle e impastatrici e le quantità.", de: "Ziel: maximaler Output — optimiere Öfen, Kammern, Kneter und Mengen.", en: "Goal: maximum output — optimise ovens, cells, mixers and quantities." },
+  tempo: { it: "Obiettivo: risparmio di tempo — proponi sequenze più rapide e accorpa i passaggi dove possibile.", de: "Ziel: Zeit sparen — schnellere Abläufe, Schritte wo möglich bündeln.", en: "Goal: save time — propose faster sequences and combine steps where possible." },
+  spreco: { it: "Obiettivo: riduzione degli sprechi — recupera impasti e invenduto e dimensiona con prudenza.", de: "Ziel: weniger Abfall — Teig/Unverkauftes verwerten und vorsichtig dimensionieren.", en: "Goal: reduce waste — reuse dough/unsold and size cautiously." },
+};
+
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
 const TOOLS = [
   { id: "mydata", Icon: Archive, it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
@@ -78,6 +86,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
   const [preferment, setPreferment] = useState("solido");
+  const [planGoal, setPlanGoal] = useState("qualita");
   const [bizType, setBizType] = useState("pro");
   const [freezerStock, setFreezerStock] = useState([]);
   const [plan, setPlan] = useState("");
@@ -176,6 +185,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     if (s.startTime) setStartTime(s.startTime);
     if (s.notes !== undefined) setNotes(s.notes);
     if (s.preferment) setPreferment(s.preferment);
+    if (s.planGoal) setPlanGoal(s.planGoal);
     if (s.bizType) setBizType(s.bizType);
     if (s.modules && typeof s.modules === "object") setModules((m) => ({ ...m, ...s.modules }));
     if (payload && payload.plan_text) { setPlan(payload.plan_text); setSavedAt(null); }
@@ -238,6 +248,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           if (s.startTime) setStartTime(s.startTime);
           if (s.notes !== undefined) setNotes(s.notes);
           if (s.preferment) setPreferment(s.preferment);
+    if (s.planGoal) setPlanGoal(s.planGoal);
           if (s.bizType) setBizType(s.bizType);
           if (s.modules && typeof s.modules === "object") setModules((m) => ({ ...m, ...s.modules }));
         }
@@ -284,7 +295,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         staff: modules.turni && staff !== "" ? Number(staff) : null,
         start_time: modules.orari ? startTime : null,
         lab_temp_c: modules.clima && labTemp !== "" ? Number(labTemp) : null,
-        standard_temp_c: Number(stdTemp) || 26, notes, lang, preferment_choice: preferment,
+        standard_temp_c: Number(stdTemp) || 26, notes: [(GOAL_TEXT[planGoal] && (GOAL_TEXT[planGoal][lang] || GOAL_TEXT[planGoal].it)), notes].filter(Boolean).join(" · "), lang, preferment_choice: preferment,
         active_modules: Object.keys(modules).filter((k) => modules[k]),
       }),
     });
@@ -318,7 +329,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     try {
       const res = await capoPlanApi.save({
         plan_text: text,
-        state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, bizType, modules },
+        state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, planGoal, bizType, modules },
       });
       setSavedAt(res.saved_at || new Date().toISOString());
     } catch {
@@ -877,21 +888,15 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         )}
         <div className="mt-3">
-          <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Triebmittel / Vorteig" : lang === "en" ? "Leaven / Preferment" : "Lievito / Prefermento"}</label>
-          <select data-testid="capo-preferment" value={preferment} onChange={(e) => setPreferment(e.target.value)}
+          <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Ziel des Plans" : lang === "en" ? "Plan goal" : "Obiettivo del piano"}</label>
+          <select data-testid="capo-plan-goal" value={planGoal} onChange={(e) => setPlanGoal(e.target.value)}
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#3f7cac]">
-            <option value="solido">{lang === "de" ? "Fester Lievito Madre" : lang === "en" ? "Solid sourdough" : "Lievito Madre solido"}</option>
-            <option value="licoli">{lang === "de" ? "LiCoLi (Flüssighefe)" : lang === "en" ? "LiCoLi (liquid starter)" : "LiCoLi (lievito in coltura liquida)"}</option>
-            <option value="poolish">Poolish</option>
-            <option value="lievito_birra">{lang === "de" ? "Hefe (Bierhefe)" : lang === "en" ? "Baker's yeast" : "Lievito di birra"}</option>
+            <option value="qualita">{lang === "de" ? "🥖 Handwerkliche Qualität (langsame Gare, Struktur)" : lang === "en" ? "🥖 Artisan quality (slow proof, structure)" : "🥖 Qualità artigianale (lievitazioni lente, struttura)"}</option>
+            <option value="resa">{lang === "de" ? "📈 Maximaler Output (Öfen/Kammern optimieren)" : lang === "en" ? "📈 Maximum output (optimise ovens/cells)" : "📈 Massima resa (ottimizza forni/celle)"}</option>
+            <option value="tempo">{lang === "de" ? "⏱️ Zeit sparen (schnellere Abläufe)" : lang === "en" ? "⏱️ Save time (faster sequences)" : "⏱️ Risparmio di tempo (sequenze più rapide)"}</option>
+            <option value="spreco">{lang === "de" ? "♻️ Weniger Abfall (Teig/Unverkauftes verwerten)" : lang === "en" ? "♻️ Less waste (reuse dough/unsold)" : "♻️ Riduci gli sprechi (recupero impasti/invenduto)"}</option>
           </select>
-          {(preferment === "licoli" || preferment === "poolish") && (
-            <div data-testid="capo-preferment-banner" className="mt-2 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/40 p-3 text-sm text-[#234b6e] dark:text-[#8FB0C2] leading-relaxed">
-              ⚠️ {lang === "de"
-                ? "TECHNISCHER HINWEIS: Du verwendest LiCoLi oder Poolish. Da es sich um Vorteige mit 100% Hydratation handelt, wird die Wassermenge im Hauptteig automatisch neu berechnet und reduziert, damit die Endhydratation ausgewogen bleibt."
-                : "ATTENZIONE TECNICA: Stai utilizzando il LiCoLi o il Poolish. Essendo prefermenti al 100% di idratazione, la quantità di acqua/liquidi nell'impasto principale è stata automaticamente ricalcolata e ridotta per mantenere bilanciata l'idratazione finale."}
-            </div>
-          )}
+          <p className="mt-1 text-[11px] text-[#7E8A93] leading-snug">{lang === "de" ? "Orientiert die KI bei der Erstellung deines Plans." : lang === "en" ? "Guides the AI when building your plan." : "Orienta l'AI nella generazione del tuo piano."}</p>
         </div>
 
         <div className="mt-3">
@@ -1022,7 +1027,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           ref={capoArchiveRef}
           canSave={!!(plan && plan.trim())}
           getPayload={() => (plan && plan.trim()
-            ? { plan_text: plan, state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, bizType, modules } }
+            ? { plan_text: plan, state: { products, useWeekly, staff, stdTemp, labTemp, startTime, notes, preferment, planGoal, bizType, modules } }
             : null)}
           onRepeat={repeatArchivedPlan}
           repeatLabel={tri3(lang, "Usa per settimana prossima", "Für nächste Woche", "Use next week")}

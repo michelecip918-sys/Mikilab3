@@ -621,8 +621,11 @@ async def _translate_recipe_de(doc):
             return {}
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"trrec-{doc.get('id', 'x')}",
-            system_message=("Traduttore IT->DE per panificazione artigianale. Mantieni invariati i termini tecnici: "
+            system_message=("Traduttore IT->DE per panificazione artigianale professionale. Mantieni invariati i termini tecnici: "
                             "Lievito Madre, Poolish, Biga, Sauerteig, Panettone, Backmittel, Kochstück, Quellstück. "
+                            "Preserva FEDELMENTE il processo tecnico: metodo (diretto/indiretto), idratazione %, temperature "
+                            "(acqua e impasto), l'ordine dei passaggi, l'acqua a filo, i pre-fermenti a inizio impasto e le "
+                            "sospensioni (uvetta/noci/canditi) come ultimo ingrediente. Non riordinare né semplificare i passaggi. "
                             "Non tradurre nomi propri (Mikilab, Michele). Rispondi SOLO con JSON valido."),
         ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
         prompt = ("Traduci in tedesco e restituisci un JSON con SOLO le chiavi tra name_de, flour_type_de, notes_de, "
@@ -850,9 +853,12 @@ async def _translate_recipe_lang(doc, target):
         lang_name = _LANG_NAMES[target]
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"trrec-{target}-{doc.get('id', 'x')}",
-            system_message=(f"Traduttore per panificazione artigianale verso il {lang_name}. Mantieni invariati i termini tecnici "
+            system_message=(f"Traduttore per panificazione artigianale professionale verso il {lang_name}. Mantieni invariati i termini tecnici "
                             "(Lievito Madre, Poolish, Biga, Sauerteig, Panettone, Backmittel, Kochstück, Quellstück) e i nomi propri "
-                            "(Mikilab, Michele). Rispondi SOLO con JSON valido."),
+                            "(Mikilab, Michele). Preserva FEDELMENTE il processo tecnico: metodo (diretto/indiretto), idratazione %, "
+                            "temperature (acqua e impasto), l'ordine dei passaggi, l'acqua a filo, i pre-fermenti a inizio impasto e le "
+                            "sospensioni (uvetta/noci/canditi) come ultimo ingrediente. Non riordinare né semplificare i passaggi. "
+                            "Rispondi SOLO con JSON valido."),
         ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
         prompt = (f"Traduci in {lang_name} e restituisci un JSON con SOLO le chiavi name_{target}, flour_type_{target}, "
                   f"notes_{target}, procedure_{target} corrispondenti ai campi forniti:\n" + json.dumps(fields, ensure_ascii=False))

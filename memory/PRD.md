@@ -1329,3 +1329,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **backend/server.py `MAESTRO_SYSTEM`**: aggiunto "PROTOCOLLO TECNICO OBBLIGATORIO" per generazione/formattazione ricette: metodo Diretto/Indiretto + regole inserimento acqua/sale/pre-fermenti, gestione alta idratazione (>=86%, acqua a filo, T finale 25-26°C), doppio impasto panettone (LM solo nel 1°, sospensioni a fine 2°), sospensioni come ultimo ingrediente, struttura da manuale tecnico (Metodo+Idratazione%, Temperature Target, passaggi motivati, pieghe, spie raddoppio/triplicamento).
 - Verificato via curl /api/maestro/chat: la ciabatta 86% esce con Metodo Indiretto, Idratazione 86%, Temperature Target e passaggi motivati.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont16 (2026-06) — Obiettivo piano + protocollo in traduzione ricette
+- **PianoProduzioneAI**: rimosso select "Lievito / Prefermento" (variabile `preferment` mantenuta a default "solido" per payload). Nuovo select `capo-plan-goal` "Obiettivo del piano" (qualita/resa/tempo/spreco) passato all'AI via note (GOAL_TEXT trilingue). Persistito in state salvato.
+- **backend/server.py**: i due prompt di traduzione ricette (IT->DE e verso lang) ora impongono di preservare fedelmente il processo tecnico (metodo diretto/indiretto, idratazione %, temperature, ordine passaggi, acqua a filo, pre-fermenti a inizio, sospensioni ultime) senza riordinare/semplificare.
+- Verificato: form mostra Obiettivo (no prefermento); backend up (recipes 200).
+- NB: PREVIEW → REDEPLOY per mikilab.de.
