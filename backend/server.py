@@ -3153,6 +3153,7 @@ def _post_public(doc: dict, user: Optional[dict]) -> dict:
         "text": doc.get("text", ""),
         "text_de": doc.get("text_de"),
         "text_en": doc.get("text_en"),
+        "text_es": doc.get("text_es"),
         "image_url": doc.get("image_url"),
         "created_at": doc.get("created_at"),
         "like_count": len(likes),
@@ -4173,8 +4174,21 @@ WELCOME_POST_EN = (
 )
 
 
-WELCOME_VERSION = 2
+WELCOME_VERSION = 3
 WELCOME_IMAGE = "/michele-casual.jpg"
+
+WELCOME_POST_ES = (
+    "¡Bienvenidos a la comunidad de MikiLab! \U0001F956\U0001F525\n\n"
+    "¡Hola a todos y bienvenidos a nuestro nuevo espacio dedicado por completo al arte de la panadería, la pastelería y la pizza!\n\n"
+    "He creado esta comunidad para unir a panaderos, pasteleros, pizzeros, profesionales y aficionados: un lugar para compartir consejos y recetas, resolver dudas sobre fermentaciones, harinas y máquinas y, sobre todo, para crecer juntos.\n\n"
+    "¿Qué encontrarás aquí?\n"
+    "\u2022 Intercambio directo: un espacio abierto para preguntas y soluciones prácticas del día a día del obrador.\n"
+    "\u2022 Novedades y recursos: contenidos y herramientas exclusivas para optimizar tu trabajo.\n"
+    "\u2022 Networking: la posibilidad de conectar con colegas.\n\n"
+    "¡Ponte cómodo, preséntate en los comentarios y cuéntanos dónde trabajas y cuál es tu especialidad!\n\n"
+    "Y lo más importante: ¡publica también fotos de TUS productos — pan, bollería, pizza y dulces — muéstralos con orgullo! Añade colegas y amigos, sigue a quien te inspira y lee las publicaciones en tu idioma: la comunidad está en italiano, alemán, inglés y español. \U0001F1EE\U0001F1F9\U0001F1E9\U0001F1EA\U0001F1EC\U0001F1E7\U0001F1EA\U0001F1F8\n\n"
+    "¡Buen trabajo y buena fermentación a todos! \U0001F33E\U0001F4AA"
+)
 
 
 async def seed_welcome_post():
@@ -4183,7 +4197,7 @@ async def seed_welcome_post():
     if exists:
         if exists.get("welcome_version") != WELCOME_VERSION:
             await db.community_posts.update_one({"id": exists["id"]}, {"$set": {
-                "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN,
+                "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN, "text_es": WELCOME_POST_ES,
                 "image_url": WELCOME_IMAGE, "author_name": "Michele — MikiLab", "pinned": True,
                 "welcome_version": WELCOME_VERSION,
             }})
@@ -4192,7 +4206,7 @@ async def seed_welcome_post():
     aid = (admin or {}).get("id") or (admin or {}).get("user_id") or "admin"
     doc = {
         "id": str(uuid.uuid4()), "author_id": aid, "author_name": "Michele — MikiLab",
-        "category": "consiglio", "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN,
+        "category": "consiglio", "text": WELCOME_POST_TEXT, "text_de": WELCOME_POST_DE, "text_en": WELCOME_POST_EN, "text_es": WELCOME_POST_ES,
         "image_url": WELCOME_IMAGE,
         "created_at": now_iso(), "likes": [], "comments": [], "pinned": True, "welcome_version": WELCOME_VERSION,
     }

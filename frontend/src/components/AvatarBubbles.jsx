@@ -20,8 +20,8 @@ const SCRIPTS = {
     { who: "momy", it: "Fai il Quiz del Fornaio e segna i progressi: ti accompagno io, senza fretta.", de: "Mach das Bäcker-Quiz und verfolge deine Fortschritte: ich begleite dich, ganz entspannt.", en: "Take the Baker's Quiz and track your progress: I'll guide you, no rush." },
   ],
   community: [
-    { who: "michele", it: "Cerchiamo colleghi appassionati! Condividi le tue foto e ricette con gli altri fornai.", de: "Wir suchen begeisterte Kollegen! Teile deine Fotos und Rezepte mit anderen Bäckern.", en: "We're looking for passionate peers! Share your photos and recipes with other bakers." },
-    { who: "momy", it: "Segui gli altri, metti un like e commenta: sui social cresciamo insieme.", de: "Folge anderen, like und kommentiere: in den sozialen Netzwerken wachsen wir zusammen.", en: "Follow others, like and comment: on socials we grow together." },
+    { who: "michele", it: "Cerchiamo colleghi appassionati! Condividi le tue foto e ricette con gli altri fornai.", de: "Wir suchen begeisterte Kollegen! Teile deine Fotos und Rezepte mit anderen Bäckern.", en: "We're looking for passionate peers! Share your photos and recipes with other bakers.", es: "¡Buscamos colegas apasionados! Comparte tus fotos y recetas con otros panaderos." },
+    { who: "momy", it: "Segui gli altri, metti un like e commenta: sui social cresciamo insieme.", de: "Folge anderen, like und kommentiere: in den sozialen Netzwerken wachsen wir zusammen.", en: "Follow others, like and comment: on socials we grow together.", es: "Sigue a los demás, da like y comenta: en las redes crecemos juntos." },
   ],
   shop: [
     { who: "michele", it: "Qui puoi avere le MIE ricette complete: dosi, procedimento e fasi.", de: "Hier bekommst du MEINE vollständigen Rezepte: Mengen, Ablauf und Phasen.", en: "Here you can get MY complete recipes: quantities, procedure and phases." },
@@ -39,10 +39,10 @@ export default function AvatarBubbles({ variant = "impara" }) {
   const pick = (m) => {
     const ov = overrides[`${variant}.${m.who}`];
     if (ov) {
-      const txt = lang === "de" ? (ov.de || ov.it) : lang === "en" ? (ov.en || ov.it) : ov.it;
+      const txt = lang === "de" ? (ov.de || ov.it) : lang === "es" ? (ov.es || ov.en || ov.it) : lang === "en" ? (ov.en || ov.it) : ov.it;
       if (txt) return txt;
     }
-    return lang === "de" ? m.de : lang === "en" ? m.en : m.it;
+    return lang === "de" ? m.de : lang === "es" ? (m.es || m.en || m.it) : lang === "en" ? m.en : m.it;
   };
 
   return (

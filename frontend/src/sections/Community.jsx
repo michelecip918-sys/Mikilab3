@@ -203,7 +203,7 @@ export default function Community() {
                   <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full font-semibold flex items-center gap-1" style={{ background: C.color + "22", color: C.color }}><C.Icon className="w-3 h-3" />{catLabel(p.category)}</span>
                   {p.can_delete && <button data-testid={`community-delete-${p.id}`} onClick={() => remove(p.id)} className="text-[#7E8A93] hover:text-[#E4572E] p-1"><Trash2 className="w-4 h-4" /></button>}
                 </div>
-                {p.text && <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-line leading-relaxed">{(lang === "de" && p.text_de) ? p.text_de : ((lang === "en" || lang === "es") && p.text_en) ? p.text_en : p.text}</p>}
+                {p.text && <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-line leading-relaxed">{lang === "de" ? (p.text_de || p.text) : lang === "es" ? (p.text_es || p.text_en || p.text) : lang === "en" ? (p.text_en || p.text) : p.text}</p>}
                 {p.image_url && <img src={p.image_url} alt="" className="w-full rounded-xl mt-2 max-h-80 object-cover" />}
 
                 <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#d5e4f0] dark:border-[#38424B]">

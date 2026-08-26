@@ -1458,3 +1458,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
    - Verificato in ES: zero residui italiani nella UI di queste sezioni. (Restano IT solo i 2 post di benvenuto seed della Community = dati/contenuti; aggiungere `text_es` nel seed backend in futuro.)
 2. **Ricerca Radio** (`RadioFornaio.jsx`): barra `radio-search` in cima al pannello; digitando filtra tutte le stazioni in un gruppo "🔎 Risultati (n)" (o messaggio "nessuna trovata"); pulsante clear `radio-search-clear`. Verificato ("swr" → 2 risultati).
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont32 (2026-06) — Post benvenuto ES + sezioni rimanenti in spagnolo
+1. **Post di benvenuto Community in ES**: aggiunto `WELCOME_POST_ES` nel seed (`server.py`), incluso `text_es` in insert/update e nella risposta API; `WELCOME_VERSION` 2→3; aggiornati i post pinned esistenti nel DB. Render Community: per ES usa `text_es` (fallback en→it). Verificato via screenshot (post in spagnolo).
+2. **Sezioni rimanenti in spagnolo reale**:
+   - Maestro (`Maestro.jsx`): `tri` esteso a 4 arg + ES sulle 3 stringhe.
+   - Maestro IA (`MohammedAssistant.jsx`): `tri` 4 arg + ES su tutte le 13 stringhe (Pregunta a Mohammadreza, Paso 1/2, domande rapide…).
+   - AvatarBubbles intro Community: aggiunte le 2 frasi in ES + fallback es→en→it.
+   - Foto (Diagnosi) e Guida metodi: usano già `t()` (chiavi in translations.js) → già in spagnolo.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
