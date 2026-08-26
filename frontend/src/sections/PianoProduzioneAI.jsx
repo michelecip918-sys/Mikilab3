@@ -37,6 +37,9 @@ const MODULES = [
   { id: "antispreco", Icon: Recycle, it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-waste" },
 ];
 
+// Ogni interruttore-modulo apre lo strumento corrispondente per configurarlo.
+const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco" };
+
 export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
   const { user } = useAuth();
@@ -403,28 +406,52 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      <Section icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "SCEGLI ANCHE", "WÄHLE AUCH", "ALSO CHOOSE")}>
+      <Section icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "SCEGLI ANCHE (interruttori del piano)", "AUCH WÄHLEN (Plan-Schalter)", "ALSO CHOOSE (plan switches)")}>
         <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#C88A2B]/15 border border-[#C88A2B]/45 px-3 py-2.5">
           <SlidersHorizontal className="w-4 h-4 text-[#A66A15] shrink-0" />
           <p className="text-[12px] font-bold text-[#7a4e12] dark:text-[#E4C98B] leading-snug">
             {tri3(lang,
-              "👆 Tocca per accendere solo ciò che ti serve. Il piano base (ricette + quantità) si genera comunque.",
-              "👆 Tippe, um nur das zu aktivieren, was du brauchst. Der Basisplan (Rezepte + Mengen) wird trotzdem erstellt.",
-              "👆 Tap to turn on only what you need. The base plan (recipes + quantities) is generated anyway.")}
+              "👆 Interruttori ON/OFF: accendi solo ciò che vuoi nel piano. Tocca la «i» e Mohammadreza ti spiega cosa fa. Il piano base (ricette + quantità) si genera comunque.",
+              "👆 ON/OFF-Schalter: aktiviere nur, was du im Plan willst. Tippe auf „i“ und Mohammadreza erklärt es. Der Basisplan (Rezepte + Mengen) wird trotzdem erstellt.",
+              "👆 ON/OFF switches: turn on only what you want in the plan. Tap the 'i' and Mohammadreza explains it. The base plan (recipes + quantities) is generated anyway.")}
           </p>
         </div>
+
+        {/* Mohammadreza spiega l'interruttore o lo strumento al tocco della "i" */}
+        {guideId && (
+          <div data-testid="tool-guide-bubble" className="mb-3 flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#2D5A4C] to-[#5E8B7E] text-white p-3 shadow-md">
+            <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-xl object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
+              <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
+              <div className="flex gap-2 mt-2">
+                <button data-testid="tool-guide-open" onClick={() => { const g = MODULE_TOOL[guideId] || guideId; setGuideId(null); onOpenTool && onOpenTool(g); }}
+                  className="text-xs font-bold bg-white text-[#2D5A4C] px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Apri strumento", "Werkzeug öffnen", "Open tool")}</button>
+                <button data-testid="tool-guide-close" onClick={() => setGuideId(null)}
+                  className="text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Chiudi", "Schließen", "Close")}</button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div data-testid="capo-modules" className="grid grid-cols-3 gap-2">
           {MODULES.map(({ id, Icon, it, de, en }) => {
             const on = !!modules[id];
             return (
-              <button key={id} type="button" data-testid={`capo-module-${id}`} aria-pressed={on} onClick={() => toggleMod(id)}
-                className={`flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 text-center transition-all active:scale-95 border min-h-[74px] ${
+              <div key={id} data-testid={`capo-module-${id}`} aria-pressed={on} onClick={() => toggleMod(id)}
+                className={`relative flex flex-col items-center justify-center gap-1 rounded-2xl p-3 pt-5 text-center transition-all active:scale-95 border min-h-[82px] cursor-pointer ${
                   on
                     ? "bg-[#5E8B7E] text-white border-[#5E8B7E] shadow-sm"
                     : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#D7E1DB] dark:border-[#38424B]"}`}>
+                <span className={`absolute top-1.5 left-1.5 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
+                <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
+                  onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
+                  className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${on ? "bg-white/25 text-white" : "bg-[#5E8B7E]/12 text-[#5E8B7E]"}`}>
+                  <Info className="w-3.5 h-3.5" />
+                </button>
                 <Icon className={`w-5 h-5 ${on ? "text-white" : "text-[#9aa4ac]"}`} />
                 <span className="text-[10.5px] font-semibold leading-tight">{tri3(lang, it, de, en)}</span>
-              </button>
+              </div>
             );
           })}
         </div>
@@ -432,34 +459,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
-
-            {/* Mohammadreza spiega lo strumento al tocco della "i" */}
-            {guideId && (
-              <div data-testid="tool-guide-bubble" className="mb-3 flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#2D5A4C] to-[#5E8B7E] text-white p-3 shadow-md">
-                <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-xl object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
-                  <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
-                  <div className="flex gap-2 mt-2">
-                    <button data-testid="tool-guide-open" onClick={() => { const g = guideId; setGuideId(null); onOpenTool(g); }}
-                      className="text-xs font-bold bg-white text-[#2D5A4C] px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Apri strumento", "Werkzeug öffnen", "Open tool")}</button>
-                    <button data-testid="tool-guide-close" onClick={() => setGuideId(null)}
-                      className="text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Chiudi", "Schließen", "Close")}</button>
-                  </div>
-                </div>
-              </div>
-            )}
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f] mb-0.5">
+              {tri3(lang, "APRI UNO STRUMENTO", "WERKZEUG ÖFFNEN", "OPEN A TOOL")}
+            </p>
+            <p className="text-[10.5px] text-[#7E8A93] mb-2">{tri3(lang, "Tocca per aprirlo e usarlo. La «i» ti spiega a cosa serve.", "Tippe zum Öffnen und Nutzen. Die „i“ erklärt den Zweck.", "Tap to open and use it. The 'i' explains what it's for.")}</p>
 
             <div className="grid grid-cols-3 gap-2">
               {[
-                { id: "capo", Icon: Snowflake, label: tri3(lang, "Celle & Impastatrici", "Kammern & Kneter", "Cells & Mixers") },
                 { id: "mydata", Icon: Archive, label: tri3(lang, "I Miei Dati", "Meine Daten", "My Data") },
-                { id: "inversa", Icon: Clock, label: tri3(lang, "Orari d'Inizio", "Startzeiten", "Start Times") },
-                { id: "spesa", Icon: ShoppingCart, label: tri3(lang, "Lista Spesa", "Einkaufsliste", "Shopping List") },
-                { id: "foodcost", Icon: Euro, label: tri3(lang, "Food Cost", "Food Cost", "Food Cost") },
-                { id: "salespoints", Icon: Store, label: tri3(lang, "Punti Vendita", "Verkaufspunkte", "Sales Points") },
-                { id: "turni", Icon: Users, label: tri3(lang, "Turni & Ruoli", "Schichten", "Shifts") },
-                { id: "freezer", Icon: Snowflake, label: tri3(lang, "Giacenze Freezer", "Freezer-Bestand", "Freezer Stock") },
                 { id: "twin", Icon: FlaskConical, label: tri3(lang, "Digital Twin", "Teig-Zwilling", "Dough Twin") },
                 { id: "adatta", Icon: Flame, label: tri3(lang, "Adatta Forno", "Ofen anpassen", "Adapt Oven") },
                 { id: "bilancia", Icon: Scale, label: tri3(lang, "Bilancia Smart", "Smarte Waage", "Smart Scale") },
@@ -476,7 +483,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 { id: "haccp", Icon: ScanLine, label: tri3(lang, "Registro HACCP", "HACCP-Register", "HACCP Log") },
                 { id: "check", Icon: ListChecks, label: tri3(lang, "Checklist", "Checklisten", "Checklists") },
                 { id: "shelf", Icon: CalendarClock, label: tri3(lang, "Shelf-Life", "Shelf-Life", "Shelf-Life") },
-                { id: "spreco", Icon: Recycle, label: tri3(lang, "Anti-Spreco", "Anti-Verschwendung", "Anti-Waste") },
               ].map(({ id, Icon, label }) => (
                 <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
                   className="relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] rounded-2xl p-3 text-center active:scale-95 hover:border-[#5E8B7E]/60 transition-all min-h-[70px] cursor-pointer">

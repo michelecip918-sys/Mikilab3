@@ -56,12 +56,12 @@ export default function AvatarBubbles({ variant = "impara" }) {
               className={`w-11 h-11 rounded-full object-cover shadow-sm shrink-0 ring-2 ${isMichele ? "ring-[#6B8E62]/60" : "ring-[#6E8CA0]/60"}`}
               onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <div data-testid={`bubble-${m.who}`}
-              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 shadow-sm border ${
+              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border ${
                 isMichele
-                  ? "bg-[#6B8E62]/12 border-[#6B8E62]/30 rounded-bl-sm"
-                  : "bg-[#6E8CA0]/12 border-[#6E8CA0]/30 rounded-br-sm"}`}>
-              <p className={`text-[10px] font-bold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#4d6b45]" : "text-[#33564E]"}`}>{NAME[m.who]}</p>
-              <p className="text-sm text-[#2B303B] dark:text-[#EAF0EC] leading-snug">{pick(m)}</p>
+                  ? "bg-[#6B8E62]/5 border-[#6B8E62]/20 rounded-bl-sm"
+                  : "bg-[#6E8CA0]/5 border-[#6E8CA0]/20 rounded-br-sm"}`}>
+              <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#3a5233]" : "text-[#274038]"}`}>{NAME[m.who]}</p>
+              <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{pick(m)}</p>
             </div>
           </motion.div>
         );

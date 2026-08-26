@@ -1249,3 +1249,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Storico Chat AI** in "I Miei Dati Salvati" (MyData.jsx, scheda `mydata-tab-chat`): registro sessioni in `lib/chatHistory.js` (localStorage `mikilab_chats`), sessione Maestro resa persistente (`mikilab_maestro_sid`), Mohammadreza già persistente. Le conversazioni si caricano dal backend via `chatApi.history` → `GET /api/maestro/history/{sid}` (stessa collezione chat_messages). Card espandibili con messaggi (ReactMarkdown) + elimina (`mydata-chat-delete-*`). Testato UI end-to-end.
 - **Enciclopedia +4 voci** (IT/DE/EN): Bassinage, Farine speciali, Semole & grani antichi, Maturazione vs Lievitazione.
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v-cont2 (2026-06) — Avatar leggibili + Lab senza doppioni + guide Mohammed
+- **AvatarBubbles.jsx**: testo bolla `font-semibold text-[#141210]` (nero marcato, leggibile), sfondo quasi trasparente (`/5` bg + `/20` border), etichetta nome più scura.
+- **PianoProduzioneAI.jsx**: eliminati i doppioni tra interruttori-modulo e griglia strumenti. Rimossi dalla griglia "APRI UNO STRUMENTO" i tile che duplicavano gli interruttori (capo/celle, inversa/orari, freezer, turni, spesa, foodcost, salespoints/punti, spreco/antispreco). Interruttori ("SCEGLI ANCHE") ora con pill ON/OFF + pulsante "i" (Mohammed) su OGNI modulo; mappa `MODULE_TOOL` per "Apri strumento". Intestazioni chiarite (interruttori del piano vs apri strumento).
+- **toolGuide.js**: aggiunte guide per gli id modulo (celle/orari/clima/punti/antispreco) + mydata; arricchite spesa/foodcost/turni/freezer con indicazione se il risultato viene 📄 generato o 💾 salvato.
+- Verificato via screenshot (login admin): 9 interruttori con ON/OFF+i, bolla guida, doppioni assenti, avatar leggibili.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
