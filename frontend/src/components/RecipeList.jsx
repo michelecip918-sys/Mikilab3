@@ -9,6 +9,7 @@ import EULabel from "@/components/EULabel";
 import ScaleDialog from "@/components/ScaleDialog";
 import FlourTable from "@/components/FlourTable";
 import PrintHeader from "@/components/PrintHeader";
+import MachineScheda from "@/components/MachineScheda";
 import { playTTS } from "@/lib/tts";
 import { addXP } from "@/lib/level";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -763,6 +764,8 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{rLoc(r, "procedure", lang)}</p>
           </div>
         ) : null}
+
+        {!r.locked && r.procedure ? <MachineScheda /> : null}
 
         {r.locked && (
           <div data-testid={`recipe-teaser-${r.id}`} className="rounded-2xl bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white p-5 text-center shadow-lg">

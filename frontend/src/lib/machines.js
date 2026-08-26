@@ -49,3 +49,37 @@ export function getActiveMachineNames() {
   MACHINE_CATEGORIES.forEach((c) => c.machines.forEach((m) => { if (active.has(m.id)) names.push(m.it); }));
   return names;
 }
+
+// Macchine "industriali" che rendono la produzione automatica.
+const INDUSTRIAL = new Set(["rheon", "estrusore", "formatrice", "brezel_form", "spezz_arrotondatrice", "volumetrica", "sfogliatrice", "lisciviatrice"]);
+
+const MACHINE_TIPS = {
+  rheon: { it: "Rheon: velocità nastro moderata (≈3) per non surriscaldare l'impasto; T finale 22-24°C.", de: "Rheon: Bandgeschwindigkeit moderat (≈3), Teig nicht überhitzen; Endtemp. 22-24°C.", en: "Rheon: moderate belt speed (≈3) to avoid overheating; final temp 22-24°C." },
+  estrusore: { it: "Estrusore: impasto ben incordato e freddo per evitare che si stracci.", de: "Extruder: gut ausgekneteter, kühler Teig, damit er nicht reißt.", en: "Extruder: well-developed, cool dough so it won't tear." },
+  formatrice: { it: "Formatrice automatica: regola i rulli in base al peso pezzo.", de: "Formmaschine: Walzen an Teiglingsgewicht anpassen.", en: "Moulder: set rollers to the piece weight." },
+  brezel_form: { it: "Formatrice Brezel: pasta un po' più soda e riposo breve prima del passaggio.", de: "Brezelmaschine: etwas festerer Teig, kurze Ruhe vor dem Formen.", en: "Pretzel former: slightly stiffer dough, short rest before forming." },
+  lisciviatrice: { it: "Lisciviatrice: soluzione di soda ben dosata e nastro asciutto.", de: "Laugenmaschine: Lauge korrekt dosieren, Band trocken.", en: "Lye machine: correct lye dosing, keep belt dry." },
+  spezzatrice_idraulica: { it: "Spezzatrice idraulica: pressione minima con impasti morbidi, spolvera il piatto.", de: "Hydr. Teiler: geringer Druck bei weichen Teigen, Platte bemehlen.", en: "Hydraulic divider: low pressure for soft dough, flour the plate." },
+  spezz_arrotondatrice: { it: "Spezzatrice-arrotondatrice: verifica peso e forma a inizio ciclo.", de: "Teiler-Wirker: Gewicht/Form zu Zyklusbeginn prüfen.", en: "Divider-rounder: check weight/shape at cycle start." },
+  volumetrica: { it: "Divisione volumetrica: taratura pistone su densità impasto.", de: "Volumetrische Teilung: Kolben auf Teigdichte einstellen.", en: "Volumetric divider: set piston to dough density." },
+  sfogliatrice: { it: "Sfogliatrice industriale: rispetta le soste di riposo tra le pieghe.", de: "Ausrollmaschine: Ruhezeiten zwischen den Touren einhalten.", en: "Sheeter: respect rest times between folds." },
+  spirale_estraibile: { it: "Spirale vasca estraibile: rispetta i tempi di incordatura, non scaldare.", de: "Spiralkneter: Auskneten einhalten, nicht überhitzen.", en: "Spiral mixer: respect development time, don't overheat." },
+  bracci_tuffanti: { it: "Bracci tuffanti: ossigena bene ma allunga i tempi; ideale grandi lievitati.", de: "Taucharme: gute Sauerstoffzufuhr, längere Zeiten; ideal für große Hefeteige.", en: "Diving arms: great oxygenation, longer times; ideal for large leavened doughs." },
+  climatherm: { it: "CLIMATHERM: usa il freddo per rallentare la lievitazione e far maturare l'impasto.", de: "CLIMATHERM: Kälte nutzen, um Gare zu bremsen und Reife zu fördern.", en: "CLIMATHERM: use cold to slow proof and boost maturation." },
+  rotovent: { it: "Rotovent: con pezzi piccoli controlla la cottura in anticipo; vapore iniziale breve.", de: "Rotovent: kleine Teiglinge früher prüfen; kurzer Anfangsdampf.", en: "Rotovent: check small pieces earlier; short initial steam." },
+  pietra_vapore: { it: "Forno a pietra: vapore ad alta pressione nei primi minuti per crosta e sviluppo.", de: "Steinofen: Hochdruckdampf in den ersten Minuten für Kruste/Trieb.", en: "Stone oven: high-pressure steam in the first minutes for crust/oven spring." },
+};
+
+// Scheda macchina calcolata dalle macchine attive (senza AI).
+export function machineScheda(lang = "it") {
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const ids = getActiveMachineIds();
+  let mode, yieldLabel;
+  if (ids.length === 0) { mode = tri("Manuale", "Manuell", "Manual"); yieldLabel = tri("≈ 40-80 pezzi/ora (a mano)", "≈ 40-80 Stück/Std (Hand)", "≈ 40-80 pcs/hour (by hand)"); }
+  else if (ids.some((id) => INDUSTRIAL.has(id))) { mode = tri("Industriale", "Industriell", "Industrial"); yieldLabel = tri("≈ 800-1500 pezzi/ora", "≈ 800-1500 Stück/Std", "≈ 800-1500 pcs/hour"); }
+  else { mode = tri("Semiautomatica", "Halbautomatisch", "Semi-automatic"); yieldLabel = tri("≈ 200-500 pezzi/ora", "≈ 200-500 Stück/Std", "≈ 200-500 pcs/hour"); }
+  const tips = ids.map((id) => MACHINE_TIPS[id] && (MACHINE_TIPS[id][lang] || MACHINE_TIPS[id].it)).filter(Boolean);
+  const names = getActiveMachineNames();
+  return { mode, yieldLabel, tips, names, count: ids.length };
+}
+

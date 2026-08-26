@@ -1361,3 +1361,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Verificato: API (panini al latte con Rheon/Rotovent/spezzatrice → Scheda Tecnica Semiautomatica, ~400-500/ora, punti attenzione) e UI (toggle persistono, count).
 - TODO possibile: alimentare le macchine anche nella generazione del PIANO (CAPO_SYSTEM).
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont21 (2026-06) — Macchine nel Piano IA + Scheda Macchina ricette + Reset
+- **lib/machines.js**: MACHINE_TIPS + machineScheda(lang) (mode Manuale/Semiautomatica/Industriale in base a set INDUSTRIAL, resa oraria stimata, tips per macchina).
+- **components/MachineScheda.jsx** (nuovo): render Modalità/Resa/Macchine attive/Punti di Attenzione; inserito in RecipeList nel dettaglio ricetta (solo ricette sbloccate con procedimento).
+- **MachinePark.jsx**: pulsante `machine-reset` "Spegni tutte".
+- **Piano IA**: CapoPlanRequest.machines (backend) + iniezione directive macchine in products_txt (IT/DE) con richiesta riga 'Macchina:' per prodotto; frontend invia getActiveMachineNames() nel payload piano.
+- Verificato: Scheda Macchina in ricetta (Industriale, ≈800-1500/ora, tips Rheon/Rotovent); backend sano; reset presente.
+- NB: generazione piano completa non ri-testata via curl (richiede payload complesso) ma wiring in place; backend startup OK.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

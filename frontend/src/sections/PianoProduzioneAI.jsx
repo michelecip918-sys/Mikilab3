@@ -12,6 +12,7 @@ import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
 import LabTour from "@/components/LabTour";
+import { getActiveMachineNames } from "@/lib/machines";
 import { guideFor } from "@/lib/toolGuide";
 import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
@@ -298,7 +299,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         staff: modules.turni && staff !== "" ? Number(staff) : null,
         start_time: modules.orari ? startTime : null,
         lab_temp_c: modules.clima && labTemp !== "" ? Number(labTemp) : null,
-        standard_temp_c: Number(stdTemp) || 26, notes: [(GOAL_TEXT[planGoal] && (GOAL_TEXT[planGoal][lang] || GOAL_TEXT[planGoal].it)), notes].filter(Boolean).join(" · "), lang, preferment_choice: preferment,
+        standard_temp_c: Number(stdTemp) || 26, notes: [(GOAL_TEXT[planGoal] && (GOAL_TEXT[planGoal][lang] || GOAL_TEXT[planGoal].it)), notes].filter(Boolean).join(" · "), lang, preferment_choice: preferment, machines: getActiveMachineNames(),
         active_modules: Object.keys(modules).filter((k) => modules[k]),
       }),
     });

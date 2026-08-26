@@ -30,7 +30,15 @@ export default function MachinePark() {
             "Aktiviere deine Maschinen: Rezepte und Pläne werden automatisch angepasst (Produktionsmodus, Stundenleistung, mechanischer Stress, Hinweise).",
             "Turn on your machines: recipes and plans adapt automatically (production mode, hourly yield, mechanical stress and attention points).")}
         </p>
-        <p className="mt-2 inline-block text-xs font-bold bg-white/20 px-3 py-1 rounded-full" data-testid="machine-count">{total} {tri("attivi", "aktiv", "active")}</p>
+        <div className="mt-2 flex items-center gap-2">
+          <span className="inline-block text-xs font-bold bg-white/20 px-3 py-1 rounded-full" data-testid="machine-count">{total} {tri("attivi", "aktiv", "active")}</span>
+          {total > 0 && (
+            <button data-testid="machine-reset" onClick={() => { setActive(new Set()); setActiveMachineIds([]); }}
+              className="text-xs font-semibold bg-white/15 hover:bg-white/25 px-3 py-1 rounded-full active:scale-95 transition-all">
+              {tri("Spegni tutte", "Alle aus", "Turn all off")}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-4">

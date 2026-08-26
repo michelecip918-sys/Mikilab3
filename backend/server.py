@@ -276,6 +276,7 @@ class CapoPlanRequest(BaseModel):
     freezer_stock: List[dict] = []   # [{name, qty, min_qty}] giacenze freezer attuali
     preferment_choice: Optional[str] = None  # "solido" | "licoli" | "poolish" | "lievito_birra"
     active_modules: Optional[List[str]] = None  # moduli opzionali attivi; None = tutti attivi (retrocompat)
+    machines: Optional[List[str]] = None  # macchinari attivi nel laboratorio (Parco Macchine)
     lang: str = "it"
 
 
@@ -1557,6 +1558,14 @@ async def capo_plan_stream(payload: CapoPlanRequest):
     def mod_on(name):
         return _all_on or (name in (_mods or []))
     products_txt, has_days = await _capo_build_products_block(items, payload.lang)
+    if payload.machines:
+        products_txt += ("\n\n[MASCHINEN] Aktive Maschinen im Labor: " + ", ".join(payload.machines) +
+                         ". Passe Zeiten (Formen/Teilen ultra-schnell), Teigtemperatur (bei Extrusion 22-24°C) und Reihenfolge an; "
+                         "gib pro Produkt eine kurze Zeile 'Maschine:' mit Produktionsmodus (Manuell/Halbautomatisch/Industriell), geschätzter Stundenleistung und einem Hinweis."
+                         if de else
+                         "\n\n[MACCHINE] Macchine attive in laboratorio: " + ", ".join(payload.machines) +
+                         ". Adatta i tempi (formatura/divisione ultra-rapide), la temperatura dell'impasto (22-24°C con estrusione) e la sequenza; "
+                         "per ogni prodotto aggiungi una breve riga 'Macchina:' con Modalità di Produzione (Manuale/Semiautomatica/Industriale), Resa Oraria Stimata e un punto di attenzione.")
     # Il panettiere può scegliere la PRIMA ricetta da cui far partire la produzione.
     start_names = [str(it.get("name")) for it in items if it.get("start") and it.get("name")]
     if start_names:
