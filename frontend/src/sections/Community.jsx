@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import Marketplace from "@/sections/Marketplace";
 import { marketNewCount, markMarketSeen } from "@/lib/market";
+import FriendsPanel from "@/components/FriendsPanel";
+import { friendsApi } from "@/lib/api";
 
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
@@ -49,7 +51,10 @@ export default function Community() {
   const [commentFor, setCommentFor] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [marketNew, setMarketNew] = useState(0);
+  const [friendsOpen, setFriendsOpen] = useState(false);
+  const [friendReqCount, setFriendReqCount] = useState(0);
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
+  useEffect(() => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); }, []);
 
   const load = async () => { setLoading(true); setPosts(await communityApi.list()); setLoading(false); };
   useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -114,6 +119,21 @@ export default function Community() {
         </div>
         <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Vai", "Los", "Go")}</span>
       </button>
+
+      <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
+        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white shadow-md active:scale-98 transition-all">
+        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <UserPlus className="w-6 h-6" />
+          {friendReqCount > 0 && <span data-testid="friends-req-badge" className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#C0574D] text-white text-[11px] font-extrabold flex items-center justify-center ring-2 ring-white">{friendReqCount}</span>}
+        </div>
+        <div className="flex-1 min-w-0 text-left">
+          <p className="font-display text-base font-bold leading-tight">{tri("Amici & Colleghi", "Freunde & Kollegen", "Friends & Colleagues")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{friendReqCount > 0 ? tri(`${friendReqCount} richieste di amicizia in attesa`, `${friendReqCount} Freundschaftsanfragen`, `${friendReqCount} friend requests pending`) : tri("Aggiungi colleghi e segui chi ti ispira", "Kollegen hinzufügen und folgen", "Add colleagues and follow who inspires you")}</p>
+        </div>
+        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open")}</span>
+      </button>
+
+      <FriendsPanel open={friendsOpen} onClose={() => setFriendsOpen(false)} onCount={setFriendReqCount} />
 
       <AvatarBubbles variant="community" />
 

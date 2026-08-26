@@ -1347,3 +1347,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Verificato: API welcome post con image /michele-casual.jpg + testo prodotti/amici/3 lingue; render in Community con avatar casual.
 - NB: la lettura post in 3 lingue usa il toggle lingua esistente (text_de/text_en). Un vero sistema "aggiungi amici" (follow/social graph) NON è implementato: solo invitato nel messaggio.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont19 (2026-06) — Sistema Amici (richieste + elenco utenti)
+- **backend/server.py**: collezione `friendships` {from_id,to_id,status:pending|accepted}. Endpoint (current_user, cookie auth): GET /users/directory (utenti + status none/friends/incoming/outgoing), GET /friends ({friends,incoming,outgoing}), POST /friends/request {to_id}, POST /friends/respond {from_id,action:accept|decline}, POST /friends/remove {other_id}.
+- **frontend**: `lib/api.js` friendsApi; `components/FriendsPanel.jsx` (modal tab Richieste/Amici/Trova con ricerca, add/accept/decline/remove); Community: pulsante `community-friends-btn` (celeste) con badge richieste + montaggio pannello.
+- Verificato: flusso completo via API (A→request→B incoming→accept→friends per entrambi) e UI (directory, Aggiungi→In attesa, toast). Utenti test in test_credentials.md.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

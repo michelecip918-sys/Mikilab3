@@ -2942,6 +2942,122 @@ async def community_delete(post_id: str, user: dict = Depends(current_user)):
     return {"ok": True}
 
 
+# --- Sistema Amici (richieste + accetta/rifiuta + elenco utenti) --------------
+class FriendReq(BaseModel):
+    to_id: str
+
+class FriendRespReq(BaseModel):
+    from_id: str
+    action: str  # accept | decline
+
+class FriendRemoveReq(BaseModel):
+    other_id: str
+
+
+def _user_card(u: dict) -> dict:
+    return {
+        "user_id": u.get("user_id"),
+        "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
+        "picture": u.get("picture") or "",
+    }
+
+
+async def _friendship(a: str, b: str):
+    return await db.friendships.find_one(
+        {"$or": [{"from_id": a, "to_id": b}, {"from_id": b, "to_id": a}]}, {"_id": 0}
+    )
+
+
+def _rel_status(fr: dict, me: str) -> str:
+    if not fr:
+        return "none"
+    if fr.get("status") == "accepted":
+        return "friends"
+    return "outgoing" if fr.get("from_id") == me else "incoming"
+
+
+@api_router.get("/users/directory")
+async def users_directory(user: dict = Depends(current_user)):
+    me = user["user_id"]
+    users = await db.users.find({"user_id": {"$ne": me}}, {"_id": 0}).to_list(500)
+    frs = await db.friendships.find(
+        {"$or": [{"from_id": me}, {"to_id": me}]}, {"_id": 0}
+    ).to_list(1000)
+    rel = {}
+    for f in frs:
+        other = f["to_id"] if f["from_id"] == me else f["from_id"]
+        rel[other] = _rel_status(f, me)
+    out = []
+    for u in users:
+        card = _user_card(u)
+        card["status"] = rel.get(u.get("user_id"), "none")
+        out.append(card)
+    out.sort(key=lambda c: (c["status"] != "friends", c["name"].lower()))
+    return out
+
+
+@api_router.get("/friends")
+async def friends_list(user: dict = Depends(current_user)):
+    me = user["user_id"]
+    frs = await db.friendships.find(
+        {"$or": [{"from_id": me}, {"to_id": me}]}, {"_id": 0}
+    ).to_list(1000)
+    friend_ids, incoming_ids, outgoing_ids = [], [], []
+    for f in frs:
+        other = f["to_id"] if f["from_id"] == me else f["from_id"]
+        st = _rel_status(f, me)
+        (friend_ids if st == "friends" else incoming_ids if st == "incoming" else outgoing_ids).append(other)
+
+    async def cards(ids):
+        if not ids:
+            return []
+        us = await db.users.find({"user_id": {"$in": ids}}, {"_id": 0}).to_list(500)
+        return [_user_card(u) for u in us]
+
+    return {"friends": await cards(friend_ids), "incoming": await cards(incoming_ids), "outgoing": await cards(outgoing_ids)}
+
+
+@api_router.post("/friends/request")
+async def friends_request(body: FriendReq, user: dict = Depends(current_user)):
+    me = user["user_id"]
+    if body.to_id == me:
+        raise HTTPException(400, "Non puoi aggiungere te stesso")
+    target = await db.users.find_one({"user_id": body.to_id}, {"_id": 0})
+    if not target:
+        raise HTTPException(404, "Utente non trovato")
+    existing = await _friendship(me, body.to_id)
+    if existing:
+        return {"status": _rel_status(existing, me)}
+    await db.friendships.insert_one({
+        "id": str(uuid.uuid4()), "from_id": me, "to_id": body.to_id,
+        "status": "pending", "created_at": now_iso(),
+    })
+    return {"status": "outgoing"}
+
+
+@api_router.post("/friends/respond")
+async def friends_respond(body: FriendRespReq, user: dict = Depends(current_user)):
+    me = user["user_id"]
+    fr = await db.friendships.find_one({"from_id": body.from_id, "to_id": me, "status": "pending"}, {"_id": 0})
+    if not fr:
+        raise HTTPException(404, "Richiesta non trovata")
+    if body.action == "accept":
+        await db.friendships.update_one({"id": fr["id"]}, {"$set": {"status": "accepted", "accepted_at": now_iso()}})
+        return {"status": "friends"}
+    await db.friendships.delete_one({"id": fr["id"]})
+    return {"status": "none"}
+
+
+@api_router.post("/friends/remove")
+async def friends_remove(body: FriendRemoveReq, user: dict = Depends(current_user)):
+    me = user["user_id"]
+    fr = await _friendship(me, body.other_id)
+    if fr:
+        await db.friendships.delete_one({"id": fr["id"]})
+    return {"status": "none"}
+
+
+
 # --- Notifiche Community (like/commenti sui propri post) ---
 async def _notify(recipient_id, actor_id, ntype, post_id, actor_name, snippet):
     if not recipient_id or recipient_id == actor_id:

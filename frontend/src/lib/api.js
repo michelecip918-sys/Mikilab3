@@ -59,6 +59,14 @@ export const chatApi = {
   history: (sid) => api.get(`/maestro/history/${sid}`).then((r) => r.data),
 };
 
+export const friendsApi = {
+  directory: () => api.get(`/users/directory`).then((r) => r.data),
+  list: () => api.get(`/friends`).then((r) => r.data),
+  request: (to_id) => api.post(`/friends/request`, { to_id }).then((r) => r.data),
+  respond: (from_id, action) => api.post(`/friends/respond`, { from_id, action }).then((r) => r.data),
+  remove: (other_id) => api.post(`/friends/remove`, { other_id }).then((r) => r.data),
+};
+
 export const newsItemsApi = {
   list: () => api.get(`/news-items`).then((r) => r.data),
   create: (data) => api.post(`/news-items`, data).then((r) => r.data),
