@@ -1324,3 +1324,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Marketplace.jsx**: usa loadMarket() (seed se vuoto) e marca visti all'apertura.
 - Verificato via screenshot: tema coerente, nessun errore di build.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont15 (2026-06) — Protocollo tecnico panificazione nel Maestro AI
+- **backend/server.py `MAESTRO_SYSTEM`**: aggiunto "PROTOCOLLO TECNICO OBBLIGATORIO" per generazione/formattazione ricette: metodo Diretto/Indiretto + regole inserimento acqua/sale/pre-fermenti, gestione alta idratazione (>=86%, acqua a filo, T finale 25-26°C), doppio impasto panettone (LM solo nel 1°, sospensioni a fine 2°), sospensioni come ultimo ingrediente, struttura da manuale tecnico (Metodo+Idratazione%, Temperature Target, passaggi motivati, pieghe, spie raddoppio/triplicamento).
+- Verificato via curl /api/maestro/chat: la ciabatta 86% esce con Metodo Indiretto, Idratazione 86%, Temperature Target e passaggi motivati.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
