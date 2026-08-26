@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import { motion } from "framer-motion";
+import { motion, Reorder } from "framer-motion";
 import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
@@ -82,6 +82,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [freezerStock, setFreezerStock] = useState([]);
   const [plan, setPlan] = useState("");
   const capoArchiveRef = useRef(null);
+  const favDragMoved = useRef(false);
   const [guideId, setGuideId] = useState(null); // strumento spiegato da Mohammadreza
   const [generating, setGenerating] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
@@ -558,21 +559,44 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#D7E1DB] dark:bg-[#38424B]" />
-            {favRow.length > 0 && !editTools && (
-              <div data-testid="tools-favorites" className="mb-3">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-1.5">⭐ {tri3(lang, "I TUOI PREFERITI", "DEINE FAVORITEN", "YOUR FAVORITES")}</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {favRow.map(({ id, Icon, it, de, en, pinned }) => (
-                    <div key={id} data-testid={`fav-tool-${id}`} onClick={() => openToolTracked(id)}
-                      className="relative flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/10 border border-[#C88A2B]/40 rounded-2xl p-3 text-center active:scale-95 hover:border-[#C88A2B]/70 transition-all min-h-[70px] cursor-pointer">
-                      {pinned && <Star className="absolute top-1 right-1 w-3.5 h-3.5 text-[#C88A2B] fill-[#C88A2B]" />}
-                      <Icon className="w-5 h-5 text-[#C88A2B]" />
-                      <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{tri3(lang, it, de, en)}</span>
+            {favRow.length > 0 && !editTools && (() => {
+              const pinnedIds = (toolPrefs.pinned || []).filter((id) => TOOLS.some((t) => t.id === id));
+              const byId = Object.fromEntries(TOOLS.map((t) => [t.id, t]));
+              const pinnedFavs = pinnedIds.map((id) => byId[id]).filter(Boolean);
+              const autoFavs = favRow.filter((t) => !t.pinned);
+              return (
+                <div data-testid="tools-favorites" className="mb-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-1.5">⭐ {tri3(lang, "I TUOI PREFERITI", "DEINE FAVORITEN", "YOUR FAVORITES")}{pinnedFavs.length > 1 ? ` · ${tri3(lang, "trascina per ordinare", "zum Sortieren ziehen", "drag to reorder")}` : ""}</p>
+                  {pinnedFavs.length > 0 && (
+                    <Reorder.Group as="div" axis="x" values={pinnedIds} onReorder={(ids) => savePrefs({ ...toolPrefs, pinned: ids })}
+                      className="flex gap-2 overflow-x-auto pb-1 mb-2" style={{ scrollbarWidth: "none" }}>
+                      {pinnedFavs.map(({ id, Icon, it, de, en }) => (
+                        <Reorder.Item as="div" key={id} value={id} data-testid={`fav-tool-${id}`}
+                          whileDrag={{ scale: 1.07, zIndex: 5 }}
+                          onDragStart={() => { favDragMoved.current = true; }}
+                          onClick={() => { if (favDragMoved.current) { favDragMoved.current = false; return; } openToolTracked(id); }}
+                          className="relative shrink-0 w-[104px] flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/12 border border-[#C88A2B]/50 rounded-2xl p-3 min-h-[70px] cursor-grab active:cursor-grabbing select-none">
+                          <Star className="absolute top-1 right-1 w-3.5 h-3.5 text-[#C88A2B] fill-[#C88A2B]" />
+                          <Icon className="w-5 h-5 text-[#C88A2B]" />
+                          <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC] text-center">{tri3(lang, it, de, en)}</span>
+                        </Reorder.Item>
+                      ))}
+                    </Reorder.Group>
+                  )}
+                  {autoFavs.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2">
+                      {autoFavs.map(({ id, Icon, it, de, en }) => (
+                        <div key={id} data-testid={`fav-tool-${id}`} onClick={() => openToolTracked(id)}
+                          className="relative flex flex-col items-center justify-center gap-1.5 bg-[#C88A2B]/10 border border-[#C88A2B]/40 rounded-2xl p-3 text-center active:scale-95 hover:border-[#C88A2B]/70 transition-all min-h-[70px] cursor-pointer">
+                          <Icon className="w-5 h-5 text-[#C88A2B]" />
+                          <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#EAF0EC]">{tri3(lang, it, de, en)}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            )}
+              );
+            })()}
             <div className="flex items-center justify-between mb-0.5">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#33564E] dark:text-[#9ec48f]">
                 {tri3(lang, "APRI UNO STRUMENTO", "WERKZEUG ÖFFNEN", "OPEN A TOOL")}

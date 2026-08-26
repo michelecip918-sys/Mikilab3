@@ -1276,3 +1276,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Etichette UE (RecipeDialog)**: pulsante `label-fill-typical` "Compila valori tipici (da verificare)" → pre-compila valori nutrizionali 100g INDICATIVI per categoria (pane, panettone/lievitati, focaccia/pizza, brezel/laugen, croissant/brioche) + allergeni tipici, tutto editabile. Michele inserisce/verifica i valori reali.
 - Verificato via screenshot (login admin): 17 badge NUOVO, pin Adatta Forno in preferiti, fill focaccia → 270 kcal + Glutine.
 - NB: PREVIEW → REDEPLOY per mikilab.de. I valori reali delle etichette li deve confermare Michele.
+
+## v-cont6 (2026-06) — Preferiti appuntati riordinabili via drag
+- **PianoProduzioneAI**: i preferiti appuntati (pinned) ora sono in una riga orizzontale trascinabile con `Reorder`/`Reorder.Item` di framer-motion; l'ordine si salva in `mikilab_tool_prefs.pinned`. Gli automatici restano statici sotto. `favDragMoved` ref evita l'apertura dello strumento al termine del drag. Header mostra "· trascina per ordinare" se >1 pinned.
+- Verificato via drag simulato: ordine pinned [adatta,timer] → [timer,adatta] persistito.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
