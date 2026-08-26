@@ -11,7 +11,7 @@ export default function WhatsAppHelp({ context = "assistenza", className = "" })
   const { lang } = useLang();
   const [WA_NUMBER, setWaNumber] = useState(WA_DEFAULT);
   useEffect(() => { siteSettingsApi.get().then((s) => { if (s && s.whatsapp_number) setWaNumber(s.whatsapp_number); }).catch(() => {}); }, []);
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
 
   const COPY = {
     corsi: {

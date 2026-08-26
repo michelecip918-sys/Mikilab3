@@ -12,7 +12,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // Espone via ref: openSave() → apre l'input nome e scorre in vista (salvataggio con un tocco).
 const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave, onRepeat, repeatLabel, describe }, ref) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [naming, setNaming] = useState(false);

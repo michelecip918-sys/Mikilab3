@@ -9,6 +9,12 @@ export function rLoc(recipe, field, lang) {
     const en = recipe[`${field}_en`];
     if (en != null && String(en).trim() !== "") return en;
   }
+  if (lang === "es") {
+    const es = recipe[`${field}_es`];
+    if (es != null && String(es).trim() !== "") return es;
+    const en = recipe[`${field}_en`];
+    if (en != null && String(en).trim() !== "") return en;
+  }
   return recipe[field] ?? "";
 }
 
@@ -89,8 +95,8 @@ const INGREDIENT_DE = {
 };
 
 export function ingLoc(name, lang) {
-  if ((lang !== "de" && lang !== "en") || !name) return name;
-  const MAP = lang === "de" ? INGREDIENT_DE : INGREDIENT_EN;
+  if ((lang !== "de" && lang !== "en" && lang !== "es") || !name) return name;
+  const MAP = lang === "de" ? INGREDIENT_DE : lang === "es" ? INGREDIENT_ES : INGREDIENT_EN;
   const key = String(name).trim().toLowerCase();
   if (MAP[key]) return MAP[key];
   // togli eventuali unità tra parentesi per il match (es. "Olio d'oliva (Öl)")
@@ -172,5 +178,81 @@ const INGREDIENT_EN = {
   "kokosfett": "Coconut fat",
   "grasso di cocco": "Coconut fat",
   "buccia di psillio": "Psyllium husk",
+};
+
+
+const INGREDIENT_ES = {
+  "zucchero": "Azúcar",
+  "tuorlo": "Yema de huevo",
+  "tuorli": "Yemas de huevo",
+  "uovo": "Huevo",
+  "uova": "Huevos",
+  "burro": "Mantequilla",
+  "miele": "Miel",
+  "pasta d'arancia": "Pasta de naranja",
+  "miglioratore naturale": "Mejorante natural",
+  "miglioratore naturale pro": "Mejorante natural Pro",
+  "albicocche disidratate a cubetti": "Orejones en cubos",
+  "albicocche disidratate": "Orejones (albaricoques secos)",
+  "cioccolato fondente": "Chocolate negro",
+  "gocce di cioccolato fondente": "Pepitas de chocolate negro",
+  "uvetta": "Pasas",
+  "canditi": "Frutas confitadas",
+  "arancia candita": "Naranja confitada",
+  "cedro candito": "Cidra confitada",
+  "semi di sesamo": "Semillas de sésamo",
+  "semi di lino": "Semillas de lino",
+  "semi di girasole": "Semillas de girasol",
+  "semi di zucca": "Semillas de calabaza",
+  "semi misti": "Semillas variadas",
+  "noci": "Nueces",
+  "nocciole": "Avellanas",
+  "mandorle": "Almendras",
+  "cioccolato": "Chocolate",
+  "gocce di cioccolato": "Pepitas de chocolate",
+  "vaniglia": "Vainilla",
+  "malto": "Malta",
+  "olive": "Aceitunas",
+  "pomodori secchi": "Tomates secos",
+  "rosmarino": "Romero",
+  "patate": "Patatas",
+  "fiocchi di patate": "Copos de patata",
+  "latte in polvere": "Leche en polvo",
+  "latte": "Leche",
+  "olio d'oliva": "Aceite de oliva",
+  "olio extravergine": "Aceite de oliva virgen extra",
+  "olio": "Aceite",
+  "sale": "Sal",
+  "acqua": "Agua",
+  "lievito madre": "Masa madre",
+  "lievito": "Levadura",
+  "cipolle stufate dolci": "Cebollas dulces estofadas",
+  "cipolla": "Cebolla",
+  "cipolle": "Cebollas",
+  "farro": "Espelta",
+  "segale": "Centeno",
+  "grano duro": "Trigo duro",
+  "semola": "Sémola",
+  "strutto": "Manteca de cerdo",
+  "birra": "Cerveza",
+  "cacao": "Cacao",
+  "cannella": "Canela",
+  "scorza di limone": "Ralladura de limón",
+  "scorza d'arancia": "Ralladura de naranja",
+  "malto diastasico puro in polvere": "Malta diastásica pura en polvo",
+  "farina di lupino dolce": "Harina de altramuz dulce",
+  "acerola in polvere (vitamina c naturale)": "Acerola en polvo (vitamina C natural)",
+  "acerola in polvere": "Acerola en polvo",
+  "farina di lino dorato": "Harina de lino dorado",
+  "lievito madre solido": "Masa madre sólida",
+  "glutine": "Gluten",
+  "aceto di mele": "Vinagre de manzana",
+  "lino dorato": "Lino dorado",
+  "lievito di birra": "Levadura de panadería",
+  "malto d'orzo": "Malta de cebada",
+  "malto d orzo": "Malta de cebada",
+  "kokosfett": "Grasa de coco",
+  "grasso di cocco": "Grasa de coco",
+  "buccia di psillio": "Cáscara de psyllium",
 };
 

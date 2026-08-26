@@ -1,0 +1,50 @@
+{
+  "summary": "Iteration 80 — Spanish (ES) support. BACKEND (11/11 pytest passed): POST /api/recipes/bundle-checkout accepts lang and persists it (verified in Mongo payment_transactions: es/de/en/it + invalid lang falls back to it), invalid bundle -> 400, unauth -> 401; GET /api/recipes?collection=mikilab (admin) returns 94 recipes with name_es/procedure_es populated on 100% and notes_es/flour_type_es populated wherever the IT source exists, and 0 recipes have procedure_es == procedure (i.e. really translated); GET /api/shop/products returns name_es/desc_es/allergens_es on all 5 products (no _id leak); /api/community/posts reachable for a normal (non-PRO) user. FRONTEND (localStorage mikilab_lang=es): bottom nav = Inicio/Recetas/Tu Laboratorio/Aprende/Comunidad, ES persists across reload, IT/DE/EN regression OK (nav + recipe category folders localized in all 4 langs). Recipe detail as admin renders Spanish name, INGREDIENTES (Harina/Agua/Masa madre sólida/Malta de cebada) and PROCEDIMIENTO fully in Spanish. Shop shows ES product names/descriptions; clicking shop-bundle-pane fires POST /api/recipes/bundle-checkout and redirects to Stripe Checkout, and the created session was stored with lang='es' (session cs_live_a1NV1kC8...). Community page is fully ES and NOT paywalled. Main gap found: large parts of the UI still fall back to Italian or English when lang=es because 46 files define a LOCAL tri(i,d,e) helper with no ES argument.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/recipes/bundle-checkout", "issue": "Stripe is running with LIVE keys in the preview env (sessions are cs_live_...). Test clicks create real live checkout sessions — consider test keys for preview."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "46 files with local tri(i,d,e) helper (no ES arg)", "issue": "When lang=es these render ITALIAN (local helper falls back to `i`), unlike the global LanguageContext tri which falls back es->en->it. Confirmed in Ricette.jsx: tabs 'Ricette MikiLab', 'Le Mie Ricette', 'Enciclopedia', 'Tabelle & Farine' and the base filter chips 'Tutte/Lievito Madre/LM di Segale/Farina Cotta/Indiretto/Diretto' stay Italian in ES. Files: sections/{Ricette,Timer,WaterTempCalc,SmartScale,GuidedWeighing,AcademyHome,ShiftsManager,Marketplace,OrdersManager,ShelfLife,DoughLog,PublicBatch,FoodCost,SourdoughTracker,ScanRecipe,DoughTwin,HaccpLog,AntiWaste,PhotoDiagnosi,Meteo,WeeklyPlan,MyData,DayClose,StoresManager,EnterpriseHub,SoundDiagnosi,SalesPoints,BatchTraceability}.jsx, components/{RecipeList,FlourTable,PaywallGate,MachinePark,MachineScheda,FriendsPanel,HighFive,NotificationBell,WhatsAppHelp,LabOnboarding,DualPhotoButtons}.jsx, audio/TimerContext.jsx", "selector": "[data-testid='nav-tab-ricette'] page + [data-testid='base-filter-*']", "priority": "HIGH"},
+      {"component": "RecipeList.jsx:290", "issue": "Flour label hardcoded: (lang==='de'?'Mehl: ':lang==='en'?'Flour: ':'Farina: ') -> ES rows show 'Farina:' instead of 'Harina:'", "selector": "[data-testid^='recipe-row-']", "priority": "MEDIUM"},
+      {"component": "RecipeList.jsx:405 recipe dialog lang switcher", "issue": "Only ['it','de','en'] buttons rendered — no [data-testid='recipe-lang-es'], so a user cannot switch a recipe to Spanish from the dialog (count=0). The auto-translate button is also gated to de/en only (line 389).", "selector": "[data-testid='recipe-lang-es']", "priority": "HIGH"},
+      {"component": "RecipeList.jsx:775-778 paywall block", "issue": "Non-PRO ES user sees Italian: 'Sblocca la ricetta completa con PRO', 'Procedimento passo-passo, tutti gli ingredienti...', 'Sblocca questa ricetta' (verified with fornaio@mikilab.de in ES).", "selector": "[data-testid='buy-single']", "priority": "HIGH"},
+      {"component": "PianoProduzioneAI.jsx (LabTour + quicklinks + modules + hints)", "issue": "Hero title/subtitle are correctly ES ('Plan de Producción con IA' / 'Rellena los datos...'), but the rest of the page is ENGLISH for ES users: tour labels ('Hi, I'm Mohammadreza', 'Skip', 'Next'), 'START', 'How to?', 'Base steps to generate the plan', tool tiles ('Add Recipes','Daily Plan','Weekly Production','Multi-store','Close the Day'), module chips ('Cells & Mixers','Start times','Freezer'), setup hint text and 'Set up now'. tri3() is called with only 3 args in those places.", "selector": "[data-testid='capo-quicklinks'], [data-testid='capo-modules'], [data-testid='lab-tour-replay']", "priority": "HIGH"},
+      {"component": "AvatarBubbles on Tu Laboratorio", "issue": "ES shows English bubbles: 'Welcome to YOUR lab!...' / 'Start from the AI Production Plan...'", "selector": "[data-testid='nav-tab-maestro'] page", "priority": "MEDIUM"},
+      {"component": "Shop.jsx bundles + allergens", "issue": "Bundle titles fall back to English in ES ('Bread Pack', 'Buns Pack', 'Snacks Pack', 'Large Leavened') while their description is ES; allergens label shows 'Allergens' (tri without ES arg).", "selector": "[data-testid^='shop-bundle-'], [data-testid^='shop-product-']", "priority": "MEDIUM"},
+      {"component": "Footer / TattooSignature", "issue": "ES page footer stays Italian: 'Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli' (home hero has the ES version) and 'Fatto con le mani di Michele' inside the recipe dialog.", "selector": "footer", "priority": "LOW"},
+      {"component": "Recipe detail chips", "issue": "Raw enum key rendered as chip: 'dc_indiretto' (dough category) instead of a localized label, in all languages.", "selector": "[data-testid^='recipe-detail-']", "priority": "MEDIUM"},
+      {"component": "Recipe subtitle (real_name)", "issue": "In ES the recipe subtitle shows English ('Crusty sourdough baguette', 'Universal improver (5 ingredients)') — no real_name_es; acceptable as fallback but inconsistent with the rest of the ES card.", "selector": "[data-testid^='recipe-row-']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "PDF vs UI terminology", "issues": ["PDF/email ES uses 'Elaboración' while the UI ES label is 'Procedimiento' (translations.js:817) — align terminology for consistency."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter80_es.py", "/app/backend/tests/_diag_iter80.py"],
+  "action_items": [
+    "Replace the 46 local `const tri = (i,d,e) => lang==='de'?d:lang==='en'?e:i` helpers with the global tri from LanguageContext (which already handles es->en->it), or add the 4th ES argument. This is the single biggest ES gap (Ricette tabs, filter chips, PaywallGate, RecipeList, FlourTable, Lab tools).",
+    "Add ES branch to PianoProduzioneAI tri3() calls (LabTour steps/labels, quicklinks 'INIZIA/Come si fa?', module chips, setup hints) and to AvatarBubbles for the Lab page.",
+    "Add 'es' to the recipe dialog language switcher list (RecipeList.jsx:405) and to the auto-translate gate (line 389).",
+    "Localize the non-PRO recipe paywall copy (RecipeList.jsx:775-778) for ES.",
+    "Fix the hardcoded 'Farina: ' flour prefix (RecipeList.jsx:290) to use 'Harina: ' for ES.",
+    "Translate Shop bundle titles + allergens label to ES.",
+    "Render a localized label instead of the raw 'dc_indiretto' dough-category key."
+  ],
+  "critical_code_review_comments": [
+    "i18n architecture smell: two different fallback strategies coexist (global tri: es->en->it; 46 local tri helpers: es->it). Any new language will silently regress again — delete the local helpers.",
+    "server.py is 4419 lines — split payments/recipes/shop routers into modules.",
+    "_r_field/bundle PDF ES path is correct (es -> _es -> _en -> it), and lang is persisted both in Stripe metadata and payment_transactions, so webhook fulfilment will use the buyer language."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter80_es.py", "/app/backend/tests/_diag_iter80.py"],
+  "success_rate": {"backend": "100%", "frontend": "70%"},
+  "seed_data_creation": "None. Test-created Stripe checkout sessions (initiated only, never paid) remain in payment_transactions.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin, PRO), fornaio@mikilab.de / Mikilab2026! (normal user, non-PRO)",
+  "context_for_next_testing_agent": "Login is NOT forced at boot anymore: open the app, click [data-testid='login-btn'], then fill auth-email/auth-password and auth-submit. Set language with page.add_init_script(\"localStorage.setItem('mikilab_lang','es')\"), or click [data-testid='lang-es']. Recipes are behind category folders: click [data-testid^='cat-folder-'] then [data-testid^='recipe-row-']. Shop is reached from Home via [data-testid='home-core-corsi'] and bundle purchase is [data-testid^='shop-bundle-'] (redirects to LIVE Stripe checkout — avoid clicking repeatedly). Lab tour overlay can be suppressed with localStorage 'mikilab_lab_tour_v1'='1'. Backend regression suite for ES: /app/backend/tests/test_iter80_es.py (run with `pytest tests/test_iter80_es.py` from /app/backend).",
+  "rca_of_the_issue": "The P0 bug (bundle PDF/email language) is FIXED end-to-end: frontend Shop.buyBundle sends the active lang, bundle_checkout whitelists it/de/en/es, stores it in Stripe metadata and in payment_transactions, and the webhook passes meta['lang'] to _bundle_fulfill; _r_field/_build_bundle_pdf resolve _es fields with es->en->it fallback. The remaining ES defects are purely presentational and all trace to one root cause: 46 components declare their own tri(i,d,e) helper that ignores the 'es' branch, so ES falls back to Italian there, while components using the global LanguageContext tri correctly fall back es->en->it."
+}

@@ -7,7 +7,7 @@ import Beginners from "@/sections/Beginners";
 
 export default function AcademyHome({ onNavigate }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const L = (o) => (o ? o[lang] || o.it : "");
   const [sub, setSub] = useState("ricettario");
   const [status, setStatus] = useState(null);
@@ -151,7 +151,7 @@ export default function AcademyHome({ onNavigate }) {
 // --- Ricettario dinamico: calcolo dosi da teglia + farina --------------------
 function DynamicRecipes() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const L = (o) => (o ? o[lang] || o.it : "");
   const [recipe, setRecipe] = useState(CALC_RECIPES[0].id);
   const [width, setWidth] = useState("30");
@@ -283,7 +283,7 @@ function Row({ label, val, bold }) {
 // --- Database farine ---------------------------------------------------------
 function FlourDB() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [q, setQ] = useState("");
   const rows = FLOURS.filter((f) => `${f.name} ${f.type_de}`.toLowerCase().includes(q.toLowerCase()));
   return (

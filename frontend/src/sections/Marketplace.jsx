@@ -31,7 +31,7 @@ function compress(file, cb) {
 
 export default function Marketplace() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
 
   const CATS = [
     { id: "impastatrice", label: tri("Impastatrici", "Kneter", "Mixers") },

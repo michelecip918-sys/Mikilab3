@@ -15,7 +15,7 @@ const Avatar = ({ c }) => (
 export default function FriendsPanel({ open, onClose, onCount }) {
   const { lang } = useLang();
   const { user } = useAuth();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [tab, setTab] = useState("richieste");
   const [dir, setDir] = useState([]);
   const [rel, setRel] = useState({ friends: [], incoming: [], outgoing: [] });

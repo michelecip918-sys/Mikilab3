@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // Scheda Macchina dinamica: riflette il Parco Macchine attivo (Modalità / Resa / Attenzioni).
 export default function MachineScheda() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const s = machineScheda(lang);
   return (
     <div data-testid="recipe-machine-scheda" className="mt-4 rounded-2xl border border-[#3f7cac]/40 bg-[#3f7cac]/8 p-4">

@@ -98,7 +98,7 @@ const MACHINE_TIPS = {
 
 // Scheda macchina calcolata dalle macchine attive (senza AI).
 export function machineScheda(lang = "it") {
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const ids = getActiveMachineIds();
   let mode, yieldLabel;
   if (ids.length === 0) { mode = tri("Manuale", "Manuell", "Manual"); yieldLabel = tri("≈ 40-80 pezzi/ora (a mano)", "≈ 40-80 Stück/Std (Hand)", "≈ 40-80 pcs/hour (by hand)"); }

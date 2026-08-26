@@ -22,7 +22,7 @@ const DEFAULTS = {
 
 export default function FoodCost() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [s, setS] = useState(() => load() || DEFAULTS);
   const [recipe, setRecipe] = useState(null);
   const onPickRecipe = (r) => {

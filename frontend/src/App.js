@@ -32,7 +32,7 @@ import { toast } from "sonner";
 
 function App() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
   useState(() => {
     // Ingresso diretto: niente più schermata di domande. Semino un profilo di default completo.

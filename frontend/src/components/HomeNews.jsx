@@ -11,7 +11,7 @@ export default function HomeNews() {
   const { lang } = useLang();
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(null); // id | "new" | null
   const [form, setForm] = useState(EMPTY);

@@ -7,7 +7,7 @@ import { batchesApi } from "@/lib/api";
 // del lotto: ?lotto=<id>. Mostra farina, date e provenienza al cliente finale.
 export default function PublicBatch({ id }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [batch, setBatch] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

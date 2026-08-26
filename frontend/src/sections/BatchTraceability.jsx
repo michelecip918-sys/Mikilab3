@@ -19,7 +19,7 @@ const genCode = () => {
 
 export default function BatchTraceability() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
 
   const [batches, setBatches] = useState(() => {
     try { return JSON.parse(localStorage.getItem("mikilab_batches") || "[]"); } catch { return []; }

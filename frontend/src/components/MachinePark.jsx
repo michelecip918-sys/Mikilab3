@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // Parco Macchine: ON/OFF dei macchinari professionali. Le scelte adattano ricette e piani via AI.
 export default function MachinePark() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [active, setActive] = useState(() => new Set(getActiveMachineIds()));
   const [userPresets, setUserPresets] = useState(() => getUserPresets());
 

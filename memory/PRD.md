@@ -1467,3 +1467,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
    - AvatarBubbles intro Community: aggiunte le 2 frasi in ES + fallback es→en→it.
    - Foto (Diagnosi) e Guida metodi: usano già `t()` (chiavi in translations.js) → già in spagnolo.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v40 (2026-06) — Fix lingua ricette al checkout + traduzioni ES complete
+- **BUG P0 RISOLTO — Ricette nella lingua d'acquisto**: `BundleCheckoutReq` ora accetta `lang`; `bundle_checkout` salva `lang` nei `metadata` Stripe e in `payment_transactions`; il webhook (`/api/webhook/stripe`) passa `meta['lang']` a `_bundle_fulfill`, che legge la lingua da metadata/tx (fallback it). `_r_field`, `_build_bundle_pdf` (etichette Ingredientes/Elaboración/Harina/Agua/Masa madre + copertina), `_bundle_email_html`, oggetto email e nome pacchetto (`_bundle_name`) ora supportano IT/DE/EN/ES. Frontend `Shop.jsx` invia `lang` alla chiamata. VERIFICATO: metadata.lang='es' salvato; PDF generato interamente in spagnolo.
+- **Traduzioni prodotti IT/DE/EN/ES**: aggiunti campi `_es` (name/flour_type/notes/procedure) a TUTTE le 94 ricette mikilab (batch LLM Claude via `_translate_recipe_lang`, ora supporta `es`). Modelli `Recipe/RecipeCreate/RecipeUpdate` estesi con `name_es/flour_type_es/notes_es/procedure_es` (altrimenti `response_model` li filtrava). Prodotti Shop (`SHOP_SEED`) con `name_es/desc_es/allergens_es`; patch idempotente estesa a `_es`. `lib/loc.js` `rLoc`/`ingLoc` gestiscono `es` (+ mappa `INGREDIENT_ES`).
+- **Community GRATIS**: confermato — nessun `PaywallGate` su Community (né in App.js né in Community.jsx). Accessibile a tutti.
+- **Rifiniture spagnolo**: PianoProduzioneAI (hero + opzioni), RecipeDialog (etichetta UE/allergeni/ingredienti/foto), RecipeList (baseLabel filtri, 'Harina:', selettore lingua ricetta con 'es', gate auto-traduci esteso a es, glossario), Ricette.jsx (tab principali), Shop.jsx (titoli bundle + allergeni + sottotitoli).
+- **Fix i18n strutturale**: 46 file usavano un helper `tri(i,d,e)` LOCALE che per ES ricadeva sull'ITALIANO. Patchati a fallback es→en (convenzione del `tri` globale) → niente più italiano nelle schermate ES (dove manca lo spagnolo mostra l'inglese).
+- Test: iteration_80 backend 100% (11/11 pytest: lang persistito es/de/en/it, 94 ricette con _es, prodotti shop _es); frontend ES verificato (nav, dettaglio ricetta interamente ES, filtri localizzati, Shop). NB: PREVIEW → REDEPLOY per mikilab.de. Stripe in preview usa chiavi LIVE (sessioni cs_live_…): evitare acquisti reali ripetuti nei test.
+

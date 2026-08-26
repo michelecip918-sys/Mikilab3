@@ -23,7 +23,7 @@ export default function Shop({ hideCourses = false }) {
   const buyBundle = async (bundle) => {
     if (!user) { setAuthOpen(true); return; }
     try {
-      const d = await api.post("/recipes/bundle-checkout", { bundle, origin_url: window.location.origin }).then((r) => r.data);
+      const d = await api.post("/recipes/bundle-checkout", { bundle, origin_url: window.location.origin, lang }).then((r) => r.data);
       if (d.url) window.location.href = d.url;
     } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again", "Error, inténtalo de nuevo")); }
   };
@@ -55,7 +55,7 @@ export default function Shop({ hideCourses = false }) {
   const panettoni = data.products.filter((p) => p.kind === "panettone");
   const corsi = data.products.filter((p) => p.kind === "corso");
 
-  const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : (lang === "en" || lang === "es") ? (p[`${base}_en`] || p[base]) : p[base];
+  const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : lang === "es" ? (p[`${base}_es`] || p[`${base}_en`] || p[base]) : lang === "en" ? (p[`${base}_en`] || p[base]) : p[base];
 
   const Card = ({ p }) => (
     <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] shadow-sm">
@@ -69,15 +69,15 @@ export default function Shop({ hideCourses = false }) {
             {p.sizes.map((s) => <span key={s} className="text-xs font-mono-data bg-[#6E8CA0]/15 text-[#234b6e] dark:text-[#8FB0C2] px-2 py-0.5 rounded-full border border-[#6E8CA0]/30">{s}</span>)}
           </div>
         ) : null}
-        {p.allergens ? <p className="text-[11px] text-[#7E8A93] mt-2"><b>{tri("Allergeni","Allergene","Allergens")}:</b> {pick(p, "allergens")}</p> : null}
+        {p.allergens ? <p className="text-[11px] text-[#7E8A93] mt-2"><b>{tri("Allergeni","Allergene","Allergens","Alérgenos")}:</b> {pick(p, "allergens")}</p> : null}
         {data.enabled ? (
           <button data-testid={`shop-buy-${p.id}`} onClick={() => join(p.id)}
             className="mt-3 w-full bg-[#3f7cac] text-white font-semibold py-2 rounded-xl active:scale-98 text-sm">
-            {p.kind === "corso" ? tri("Iscriviti","Anmelden","Enrol") : tri("Prenota","Vorbestellen","Pre-order")}
+            {p.kind === "corso" ? tri("Iscriviti","Anmelden","Enrol","Inscríbete") : tri("Prenota","Vorbestellen","Pre-order","Reservar")}
           </button>
         ) : (
           <span className="inline-flex items-center gap-1 mt-3 text-xs font-bold text-[#3f7cac]">
-            <Clock className="w-3.5 h-3.5" /> {tri("In arrivo","Bald verfügbar","Coming soon")}
+            <Clock className="w-3.5 h-3.5" /> {tri("In arrivo","Bald verfügbar","Coming soon","Próximamente")}
           </span>
         )}
       </div>
@@ -91,8 +91,8 @@ export default function Shop({ hideCourses = false }) {
         <h1 className="font-display text-3xl font-bold">{de ? "Shop & Academy" : "Shop & Academy"}</h1>
         <p className="text-white/85 text-sm mt-2">
           {data.enabled
-            ? tri("Panettoni artigianali e corsi online. Scegli il tuo prodotto!","Handwerkliche Panettoni und Online-Kurse. Wähle dein Produkt!","Artisan panettoni and online courses. Pick your product!")
-            : tri("In arrivo: panettoni artigianali e corsi online. Iscriviti alla lista d'attesa!","Bald: handwerkliche Panettoni und Online-Kurse. Trag dich in die Warteliste ein!","Coming soon: artisan panettoni and online courses. Join the waitlist!")}
+            ? tri("Panettoni artigianali e corsi online. Scegli il tuo prodotto!","Handwerkliche Panettoni und Online-Kurse. Wähle dein Produkt!","Artisan panettoni and online courses. Pick your product!","¡Panettones artesanales y cursos online. Elige tu producto!")
+            : tri("In arrivo: panettoni artigianali e corsi online. Iscriviti alla lista d'attesa!","Bald: handwerkliche Panettoni und Online-Kurse. Trag dich in die Warteliste ein!","Coming soon: artisan panettoni and online courses. Join the waitlist!","Próximamente: panettones artesanales y cursos online. ¡Únete a la lista de espera!")}
         </p>
       </div>
 
@@ -109,21 +109,22 @@ export default function Shop({ hideCourses = false }) {
           <p className="text-sm text-[#7E8A93] mt-1 leading-snug">
             {tri("Acquista un pacchetto e sblocca SUBITO tutte le ricette della categoria (dosi, procedimento, fasi) nel tuo laboratorio.",
               "Kaufe ein Paket und schalte SOFORT alle Rezepte der Kategorie frei.",
-              "Buy a pack and INSTANTLY unlock all recipes in that category.")}
+              "Buy a pack and INSTANTLY unlock all recipes in that category.",
+              "Compra un pack y desbloquea AL INSTANTE todas las recetas de la categoría (cantidades, elaboración, fases) en tu laboratorio.")}
           </p>
           <div className="grid grid-cols-1 gap-2.5 mt-4">
             {[
-              { b: "pane", it: "Pacchetto Pane", de: "Paket Brot", en: "Bread Pack", price: "€40", grad: true },
-              { b: "panettoni", it: "Grandi Lievitati (Panettoni & Colombe)", de: "Große Hefegebäcke", en: "Large Leavened (Panettoni & Colombe)", price: "€50", grad: true },
-              { b: "panini", it: "Pacchetto Panini", de: "Paket Brötchen", en: "Buns Pack", price: "€20" },
-              { b: "snack", it: "Pacchetto Snack", de: "Paket Snacks", en: "Snacks Pack", price: "€10" },
+              { b: "pane", it: "Pacchetto Pane", de: "Paket Brot", en: "Bread Pack", es: "Pack de Pan", price: "€40", grad: true },
+              { b: "panettoni", it: "Grandi Lievitati (Panettoni & Colombe)", de: "Große Hefegebäcke", en: "Large Leavened (Panettoni & Colombe)", es: "Grandes Levados (Panettone y Colombe)", price: "€50", grad: true },
+              { b: "panini", it: "Pacchetto Panini", de: "Paket Brötchen", en: "Buns Pack", es: "Pack de Bollos", price: "€20" },
+              { b: "snack", it: "Pacchetto Snack", de: "Paket Snacks", en: "Snacks Pack", es: "Pack de Snacks", price: "€10" },
             ].map((x) => {
               const owned = (ent?.unlocked_bundles || []).includes(x.b) || ent?.unlock_all;
               return (
                 <button key={x.b} data-testid={`shop-bundle-${x.b}`} disabled={owned} onClick={() => buyBundle(x.b)}
                   className={`w-full flex items-center justify-between rounded-2xl px-4 py-3 active:scale-98 transition-all ${owned ? "bg-[#5aa0cf]/15 border border-[#5aa0cf]/40" : x.grad ? "bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white" : "bg-[#6E8CA0]/10 border-2 border-[#6E8CA0]"}`}>
                   <span className="text-left min-w-0">
-                    <span className={`block font-semibold truncate ${x.grad && !owned ? "text-white" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{tri(x.it, x.de, x.en)}</span>
+                    <span className={`block font-semibold truncate ${x.grad && !owned ? "text-white" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{tri(x.it, x.de, x.en, x.es)}</span>
                     <span className={`block text-xs ${x.grad && !owned ? "text-white/80" : "text-[#7E8A93]"}`}>{owned ? tri("Acquistato ✓ — ricette sbloccate", "Gekauft ✓", "Purchased ✓", "Comprado ✓ — recetas desbloqueadas") : tri("Tutte le ricette della categoria, per sempre", "Alle Rezepte der Kategorie, für immer", "All category recipes, forever", "Todas las recetas de la categoría, para siempre")}</span>
                   </span>
                   <span className={`font-display text-lg font-bold shrink-0 ml-2 ${x.grad && !owned ? "text-white" : "text-[#234b6e] dark:text-[#8FB0C2]"}`}>{owned ? "✓" : x.price}</span>

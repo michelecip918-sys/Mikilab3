@@ -124,6 +124,10 @@ class Recipe(BaseModel):
     flour_type_en: Optional[str] = None
     notes_en: Optional[str] = None
     procedure_en: Optional[str] = None
+    name_es: Optional[str] = None
+    flour_type_es: Optional[str] = None
+    notes_es: Optional[str] = None
+    procedure_es: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
     real_name_en: Optional[str] = None
@@ -170,6 +174,10 @@ class RecipeCreate(BaseModel):
     flour_type_en: Optional[str] = None
     notes_en: Optional[str] = None
     procedure_en: Optional[str] = None
+    name_es: Optional[str] = None
+    flour_type_es: Optional[str] = None
+    notes_es: Optional[str] = None
+    procedure_es: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
     real_name_en: Optional[str] = None
@@ -550,11 +558,27 @@ async def require_admin(user: dict = Depends(current_user)):
 RECIPE_PRICES = {"single": 499, "panettoni": 2999, "all": 14900}  # centesimi EUR
 # Pacchetti ricette per categoria (centesimi EUR)
 BUNDLE_DEFS = {
-    "pane": {"amount": 4000, "name": "Pacchetto Ricette Pane", "cat": "pane"},
-    "panini": {"amount": 2000, "name": "Pacchetto Ricette Panini", "cat": "panini"},
-    "snack": {"amount": 1000, "name": "Pacchetto Ricette Snack", "cat": "snack"},
-    "panettoni": {"amount": 5000, "name": "Pacchetto Grandi Lievitati (Panettoni & Colombe)", "cat": "panettoni"},
+    "pane": {"amount": 4000, "name": "Pacchetto Ricette Pane", "cat": "pane",
+             "name_de": "Brot-Rezeptpaket", "name_en": "Bread Recipes Pack", "name_es": "Paquete Recetas de Pan"},
+    "panini": {"amount": 2000, "name": "Pacchetto Ricette Panini", "cat": "panini",
+               "name_de": "Brötchen-Rezeptpaket", "name_en": "Rolls Recipes Pack", "name_es": "Paquete Recetas de Bollos"},
+    "snack": {"amount": 1000, "name": "Pacchetto Ricette Snack", "cat": "snack",
+              "name_de": "Snack-Rezeptpaket", "name_en": "Snack Recipes Pack", "name_es": "Paquete Recetas de Snacks"},
+    "panettoni": {"amount": 5000, "name": "Pacchetto Grandi Lievitati (Panettoni & Colombe)", "cat": "panettoni",
+                  "name_de": "Paket Große Hefegebäcke (Panettone & Colombe)",
+                  "name_en": "Large Leavened Cakes Pack (Panettone & Colombe)",
+                  "name_es": "Paquete Grandes Levados (Panettone y Colombe)"},
 }
+
+
+def _bundle_name(b: dict, lang: str) -> str:
+    if lang == "de":
+        return b.get("name_de") or b["name"]
+    if lang == "en":
+        return b.get("name_en") or b["name"]
+    if lang == "es":
+        return b.get("name_es") or b.get("name_en") or b["name"]
+    return b["name"]
 
 
 def _recipe_bundle(d) -> str:
@@ -864,12 +888,12 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depe
     return merged
 
 
-_LANG_NAMES = {"it": "italiano", "de": "tedesco", "en": "inglese"}
+_LANG_NAMES = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo"}
 
 
 async def _translate_recipe_lang(doc, target):
-    """Traduce nome + campi ricetta nella lingua target (it/de/en). Ritorna dict {campo_<lang>: valore}."""
-    if target not in ("it", "de", "en"):
+    """Traduce nome + campi ricetta nella lingua target (it/de/en/es). Ritorna dict {campo_<lang>: valore}."""
+    if target not in ("it", "de", "en", "es"):
         return {}
     try:
         fields = {k: doc.get(k) for k in ["name", "flour_type", "notes", "procedure"] if doc.get(k)}
@@ -2263,6 +2287,7 @@ async def create_checkout(body: CheckoutReq, user: dict = Depends(current_user))
 class BundleCheckoutReq(BaseModel):
     bundle: str  # pane | panini | snack | panettoni
     origin_url: str
+    lang: str = "it"
 
 
 @api_router.post("/recipes/bundle-checkout")
@@ -2270,6 +2295,7 @@ async def bundle_checkout(body: BundleCheckoutReq, user: dict = Depends(current_
     b = BUNDLE_DEFS.get(body.bundle)
     if not b:
         raise HTTPException(400, "Pacchetto non valido")
+    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
     email = user["email"]
     existing = _stripe.Customer.list(email=email, limit=1).data
     customer = existing[0] if existing else _stripe.Customer.create(email=email)
@@ -2278,14 +2304,14 @@ async def bundle_checkout(body: BundleCheckoutReq, user: dict = Depends(current_
         customer=customer.id,
         managed_payments={"enabled": False},
         line_items=[{"price_data": {"currency": "eur", "unit_amount": b["amount"],
-                                    "product_data": {"name": b["name"]}}, "quantity": 1}],
+                                    "product_data": {"name": _bundle_name(b, lang)}}, "quantity": 1}],
         success_url=body.origin_url.rstrip("/") + "/?bundle=success&session_id={CHECKOUT_SESSION_ID}",
         cancel_url=body.origin_url.rstrip("/") + "/?bundle=cancel",
-        metadata={"email": email, "bundle": body.bundle, "kind": "bundle"},
+        metadata={"email": email, "bundle": body.bundle, "kind": "bundle", "lang": lang},
     )
     await db.payment_transactions.insert_one({
         "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
-        "bundle": body.bundle, "amount": b["amount"], "currency": "eur",
+        "bundle": body.bundle, "amount": b["amount"], "currency": "eur", "lang": lang,
         "payment_status": "initiated", "created_at": now_iso(),
     })
     return {"url": session.url, "session_id": session.id}
@@ -2295,6 +2321,8 @@ def _r_field(d: dict, base: str, lang: str) -> str:
         return d.get(f"{base}_de") or d.get(base) or ""
     if lang == "en":
         return d.get(f"{base}_en") or d.get(base) or ""
+    if lang == "es":
+        return d.get(f"{base}_es") or d.get(f"{base}_en") or d.get(base) or ""
     return d.get(base) or ""
 
 
@@ -2308,14 +2336,21 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
     from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, PageBreak)
 
     L = {"it": {"ing": "Ingredienti", "proc": "Procedimento", "phases": "Fasi di lavorazione",
-                "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab"},
+                "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab",
+                "water": "Acqua", "sourdough": "Lievito madre", "salt": "Sale"},
          "de": {"ing": "Zutaten", "proc": "Zubereitung", "phases": "Arbeitsschritte",
-                "notes": "Notizen", "flour": "Mehl", "hyd": "Hydration", "made": "Erstellt mit MikiLab"},
+                "notes": "Notizen", "flour": "Mehl", "hyd": "Hydration", "made": "Erstellt mit MikiLab",
+                "water": "Wasser", "sourdough": "Sauerteig", "salt": "Salz"},
          "en": {"ing": "Ingredients", "proc": "Method", "phases": "Work phases",
-                "notes": "Notes", "flour": "Flour", "hyd": "Hydration", "made": "Made with MikiLab"}}.get(lang, None)
+                "notes": "Notes", "flour": "Flour", "hyd": "Hydration", "made": "Made with MikiLab",
+                "water": "Water", "sourdough": "Sourdough", "salt": "Salt"},
+         "es": {"ing": "Ingredientes", "proc": "Elaboración", "phases": "Fases de trabajo",
+                "notes": "Notas", "flour": "Harina", "hyd": "Hidratación", "made": "Hecho con MikiLab",
+                "water": "Agua", "sourdough": "Masa madre", "salt": "Sal"}}.get(lang, None)
     if L is None:
         L = {"ing": "Ingredienti", "proc": "Procedimento", "phases": "Fasi di lavorazione",
-             "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab"}
+             "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab",
+             "water": "Acqua", "sourdough": "Lievito madre", "salt": "Sale"}
 
     buf = BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=A4, topMargin=18 * mm, bottomMargin=18 * mm,
@@ -2382,8 +2417,8 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
 
         # Ingredienti base + extra
         ing_lines = []
-        for key, ilabel in [("flour_grams", "Farina"), ("water_grams", "Acqua"),
-                            ("sourdough_grams", "Lievito madre"), ("salt_grams", "Sale")]:
+        for key, ilabel in [("flour_grams", L["flour"]), ("water_grams", L["water"]),
+                            ("sourdough_grams", L["sourdough"]), ("salt_grams", L["salt"])]:
             v = r.get(key)
             if v:
                 ing_lines.append(f"{ilabel}: {esc(v)} g")
@@ -2441,6 +2476,13 @@ def _bundle_email_html(bundle_name: str, lang: str) -> str:
                 f"in your lab inside the MikiLab app.</p>"
                 f"<p>Attached you'll find a <b>PDF</b> with all the recipes in the pack, ready to print.</p>"
                 f"<p style='color:#888;font-size:12px'>MikiLab · Michele's Lab</p></div>")
+    if lang == "es":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+                f"<h2 style='color:#234b6e'>¡Gracias por tu compra! 🥖</h2>"
+                f"<p>Tu paquete <b>{bundle_name}</b> ha sido desbloqueado. Todas las recetas están ahora "
+                f"disponibles en tu laboratorio dentro de la app MikiLab.</p>"
+                f"<p>Adjunto encontrarás un <b>PDF</b> con todas las recetas del paquete, listo para imprimir.</p>"
+                f"<p style='color:#888;font-size:12px'>MikiLab · El Laboratorio de Michele</p></div>")
     return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
             f"<h2 style='color:#234b6e'>Grazie per il tuo acquisto! 🥖</h2>"
             f"<p>Il pacchetto <b>{bundle_name}</b> è stato sbloccato. Trovi tutte le ricette "
@@ -2456,6 +2498,10 @@ async def _bundle_fulfill(session_obj, lang: str = "it"):
     tx = await db.payment_transactions.find_one({"session_id": sid})
     email = (tx or {}).get("email") or meta.get("email")
     bundle = (tx or {}).get("bundle") or meta.get("bundle")
+    # Lingua: metadata Stripe > transazione salvata > parametro (fallback)
+    lang = meta.get("lang") or (tx or {}).get("lang") or lang
+    if lang not in ("it", "de", "en", "es"):
+        lang = "it"
     if not email or bundle not in BUNDLE_DEFS:
         return
     email = email.strip().lower()
@@ -2473,15 +2519,17 @@ async def _bundle_fulfill(session_obj, lang: str = "it"):
         return
     try:
         b = BUNDLE_DEFS[bundle]
+        bname = _bundle_name(b, lang)
         docs = await db.recipes.find({"collection_name": "mikilab"}, {"_id": 0}).to_list(1000)
         recipes = [d for d in docs if _recipe_bundle(d) == b["cat"]]
         recipes.sort(key=lambda d: (d.get("name") or "").lower())
-        pdf_bytes = await asyncio.to_thread(_build_bundle_pdf, recipes, b["name"], lang)
-        subj = {"de": f"MikiLab · Dein Paket: {b['name']}",
-                "en": f"MikiLab · Your pack: {b['name']}"}.get(lang, f"MikiLab · Il tuo pacchetto: {b['name']}")
+        pdf_bytes = await asyncio.to_thread(_build_bundle_pdf, recipes, bname, lang)
+        subj = {"de": f"MikiLab · Dein Paket: {bname}",
+                "en": f"MikiLab · Your pack: {bname}",
+                "es": f"MikiLab · Tu paquete: {bname}"}.get(lang, f"MikiLab · Il tuo pacchetto: {bname}")
         fname = (b["cat"] + "_mikilab.pdf")
         params = {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [email], "subject": subj,
-                  "html": _bundle_email_html(b["name"], lang),
+                  "html": _bundle_email_html(bname, lang),
                   "attachments": [{"filename": fname, "content": list(pdf_bytes)}]}
         await asyncio.to_thread(_resend.Emails.send, params)
     except Exception as e:
@@ -2591,7 +2639,7 @@ async def stripe_webhook(request: Request):
         elif meta.get("recipe_kind"):
             await _recipe_fulfill(obj)
         elif meta.get("kind") == "bundle" and email and meta.get("bundle") in BUNDLE_DEFS:
-            await _bundle_fulfill(obj, lang="it")
+            await _bundle_fulfill(obj, lang=meta.get("lang", "it"))
         else:
             await db.payment_transactions.update_one({"session_id": obj.get("id")},
                 {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
@@ -2989,24 +3037,24 @@ async def save_freezer(body: FreezerSave, lang: str = "it", user: dict = Depends
 # Shop & Academy ("Coming Soon") — catalogo + lista d'attesa + toggle admin
 # ---------------------------------------------------------------------------
 SHOP_SEED = [
-    {"id": "p-classico", "kind": "panettone", "name": "Panettone Classico", "name_de": "Panettone Klassik", "name_en": "Classic Panettone",
-     "desc": "Uvetta e canditi, lievito madre, 36h di lievitazione.", "desc_de": "Rosinen und kandierte Früchte, Sauerteig, 36h Gärung.", "desc_en": "Raisins and candied fruit, sourdough, 36h leavening.",
+    {"id": "p-classico", "kind": "panettone", "name": "Panettone Classico", "name_de": "Panettone Klassik", "name_en": "Classic Panettone", "name_es": "Panettone Clásico",
+     "desc": "Uvetta e canditi, lievito madre, 36h di lievitazione.", "desc_de": "Rosinen und kandierte Früchte, Sauerteig, 36h Gärung.", "desc_en": "Raisins and candied fruit, sourdough, 36h leavening.", "desc_es": "Pasas y frutas confitadas, masa madre, 36h de fermentación.",
      "sizes": ["500g", "750g", "1000g"], "image_url": "/recipes/pan_classico.jpg",
-     "allergens": "Glutine, Uova, Latte", "allergens_de": "Gluten, Eier, Milch", "allergens_en": "Gluten, Eggs, Milk", "active": True},
-    {"id": "p-cioccolato", "kind": "panettone", "name": "Panettone Cioccolato e Noci", "name_de": "Panettone Schokolade & Nüsse", "name_en": "Chocolate & Walnut Panettone",
-     "desc": "Gocce di cioccolato fondente e noci.", "desc_de": "Zartbitter-Schokostückchen und Walnüsse.", "desc_en": "Dark chocolate chips and walnuts.",
+     "allergens": "Glutine, Uova, Latte", "allergens_de": "Gluten, Eier, Milch", "allergens_en": "Gluten, Eggs, Milk", "allergens_es": "Gluten, Huevos, Leche", "active": True},
+    {"id": "p-cioccolato", "kind": "panettone", "name": "Panettone Cioccolato e Noci", "name_de": "Panettone Schokolade & Nüsse", "name_en": "Chocolate & Walnut Panettone", "name_es": "Panettone Chocolate y Nueces",
+     "desc": "Gocce di cioccolato fondente e noci.", "desc_de": "Zartbitter-Schokostückchen und Walnüsse.", "desc_en": "Dark chocolate chips and walnuts.", "desc_es": "Pepitas de chocolate negro y nueces.",
      "sizes": ["500g", "1000g"], "image_url": "/recipes/pan_cioc_noci.jpg",
-     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "allergens_de": "Gluten, Eier, Milch, Schalenfrüchte", "allergens_en": "Gluten, Eggs, Milk, Nuts", "active": True},
-    {"id": "p-pistacchio", "kind": "panettone", "name": "Panettone Pistacchio", "name_de": "Panettone Pistazie", "name_en": "Pistachio Panettone",
-     "desc": "Cioccolato bianco e pistacchio.", "desc_de": "Weiße Schokolade und Pistazie.", "desc_en": "White chocolate and pistachio.",
+     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "allergens_de": "Gluten, Eier, Milch, Schalenfrüchte", "allergens_en": "Gluten, Eggs, Milk, Nuts", "allergens_es": "Gluten, Huevos, Leche, Frutos secos", "active": True},
+    {"id": "p-pistacchio", "kind": "panettone", "name": "Panettone Pistacchio", "name_de": "Panettone Pistazie", "name_en": "Pistachio Panettone", "name_es": "Panettone Pistacho",
+     "desc": "Cioccolato bianco e pistacchio.", "desc_de": "Weiße Schokolade und Pistazie.", "desc_en": "White chocolate and pistachio.", "desc_es": "Chocolate blanco y pistacho.",
      "sizes": ["500g", "1000g"], "image_url": "/recipes/pan_pistacchio.jpg",
-     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "allergens_de": "Gluten, Eier, Milch, Schalenfrüchte", "allergens_en": "Gluten, Eggs, Milk, Nuts", "active": True},
-    {"id": "c-lievitati", "kind": "corso", "name": "Masterclass Grandi Lievitati", "name_de": "Masterclass Große Hefegebäcke", "name_en": "Big Leavened Cakes Masterclass",
-     "desc": "Corso online sul panettone col metodo Mikilab (lievito madre, 2 impasti).", "desc_de": "Online-Kurs zum Panettone nach Mikilab-Methode (Sauerteig, 2 Teige).", "desc_en": "Online panettone course with the Mikilab method (sourdough, 2 doughs).",
+     "allergens": "Glutine, Uova, Latte, Frutta a guscio", "allergens_de": "Gluten, Eier, Milch, Schalenfrüchte", "allergens_en": "Gluten, Eggs, Milk, Nuts", "allergens_es": "Gluten, Huevos, Leche, Frutos secos", "active": True},
+    {"id": "c-lievitati", "kind": "corso", "name": "Masterclass Grandi Lievitati", "name_de": "Masterclass Große Hefegebäcke", "name_en": "Big Leavened Cakes Masterclass", "name_es": "Masterclass Grandes Levados",
+     "desc": "Corso online sul panettone col metodo Mikilab (lievito madre, 2 impasti).", "desc_de": "Online-Kurs zum Panettone nach Mikilab-Methode (Sauerteig, 2 Teige).", "desc_en": "Online panettone course with the Mikilab method (sourdough, 2 doughs).", "desc_es": "Curso online de panettone con el método Mikilab (masa madre, 2 masas).",
      "sizes": ["Online"], "image_url": "/recipes/r_panettone_base.jpg",
      "allergens": "", "active": True},
-    {"id": "c-basi", "kind": "corso", "name": "Corso Basi del Pane", "name_de": "Kurs Brot-Grundlagen", "name_en": "Bread Basics Course",
-     "desc": "Per principianti: pane casereccio, pizza in teglia, focaccia.", "desc_de": "Für Anfänger: Hausbrot, Blechpizza, Focaccia.", "desc_en": "For beginners: home bread, pan pizza, focaccia.",
+    {"id": "c-basi", "kind": "corso", "name": "Corso Basi del Pane", "name_de": "Kurs Brot-Grundlagen", "name_en": "Bread Basics Course", "name_es": "Curso Bases del Pan",
+     "desc": "Per principianti: pane casereccio, pizza in teglia, focaccia.", "desc_de": "Für Anfänger: Hausbrot, Blechpizza, Focaccia.", "desc_en": "For beginners: home bread, pan pizza, focaccia.", "desc_es": "Para principiantes: pan casero, pizza en bandeja, focaccia.",
      "sizes": ["Online"], "image_url": "/recipes/r_cuore.jpg",
      "allergens": "", "active": True},
 ]
@@ -3018,7 +3066,7 @@ async def seed_shop_if_empty():
     else:
         # patch idempotente delle traduzioni EN/DE sui prodotti già esistenti
         for p in SHOP_SEED:
-            tr = {k: v for k, v in p.items() if k.endswith("_en") or k.endswith("_de")}
+            tr = {k: v for k, v in p.items() if k.endswith("_en") or k.endswith("_de") or k.endswith("_es")}
             if tr:
                 await db.shop_products.update_one({"id": p["id"]}, {"$set": tr})
     if not await db.app_meta.find_one({"_key": "shop_settings"}):

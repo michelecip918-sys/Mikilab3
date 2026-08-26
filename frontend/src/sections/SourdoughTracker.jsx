@@ -14,7 +14,7 @@ function loadLog() {
 
 export default function SourdoughTracker() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [ph, setPh] = useState("");
   const [temp, setTemp] = useState("");
   const [log, setLog] = useState(loadLog);

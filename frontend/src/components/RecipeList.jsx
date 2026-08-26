@@ -43,7 +43,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   useBackClose(!!viewing, () => setViewing(null));
   useBackClose(dialogOpen, () => setDialogOpen(false));
   useBackClose(!!scaling, () => setScaling(null));
-  const triM = (i_, d_, e_) => (lang === "de" ? d_ : lang === "en" ? e_ : i_);
+  const triM = (i_, d_, e_) => (lang === "de" ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
   const { user, setAuthOpen } = useAuth();
   // Mikilab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
   const canEdit = collectionName === "mikilab" ? user?.role === "admin" : true;
@@ -287,7 +287,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {rLoc(r, "name", lang)}
               </h3>
               {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-medium text-[#3f7cac] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
-              {rLoc(r, "flour_type", lang) ? <p className="text-[10px] text-[#7E8A93] truncate mt-0.5">{(lang === "de" ? "Mehl: " : lang === "en" ? "Flour: " : "Farina: ")}{rLoc(r, "flour_type", lang)}</p> : null}
+              {rLoc(r, "flour_type", lang) ? <p className="text-[10px] text-[#7E8A93] truncate mt-0.5">{(lang === "de" ? "Mehl: " : lang === "en" ? "Flour: " : lang === "es" ? "Harina: " : "Farina: ")}{rLoc(r, "flour_type", lang)}</p> : null}
             </div>
           </motion.button>
         );
@@ -386,7 +386,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
           <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
           <div className="sticky top-0 z-10 flex justify-end items-center gap-1 px-4 pt-3 pb-2 bg-[#f0f6fb]/95 dark:bg-[#1B2127]/95 backdrop-blur">
-            {canEdit && viewing && (lang === "de" || lang === "en") && !viewing[`name_${lang}`] && (
+            {canEdit && viewing && (lang === "de" || lang === "en" || lang === "es") && !viewing[`name_${lang}`] && (
               <button data-testid="recipe-translate-btn" disabled={translating}
                 onClick={async () => {
                   setTranslating(true);
@@ -402,7 +402,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {translating ? "…" : triM(`Traduci in ${lang.toUpperCase()}`, `Auf ${lang.toUpperCase()} übersetzen`, `Translate to ${lang.toUpperCase()}`)}
               </button>
             )}
-            {["it", "de", "en"].map((lc) => (
+            {["it", "de", "en", "es"].map((lc) => (
               <button key={lc} data-testid={`recipe-lang-${lc}`} onClick={() => setLang(lc)}
                 className={`text-[11px] font-bold uppercase px-2.5 py-1 rounded-lg border transition-all ${lang === lc ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#d5e4f0] dark:border-[#38424B]"}`}>
                 {lc}
@@ -516,7 +516,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onUnlock, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
   const de = lang === "de";
-  const tri = (i_, d_, e_) => (de ? d_ : lang === "en" ? e_ : i_);
+  const tri = (i_, d_, e_) => (de ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
   const isPanettone = recipeCategory(r).key === "panettoni";
   const [farro, setFarro] = useState(false);
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
@@ -933,18 +933,18 @@ function recipeBase(r) {
   return [...new Set(out)];
 }
 function baseLabel(k, lang) {
-  const de = lang === "de", en = lang === "en";
+  const de = lang === "de", en = lang === "en", es = lang === "es";
   switch (k) {
-    case "all": return de ? "Alle" : en ? "All" : "Tutte";
+    case "all": return de ? "Alle" : en ? "All" : es ? "Todas" : "Tutte";
     case "poolish": return "Poolish";
     case "biga": return "Biga";
-    case "lm": return de ? "Sauerteig" : en ? "Sourdough" : "Lievito Madre";
-    case "segale": return de ? "Roggen-ST" : en ? "Rye sourdough" : "LM di Segale";
+    case "lm": return de ? "Sauerteig" : en ? "Sourdough" : es ? "Masa madre" : "Lievito Madre";
+    case "segale": return de ? "Roggen-ST" : en ? "Rye sourdough" : es ? "MM de centeno" : "LM di Segale";
     case "licoli": return "LiCoLi";
-    case "kochstuck": return de ? "Kochstück" : en ? "Cooked flour" : "Farina Cotta";
+    case "kochstuck": return de ? "Kochstück" : en ? "Cooked flour" : es ? "Harina cocida" : "Farina Cotta";
     case "quark": return "Quark";
-    case "indiretto": return de ? "Indirekt" : en ? "Indirect" : "Indiretto";
-    case "diretto": return de ? "Direkt" : en ? "Direct" : "Diretto";
+    case "indiretto": return de ? "Indirekt" : en ? "Indirect" : es ? "Indirecto" : "Indiretto";
+    case "diretto": return de ? "Direkt" : en ? "Direct" : es ? "Directo" : "Diretto";
     default: return k;
   }
 }
@@ -1016,7 +1016,7 @@ function GlossaryBox({ text }) {
       <p className="text-[10px] font-bold uppercase tracking-wide text-[#234b6e] dark:text-[#8FB0C2] mb-1.5">{t("gloss_title")} *</p>
       <ul className="space-y-1.5">
         {found.map((g, i) => (
-          <li key={i} className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">* {lang === "de" ? g.de : lang === "en" ? g.en : g.it}</li>
+          <li key={i} className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">* {lang === "de" ? g.de : lang === "en" ? g.en : lang === "es" ? (g.es ?? g.en ?? g.it) : g.it}</li>
         ))}
       </ul>
     </div>
@@ -1059,7 +1059,7 @@ const PAN_GLAZE = [
 
 function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange }) {
   const de = lang === "de";
-  const tri = (i_, d_, e_) => (de ? d_ : lang === "en" ? e_ : i_);
+  const tri = (i_, d_, e_) => (de ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
   const [glazeTot, setGlazeTot] = useState(150);
   const targetVal = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
   const fct = flourG > 0 ? targetVal / flourG : 1;

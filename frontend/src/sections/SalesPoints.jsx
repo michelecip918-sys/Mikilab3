@@ -7,7 +7,7 @@ import { getSalesPoints, saveSalesPoints } from "@/lib/salesPoints";
 // Passo 3 · Logistica & Punti Vendita — CRUD punti vendita (localStorage).
 export default function SalesPoints() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [points, setPoints] = useState([]);
   const [form, setForm] = useState({ name: "", address: "", hours: "" });
 

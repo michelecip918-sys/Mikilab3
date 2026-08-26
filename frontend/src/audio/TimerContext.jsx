@@ -12,7 +12,7 @@ export const remainingOf = (t) => (t.running && t.endsAt ? Math.max(0, Math.roun
 
 export function TimerProvider({ children }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
 
   const [timers, setTimers] = useState(() => {
     try { return JSON.parse(localStorage.getItem("mikilab_timers") || "[]"); } catch { return []; }

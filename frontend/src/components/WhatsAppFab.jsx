@@ -19,7 +19,7 @@ export default function WhatsAppFab() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => { window.removeEventListener("scroll", onScroll); clearTimeout(timer); };
   }, []);
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const msg = tri(
     "Ciao Michele! Ti scrivo da MikiLab.",
     "Hallo Michele! Ich schreibe dir über MikiLab.",

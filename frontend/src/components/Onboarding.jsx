@@ -8,7 +8,7 @@ export const getProfile = () => { try { return JSON.parse(localStorage.getItem(O
 
 export default function Onboarding({ onDone }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [step, setStep] = useState(0);
   const [p, setP] = useState({ labName: "", type: "panificio", equip: [], focus: "pane" });
   const set = (patch) => setP((x) => ({ ...x, ...patch }));

@@ -11,7 +11,7 @@ import { useBackClose } from "@/lib/backNav";
 export default function Ricette() {
   const { t, lang } = useLang();
   const { user } = useAuth();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
   const [view, setView] = useState("main");
   const [coll, setColl] = useState("mikilab");
   useBackClose(view !== "main", () => setView("main"));
@@ -23,7 +23,7 @@ export default function Ricette() {
       <div data-testid="ricette-farine" className="space-y-4">
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#234b6e] p-6 text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-          <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours")}</h1></div>
+          <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas")}</h1></div>
           <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3" />
           <p className="text-sm text-white/90 leading-relaxed italic">
             {tri(
@@ -47,22 +47,22 @@ export default function Ricette() {
             onClick={() => setColl("mikilab")}
             className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "mikilab" ? "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
           >
-            <ChefHat className="w-4 h-4" /> {tri("Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}
+            <ChefHat className="w-4 h-4" /> {tri("Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes", "Recetas MikiLab")}
           </button>
           <button
             data-testid="ricette-tab-personal"
             onClick={() => setColl("personal")}
             className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${coll === "personal" ? "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}
           >
-            <User className="w-4 h-4" /> {tri("Le Mie Ricette", "Meine Rezepte", "My Recipes")}
+            <User className="w-4 h-4" /> {tri("Le Mie Ricette", "Meine Rezepte", "My Recipes", "Mis Recetas")}
           </button>
         </div>
       )}
 
       {coll === "mikilab" && (
         <div className="grid grid-cols-3 gap-2.5 mb-4">
-          <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia")} onClick={() => setView("guida")} />
-          <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours")} onClick={() => setView("farine")} />
+          <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia", "Enciclopedia")} onClick={() => setView("guida")} />
+          <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas")} onClick={() => setView("farine")} />
           <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
         </div>
       )}
