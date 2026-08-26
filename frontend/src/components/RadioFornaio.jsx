@@ -2,24 +2,71 @@ import { useRef, useState, useEffect } from "react";
 import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAmbient } from "@/audio/AmbientContext";
+import { useBackClose } from "@/lib/backNav";
 
 const STATIONS = {
   it: [
     { id: "rai1", name: "RAI Radio 1", url: "https://icestreaming.rai.it/1.mp3" },
     { id: "rai2", name: "RAI Radio 2", url: "https://icestreaming.rai.it/2.mp3" },
     { id: "rai3", name: "RAI Radio 3", url: "https://icestreaming.rai.it/3.mp3" },
+    { id: "raigr", name: "RAI GR Parlamento", url: "https://icestreaming.rai.it/5.mp3" },
+    { id: "isoradio", name: "RAI Isoradio", url: "https://icestreaming.rai.it/6.mp3" },
     { id: "rtl", name: "RTL 102.5", url: "https://streamingv2.shoutcast.com/rtl-1025" },
     { id: "r105", name: "Radio 105", url: "https://icy.unitedradio.it/Radio105.mp3" },
     { id: "virgin", name: "Virgin Radio", url: "https://icy.unitedradio.it/Virgin.mp3" },
+    { id: "r101", name: "R101", url: "https://icy.unitedradio.it/R101.mp3" },
+    { id: "rmc", name: "Radio Monte Carlo", url: "https://icy.unitedradio.it/RMC.mp3" },
+    { id: "subasio", name: "Radio Subasio", url: "https://icy.unitedradio.it/Subasio.mp3" },
     { id: "deejay", name: "Radio Deejay", url: "https://radiodeejay-lh.akamaihd.net/i/RadioDeejay_Live_1@189857/master.m3u8" },
+    { id: "capital", name: "Radio Capital", url: "https://radiocapital-lh.akamaihd.net/i/RadioCapital_Live_1@196312/master.m3u8" },
     { id: "kisskiss", name: "Radio Kiss Kiss", url: "https://ice07.fluidstream.net/KissKiss.mp3" },
+    { id: "freccia", name: "Radiofreccia", url: "https://streamingv2.shoutcast.com/radiofreccia" },
+    { id: "radioitalia", name: "Radio Italia", url: "https://radioitaliasmi.akamaized.net/hls/live/2093120/RISMI/master.m3u8" },
   ],
   de: [
     { id: "swr3", name: "SWR3", url: "https://liveradio.swr.de/sw282p3/swr3/play.mp3" },
+    { id: "swr1bw", name: "SWR1 BW", url: "https://liveradio.swr.de/sw282p3/swr1bw/play.mp3" },
+    { id: "1live", name: "1LIVE", url: "https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3" },
+    { id: "wdr2", name: "WDR 2", url: "https://wdr-wdr2-rheinland.icecastssl.wdr.de/wdr/wdr2/rheinland/mp3/128/stream.mp3" },
+    { id: "ndr2", name: "NDR 2", url: "https://icecast.ndr.de/ndr/ndr2/niedersachsen/mp3/128/stream.mp3" },
     { id: "antenne1", name: "Antenne 1", url: "https://stream.antenne1.de/a1stg/mp3-128/" },
     { id: "antenne", name: "Antenne Bayern", url: "https://stream.antenne.de/antenne/stream/mp3" },
+    { id: "bayern3", name: "Bayern 3", url: "https://dispatcher.rndfnk.com/br/br3/live/mp3/mid" },
     { id: "bigfm", name: "bigFM", url: "https://stream.bigfm.de/berlin/aac-128" },
-    { id: "swr1bw", name: "SWR1 BW", url: "https://liveradio.swr.de/sw282p3/swr1bw/play.mp3" },
+    { id: "rockantenne", name: "Rock Antenne", url: "https://stream.rockantenne.de/rockantenne/stream/mp3" },
+    { id: "sunshine", name: "sunshine live", url: "https://stream.sunshine-live.de/live/mp3-192/" },
+    { id: "klassik", name: "Klassik Radio", url: "https://stream.klassikradio.de/live/mp3-192/" },
+    { id: "ffh", name: "HIT RADIO FFH", url: "https://mp3.ffh.de/radioffh/hqlivestream.mp3" },
+    { id: "planet", name: "planet radio", url: "https://streams.planetradio.de/planetradio/mp3/hqlivestream" },
+    { id: "dlf", name: "Deutschlandfunk", url: "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3" },
+  ],
+  intl: [
+    { id: "fip", name: "FIP (FR)", url: "https://icecast.radiofrance.fr/fip-midfi.mp3" },
+    { id: "fipjazz", name: "FIP Jazz", url: "https://icecast.radiofrance.fr/fipjazz-midfi.mp3" },
+    { id: "fiprock", name: "FIP Rock", url: "https://icecast.radiofrance.fr/fiprock-midfi.mp3" },
+    { id: "jazzradio", name: "Jazz Radio", url: "https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3" },
+    { id: "nova", name: "Radio Nova", url: "https://novazz.ice.infomaniak.ch/novazz-128.mp3" },
+    { id: "rsjazz", name: "Radio Swiss Jazz", url: "https://stream.srg-ssr.ch/m/rsj/mp3_128" },
+    { id: "rsclassic", name: "Radio Swiss Classic", url: "https://stream.srg-ssr.ch/m/rsc_de/mp3_128" },
+    { id: "rspop", name: "Radio Swiss Pop", url: "https://stream.srg-ssr.ch/m/rsp/mp3_128" },
+  ],
+  uk: [
+    { id: "capitaluk", name: "Capital FM", url: "https://media-ssl.musicradio.com/CapitalMP3" },
+    { id: "heartuk", name: "Heart", url: "https://media-ssl.musicradio.com/HeartLondonMP3" },
+    { id: "smoothuk", name: "Smooth", url: "https://media-ssl.musicradio.com/SmoothLondonMP3" },
+    { id: "classicfm", name: "Classic FM", url: "https://media-ssl.musicradio.com/ClassicFMMP3" },
+    { id: "lbc", name: "LBC", url: "https://media-ssl.musicradio.com/LBCUK" },
+    { id: "jazzfmuk", name: "Jazz FM", url: "https://edge-bauerall-01-gos2.sharp-stream.com/jazz.mp3" },
+    { id: "planetrock", name: "Planet Rock", url: "https://edge-bauerall-01-gos2.sharp-stream.com/planetrock.mp3" },
+  ],
+  es: [
+    { id: "los40", name: "LOS40", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40.mp3" },
+    { id: "cadenaser", name: "Cadena SER", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER.mp3" },
+    { id: "cadenadial", name: "Cadena Dial", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3" },
+    { id: "europafm", name: "Europa FM", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/EUROPA_FM.mp3" },
+    { id: "los40classic", name: "LOS40 Classic", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_CLASSIC.mp3" },
+    { id: "kissfmes", name: "Kiss FM", url: "https://kissfm.kissfmradio.cires21.com/kissfm.mp3" },
+    { id: "cope", name: "COPE", url: "https://flucast-b04-06.flumotion.com/cope/net1.mp3" },
   ],
 };
 
@@ -33,6 +80,8 @@ export default function RadioFornaio() {
     { id: "morning", label: lang === "de" ? "Morgen" : lang === "en" ? "Morning" : "Mattino", emoji: "🌅" },
   ];
   const [open, setOpen] = useState(false);
+  // Tasto Indietro: chiude SOLO il pannello (la radio continua a suonare), non naviga via.
+  useBackClose(open, () => setOpen(false));
   const [scrolling, setScrolling] = useState(false);
   useEffect(() => {
     let tId;
@@ -84,7 +133,7 @@ export default function RadioFornaio() {
     if (p && p.catch) p.catch(() => setStatus("error"));
   };
 
-  const allStations = [...STATIONS.it, ...STATIONS.de];
+  const allStations = [...STATIONS.it, ...STATIONS.de, ...STATIONS.intl, ...STATIONS.uk, ...STATIONS.es];
 
   const [listening, setListening] = useState(false);
   const listenStation = () => {
@@ -145,7 +194,7 @@ export default function RadioFornaio() {
     <>
       {open && (
         <div className="fixed inset-x-0 bottom-40 z-40 px-4 flex justify-center pointer-events-none">
-          <div data-testid="radio-panel" className="pointer-events-auto w-full max-w-xl bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl shadow-xl p-4">
+          <div data-testid="radio-panel" className="pointer-events-auto w-full max-w-xl max-h-[70vh] overflow-y-auto bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl shadow-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Radio className="w-5 h-5 text-[#3f7cac]" />
               <div className="flex-1 min-w-0">
@@ -199,7 +248,10 @@ export default function RadioFornaio() {
             )}
 
             {renderGroup(`🇮🇹 ${t("radio_it")}`, STATIONS.it)}
+            {renderGroup(`🇬🇧 ${tri("Inglesi (UK)", "Englisch (UK)", "English (UK)")}`, STATIONS.uk)}
+            {renderGroup(`🇪🇸 ${tri("Spagnole", "Spanisch", "Spanish")}`, STATIONS.es)}
             {renderGroup(`🇩🇪 ${t("radio_de")}`, STATIONS.de)}
+            {renderGroup(`🌍 ${tri("Internazionali", "International", "International")}`, STATIONS.intl)}
 
             {nowPlaying && (
               <div data-testid="radio-now-playing" className="mt-1 flex items-center gap-2 bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 rounded-xl px-3 py-2">

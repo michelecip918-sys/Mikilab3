@@ -1429,3 +1429,16 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
    - Frontend memo usa `consume` (dichiarato) se presente, altrimenti `deducted`. Fix asse Y (width 40→52, margin left 2) per non tagliare le etichette kg.
 - Test: iteration_79 frontend — header pulito confermato; grafico renderizza correttamente (6 barre, legenda Farina/Lievito, bucket settimanali, tooltip). Fix post-test: persistenza `consume` (verificata via curl) + asse Y non tagliato.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont29 (2026-06) — Radio (fix Indietro + molte stazioni) & i18n 4 lingue (IT/DE/EN/ES)
+### Radio
+- **Fix tasto Indietro** (`RadioFornaio.jsx`): aggiunto `useBackClose(open,...)` → premendo indietro si chiude SOLO il pannello, la radio continua a suonare, l'app non naviga via. Verificato (panel after back: 0, app resta caricata).
+- **Molte più stazioni**: IT (16), DE (15), 🌍 Internazionali (8: FIP/Jazz/Swiss), 🇬🇧 UK (7: Capital/Heart/Smooth/Classic FM/LBC/Jazz FM/Planet Rock), 🇪🇸 ES (7: LOS40/Cadena SER/Dial/Europa FM/Kiss FM/COPE). Pannello ora `max-h-[70vh] overflow-y-auto`.
+### i18n 4 lingue
+- `LanguageContext.jsx` riscritto: supporta it/de/en/es; rileva prefisso URL (/it//de//en//es), poi localStorage, poi lingua browser. Fallback `t()`: lingua→EN→IT (mai italiano per EN/ES sulle chiavi centrali). `tri(it,de,en,es)` con fallback es→en→it.
+- `translations.js`: aggiunto blocco **ES completo** — tutte le 4 lingue hanno esattamente **671 chiavi 1:1** (verificato).
+- `tri3` esteso a `(lang,i,d,e,s)` in PianoProduzioneAI.jsx e Beginners.jsx.
+- Selettore lingua Header + IntroGuide: IT · DE · EN · ES.
+- SEO: tag `<link rel="alternate" hreflang="it/de/en/es/x-default">` in `index.html`.
+- **NOTA**: le ~671 chiavi centrali (menu, nav, pulsanti, form, errori, pagine) sono tradotte 1:1 in tutte e 4 le lingue. Restano da traddurre in ES i ~1.060 testi "inline" `tri(it,de,en)` sparsi nel codice (es. alcune card Home): per ora mostrano EN in modalità ES (best effort concordato). Routing URL con prefisso: solo lettura all'avvio + hreflang (nessun rework path completo, come da scelta utente).
+- NB: PREVIEW → REDEPLOY per mikilab.de.

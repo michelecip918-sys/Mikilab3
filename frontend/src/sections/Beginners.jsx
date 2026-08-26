@@ -322,7 +322,7 @@ const DAILY_RECIPES = {
 
 export default function Beginners() {
   const { t, lang } = useLang();
-  const tri3 = (l, i, d, e) => (l === "de" ? d : l === "en" ? e : i);
+  const tri3 = (l, i, d, e, s) => (l === "de" ? (d ?? i) : l === "en" ? (e ?? i) : l === "es" ? (s ?? e ?? i) : i);
   const beginners = BEGINNERS[lang] || BEGINNERS.it;
   const courses = content[lang].freeCourses || [];
   const daily = DAILY_RECIPES[lang] || DAILY_RECIPES.it;

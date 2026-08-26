@@ -12,6 +12,8 @@ const CONTENT = {
 const LANGS = [
   { id: "it", flag: "🇮🇹", label: "IT" },
   { id: "de", flag: "🇩🇪", label: "DE" },
+  { id: "en", flag: "🇬🇧", label: "EN" },
+  { id: "es", flag: "🇪🇸", label: "ES" },
 ];
 
 export default function IntroGuide() {

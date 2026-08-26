@@ -19,7 +19,7 @@ import { rLoc } from "@/lib/loc";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
-const tri3 = (lang, i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+const tri3 = (lang, i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : i);
 
 // Piano di Produzione con IA (spostato dalla "Impostazione Macchine").
 // Config macchine/celle letta in sola lettura per alimentare l'IA.

@@ -2,29 +2,47 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import { translations } from "@/i18n/translations";
 
 const LanguageContext = createContext(null);
+const SUPPORTED = ["it", "de", "en", "es"];
+
+function initialLang() {
+  // 1) prefisso lingua nell'URL (/it /de /en /es) → SEO / condivisione
+  const seg = (window.location.pathname.split("/")[1] || "").toLowerCase();
+  if (SUPPORTED.includes(seg)) return seg;
+  // 2) scelta salvata
+  const saved = localStorage.getItem("mikilab_lang");
+  if (SUPPORTED.includes(saved)) return saved;
+  // 3) lingua del browser
+  const nav = (navigator.language || "it").slice(0, 2).toLowerCase();
+  if (SUPPORTED.includes(nav)) return nav;
+  return "it";
+}
 
 export function LanguageProvider({ children }) {
-  const [lang, setLangState] = useState(() => {
-    const saved = localStorage.getItem("mikilab_lang");
-    // Solo IT/DE per ora (EN temporaneamente disattivato lato UI).
-    if (saved === "de") return "de";
-    return "it";
-  });
+  const [lang, setLangState] = useState(initialLang);
 
   useEffect(() => {
     localStorage.setItem("mikilab_lang", lang);
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const setLang = useCallback((l) => setLangState(l === "de" ? "de" : "it"), []);
+  const setLang = useCallback((l) => setLangState(SUPPORTED.includes(l) ? l : "it"), []);
 
+  // t(key): lingua scelta → EN → IT → key. Così ES/DE mancanti ricadono su EN (mai italiano per EN/ES).
   const t = useCallback(
-    (key) => (translations[lang] && translations[lang][key]) || translations.it[key] || key,
+    (key) => {
+      const L = translations[lang] || {};
+      return L[key] ?? translations.en?.[key] ?? translations.it[key] ?? key;
+    },
     [lang]
   );
 
-  // Helper per stringhe inline trilingue: tri(it, de, en). EN ricade su IT se mancante.
-  const tri = useCallback((it_, de_, en_) => (lang === "de" ? de_ : lang === "en" ? (en_ ?? it_) : it_), [lang]);
+  // Testi inline: tri(it, de, en, es). Fallback: es→en→it, en→it, de→it.
+  const tri = useCallback((it_, de_, en_, es_) => {
+    if (lang === "de") return de_ ?? it_;
+    if (lang === "en") return en_ ?? it_;
+    if (lang === "es") return es_ ?? en_ ?? it_;
+    return it_;
+  }, [lang]);
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t, tri }}>
