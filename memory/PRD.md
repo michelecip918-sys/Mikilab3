@@ -1296,3 +1296,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Home.jsx**: `storyOpen` ora parte APERTO al primo accesso (localStorage `mikilab_home_story_seen` assente); `toggleStory` imposta il flag così alle visite successive resta chiuso di default.
 - Verificato: 1a visita aperto (bio-card visibile) → chiude → 2a visita chiuso.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont10 (2026-06) — Foto reale del laboratorio in "Scopri MikiLab"
+- **Home.jsx**: aggiunta `home-lab-photo` (public/michele-real-lab.jpg) in cima al contenuto di "Scopri MikiLab", con overlay gradiente e didascalia trilingue "Michele, nel suo laboratorio". Impatto personale al primo accesso (sezione già aperta).
+- Verificato via screenshot.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

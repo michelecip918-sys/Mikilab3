@@ -223,6 +223,15 @@ export default function Home({ onNavigate }) {
             <motion.div key="story" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
               <div className="space-y-6 pt-6">
+                <div data-testid="home-lab-photo" className="rounded-3xl overflow-hidden shadow-xl ring-2 ring-[#C88A2B]/40 relative">
+                  <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt={L("Michele nel suo laboratorio", "Michele in seiner Backstube", "Michele in his bakery")}
+                    className="w-full h-56 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                    <p className="text-white font-display text-lg font-bold leading-tight">{L("Michele, nel suo laboratorio", "Michele, in seiner Backstube", "Michele, in his bakery")}</p>
+                    <p className="text-white/85 text-xs leading-snug">{L("Da qui nasce MikiLab: mani in pasta, ogni giorno.", "Hier entsteht MikiLab: jeden Tag mittendrin.", "This is where MikiLab is born: hands in the dough, every day.")}</p>
+                  </div>
+                </div>
+
                 <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-xl p-7 text-center">
                   <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
                     className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-4" />
