@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import { Sparkles, Send, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { registerChat } from "@/lib/chatHistory";
 
 const AVATAR = `${process.env.PUBLIC_URL}/mohammed-avatar.jpg`;
 const sid = () => {
@@ -55,6 +56,7 @@ export default function MohammedAssistant() {
     setInput("");
     setMessages((m) => [...m, { role: "user", content: msg }, { role: "assistant", content: "" }]);
     setBusy(true);
+    registerChat(sessionId.current, "mohammed");
     try {
       const res = await fetch(`${API}/mohammed/chat`, {
         method: "POST",

@@ -34,6 +34,10 @@ export const ENC_ENTRIES = {
     { t: "Quando aggiungere il sale", b: "Il sale rinforza il glutine e frena la fermentazione. In genere si aggiunge a fine impasto (o dopo l'autolisi) per non rallentare lo sviluppo della maglia. Dose tipica 2% sulla farina." },
     { t: "Spinta di forno (oven spring)", b: "L'espansione rapida del pane nei primi minuti di cottura, quando gas e vapore si dilatano. Dipende da buona lievitazione, taglio e vapore iniziale." },
     { t: "Taglio / Grigne", b: "Incisioni sulla superficie prima di infornare: guidano l'espansione ed evitano rotture casuali. Lama inclinata a 45° per formare le 'orecchie'." },
+    { t: "Bassinage", b: "Aggiunta di acqua (a volte con un pizzico di sale) alla fine dell'impasto, poco alla volta, quando la maglia è già formata. Permette di raggiungere idratazioni alte senza smontare l'impasto. Versa a filo e fai riassorbire prima di aggiungerne ancora." },
+    { t: "Farine speciali", b: "Ogni farina cambia l'impasto. Farro (Dinkel): profumato ma con glutine più fragile → impasto delicato, +3-5% acqua. Segale: poco glutine, molto attiva → prefermenti liquidi e idratazioni alte. Integrale/Vollkorn: crusca che 'taglia' il glutine e beve acqua → più idratazione e riposi. Tipo 00/0/1/2: dal più raffinato al quasi integrale. Manitoba (alta W): forte, per grandi lievitati." },
+    { t: "Semole e grani antichi", b: "Semola rimacinata di grano duro: colore ambrato, assorbe molta acqua, croccante (pane di Altamura/Matera). Grani antichi (Senatore Cappelli, Timilia, Russello): meno forza (W basso) → lievitazioni più brevi, glutine meno tenace, ottima digeribilità e aroma. Non spingere l'idratazione come con le farine moderne." },
+    { t: "Maturazione vs Lievitazione", b: "Sono due cose diverse. La LIEVITAZIONE è il gonfiarsi dell'impasto (i lieviti producono gas). La MATURAZIONE è la scomposizione di amidi e glutine (enzimi) che rende il pane digeribile e aromatico. Con il freddo puoi rallentare la lievitazione e far proseguire la maturazione: ecco perché il frigo migliora il pane." },
   ],
   de: [
     { t: "Natürlicher Pro-Backmittel", b: "Für alle Teige (Direkt und Indirekt) wird ausschließlich der Natürliche Pro-Backmittel mit 2% auf das Mehlgewicht verwendet. Eine einzige universelle Formel für Trieb, Stand und Weichheit." },
@@ -62,6 +66,10 @@ export const ENC_ENTRIES = {
     { t: "Wann Salz zugeben", b: "Salz stärkt das Gluten und bremst die Gärung. Meist gegen Ende des Knetens (oder nach der Autolyse) zugeben, um die Glutenentwicklung nicht zu bremsen. Übliche Dosis 2% auf das Mehl." },
     { t: "Ofentrieb", b: "Die schnelle Ausdehnung des Brotes in den ersten Backminuten, wenn Gase und Dampf sich ausdehnen. Hängt von guter Gare, Einschnitten und Anfangsdampf ab." },
     { t: "Einschnitte", b: "Schnitte vor dem Backen: lenken die Ausdehnung und verhindern zufällige Risse. Klinge in 45° für schöne 'Ohren'." },
+    { t: "Bassinage", b: "Zugabe von Wasser (manchmal mit etwas Salz) am Ende des Knetens, nach und nach, wenn das Glutennetz schon steht. So erreicht man hohe Hydration, ohne den Teig zu 'überkneten'. In dünnem Strahl zugeben und einziehen lassen, bevor mehr folgt." },
+    { t: "Spezialmehle", b: "Jedes Mehl verändert den Teig. Dinkel: aromatisch, aber empfindlicheres Gluten → sanft kneten, +3-5% Wasser. Roggen: wenig Gluten, sehr aktiv → flüssige Vorteige und hohe Hydration. Vollkorn: Kleie 'schneidet' das Gluten und bindet Wasser → mehr Hydration und Ruhezeiten. Type 405/550/1050: vom fein zum fast vollen Ausmahlungsgrad. Manitoba (hohes W): stark, für große Hefegebäcke." },
+    { t: "Hartweizen & alte Getreide", b: "Hartweizengrieß (Semola rimacinata): bernsteinfarben, saugt viel Wasser, knusprig (Brot aus Altamura/Matera). Alte Sorten (Senatore Cappelli, Timilia, Russello): weniger Kraft (niedriges W) → kürzere Gare, weniger zähes Gluten, sehr bekömmlich und aromatisch. Hydration nicht so hoch treiben wie bei modernen Mehlen." },
+    { t: "Reife vs. Gare", b: "Zwei verschiedene Dinge. Die GARE ist das Aufgehen des Teigs (Hefen bilden Gas). Die REIFE ist der Abbau von Stärke und Gluten (Enzyme), der das Brot bekömmlich und aromatisch macht. Mit Kälte bremst du die Gare und lässt die Reife weiterlaufen: darum verbessert der Kühlschrank das Brot." },
   ],
   en: [
     { t: "Natural Improver Pro", b: "For every dough (Direct and Indirect method) use only the Natural Improver Pro at 2% of the flour weight. A single universal formula for lift, stability and softness." },
@@ -90,6 +98,10 @@ export const ENC_ENTRIES = {
     { t: "When to add salt", b: "Salt strengthens gluten and slows fermentation. Usually added at the end of mixing (or after autolyse) so it doesn't slow gluten development. Typical dose 2% of the flour." },
     { t: "Oven spring", b: "The rapid expansion of bread in the first baking minutes as gases and steam expand. It depends on good proofing, scoring and initial steam." },
     { t: "Scoring", b: "Cuts on the surface before baking: they guide expansion and prevent random tears. Blade at 45° to create the 'ears'." },
+    { t: "Bassinage", b: "Adding water (sometimes with a pinch of salt) at the end of mixing, a little at a time, once the gluten is already built. It lets you reach high hydration without breaking down the dough. Pour in a thin stream and let it absorb before adding more." },
+    { t: "Special flours", b: "Every flour changes the dough. Spelt (Dinkel): fragrant but more fragile gluten → gentle mixing, +3-5% water. Rye: little gluten, very active → liquid preferments and high hydration. Wholemeal: bran that 'cuts' the gluten and drinks water → more hydration and rests. Type 00/0/1/2: from most refined to nearly wholemeal. Manitoba (high W): strong, for big leavened cakes." },
+    { t: "Durum semolina & ancient grains", b: "Remilled durum semolina: amber colour, absorbs a lot of water, crisp (Altamura/Matera bread). Ancient grains (Senatore Cappelli, Timilia, Russello): less strength (low W) → shorter fermentation, less tenacious gluten, great digestibility and aroma. Don't push hydration like with modern flours." },
+    { t: "Maturation vs fermentation", b: "Two different things. FERMENTATION is the dough rising (yeasts producing gas). MATURATION is the breakdown of starches and gluten (enzymes) that makes bread digestible and aromatic. With cold you slow fermentation while maturation keeps going: that's why the fridge improves bread." },
   ],
 };
 

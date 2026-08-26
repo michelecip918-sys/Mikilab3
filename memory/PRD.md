@@ -1242,3 +1242,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Traduzione ricette PRO: backend POST /api/recipes/{id}/translate?lang=it|de|en (Depends require_pro; _translate_recipe_lang via LlmChat claude-sonnet-4-6, salva name_<lang>/flour_type_<lang>/notes_<lang>/procedure_<lang>; gate proprietà: proprie ricette o admin per mikilab). api.js recipesApi.translate. RecipeList dialog: pulsante recipe-translate-btn (visibile se canEdit && lang de/en && manca name_<lang>) → traduce e ricarica. Testato via curl (name_en ok).
 - "Le Mie Ricette" (collection personal): cartelle CHIUSE di default (open = openCats[key] ?? collectionName!=="personal"). Mikilab resta aperto di default.
 - Compila pulito. REDEPLOY per mikilab.de.
+
+## v-cont (2026-06) — Storico Chat AI in archivio + Enciclopedia arricchita
+- **Riquadro Mohammadreza compattato** in "Il Tuo Laboratorio" (MohammedAssistant.jsx): avatar/padding/testo ridotti, intro a una riga.
+- **Enciclopedia solo in Ricette MikiLab** (no doppioni): rimossa la versione incorporata da RecipeList (collection personal).
+- **Storico Chat AI** in "I Miei Dati Salvati" (MyData.jsx, scheda `mydata-tab-chat`): registro sessioni in `lib/chatHistory.js` (localStorage `mikilab_chats`), sessione Maestro resa persistente (`mikilab_maestro_sid`), Mohammadreza già persistente. Le conversazioni si caricano dal backend via `chatApi.history` → `GET /api/maestro/history/{sid}` (stessa collezione chat_messages). Card espandibili con messaggi (ReactMarkdown) + elimina (`mydata-chat-delete-*`). Testato UI end-to-end.
+- **Enciclopedia +4 voci** (IT/DE/EN): Bassinage, Farine speciali, Semole & grani antichi, Maturazione vs Lievitazione.
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.

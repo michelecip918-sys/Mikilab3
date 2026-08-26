@@ -5,6 +5,7 @@ import { Sparkles, Send, MessageCircle, BookOpen, Youtube, MapPin, Newspaper, Pl
 import { API, announcementsApi } from "@/lib/api";
 import { content } from "@/data/content";
 import { useLang } from "@/i18n/LanguageContext";
+import { registerChat } from "@/lib/chatHistory";
 import TalkingAvatar from "@/components/TalkingAvatar";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -48,7 +49,11 @@ export default function MaestroSaTutto() {
 function ChatPanel() {
   const { t, lang } = useLang();
   const promptSuggestions = content[lang].promptSuggestions;
-  const [sessionId] = useState(() => `sess-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
+  const [sessionId] = useState(() => {
+    let s = localStorage.getItem("mikilab_maestro_sid");
+    if (!s) { s = `sess-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`; localStorage.setItem("mikilab_maestro_sid", s); }
+    return s;
+  });
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -62,6 +67,7 @@ function ChatPanel() {
     setInput("");
     setMessages((m) => [...m, { role: "user", content: q }, { role: "assistant", content: "" }]);
     setStreaming(true);
+    registerChat(sessionId, "maestro");
     try {
       const res = await fetch(`${API}/maestro/chat`, {
         method: "POST",

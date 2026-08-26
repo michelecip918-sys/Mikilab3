@@ -55,6 +55,10 @@ export const plansArchiveApi = {
   remove: (id) => api.delete(`/plans/archive/${id}`).then((r) => r.data),
 };
 
+export const chatApi = {
+  history: (sid) => api.get(`/maestro/history/${sid}`).then((r) => r.data),
+};
+
 export const newsItemsApi = {
   list: () => api.get(`/news-items`).then((r) => r.data),
   create: (data) => api.post(`/news-items`, data).then((r) => r.data),

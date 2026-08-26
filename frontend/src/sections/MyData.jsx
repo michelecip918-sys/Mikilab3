@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { CalendarDays, BookOpen, FileText, MessageSquare, Clock } from "lucide-react";
-import { plansArchiveApi, recipesApi } from "@/lib/api";
+import ReactMarkdown from "react-markdown";
+import { CalendarDays, BookOpen, FileText, MessageSquare, Clock, ChevronDown, Trash2, Loader2 } from "lucide-react";
+import { plansArchiveApi, recipesApi, chatApi } from "@/lib/api";
+import { getChats, removeChat } from "@/lib/chatHistory";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 
-// Archivio "I Miei Dati Salvati": Piani (archivio), Ricette (personali), Documenti & PDF.
+// Archivio "I Miei Dati Salvati": Piani (archivio), Ricette (personali), Documenti & PDF, Chat AI.
 export default function MyData({ onOpenTool }) {
   const { lang } = useLang();
   const { user } = useAuth();
@@ -12,10 +14,12 @@ export default function MyData({ onOpenTool }) {
   const [tab, setTab] = useState("piani");
   const [plans, setPlans] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [chats, setChats] = useState([]);
 
   useEffect(() => {
     plansArchiveApi.list().then((d) => setPlans(Array.isArray(d) ? d : [])).catch(() => {});
     recipesApi.list("personal").then((d) => setRecipes(Array.isArray(d) ? d : [])).catch(() => {});
+    setChats(getChats());
   }, []);
 
   const fmt = (iso) => { try { return new Date(iso).toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "short", year: "numeric" }); } catch { return ""; } };
@@ -24,8 +28,10 @@ export default function MyData({ onOpenTool }) {
     { id: "piani", Icon: CalendarDays, label: tri("Piani di Lavoro", "Arbeitspläne", "Work Plans"), n: plans.length },
     { id: "ricette", Icon: BookOpen, label: tri("Ricette", "Rezepte", "Recipes"), n: recipes.length },
     { id: "docs", Icon: FileText, label: tri("Documenti & PDF", "Dokumente & PDF", "Documents & PDF") },
-    { id: "chat", Icon: MessageSquare, label: tri("Chat AI", "KI-Chat", "AI Chat") },
+    { id: "chat", Icon: MessageSquare, label: tri("Chat AI", "KI-Chat", "AI Chat"), n: chats.length },
   ];
+
+  const deleteChat = (id) => { removeChat(id); setChats(getChats()); };
 
   return (
     <div data-testid="my-data" className="pb-4">
@@ -74,8 +80,64 @@ export default function MyData({ onOpenTool }) {
       )}
 
       {tab === "chat" && (
-        <div data-testid="mydata-chat">
-          <Empty text={tri("Lo storico delle chat con l'assistente arriverà a breve.", "Der Chat-Verlauf mit dem Assistenten kommt bald.", "AI chat history is coming soon.")} />
+        <div data-testid="mydata-chat" className="space-y-2">
+          {chats.length === 0 ? (
+            <Empty text={tri("Nessuna conversazione. Parla con 'Chiedi al Maestro' o con Mohammadreza nel Tuo Laboratorio: lo storico apparirà qui.", "Noch keine Unterhaltung. Sprich mit 'Frag den Meister' oder mit Mohammadreza in deinem Labor: der Verlauf erscheint hier.", "No conversations yet. Chat with 'Ask the Master' or with Mohammadreza in Your Lab: the history will appear here.")} />
+          ) : (
+            chats.map((c) => (
+              <ChatCard key={c.id} chat={c} fmt={fmt} tri={tri} onDelete={() => deleteChat(c.id)} />
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ChatCard({ chat, fmt, tri, onDelete }) {
+  const [open, setOpen] = useState(false);
+  const [msgs, setMsgs] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const label = chat.kind === "mohammed" ? "Mohammadreza" : tri("Chiedi al Maestro", "Frag den Meister", "Ask the Master");
+
+  const toggle = async () => {
+    const next = !open;
+    setOpen(next);
+    if (next && msgs === null) {
+      setLoading(true);
+      try { const d = await chatApi.history(chat.id); setMsgs(Array.isArray(d) ? d : []); }
+      catch { setMsgs([]); }
+      finally { setLoading(false); }
+    }
+  };
+
+  return (
+    <div data-testid={`mydata-chat-${chat.id}`} className="rounded-xl bg-white dark:bg-[#232A31] border border-[#D7E1DB] dark:border-[#38424B] overflow-hidden">
+      <div className="flex items-center gap-2 p-3">
+        <div className="w-9 h-9 rounded-xl bg-[#5E8B7E]/15 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-[#5E8B7E]" /></div>
+        <button data-testid={`mydata-chat-toggle-${chat.id}`} onClick={toggle} className="min-w-0 flex-1 text-left">
+          <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{label}</p>
+          <p className="text-[11px] text-[#7E8A93] flex items-center gap-1"><Clock className="w-3 h-3" />{fmt(chat.ts)}</p>
+        </button>
+        <button data-testid={`mydata-chat-delete-${chat.id}`} onClick={onDelete} className="w-8 h-8 rounded-lg bg-[#EAF0EC] dark:bg-[#2A323A] flex items-center justify-center text-[#C0574D] shrink-0"><Trash2 className="w-4 h-4" /></button>
+        <button onClick={toggle} className="w-8 h-8 rounded-lg flex items-center justify-center text-[#7E8A93] shrink-0"><ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} /></button>
+      </div>
+      {open && (
+        <div className="px-3 pb-3 space-y-2 max-h-80 overflow-y-auto">
+          {loading ? (
+            <div className="flex items-center gap-2 text-[#7E8A93] text-sm py-2"><Loader2 className="w-4 h-4 animate-spin" />{tri("Carico…", "Lädt…", "Loading…")}</div>
+          ) : (msgs && msgs.length > 0) ? (
+            msgs.map((m, i) => (
+              <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#5E8B7E] text-white whitespace-pre-wrap" : "bg-[#EAF0EC] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#EAF0EC]"}`}>
+                  {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-[#7E8A93] py-2">{tri("Conversazione vuota o non più disponibile.", "Leere oder nicht mehr verfügbare Unterhaltung.", "Empty or no longer available conversation.")}</p>
+          )}
         </div>
       )}
     </div>
