@@ -25,7 +25,7 @@ export default function Shop({ hideCourses = false }) {
     try {
       const d = await api.post("/recipes/bundle-checkout", { bundle, origin_url: window.location.origin }).then((r) => r.data);
       if (d.url) window.location.href = d.url;
-    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again")); }
+    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again", "Error, inténtalo de nuevo")); }
   };
 
   const buyRecipes = async (kind) => {
@@ -33,13 +33,13 @@ export default function Shop({ hideCourses = false }) {
     try {
       const d = await recipePurchaseApi.checkout(kind, null);
       if (d.url) window.location.href = d.url;
-    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again")); }
+    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again", "Error, inténtalo de nuevo")); }
   };
   const subscribePro = async () => {
     try {
       const d = await subscriptionApi.checkout("monthly", "lab");
       if (d.url) window.location.href = d.url;
-    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again")); }
+    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again", "Error, inténtalo de nuevo")); }
   };
 
   const join = async (product_id = null) => {
@@ -103,9 +103,9 @@ export default function Shop({ hideCourses = false }) {
         <div className="p-5">
           <div className="flex items-center gap-2 mb-1.5">
             <BookOpen className="w-5 h-5 text-[#3f7cac]" />
-            <span className="text-[11px] font-bold uppercase tracking-wide text-[#3f7cac]">{tri("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
+            <span className="text-[11px] font-bold uppercase tracking-wide text-[#3f7cac]">{tri("Disponibile ora", "Jetzt verfügbar", "Available now", "Disponible ahora")}</span>
           </div>
-          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Pacchetti Ricette di Michele", "Micheles Rezept-Pakete", "Michele's Recipe Packs")}</h2>
+          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Pacchetti Ricette di Michele", "Micheles Rezept-Pakete", "Michele's Recipe Packs", "Packs de Recetas de Michele")}</h2>
           <p className="text-sm text-[#7E8A93] mt-1 leading-snug">
             {tri("Acquista un pacchetto e sblocca SUBITO tutte le ricette della categoria (dosi, procedimento, fasi) nel tuo laboratorio.",
               "Kaufe ein Paket und schalte SOFORT alle Rezepte der Kategorie frei.",
@@ -124,7 +124,7 @@ export default function Shop({ hideCourses = false }) {
                   className={`w-full flex items-center justify-between rounded-2xl px-4 py-3 active:scale-98 transition-all ${owned ? "bg-[#5aa0cf]/15 border border-[#5aa0cf]/40" : x.grad ? "bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white" : "bg-[#6E8CA0]/10 border-2 border-[#6E8CA0]"}`}>
                   <span className="text-left min-w-0">
                     <span className={`block font-semibold truncate ${x.grad && !owned ? "text-white" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{tri(x.it, x.de, x.en)}</span>
-                    <span className={`block text-xs ${x.grad && !owned ? "text-white/80" : "text-[#7E8A93]"}`}>{owned ? tri("Acquistato ✓ — ricette sbloccate", "Gekauft ✓", "Purchased ✓") : tri("Tutte le ricette della categoria, per sempre", "Alle Rezepte der Kategorie, für immer", "All category recipes, forever")}</span>
+                    <span className={`block text-xs ${x.grad && !owned ? "text-white/80" : "text-[#7E8A93]"}`}>{owned ? tri("Acquistato ✓ — ricette sbloccate", "Gekauft ✓", "Purchased ✓", "Comprado ✓ — recetas desbloqueadas") : tri("Tutte le ricette della categoria, per sempre", "Alle Rezepte der Kategorie, für immer", "All category recipes, forever", "Todas las recetas de la categoría, para siempre")}</span>
                   </span>
                   <span className={`font-display text-lg font-bold shrink-0 ml-2 ${x.grad && !owned ? "text-white" : "text-[#234b6e] dark:text-[#8FB0C2]"}`}>{owned ? "✓" : x.price}</span>
                 </button>
@@ -133,7 +133,7 @@ export default function Shop({ hideCourses = false }) {
             <div className="text-center pt-0.5">
               <button data-testid="shop-subscribe-pro" onClick={subscribePro}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-[#3f7cac] hover:underline">
-                <Crown className="w-4 h-4" /> {tri("oppure abbonati PRO (tutto incluso) · €29,99/mese", "oder PRO abonnieren · €29,99/Monat", "or subscribe PRO · €29.99/month")}
+                <Crown className="w-4 h-4" /> {tri("oppure abbonati PRO (tutto incluso) · €29,99/mese", "oder PRO abonnieren · €29,99/Monat", "or subscribe PRO · €29.99/month", "o suscríbete PRO (todo incluido) · €29,99/mes")}
               </button>
             </div>
           </div>

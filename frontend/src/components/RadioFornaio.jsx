@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw } from "lucide-react";
+import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw, Search } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAmbient } from "@/audio/AmbientContext";
 import { useBackClose } from "@/lib/backNav";
@@ -94,6 +94,7 @@ export default function RadioFornaio() {
   const [volume, setVolume] = useState(0.9);
   const [favs, setFavs] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_radio_favs") || "[]"); } catch { return []; } });
   const [lastId, setLastId] = useState(() => localStorage.getItem("mikilab_radio_last") || null);
+  const [q, setQ] = useState("");
   const toggleFav = (id) => setFavs((f) => { const n = f.includes(id) ? f.filter((x) => x !== id) : [...f, id]; try { localStorage.setItem("mikilab_radio_favs", JSON.stringify(n)); } catch { /* */ } return n; });
   const audioRef = useRef(null);
 
@@ -265,6 +266,21 @@ export default function RadioFornaio() {
               </div>
             )}
 
+            <div className="relative mb-3">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" />
+              <input data-testid="radio-search" value={q} onChange={(e) => setQ(e.target.value)}
+                placeholder={tri("Cerca una stazione…", "Sender suchen…", "Search a station…", "Buscar una emisora…")}
+                className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl pl-9 pr-9 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
+              {q && <button data-testid="radio-search-clear" onClick={() => setQ("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#7E8A93] p-1"><X className="w-4 h-4" /></button>}
+            </div>
+
+            {q.trim() ? (() => {
+              const res = allStations.filter((s) => s.name.toLowerCase().includes(q.trim().toLowerCase()));
+              return res.length
+                ? renderGroup(`🔎 ${tri("Risultati", "Ergebnisse", "Results", "Resultados")} (${res.length})`, res)
+                : <p data-testid="radio-search-empty" className="text-sm text-[#7E8A93] text-center py-6">{tri("Nessuna stazione trovata", "Kein Sender gefunden", "No station found", "Ninguna emisora encontrada")}</p>;
+            })() : (
+            <>
             {lastStation && current !== lastStation.id && (
               <button data-testid="radio-resume" onClick={() => playStation(lastStation)}
                 className="w-full flex items-center gap-2 mb-3 px-3 py-2.5 rounded-xl bg-[#C88A2B]/12 border border-[#C88A2B]/40 text-[#8a5e17] dark:text-[#e0b566] text-sm font-semibold active:scale-98">
@@ -274,10 +290,12 @@ export default function RadioFornaio() {
             )}
             {favStations.length > 0 && renderGroup(`⭐ ${tri("Preferite", "Favoriten", "Favorites", "Favoritas")}`, favStations)}
             {renderGroup(`🇮🇹 ${t("radio_it")}`, STATIONS.it)}
-            {renderGroup(`🇬🇧 ${tri("Inglesi (UK)", "Englisch (UK)", "English (UK)")}`, STATIONS.uk)}
-            {renderGroup(`🇪🇸 ${tri("Spagnole", "Spanisch", "Spanish")}`, STATIONS.es)}
+            {renderGroup(`🇬🇧 ${tri("Inglesi (UK)", "Englisch (UK)", "English (UK)", "Inglesas (UK)")}`, STATIONS.uk)}
+            {renderGroup(`🇪🇸 ${tri("Spagnole", "Spanisch", "Spanish", "Españolas")}`, STATIONS.es)}
             {renderGroup(`🇩🇪 ${t("radio_de")}`, STATIONS.de)}
-            {renderGroup(`🌍 ${tri("Internazionali", "International", "International")}`, STATIONS.intl)}
+            {renderGroup(`🌍 ${tri("Internazionali", "International", "International", "Internacionales")}`, STATIONS.intl)}
+            </>
+            )}
 
             {nowPlaying && (
               <div data-testid="radio-now-playing" className="mt-1 flex items-center gap-2 bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 rounded-xl px-3 py-2">

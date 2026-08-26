@@ -329,10 +329,10 @@ export default function Beginners() {
   const today = daily[Math.floor(Date.now() / 86400000) % daily.length];
 
   const PATH = [
-    tri3(lang, "Conosci i 4 ingredienti base (leggi i consigli qui sotto)", "Lerne die 4 Grundzutaten (siehe Tipps unten)", "Learn the 4 basic ingredients (see tips below)"),
-    tri3(lang, "Prova la Ricetta del giorno", "Probiere das Rezept des Tages", "Try the Recipe of the day"),
-    tri3(lang, "Crea un piano con «Pianifica la tua Produzione»", "Erstelle einen Plan mit „Plane deine Produktion“", "Make a plan with 'Plan your Production'"),
-    tri3(lang, "Supera il Quiz del Fornaio", "Bestehe das Bäcker-Quiz", "Pass the Baker Quiz"),
+    tri3(lang, "Conosci i 4 ingredienti base (leggi i consigli qui sotto)", "Lerne die 4 Grundzutaten (siehe Tipps unten)", "Learn the 4 basic ingredients (see tips below)", "Conoce los 4 ingredientes básicos (lee los consejos abajo)"),
+    tri3(lang, "Prova la Ricetta del giorno", "Probiere das Rezept des Tages", "Try the Recipe of the day", "Prueba la Receta del día"),
+    tri3(lang, "Crea un piano con «Pianifica la tua Produzione»", "Erstelle einen Plan mit „Plane deine Produktion“", "Make a plan with 'Plan your Production'", "Crea un plan con «Planifica tu Producción»"),
+    tri3(lang, "Supera il Quiz del Fornaio", "Bestehe das Bäcker-Quiz", "Pass the Baker Quiz", "Supera el Quiz del Panadero"),
   ];
   const PKEY = "mikilab_beginner_path";
   const [pathDone, setPathDone] = useState(() => {
@@ -350,16 +350,16 @@ export default function Beginners() {
   return (
     <div data-testid="beginners-page" className="space-y-4 pb-4">
       <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_impara_tour_v1"
-        labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip"), next: tri3(lang, "Avanti", "Weiter", "Next"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!") }}
+        labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip", "Saltar"), next: tri3(lang, "Avanti", "Weiter", "Next", "Siguiente"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!", "¡Entendido!") }}
         steps={[
-          { target: null, title: tri3(lang, "Benvenuto in Impara 👋", "Willkommen bei Lernen 👋", "Welcome to Learn 👋"),
-            body: tri3(lang, "Qui impari a fare il pane a casa, passo dopo passo. Ti mostro come muoverti.", "Hier lernst du Schritt für Schritt Brot backen. Ich zeige dir, wie es geht.", "Here you learn to bake bread at home, step by step. Let me show you around.") },
-          { target: "beginner-path", title: tri3(lang, "1 · Segui il percorso", "1 · Folge dem Weg", "1 · Follow the path"),
-            body: tri3(lang, "Spunta i 4 passi del tuo percorso: ingredienti base, ricetta del giorno, primo piano e quiz.", "Hake die 4 Schritte ab: Grundzutaten, Rezept des Tages, erster Plan und Quiz.", "Tick the 4 steps: basic ingredients, recipe of the day, first plan and quiz.") },
-          { target: "home-planner", title: tri3(lang, "2 · Pianifica il pane a casa", "2 · Plane dein Brot zu Hause", "2 · Plan your home bake"),
-            body: tri3(lang, "Scegli una ricetta e quando ti serve pronto: ti do orari e lista della spesa, semplici.", "Wähle ein Rezept und wann es fertig sein soll: du bekommst Zeiten und Einkaufsliste.", "Pick a recipe and when you need it ready: I give you times and a shopping list.") },
-          { target: "quiz-panel", title: tri3(lang, "3 · Metti alla prova", "3 · Teste dich", "3 · Test yourself"),
-            body: tri3(lang, "Fai il Quiz del Fornaio e sblocca i livelli. Impari divertendoti!", "Mach das Bäcker-Quiz und schalte Level frei. Lernen mit Spaß!", "Take the Baker's Quiz and unlock levels. Learn while having fun!") },
+          { target: null, title: tri3(lang, "Benvenuto in Impara 👋", "Willkommen bei Lernen 👋", "Welcome to Learn 👋", "Bienvenido a Aprende 👋"),
+            body: tri3(lang, "Qui impari a fare il pane a casa, passo dopo passo. Ti mostro come muoverti.", "Hier lernst du Schritt für Schritt Brot backen. Ich zeige dir, wie es geht.", "Here you learn to bake bread at home, step by step. Let me show you around.", "Aquí aprendes a hacer pan en casa, paso a paso. Te muestro cómo moverte.") },
+          { target: "beginner-path", title: tri3(lang, "1 · Segui il percorso", "1 · Folge dem Weg", "1 · Follow the path", "1 · Sigue el recorrido"),
+            body: tri3(lang, "Spunta i 4 passi del tuo percorso: ingredienti base, ricetta del giorno, primo piano e quiz.", "Hake die 4 Schritte ab: Grundzutaten, Rezept des Tages, erster Plan und Quiz.", "Tick the 4 steps: basic ingredients, recipe of the day, first plan and quiz.", "Marca los 4 pasos de tu recorrido: ingredientes básicos, receta del día, primer plan y quiz.") },
+          { target: "home-planner", title: tri3(lang, "2 · Pianifica il pane a casa", "2 · Plane dein Brot zu Hause", "2 · Plan your home bake", "2 · Planifica tu pan en casa"),
+            body: tri3(lang, "Scegli una ricetta e quando ti serve pronto: ti do orari e lista della spesa, semplici.", "Wähle ein Rezept und wann es fertig sein soll: du bekommst Zeiten und Einkaufsliste.", "Pick a recipe and when you need it ready: I give you times and a shopping list.", "Elige una receta y cuándo la necesitas lista: te doy horarios y lista de la compra, sencillos.") },
+          { target: "quiz-panel", title: tri3(lang, "3 · Metti alla prova", "3 · Teste dich", "3 · Test yourself", "3 · Ponte a prueba"),
+            body: tri3(lang, "Fai il Quiz del Fornaio e sblocca i livelli. Impari divertendoti!", "Mach das Bäcker-Quiz und schalte Level frei. Lernen mit Spaß!", "Take the Baker's Quiz and unlock levels. Learn while having fun!", "Haz el Quiz del Panadero y desbloquea niveles. ¡Aprende divirtiéndote!") },
         ]} />
       <AvatarBubbles variant="impara" />
       <div className="rounded-2xl p-5 bg-[#5aa0cf]/12 border border-[#5aa0cf]/30">
@@ -370,14 +370,14 @@ export default function Beginners() {
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_intro")}</p>
         <button data-testid="impara-tour-replay" onClick={() => setTourForce((n) => n + 1)}
           className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#2e6690] dark:text-[#a9d2ec] bg-white dark:bg-[#232A31] border border-[#5aa0cf]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
-          {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
+          {tri3(lang, "Come si fa?", "Wie geht's?", "How to?", "¿Cómo se hace?")}
         </button>
         {(() => {
           const lvl = getLevelProgress((i, d, e) => tri3(lang, i, d, e));
           return (
             <div data-testid="beginners-level" className="mt-3">
               <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wide ${lvl.cls}`}>
-                {lvl.icon} {tri3(lang, "Livello", "Level", "Level")}: {lvl.name}
+                {lvl.icon} {tri3(lang, "Livello", "Level", "Level", "Nivel")}: {lvl.name}
               </span>
               {!lvl.isMax && (
                 <div className="mt-1.5 h-2 w-full max-w-[240px] rounded-full bg-[#d5e4f0] dark:bg-[#38424B] overflow-hidden">
@@ -392,7 +392,7 @@ export default function Beginners() {
       {/* Percorso guidato principianti */}
       <div data-testid="beginner-path" className="rounded-2xl p-5 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, "Il tuo percorso", "Dein Weg", "Your path")}</h3>
+          <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, "Il tuo percorso", "Dein Weg", "Your path", "Tu recorrido")}</h3>
           <span className="text-xs font-bold text-[#5aa0cf]">{doneCount}/{PATH.length}</span>
         </div>
         <div className="h-2 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] overflow-hidden mb-3">
@@ -412,7 +412,7 @@ export default function Beginners() {
             );
           })}
         </div>
-        {doneCount === PATH.length && <p className="text-sm font-semibold text-[#5aa0cf] mt-3">🎉 {tri3(lang, "Percorso completato! Sei pronto per il tuo primo pane.", "Weg abgeschlossen! Bereit für dein erstes Brot.", "Path completed! Ready for your first bread.")}</p>}
+        {doneCount === PATH.length && <p className="text-sm font-semibold text-[#5aa0cf] mt-3">🎉 {tri3(lang, "Percorso completato! Sei pronto per il tuo primo pane.", "Weg abgeschlossen! Bereit für dein erstes Brot.", "Path completed! Ready for your first bread.", "¡Recorrido completado! Estás listo para tu primer pan.")}</p>}
       </div>
 
       {/* Ricetta del giorno gratis — cambia ogni giorno */}

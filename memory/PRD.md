@@ -1449,3 +1449,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 3. **Radio — memoria ultima stazione** (`RadioFornaio.jsx`): salva l'ultima stazione in `mikilab_radio_last`; alla riapertura del pannello appare il pulsante "Riprendi: [stazione]" (`radio-resume`) per riavviarla con un tocco.
 4. **Radio — Preferite con stella**: stella su ogni stazione (`radio-fav-<id>`), salvate in `mikilab_radio_favs`; gruppo "⭐ Preferite" in cima al pannello. Verificato.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont31 (2026-06) — Spagnolo reale (Community/Shop/Impara) + Ricerca Radio
+1. **Traduzioni ES reali (non EN)**: 
+   - Community (`Community.jsx`): `tri` esteso a 4 arg; aggiunto ES a tutte le 27 stringhe inline (Comunidad de Panaderos, Mercadillo de Segunda Mano, Amigos y Colegas, tabs Consejo/Foto/Receta/Pregunta, toast, ecc.).
+   - Shop (`Shop.jsx`): ES aggiunto alle 6 stringhe `tri` (Packs de Recetas de Michele, Comprado ✓, Disponible ahora, suscríbete PRO…).
+   - Impara/Beginners (`Beginners.jsx`): ES aggiunto alle 19 stringhe `tri3` (Bienvenido a Aprende, Tu recorrido, Quiz del Panadero, Siguiente/Saltar/Entendido…).
+   - Verificato in ES: zero residui italiani nella UI di queste sezioni. (Restano IT solo i 2 post di benvenuto seed della Community = dati/contenuti; aggiungere `text_es` nel seed backend in futuro.)
+2. **Ricerca Radio** (`RadioFornaio.jsx`): barra `radio-search` in cima al pannello; digitando filtra tutte le stazioni in un gruppo "🔎 Risultati (n)" (o messaggio "nessuna trovata"); pulsante clear `radio-search-clear`. Verificato ("swr" → 2 risultati).
+- NB: PREVIEW → REDEPLOY per mikilab.de.
