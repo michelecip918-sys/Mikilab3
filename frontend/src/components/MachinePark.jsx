@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Cog, Check } from "lucide-react";
-import { MACHINE_CATEGORIES, getActiveMachineIds, setActiveMachineIds } from "@/lib/machines";
+import { Cog, Check, Bookmark, Plus, X } from "lucide-react";
+import { MACHINE_CATEGORIES, getActiveMachineIds, setActiveMachineIds, BUILTIN_PRESETS, getUserPresets, saveUserPreset, deleteUserPreset, presetLabel } from "@/lib/machines";
 import { useLang } from "@/i18n/LanguageContext";
 
 // Parco Macchine: ON/OFF dei macchinari professionali. Le scelte adattano ricette e piani via AI.
@@ -8,17 +8,24 @@ export default function MachinePark() {
   const { lang } = useLang();
   const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
   const [active, setActive] = useState(() => new Set(getActiveMachineIds()));
+  const [userPresets, setUserPresets] = useState(() => getUserPresets());
 
+  const commit = (set) => { setActive(new Set(set)); setActiveMachineIds([...set]); };
   const toggle = (id) => {
-    setActive((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      setActiveMachineIds([...next]);
-      return next;
-    });
+    const next = new Set(active);
+    next.has(id) ? next.delete(id) : next.add(id);
+    commit(next);
   };
+  const applyPreset = (ids) => commit(new Set(ids));
+  const savePreset = () => {
+    const name = (window.prompt(tri("Nome del preset (es. Linea Pane):", "Preset-Name (z.B. Brotlinie):", "Preset name (e.g. Bread line):")) || "").trim();
+    if (!name || active.size === 0) return;
+    setUserPresets(saveUserPreset(name, [...active]));
+  };
+  const removePreset = (id) => setUserPresets(deleteUserPreset(id));
 
   const total = active.size;
+  const allPresets = [...BUILTIN_PRESETS, ...userPresets];
 
   return (
     <div data-testid="machine-park" className="pb-4">
@@ -38,6 +45,24 @@ export default function MachinePark() {
               {tri("Spegni tutte", "Alle aus", "Turn all off")}
             </button>
           )}
+        </div>
+      </div>
+
+      <div data-testid="machine-presets" className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#234b6e] dark:text-[#a9d2ec] flex items-center gap-1.5"><Bookmark className="w-4 h-4" />{tri("Preset laboratorio", "Labor-Presets", "Lab presets")}</p>
+          <button data-testid="machine-save-preset" onClick={savePreset}
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3f7cac] border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31] px-2.5 py-1 rounded-full active:scale-95">
+            <Plus className="w-3.5 h-3.5" />{tri("Salva attuali", "Aktuelle speichern", "Save current")}
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {allPresets.map((p) => (
+            <span key={p.id} data-testid={`preset-${p.id}`} className="inline-flex items-center gap-1 rounded-full bg-[#3f7cac]/12 border border-[#3f7cac]/40 pl-3 pr-2 py-1">
+              <button onClick={() => applyPreset(p.ids)} className="text-xs font-semibold text-[#234b6e] dark:text-[#a9d2ec]">{presetLabel(p, lang)}</button>
+              {!p.builtin && <button data-testid={`preset-del-${p.id}`} onClick={() => removePreset(p.id)} className="text-[#C0574D]"><X className="w-3.5 h-3.5" /></button>}
+            </span>
+          ))}
         </div>
       </div>
 

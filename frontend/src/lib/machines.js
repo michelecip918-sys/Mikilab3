@@ -38,6 +38,32 @@ export function getActiveMachineIds() {
   try { const a = JSON.parse(localStorage.getItem(MACHINE_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch { return []; }
 }
 
+// Preset laboratorio (combinazioni di macchine salvabili + preset predefiniti).
+export const PRESET_KEY = "mikilab_machine_presets";
+export const BUILTIN_PRESETS = [
+  { id: "pane", builtin: true, name: { it: "Linea Pane", de: "Brotlinie", en: "Bread line" }, ids: ["spirale_estraibile", "spezz_arrotondatrice", "climatherm", "rotovent"] },
+  { id: "brezel", builtin: true, name: { it: "Linea Brezel", de: "Brezellinie", en: "Pretzel line" }, ids: ["brezel_form", "lisciviatrice", "spezzatrice_idraulica", "rotovent"] },
+  { id: "grandi", builtin: true, name: { it: "Linea Grandi Lievitati", de: "Große Hefegebäcke", en: "Large leavened" }, ids: ["bracci_tuffanti", "climatherm", "rotovent"] },
+  { id: "pietra", builtin: true, name: { it: "Linea Artigianale (pietra)", de: "Handwerk (Stein)", en: "Artisan (stone)" }, ids: ["spirale_estraibile", "pietra_vapore"] },
+];
+export function getUserPresets() {
+  try { const a = JSON.parse(localStorage.getItem(PRESET_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch { return []; }
+}
+export function saveUserPreset(name, ids) {
+  const p = getUserPresets();
+  p.push({ id: "u" + Date.now(), name, ids });
+  try { localStorage.setItem(PRESET_KEY, JSON.stringify(p)); } catch { /* */ }
+  return p;
+}
+export function deleteUserPreset(id) {
+  const p = getUserPresets().filter((x) => x.id !== id);
+  try { localStorage.setItem(PRESET_KEY, JSON.stringify(p)); } catch { /* */ }
+  return p;
+}
+export function presetLabel(p, lang) {
+  return typeof p.name === "string" ? p.name : (p.name[lang] || p.name.it);
+}
+
 export function setActiveMachineIds(ids) {
   try { localStorage.setItem(MACHINE_KEY, JSON.stringify(ids)); } catch { /* */ }
 }

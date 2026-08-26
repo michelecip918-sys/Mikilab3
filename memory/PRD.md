@@ -1370,3 +1370,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Verificato: Scheda Macchina in ricetta (Industriale, ≈800-1500/ora, tips Rheon/Rotovent); backend sano; reset presente.
 - NB: generazione piano completa non ri-testata via curl (richiede payload complesso) ma wiring in place; backend startup OK.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont22 (2026-06) — Scheda Macchina in stampa + Preset Laboratorio
+- **index.css**: regola @media print per [data-testid=recipe-machine-scheda] (sfondo bianco + bordo). La scheda è già dentro .print-area → inclusa nel PDF/stampa ricetta.
+- **lib/machines.js**: PRESET_KEY + BUILTIN_PRESETS (Linea Pane, Linea Brezel, Linea Grandi Lievitati, Linea Artigianale pietra) + getUserPresets/saveUserPreset/deleteUserPreset/presetLabel.
+- **MachinePark.jsx**: sezione Preset (chip applica preset + "Salva attuali" via prompt + elimina preset utente).
+- Verificato: 4 preset builtin; "Linea Pane" attiva 4 macchine (count 4 attivi), persistite.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
