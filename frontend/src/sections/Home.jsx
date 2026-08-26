@@ -92,6 +92,12 @@ const SCENE_PHRASES = {
     "I compute doses, hydration and costs 🧮",
     "I follow you on smartphone and PC 📱💻",
   ],
+  es: [
+    "Organizo tus recetas 📋",
+    "Planifico la producción en el obrador ⏱️",
+    "Calculo dosis, hidratación y costes 🧮",
+    "Te acompaño desde el móvil y el PC 📱💻",
+  ],
 };
 
 function HomeAvatarScene({ lang }) {
@@ -127,7 +133,7 @@ function HomeAvatarScene({ lang }) {
 
       <div className="absolute bottom-0 left-0 p-5 z-20 pointer-events-none">
         <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪</p>
+        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : lang === "en" ? "Your digital companion" : lang === "es" ? "Tu compañero digital" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪 🇬🇧 🇪🇸</p>
       </div>
     </div>
   );
@@ -151,7 +157,7 @@ export default function Home({ onNavigate }) {
   const jokes = JOKES[lang] || JOKES.it;
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
-  const L = (it_, de_, en_) => (de ? de_ : lang === "en" ? en_ : it_);
+  const L = (it_, de_, en_, es_) => (de ? de_ : lang === "en" ? en_ : lang === "es" ? (es_ ?? en_) : it_);
   const profile = getProfile();
 
   const [panettoni, setPanettoni] = useState([]);
@@ -210,8 +216,8 @@ export default function Home({ onNavigate }) {
                 <Info className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-display text-base font-bold">{L("Scopri MikiLab", "MikiLab kennenlernen", "Discover MikiLab")}</h3>
-                <p className="text-white/85 text-[13px] leading-snug">{L("Chi è Michele, il metodo e la filosofia", "Wer Michele ist, die Methode und Philosophie", "Who Michele is, the method and philosophy")}</p>
+                <h3 className="font-display text-base font-bold">{L("Scopri MikiLab", "MikiLab kennenlernen", "Discover MikiLab", "Descubre MikiLab")}</h3>
+                <p className="text-white/85 text-[13px] leading-snug">{L("Chi è Michele, il metodo e la filosofia", "Wer Michele ist, die Methode und Philosophie", "Who Michele is, the method and philosophy", "Quién es Michele, el método y la filosofía")}</p>
               </div>
               <ChevronDown className={`w-6 h-6 text-white/90 shrink-0 transition-transform duration-300 ${storyOpen ? "rotate-180" : ""}`} />
             </div>
@@ -224,11 +230,11 @@ export default function Home({ onNavigate }) {
               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
               <div className="space-y-6 pt-6">
                 <div data-testid="home-lab-photo" className="rounded-3xl overflow-hidden shadow-xl ring-2 ring-[#C88A2B]/40 relative">
-                  <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt={L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough")}
+                  <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt={L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough", "Michele, con las manos en la masa")}
                     className="w-full h-56 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <p className="text-white font-display text-lg font-bold leading-tight">{L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough")}</p>
-                    <p className="text-white/85 text-xs leading-snug">{L("Passione, metodo e arte bianca — ogni giorno.", "Leidenschaft, Methode und Backkunst — jeden Tag.", "Passion, method and the baking craft — every day.")}</p>
+                    <p className="text-white font-display text-lg font-bold leading-tight">{L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough", "Michele, con las manos en la masa")}</p>
+                    <p className="text-white/85 text-xs leading-snug">{L("Passione, metodo e arte bianca — ogni giorno.", "Leidenschaft, Methode und Backkunst — jeden Tag.", "Passion, method and the baking craft — every day.", "Pasión, método y arte blanco — cada día.")}</p>
                   </div>
                 </div>
 

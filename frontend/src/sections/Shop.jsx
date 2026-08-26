@@ -55,7 +55,7 @@ export default function Shop({ hideCourses = false }) {
   const panettoni = data.products.filter((p) => p.kind === "panettone");
   const corsi = data.products.filter((p) => p.kind === "corso");
 
-  const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : lang === "en" ? (p[`${base}_en`] || p[base]) : p[base];
+  const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : (lang === "en" || lang === "es") ? (p[`${base}_en`] || p[base]) : p[base];
 
   const Card = ({ p }) => (
     <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] shadow-sm">

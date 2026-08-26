@@ -11,7 +11,7 @@ const euro = (cents) => "€ " + (cents / 100).toFixed(cents % 100 === 0 ? 0 : 2
 export default function Academy() {
   const { lang } = useLang();
   const { user, setAuthOpen } = useAuth();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
   const [cat, setCat] = useState({ courses: [], consult: null });
   const [owned, setOwned] = useState({}); // id -> video_url
   const [busy, setBusy] = useState(null);
@@ -79,9 +79,9 @@ export default function Academy() {
     buy("consult", null, form);
   };
 
-  const title = (c) => (lang === "de" ? c.title_de : lang === "en" ? c.title_en : c.title) || c.title;
-  const desc = (c) => (lang === "de" ? c.desc_de : lang === "en" ? c.desc_en : c.desc) || c.desc;
-  const dur = (c) => (lang === "de" ? c.duration_de : lang === "en" ? c.duration_en : c.duration) || c.duration;
+  const title = (c) => (lang === "de" ? c.title_de : (lang === "en" || lang === "es") ? c.title_en : c.title) || c.title;
+  const desc = (c) => (lang === "de" ? c.desc_de : (lang === "en" || lang === "es") ? c.desc_en : c.desc) || c.desc;
+  const dur = (c) => (lang === "de" ? c.duration_de : (lang === "en" || lang === "es") ? c.duration_en : c.duration) || c.duration;
 
   return (
     <div data-testid="academy-page" className="pb-4 space-y-6">

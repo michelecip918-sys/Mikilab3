@@ -1442,3 +1442,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - SEO: tag `<link rel="alternate" hreflang="it/de/en/es/x-default">` in `index.html`.
 - **NOTA**: le ~671 chiavi centrali (menu, nav, pulsanti, form, errori, pagine) sono tradotte 1:1 in tutte e 4 le lingue. Restano da traddurre in ES i ~1.060 testi "inline" `tri(it,de,en)` sparsi nel codice (es. alcune card Home): per ora mostrano EN in modalità ES (best effort concordato). Routing URL con prefisso: solo lettura all'avvio + hreflang (nessun rework path completo, come da scelta utente).
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont30 (2026-06) — Home ES, sezioni inline ES (fallback EN), Radio preferite + memoria
+1. **Home in spagnolo** (`Home.jsx`): helper `L` esteso a `(it,de,en,es)`, aggiunte le traduzioni ES a tutte le schede (Descubre MikiLab, biografia, "Michele con las manos en la masa", slogan), `SCENE_PHRASES.es`, "Tu compañero digital". Verificato: zero residui italiani in ES.
+2. **Sezioni inline ES** (Community/Academy/MohammedAssistant/Shop/Beginners): gli helper locali (`tri`, `pick`, `title/desc/dur`, ternarie `lang==="en"?`) ora per ES ricadono sull'**inglese** invece che sull'italiano → in modalità ES non compare più italiano (traduzione ES 1:1 di ogni stringa inline resta una passata successiva, come da "best effort").
+3. **Radio — memoria ultima stazione** (`RadioFornaio.jsx`): salva l'ultima stazione in `mikilab_radio_last`; alla riapertura del pannello appare il pulsante "Riprendi: [stazione]" (`radio-resume`) per riavviarla con un tocco.
+4. **Radio — Preferite con stella**: stella su ogni stazione (`radio-fav-<id>`), salvate in `mikilab_radio_favs`; gruppo "⭐ Preferite" in cima al pannello. Verificato.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

@@ -235,7 +235,7 @@ function BakerQuiz() {
 
   const record = best > 0 && (
     <p data-testid="quiz-best" className="text-xs font-semibold text-[#5aa0cf] flex items-center justify-center gap-1 mb-2">
-      <Trophy className="w-3.5 h-3.5" /> {lang === "de" ? `Dein Rekord: ${best}/${questions.length}` : lang === "en" ? `Your record: ${best}/${questions.length}` : `Il tuo record: ${best}/${questions.length}`}
+      <Trophy className="w-3.5 h-3.5" /> {lang === "de" ? `Dein Rekord: ${best}/${questions.length}` : (lang === "en" || lang === "es") ? `Your record: ${best}/${questions.length}` : `Il tuo record: ${best}/${questions.length}`}
     </p>
   );
 
@@ -419,10 +419,10 @@ export default function Beginners() {
       <div data-testid="recipe-of-day" className="rounded-2xl p-5 text-white bg-gradient-to-br from-[#24303c] to-[#16202b] shadow-md">
         <div className="flex items-center gap-2 mb-1">
           <Star className="w-4 h-4" />
-          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages · gratis" : lang === "en" ? "Recipe of the day · free" : "Ricetta del giorno · gratis"}</span>
+          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages · gratis" : (lang === "en" || lang === "es") ? "Recipe of the day · free" : "Ricetta del giorno · gratis"}</span>
         </div>
         <h3 className="font-display text-xl font-bold leading-tight">{today.name}</h3>
-        <p className="text-sm text-white/90 mt-2"><b>{lang === "de" ? "Zutaten" : lang === "en" ? "Ingredients" : "Ingredienti"}:</b> {today.ing}</p>
+        <p className="text-sm text-white/90 mt-2"><b>{lang === "de" ? "Zutaten" : (lang === "en" || lang === "es") ? "Ingredients" : "Ingredienti"}:</b> {today.ing}</p>
         <p className="text-sm text-white/90 mt-1.5 leading-snug">{today.steps}</p>
       </div>
 

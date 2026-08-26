@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic } from "lucide-react";
+import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAmbient } from "@/audio/AmbientContext";
 import { useBackClose } from "@/lib/backNav";
@@ -92,6 +92,9 @@ export default function RadioFornaio() {
   const [current, setCurrent] = useState(null); // station id
   const [status, setStatus] = useState("idle"); // idle | loading | playing | error
   const [volume, setVolume] = useState(0.9);
+  const [favs, setFavs] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_radio_favs") || "[]"); } catch { return []; } });
+  const [lastId, setLastId] = useState(() => localStorage.getItem("mikilab_radio_last") || null);
+  const toggleFav = (id) => setFavs((f) => { const n = f.includes(id) ? f.filter((x) => x !== id) : [...f, id]; try { localStorage.setItem("mikilab_radio_favs", JSON.stringify(n)); } catch { /* */ } return n; });
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -127,6 +130,8 @@ export default function RadioFornaio() {
     const a = audioRef.current;
     if (current === st.id && status === "playing") { stop(); return; }
     setCurrent(st.id);
+    setLastId(st.id);
+    try { localStorage.setItem("mikilab_radio_last", st.id); } catch { /* */ }
     setStatus("loading");
     a.src = st.url;
     const p = a.play();
@@ -164,12 +169,13 @@ export default function RadioFornaio() {
       <div className="grid grid-cols-2 gap-2">
         {list.map((st) => {
           const active = current === st.id;
+          const isFav = favs.includes(st.id);
           return (
-            <button
+            <div
               key={st.id}
               data-testid={`radio-station-${st.id}`}
               onClick={() => playStation(st)}
-              className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all active:scale-98 border ${
+              className={`relative flex items-center gap-2 pl-3 pr-8 py-2.5 rounded-xl text-sm font-medium text-left transition-all active:scale-98 border cursor-pointer ${
                 active
                   ? "bg-[#3f7cac] text-white border-[#3f7cac] shadow-sm"
                   : "bg-white dark:bg-[#1F252B] text-[#2B303B] dark:text-[#e4eff8] border-[#d5e4f0] dark:border-[#38424B]"
@@ -183,12 +189,24 @@ export default function RadioFornaio() {
                 <Play className="w-4 h-4 shrink-0" />
               )}
               <span className="truncate">{st.name}</span>
-            </button>
+              <button
+                type="button"
+                data-testid={`radio-fav-${st.id}`}
+                aria-label="favorite"
+                onClick={(e) => { e.stopPropagation(); toggleFav(st.id); }}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 active:scale-90"
+              >
+                <Star className={`w-4 h-4 ${isFav ? "fill-[#C88A2B] text-[#C88A2B]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
+              </button>
+            </div>
           );
         })}
       </div>
     </div>
   );
+
+  const favStations = allStations.filter((s) => favs.includes(s.id));
+  const lastStation = allStations.find((s) => s.id === lastId);
 
   return (
     <>
@@ -247,6 +265,14 @@ export default function RadioFornaio() {
               </div>
             )}
 
+            {lastStation && current !== lastStation.id && (
+              <button data-testid="radio-resume" onClick={() => playStation(lastStation)}
+                className="w-full flex items-center gap-2 mb-3 px-3 py-2.5 rounded-xl bg-[#C88A2B]/12 border border-[#C88A2B]/40 text-[#8a5e17] dark:text-[#e0b566] text-sm font-semibold active:scale-98">
+                <RotateCcw className="w-4 h-4 shrink-0" />
+                <span className="truncate">{tri("Riprendi", "Weiter", "Resume", "Reanudar")}: {lastStation.name}</span>
+              </button>
+            )}
+            {favStations.length > 0 && renderGroup(`⭐ ${tri("Preferite", "Favoriten", "Favorites", "Favoritas")}`, favStations)}
             {renderGroup(`🇮🇹 ${t("radio_it")}`, STATIONS.it)}
             {renderGroup(`🇬🇧 ${tri("Inglesi (UK)", "Englisch (UK)", "English (UK)")}`, STATIONS.uk)}
             {renderGroup(`🇪🇸 ${tri("Spagnole", "Spanisch", "Spanish")}`, STATIONS.es)}
