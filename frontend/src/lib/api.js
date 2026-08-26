@@ -23,6 +23,7 @@ export const recipesApi = {
   update: (id, data) => api.put(`/recipes/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/recipes/${id}`).then((r) => r.data),
   translate: (id, lang) => api.post(`/recipes/${id}/translate`, {}, { params: { lang } }).then((r) => r.data),
+  generate: (data) => api.post(`/recipes/generate`, data).then((r) => r.data),
 };
 
 export const ovenApi = {

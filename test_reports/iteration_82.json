@@ -1,0 +1,35 @@
+{
+  "summary": "Frontend-only re-test (iteration_82) of MikiLab after the ES crash fix. VERIFIED FIXED: tab 'Aprende' (nav-tab-impara) in Spanish no longer white-screens — renders full ES content (body ~5.2-5.3k chars: 'Para principiantes', 'Tu recorrido', 'Receta del día', 'Quiz del Panadero'), 0 page errors. Verified 5 recipe folders unchanged, all 5 new viennoiserie recipes show real Unsplash photos (HTTP 200, no grey placeholder), no croissant/cornetti/panettone/stollen leaked into 'Pane & Panificati', Recipe Generator works end-to-end (gen-result 4783 chars with computed doses + procedure). Impara loads without crash in IT/DE/EN/ES. NOT FIXED: the Enciclopedia section shown in the UI is still ITALIAN when lang=es (the ES fix was applied to src/data/content.js, but the visible page renders from src/sections/Enciclopedia.jsx + src/sections/GuidaMetodi.jsx, which have no 'es' blocks). Also ES avatar bubbles in Impara fall back to English.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "sections/Enciclopedia.jsx (ENC_ENTRIES)", "issue": "ENC_ENTRIES only defines it/de/en; with lang=es the code falls back to ENC_ENTRIES.it so all encyclopedia entries render in ITALIAN in Spanish UI (header/subtitle are translated, body is not). Add an 'es' array.", "selector": "[data-testid^='encyclopedia-'] / Recetas -> Enciclopedia", "priority": "HIGH"},
+      {"component": "sections/GuidaMetodi.jsx (SECTIONS)", "issue": "All 4 method sections (Poolish, Lievito Madre pane vs panettone, Roggen Sauerteig, Backmittel) have it/de/en only (0 'es' blocks); `s[lang] || s.it` renders Italian text in Spanish. Confirmed on screen: 'Il poolish è un prefermento LIQUIDO...' with ES header 'Enciclopedia de mi pan'.", "selector": "Recetas -> Enciclopedia (first accordions)", "priority": "HIGH"},
+      {"component": "components/AvatarBubbles.jsx", "issue": "8 bubbles have 'en' but only 2 have 'es' -> in ES the Aprende header bubbles show ENGLISH text (\"Learn calmly: here you'll find...\", \"Take the Baker's Quiz and track your progress...\").", "selector": "nav-tab-impara top bubbles", "priority": "MEDIUM"},
+      {"component": "RecipeGenerator", "issue": "Clicking gen-submit with the empty 'PRODOTTO' field does nothing: no validation message, no disabled state, no toast (silent no-op). Add inline validation / disabled button.", "selector": "[data-testid='gen-submit']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipe folder headers / rows", "issues": ["cat-folder-* headers expose only the emoji as first text line to a11y/testing tools (folder name is a background-image style title); recipe-row-* first text line is just the origin flag emoji — makes row identification fragile. Consider adding data-testid with slug or aria-label with the recipe name."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Add a complete 'es' block to ENC_ENTRIES in /app/frontend/src/sections/Enciclopedia.jsx (Italian is currently shown in ES).",
+    "Add 'es' translations for the 4 SECTIONS in /app/frontend/src/sections/GuidaMetodi.jsx.",
+    "Add missing 'es' strings to the 6 bubbles in /app/frontend/src/components/AvatarBubbles.jsx (currently English in ES).",
+    "Optional: add validation feedback when gen-submit is pressed with empty product field."
+  ],
+  "critical_code_review_comments": [
+    "Two parallel encyclopedia data sources exist: content.js `encyclopedia` (src/sections/Encyclopedia.jsx) and ENC_ENTRIES/GuidaMetodi (src/sections/Enciclopedia.jsx). The ES fix was applied only to content.js, which is NOT what the Recetas->Enciclopedia entry point renders. Consolidate to a single source to avoid divergent translations.",
+    "Language fallback pattern `X[lang] || X.it` silently hides missing translations; consider a dev-time warning or a translation-coverage check."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "83% (5/6 scenarios pass; Enciclopedia ES still Italian)"},
+  "seed_data_creation": "none (no test data created; login with existing admin@mikilab.de)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked, session cookie set)",
+  "context_for_next_testing_agent": "ES Impara crash is definitively fixed (0 pageerror, ES content rendered). Remaining work is pure i18n content: Enciclopedia.jsx ENC_ENTRIES + GuidaMetodi.jsx SECTIONS + AvatarBubbles.jsx need 'es'. Note DE/EN Enciclopedia label is 'Lexikon'/'Encyclopedia' — do not select by the Italian text. Recipe rows expose only flag emoji as first text line; use has_text with the recipe name. Generator requires the PRODOTTO input filled before gen-submit; AI response takes ~20-40s. Stripe checkout was NOT exercised (LIVE).",
+  "rca_of_the_issue": "The remaining ES-Italian encyclopedia issue: the UI route Recetas -> Enciclopedia renders src/sections/Enciclopedia.jsx which builds its list from GuidaMetodi SECTIONS (`s[lang] || s.it`) plus ENC_ENTRIES[lang] || ENC_ENTRIES.it. Neither file has an 'es' key, so Italian is served. The es block added to src/data/content.js is consumed by a different (unused for this route) component, src/sections/Encyclopedia.jsx."
+}

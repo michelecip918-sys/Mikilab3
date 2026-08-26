@@ -54,6 +54,7 @@ const GOAL_TEXT = {
 
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
 const TOOLS = [
+  { id: "generatore", Icon: Sparkles, it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
   { id: "mydata", Icon: Archive, it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
   { id: "macchine", Icon: Wrench, it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
   { id: "twin", Icon: FlaskConical, it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },

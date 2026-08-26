@@ -47,6 +47,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import MohammedAssistant from "@/sections/MohammedAssistant";
 import AvatarBubbles from "@/components/AvatarBubbles";
+import RecipeGenerator from "@/components/RecipeGenerator";
 import { toast } from "sonner";
 
 export default function Maestro() {
@@ -77,6 +78,7 @@ export default function Maestro() {
             extraHeader={<ScanRecipe embedded />} />
         )}
         {tool === "capo" && <CapoLaboratorio />}
+        {tool === "generatore" && <RecipeGenerator />}
         {tool === "pianoai" && <PianoProduzioneAI onOpenTool={openTool} />}
         {tool === "mydata" && <MyData onOpenTool={openTool} />}
         {tool === "macchine" && <MachinePark />}

@@ -1,0 +1,42 @@
+{
+  "summary": "Iteration 81 — Recipe categories restructure, 6 new recipes, Recipe Generator (PRO), Community auto-translation, Shop 'Pasticceria' bundle, i18n ES. BACKEND 11/11 pytest passed (/app/backend/tests/test_iter81_gen_community.py): POST /api/recipes/generate with poolish/biga/lm returns readable localized title, correct baker's-percentage math (water = hydration% of total flour, salt ~2%, poolish 30% flour @100% hyd, biga 40% @45%, LM 25%, extras grams, sum of parts == total_weight +/-1%), hydration clamped to 100, AI procedure >200 chars in ES/IT/DE, non-PRO user -> 403, unauth -> 401. Community: POST /api/community/posts + /comments return populated text_de/text_en/text_es (real translations, persisted, no _id leak); test posts deleted. Recipes: all 6 new recipes exist with menu_category viennoiserie (5) / pane (Pane di Cristallo), procedure + name/procedure _de/_en/_es populated; no croissant/cornetto/panettone/stollen/danish filed under pane/panini. Bundle: /api/recipes/bundle-checkout 'pasticceria' -> 200 Stripe session (not completed), invalid bundle -> 400. FRONTEND (mobile 390x844, admin login): recipe tab shows exactly the 5 macro folders (Basi & Lieviti 6, Pasticceria Lievitata & Viennoiserie 23, Pane & Panificati 47, Focacce 12, Snack 11); all new recipes open with INGREDIENTI + PROCEDIMENTO and in-dialog language switch renders ES/DE/EN correctly; PANE folder (47) has zero viennoiserie leaks. Generator UI: capo-quicklink-generatore opens recipe-generator, form + slider (78%) + extras + weight 1500 -> gen-result with correct doses and full Italian procedure (4.4k chars). Shop shows 'Pasticceria Lievitata & Viennoiserie' €50, legacy 'panettoni' bundle gone, click fires bundle-checkout 200. Community in ES renders Spanish translation only. CRITICAL: 'Aprende' (Impara) tab is a BLANK/crashed screen when lang=es.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/recipes", "issue": "extra_ingredients[].name has no _de/_en/_es variants; in ES/DE/EN recipe detail uncommon ingredient names stay Italian (e.g. Stollen in ES: 'Arancia e cedro canditi a cubetti', 'Mandorle tritate', 'Marzapane (inserto centrale)', 'Spezie: cardamomo, cannella...', 'Latte intero'). Only dictionary-matched names get translated."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Beginners.jsx (Impara/Aprende tab)", "issue": "White/blank screen with runtime error when lang=es: 'Cannot read properties of undefined (reading freeCourses)'. /app/frontend/src/data/content.js has only it/de/en keys, so content['es'] is undefined at Beginners.jsx:347. Tab body length = 0. IT/DE/EN work fine.", "selector": "[data-testid='nav-tab-impara']", "priority": "CRITICAL"},
+      {"component": "content[lang] consumers", "issue": "8 direct content[lang] usages without fallback (Beginners.jsx, CoursesPanel.jsx, NewsPage.jsx, Encyclopedia.jsx, Mikilab.jsx, MaestroSaTutto.jsx x3) — same crash risk for lang=es; needs an es block in data/content.js plus `content[lang] || content.it` guard.", "selector": "n/a", "priority": "HIGH"},
+      {"component": "Encyclopedia (Ricette -> Enciclopedia)", "issue": "With lang=es the encyclopedia content renders entirely in Italian (Poolish/Lievito Madre entries) — untranslated fallback.", "selector": "text=Enciclopedia de mi pan", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipe list — Pasticceria & Viennoiserie folder", "issues": ["New recipes (Cornetti all'Italiana, Croissant Classici, Croissant Tradizionali, Danish Pastry, Stollen) have no image_url: cards show a grey chef-hat placeholder while all legacy recipes have photos"]},
+      {"screen": "Il Tuo Laboratorio / Recipe Generator", "issues": ["Floating 'Radio' bubble (bottom-left) overlaps the ingredient rows / result table on 390px width, partially hiding a line of text"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter81_gen_community.py", "/app/test_reports/pytest/iter81.xml"],
+  "action_items": [
+    "CRITICAL: add an `es` block to /app/frontend/src/data/content.js (freeCourses, news, encyclopedia, lievitoMadre, promptSuggestions, youtubeVideos) and guard all content[lang] reads with `content[lang] || content.it` — the Aprende tab is currently a blank crashed screen in Spanish",
+    "Translate the Enciclopedia content for ES (currently Italian fallback)",
+    "Add name_de/name_en/name_es (or a wider translation map) for extra_ingredients so ES/DE/EN recipe ingredient lists are fully localized",
+    "Add images (image_url) for the 5 new viennoiserie recipes",
+    "Adjust the floating Radio bubble z-index/offset so it doesn't cover content on mobile"
+  ],
+  "critical_code_review_comments": [
+    "data/content.js is keyed by language with no ES entry while LangContext allows 'es' — any component doing content[lang].X throws. Introduce a helper `getContent(lang)` returning `content[lang] ?? content.it` and use it everywhere (8 call sites).",
+    "server.py is 4625 lines — should be split into routers (recipes, community, payments, capo) for maintainability.",
+    "/api/recipes/generate silently returns procedure:'' if EMERGENT_LLM_KEY is missing or LLM fails; frontend then shows an empty procedure block. Return a warning flag or 502 so the UI can show an error state."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter81_gen_community.py"],
+  "success_rate": {"backend": "100%", "frontend": "85%"},
+  "seed_data_creation": "1 temporary community post + comment (TEST_iter81) created and deleted; 2 Stripe LIVE checkout sessions created (pasticceria bundle) but NOT paid.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (PRO admin), fornaio@mikilab.de / Mikilab2026! (non-PRO, correctly gets 403 on generator)",
+  "context_for_next_testing_agent": "Login: click [data-testid='login-btn'] then auth-email/auth-password/auth-submit. Nav testids are nav-tab-home|ricette|maestro|impara|community (NOT nav-ricette). Set language via add_init_script localStorage 'mikilab_lang' or header [data-testid='lang-es']; inside a recipe dialog the header lang buttons are blocked by the DialogOverlay — use [data-testid='recipe-lang-es'] instead. Recipes: [data-testid^='cat-folder-'] then [data-testid^='recipe-row-'] (rows show the NAME IN THE ACTIVE LANGUAGE — match text accordingly). Generator: nav-tab-maestro -> capo-quicklink-generatore -> gen-product/gen-preferment/gen-hydration(range, set via JS value setter + input event)/gen-weight/gen-extra-<key>/gen-submit -> gen-result+gen-procedure (takes ~30-60s). Shop: home-core-corsi -> shop-bundle-pasticceria (LIVE Stripe, don't repeat). Backend regression: pytest tests/test_iter81_gen_community.py from /app/backend (~2.5 min, LLM calls).",
+  "rca_of_the_issue": "Aprende ES blank screen: LangProvider accepts 'es' but /app/frontend/src/data/content.js only defines it/de/en. Beginners.jsx:347 does `content[lang].freeCourses` -> TypeError on undefined, the React error boundary/dev overlay replaces the whole tab (inner_text length 0). Reproduce: localStorage.setItem('mikilab_lang','es'), login, click [data-testid='nav-tab-impara']. Mitigation: add es content + null-safe access."
+}

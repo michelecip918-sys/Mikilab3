@@ -173,7 +173,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     setUnlockRecipe(viewing);
   };
 
-  const isViewingPanettone = unlockRecipe ? recipeCategory(unlockRecipe).key === "panettoni" : false;
+  const isViewingPanettone = unlockRecipe ? /panettone|colomba|pandoro/i.test(unlockRecipe.name || "") : false;
 
   const buyRecipe = async (kind) => {
     if (!user) { setAuthOpen(true); return; }
@@ -517,7 +517,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const { lang } = useLang();
   const de = lang === "de";
   const tri = (i_, d_, e_) => (de ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
-  const isPanettone = recipeCategory(r).key === "panettoni";
+  const isPanettone = /panettone|colomba|pandoro/i.test(r.name || "");
   const [farro, setFarro] = useState(false);
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const flourG = Number(r.flour_grams) || 0;

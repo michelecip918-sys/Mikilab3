@@ -7,7 +7,7 @@ import { recipeCategory } from "@/lib/recipeCats";
 const PRODUCTS = [
   { id: "pane", base: 3 }, { id: "panettone", base: 30 }, { id: "brezel", base: 2 }, { id: "dolci", base: 5 },
 ];
-const CAT_BASE = { basi: 5, pane: 3, panini: 2, snack: 2, focacce: 3, panettoni: 30 };
+const CAT_BASE = { basi: 5, pane: 3, panini: 2, snack: 2, focacce: 3, viennoiserie: 20, panettoni: 30 };
 
 export default function ShelfLife() {
   const { lang } = useLang();

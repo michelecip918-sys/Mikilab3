@@ -558,13 +558,18 @@ async def require_admin(user: dict = Depends(current_user)):
 RECIPE_PRICES = {"single": 499, "panettoni": 2999, "all": 14900}  # centesimi EUR
 # Pacchetti ricette per categoria (centesimi EUR)
 BUNDLE_DEFS = {
-    "pane": {"amount": 4000, "name": "Pacchetto Ricette Pane", "cat": "pane",
-             "name_de": "Brot-Rezeptpaket", "name_en": "Bread Recipes Pack", "name_es": "Paquete Recetas de Pan"},
+    "pasticceria": {"amount": 5000, "name": "Pacchetto Pasticceria Lievitata & Viennoiserie", "cat": "pasticceria",
+                    "name_de": "Paket Feine Hefebackwaren & Viennoiserie",
+                    "name_en": "Leavened Pastry & Viennoiserie Pack",
+                    "name_es": "Paquete Bollería Fermentada y Viennoiserie"},
+    "pane": {"amount": 4000, "name": "Pacchetto Ricette Pane & Panificati", "cat": "pane",
+             "name_de": "Paket Brot & Backwaren", "name_en": "Bread & Baked Goods Pack", "name_es": "Paquete Pan y Panificados"},
     "panini": {"amount": 2000, "name": "Pacchetto Ricette Panini", "cat": "panini",
                "name_de": "Brötchen-Rezeptpaket", "name_en": "Rolls Recipes Pack", "name_es": "Paquete Recetas de Bollos"},
-    "snack": {"amount": 1000, "name": "Pacchetto Ricette Snack", "cat": "snack",
-              "name_de": "Snack-Rezeptpaket", "name_en": "Snack Recipes Pack", "name_es": "Paquete Recetas de Snacks"},
-    "panettoni": {"amount": 5000, "name": "Pacchetto Grandi Lievitati (Panettoni & Colombe)", "cat": "panettoni",
+    "snack": {"amount": 1000, "name": "Pacchetto Snack & Sfizi Salati", "cat": "snack",
+              "name_de": "Paket Snacks & herzhafte Häppchen", "name_en": "Snacks & Savory Bites Pack", "name_es": "Paquete Snacks y Aperitivos Salados"},
+    # Legacy (deprecato): mantenuto per fulfillment di eventuali acquisti pregressi.
+    "panettoni": {"amount": 5000, "name": "Pacchetto Grandi Lievitati (Panettoni & Colombe)", "cat": "pasticceria",
                   "name_de": "Paket Große Hefegebäcke (Panettone & Colombe)",
                   "name_en": "Large Leavened Cakes Pack (Panettone & Colombe)",
                   "name_es": "Paquete Grandes Levados (Panettone y Colombe)"},
@@ -582,15 +587,20 @@ def _bundle_name(b: dict, lang: str) -> str:
 
 
 def _recipe_bundle(d) -> str:
-    if _is_panettone_recipe(d):
-        return "panettoni"
-    s = f"{d.get('category','')} {d.get('menu_category','')} {d.get('name','')}".lower()
+    cat = (d.get("menu_category") or "").lower()
+    if cat == "viennoiserie" or _is_panettone_recipe(d):
+        return "pasticceria"
+    if cat == "panini":
+        return "panini"
+    if cat == "snack":
+        return "snack"
+    if cat in ("pane", "focacce", "basi"):
+        return "pane"
+    s = f"{d.get('category','')} {cat} {d.get('name','')}".lower()
     if "panin" in s:
         return "panini"
     if "snack" in s or "grissini" in s or "taralli" in s or "cracker" in s:
         return "snack"
-    if "pane" in s or "brot" in s or "bread" in s or "ciabatt" in s or "baguette" in s:
-        return "pane"
     return "pane"
 DIAGNOSI_MONTHLY_LIMIT = 10  # per il piano "Impara da Casa" (home)
 
@@ -788,6 +798,10 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
             unlock_pan = bool(ent.get("unlock_panettoni"))
             unlocked = set(ent.get("unlocked_recipes") or [])
             unlocked_bundles = set(ent.get("unlocked_bundles") or [])
+            # Retro-compatibilità: chi ha acquistato il vecchio pacchetto "panettoni"
+            # mantiene l'accesso alla nuova categoria "pasticceria" (viennoiserie).
+            if "panettoni" in unlocked_bundles:
+                unlocked_bundles.add("pasticceria")
 
             def _visible(d):
                 if d.get("name") in DEMO_RECIPE_NAMES or unlock_all:
@@ -803,6 +817,189 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
     docs = await db.recipes.find({"collection_name": collection_name, "owner_id": user["user_id"]}, {"_id": 0}).sort("name", 1).to_list(1000)
     return docs
+
+
+# ==========================================================================
+# GENERATORE DI RICETTE CUSTOM (Il Tuo Laboratorio) — metodo Mickey Lab
+# Calcolo deterministico con percentuali del panificatore + procedimento AI.
+# ==========================================================================
+GEN_EXTRAS = {
+    # key: (label_it, percent_su_farina)
+    "olio_oliva": ("Olio extravergine d'oliva", 4.0),
+    "strutto": ("Strutto", 3.0),
+    "burro": ("Burro", 8.0),
+    "zucchero": ("Zucchero", 5.0),
+    "miele": ("Miele", 3.0),
+    "latte": ("Latte (sostituisce parte dell'acqua)", 0.0),
+    "uova": ("Uova", 10.0),
+    "farina_canapa": ("Farina di canapa", 8.0),
+    "semi_misti": ("Semi misti (lino, girasole, sesamo)", 12.0),
+    "erbe": ("Erbe aromatiche (rosmarino/origano)", 1.5),
+    "olive": ("Olive denocciolate", 15.0),
+    "pomodori_secchi": ("Pomodori secchi", 12.0),
+    "noci": ("Noci", 15.0),
+    "uvetta": ("Uvetta", 20.0),
+    "malto": ("Malto diastasico", 0.8),
+}
+
+GEN_PREFERMENT = {
+    "poolish": {"label": "Poolish", "flour_share": 0.30, "hyd": 1.00, "yeast_pct": 0.3, "method": "indiretto"},
+    "biga": {"label": "Biga", "flour_share": 0.40, "hyd": 0.45, "yeast_pct": 1.0, "method": "indiretto"},
+    "lm": {"label": "Lievito Madre", "flour_share": 0.0, "lm_pct": 25.0, "yeast_pct": 0.0, "method": "indiretto"},
+    "diretto": {"label": "Lievito di Birra (diretto)", "flour_share": 0.0, "yeast_pct": 1.5, "method": "diretto"},
+    "misto": {"label": "Poolish + Lievito Madre (misto)", "flour_share": 0.20, "hyd": 1.00, "lm_pct": 10.0, "yeast_pct": 0.4, "method": "indiretto"},
+}
+
+
+class RecipeGenReq(BaseModel):
+    product: str
+    preferment: str = "diretto"       # poolish | biga | lm | diretto | misto
+    hydration: int = 70               # 50..100
+    extras: List[str] = []
+    total_weight: int = 1000          # grammi impasto finale desiderato
+    lang: str = "it"
+
+
+def _round5(x: float) -> float:
+    return round(x, 1) if x < 20 else round(x)
+
+
+@api_router.post("/recipes/generate")
+async def generate_recipe(body: RecipeGenReq, user: dict = Depends(current_user)):
+    if not await user_is_pro(user):
+        raise HTTPException(status_code=403, detail="Serve l'abbonamento PRO")
+    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
+    hyd = max(50, min(100, int(body.hydration)))
+    pf = GEN_PREFERMENT.get(body.preferment, GEN_PREFERMENT["diretto"])
+    salt_pct = 2.0
+    extra_defs = [(k, GEN_EXTRAS[k][0], GEN_EXTRAS[k][1]) for k in body.extras if k in GEN_EXTRAS]
+    extras_pct_sum = sum(p for _, _, p in extra_defs)
+    lm_pct = pf.get("lm_pct", 0.0)
+    yeast_pct = pf.get("yeast_pct", 0.0)
+
+    # Farina totale: totale = farina * (1 + idr + sale + extra + lm + lievito)/100
+    total_pct = 100 + hyd + salt_pct + extras_pct_sum + lm_pct + yeast_pct
+    flour_total = body.total_weight / (total_pct / 100.0)
+    water_total = flour_total * hyd / 100.0
+    salt_g = flour_total * salt_pct / 100.0
+    yeast_g = flour_total * yeast_pct / 100.0
+    lm_g = flour_total * lm_pct / 100.0
+    extras_g = [{"name": lbl, "grams": _round5(flour_total * p / 100.0), "percent": p} for _, lbl, p in extra_defs]
+
+    # Split pre-fermento
+    preferment_block = None
+    fshare = pf.get("flour_share", 0.0)
+    if fshare > 0:
+        pf_flour = flour_total * fshare
+        pf_water = pf_flour * pf.get("hyd", 1.0)
+        pf_yeast = pf_flour * pf.get("yeast_pct", 0.0) / 100.0
+        preferment_block = {
+            "type": pf["label"],
+            "flour_g": _round5(pf_flour), "water_g": _round5(pf_water), "yeast_g": _round5(pf_yeast),
+            "hours": "12-16h a 18°C" if body.preferment == "biga" else "8-12h a 20°C",
+        }
+        final_flour = flour_total - pf_flour
+        final_water = water_total - pf_water
+    else:
+        final_flour = flour_total
+        final_water = water_total
+
+    ingredients = {
+        "flour_total_g": _round5(flour_total),
+        "water_total_g": _round5(water_total),
+        "final_flour_g": _round5(final_flour),
+        "final_water_g": _round5(final_water),
+        "salt_g": _round5(salt_g),
+        "yeast_g": _round5(yeast_g) if yeast_g else 0,
+        "sourdough_g": _round5(lm_g) if lm_g else 0,
+        "extras": extras_g,
+        "hydration_percent": hyd,
+        "preferment": preferment_block,
+    }
+
+    # Titolo leggibile
+    pf_label = pf["label"]
+    title_map = {
+        "it": f"{body.product} con {pf_label} al {hyd}% di Idratazione",
+        "de": f"{body.product} mit {pf_label}, {hyd}% Hydration",
+        "en": f"{body.product} with {pf_label} at {hyd}% Hydration",
+        "es": f"{body.product} con {pf_label} al {hyd}% de Hidratación",
+    }
+    title = title_map.get(lang, title_map["it"])
+
+    # Procedimento AI su misura nella lingua attiva
+    procedure = ""
+    if EMERGENT_LLM_KEY:
+        lang_name = _LANG_NAMES.get(lang, "italiano")
+        extras_txt = ", ".join(f"{e['name']} {e['grams']}g" for e in extras_g) or "nessuno"
+        pf_txt = (f"{preferment_block['type']}: {preferment_block['flour_g']}g farina + "
+                  f"{preferment_block['water_g']}g acqua + {preferment_block['yeast_g']}g lievito ({preferment_block['hours']})"
+                  if preferment_block else (f"Lievito Madre {ingredients['sourdough_g']}g" if lm_g else "Lievito di birra diretto"))
+        sys = (f"Sei un Maestro Panificatore. Scrivi SOLO in {lang_name}. "
+               "Genera un procedimento professionale passo-passo (numerato) per la ricetta indicata, "
+               "coerente col pre-fermento, l'idratazione e gli ingredienti dati. "
+               "Includi: gestione del pre-fermento, eventuale autolisi, impasto e incordatura, inserimento di olio/aromi "
+               "come da regola (grassi e aromi verso fine impasto), puntata, pieghe, formatura, appretto e cottura "
+               "con temperatura e tempi realistici per il prodotto. Niente introduzioni, solo i passaggi.")
+        prompt = (f"Prodotto: {body.product}\nPre-fermento: {pf_txt}\nIdratazione: {hyd}%\n"
+                  f"Farina totale: {ingredients['flour_total_g']}g, Acqua totale: {ingredients['water_total_g']}g, "
+                  f"Sale: {ingredients['salt_g']}g. Ingredienti speciali: {extras_txt}.\n"
+                  f"Peso impasto finale: {body.total_weight}g.")
+        try:
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gen-{uuid.uuid4().hex[:8]}",
+                           system_message=sys).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1600)
+            full = ""
+            async for ev in chat.stream_message(UserMessage(text=prompt)):
+                if isinstance(ev, TextDelta):
+                    full += ev.content
+                elif isinstance(ev, StreamDone):
+                    break
+            procedure = full.strip()
+        except Exception as e:
+            logging.warning(f"generate_recipe procedure failed: {e}")
+
+    return {"title": title, "ingredients": ingredients, "procedure": procedure,
+            "preferment_key": body.preferment, "product": body.product, "lang": lang}
+
+
+async def _translate_text_multi(text: str) -> dict:
+    """Traduce un breve testo (post/commento community) in DE/EN/ES con una sola chiamata.
+    Ritorna {text_de, text_en, text_es}. Best-effort: in caso di errore ritorna {}."""
+    text = (text or "").strip()
+    if not text or not EMERGENT_LLM_KEY:
+        return {}
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"ctr-{uuid.uuid4().hex[:8]}",
+            system_message=("Sei un traduttore per una community di panificatori. Traduci il messaggio in "
+                            "tedesco, inglese e spagnolo mantenendo tono naturale e termini tecnici (Lievito Madre, "
+                            "Poolish, Biga, Sauerteig, Panettone). Se il testo è già in una di quelle lingue, "
+                            "fornisci comunque la traduzione corretta. Rispondi SOLO con JSON valido "
+                            '{"de": "...", "en": "...", "es": "..."} senza altro testo.'),
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1200)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=text)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        if not m:
+            return {}
+        data = json.loads(m.group(0))
+        out = {}
+        if data.get("de"):
+            out["text_de"] = data["de"]
+        if data.get("en"):
+            out["text_en"] = data["en"]
+        if data.get("es"):
+            out["text_es"] = data["es"]
+        return out
+    except Exception as e:
+        logging.warning(f"translate_text_multi failed: {e}")
+        return {}
+
+
 
 
 @api_router.post("/recipes", response_model=Recipe)
@@ -3225,12 +3422,16 @@ async def community_create(body: CommunityPostReq, user: dict = Depends(current_
     if not text and not body.image_url:
         raise HTTPException(400, "Scrivi un messaggio o allega una foto")
     cat = body.category if body.category in COMMUNITY_CATEGORIES else "consiglio"
+    tr = await _translate_text_multi(text) if text else {}
     doc = {
         "id": str(uuid.uuid4()),
         "author_id": user["user_id"],
         "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
         "category": cat,
         "text": text,
+        "text_de": tr.get("text_de"),
+        "text_en": tr.get("text_en"),
+        "text_es": tr.get("text_es"),
         "image_url": body.image_url,
         "created_at": now_iso(),
         "likes": [],
@@ -3268,11 +3469,15 @@ async def community_comment(post_id: str, body: CommunityCommentReq, user: dict 
     if not doc:
         raise HTTPException(404, "Post non trovato")
     actor = user.get("name") or (user.get("email") or "Fornaio").split("@")[0]
+    ctr = await _translate_text_multi(text)
     comment = {
         "id": str(uuid.uuid4()),
         "author_id": user["user_id"],
         "author_name": actor,
         "text": text,
+        "text_de": ctr.get("text_de"),
+        "text_en": ctr.get("text_en"),
+        "text_es": ctr.get("text_es"),
         "created_at": now_iso(),
     }
     await db.community_posts.update_one({"id": post_id}, {"$push": {"comments": comment}})

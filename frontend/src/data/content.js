@@ -146,10 +146,61 @@ export const content = {
     },
   },
 
+  es: {
+    promptSuggestions: [
+      "¿Cómo corrijo una masa demasiado húmeda y pegajosa?",
+      "¿Qué harina alemana equivale a la Tipo 00 o Tipo 1 italiana?",
+      "¿Cómo sé cuándo el pan fermentado está listo para hornear?",
+      "¿Cómo refresco mi masa madre antes de una masa grande?",
+    ],
+    encyclopedia: [
+      { title: "Harinas alemanas para panaderos italianos", body: "En Alemania se usa la clasificación por 'Type'. Equivalencias útiles: Type 405 ≈ 00, Type 550 ≈ 0, Type 812 ≈ 1, Type 1050 ≈ 2. Para la espelta busca 'Dinkelmehl' (Type 630 fina, 1050 semiintegral)." },
+      { title: "La ciencia de la autólisis", body: "Mezclando solo harina y agua y dejando reposar 30–60 minutos, las enzimas empiezan a desarrollar el gluten. El resultado es una masa más extensible y una mejor estructura de la miga." },
+      { title: "Ácido láctico vs acético", body: "Masa madre caliente e hidratada → más ácido láctico (notas suaves). Fría y dura → más ácido acético (notas intensas). Ajusta temperatura e hidratación para controlar la acidez." },
+      { title: "Hidratación: qué cambia", body: "Más agua = miga más abierta pero masa más difícil. Para empezar, quédate entre 70–75% con harinas medias; supera el 80% solo con harinas fuertes (W300+)." },
+    ],
+    news: [
+      { region: "germania", highlight: true, tag: "Deutschland", title: "Harinas ecológicas a la piedra en Alemania", body: "Cada vez más molinos regionales ofrecen espelta (Dinkel) Type 630 y 1050: ideales para panes rústicos y panettone de fermentación natural." },
+      { region: "germania", highlight: true, tag: "Deutschland", title: "Temporada fría: da más tiempo", body: "A 18–20°C en casa la fermentación se ralentiza. Sube la temperatura del agua y mantén la masa en torno a 24–25°C." },
+      { region: "germania", tag: "Germany", title: "La espelta vuelve a estar de moda en Alemania", body: "En toda Alemania crece la demanda de Dinkelbrot: la harina de espelta absorbe más agua, empieza con +3–5% de hidratación." },
+      { region: "germania", tag: "Germany", title: "Cultura Sauerteig: intercambio de masas madre", body: "Las comunidades de panaderos de Alemania organizan intercambios de masa madre y granos antiguos." },
+      { region: "italia", tag: "Italy", title: "Panettone artesanal: la temporada de los grandes levados", body: "En Italia la formación en masa madre para el panettone está en pleno auge: refrescos regulares y temperatura estable son la clave." },
+      { region: "italia", tag: "Italy", title: "Granos antiguos y harinas de proximidad", body: "Las harinas de grano antiguo molidas a la piedra crecen en Italia: más sabor, pero hay que gestionar hidratación y fuerza." },
+    ],
+    youtubeVideos: [
+      { title: "Masa y prefermento: el inicio (sponge)", category: "Técnica de masa", url: "https://www.youtube.com/embed/SCmgZw4QXE4" },
+      { title: "Cocción y greñado de grandes levados", category: "Cocción y acabado", url: "https://www.youtube.com/embed/C_7Xft7HRVQ" },
+    ],
+    freeCourses: [
+      { title: "Panettone artesanal: el método profesional", category: "Panettone", source: "Eater · Martesana Milano", level: "Profesional", url: "https://www.youtube.com/embed/nwCiW_BH3lU", isNew: true },
+      { title: "Masa madre: alimentación y refresco", category: "Masa madre", source: "Ricette di Caterina", level: "Profesional", url: "https://www.youtube.com/embed/eN6BnMnfRUE", isNew: true },
+      { title: "Focaccia genovesa con biga: corteza crujiente y miga abierta", category: "Focaccia", source: "Chef Billy Parisi", level: "Profesional", url: "https://www.youtube.com/embed/nyu15TqG038", isNew: false },
+      { title: "Masa madre desde cero, sin aditivos", category: "Masa madre", source: "Bread Ritual", level: "Profesional", url: "https://www.youtube.com/embed/GSJmK9IU4tQ", isNew: false },
+    ],
+    lievitoMadre: {
+      intro: "La masa madre es el corazón de mi trabajo. Aquí te lo explico todo: qué es, la diferencia entre masa madre sólida, Li.Co.Li y el Sauerteig alemán, qué es la autólisis y cómo gestiono mi madre día a día.",
+      sections: [
+        { title: "Qué es la masa madre", body: "Es una masa de harina y agua fermentada de forma espontánea por levaduras salvajes y bacterias lácticas. Aporta fermentación natural, aroma, digestibilidad y larga conservación. La madre SÓLIDA tiene baja hidratación (~45-50%), es estable y huele dulce/a miel." },
+        { title: "Qué es el Li.Co.Li", body: "Li.Co.Li = masa madre de cultivo líquido: una madre de alta hidratación (100%, igual peso de harina y agua). Es más fácil de gestionar (se remueve, no se amasa), fermenta más rápido y da notas ligeramente más ácidas. Ideal para panes de cada día; para los grandes levados prefiero la sólida." },
+        { title: "Sauerteig y masa madre", body: "En Alemania el 'Sauerteig' suele ser de centeno, más ácido y usado para panes oscuros. La 'lievito madre' italiana suele ser de trigo, más suave, ideal para panettone y panes ligeros. Uso ambas: Sauerteig para panes rústicos alemanes, masa madre para los grandes levados." },
+        { title: "Autólisis", body: "La autólisis consiste en dejar reposar solo harina y agua (sin levadura ni sal) 30-60 minutos antes de amasar. Las enzimas empiezan a desarrollar el gluten solas: la masa se vuelve más extensible, fácil de trabajar y la miga mejora. Con integrales y espelta ayuda mucho a la absorción de agua." },
+        { title: "Mi rutina (Millebolle 50-50)", body: "Cada día: baño la madre 15 min en agua a 31°C. Primer refresco: 100 g de madre + 200 g de harina, hidratación ~35%, reposo ~4 horas hasta pH 4,2-4,3. Tras el primer refresco guardo una parte para el día siguiente. Un refresco adicional a 16-24°C durante 18-24 horas al 45% cuando la necesito para grandes levados. Siempre controlo el pH: es mi brújula para la fuerza de la madre." },
+        { title: "Refrescar paso a paso", body: "Refrescar es alimentar la madre: descarta una parte y añade harina y agua frescas. Proporción típica 1:1:0,5 (100 g madre + 100 g harina + 45-50 g agua para la sólida). Antes de un gran levado hago 2-3 refrescos seguidos (cada 3-4 horas) a 28°C: la madre queda dulce, hinchada y lista." },
+        { title: "Cómo sé que está lista", body: "Está lista cuando dobla/triplica en 3-4 horas, huele a yogur y miel (no a vinagre ni disolvente) y el corte muestra una miga tupida y uniforme. Truco: un trocito en agua debe flotar. Si está ácida, floja o huele mal, necesita más refrescos o está demasiado caliente/fría." },
+        { title: "Temperatura y agua", body: "La temperatura lo gobierna todo. 26-28°C = fermentación dulce y rápida; por debajo de 20°C se ralentiza y se vuelve más ácida. Uso agua a ~31°C para el baño y ajusto la temperatura del agua de amasado (ver 'Clima y temperatura') para alcanzar la temperatura final de madre y masa." },
+        { title: "Autólisis y madre juntas", body: "A menudo hago autólisis (solo harina + agua, 30-60 min) ANTES de añadir la madre: la red de gluten arranca sola, la masa admite más agua y se mantiene extensible. Luego la desarrollo con la madre y por último la sal. Con espelta e integrales este paso marca la diferencia." },
+        { title: "Problemas comunes y soluciones", body: "Demasiado ácida → refrescos más frecuentes, menor temperatura, menos agua. Floja/débil → refrescos seguidos a 28°C, harina más fuerte. Corteza seca arriba → tapa bien o consérvala bajo agua/baño. Moho → tírala y empieza de nuevo (no se recupera). Olor a acetona → tiene hambre: refréscala enseguida." },
+        { title: "Conservación", body: "En la nevera (4°C) tras un refresco, bien cerrada: aguanta 5-7 días entre refrescos. Para pausas largas: sécala en escamas y guárdala en un tarro, o átala bien y consérvala en agua (método del baño). Antes de usarla, recupera su fuerza con 2-3 refrescos." },
+      ],
+    },
+  },
+
+
 };
 
 // Fallback lingua: finché i contenuti EN non sono tradotti, EN usa l'italiano
 // (evita il crash `content[lang]` undefined quando la lingua è 'en').
 if (!content.en) content.en = content.it;
+if (!content.es) content.es = content.it;
 // serve a far scattare la notifica "nuovi corsi" all'utente.
 export const COURSES_VERSION = 1;

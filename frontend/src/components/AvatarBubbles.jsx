@@ -12,20 +12,20 @@ const AV = {
 // Testi "fumetto" (SOLO scritti, nessuna voce) per sezione.
 const SCRIPTS = {
   lab: [
-    { who: "michele", it: "Benvenuto nel TUO laboratorio! Qui organizzi tutta la produzione partendo dalle tue ricette.", de: "Willkommen in DEINER Backstube! Hier organisierst du die ganze Produktion mit deinen Rezepten.", en: "Welcome to YOUR lab! Here you organize the whole production starting from your recipes." },
-    { who: "momy", it: "Parti dal Piano di Produzione IA: scegli le ricette, accendi i moduli e genera il piano. Ti guido io.", de: "Starte mit dem KI-Produktionsplan: Rezepte wählen, Module aktivieren und Plan erzeugen. Ich führe dich.", en: "Start from the AI Production Plan: pick recipes, turn on modules and generate the plan. I'll guide you." },
+    { who: "michele", it: "Benvenuto nel TUO laboratorio! Qui organizzi tutta la produzione partendo dalle tue ricette.", de: "Willkommen in DEINER Backstube! Hier organisierst du die ganze Produktion mit deinen Rezepten.", en: "Welcome to YOUR lab! Here you organize the whole production starting from your recipes.", es: "¡Bienvenido a TU laboratorio! Aquí organizas toda la producción partiendo de tus recetas." },
+    { who: "momy", it: "Parti dal Piano di Produzione IA: scegli le ricette, accendi i moduli e genera il piano. Ti guido io.", de: "Starte mit dem KI-Produktionsplan: Rezepte wählen, Module aktivieren und Plan erzeugen. Ich führe dich.", en: "Start from the AI Production Plan: pick recipes, turn on modules and generate the plan. I'll guide you.", es: "Empieza por el Plan de Producción con IA: elige recetas, activa los módulos y genera el plan. Yo te guío." },
   ],
   impara: [
-    { who: "michele", it: "Impara con calma: qui trovi la ricetta del giorno, i video e il tuo percorso passo-passo.", de: "Lerne in Ruhe: hier findest du das Rezept des Tages, Videos und deinen Schritt-für-Schritt-Weg.", en: "Learn calmly: here you'll find the recipe of the day, videos and your step-by-step path." },
-    { who: "momy", it: "Fai il Quiz del Fornaio e segna i progressi: ti accompagno io, senza fretta.", de: "Mach das Bäcker-Quiz und verfolge deine Fortschritte: ich begleite dich, ganz entspannt.", en: "Take the Baker's Quiz and track your progress: I'll guide you, no rush." },
+    { who: "michele", it: "Impara con calma: qui trovi la ricetta del giorno, i video e il tuo percorso passo-passo.", de: "Lerne in Ruhe: hier findest du das Rezept des Tages, Videos und deinen Schritt-für-Schritt-Weg.", en: "Learn calmly: here you'll find the recipe of the day, videos and your step-by-step path.", es: "Aprende con calma: aquí encuentras la receta del día, los vídeos y tu recorrido paso a paso." },
+    { who: "momy", it: "Fai il Quiz del Fornaio e segna i progressi: ti accompagno io, senza fretta.", de: "Mach das Bäcker-Quiz und verfolge deine Fortschritte: ich begleite dich, ganz entspannt.", en: "Take the Baker's Quiz and track your progress: I'll guide you, no rush.", es: "Haz el Quiz del Panadero y anota tus progresos: te acompaño, sin prisa." },
   ],
   community: [
     { who: "michele", it: "Cerchiamo colleghi appassionati! Condividi le tue foto e ricette con gli altri fornai.", de: "Wir suchen begeisterte Kollegen! Teile deine Fotos und Rezepte mit anderen Bäckern.", en: "We're looking for passionate peers! Share your photos and recipes with other bakers.", es: "¡Buscamos colegas apasionados! Comparte tus fotos y recetas con otros panaderos." },
     { who: "momy", it: "Segui gli altri, metti un like e commenta: sui social cresciamo insieme.", de: "Folge anderen, like und kommentiere: in den sozialen Netzwerken wachsen wir zusammen.", en: "Follow others, like and comment: on socials we grow together.", es: "Sigue a los demás, da like y comenta: en las redes crecemos juntos." },
   ],
   shop: [
-    { who: "michele", it: "Qui puoi avere le MIE ricette complete: dosi, procedimento e fasi.", de: "Hier bekommst du MEINE vollständigen Rezepte: Mengen, Ablauf und Phasen.", en: "Here you can get MY complete recipes: quantities, procedure and phases." },
-    { who: "momy", it: "Acquista il ricettario o abbonati PRO: le ricette compaiono subito nel Piano IA!", de: "Kaufe das Rezeptbuch oder abonniere PRO: die Rezepte erscheinen sofort im KI-Plan!", en: "Buy the recipe book or subscribe PRO: recipes appear right away in the AI Plan!" },
+    { who: "michele", it: "Qui puoi avere le MIE ricette complete: dosi, procedimento e fasi.", de: "Hier bekommst du MEINE vollständigen Rezepte: Mengen, Ablauf und Phasen.", en: "Here you can get MY complete recipes: quantities, procedure and phases.", es: "Aquí puedes tener MIS recetas completas: cantidades, procedimiento y fases." },
+    { who: "momy", it: "Acquista il ricettario o abbonati PRO: le ricette compaiono subito nel Piano IA!", de: "Kaufe das Rezeptbuch oder abonniere PRO: die Rezepte erscheinen sofort im KI-Plan!", en: "Buy the recipe book or subscribe PRO: recipes appear right away in the AI Plan!", es: "¡Compra el recetario o suscríbete a PRO: las recetas aparecen enseguida en el Plan IA!" },
   ],
 };
 

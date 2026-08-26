@@ -150,6 +150,14 @@ const BEGINNERS = {
     { title: "Baking at home", body: "Well-heated oven (230°C). Put a small pan of water in the oven for the first 10 minutes for steam: a nicer crust. It's ready when golden and it sounds hollow underneath." },
     { title: "Don't get discouraged", body: "Your first loaves won't be perfect, and that's normal. Every bake teaches something: we were all beginners once. What matters is starting again." },
   ],
+  es: [
+    { title: "Los cuatro ingredientes", body: "Para hacer pan solo necesitas harina, agua, sal y una levadura. Pesa todo con la balanza: la precisión ya es la mitad del resultado." },
+    { title: "El agua adecuada", body: "Usa agua tibia, nunca caliente. Un poco más tibia en invierno, más fresca en verano: así la masa fermenta con calma." },
+    { title: "Amasa sin prisa", body: "Mezcla, deja reposar 20 minutos y continúa: la masa se vuelve lisa casi sola. Unos pocos pliegues valen más que mucha fuerza." },
+    { title: "Deja fermentar", body: "Cubre el bol y deja que doble en un lugar cálido. Mejor lento que rápido: más sabor y mayor digestibilidad." },
+    { title: "La cocción en casa", body: "Horno bien caliente (230°C). Pon un cazo con agua en el horno los primeros 10 minutos para el vapor: una corteza más bonita. Está listo cuando está dorado y suena hueco por debajo." },
+    { title: "No te desanimes", body: "Tus primeros panes no serán perfectos, y es normal. Cada horneada enseña algo: todos fuimos principiantes. Lo importante es volver a empezar." },
+  ],
 };
 
 const FAMOUS = [
@@ -205,6 +213,13 @@ const QUIZ = {
     { q: "How do you know the bread is baked?", options: ["When it's still white", "When it's golden and sounds hollow underneath", "After exactly 5 minutes"], correct: 1 },
     { q: "Which leavening gives more flavour?", options: ["Fast and very warm", "Slow and patient", "No need to let it rise"], correct: 1 },
   ],
+  es: [
+    { q: "¿A qué temperatura debe estar el agua para amasar?", options: ["Hirviendo", "Tibia", "Helada"], correct: 1 },
+    { q: "¿Cuántos son los ingredientes básicos del pan?", options: ["Dos", "Cuatro (harina, agua, sal, levadura)", "Ocho"], correct: 1 },
+    { q: "¿Qué pones en el horno para una corteza más bonita?", options: ["Azúcar", "Un cazo con agua para el vapor", "Una cucharada de aceite"], correct: 1 },
+    { q: "¿Cómo sabes que el pan está cocido?", options: ["Cuando aún está blanco", "Cuando está dorado y suena hueco por debajo", "Después de exactamente 5 minutos"], correct: 1 },
+    { q: "¿Qué fermentación da más sabor?", options: ["Rápida y muy caliente", "Lenta y paciente", "No hace falta fermentar"], correct: 1 },
+  ],
 };
 
 function BakerQuiz() {
@@ -235,7 +250,7 @@ function BakerQuiz() {
 
   const record = best > 0 && (
     <p data-testid="quiz-best" className="text-xs font-semibold text-[#5aa0cf] flex items-center justify-center gap-1 mb-2">
-      <Trophy className="w-3.5 h-3.5" /> {lang === "de" ? `Dein Rekord: ${best}/${questions.length}` : (lang === "en" || lang === "es") ? `Your record: ${best}/${questions.length}` : `Il tuo record: ${best}/${questions.length}`}
+      <Trophy className="w-3.5 h-3.5" /> {lang === "de" ? `Dein Rekord: ${best}/${questions.length}` : lang === "es" ? `Tu récord: ${best}/${questions.length}` : lang === "en" ? `Your record: ${best}/${questions.length}` : `Il tuo record: ${best}/${questions.length}`}
     </p>
   );
 
@@ -317,6 +332,11 @@ const DAILY_RECIPES = {
     { name: "Simple home bread", ing: "500 g flour · 350 g warm water · 8 g salt · 5 g yeast", steps: "Dissolve yeast in water, add flour and salt. Knead 5 min, cover and let double (2-3 h). Shape, prove 1 h, bake at 230°C for 30-35 min with a pan of water." },
     { name: "Soft focaccia", ing: "500 g flour · 400 g water · 10 g salt · 5 g yeast · olive oil", steps: "Very wet dough: mix all, 3 stretch-and-folds every 30 min. Into an oiled tray, dimple with fingers, oil and coarse salt. Prove 1 h, bake at 220°C for 20 min." },
     { name: "Milk rolls", ing: "500 g flour · 250 g milk · 50 g butter · 50 g sugar · 7 g yeast · 8 g salt", steps: "Knead all until smooth, prove 2 h. Shape balls, prove 1 h, brush with milk, bake at 180°C for 15-18 min." },
+  ],
+  es: [
+    { name: "Pan sencillo de casa", ing: "500 g harina · 350 g agua tibia · 8 g sal · 5 g levadura", steps: "Disuelve la levadura en el agua, añade harina y sal. Amasa 5 min, tapa y deja doblar (2-3 h). Forma, fermenta 1 h, hornea a 230°C durante 30-35 min con un cazo de agua." },
+    { name: "Focaccia blanda", ing: "500 g harina · 400 g agua · 10 g sal · 5 g levadura · aceite de oliva", steps: "Masa muy hidratada: mezcla todo, 3 pliegues cada 30 min. Vierte en bandeja aceitada, marca hoyuelos con los dedos, aceite y sal gruesa. Fermenta 1 h, hornea a 220°C durante 20 min." },
+    { name: "Bollos de leche", ing: "500 g harina · 250 g leche · 50 g mantequilla · 50 g azúcar · 7 g levadura · 8 g sal", steps: "Amasa todo hasta que quede liso, fermenta 2 h. Forma bolitas, fermenta 1 h, pincela con leche y hornea a 180°C durante 15-18 min." },
   ],
 };
 
@@ -419,10 +439,10 @@ export default function Beginners() {
       <div data-testid="recipe-of-day" className="rounded-2xl p-5 text-white bg-gradient-to-br from-[#24303c] to-[#16202b] shadow-md">
         <div className="flex items-center gap-2 mb-1">
           <Star className="w-4 h-4" />
-          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages · gratis" : (lang === "en" || lang === "es") ? "Recipe of the day · free" : "Ricetta del giorno · gratis"}</span>
+          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages · gratis" : lang === "es" ? "Receta del día · gratis" : lang === "en" ? "Recipe of the day · free" : "Ricetta del giorno · gratis"}</span>
         </div>
         <h3 className="font-display text-xl font-bold leading-tight">{today.name}</h3>
-        <p className="text-sm text-white/90 mt-2"><b>{lang === "de" ? "Zutaten" : (lang === "en" || lang === "es") ? "Ingredients" : "Ingredienti"}:</b> {today.ing}</p>
+        <p className="text-sm text-white/90 mt-2"><b>{lang === "de" ? "Zutaten" : lang === "es" ? "Ingredientes" : lang === "en" ? "Ingredients" : "Ingredienti"}:</b> {today.ing}</p>
         <p className="text-sm text-white/90 mt-1.5 leading-snug">{today.steps}</p>
       </div>
 

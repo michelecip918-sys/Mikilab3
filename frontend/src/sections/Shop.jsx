@@ -114,10 +114,10 @@ export default function Shop({ hideCourses = false }) {
           </p>
           <div className="grid grid-cols-1 gap-2.5 mt-4">
             {[
-              { b: "pane", it: "Pacchetto Pane", de: "Paket Brot", en: "Bread Pack", es: "Pack de Pan", price: "€40", grad: true },
-              { b: "panettoni", it: "Grandi Lievitati (Panettoni & Colombe)", de: "Große Hefegebäcke", en: "Large Leavened (Panettoni & Colombe)", es: "Grandes Levados (Panettone y Colombe)", price: "€50", grad: true },
+              { b: "pasticceria", it: "Pasticceria Lievitata & Viennoiserie", de: "Feine Hefebackwaren & Viennoiserie", en: "Leavened Pastry & Viennoiserie", es: "Bollería Fermentada y Viennoiserie", price: "€50", grad: true },
+              { b: "pane", it: "Pane & Panificati", de: "Brot & Backwaren", en: "Bread & Baked Goods", es: "Pan y Panificados", price: "€40", grad: true },
               { b: "panini", it: "Pacchetto Panini", de: "Paket Brötchen", en: "Buns Pack", es: "Pack de Bollos", price: "€20" },
-              { b: "snack", it: "Pacchetto Snack", de: "Paket Snacks", en: "Snacks Pack", es: "Pack de Snacks", price: "€10" },
+              { b: "snack", it: "Snack & Sfizi Salati", de: "Snacks & herzhafte Häppchen", en: "Snacks & Savory Bites", es: "Snacks y Aperitivos Salados", price: "€10" },
             ].map((x) => {
               const owned = (ent?.unlocked_bundles || []).includes(x.b) || ent?.unlock_all;
               return (

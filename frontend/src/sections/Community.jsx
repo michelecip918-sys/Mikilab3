@@ -221,7 +221,7 @@ export default function Community() {
                     {(p.comments || []).map((c) => (
                       <div key={c.id} className="flex gap-2 text-sm">
                         <span className="font-semibold text-[#3f7cac] shrink-0">{c.author_name}:</span>
-                        <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{c.text}</span>
+                        <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? (c.text_de || c.text) : lang === "es" ? (c.text_es || c.text_en || c.text) : lang === "en" ? (c.text_en || c.text) : c.text}</span>
                       </div>
                     ))}
                     {commentFor === p.id && (
