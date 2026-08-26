@@ -6,6 +6,7 @@ import { API, announcementsApi } from "@/lib/api";
 import { content } from "@/data/content";
 import { useLang } from "@/i18n/LanguageContext";
 import { registerChat } from "@/lib/chatHistory";
+import { getActiveMachineNames } from "@/lib/machines";
 import TalkingAvatar from "@/components/TalkingAvatar";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -72,7 +73,7 @@ function ChatPanel() {
       const res = await fetch(`${API}/maestro/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId, message: q, lang }),
+        body: JSON.stringify({ session_id: sessionId, message: q, lang, machines: getActiveMachineNames() }),
       });
       const reader = res.body.getReader();
       const decoder = new TextDecoder();

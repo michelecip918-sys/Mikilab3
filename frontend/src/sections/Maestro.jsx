@@ -8,6 +8,7 @@ import {
 import RecipeList from "@/components/RecipeList";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
 import MyData from "@/sections/MyData";
+import MachinePark from "@/components/MachinePark";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import StartDoughs from "@/sections/StartDoughs";
 import AdattaForno from "@/sections/AdattaForno";
@@ -78,6 +79,7 @@ export default function Maestro() {
         {tool === "capo" && <CapoLaboratorio />}
         {tool === "pianoai" && <PianoProduzioneAI onOpenTool={openTool} />}
         {tool === "mydata" && <MyData onOpenTool={openTool} />}
+        {tool === "macchine" && <MachinePark />}
         {tool === "bilancia" && <SmartScale />}
         {tool === "pesata" && <GuidedWeighing />}
         {tool === "sessioni" && <DoughLog />}

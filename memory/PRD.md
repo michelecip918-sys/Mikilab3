@@ -1353,3 +1353,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **frontend**: `lib/api.js` friendsApi; `components/FriendsPanel.jsx` (modal tab Richieste/Amici/Trova con ricerca, add/accept/decline/remove); Community: pulsante `community-friends-btn` (celeste) con badge richieste + montaggio pannello.
 - Verificato: flusso completo via API (A→request→B incoming→accept→friends per entrambi) e UI (directory, Aggiungi→In attesa, toast). Utenti test in test_credentials.md.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont20 (2026-06) — Parco Macchine ON/OFF + adattamento ricette AI
+- **lib/machines.js** (nuovo): 5 categorie (formatura/estrusione, brezel, divisione, sfoglia/impasti, cella/cottura) con macchine (Rheon, estrusore, formatrice, brezel, lisciviatrice, spezzatrici, sfogliatrice, spirale/bracci tuffanti, CLIMATHERM, Rotovent, pietra+vapore). localStorage `mikilab_machines` (ids). getActiveMachineNames() (nomi IT per AI).
+- **components/MachinePark.jsx** (nuovo): tool ON/OFF per categoria con switch + contatore. Registrato in TOOLS (id "macchine", Parco Macchine) e in Maestro.jsx (tool switch).
+- **backend/server.py**: MACHINE_PROTOCOL (consulente tecnico industriale) + ChatRequest.machines + maestro_stream applica direttiva macchine → ricetta con "Modalità di Produzione", "Resa Oraria Stimata", "Punti di Attenzione Macchina", riduzione tempi formatura/divisione, T finale più bassa (22-24°C) per estrusione, ecc. MaestroSaTutto invia getActiveMachineNames().
+- Verificato: API (panini al latte con Rheon/Rotovent/spezzatrice → Scheda Tecnica Semiautomatica, ~400-500/ora, punti attenzione) e UI (toggle persistono, count).
+- TODO possibile: alimentare le macchine anche nella generazione del PIANO (CAPO_SYSTEM).
+- NB: PREVIEW → REDEPLOY per mikilab.de.

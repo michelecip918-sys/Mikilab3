@@ -244,6 +244,7 @@ class ChatRequest(BaseModel):
     session_id: str
     message: str
     lang: str = "it"
+    machines: Optional[List[str]] = None
 
 
 class VisionRequest(BaseModel):
@@ -1270,12 +1271,35 @@ LANG_DIRECTIVE = {
     "de": " Antworte IMMER auf Deutsch (respond always in German).",
 }
 
+MACHINE_PROTOCOL = (
+    "Sei un Consulente Tecnico di Panificazione Industriale e Artigianale. In base ai MACCHINARI ATTIVI qui sopra, "
+    "RICALCOLA e ADATTA la ricetta e il procedimento. Regole:\n"
+    "A) VELOCITA' E TEMPI: riduci drasticamente i tempi di formatura/divisione manuale (es. da ~45 min a mano a ~5 min con Reon/formatrice automatica o spezzatrice-arrotondatrice). "
+    "Ricalcola puntata in vasca e fermalievitazione tenendo conto che la lavorazione meccanica e' ultra-rapida.\n"
+    "B) STRESS MECCANICO/TERMICO: con estrusione/formatura (Rheon, estrusore) l'impasto subisce piu' stress: consiglia temperatura finale piu' bassa (22-24°C) e/o una tenuta glutenica leggermente superiore per non stracciare l'impasto. "
+    "Con formatrice Brezel automatica regola idratazione e tempi di riposo prima del passaggio in macchina. Con spirale/bracci tuffanti ad alta capacita' adatta i tempi di incordatura. "
+    "Con cella CLIMATHERM sfrutta il freddo per gestire lievitazione e maturazione; con forno Rotovent o piano di pietra con vapore ad alta pressione indica gradi, minuti e gestione del vapore.\n"
+    "C) VISUALIZZAZIONE OBBLIGATORIA nella scheda ricetta, aggiungi in fondo queste 3 righe:\n"
+    "- 'Modalita' di Produzione:' Manuale / Semiautomatica / Industriale (in base alle macchine ON).\n"
+    "- 'Resa Oraria Stimata:' pezzi o kg al minuto/ora producibili con l'attrezzatura attiva (stima realistica).\n"
+    "- 'Punti di Attenzione Macchina:' avvisi pratici (es. 'Incrocia il nastro della Rheon a velocita' 3 per evitare il surriscaldamento dell'impasto').\n"
+    "Se NON ci sono macchine attive, considera lavorazione manuale/artigianale classica."
+)
 
-async def maestro_stream(session_id: str, message: str, lang: str = "it"):
+
+
+
+async def maestro_stream(session_id: str, message: str, lang: str = "it", machines: Optional[List[str]] = None):
+    machine_directive = ""
+    if machines:
+        machine_directive = (
+            "\n\n=== MACCHINARI ATTIVI NEL LABORATORIO (ON): " + ", ".join(machines) + " ===\n"
+            + MACHINE_PROTOCOL
+        )
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=session_id,
-        system_message=MAESTRO_SYSTEM + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]),
+        system_message=MAESTRO_SYSTEM + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]) + machine_directive,
     ).with_model("anthropic", "claude-sonnet-4-6")
 
     # Load prior history for this session into the chat for continuity
@@ -1323,7 +1347,7 @@ async def maestro_chat(payload: ChatRequest):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
     return StreamingResponse(
-        maestro_stream(payload.session_id, payload.message, payload.lang),
+        maestro_stream(payload.session_id, payload.message, payload.lang, payload.machines),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )

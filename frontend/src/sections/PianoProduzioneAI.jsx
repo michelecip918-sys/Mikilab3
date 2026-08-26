@@ -54,6 +54,7 @@ const GOAL_TEXT = {
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
 const TOOLS = [
   { id: "mydata", Icon: Archive, it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
+  { id: "macchine", Icon: Wrench, it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
   { id: "twin", Icon: FlaskConical, it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
   { id: "adatta", Icon: Flame, it: "Adatta Forno", de: "Ofen anpassen", en: "Adapt Oven" },
   { id: "bilancia", Icon: Scale, it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
