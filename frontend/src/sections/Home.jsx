@@ -224,11 +224,11 @@ export default function Home({ onNavigate }) {
               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
               <div className="space-y-6 pt-6">
                 <div data-testid="home-lab-photo" className="rounded-3xl overflow-hidden shadow-xl ring-2 ring-[#C88A2B]/40 relative">
-                  <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt={L("Michele nel suo laboratorio", "Michele in seiner Backstube", "Michele in his bakery")}
+                  <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt={L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough")}
                     className="w-full h-56 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <p className="text-white font-display text-lg font-bold leading-tight">{L("Michele, nel suo laboratorio", "Michele, in seiner Backstube", "Michele, in his bakery")}</p>
-                    <p className="text-white/85 text-xs leading-snug">{L("Da qui nasce MikiLab: mani in pasta, ogni giorno.", "Hier entsteht MikiLab: jeden Tag mittendrin.", "This is where MikiLab is born: hands in the dough, every day.")}</p>
+                    <p className="text-white font-display text-lg font-bold leading-tight">{L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough")}</p>
+                    <p className="text-white/85 text-xs leading-snug">{L("Passione, metodo e arte bianca — ogni giorno.", "Leidenschaft, Methode und Backkunst — jeden Tag.", "Passion, method and the baking craft — every day.")}</p>
                   </div>
                 </div>
 
