@@ -1306,3 +1306,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Home.jsx**: `home-lab-gallery` dopo l'intro Michele — 3 foto reali (bio-dough-3, michele-real2, bio-dough) in scroll orizzontale, mostrate INTERE con `object-contain` su sfondo scuro (nessun crop), didascalie trilingui.
 - Verificato: 3 item presenti, foto intere.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont12 (2026-06) — Slogan MikiLab unito a "Scopri MikiLab"
+- **Home.jsx**: lo slogan (MikiLab + brand_slogan) è ora l'intestazione della card `home-story`: un'unica card con la riga "Scopri MikiLab" separata da un divisore sottile. Rimosso il blocco slogan separato. Toggle invariato.
+- Verificato: slogan dentro story, tap espande la storia.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

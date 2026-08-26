@@ -197,25 +197,25 @@ export default function Home({ onNavigate }) {
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
-      {/* Slogan / posizionamento professionale */}
-      <div data-testid="home-slogan" className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white px-5 py-4 shadow-lg -mt-2">
-        <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-        <p className="font-display text-lg sm:text-xl font-bold leading-tight mt-1">MikiLab</p>
-        <p className="text-sm text-white/90 leading-snug mt-0.5">{t("brand_slogan")}</p>
-      </div>
-
-      {/* ===== SCOPRI MIKILAB: subito sotto lo slogan MikiLab ===== */}
-      <div data-testid="home-story">
+      {/* ===== MIKILAB + SCOPRI MIKILAB uniti in un'unica card ===== */}
+      <div data-testid="home-story" className="-mt-2">
         <button data-testid="home-story-toggle" onClick={toggleStory}
-          className="w-full flex items-center gap-3 rounded-3xl p-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-lg active:scale-98 transition-all">
-          <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
-            <Info className="w-6 h-6" />
+          className="w-full text-left relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white shadow-lg active:scale-98 transition-all">
+          <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+          <div className="p-5" data-testid="home-slogan">
+            <p className="font-display text-lg sm:text-xl font-bold leading-tight mt-1">MikiLab</p>
+            <p className="text-sm text-white/90 leading-snug mt-0.5">{t("brand_slogan")}</p>
+            <div className="mt-4 flex items-center gap-3 border-t border-white/20 pt-3">
+              <div className="w-11 h-11 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
+                <Info className="w-5 h-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-display text-base font-bold">{L("Scopri MikiLab", "MikiLab kennenlernen", "Discover MikiLab")}</h3>
+                <p className="text-white/85 text-[13px] leading-snug">{L("Chi è Michele, il metodo e la filosofia", "Wer Michele ist, die Methode und Philosophie", "Who Michele is, the method and philosophy")}</p>
+              </div>
+              <ChevronDown className={`w-6 h-6 text-white/90 shrink-0 transition-transform duration-300 ${storyOpen ? "rotate-180" : ""}`} />
+            </div>
           </div>
-          <div className="flex-1 min-w-0 text-left">
-            <h3 className="font-display text-lg font-bold">{L("Scopri MikiLab", "MikiLab kennenlernen", "Discover MikiLab")}</h3>
-            <p className="text-white/85 text-sm">{L("Chi è Michele, il metodo e la filosofia", "Wer Michele ist, die Methode und Philosophie", "Who Michele is, the method and philosophy")}</p>
-          </div>
-          <ChevronDown className={`w-6 h-6 text-white/90 shrink-0 transition-transform duration-300 ${storyOpen ? "rotate-180" : ""}`} />
         </button>
 
         <AnimatePresence initial={false}>
