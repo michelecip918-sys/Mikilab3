@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckSquare, Thermometer, ShieldCheck, Archive, CalendarCheck, LogIn, Package,
   QrCode, Sparkles, ChevronRight, ChevronLeft, Plus, X, Trash2, Boxes, Save, AlertTriangle,
-  FileText, History, Send, Search, Download,
+  FileText, History, Send, Search, Download, Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
@@ -44,6 +44,7 @@ export default function DayClose() {
   const [anomalies, setAnomalies] = useState("");
   const [operator, setOperator] = useState("");
   const [note, setNote] = useState("");
+  const [signature, setSignature] = useState("");
   const [saving, setSaving] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
   const [recipeById, setRecipeById] = useState({});
@@ -51,6 +52,7 @@ export default function DayClose() {
   const [closures, setClosures] = useState([]);
   const [search, setSearch] = useState("");
   const [lastId, setLastId] = useState(null);
+  const [supplierEmail, setSupplierEmail] = useState(() => { try { return localStorage.getItem("mikilab_supplier_email") || ""; } catch { return ""; } });
 
   const load = useCallback(async () => {
     if (!user) return;
@@ -127,7 +129,7 @@ export default function DayClose() {
     const src = lowStockItems.length ? lowStockItems : inventory;
     if (!src.length) { toast.message(tri("Nessuna materia da ordinare", "Keine Rohstoffe zu bestellen")); return; }
     const withEmail = SUPPLIERS.find((s) => s.country === (lang === "de" ? "de" : "it") && s.email) || SUPPLIERS.find((s) => s.email);
-    const to = withEmail ? withEmail.email : "";
+    const to = (supplierEmail || "").trim() || (withEmail ? withEmail.email : "");
     const subject = tri("Ordine materie prime · MikiLab", "Rohstoffbestellung · MikiLab");
     const lines = src.map((it) => `- ${it.name}: ${it.qty} ${it.unit || "kg"}${it.threshold != null ? ` (${tri("soglia", "Schwelle")} ${it.threshold})` : ""}`).join("\n");
     const body = `${tri("Buongiorno,", "Guten Tag,")}\n${tri("vorrei ordinare:", "ich möchte bestellen:")}\n\n${lines}\n\n${tri("Grazie!", "Danke!")}`;
@@ -144,7 +146,7 @@ export default function DayClose() {
         consume: consume.filter((c) => c.name && Number(c.qty) > 0),
         temps: temps.filter((t) => t.name).map((t) => ({ name: t.name, temp_c: t.temp_c === "" ? null : Number(t.temp_c) })),
         cleaning, anomalies: anomalies.trim(), operator: operator.trim(), note: note.trim(),
-        production_lot: lot.trim(), lang,
+        production_lot: lot.trim(), signature, lang,
       });
       setCelebrate(true);
       setLastId((res.closure && res.closure.id) || null);
@@ -289,6 +291,13 @@ export default function DayClose() {
                 <button data-testid="inv-save" onClick={saveInventory} className="text-sm font-semibold text-white bg-[#6E8CA0] px-3 py-1.5 rounded-full flex items-center gap-1"><Save className="w-3.5 h-3.5" /> {tri("Salva magazzino", "Lager speichern")}</button>
               </div>
               <p className="text-[11px] text-[#7E8A93] flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 text-[#C88A2B] shrink-0 mt-0.5" /> {tri("Imposta una soglia: ricevi un'email quando la materia scende sotto quel livello.", "Lege eine Schwelle fest: du erhältst eine E-Mail, wenn der Rohstoff darunter fällt.")}</p>
+              <div className="pt-2 border-t border-[#d5e4f0] dark:border-[#38424B]">
+                <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-[#3f7cac] mb-1"><Send className="w-3.5 h-3.5" /> {tri("Email fornitore (per ordine rapido)", "Lieferanten-E-Mail (Schnellbestellung)")}</label>
+                <input data-testid="supplier-email" type="email" value={supplierEmail}
+                  onChange={(e) => { setSupplierEmail(e.target.value); try { localStorage.setItem("mikilab_supplier_email", e.target.value); } catch { /* */ } }}
+                  placeholder="ordini@fornitore.it" className={inp} />
+                <p className="text-[11px] text-[#7E8A93] mt-1">{tri("Salvata sul dispositivo: l'ordine rapido partirà già col destinatario giusto.", "Auf dem Gerät gespeichert: die Schnellbestellung geht an den richtigen Empfänger.")}</p>
+              </div>
             </div>
           </Card>
 
@@ -362,6 +371,11 @@ export default function DayClose() {
             <label className="text-[11px] font-bold uppercase text-[#7E8A93]">{tri("Nota di chiusura (facoltativa)", "Abschlussnotiz (optional)")}</label>
             <textarea data-testid="dayclose-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} className={inp + " mt-1 resize-none"} />
             <p className="text-[11px] text-[#7E8A93] mt-2">{tri("Data", "Datum")}: {new Date().toLocaleDateString(lang === "de" ? "de-DE" : "it-IT")} · {tri("Lotto", "Charge")}: <span className="font-mono-data">{lot}</span></p>
+          </Card>
+
+          <Card icon={<Pencil className="w-4 h-4" />} title={tri("Firma operatore", "Unterschrift Bediener")}>
+            <SignaturePad value={signature} onChange={setSignature} tri={tri} />
+            <p className="text-[11px] text-[#7E8A93] mt-1.5">{tri("Firma col dito o col mouse: comparirà sul report PDF per gli ispettori.", "Mit Finger oder Maus unterschreiben: erscheint im PDF-Bericht für Inspektoren.")}</p>
           </Card>
 
           <Card icon={<Archive className="w-4 h-4" />} title={tri("Riepilogo", "Zusammenfassung")}>
@@ -460,6 +474,49 @@ function Card({ icon, title, children }) {
     <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4">
       <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#3f7cac] mb-2.5">{icon} {title}</p>
       {children}
+    </div>
+  );
+}
+
+function SignaturePad({ value, onChange, tri }) {
+  const ref = useRef(null);
+  const drawing = useRef(false);
+  const last = useRef(null);
+
+  const point = (e) => {
+    const c = ref.current;
+    const r = c.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * (c.width / r.width), y: (e.clientY - r.top) * (c.height / r.height) };
+  };
+  const start = (e) => { e.preventDefault(); drawing.current = true; last.current = point(e); try { e.target.setPointerCapture(e.pointerId); } catch { /* */ } };
+  const move = (e) => {
+    if (!drawing.current) return;
+    e.preventDefault();
+    const ctx = ref.current.getContext("2d");
+    const p = point(e);
+    ctx.strokeStyle = "#1a2b3a"; ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath(); ctx.moveTo(last.current.x, last.current.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+    last.current = p;
+  };
+  const end = () => { if (!drawing.current) return; drawing.current = false; onChange(ref.current.toDataURL("image/png")); };
+  const clear = () => { const c = ref.current; c.getContext("2d").clearRect(0, 0, c.width, c.height); onChange(""); };
+
+  return (
+    <div>
+      <div className="relative rounded-xl border-2 border-dashed border-[#c7d6e5] dark:border-[#38424B] bg-[#f8fbfe] dark:bg-[#1F252B] overflow-hidden">
+        <canvas ref={ref} width={600} height={180} data-testid="signature-pad"
+          onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerLeave={end}
+          className="w-full touch-none" style={{ height: "150px", cursor: "crosshair" }} />
+        {!value && (
+          <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-[#9fb2c2]">
+            {tri("Firma qui ✍️", "Hier unterschreiben ✍️")}
+          </span>
+        )}
+      </div>
+      <button type="button" data-testid="signature-clear" onClick={clear}
+        className="mt-2 text-xs font-semibold text-[#C0574D] active:scale-95">
+        {tri("Cancella firma", "Unterschrift löschen")}
+      </button>
     </div>
   );
 }

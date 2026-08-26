@@ -1414,3 +1414,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Test: iteration_77 frontend 100% (toggle, storico, ricerca, wizard, celebrazione+PDF, banner scorte+mailto, IT/DE). Backend curl: list, PDF (%PDF-, 200 application/pdf), weekly email accettata da Resend. Fix post-test: download PDF via anchor con filename `chiusura-<lotto>.pdf`; input "Soglia avviso" su riga dedicata (non più stretto).
 - **Known issue (preesistente, fuori scope)**: LabTour in "Il Tuo Laboratorio" ha un overlay che intercetta i click finché non viene chiuso; i controlli Salta/Avanti/X non hanno data-testid. Da valutare separatamente.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont27 (2026-06) — Fix Tour Laboratorio, Firma Digitale su PDF, Email fornitore predefinita
+1. **Fix Tour Laboratorio** (`LabTour.jsx`): il backdrop è ora `pointer-events-none` (solo oscuramento, non blocca i tap). Aggiunto listener document-click: toccando fuori dalla card del tour (es. uno strumento) il tour si chiude e il tap raggiunge lo strumento. Controlli già con data-testid (lab-tour-skip/next). Verificato: tap su capo-quicklink-dayclose → strumento aperto + tour chiuso.
+2. **Firma Digitale Chiusura** (`DayClose.jsx` `SignaturePad` canvas dito/mouse, `signature-pad`/`signature-clear`): la firma (dataURL PNG) viene salvata nella chiusura e **incorporata nel report PDF** (`server.py` DayCloseReq.signature + `_build_closure_pdf` disegna l'immagine base64 alla riga firma). Verificato E2E: disegno → conferma → PDF 200/application/pdf con firma.
+3. **Email fornitore predefinita (opzione B)** (`DayClose.jsx`): campo `supplier-email` nel Magazzino, salvato in localStorage (`mikilab_supplier_email`); `supplierOrder` usa quell'indirizzo come destinatario del mailto di "Ordine rapido al fornitore" (fallback: fornitore con email da `suppliers.js`). Verificato: persiste al reload, mailto precompilato.
+- Test: iteration_78 frontend 100% (4/4). Note cosmetiche opzionali non bloccanti: striscia colorata sopra header su mobile; 401 pre-login in console.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

@@ -3923,6 +3923,7 @@ class DayCloseReq(BaseModel):
     operator: Optional[str] = Field("", max_length=160)
     note: Optional[str] = Field("", max_length=2000)
     production_lot: Optional[str] = Field("", max_length=120)
+    signature: Optional[str] = Field("", max_length=400000)   # data URL PNG (firma)
     lang: str = "it"
 
 
@@ -3983,7 +3984,8 @@ async def day_close(body: DayCloseReq, user: dict = Depends(current_user)):
     rec = {"id": str(uuid.uuid4()), "owner_id": uid, "date": now[:10], "closed_at": now,
            "produced": body.produced, "deducted": deducted, "temps": body.temps,
            "cleaning": body.cleaning, "anomalies": body.anomalies, "operator": body.operator,
-           "note": body.note, "production_lot": body.production_lot, "haccp_created": haccp_created}
+           "note": body.note, "production_lot": body.production_lot, "signature": body.signature or "",
+           "haccp_created": haccp_created}
     await db.day_closures.insert_one(rec)
     rec.pop("_id", None)
     # Avviso scorte basse via email (se qualche materia è scesa sotto soglia con lo scarico)
@@ -4078,8 +4080,20 @@ def _build_closure_pdf(c: dict, lang: str = "it") -> bytes:
         story.append(Paragraph(L["note"], lab))
         story.append(Paragraph(esc(c.get("note")), body))
 
-    story.append(Spacer(1, 14 * mm))
-    story.append(Paragraph(f"{L['sign']}: {esc(c.get('operator')) or ''} __________________________", body))
+    story.append(Spacer(1, 10 * mm))
+    story.append(Paragraph(f"{L['sign']}:", body))
+    sig = c.get("signature") or ""
+    if sig.startswith("data:image"):
+        try:
+            import base64
+            from reportlab.platypus import Image as _Img
+            raw = base64.b64decode(sig.split(",", 1)[1])
+            story.append(_Img(BytesIO(raw), width=60 * mm, height=18 * mm, kind="proportional", hAlign="LEFT"))
+        except Exception:
+            story.append(Paragraph(f"{esc(c.get('operator')) or ''} __________________________", body))
+    else:
+        story.append(Spacer(1, 4 * mm))
+        story.append(Paragraph(f"{esc(c.get('operator')) or ''} __________________________", body))
     story.append(Paragraph(f"<font color='#7E8A93' size=8>MikiLab · Il Laboratorio di Michele · {esc(c.get('closed_at'))}</font>", body))
     doc.build(story)
     return buf.getvalue()
