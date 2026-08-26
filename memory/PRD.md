@@ -1291,3 +1291,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Home.jsx**: il blocco `home-story` ("Scopri MikiLab") spostato da sotto "Chiedi al Maestro" a subito sotto lo slogan MikiLab e sopra News/"Il cuore di MikiLab". Stessa struttura (richiudibile, bio, concetti, joke). Rimosso dalla posizione in fondo. Nessun doppione.
 - Verificato: ordine slogan→story→news→core, home-story count=1.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont9 (2026-06) — "Scopri MikiLab" aperto al primo accesso
+- **Home.jsx**: `storyOpen` ora parte APERTO al primo accesso (localStorage `mikilab_home_story_seen` assente); `toggleStory` imposta il flag così alle visite successive resta chiuso di default.
+- Verificato: 1a visita aperto (bio-card visibile) → chiude → 2a visita chiuso.
+- NB: PREVIEW → REDEPLOY per mikilab.de.

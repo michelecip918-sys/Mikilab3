@@ -138,7 +138,13 @@ export default function Home({ onNavigate }) {
   const [chat, setChat] = useState(false);
   const [legal, setLegal] = useState(false);
   const [open, setOpen] = useState(null);
-  const [storyOpen, setStoryOpen] = useState(false);
+  const [storyOpen, setStoryOpen] = useState(() => {
+    try { return !localStorage.getItem("mikilab_home_story_seen"); } catch { return true; }
+  });
+  const toggleStory = () => {
+    try { localStorage.setItem("mikilab_home_story_seen", "1"); } catch { /* */ }
+    setStoryOpen((v) => !v);
+  };
   const concepts = CONCEPTS[lang] || CONCEPTS.it;
   const activeConcept = concepts.find((c) => c.id === open) || null;
   const go = (tab) => onNavigate && onNavigate(tab);
@@ -200,7 +206,7 @@ export default function Home({ onNavigate }) {
 
       {/* ===== SCOPRI MIKILAB: subito sotto lo slogan MikiLab ===== */}
       <div data-testid="home-story">
-        <button data-testid="home-story-toggle" onClick={() => setStoryOpen((v) => !v)}
+        <button data-testid="home-story-toggle" onClick={toggleStory}
           className="w-full flex items-center gap-3 rounded-3xl p-5 bg-gradient-to-br from-[#5E8B7E] to-[#33564E] text-white shadow-lg active:scale-98 transition-all">
           <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
             <Info className="w-6 h-6" />
