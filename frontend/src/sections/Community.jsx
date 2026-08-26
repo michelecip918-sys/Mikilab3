@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2 } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -97,6 +97,17 @@ export default function Community() {
           <p className="text-sm text-[#7E8A93]">{tri("Consigli, foto e ricette tra colleghi", "Tipps, Fotos und Rezepte unter Kollegen", "Tips, photos and recipes among peers")}</p>
         </div>
       </div>
+
+      <button data-testid="community-marketplace-top-btn"
+        onClick={() => { const el = document.querySelector("[data-testid='community-marketplace']"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#C88A2B] to-[#A66A15] text-white shadow-md active:scale-98 transition-all">
+        <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0"><Store className="w-6 h-6" /></div>
+        <div className="flex-1 min-w-0 text-left">
+          <p className="font-display text-base font-bold leading-tight">{tri("Mercatino dell'Usato", "Gebraucht-Markt", "Used Marketplace")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{tri("Compra e vendi macchinari e attrezzature tra artigiani", "Kaufe & verkaufe Maschinen und Ausrüstung unter Handwerkern", "Buy & sell machinery and equipment among artisans")}</p>
+        </div>
+        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Vai", "Los", "Go")}</span>
+      </button>
 
       <AvatarBubbles variant="community" />
 

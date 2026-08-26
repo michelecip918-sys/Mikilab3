@@ -1311,3 +1311,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Home.jsx**: lo slogan (MikiLab + brand_slogan) è ora l'intestazione della card `home-story`: un'unica card con la riga "Scopri MikiLab" separata da un divisore sottile. Rimosso il blocco slogan separato. Toggle invariato.
 - Verificato: slogan dentro story, tap espande la storia.
 - NB: PREVIEW → REDEPLOY per mikilab.de.
+
+## v-cont13 (2026-06) — Pulsante Marketplace in alto nella Community
+- **Community.jsx**: aggiunto `community-marketplace-top-btn` (card dorata "Mercatino dell'Usato") subito sotto l'header; scroll smooth alla sezione `community-marketplace` in fondo. Trilingue.
+- Verificato: pulsante presente, click scrolla al marketplace.
+- NB: PREVIEW → REDEPLOY per mikilab.de.
