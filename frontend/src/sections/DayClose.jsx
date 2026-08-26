@@ -183,21 +183,31 @@ export default function DayClose() {
             )}
             <div className="space-y-2">
               {inventory.map((it, i) => (
-                <div key={it.id || i} className="flex items-center gap-2">
-                  <input data-testid={`inv-name-${i}`} value={it.name} placeholder={tri("Materia prima", "Rohstoff")}
-                    onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
-                  <input data-testid={`inv-qty-${i}`} type="number" value={it.qty}
-                    onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-20"} />
-                  <select data-testid={`inv-unit-${i}`} value={it.unit} onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))} className={inp + " w-16 px-1"}>
-                    <option>kg</option><option>g</option><option>pz</option><option>L</option>
-                  </select>
-                  <button onClick={() => setInventory((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><Trash2 className="w-4 h-4" /></button>
+                <div key={it.id || i} className="rounded-xl border border-[#d5e4f0] dark:border-[#38424B] p-2 space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <input data-testid={`inv-name-${i}`} value={it.name} placeholder={tri("Materia prima", "Rohstoff")}
+                      onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
+                    <button onClick={() => setInventory((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input data-testid={`inv-qty-${i}`} type="number" value={it.qty} placeholder={tri("Qtà", "Menge")}
+                      onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-20"} />
+                    <select data-testid={`inv-unit-${i}`} value={it.unit} onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))} className={inp + " w-16 px-1"}>
+                      <option>kg</option><option>g</option><option>pz</option><option>L</option>
+                    </select>
+                    <div className="flex items-center gap-1 flex-1 min-w-0">
+                      <AlertTriangle className="w-3.5 h-3.5 text-[#C88A2B] shrink-0" />
+                      <input data-testid={`inv-threshold-${i}`} type="number" value={it.threshold ?? ""} placeholder={tri("soglia avviso", "Warnschwelle")}
+                        onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, threshold: e.target.value === "" ? null : Number(e.target.value) } : x))} className={inp + " min-w-0"} />
+                    </div>
+                  </div>
                 </div>
               ))}
               <div className="flex flex-wrap items-center gap-2">
-                <button data-testid="inv-add" onClick={() => setInventory((l) => [...l, { name: "", category: "farina", qty: 0, unit: "kg" }])} className="text-sm font-medium text-[#3f7cac] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi materia", "Rohstoff")}</button>
+                <button data-testid="inv-add" onClick={() => setInventory((l) => [...l, { name: "", category: "farina", qty: 0, unit: "kg", threshold: null }])} className="text-sm font-medium text-[#3f7cac] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi materia", "Rohstoff")}</button>
                 <button data-testid="inv-save" onClick={saveInventory} className="text-sm font-semibold text-white bg-[#6E8CA0] px-3 py-1.5 rounded-full flex items-center gap-1"><Save className="w-3.5 h-3.5" /> {tri("Salva magazzino", "Lager speichern")}</button>
               </div>
+              <p className="text-[11px] text-[#7E8A93] flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 text-[#C88A2B] shrink-0 mt-0.5" /> {tri("Imposta una soglia: ricevi un'email quando la materia scende sotto quel livello.", "Lege eine Schwelle fest: du erhältst eine E-Mail, wenn der Rohstoff darunter fällt.")}</p>
             </div>
           </Card>
 

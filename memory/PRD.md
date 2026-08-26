@@ -1399,3 +1399,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 6. **Email di follow-up** (`_send_bundle_followups` + loop ogni 6h): 3 giorni dopo l'acquisto di un pacchetto (`FOLLOWUP_DAYS=3`), invio UNA sola volta (`followup_sent`) invitando a scoprire gli altri pacchetti (Resend).
 - Test: iteration_76 backend 9/9 pytest + E2E frontend 100% (favoriti no-auto-add, wizard chiusura, lingue). Fix post-test: owner_id non più esposto in day-close/last; niente voci HACCP per temperature vuote; badge NUOVO non copre più le etichette; rimossi 🇬🇧.
 - NB: PREVIEW → REDEPLOY per mikilab.de. Chiave Stripe LIVE.
+
+## v-cont25 (2026-06) — Avviso Scorte Basse (email)
+- **Backend** (`server.py`): `_notify_low_stock(uid, email, lang)` — quando una materia prima del magazzino scende ≤ `threshold` invia UNA email (Resend, IT/DE) con l'elenco delle materie sotto soglia; anti-spam via `inventory_meta.notified` (ri-notifica solo dopo che la materia risale sopra soglia e riscende). Chiamato in `PUT /api/inventory` e dopo lo scarico in `POST /api/day-close`.
+- **Frontend** (`DayClose.jsx`, Step 1 Magazzino): ogni riga ha ora il campo **soglia avviso** (`inv-threshold-<i>`) + nota "ricevi un'email quando la materia scende sotto quel livello".
+- Test: helper diretto → 1ª chiamata invia (notified=['farina 0']); 2ª idempotente (nessuna email); dopo rifornimento sopra soglia notified svuotato. PUT /inventory salva threshold e non genera errori (HTTP 200).
+- NB: email inviata all'indirizzo dell'utente loggato; dominio mittente `noreply@mikilab.de` (Resend). PREVIEW → REDEPLOY per mikilab.de.

@@ -3869,7 +3869,49 @@ async def inventory_save(body: InventorySave, user: dict = Depends(current_user)
                      "lot": (it.lot or "").strip(), "threshold": it.threshold, "updated_at": now_iso()})
     if docs:
         await db.inventory_items.insert_many(docs)
+    await _notify_low_stock(uid, user.get("email"))
     return {"items": [_inv_public(d) for d in docs]}
+
+
+def _low_stock_email_html(items: list, lang: str) -> str:
+    rows = "".join(
+        f"<li><b>{(i.get('name') or '')}</b>: {i.get('qty')} {i.get('unit', 'kg')}"
+        f" (soglia {i.get('threshold')} {i.get('unit', 'kg')})</li>" if lang != "de" else
+        f"<li><b>{(i.get('name') or '')}</b>: {i.get('qty')} {i.get('unit', 'kg')}"
+        f" (Schwelle {i.get('threshold')} {i.get('unit', 'kg')})</li>"
+        for i in items)
+    if lang == "de":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+                f"<h2 style='color:#C0574D'>⚠️ Rohstoffe fast aufgebraucht</h2>"
+                f"<p>Folgende Rohstoffe sind unter die Warnschwelle gefallen. Rechtzeitig nachbestellen:</p>"
+                f"<ul>{rows}</ul>"
+                f"<p style='color:#888;font-size:12px'>MikiLab · Rohstofflager</p></div>")
+    return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'>"
+            f"<h2 style='color:#C0574D'>⚠️ Materie prime in esaurimento</h2>"
+            f"<p>Queste materie prime sono scese sotto la soglia di avviso. Ordina in tempo:</p>"
+            f"<ul>{rows}</ul>"
+            f"<p style='color:#888;font-size:12px'>MikiLab · Magazzino materie prime</p></div>")
+
+
+async def _notify_low_stock(uid: str, email: Optional[str], lang: str = "it"):
+    """Invia UNA email quando una materia prima scende sotto soglia (finché non viene rifornita)."""
+    items = await db.inventory_items.find({"owner_id": uid, "threshold": {"$ne": None}}).to_list(500)
+    low = [it for it in items if it.get("threshold") is not None and float(it.get("qty") or 0) <= float(it["threshold"])]
+    low_keys = {_norm(it.get("name")) for it in low}
+    meta = await db.inventory_meta.find_one({"owner_id": uid}) or {}
+    notified = set(meta.get("notified") or [])
+    new_low = [it for it in low if _norm(it.get("name")) not in notified]
+    if new_low and RESEND_API_KEY and email:
+        try:
+            params = {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [email],
+                      "subject": ("MikiLab · Scorte basse ⚠️" if lang != "de" else "MikiLab · Niedriger Bestand ⚠️"),
+                      "html": _low_stock_email_html(new_low, lang)}
+            await asyncio.to_thread(_resend.Emails.send, params)
+        except Exception as e:
+            logging.getLogger(__name__).error(f"low-stock email failed: {e}")
+    # Notificati = quelli attualmente sotto soglia (chi risale sopra soglia potrà essere ri-notificato)
+    await db.inventory_meta.update_one({"owner_id": uid},
+        {"$set": {"owner_id": uid, "notified": list(low_keys), "updated_at": now_iso()}}, upsert=True)
 
 
 class DayCloseReq(BaseModel):
@@ -3944,6 +3986,8 @@ async def day_close(body: DayCloseReq, user: dict = Depends(current_user)):
            "note": body.note, "production_lot": body.production_lot, "haccp_created": haccp_created}
     await db.day_closures.insert_one(rec)
     rec.pop("_id", None)
+    # Avviso scorte basse via email (se qualche materia è scesa sotto soglia con lo scarico)
+    await _notify_low_stock(uid, user.get("email"), body.lang)
     return {"ok": True, "closure": {k: rec[k] for k in rec if k != "owner_id"}, "deducted": deducted, "haccp_created": haccp_created}
 
 
