@@ -85,38 +85,30 @@ export default function MohammedAssistant() {
   };
 
   return (
-    <div data-testid="mohammed-assistant" className="rounded-3xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white p-5 mb-5 shadow-lg">
-      <div className="flex items-start gap-3">
-        <img src={AVATAR} alt="Mohammadreza Jafari" data-testid="mohammed-avatar" className="w-16 h-16 rounded-2xl object-cover ring-2 ring-white/70 shadow-md shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+    <div data-testid="mohammed-assistant" className="rounded-2xl bg-gradient-to-br from-[#33564E] to-[#5E8B7E] text-white p-3 mb-4 shadow-md">
+      <div className="flex items-center gap-2.5">
+        <img src={AVATAR} alt="Mohammadreza Jafari" data-testid="mohammed-avatar" className="w-10 h-10 rounded-xl object-cover ring-1 ring-white/70 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-white/70">{tri("Mohammadreza Jafari · Assistente di Michele (MikiLab)", "Mohammadreza Jafari · Mich-eles Assistent (MikiLab)", "Mohammadreza Jafari · Michele's assistant (MikiLab)")}</p>
-          <h2 className="font-display text-xl font-bold leading-tight">{tri("Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋")}</h2>
-          <p className="text-sm text-white/90 mt-1 leading-snug">
-            {tri(
-              "Sono l'assistente di Michele, il creatore di MikiLab. Ti guido nel cuore del laboratorio: cosa serve DAVVERO per generare il Piano di Produzione con l'IA e quali opzioni extra puoi collegare (freezer, celle, spesa, food cost, punti vendita, turni, Digital Twin del picco).",
-              "Ich bin Micheles Assistent (Gründer von MikiLab). Ich zeige dir das Herz der Backstube: was du WIRKLICH brauchst, um den KI-Produktionsplan zu erstellen, und welche Extra-Optionen du verbinden kannst (Gefrierbestand, Kammern, Einkauf, Food Cost, Verkaufspunkte, Schichten, Digital Twin des Peaks).",
-              "I'm Michele's assistant (creator of MikiLab). I show you the heart of the lab: what you REALLY need to generate the AI Production Plan and which extra options you can connect (freezer, cells, shopping, food cost, sales points, shifts, the peak Digital Twin)."
-            )}
-          </p>
+          <h2 className="font-display text-base font-bold leading-tight">{tri("Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋")}</h2>
+          <p className="text-[11px] text-white/80 leading-snug">{tri("Assistente di Michele · ti guido nel laboratorio", "Micheles Assistent · ich führe dich durch die Backstube", "Michele's assistant · I guide you in the lab")}</p>
         </div>
       </div>
 
       {/* Guida passo-passo del laboratorio */}
-      <div data-testid="mohammed-guide" className="mt-4 grid grid-cols-1 gap-1.5">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-white/70 mb-0.5">{tri("Guida passo-passo del laboratorio", "Schritt-für-Schritt-Anleitung", "Step-by-step lab guide")}</p>
+      <div data-testid="mohammed-guide" className="mt-2.5 grid grid-cols-1 gap-1">
         {GUIDE.map((g) => (
           <button key={g.n} data-testid={`mohammed-guide-${g.n}`} onClick={() => askGuide(g.q)}
-            className="w-full flex items-center gap-2.5 bg-white/12 hover:bg-white/22 rounded-xl px-3 py-2 text-left active:scale-98 transition-all">
-            <span className="w-6 h-6 rounded-full bg-white/90 text-[#33564E] font-bold text-xs flex items-center justify-center shrink-0">{g.n}</span>
-            <span className="text-sm font-medium">{g.t}</span>
+            className="w-full flex items-center gap-2 bg-white/12 hover:bg-white/22 rounded-lg px-2.5 py-1.5 text-left active:scale-98 transition-all">
+            <span className="w-5 h-5 rounded-full bg-white/90 text-[#33564E] font-bold text-[11px] flex items-center justify-center shrink-0">{g.n}</span>
+            <span className="text-[13px] font-medium leading-tight">{g.t}</span>
           </button>
         ))}
       </div>
 
       <button data-testid="mohammed-toggle" onClick={() => setOpen((o) => !o)}
-        className="mt-3 inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur px-4 py-2 rounded-xl text-sm font-semibold active:scale-97 transition-all">
-        <Sparkles className="w-4 h-4" /> {open ? tri("Chiudi assistente", "Assistent schließen", "Close assistant") : tri("Chiedi a Mohammadreza", "Mohammadreza fragen", "Ask Mohammadreza")}
-        {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        className="mt-2.5 inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur px-3 py-1.5 rounded-lg text-[13px] font-semibold active:scale-97 transition-all">
+        <Sparkles className="w-3.5 h-3.5" /> {open ? tri("Chiudi assistente", "Assistent schließen", "Close assistant") : tri("Chiedi a Mohammadreza", "Mohammadreza fragen", "Ask Mohammadreza")}
+        {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
       </button>
 
       {open && (
