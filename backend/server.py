@@ -439,6 +439,8 @@ class RegisterReq(BaseModel):
     email: str
     password: str
     name: Optional[str] = ""
+    origin_url: Optional[str] = None
+    lang: Optional[str] = "it"
 
 
 class LoginReq(BaseModel):
@@ -446,8 +448,28 @@ class LoginReq(BaseModel):
     password: str
 
 
+class ResendVerifyReq(BaseModel):
+    email: str
+    origin_url: Optional[str] = None
+    lang: Optional[str] = "it"
+
+
 class GoogleReq(BaseModel):
     session_id: str
+
+
+def _validate_password(pw: str, lang: str = "it") -> None:
+    """Password forte: min 8 caratteri, almeno una lettera e un numero."""
+    import re as _re
+    msgs = {
+        "it": "La password deve avere almeno 8 caratteri, con lettere e numeri.",
+        "en": "Password must be at least 8 characters, with letters and numbers.",
+        "de": "Das Passwort muss mindestens 8 Zeichen mit Buchstaben und Zahlen haben.",
+        "es": "La contraseña debe tener al menos 8 caracteres, con letras y números.",
+    }
+    ok = pw and len(pw) >= 8 and _re.search(r"[A-Za-z]", pw) and _re.search(r"\d", pw)
+    if not ok:
+        raise HTTPException(status_code=400, detail=msgs.get(lang, msgs["it"]))
 
 
 def _hash_pw(pw):
@@ -699,31 +721,128 @@ async def _translate_recipe_de(doc):
         return {}
 
 
+def _verify_email_html(link: str, lang: str) -> str:
+    if lang == "de":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>Willkommen bei MikiLab 🥖</h2>"
+                f"<p>Bestätige deine E-Mail, um dein Konto zu aktivieren:</p>"
+                f"<p><a href='{link}' style='background:#3f7cac;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:bold'>E-Mail bestätigen</a></p>"
+                f"<p style='color:#888;font-size:12px'>Der Link läuft in 24 Stunden ab.</p></div>")
+    if lang == "es":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>¡Bienvenido a MikiLab 🥖</h2>"
+                f"<p>Confirma tu correo para activar tu cuenta:</p>"
+                f"<p><a href='{link}' style='background:#3f7cac;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:bold'>Confirmar correo</a></p>"
+                f"<p style='color:#888;font-size:12px'>El enlace caduca en 24 horas.</p></div>")
+    if lang == "en":
+        return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>Welcome to MikiLab 🥖</h2>"
+                f"<p>Confirm your email to activate your account:</p>"
+                f"<p><a href='{link}' style='background:#3f7cac;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:bold'>Confirm email</a></p>"
+                f"<p style='color:#888;font-size:12px'>The link expires in 24 hours.</p></div>")
+    return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>Benvenuto in MikiLab 🥖</h2>"
+            f"<p>Conferma la tua email per attivare l'account:</p>"
+            f"<p><a href='{link}' style='background:#3f7cac;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:bold'>Conferma email</a></p>"
+            f"<p style='color:#888;font-size:12px'>Il link scade tra 24 ore.</p></div>")
+
+
+async def _send_verification(email: str, origin_url: str, lang: str):
+    if not RESEND_API_KEY:
+        return None
+    token = secrets.token_urlsafe(32)
+    exp = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
+    await db.email_verifications.update_one(
+        {"email": email}, {"$set": {"email": email, "token": token, "expires_at": exp, "created_at": now_iso()}}, upsert=True)
+    origin = (origin_url or "").rstrip("/")
+    link = f"{origin}/?verify={token}"
+    subj = {"de": "MikiLab · E-Mail bestätigen", "en": "MikiLab · Confirm your email",
+            "es": "MikiLab · Confirma tu correo"}.get(lang, "MikiLab · Conferma la tua email")
+    try:
+        await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [email],
+                                                       "subject": subj, "html": _verify_email_html(link, lang)})
+    except Exception as e:
+        logging.getLogger(__name__).error(f"verification email failed: {e}")
+    return token
+
+
 @api_router.post("/auth/register")
 async def auth_register(payload: RegisterReq, response: Response):
     email = payload.email.strip().lower()
+    lang = payload.lang if payload.lang in ("it", "de", "en", "es") else "it"
     if not email or not payload.password:
         raise HTTPException(status_code=400, detail="Email e password richieste")
+    _validate_password(payload.password, lang)
     if await db.users.find_one({"email": email}):
         raise HTTPException(status_code=400, detail="Email già registrata")
     user_id = f"user_{uuid.uuid4().hex[:12]}"
+    verify_enabled = bool(RESEND_API_KEY)
     await db.users.insert_one({
         "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],
         "picture": "", "role": await _role_for_new_user(), "auth_provider": "email",
         "password_hash": _hash_pw(payload.password), "created_at": now_iso(),
+        "email_verified": not verify_enabled,
     })
+    if verify_enabled:
+        await _send_verification(email, payload.origin_url or "", lang)
+        return {"needs_verification": True,
+                "message": {"it": "Ti abbiamo inviato un'email di conferma. Controlla la posta per attivare l'account.",
+                            "de": "Wir haben dir eine Bestätigungs-E-Mail gesendet. Prüfe dein Postfach.",
+                            "en": "We've sent you a confirmation email. Check your inbox to activate your account.",
+                            "es": "Te hemos enviado un correo de confirmación. Revisa tu bandeja para activar la cuenta."}.get(lang, "")}
     token = await _make_session(user_id)
     _set_cookie(response, token)
     u = await db.users.find_one({"user_id": user_id}, {"_id": 0})
     return {"user": _public_user(u), "session_token": token}
 
 
+@api_router.post("/auth/verify-email")
+async def verify_email(body: dict, response: Response):
+    token = (body or {}).get("token", "")
+    rec = await db.email_verifications.find_one({"token": token}, {"_id": 0})
+    if not rec:
+        raise HTTPException(status_code=400, detail="Link non valido o già usato")
+    if rec.get("expires_at") and rec["expires_at"] < datetime.now(timezone.utc).isoformat():
+        raise HTTPException(status_code=400, detail="Link scaduto, richiedine uno nuovo")
+    u = await db.users.find_one({"email": rec["email"]}, {"_id": 0})
+    if not u:
+        raise HTTPException(status_code=400, detail="Utente non trovato")
+    await db.users.update_one({"email": rec["email"]}, {"$set": {"email_verified": True}})
+    await db.email_verifications.delete_one({"token": token})
+    tok = await _make_session(u["user_id"])
+    _set_cookie(response, tok)
+    u = await db.users.find_one({"email": rec["email"]}, {"_id": 0})
+    return {"user": _public_user(u), "session_token": tok}
+
+
+@api_router.post("/auth/resend-verification")
+async def resend_verification(body: ResendVerifyReq):
+    email = (body.email or "").strip().lower()
+    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
+    u = await db.users.find_one({"email": email, "auth_provider": "email"})
+    if u and not u.get("email_verified"):
+        await _send_verification(email, body.origin_url or "", lang)
+    return {"ok": True}
+
+
 @api_router.post("/auth/login")
-async def auth_login(payload: LoginReq, response: Response):
+async def auth_login(payload: LoginReq, request: Request, response: Response):
     email = payload.email.strip().lower()
+    ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?"))
+    ident = f"{ip}:{email}"
+    # Protezione forza-bruta: max 5 tentativi falliti, blocco 15 min
+    att = await db.login_attempts.find_one({"identifier": ident})
+    now = datetime.now(timezone.utc)
+    if att and att.get("locked_until") and att["locked_until"] > now.isoformat():
+        raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
     u = await db.users.find_one({"email": email}, {"_id": 0})
     if not u or not u.get("password_hash") or not _check_pw(payload.password, u["password_hash"]):
+        fails = (att.get("fails", 0) if att else 0) + 1
+        upd = {"identifier": ident, "fails": fails, "updated_at": now.isoformat()}
+        if fails >= 5:
+            upd["locked_until"] = (now + timedelta(minutes=15)).isoformat()
+            upd["fails"] = 0
+        await db.login_attempts.update_one({"identifier": ident}, {"$set": upd}, upsert=True)
         raise HTTPException(status_code=401, detail="Credenziali non valide")
+    if u.get("auth_provider") == "email" and u.get("email_verified") is False:
+        raise HTTPException(status_code=403, detail="verify_email")
+    await db.login_attempts.delete_one({"identifier": ident})
     token = await _make_session(u["user_id"])
     _set_cookie(response, token)
     return {"user": _public_user(u), "session_token": token}
@@ -842,6 +961,16 @@ GEN_EXTRAS = {
     "malto": ("Malto diastasico", 0.8),
 }
 
+# Prezzi indicativi €/kg per il food cost del generatore
+GEN_PRICE_KG = {
+    "olio_oliva": 8.0, "strutto": 4.0, "burro": 9.0, "zucchero": 1.2, "miele": 9.0,
+    "latte": 1.2, "uova": 4.0, "farina_canapa": 14.0, "semi_misti": 6.0, "erbe": 25.0,
+    "olive": 7.0, "pomodori_secchi": 12.0, "noci": 14.0, "uvetta": 4.5, "malto": 6.0,
+}
+GEN_PRICE_SALT_KG = 0.5
+GEN_PRICE_YEAST_KG = 6.0
+GEN_PRICE_SOURDOUGH_KG = 1.5
+
 GEN_PREFERMENT = {
     "poolish": {"label": "Poolish", "flour_share": 0.30, "hyd": 1.00, "yeast_pct": 0.3, "method": "indiretto"},
     "biga": {"label": "Biga", "flour_share": 0.40, "hyd": 0.45, "yeast_pct": 1.0, "method": "indiretto"},
@@ -858,6 +987,19 @@ class RecipeGenReq(BaseModel):
     extras: List[str] = []
     total_weight: int = 1000          # grammi impasto finale desiderato
     lang: str = "it"
+    # Scalatura per pezzatura
+    mode: str = "weight"              # weight | pieces
+    pieces: int = 0
+    piece_weight: int = 0             # grammi a pezzo
+    waste_percent: float = 10.0       # sfrido %
+    # Temperatura acqua d'impasto
+    target_dough_temp: float = 24.0
+    ambient_temp: float = 20.0
+    flour_temp: float = 20.0
+    friction: float = 3.0
+    # Food cost
+    flour_price_kg: float = 1.2
+    food_cost_ratio: float = 0.30     # incidenza materia prima sul prezzo di vendita
 
 
 def _round5(x: float) -> float:
@@ -877,9 +1019,18 @@ async def generate_recipe(body: RecipeGenReq, user: dict = Depends(current_user)
     lm_pct = pf.get("lm_pct", 0.0)
     yeast_pct = pf.get("yeast_pct", 0.0)
 
+    # Scalatura: da pezzatura o da peso totale
+    pieces_n = max(0, int(body.pieces or 0))
+    piece_w = max(0, int(body.piece_weight or 0))
+    waste = max(0.0, float(body.waste_percent or 0))
+    if body.mode == "pieces" and pieces_n > 0 and piece_w > 0:
+        total_weight = int(round(pieces_n * piece_w * (1 + waste / 100.0)))
+    else:
+        total_weight = max(100, int(body.total_weight or 1000))
+
     # Farina totale: totale = farina * (1 + idr + sale + extra + lm + lievito)/100
     total_pct = 100 + hyd + salt_pct + extras_pct_sum + lm_pct + yeast_pct
-    flour_total = body.total_weight / (total_pct / 100.0)
+    flour_total = total_weight / (total_pct / 100.0)
     water_total = flour_total * hyd / 100.0
     salt_g = flour_total * salt_pct / 100.0
     yeast_g = flour_total * yeast_pct / 100.0
@@ -917,6 +1068,112 @@ async def generate_recipe(body: RecipeGenReq, user: dict = Depends(current_user)
         "preferment": preferment_block,
     }
 
+    # --- Temperatura acqua d'impasto (metodo Mickey Lab) ---
+    has_pf = bool(preferment_block) or lm_g > 0
+    factor = 4 if has_pf else 3
+    d, fl, amb, fr = body.target_dough_temp, body.flour_temp, body.ambient_temp, body.friction
+    if has_pf:
+        water_temp = factor * d - (fl + amb + fr + amb)  # pre-fermento ~ temp. ambiente
+    else:
+        water_temp = factor * d - (fl + amb + fr)
+    water_temp = round(max(1.0, min(60.0, water_temp)), 1)
+    water_status = "hot" if amb >= 29 or water_temp < 2 else ("cold" if amb <= 15 or water_temp > 40 else "ok")
+    water_temp_block = {
+        "water_c": water_temp, "target_dough_c": d, "flour_c": fl, "ambient_c": amb,
+        "friction_c": fr, "status": water_status, "factor": factor,
+    }
+
+    # --- Food cost ---
+    def _cost(grams, price_kg):
+        return (grams / 1000.0) * price_kg
+    cost_flour = _cost(flour_total, body.flour_price_kg)
+    cost_salt = _cost(salt_g, GEN_PRICE_SALT_KG)
+    cost_yeast = _cost(yeast_g, GEN_PRICE_YEAST_KG) + (_cost(preferment_block["yeast_g"], GEN_PRICE_YEAST_KG) if preferment_block else 0)
+    cost_sour = _cost(lm_g, GEN_PRICE_SOURDOUGH_KG)
+    cost_extras = 0.0
+    for k, lbl, p in extra_defs:
+        cost_extras += _cost(flour_total * p / 100.0, GEN_PRICE_KG.get(k, 3.0))
+    material_cost = cost_flour + cost_salt + cost_yeast + cost_sour + cost_extras
+    n_pieces = pieces_n if (body.mode == "pieces" and pieces_n > 0) else max(1, int(round(total_weight / 500.0)))
+    cost_piece = material_cost / n_pieces if n_pieces else material_cost
+    ratio = body.food_cost_ratio if 0.05 <= body.food_cost_ratio <= 0.9 else 0.30
+    suggested_price = cost_piece / ratio
+    food_cost_block = {
+        "material_cost": round(material_cost, 2),
+        "pieces": n_pieces,
+        "cost_per_piece": round(cost_piece, 2),
+        "food_cost_ratio": round(ratio * 100),
+        "suggested_price_piece": round(suggested_price, 2),
+        "currency": "EUR",
+    }
+
+    # --- Pezzatura ---
+    portioning = {
+        "mode": body.mode,
+        "total_dough_g": total_weight,
+        "pieces": pieces_n if body.mode == "pieces" else None,
+        "piece_weight_g": piece_w if body.mode == "pieces" else None,
+        "waste_percent": waste if body.mode == "pieces" else None,
+    }
+
+    # --- Alert Ricetta Intelligente (coerenza idratazione/farina/pre-fermento) ---
+    W = {
+        "it": {
+            "hyd_extreme": "Idratazione oltre l'85%: usa una farina MOLTO forte (W320+/Manitoba) e gestisci con pieghe e bassinage, altrimenti l'impasto collassa.",
+            "hyd_high": "Idratazione alta (80%+): consigliata farina forte (W300+) e almeno 3 giri di pieghe.",
+            "hyd_low_focaccia": "Per focacce/ciabatte questa idratazione è bassa: sali almeno al 70-75% per un'alveolatura aperta.",
+            "biga_high": "Biga con idratazione totale molto alta: la biga è un pre-fermento SOLIDO, tienila al 45% e porta l'acqua nell'impasto finale (bassinage).",
+            "lm_high": "Lievito Madre con idratazione estrema: parti da rinfreschi in forza e aggiungi l'acqua a filo.",
+            "diretto_long": "Metodo diretto con idratazione alta: valuta un pre-fermento (poolish/biga) per più forza e profumo.",
+            "piece_small": "Pezzatura molto piccola: verifica lo sfrido e i tempi di cottura ridotti.",
+        },
+        "en": {
+            "hyd_extreme": "Hydration above 85%: use a VERY strong flour (W320+/Manitoba) and manage with folds and bassinage, or the dough will collapse.",
+            "hyd_high": "High hydration (80%+): a strong flour (W300+) and at least 3 sets of folds are recommended.",
+            "hyd_low_focaccia": "For focaccia/ciabatta this hydration is low: go to at least 70-75% for an open crumb.",
+            "biga_high": "Biga with very high total hydration: biga is a STIFF preferment, keep it at 45% and add the water in the final dough (bassinage).",
+            "lm_high": "Sourdough with extreme hydration: start from strong refreshments and add water gradually.",
+            "diretto_long": "Direct method with high hydration: consider a preferment (poolish/biga) for more strength and aroma.",
+            "piece_small": "Very small piece weight: check waste and reduced baking times.",
+        },
+        "de": {
+            "hyd_extreme": "Hydration über 85%: sehr starkes Mehl (W320+/Manitoba) verwenden und mit Falten und Bassinage führen, sonst kollabiert der Teig.",
+            "hyd_high": "Hohe Hydration (80%+): starkes Mehl (W300+) und mindestens 3 Faltdurchgänge empfohlen.",
+            "hyd_low_focaccia": "Für Focaccia/Ciabatta ist diese Hydration niedrig: mindestens 70-75% für eine offene Krume.",
+            "biga_high": "Biga mit sehr hoher Gesamthydration: Biga ist ein FESTER Vorteig, bei 45% halten und Wasser im Hauptteig zugeben (Bassinage).",
+            "lm_high": "Sauerteig mit extremer Hydration: mit kräftigen Auffrischungen starten und Wasser nach und nach zugeben.",
+            "diretto_long": "Direkte Methode mit hoher Hydration: einen Vorteig (Poolish/Biga) für mehr Kraft und Aroma erwägen.",
+            "piece_small": "Sehr kleines Stückgewicht: Verschnitt und kürzere Backzeiten prüfen.",
+        },
+        "es": {
+            "hyd_extreme": "Hidratación por encima del 85%: usa una harina MUY fuerte (W320+/Manitoba) y gestiona con pliegues y bassinage, o la masa colapsará.",
+            "hyd_high": "Hidratación alta (80%+): se recomienda harina fuerte (W300+) y al menos 3 tandas de pliegues.",
+            "hyd_low_focaccia": "Para focaccia/chapata esta hidratación es baja: sube al menos al 70-75% para una miga abierta.",
+            "biga_high": "Biga con hidratación total muy alta: la biga es un prefermento SÓLIDO, mantenla al 45% y añade el agua en la masa final (bassinage).",
+            "lm_high": "Masa madre con hidratación extrema: parte de refrescos en fuerza y añade el agua poco a poco.",
+            "diretto_long": "Método directo con hidratación alta: valora un prefermento (poolish/biga) para más fuerza y aroma.",
+            "piece_small": "Pieza muy pequeña: revisa el desperdicio y los tiempos de cocción reducidos.",
+        },
+    }
+    wl = W.get(lang, W["it"])
+    prod_l = body.product.lower()
+    warnings = []
+    if hyd > 85:
+        warnings.append({"level": "danger", "text": wl["hyd_extreme"]})
+    elif hyd >= 80:
+        warnings.append({"level": "warn", "text": wl["hyd_high"]})
+    if hyd < 65 and any(x in prod_l for x in ["focacc", "ciabatt", "cristall"]):
+        warnings.append({"level": "warn", "text": wl["hyd_low_focaccia"]})
+    if body.preferment == "biga" and hyd > 78:
+        warnings.append({"level": "warn", "text": wl["biga_high"]})
+    if body.preferment in ("lm", "misto") and hyd > 85:
+        warnings.append({"level": "warn", "text": wl["lm_high"]})
+    if body.preferment == "diretto" and hyd >= 80:
+        warnings.append({"level": "info", "text": wl["diretto_long"]})
+    if body.mode == "pieces" and 0 < piece_w < 40:
+        warnings.append({"level": "info", "text": wl["piece_small"]})
+
+
     # Titolo leggibile
     pf_label = pf["label"]
     title_map = {
@@ -944,7 +1201,7 @@ async def generate_recipe(body: RecipeGenReq, user: dict = Depends(current_user)
         prompt = (f"Prodotto: {body.product}\nPre-fermento: {pf_txt}\nIdratazione: {hyd}%\n"
                   f"Farina totale: {ingredients['flour_total_g']}g, Acqua totale: {ingredients['water_total_g']}g, "
                   f"Sale: {ingredients['salt_g']}g. Ingredienti speciali: {extras_txt}.\n"
-                  f"Peso impasto finale: {body.total_weight}g.")
+                  f"Peso impasto finale: {total_weight}g. Temperatura acqua consigliata: {water_temp}°C.")
         try:
             chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gen-{uuid.uuid4().hex[:8]}",
                            system_message=sys).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1600)
@@ -959,6 +1216,8 @@ async def generate_recipe(body: RecipeGenReq, user: dict = Depends(current_user)
             logging.warning(f"generate_recipe procedure failed: {e}")
 
     return {"title": title, "ingredients": ingredients, "procedure": procedure,
+            "water_temp": water_temp_block, "food_cost": food_cost_block,
+            "portioning": portioning, "warnings": warnings,
             "preferment_key": body.preferment, "product": body.product, "lang": lang}
 
 
@@ -3152,8 +3411,7 @@ async def forgot_password(body: ForgotReq):
 
 @api_router.post("/auth/reset-password")
 async def reset_password(body: ResetReq):
-    if not body.password or len(body.password) < 6:
-        raise HTTPException(400, "La password deve avere almeno 6 caratteri")
+    _validate_password(body.password or "")
     rec = await db.password_resets.find_one({"token": body.token}, {"_id": 0})
     if not rec:
         raise HTTPException(400, "Link non valido o già usato")

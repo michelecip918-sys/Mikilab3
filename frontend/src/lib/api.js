@@ -104,6 +104,8 @@ export const authApi = {
   logout: () => api.post(`/auth/logout`).then((r) => r.data),
   forgot: (email, lang) => api.post(`/auth/forgot-password`, { email, origin_url: window.location.origin, lang }).then((r) => r.data),
   reset: (token, password) => api.post(`/auth/reset-password`, { token, password }).then((r) => r.data),
+  verifyEmail: (token) => api.post(`/auth/verify-email`, { token }).then((r) => r.data),
+  resendVerification: (email, lang) => api.post(`/auth/resend-verification`, { email, origin_url: window.location.origin, lang }).then((r) => r.data),
 };
 
 export const subscriptionApi = {

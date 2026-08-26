@@ -540,7 +540,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
     if (e && e.name && e.percent != null && e.percent !== "") {
       if (biga && /lievito di birra|hefe/i.test(e.name)) return; // il lievito è nel Vorteig
       const grams = flourG > 0 ? Math.round(target * (Number(e.percent) / 100)) : null;
-      rows.push([ingLoc(e.name, lang), grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
+      rows.push([e[`name_${lang}`] || ingLoc(e.name, lang), grams != null ? `${grams} g · ${e.percent}%` : `${e.percent}%`]);
     }
   });
   (r.costing?.extras || []).forEach((e) => { if (e.name) rows.push([ingLoc(e.name, lang), e.cost ? `€ ${e.cost}` : "—"]); });

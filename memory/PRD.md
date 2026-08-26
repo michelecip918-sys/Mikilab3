@@ -1487,3 +1487,23 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Test**: iter_81 backend 100% (generate/community/categorie/bundle) + frontend 85%; iter_82 frontend re-test: Impara ES OK (no crash), 5 cartelle categoria, nessun dolce in Pane, generatore OK, immagini nuove ricette OK. Enciclopedia/GuidaMetodi/AvatarBubbles ES corretti dopo iter_82 e verificati via screenshot.
 - File dev (non in prod): `backend/seed_new_recipes.py`, `backend/gen_es_translations.py`.
 
+
+## v42 (2026-06) — Generatore "Assistente di Produzione" (temp acqua + food cost + pezzatura + alert) & traduzione ingredienti
+- **Generatore potenziato** (`POST /api/recipes/generate`, `RecipeGenReq` estesa):
+  - **Pezzatura**: `mode=pieces` con `pieces`, `piece_weight`, `waste_percent` (sfrido) → `total_weight = pieces × peso × (1+sfrido%)`. Ritorna blocco `portioning`.
+  - **Temperatura acqua d'impasto**: formula Mickey Lab (fattore 4 con pre-fermento, 3 diretto): `T_acqua = k×T_impasto − (T_farina + T_ambiente + attrito [+ pre-fermento])`. Ritorna `water_temp` con status hot/cold/ok.
+  - **Food cost**: mappa prezzi €/kg (`GEN_PRICE_KG` + sale/lievito/madre) → `material_cost`, `cost_per_piece`, `suggested_price_piece` (in base a `food_cost_ratio`). Ritorna `food_cost`.
+  - **Alert Ricetta Intelligente**: warnings localizzati (IT/DE/EN/ES) per incoerenze idratazione/farina/pre-fermento (idr>85 danger, ≥80 warn, biga+idr alta, LM idr estrema, focacce idr bassa, pezzo <40g). Ritorna `warnings[]` con level danger/warn/info.
+  - UI `RecipeGenerator.jsx`: toggle Peso/Pezzatura, sezione avanzata (temp + prezzo + food cost %), blocchi risultato Acqua d'impasto / Food cost / Alert. Verificato via screenshot (pezzatura 20×90g→1980g, acqua 29°C, food cost €0.07, alert).
+- **Traduzione ingredienti speciali (punto 4)**: aggiunti `name_de/name_en/name_es` agli `extra_ingredients` delle 6 nuove ricette (27 voci: Mantequilla/Pasas/Naranja confitada, Butter/Rosinen…). `RecipeList.jsx` ora mostra `e[name_${lang}] || ingLoc(e.name, lang)`. Verificato via API (Stollen ES/DE OK).
+- Test: self-test curl (matematica pezzatura/temp/costo/warnings corretta) + screenshot UI end-to-end. ⚠️ PREVIEW → Redeploy per mikilab.de.
+
+
+## v43 (2026-06) — Sicurezza autenticazione: registrazione evidente, password forte, forza-bruta, verifica email
+- **UI (`AuthScreen.jsx`)**: tab prominenti Accedi/Registrati (`auth-tabs`), campo "Conferma password" + hint forza (`auth-confirm`), banner verifica email (`auth-info` + `auth-resend-verify`), stringhe in IT/DE/EN/ES.
+- **Password forte** (`_validate_password`): min 8 caratteri + almeno una lettera e un numero, su register E reset-password (400 se debole).
+- **Forza-bruta**: `login_attempts` (ip:email), 5 falliti → blocco 15 min (429).
+- **Verifica email** (se `RESEND_API_KEY` presente): register → `email_verified=false` + token 24h (`email_verifications`) + email Resend con link `/?verify=<token>`; `AuthContext` consuma il token e logga l'utente. Login email non verificato → 403 `verify_email`. Endpoint `POST /api/auth/verify-email`, `POST /api/auth/resend-verification`. Utenti pre-esistenti (senza campo) = verificati (grandfathered).
+- Test (curl): weak→400, strong→needs_verification, login non verificato→403, brute→429 al 6°, verify-email→sessione+login OK, admin esistente→200. UI verificata via screenshot.
+- ⚠️ PRODUZIONE: (1) il problema "manca Registrati" era su mikilab.de = deploy vecchio → serve **REDEPLOY**. (2) Perché le email di verifica arrivino, il dominio mittente `noreply@mikilab.de` DEVE essere verificato su Resend, altrimenti i NUOVI iscritti non ricevono il link e non possono accedere (gli utenti esistenti non sono impattati).
+

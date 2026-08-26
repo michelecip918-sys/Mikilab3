@@ -31,6 +31,18 @@ export function AuthProvider({ children }) {
         // pulisci il fragment
         window.history.replaceState(null, "", window.location.pathname + window.location.search);
       }
+      // Verifica email: ?verify=token
+      const params = new URLSearchParams(window.location.search);
+      const vtok = params.get("verify");
+      if (vtok) {
+        try {
+          const r = await authApi.verifyEmail(vtok);
+          if (r?.user) setUser(r.user);
+        } catch { /* token non valido/scaduto */ }
+        const u = new URL(window.location.href);
+        u.searchParams.delete("verify");
+        window.history.replaceState(null, "", u.pathname + u.search);
+      }
       await refresh();
       setLoading(false);
     })();
