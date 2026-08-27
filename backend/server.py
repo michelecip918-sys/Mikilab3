@@ -3959,6 +3959,7 @@ def _post_public(doc: dict, user: Optional[dict]) -> dict:
         "id": doc["id"],
         "author_id": doc.get("author_id"),
         "author_name": doc.get("author_name") or "Fornaio",
+        "author_avatar": doc.get("author_avatar", ""),
         "category": doc.get("category", "consiglio"),
         "text": doc.get("text", ""),
         "text_de": doc.get("text_de"),
@@ -3974,10 +3975,17 @@ def _post_public(doc: dict, user: Optional[dict]) -> dict:
 
 
 @api_router.get("/community/posts")
-async def community_list(request: Request, limit: int = 200):
+async def community_list(request: Request, limit: int = 200, scope: str = "all"):
     user = await optional_user(request)
     limit = max(1, min(limit, 500))
-    docs = await db.community_posts.find({}, {"_id": 0}).sort("created_at", -1).to_list(limit)
+    q = {}
+    if scope == "friends" and user:
+        me = user["user_id"]
+        frs = await db.friendships.find({"status": "accepted", "$or": [{"from_id": me}, {"to_id": me}]}, {"_id": 0}).to_list(500)
+        ids = {(f["to_id"] if f["from_id"] == me else f["from_id"]) for f in frs}
+        ids.add(me)
+        q = {"author_id": {"$in": list(ids)}}
+    docs = await db.community_posts.find(q, {"_id": 0}).sort("created_at", -1).to_list(limit)
     return [_post_public(d, user) for d in docs]
 
 
@@ -3992,6 +4000,7 @@ async def community_create(body: CommunityPostReq, user: dict = Depends(current_
         "id": str(uuid.uuid4()),
         "author_id": user["user_id"],
         "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
+        "author_avatar": user.get("picture", ""),
         "category": cat,
         "text": text,
         "text_de": tr.get("text_de"),
@@ -4039,6 +4048,7 @@ async def community_comment(post_id: str, body: CommunityCommentReq, user: dict 
         "id": str(uuid.uuid4()),
         "author_id": user["user_id"],
         "author_name": actor,
+        "author_avatar": user.get("picture", ""),
         "text": text,
         "text_de": ctr.get("text_de"),
         "text_en": ctr.get("text_en"),

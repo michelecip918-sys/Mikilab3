@@ -1670,3 +1670,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **"Scopri MikiLab" semplificato** (Home): rimosse le troppe voci (bio-card, features, gallery, concetti) → un unico testo "chi sono + cosa fa il sito" (`home-about`, IT/DE/EN/ES). Vecchio contenuto lasciato inattivo `{false && (...)}`.
 - **Più opzioni pubblicazione** (già v62): Consiglio/Idea/Foto/Ricetta/Domanda/Evento.
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v64 (27 Ago 2026) — Segui colleghi + Avatar nei post + Nuovi avatar
+- **Avatar nei post/commenti**: post e commenti ora salvano/mostrano `author_avatar` (= users.picture). `_post_public` + create post/comment aggiornati. Frontend mostra l'avatar accanto al nome (fallback iniziale) in post e commenti.
+- **Segui i Colleghi**: pulsante `profile-follow` nel ProfilePanel (per utenti diversi da sé) che invia richiesta amicizia (`friends/request`). Feed **"Dai tuoi contatti"**: toggle `feed-toggle` (Tutti/Contatti) → `GET /community/posts?scope=friends` (post degli amici accettati + propri). Verificato: friends feed conteggio corretto.
+- **Nuovi stili avatar**: aggiunti Panettiera (donna), Barista, Gelatiere ai preset (ora 7). Generati Nano Banana.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.

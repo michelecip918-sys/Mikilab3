@@ -61,11 +61,12 @@ export default function Community() {
   const [profileUser, setProfileUser] = useState(null);
   const [mapOpen, setMapOpen] = useState(false);
   const [friendReqCount, setFriendReqCount] = useState(0);
+  const [feed, setFeed] = useState("all");
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); }, []);
 
-  const load = async () => { setLoading(true); setPosts(await communityApi.list()); setLoading(false); };
-  useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const load = async (f = feed) => { setLoading(true); setPosts(await communityApi.list(f)); setLoading(false); };
+  useEffect(() => { load(feed); }, [feed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const needLogin = () => { if (!user) { setAuthOpen(true); return true; } return false; };
 
@@ -246,6 +247,12 @@ export default function Community() {
       </div>
 
       {/* Feed */}
+      <div data-testid="feed-toggle" className="flex gap-2 mb-3">
+        {[["all", tri("Tutti", "Alle", "All", "Todos")], ["friends", tri("Dai tuoi contatti", "Von Kontakten", "From your contacts", "De tus contactos")]].map(([id, lbl]) => (
+          <button key={id} data-testid={`feed-tab-${id}`} onClick={() => { if (id === "friends" && needLogin()) return; setFeed(id); }}
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${feed === id ? "bg-[#123c4a] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#7E8A93]"}`}>{lbl}</button>
+        ))}
+      </div>
       {loading ? (
         <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#3f7cac]" /></div>
       ) : (
@@ -282,9 +289,9 @@ export default function Community() {
                 {(commentFor === p.id || (p.comments || []).length > 0) && (
                   <div className="mt-3 space-y-2">
                     {(p.comments || []).map((c) => (
-                      <div key={c.id} className="flex gap-2 text-sm">
-                        <span className="font-semibold text-[#3f7cac] shrink-0">{c.author_name}:</span>
-                        <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? (c.text_de || c.text) : lang === "es" ? (c.text_es || c.text_en || c.text) : lang === "en" ? (c.text_en || c.text) : c.text}</span>
+                      <div key={c.id} className="flex gap-2 text-sm items-start">
+                        <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-[#3f7cac] flex items-center justify-center text-white text-[10px] font-bold">{c.author_avatar ? <img src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : (c.author_name || "F")[0].toUpperCase()}</div>
+                        <div className="min-w-0"><span className="font-semibold text-[#3f7cac]">{c.author_name}:</span> <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? (c.text_de || c.text) : lang === "es" ? (c.text_es || c.text_en || c.text) : lang === "en" ? (c.text_en || c.text) : c.text}</span></div>
                       </div>
                     ))}
                     {commentFor === p.id && (

@@ -135,7 +135,7 @@ export const siteSettingsApi = {
 };
 
 export const communityApi = {
-  list: () => api.get(`/community/posts`).then((r) => r.data).catch(() => []),
+  list: (scope) => api.get(`/community/posts${scope === "friends" ? "?scope=friends" : ""}`).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/community/posts`, data).then((r) => r.data),
   like: (id) => api.post(`/community/posts/${id}/like`).then((r) => r.data),
   comment: (id, text) => api.post(`/community/posts/${id}/comments`, { text }).then((r) => r.data),

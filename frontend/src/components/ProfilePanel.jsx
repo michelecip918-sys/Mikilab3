@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare } from "lucide-react";
-import { profileApi, uploadApi } from "@/lib/api";
+import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare, UserPlus } from "lucide-react";
+import { profileApi, uploadApi, friendsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
@@ -10,6 +10,9 @@ const PRESET_AVATARS = [
   { id: "chef", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/6af4112c72273e180c5b227f6c47a3e3eb47b476d80f334d607006927cb63d41.jpeg", it: "Cuoco", de: "Koch", en: "Chef", es: "Cocinero" },
   { id: "pizzaiolo", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/2db58948b5e00cae83b4d6351be55ca3401fa2f526fbaef2e3cb9e533287e85c.jpeg", it: "Pizzaiolo", de: "Pizzabäcker", en: "Pizzaiolo", es: "Pizzero" },
   { id: "pastry", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/e2904c622aeec71d0f42fed9cf97a5c6132c95686e825615581baf064e63217e.jpeg", it: "Pasticciere", de: "Konditor", en: "Pastry chef", es: "Pastelero" },
+  { id: "baker_f", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/f101801e5dc13986a0d27fe13abea1076fb6c012170cf53fb97dd2bbb574d3ec.jpeg", it: "Panettiera", de: "Bäckerin", en: "Baker (woman)", es: "Panadera" },
+  { id: "barista", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/c02f0851287203b0df733386e12c2e65b7a1eccbdf30fb0d68b02d888e2b0f9b.jpeg", it: "Barista", de: "Barista", en: "Barista", es: "Barista" },
+  { id: "gelatiere", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/4f3cbf12ce4d394db90c2def13473e910b95ee01d3377e70bffff3e8330fdbea.jpeg", it: "Gelatiere", de: "Eismacher", en: "Gelato maker", es: "Heladero" },
 ];
 
 // Pagina profilo social: avatar, bio e ricette/post pubblicati dal fornaio.
@@ -23,7 +26,13 @@ export default function ProfilePanel({ userId, onClose }) {
   const [name, setName] = useState("");
   const [pic, setPic] = useState("");
   const [saving, setSaving] = useState(false);
+  const [followed, setFollowed] = useState(false);
   const isMe = user && user.user_id === userId;
+
+  const follow = async () => {
+    try { await friendsApi.request(userId); setFollowed(true); toast.success(tri("Richiesta inviata!", "Anfrage gesendet!", "Request sent!", "¡Solicitud enviada!")); }
+    catch { toast.error(tri("Già inviata o errore", "Bereits gesendet oder Fehler", "Already sent or error", "Ya enviada o error")); }
+  };
 
   useEffect(() => {
     profileApi.get(userId).then((d) => { setData(d); setBio(d.bio || ""); setName(d.name || ""); setPic(d.picture || ""); }).catch(() => setData(false));
@@ -69,6 +78,12 @@ export default function ProfilePanel({ userId, onClose }) {
                   <span className="flex items-center gap-1"><MessageSquare className="w-3.5 h-3.5" /> {data.posts_count} {tri("post", "Beiträge", "posts", "posts")}</span>
                   <span className="flex items-center gap-1"><Store className="w-3.5 h-3.5" /> {data.listings_count} {tri("annunci", "Anzeigen", "listings", "anuncios")}</span>
                 </div>
+                {user && !isMe && (
+                  <button data-testid="profile-follow" onClick={follow} disabled={followed}
+                    className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold bg-white text-[#123c4a] px-3 py-1.5 rounded-full active:scale-95 disabled:opacity-70">
+                    <UserPlus className="w-3.5 h-3.5" /> {followed ? tri("Richiesta inviata", "Gesendet", "Requested", "Enviada") : tri("Segui", "Folgen", "Follow", "Seguir")}
+                  </button>
+                )}
               </div>
             </div>
           )}
