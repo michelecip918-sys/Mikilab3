@@ -1524,3 +1524,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - "Suggeriti per te": top 3 strumenti più usati (localStorage mikilab_tool_usage), non duplicati nelle categorie ne nei preferiti.
 - Pallino "NUOVO" ora solo sul Generatore (prima appariva su quasi tutte le card = rumore visivo).
 - Testing agent iter_83: frontend 100% (6/6). Minor noto: FAB Radio si sovrappone allultima riga su 390px (i click funzionano).
+
+## v43.4 (2026-06) — Drag&Drop strumenti + FAB Radio + Disclaimer IA
+- Laboratorio: riordino strumenti via HTML5 drag&drop (persist localStorage mikilab_tool_prefs.order) + frecce su/giù. FAB Radio (48x48, left-3) auto-hide durante lo scroll, non copre più le card. Testing iter_84: frontend 100%. Minor cosmetico: FAB può sfiorare le etichette-categoria su 390px.
+- Disclaimer procedure IA (4 lingue IT/DE/EN/ES): banner ambra sotto il procedimento nel Generatore Ricette (`RecipeGenerator.jsx`, data-testid `gen-disclaimer`) E sotto il piano nel Piano IA (`PianoProduzioneAI.jsx`, data-testid `capo-plan-disclaimer`, dentro print-area → incluso nel PDF). Testo: "generato dall'IA a scopo indicativo, da validare sempre dal fornaio in base a farina/ambiente/attrezzatura". Compilazione verificata, nessun test agent (modifica solo UI/testo).
