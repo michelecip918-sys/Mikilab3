@@ -457,7 +457,7 @@ export default function Beginners({ onNavigate }) {
       {/* Academy da Casa — Mohammadreza assistente per l'home baker */}
       <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <ChefHat className="w-4 h-4" />
-        <span className="text-xs font-semibold uppercase tracking-wide">{tri3(lang, "Academy da Casa", "Heim-Academy", "Home Academy", "Academy en Casa")}</span>
+        <span className="font-display text-lg font-bold">{tri3(lang, "Academy da Casa", "Heim-Academy", "Home Academy", "Academy en Casa")}</span>
       </div>
       <AcademyCoach />
 
@@ -486,7 +486,7 @@ export default function Beginners({ onNavigate }) {
       {/* Quiz del Fornaio */}
       <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <Trophy className="w-4 h-4" />
-        <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_quiz_title")}</span>
+        <span className="font-display text-lg font-bold">{t("beginners_quiz_title")}</span>
       </div>
       <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_quiz_sub")}</p>
       <EvolvingQuiz />
@@ -494,7 +494,7 @@ export default function Beginners({ onNavigate }) {
       {/* Bake-Along: sfida di panificazione della community con classifica */}
       <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <Flame className="w-4 h-4" />
-        <span className="text-xs font-semibold uppercase tracking-wide">{tri3(lang, "Sfida Bake-Along", "Bake-Along Challenge", "Bake-Along Challenge", "Reto Bake-Along")}</span>
+        <span className="font-display text-lg font-bold">{tri3(lang, "Sfida Bake-Along", "Bake-Along Challenge", "Bake-Along Challenge", "Reto Bake-Along")}</span>
       </div>
       <p className="text-sm text-[#7E8A93] -mt-2">{tri3(lang, "Sforna il tema della settimana, condividi la foto e vota i pani della community.", "Backe das Wochenthema, teile dein Foto und stimme für die Brote der Community ab.", "Bake this week's theme, share your photo and vote for the community's breads.", "Hornea el tema de la semana, comparte tu foto y vota los panes de la comunidad.")}</p>
       <BakeAlong />

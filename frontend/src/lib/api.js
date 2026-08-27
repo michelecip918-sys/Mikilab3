@@ -128,6 +128,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   setShop: (enabled) => api.put(`/admin/shop/settings`, { enabled }).then((r) => r.data),
   shopWaitlist: () => api.get(`/admin/shop/waitlist`).then((r) => r.data),
   setSiteSettings: (data) => api.put(`/admin/site-settings`, data).then((r) => r.data),
+  bakeAlongNotify: () => api.post(`/admin/bakealong/notify`).then((r) => r.data),
 };
 
 export const siteSettingsApi = {

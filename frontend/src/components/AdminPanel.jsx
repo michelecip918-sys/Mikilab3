@@ -22,6 +22,15 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [days, setDays] = useState("0"); // "0" = illimitato
   const [busy, setBusy] = useState(false);
   const [shop, setShop] = useState({ enabled: false, waitlist_count: 0 });
+  const [baBusy, setBaBusy] = useState(false);
+  const notifyBakeAlong = async () => {
+    setBaBusy(true);
+    try {
+      const r = await adminApi.bakeAlongNotify();
+      toast.success((de ? "Inviato a " : "Inviato a ") + (r.notified_subscribers ?? 0) + (de ? " Abonnenten" : " iscritti"));
+    } catch { toast.error(de ? "Fehler" : "Errore"); }
+    finally { setBaBusy(false); }
+  };
   const [settings, setSettings] = useState({ whatsapp_number: "", avatar_bubbles: {}, folder_covers: {} });
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
@@ -164,7 +173,18 @@ export default function AdminPanel({ open, onOpenChange }) {
           </div>
         </div>
 
-        {/* Impostazioni sito editabili — WhatsApp, Fumetti, Copertine */}
+        <div data-testid="admin-bakealong" className="rounded-2xl bg-[#a9772f]/10 border border-[#a9772f]/30 p-4 mt-2">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-[#8a5a2b] dark:text-[#e0b877]">Bake-Along</p>
+              <p className="text-[11px] text-[#7E8A93]">{de ? "Alle Abonnenten über die Wochen-Challenge benachrichtigen" : "Avvisa tutti gli iscritti della sfida della settimana"}</p>
+            </div>
+            <button data-testid="admin-bakealong-notify" onClick={notifyBakeAlong} disabled={baBusy}
+              className="px-3 py-2 rounded-xl text-sm font-semibold bg-[#a9772f] text-white active:scale-97 disabled:opacity-60 shrink-0">
+              {baBusy ? (de ? "Sende…" : "Invio…") : (de ? "Senden" : "Invia ora")}
+            </button>
+          </div>
+        </div>
         <div data-testid="admin-site-settings" className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
           <p className="text-sm font-bold text-[#234b6e] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
 

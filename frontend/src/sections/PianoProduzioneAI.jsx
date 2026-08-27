@@ -810,7 +810,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               const unpin = (id) => { togglePinTool(id); toast.success(tri3(lang, "Rimosso dai preferiti", "Aus Favoriten entfernt", "Removed from favorites")); };
               return (
                 <div data-testid="tools-favorites" className="mb-3">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-1.5">⭐ {tri3(lang, "I TUOI PREFERITI", "DEINE FAVORITEN", "YOUR FAVORITES")}{pinnedFavs.length > 1 ? ` · ${tri3(lang, "trascina per ordinare · tocca la stella per togliere", "ziehen zum Sortieren · Stern zum Entfernen", "drag to reorder · tap star to remove")}` : ` · ${tri3(lang, "tocca la stella per togliere", "Stern zum Entfernen", "tap star to remove")}`}</p>
+                  <p className="mb-1.5"><span className="font-display text-lg font-bold text-[#C88A2B]">⭐ {tri3(lang, "I tuoi preferiti", "Deine Favoriten", "Your favorites", "Tus favoritos")}</span><span className="text-[11px] font-semibold text-[#7E8A93]">{pinnedFavs.length > 1 ? ` · ${tri3(lang, "trascina per ordinare · tocca la stella per togliere", "ziehen zum Sortieren · Stern zum Entfernen", "drag to reorder · tap star to remove")}` : ` · ${tri3(lang, "tocca la stella per togliere", "Stern zum Entfernen", "tap star to remove")}`}</span></p>
                   <Reorder.Group as="div" axis="x" values={pinnedIds} onReorder={(ids) => savePrefs({ ...toolPrefs, pinned: ids })}
                     className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
                     {pinnedFavs.map(({ id, Icon, it, de, en }) => (
@@ -834,8 +834,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               );
             })()}
             <div className="flex items-center justify-between mb-0.5">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-[#234b6e] dark:text-[#a9d2ec]">
-                {tri3(lang, "APRI UNO STRUMENTO", "WERKZEUG ÖFFNEN", "OPEN A TOOL")}
+              <p className="font-display text-lg font-bold text-[#234b6e] dark:text-[#a9d2ec]">
+                {tri3(lang, "Apri uno strumento", "Werkzeug öffnen", "Open a tool", "Abrir una herramienta")}
               </p>
               <button data-testid="tools-edit-toggle" onClick={() => setEditTools((v) => !v)}
                 className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${editTools ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3f7cac] border-[#d5e4f0] dark:border-[#38424B]"}`}>
@@ -859,7 +859,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
             {!editTools && !toolQuery.trim() && suggestedTools.length > 0 && (
               <div data-testid="tools-suggested" className="mb-4">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-2">{tri3(lang, "Suggeriti per te", "Für dich empfohlen", "Suggested for you", "Sugeridos para ti")}</p>
+                <p className="font-display text-lg font-bold text-[#C88A2B] mb-2">{tri3(lang, "Suggeriti per te", "Für dich empfohlen", "Suggested for you", "Sugeridos para ti")}</p>
                 <div className="grid grid-cols-3 gap-2">
                   {suggestedTools.map((tl) => renderToolCard(tl))}
                 </div>
@@ -886,7 +886,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   if (items.length === 0) return null;
                   return (
                     <div key={c.key} data-testid={`tools-cat-${c.key}`}>
-                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#3f7cac] mb-2">{tri3(lang, c.it, c.de, c.en, c.es)}</p>
+                      <p className="font-display text-lg font-bold text-[#3f7cac] mb-2">{tri3(lang, c.it, c.de, c.en, c.es)}</p>
                       <div className="grid grid-cols-3 gap-2">
                         {items.map((tl) => renderToolCard(tl))}
                       </div>

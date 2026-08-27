@@ -5044,6 +5044,60 @@ async def bakealong_entries(request: Request, week: Optional[str] = None):
     return {"week": wk, "entries": entries}
 
 
+async def _broadcast_bakealong(force: bool = False):
+    """Invia push + campanella a tutti gli iscritti per la sfida della settimana corrente. Ritorna il numero di iscritti."""
+    theme = _bakealong_theme("it")
+    title = "🔥 Nuova Sfida Bake-Along!"
+    body = f"Questa settimana: {theme['title']}. Sforna e partecipa!"
+    subs = await db.push_subs.find({}, {"_id": 0}).to_list(5000)
+    if subs:
+        _, priv = await _get_vapid()
+        payload = {"title": title, "body": body, "url": "/?tab=impara"}
+        for s in subs:
+            try:
+                await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+            except Exception:
+                pass
+    uids = {s.get("user_id") for s in subs if s.get("user_id")}
+    for uid in uids:
+        try:
+            await db.notifications.insert_one({
+                "id": str(uuid.uuid4()), "user_id": uid, "actor_id": "system",
+                "type": "bakealong", "post_id": None, "actor_name": "MikiLab",
+                "snippet": theme["title"][:80], "read": False, "created_at": now_iso(),
+            })
+        except Exception:
+            pass
+    return len(subs)
+
+
+@api_router.post("/admin/bakealong/notify")
+async def admin_bakealong_notify(user: dict = Depends(require_admin)):
+    n = await _broadcast_bakealong(force=True)
+    await db.app_config.update_one({"_id": "bakealong_notify"}, {"$set": {"week": _iso_week()}}, upsert=True)
+    return {"ok": True, "notified_subscribers": n}
+
+
+async def _bakealong_notify_loop():
+    """A inizio di ogni nuova settimana ISO avvisa (web push + campanella) tutti gli iscritti della nuova sfida Bake-Along."""
+    await asyncio.sleep(20)  # attende l'avvio completo
+    while True:
+        try:
+            wk = _iso_week()
+            cfg = await db.app_config.find_one({"_id": "bakealong_notify"})
+            last = cfg.get("week") if cfg else None
+            if last is None:
+                # Primo avvio: memorizza la settimana corrente SENZA notificare (niente spam al deploy)
+                await db.app_config.update_one({"_id": "bakealong_notify"}, {"$set": {"week": wk}}, upsert=True)
+            elif last != wk:
+                n = await _broadcast_bakealong()
+                await db.app_config.update_one({"_id": "bakealong_notify"}, {"$set": {"week": wk}}, upsert=True)
+                logger.info(f"Bake-Along: notificata nuova sfida a {n} iscritti")
+        except Exception:
+            logger.exception("bakealong notify loop error")
+        await asyncio.sleep(600)
+
+
 # --- Sistema Amici (richieste + accetta/rifiuta + elenco utenti) --------------
 class FriendReq(BaseModel):
     to_id: str
@@ -6408,6 +6462,11 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Reminders push loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Reminders loop start error: {e}")
+    try:
+        asyncio.create_task(_bakealong_notify_loop())
+        logging.getLogger(__name__).info("Bake-Along notify loop avviato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Bake-Along loop start error: {e}")
 
 
 @app.on_event("shutdown")
