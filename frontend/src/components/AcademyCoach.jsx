@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, ChefHat, Sparkles, Clock, Thermometer, Wrench, BellRing } from "lucide-react";
+import { Send, Loader2, ChefHat, Sparkles, Clock, Thermometer, Wrench, BellRing, Mic, Volume2, VolumeX } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { parseTimeline, saveReminders } from "@/lib/reminders";
+import { cleanForSpeech } from "@/lib/voice";
 import { toast } from "sonner";
 
 // Assistente "Mohammadreza" per l'home baker: scheduling inverso + calcoli + troubleshooting.
@@ -14,8 +15,27 @@ export default function AcademyCoach() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [readAloud, setReadAloud] = useState(false);
+  const recRef = useRef(null);
   const endRef = useRef(null);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+
+  const speechSupported = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  const ttsSupported = typeof window !== "undefined" && "speechSynthesis" in window;
+
+  const speak = (raw) => {
+    if (!readAloud || !ttsSupported) return;
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(cleanForSpeech(raw));
+      u.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
+      u.rate = 1; u.pitch = 1;
+      window.speechSynthesis.speak(u);
+    } catch { /* ignore */ }
+  };
+
+  useEffect(() => () => { try { window.speechSynthesis?.cancel(); } catch { /* */ } }, []);
 
   const CHIPS = [
     { Icon: Clock, label: tri("Calcola orari a ritroso", "Zeiten rückwärts rechnen", "Backwards timeline", "Horarios a la inversa"),
@@ -45,6 +65,7 @@ export default function AcademyCoach() {
     setMessages((m) => [...m, { role: "user", content: text }, { role: "assistant", content: "" }]);
     setBusy(true);
     let sawDone = false;
+    let full = "";
     try {
       const res = await fetch(`${API}/academy/coach`, {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -59,13 +80,36 @@ export default function AcademyCoach() {
           const line = part.replace(/^data: ?/, "").trim(); if (!line) continue;
           let obj; try { obj = JSON.parse(line); } catch { continue; }
           if (obj.done) { sawDone = true; continue; }
-          if (obj.d) setMessages((m) => { const c = [...m]; c[c.length - 1] = { role: "assistant", content: c[c.length - 1].content + obj.d }; return c; });
+          if (obj.d) { full += obj.d; setMessages((m) => { const c = [...m]; c[c.length - 1] = { role: "assistant", content: c[c.length - 1].content + obj.d }; return c; }); }
         }
       }
       if (!sawDone) { /* stream chiuso */ }
+      if (full) speak(full);
     } catch {
       setMessages((m) => { const c = [...m]; c[c.length - 1] = { role: "assistant", content: tri("Ops, riprova tra poco.", "Ups, versuch es gleich nochmal.", "Oops, try again shortly.", "Ups, inténtalo de nuevo.") }; return c; });
     } finally { setBusy(false); }
+  };
+
+  const startListening = () => {
+    if (!speechSupported) { toast.error(tri("Il microfono non è supportato su questo browser.", "Das Mikrofon wird in diesem Browser nicht unterstützt.", "The microphone is not supported in this browser.", "El micrófono no es compatible con este navegador.")); return; }
+    if (listening) { try { recRef.current?.stop(); } catch { /* */ } return; }
+    const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const rec = new Rec();
+    rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
+    rec.interimResults = false; rec.maxAlternatives = 1; rec.continuous = false;
+    rec.onstart = () => setListening(true);
+    rec.onresult = (e) => { const heard = e.results[0][0].transcript; setListening(false); if (heard) ask(heard); };
+    rec.onerror = () => setListening(false);
+    rec.onend = () => setListening(false);
+    recRef.current = rec;
+    try { rec.start(); } catch { setListening(false); }
+  };
+
+  const toggleReadAloud = () => {
+    setReadAloud((v) => {
+      if (v) { try { window.speechSynthesis?.cancel(); } catch { /* */ } }
+      return !v;
+    });
   };
 
   const saveTimeline = async (text) => {
@@ -90,6 +134,13 @@ export default function AcademyCoach() {
           <p className="text-[12px] text-white/90 mt-0.5">{tri("Il tuo Master Baker per la panificazione a casa", "Dein Master Baker fürs Backen zu Hause", "Your Master Baker for home baking", "Tu Master Baker para hornear en casa")}</p>
         </div>
         <ChefHat className="w-5 h-5 ml-auto shrink-0" />
+        {ttsSupported && (
+          <button data-testid="academy-coach-readaloud" onClick={toggleReadAloud} aria-pressed={readAloud}
+            title={tri("Leggi le risposte ad alta voce", "Antworten laut vorlesen", "Read answers aloud", "Leer las respuestas en voz alta")}
+            className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-all ${readAloud ? "bg-white/30" : "bg-white/10 hover:bg-white/20"}`}>
+            {readAloud ? <Volume2 className="w-4.5 h-4.5" /> : <VolumeX className="w-4.5 h-4.5" />}
+          </button>
+        )}
       </div>
 
       <div className="p-4 space-y-3">
@@ -133,12 +184,24 @@ export default function AcademyCoach() {
 
         <div className="flex items-center gap-2 pt-1">
           <input data-testid="academy-coach-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()}
-            placeholder={tri("Scrivi a Mohammadreza…", "Schreib Mohammadreza…", "Message Mohammadreza…", "Escribe a Mohammadreza…")}
+            placeholder={tri("Scrivi o parla a Mohammadreza…", "Schreib oder sprich mit Mohammadreza…", "Type or talk to Mohammadreza…", "Escribe o habla con Mohammadreza…")}
             className="flex-1 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
+          {speechSupported && (
+            <button data-testid="academy-coach-mic" onClick={startListening} disabled={busy}
+              title={tri("Parla con Mohammadreza", "Mit Mohammadreza sprechen", "Talk to Mohammadreza", "Habla con Mohammadreza")}
+              className={`w-11 h-11 rounded-full flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0 transition-all ${listening ? "bg-[#C0574D] animate-pulse text-white" : "bg-[#a9772f] hover:bg-[#8a5a2b] text-white"}`}>
+              <Mic className="w-5 h-5" />
+            </button>
+          )}
           <button data-testid="academy-coach-send" data-sfx="confirm" onClick={() => ask()} disabled={busy || !input.trim()} className="w-11 h-11 rounded-full bg-[#3f7cac] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
             {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           </button>
         </div>
+        {listening && (
+          <p data-testid="academy-coach-listening" className="text-[12px] text-[#C0574D] font-semibold text-center pt-1">
+            {tri("Sto ascoltando… parla pure.", "Ich höre zu… sprich einfach.", "Listening… go ahead.", "Escuchando… habla.")}
+          </p>
+        )}
       </div>
     </div>
   );

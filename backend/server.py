@@ -3371,6 +3371,31 @@ class ScanPdfRequest(BaseModel):
     lang: str = "it"
 
 
+# Schema campi ricetta (riusato dal prompt foto) per l'estrazione multi-ricetta dal PDF.
+SCAN_FIELDS_SCHEMA = (
+    '{"name": string, "flour_type": string, "hydration_percent": number|null, '
+    '"flour_grams": number|null, "water_grams": number|null, "sourdough_grams": number|null, "salt_grams": number|null, '
+    '"preferment_type": "none"|"lm"|"poolish"|"biga", "method_type": "diretto"|"indiretto", '
+    '"dough_category": string|null, "water_temp_c": number|null, "mix_minutes": number|null, '
+    '"bake_temp": number|null, "bake_minutes": number|null, "oven_type": string|null, '
+    '"bulk_fermentation_hours": number|null, "proofing_hours": number|null, "origin": string|null, '
+    '"extra_ingredients": [{"name": string, "percent": number|null, "grams": number|null}], '
+    '"procedure": string, "notes": string}'
+)
+
+SCAN_PDF_MULTI_PROMPT = (
+    "Sei un assistente di panificazione. Il TESTO seguente è estratto da un PDF che può contenere UNA o PIÙ ricette "
+    "(anche un intero ricettario). Individua OGNI ricetta distinta e trasformala in DATI STRUTTURATI. "
+    "Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, in questo formato ESATTO:\n"
+    '{"recipes": [ RICETTA, RICETTA, ... ]}\n'
+    "dove ogni RICETTA ha ESATTAMENTE queste chiavi (usa null se un dato non è presente, NON inventare):\n"
+    + SCAN_FIELDS_SCHEMA + "\n"
+    "Converti tutte le quantità in grammi quando possibile. Metti il procedimento passo-passo in 'procedure'. "
+    "Se il PDF contiene una sola ricetta, restituisci comunque un array con un solo elemento. "
+    "Estrai al massimo 20 ricette. Non aggiungere spiegazioni: SOLO il JSON."
+)
+
+
 @api_router.post("/maestro/scan-recipe-pdf")
 async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_pro)):
     if not EMERGENT_LLM_KEY:
@@ -3383,7 +3408,7 @@ async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_
         pdf_bytes = _b64.b64decode(raw_b64)
         from pypdf import PdfReader
         reader = PdfReader(_io.BytesIO(pdf_bytes))
-        pages = [(p.extract_text() or "") for p in reader.pages[:10]]
+        pages = [(p.extract_text() or "") for p in reader.pages[:40]]
         pdf_text = "\n".join(pages).strip()
     except Exception:
         logger.exception("pdf parse error")
@@ -3394,8 +3419,8 @@ async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_
         api_key=EMERGENT_LLM_KEY,
         session_id=f"scanpdf-{uuid.uuid4()}",
         system_message="Estrai ricette da testo e restituisci solo JSON valido.",
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
-    prompt = SCAN_PROMPT + "\n\nTESTO DELLA RICETTA (dal PDF):\n" + pdf_text[:12000]
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=8000)
+    prompt = SCAN_PDF_MULTI_PROMPT + "\n\nTESTO DAL PDF:\n" + pdf_text[:18000]
     text = ""
     try:
         async for event in chat.stream_message(UserMessage(text=prompt)):
@@ -3407,13 +3432,23 @@ async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_
         logger.exception("scan-recipe-pdf error")
         raise HTTPException(status_code=500, detail="Errore nell'analisi del PDF")
     rawt = text.strip().strip("`")
+    if rawt.lower().startswith("json"):
+        rawt = rawt[4:].strip()
     s, e = rawt.find("{"), rawt.rfind("}")
     if s == -1 or e == -1:
         raise HTTPException(status_code=422, detail="Ricetta non riconosciuta nel PDF")
     try:
-        return json.loads(rawt[s:e + 1])
+        parsed = json.loads(rawt[s:e + 1])
     except Exception:
         raise HTTPException(status_code=422, detail="Impossibile leggere la ricetta dal PDF")
+    recipes = parsed.get("recipes") if isinstance(parsed, dict) else None
+    if not isinstance(recipes, list):
+        # Fallback: singola ricetta come oggetto piatto
+        recipes = [parsed] if isinstance(parsed, dict) else []
+    recipes = [r for r in recipes if isinstance(r, dict) and (r.get("name") or "").strip()]
+    if not recipes:
+        raise HTTPException(status_code=422, detail="Nessuna ricetta riconosciuta nel PDF")
+    return {"recipes": recipes}
 
 
 import xml.etree.ElementTree as ET

@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { toast } from "sonner";
-import { Camera, Loader2, ScanLine, PenLine, Upload } from "lucide-react";
+import { Camera, Loader2, ScanLine, PenLine, Upload, FileText, CheckCircle2, ChevronRight } from "lucide-react";
 import { API, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -12,6 +12,9 @@ export default function ScanRecipe({ embedded = false }) {
   const [loading, setLoading] = useState(false);
   const [scanned, setScanned] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [pdfRecipes, setPdfRecipes] = useState([]); // ricette multiple trovate nel PDF
+  const [savedIdx, setSavedIdx] = useState([]); // indici già salvati
+  const [activeIdx, setActiveIdx] = useState(null); // indice della ricetta aperta nel dialog
   const fileRef = useRef(null);
 
   const onPhoto = (file) => {
@@ -61,7 +64,17 @@ export default function ScanRecipe({ embedded = false }) {
           });
           if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || ""); }
           const data = await res.json();
-          setScanned(data); setDialogOpen(true); toast.success(t("scan_done"));
+          const recipes = Array.isArray(data?.recipes) ? data.recipes : (data ? [data] : []);
+          if (recipes.length === 0) { toast.error(t("scan_error")); return; }
+          if (recipes.length === 1) {
+            setPdfRecipes([]); setScanned(recipes[0]); setActiveIdx(null); setDialogOpen(true);
+          } else {
+            // Più ricette: mostra l'elenco da rivedere/salvare una per una.
+            setPdfRecipes(recipes); setSavedIdx([]); setScanned(null); setActiveIdx(null);
+          }
+          toast.success(recipes.length > 1
+            ? tri(`Trovate ${recipes.length} ricette nel PDF`, `${recipes.length} Rezepte im PDF gefunden`, `Found ${recipes.length} recipes in the PDF`)
+            : t("scan_done"));
         } catch (err) {
           toast.error(err?.message || t("scan_error"));
         } finally { setLoading(false); }
@@ -72,12 +85,21 @@ export default function ScanRecipe({ embedded = false }) {
     onPhoto(file);
   };
 
+  const openPdfRecipe = (idx) => {
+    setScanned(pdfRecipes[idx]); setActiveIdx(idx); setDialogOpen(true);
+  };
+
   const handleSave = async (payload) => {
     try {
       await recipesApi.create({ ...payload, collection_name: "personal" });
       toast.success(t("toast_saved"));
       setDialogOpen(false);
-      setScanned(null);
+      if (activeIdx != null) {
+        setSavedIdx((s) => (s.includes(activeIdx) ? s : [...s, activeIdx]));
+      } else {
+        setScanned(null);
+      }
+      setActiveIdx(null);
     } catch {
       toast.error(t("toast_save_error"));
     }
@@ -129,6 +151,40 @@ export default function ScanRecipe({ embedded = false }) {
           </div>
         )}
       </div>
+
+      {pdfRecipes.length > 1 && (
+        <div data-testid="pdf-recipes-list" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+          <div className="flex items-center gap-2 mb-3 text-[#2e8b6f]">
+            <FileText className="w-5 h-5" />
+            <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">
+              {tri(`${pdfRecipes.length} ricette trovate nel PDF`, `${pdfRecipes.length} Rezepte im PDF`, `${pdfRecipes.length} recipes found in the PDF`)}
+            </h3>
+          </div>
+          <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Tocca una ricetta per rivederla e salvarla nel tuo ricettario.", "Tippe auf ein Rezept, um es zu prüfen und zu speichern.", "Tap a recipe to review and save it to your book.")}</p>
+          <ul className="space-y-2">
+            {pdfRecipes.map((r, i) => {
+              const done = savedIdx.includes(i);
+              return (
+                <li key={i}>
+                  <button data-testid={`pdf-recipe-${i}`} onClick={() => openPdfRecipe(i)}
+                    className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-xl border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#f0f6fb] dark:bg-[#1F252B] border-[#d5e4f0] dark:border-[#38424B] hover:border-[#3f7cac]"}`}>
+                    {done ? <CheckCircle2 className="w-5 h-5 text-[#2e8b6f] shrink-0" /> : <ScanLine className="w-5 h-5 text-[#3f7cac] shrink-0" />}
+                    <span className="flex-1 min-w-0">
+                      <span className="block font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name || tri("Ricetta senza nome", "Rezept ohne Namen", "Untitled recipe")}</span>
+                      {r.flour_type && <span className="block text-[11px] text-[#7E8A93] truncate">{r.flour_type}</span>}
+                    </span>
+                    {done ? <span className="text-[11px] font-bold text-[#2e8b6f] shrink-0">{tri("Salvata", "Gespeichert", "Saved")}</span> : <ChevronRight className="w-4 h-4 text-[#7E8A93] shrink-0" />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <button data-testid="pdf-recipes-done" onClick={() => { setPdfRecipes([]); setSavedIdx([]); }}
+            className="mt-3 text-[12px] font-bold text-[#3f7cac] underline">
+            {tri("Chiudi elenco", "Liste schließen", "Close list")}
+          </button>
+        </div>
+      )}
 
       <RecipeDialog open={dialogOpen} onOpenChange={setDialogOpen} initial={scanned} onSave={handleSave} />
     </div>
