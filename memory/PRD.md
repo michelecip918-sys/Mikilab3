@@ -1574,3 +1574,16 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - FIX applicati/verificati: SEC-001 CORS (allow_credentials=False, chiude riflessione origin credenziale; app usa Bearer token → nessun impatto); SEC-002 NoSQL injection in /auth/verify-email (token forzato a str → account takeover chiuso, verificato HTTP 400 su {$ne}); SEC-003 XSS stored nel link mappa fornai (escape completo &<>"' + validazione schema http/https).
 - DA FARE (residuo audit, non ancora fixato): SEC-004 abuso trial 7gg re-registrazione (MEDIA — richiede binding device/pagamento + blocco domini usa-e-getta); SEC-005 CSRF (SameSite=none → passare a Lax o token CSRF); hardening: auth su /api/upload,/api/files,/api/seed-mikilab; messaggi generici anti-enumeration; rate-limit su register/forgot/verify/resend.
 - NON ANCORA FATTO (parte contenuti richiesta dall'utente): aggiungere ricette Croissant/Cornetti (evidenziare: Croissant sfogliato SENZA zucchero nell'impasto), espandere "Pasticceria Lievitata & Viennoiserie" (danesi, brioche, veneziane, cornetti), ricette trend (Pan di Kristall), Pane da Hamburger in sezione Panini. Task dati ampio → prossima sessione.
+
+## v45.2 (2026-06) — Security MEDIE + Contenuti Viennoiserie/Trend
+- SEC-005 CSRF: cookie sessione samesite="none"→"lax" (app usa Bearer, nessun impatto).
+- SEC-004 abuso trial: /trial/activate ora blocca domini email usa-e-getta (blocklist) + impedisce riattivazione dallo stesso IP con email diverse (db.trial_fingerprints). Admin esente. Login verificato OK.
+- CONTENUTI (parte B): seed /app/backend/seed_viennoiserie.py → 7 ricette (mikilab, 106 totali) con immagini + name/notes/procedure IT/DE/EN/ES + menu_category corretta:
+  · Croissant Sfogliato — **SENZA zucchero nell'impasto** (evidenziato nelle notes 4 lingue) [viennoiserie]
+  · Cornetto Italiano (dolce, con zucchero) [viennoiserie]
+  · Danese alla Crema (Plunder) [viennoiserie]
+  · Brioche Francese [viennoiserie]
+  · Veneziana (grande lievitato) [viennoiserie]
+  · Pane da Hamburger [panini]
+  · Pan di Kristall 95% idratazione (trend) [pane]
+- Viennoiserie non è più solo panettoni. Verificato via API (categorie/img/traduzioni OK).

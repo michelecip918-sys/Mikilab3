@@ -495,7 +495,7 @@ async def _make_session(user_id, token=None):
 
 
 def _set_cookie(resp, token):
-    resp.set_cookie("session_token", token, httponly=True, secure=True, samesite="none", path="/", max_age=SESSION_DAYS * 86400)
+    resp.set_cookie("session_token", token, httponly=True, secure=True, samesite="lax", path="/", max_age=SESSION_DAYS * 86400)
 
 
 def _public_user(u):
@@ -3210,16 +3210,33 @@ class TrialReq(BaseModel):
 
 
 @api_router.post("/trial/activate")
-async def activate_trial(body: TrialReq, user: dict = Depends(current_user)):
+async def activate_trial(body: TrialReq, request: Request, user: dict = Depends(current_user)):
     email = user["email"].strip().lower()
+    # SEC-004: blocca domini email usa-e-getta (anti-abuso prova ripetuta)
+    DISPOSABLE = {"mailinator.com", "guerrillamail.com", "10minutemail.com", "tempmail.com", "temp-mail.org",
+                  "yopmail.com", "trashmail.com", "getnada.com", "throwawaymail.com", "sharklasers.com",
+                  "maildrop.cc", "fakeinbox.com", "dispostable.com", "mailnesia.com", "moakt.com", "emailondeck.com"}
+    domain = email.split("@")[-1] if "@" in email else ""
+    is_admin = user.get("role") == "admin"
+    if domain in DISPOSABLE and not is_admin:
+        raise HTTPException(400, "Per la prova gratuita usa un indirizzo email valido (non temporaneo).")
     ent = await db.entitlements.find_one({"email": email})
     if ent and ent.get("trial_used"):
         raise HTTPException(400, "Prova già utilizzata")
+    # SEC-004: stesso dispositivo/IP non può riattivare la prova con email diverse (30 giorni)
+    ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?"))
+    if ip and ip != "?" and not is_admin:
+        prior = await db.trial_fingerprints.find_one({"ip": ip, "email": {"$ne": email}})
+        if prior:
+            raise HTTPException(400, "Una prova gratuita è già stata attivata da questo dispositivo.")
     hours = 1 if int(body.hours) == 1 else 24
     exp = (datetime.now(timezone.utc) + timedelta(hours=hours)).isoformat()
     await db.entitlements.update_one({"email": email},
         {"$set": {"email": email, "pro": True, "source": "trial",
                   "expires_at": exp, "trial_used": True, "updated_at": now_iso()}}, upsert=True)
+    if ip and ip != "?":
+        await db.trial_fingerprints.update_one({"ip": ip, "email": email},
+            {"$set": {"ip": ip, "email": email, "created_at": now_iso()}}, upsert=True)
     return {"pro": True, "source": "trial", "expires_at": exp}
 
 
