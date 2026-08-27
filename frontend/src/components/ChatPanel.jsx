@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { X, Send, ArrowLeft, Loader2, MessageSquare, Search } from "lucide-react";
-import { dmApi, friendsApi } from "@/lib/api";
+import { X, Send, ArrowLeft, Loader2, MessageSquare, Search, ImagePlus } from "lucide-react";
+import { dmApi, friendsApi, uploadApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
@@ -32,6 +32,8 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
   const [loadingThread, setLoadingThread] = useState(false);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef(null);
   const [friends, setFriends] = useState([]);
   const [showNew, setShowNew] = useState(false);
   const [q, setQ] = useState("");
@@ -86,6 +88,19 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
     finally { setSending(false); }
   };
 
+  const sendPhoto = async (file) => {
+    if (!file || !active) return;
+    setUploading(true);
+    try {
+      const url = await uploadApi.image(file, `chat-${Date.now()}.jpg`);
+      const optimistic = { id: `tmp-${Date.now()}`, from_id: user?.user_id, to_id: active.user_id, text: "", image_url: url, created_at: new Date().toISOString() };
+      setMsgs((p) => [...p, optimistic]);
+      await dmApi.send(active.user_id, "", url);
+      await loadThread(active.user_id, true);
+    } catch { toast.error(tri("Foto non inviata", "Foto nicht gesendet", "Photo not sent", "Foto no enviada")); }
+    finally { setUploading(false); }
+  };
+
   if (!open) return null;
 
   const filteredFriends = friends.filter((f) => (f.name || "").toLowerCase().includes(q.toLowerCase()));
@@ -127,7 +142,8 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                   return (
                     <div key={m.id} data-testid={`chat-msg-${m.id}`} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[78%] rounded-2xl px-3.5 py-2 ${mine ? "bg-[#3f7cac] text-white rounded-br-sm" : "bg-white dark:bg-[#232A31] text-[#2B303B] dark:text-[#e4eff8] rounded-bl-sm border border-[#d5e4f0] dark:border-[#38424B]"}`}>
-                        <p className="text-sm whitespace-pre-line leading-snug break-words">{m.text}</p>
+                        {m.image_url && <img src={m.image_url} alt="" data-testid="chat-msg-image" className="rounded-xl mb-1 max-h-56 w-full object-cover" />}
+                        {m.text && <p className="text-sm whitespace-pre-line leading-snug break-words">{m.text}</p>}
                         <p className={`text-[10px] mt-0.5 text-right ${mine ? "text-white/70" : "text-[#7E8A93]"}`}>{timeShort(m.created_at, lang)}</p>
                       </div>
                     </div>
@@ -137,6 +153,10 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               <div ref={endRef} />
             </div>
             <div className="p-3 border-t border-[#d5e4f0] dark:border-[#38424B] flex items-center gap-2 shrink-0">
+              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) sendPhoto(f); e.target.value = ""; }} />
+              <button data-testid="chat-photo" onClick={() => fileRef.current?.click()} disabled={uploading} className="w-10 h-10 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#3f7cac] flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
+                {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImagePlus className="w-5 h-5" />}
+              </button>
               <input data-testid="chat-input" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())}
                 placeholder={tri("Scrivi un messaggio…", "Nachricht schreiben…", "Type a message…", "Escribe un mensaje…")}
                 className="flex-1 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
@@ -177,7 +197,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                   <AvatarImg pic={c.picture} name={c.name} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
-                    <p className="text-[12px] text-[#7E8A93] truncate">{c.last}</p>
+                    <p className="text-[12px] text-[#7E8A93] truncate">{c.last || "📷"}</p>
                   </div>
                   {c.unread > 0 && <span data-testid={`chat-unread-${c.other_id}`} className="min-w-[20px] h-5 px-1.5 rounded-full bg-[#3f7cac] text-white text-[11px] font-bold flex items-center justify-center shrink-0">{c.unread}</span>}
                 </button>

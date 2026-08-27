@@ -71,8 +71,9 @@ export default function AcademyCoach() {
   const saveTimeline = async (text) => {
     const steps = parseTimeline(text);
     if (steps.length === 0) { toast.error(tri("Nessun orario trovato nella risposta.", "Keine Uhrzeit gefunden.", "No times found in the answer.", "No se encontraron horarios.")); return; }
-    const { count, permission } = await saveReminders(steps);
-    if (permission === "granted") toast.success(tri(`${count} promemoria salvati! Riceverai una notifica ad ogni passo.`, `${count} Erinnerungen gespeichert! Du bekommst zu jedem Schritt eine Benachrichtigung.`, `${count} reminders saved! You'll get a notification for each step.`, `${count} recordatorios guardados. Recibirás una notificación en cada paso.`));
+    const { count, permission, persistent } = await saveReminders(steps);
+    if (persistent) toast.success(tri(`${count} promemoria salvati! Riceverai una notifica ad ogni passo, anche ad app chiusa.`, `${count} Erinnerungen gespeichert! Du bekommst Benachrichtigungen zu jedem Schritt, auch bei geschlossener App.`, `${count} reminders saved! You'll get a notification for each step, even when the app is closed.`, `${count} recordatorios guardados. Recibirás notificaciones en cada paso, incluso con la app cerrada.`));
+    else if (permission === "granted") toast.success(tri(`${count} promemoria salvati! Riceverai una notifica ad ogni passo.`, `${count} Erinnerungen gespeichert! Du bekommst zu jedem Schritt eine Benachrichtigung.`, `${count} reminders saved! You'll get a notification for each step.`, `${count} recordatorios guardados. Recibirás una notificación en cada paso.`));
     else toast.success(tri(`${count} promemoria salvati (attiva le notifiche per gli avvisi).`, `${count} Erinnerungen gespeichert (Benachrichtigungen aktivieren).`, `${count} reminders saved (enable notifications for alerts).`, `${count} recordatorios guardados (activa las notificaciones).`));
   };
 

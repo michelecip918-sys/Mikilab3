@@ -196,7 +196,7 @@ export const profileApi = {
 };
 
 export const dmApi = {
-  send: (to_id, text) => api.post(`/community/messages`, { to_id, text }).then((r) => r.data),
+  send: (to_id, text, image_url) => api.post(`/community/messages`, { to_id, text, image_url }).then((r) => r.data),
   thread: (other_id) => api.get(`/community/messages/${other_id}`).then((r) => r.data).catch(() => ({ messages: [], other: null })),
   conversations: () => api.get(`/community/conversations`).then((r) => r.data.conversations || []).catch(() => []),
 };
@@ -204,6 +204,16 @@ export const dmApi = {
 export const academyApi = {
   quiz: (level, lang, asked) => api.post(`/academy/quiz`, { level, lang, asked }).then((r) => r.data),
   grantBadge: (badge) => api.post(`/academy/badge`, { badge }).then((r) => r.data),
+  quizScore: (points = 1) => api.post(`/academy/quiz-score`, { points }).then((r) => r.data).catch(() => ({})),
+  leaderboard: () => api.get(`/academy/leaderboard`).then((r) => r.data).catch(() => ({ rows: [] })),
+  sosHistory: () => api.get(`/academy/sos-history`).then((r) => r.data.items || []).catch(() => []),
+  sosDelete: (id) => api.delete(`/academy/sos-history/${id}`).then((r) => r.data),
+};
+
+export const pushApi = {
+  vapid: () => api.get(`/push/vapid`).then((r) => r.data.public_key).catch(() => null),
+  subscribe: (subscription) => api.post(`/push/subscribe`, { subscription }).then((r) => r.data),
+  saveReminders: (steps) => api.post(`/reminders`, { steps }).then((r) => r.data).catch(() => ({})),
 };
 
 export const doughSessionsApi = {

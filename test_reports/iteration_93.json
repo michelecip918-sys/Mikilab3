@@ -1,0 +1,44 @@
+{
+  "summary": "Iteration 93 review: tested the 4 new features (chat photo messages, weekly quiz leaderboard, persistent reminders via Web Push, SOS history in profile) plus DM/quiz regression. Backend: 25 passed / 1 skipped (26 tests) in /app/backend/tests/test_iter93_photo_leaderboard_push_sos.py — 100% of executed assertions pass. Frontend (mobile 390x844, amico1): photo message upload+bubble OK, leaderboard with points and 🎓 OK, quiz-score POST on correct Master answer OK (15→16), coach 'Save to reminders' toast OK, profile SOS history with delete button OK. Web Push subscription cannot be created in headless Chrome, so the server-side persistence branch of the reminders flow could not be exercised from the UI (verified directly via API instead).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/community/conversations", "issue": "For a photo-only message the conversation preview field 'last' is an empty string (only m['text'] is used). ChatPanel currently masks it with a 📷 placeholder, but the API payload is lossy — consider returning '📷 Foto' or an has_image flag."},
+      {"endpoint": "DELETE /api/academy/sos-history/{id}", "issue": "Returns 200 {ok:true} even when the id does not exist or belongs to another user (verified: non-owner delete has no effect but still 200). Prefer 404 when nothing was deleted."},
+      {"endpoint": "POST /api/academy/quiz-score", "issue": "No rate limiting / server-side validation that the answer was actually correct — a client can POST 10 points repeatedly and inflate the weekly leaderboard (verified: 9999 clamps to +10 per call, unlimited calls). Consider capping per week or validating server-side."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ProfilePanel / SOS history thumb", "issue": "The <img> thumb has no onError fallback: the existing seeded item (thumb='https://example.com/t.jpg') renders a broken-image icon inside the card. Add a fallback/placeholder when the thumb URL fails or is missing.", "selector": "[data-testid^='sos-history-']", "priority": "LOW"},
+      {"component": "Learn section (pre-existing)", "issue": "React console error 'Encountered two children with the same key: dccccb01-5bae-4dd7-95e0-c79df42e479e' fires twice on entering the Learn tab — a list in the Learn/Academy tree renders duplicate items with the same uuid key.", "selector": "[data-testid='nav-tab-impara']", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Persistent reminders (coach → Save to reminders)", "issue": "Server-side persistence only happens when Notification.permission === 'granted' AND pushManager.subscribe() succeeds. In headless Chrome permission is 'denied' and, once patched to 'granted', GET /api/push/vapid returned 200 but pushManager.subscribe() failed, so neither POST /api/push/subscribe nor POST /api/reminders were called; the flow degraded gracefully to the local toast ('12 reminders saved! You'll get a notification for each step.'). Not reproducible/verifiable in this environment — backend endpoints verified independently. Suggestion: save reminders server-side even when the push subscription fails (so they survive a page reload) instead of skipping /api/reminders entirely.", "affected_selectors": ["[data-testid='academy-save-timeline-1']"]},
+      {"flow": "Quiz leaderboard refresh", "issue": "After a correct Master answer the visible leaderboard is not refreshed automatically; points only update when the panel is toggled again (verified 15→16 after re-open). Minor UX nit.", "affected_selectors": ["[data-testid='quiz-leaderboard']"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_iter93_photo_leaderboard_push_sos.py", "/app/test_reports/pytest/iter93.xml"],
+  "action_items": [
+    "Optional: add onError placeholder for SOS history thumbnails (broken thumb visible today).",
+    "Optional: persist reminders via POST /api/reminders even if the push subscription cannot be created.",
+    "Optional: DELETE /api/academy/sos-history/{id} should return 404 when no document is deleted.",
+    "Optional: guard /api/academy/quiz-score against client-side point inflation (no server validation / no weekly cap).",
+    "Fix pre-existing React duplicate-key warning in the Learn section (key dccccb01-5bae-4dd7-95e0-c79df42e479e)."
+  ],
+  "critical_code_review_comments": [
+    "server.py is ~5800 lines — well past the 700-line guideline; the new academy/push/reminders blocks are good candidates for extraction into routers (academy.py, push.py).",
+    "_get_vapid() uses __import__('cryptography.hazmat.primitives.serialization', fromlist=[...]) inline; move to a normal top-level import for readability/testability.",
+    "_reminders_loop() polls every 30s with no jitter/index; ensure an index on reminders.{sent,due} to keep the scan cheap as data grows.",
+    "All new endpoints correctly project {_id: 0}; no ObjectId leaked in any tested response."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter93_photo_leaderboard_push_sos.py"],
+  "success_rate": {"backend": "100% (25/26 executed, 1 skipped by design to keep the single SOS item for UI testing)", "frontend": "100% of testable flows (reminders server-persistence branch untestable in headless)"},
+  "seed_data_creation": "Sent TEST_iter93 / TEST_ui93 DM messages between amico1 and amico2 (incl. photo-only messages with placeholder URLs), added weekly quiz points to amico1 (now 16), registered a dummy push subscription endpoint 'https://fcm.googleapis.com/fcm/send/TEST_iter93', saved TEST_iter93 reminders. Existing amico1 SOS history item preserved.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "amico1@mikilab.de / Test1234!, amico2@mikilab.de / Test1234! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Backend tests for iteration 93 live in /app/backend/tests/test_iter93_photo_leaderboard_push_sos.py (fast, no AI calls). UI notes: login via header 'login-btn'; Learn tab is 'nav-tab-impara'; quiz level testids are quiz-level-apprendista/avanzato/master; the chat photo upload is the single hidden input[type=file] inside [data-testid='chat-panel'] (set_input_files with /app/.screenshots/bread_test.jpg works, upload+send takes ~10s). To test the reminders flow in headless, patch Notification.permission to 'granted' via page.evaluate — real pushManager.subscribe() still fails, so /api/push/subscribe and /api/reminders are never called from the UI. Coach AI answers take 30-60s.",
+  "rca_of_the_issue": "No blocking defect found. The only functional gap is by design: frontend saveReminders() short-circuits server persistence when Notification permission is not granted or pushManager.subscribe() fails, so /api/reminders is never hit in a headless/permission-less browser; the backend endpoints themselves work (verified via API: {ok:true,count:2})."
+}

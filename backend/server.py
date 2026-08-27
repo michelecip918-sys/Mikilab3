@@ -259,6 +259,7 @@ class VisionRequest(BaseModel):
     mode: str  # "difetti" | "ingredienti"
     image_base64: str
     lang: str = "it"
+    thumb: Optional[str] = None
 
 
 class LabConfig(BaseModel):
@@ -2284,7 +2285,7 @@ SOS_LABELS = {
 }
 
 
-async def sos_stream(image_b64: str, lang: str = "it"):
+async def sos_stream(image_b64: str, lang: str = "it", user_id: str = None, thumb: str = None):
     if "," in image_b64 and image_b64.strip().startswith("data:"):
         image_b64 = image_b64.split(",", 1)[1]
     chat = LlmChat(
@@ -2293,15 +2294,23 @@ async def sos_stream(image_b64: str, lang: str = "it"):
         system_message=SOS_PROMPT + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]) + SOS_LABELS.get(lang, SOS_LABELS["it"]),
     ).with_model("anthropic", "claude-sonnet-4-6")
     user_msg = UserMessage(text="Ecco la foto del mio pane/impasto. Dammi la diagnosi SOS.", file_contents=[ImageContent(image_base64=image_b64)])
+    full = ""
     try:
         async for event in chat.stream_message(user_msg):
             if isinstance(event, TextDelta):
+                full += event.content
                 yield f"data: {json.dumps({'d': event.content})}\n\n"
             elif isinstance(event, StreamDone):
                 break
     except Exception:
         logger.exception("sos stream error")
         yield f"data: {json.dumps({'d': '[Errore nella diagnosi. Riprova.]'})}\n\n"
+    if user_id and full.strip():
+        try:
+            await db.sos_history.insert_one({"id": str(uuid.uuid4()), "user_id": user_id,
+                                             "result": full[:6000], "thumb": (thumb or "")[:400], "lang": lang, "created_at": now_iso()})
+        except Exception:
+            logger.exception("sos history save error")
     yield f"data: {json.dumps({'done': True})}\n\n"
 
 
@@ -2310,10 +2319,182 @@ async def academy_sos(payload: VisionRequest, user: dict = Depends(current_user)
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
     return StreamingResponse(
-        sos_stream(payload.image_base64, payload.lang),
+        sos_stream(payload.image_base64, payload.lang, user_id=user["user_id"], thumb=getattr(payload, "thumb", None)),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@api_router.get("/academy/sos-history")
+async def academy_sos_history(user: dict = Depends(current_user)):
+    docs = await db.sos_history.find({"user_id": user["user_id"]}, {"_id": 0}).sort("created_at", -1).to_list(30)
+    return {"items": docs}
+
+
+@api_router.delete("/academy/sos-history/{item_id}")
+async def academy_sos_history_delete(item_id: str, user: dict = Depends(current_user)):
+    res = await db.sos_history.delete_one({"id": item_id, "user_id": user["user_id"]})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Diagnosi non trovata")
+    return {"ok": True}
+
+
+# --- Classifica Quiz (punti Master settimanali tra amici) ---
+def _iso_week():
+    from datetime import date
+    y, w, _ = date.today().isocalendar()
+    return f"{y}-W{w:02d}"
+
+
+class QuizScoreReq(BaseModel):
+    points: int = 1
+
+
+@api_router.post("/academy/quiz-score")
+async def academy_quiz_score(body: QuizScoreReq, user: dict = Depends(current_user)):
+    pts = max(0, min(int(body.points or 0), 10))
+    if pts == 0:
+        return {"ok": True}
+    week = _iso_week()
+    WEEKLY_CAP = 300
+    existing = await db.quiz_scores.find_one({"user_id": user["user_id"], "week": week}, {"_id": 0, "points": 1})
+    cur = (existing or {}).get("points", 0)
+    if cur >= WEEKLY_CAP:
+        return {"ok": True, "week": week, "capped": True}
+    pts = min(pts, WEEKLY_CAP - cur)
+    await db.quiz_scores.update_one(
+        {"user_id": user["user_id"], "week": week},
+        {"$inc": {"points": pts}, "$set": {"updated_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True, "week": week}
+
+
+async def _accepted_friend_ids(user_id: str):
+    frs = await db.friendships.find({"status": "accepted", "$or": [{"from_id": user_id}, {"to_id": user_id}]}, {"_id": 0}).to_list(500)
+    return [(f["to_id"] if f["from_id"] == user_id else f["from_id"]) for f in frs]
+
+
+@api_router.get("/academy/leaderboard")
+async def academy_leaderboard(user: dict = Depends(current_user)):
+    week = _iso_week()
+    ids = await _accepted_friend_ids(user["user_id"])
+    ids.append(user["user_id"])
+    scores = await db.quiz_scores.find({"week": week, "user_id": {"$in": ids}}, {"_id": 0}).to_list(500)
+    smap = {s["user_id"]: s.get("points", 0) for s in scores}
+    us = await db.users.find({"user_id": {"$in": ids}}, {"_id": 0, "user_id": 1, "name": 1, "picture": 1, "email": 1, "badges": 1}).to_list(500)
+    rows = [{
+        "user_id": u["user_id"],
+        "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
+        "picture": u.get("picture", ""),
+        "diplomato": "diplomato" in (u.get("badges") or []),
+        "points": smap.get(u["user_id"], 0),
+        "me": u["user_id"] == user["user_id"],
+    } for u in us]
+    rows.sort(key=lambda r: (-r["points"], r["name"].lower()))
+    return {"week": week, "rows": rows}
+
+
+# --- Web Push per promemoria persistenti (VAPID) ---
+async def _get_vapid():
+    doc = await db.app_config.find_one({"_id": "vapid"})
+    if doc:
+        return doc["public"], doc["private"]
+    from py_vapid import Vapid01
+    import base64 as _b64
+    v = Vapid01()
+    v.generate_keys()
+    # public key in application server key format (uncompressed point, base64url)
+    pub_raw = v.public_key.public_bytes(
+        encoding=__import__("cryptography.hazmat.primitives.serialization", fromlist=["Encoding"]).Encoding.X962,
+        format=__import__("cryptography.hazmat.primitives.serialization", fromlist=["PublicFormat"]).PublicFormat.UncompressedPoint,
+    )
+    pub_b64 = _b64.urlsafe_b64encode(pub_raw).rstrip(b"=").decode()
+    priv_raw = v.private_key.private_numbers().private_value.to_bytes(32, "big")
+    priv_b64 = _b64.urlsafe_b64encode(priv_raw).rstrip(b"=").decode()
+    await db.app_config.insert_one({"_id": "vapid", "public": pub_b64, "private": priv_b64})
+    return pub_b64, priv_b64
+
+
+@api_router.get("/push/vapid")
+async def push_vapid():
+    pub, _ = await _get_vapid()
+    return {"public_key": pub}
+
+
+class PushSubReq(BaseModel):
+    subscription: dict
+
+
+@api_router.post("/push/subscribe")
+async def push_subscribe(body: PushSubReq, user: dict = Depends(current_user)):
+    sub = body.subscription or {}
+    endpoint = sub.get("endpoint")
+    if not endpoint:
+        raise HTTPException(400, "Subscription non valida")
+    await db.push_subs.update_one(
+        {"endpoint": endpoint},
+        {"$set": {"user_id": user["user_id"], "subscription": sub, "updated_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True}
+
+
+class ReminderStep(BaseModel):
+    time: str
+    label: str
+    due: str  # ISO UTC
+
+
+class RemindersReq(BaseModel):
+    steps: List[ReminderStep]
+
+
+@api_router.post("/reminders")
+async def reminders_create(body: RemindersReq, user: dict = Depends(current_user)):
+    # rimuove i vecchi non ancora inviati e reinserisce
+    await db.reminders.delete_many({"user_id": user["user_id"], "sent": {"$ne": True}})
+    docs = [{"id": str(uuid.uuid4()), "user_id": user["user_id"], "time": s.time,
+             "label": s.label[:160], "due": s.due, "sent": False, "created_at": now_iso()}
+            for s in body.steps[:20]]
+    if docs:
+        await db.reminders.insert_many(docs)
+    return {"ok": True, "count": len(docs)}
+
+
+def _send_push(sub: dict, payload: dict, private_key: str):
+    from pywebpush import webpush, WebPushException
+    try:
+        webpush(subscription_info=sub, data=json.dumps(payload),
+                vapid_private_key=private_key,
+                vapid_claims={"sub": f"mailto:{SENDER_EMAIL}"})
+        return True
+    except WebPushException as e:
+        logger.warning(f"webpush failed: {e}")
+        return False
+    except Exception:
+        logger.exception("webpush error")
+        return False
+
+
+async def _reminders_loop():
+    while True:
+        try:
+            now = datetime.now(timezone.utc).isoformat()
+            due = await db.reminders.find({"sent": False, "due": {"$lte": now}}, {"_id": 0}).to_list(200)
+            if due:
+                _, priv = await _get_vapid()
+                for r in due:
+                    subs = await db.push_subs.find({"user_id": r["user_id"]}, {"_id": 0}).to_list(20)
+                    payload = {"title": f"MikiLab · {r['time']}", "body": r["label"]}
+                    for s in subs:
+                        await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+                    await db.reminders.update_one({"id": r["id"]}, {"$set": {"sent": True}})
+        except Exception:
+            logger.exception("reminders loop error")
+        await asyncio.sleep(30)
+
+
 
 
 
@@ -4506,20 +4687,22 @@ async def community_profile_update(body: ProfileUpdateReq, user: dict = Depends(
 
 class DMReq(BaseModel):
     to_id: str
-    text: str
+    text: str = ""
+    image_url: Optional[str] = None
 
 
 @api_router.post("/community/messages")
 async def dm_send(body: DMReq, user: dict = Depends(current_user)):
     text = (body.text or "").strip()[:1000]
-    if not text or not body.to_id:
+    image_url = (body.image_url or "").strip()[:600] or None
+    if (not text and not image_url) or not body.to_id:
         raise HTTPException(400, "Messaggio vuoto")
     me = user["user_id"]
     doc = {"id": str(uuid.uuid4()), "from_id": me, "to_id": body.to_id, "text": text,
-           "read": False, "created_at": now_iso()}
+           "image_url": image_url, "read": False, "created_at": now_iso()}
     await db.dm_messages.insert_one(doc)
     actor = user.get("name") or (user.get("email") or "Fornaio").split("@")[0]
-    await _notify(body.to_id, me, "message", None, actor, text[:60])
+    await _notify(body.to_id, me, "message", None, actor, (text or "📷 Foto")[:60])
     doc.pop("_id", None)
     return doc
 
@@ -4534,7 +4717,7 @@ async def dm_conversations(user: dict = Depends(current_user)):
     for m in msgs:
         other = m["to_id"] if m["from_id"] == me else m["from_id"]
         c = convos.setdefault(other, {"other_id": other, "last": "", "at": None, "unread": 0})
-        c["last"] = m.get("text", "")
+        c["last"] = m.get("text", "") or ("📷 Foto" if m.get("image_url") else "")
         c["at"] = m.get("created_at")
         if m["to_id"] == me and not m.get("read"):
             c["unread"] += 1
@@ -5625,6 +5808,11 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Follow-up email loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Follow-up loop start error: {e}")
+    try:
+        asyncio.create_task(_reminders_loop())
+        logging.getLogger(__name__).info("Reminders push loop avviato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Reminders loop start error: {e}")
     try:
         await db.rate_limits.create_index("ts", expireAfterSeconds=86400)
     except Exception as e:

@@ -1,5 +1,32 @@
-// Promemoria/sveglie estratti dalla timeline del coach (best-effort, sessione + Notification API).
+// Promemoria/sveglie estratti dalla timeline del coach.
+// Locale (Notification + setTimeout mentre l'app è aperta) + persistente (Web Push via backend).
+import { pushApi } from "@/lib/api";
 const KEY = "mikilab_reminders";
+
+function urlB64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = atob(base64);
+  const arr = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+
+async function ensurePushSubscription() {
+  try {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return false;
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      const key = await pushApi.vapid();
+      if (!key) return false;
+      sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlB64ToUint8Array(key) });
+    }
+    await pushApi.subscribe(sub.toJSON());
+    return true;
+  } catch { return false; }
+}
+
 
 // Estrae righe con un orario (HH:MM, HH.MM, oppure 12h con AM/PM) da un testo markdown.
 export function parseTimeline(text) {
@@ -48,7 +75,7 @@ export function clearReminders() {
   try { localStorage.removeItem(KEY); } catch { /* */ }
 }
 
-// Salva gli step e prova a programmare notifiche per gli orari ancora futuri di oggi.
+// Salva gli step: notifiche locali (oggi) + push persistente lato server.
 export async function saveReminders(steps) {
   const items = (steps || []).map((s, i) => ({ id: `${Date.now()}-${i}`, ...s }));
   try { localStorage.setItem(KEY, JSON.stringify(items)); } catch { /* */ }
@@ -56,16 +83,30 @@ export async function saveReminders(steps) {
   if (typeof Notification !== "undefined" && permission === "default") {
     try { permission = await Notification.requestPermission(); } catch { /* */ }
   }
+  const now = new Date();
+  // orari assoluti (oggi) per ogni step; se già passato oggi, si intende domani
+  const withDue = items.map((s) => {
+    const [h, m] = s.time.split(":").map(Number);
+    const when = new Date(); when.setHours(h, m, 0, 0);
+    if (when.getTime() <= now.getTime()) when.setDate(when.getDate() + 1);
+    return { ...s, dueDate: when };
+  });
+  // notifiche locali immediate (mentre l'app resta aperta)
   if (permission === "granted") {
-    const now = new Date();
-    items.forEach((s) => {
-      const [h, m] = s.time.split(":").map(Number);
-      const when = new Date(); when.setHours(h, m, 0, 0);
-      const ms = when.getTime() - now.getTime();
+    withDue.forEach((s) => {
+      const ms = s.dueDate.getTime() - now.getTime();
       if (ms > 0 && ms < 24 * 3600 * 1000) {
         setTimeout(() => { try { new Notification("MikiLab · " + s.time, { body: s.label }); } catch { /* */ } }, ms);
       }
     });
   }
-  return { count: items.length, permission };
+  // salvataggio persistente lato server (sopravvive al reload; push se disponibile)
+  let persistent = false;
+  const payload = withDue.map((s) => ({ time: s.time, label: s.label, due: s.dueDate.toISOString() }));
+  if (permission === "granted") { try { await ensurePushSubscription(); } catch { /* */ } }
+  try {
+    const r = await pushApi.saveReminders(payload);
+    persistent = !!(r && r.ok);
+  } catch { /* utente non loggato o errore: resta solo locale */ }
+  return { count: items.length, permission, persistent };
 }

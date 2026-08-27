@@ -29,6 +29,9 @@ export default function EvolvingQuiz() {
   const BKEY = "mikilab_academy_quiz_best";
   const [best, setBest] = useState(() => Number(localStorage.getItem(BKEY) || 0));
   const [masterStreak, setMasterStreak] = useState(0);
+  const [board, setBoard] = useState(null);
+  const [showBoard, setShowBoard] = useState(false);
+  const loadBoard = () => { if (user) academyApi.leaderboard().then((d) => setBoard(d.rows || [])).catch(() => setBoard([])); };
   const [diploma, setDiploma] = useState(() => { try { return localStorage.getItem(DIPLOMA_KEY) === "1"; } catch { return false; } });
 
   useEffect(() => {
@@ -59,6 +62,7 @@ export default function EvolvingQuiz() {
       if (level === "master") {
         const ms = masterStreak + 1;
         setMasterStreak(ms);
+        if (user) academyApi.quizScore(1).then(() => { if (showBoard) loadBoard(); });
         if (ms >= MASTER_TARGET && !diploma) awardDiploma();
       }
     } else {
@@ -116,6 +120,31 @@ export default function EvolvingQuiz() {
         <span data-testid="quiz-streak" className="font-semibold text-[#3f7cac] flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" /> {tri("Serie", "Serie", "Streak", "Racha")}: {streak}</span>
         <span data-testid="quiz-best" className="font-semibold text-[#a9772f] flex items-center gap-1"><Trophy className="w-3.5 h-3.5" /> {tri("Record", "Rekord", "Best", "Récord")}: {best}</span>
       </div>
+
+      {user && (
+        <button data-testid="quiz-leaderboard-toggle" onClick={() => { const n = !showBoard; setShowBoard(n); if (n) loadBoard(); }}
+          className="w-full mb-3 flex items-center justify-center gap-2 text-[12px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 py-2 rounded-xl active:scale-98">
+          <Trophy className="w-4 h-4" /> {showBoard ? tri("Nascondi classifica", "Rangliste ausblenden", "Hide leaderboard", "Ocultar clasificación") : tri("Classifica settimanale (amici)", "Wöchentliche Rangliste (Freunde)", "Weekly leaderboard (friends)", "Clasificación semanal (amigos)")}
+        </button>
+      )}
+      {user && showBoard && (
+        <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-3 space-y-1.5">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Punti Master di questa settimana", "Master-Punkte diese Woche", "This week's Master points", "Puntos Master de esta semana")}</p>
+          {board === null ? (
+            <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-[#2e8b6f]" /></div>
+          ) : board.length === 0 ? (
+            <p className="text-sm text-[#7E8A93] py-2">{tri("Ancora nessun punto. Rispondi al livello Master per scalare la classifica!", "Noch keine Punkte. Beantworte Master-Fragen, um zu klettern!", "No points yet. Answer Master questions to climb!", "Sin puntos aún. ¡Responde en Master para subir!")}</p>
+          ) : board.map((r, idx) => (
+            <div key={r.user_id} data-testid={`leaderboard-row-${r.user_id}`} className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 ${r.me ? "bg-[#3f7cac]/10" : ""}`}>
+              <span className={`w-5 text-center text-sm font-extrabold ${idx === 0 ? "text-[#a9772f]" : "text-[#7E8A93]"}`}>{idx + 1}</span>
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white text-xs font-bold shrink-0">{r.picture ? <img src={r.picture} alt={r.name} className="w-full h-full object-cover" /> : (r.name || "F")[0].toUpperCase()}</div>
+              <span className="flex-1 min-w-0 truncate text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{r.name}{r.me ? tri(" (tu)", " (du)", " (you)", " (tú)") : ""}</span>
+              {r.diplomato && <span title="Fornaio Diplomato" className="text-sm">🎓</span>}
+              <span className="text-sm font-extrabold text-[#2e8b6f]">{r.points}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {!q && !loading && (
         <button data-testid="quiz-start" data-sfx="confirm" onClick={() => loadQuestion()}

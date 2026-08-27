@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare, UserPlus, Send } from "lucide-react";
-import { profileApi, uploadApi, friendsApi } from "@/lib/api";
+import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare, UserPlus, Send, Stethoscope, Trash2 } from "lucide-react";
+import { profileApi, uploadApi, friendsApi, academyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
@@ -32,6 +32,17 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
   const [followed, setFollowed] = useState(false);
   const [viewId, setViewId] = useState(userId);
   const isMe = user && user.user_id === viewId;
+  const [sosItems, setSosItems] = useState([]);
+
+  useEffect(() => {
+    if (isMe) academyApi.sosHistory().then(setSosItems).catch(() => setSosItems([]));
+    else setSosItems([]);
+  }, [isMe, viewId]);
+
+  const deleteSos = async (id) => {
+    setSosItems((p) => p.filter((x) => x.id !== id));
+    try { await academyApi.sosDelete(id); } catch { /* */ }
+  };
 
   const follow = async () => {
     try { await friendsApi.request(viewId); setFollowed(true); toast.success(tri("Richiesta inviata!", "Anfrage gesendet!", "Request sent!", "¡Solicitud enviada!")); }
@@ -148,6 +159,27 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                       <div className="w-11 h-11 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white font-bold">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
                       <span className="text-[10px] text-[#3F4A54] dark:text-[#AEB8BF] truncate w-full text-center">{c.name}</span>
                     </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isMe && sosItems.length > 0 && (
+              <div data-testid="profile-sos-history">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2 flex items-center gap-1.5"><Stethoscope className="w-3.5 h-3.5 text-[#b23a2f]" /> {tri("Diagnosi SOS salvate", "Gespeicherte SOS-Diagnosen", "Saved SOS diagnoses", "Diagnósticos SOS guardados")} ({sosItems.length})</p>
+                <div className="space-y-2">
+                  {sosItems.map((s) => (
+                    <div key={s.id} data-testid={`sos-history-${s.id}`} className="rounded-xl bg-[#fbeeec] dark:bg-[#2a1f1e] border border-[#e6cfc9] dark:border-[#4a2e2b] p-3 flex gap-3">
+                      <div className="relative w-14 h-14 rounded-lg bg-[#b23a2f]/15 flex items-center justify-center shrink-0 overflow-hidden">
+                        <Stethoscope className="w-6 h-6 text-[#b23a2f]" />
+                        {s.thumb && <img src={s.thumb} alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] text-[#2B303B] dark:text-[#e4eff8] line-clamp-3 leading-snug">{s.result.replace(/[#*⚡🥖🔧]/g, "").trim()}</p>
+                        <p className="text-[10px] text-[#7E8A93] mt-1">{new Date(s.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <button data-testid={`sos-history-delete-${s.id}`} onClick={() => deleteSos(s.id)} className="text-[#7E8A93] hover:text-[#b23a2f] p-1 self-start"><Trash2 className="w-4 h-4" /></button>
+                    </div>
                   ))}
                 </div>
               </div>

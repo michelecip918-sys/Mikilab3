@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { X, Loader2, Stethoscope, RotateCcw } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
-import { API } from "@/lib/api";
+import { API, uploadApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 
@@ -28,12 +28,12 @@ export default function SosImpasto({ open, onClose }) {
 
   if (!open) return null;
 
-  const analyze = async (dataUrl) => {
+  const analyze = async (dataUrl, thumbUrl) => {
     setBusy(true); setResult("");
     try {
       const res = await fetch(`${API}/academy/sos`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
-        body: JSON.stringify({ mode: "sos", image_base64: dataUrl, lang }),
+        body: JSON.stringify({ mode: "sos", image_base64: dataUrl, thumb: thumbUrl || "", lang }),
       });
       if (res.status === 401) { onClose(); setAuthOpen && setAuthOpen(true); return; }
       const reader = res.body.getReader(); const decoder = new TextDecoder(); let buffer = "";
@@ -57,7 +57,9 @@ export default function SosImpasto({ open, onClose }) {
     if (!user) { onClose(); setAuthOpen && setAuthOpen(true); return; }
     const dataUrl = await fileToDataUrl(f);
     setPhoto(dataUrl);
-    analyze(dataUrl);
+    let thumbUrl = "";
+    try { thumbUrl = await uploadApi.image(f, `sos-${Date.now()}.jpg`); } catch { /* */ }
+    analyze(dataUrl, thumbUrl);
   };
 
   const reset = () => { setPhoto(""); setResult(""); };
