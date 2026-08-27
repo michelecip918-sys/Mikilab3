@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -139,6 +139,39 @@ function HomeAvatarScene({ lang }) {
   );
 }
 
+const FEATURES = [
+  { icon: Wrench, color: "#3f7cac",
+    it: ["Il Tuo Laboratorio", "Piano di produzione con l'IA: orari d'inizio, celle, impasti, lista spesa, costi e margini — e la tabella delle infornate."],
+    de: ["Dein Labor", "KI-Produktionsplan: Startzeiten, Kammern, Teige, Einkaufsliste, Kosten & Margen — und die Back-Tabelle."],
+    en: ["Your Lab", "AI production plan: start times, cells, doughs, shopping list, costs & margins — plus the baking schedule."],
+    es: ["Tu Laboratorio", "Plan de producción con IA: horarios, cámaras, masas, lista de compra, costes y márgenes — y la tabla de horneado."] },
+  { icon: Activity, color: "#2e8b6f",
+    it: ["Fermentazione Predittiva", "Ti dice quanto lieviterà l'impasto oggi (usando il meteo) e ti avvisa quando è pronto."],
+    de: ["Gärungs-Prognose", "Sagt dir, wie lange die Gare heute dauert (mit Wetter) und meldet sich, wenn der Teig fertig ist."],
+    en: ["Fermentation Forecast", "Tells you how long proofing takes today (using the weather) and alerts you when the dough is ready."],
+    es: ["Fermentación Predictiva", "Te dice cuánto leudará hoy (con el clima) y te avisa cuando la masa está lista."] },
+  { icon: Hand, color: "#C88A2B",
+    it: ["Mani in Pasta & Timeline", "Leggi le ricette a voce con le mani libere e vedi la linea del tempo con gli orari a ritroso dallo sforno."],
+    de: ["Hände im Teig & Zeitplan", "Rezepte freihändig vorlesen lassen und den Zeitplan rückwärts ab dem Ausbacken sehen."],
+    en: ["Hands-free & Timeline", "Have recipes read aloud hands-free and see the timeline with times counted back from baking."],
+    es: ["Manos en la Masa y Timeline", "Escucha las recetas con las manos libres y ve la línea de tiempo a partir del horneado."] },
+  { icon: BookOpen, color: "#234b6e",
+    it: ["Le Mie Ricette + Generatore", "Le ricette col mio metodo (dosi, idratazione, costi) e un generatore IA per crearne di nuove su misura."],
+    de: ["Meine Rezepte + Generator", "Rezepte mit meiner Methode (Mengen, Hydratation, Kosten) und ein KI-Generator für neue, maßgeschneiderte."],
+    en: ["My Recipes + Generator", "Recipes with my method (doses, hydration, costs) and an AI generator to create tailored new ones."],
+    es: ["Mis Recetas + Generador", "Recetas con mi método (dosis, hidratación, costes) y un generador IA para crear nuevas a medida."] },
+  { icon: GraduationCap, color: "#5aa0cf",
+    it: ["Impara", "Lezioni passo-passo e la diagnosi dell'impasto da una foto: capisci subito cosa migliorare."],
+    de: ["Lernen", "Schritt-für-Schritt-Lektionen und Teig-Diagnose per Foto: sofort verstehen, was zu verbessern ist."],
+    en: ["Learn", "Step-by-step lessons and dough diagnosis from a photo: instantly see what to improve."],
+    es: ["Aprende", "Lecciones paso a paso y diagnóstico de la masa por foto: entiende al instante qué mejorar."] },
+  { icon: Users, color: "#6E8CA0",
+    it: ["Community & Mappa dei Fornai", "Confrontati con altri fornai e scopri chi usa MikiLab nel mondo sulla mappa."],
+    de: ["Community & Bäcker-Karte", "Tausche dich mit anderen Bäckern aus und entdecke auf der Karte, wer MikiLab weltweit nutzt."],
+    en: ["Community & Bakers Map", "Connect with other bakers and discover who uses MikiLab worldwide on the map."],
+    es: ["Comunidad y Mapa de Panaderos", "Conecta con otros panaderos y descubre en el mapa quién usa MikiLab en el mundo."] },
+];
+
 export default function Home({ onNavigate }) {
   const { t, lang } = useLang();
   const [chat, setChat] = useState(false);
@@ -256,6 +289,33 @@ export default function Home({ onNavigate }) {
                       "A website designed to organise the work exactly as you would. From detailed recipe management to the shopping list, all the way to precise production planning in the bakery. Plus, with AI's help you can calculate, adapt and manage every stage with no margin for error: you focus on the bakery, we take care of the rest."
                     )}
                   </p>
+                </div>
+
+                <div data-testid="home-features" className="rounded-3xl bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] shadow-md overflow-hidden">
+                  <div className="bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white px-5 py-4 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    <h3 className="font-display text-lg font-bold">{L("Cosa puoi fare con MikiLab", "Was du mit MikiLab machen kannst", "What you can do with MikiLab", "Qué puedes hacer con MikiLab")}</h3>
+                  </div>
+                  <div className="divide-y divide-[#d5e4f0] dark:divide-[#38424B]">
+                    {FEATURES.map((f, i) => {
+                      const Icon = f.icon;
+                      const txt = f[lang] || f.it;
+                      return (
+                        <div key={i} data-testid={`home-feature-${i}`} className="flex items-start gap-3 px-5 py-4">
+                          <div className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0" style={{ background: `${f.color}1a` }}>
+                            <Icon className="w-5 h-5" style={{ color: f.color }} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-semibold text-[15px] text-[#2B303B] dark:text-[#e4eff8] leading-tight">{txt[0]}</p>
+                            <p className="text-[13px] text-[#3F4A54] dark:text-[#AEB8BF] leading-snug mt-0.5">{txt[1]}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="px-5 py-3 bg-[#e4eff8] dark:bg-[#151b21] text-center">
+                    <p className="text-[12px] text-[#7E8A93]">🇮🇹 🇩🇪 🇬🇧 🇪🇸 · {L("in italiano, tedesco, inglese e spagnolo — su smartphone e PC", "auf Italienisch, Deutsch, Englisch & Spanisch — Smartphone & PC", "in Italian, German, English & Spanish — on smartphone & PC", "en italiano, alemán, inglés y español — en móvil y PC")}</p>
+                  </div>
                 </div>
 
                 <div data-testid="home-lab-gallery">
