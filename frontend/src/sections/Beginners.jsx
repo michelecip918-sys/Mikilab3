@@ -1,7 +1,7 @@
 import { useLang } from "@/i18n/LanguageContext";
 import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
-import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope } from "lucide-react";
+import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -11,6 +11,7 @@ import SupplierOrder from "@/components/SupplierOrder";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import AcademyCoach from "@/components/AcademyCoach";
 import EvolvingQuiz from "@/components/EvolvingQuiz";
+import BakeAlong from "@/components/BakeAlong";
 import SosImpasto from "@/components/SosImpasto";
 import LabTour from "@/components/LabTour";
 
@@ -489,6 +490,14 @@ export default function Beginners({ onNavigate }) {
       </div>
       <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_quiz_sub")}</p>
       <EvolvingQuiz />
+
+      {/* Bake-Along: sfida di panificazione della community con classifica */}
+      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
+        <Flame className="w-4 h-4" />
+        <span className="text-xs font-semibold uppercase tracking-wide">{tri3(lang, "Sfida Bake-Along", "Bake-Along Challenge", "Bake-Along Challenge", "Reto Bake-Along")}</span>
+      </div>
+      <p className="text-sm text-[#7E8A93] -mt-2">{tri3(lang, "Sforna il tema della settimana, condividi la foto e vota i pani della community.", "Backe das Wochenthema, teile dein Foto und stimme für die Brote der Community ab.", "Bake this week's theme, share your photo and vote for the community's breads.", "Hornea el tema de la semana, comparte tu foto y vota los panes de la comunidad.")}</p>
+      <BakeAlong />
     </div>
   );
 }

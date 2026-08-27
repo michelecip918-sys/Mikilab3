@@ -142,6 +142,13 @@ export const communityApi = {
   remove: (id) => api.delete(`/community/posts/${id}`).then((r) => r.data),
 };
 
+export const bakeAlongApi = {
+  current: (lang) => api.get(`/bakealong/current`, { params: { lang } }).then((r) => r.data).catch(() => null),
+  submit: (image_url, text) => api.post(`/bakealong/submit`, { image_url, text }).then((r) => r.data),
+  entries: (week) => api.get(`/bakealong/entries`, { params: week ? { week } : {} }).then((r) => r.data).catch(() => ({ entries: [] })),
+  like: (id) => api.post(`/community/posts/${id}/like`).then((r) => r.data),
+};
+
 export const bakersApi = {
   map: () => api.get(`/bakers/map`).then((r) => r.data).catch(() => []),
   me: () => api.get(`/bakers/me`).then((r) => r.data).catch(() => null),

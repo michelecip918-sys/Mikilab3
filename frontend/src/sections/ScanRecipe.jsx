@@ -13,6 +13,7 @@ export default function ScanRecipe({ embedded = false }) {
   const [scanned, setScanned] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [pdfRecipes, setPdfRecipes] = useState([]); // ricette multiple trovate nel PDF
+  const [pageThumbs, setPageThumbs] = useState({}); // miniature pagina per numero pagina
   const [savedIdx, setSavedIdx] = useState([]); // indici già salvati
   const [activeIdx, setActiveIdx] = useState(null); // indice della ricetta aperta nel dialog
   const fileRef = useRef(null);
@@ -73,10 +74,10 @@ export default function ScanRecipe({ embedded = false }) {
           const recipes = Array.isArray(data?.recipes) ? data.recipes : (data ? [data] : []);
           if (recipes.length === 0) { toast.error(t("scan_error")); return; }
           if (recipes.length === 1) {
-            setPdfRecipes([]); setScanned(recipes[0]); setActiveIdx(null); setDialogOpen(true);
+            setPdfRecipes([]); setPageThumbs({}); setScanned(recipes[0]); setActiveIdx(null); setDialogOpen(true);
           } else {
             // Più ricette: mostra l'elenco da rivedere/salvare una per una.
-            setPdfRecipes(recipes); setSavedIdx([]); setScanned(null); setActiveIdx(null);
+            setPdfRecipes(recipes); setPageThumbs(data.page_thumbs || {}); setSavedIdx([]); setScanned(null); setActiveIdx(null);
           }
           toast.success(recipes.length > 1
             ? tri(`Trovate ${recipes.length} ricette nel PDF`, `${recipes.length} Rezepte im PDF gefunden`, `Found ${recipes.length} recipes in the PDF`)
@@ -200,10 +201,16 @@ export default function ScanRecipe({ embedded = false }) {
                 <li key={i}>
                   <button data-testid={`pdf-recipe-${i}`} onClick={() => openPdfRecipe(i)}
                     className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-xl border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#f0f6fb] dark:bg-[#1F252B] border-[#d5e4f0] dark:border-[#38424B] hover:border-[#3f7cac]"}`}>
-                    {done ? <CheckCircle2 className="w-5 h-5 text-[#2e8b6f] shrink-0" /> : <ScanLine className="w-5 h-5 text-[#3f7cac] shrink-0" />}
+                    {pageThumbs[String(r.page)] ? (
+                      <img data-testid={`pdf-recipe-thumb-${i}`} src={pageThumbs[String(r.page)]} alt=""
+                        className="w-12 h-16 object-cover rounded-md border border-[#d5e4f0] dark:border-[#38424B] shrink-0 bg-white" />
+                    ) : (
+                      done ? <CheckCircle2 className="w-5 h-5 text-[#2e8b6f] shrink-0" /> : <ScanLine className="w-5 h-5 text-[#3f7cac] shrink-0" />
+                    )}
                     <span className="flex-1 min-w-0">
                       <span className="block font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name || tri("Ricetta senza nome", "Rezept ohne Namen", "Untitled recipe")}</span>
                       {r.flour_type && <span className="block text-[11px] text-[#7E8A93] truncate">{r.flour_type}</span>}
+                      {r.page && <span className="block text-[10px] text-[#a9772f] font-semibold">{tri(`Pag. ${r.page}`, `S. ${r.page}`, `Page ${r.page}`, `Pág. ${r.page}`)}</span>}
                     </span>
                     {done ? <span className="text-[11px] font-bold text-[#2e8b6f] shrink-0">{tri("Salvata", "Gespeichert", "Saved")}</span> : <ChevronRight className="w-4 h-4 text-[#7E8A93] shrink-0" />}
                   </button>

@@ -3385,15 +3385,50 @@ SCAN_FIELDS_SCHEMA = (
 
 SCAN_PDF_MULTI_PROMPT = (
     "Sei un assistente di panificazione. Il TESTO seguente è estratto da un PDF che può contenere UNA o PIÙ ricette "
-    "(anche un intero ricettario). Individua OGNI ricetta distinta e trasformala in DATI STRUTTURATI. "
+    "(anche un intero ricettario). Il testo è diviso da marcatori '=== PAGINA N ==='. "
+    "Individua OGNI ricetta distinta e trasformala in DATI STRUTTURATI. "
     "Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, in questo formato ESATTO:\n"
     '{"recipes": [ RICETTA, RICETTA, ... ]}\n'
-    "dove ogni RICETTA ha ESATTAMENTE queste chiavi (usa null se un dato non è presente, NON inventare):\n"
+    "dove ogni RICETTA ha queste chiavi (usa null se un dato non è presente, NON inventare):\n"
     + SCAN_FIELDS_SCHEMA + "\n"
+    'Aggiungi a OGNI ricetta anche il campo "page": number = il numero di pagina del PDF dove inizia la ricetta '
+    "(desumilo dai marcatori '=== PAGINA N ==='). "
     "Converti tutte le quantità in grammi quando possibile. Metti il procedimento passo-passo in 'procedure'. "
     "Se il PDF contiene una sola ricetta, restituisci comunque un array con un solo elemento. "
     "Estrai al massimo 20 ricette. Non aggiungere spiegazioni: SOLO il JSON."
 )
+
+
+def _pdf_page_thumbs(pdf_bytes: bytes, page_numbers: list):
+    """Renderizza le pagine richieste (1-based) in miniature JPEG base64. Best-effort."""
+    import base64 as _base64
+    thumbs = {}
+    wanted = sorted({int(p) for p in page_numbers if isinstance(p, (int, float)) and int(p) >= 1})[:20]
+    if not wanted:
+        return thumbs
+    try:
+        import pymupdf as _fitz
+    except Exception:
+        try:
+            import fitz as _fitz
+        except Exception:
+            return thumbs
+    try:
+        doc = _fitz.open(stream=pdf_bytes, filetype="pdf")
+        for pnum in wanted:
+            if pnum > doc.page_count:
+                continue
+            try:
+                page = doc.load_page(pnum - 1)
+                pix = page.get_pixmap(matrix=_fitz.Matrix(0.5, 0.5))
+                jpg = pix.tobytes("jpeg", jpg_quality=55)
+                thumbs[str(pnum)] = "data:image/jpeg;base64," + _base64.b64encode(jpg).decode()
+            except Exception:
+                continue
+        doc.close()
+    except Exception:
+        logger.exception("pdf thumb render error")
+    return thumbs
 
 
 @api_router.post("/maestro/scan-recipe-pdf")
@@ -3409,7 +3444,7 @@ async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_
         from pypdf import PdfReader
         reader = PdfReader(_io.BytesIO(pdf_bytes))
         pages = [(p.extract_text() or "") for p in reader.pages[:40]]
-        pdf_text = "\n".join(pages).strip()
+        pdf_text = "\n".join([f"=== PAGINA {i + 1} ===\n{t}" for i, t in enumerate(pages)]).strip()
     except Exception:
         logger.exception("pdf parse error")
         raise HTTPException(status_code=422, detail="PDF non leggibile")
@@ -3448,7 +3483,8 @@ async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_
     recipes = [r for r in recipes if isinstance(r, dict) and (r.get("name") or "").strip()]
     if not recipes:
         raise HTTPException(status_code=422, detail="Nessuna ricetta riconosciuta nel PDF")
-    return {"recipes": recipes}
+    page_thumbs = _pdf_page_thumbs(pdf_bytes, [r.get("page") for r in recipes])
+    return {"recipes": recipes, "page_thumbs": page_thumbs}
 
 
 class ScanFlourRequest(BaseModel):
@@ -4890,6 +4926,122 @@ async def community_delete(post_id: str, user: dict = Depends(current_user)):
     await db.community_posts.delete_one({"id": post_id})
     await db.notifications.delete_many({"post_id": post_id})
     return {"ok": True}
+
+
+# --- Bake-Along: sfide settimanali di panificazione della community + classifica ---
+BAKEALONG_THEMES = [
+    {"id": "pane_integrale", "it": ("Pane Integrale", "Sforna un pane 100% integrale ben alveolato.", "Idrata di più (l'integrale beve tanto), usa autolisi lunga e pieghe delicate."),
+     "de": ("Vollkornbrot", "Backe ein 100% Vollkornbrot mit schöner Porung.", "Mehr Wasser (Vollkorn saugt stark), lange Autolyse und sanftes Falten."),
+     "en": ("Whole Wheat Bread", "Bake a 100% whole wheat loaf with an open crumb.", "Hydrate more (whole wheat drinks a lot), long autolyse and gentle folds."),
+     "es": ("Pan Integral", "Hornea un pan 100% integral bien alveolado.", "Más hidratación, autólisis larga y pliegues suaves.")},
+    {"id": "baguette", "it": ("Baguette Croccante", "La baguette più croccante e alveolata che riesci a fare.", "Poolish la sera prima, vapore in forno nei primi 10 minuti."),
+     "de": ("Knuspriges Baguette", "Das knusprigste, luftigste Baguette, das du hinbekommst.", "Poolish am Vorabend, Dampf in den ersten 10 Minuten."),
+     "en": ("Crusty Baguette", "The crustiest, airiest baguette you can make.", "Poolish the night before, steam for the first 10 minutes."),
+     "es": ("Baguette Crujiente", "La baguette más crujiente y alveolada que puedas.", "Poolish la noche antes, vapor los primeros 10 minutos.")},
+    {"id": "focaccia", "it": ("Focaccia Alveolata", "Focaccia soffice e piena di bolle.", "Alta idratazione, lievitazione in teglia unta, fossette con le dita e olio."),
+     "de": ("Luftige Focaccia", "Weiche Focaccia voller Blasen.", "Hohe Hydratation, Gare im geölten Blech, Dellen mit den Fingern und Öl."),
+     "en": ("Bubbly Focaccia", "Soft focaccia full of bubbles.", "High hydration, proof in an oiled pan, dimple with fingers and oil."),
+     "es": ("Focaccia Alveolada", "Focaccia esponjosa y llena de burbujas.", "Alta hidratación, fermentación en bandeja aceitada, hoyuelos y aceite.")},
+    {"id": "cinnamon", "it": ("Girelle alla Cannella", "Soft rolls alla cannella con glassa.", "Impasto arricchito con burro e latte, seconda lievitazione ben fatta."),
+     "de": ("Zimtschnecken", "Weiche Zimtschnecken mit Glasur.", "Angereicherter Teig mit Butter und Milch, gute zweite Gare."),
+     "en": ("Cinnamon Rolls", "Soft cinnamon rolls with glaze.", "Enriched dough with butter and milk, good second proof."),
+     "es": ("Rollos de Canela", "Rollos suaves de canela con glaseado.", "Masa enriquecida con mantequilla y leche, buena segunda fermentación.")},
+    {"id": "pizza", "it": ("Pizza in Teglia", "Pizza in teglia alta idratazione, cornicione alveolato.", "80% idratazione, maturazione in frigo 24-48h, teglia ben calda."),
+     "de": ("Blechpizza", "Blechpizza mit hoher Hydratation, luftiger Rand.", "80% Hydratation, 24-48h Kühlreifung, heißes Blech."),
+     "en": ("Pan Pizza", "High-hydration pan pizza with an airy crust.", "80% hydration, 24-48h cold maturation, very hot pan."),
+     "es": ("Pizza en Bandeja", "Pizza en bandeja alta hidratación, borde alveolado.", "80% hidratación, maduración en frío 24-48h, bandeja caliente.")},
+    {"id": "rustico", "it": ("Pane Rustico a Lievito Madre", "Un bel pane rustico con la tua pasta madre.", "Rinfresca la madre al top, cottura in pentola per la crosta."),
+     "de": ("Rustikales Sauerteigbrot", "Ein schönes rustikales Brot mit deinem Sauerteig.", "Sauerteig auf dem Höhepunkt auffrischen, im Topf backen."),
+     "en": ("Rustic Sourdough", "A beautiful rustic loaf with your sourdough.", "Refresh the starter at its peak, bake in a pot for the crust."),
+     "es": ("Pan Rústico de Masa Madre", "Un buen pan rústico con tu masa madre.", "Refresca la madre en su punto, hornea en olla para la corteza.")},
+    {"id": "brioche", "it": ("Brioche Soffice", "La brioche più soffice e filante.", "Burro freddo a fine impasto, incordatura perfetta, frigo prima di formare."),
+     "de": ("Fluffige Brioche", "Die weichste, fluffigste Brioche.", "Kalte Butter am Ende, perfekte Teigstruktur, vor dem Formen kühlen."),
+     "en": ("Soft Brioche", "The softest, fluffiest brioche.", "Cold butter at the end, perfect gluten, chill before shaping."),
+     "es": ("Brioche Suave", "La brioche más suave y esponjosa.", "Mantequilla fría al final, amasado perfecto, frío antes de formar.")},
+    {"id": "grissini", "it": ("Grissini & Snack", "Grissini o crackers croccanti fatti in casa.", "Impasto povero d'acqua, stesura sottile, cottura bassa e lunga."),
+     "de": ("Grissini & Snacks", "Knusprige Grissini oder Cracker selbstgemacht.", "Wasserarmer Teig, dünn ausrollen, niedrig und lange backen."),
+     "en": ("Grissini & Snacks", "Crunchy homemade grissini or crackers.", "Low-water dough, roll thin, bake low and long."),
+     "es": ("Grissini & Snacks", "Grissini o crackers crujientes caseros.", "Masa con poca agua, estirado fino, cocción baja y larga.")},
+]
+
+
+def _bakealong_index(offset: int = 0):
+    from datetime import date, timedelta
+    _, w, _2 = (date.today() + timedelta(weeks=offset)).isocalendar()
+    return w % len(BAKEALONG_THEMES)
+
+
+def _bakealong_theme(lang: str, offset: int = 0):
+    lang = lang if lang in ("it", "de", "en", "es") else "it"
+    th = BAKEALONG_THEMES[_bakealong_index(offset)]
+    title, desc, tip = th.get(lang, th["it"])
+    return {"id": th["id"], "title": title, "description": desc, "tip": tip}
+
+
+class BakeAlongSubmitReq(BaseModel):
+    text: str = Field("", max_length=2000)
+    image_url: str
+
+
+@api_router.get("/bakealong/current")
+async def bakealong_current(request: Request, lang: str = "it"):
+    user = await optional_user(request)
+    week = _iso_week()
+    theme = _bakealong_theme(lang)
+    count = await db.community_posts.count_documents({"category": "bakealong", "challenge_week": week})
+    submitted = False
+    if user:
+        submitted = bool(await db.community_posts.find_one(
+            {"category": "bakealong", "challenge_week": week, "author_id": user["user_id"]}, {"_id": 1}))
+    last = _bakealong_theme(lang, offset=-1)
+    return {"week": week, "theme": theme, "participants": count, "already_submitted": submitted,
+            "last_week_theme": last}
+
+
+@api_router.post("/bakealong/submit")
+async def bakealong_submit(body: BakeAlongSubmitReq, user: dict = Depends(current_user)):
+    if not body.image_url:
+        raise HTTPException(400, "Serve una foto del tuo prodotto")
+    week = _iso_week()
+    theme = _bakealong_theme("it")
+    existing = await db.community_posts.find_one(
+        {"category": "bakealong", "challenge_week": week, "author_id": user["user_id"]}, {"_id": 0, "id": 1})
+    text = (body.text or "").strip()
+    tr = await _translate_text_multi(text) if text else {}
+    if existing:
+        await db.community_posts.update_one({"id": existing["id"]},
+            {"$set": {"text": text, "text_de": tr.get("text_de"), "text_en": tr.get("text_en"),
+                      "text_es": tr.get("text_es"), "image_url": body.image_url}})
+        doc = await db.community_posts.find_one({"id": existing["id"]}, {"_id": 0})
+        return _post_public(doc, user)
+    doc = {
+        "id": str(uuid.uuid4()),
+        "author_id": user["user_id"],
+        "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
+        "author_avatar": user.get("picture", ""),
+        "category": "bakealong",
+        "challenge_week": week,
+        "challenge_id": theme["id"],
+        "text": text,
+        "text_de": tr.get("text_de"), "text_en": tr.get("text_en"), "text_es": tr.get("text_es"),
+        "image_url": body.image_url,
+        "created_at": now_iso(),
+        "likes": [], "comments": [],
+    }
+    await db.community_posts.insert_one(doc)
+    return _post_public(doc, user)
+
+
+@api_router.get("/bakealong/entries")
+async def bakealong_entries(request: Request, week: Optional[str] = None):
+    user = await optional_user(request)
+    wk = week or _iso_week()
+    docs = await db.community_posts.find({"category": "bakealong", "challenge_week": wk}, {"_id": 0}).to_list(500)
+    entries = [_post_public(d, user) for d in docs]
+    entries.sort(key=lambda e: (e["like_count"], e.get("created_at", "")), reverse=True)
+    for rank, e in enumerate(entries):
+        e["rank"] = rank + 1
+    return {"week": wk, "entries": entries}
 
 
 # --- Sistema Amici (richieste + accetta/rifiuta + elenco utenti) --------------
