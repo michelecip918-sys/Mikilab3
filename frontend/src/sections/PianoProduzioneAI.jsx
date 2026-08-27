@@ -118,6 +118,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [toolPrefs, setToolPrefs] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_prefs") || "{}"); } catch { return {}; } });
   const [editTools, setEditTools] = useState(false);
   const [toolQuery, setToolQuery] = useState("");
+  const [dragId, setDragId] = useState(null);
   const [tourForce, setTourForce] = useState(0);
   const [toolUsage, setToolUsage] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_usage") || "{}"); } catch { return {}; } });
   const openToolTracked = (id) => {
@@ -156,6 +157,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     [ids[i], ids[j]] = [ids[j], ids[i]];
     savePrefs({ ...toolPrefs, order: ids });
   };
+  const reorderTool = (fromId, toId) => {
+    if (!fromId || !toId || fromId === toId) return;
+    const ids = orderedTools.map((tl) => tl.id);
+    const from = ids.indexOf(fromId); const to = ids.indexOf(toId);
+    if (from < 0 || to < 0) return;
+    ids.splice(to, 0, ids.splice(from, 1)[0]);
+    savePrefs({ ...toolPrefs, order: ids });
+  };
   const toggleHideTool = (id) => {
     const h = new Set(toolPrefs.hidden || []);
     h.has(id) ? h.delete(id) : h.add(id);
@@ -171,7 +180,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     const isHidden = hiddenTools.has(id);
     return (
       <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => { if (!editTools) openToolTracked(id); }}
-        className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-default border-dashed border-[#3f7cac]/50" : "cursor-pointer border-[#d5e4f0] dark:border-[#38424B] active:scale-95 hover:border-[#3f7cac]/60"} ${isHidden ? "opacity-40" : ""}`}>
+        draggable={editTools}
+        onDragStart={editTools ? (e) => { setDragId(id); e.dataTransfer.effectAllowed = "move"; } : undefined}
+        onDragOver={editTools ? (e) => e.preventDefault() : undefined}
+        onDrop={editTools ? (e) => { e.preventDefault(); reorderTool(dragId, id); setDragId(null); } : undefined}
+        onDragEnd={editTools ? () => setDragId(null) : undefined}
+        className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-move border-dashed border-[#3f7cac]/50" : "cursor-pointer border-[#d5e4f0] dark:border-[#38424B] active:scale-95 hover:border-[#3f7cac]/60"} ${isHidden ? "opacity-40" : ""} ${dragId === id ? "opacity-50 scale-95 ring-2 ring-[#3f7cac]" : ""}`}>
         {editTools ? (
           <>
             <div className="absolute top-1 left-1 flex gap-0.5">
@@ -694,7 +708,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
             <p className="text-[10.5px] text-[#7E8A93] mb-2">
               {editTools
-                ? tri3(lang, "Occhio = nascondi · stella = preferito · frecce = riordina.", "Auge = ausblenden · Stern = Favorit · Pfeile = sortieren.", "Eye = hide · star = favorite · arrows = reorder.")
+                ? tri3(lang, "Trascina per riordinare · occhio = nascondi · stella = preferito · frecce = sposta.", "Ziehen zum Sortieren · Auge = ausblenden · Stern = Favorit · Pfeile = verschieben.", "Drag to reorder · eye = hide · star = favorite · arrows = move.", "Arrastra para reordenar · ojo = ocultar · estrella = favorito · flechas = mover.")
                 : tri3(lang, "Tocca per aprirlo. La ⭐ lo aggiunge ai preferiti, la «i» spiega a cosa serve.", "Tippe zum Öffnen. Der ⭐ fügt zu Favoriten hinzu, die „i“ erklärt es.", "Tap to open. The ⭐ adds to favorites, the 'i' explains it.")}
             </p>
 

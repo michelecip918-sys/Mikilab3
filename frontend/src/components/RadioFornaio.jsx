@@ -320,12 +320,12 @@ export default function RadioFornaio() {
         </div>
       )}
 
-      <div className={`fixed z-40 left-4 bottom-20 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`} style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
+      <div className={`fixed z-40 left-3 bottom-24 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`} style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
         <button
           data-testid="radio-fornaio-btn"
           onClick={() => setOpen((o) => !o)}
           aria-label={t("radio_title")}
-          className={`relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
+          className={`relative w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
             status === "playing" ? "bg-[#5aa0cf]" : "bg-[#234b6e] hover:bg-[#234b6e]"
           }`}
         >

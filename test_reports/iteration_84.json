@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only mobile (390x844) retest of 'Il Tuo Laboratorio' after login as admin@mikilab.de. (1) DRAG & DROP OK: in 'Personalizza' mode all 19 tool cards have draggable=true (the 5 quick-action cards in capo-quicklinks above are correctly NOT draggable), help text 'Trascina per riordinare · occhio = nascondi · stella = preferito · frecce = sposta.' is shown, Playwright native HTML5 drag_and_drop of card #1 onto card #4/#5 reorders the grid (generatore moved from idx0 to idx4), localStorage mikilab_tool_prefs.order is written with the new order, and the order PERSISTS after a full page reload. Arrows tool-up-<id>/tool-down-<id> still work (up moved 'mydata' to idx0, down restored the exact previous order). (2) RADIO FAB FIX OK: wrapper fixed left-3 with button 48x48 at y=678 (viewport 844) i.e. ~166px above the bottom; during active scroll it fades (opacity 0.41 -> 0, translateY, pointer-events:none) and restores after scroll stops. A 12-step scroll scan across the whole tools section found ZERO tool cards whose center was blocked by the FAB and zero card/FAB bounding-box overlaps; the last card of the grid (Shelf-Life, VENDITA row) is fully hit-testable and tapping it opens the Shelf-Life tool. (3) REGRESSIONS OK: capo-quicklink-generatore visible and opens recipe-generator; category headings tools-cat-impasto/cottura/gestione/vendita present; tools-suggested appears after usage; tools-search 'temp' filters to Temp. Acqua only; no duplicate capo-quicklink-* testids. Only console error is the expected pre-login 401 session check.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Il Tuo Laboratorio - tools grid (390px)",
+        "issues": [
+          "Minor (cosmetic, leftover): the Radio FAB + its 'Radio' label still visually overlap the left edge of the category heading text (e.g. 'COTTURA' rendered as '...TURA') when the heading happens to sit at the FAB height. Tool cards are no longer covered, only the small uppercase category labels."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional cosmetic: add a small left padding / higher z-index handling so the Radio FAB does not clip the category heading text (tools-cat-* labels) on 390px."
+  ],
+  "critical_code_review_comments": [
+    "reorderTool uses ids.splice(to,0,ids.splice(from,1)[0]) with 'to' computed BEFORE removal: when dragging an item forward the dropped item lands one slot before the target (observed: generatore dropped on idx4 ended at idx4, i.e. before the target card). Functionally acceptable but slightly off from 'drop on target position' semantics - consider adjusting to (from < to ? to-1 : to) or splice after recompute.",
+    "PianoProduzioneAI.jsx is ~1158 lines; the tools grid (TOOLS/renderToolCard/drag logic) should be extracted into its own component.",
+    "No touch-based reorder: draggable/HTML5 DnD does not fire on real touch devices (mobile Safari/Chrome Android). Since this feature is explicitly for phones, consider pointer-event based reordering (or keep arrows as the primary mobile path, which do work)."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (per request)", "frontend": "100% (all 3 requested areas passed)" },
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Login: click header 'Accedi', then auth-email/auth-password/auth-submit. Set localStorage mikilab_lang='it' and mikilab_lab_tour_v1='1' via add_init_script - do NOT clear mikilab_tool_prefs inside add_init_script when testing persistence (it re-runs on reload and produced a false persistence failure in this run). IMPORTANT: selector [data-testid^='capo-quicklink-'] also matches the 5 quick-action cards (aggiungi/lavoro/settimana/enterprise/dayclose) which are NOT tools; filter by [draggable='true'] in Personalizza mode. Playwright page.drag_and_drop DOES trigger the HTML5 DnD handlers in this app.",
+  "rca_of_the_issue": "N/A - both reported fixes (FAB size/position + auto-hide, and drag&drop reorder with localStorage persistence) verified working."
+}
