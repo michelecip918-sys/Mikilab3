@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, Tag, BookOpen, Wheat, ChefHat, User } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
+import { NovitaColorate } from "@/components/NovitaColorate";
 import PanettoneLabels from "@/sections/PanettoneLabels";
 import GuidaMetodi from "@/sections/Enciclopedia";
 import FlourTable from "@/components/FlourTable";
@@ -75,6 +76,7 @@ export default function Ricette() {
           heroTitle={t("brand_subtitle")}
           heroSubtitle={t("mikilab_subtitle")}
           emptyText={t("mikilab_empty")}
+          extraHeader={<NovitaColorate />}
         />
       ) : (
         <RecipeList

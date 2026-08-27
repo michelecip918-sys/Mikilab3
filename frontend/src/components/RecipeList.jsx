@@ -97,6 +97,19 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   }, [recipes, collectionName]);
 
 
+  // Apertura ricetta da eventi esterni (es. vetrina "Novità dal MikiLab")
+  useEffect(() => {
+    if (collectionName !== "mikilab") return;
+    const onOpen = (e) => {
+      const id = e?.detail?.id;
+      const target = recipes.find((x) => x.id === id);
+      if (target) setViewing(target);
+    };
+    window.addEventListener("mikilab-open-recipe", onOpen);
+    return () => window.removeEventListener("mikilab-open-recipe", onOpen);
+  }, [recipes, collectionName]);
+
+
   // tiene aggiornata la ricetta aperta dopo un salvataggio/scala
   useEffect(() => {
     if (viewing) {

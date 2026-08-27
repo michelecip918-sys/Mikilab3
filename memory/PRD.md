@@ -1616,3 +1616,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
   - **Pane alla Curcuma e Zenzero** (giallo oro, biga), **Pane agli Spinaci** (verde, poolish), **Pane Nero al Carbone Vegetale** (nero + sesamo nero, lm), **Cornetto Bicolore Carbone e Vaniglia** (bianco/nero, biga). Immagini generate Nano Banana. Verificato via API (metodo/categoria/img/proc_len) + screenshot.
 - **Badge fiducia abbonamento**: in PaywallGate, sotto le card prezzi, riga `paywall-trust-badge` con icona ShieldCheck: "Nessun addebito automatico · disdici quando vuoi" (IT/DE/EN). Verificato a schermo.
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v57 (27 Ago 2026) — Colori zafferano/spirulina/rapa + Vetrina Novità in Ricette
+- **3 nuove ricette colorate NATURALMENTE** (metodo INDIRETTO, procedimenti lunghi IT/DE/EN), seed persistente. SEED_VERSION `2026-06-v57-colorate3`. Script: `backend/seed_speciali_colorate3.py`. Totale mikilab: 120.
+  - **Pane allo Zafferano** (giallo-arancio, biga, infusione pistilli), **Pane alla Spirulina** (blu-verde, poolish), **Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia** (rosa/chiaro, biga). Immagini generate Nano Banana.
+- **Vetrina "Novità dal MikiLab"** (`components/NovitaColorate.jsx`): evidenzia le 12 ricette colorate naturalmente in scroll orizzontale con foto. Posizionata nella **sezione Ricette (Mikilab)** come `extraHeader` di RecipeList (NON in Home — spostata su richiesta utente; il blocco Home `home-novita` è stato rimosso). Tap sulla card → apre la scheda ricetta via evento `mikilab-open-recipe` gestito in RecipeList (nuovo listener). testid: `ricette-novita`, `novita-card-<id>`. Verificato a schermo (12 card, click apre il dialog ricetta).
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
