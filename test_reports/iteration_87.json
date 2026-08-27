@@ -1,0 +1,59 @@
+{
+  "summary": "Frontend-only test (mobile 390x844, IT, admin@mikilab.de) of FASE 1 features: (1) Fermentazione Predittiva tool in 'Il Tuo Laboratorio' and (2) Modalità Mani in Pasta overlay in RecipeDetail. Both features work end-to-end. Q10 model verified: default (24°C, 1% lievito, diretto, Raddoppio) = 1h 36m (96 min, as expected); 30°C = 57m (decreases), 18°C = 2h 41m (increases) → monotonic OK; +50% volume = 58m (< raddoppio); lievito madre 1% = 16h. 'Avvisami quando è pronto' shows toast 'Ti avviso alle HH:MM' and creates a global timer (localStorage mikilab_timers: 'Impasto pronto 🍞', total 5760s = 96 min). Geolocation denied in headless → graceful error message, no crash; city search 'Stoccarda' returned real Open-Meteo data (25°C, 59% umidità) and auto-filled ferment-ambient-temp; bogus city → 'Città non trovata.'. Mani in Pasta: handsfree-recipe-<id> opens handsfree-overlay, step 1/5 text shown, next/prev change counter+text, prev disabled at step 1, repeat/tts/mic present and non-crashing, +20m creates timer ('Timer ricetta', 1200s) with toast, close returns to recipe detail. One real UI/UX bug found: the hands-free overlay is NOT truly full-screen (clipped inside the Radix recipe dialog) and tapping the visible header/bottom-nav area dismisses both the overlay and the recipe dialog.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "HandsFreeMode (rendered inside RecipeDialog)",
+        "issue": "Overlay 'fixed inset-0 z-[95]' is NOT full-screen: bounding box is x=1,y=51.6,w=388,h=740.7 on a 390x844 viewport, because the parent Radix DialogContent has a CSS transform (matrix translate) which creates a containing block for fixed positioning. Header and bottom nav stay visible around the overlay. Worse: the exposed strip (y<52 and y>792) is the Radix dialog backdrop ('fixed inset-0 z-50 bg-black/80'), so a tap there closes BOTH the hands-free overlay AND the recipe dialog, dropping the user back to the recipe list — very likely with floury hands during hands-free use. Fix: render HandsFreeMode with ReactDOM.createPortal(..., document.body).",
+        "selector": "[data-testid=\"handsfree-overlay\"]",
+        "priority": "HIGH"
+      },
+      {
+        "component": "HandsFreeMode bottom controls",
+        "issue": "TTS button and mic button both carry the identical Italian label 'Voce' side by side (handsfree-tts / handsfree-mic) → ambiguous. Suggest 'Voce'/'Ascolta' vs 'Comandi' or 'Microfono'.",
+        "selector": "[data-testid=\"handsfree-tts\"], [data-testid=\"handsfree-mic\"]",
+        "priority": "LOW"
+      },
+      {
+        "component": "FermentazionePredittiva curve",
+        "issue": "The SVG sigmoid curve is static (hard-coded points, not derived from est.minutes/temperature), so it never changes with inputs — purely decorative; add time axis labels or make it parameter-dependent.",
+        "selector": "[data-testid=\"fermentazione-tool\"] svg",
+        "priority": "LOW"
+      },
+      {
+        "component": "FermentazionePredittiva inputs",
+        "issue": "No input validation: yeast = 0 and yeast = -5 both produce the same 32h 00m (silent clamp to 0.05); dough temp 60°C is accepted and still produces a proofing time (no warning that yeast dies >45°C). Consider min/max clamping + hint text.",
+        "selector": "[data-testid=\"ferment-yeast\"], [data-testid=\"ferment-dough-temp\"]",
+        "priority": "LOW"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Mani in Pasta overlay",
+        "issues": ["Overlay leaves the app header/bottom-nav visible (not immersive full screen)", "Step text is vertically centered with a lot of empty space on long procedures; first parsed 'step' is actually a heading ('PREPARAZIONE (mix a secco)') — parsing could merge/skip headings"]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "HIGH: Portal HandsFreeMode to document.body (createPortal) so the overlay covers the whole viewport and taps around it can't dismiss the underlying recipe dialog.",
+    "LOW: Disambiguate the two 'Voce' labels (TTS vs mic) in HandsFreeMode.",
+    "LOW: Make the fermentation curve reflect the computed time or label the axes.",
+    "LOW: Add min/max validation for ferment-yeast (>0) and ferment-dough-temp (e.g. 4–45°C)."
+  ],
+  "critical_code_review_comments": [
+    "HandsFreeMode is mounted inside RecipeDialog's transformed DialogContent — any 'fixed inset-0' child is constrained by the transformed ancestor. Use a portal for all full-screen overlays.",
+    "FermentazionePredittiva: fetchWeather has 'tri' in its dependency array while tri is recreated every render (eslint disabled) — harmless here but the useCallback provides no memoization.",
+    "FermentazionePredittiva: Math.max(n(yeast) || 0, 0.05) silently accepts negative/zero yeast; validate at the input level instead."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "95%" },
+  "seed_data_creation": "None. Created two transient app timers (Impasto pronto 96m, Timer ricetta 20m) stored in localStorage only.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Login flow in headless: the app renders the marketing home first — must click header 'Accedi' before auth-email/auth-password/auth-submit appear (otherwise you stay anonymous and 'Il Tuo Laboratorio' shows the PRO paywall). Recipes are inside collapsible category folders: click [data-testid^='cat-folder-'] then [data-testid^='recipe-row-']; first row ('Miglioratore Naturale Pro') has a procedure and shows handsfree-recipe-<id>. Geolocation is denied in headless (expected); Open-Meteo city search works. Q10 baseline: 24°C/1%/diretto/double = 96 min.",
+  "rca_of_the_issue": "Hands-free overlay clipping: RecipeDetail is rendered inside a Radix Dialog whose content uses translate(-50%,-50%). A transformed ancestor becomes the containing block for position:fixed descendants, so HandsFreeMode's 'fixed inset-0' resolves to the dialog box (388x741 at y=51.6) instead of the viewport. The uncovered strips are the Radix backdrop, whose onPointerDown closes the dialog — confirmed by clicking (195,25): both handsfree-overlay and recipe-detail disappeared. Mitigation: ReactDOM.createPortal(overlayJSX, document.body)."
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand } from "lucide-react";
 import { recipesApi, subscriptionApi, recipePurchaseApi, siteSettingsApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -9,8 +9,8 @@ import EULabel from "@/components/EULabel";
 import ScaleDialog from "@/components/ScaleDialog";
 import PrintHeader from "@/components/PrintHeader";
 import MachineScheda from "@/components/MachineScheda";
-import { playTTS } from "@/lib/tts";
-import { addXP } from "@/lib/level";
+import { playTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
+import HandsFreeMode from "@/components/HandsFreeMode";
 import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -532,6 +532,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const tri = (i_, d_, e_) => (de ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
   const isPanettone = /panettone|colomba|pandoro/i.test(r.name || "");
   const [farro, setFarro] = useState(false);
+  const [handsFree, setHandsFree] = useState(false);
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const flourG = Number(r.flour_grams) || 0;
   const target = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
@@ -672,6 +673,9 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           <ActionBtn testid={`share-recipe-${r.id}`} onClick={shareRecipe} color="#6E8CA0" label={tri("Condividi", "Teilen", "Share")}><Share2 className="w-4 h-4" /></ActionBtn>
           {!r.locked && rLoc(r, "procedure", lang) && (
             <ActionBtn testid={`listen-recipe-${r.id}`} onClick={() => playTTS(`${rLoc(r, "name", lang)}. ${rLoc(r, "procedure", lang)}`, { who: "momy", lang }).catch(() => {})} color="#3f7cac" label={tri("Ascolta", "Anhören", "Listen")}><Volume2 className="w-4 h-4" /></ActionBtn>
+          )}
+          {!r.locked && rLoc(r, "procedure", lang) && (
+            <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => setHandsFree(true)} color="#C88A2B" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && (
             <ActionBtn testid={`pdf-recipe-${r.id}`} onClick={() => window.print()} color="#5aa0cf" label={tri("PDF / Stampa", "PDF / Drucken", "PDF / Print")}><Printer className="w-4 h-4" /></ActionBtn>
@@ -823,6 +827,9 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
 
         <TattooSignature className="mt-1" testid={`recipe-signature-${r.id}`} />
       </div>
+      {handsFree && (
+        <HandsFreeMode recipe={r} procedure={rLoc(r, "procedure", lang)} lang={lang} onClose={() => setHandsFree(false)} />
+      )}
     </div>
   );
 }

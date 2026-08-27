@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -92,6 +92,7 @@ const GOAL_TEXT = {
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
 const TOOLS = [
   { id: "generatore", Icon: Sparkles, cat: "impasto", it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
+  { id: "fermentazione", Icon: Activity, cat: "impasto", it: "Fermentazione Predittiva", de: "Gärungs-Prognose", en: "Fermentation Forecast", es: "Fermentación Predictiva" },
   { id: "mydata", Icon: Archive, cat: "gestione", it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
   { id: "macchine", Icon: Wrench, cat: "gestione", it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
   { id: "twin", Icon: FlaskConical, cat: "impasto", it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
