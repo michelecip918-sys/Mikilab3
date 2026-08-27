@@ -1763,3 +1763,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Verificato via screenshot (admin/PRO): tour a 6 step, evidenziazione della "i" dorata sulla card corretta, intestazioni sezioni colorate e "i" evidenti.
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
 
+
+## v75 (27 Ago 2026) — Laboratorio snellito (arriva subito a generare)
+- **Maestro.jsx ("Il Tuo Laboratorio") accorciato**: rimossi i blocchi introduttivi che spingevano in basso il piano (banner immagine `maestro-hero-tattoo`, titolo H1 + sottotitolo, bolle chat `AvatarBubbles` MICHELE/MOMY). La sezione `MohammedAssistant` (Chiedi a Mohammadreza) è stata spostata SOTTO il piano. Ora la vista si apre direttamente sull'hero "Piano di Produzione con IA" con i quicklink START (Aggiungi Ricette, Piano Giornaliero, ecc.) subito visibili → il panettiere arriva subito a generare.
+- Verificato via screenshot mobile (admin): Lab si apre su AI Production Plan + START, niente più preamble.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.

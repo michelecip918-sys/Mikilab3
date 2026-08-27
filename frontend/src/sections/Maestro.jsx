@@ -124,25 +124,14 @@ export default function Maestro() {
   return (
     <div className="pb-28">
       <HighFive />
-      <div data-testid="maestro-hero-tattoo" className="relative rounded-3xl overflow-hidden mb-4 h-40 shadow-md">
-        <img src={`${process.env.PUBLIC_URL || ""}/bio-dough.jpg`} alt="Michele" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/25 to-transparent" />
-        <div className="absolute bottom-3 left-4 right-4">
-          <h2 className="font-display text-lg font-bold text-white leading-tight">{tri("Le mani nell'impasto, la testa organizzata", "Hände im Teig, Kopf organisiert", "Hands in the dough, head organized", "Las manos en la masa, la cabeza organizada")}</h2>
-        </div>
-      </div>
-      <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8] mb-1">{t("maestro_title")}</h1>
-      <p className="text-sm text-[#7E8A93] mb-4">{tri("Tutto in un unico posto: ricette, moduli e strumenti", "Alles an einem Ort: Rezepte, Module und Werkzeuge", "Everything in one place: recipes, modules and tools", "Todo en un solo lugar: recetas, módulos y herramientas")}</p>
 
-      <AvatarBubbles variant="lab" />
+      {/* Snellito: si arriva SUBITO al Piano di Produzione IA (hero + scegli ricette + genera) */}
+      <PianoProduzioneAI onOpenTool={openTool} />
 
-      {/* Chiedi a Mohammed: subito sotto i due avatar, prima del menu */}
-      <div className="mb-5">
+      {/* Assistente e aiuto: sotto il piano, per chi vuole approfondire */}
+      <div className="mt-5">
         <MohammedAssistant />
       </div>
-
-      {/* UNICA sezione: il Piano di Produzione IA con TUTTI gli strumenti al suo interno */}
-      <PianoProduzioneAI onOpenTool={openTool} />
 
       {/* WhatsApp SOLO qui (Laboratorio) e nei Corsi */}
       <div className="mt-4">
