@@ -1822,3 +1822,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - BUG: a volte tornando indietro lo schermo diventava tutto bianco e non si riprendeva più.
 - CAUSA: nessun ErrorBoundary in tutta l'app → qualsiasi errore di render (spesso durante il cambio tab via popstate) mandava React in crash lasciando schermo bianco permanente, senza modo di recuperare.
 - FIX (frontend): nuovo `components/ErrorBoundary.jsx` che intercetta i crash di render e mostra una card di recupero (Riprova / Torna alla Home) invece del bianco. Avvolge le viste tab in `App.js` con `resetKey={tab}` → si **auto-ripristina** appena l'utente cambia tab (bottom nav) o preme Indietro. Inoltre il listener `popstate` è ora in try/catch così un errore nel gestore di chiusura di una vista profonda (backNav consumeBack) non rompe più la navigazione. Verificato via smoke test: 4x tasto Indietro → app resta renderizzata (Home + footer + nav), nessuno schermo bianco.
+
+## v-fork.8 (2026-08) — FIX richieste amicizia/notifiche non arrivano (account duplicati)
+- SEGNALAZIONE: un amico invia richiesta di amicizia ma all'utente non arriva né richiesta né notifica.
+- INDAGINE: backend friend request/notify/notifications OK (verificato via curl). CAUSA REALE: l'utente proprietario (michelecip918@gmail.com, in OWNER_EMAILS) aveva DUE account creati nello stesso microsecondo via Google login → race condition in `auth_google` (find_one email → not found → doppio insert). Split-brain: richieste/notifiche legate a un user_id, login che ne restituiva un altro.
+- FIX:
+  1) DEDUP (one-off `/tmp/dedup_users.py`): unione per email, primario = account con sessione attiva (user_71c7 tenuto, copia admin accidentale user_174f cancellata), migrazione riferimenti su user_sessions/friendships/notifications/community_posts/recipes/market_listings/dm_messages/flours/bakealong_winners/push_subs/inventory. Sessioni migrate → utente resta loggato.
+  2) INDICE UNICO su users.email (`uniq_email`) creato allo startup (dopo dedup, così non fallisce).
+  3) UPSERT ATOMICO race-safe in `auth_google` ($setOnInsert + upsert, catch DuplicateKeyError) e `auth_register` (insert in try/except DuplicateKeyError → 400 "Email già registrata").
+- VERIFICATO via curl: indice presente, 0 email duplicate, michelecip918=1 account, flusso amicizia (request→incoming+notifica→accept=friends) OK, registrazione duplicata → HTTP 400. (Integration_expert consultato prima della modifica auth, come da prassi.)
+- NOTA: la specifica richiesta persa non era nel DB (nessuna friendship su michelecip918) → causa= split-brain; chiesto all'utente di far re-inviare la richiesta (ora arriverà all'unico account).

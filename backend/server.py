@@ -805,14 +805,18 @@ async def auth_register(payload: RegisterReq, request: Request, response: Respon
     _validate_password(payload.password, lang)
     if await db.users.find_one({"email": email}):
         raise HTTPException(status_code=400, detail="Email già registrata")
+    from pymongo.errors import DuplicateKeyError
     user_id = f"user_{uuid.uuid4().hex[:12]}"
     verify_enabled = bool(RESEND_API_KEY)
-    await db.users.insert_one({
-        "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],
-        "picture": "", "role": await _role_for_new_user(), "auth_provider": "email",
-        "password_hash": _hash_pw(payload.password), "created_at": now_iso(),
-        "email_verified": not verify_enabled,
-    })
+    try:
+        await db.users.insert_one({
+            "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],
+            "picture": "", "role": await _role_for_new_user(), "auth_provider": "email",
+            "password_hash": _hash_pw(payload.password), "created_at": now_iso(),
+            "email_verified": not verify_enabled,
+        })
+    except DuplicateKeyError:
+        raise HTTPException(status_code=400, detail="Email già registrata")
     if verify_enabled:
         await _send_verification(email, payload.origin_url or "", lang)
         return {"needs_verification": True,
@@ -897,13 +901,22 @@ async def auth_google(payload: GoogleReq, response: Response):
         raise HTTPException(status_code=401, detail="Email mancante")
     u = await db.users.find_one({"email": email}, {"_id": 0})
     if not u:
+        from pymongo.errors import DuplicateKeyError
         user_id = f"user_{uuid.uuid4().hex[:12]}"
-        await db.users.insert_one({
-            "user_id": user_id, "email": email, "name": data.get("name", ""),
-            "picture": data.get("picture", ""), "role": await _role_for_new_user(),
-            "auth_provider": "google", "created_at": now_iso(),
-        })
-        u = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+        try:
+            # Upsert atomico anti-race: se due login Google arrivano insieme, ne resta UNO solo.
+            await db.users.update_one(
+                {"email": email},
+                {"$setOnInsert": {
+                    "user_id": user_id, "email": email, "name": data.get("name", ""),
+                    "picture": data.get("picture", ""), "role": await _role_for_new_user(),
+                    "auth_provider": "google", "created_at": now_iso(),
+                }},
+                upsert=True,
+            )
+        except DuplicateKeyError:
+            pass  # l'altro request ha già creato l'account: lo rileggiamo sotto
+        u = await db.users.find_one({"email": email}, {"_id": 0})
     token = await _make_session(u["user_id"], data.get("session_token"))
     _set_cookie(response, token)
     return {"user": _public_user(u), "session_token": token}
@@ -6570,6 +6583,11 @@ async def on_startup_seed_mikilab():
         await seed_welcome_post()
     except Exception as e:
         logging.getLogger(__name__).error(f"Welcome post seed error: {e}")
+    try:
+        # Indice unico sull'email: garantisce UN SOLO account per email (anti-duplicati/race).
+        await db.users.create_index("email", unique=True, name="uniq_email")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"users email unique index error: {e}")
     try:
         init_storage()
         logging.getLogger(__name__).info("Archivio immagini inizializzato")
