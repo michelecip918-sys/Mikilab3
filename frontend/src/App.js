@@ -22,6 +22,7 @@ import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import PublicBatch from "@/sections/PublicBatch";
 import { consumeBack } from "@/lib/backNav";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
@@ -65,7 +66,12 @@ function App() {
   useEffect(() => {
     window.history.replaceState({ tab: "home" }, "");
     const onPop = (e) => {
-      if (consumeBack()) return; // chiude prima le viste profonde aperte
+      try {
+        if (consumeBack()) return; // chiude prima le viste profonde aperte
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("back-nav close error:", err);
+      }
       const next = (e.state && e.state.tab) || "home";
       tabRef.current = next;
       setTab(next);
@@ -160,6 +166,7 @@ function App() {
       <Header />
       <InstallBanner />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-64">
+        <ErrorBoundary resetKey={tab} lang={lang}>
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
@@ -178,6 +185,7 @@ function App() {
             {tab === "shop" && <><Academy /><Shop hideCourses /></>}
           </motion.div>
         </AnimatePresence>
+        </ErrorBoundary>
 
         <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#38424B]">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white p-4 shadow-lg">
