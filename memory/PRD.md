@@ -1757,3 +1757,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **DEPLOYMENT FIX (blocker risolto)**: rimossa la creazione dell'indice TTL su `rate_limits` allo startup (operazione distruttiva segnalata dal deployment agent). Sostituita con pulizia lazy non distruttiva dentro `_reminders_loop` (`delete_many ts < now-24h`). Deployment agent ora: **PASS, nessun blocker**.
 - Stato: app pronta per la pubblicazione (deploy su Emergent). Ricordarsi che le modifiche sono in PREVIEW → premere REDEPLOY per aggiornare mikilab.de.
 
+
+## v74 (27 Ago 2026) — Onboarding guidato esteso
+- **Tour del Laboratorio esteso** (`LabTour` in PianoProduzioneAI, `storageKey` bumpata a `mikilab_lab_tour_v2` → si rimostra una volta): ora 6 step. Nuovo step **"La «i» dorata ti spiega tutto"** che EVIDENZIA (anello ambra) un pulsante info reale (`tool-info-celle`) spiegando che ogni strumento ha la "i" dorata (con suono). Nuovo step finale **"🔥 Sfida della Settimana"** che invita ad andare in Impara per il Quiz a tema e diventare Fornaio della Settimana. Trilingue IT/DE/EN/ES. Replay dal pulsante "Come si fa?".
+- Verificato via screenshot (admin/PRO): tour a 6 step, evidenziazione della "i" dorata sulla card corretta, intestazioni sezioni colorate e "i" evidenti.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
