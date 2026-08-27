@@ -1,7 +1,7 @@
 import { useLang } from "@/i18n/LanguageContext";
 import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
-import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays } from "lucide-react";
+import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -11,6 +11,7 @@ import SupplierOrder from "@/components/SupplierOrder";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import AcademyCoach from "@/components/AcademyCoach";
 import EvolvingQuiz from "@/components/EvolvingQuiz";
+import SosImpasto from "@/components/SosImpasto";
 import LabTour from "@/components/LabTour";
 
 const HOME_DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -342,9 +343,10 @@ const DAILY_RECIPES = {
   ],
 };
 
-export default function Beginners() {
+export default function Beginners({ onNavigate }) {
   const { t, lang } = useLang();
   const tri3 = (l, i, d, e, s) => (l === "de" ? (d ?? i) : l === "en" ? (e ?? i) : l === "es" ? (s ?? e ?? i) : i);
+  const [sosOpen, setSosOpen] = useState(false);
   const beginners = BEGINNERS[lang] || BEGINNERS.it;
   const courses = content[lang].freeCourses || [];
   const daily = DAILY_RECIPES[lang] || DAILY_RECIPES.it;
@@ -457,6 +459,21 @@ export default function Beginners() {
         <span className="text-xs font-semibold uppercase tracking-wide">{tri3(lang, "Academy da Casa", "Heim-Academy", "Home Academy", "Academy en Casa")}</span>
       </div>
       <AcademyCoach />
+
+      {/* SOS Impasto: manda la foto del pane a Mohammadreza per una diagnosi */}
+      <button data-testid="beginners-sos-btn" onClick={() => setSosOpen(true)}
+        className="w-full flex items-center gap-3 rounded-2xl p-4 bg-gradient-to-br from-[#b23a2f] to-[#7a1f1f] text-white shadow-md active:scale-98 transition-all">
+        <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <Stethoscope className="w-6 h-6" />
+        </div>
+        <div className="flex-1 min-w-0 text-left">
+          <p className="font-display text-base font-bold leading-tight">{tri3(lang, "SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{tri3(lang, "Manda la foto del tuo pane a Mohammadreza per una diagnosi immediata", "Sende Mohammadreza ein Foto deines Brotes für eine Sofortdiagnose", "Send Mohammadreza a photo of your bread for an instant diagnosis", "Envía a Mohammadreza una foto de tu pan para un diagnóstico inmediato")}</p>
+        </div>
+        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri3(lang, "Apri", "Öffnen", "Open", "Abrir")}</span>
+      </button>
+      <SosImpasto open={sosOpen} onClose={() => setSosOpen(false)} onNavigate={onNavigate} />
+
 
       {beginners.map((s, i) => (
         <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-5">

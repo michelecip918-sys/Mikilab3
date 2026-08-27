@@ -114,13 +114,15 @@ export default function Marketplace() {
 
   const contactHref = (it) => {
     const raw = (it.contact || "").trim();
+    if (!raw) return null; // nessun contatto sull'annuncio → nessun link (niente fallback su WhatsApp del sito)
     const msg = tri(`Ciao, sono interessato a "${it.title}" su MikiLab.`, `Hallo, ich interessiere mich für "${it.title}" auf MikiLab.`, `Hi, I'm interested in "${it.title}" on MikiLab.`);
     if (raw.includes("@")) return `mailto:${raw}?subject=${encodeURIComponent(it.title)}&body=${encodeURIComponent(msg)}`;
-    const num = raw ? raw.replace(/[^0-9]/g, "") : WA_NUMBER;
-    return `https://wa.me/${num || WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    if (/^https?:\/\//i.test(raw)) return raw; // link diretto dell'annuncio
+    const num = raw.replace(/[^0-9]/g, "");
+    return num ? `https://wa.me/${num}?text=${encodeURIComponent(msg)}` : null;
   };
 
-  const allItems = [...items, ...SAMPLES];
+  const allItems = items;
   let visible = filter === "all" ? allItems : allItems.filter((x) => x.cat === filter);
   if (geo) {
     visible = visible
@@ -205,10 +207,14 @@ export default function Marketplace() {
               <div className="mt-auto pt-2">
                 {it.price && <p className="font-mono-data text-lg font-bold text-[#5aa0cf]">€ {priceFmt(it.price)}</p>}
                 <div className="flex items-center gap-1.5 mt-1.5">
-                  <a data-testid={`market-contact-${it.id}`} href={contactHref(it)} target="_blank" rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2 rounded-lg active:scale-95 transition-transform">
-                    {(it.contact || "").includes("@") ? <Mail className="w-3.5 h-3.5" /> : <MessageCircle className="w-3.5 h-3.5" />} {tri("Contatta", "Kontakt", "Contact")}
-                  </a>
+                  {contactHref(it) ? (
+                    <a data-testid={`market-contact-${it.id}`} href={contactHref(it)} target="_blank" rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2 rounded-lg active:scale-95 transition-transform">
+                      {(it.contact || "").includes("@") ? <Mail className="w-3.5 h-3.5" /> : <MessageCircle className="w-3.5 h-3.5" />} {tri("Contatta", "Kontakt", "Contact")}
+                    </a>
+                  ) : (
+                    <span data-testid={`market-nocontact-${it.id}`} className="flex-1 text-center text-[11px] text-[#7E8A93] py-2 border border-dashed border-[#d5e4f0] dark:border-[#38424B] rounded-lg">{tri("Nessun contatto indicato", "Kein Kontakt angegeben", "No contact provided")}</span>
+                  )}
                   {!it.sample && user && (it.owner_id === user.user_id || user.role === "admin") && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
                 </div>
               </div>

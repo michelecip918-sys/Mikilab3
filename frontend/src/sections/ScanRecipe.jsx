@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
-import { Camera, Loader2, ScanLine, PenLine } from "lucide-react";
+import { Camera, Loader2, ScanLine, PenLine, Upload } from "lucide-react";
 import { API, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -12,6 +12,7 @@ export default function ScanRecipe({ embedded = false }) {
   const [loading, setLoading] = useState(false);
   const [scanned, setScanned] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const fileRef = useRef(null);
 
   const onPhoto = (file) => {
     if (!file) return;
@@ -86,10 +87,17 @@ export default function ScanRecipe({ embedded = false }) {
         ) : (
           <DualPhotoButtons onFile={onPhoto} testid="scan" />
         )}
-        {/* Scrivere/modificare a mano: dopo lo scatto il testo è già modificabile; qui parti da zero. */}
         {!loading && (
           <div className="mt-4 pt-4 border-t border-[#d5e4f0] dark:border-[#38424B]">
-            <p className="text-xs text-[#7E8A93] mb-2">{tri("Dopo la foto puoi correggere il testo. Oppure scrivi la ricetta a mano da zero:", "Nach dem Foto kannst du den Text korrigieren. Oder schreibe das Rezept von Hand:", "After the photo you can edit the text. Or write the recipe by hand:")}</p>
+            {/* Carica da file dal PC (o dall'allegato ricevuto via email): immagini/scansioni delle ricette */}
+            <input ref={fileRef} type="file" accept="image/*" className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) onPhoto(f); e.target.value = ""; }} />
+            <button data-testid="scan-upload-file-btn" onClick={() => fileRef.current?.click()}
+              className="inline-flex items-center gap-2 bg-[#2e8b6f] text-white font-semibold px-5 py-3 rounded-2xl active:scale-97 transition-all mb-3">
+              <Upload className="w-5 h-5" /> {tri("Carica dal PC / da email", "Vom PC / aus E-Mail laden", "Upload from PC / email")}
+            </button>
+            <p className="text-[11px] text-[#7E8A93] mb-3">{tri("Hai già le ricette in una cartella del computer o ricevute via email? Caricale qui: le leggo io e le trasformo in scheda.", "Hast du Rezepte in einem PC-Ordner oder per E-Mail erhalten? Lade sie hier hoch: ich lese sie und erstelle die Karte.", "Got recipes in a folder on your PC or received by email? Upload them here: I'll read them and turn them into a recipe card.")}</p>
+            <p className="text-xs text-[#7E8A93] mb-2">{tri("Oppure scrivi la ricetta a mano da zero:", "Oder schreibe das Rezept von Hand:", "Or write the recipe by hand from scratch:")}</p>
             <button data-testid="scan-manual-btn" onClick={() => { setScanned(null); setDialogOpen(true); }}
               className="inline-flex items-center gap-2 bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#e4eff8] font-semibold px-5 py-3 rounded-2xl border-2 border-[#3f7cac]/40 active:scale-97 transition-all">
               <PenLine className="w-5 h-5 text-[#3f7cac]" /> {tri("Scrivi a mano", "Von Hand schreiben", "Write by hand")}

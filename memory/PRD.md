@@ -1768,3 +1768,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Maestro.jsx ("Il Tuo Laboratorio") accorciato**: rimossi i blocchi introduttivi che spingevano in basso il piano (banner immagine `maestro-hero-tattoo`, titolo H1 + sottotitolo, bolle chat `AvatarBubbles` MICHELE/MOMY). La sezione `MohammedAssistant` (Chiedi a Mohammadreza) è stata spostata SOTTO il piano. Ora la vista si apre direttamente sull'hero "Piano di Produzione con IA" con i quicklink START (Aggiungi Ricette, Piano Giornaliero, ecc.) subito visibili → il panettiere arriva subito a generare.
 - Verificato via screenshot mobile (admin): Lab si apre su AI Production Plan + START, niente più preamble.
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v76 (27 Ago 2026) — SOS in Impara, Marketplace contatti corretti, import ricette da PC/email
+- **SOS Impasto spostato da Social a Impara**: rimosso `community-sos-btn` + pannello da Community.jsx; aggiunto in Beginners.jsx (`beginners-sos-btn`, sotto l'Academy coach) con `SosImpasto` (onNavigate per aprire la ricetta consigliata). Verificato: presente in Impara, assente in Social.
+- **Marketplace — fix contatti**: (1) rimossi gli annunci di ESEMPIO hardcoded (SAMPLES: macchinari che sembravano del proprietario). Ora la board mostra solo annunci reali (empty-state "Nessun annuncio. Pubblica il primo!"). (2) Il pulsante "Contatta" NON ricade più sul WhatsApp del sito: usa SOLO il contatto dell'annuncio (email→mailto, link http→diretto, numero→wa.me). Se l'annuncio non ha contatto, mostra "Nessun contatto indicato" (nessun link).
+- **Import ricette da PC/email (ScanRecipe "Le mie ricette")**: nuovo pulsante `scan-upload-file-btn` "Carica dal PC / da email" — file picker immagini che riusa il flusso scan-recipe (OCR/AI). Il panettiere può caricare scansioni/foto già presenti in una cartella del PC o ricevute via email, oltre a scansiona/foto/scrivi a mano.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.
