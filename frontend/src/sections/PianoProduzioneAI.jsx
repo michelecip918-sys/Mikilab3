@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -110,6 +110,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   // Personalizzazione strumenti (riordina/nascondi) + tour guidato.
   const [toolPrefs, setToolPrefs] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_prefs") || "{}"); } catch { return {}; } });
   const [editTools, setEditTools] = useState(false);
+  const [toolQuery, setToolQuery] = useState("");
   const [tourForce, setTourForce] = useState(0);
   const [toolUsage, setToolUsage] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_usage") || "{}"); } catch { return {}; } });
   const openToolTracked = (id) => {
@@ -132,7 +133,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     return list;
   }, [toolPrefs]);
   const hiddenTools = new Set(toolPrefs.hidden || []);
-  const visibleTools = orderedTools.filter((tl) => editTools || !hiddenTools.has(tl.id));
+  const pinnedTools = new Set((toolPrefs.pinned || []).filter((id) => TOOLS.some((t) => t.id === id)));
+  // Fuori dalla modifica: non ripetere nella griglia gli strumenti già presenti nei Preferiti (no doppioni)
+  const visibleTools = orderedTools.filter((tl) => editTools || (!hiddenTools.has(tl.id) && !pinnedTools.has(tl.id)));
   const moveTool = (id, dir) => {
     const ids = orderedTools.map((tl) => tl.id);
     const i = ids.indexOf(id); const j = i + dir;
@@ -634,8 +637,21 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 : tri3(lang, "Tocca per aprirlo. La ⭐ lo aggiunge ai preferiti, la «i» spiega a cosa serve.", "Tippe zum Öffnen. Der ⭐ fügt zu Favoriten hinzu, die „i“ erklärt es.", "Tap to open. The ⭐ adds to favorites, the 'i' explains it.")}
             </p>
 
+            {!editTools && (
+              <div className="relative mb-2">
+                <Search className="w-4 h-4 text-[#7E8A93] absolute left-3 top-1/2 -translate-y-1/2" />
+                <input data-testid="tools-search" value={toolQuery} onChange={(e) => setToolQuery(e.target.value)}
+                  placeholder={tri3(lang, "Cerca uno strumento…", "Werkzeug suchen…", "Search a tool…", "Buscar herramienta…")}
+                  className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31] pl-9 pr-3 py-2 text-sm outline-none focus:border-[#3f7cac]" />
+              </div>
+            )}
+
             <div className="grid grid-cols-3 gap-2">
-              {visibleTools.map(({ id, Icon, it, de, en }) => {
+              {visibleTools.filter(({ it, de, en }) => {
+                const q = toolQuery.trim().toLowerCase();
+                if (!q || editTools) return true;
+                return `${it} ${de} ${en}`.toLowerCase().includes(q);
+              }).map(({ id, Icon, it, de, en }) => {
                 const label = tri3(lang, it, de, en);
                 const isHidden = hiddenTools.has(id);
                 return (

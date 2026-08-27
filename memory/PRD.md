@@ -1512,3 +1512,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - ResetPassword.jsx: policy password forte (8+ lettere+numeri) con hint + conferma, stringhe IT/DE/EN/ES.
 - Dominio Resend mikilab.de VERIFICATO (status: verified, eu-west-1); invio email di prova OK → email di conferma/reset arrivano in produzione.
 - Login Apple/secondo social: ANNULLATO su richiesta utente (restano Google + email/password).
+
+## v43.2 — Laboratorio: no doppioni + ricerca strumenti
+- Fix doppione: gli strumenti messi tra i Preferiti non vengono più ripetuti nella griglia "Apri uno strumento" (esclusi quando non si è in modifica). In modalità Personalizza restano tutti visibili per gestirli.
+- Aggiunta barra di ricerca strumenti (tools-search) per filtrare per nome in 4 lingue. Nulla rimosso dalle impostazioni.
+- Verificato: Timer in preferiti=1, in griglia=0; ricerca "temp" filtra a Temp. Acqua.
