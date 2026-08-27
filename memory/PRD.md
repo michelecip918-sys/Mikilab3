@@ -1648,3 +1648,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Mercatino REALE (server)**: nuovi endpoint `GET/POST/DELETE /api/community/market` (collezione `market_listings`), annunci condivisi tra tutti, **solo utenti registrati** pubblicano, delete owner/admin. Foto caricate su **Emergent Object Storage** (riuso `/upload` + `uploadApi.image`). Frontend `Marketplace.jsx` riscritto (via `marketApi`, non più localStorage); mantiene 5 annunci ESEMPIO multilingua + geolocalizzazione. Verificato via curl (create/list/401/delete) + UI.
 - **ANCORA IN SOSPESO**: (D) Profili Social (avatar/bio/ricette pubblicate); spostare "Le mie ricette" da Ricette → Il Tuo Laboratorio (fatto "alla fine").
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v61 (27 Ago 2026) — Riordino generatore · Nav "Social" + logo · Le Mie Ricette nel Lab
+- **Ordine generatore (Il Tuo Laboratorio)**: usato CSS `order` su `<Section>` (prop `order`, wrapper `flex flex-col`). Ora: **1) Scegli anche (interruttori) → 2) Compila per generare (evidenziato) → 3) Apri anche altri strumenti**. La sezione strumenti ora è separata con nota: "tocca la «i» per capire a cosa serve ognuno e cosa usa, poi aprilo". Verificato via bounding box (modules 1414 < compila 1910 < tools 2958).
+- **Bottom nav**: "Community" rinominata **"Social"** + tile con **logo ML** (gradiente stile Instagram) sul tasto. Mantiene il pallino notifiche.
+- **"Le Mie Ricette" spostato nel Lab**: rimosso il toggle MikiLab/Personale da `Ricette.jsx` (ora solo MikiLab); il ricettario personale è ora lo strumento `aggiungi` in TOOLS ("Le Mie Ricette / My Recipes") dentro Il Tuo Laboratorio (già rendeva RecipeList personal + ScanRecipe).
+- **Moderazione mercatino**: l'admin può già eliminare QUALSIASI annuncio (pulsante cestino visibile su tutti gli annunci per role=admin; endpoint DELETE consente owner/admin).
+- **ANCORA IN SOSPESO (grandi)**: Profili Social (pagina avatar/bio/ricette pubblicate); intro social nuova/colorata/giovanile; più opzioni di pubblicazione (consigli/idee) nel composer social; pannello admin dedicato moderazione.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.

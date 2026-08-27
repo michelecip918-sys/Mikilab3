@@ -4,7 +4,8 @@ import { useLang } from "@/i18n/LanguageContext";
 import { notificationsApi } from "@/lib/api";
 
 export default function BottomNav({ active, onChange }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const triNav = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
   const [unread, setUnread] = useState(0);
   const loadUnread = useCallback(async () => {
     try { const d = await notificationsApi.list(); setUnread(d.unread || 0); } catch { setUnread(0); }
@@ -24,7 +25,7 @@ export default function BottomNav({ active, onChange }) {
     { id: "ricette", label: t("nav_ricette"), Icon: BookOpen },
     { id: "maestro", label: t("nav_maestro"), Icon: Wrench },
     { id: "impara", label: t("nav_impara"), Icon: GraduationCap },
-    { id: "community", label: t("nav_community"), Icon: Users },
+    { id: "community", label: triNav("Social", "Social", "Social", "Social"), Icon: Users, logo: true },
   ];
 
   return (
@@ -41,7 +42,7 @@ export default function BottomNav({ active, onChange }) {
         <div className="flex-1 bg-[#A9C5D4]" />
       </div>
       <div className="max-w-xl mx-auto grid grid-cols-5 gap-0.5 px-1 py-2" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
-        {TABS.map(({ id, label, Icon }) => {
+        {TABS.map(({ id, label, Icon, logo }) => {
           const on = norm === id;
           return (
             <button
@@ -53,7 +54,13 @@ export default function BottomNav({ active, onChange }) {
               }`}
             >
               <span className="relative">
-                <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />
+                {logo ? (
+                  <span className="w-5 h-5 rounded-md flex items-center justify-center overflow-hidden" style={{ background: "linear-gradient(135deg,#feda75,#d62976 55%,#4f5bd5)" }}>
+                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Social" className="w-4 h-4 object-contain" />
+                  </span>
+                ) : (
+                  <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />
+                )}
                 {id === "community" && unread > 0 && (
                   <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#f0f6fb] dark:ring-[#1B2127]">{unread > 9 ? "9+" : unread}</span>
                 )}

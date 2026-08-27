@@ -114,6 +114,7 @@ const TOOLS = [
   { id: "haccp", Icon: ScanLine, cat: "gestione", it: "Registro HACCP", de: "HACCP-Register", en: "HACCP Log" },
   { id: "check", Icon: ListChecks, cat: "gestione", it: "Checklist", de: "Checklisten", en: "Checklists" },
   { id: "shelf", Icon: CalendarClock, cat: "vendita", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
+  { id: "aggiungi", Icon: BookOpen, cat: "impasto", it: "Le Mie Ricette", de: "Meine Rezepte", en: "My Recipes", es: "Mis Recetas" },
 ];
 
 const TOOL_CATS = [
@@ -697,7 +698,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      <Section icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "SCEGLI ANCHE (interruttori del piano)", "AUCH WÄHLEN (Plan-Schalter)", "ALSO CHOOSE (plan switches)")}>
+      <div className="flex flex-col">
+      <Section order={1} icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "SCEGLI ANCHE (interruttori del piano)", "AUCH WÄHLEN (Plan-Schalter)", "ALSO CHOOSE (plan switches)")}>
         <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#C88A2B]/15 border border-[#C88A2B]/45 px-3 py-2.5">
           <SlidersHorizontal className="w-4 h-4 text-[#A66A15] shrink-0" />
           <p className="text-[12px] font-bold text-[#7a4e12] dark:text-[#E4C98B] leading-snug">
@@ -751,7 +753,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             );
           })}
         </div>
+      </Section>
 
+      <Section order={3} icon={<Wrench className="w-4 h-4" />} title={tri3(lang, "Apri anche altri strumenti", "Weitere Werkzeuge öffnen", "Open other tools")}>
+        <p className="text-[11px] text-[#7E8A93] mb-3">{tri3(lang, "Più sotto puoi aprire tutti gli strumenti: tocca la «i» per capire a cosa serve ognuno e cosa usa, poi aprilo.", "Weiter unten kannst du alle Werkzeuge öffnen: Tippe auf „i“, um zu verstehen, wofür jedes dient, dann öffne es.", "Below you can open all the tools: tap the 'i' to understand what each one does and uses, then open it.")}</p>
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#d5e4f0] dark:bg-[#38424B]" />
@@ -880,7 +885,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         )}
       </Section>
 
-      <Section highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
+      <Section order={2} highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
         <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
             <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
               className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#a9d2ec] border-[#d5e4f0] dark:border-[#38424B]"}`}>
@@ -1361,6 +1366,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           }}
         />
       </Section>
+      </div>
       {planHF && (
         <HandsFreeMode
           recipe={{ id: "plan" }}
@@ -1400,9 +1406,9 @@ function RecipePrint({ r, lang }) {
   );
 }
 
-function Section({ icon, title, children, highlight, badge }) {
+function Section({ icon, title, children, highlight, badge, order }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} style={order ? { order } : undefined}
       className={`mb-4 rounded-2xl p-4 ${highlight
         ? "bg-white dark:bg-[#232A31] border-2 border-[#C88A2B] shadow-lg shadow-[#C88A2B]/20 ring-1 ring-[#C88A2B]/30"
         : "bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]"}`}>
