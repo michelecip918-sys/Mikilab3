@@ -4257,11 +4257,12 @@ async def community_profile(user_id: str):
         raise HTTPException(404, "Utente non trovato")
     posts = await db.community_posts.find({"author_id": user_id, "is_deleted": {"$ne": True}}, {"_id": 0}).sort("created_at", -1).to_list(50)
     listings = await db.market_listings.count_documents({"owner_id": user_id, "is_deleted": {"$ne": True}})
+    followers = await db.friendships.count_documents({"status": "accepted", "$or": [{"from_id": user_id}, {"to_id": user_id}]})
     return {
         "user_id": user_id,
         "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
         "picture": u.get("picture", ""), "bio": u.get("bio", ""),
-        "joined": u.get("created_at"),
+        "joined": u.get("created_at"), "followers_count": followers,
         "posts": posts, "posts_count": len(posts), "listings_count": listings,
     }
 

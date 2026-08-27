@@ -13,6 +13,9 @@ const PRESET_AVATARS = [
   { id: "baker_f", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/f101801e5dc13986a0d27fe13abea1076fb6c012170cf53fb97dd2bbb574d3ec.jpeg", it: "Panettiera", de: "Bäckerin", en: "Baker (woman)", es: "Panadera" },
   { id: "barista", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/c02f0851287203b0df733386e12c2e65b7a1eccbdf30fb0d68b02d888e2b0f9b.jpeg", it: "Barista", de: "Barista", en: "Barista", es: "Barista" },
   { id: "gelatiere", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/4f3cbf12ce4d394db90c2def13473e910b95ee01d3377e70bffff3e8330fdbea.jpeg", it: "Gelatiere", de: "Eismacher", en: "Gelato maker", es: "Heladero" },
+  { id: "chef_f", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/c355cb59cb389bba6c0814430a7d97321b2ab10b987c8d30da776bd9f10168e8.jpeg", it: "Cuoca", de: "Köchin", en: "Chef (woman)", es: "Cocinera" },
+  { id: "pizza_f", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/4bbc8f970433025fc59a2e8ade75fee5c66c95cc41344edcefab0cf2137052ad.jpeg", it: "Pizzaiola", de: "Pizzabäckerin", en: "Pizzaiola", es: "Pizzera" },
+  { id: "baker_bronze", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/696e76c2abc03369b75c8d8b28e9a7fad53fc802726f45bb0c2ef49c8c37bc63.jpeg", it: "Panettiere (bronzo)", de: "Bäcker (bronze)", en: "Baker (bronze)", es: "Panadero (bronce)" },
 ];
 
 // Pagina profilo social: avatar, bio e ricette/post pubblicati dal fornaio.
@@ -77,6 +80,7 @@ export default function ProfilePanel({ userId, onClose }) {
                 <div className="flex gap-3 mt-1 text-[12px] text-white/90">
                   <span className="flex items-center gap-1"><MessageSquare className="w-3.5 h-3.5" /> {data.posts_count} {tri("post", "Beiträge", "posts", "posts")}</span>
                   <span className="flex items-center gap-1"><Store className="w-3.5 h-3.5" /> {data.listings_count} {tri("annunci", "Anzeigen", "listings", "anuncios")}</span>
+                  <span className="flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" /> {tri("seguito da", "Follower:", "followed by", "seguido por")} {data.followers_count ?? 0}</span>
                 </div>
                 {user && !isMe && (
                   <button data-testid="profile-follow" onClick={follow} disabled={followed}

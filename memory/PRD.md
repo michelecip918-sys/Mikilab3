@@ -1676,3 +1676,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Segui i Colleghi**: pulsante `profile-follow` nel ProfilePanel (per utenti diversi da sé) che invia richiesta amicizia (`friends/request`). Feed **"Dai tuoi contatti"**: toggle `feed-toggle` (Tutti/Contatti) → `GET /community/posts?scope=friends` (post degli amici accettati + propri). Verificato: friends feed conteggio corretto.
 - **Nuovi stili avatar**: aggiunti Panettiera (donna), Barista, Gelatiere ai preset (ora 7). Generati Nano Banana.
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v65 (27 Ago 2026) — Contatore follower + più avatar
+- **Contatore follower**: profilo GET ora ritorna `followers_count` (amicizie accettate). ProfilePanel mostra "seguito da N". La lista contatti resta accessibile dal pannello "Amici & Colleghi" (FriendsPanel).
+- **Nuovi avatar**: aggiunti Cuoca (donna), Pizzaiola (donna), Panettiere variante bronzo → 10 avatar preset totali. Generati Nano Banana.
+- Verificato: followers_count via API + 10 preset a schermo.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.
