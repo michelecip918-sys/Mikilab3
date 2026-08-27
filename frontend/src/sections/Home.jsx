@@ -5,6 +5,9 @@ import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
 import { recipesApi } from "@/lib/api";
+import { dmApi } from "@/lib/api";
+import { useAuth } from "@/auth/AuthContext";
+import ChatPanel from "@/components/ChatPanel";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import HomeNews from "@/components/HomeNews";
@@ -174,7 +177,15 @@ const FEATURES = [
 
 export default function Home({ onNavigate }) {
   const { t, lang } = useLang();
+  const { user } = useAuth();
   const [chat, setChat] = useState(false);
+  const [convos, setConvos] = useState([]);
+  const [chatUser, setChatUser] = useState(null);
+  const [chatOpen, setChatOpen] = useState(false);
+  useEffect(() => {
+    if (user) dmApi.conversations().then((c) => setConvos((c || []).filter((x) => x.unread > 0))).catch(() => setConvos([]));
+    else setConvos([]);
+  }, [user, chatOpen]);
   const [legal, setLegal] = useState(false);
   const [open, setOpen] = useState(null);
   const [storyOpen, setStoryOpen] = useState(() => {
@@ -235,6 +246,31 @@ export default function Home({ onNavigate }) {
     <div className="pb-2 space-y-6">
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
+
+      {/* Messaggi non letti dagli amici */}
+      {convos.length > 0 && (
+        <div data-testid="home-unread-chats" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <MessageCircle className="w-4 h-4 text-[#7a4fbf]" />
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{L("Messaggi non letti", "Ungelesene Nachrichten", "Unread messages", "Mensajes no leídos")}</p>
+            <span className="ml-auto min-w-[20px] h-5 px-1.5 rounded-full bg-[#7a4fbf] text-white text-[11px] font-bold flex items-center justify-center">{convos.reduce((a, x) => a + (x.unread || 0), 0)}</span>
+          </div>
+          <div className="space-y-1.5">
+            {convos.slice(0, 4).map((c) => (
+              <button key={c.other_id} data-testid={`home-chat-${c.other_id}`} onClick={() => { setChatUser({ user_id: c.other_id, name: c.name, picture: c.picture }); setChatOpen(true); }}
+                className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-[#f0f6fb] dark:hover:bg-[#2A323A] active:scale-98 transition-all text-left">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white text-sm font-bold shrink-0">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
+                  <p className="text-[12px] text-[#7E8A93] truncate">{c.last}</p>
+                </div>
+                <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-[#7a4fbf] text-white text-[10px] font-bold flex items-center justify-center shrink-0">{c.unread}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      <ChatPanel open={chatOpen} onClose={() => { setChatOpen(false); setChatUser(null); }} initialUser={chatUser} />
 
       {/* ===== MIKILAB + SCOPRI MIKILAB uniti in un'unica card ===== */}
       <div data-testid="home-story" className="-mt-2">

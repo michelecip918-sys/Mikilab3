@@ -1,0 +1,112 @@
+import { useState, useRef, useEffect } from "react";
+import { X, Loader2, Stethoscope, RotateCcw } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import DualPhotoButtons from "@/components/DualPhotoButtons";
+import { API } from "@/lib/api";
+import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = (e) => resolve(e.target.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+// SOS Impasto: manda la foto del pane a Mohammadreza per una diagnosi immediata (login richiesto).
+export default function SosImpasto({ open, onClose }) {
+  const { lang } = useLang();
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const { user, setAuthOpen } = useAuth();
+  const [photo, setPhoto] = useState("");
+  const [result, setResult] = useState("");
+  const [busy, setBusy] = useState(false);
+  const endRef = useRef(null);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [result]);
+
+  if (!open) return null;
+
+  const analyze = async (dataUrl) => {
+    setBusy(true); setResult("");
+    try {
+      const res = await fetch(`${API}/academy/sos`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ mode: "sos", image_base64: dataUrl, lang }),
+      });
+      if (res.status === 401) { onClose(); setAuthOpen && setAuthOpen(true); return; }
+      const reader = res.body.getReader(); const decoder = new TextDecoder(); let buffer = "";
+      while (true) {
+        const { done, value } = await reader.read(); if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split("\n\n"); buffer = parts.pop();
+        for (const part of parts) {
+          const line = part.replace(/^data: ?/, "").trim(); if (!line) continue;
+          let obj; try { obj = JSON.parse(line); } catch { continue; }
+          if (obj.done) continue;
+          if (obj.d) setResult((p) => p + obj.d);
+        }
+      }
+    } catch {
+      setResult(tri("Ops, riprova tra poco.", "Ups, versuch es gleich nochmal.", "Oops, try again shortly.", "Ups, inténtalo de nuevo."));
+    } finally { setBusy(false); }
+  };
+
+  const onFile = async (f) => {
+    if (!user) { onClose(); setAuthOpen && setAuthOpen(true); return; }
+    const dataUrl = await fileToDataUrl(f);
+    setPhoto(dataUrl);
+    analyze(dataUrl);
+  };
+
+  const reset = () => { setPhoto(""); setResult(""); };
+
+  return (
+    <div className="fixed inset-0 z-[75] flex items-end sm:items-center justify-center" data-testid="sos-panel">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#1B2127] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[88vh] flex flex-col overflow-hidden">
+        <div className="flex items-center gap-3 p-4 text-white shrink-0" style={{ background: "linear-gradient(135deg,#7a1f1f,#b23a2f 55%,#a9772f)" }}>
+          <Stethoscope className="w-6 h-6 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-lg font-bold leading-none">{tri("SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa")}</p>
+            <p className="text-[12px] text-white/90 mt-0.5">{tri("Diagnosi immediata da Mohammadreza", "Sofortdiagnose von Mohammadreza", "Instant diagnosis from Mohammadreza", "Diagnóstico inmediato de Mohammadreza")}</p>
+          </div>
+          <button data-testid="sos-close" onClick={onClose} className="p-1 active:scale-90"><X className="w-5 h-5" /></button>
+        </div>
+
+        <div className="p-4 overflow-y-auto space-y-3">
+          {!photo && (
+            <>
+              <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
+                {tri("Scatta o carica una foto del tuo pane o impasto: analizzo crosta, mollica, forma e cottura e ti dico causa e rimedio.",
+                  "Mach oder lade ein Foto deines Brotes/Teigs hoch: Ich analysiere Kruste, Krume, Form und Backen und nenne Ursache und Lösung.",
+                  "Take or upload a photo of your bread or dough: I analyse crust, crumb, shape and bake and give you cause and fix.",
+                  "Haz o sube una foto de tu pan o masa: analizo corteza, miga, forma y cocción y te digo causa y solución.")}
+              </p>
+              <DualPhotoButtons testid="sos-photo" onFile={onFile} />
+            </>
+          )}
+
+          {photo && (
+            <div className="relative">
+              <img src={photo} alt="" className="w-full h-48 object-cover rounded-2xl" />
+              <button data-testid="sos-reset" onClick={reset} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1.5 flex items-center gap-1 text-xs"><RotateCcw className="w-4 h-4" /></button>
+            </div>
+          )}
+
+          {(busy || result) && (
+            <div data-testid="sos-result" className="rounded-2xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+              {busy && !result ? (
+                <div className="flex items-center gap-2 text-[#b23a2f]"><Loader2 className="w-5 h-5 animate-spin" /> {tri("Analisi in corso…", "Analyse läuft…", "Analysing…", "Analizando…")}</div>
+              ) : (
+                <div className="markdown-body text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]"><ReactMarkdown>{result}</ReactMarkdown></div>
+              )}
+              <div ref={endRef} />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

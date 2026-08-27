@@ -1926,6 +1926,8 @@ MAESTRO_SYSTEM = (
 LANG_DIRECTIVE = {
     "it": " Rispondi SEMPRE in italiano.",
     "de": " Antworte IMMER auf Deutsch (respond always in German).",
+    "en": " Always respond in English.",
+    "es": " Responde SIEMPRE en español.",
 }
 
 MACHINE_PROTOCOL = (
@@ -2195,35 +2197,40 @@ async def academy_quiz(payload: QuizRequest):
         + "Restituisci SOLO JSON valido con questo schema esatto:\n"
         + schema
     )
-    chat = LlmChat(
-        api_key=EMERGENT_LLM_KEY,
-        session_id=f"quiz-{uuid.uuid4().hex[:8]}",
-        system_message="Sei un esperto di panificazione casalinga e chimica della fermentazione. Crei quiz didattici. Rispondi SOLO con JSON valido.",
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=700)
-    text = ""
-    try:
-        async for event in chat.stream_message(UserMessage(text=prompt)):
-            if isinstance(event, TextDelta):
-                text += event.content
-            elif isinstance(event, StreamDone):
-                break
-    except Exception:
-        logger.exception("academy quiz error")
-        raise HTTPException(status_code=500, detail="Errore nella generazione del quiz")
-    raw = text.strip()
-    if raw.startswith("```"):
-        raw = raw.strip("`")
-    s, e = raw.find("{"), raw.rfind("}")
-    if s == -1 or e == -1:
+    data = None
+    for _attempt in range(2):
+        text = ""
+        try:
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY,
+                session_id=f"quiz-{uuid.uuid4().hex[:8]}",
+                system_message="Sei un esperto di panificazione casalinga e chimica della fermentazione. Crei quiz didattici. Rispondi SOLO con JSON valido.",
+            ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=700)
+            async for event in chat.stream_message(UserMessage(text=prompt)):
+                if isinstance(event, TextDelta):
+                    text += event.content
+                elif isinstance(event, StreamDone):
+                    break
+        except Exception:
+            logger.exception("academy quiz error")
+            continue
+        raw = text.strip()
+        if raw.startswith("```"):
+            raw = raw.strip("`")
+        s, e = raw.find("{"), raw.rfind("}")
+        if s == -1 or e == -1:
+            continue
+        try:
+            parsed = json.loads(raw[s:e + 1])
+        except Exception:
+            continue
+        opts = parsed.get("options") or []
+        if isinstance(opts, list) and len(opts) >= 2:
+            data = parsed
+            break
+    if data is None:
         raise HTTPException(status_code=422, detail="Quiz non generato")
-    try:
-        data = json.loads(raw[s:e + 1])
-    except Exception:
-        raise HTTPException(status_code=422, detail="Quiz non leggibile")
-    # normalizzazione difensiva
     opts = data.get("options") or []
-    if not isinstance(opts, list) or len(opts) < 2:
-        raise HTTPException(status_code=422, detail="Quiz incompleto")
     try:
         correct = int(data.get("correct", 0))
     except Exception:
@@ -2236,6 +2243,78 @@ async def academy_quiz(payload: QuizRequest):
         "explanation": str(data.get("explanation", "")).strip(),
         "level": level,
     }
+
+
+# --- Badge Academy (es. "Fornaio Diplomato" al superamento di serie al livello Master) ---
+_ALLOWED_BADGES = {"diplomato", "master_baker"}
+
+
+class BadgeReq(BaseModel):
+    badge: str
+
+
+@api_router.post("/academy/badge")
+async def academy_grant_badge(body: BadgeReq, user: dict = Depends(current_user)):
+    badge = (body.badge or "").strip()
+    if badge not in _ALLOWED_BADGES:
+        raise HTTPException(400, "Badge non valido")
+    await db.users.update_one({"user_id": user["user_id"]}, {"$addToSet": {"badges": badge}})
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "badges": 1})
+    return {"badges": u.get("badges", [])}
+
+
+# --- SOS Impasto: diagnosi rapida della foto del pane da parte di Mohammadreza (login richiesto) ---
+SOS_PROMPT = (
+    "Sei 'Mohammadreza', Master Baker di MikiLab. Un panettiere ti manda la FOTO del suo pane/impasto per un SOS. "
+    "Fai una DIAGNOSI STRUTTURALE immediata e pratica. Analizza (quando visibili): crosta, mollica/alveolatura, forma/sviluppo, "
+    "colore/cottura, stato di lievitazione. Per ogni difetto indica CAUSA -> RIMEDIO concreto. Se l'impasto sembra buono, dillo con un complimento. "
+    "Rispondi in markdown, breve e leggibile durante il lavoro, con questa struttura:\n"
+    "⚡ **Diagnosi:** cosa vedo in una frase.\n"
+    "🥖 **Cosa è successo:** 2-4 punti (difetto -> causa).\n"
+    "🔧 **Come rimediare:** 2-4 azioni concrete per la prossima volta.\n"
+    "Non inventare dettagli non visibili nella foto."
+)
+
+
+SOS_LABELS = {
+    "it": " Usa ESATTAMENTE queste etichette: '⚡ **Diagnosi:**', '🥖 **Cosa è successo:**', '🔧 **Come rimediare:**'.",
+    "de": " Verwende GENAU diese Beschriftungen: '⚡ **Diagnose:**', '🥖 **Was ist passiert:**', '🔧 **Wie beheben:**'.",
+    "en": " Use EXACTLY these labels: '⚡ **Diagnosis:**', '🥖 **What happened:**', '🔧 **How to fix:**'.",
+    "es": " Usa EXACTAMENTE estas etiquetas: '⚡ **Diagnóstico:**', '🥖 **Qué pasó:**', '🔧 **Cómo solucionarlo:**'.",
+}
+
+
+async def sos_stream(image_b64: str, lang: str = "it"):
+    if "," in image_b64 and image_b64.strip().startswith("data:"):
+        image_b64 = image_b64.split(",", 1)[1]
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"sos-{uuid.uuid4()}",
+        system_message=SOS_PROMPT + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]) + SOS_LABELS.get(lang, SOS_LABELS["it"]),
+    ).with_model("anthropic", "claude-sonnet-4-6")
+    user_msg = UserMessage(text="Ecco la foto del mio pane/impasto. Dammi la diagnosi SOS.", file_contents=[ImageContent(image_base64=image_b64)])
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                yield f"data: {json.dumps({'d': event.content})}\n\n"
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("sos stream error")
+        yield f"data: {json.dumps({'d': '[Errore nella diagnosi. Riprova.]'})}\n\n"
+    yield f"data: {json.dumps({'done': True})}\n\n"
+
+
+@api_router.post("/academy/sos")
+async def academy_sos(payload: VisionRequest, user: dict = Depends(current_user)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        sos_stream(payload.image_base64, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
 
 
 
@@ -4408,7 +4487,7 @@ async def community_profile(user_id: str):
         "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
         "picture": u.get("picture", ""), "bio": u.get("bio", ""),
         "joined": u.get("created_at"), "followers_count": len(other_ids),
-        "contacts": contacts,
+        "contacts": contacts, "badges": u.get("badges", []),
         "posts": posts, "posts_count": len(posts), "listings_count": listings,
     }
 

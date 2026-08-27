@@ -203,6 +203,7 @@ export const dmApi = {
 
 export const academyApi = {
   quiz: (level, lang, asked) => api.post(`/academy/quiz`, { level, lang, asked }).then((r) => r.data),
+  grantBadge: (badge) => api.post(`/academy/badge`, { badge }).then((r) => r.data),
 };
 
 export const doughSessionsApi = {

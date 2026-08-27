@@ -1,12 +1,17 @@
-import { useState } from "react";
-import { Trophy, CheckCircle2, XCircle, Loader2, RotateCcw, GraduationCap, Sparkles } from "lucide-react";
-import { academyApi } from "@/lib/api";
+import { useState, useEffect } from "react";
+import { Trophy, CheckCircle2, XCircle, Loader2, RotateCcw, GraduationCap, Sparkles, Award } from "lucide-react";
+import { academyApi, profileApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
+
+const DIPLOMA_KEY = "mikilab_diplomato";
+const MASTER_TARGET = 5; // risposte corrette di fila al livello Master per il diploma
 
 // Quiz del Fornaio Casalingo: 3 livelli, domande generate dall'IA (infinite), spiegazione tecnica per risposta.
 export default function EvolvingQuiz() {
   const { lang } = useLang();
+  const { user } = useAuth();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
 
   const LEVELS = [
@@ -23,6 +28,15 @@ export default function EvolvingQuiz() {
   const [asked, setAsked] = useState([]);
   const BKEY = "mikilab_academy_quiz_best";
   const [best, setBest] = useState(() => Number(localStorage.getItem(BKEY) || 0));
+  const [masterStreak, setMasterStreak] = useState(0);
+  const [diploma, setDiploma] = useState(() => { try { return localStorage.getItem(DIPLOMA_KEY) === "1"; } catch { return false; } });
+
+  useEffect(() => {
+    if (!user) return;
+    profileApi.get(user.user_id).then((p) => {
+      if ((p?.badges || []).includes("diplomato")) { setDiploma(true); try { localStorage.setItem(DIPLOMA_KEY, "1"); } catch { /* */ } }
+    }).catch(() => {});
+  }, [user]);
 
   const loadQuestion = async (lvl = level) => {
     setLoading(true); setPicked(null); setQ(null);
@@ -42,8 +56,25 @@ export default function EvolvingQuiz() {
       const ns = streak + 1;
       setStreak(ns);
       if (ns > best) { setBest(ns); try { localStorage.setItem(BKEY, String(ns)); } catch { /* */ } }
+      if (level === "master") {
+        const ms = masterStreak + 1;
+        setMasterStreak(ms);
+        if (ms >= MASTER_TARGET && !diploma) awardDiploma();
+      }
     } else {
       setStreak(0);
+      if (level === "master") setMasterStreak(0);
+    }
+  };
+
+  const awardDiploma = async () => {
+    setDiploma(true);
+    try { localStorage.setItem(DIPLOMA_KEY, "1"); } catch { /* */ }
+    toast.success(tri("🎓 Complimenti! Hai ottenuto il badge «Fornaio Diplomato»!", "🎓 Glückwunsch! Du hast das Abzeichen «Diplom-Bäcker» erhalten!", "🎓 Congratulations! You earned the «Certified Baker» badge!", "🎓 ¡Enhorabuena! Has conseguido la insignia «Panadero Diplomado»!"), { duration: 6000 });
+    if (user) {
+      try { await academyApi.grantBadge("diplomato"); window.dispatchEvent(new CustomEvent("mikilab-profile-updated")); } catch { /* */ }
+    } else {
+      toast.message(tri("Accedi per mostrare il badge nel tuo profilo Social.", "Melde dich an, um das Abzeichen im Profil zu zeigen.", "Sign in to show the badge on your Social profile.", "Inicia sesión para mostrar la insignia en tu perfil."));
     }
   };
 
@@ -57,11 +88,23 @@ export default function EvolvingQuiz() {
       </div>
       <p className="text-sm text-[#7E8A93] mb-3">{tri("Domande infinite generate dall'IA, con spiegazione tecnica ad ogni risposta.", "Unendliche KI-Fragen mit technischer Erklärung zu jeder Antwort.", "Infinite AI-generated questions with a technical explanation for every answer.", "Preguntas infinitas generadas por IA, con explicación técnica en cada respuesta.")}</p>
 
+      {diploma && (
+        <div data-testid="diploma-badge" className="flex items-center gap-2 mb-3 rounded-xl bg-gradient-to-r from-[#a9772f] to-[#8a5a2b] text-white px-3 py-2 shadow-sm">
+          <Award className="w-5 h-5 shrink-0" />
+          <span className="text-sm font-bold">{tri("Fornaio Diplomato 🎓", "Diplom-Bäcker 🎓", "Certified Baker 🎓", "Panadero Diplomado 🎓")}</span>
+        </div>
+      )}
+      {level === "master" && !diploma && (
+        <p data-testid="master-progress" className="text-[11px] font-semibold text-[#a9772f] mb-2">
+          {tri(`Diploma: ${masterStreak}/${MASTER_TARGET} risposte Master di fila`, `Diplom: ${masterStreak}/${MASTER_TARGET} Master-Antworten in Folge`, `Diploma: ${masterStreak}/${MASTER_TARGET} Master answers in a row`, `Diploma: ${masterStreak}/${MASTER_TARGET} respuestas Master seguidas`)}
+        </p>
+      )}
+
       {/* Selettore livello */}
       <div className="grid grid-cols-3 gap-1.5 mb-3">
         {LEVELS.map((l) => (
           <button key={l.id} data-testid={`quiz-level-${l.id}`}
-            onClick={() => { setLevel(l.id); setQ(null); setPicked(null); setStreak(0); }}
+            onClick={() => { setLevel(l.id); setQ(null); setPicked(null); setStreak(0); setMasterStreak(0); }}
             className={`py-2 rounded-xl text-[11px] font-bold transition-all leading-tight ${level === l.id ? "text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#7E8A93]"}`}
             style={level === l.id ? { background: l.color } : {}}>
             {l.label}

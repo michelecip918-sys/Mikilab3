@@ -83,6 +83,11 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                   <span className="flex items-center gap-1"><Store className="w-3.5 h-3.5" /> {data.listings_count} {tri("annunci", "Anzeigen", "listings", "anuncios")}</span>
                   <span className="flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" /> {tri("seguito da", "Follower:", "followed by", "seguido por")} {data.followers_count ?? 0}</span>
                 </div>
+                {(data.badges || []).includes("diplomato") && (
+                  <span data-testid="profile-badge-diplomato" className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-[#a9772f] text-white px-2.5 py-1 rounded-full">
+                    🎓 {tri("Fornaio Diplomato", "Diplom-Bäcker", "Certified Baker", "Panadero Diplomado")}
+                  </span>
+                )}
                 {user && !isMe && (
                   <div className="flex items-center gap-2 mt-2">
                     <button data-testid="profile-follow" onClick={follow} disabled={followed}

@@ -1,0 +1,51 @@
+{
+  "summary": "Iteration 92: tested the 4 new features (Save Timeline reminders in Academy Coach, 'Fornaio Diplomato' badge, SOS Impasto photo diagnosis, Home unread-chat list) + coach/quiz/profile regression. Backend: 16/16 pytest tests pass (/api/academy/badge grant+idempotent+invalid+empty+401, profile 'badges', /api/academy/sos 401 anon / SSE diagnosis with real bread JPEG / data-URL prefix accepted / 422 without 'mode', coach IT emoji format + DE/EN without Italian labels, quiz 3 levels). Frontend (390x844): coach chip -> AI answer -> academy-save-timeline-N appears, click saves 13 reminders (toast + localStorage); anonymous community-sos-btn correctly opens the login gate; as amico1 the SOS panel streams a full diagnosis from an uploaded JPEG; ProfilePanel shows profile-badge-diplomato ('Certified Baker'); Home shows home-unread-chats (count 2), clicking home-chat-<id> opens chat-panel and the card disappears after reading; quiz master-progress goes 0/5 -> 1/5 -> 2/5 on correct Master answers. Two real defects found: (a) SOS/Maestro answer in Italian when UI language is EN/ES (LANG_DIRECTIVE has only it/de), (b) the quiz diploma banner is localStorage-only and ignores the server badge.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/academy/sos (and /api/maestro/chat, /api/maestro/vision, /api/capo/*)", "issue": "LANG_DIRECTIVE only defines 'it' and 'de'; lang='en'/'es' falls back to LANG_DIRECTIVE['it'] so the whole answer is generated in Italian. Verified: UI in English -> SOS diagnosis fully Italian ('⚡ Diagnosi: Filoni in appretto...'); lang=de works correctly. HIGH impact for a 4-language app.", "priority": "HIGH"},
+      {"endpoint": "/api/academy/sos", "issue": "Reuses VisionRequest, so the unused field 'mode' is REQUIRED -> 422 for any client that omits it (frontend sends mode='sos' so the UI works). Use a dedicated SosRequest model with only image_base64+lang."},
+      {"endpoint": "/api/academy/quiz", "issue": "Returns 3 options by design (prompt asks for 3) while some UI/tests assume 4; also intermittently answers 422 'Quiz non generato' when the model returns no JSON (seen once out of ~8 calls under parallel load, ~12% failure) — no retry on the server, the UI only shows a generic toast."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "EvolvingQuiz", "issue": "The diploma state comes only from localStorage ('mikilab_diplomato'); it is never hydrated from the server profile 'badges'. amico1 owns the badge server-side but the quiz shows no diploma-badge banner and 'Diploma: 0/5', so the badge can be re-awarded and is lost on another device/cleared storage.", "selector": "[data-testid=\"diploma-badge\"]", "priority": "MEDIUM"},
+      {"component": "reminders.js parseTimeline", "issue": "Reminder parsing is noisy: (1) the '⚡ Status / Diagnosis' header line is saved as a 12:30 reminder, (2) markdown table pipes are kept in labels ('| 🟢 Friday 8:00 PM | Feed your starter…'), (3) 12-hour times are misread ('8:00 PM' -> 08:00), (4) one answer produced 13 reminders. Times/labels shown to the user are therefore wrong in EN.", "selector": "[data-testid^=\"academy-save-timeline-\"]", "priority": "MEDIUM"},
+      {"component": "Home/Learn lists", "issue": "Pre-existing React console error 'Encountered two children with the same key' still fires twice on load (reported in iteration 91).", "selector": "n/a (console)", "priority": "LOW"},
+      {"component": "Header brand", "issue": "Pre-existing: brand title truncated to 'Mi...' / 'M...' on 390px viewport.", "selector": "header title", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "SOS Impasto localisation", "issue": "Frontend correctly sends lang from useLang, but the backend ignores en/es (see LANG_DIRECTIVE) so an English/Spanish user gets an Italian diagnosis inside an English panel.", "affected_selectors": ["[data-testid=\"sos-result\"]"]},
+      {"flow": "Anonymous app load", "issue": "Pre-existing 401 console noise on the anonymous session probe.", "affected_selectors": []}
+    ],
+    "design_issues": [
+      {"screen": "Learn (Impara)", "issues": ["Still two quizzes on the same page (AI 'Home Baker Quiz' + legacy static quiz) — pre-existing duplication."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter92_badge_sos.py",
+    "/app/test_reports/pytest/iter92.xml",
+    "/app/test_reports/pytest/iter92_sos.xml"
+  ],
+  "action_items": [
+    "Add 'en' and 'es' entries to LANG_DIRECTIVE (and/or localise SOS_PROMPT labels) so SOS/Maestro answer in the selected language — currently EN/ES users get Italian.",
+    "Hydrate EvolvingQuiz diploma state from the server profile badges (or /api/community/profile/me) instead of localStorage only.",
+    "Harden parseTimeline: skip header/label lines, strip markdown table pipes, support 12-hour AM/PM, cap the number of reminders.",
+    "Give /api/academy/sos its own request model (drop the unused required 'mode').",
+    "Optional: retry once server-side when the quiz model returns unparsable JSON (422 seen ~12% under load); fix the duplicate React key warning."
+  ],
+  "critical_code_review_comments": [
+    "server.py is now 5622 lines and hosts academy/community/capo/maestro — split into routers per domain.",
+    "SOS_PROMPT hardcodes Italian section labels ('⚡ Diagnosi', '🥖 Cosa vedo', '🔧 Come rimediare') exactly like the coach prompt before its fix; localise them per language.",
+    "/api/academy/badge has no server-side verification that the diploma was actually earned — any authenticated client can grant itself the badge (acceptable for a gamification badge, but worth noting)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter92_badge_sos.py"],
+  "success_rate": {"backend": "100% (16/16)", "frontend": "~90% (all flows work; 2 functional defects: language of SOS answer, diploma banner not synced from server)"},
+  "seed_data_creation": "Sent 2 DM 'TEST_iter92 messaggio N' from amico2 to amico1 (read during the UI test). Granted the 'diplomato' badge to amico1 via /api/academy/badge (idempotent).",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! ; amico1@mikilab.de / Test1234! ; amico2@mikilab.de / Test1234! (all valid)",
+  "context_for_next_testing_agent": "Backend suite: /app/backend/tests/test_iter92_badge_sos.py (run with -n 2/4; AI calls 5-60s). SOS requires mode:'sos' in the payload (VisionRequest) and a REAL photo — a synthetic PIL gradient JPEG is rejected by Anthropic ('Could not process image'); use /app/.screenshots/bread_test.jpg. Quiz option testids are quiz-opt-<i> (not quiz-option-<i>); read the correct index by intercepting the /api/academy/quiz response. Home unread card appears only when unread>0: re-send a DM from amico2 before retesting. Open items: LANG_DIRECTIVE en/es fallback to Italian, quiz diploma banner not synced from server badges, parseTimeline noise.",
+  "rca_of_the_issue": "Italian SOS answers for EN/ES: LANG_DIRECTIVE = {it, de} only, and sos_stream/maestro do LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE['it']), so en/es silently get the Italian directive while the base prompt is Italian too. Diploma banner: EvolvingQuiz initialises `diploma` from localStorage('mikilab_diplomato') and never reads the user's server badges, so a badge granted from another session/device is invisible in the quiz card (it is correctly shown in ProfilePanel, which reads the profile API)."
+}

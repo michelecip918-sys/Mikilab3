@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -10,6 +10,7 @@ import { marketNewCount, markMarketSeen } from "@/lib/market";
 import FriendsPanel from "@/components/FriendsPanel";
 import ProfilePanel from "@/components/ProfilePanel";
 import ChatPanel from "@/components/ChatPanel";
+import SosImpasto from "@/components/SosImpasto";
 import BakersMap from "@/components/BakersMap";
 import { friendsApi, dmApi } from "@/lib/api";
 
@@ -65,6 +66,7 @@ export default function Community() {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatUser, setChatUser] = useState(null);
   const [msgUnread, setMsgUnread] = useState(0);
+  const [sosOpen, setSosOpen] = useState(false);
   const [feed, setFeed] = useState("all");
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); }, []);
@@ -183,6 +185,18 @@ export default function Community() {
         <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
       </button>
 
+      <button data-testid="community-sos-btn" onClick={() => { if (needLogin()) return; setSosOpen(true); }}
+        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#b23a2f] to-[#7a1f1f] text-white shadow-md active:scale-98 transition-all">
+        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <Stethoscope className="w-6 h-6" />
+        </div>
+        <div className="flex-1 min-w-0 text-left">
+          <p className="font-display text-base font-bold leading-tight">{tri("SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{tri("Manda la foto del tuo pane a Mohammadreza per una diagnosi immediata", "Sende Mohammadreza ein Foto deines Brotes für eine Sofortdiagnose", "Send Mohammadreza a photo of your bread for an instant diagnosis", "Envía a Mohammadreza una foto de tu pan para un diagnóstico inmediato")}</p>
+        </div>
+        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
+      </button>
+
       <button data-testid="community-map-btn" onClick={() => setMapOpen(true)}
         className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#2e8b6f] to-[#1c5c49] text-white shadow-md active:scale-98 transition-all">
         <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
@@ -199,6 +213,7 @@ export default function Community() {
         onMessage={(u) => { setFriendsOpen(false); setChatUser(u); setChatOpen(true); }} />
       {profileUser && <ProfilePanel userId={profileUser} onClose={() => setProfileUser(null)} onMessage={(u) => { setProfileUser(null); setChatUser(u); setChatOpen(true); }} />}
       <ChatPanel open={chatOpen} onClose={() => { setChatOpen(false); setChatUser(null); loadMsgUnread(); window.dispatchEvent(new Event("mikilab-notif-refresh")); }} initialUser={chatUser} />
+      <SosImpasto open={sosOpen} onClose={() => setSosOpen(false)} />
       <BakersMap open={mapOpen} onClose={() => setMapOpen(false)} />
 
       <AvatarBubbles variant="community" />

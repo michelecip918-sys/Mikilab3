@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, ChefHat, Sparkles, Clock, Thermometer, Wrench } from "lucide-react";
+import { Send, Loader2, ChefHat, Sparkles, Clock, Thermometer, Wrench, BellRing } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { parseTimeline, saveReminders } from "@/lib/reminders";
+import { toast } from "sonner";
 
 // Assistente "Mohammadreza" per l'home baker: scheduling inverso + calcoli + troubleshooting.
 export default function AcademyCoach() {
@@ -66,6 +68,16 @@ export default function AcademyCoach() {
     } finally { setBusy(false); }
   };
 
+  const saveTimeline = async (text) => {
+    const steps = parseTimeline(text);
+    if (steps.length === 0) { toast.error(tri("Nessun orario trovato nella risposta.", "Keine Uhrzeit gefunden.", "No times found in the answer.", "No se encontraron horarios.")); return; }
+    const { count, permission } = await saveReminders(steps);
+    if (permission === "granted") toast.success(tri(`${count} promemoria salvati! Riceverai una notifica ad ogni passo.`, `${count} Erinnerungen gespeichert! Du bekommst zu jedem Schritt eine Benachrichtigung.`, `${count} reminders saved! You'll get a notification for each step.`, `${count} recordatorios guardados. Recibirás una notificación en cada paso.`));
+    else toast.success(tri(`${count} promemoria salvati (attiva le notifiche per gli avvisi).`, `${count} Erinnerungen gespeichert (Benachrichtigungen aktivieren).`, `${count} reminders saved (enable notifications for alerts).`, `${count} recordatorios guardados (activa las notificaciones).`));
+  };
+
+  const hasTimeline = (txt) => parseTimeline(txt).length > 0;
+
   return (
     <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]">
       <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 55%,#a9772f)" }}>
@@ -105,6 +117,12 @@ export default function AcademyCoach() {
                   {m.role === "assistant" ? (
                     m.content ? <div className="markdown-body leading-relaxed"><ReactMarkdown>{m.content}</ReactMarkdown></div> : <Loader2 className="w-4 h-4 animate-spin text-[#3f7cac]" />
                   ) : <p className="whitespace-pre-line">{m.content}</p>}
+                  {m.role === "assistant" && m.content && !busy && hasTimeline(m.content) && (
+                    <button data-testid={`academy-save-timeline-${i}`} data-sfx="save" onClick={() => saveTimeline(m.content)}
+                      className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-[#a9772f] hover:bg-[#8a5a2b] px-3 py-1.5 rounded-full active:scale-95">
+                      <BellRing className="w-3.5 h-3.5" /> {tri("Salva nei promemoria", "In Erinnerungen speichern", "Save to reminders", "Guardar en recordatorios")}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
