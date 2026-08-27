@@ -9,6 +9,8 @@ import { API, recipesApi } from "@/lib/api";
 import { computeShopping } from "@/lib/shopping";
 import SupplierOrder from "@/components/SupplierOrder";
 import AvatarBubbles from "@/components/AvatarBubbles";
+import AcademyCoach from "@/components/AcademyCoach";
+import EvolvingQuiz from "@/components/EvolvingQuiz";
 import LabTour from "@/components/LabTour";
 
 const HOME_DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -378,7 +380,7 @@ export default function Beginners() {
             body: tri3(lang, "Spunta i 4 passi del tuo percorso: ingredienti base, ricetta del giorno, primo piano e quiz.", "Hake die 4 Schritte ab: Grundzutaten, Rezept des Tages, erster Plan und Quiz.", "Tick the 4 steps: basic ingredients, recipe of the day, first plan and quiz.", "Marca los 4 pasos de tu recorrido: ingredientes básicos, receta del día, primer plan y quiz.") },
           { target: "home-planner", title: tri3(lang, "2 · Pianifica il pane a casa", "2 · Plane dein Brot zu Hause", "2 · Plan your home bake", "2 · Planifica tu pan en casa"),
             body: tri3(lang, "Scegli una ricetta e quando ti serve pronto: ti do orari e lista della spesa, semplici.", "Wähle ein Rezept und wann es fertig sein soll: du bekommst Zeiten und Einkaufsliste.", "Pick a recipe and when you need it ready: I give you times and a shopping list.", "Elige una receta y cuándo la necesitas lista: te doy horarios y lista de la compra, sencillos.") },
-          { target: "quiz-panel", title: tri3(lang, "3 · Metti alla prova", "3 · Teste dich", "3 · Test yourself", "3 · Ponte a prueba"),
+          { target: "evolving-quiz", title: tri3(lang, "3 · Metti alla prova", "3 · Teste dich", "3 · Test yourself", "3 · Ponte a prueba"),
             body: tri3(lang, "Fai il Quiz del Fornaio e sblocca i livelli. Impari divertendoti!", "Mach das Bäcker-Quiz und schalte Level frei. Lernen mit Spaß!", "Take the Baker's Quiz and unlock levels. Learn while having fun!", "Haz el Quiz del Panadero y desbloquea niveles. ¡Aprende divirtiéndote!") },
         ]} />
       <AvatarBubbles variant="impara" />
@@ -449,6 +451,13 @@ export default function Beginners() {
       {/* Pianifica il pane a casa */}
       <HomePlanner />
 
+      {/* Academy da Casa — Mohammadreza assistente per l'home baker */}
+      <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
+        <ChefHat className="w-4 h-4" />
+        <span className="text-xs font-semibold uppercase tracking-wide">{tri3(lang, "Academy da Casa", "Heim-Academy", "Home Academy", "Academy en Casa")}</span>
+      </div>
+      <AcademyCoach />
+
       {beginners.map((s, i) => (
         <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-5">
           <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{s.title}</h3>
@@ -462,7 +471,7 @@ export default function Beginners() {
         <span className="text-xs font-semibold uppercase tracking-wide">{t("beginners_quiz_title")}</span>
       </div>
       <p className="text-sm text-[#7E8A93] -mt-2">{t("beginners_quiz_sub")}</p>
-      <BakerQuiz />
+      <EvolvingQuiz />
     </div>
   );
 }

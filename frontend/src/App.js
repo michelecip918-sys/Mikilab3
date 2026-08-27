@@ -26,6 +26,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
+import { SoundFXProvider } from "@/audio/SoundFXContext";
 import ambient from "@/lib/ambientMusic";
 import { recipePurchaseApi, subscriptionApi, api } from "@/lib/api";
 import { toast } from "sonner";
@@ -150,6 +151,7 @@ function App() {
   return (
     <AmbientProvider>
     <TimerProvider>
+    <SoundFXProvider>
     <div className="App min-h-screen bg-[#f0f6fb] dark:bg-[#1B2127]">
       {/* Sfondo tematico: filigrana grano/farina elegante su ogni pagina (contrasto garantito dalle card) */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-repeat opacity-[0.55] dark:opacity-[0.05]"
@@ -232,6 +234,7 @@ function App() {
       )}
       </div>
     </div>
+    </SoundFXProvider>
     </TimerProvider>
     </AmbientProvider>
   );

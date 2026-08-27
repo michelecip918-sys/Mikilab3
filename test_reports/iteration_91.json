@@ -1,0 +1,45 @@
+{
+  "summary": "Iteration 91: tested the 5 new features (Academy Coach SSE, Evolving AI Quiz, DM unread badge, 'Scrivi' from Friends, Radio SFX toggle) + DM regression. Backend: 14/14 pytest tests pass (quiz 3 levels x IT/EN, invalid-level fallback, no-repeat, coach SSE IT/EN with emoji structure + done:true, DM send/conversations/unread->0/thread/auth/empty-text validation). Frontend: all flows verified on mobile viewport (390x844) — Learn section renders academy-coach + evolving-quiz for anonymous users, chip and input/send stream a real AI answer, quiz level select/start/options/explanation/next + streak & best increment, unread badge shows count 2 and clears after reading, chat panel conversations/thread/send bubble/new-message friend list, 'Message' (friend-message-*) opens the thread and sends, Radio panel sfx-toggle reveals sfx-volume slider and toggles back with no console errors. No blocking issues found.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/academy/coach", "issue": "Section labels in the mandatory answer format are hardcoded in Italian in ACADEMY_COACH_SYSTEM ('⚡ Stato / Diagnosi:', '🥖 Impatto in cucina:', '⏱️ Timeline / Passo-Passo:', '🔘 Prossimo passo:'). With lang=en/de/es the body is translated but the model copies the Italian labels verbatim -> mixed-language answers. Suggest localizing the label text per language in ACADEMY_COACH_LANG."},
+      {"endpoint": "/api/community/messages/{other_id}", "issue": "The returned messages still carry read:false for messages that this very call marks as read (response is built before/independently of the update). Cosmetic only: conversations.unread correctly returns 0 afterwards."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Home/Learn lists", "issue": "React console error 'Encountered two children with the same key' fires twice on load (Home and when entering Learn). Non-blocking but indicates a duplicate key in a .map() (likely news/sections/stations list).", "selector": "n/a (console)", "priority": "LOW"},
+      {"component": "Header brand", "issue": "Brand title is truncated to 'Mi...' / 'M...' on 390px viewport while there is free horizontal space; sub-line 'Michel...' also clipped.", "selector": "header title", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Anonymous app load", "issue": "A 401 response is logged in the console on first load for anonymous users (session/me probe). Expected functionally, but should be swallowed to keep the console clean.", "affected_selectors": []}
+    ],
+    "design_issues": [
+      {"screen": "Learn (Impara)", "issues": ["Two quizzes appear on the same page (new AI 'Home Baker Quiz' + legacy 'Start the quiz' static quiz further down) — potentially confusing duplication; verify it is intentional."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter91_academy_dm.py",
+    "/app/test_reports/pytest/iter91.xml",
+    "/app/test_reports/pytest/iter91d.xml"
+  ],
+  "action_items": [
+    "Localize the ⚡/🥖/⏱️/🔘 section labels of the Academy Coach prompt for de/en/es (currently Italian labels leak into translated answers).",
+    "Fix the duplicate React key warning triggered on Home/Learn load.",
+    "Optional: silence the anonymous 401 console error and un-truncate the header brand on small screens."
+  ],
+  "critical_code_review_comments": [
+    "server.py is very large (>4000 lines) and now hosts academy, community and capo endpoints — consider splitting into routers per domain.",
+    "/api/academy/quiz clamps 'correct' into range (good defensive normalization) but does not verify options are unique/non-empty; a model returning duplicated options would still pass.",
+    "AcademyCoach.jsx reads res.body.getReader() without checking res.ok — a non-200 (e.g. missing LLM key) would throw and only show the generic 'Ops, riprova' bubble with no diagnostic."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter91_academy_dm.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Sent TEST_iter91_* / TEST_badge / TEST_ui DM messages between amico1 and amico2 (friendship already existed). No users created.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! ; amico1@mikilab.de / Test1234! ; amico2@mikilab.de / Test1234! (all valid)",
+  "context_for_next_testing_agent": "All 5 iteration-91 features verified end-to-end. Backend suite: /app/backend/tests/test_iter91_academy_dm.py (note: conversations use field 'other_id', not user_id; login returns session_token + user.user_id). Quiz/coach AI calls take 5-40s — use timeouts >=60s. Learn section is public (no paywall). Friends panel opens on the 'Requests' tab: click friends-tab-amici before looking for friend-message-<id>. Remaining open items are cosmetic only (IT labels in translated coach answers, duplicate React key warning, anonymous 401 console noise).",
+  "rca_of_the_issue": "Coach language leak: ACADEMY_COACH_SYSTEM defines the mandatory 4-line format with Italian literal labels; the per-language addendum only asks to keep the emoji structure, so the LLM reuses the Italian labels in non-IT answers."
+}

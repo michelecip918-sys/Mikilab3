@@ -11,7 +11,7 @@ import FriendsPanel from "@/components/FriendsPanel";
 import ProfilePanel from "@/components/ProfilePanel";
 import ChatPanel from "@/components/ChatPanel";
 import BakersMap from "@/components/BakersMap";
-import { friendsApi } from "@/lib/api";
+import { friendsApi, dmApi } from "@/lib/api";
 
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
@@ -64,9 +64,12 @@ export default function Community() {
   const [friendReqCount, setFriendReqCount] = useState(0);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatUser, setChatUser] = useState(null);
+  const [msgUnread, setMsgUnread] = useState(0);
   const [feed, setFeed] = useState("all");
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); }, []);
+  const loadMsgUnread = () => { if (user) dmApi.conversations().then((c) => setMsgUnread((c || []).reduce((a, x) => a + (x.unread || 0), 0))).catch(() => {}); };
+  useEffect(() => { loadMsgUnread(); }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const load = async (f = feed) => { setLoading(true); setPosts(await communityApi.list(f)); setLoading(false); };
   useEffect(() => { load(feed); }, [feed]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -171,6 +174,7 @@ export default function Community() {
         className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#7a4fbf] to-[#4a2e78] text-white shadow-md active:scale-98 transition-all">
         <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
           <MessageCircle className="w-6 h-6" />
+          {msgUnread > 0 && <span data-testid="messages-unread-badge" className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#C0574D] text-white text-[11px] font-extrabold flex items-center justify-center ring-2 ring-white">{msgUnread > 9 ? "9+" : msgUnread}</span>}
         </div>
         <div className="flex-1 min-w-0 text-left">
           <p className="font-display text-base font-bold leading-tight">{tri("Messaggi", "Nachrichten", "Messages", "Mensajes")}</p>
@@ -191,9 +195,10 @@ export default function Community() {
         <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
       </button>
 
-      <FriendsPanel open={friendsOpen} onClose={() => setFriendsOpen(false)} onCount={setFriendReqCount} />
+      <FriendsPanel open={friendsOpen} onClose={() => setFriendsOpen(false)} onCount={setFriendReqCount}
+        onMessage={(u) => { setFriendsOpen(false); setChatUser(u); setChatOpen(true); }} />
       {profileUser && <ProfilePanel userId={profileUser} onClose={() => setProfileUser(null)} onMessage={(u) => { setProfileUser(null); setChatUser(u); setChatOpen(true); }} />}
-      <ChatPanel open={chatOpen} onClose={() => { setChatOpen(false); setChatUser(null); window.dispatchEvent(new Event("mikilab-notif-refresh")); }} initialUser={chatUser} />
+      <ChatPanel open={chatOpen} onClose={() => { setChatOpen(false); setChatUser(null); loadMsgUnread(); window.dispatchEvent(new Event("mikilab-notif-refresh")); }} initialUser={chatUser} />
       <BakersMap open={mapOpen} onClose={() => setMapOpen(false)} />
 
       <AvatarBubbles variant="community" />
@@ -247,7 +252,7 @@ export default function Community() {
             {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4 text-[#5aa0cf]" />} {tri("Foto", "Foto", "Photo", "Foto")}
             <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
-          <button data-testid="community-submit" onClick={submit} disabled={posting}
+          <button data-testid="community-submit" data-sfx="save" onClick={submit} disabled={posting}
             className="ml-auto flex items-center gap-1.5 bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-xl active:scale-98 transition-all">
             {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Pubblica", "Posten", "Post", "Publicar")}
           </button>
@@ -287,7 +292,7 @@ export default function Community() {
                     </div>
                   </button>
                   <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full font-semibold flex items-center gap-1" style={{ background: C.color + "22", color: C.color }}><C.Icon className="w-3 h-3" />{catLabel(p.category)}</span>
-                  {p.can_delete && <button data-testid={`community-delete-${p.id}`} onClick={() => remove(p.id)} className="text-[#7E8A93] hover:text-[#E4572E] p-1"><Trash2 className="w-4 h-4" /></button>}
+                  {p.can_delete && <button data-testid={`community-delete-${p.id}`} data-sfx="delete" onClick={() => remove(p.id)} className="text-[#7E8A93] hover:text-[#E4572E] p-1"><Trash2 className="w-4 h-4" /></button>}
                 </div>
                 {p.text && <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-line leading-relaxed">{lang === "de" ? (p.text_de || p.text) : lang === "es" ? (p.text_es || p.text_en || p.text) : lang === "en" ? (p.text_en || p.text) : p.text}</p>}
                 {p.image_url && <img src={p.image_url} alt="" className="w-full rounded-xl mt-2 max-h-80 object-cover" />}

@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw, Search, Plus, Trash2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAmbient } from "@/audio/AmbientContext";
+import { useSoundFX } from "@/audio/SoundFXContext";
 import { useBackClose } from "@/lib/backNav";
 
 const STATIONS = {
@@ -73,6 +74,7 @@ const STATIONS = {
 export default function RadioFornaio() {
   const { t, lang, tri } = useLang();
   const { on: ambientOn, toggle: toggleAmbient, volume: ambientVol, setVolume: setAmbientVol, mode: ambientMode, setMode: setAmbientMode } = useAmbient();
+  const { sfxEnabled, toggleSfx, sfxVolume, setSfxVol } = useSoundFX();
   const AMB = [
     { id: "fire", label: lang === "de" ? "Ofen" : lang === "en" ? "Oven" : "Forno", emoji: "🔥" },
     { id: "rain", label: lang === "de" ? "Regen" : lang === "en" ? "Rain" : "Pioggia", emoji: "🌧️" },
@@ -283,6 +285,28 @@ export default function RadioFornaio() {
                     className="flex-1 accent-[#3f7cac]"
                   />
                 </div>
+              </div>
+            )}
+
+            {/* Suoni dell'interfaccia (UI Sound FX) */}
+            <button
+              data-testid="sfx-toggle"
+              onClick={toggleSfx}
+              className={`w-full mb-3 flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left transition-all active:scale-98 ${
+                sfxEnabled ? "bg-[#a9772f] text-white border-[#a9772f]" : "bg-[#a9772f]/10 text-[#8a5a2b] dark:text-[#d3ab6b] border-[#a9772f]/40"
+              }`}
+            >
+              <Volume2 className={`w-5 h-5 shrink-0 ${sfxEnabled ? "text-white" : "text-[#a9772f]"}`} />
+              <span className="flex-1 min-w-0">
+                <span className="block text-sm font-semibold">{tri("Suoni dell'app (click)", "App-Klänge (Klick)", "App sounds (click)", "Sonidos de la app (clic)")}</span>
+                <span className={`block text-[11px] ${sfxEnabled ? "text-white/80" : "text-[#7E8A93]"}`}>{sfxEnabled ? tri("Attivi · crosta, forno, farina", "Aktiv · Kruste, Ofen, Mehl", "On · crust, oven, flour", "Activos · corteza, horno, harina") : tri("Disattivati", "Aus", "Off", "Desactivados")}</span>
+              </span>
+            </button>
+            {sfxEnabled && (
+              <div className="-mt-1 mb-3 flex items-center gap-2 px-1">
+                <Volume2 className="w-4 h-4 text-[#a9772f] shrink-0" />
+                <input data-testid="sfx-volume" type="range" min="0" max="1" step="0.05" value={sfxVolume}
+                  onChange={(e) => setSfxVol(Number(e.target.value))} className="flex-1 accent-[#a9772f]" />
               </div>
             )}
 

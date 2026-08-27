@@ -201,6 +201,10 @@ export const dmApi = {
   conversations: () => api.get(`/community/conversations`).then((r) => r.data.conversations || []).catch(() => []),
 };
 
+export const academyApi = {
+  quiz: (level, lang, asked) => api.post(`/academy/quiz`, { level, lang, asked }).then((r) => r.data),
+};
+
 export const doughSessionsApi = {
   list: (recipeId) => api.get(`/dough-sessions`, { params: recipeId ? { recipe_id: recipeId } : {} }).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/dough-sessions`, data).then((r) => r.data),

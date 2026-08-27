@@ -2100,6 +2100,146 @@ async def mohammed_history(session_id: str):
 
 
 # ---------------------------------------------------------------------------
+# Academy da Casa — Mohammadreza per l'home baker (chi panifica a casa)
+# ---------------------------------------------------------------------------
+ACADEMY_COACH_SYSTEM = (
+    "Sei 'Mohammadreza', il Master Baker virtuale d'élite di MikiLab dedicato a chi panifica A CASA (home baker). "
+    "Trasformi la cucina dell'utente in un laboratorio casalingo ad alte prestazioni. NON parli mai di macchinari "
+    "industriali: adatti tutto agli strumenti di casa (forno domestico max 230-250°C, pietra refrattaria, pentola in "
+    "ghisa, planetaria casalinga o impasto a mano, frigo di casa).\n"
+    "COMPETENZE:\n"
+    "1) SCHEDULING INVERSO: se l'utente dice quando vuole sfornare (es. 'pane pronto domenica alle 12:30'), calcoli a "
+    "ritroso la timeline esatta: rinfresco lievito, autolisi, pieghe, maturazione in frigo (indica 4°C vs 8°C), "
+    "puntata, formatura, appretto e preriscaldamento del forno, con GIORNO e ORARIO per ogni passo.\n"
+    "2) CALCOLI TECNICO-CLIMATICI: Baker's percentage, temperatura dell'acqua in base alla temperatura della cucina, "
+    "conversione tra lievito di birra fresco/secco e pasta madre, idratazione ideale in base alla farina (supermercato "
+    "o mulino) e a temperatura/umidità della cucina.\n"
+    "3) TROUBLESHOOTING SCIENTIFICO: niente consigli banali; spieghi la CHIMICA della fermentazione e risolvi i difetti "
+    "reali del pane fatto in casa (pane piatto, mollica gommosa, crosta molle dopo la cottura, alveoli chiusi sul fondo) "
+    "indicando causa -> rimedio.\n"
+    "FORMATO DI RISPOSTA OBBLIGATORIO (usa sempre queste 4 righe con le emoji, in markdown):\n"
+    "⚡ **Stato / Diagnosi:** breve sintesi (es. 'Timeline per domenica calcolata').\n"
+    "🥖 **Impatto in cucina:** cosa fare in pratica con gli strumenti di casa.\n"
+    "⏱️ **Timeline / Passo-Passo:** elenco con [Giorno e Orario] - azione, oppure spiegazione tecnica passo passo.\n"
+    "🔘 **Prossimo passo:** una call-to-action breve (es. 'Salva questa timeline' o 'Fammi sapere che farina usi').\n"
+    "Sii pratico, caldo e da vero maestro. Non essere prolisso."
+)
+ACADEMY_COACH_LANG = {
+    "it": (" Rispondi SEMPRE in italiano. Usa ESATTAMENTE queste etichette nelle 4 righe:"
+           " '⚡ **Stato / Diagnosi:**', '🥖 **Impatto in cucina:**', '⏱️ **Timeline / Passo-Passo:**', '🔘 **Prossimo passo:**'."),
+    "de": (" Antworte IMMER auf Deutsch. Verwende GENAU diese Beschriftungen in den 4 Zeilen:"
+           " '⚡ **Status / Diagnose:**', '🥖 **Auswirkung in der Küche:**', '⏱️ **Timeline / Schritt-für-Schritt:**', '🔘 **Nächster Schritt:**'."),
+    "en": (" Always answer in English. Use EXACTLY these labels in the 4 lines:"
+           " '⚡ **Status / Diagnosis:**', '🥖 **Kitchen impact:**', '⏱️ **Timeline / Step-by-step:**', '🔘 **Next step:**'."),
+    "es": (" Responde SIEMPRE en español. Usa EXACTAMENTE estas etiquetas en las 4 líneas:"
+           " '⚡ **Estado / Diagnóstico:**', '🥖 **Impacto en la cocina:**', '⏱️ **Cronología / Paso a paso:**', '🔘 **Próximo paso:**'."),
+}
+
+
+@api_router.post("/academy/coach")
+async def academy_coach(payload: ChatRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        _lab_assistant_stream(ACADEMY_COACH_SYSTEM, ACADEMY_COACH_LANG, payload.session_id, payload.message, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+class QuizRequest(BaseModel):
+    level: str = "apprendista"   # apprendista | avanzato | master
+    lang: str = "it"
+    asked: Optional[List[str]] = None   # domande già poste (per evitare ripetizioni)
+
+
+_QUIZ_LEVELS = {
+    "apprendista": {
+        "it": "Livello APPRENDISTA: calcoli rapidi di idratazione, dosaggi di lievito, temperatura dell'acqua in casa, i 4 ingredienti base. Domande semplici e pratiche.",
+        "de": "Level ANFÄNGER: schnelle Hydratationsberechnungen, Hefemengen, Wassertemperatur zu Hause, die 4 Grundzutaten. Einfache, praktische Fragen.",
+        "en": "APPRENTICE level: quick hydration calculations, yeast dosing, home water temperature, the 4 basic ingredients. Simple, practical questions.",
+        "es": "Nivel APRENDIZ: cálculos rápidos de hidratación, dosis de levadura, temperatura del agua en casa, los 4 ingredientes básicos. Preguntas simples y prácticas.",
+    },
+    "avanzato": {
+        "it": "Livello HOME BAKER AVANZATO: pieghe di rinforzo, controllo della lievitazione in frigo casalingo (4°C vs 8°C), autolisi, conversione tra lieviti. Domande di media difficoltà.",
+        "de": "Level FORTGESCHRITTEN: Dehnen & Falten, Gärkontrolle im Haushaltskühlschrank (4°C vs 8°C), Autolyse, Umrechnung zwischen Triebmitteln. Mittlere Schwierigkeit.",
+        "en": "ADVANCED HOME BAKER level: stretch & folds, cold proofing in a home fridge (4°C vs 8°C), autolyse, leaven conversion. Medium difficulty.",
+        "es": "Nivel PANADERO CASERO AVANZADO: pliegues de refuerzo, control de fermentación en frigo casero (4°C vs 8°C), autólisis, conversión entre levaduras. Dificultad media.",
+    },
+    "master": {
+        "it": "Livello MASTER BAKER DI CASA: scenari critici reali. Esempio: 'È estate, 29°C in cucina, vuoi una pizza in teglia all'80% di idratazione: come gestisci rinfreschi e tempi senza far stralievitare?'. Domande complesse con scenario.",
+        "de": "Level HEIM-MASTER-BÄCKER: reale kritische Szenarien. Beispiel: 'Sommer, 29°C in der Küche, Blechpizza mit 80% Hydratation: wie steuerst du Auffrischungen und Zeiten ohne Übergare?'. Komplexe Szenariofragen.",
+        "en": "HOME MASTER BAKER level: real critical scenarios. Example: 'It's summer, 29°C in the kitchen, you want an 80% hydration pan pizza: how do you manage refreshes and timing without over-proofing?'. Complex scenario questions.",
+        "es": "Nivel MASTER BAKER DE CASA: escenarios críticos reales. Ejemplo: 'Es verano, 29°C en la cocina, quieres una pizza en bandeja al 80% de hidratación: ¿cómo gestionas refrescos y tiempos sin sobrefermentar?'. Preguntas complejas con escenario.",
+    },
+}
+
+
+@api_router.post("/academy/quiz")
+async def academy_quiz(payload: QuizRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    lang = payload.lang if payload.lang in ("it", "de", "en", "es") else "it"
+    level = payload.level if payload.level in _QUIZ_LEVELS else "apprendista"
+    lvl_desc = _QUIZ_LEVELS[level].get(lang, _QUIZ_LEVELS[level]["it"])
+    avoid = ""
+    if payload.asked:
+        avoid = " Evita di ripetere queste domande già poste: " + " | ".join(payload.asked[-12:]) + "."
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo"}[lang]
+    schema = '{"question": "...", "options": ["...","...","..."], "correct": 0, "explanation": "spiegazione tecnica e scientifica del perche la risposta corretta e giusta (2-4 frasi)", "level": "' + level + '"}'
+    prompt = (
+        "Genera UNA domanda a risposta multipla per un QUIZ di panificazione CASALINGA. "
+        + lvl_desc + avoid + "\n"
+        "La domanda deve essere realistica, tecnica e verificabile. Fornisci esattamente 3 opzioni di risposta, una sola corretta.\n"
+        + f"Scrivi TUTTO in {lang_name}.\n"
+        + "Restituisci SOLO JSON valido con questo schema esatto:\n"
+        + schema
+    )
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"quiz-{uuid.uuid4().hex[:8]}",
+        system_message="Sei un esperto di panificazione casalinga e chimica della fermentazione. Crei quiz didattici. Rispondi SOLO con JSON valido.",
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=700)
+    text = ""
+    try:
+        async for event in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("academy quiz error")
+        raise HTTPException(status_code=500, detail="Errore nella generazione del quiz")
+    raw = text.strip()
+    if raw.startswith("```"):
+        raw = raw.strip("`")
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Quiz non generato")
+    try:
+        data = json.loads(raw[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Quiz non leggibile")
+    # normalizzazione difensiva
+    opts = data.get("options") or []
+    if not isinstance(opts, list) or len(opts) < 2:
+        raise HTTPException(status_code=422, detail="Quiz incompleto")
+    try:
+        correct = int(data.get("correct", 0))
+    except Exception:
+        correct = 0
+    correct = max(0, min(correct, len(opts) - 1))
+    return {
+        "question": str(data.get("question", "")).strip(),
+        "options": [str(o).strip() for o in opts[:4]],
+        "correct": correct,
+        "explanation": str(data.get("explanation", "")).strip(),
+        "level": level,
+    }
+
+
+
+# ---------------------------------------------------------------------------
 # Capo Laboratorio — pianificazione intelligente del lavoro (Claude, streaming)
 # ---------------------------------------------------------------------------
 CAPO_SYSTEM = (

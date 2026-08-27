@@ -140,7 +140,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               <input data-testid="chat-input" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())}
                 placeholder={tri("Scrivi un messaggio…", "Nachricht schreiben…", "Type a message…", "Escribe un mensaje…")}
                 className="flex-1 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
-              <button data-testid="chat-send" onClick={send} disabled={sending || !text.trim()} className="w-11 h-11 rounded-full bg-[#3f7cac] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
+              <button data-testid="chat-send" data-sfx="confirm" onClick={send} disabled={sending || !text.trim()} className="w-11 h-11 rounded-full bg-[#3f7cac] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
                 {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </button>
             </div>

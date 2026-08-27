@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { X, UserPlus, Check, Clock, Users2, Search, UserMinus, Loader2 } from "lucide-react";
+import { X, UserPlus, Check, Clock, Users2, Search, UserMinus, Loader2, Send } from "lucide-react";
 import { friendsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -12,7 +12,7 @@ const Avatar = ({ c }) => (
   </div>
 );
 
-export default function FriendsPanel({ open, onClose, onCount }) {
+export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
   const { lang } = useLang();
   const { user } = useAuth();
   const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
@@ -86,6 +86,10 @@ export default function FriendsPanel({ open, onClose, onCount }) {
                 ? <Empty text={tri("Ancora nessun amico. Vai su 'Trova'!", "Noch keine Freunde. Geh zu 'Finden'!", "No friends yet. Go to 'Find'!")} />
                 : rel.friends.map((c) => (
                   <Row key={c.user_id} c={c} testid={`friend-item-${c.user_id}`}>
+                    {onMessage && (
+                      <button data-testid={`friend-message-${c.user_id}`} onClick={() => onMessage({ user_id: c.user_id, name: c.name, picture: c.picture })}
+                        className="px-3 py-1.5 rounded-lg bg-[#3f7cac] text-white text-xs font-bold flex items-center gap-1"><Send className="w-3.5 h-3.5" />{tri("Scrivi", "Schreiben", "Message")}</button>
+                    )}
                     <button data-testid={`friend-remove-${c.user_id}`} onClick={() => act(() => friendsApi.remove(c.user_id))}
                       className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#2A323A] text-[#C0574D] text-xs font-semibold flex items-center gap-1"><UserMinus className="w-3.5 h-3.5" />{tri("Rimuovi", "Entfernen", "Remove")}</button>
                   </Row>
