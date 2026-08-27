@@ -9,6 +9,7 @@ import Marketplace from "@/sections/Marketplace";
 import { marketNewCount, markMarketSeen } from "@/lib/market";
 import FriendsPanel from "@/components/FriendsPanel";
 import ProfilePanel from "@/components/ProfilePanel";
+import ChatPanel from "@/components/ChatPanel";
 import BakersMap from "@/components/BakersMap";
 import { friendsApi } from "@/lib/api";
 
@@ -61,6 +62,8 @@ export default function Community() {
   const [profileUser, setProfileUser] = useState(null);
   const [mapOpen, setMapOpen] = useState(false);
   const [friendReqCount, setFriendReqCount] = useState(0);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatUser, setChatUser] = useState(null);
   const [feed, setFeed] = useState("all");
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); }, []);
@@ -164,6 +167,18 @@ export default function Community() {
         <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
       </button>
 
+      <button data-testid="community-messages-btn" onClick={() => { if (needLogin()) return; setChatUser(null); setChatOpen(true); }}
+        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#7a4fbf] to-[#4a2e78] text-white shadow-md active:scale-98 transition-all">
+        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <MessageCircle className="w-6 h-6" />
+        </div>
+        <div className="flex-1 min-w-0 text-left">
+          <p className="font-display text-base font-bold leading-tight">{tri("Messaggi", "Nachrichten", "Messages", "Mensajes")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{tri("Scrivi in privato ai tuoi amici fornai", "Schreibe deinen Bäcker-Freunden privat", "Message your baker friends privately", "Escribe en privado a tus amigos panaderos")}</p>
+        </div>
+        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
+      </button>
+
       <button data-testid="community-map-btn" onClick={() => setMapOpen(true)}
         className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#2e8b6f] to-[#1c5c49] text-white shadow-md active:scale-98 transition-all">
         <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
@@ -177,7 +192,8 @@ export default function Community() {
       </button>
 
       <FriendsPanel open={friendsOpen} onClose={() => setFriendsOpen(false)} onCount={setFriendReqCount} />
-      {profileUser && <ProfilePanel userId={profileUser} onClose={() => setProfileUser(null)} />}
+      {profileUser && <ProfilePanel userId={profileUser} onClose={() => setProfileUser(null)} onMessage={(u) => { setProfileUser(null); setChatUser(u); setChatOpen(true); }} />}
+      <ChatPanel open={chatOpen} onClose={() => { setChatOpen(false); setChatUser(null); window.dispatchEvent(new Event("mikilab-notif-refresh")); }} initialUser={chatUser} />
       <BakersMap open={mapOpen} onClose={() => setMapOpen(false)} />
 
       <AvatarBubbles variant="community" />

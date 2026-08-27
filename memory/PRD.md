@@ -1682,3 +1682,14 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Nuovi avatar**: aggiunti Cuoca (donna), Pizzaiola (donna), Panettiere variante bronzo → 10 avatar preset totali. Generati Nano Banana.
 - Verificato: followers_count via API + 10 preset a schermo.
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v66 (27 Ago 2026) — Chat amici (DM) + comandi Mohammadreza estesi
+- **Messaggi diretti tra amici (P0 FATTO)**: nuovo `components/ChatPanel.jsx` (elenco conversazioni + chat 1-a-1 con polling 5s, invio ottimistico, bolle sinistra/destra, orario). Backend già pronto (`POST /api/community/messages`, `GET /api/community/messages/{id}`); AGGIUNTO `GET /api/community/conversations` (partner, ultimo messaggio, non letti, nome/avatar) e `dm_thread` ora ritorna anche `other` (info interlocutore). `dmApi.conversations` in api.js.
+  - **Accessi**: pulsante "Messaggi" in Social (`community-messages-btn`, apre elenco conversazioni + "Nuovo messaggio" che sceglie tra gli amici) e pulsante "Messaggio" nel profilo di un altro fornaio (`profile-message` in ProfilePanel → apre chat diretta).
+  - **Badge non letti**: già coperto dal sistema notifiche esistente — `dm_send` chiama `_notify(type="message")`, il badge Social nella BottomNav conta gli unread. In ChatPanel l'elenco conversazioni mostra il conteggio non letti per contatto (`chat-unread-<id>`).
+  - Verificato: flusso completo via curl (send/conversations/thread/notify tra amico1↔amico2) + screenshot UI (chat "Amico Due" con bolla inviata + composer).
+- **Comandi rapidi "Mohammadreza" (P0 FATTO)**: nel Generatore IA (PianoProduzioneAI) 4 chip che precompilano le note — "Gestisci la produzione ora" (template esatto utente), "Ordine urgente extra", "Correggi la ricetta", "Pianifica domani". Trilingue IT/DE/EN. testid `capo-cmd-mohammadreza/emergenza/correzione/domani`.
+- **Moderazione Marketplace (admin)**: già presente — backend `market_delete` consente delete all'owner O admin; frontend mostra il cestino se `owner_id===me || role==='admin'` (`market-remove-<id>`).
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.
+### RESTA (richiesta utente — fase successiva)
+- **Home Baker Academy (sezione "Impara")**: spec fornita — assistente IA "Mohammadreza" per chi panifica a casa (scheduling inverso, adattamento strumenti casalinghi, calcoli clima/idratazione) + "Quiz del Fornaio Casalingo" evolutivo a 3 livelli (Apprendista/Avanzato/Master di Casa) con spiegazione tecnica per ogni risposta e formato risposta ⚡🥖⏱️🔘. Da progettare come fase dedicata.

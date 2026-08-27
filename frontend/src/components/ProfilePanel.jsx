@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare, UserPlus } from "lucide-react";
+import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare, UserPlus, Send } from "lucide-react";
 import { profileApi, uploadApi, friendsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -19,7 +19,7 @@ const PRESET_AVATARS = [
 ];
 
 // Pagina profilo social: avatar, bio e ricette/post pubblicati dal fornaio.
-export default function ProfilePanel({ userId, onClose }) {
+export default function ProfilePanel({ userId, onClose, onMessage }) {
   const { lang } = useLang();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
   const { user } = useAuth();
@@ -30,16 +30,17 @@ export default function ProfilePanel({ userId, onClose }) {
   const [pic, setPic] = useState("");
   const [saving, setSaving] = useState(false);
   const [followed, setFollowed] = useState(false);
-  const isMe = user && user.user_id === userId;
+  const [viewId, setViewId] = useState(userId);
+  const isMe = user && user.user_id === viewId;
 
   const follow = async () => {
-    try { await friendsApi.request(userId); setFollowed(true); toast.success(tri("Richiesta inviata!", "Anfrage gesendet!", "Request sent!", "¡Solicitud enviada!")); }
+    try { await friendsApi.request(viewId); setFollowed(true); toast.success(tri("Richiesta inviata!", "Anfrage gesendet!", "Request sent!", "¡Solicitud enviada!")); }
     catch { toast.error(tri("Già inviata o errore", "Bereits gesendet oder Fehler", "Already sent or error", "Ya enviada o error")); }
   };
 
   useEffect(() => {
-    profileApi.get(userId).then((d) => { setData(d); setBio(d.bio || ""); setName(d.name || ""); setPic(d.picture || ""); }).catch(() => setData(false));
-  }, [userId]);
+    profileApi.get(viewId).then((d) => { setData(d); setBio(d.bio || ""); setName(d.name || ""); setPic(d.picture || ""); setFollowed(false); }).catch(() => setData(false));
+  }, [viewId]);
 
   const onPhoto = async (e) => {
     const f = e.target.files?.[0]; if (!f) return;
@@ -83,10 +84,18 @@ export default function ProfilePanel({ userId, onClose }) {
                   <span className="flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" /> {tri("seguito da", "Follower:", "followed by", "seguido por")} {data.followers_count ?? 0}</span>
                 </div>
                 {user && !isMe && (
-                  <button data-testid="profile-follow" onClick={follow} disabled={followed}
-                    className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold bg-white text-[#123c4a] px-3 py-1.5 rounded-full active:scale-95 disabled:opacity-70">
-                    <UserPlus className="w-3.5 h-3.5" /> {followed ? tri("Richiesta inviata", "Gesendet", "Requested", "Enviada") : tri("Segui", "Folgen", "Follow", "Seguir")}
-                  </button>
+                  <div className="flex items-center gap-2 mt-2">
+                    <button data-testid="profile-follow" onClick={follow} disabled={followed}
+                      className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-white text-[#123c4a] px-3 py-1.5 rounded-full active:scale-95 disabled:opacity-70">
+                      <UserPlus className="w-3.5 h-3.5" /> {followed ? tri("Richiesta inviata", "Gesendet", "Requested", "Enviada") : tri("Segui", "Folgen", "Follow", "Seguir")}
+                    </button>
+                    {onMessage && (
+                      <button data-testid="profile-message" onClick={() => onMessage({ user_id: viewId, name: data.name, picture: data.picture })}
+                        className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-white/20 border border-white/50 text-white px-3 py-1.5 rounded-full active:scale-95">
+                        <Send className="w-3.5 h-3.5" /> {tri("Messaggio", "Nachricht", "Message", "Mensaje")}
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -123,6 +132,20 @@ export default function ProfilePanel({ userId, onClose }) {
                 <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{data.bio || tri("Nessuna bio ancora.", "Noch keine Bio.", "No bio yet.", "Sin bio todavía.")}</p>
                 {isMe && <button data-testid="profile-edit" onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-sm font-semibold text-[#123c4a] dark:text-[#8FB0C2]"><Pencil className="w-4 h-4" /> {tri("Modifica profilo", "Profil bearbeiten", "Edit profile", "Editar perfil")}</button>}
               </>
+            )}
+
+            {data.contacts && data.contacts.length > 0 && (
+              <div data-testid="profile-contacts">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{tri("I tuoi contatti", "Deine Kontakte", "Your contacts", "Tus contactos")} ({data.contacts.length})</p>
+                <div className="flex gap-3 overflow-x-auto pb-1">
+                  {data.contacts.map((c) => (
+                    <button key={c.user_id} data-testid={`contact-${c.user_id}`} onClick={() => setViewId(c.user_id)} className="shrink-0 flex flex-col items-center gap-1 w-14 active:scale-95">
+                      <div className="w-11 h-11 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white font-bold">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
+                      <span className="text-[10px] text-[#3F4A54] dark:text-[#AEB8BF] truncate w-full text-center">{c.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
 
             <div>

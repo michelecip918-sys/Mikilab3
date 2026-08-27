@@ -1143,6 +1143,40 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
         <div className="mt-3">
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("capo_notes")}</label>
+          <div className="flex flex-wrap gap-1.5 mt-1 mb-1.5">
+            <button type="button" data-testid="capo-cmd-mohammadreza"
+              onClick={() => setNotes(tri3(lang,
+                "Ciao Mohammadreza, sono in laboratorio e devo gestire la produzione. Voglio che analizzi la situazione, ricalcoli l'intero piano di lavoro a ritroso e mi dica esattamente cosa fare ora per ora. Se ci sono ordini urgenti, adatta gli slot del forno, le impastatrici e la cella frigo senza far bruciare o ritardare gli altri pani. Calcola anche la temperatura dell'acqua, l'idratazione corretta e inviami la timeline aggiornata con la conferma da premere.",
+                "Hallo Mohammadreza, ich bin in der Backstube und muss die Produktion steuern. Analysiere die Lage, rechne den gesamten Arbeitsplan rückwärts neu und sag mir Stunde für Stunde genau, was zu tun ist. Bei dringenden Bestellungen passe Ofen-, Kneter- und Kühlzeiten an, ohne andere Brote zu verbrennen oder zu verzögern. Berechne auch Wassertemperatur und Hydratation und schick mir die aktualisierte Timeline mit Bestätigung.",
+                "Hi Mohammadreza, I'm in the bakery and need to manage production. Analyse the situation, recalculate the whole work plan backwards and tell me exactly what to do hour by hour. If there are urgent orders, adapt oven, mixer and fridge slots without burning or delaying the other breads. Also calculate water temperature and correct hydration and send me the updated timeline with a confirmation to press."))}
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#3f7cac] bg-[#3f7cac]/10 border border-[#3f7cac]/30 px-2.5 py-1 rounded-full active:scale-95">
+              <Sparkles className="w-3 h-3" /> {tri3(lang, "Gestisci la produzione ora", "Produktion jetzt steuern", "Manage production now")}
+            </button>
+            <button type="button" data-testid="capo-cmd-emergenza"
+              onClick={() => setNotes(tri3(lang,
+                "Ciao Mohammadreza, è arrivato un ordine extra all'ultimo momento e devo aggiungerlo alla produzione di oggi senza far ritardare o rovinare gli impasti già avviati. Dimmi in quale impastatrice inserirlo, come spostare gli slot del forno e della cella, e ricalcola la timeline ora per ora con le nuove quantità.",
+                "Hallo Mohammadreza, es kam kurzfristig eine Extrabestellung und ich muss sie in die heutige Produktion aufnehmen, ohne die bereits gestarteten Teige zu verzögern oder zu verderben. Sag mir, in welchen Kneter ich sie gebe, wie ich Ofen- und Kammerzeiten verschiebe, und rechne die Timeline stundenweise mit den neuen Mengen neu.",
+                "Hi Mohammadreza, a last-minute extra order came in and I need to add it to today's production without delaying or ruining the doughs already started. Tell me which mixer to use, how to shift the oven and cell slots, and recalculate the timeline hour by hour with the new quantities."))}
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#C0574D] bg-[#C0574D]/10 border border-[#C0574D]/30 px-2.5 py-1 rounded-full active:scale-95">
+              <Sparkles className="w-3 h-3" /> {tri3(lang, "Ordine urgente extra", "Dringende Extrabestellung", "Urgent extra order")}
+            </button>
+            <button type="button" data-testid="capo-cmd-correzione"
+              onClick={() => setNotes(tri3(lang,
+                "Ciao Mohammadreza, l'impasto di oggi non è venuto come volevo (dimmi tu quali difetti controllare: struttura, idratazione, lievitazione, cottura). Analizza le possibili cause e correggi la ricetta e i tempi per la prossima volta: idratazione, temperatura dell'acqua, dosi di prefermento, durata di puntata e appretto. Dammi la versione corretta pronta da usare.",
+                "Hallo Mohammadreza, der heutige Teig ist nicht wie gewünscht geworden (sag mir, welche Fehler ich prüfen soll: Struktur, Hydratation, Gare, Backen). Analysiere die möglichen Ursachen und korrigiere Rezept und Zeiten für das nächste Mal: Hydratation, Wassertemperatur, Vorteigmengen, Stock- und Stückgare. Gib mir die korrigierte, einsatzbereite Version.",
+                "Hi Mohammadreza, today's dough didn't turn out as I wanted (tell me which faults to check: structure, hydration, proofing, baking). Analyse the possible causes and correct the recipe and timings for next time: hydration, water temperature, preferment amounts, bulk and final proof. Give me the corrected version ready to use."))}
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#a9772f] bg-[#a9772f]/10 border border-[#a9772f]/30 px-2.5 py-1 rounded-full active:scale-95">
+              <Sparkles className="w-3 h-3" /> {tri3(lang, "Correggi la ricetta", "Rezept korrigieren", "Fix the recipe")}
+            </button>
+            <button type="button" data-testid="capo-cmd-domani"
+              onClick={() => setNotes(tri3(lang,
+                "Ciao Mohammadreza, prepariamo già la produzione di domani. In base ai prodotti e alle quantità che ti indico, dimmi quali prefermenti e rinfreschi devo avviare stasera, a che ora, con quali dosi e temperature. Poi costruisci la timeline completa di domani a ritroso dall'orario di apertura, con impasti, celle e forni organizzati.",
+                "Hallo Mohammadreza, lass uns die morgige Produktion vorbereiten. Sag mir anhand der Produkte und Mengen, welche Vorteige und Auffrischungen ich heute Abend ansetzen muss, um wie viel Uhr, mit welchen Mengen und Temperaturen. Erstelle dann die komplette Timeline für morgen rückwärts ab Öffnungszeit, mit organisierten Teigen, Kammern und Öfen.",
+                "Hi Mohammadreza, let's prepare tomorrow's production now. Based on the products and quantities I give you, tell me which preferments and refreshes I must start tonight, at what time, with which amounts and temperatures. Then build tomorrow's full timeline backwards from opening time, with doughs, cells and ovens organised."))}
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 px-2.5 py-1 rounded-full active:scale-95">
+              <Sparkles className="w-3 h-3" /> {tri3(lang, "Pianifica domani", "Morgen planen", "Plan tomorrow")}
+            </button>
+          </div>
           <textarea data-testid="capo-notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#3f7cac] resize-none" />
         </div>

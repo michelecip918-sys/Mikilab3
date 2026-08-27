@@ -4257,12 +4257,18 @@ async def community_profile(user_id: str):
         raise HTTPException(404, "Utente non trovato")
     posts = await db.community_posts.find({"author_id": user_id, "is_deleted": {"$ne": True}}, {"_id": 0}).sort("created_at", -1).to_list(50)
     listings = await db.market_listings.count_documents({"owner_id": user_id, "is_deleted": {"$ne": True}})
-    followers = await db.friendships.count_documents({"status": "accepted", "$or": [{"from_id": user_id}, {"to_id": user_id}]})
+    frs = await db.friendships.find({"status": "accepted", "$or": [{"from_id": user_id}, {"to_id": user_id}]}, {"_id": 0}).to_list(200)
+    other_ids = [(f["to_id"] if f["from_id"] == user_id else f["from_id"]) for f in frs]
+    contacts = []
+    if other_ids:
+        us = await db.users.find({"user_id": {"$in": other_ids}}, {"_id": 0, "user_id": 1, "name": 1, "picture": 1, "email": 1}).to_list(200)
+        contacts = [{"user_id": x["user_id"], "name": x.get("name") or (x.get("email") or "Fornaio").split("@")[0], "picture": x.get("picture", "")} for x in us]
     return {
         "user_id": user_id,
         "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
         "picture": u.get("picture", ""), "bio": u.get("bio", ""),
-        "joined": u.get("created_at"), "followers_count": followers,
+        "joined": u.get("created_at"), "followers_count": len(other_ids),
+        "contacts": contacts,
         "posts": posts, "posts_count": len(posts), "listings_count": listings,
     }
 
@@ -4277,6 +4283,65 @@ async def community_profile_update(body: ProfileUpdateReq, user: dict = Depends(
         await db.users.update_one({"user_id": user["user_id"]}, {"$set": upd})
     u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
     return {"name": u.get("name"), "picture": u.get("picture", ""), "bio": u.get("bio", "")}
+
+
+class DMReq(BaseModel):
+    to_id: str
+    text: str
+
+
+@api_router.post("/community/messages")
+async def dm_send(body: DMReq, user: dict = Depends(current_user)):
+    text = (body.text or "").strip()[:1000]
+    if not text or not body.to_id:
+        raise HTTPException(400, "Messaggio vuoto")
+    me = user["user_id"]
+    doc = {"id": str(uuid.uuid4()), "from_id": me, "to_id": body.to_id, "text": text,
+           "read": False, "created_at": now_iso()}
+    await db.dm_messages.insert_one(doc)
+    actor = user.get("name") or (user.get("email") or "Fornaio").split("@")[0]
+    await _notify(body.to_id, me, "message", None, actor, text[:60])
+    doc.pop("_id", None)
+    return doc
+
+
+@api_router.get("/community/conversations")
+async def dm_conversations(user: dict = Depends(current_user)):
+    me = user["user_id"]
+    msgs = await db.dm_messages.find(
+        {"$or": [{"from_id": me}, {"to_id": me}]}, {"_id": 0}
+    ).sort("created_at", 1).to_list(2000)
+    convos = {}  # other_id -> {last, at, unread}
+    for m in msgs:
+        other = m["to_id"] if m["from_id"] == me else m["from_id"]
+        c = convos.setdefault(other, {"other_id": other, "last": "", "at": None, "unread": 0})
+        c["last"] = m.get("text", "")
+        c["at"] = m.get("created_at")
+        if m["to_id"] == me and not m.get("read"):
+            c["unread"] += 1
+    ids = list(convos.keys())
+    if ids:
+        us = await db.users.find({"user_id": {"$in": ids}}, {"_id": 0, "user_id": 1, "name": 1, "picture": 1, "email": 1}).to_list(500)
+        umap = {x["user_id"]: x for x in us}
+        for oid, c in convos.items():
+            u = umap.get(oid, {})
+            c["name"] = u.get("name") or (u.get("email") or "Fornaio").split("@")[0]
+            c["picture"] = u.get("picture", "")
+    items = sorted(convos.values(), key=lambda c: c.get("at") or "", reverse=True)
+    return {"conversations": items}
+
+
+@api_router.get("/community/messages/{other_id}")
+async def dm_thread(other_id: str, user: dict = Depends(current_user)):
+    me = user["user_id"]
+    q = {"$or": [{"from_id": me, "to_id": other_id}, {"from_id": other_id, "to_id": me}]}
+    msgs = await db.dm_messages.find(q, {"_id": 0}).sort("created_at", 1).to_list(200)
+    await db.dm_messages.update_many({"from_id": other_id, "to_id": me, "read": False}, {"$set": {"read": True}})
+    other = await db.users.find_one({"user_id": other_id}, {"_id": 0, "name": 1, "picture": 1, "email": 1})
+    other_info = None
+    if other:
+        other_info = {"user_id": other_id, "name": other.get("name") or (other.get("email") or "Fornaio").split("@")[0], "picture": other.get("picture", "")}
+    return {"messages": msgs, "other": other_info}
 
 
 # --- Notifiche Community (like/commenti sui propri post) ---

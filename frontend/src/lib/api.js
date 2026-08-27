@@ -195,6 +195,12 @@ export const profileApi = {
   update: (payload) => api.post(`/community/profile`, payload).then((r) => r.data),
 };
 
+export const dmApi = {
+  send: (to_id, text) => api.post(`/community/messages`, { to_id, text }).then((r) => r.data),
+  thread: (other_id) => api.get(`/community/messages/${other_id}`).then((r) => r.data).catch(() => ({ messages: [], other: null })),
+  conversations: () => api.get(`/community/conversations`).then((r) => r.data.conversations || []).catch(() => []),
+};
+
 export const doughSessionsApi = {
   list: (recipeId) => api.get(`/dough-sessions`, { params: recipeId ? { recipe_id: recipeId } : {} }).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/dough-sessions`, data).then((r) => r.data),
