@@ -54,25 +54,32 @@ const GOAL_TEXT = {
 
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
 const TOOLS = [
-  { id: "generatore", Icon: Sparkles, it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
-  { id: "mydata", Icon: Archive, it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
-  { id: "macchine", Icon: Wrench, it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
-  { id: "twin", Icon: FlaskConical, it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
-  { id: "adatta", Icon: Flame, it: "Adatta Forno", de: "Ofen anpassen", en: "Adapt Oven" },
-  { id: "bilancia", Icon: Scale, it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
-  { id: "termo", Icon: Thermometer, it: "Termostato & Clima", de: "Thermostat & Klima", en: "Thermostat & Climate" },
-  { id: "acqua", Icon: Droplets, it: "Temp. Acqua", de: "Wasser-Temp.", en: "Water Temp." },
-  { id: "pesata", Icon: Scale, it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
-  { id: "timer", Icon: TimerIcon, it: "Timer", de: "Timer", en: "Timer" },
-  { id: "meteo", Icon: CloudSun, it: "Meteo", de: "Wetter", en: "Weather" },
-  { id: "ph", Icon: FlaskConical, it: "pH Lievito", de: "pH Sauerteig", en: "Sourdough pH" },
-  { id: "diagnosi", Icon: Camera, it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
-  { id: "suono", Icon: Camera, it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
-  { id: "sessioni", Icon: Thermometer, it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
-  { id: "lotti", Icon: QrCode, it: "Tracciabilità Lotti", de: "Chargen", en: "Batch Traceability" },
-  { id: "haccp", Icon: ScanLine, it: "Registro HACCP", de: "HACCP-Register", en: "HACCP Log" },
-  { id: "check", Icon: ListChecks, it: "Checklist", de: "Checklisten", en: "Checklists" },
-  { id: "shelf", Icon: CalendarClock, it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
+  { id: "generatore", Icon: Sparkles, cat: "impasto", it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
+  { id: "mydata", Icon: Archive, cat: "gestione", it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
+  { id: "macchine", Icon: Wrench, cat: "gestione", it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
+  { id: "twin", Icon: FlaskConical, cat: "impasto", it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
+  { id: "adatta", Icon: Flame, cat: "cottura", it: "Adatta Forno", de: "Ofen anpassen", en: "Adapt Oven" },
+  { id: "bilancia", Icon: Scale, cat: "impasto", it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
+  { id: "termo", Icon: Thermometer, cat: "impasto", it: "Termostato & Clima", de: "Thermostat & Klima", en: "Thermostat & Climate" },
+  { id: "acqua", Icon: Droplets, cat: "impasto", it: "Temp. Acqua", de: "Wasser-Temp.", en: "Water Temp." },
+  { id: "pesata", Icon: Scale, cat: "impasto", it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
+  { id: "timer", Icon: TimerIcon, cat: "cottura", it: "Timer", de: "Timer", en: "Timer" },
+  { id: "meteo", Icon: CloudSun, cat: "cottura", it: "Meteo", de: "Wetter", en: "Weather" },
+  { id: "ph", Icon: FlaskConical, cat: "impasto", it: "pH Lievito", de: "pH Sauerteig", en: "Sourdough pH" },
+  { id: "diagnosi", Icon: Camera, cat: "gestione", it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
+  { id: "suono", Icon: Camera, cat: "gestione", it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
+  { id: "sessioni", Icon: Thermometer, cat: "gestione", it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
+  { id: "lotti", Icon: QrCode, cat: "gestione", it: "Tracciabilità Lotti", de: "Chargen", en: "Batch Traceability" },
+  { id: "haccp", Icon: ScanLine, cat: "gestione", it: "Registro HACCP", de: "HACCP-Register", en: "HACCP Log" },
+  { id: "check", Icon: ListChecks, cat: "gestione", it: "Checklist", de: "Checklisten", en: "Checklists" },
+  { id: "shelf", Icon: CalendarClock, cat: "vendita", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
+];
+
+const TOOL_CATS = [
+  { key: "impasto", it: "Impasto", de: "Teig", en: "Dough", es: "Masa" },
+  { key: "cottura", it: "Cottura", de: "Backen", en: "Baking", es: "Cocción" },
+  { key: "gestione", it: "Gestione", de: "Verwaltung", en: "Management", es: "Gestión" },
+  { key: "vendita", it: "Vendita", de: "Verkauf", en: "Sales", es: "Venta" },
 ];
 
 export default function PianoProduzioneAI({ onOpenTool }) {
@@ -136,6 +143,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const pinnedTools = new Set((toolPrefs.pinned || []).filter((id) => TOOLS.some((t) => t.id === id)));
   // Fuori dalla modifica: non ripetere nella griglia gli strumenti già presenti nei Preferiti (no doppioni)
   const visibleTools = orderedTools.filter((tl) => editTools || (!hiddenTools.has(tl.id) && !pinnedTools.has(tl.id)));
+  const suggestedTools = useMemo(() => {
+    return orderedTools
+      .filter((tl) => !pinnedTools.has(tl.id) && !hiddenTools.has(tl.id) && (toolUsage[tl.id] || 0) > 0)
+      .sort((a, b) => (toolUsage[b.id] || 0) - (toolUsage[a.id] || 0))
+      .slice(0, 3);
+  }, [orderedTools, toolUsage, toolPrefs]);
   const moveTool = (id, dir) => {
     const ids = orderedTools.map((tl) => tl.id);
     const i = ids.indexOf(id); const j = i + dir;
@@ -153,6 +166,54 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     p.has(id) ? p.delete(id) : p.add(id);
     savePrefs({ ...toolPrefs, pinned: [...p] });
   };
+  const renderToolCard = ({ id, Icon, it, de, en }) => {
+    const label = tri3(lang, it, de, en);
+    const isHidden = hiddenTools.has(id);
+    return (
+      <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => { if (!editTools) openToolTracked(id); }}
+        className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-default border-dashed border-[#3f7cac]/50" : "cursor-pointer border-[#d5e4f0] dark:border-[#38424B] active:scale-95 hover:border-[#3f7cac]/60"} ${isHidden ? "opacity-40" : ""}`}>
+        {editTools ? (
+          <>
+            <div className="absolute top-1 left-1 flex gap-0.5">
+              <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onClick={(e) => { e.stopPropagation(); toggleHideTool(id); }}
+                className="w-6 h-6 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#3f7cac] active:scale-90">
+                {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
+              <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onClick={(e) => { e.stopPropagation(); togglePinTool(id); }}
+                className={`w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#C88A2B] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#C88A2B]"}`}>
+                <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
+              </button>
+            </div>
+            <div className="absolute top-1 right-1 flex flex-col">
+              <button type="button" data-testid={`tool-up-${id}`} aria-label="up" onClick={(e) => { e.stopPropagation(); moveTool(id, -1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronUp className="w-3.5 h-3.5" /></button>
+              <button type="button" data-testid={`tool-down-${id}`} aria-label="down" onClick={(e) => { e.stopPropagation(); moveTool(id, 1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronDown className="w-3.5 h-3.5" /></button>
+            </div>
+          </>
+        ) : (
+          <>
+            <button type="button" data-testid={`tool-fav-${id}`} aria-label="favorite"
+              onClick={(e) => { e.stopPropagation(); const was = (toolPrefs.pinned || []).includes(id); togglePinTool(id); toast.success(was ? tri3(lang, "Rimosso dai preferiti", "Aus Favoriten entfernt", "Removed from favorites") : tri3(lang, "Aggiunto ai preferiti ⭐", "Zu Favoriten hinzugefügt ⭐", "Added to favorites ⭐")); }}
+              className={`absolute top-1 left-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#C88A2B] text-white" : "bg-[#C88A2B]/12 text-[#C88A2B]"}`}>
+              <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
+              {id === "generatore" && !toolUsage[id] && (
+                <span data-testid={`tool-new-${id}`} className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#C0574D] border border-white animate-pulse" title={tri3(lang, "Nuovo", "Neu", "New")} />
+              )}
+            </button>
+            {guideFor(id, lang) && (
+              <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
+                onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
+                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#3f7cac]/12 flex items-center justify-center text-[#3f7cac] active:scale-90">
+                <Info className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </>
+        )}
+        <Icon className="w-5 h-5 text-[#3f7cac]" />
+        <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8]">{label}</span>
+      </div>
+    );
+  };
+
   // I PREFERITI sono SOLO quelli scelti a mano con la stella (nessuna aggiunta automatica).
   const favRow = useMemo(() => {
     const byId = Object.fromEntries(TOOLS.map((tl) => [tl.id, tl]));
@@ -646,59 +707,39 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-2">
-              {visibleTools.filter(({ it, de, en }) => {
-                const q = toolQuery.trim().toLowerCase();
-                if (!q || editTools) return true;
-                return `${it} ${de} ${en}`.toLowerCase().includes(q);
-              }).map(({ id, Icon, it, de, en }) => {
-                const label = tri3(lang, it, de, en);
-                const isHidden = hiddenTools.has(id);
-                return (
-                  <div key={id} data-testid={`capo-quicklink-${id}`} onClick={() => { if (!editTools) openToolTracked(id); }}
-                    className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-default border-dashed border-[#3f7cac]/50" : "cursor-pointer border-[#d5e4f0] dark:border-[#38424B] active:scale-95 hover:border-[#3f7cac]/60"} ${isHidden ? "opacity-40" : ""}`}>
-                    {editTools ? (
-                      <>
-                        <div className="absolute top-1 left-1 flex gap-0.5">
-                          <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onClick={(e) => { e.stopPropagation(); toggleHideTool(id); }}
-                            className="w-6 h-6 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#3f7cac] active:scale-90">
-                            {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                          </button>
-                          <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onClick={(e) => { e.stopPropagation(); togglePinTool(id); }}
-                            className={`w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#C88A2B] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#C88A2B]"}`}>
-                            <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
-                          </button>
-                        </div>
-                        <div className="absolute top-1 right-1 flex flex-col">
-                          <button type="button" data-testid={`tool-up-${id}`} aria-label="up" onClick={(e) => { e.stopPropagation(); moveTool(id, -1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronUp className="w-3.5 h-3.5" /></button>
-                          <button type="button" data-testid={`tool-down-${id}`} aria-label="down" onClick={(e) => { e.stopPropagation(); moveTool(id, 1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronDown className="w-3.5 h-3.5" /></button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <button type="button" data-testid={`tool-fav-${id}`} aria-label="favorite"
-                          onClick={(e) => { e.stopPropagation(); const was = (toolPrefs.pinned || []).includes(id); togglePinTool(id); toast.success(was ? tri3(lang, "Rimosso dai preferiti", "Aus Favoriten entfernt", "Removed from favorites") : tri3(lang, "Aggiunto ai preferiti ⭐", "Zu Favoriten hinzugefügt ⭐", "Added to favorites ⭐")); }}
-                          className={`absolute top-1 left-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#C88A2B] text-white" : "bg-[#C88A2B]/12 text-[#C88A2B]"}`}>
-                          <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
-                          {!toolUsage[id] && (
-                            <span data-testid={`tool-new-${id}`} className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#C0574D] border border-white animate-pulse" title={tri3(lang, "Nuovo", "Neu", "New")} />
-                          )}
-                        </button>
-                        {guideFor(id, lang) && (
-                          <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
-                            onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
-                            className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#3f7cac]/12 flex items-center justify-center text-[#3f7cac] active:scale-90">
-                            <Info className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                      </>
-                    )}
-                    <Icon className="w-5 h-5 text-[#3f7cac]" />
-                    <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8]">{label}</span>
-                  </div>
-                );
-              })}
-            </div>
+            {!editTools && !toolQuery.trim() && suggestedTools.length > 0 && (
+              <div data-testid="tools-suggested" className="mb-4">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] mb-2">{tri3(lang, "Suggeriti per te", "Für dich empfohlen", "Suggested for you", "Sugeridos para ti")}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {suggestedTools.map((tl) => renderToolCard(tl))}
+                </div>
+              </div>
+            )}
+
+            {(editTools || toolQuery.trim()) ? (
+              <div className="grid grid-cols-3 gap-2">
+                {visibleTools.filter(({ it, de, en }) => {
+                  const q = toolQuery.trim().toLowerCase();
+                  if (!q || editTools) return true;
+                  return `${it} ${de} ${en}`.toLowerCase().includes(q);
+                }).map((tl) => renderToolCard(tl))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {TOOL_CATS.map((c) => {
+                  const items = visibleTools.filter((tl) => (tl.cat || "gestione") === c.key && !suggestedTools.some((s) => s.id === tl.id));
+                  if (items.length === 0) return null;
+                  return (
+                    <div key={c.key} data-testid={`tools-cat-${c.key}`}>
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#3f7cac] mb-2">{tri3(lang, c.it, c.de, c.en, c.es)}</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {items.map((tl) => renderToolCard(tl))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             {!editTools && hiddenTools.size > 0 && (
               <p data-testid="tools-hidden-note" className="text-[10.5px] text-[#7E8A93] mt-2">
                 {tri3(lang, `${hiddenTools.size} strumenti nascosti · tocca «Personalizza» per rivederli.`, `${hiddenTools.size} Werkzeuge ausgeblendet · „Anpassen“ zum Anzeigen.`, `${hiddenTools.size} tools hidden · tap 'Customize' to show them.`)}

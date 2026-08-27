@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only test (mobile 390x844) of 'Il Tuo Laboratorio' tools grid in PianoProduzioneAI.jsx after login as admin@mikilab.de. Verified: (1) MAIN BUG FIXED - 'Generatore Ricette' card (capo-quicklink-generatore) is visible as the FIRST card of the 'Impasto' category and opens RecipeGenerator (data-testid recipe-generator) with prodotto / pre-fermento / idratazione / quantita fields; (2) category headings tools-cat-impasto/cottura/gestione/vendita all present (vendita contains capo-quicklink-shelf), no empty category rendered; (3) 'Suggeriti per te' (tools-suggested) appears after opening Timer x2 + Temp. Acqua x1 (localStorage mikilab_tool_usage = {timer:2, acqua:1}), ordered by usage, capped at 3, and suggested tools are NOT repeated in the categories below; (4) no duplicate capo-quicklink-* testids in any state (initial 24, after suggested 24, after favouriting Timer 23 with capo-quicklink-timer count = 0 and fav-tool-timer = 1); (5) search 'temp' filters the grid to Temp. Acqua only and renders a FLAT view (0 category headings, suggested hidden); (6) 'Personalizza' (tools-edit-toggle) shows all 19 tools flat (0 headings) with tool-hide/tool-pin/tool-up controls. No functional or console errors found (only an expected 401 from the pre-login session check).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Il Tuo Laboratorio - tools grid", "issues": ["Minor: the floating 'Radio' FAB (bottom-left) overlaps the last row of tool cards / the 'Registro HACCP' label on 390px viewport; clicks still work but the label is partly hidden.", "Minor: nearly every card shows the red 'NUOVO' pulsing dot at once (19/19 initially), which makes the grid visually noisy."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is ~1144 lines - consider splitting the tools grid (TOOLS/TOOL_CATS/renderToolCard/suggested logic) into its own component for maintainability.",
+    "suggestedTools useMemo lists toolPrefs in deps but reads pinnedTools/hiddenTools built outside useMemo (new Set each render) - works today but is fragile; derive both sets with useMemo."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (per request)", "frontend": "100% (6/6 scenarios passed)" },
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Login is NOT auto-shown: click the header 'Accedi' button first, then use data-testid auth-email/auth-password/auth-submit. Set localStorage mikilab_lang='it' and mikilab_lab_tour_v1='1' via add_init_script; clear mikilab_tool_usage/mikilab_tool_prefs for a clean tools state. Return from an open tool via the 'Torna agli strumenti' button. Tools grid testids: capo-quicklink-<id>, tools-cat-<impasto|cottura|gestione|vendita>, tools-suggested, tools-favorites/fav-tool-<id>, tools-search, tools-edit-toggle, tool-hide/pin/up/down-<id>. Note capo-quicklink-* testids are also used by non-tool quicklinks elsewhere on the page (aggiungi, lavoro, settimana, enterprise, dayclose) - scope selectors inside the category/suggested containers when counting.",
+  "rca_of_the_issue": "Reported bug (Recipe Generator not visible) is no longer reproducible: TOOLS[0] = {id:'generatore', cat:'impasto'} renders first inside tools-cat-impasto and Maestro.jsx maps tool==='generatore' to <RecipeGenerator/>; the open flow was verified end-to-end."
+}

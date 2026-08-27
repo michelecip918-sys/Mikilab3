@@ -1517,3 +1517,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Fix doppione: gli strumenti messi tra i Preferiti non vengono più ripetuti nella griglia "Apri uno strumento" (esclusi quando non si è in modifica). In modalità Personalizza restano tutti visibili per gestirli.
 - Aggiunta barra di ricerca strumenti (tools-search) per filtrare per nome in 4 lingue. Nulla rimosso dalle impostazioni.
 - Verificato: Timer in preferiti=1, in griglia=0; ricerca "temp" filtra a Temp. Acqua.
+
+## v43.3 — Laboratorio: Generatore visibile + categorie + suggeriti
+- FIX: "Crea Ricette" (Generatore) ora è la prima card della categoria "Impasto" in "Apri uno strumento" e si apre correttamente (era poco visibile).
+- Strumenti raggruppati per tema con intestazioni: Impasto, Cottura, Gestione, Vendita (categorie vuote nascoste). Vista piatta durante ricerca/Personalizza.
+- "Suggeriti per te": top 3 strumenti più usati (localStorage mikilab_tool_usage), non duplicati nelle categorie ne nei preferiti.
+- Pallino "NUOVO" ora solo sul Generatore (prima appariva su quasi tutte le card = rumore visivo).
+- Testing agent iter_83: frontend 100% (6/6). Minor noto: FAB Radio si sovrappone allultima riga su 390px (i click funzionano).
