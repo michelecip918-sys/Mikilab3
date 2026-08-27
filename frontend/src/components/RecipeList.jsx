@@ -18,6 +18,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { useBackClose } from "@/lib/backNav";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
+import { isColored } from "@/lib/coloredRecipes";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -269,7 +270,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         const q = query.trim().toLowerCase();
         const matches = (r) => {
           if (catFilter !== "all" && recipeCategory(r).key !== catFilter) return false;
-          if (baseFilter !== "all" && !recipeBase(r).includes(baseFilter)) return false;
+          if (baseFilter === "colorati") { if (!isColored(r.name)) return false; }
+          else if (baseFilter !== "all" && !recipeBase(r).includes(baseFilter)) return false;
           if (!q) return true;
           const hay = [rLoc(r, "name", lang), rLoc(r, "real_name", lang), rLoc(r, "flour_type", lang), r.notes || "", recipeBadges(r).join(" ")].join(" ").toLowerCase();
           return hay.includes(q);
@@ -301,6 +303,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               )}
               {r.origin && flagEmoji(r.origin) && (
                 <span title={countryName(r.origin)} className="absolute top-2.5 right-2 text-xl drop-shadow-md">{flagEmoji(r.origin)}</span>
+              )}
+              {isColored(r.name) && (
+                <span data-testid={`recipe-new-badge-${r.id}`} className="absolute top-2 left-2 z-10 text-[9px] font-extrabold uppercase tracking-wide text-white px-2 py-0.5 rounded-full shadow bg-gradient-to-r from-[#feda75] via-[#d62976] to-[#4f5bd5]">
+                  {triM("Novità", "Neu", "New")}
+                </span>
               )}
               {r.locked && (
                 <span className="absolute bottom-2 right-2 bg-white/90 dark:bg-[#232A31]/90 rounded-full p-1.5 shadow">
@@ -350,6 +357,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     {baseLabel(b, lang)}
                   </button>
                 ))}
+                {collectionName === "mikilab" && (
+                  <button data-testid="base-filter-colorati" onClick={() => setBaseFilter(baseFilter === "colorati" ? "all" : "colorati")}
+                    className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${
+                      baseFilter === "colorati"
+                        ? "bg-gradient-to-r from-[#feda75] via-[#d62976] to-[#4f5bd5] text-white border-transparent shadow-sm"
+                        : "bg-white dark:bg-[#232A31] text-[#d62976] border-[#d62976]/40 hover:border-[#d62976]"}`}>
+                    🌈 {triM("Colorati", "Bunt", "Colourful")}
+                  </button>
+                )}
               </div>
             )}
 

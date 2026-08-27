@@ -1622,3 +1622,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
   - **Pane allo Zafferano** (giallo-arancio, biga, infusione pistilli), **Pane alla Spirulina** (blu-verde, poolish), **Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia** (rosa/chiaro, biga). Immagini generate Nano Banana.
 - **Vetrina "Novità dal MikiLab"** (`components/NovitaColorate.jsx`): evidenzia le 12 ricette colorate naturalmente in scroll orizzontale con foto. Posizionata nella **sezione Ricette (Mikilab)** come `extraHeader` di RecipeList (NON in Home — spostata su richiesta utente; il blocco Home `home-novita` è stato rimosso). Tap sulla card → apre la scheda ricetta via evento `mikilab-open-recipe` gestito in RecipeList (nuovo listener). testid: `ricette-novita`, `novita-card-<id>`. Verificato a schermo (12 card, click apre il dialog ricetta).
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v58 (27 Ago 2026) — Filtro/Badge colorati + Community "social" + Mercatino geo/multilingua
+- **Lista condivisa** `frontend/src/lib/coloredRecipes.js` (COLORED_RECIPES + isColored) usata da RecipeList e vetrina.
+- **Filtro "Colorati" 🌈** (RecipeList, solo mikilab): chip `base-filter-colorati` (gradiente Instagram) → mostra solo le 12 ricette colorate. **Badge "Novità/New"** (`recipe-new-badge-<id>`, gradiente) sulle card colorate nell'elenco.
+- **Scheda "Perché coloriamo naturalmente"** (`novita-why`) nella vetrina NovitaColorate: spiega gli ingredienti naturali (curcuma/zafferano→giallo, spinaci/pistacchio→verde, spirulina→blu-verde, barbabietola→rosa, pomodoro/nduja→rosso, carbone→nero). IT/DE/EN/ES.
+- **Community = "MikiLab Social"**: header brandizzato SOLO nella Community (`community-social-header`) con gradiente stile Instagram, avatar (`michele-avatar.jpg`) + logo ML (`logo.png`), badge "Nuovo", claim "il nuovo social dei fornai dentro il mio sito". IT/DE/EN/ES.
+- **Mercatino dell'Usato (Marketplace.jsx)**: aggiunti 5 annunci di ESEMPIO multilingua (DE Stuttgart, IT Napoli, FR Lyon, ES Madrid, EN London) con coordinate — non salvati, non eliminabili (`sample`). **Modalità geolocalizzazione** (`market-geo`, "Vicino a me"): usa navigator.geolocation, calcola la distanza (haversine) e ordina gli annunci per vicinanza; badge distanza "· X km" sulle card e avviso `market-geo-active`.
+- Verificato a schermo: header social, filtro Colorati (12 ricette + 12 badge), scheda perché, mercatino con card multilingua + pulsante geo.
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.

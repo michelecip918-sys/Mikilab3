@@ -99,12 +99,28 @@ export default function Community() {
 
   return (
     <div className="pb-40" data-testid="community">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#2f6a97] flex items-center justify-center"><Users className="w-6 h-6 text-white" /></div>
-        <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Community dei Panettieri", "Bäcker-Community", "Bakers Community", "Comunidad de Panaderos")}</h1>
-          <div className="h-1 w-10 rounded-full bg-[#C88A2B] my-1" />
-          <p className="text-sm text-[#7E8A93]">{tri("Consigli, foto e ricette tra colleghi", "Tipps, Fotos und Rezepte unter Kollegen", "Tips, photos and recipes among peers", "Consejos, fotos y recetas entre colegas")}</p>
+      {/* Header social brandizzato — SOLO nella Community: si capisce che è un nuovo social nel sito */}
+      <div data-testid="community-social-header" className="relative overflow-hidden rounded-3xl p-5 mb-5 text-white shadow-lg"
+        style={{ background: "linear-gradient(135deg,#feda75 0%,#fa7e1e 22%,#d62976 55%,#962fbf 78%,#4f5bd5 100%)" }}>
+        <div className="flex items-center gap-3">
+          <div className="relative shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-white/25 border-2 border-white/70 overflow-hidden shadow-md">
+              <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab" className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-xl bg-white shadow flex items-center justify-center overflow-hidden border border-white">
+              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="ML" className="w-full h-full object-contain" />
+            </div>
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="font-display text-2xl font-extrabold leading-none drop-shadow-sm">MikiLab Social</h1>
+              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-white text-[#d62976] px-2 py-0.5 rounded-full shadow">{tri("Nuovo", "Neu", "New", "Nuevo")}</span>
+            </div>
+            <p className="text-sm text-white/95 mt-1 leading-snug font-semibold">
+              {tri("Il nuovo social dei fornai, dentro il mio sito", "Das neue Bäcker-Social, direkt auf meiner Seite", "The new bakers' social, right inside my site", "La nueva red de panaderos, dentro de mi sitio")}
+            </p>
+            <p className="text-[11px] text-white/85 mt-0.5">{tri("Consigli, foto, ricette, amici e mercatino tra colleghi", "Tipps, Fotos, Rezepte, Freunde und Markt", "Tips, photos, recipes, friends and marketplace", "Consejos, fotos, recetas, amigos y mercadillo")}</p>
+          </div>
         </div>
       </div>
 

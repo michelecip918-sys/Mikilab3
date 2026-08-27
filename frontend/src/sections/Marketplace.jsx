@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Store, Plus, Trash2, Tag, X, MessageCircle, Mail } from "lucide-react";
+import { Store, Plus, Trash2, Tag, X, MessageCircle, Mail, MapPin, Navigation } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 import { loadMarket, MARKET_KEY, markMarketSeen } from "@/lib/market";
@@ -9,6 +9,22 @@ import { loadMarket, MARKET_KEY, markMarketSeen } from "@/lib/market";
 
 const WA_NUMBER = "491601253378";
 const uid = () => Math.random().toString(36).slice(2, 9);
+
+// Annunci di ESEMPIO multilingua (non salvati; mostrano che il mercatino è aperto a fornai di più Paesi).
+const SAMPLES = [
+  { id: "s1", sample: true, cat: "impastatrice", condition: "buono", price: "2200", place: "Stuttgart, DE", lat: 48.7758, lng: 9.1829, title: "Spiralkneter 40 kg — gut erhalten", desc: "Zuverlässiger Spiralkneter, ideal für die tägliche Produktion. Abholung in Stuttgart.", contact: "" },
+  { id: "s2", sample: true, cat: "forno", condition: "nuovo", price: "5400", place: "Napoli, IT", lat: 40.8518, lng: 14.2681, title: "Forno rotativo a carrello — come nuovo", desc: "Forno professionale a carrello, pochissimo usato. Ottimo per pane e viennoiserie.", contact: "" },
+  { id: "s3", sample: true, cat: "sfogliatrice", condition: "buono", price: "1800", place: "Lyon, FR", lat: 45.7640, lng: 4.8357, title: "Laminoir 500mm — bon état", desc: "Laminoir de comptoir, parfait pour croissants et feuilletés. À récupérer à Lyon.", contact: "" },
+  { id: "s4", sample: true, cat: "cella", condition: "buono", price: "1300", place: "Madrid, ES", lat: 40.4168, lng: -3.7038, title: "Cámara de fermentación controlada", desc: "Cámara de fermentación con control de temperatura y humedad. Recogida en Madrid.", contact: "" },
+  { id: "s5", sample: true, cat: "accessori", condition: "nuovo", price: "260", place: "London, UK", lat: 51.5074, lng: -0.1278, title: "Set of bannetons & couche — new", desc: "Brand new proofing baskets and linen couche, various sizes. Collection in London.", contact: "" },
+];
+
+function distanceKm(a, b) {
+  const R = 6371, toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s)));
+}
 
 // riduce l'immagine per stare nel localStorage
 function compress(file, cb) {
@@ -48,6 +64,19 @@ export default function Marketplace() {
   const [showForm, setShowForm] = useState(false);
   const [err, setErr] = useState("");
   const [form, setForm] = useState({ title: "", cat: "impastatrice", price: "", condition: "buono", place: "", desc: "", photo: "", contact: "" });
+  const [geo, setGeo] = useState(null);
+  const [geoBusy, setGeoBusy] = useState(false);
+
+  const requestGeo = () => {
+    if (geo) { setGeo(null); return; }
+    if (!navigator.geolocation) return;
+    setGeoBusy(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { setGeo({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setGeoBusy(false); },
+      () => { setGeoBusy(false); },
+      { enableHighAccuracy: false, timeout: 8000 }
+    );
+  };
 
   useEffect(() => { try { localStorage.setItem(MARKET_KEY, JSON.stringify(items)); markMarketSeen(); } catch { /* quota */ } }, [items]);
 
@@ -81,7 +110,13 @@ export default function Marketplace() {
     return `https://wa.me/${num || WA_NUMBER}?text=${encodeURIComponent(msg)}`;
   };
 
-  const visible = filter === "all" ? items : items.filter((x) => x.cat === filter);
+  const allItems = [...items, ...SAMPLES];
+  let visible = filter === "all" ? allItems : allItems.filter((x) => x.cat === filter);
+  if (geo) {
+    visible = visible
+      .map((x) => (x.lat != null && x.lng != null ? { ...x, _km: distanceKm(geo, x) } : x))
+      .sort((a, b) => (a._km ?? 1e9) - (b._km ?? 1e9));
+  }
   const priceFmt = (v) => { try { return new Intl.NumberFormat(lang === "en" ? "en-GB" : lang === "de" ? "de-DE" : "it-IT").format(Number(v)); } catch { return String(v); } };
   const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
 
@@ -95,10 +130,17 @@ export default function Marketplace() {
         </div>
       </div>
 
-      <button data-testid="market-add" onClick={() => setShowForm((s) => !s)}
-        className="w-full flex items-center justify-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
-        <Plus className="w-5 h-5" /> {tri("Pubblica un annuncio", "Anzeige aufgeben", "Post a listing")}
-      </button>
+      <div className="flex gap-2 mb-4">
+        <button data-testid="market-add" onClick={() => setShowForm((s) => !s)}
+          className="flex-1 flex items-center justify-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all">
+          <Plus className="w-5 h-5" /> {tri("Pubblica un annuncio", "Anzeige aufgeben", "Post a listing")}
+        </button>
+        <button data-testid="market-geo" onClick={requestGeo}
+          className={`flex items-center justify-center gap-2 px-4 py-3 rounded-2xl font-semibold active:scale-98 transition-all border ${geo ? "bg-[#2e8b6f] text-white border-[#2e8b6f]" : "bg-white dark:bg-[#232A31] text-[#2e8b6f] border-[#2e8b6f]/40"}`}>
+          <Navigation className={`w-5 h-5 ${geoBusy ? "animate-pulse" : ""}`} /> {geo ? tri("Vicini a me", "In der Nähe", "Near me") : tri("Vicino a me", "In der Nähe", "Near me")}
+        </button>
+      </div>
+      {geo && <p data-testid="market-geo-active" className="text-xs text-[#2e8b6f] font-semibold -mt-2 mb-3 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {tri("Ordinati per distanza dalla tua posizione", "Nach Entfernung sortiert", "Sorted by distance from you")}</p>}
 
       {/* Form nuovo annuncio */}
       {showForm && (
@@ -148,7 +190,7 @@ export default function Marketplace() {
                 <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#6E8CA0]/15 text-[#3f7cac] font-semibold flex items-center gap-0.5"><Tag className="w-2.5 h-2.5" />{catLabel(it.cat)}</span>
                 <span className="text-[10px] text-[#7E8A93]">{condLabel(it.condition)}</span>
               </div>
-              {it.place && <p className="text-[11px] text-[#7E8A93] mt-0.5">{it.place}</p>}
+              {it.place && <p className="text-[11px] text-[#7E8A93] mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{it.place}{it._km != null ? ` · ${it._km} km` : ""}</p>}
               {it.desc && <p className="text-[11px] text-[#7E8A93] mt-1 line-clamp-2">{it.desc}</p>}
               <div className="mt-auto pt-2">
                 {it.price && <p className="font-mono-data text-lg font-bold text-[#5aa0cf]">€ {priceFmt(it.price)}</p>}
@@ -157,7 +199,7 @@ export default function Marketplace() {
                     className="flex-1 flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2 rounded-lg active:scale-95 transition-transform">
                     {(it.contact || "").includes("@") ? <Mail className="w-3.5 h-3.5" /> : <MessageCircle className="w-3.5 h-3.5" />} {tri("Contatta", "Kontakt", "Contact")}
                   </a>
-                  <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>
+                  {!it.sample && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
                 </div>
               </div>
             </div>
