@@ -190,6 +190,11 @@ export const marketApi = {
   remove: (id) => api.delete(`/community/market/${id}`).then((r) => r.data),
 };
 
+export const profileApi = {
+  get: (userId) => api.get(`/community/profile/${userId}`).then((r) => r.data),
+  update: (payload) => api.post(`/community/profile`, payload).then((r) => r.data),
+};
+
 export const doughSessionsApi = {
   list: (recipeId) => api.get(`/dough-sessions`, { params: recipeId ? { recipe_id: recipeId } : {} }).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/dough-sessions`, data).then((r) => r.data),

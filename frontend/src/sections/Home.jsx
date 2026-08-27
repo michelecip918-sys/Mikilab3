@@ -262,6 +262,23 @@ export default function Home({ onNavigate }) {
             <motion.div key="story" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
               <div className="space-y-6 pt-6">
+                {/* Scopri MikiLab — versione semplificata: un solo testo */}
+                <div data-testid="home-about" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white shadow-xl">
+                  <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele" className="w-full h-52 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-white/40" />
+                      <h1 className="font-display text-2xl font-bold">MikiLab</h1>
+                    </div>
+                    <p className="text-[15px] leading-relaxed text-white/95">{L(
+                      "Ciao, sono Michele: fornaio e appassionato di arte bianca. MikiLab è il sito che ho creato per aiutare i panettieri a organizzare il lavoro come lo farei io. Trovi ricette dettagliate, liste della spesa, la pianificazione della produzione e un assistente AI che calcola e adatta ogni fase senza errori. C'è anche il Social dei Panettieri per condividere idee, foto e ricette, trovare colleghi e comprare o vendere attrezzatura usata. Tu pensi al laboratorio, al resto pensiamo noi — in italiano, tedesco, inglese e spagnolo, su smartphone e PC.",
+                      "Hallo, ich bin Michele: Bäcker mit Leidenschaft für die Backkunst. MikiLab ist die Website, die ich erstellt habe, um Bäckern zu helfen, ihre Arbeit so zu organisieren, wie ich es tun würde. Du findest detaillierte Rezepte, Einkaufslisten, die Produktionsplanung und einen KI-Assistenten, der jede Phase fehlerfrei berechnet und anpasst. Es gibt auch das Bäcker-Social zum Teilen von Ideen, Fotos und Rezepten, um Kollegen zu finden und gebrauchte Ausrüstung zu kaufen oder zu verkaufen. Du kümmerst dich um die Backstube, um den Rest kümmern wir uns — auf Italienisch, Deutsch, Englisch und Spanisch, auf Smartphone und PC.",
+                      "Hi, I'm Michele: a baker in love with the baking craft. MikiLab is the site I built to help bakers organise their work exactly as I would. You'll find detailed recipes, shopping lists, production planning and an AI assistant that calculates and adapts every stage with no errors. There's also the Bakers' Social to share ideas, photos and recipes, meet fellow bakers and buy or sell used equipment. You focus on the bakery, we take care of the rest — in Italian, German, English and Spanish, on smartphone and PC.",
+                      "Hola, soy Michele: panadero apasionado por el arte blanco. MikiLab es el sitio que creé para ayudar a los panaderos a organizar el trabajo como lo haría yo. Encontrarás recetas detalladas, listas de la compra, la planificación de la producción y un asistente de IA que calcula y adapta cada fase sin errores. También está el Social de Panaderos para compartir ideas, fotos y recetas, encontrar colegas y comprar o vender equipo usado. Tú piensa en el obrador, del resto nos encargamos nosotros — en italiano, alemán, inglés y español, en móvil y PC."
+                    )}</p>
+                  </div>
+                </div>
+                {false && (<>
                 <div data-testid="home-lab-photo" className="rounded-3xl overflow-hidden shadow-xl ring-2 ring-[#C88A2B]/40 relative">
                   <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt={L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough", "Michele, con las manos en la masa")}
                     className="w-full h-56 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
@@ -381,6 +398,7 @@ export default function Home({ onNavigate }) {
                   <Laugh className="w-5 h-5 text-[#3f7cac] shrink-0 mt-0.5" />
                   <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] italic leading-relaxed">{joke}</p>
                 </div>
+                </>)}
               </div>
             </motion.div>
           )}

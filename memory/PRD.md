@@ -1662,3 +1662,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Più opzioni di pubblicazione**: aggiunte categorie post **Idea** (Sparkles, magenta) ed **Evento** (CalendarDays, verde) oltre a Consiglio/Foto/Ricetta/Domanda. Composer ora griglia 3 col con titolo "Cosa vuoi condividere?". Backend `COMMUNITY_CATEGORIES` esteso a {consiglio,foto,ricetta,domanda,idea,evento}. Verificato: creazione post categoria "idea" OK.
 - **ANCORA IN SOSPESO**: Profili Social (pagina profilo con avatar, bio, ricette pubblicate) — prossima fase dedicata; pannello admin moderazione (admin già può eliminare qualsiasi annuncio/post).
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v63 (27 Ago 2026) — Profili Social + colori maschili + Scopri MikiLab semplificato
+- **Profili Social**: backend `GET /community/profile/{user_id}` (name, picture, bio, joined, posts, posts_count, listings_count) + `POST /community/profile` (aggiorna name/bio/picture su users; campo `picture`=avatar, aggiunto `bio`). Frontend `components/ProfilePanel.jsx`: pagina profilo (avatar, nome, bio, conteggi, post pubblicati); modifica per il proprietario. Aperto da pulsante `open-my-profile` nell'header Social e dai **nomi/avatar autori dei post** (cliccabili → `post-author-{id}`). Verificato via API (update/get) + UI.
+- **Avatar professionali**: 4 avatar preimpostati (Panettiere/Cuoco/Pizzaiolo/Pasticciere) generati (Nano Banana), selezionabili in ProfilePanel (`avatar-preset-*`) + upload foto (storage). Il Panettiere è stato rigenerato più "da fornaio" (pani rustici/baguette/grano). Ampliabile con nuovi stili.
+- **Colori Community più maschili**: gradienti da Instagram (rosa/magenta) → **navy→teal→bronzo** (#0f2231→#123c4a→#1f5a68→#a9772f) su header Social, intro, tile logo nav, badge; categoria "idea" #d62976→#8a5a2b.
+- **"Scopri MikiLab" semplificato** (Home): rimosse le troppe voci (bio-card, features, gallery, concetti) → un unico testo "chi sono + cosa fa il sito" (`home-about`, IT/DE/EN/ES). Vecchio contenuto lasciato inattivo `{false && (...)}`.
+- **Più opzioni pubblicazione** (già v62): Consiglio/Idea/Foto/Ricetta/Domanda/Evento.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.

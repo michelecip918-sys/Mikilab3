@@ -1,0 +1,130 @@
+import { useEffect, useState } from "react";
+import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare } from "lucide-react";
+import { profileApi, uploadApi } from "@/lib/api";
+import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
+import { toast } from "sonner";
+
+const PRESET_AVATARS = [
+  { id: "baker", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/f4f92c7fc737861a39742c7684cca7caf5b4ed4335220b146233944408fd3db3.jpeg", it: "Panettiere", de: "Bäcker", en: "Baker", es: "Panadero" },
+  { id: "chef", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/6af4112c72273e180c5b227f6c47a3e3eb47b476d80f334d607006927cb63d41.jpeg", it: "Cuoco", de: "Koch", en: "Chef", es: "Cocinero" },
+  { id: "pizzaiolo", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/2db58948b5e00cae83b4d6351be55ca3401fa2f526fbaef2e3cb9e533287e85c.jpeg", it: "Pizzaiolo", de: "Pizzabäcker", en: "Pizzaiolo", es: "Pizzero" },
+  { id: "pastry", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/e2904c622aeec71d0f42fed9cf97a5c6132c95686e825615581baf064e63217e.jpeg", it: "Pasticciere", de: "Konditor", en: "Pastry chef", es: "Pastelero" },
+];
+
+// Pagina profilo social: avatar, bio e ricette/post pubblicati dal fornaio.
+export default function ProfilePanel({ userId, onClose }) {
+  const { lang } = useLang();
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
+  const { user } = useAuth();
+  const [data, setData] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [bio, setBio] = useState("");
+  const [name, setName] = useState("");
+  const [pic, setPic] = useState("");
+  const [saving, setSaving] = useState(false);
+  const isMe = user && user.user_id === userId;
+
+  useEffect(() => {
+    profileApi.get(userId).then((d) => { setData(d); setBio(d.bio || ""); setName(d.name || ""); setPic(d.picture || ""); }).catch(() => setData(false));
+  }, [userId]);
+
+  const onPhoto = async (e) => {
+    const f = e.target.files?.[0]; if (!f) return;
+    try { const url = await uploadApi.image(f, "avatar.jpg"); setPic(url); } catch { toast.error("Upload error"); }
+  };
+  const save = async () => {
+    setSaving(true);
+    try {
+      const r = await profileApi.update({ name, bio, picture: pic });
+      setData((p) => ({ ...p, ...r }));
+      setEditing(false);
+      window.dispatchEvent(new CustomEvent("mikilab-profile-updated"));
+      toast.success(tri("Profilo aggiornato", "Profil aktualisiert", "Profile updated", "Perfil actualizado"));
+    } catch { toast.error(tri("Errore", "Fehler", "Error", "Error")); } finally { setSaving(false); }
+  };
+
+  return (
+    <div data-testid="profile-panel" className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center" onClick={onClose}>
+      <div className="bg-white dark:bg-[#1B2127] w-full sm:max-w-lg sm:rounded-3xl rounded-t-3xl max-h-[88vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="relative p-6 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 45%,#1f5a68 72%,#a9772f)" }}>
+          <button data-testid="profile-close" onClick={onClose} className="absolute top-3 right-3 bg-white/20 rounded-full p-1.5"><X className="w-5 h-5" /></button>
+          {!data ? (
+            <div className="py-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin" /></div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-20 h-20 rounded-2xl bg-white/20 border-2 border-white/60 overflow-hidden flex items-center justify-center">
+                  {(editing ? pic : data.picture) ? <img src={editing ? pic : data.picture} alt={data.name} className="w-full h-full object-cover" /> : <span className="font-display text-3xl font-bold">{(data.name || "F")[0].toUpperCase()}</span>}
+                </div>
+                {editing && <label className="absolute -bottom-1 -right-1 bg-white text-[#123c4a] rounded-full p-1.5 cursor-pointer shadow"><ImagePlus className="w-4 h-4" /><input type="file" accept="image/*" className="hidden" onChange={onPhoto} /></label>}
+              </div>
+              <div className="min-w-0 flex-1">
+                {editing ? (
+                  <input data-testid="profile-name-input" value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-white/20 rounded-lg px-2 py-1 text-lg font-bold outline-none" />
+                ) : (
+                  <h2 className="font-display text-2xl font-bold truncate">{data.name}</h2>
+                )}
+                <div className="flex gap-3 mt-1 text-[12px] text-white/90">
+                  <span className="flex items-center gap-1"><MessageSquare className="w-3.5 h-3.5" /> {data.posts_count} {tri("post", "Beiträge", "posts", "posts")}</span>
+                  <span className="flex items-center gap-1"><Store className="w-3.5 h-3.5" /> {data.listings_count} {tri("annunci", "Anzeigen", "listings", "anuncios")}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {data && (
+          <div className="p-5 space-y-4">
+            {editing ? (
+              <>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{tri("Scegli il tuo avatar", "Wähle deinen Avatar", "Choose your avatar", "Elige tu avatar")}</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {PRESET_AVATARS.map((a) => (
+                      <button key={a.id} data-testid={`avatar-preset-${a.id}`} onClick={() => setPic(a.url)}
+                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#a9772f] ring-2 ring-[#a9772f]/40" : "border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                        <img src={a.url} alt={a[lang] || a.it} className="w-full aspect-square object-cover" />
+                        <span className="block text-[9px] font-semibold text-[#3F4A54] dark:text-[#AEB8BF] py-0.5">{a[lang] || a.it}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <label data-testid="avatar-upload" className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-[#123c4a] dark:text-[#8FB0C2] cursor-pointer"><ImagePlus className="w-4 h-4" /> {tri("oppure carica una foto", "oder Foto hochladen", "or upload a photo", "o sube una foto")}<input type="file" accept="image/*" className="hidden" onChange={onPhoto} /></label>
+                </div>
+                <textarea data-testid="profile-bio-input" value={bio} onChange={(e) => setBio(e.target.value)} rows={3} maxLength={300}
+                  placeholder={tri("Scrivi una breve bio: chi sei, il tuo forno, la tua specialità…", "Kurze Bio: wer du bist, deine Bäckerei, deine Spezialität…", "Short bio: who you are, your bakery, your specialty…", "Bio breve: quién eres, tu horno, tu especialidad…")}
+                  className="w-full bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none" />
+                <div className="flex gap-2">
+                  <button data-testid="profile-save" onClick={save} disabled={saving} className="flex-1 bg-[#123c4a] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-60">{saving ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
+                  <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-xl border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{data.bio || tri("Nessuna bio ancora.", "Noch keine Bio.", "No bio yet.", "Sin bio todavía.")}</p>
+                {isMe && <button data-testid="profile-edit" onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-sm font-semibold text-[#123c4a] dark:text-[#8FB0C2]"><Pencil className="w-4 h-4" /> {tri("Modifica profilo", "Profil bearbeiten", "Edit profile", "Editar perfil")}</button>}
+              </>
+            )}
+
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{tri("Pubblicazioni", "Beiträge", "Published", "Publicaciones")}</p>
+              {data.posts.length === 0 ? (
+                <p className="text-sm text-[#7E8A93]">{tri("Ancora nessuna pubblicazione.", "Noch keine Beiträge.", "Nothing published yet.", "Nada publicado aún.")}</p>
+              ) : (
+                <div className="space-y-2">
+                  {data.posts.map((p) => (
+                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-xl bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-3">
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-[#123c4a] dark:text-[#8FB0C2]">{p.category}</span>
+                      <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] mt-0.5 line-clamp-3">{p.text}</p>
+                      {p.photo && <img src={p.photo} alt="" className="w-full h-32 object-cover rounded-lg mt-2" />}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

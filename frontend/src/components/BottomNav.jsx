@@ -55,7 +55,7 @@ export default function BottomNav({ active, onChange }) {
             >
               <span className="relative">
                 {logo ? (
-                  <span className="w-5 h-5 rounded-md flex items-center justify-center overflow-hidden" style={{ background: "linear-gradient(135deg,#feda75,#d62976 55%,#4f5bd5)" }}>
+                  <span className="w-5 h-5 rounded-md flex items-center justify-center overflow-hidden" style={{ background: "linear-gradient(135deg,#123c4a,#1f5a68 60%,#a9772f)" }}>
                     <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Social" className="w-4 h-4 object-contain" />
                   </span>
                 ) : (

@@ -8,12 +8,13 @@ import AvatarBubbles from "@/components/AvatarBubbles";
 import Marketplace from "@/sections/Marketplace";
 import { marketNewCount, markMarketSeen } from "@/lib/market";
 import FriendsPanel from "@/components/FriendsPanel";
+import ProfilePanel from "@/components/ProfilePanel";
 import BakersMap from "@/components/BakersMap";
 import { friendsApi } from "@/lib/api";
 
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
-  { id: "idea", Icon: Sparkles, color: "#d62976" },
+  { id: "idea", Icon: Sparkles, color: "#8a5a2b" },
   { id: "foto", Icon: Camera, color: "#6E8CA0" },
   { id: "ricetta", Icon: BookOpen, color: "#5aa0cf" },
   { id: "domanda", Icon: HelpCircle, color: "#3F7CAC" },
@@ -57,6 +58,7 @@ export default function Community() {
   const [commentText, setCommentText] = useState("");
   const [marketNew, setMarketNew] = useState(0);
   const [friendsOpen, setFriendsOpen] = useState(false);
+  const [profileUser, setProfileUser] = useState(null);
   const [mapOpen, setMapOpen] = useState(false);
   const [friendReqCount, setFriendReqCount] = useState(0);
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
@@ -105,7 +107,7 @@ export default function Community() {
     <div className="pb-40" data-testid="community">
       {/* Header social brandizzato — SOLO nella Community: si capisce che è un nuovo social nel sito */}
       <div data-testid="community-social-header" className="relative overflow-hidden rounded-3xl p-5 mb-5 text-white shadow-lg"
-        style={{ background: "linear-gradient(135deg,#feda75 0%,#fa7e1e 22%,#d62976 55%,#962fbf 78%,#4f5bd5 100%)" }}>
+        style={{ background: "linear-gradient(135deg,#0f2231 0%,#123c4a 40%,#1f5a68 70%,#a9772f 100%)" }}>
         <div className="flex items-center gap-3">
           <div className="relative shrink-0">
             <div className="w-16 h-16 rounded-2xl bg-white/25 border-2 border-white/70 overflow-hidden shadow-md">
@@ -118,12 +120,18 @@ export default function Community() {
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="font-display text-2xl font-extrabold leading-none drop-shadow-sm">MikiLab Social</h1>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-white text-[#d62976] px-2 py-0.5 rounded-full shadow">{tri("Nuovo", "Neu", "New", "Nuevo")}</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-white text-[#123c4a] px-2 py-0.5 rounded-full shadow">{tri("Nuovo", "Neu", "New", "Nuevo")}</span>
             </div>
             <p className="text-sm text-white/95 mt-1 leading-snug font-semibold">
               {tri("Il nuovo social dei fornai, dentro il mio sito", "Das neue Bäcker-Social, direkt auf meiner Seite", "The new bakers' social, right inside my site", "La nueva red de panaderos, dentro de mi sitio")}
             </p>
             <p className="text-[11px] text-white/85 mt-0.5">{tri("Consigli, foto, ricette, amici e mercatino tra colleghi", "Tipps, Fotos, Rezepte, Freunde und Markt", "Tips, photos, recipes, friends and marketplace", "Consejos, fotos, recetas, amigos y mercadillo")}</p>
+            {user && (
+              <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
+                className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold bg-white/20 hover:bg-white/30 border border-white/40 px-3 py-1.5 rounded-full active:scale-95 transition-all">
+                <UserPlus className="w-3.5 h-3.5" /> {tri("Il mio profilo", "Mein Profil", "My profile", "Mi perfil")}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -168,6 +176,7 @@ export default function Community() {
       </button>
 
       <FriendsPanel open={friendsOpen} onClose={() => setFriendsOpen(false)} onCount={setFriendReqCount} />
+      {profileUser && <ProfilePanel userId={profileUser} onClose={() => setProfileUser(null)} />}
       <BakersMap open={mapOpen} onClose={() => setMapOpen(false)} />
 
       <AvatarBubbles variant="community" />
@@ -187,7 +196,7 @@ export default function Community() {
 
       {/* Intro viva e giovanile del Social */}
       <div data-testid="social-intro" className="rounded-2xl p-4 mb-4 text-white relative overflow-hidden"
-        style={{ background: "linear-gradient(120deg,#4f5bd5,#962fbf 45%,#d62976 80%,#fa7e1e)" }}>
+        style={{ background: "linear-gradient(120deg,#0f2231,#123c4a 40%,#1f5a68 72%,#a9772f)" }}>
         <p className="font-display text-lg font-extrabold leading-tight">{tri("Benvenuto nel Social dei Panettieri! 🥐🔥", "Willkommen im Bäcker-Social! 🥐🔥", "Welcome to the Bakers' Social! 🥐🔥", "¡Bienvenido al Social de Panaderos! 🥐🔥")}</p>
         <p className="text-[12.5px] text-white/90 mt-1 leading-snug">{tri("Mostra le tue sfornate, lancia idee, chiedi aiuto e trova colleghi vicino a te. Qui si cresce insieme.", "Zeig deine Backwerke, teile Ideen, frag um Rat und finde Kollegen in der Nähe.", "Show your bakes, drop ideas, ask for help and find fellow bakers near you.", "Muestra tus horneadas, lanza ideas, pide ayuda y encuentra colegas cerca.")}</p>
         <div className="flex gap-2 mt-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
@@ -247,11 +256,13 @@ export default function Community() {
             return (
               <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4 shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-display font-bold" style={{ background: C.color }}>{(p.author_name || "F")[0].toUpperCase()}</div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{p.author_name}</p>
-                    <p className="text-[11px] text-[#7E8A93]">{timeAgo(p.created_at, lang)}</p>
-                  </div>
+                  <button data-testid={`post-author-${p.id}`} onClick={() => p.author_id && setProfileUser(p.author_id)} className="flex items-center gap-2 min-w-0 active:scale-98 transition-transform">
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-display font-bold overflow-hidden" style={{ background: C.color }}>{p.author_avatar ? <img src={p.author_avatar} alt="" className="w-full h-full object-cover" /> : (p.author_name || "F")[0].toUpperCase()}</div>
+                    <div className="min-w-0 text-left">
+                      <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate hover:underline">{p.author_name}</p>
+                      <p className="text-[11px] text-[#7E8A93]">{timeAgo(p.created_at, lang)}</p>
+                    </div>
+                  </button>
                   <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full font-semibold flex items-center gap-1" style={{ background: C.color + "22", color: C.color }}><C.Icon className="w-3 h-3" />{catLabel(p.category)}</span>
                   {p.can_delete && <button data-testid={`community-delete-${p.id}`} onClick={() => remove(p.id)} className="text-[#7E8A93] hover:text-[#E4572E] p-1"><Trash2 className="w-4 h-4" /></button>}
                 </div>

@@ -4234,6 +4234,40 @@ async def market_delete(listing_id: str, user: dict = Depends(current_user)):
     return {"ok": True}
 
 
+class ProfileUpdateReq(BaseModel):
+    name: Optional[str] = None
+    bio: Optional[str] = None
+    picture: Optional[str] = None
+
+
+@api_router.get("/community/profile/{user_id}")
+async def community_profile(user_id: str):
+    u = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    if not u:
+        raise HTTPException(404, "Utente non trovato")
+    posts = await db.community_posts.find({"author_id": user_id, "is_deleted": {"$ne": True}}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    listings = await db.market_listings.count_documents({"owner_id": user_id, "is_deleted": {"$ne": True}})
+    return {
+        "user_id": user_id,
+        "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
+        "picture": u.get("picture", ""), "bio": u.get("bio", ""),
+        "joined": u.get("created_at"),
+        "posts": posts, "posts_count": len(posts), "listings_count": listings,
+    }
+
+
+@api_router.post("/community/profile")
+async def community_profile_update(body: ProfileUpdateReq, user: dict = Depends(current_user)):
+    upd = {}
+    if body.name is not None: upd["name"] = body.name.strip()[:60]
+    if body.bio is not None: upd["bio"] = body.bio.strip()[:300]
+    if body.picture is not None: upd["picture"] = body.picture.strip()[:600]
+    if upd:
+        await db.users.update_one({"user_id": user["user_id"]}, {"$set": upd})
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    return {"name": u.get("name"), "picture": u.get("picture", ""), "bio": u.get("bio", "")}
+
+
 # --- Notifiche Community (like/commenti sui propri post) ---
 async def _notify(recipient_id, actor_id, ntype, post_id, actor_name, snippet):
     if not recipient_id or recipient_id == actor_id:
