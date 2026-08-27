@@ -79,7 +79,7 @@ function App() {
   // Ritorno da Stripe: conferma acquisto ricetta / abbonamento e pulisce l'URL.
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
-    const clean = () => { const u = new URL(window.location.href); ["recipe", "sub", "session_id", "bundle"].forEach((k) => u.searchParams.delete(k)); window.history.replaceState({ tab: "home" }, "", u.toString()); };
+    const clean = () => { const u = new URL(window.location.href); ["recipe", "sub", "session_id", "bundle", "trial"].forEach((k) => u.searchParams.delete(k)); window.history.replaceState({ tab: "home" }, "", u.toString()); };
     if (p.get("bundle") === "success" && p.get("session_id")) {
       api.get(`/recipes/bundle/checkout/status/${p.get("session_id")}?lang=${lang}`).then((r) => {
         if (r?.data?.paid) {
@@ -104,6 +104,15 @@ function App() {
     else if (p.get("sub") === "success") {
       subscriptionApi.status().then(() => toast.success(tri("Abbonamento attivo! Grazie 🙏", "Abo aktiv! Danke 🙏", "Subscription active! Thank you 🙏"))).finally(clean);
     } else if (p.get("sub") === "cancel") { clean(); }
+    else if (p.get("trial") === "success" && p.get("session_id")) {
+      subscriptionApi.trialCheckoutStatus(p.get("session_id")).then((r) => {
+        if (r?.activated) {
+          toast.success(tri("Prova di 7 giorni attivata! Nessun addebito automatico 🎉", "7-Tage-Test aktiviert! Keine automatische Belastung 🎉", "7-day trial activated! No automatic charge 🎉"));
+          window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
+        }
+        clean();
+      }).catch(clean);
+    } else if (p.get("trial") === "cancel") { clean(); }
     else if (p.get("ricetta")) {
       setTab("ricette");
       const u = new URL(window.location.href); u.searchParams.delete("ricetta");

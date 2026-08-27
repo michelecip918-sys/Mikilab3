@@ -483,6 +483,34 @@ def _check_pw(pw, h):
         return False
 
 
+def _client_ip(request) -> str:
+    return (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+            or (request.client.host if request.client else "?"))
+
+
+async def _rate_limit(scope: str, key: str, max_count: int, window_seconds: int) -> bool:
+    """Rate limit basato su Mongo (finestra fissa). Ritorna False se il limite è superato."""
+    if not key or key == "?":
+        return True
+    ident = f"{scope}:{key}"
+    now = datetime.now(timezone.utc)
+    rec = await db.rate_limits.find_one({"_id": ident})
+    if rec and rec.get("window_start"):
+        try:
+            ws = datetime.fromisoformat(rec["window_start"])
+        except Exception:
+            ws = None
+        if ws and (now - ws).total_seconds() < window_seconds:
+            if int(rec.get("count", 0)) >= max_count:
+                return False
+            await db.rate_limits.update_one({"_id": ident}, {"$inc": {"count": 1}})
+            return True
+    await db.rate_limits.update_one(
+        {"_id": ident},
+        {"$set": {"window_start": now.isoformat(), "count": 1, "ts": now}}, upsert=True)
+    return True
+
+
 async def _make_session(user_id, token=None):
     token = token or secrets.token_urlsafe(32)
     exp = (datetime.now(timezone.utc) + timedelta(days=SESSION_DAYS)).isoformat()
@@ -763,9 +791,12 @@ async def _send_verification(email: str, origin_url: str, lang: str):
 
 
 @api_router.post("/auth/register")
-async def auth_register(payload: RegisterReq, response: Response):
+async def auth_register(payload: RegisterReq, request: Request, response: Response):
     email = payload.email.strip().lower()
     lang = payload.lang if payload.lang in ("it", "de", "en", "es") else "it"
+    # Anti-spam: max 5 registrazioni all'ora per dispositivo/IP
+    if not await _rate_limit("register", _client_ip(request), 5, 3600):
+        raise HTTPException(status_code=429, detail="Troppe registrazioni da questo dispositivo. Riprova più tardi.")
     if not email or not payload.password:
         raise HTTPException(status_code=400, detail="Email e password richieste")
     _validate_password(payload.password, lang)
@@ -1343,7 +1374,7 @@ async def create_recipe(payload: RecipeCreate, user: dict = Depends(current_user
 
 
 @api_router.post("/upload")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(file: UploadFile = File(...), user: dict = Depends(current_user)):
     """Carica una foto nell'archivio immagini dedicato e restituisce l'URL servito dal backend."""
     ext = (file.filename.rsplit(".", 1)[-1] if file.filename and "." in file.filename else "jpg").lower()
     if ext not in MIME_TYPES:
@@ -3240,6 +3271,80 @@ async def activate_trial(body: TrialReq, request: Request, user: dict = Depends(
     return {"pro": True, "source": "trial", "expires_at": exp}
 
 
+class TrialCardReq(BaseModel):
+    origin_url: str
+
+
+@api_router.post("/trial/checkout")
+async def trial_checkout(body: TrialCardReq, user: dict = Depends(current_user)):
+    """Prova 7 giorni: raccoglie la carta con Stripe (mode=setup) SENZA addebitare nulla."""
+    email = user["email"].strip().lower()
+    ent = await db.entitlements.find_one({"email": email})
+    if ent and ent.get("trial_used"):
+        raise HTTPException(400, "Prova già utilizzata")
+    existing = _stripe.Customer.list(email=email, limit=1).data
+    customer = existing[0] if existing else _stripe.Customer.create(email=email)
+    origin = body.origin_url.rstrip("/")
+    session = _stripe.checkout.Session.create(
+        mode="setup",
+        customer=customer.id,
+        managed_payments={"enabled": False},
+        payment_method_types=["card"],
+        success_url=origin + "/?trial=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=origin + "/?trial=cancel",
+        metadata={"email": email, "kind": "trial_setup"},
+    )
+    await db.payment_transactions.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "kind": "trial_setup", "amount": 0, "currency": "eur",
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
+
+
+async def _activate_card_trial(email: str, session) -> dict:
+    """Concede la prova 7 giorni dopo il salvataggio della carta. NESSUN addebito automatico."""
+    email = (email or "").strip().lower()
+    ent = await db.entitlements.find_one({"email": email})
+    if ent and ent.get("trial_used"):
+        return {"pro": bool(ent.get("pro")), "source": ent.get("source"), "expires_at": ent.get("expires_at")}
+    pm_id = None
+    cust_id = None
+    try:
+        si = session.get("setup_intent")
+        if isinstance(si, str):
+            si = _stripe.SetupIntent.retrieve(si)
+        if si:
+            pm_id = si.get("payment_method")
+        cust_id = session.get("customer")
+    except Exception:
+        pass
+    exp = (datetime.now(timezone.utc) + timedelta(days=7)).isoformat()
+    await db.entitlements.update_one({"email": email},
+        {"$set": {"email": email, "pro": True, "source": "trial_card",
+                  "expires_at": exp, "trial_used": True,
+                  "stripe_customer_id": cust_id, "stripe_payment_method_id": pm_id,
+                  "trial_autocharge": False, "updated_at": now_iso()}}, upsert=True)
+    return {"pro": True, "source": "trial_card", "expires_at": exp}
+
+
+@api_router.get("/trial/checkout/status/{session_id}")
+async def trial_checkout_status(session_id: str, user: dict = Depends(current_user)):
+    email = user["email"].strip().lower()
+    try:
+        session = _stripe.checkout.Session.retrieve(session_id, expand=["setup_intent"])
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    if (session.get("metadata") or {}).get("email") != email:
+        raise HTTPException(403, "Non autorizzato")
+    if session.get("status") == "complete":
+        await db.payment_transactions.update_one({"session_id": session_id},
+            {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
+        res = await _activate_card_trial(email, session)
+        return {"activated": True, **res}
+    return {"activated": False}
+
+
 @api_router.post("/webhook/stripe")
 async def stripe_webhook(request: Request):
     payload = await request.body()
@@ -3259,6 +3364,12 @@ async def stripe_webhook(request: Request):
             await _recipe_fulfill(obj)
         elif meta.get("kind") == "bundle" and email and meta.get("bundle") in BUNDLE_DEFS:
             await _bundle_fulfill(obj, lang=meta.get("lang", "it"))
+        elif meta.get("kind") == "trial_setup" and email:
+            try:
+                full = _stripe.checkout.Session.retrieve(obj.get("id"), expand=["setup_intent"])
+            except Exception:
+                full = obj
+            await _activate_card_trial(email, full)
         else:
             await db.payment_transactions.update_one({"session_id": obj.get("id")},
                 {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
@@ -3548,8 +3659,13 @@ def _reset_email_html(link: str, de: bool) -> str:
 
 
 @api_router.post("/auth/forgot-password")
-async def forgot_password(body: ForgotReq):
+async def forgot_password(body: ForgotReq, request: Request):
     email = (body.email or "").strip().lower()
+    # Anti-spam: max 10 richieste/ora per IP e 3/ora per email
+    if not await _rate_limit("forgot_ip", _client_ip(request), 10, 3600):
+        raise HTTPException(status_code=429, detail="Troppe richieste. Riprova più tardi.")
+    if email and not await _rate_limit("forgot_email", email, 3, 3600):
+        raise HTTPException(status_code=429, detail="Troppe richieste per questa email. Riprova più tardi.")
     # Non riveliamo se l'email esiste (anti-enumeration). Rispondiamo sempre ok.
     u = await db.users.find_one({"email": email, "auth_provider": "email"})
     if u and RESEND_API_KEY:
@@ -5038,6 +5154,10 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Follow-up email loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Follow-up loop start error: {e}")
+    try:
+        await db.rate_limits.create_index("ts", expireAfterSeconds=86400)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"rate_limits index error: {e}")
 
 
 @app.on_event("shutdown")

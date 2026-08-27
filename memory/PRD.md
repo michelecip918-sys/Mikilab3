@@ -1587,3 +1587,15 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
   · Pane da Hamburger [panini]
   · Pan di Kristall 95% idratazione (trend) [pane]
 - Viennoiserie non è più solo panettoni. Verificato via API (categorie/img/traduzioni OK).
+
+## v-sec (27 Ago 2026) — Rate limiting auth + Prova 7gg con carta (no addebito auto)
+- **Rate limiting (P0 FATTO)**: helper Mongo `_rate_limit(scope,key,max,window)` + `_client_ip()` (collezione `rate_limits`, TTL 24h su `ts`).
+  - `POST /api/auth/register`: max **5/ora per IP** → 429 "Troppe registrazioni da questo dispositivo".
+  - `POST /api/auth/forgot-password`: max **10/ora per IP** + **3/ora per email** → 429. Mantiene anti-enumeration ({ok:true}).
+  - Verificato via curl: 6° register stesso IP → 429; 4° forgot stessa email → 429.
+- **Prova 7 giorni legata alla carta, SENZA addebito automatico (P1 FATTO — opzione b utente)**:
+  - Backend: `POST /api/trial/checkout` → Stripe Checkout `mode="setup"` (managed_payments off) raccoglie la carta senza addebitare; `GET /api/trial/checkout/status/{sid}` + webhook `checkout.session.completed` (kind=trial_setup) → `_activate_card_trial()` concede 7gg PRO (`source="trial_card"`, `trial_used=True`, salva `stripe_customer_id`/`stripe_payment_method_id`, `trial_autocharge=False`). Nessun rinnovo automatico: alla scadenza l'utente deve abbonarsi manualmente.
+  - Frontend: `subscriptionApi.trialCheckout/trialCheckoutStatus` (lib/api.js); PaywallGate mostra blocco "Prova 7 giorni — richiede carta, non addebitiamo nulla" con pulsante `trial-7d-card` → redirect Stripe. App.js gestisce ritorno `?trial=success|cancel`.
+  - **RIMOSSA** la vecchia prova device senza registrazione (localStorage `mikilab_local_trial`) e i pulsanti 1h/24h dal paywall (abusabili): ora la prova richiede login + carta. Endpoint legacy `/api/trial/activate` resta ma non più usato dalla UI.
+  - Verificato: `trial/checkout` ritorna URL Stripe valido; UI mostra il nuovo pulsante (screenshot).
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.

@@ -112,6 +112,8 @@ export const subscriptionApi = {
   status: () => api.get(`/subscription/status`).then((r) => r.data),
   checkout: (plan, tier = "lab") => api.post(`/subscription/checkout`, { plan, tier, origin_url: window.location.origin }).then((r) => r.data),
   trial: (hours) => api.post(`/trial/activate`, { hours }).then((r) => r.data),
+  trialCheckout: () => api.post(`/trial/checkout`, { origin_url: window.location.origin }).then((r) => r.data),
+  trialCheckoutStatus: (session_id) => api.get(`/trial/checkout/status/${session_id}`).then((r) => r.data),
 };
 
 export const recipePurchaseApi = {

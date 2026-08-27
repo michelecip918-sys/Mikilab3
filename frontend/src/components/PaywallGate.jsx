@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check, Store, Truck, CalendarClock } from "lucide-react";
+import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check, Store, Truck, CalendarClock, CreditCard } from "lucide-react";
 import { subscriptionApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
@@ -111,13 +111,6 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [left, setLeft] = useState("");
-  // Prova gratuita 7 giorni per visitatori NON registrati (a livello di dispositivo)
-  const [localTrial, setLocalTrial] = useState(() => localStorage.getItem("mikilab_local_trial"));
-  const TRIAL_MS = 7 * 24 * 3600 * 1000;
-  const localMsLeft = localTrial ? (new Date(localTrial).getTime() + TRIAL_MS - Date.now()) : 0;
-  const localTrialActive = !user && localMsLeft > 0;
-  const localDaysLeft = Math.ceil(localMsLeft / 86400000);
-  const startLocalTrial = () => { const iso = new Date().toISOString(); localStorage.setItem("mikilab_local_trial", iso); setLocalTrial(iso); };
 
   const load = useCallback(async () => {
     if (!email) { setStatus(null); setLoading(false); return; }
@@ -129,6 +122,13 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   }, [email]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Aggiorna lo stato quando una prova/acquisto viene attivato altrove (es. ritorno da Stripe)
+  useEffect(() => {
+    const h = () => load();
+    window.addEventListener("mikilab-entitlements-updated", h);
+    return () => window.removeEventListener("mikilab-entitlements-updated", h);
+  }, [load]);
 
   // Countdown prova/abbonamento
   useEffect(() => {
@@ -149,29 +149,17 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
     } catch { toast.error(tri("Errore checkout", "Checkout-Fehler", "Checkout error")); }
   };
 
-  const startTrial = async (hours) => {
+  const startCardTrial = async () => {
     try {
-      await subscriptionApi.trial(hours);
-      toast.success(tri("Prova attivata!", "Test aktiviert!", "Trial activated!"));
-      load();
+      const d = await subscriptionApi.trialCheckout();
+      if (d.url) window.location.href = d.url;
+      else toast.error(tri("Errore avvio prova", "Fehler beim Start", "Trial start error"));
     } catch (e) {
       toast.error(e?.response?.data?.detail || tri("Prova non disponibile", "Test nicht verfügbar", "Trial not available"));
     }
   };
 
   if (loading) return <div className="py-20 text-center text-[#7E8A93]">…</div>;
-
-  // Prova gratuita 7 giorni (dispositivo, senza registrazione) → contenuto sbloccato
-  if (localTrialActive) {
-    return (
-      <>
-        <div data-testid="local-trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#5aa0cf]/15 border border-[#5aa0cf]/40 px-3 py-2 text-sm font-semibold text-[#2e6690] dark:text-[#a9d2ec]">
-          <Sparkles className="w-4 h-4" /> {tri("Prova gratuita — restano", "Kostenlose Testphase — verbleibend", "Free trial — left")} <span className="font-mono-data">{localDaysLeft} {tri(localDaysLeft === 1 ? "giorno" : "giorni", localDaysLeft === 1 ? "Tag" : "Tage", localDaysLeft === 1 ? "day" : "days")}</span>
-        </div>
-        {children}
-      </>
-    );
-  }
 
   // PRO / prova attiva → contenuto sbloccato (+ banner countdown se prova)
   const hasAccess = usesAcademy ? (status?.academy || status?.pro) : status?.pro;
@@ -235,16 +223,9 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
 
       {!email ? (
         <div className="mt-5 space-y-3">
-          {!localTrial ? (
-            <button data-testid="local-trial-start" onClick={startLocalTrial}
-              className="w-full bg-[#5aa0cf] hover:bg-[#336a94] text-white font-bold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
-              <Sparkles className="w-5 h-5" /> {tri("Prova gratis 7 giorni (senza registrazione)", "7 Tage kostenlos testen (ohne Anmeldung)", "Try free for 7 days (no sign-up)")}
-            </button>
-          ) : (
-            <p data-testid="local-trial-ended" className="text-center text-sm text-[#7E8A93]">
-              {tri("La tua prova gratuita di 7 giorni è terminata. Accedi o abbonati per continuare.", "Deine 7-tägige Testphase ist beendet. Melde dich an oder abonniere.", "Your 7-day free trial has ended. Log in or subscribe to continue.")}
-            </p>
-          )}
+          <p data-testid="paywall-trial-hint" className="text-center text-sm text-[#7E8A93]">
+            {tri("Accedi per iniziare la prova gratuita di 7 giorni.", "Melde dich an, um die 7-tägige Testphase zu starten.", "Log in to start your 7-day free trial.")}
+          </p>
           <button data-testid="paywall-login" onClick={() => setAuthOpen(true)}
             className="w-full bg-[#3f7cac] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
             {tri("Accedi per continuare", "Anmelden, um fortzufahren", "Log in to continue")}
@@ -271,14 +252,17 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
           {!status?.trial_used && (
             <div className="rounded-2xl bg-[#5aa0cf]/10 border border-[#5aa0cf]/30 p-4">
               <p className="flex items-center gap-2 text-sm font-semibold text-[#2e6690] dark:text-[#a9d2ec]">
-                <Sparkles className="w-4 h-4" /> {tri("Prova gratis (una volta)", "Kostenlos testen (einmalig)", "Free trial (once)")}
+                <Sparkles className="w-4 h-4" /> {tri("Prova gratis 7 giorni", "7 Tage kostenlos testen", "7-day free trial")}
               </p>
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                <button data-testid="trial-1h" onClick={() => startTrial(1)}
-                  className="bg-[#5aa0cf] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("1 ora", "1 Stunde", "1 hour")}</button>
-                <button data-testid="trial-24h" onClick={() => startTrial(24)}
-                  className="bg-[#5aa0cf] text-white font-semibold py-2.5 rounded-xl active:scale-97">{tri("24 ore", "24 Stunden", "24 hours")}</button>
-              </div>
+              <p className="text-xs text-[#7E8A93] mt-1 leading-snug">
+                {tri("Richiede una carta ma NON addebitiamo nulla. Alla fine dei 7 giorni decidi tu se abbonarti: nessun rinnovo automatico.",
+                     "Erfordert eine Karte, aber wir belasten nichts. Nach 7 Tagen entscheidest du, ob du abonnierst: keine automatische Verlängerung.",
+                     "Requires a card but we charge nothing. After 7 days you decide whether to subscribe: no automatic renewal.")}
+              </p>
+              <button data-testid="trial-7d-card" onClick={startCardTrial}
+                className="w-full mt-2.5 bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold py-2.5 rounded-xl active:scale-97 transition-all flex items-center justify-center gap-2">
+                <CreditCard className="w-4 h-4" /> {tri("Inizia la prova (carta richiesta)", "Test starten (Karte erforderlich)", "Start trial (card required)")}
+              </button>
             </div>
           )}
         </div>
