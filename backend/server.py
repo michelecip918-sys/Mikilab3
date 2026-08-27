@@ -1925,10 +1925,37 @@ MAESTRO_SYSTEM = (
 )
 
 LANG_DIRECTIVE = {
-    "it": " Rispondi SEMPRE in italiano.",
-    "de": " Antworte IMMER auf Deutsch (respond always in German).",
-    "en": " Always respond in English.",
-    "es": " Responde SIEMPRE en español.",
+    "it": (
+        "\n\n### LINGUA DI RISPOSTA: ITALIANO ###\n"
+        "Scrivi TUTTA la risposta in italiano: titoli di sezione, elenchi attrezzature, riepiloghi e note. "
+        "Non mescolare MAI lingue diverse nella stessa risposta."
+    ),
+    "de": (
+        "\n\n### ANTWORTSPRACHE: DEUTSCH ###\n"
+        "Schreibe die GESAMTE Antwort auf Deutsch – AUCH Überschriften, Geräte-/Maschinenlisten, Zusammenfassungen und Hinweise. "
+        "Die Maschinen werden dir auf Italienisch genannt: ÜBERSETZE die generischen Bezeichnungen ins Deutsche, z. B. "
+        "'Impastatrice a spirale (vasca estraibile)' → 'Spiralkneter (herausnehmbarer Kessel)', "
+        "'Impastatrice a bracci tuffanti' → 'Tauchkneter', 'Sfogliatrice automatica' → 'Ausrollmaschine', "
+        "'Cella di fermalievitazione' → 'Gär-/Kühlzelle', 'Forno a carrello rotante' → 'Stikkenofen (Rotationsofen)', "
+        "'Forno a piano di pietra con vapore alta pressione' → 'Steinofen mit Hochdruckdampf', 'Spezzatrice/arrotondatrice' → 'Teigteiler/Rundwirker'. "
+        "Behalte NUR Eigennamen/Marken unverändert (Rheon, CLIMATHERM, Rotovent). MISCHE NIEMALS Italienisch und Deutsch."
+    ),
+    "en": (
+        "\n\n### RESPONSE LANGUAGE: ENGLISH ###\n"
+        "Write the ENTIRE response in English, INCLUDING section titles, equipment/machine lists, recaps and notes. "
+        "The machines are given to you in Italian: TRANSLATE the generic descriptions into English "
+        "(e.g. 'Impastatrice a spirale' → 'Spiral mixer', 'Sfogliatrice automatica' → 'Automatic sheeter', "
+        "'Cella di fermalievitazione' → 'Retarder-proofer', 'Forno a carrello rotante' → 'Rotary rack oven', "
+        "'Forno a piano di pietra' → 'Stone deck oven'). Keep ONLY brand names unchanged (Rheon, CLIMATHERM, Rotovent). NEVER mix languages."
+    ),
+    "es": (
+        "\n\n### IDIOMA DE RESPUESTA: ESPAÑOL ###\n"
+        "Escribe TODA la respuesta en español, INCLUIDOS títulos de sección, listas de equipos/máquinas, resúmenes y notas. "
+        "Las máquinas se te indican en italiano: TRADUCE las descripciones genéricas al español "
+        "(p. ej. 'Impastatrice a spirale' → 'Amasadora de espiral', 'Sfogliatrice automatica' → 'Laminadora automática', "
+        "'Cella di fermalievitazione' → 'Cámara de fermentación controlada', 'Forno a carrello rotante' → 'Horno rotativo de carros'). "
+        "Mantén SOLO los nombres de marca sin cambios (Rheon, CLIMATHERM, Rotovent). NUNCA mezcles idiomas."
+    ),
 }
 
 MACHINE_PROTOCOL = (
@@ -1959,7 +1986,7 @@ async def maestro_stream(session_id: str, message: str, lang: str = "it", machin
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=session_id,
-        system_message=MAESTRO_SYSTEM + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]) + machine_directive,
+        system_message=MAESTRO_SYSTEM + machine_directive + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]),
     ).with_model("anthropic", "claude-sonnet-4-6")
 
     # Load prior history for this session into the chat for continuity
