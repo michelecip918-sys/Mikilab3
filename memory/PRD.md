@@ -1733,3 +1733,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Note minori non bloccanti: picker reazioni `-top-9` può essere tagliato dall'header per il messaggio più in alto; trigger reazione (smiley) poco contrastato; `sos-recipe` ritorna {recipe_id:null} con HTTP 200 in caso di nessun match (UI semplicemente non mostra la card). server.py monolite (~9k righe) da splittare (facoltativo).
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
 
+
+## v71 (27 Ago 2026) — Sfida a Tema settimanale
+- **Sfida a Tema**: tema rotante automatico per settimana ISO (8 temi: idratazione, lievito madre, fermentazione, farine/W, cottura, pieghe, temperatura, difetti). `GET /api/academy/weekly-theme?lang=` → {week, theme_id, title localizzato}. `POST /api/academy/quiz` accetta ora `theme` opzionale → le domande sono vincolate al tema.
+- **UI (EvolvingQuiz)**: card `weekly-theme-card` con titolo del tema (`weekly-theme-title`) e pulsante `weekly-theme-start` ("Gioca") che attiva la modalità tema (banner + `weekly-theme-exit`); le risposte corrette contano comunque per la classifica/Sfida della Settimana. Trilingue IT/DE/EN/ES.
+- Verificato: endpoint tema (W35 → "Farine e forza"/"Flours & strength"), quiz a tema (domanda su idratazione), UI card + attivazione modalità sfida via screenshot.
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.
+

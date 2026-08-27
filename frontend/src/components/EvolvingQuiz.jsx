@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trophy, CheckCircle2, XCircle, Loader2, RotateCcw, GraduationCap, Sparkles, Award } from "lucide-react";
+import { Trophy, CheckCircle2, XCircle, Loader2, RotateCcw, GraduationCap, Sparkles, Award, Flame, X } from "lucide-react";
 import { academyApi, profileApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -34,6 +34,10 @@ export default function EvolvingQuiz() {
   const [showBoard, setShowBoard] = useState(false);
   const loadBoard = () => { if (user) academyApi.leaderboard().then((d) => { setBoard(d.rows || []); setChampion(d.champion || null); }).catch(() => setBoard([])); };
   const [diploma, setDiploma] = useState(() => { try { return localStorage.getItem(DIPLOMA_KEY) === "1"; } catch { return false; } });
+  const [theme, setTheme] = useState(null);       // {theme_id, title}
+  const [themeMode, setThemeMode] = useState(false);
+
+  useEffect(() => { academyApi.weeklyTheme(lang).then((t) => t && setTheme(t)).catch(() => {}); }, [lang]);
 
   useEffect(() => {
     if (!user) return;
@@ -42,16 +46,22 @@ export default function EvolvingQuiz() {
     }).catch(() => {});
   }, [user]);
 
-  const loadQuestion = async (lvl = level) => {
+  const loadQuestion = async (lvl = level, useTheme = themeMode) => {
     setLoading(true); setPicked(null); setQ(null);
     try {
-      const data = await academyApi.quiz(lvl, lang, asked);
+      const data = await academyApi.quiz(lvl, lang, asked, useTheme && theme ? theme.title : null);
       setQ(data);
       setAsked((a) => [...a, data.question].slice(-12));
     } catch {
       toast.error(tri("Non riesco a generare la domanda, riprova.", "Frage konnte nicht erstellt werden.", "Couldn't generate the question, retry.", "No se pudo generar la pregunta."));
     } finally { setLoading(false); }
   };
+
+  const startThemeChallenge = () => {
+    setThemeMode(true); setStreak(0); setPicked(null); setQ(null); setAsked([]);
+    loadQuestion(level, true);
+  };
+  const exitTheme = () => { setThemeMode(false); setQ(null); setPicked(null); };
 
   const pick = (i) => {
     if (picked != null || !q) return;
@@ -103,6 +113,25 @@ export default function EvolvingQuiz() {
         <p data-testid="master-progress" className="text-[11px] font-semibold text-[#a9772f] mb-2">
           {tri(`Diploma: ${masterStreak}/${MASTER_TARGET} risposte Master di fila`, `Diplom: ${masterStreak}/${MASTER_TARGET} Master-Antworten in Folge`, `Diploma: ${masterStreak}/${MASTER_TARGET} Master answers in a row`, `Diploma: ${masterStreak}/${MASTER_TARGET} respuestas Master seguidas`)}
         </p>
+      )}
+
+      {/* Sfida a Tema settimanale */}
+      {theme && (
+        <div data-testid="weekly-theme-card" className="mb-3 rounded-xl p-3 text-white shadow-sm" style={{ background: themeMode ? "linear-gradient(135deg,#b23a2f,#7a1f1f)" : "linear-gradient(135deg,#7a4fbf,#4a2e78)" }}>
+          <div className="flex items-center gap-2">
+            <Flame className="w-5 h-5 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-white/80">{tri("Sfida della settimana", "Challenge der Woche", "Weekly challenge", "Desafío de la semana")}</p>
+              <p data-testid="weekly-theme-title" className="font-display text-base font-bold leading-tight truncate">{theme.title}</p>
+            </div>
+            {themeMode ? (
+              <button data-testid="weekly-theme-exit" onClick={exitTheme} className="text-xs font-bold bg-white/20 px-2.5 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><X className="w-3.5 h-3.5" /> {tri("Esci", "Beenden", "Exit", "Salir")}</button>
+            ) : (
+              <button data-testid="weekly-theme-start" onClick={startThemeChallenge} className="text-xs font-bold bg-white text-[#4a2e78] px-3 py-1.5 rounded-full active:scale-95">{tri("Gioca", "Spielen", "Play", "Jugar")}</button>
+            )}
+          </div>
+          {themeMode && <p className="text-[11px] text-white/85 mt-1">{tri("Domande a tema attive: rispondi bene per scalare la classifica!", "Themenfragen aktiv: richtig antworten und aufsteigen!", "Themed questions on: answer well to climb the leaderboard!", "Preguntas temáticas activas: ¡responde bien para subir!")}</p>}
+        </div>
       )}
 
       {/* Selettore livello */}

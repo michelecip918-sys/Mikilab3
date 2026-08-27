@@ -203,7 +203,8 @@ export const dmApi = {
 };
 
 export const academyApi = {
-  quiz: (level, lang, asked) => api.post(`/academy/quiz`, { level, lang, asked }).then((r) => r.data),
+  quiz: (level, lang, asked, theme) => api.post(`/academy/quiz`, { level, lang, asked, theme }).then((r) => r.data),
+  weeklyTheme: (lang) => api.get(`/academy/weekly-theme`, { params: { lang } }).then((r) => r.data).catch(() => null),
   grantBadge: (badge) => api.post(`/academy/badge`, { badge }).then((r) => r.data),
   quizScore: (points = 1) => api.post(`/academy/quiz-score`, { points }).then((r) => r.data).catch(() => ({})),
   leaderboard: () => api.get(`/academy/leaderboard`).then((r) => r.data).catch(() => ({ rows: [] })),

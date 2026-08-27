@@ -2154,6 +2154,34 @@ class QuizRequest(BaseModel):
     level: str = "apprendista"   # apprendista | avanzato | master
     lang: str = "it"
     asked: Optional[List[str]] = None   # domande già poste (per evitare ripetizioni)
+    theme: Optional[str] = None   # tema della sfida settimanale (facoltativo)
+
+
+# Temi rotanti della "Sfida a Tema" settimanale
+WEEKLY_THEMES = [
+    {"id": "idratazione", "it": "Idratazione", "de": "Hydratation", "en": "Hydration", "es": "Hidratación"},
+    {"id": "lievito_madre", "it": "Lievito madre", "de": "Sauerteig", "en": "Sourdough starter", "es": "Masa madre"},
+    {"id": "fermentazione", "it": "Fermentazione e maturazione", "de": "Gärung & Reifung", "en": "Fermentation & maturation", "es": "Fermentación y maduración"},
+    {"id": "farine", "it": "Farine e forza (W)", "de": "Mehle & Stärke (W)", "en": "Flours & strength (W)", "es": "Harinas y fuerza (W)"},
+    {"id": "cottura", "it": "Cottura e forno di casa", "de": "Backen & Hausofen", "en": "Baking & home oven", "es": "Cocción y horno de casa"},
+    {"id": "pieghe", "it": "Pieghe e incordatura", "de": "Falten & Teigstruktur", "en": "Folds & gluten development", "es": "Pliegues y amasado"},
+    {"id": "temperatura", "it": "Temperatura e clima della cucina", "de": "Temperatur & Küchenklima", "en": "Temperature & kitchen climate", "es": "Temperatura y clima de la cocina"},
+    {"id": "difetti", "it": "Difetti del pane e rimedi", "de": "Brotfehler & Lösungen", "en": "Bread faults & fixes", "es": "Defectos del pan y soluciones"},
+]
+
+
+def _weekly_theme_index():
+    from datetime import date
+    _, w, _2 = date.today().isocalendar()
+    return w % len(WEEKLY_THEMES)
+
+
+@api_router.get("/academy/weekly-theme")
+async def academy_weekly_theme(lang: str = "it"):
+    lang = lang if lang in ("it", "de", "en", "es") else "it"
+    idx = _weekly_theme_index()
+    th = WEEKLY_THEMES[idx]
+    return {"week": _iso_week(), "theme_id": th["id"], "title": th.get(lang, th["it"])}
 
 
 _QUIZ_LEVELS = {
@@ -2188,11 +2216,14 @@ async def academy_quiz(payload: QuizRequest):
     avoid = ""
     if payload.asked:
         avoid = " Evita di ripetere queste domande già poste: " + " | ".join(payload.asked[-12:]) + "."
+    theme_hint = ""
+    if payload.theme:
+        theme_hint = f" La domanda DEVE riguardare specificamente il tema: «{payload.theme[:60]}»."
     lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo"}[lang]
     schema = '{"question": "...", "options": ["...","...","..."], "correct": 0, "explanation": "spiegazione tecnica e scientifica del perche la risposta corretta e giusta (2-4 frasi)", "level": "' + level + '"}'
     prompt = (
         "Genera UNA domanda a risposta multipla per un QUIZ di panificazione CASALINGA. "
-        + lvl_desc + avoid + "\n"
+        + lvl_desc + theme_hint + avoid + "\n"
         "La domanda deve essere realistica, tecnica e verificabile. Fornisci esattamente 3 opzioni di risposta, una sola corretta.\n"
         + f"Scrivi TUTTO in {lang_name}.\n"
         + "Restituisci SOLO JSON valido con questo schema esatto:\n"
