@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -1071,6 +1071,17 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#3f7cac] mb-2">{t("capo_plan_title")}</p>
                 <ReactMarkdown>{plan}</ReactMarkdown>
+                <div data-testid="capo-plan-disclaimer" className="mt-4 flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-50 dark:bg-amber-500/10 px-3 py-2.5">
+                  <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                  <p className="text-xs text-amber-700 dark:text-amber-300/90 leading-relaxed">
+                    {tri3(lang,
+                      "Piano generato dall'IA a scopo indicativo. Tempi, temperature e idratazione vanno sempre validati dal fornaio in base a farina, ambiente e attrezzatura.",
+                      "KI-generierter Plan als Richtwert. Zeiten, Temperaturen und Hydratation müssen stets vom Bäcker anhand von Mehl, Umgebung und Ausstattung geprüft werden.",
+                      "AI-generated plan for guidance only. Times, temperatures and hydration must always be validated by the baker based on flour, environment and equipment.",
+                      "Plan generado por IA a título orientativo. Los tiempos, temperaturas e hidratación deben ser validados siempre por el panadero según la harina, el entorno y el equipo."
+                    )}
+                  </p>
+                </div>
               </div>
 
               {modules.spesa && <SupplierOrder totals={shopTotals} />}
