@@ -140,6 +140,13 @@ export const communityApi = {
   remove: (id) => api.delete(`/community/posts/${id}`).then((r) => r.data),
 };
 
+export const bakersApi = {
+  map: () => api.get(`/bakers/map`).then((r) => r.data).catch(() => []),
+  me: () => api.get(`/bakers/me`).then((r) => r.data).catch(() => null),
+  save: (data) => api.put(`/bakers/me`, data).then((r) => r.data),
+  remove: () => api.delete(`/bakers/me`).then((r) => r.data),
+};
+
 export const storesApi = {
   list: () => api.get(`/stores`).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/stores`, data).then((r) => r.data),

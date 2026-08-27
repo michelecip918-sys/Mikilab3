@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -8,6 +8,7 @@ import AvatarBubbles from "@/components/AvatarBubbles";
 import Marketplace from "@/sections/Marketplace";
 import { marketNewCount, markMarketSeen } from "@/lib/market";
 import FriendsPanel from "@/components/FriendsPanel";
+import BakersMap from "@/components/BakersMap";
 import { friendsApi } from "@/lib/api";
 
 const CATS = [
@@ -52,6 +53,7 @@ export default function Community() {
   const [commentText, setCommentText] = useState("");
   const [marketNew, setMarketNew] = useState(0);
   const [friendsOpen, setFriendsOpen] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
   const [friendReqCount, setFriendReqCount] = useState(0);
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); }, []);
@@ -133,7 +135,20 @@ export default function Community() {
         <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
       </button>
 
+      <button data-testid="community-map-btn" onClick={() => setMapOpen(true)}
+        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#2e8b6f] to-[#1c5c49] text-white shadow-md active:scale-98 transition-all">
+        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <MapPin className="w-6 h-6" />
+        </div>
+        <div className="flex-1 min-w-0 text-left">
+          <p className="font-display text-base font-bold leading-tight">{tri("Mappa dei Fornai", "Bäcker-Karte", "Bakers Map", "Mapa de Panaderos")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{tri("Scopri i fornai MikiLab nel mondo e fatti conoscere", "Entdecke MikiLab-Bäcker weltweit und zeige dich", "Discover MikiLab bakers worldwide and get known", "Descubre panaderos MikiLab en el mundo y date a conocer")}</p>
+        </div>
+        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
+      </button>
+
       <FriendsPanel open={friendsOpen} onClose={() => setFriendsOpen(false)} onCount={setFriendReqCount} />
+      <BakersMap open={mapOpen} onClose={() => setMapOpen(false)} />
 
       <AvatarBubbles variant="community" />
 

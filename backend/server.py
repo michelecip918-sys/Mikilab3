@@ -1513,6 +1513,53 @@ async def delete_capo_last_plan(user: dict = Depends(current_user)):
 
 
 # ---------------------------------------------------------------------------
+# Mappa dei Fornai — pin opt-in (nome + città + bio + posizione approssimata)
+# ---------------------------------------------------------------------------
+class BakerPin(BaseModel):
+    name: str = ""
+    city: str = ""
+    country: Optional[str] = ""
+    bio: Optional[str] = ""
+    lat: float
+    lng: float
+
+
+@api_router.get("/bakers/map")
+async def get_bakers_map(user: dict = Depends(current_user)):
+    docs = await db.baker_pins.find({}, {"_id": 0, "user_id": 0}).to_list(2000)
+    return docs
+
+
+@api_router.get("/bakers/me")
+async def get_baker_me(user: dict = Depends(current_user)):
+    doc = await db.baker_pins.find_one({"user_id": user["user_id"]}, {"_id": 0, "user_id": 0})
+    return doc  # null se non presente
+
+
+@api_router.put("/bakers/me")
+async def save_baker_me(payload: BakerPin, user: dict = Depends(current_user)):
+    # Privacy: posizione approssimata (~1km) arrotondando le coordinate.
+    doc = {
+        "name": (payload.name or user.get("name") or "Fornaio").strip()[:60],
+        "city": (payload.city or "").strip()[:80],
+        "country": (payload.country or "").strip()[:60],
+        "bio": (payload.bio or "").strip()[:200],
+        "lat": round(float(payload.lat), 2),
+        "lng": round(float(payload.lng), 2),
+        "updated_at": now_iso(),
+    }
+    await db.baker_pins.update_one({"user_id": user["user_id"]}, {"$set": {**doc, "user_id": user["user_id"]}}, upsert=True)
+    return doc
+
+
+@api_router.delete("/bakers/me")
+async def delete_baker_me(user: dict = Depends(current_user)):
+    await db.baker_pins.delete_one({"user_id": user["user_id"]})
+    return {"success": True}
+
+
+
+# ---------------------------------------------------------------------------
 # Archivio Piani di Lavoro salvati (per utente): più piani con nome + data.
 # kind: "weekly" (Piano settimanale) | "capo" (Piano IA). Payload libero.
 # ---------------------------------------------------------------------------

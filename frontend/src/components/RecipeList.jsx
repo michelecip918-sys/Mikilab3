@@ -11,6 +11,7 @@ import PrintHeader from "@/components/PrintHeader";
 import MachineScheda from "@/components/MachineScheda";
 import { playTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
 import HandsFreeMode from "@/components/HandsFreeMode";
+import RecipeTimeline from "@/components/RecipeTimeline";
 import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -533,6 +534,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const isPanettone = /panettone|colomba|pandoro/i.test(r.name || "");
   const [farro, setFarro] = useState(false);
   const [handsFree, setHandsFree] = useState(false);
+  const [showTimeline, setShowTimeline] = useState(false);
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const flourG = Number(r.flour_grams) || 0;
   const target = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
@@ -676,6 +678,9 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           )}
           {!r.locked && rLoc(r, "procedure", lang) && (
             <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => setHandsFree(true)} color="#C88A2B" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>
+          )}
+          {!r.locked && (
+            <ActionBtn testid={`timeline-recipe-${r.id}`} onClick={() => setShowTimeline((v) => !v)} color="#2e8b6f" label={tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}><Clock className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && (
             <ActionBtn testid={`pdf-recipe-${r.id}`} onClick={() => window.print()} color="#5aa0cf" label={tri("PDF / Stampa", "PDF / Drucken", "PDF / Print")}><Printer className="w-4 h-4" /></ActionBtn>
@@ -822,6 +827,8 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             </div>
           </div>
         )}
+
+        {showTimeline && !r.locked && <RecipeTimeline recipe={r} lang={lang} />}
 
         {priceBlock}
 

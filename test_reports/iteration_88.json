@@ -1,0 +1,52 @@
+{
+  "summary": "Frontend-only E2E test (mobile 390x844, lang=it, admin@mikilab.de) of FASE 2 features: (3) Mappa dei Fornai in Community and (4) Timeline Ricetta in RecipeDetail. BAKERS MAP: fully working end-to-end — 'community-map-btn' opens 'bakers-map' full screen, Leaflet canvas renders (12 OSM tiles loaded, box 390x703), opt-in form appears with name/city/bio + GPS button, saving 'Michele'/'Stuttgart' geocodes via Open-Meteo, closes the form, drops the own ⭐ marker on Stuttgart, header counter goes (0)->(1); pin survives close+reopen (backend persistence), toggle label switches to 'Modifica la mia posizione', 'bakers-remove' shows the 'Rimosso dalla mappa' toast and clears the marker, 'bakers-map-close' returns to Community. Test pin cleaned up (GET /api/bakers/map -> [], /api/bakers/me -> None). TIMELINE: 'timeline-recipe-<id>' toggles 'recipe-timeline-<id>' inline; 'timeline-start-<id>', time input 'timeline-target-<id>' and 5 'timeline-phase-<id>-<n>' rows render; changing target 14:15 -> 06:00 recomputes backwards correctly (start 09:25 -> 01:10, last phase Cottura ends exactly 06:00, total 4h50m consistent); re-tapping hides the timeline. One HIGH functional gap found: the timeline never uses real recipe timings.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "Timeline ricetta - phase source",
+        "issue": "RecipeTimeline.jsx only reads recipe.work_phases, which is NULL/empty for ALL 99 MikiLab recipes (verified via GET /api/recipes: 0 recipes have >=2 valid work_phases). Result: EVERY recipe shows the identical hardcoded generic bread template (Impasto 20m / Puntata 2h / Formatura 20m / Appretto 1h30 / Cottura 40m = 4h50m) plus the 'Tempi indicativi' disclaimer. The timeline is therefore decorative and misleading: e.g. 'Croissant Farcito Salato' (real data: bulk 1h, proof 2h, bake 16-18min @195C) and even non-bread items like 'Miglioratore Naturale Pro' (a dry improver mix) and 'Lievito Madre Solido' (a starter) all show the same bread schedule. Recipes DO carry usable timing fields that are ignored: mix_minutes (55/99 populated), bulk_fermentation_hours (44/99), proofing_hours (50/99), rest_minutes (2/99), bake_minutes (92/99), bake_temp (92/99). Fix: build phases from these fields when work_phases is empty (Impasto=mix_minutes, Puntata=bulk_fermentation_hours, Riposo=rest_minutes, Appretto=proofing_hours, Cottura=bake_minutes/bake_temp) and fall back to the generic template only when none is present; consider hiding the timeline button for non-process recipes (basi/miglioratori) or labelling it clearly.",
+        "affected_selectors": ["timeline-recipe-<id>", "recipe-timeline-<id>", "timeline-phase-<id>-<n>"]
+      }
+    ],
+    "design_issues": [
+      {
+        "screen": "RecipeDetail - timeline",
+        "issues": [
+          "The native <input type='time'> renders with a 12h AM/PM segment in the test browser even with lang='it' (screenshot shows '06:00 AM'), while the rest of the timeline prints 24h times via it-IT toLocaleTimeString. Inconsistent clock format; consider a locale-forced/24h control or a small custom time picker.",
+          "Minor: 'Sforno alle' label + time input wrap tightly on 390px width; acceptable but crowded."
+        ]
+      },
+      {
+        "screen": "Bakers Map",
+        "issues": [
+          "Cosmetic only: the header counter '(N)' comes from pins fetched before save, so it briefly shows the pre-save count; it corrected to (1) after reload. No action strictly needed."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "HIGH: Derive RecipeTimeline phases from the real recipe fields (mix_minutes, bulk_fermentation_hours, rest_minutes, proofing_hours, bake_minutes, bake_temp) instead of only work_phases, otherwise every recipe shows the same generic 4h50m bread schedule.",
+    "MEDIUM: Decide behaviour of the timeline button for non-process recipes (basi/lieviti/miglioratori) where a bake-out schedule makes no sense.",
+    "LOW: Make the 'Sforno alle' time input format consistent (24h) with the rest of the timeline output."
+  ],
+  "critical_code_review_comments": [
+    "RecipeTimeline.jsx: the default template is unconditionally reachable because work_phases is never populated by the seed/API — dead branch for real phases. Add a second-level fallback from the structured numeric fields.",
+    "RecipeTimeline.jsx: `target` state is initialised from defaultTarget only on mount; if totalMins changes (phases recomputed on language switch) the target is not re-synced. Low impact but worth a useEffect or key reset.",
+    "BakersMap.jsx: 'mine' identity is inferred by comparing name+lat+lng instead of an id/owner flag returned by the API — two bakers in the same city with the same name would both render as ⭐. Prefer a server-side `is_mine`/pin id.",
+    "BakersMap.jsx: popup HTML is built by string concatenation and only escapes '<' — escape quotes/& too, or use Leaflet DOM content, to avoid attribute-context injection from name/city/bio."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "Bakers Map 100% (7/7 steps), Timeline 100% of UI mechanics (5/5) but phase data source wrong -> feature-level ~60%"},
+  "seed_data_creation": "Created and then deleted a baker pin (Michele / Stuttgart / 'Test pin QA') for admin@mikilab.de. Verified cleanup: /api/bakers/map -> [], /api/bakers/me -> None. No residual data.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Bakers Map (BakersMap.jsx) is verified working incl. Leaflet tiles, Open-Meteo city geocoding, save/persist/remove and backend persistence — no need to re-test unless changed. GPS (bakers-gps) was not exercised (headless). Timeline UI mechanics (toggle, backward recomputation from 'timeline-target', hide) are verified correct; the only open item is that phases come from the hardcoded template because no recipe has work_phases. Test note: in RecipeList the category folders stay expanded, so [data-testid^='recipe-row-'] is cumulative across opened folders — index nth(i) does NOT map to the newly opened folder; close the previous folder or scope the selector to the folder container when iterating recipes.",
+  "rca_of_the_issue": "RecipeTimeline.jsx builds its phase list exclusively from recipe.work_phases (filtering entries with a parseable duration and requiring >=2). The MikiLab recipe seed/model stores timings in separate numeric columns (mix_minutes, bulk_fermentation_hours, proofing_hours, bake_minutes, ...) and leaves work_phases null, so the >=2 condition is never met and the component always falls through to the hardcoded 5-phase bread template. Reproduction: log in as admin, open any recipe, tap timeline-recipe-<id> -> always 'durata totale 4h 50m' with the 'Tempi indicativi' note, independent of the recipe. Mitigation: add a fallback phase builder from the structured numeric fields before returning the generic template."
+}
