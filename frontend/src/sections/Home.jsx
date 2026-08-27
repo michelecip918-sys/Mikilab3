@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
 import { recipesApi } from "@/lib/api";
-import { dmApi } from "@/lib/api";
+import { dmApi, academyApi, profileApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import ChatPanel from "@/components/ChatPanel";
 import LegalPage from "@/sections/LegalPage";
@@ -182,10 +182,17 @@ export default function Home({ onNavigate }) {
   const [convos, setConvos] = useState([]);
   const [chatUser, setChatUser] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [weekTheme, setWeekTheme] = useState(null);
+  const [isChampion, setIsChampion] = useState(false);
   useEffect(() => {
     if (user) dmApi.conversations().then((c) => setConvos((c || []).filter((x) => x.unread > 0))).catch(() => setConvos([]));
     else setConvos([]);
   }, [user, chatOpen]);
+  useEffect(() => { academyApi.weeklyTheme(lang).then((t) => t && setWeekTheme(t)).catch(() => {}); }, [lang]);
+  useEffect(() => {
+    if (!user) { setIsChampion(false); return; }
+    profileApi.get(user.user_id).then((p) => setIsChampion((p?.badges || []).includes("fornaio_settimana"))).catch(() => {});
+  }, [user]);
   const [legal, setLegal] = useState(false);
   const [open, setOpen] = useState(null);
   const [storyOpen, setStoryOpen] = useState(() => {
@@ -246,6 +253,32 @@ export default function Home({ onNavigate }) {
     <div className="pb-2 space-y-6">
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
+
+      {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
+      {isChampion && (
+        <div data-testid="home-champion-banner" className="rounded-2xl p-4 text-white shadow-md flex items-center gap-3" style={{ background: "linear-gradient(135deg,#a9772f,#7a531d)" }}>
+          <span className="text-3xl">🏆</span>
+          <div className="min-w-0">
+            <p className="font-display text-lg font-bold leading-tight">{L("Sei il Fornaio della Settimana!", "Du bist Bäcker der Woche!", "You're the Baker of the Week!", "¡Eres el Panadero de la Semana!")}</p>
+            <p className="text-[12px] text-white/90 leading-snug">{L("Il badge 🏆 è sul tuo profilo Social. Difendi il titolo nella sfida a tema!", "Das 🏆-Abzeichen ist in deinem Profil. Verteidige den Titel in der Themen-Challenge!", "The 🏆 badge is on your Social profile. Defend your title in the themed challenge!", "La insignia 🏆 está en tu perfil. ¡Defiende tu título en el desafío temático!")}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Annuncio della Sfida: tema quiz della settimana */}
+      {weekTheme && (
+        <button data-testid="home-weekly-challenge" onClick={() => onNavigate && onNavigate("impara")}
+          className="w-full flex items-center gap-3 rounded-2xl p-4 text-left text-white shadow-md active:scale-98 transition-all" style={{ background: "linear-gradient(135deg,#7a4fbf,#4a2e78)" }}>
+          <span className="text-2xl shrink-0">🔥</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-white/80">{L("Sfida della settimana", "Challenge der Woche", "Weekly challenge", "Desafío de la semana")}</p>
+            <p className="font-display text-base font-bold leading-tight truncate">{weekTheme.title}</p>
+            <p className="text-[12px] text-white/90 leading-snug">{L("Metti alla prova te e i tuoi amici nel quiz a tema!", "Fordere dich und deine Freunde im Themen-Quiz heraus!", "Challenge yourself and your friends in the themed quiz!", "¡Rétate a ti y a tus amigos en el quiz temático!")}</p>
+          </div>
+          <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{L("Gioca", "Spielen", "Play", "Jugar")}</span>
+        </button>
+      )}
+
 
       {/* Messaggi non letti dagli amici */}
       {convos.length > 0 && (

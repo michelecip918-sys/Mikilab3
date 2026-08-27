@@ -14,6 +14,7 @@ import PlanArchive from "@/components/PlanArchive";
 import LabTour from "@/components/LabTour";
 import { getActiveMachineNames } from "@/lib/machines";
 import { guideFor } from "@/lib/toolGuide";
+import { playSfx } from "@/lib/uiSounds";
 import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
 import PrintHeader from "@/components/PrintHeader";
@@ -169,6 +170,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [dragId, setDragId] = useState(null);
   const [tourForce, setTourForce] = useState(0);
   const [toolUsage, setToolUsage] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_usage") || "{}"); } catch { return {}; } });
+  const guideToolId = (id) => MODULE_TOOL[id] || (TOOLS.some((t) => t.id === id) ? id : null);
+  // Apertura guida di Mohammadreza con suono di arrivo (campanella del forno)
+  const openGuide = (id) => { try { playSfx("ding"); } catch { /* */ } setGuideId(id); };
+
   const openToolTracked = (id) => {
     let next;
     try {
@@ -263,8 +268,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </button>
             {guideFor(id, lang) && (
               <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
-                onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
-                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#3f7cac]/12 flex items-center justify-center text-[#3f7cac] active:scale-90">
+                onClick={(e) => { e.stopPropagation(); openGuide(id); }}
+                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#C88A2B] flex items-center justify-center text-white shadow-sm ring-2 ring-white dark:ring-[#232A31] active:scale-90">
                 <Info className="w-3.5 h-3.5" />
               </button>
             )}
@@ -699,6 +704,25 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       )}
 
       <div className="flex flex-col">
+      {/* Spiegazione Mohammadreza: pannello FISSO in fondo, visibile ovunque (niente scroll in alto) */}
+      {guideId && (
+        <div data-testid="tool-guide-bubble" className="fixed inset-x-0 bottom-0 z-[80] px-3 pb-[max(16px,env(safe-area-inset-bottom))] pt-2 pointer-events-none">
+          <div className="mx-auto max-w-md pointer-events-auto flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white p-3 shadow-2xl ring-1 ring-white/15">
+            <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-xl object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
+              <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
+              {onOpenTool && guideToolId(guideId) && (
+                <button data-testid="tool-guide-open" onClick={() => { const tid = guideToolId(guideId); setGuideId(null); openToolTracked(tid); }}
+                  className="mt-2 mr-2 inline-flex items-center gap-1 text-xs font-bold bg-white text-[#234b6e] px-3 py-1.5 rounded-lg active:scale-95"><Wrench className="w-3.5 h-3.5" /> {tri3(lang, "Apri strumento", "Öffnen", "Open tool")}</button>
+              )}
+              <button data-testid="tool-guide-close" onClick={() => setGuideId(null)}
+                className="mt-2 inline-flex text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Ho capito", "Verstanden", "Got it")}</button>
+            </div>
+            <button data-testid="tool-guide-x" onClick={() => setGuideId(null)} className="text-white/70 hover:text-white shrink-0"><X className="w-4 h-4" /></button>
+          </div>
+        </div>
+      )}
       <Section order={1} icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "SCEGLI ANCHE (interruttori del piano)", "AUCH WÄHLEN (Plan-Schalter)", "ALSO CHOOSE (plan switches)")}>
         <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#C88A2B]/15 border border-[#C88A2B]/45 px-3 py-2.5">
           <SlidersHorizontal className="w-4 h-4 text-[#A66A15] shrink-0" />
@@ -710,20 +734,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </p>
         </div>
 
-        {/* Mohammadreza spiega l'interruttore o lo strumento al tocco della "i" */}
-        {guideId && (
-          <div data-testid="tool-guide-bubble" className="mb-3 flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white p-3 shadow-md">
-            <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-xl object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-            <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
-              <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
-              <div className="flex gap-2 mt-2">
-                <button data-testid="tool-guide-close" onClick={() => setGuideId(null)}
-                  className="text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Ho capito", "Verstanden", "Got it")}</button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* La spiegazione di Mohammadreza ora è un pannello fisso in fondo (vedi sotto): niente più scroll in alto. */}
 
         <div data-testid="capo-modules" className="grid grid-cols-3 gap-2">
           {MODULES.map(({ id, Icon, it, de, en }) => {
@@ -736,8 +747,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#d5e4f0] dark:border-[#38424B]"}`}>
                 <span className={`absolute top-1.5 left-1.5 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
                 <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
-                  onClick={(e) => { e.stopPropagation(); setGuideId(id); }}
-                  className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${on ? "bg-white/25 text-white" : "bg-[#3f7cac]/12 text-[#3f7cac]"}`}>
+                  onClick={(e) => { e.stopPropagation(); openGuide(id); }}
+                  className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 shadow-sm ring-2 ${on ? "bg-white text-[#3f7cac] ring-[#3f7cac]" : "bg-[#C88A2B] text-white ring-white dark:ring-[#232A31]"}`}>
                   <Info className="w-3.5 h-3.5" />
                 </button>
                 <Icon className={`w-5 h-5 ${on ? "text-white" : "text-[#9aa4ac]"}`} />
@@ -756,7 +767,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       </Section>
 
       <Section order={3} icon={<Wrench className="w-4 h-4" />} title={tri3(lang, "Apri anche altri strumenti", "Weitere Werkzeuge öffnen", "Open other tools")}>
-        <p className="text-[11px] text-[#7E8A93] mb-3">{tri3(lang, "Più sotto puoi aprire tutti gli strumenti: tocca la «i» per capire a cosa serve ognuno e cosa usa, poi aprilo.", "Weiter unten kannst du alle Werkzeuge öffnen: Tippe auf „i“, um zu verstehen, wofür jedes dient, dann öffne es.", "Below you can open all the tools: tap the 'i' to understand what each one does and uses, then open it.")}</p>
+        <div className="mb-3 rounded-xl bg-[#f7efe0] dark:bg-[#2a2418] border border-[#e5d4b0] dark:border-[#4a3f28] p-2.5 flex items-start gap-2">
+          <span className="w-5 h-5 rounded-full bg-[#C88A2B] flex items-center justify-center text-white shrink-0 mt-0.5"><Info className="w-3 h-3" /></span>
+          <p className="text-[11px] text-[#7a5a1f] dark:text-[#d3ab6b] leading-snug">{tri3(lang, "Tocca la «i» dorata su ogni strumento: Mohammadreza ti spiega a cosa serve (con un suono). Poi tocca lo strumento per aprirlo.", "Tippe auf das goldene „i“ auf jedem Werkzeug: Mohammadreza erklärt es dir (mit Ton). Dann tippe auf das Werkzeug, um es zu öffnen.", "Tap the golden 'i' on each tool: Mohammadreza explains what it's for (with a sound). Then tap the tool to open it.")}</p>
+        </div>
         {onOpenTool && (
           <>
             <div className="mt-4 mb-2 h-px bg-[#d5e4f0] dark:bg-[#38424B]" />
@@ -1441,14 +1455,17 @@ function RecipePrint({ r, lang }) {
 }
 
 function Section({ icon, title, children, highlight, badge, order }) {
+  const ACCENTS = { 1: "#3f7cac", 2: "#C88A2B", 3: "#2e8b6f", 4: "#7a4fbf", 5: "#b23a2f" };
+  const accent = ACCENTS[order] || "#3f7cac";
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} style={order ? { order } : undefined}
-      className={`mb-4 rounded-2xl p-4 ${highlight
+      className={`relative mb-4 rounded-2xl p-4 pl-5 overflow-hidden ${highlight
         ? "bg-white dark:bg-[#232A31] border-2 border-[#C88A2B] shadow-lg shadow-[#C88A2B]/20 ring-1 ring-[#C88A2B]/30"
         : "bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]"}`}>
-      <div className="flex items-center gap-2 mb-3 text-[#3f7cac]">
-        {icon}
-        <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{title}</h2>
+      <span className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: accent }} />
+      <div className="flex items-center gap-2.5 mb-3">
+        <span className="w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0" style={{ background: accent }}>{icon}</span>
+        <h2 className="font-display text-[17px] font-bold leading-tight" style={{ color: accent }}>{title}</h2>
         {badge && <span className="ml-auto text-[10px] font-extrabold uppercase tracking-wide text-white bg-[#C88A2B] px-2 py-0.5 rounded-full shadow">{badge}</span>}
       </div>
       {children}

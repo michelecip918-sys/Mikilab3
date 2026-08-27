@@ -1740,3 +1740,20 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Verificato: endpoint tema (W35 → "Farine e forza"/"Flours & strength"), quiz a tema (domanda su idratazione), UI card + attivazione modalità sfida via screenshot.
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
 
+
+## v72 (27 Ago 2026) — Annuncio Sfida in Home, Premio Campione, FIX guida "i" nel Laboratorio
+- **FIX «i» nel Tuo Laboratorio (PianoProduzioneAI)**: (1) la spiegazione di Mohammadreza NON è più fissa in cima — ora è un PANNELLO FISSO in fondo allo schermo (`position: fixed`, `tool-guide-bubble`), quindi appare dove sei senza dover risalire; ha anche il tasto "Apri strumento" (`tool-guide-open`). (2) Aggiunte le 6 guide mancanti in `lib/toolGuide.js` (aggiungi, generatore, macchine, plan, dayclose, enterprise): ora TUTTI i 33 strumenti mostrano la "i". Verificato via screenshot (admin/PRO): tap sullo strumento più in basso → spiegazione in fondo, in-place.
+- **Annuncio della Sfida (Home)**: card `home-weekly-challenge` col tema quiz della settimana + CTA che porta a Impara. Trilingue.
+- **Premio del Campione**: banner speciale in Home (`home-champion-banner`) per chi ha il badge `fornaio_settimana` + chip già presente nel profilo (`profile-badge-champion`). Appare solo quando esiste un campione (dalla settimana successiva alla prima con punteggi).
+- Verificato: annuncio Home (screenshot), guida "i" fissa in fondo con 33 strumenti (screenshot admin), endpoint tema via curl.
+- Nota: "Il Tuo Laboratorio" è dietro paywall PRO → la "i" è visibile solo agli utenti PRO/admin (comportamento esistente).
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
+
+## v73 (27 Ago 2026) — Leggibilità Laboratorio + suono Mohammadreza + DEPLOY-READY
+- **Colori e leggibilità (PianoProduzioneAI "Il Tuo Laboratorio")**: componente `Section` ora con barra d'accento colorata a sinistra + icona in chip colorata + titolo colorato/più grande (colori per ordine: blu/oro/verde/viola/rosso). Guida l'occhio del panettiere.
+- **"i" ben visibile**: i bottoni info degli strumenti sono ora cerchietti DORATI (`#C88A2B`) con anello bianco, ben visibili su ogni card. Legenda colorata in cima alla sezione strumenti che spiega: "Tocca la «i» dorata → Mohammadreza spiega (con suono), poi tocca lo strumento per aprirlo".
+- **Suono all'arrivo di Mohammadreza**: `openGuide()` riproduce `playSfx("ding")` (campanella forno) quando si apre la spiegazione. Verificato via screenshot (admin/PRO): tutte le sezioni leggibili, "i" evidenti, pannello guida fisso in fondo.
+- **DEPLOYMENT FIX (blocker risolto)**: rimossa la creazione dell'indice TTL su `rate_limits` allo startup (operazione distruttiva segnalata dal deployment agent). Sostituita con pulizia lazy non distruttiva dentro `_reminders_loop` (`delete_many ts < now-24h`). Deployment agent ora: **PASS, nessun blocker**.
+- Stato: app pronta per la pubblicazione (deploy su Emergent). Ricordarsi che le modifiche sono in PREVIEW → premere REDEPLOY per aggiornare mikilab.de.
+

@@ -2602,6 +2602,9 @@ async def _reminders_loop():
                     for s in subs:
                         await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
                     await db.reminders.update_one({"id": r["id"]}, {"$set": {"sent": True}})
+            # pulizia lazy dei contatori di rate-limit scaduti (>24h) — non distruttiva allo startup
+            cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+            await db.rate_limits.delete_many({"ts": {"$lt": cutoff}})
         except Exception:
             logger.exception("reminders loop error")
         await asyncio.sleep(30)
@@ -5949,10 +5952,6 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Reminders push loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Reminders loop start error: {e}")
-    try:
-        await db.rate_limits.create_index("ts", expireAfterSeconds=86400)
-    except Exception as e:
-        logging.getLogger(__name__).error(f"rate_limits index error: {e}")
 
 
 @app.on_event("shutdown")
