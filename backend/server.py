@@ -1515,11 +1515,18 @@ async def delete_capo_last_plan(user: dict = Depends(current_user)):
 # ---------------------------------------------------------------------------
 # Mappa dei Fornai — pin opt-in (nome + città + bio + posizione approssimata)
 # ---------------------------------------------------------------------------
+def _norm_link(v: str) -> str:
+    if not v:
+        return ""
+    return v if (v.startswith("http://") or v.startswith("https://")) else ("https://" + v)
+
+
 class BakerPin(BaseModel):
     name: str = ""
     city: str = ""
     country: Optional[str] = ""
     bio: Optional[str] = ""
+    link: Optional[str] = ""
     lat: float
     lng: float
 
@@ -1544,6 +1551,7 @@ async def save_baker_me(payload: BakerPin, user: dict = Depends(current_user)):
         "city": (payload.city or "").strip()[:80],
         "country": (payload.country or "").strip()[:60],
         "bio": (payload.bio or "").strip()[:200],
+        "link": _norm_link((payload.link or "").strip()[:200]),
         "lat": round(float(payload.lat), 2),
         "lng": round(float(payload.lng), 2),
         "updated_at": now_iso(),

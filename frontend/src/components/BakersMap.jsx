@@ -19,6 +19,7 @@ export default function BakersMap({ open, onClose }) {
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [bio, setBio] = useState("");
+  const [link, setLink] = useState("");
   const [coords, setCoords] = useState(null); // {lat,lng}
   const [busy, setBusy] = useState(false);
 
@@ -26,7 +27,7 @@ export default function BakersMap({ open, onClose }) {
     const [all, me] = await Promise.all([bakersApi.map(), bakersApi.me()]);
     setPins(Array.isArray(all) ? all : []);
     setMine(me || null);
-    if (me) { setName(me.name || ""); setCity(me.city || ""); setBio(me.bio || ""); setCoords({ lat: me.lat, lng: me.lng }); }
+    if (me) { setName(me.name || ""); setCity(me.city || ""); setBio(me.bio || ""); setLink(me.link || ""); setCoords({ lat: me.lat, lng: me.lng }); }
   }, []);
 
   useEffect(() => { if (open) load(); }, [open, load]);
@@ -60,7 +61,8 @@ export default function BakersMap({ open, onClose }) {
       const isMine = mine && p.name === mine.name && p.lat === mine.lat && p.lng === mine.lng;
       const m = L.marker([p.lat, p.lng], { icon: mkIcon(isMine) }).addTo(layer);
       const safe = (s) => (s || "").replace(/</g, "&lt;");
-      m.bindPopup(`<b>${safe(p.name)}</b>${p.city ? `<br/>📍 ${safe(p.city)}` : ""}${p.bio ? `<br/><span style="color:#555">${safe(p.bio)}</span>` : ""}`);
+      const linkHtml = p.link ? `<br/><a href="${safe(p.link)}" target="_blank" rel="noopener" style="color:#3f7cac;font-weight:600">🔗 ${safe(p.link.replace(/^https?:\/\//, ""))}</a>` : "";
+      m.bindPopup(`<b>${safe(p.name)}</b>${p.city ? `<br/>📍 ${safe(p.city)}` : ""}${p.bio ? `<br/><span style="color:#555">${safe(p.bio)}</span>` : ""}${linkHtml}`);
     });
     if (list.length) {
       try { map.fitBounds(L.latLngBounds(list.map((p) => [p.lat, p.lng])).pad(0.3), { maxZoom: 8 }); } catch { /* */ }
@@ -80,10 +82,11 @@ export default function BakersMap({ open, onClose }) {
   const geocodeCity = async () => {
     if (!city.trim()) return null;
     try {
-      const r = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=${lang}`);
+      const r = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=5&language=${lang}`);
       const j = await r.json();
-      const g = j.results && j.results[0];
-      if (g) return { lat: g.latitude, lng: g.longitude, country: g.country || "" };
+      const results = (j.results || []).slice().sort((a, b) => (b.population || 0) - (a.population || 0));
+      const g = results[0];
+      if (g) { setCity(`${g.name}${g.country ? ", " + g.country : ""}`); return { lat: g.latitude, lng: g.longitude, country: g.country || "" }; }
     } catch { /* */ }
     return null;
   };
@@ -94,7 +97,7 @@ export default function BakersMap({ open, onClose }) {
       let c = coords; let country = "";
       if (!c) { const g = await geocodeCity(); if (g) { c = { lat: g.lat, lng: g.lng }; country = g.country; } }
       if (!c) { toast.error(tri("Indica la città o usa il GPS.", "Stadt angeben oder GPS nutzen.", "Enter a city or use GPS.", "Indica la ciudad o usa GPS.")); setBusy(false); return; }
-      await bakersApi.save({ name: name.trim(), city: city.trim(), country, bio: bio.trim(), lat: c.lat, lng: c.lng });
+      await bakersApi.save({ name: name.trim(), city: city.trim(), country, bio: bio.trim(), link: link.trim(), lat: c.lat, lng: c.lng });
       toast.success(tri("Sei sulla mappa! 🥖", "Du bist auf der Karte! 🥖", "You're on the map! 🥖", "¡Estás en el mapa! 🥖"));
       setShowForm(false); setCoords(null); await load();
     } catch { toast.error(tri("Salvataggio non riuscito", "Speichern fehlgeschlagen", "Save failed", "Error al guardar")); }
@@ -132,6 +135,7 @@ export default function BakersMap({ open, onClose }) {
               <button data-testid="bakers-gps" onClick={useGeo} disabled={busy} className="px-3 rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] text-[#3f7cac]" title="GPS">{busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Navigation className="w-5 h-5" />}</button>
             </div>
             <input data-testid="bakers-bio" value={bio} onChange={(e) => setBio(e.target.value)} maxLength={200} placeholder={tri("Due parole su di te (facoltativo)", "Kurz über dich (optional)", "A short bio (optional)", "Bio breve (opcional)")} className={inp} />
+            <input data-testid="bakers-link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={200} placeholder={tri("Sito o Instagram (facoltativo)", "Website oder Instagram (optional)", "Website or Instagram (optional)", "Web o Instagram (opcional)")} className={inp} />
             <p className="text-[10.5px] text-[#7E8A93]">{tri("La posizione è approssimata alla città (privacy). Comparire è facoltativo.", "Standort auf Stadt gerundet (Privatsphäre). Freiwillig.", "Location is rounded to the city (privacy). Opt-in.", "Ubicación aproximada a la ciudad (privacidad). Opcional.")}</p>
             <div className="flex gap-2">
               <button data-testid="bakers-save" onClick={save} disabled={busy} className="flex-1 bg-[#3f7cac] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-50">{busy ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>

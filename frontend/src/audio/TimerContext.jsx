@@ -86,9 +86,11 @@ export function TimerProvider({ children }) {
 
   const addTimer = useCallback((label, minutes) => {
     const secs = Math.round((Number(minutes) || 0) * 60);
-    if (secs <= 0) return;
+    if (secs <= 0) return null;
     try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch { /* */ }
-    setTimers((prev) => [...prev, { id: uid(), name: label || "", label: label || "Timer", total: secs, remaining: secs, running: true, endsAt: now() + secs * 1000, notified: false }]);
+    const id = uid();
+    setTimers((prev) => [...prev, { id, name: label || "", label: label || "Timer", total: secs, remaining: secs, running: true, endsAt: now() + secs * 1000, notified: false }]);
+    return id;
   }, []);
 
   const dismiss = useCallback((id) => setRinging((prev) => prev.filter((r) => r.id !== id)), []);

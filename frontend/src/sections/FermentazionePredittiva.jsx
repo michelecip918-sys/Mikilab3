@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Activity, MapPin, Loader2, Thermometer, Percent, Bell, Sparkles, CloudSun } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
@@ -16,7 +16,7 @@ const PREF_TYPES = [
 export default function FermentazionePredittiva() {
   const { lang } = useLang();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" ? e : i));
-  const { addTimer } = useTimers();
+  const { addTimer, remove: removeTimer } = useTimers();
 
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
@@ -27,6 +27,13 @@ export default function FermentazionePredittiva() {
   const [yeast, setYeast] = useState("1");
   const [type, setType] = useState("diretto");
   const [level, setLevel] = useState("double");
+  const [run, setRun] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_ferment_run") || "null"); } catch { return null; } });
+  const [nowTs, setNowTs] = useState(Date.now());
+  useEffect(() => {
+    if (!run) return;
+    const id = setInterval(() => setNowTs(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [run]);
 
   const fetchWeather = useCallback(async (lat, lon, place) => {
     setLoading(true); setErr("");
@@ -58,9 +65,10 @@ export default function FermentazionePredittiva() {
     if (!city.trim()) return;
     setLoading(true); setErr("");
     try {
-      const g = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=${lang}`);
+      const g = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=5&language=${lang}`);
       const gj = await g.json();
-      const r = gj.results && gj.results[0];
+      const results = (gj.results || []).slice().sort((a, b) => (b.population || 0) - (a.population || 0));
+      const r = results[0];
       if (!r) { setErr(tri("Città non trovata.", "Stadt nicht gefunden.", "City not found.", "Ciudad no encontrada.")); setLoading(false); return; }
       fetchWeather(r.latitude, r.longitude, `${r.name}${r.country ? ", " + r.country : ""}`);
     } catch { setErr(tri("Ricerca non riuscita.", "Suche fehlgeschlagen.", "Search failed.", "Búsqueda fallida.")); setLoading(false); }
@@ -93,9 +101,17 @@ export default function FermentazionePredittiva() {
 
   const startReminder = () => {
     try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch { /* */ }
-    addTimer(tri("Impasto pronto 🍞", "Teig fertig 🍞", "Dough ready 🍞", "Masa lista 🍞"), est.minutes);
+    const timerId = addTimer(tri("Impasto pronto 🍞", "Teig fertig 🍞", "Dough ready 🍞", "Masa lista 🍞"), est.minutes);
+    const r = { startedAt: Date.now(), minutes: est.minutes, timerId };
+    setRun(r); setNowTs(Date.now());
+    try { localStorage.setItem("mikilab_ferment_run", JSON.stringify(r)); } catch { /* */ }
     toast.success(tri(`Ti avviso alle ${readyAt} quando l'impasto è pronto.`, `Ich melde mich um ${readyAt}, wenn der Teig fertig ist.`, `I'll alert you at ${readyAt} when the dough is ready.`, `Te aviso a las ${readyAt} cuando la masa esté lista.`));
   };
+  const cancelRun = () => { try { if (run && run.timerId) removeTimer(run.timerId); } catch { /* */ } setRun(null); try { localStorage.removeItem("mikilab_ferment_run"); } catch { /* */ } };
+
+  // Progresso live della lievitazione in corso.
+  const progress = run ? Math.max(0, Math.min(1, (nowTs - run.startedAt) / (run.minutes * 60000))) : null;
+  const remainMin = run ? Math.max(0, Math.round((run.startedAt + run.minutes * 60000 - nowTs) / 60000)) : 0;
 
   // Curva sigmoide (visualizzazione lievitazione nel tempo)
   const W = 320, H = 120, pad = 8;
@@ -168,8 +184,20 @@ export default function FermentazionePredittiva() {
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-24 mt-3" preserveAspectRatio="none" aria-hidden>
           <polyline points={pts} fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" />
           <line x1={pad} y1={H - pad} x2={W - pad} y2={H - pad} stroke="rgba(255,255,255,0.35)" strokeWidth="1" />
+          {progress != null && (() => {
+            const dx = pad + progress * (W - 2 * pad);
+            const dy = H - pad - sig(progress) * (H - 2 * pad);
+            return (<g><line x1={dx} y1={pad} x2={dx} y2={H - pad} stroke="#F2C14E" strokeWidth="1.5" strokeDasharray="3 3" /><circle cx={dx} cy={dy} r="6" fill="#F2C14E" stroke="#fff" strokeWidth="2" /></g>);
+          })()}
         </svg>
-        <p className="text-[11px] text-white/80 mt-1">{tri("Impasto", "Teig", "Dough", "Masa")} → {tri("raddoppio", "verdoppelt", "doubled", "duplicado")}</p>
+        {progress != null ? (
+          <div data-testid="ferment-live" className="mt-1 flex items-center justify-between text-[13px]">
+            <span className="text-white/90">{tri("Lievitazione", "Gärung", "Proofing", "Fermentación")}: <b>{Math.round(progress * 100)}%</b></span>
+            <span className="text-white/90">{progress >= 1 ? tri("pronto! 🍞", "fertig! 🍞", "ready! 🍞", "¡lista! 🍞") : `${tri("mancano", "noch", "left", "faltan")} ${remainMin >= 60 ? Math.floor(remainMin / 60) + "h " + (remainMin % 60) + "m" : remainMin + "m"}`}</span>
+          </div>
+        ) : (
+          <p className="text-[11px] text-white/80 mt-1">{tri("Impasto", "Teig", "Dough", "Masa")} → {tri("raddoppio", "verdoppelt", "doubled", "duplicado")}</p>
+        )}
       </div>
 
       <div data-testid="ferment-note" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4 mb-4 flex items-start gap-2">
@@ -184,10 +212,17 @@ export default function FermentazionePredittiva() {
         </p>
       </div>
 
-      <button data-testid="ferment-remind" onClick={startReminder}
-        className="w-full flex items-center justify-center gap-2 bg-[#C88A2B] hover:bg-[#a66f20] text-white font-bold py-4 rounded-2xl active:scale-98 transition-all">
-        <Bell className="w-5 h-5" /> {tri("Avvisami quando è pronto", "Erinnere mich, wenn fertig", "Alert me when ready", "Avísame cuando esté lista")}
-      </button>
+      {run ? (
+        <button data-testid="ferment-cancel" onClick={cancelRun}
+          className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#232A31] border border-[#C0574D]/40 text-[#C0574D] font-bold py-4 rounded-2xl active:scale-98 transition-all">
+          <Bell className="w-5 h-5" /> {tri("Annulla il promemoria", "Erinnerung abbrechen", "Cancel the reminder", "Cancelar el aviso")}
+        </button>
+      ) : (
+        <button data-testid="ferment-remind" onClick={startReminder}
+          className="w-full flex items-center justify-center gap-2 bg-[#C88A2B] hover:bg-[#a66f20] text-white font-bold py-4 rounded-2xl active:scale-98 transition-all">
+          <Bell className="w-5 h-5" /> {tri("Avvisami quando è pronto", "Erinnere mich, wenn fertig", "Alert me when ready", "Avísame cuando esté lista")}
+        </button>
+      )}
     </div>
   );
 }

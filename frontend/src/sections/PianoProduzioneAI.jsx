@@ -17,6 +17,7 @@ import { guideFor } from "@/lib/toolGuide";
 import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
 import PrintHeader from "@/components/PrintHeader";
+import HandsFreeMode from "@/components/HandsFreeMode";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
@@ -148,6 +149,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [bakerNote, setBakerNote] = useState("");
   const [planTruncated, setPlanTruncated] = useState(false);
   const [infEdit, setInfEdit] = useState(null); // tabella infornate modificabile {headers, rows}
+  const [planHF, setPlanHF] = useState(false); // lettura vocale del piano
   const [pickSearch, setPickSearch] = useState("");
   const [savedProducts, setSavedProducts] = useState([]);
   const [modules, setModules] = useState(DEFAULT_MODULES);
@@ -1007,7 +1009,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
 
         {pickerOpen && (
-          <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center" onClick={() => setPickerOpen(false)}>
+          <div className="fixed inset-0 z-[70] bg-black/50 flex items-end sm:items-center justify-center" onClick={() => setPickerOpen(false)}>
             <div className="bg-white dark:bg-[#1B2127] w-full sm:max-w-md max-h-[82vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <div className="p-4 border-b border-[#d5e4f0] dark:border-[#38424B]">
                 <div className="flex items-center justify-between mb-2">
@@ -1171,6 +1173,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               className="no-print mt-3 w-full bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
             </button>
+            {!generating && (
+              <button data-testid="capo-voice" onClick={() => setPlanHF(true)}
+                className="no-print mt-2 w-full bg-[#C88A2B] hover:bg-[#a66f20] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+                <ChefHat className="w-5 h-5" /> {tri3(lang, "Leggi il piano a voce (mani libere)", "Plan vorlesen (Hände frei)", "Read the plan aloud (hands-free)", "Leer el plan en voz alta (manos libres)")}
+              </button>
+            )}
             <button data-testid="capo-share" onClick={() => shareContent(lang === "de" ? "Produktionsplan — MikiLab" : lang === "en" ? "Production plan — MikiLab" : lang === "es" ? "Plan de producción — MikiLab" : "Piano di Produzione — MikiLab", plan, lang)}
               className="no-print mt-2 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] active:scale-98 transition-all flex items-center justify-center gap-2">
               <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : lang === "es" ? "Compartir" : "Condividi"}
@@ -1284,6 +1292,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           }}
         />
       </Section>
+      {planHF && (
+        <HandsFreeMode
+          recipe={{ id: "plan" }}
+          procedure={(plan || "").replace(/\[\[PLAN_END\]\]/g, "").replace(/^#{1,6}\s*/gm, "").replace(/[*`>_]/g, "").replace(/\|/g, "  ").split("\n").map((l) => l.trim()).filter(Boolean).join("\n")}
+          lang={lang}
+          onClose={() => setPlanHF(false)}
+        />
+      )}
     </div>
   );
 }

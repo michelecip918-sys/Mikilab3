@@ -1,0 +1,38 @@
+{
+  "summary": "Frontend-only E2E test (mobile 390x844, IT, admin@mikilab.de) of the 4 refinements. ALL 4 WORK. (1) CURVA LIVE FERMENTAZIONE: ferment-remind (24°C/1%/diretto → 1h 36m) shows toast 'Ti avviso alle 11:18…', renders ferment-live with 'Lievitazione: 0% · mancano 1h 36m' (coherent, just started), adds the live dot on the SVG curve (4 circles present), persists {startedAt,minutes:96} in localStorage mikilab_ferment_run, and the CTA switches to ferment-cancel; tapping ferment-cancel removes the live block, clears localStorage and restores ferment-remind. (2) COMANDO VOCALE NEL PIANO: generated a real plan (Ciabatta x40, single phase, modules off) — 'capo-voice' ('Leggi il piano a voce (mani libere)') is rendered under capo-print/capo-share, opens handsfree-overlay TRUE full-screen (box 0,0 390x844 — the iter-87 clipping bug is fixed via createPortal), handsfree-counter 'Passo 1/8', handsfree-step shows the first plan line 'PIANO QUOTIDIANO – CIABATTA 40 PEZZI', next/prev change step+counter, prev disabled at step 1, handsfree-close returns to the plan (capo-plan still present). (3) PROFILO FORNAIO LINK: bakers-link field present in the opt-in form; saving Test/Milano/instagram.com/test drops the marker and the pin popup renders the clickable link '<a href=\"https://instagram.com/test\" target=_blank>🔗 instagram.com/test</a>' (https:// normalization by backend _norm_link confirmed); reopening the form shows link='https://instagram.com/test'; bakers-remove cleared the pin (GET /api/bakers/map → [], /api/bakers/me → null, test data cleaned). (4) TIMELINE NEL PDF: for 'Baguette a Lievito Madre' recipe-timeline-<id> renders 4 REAL phases (Impasto 10m, Puntata 3h, Appretto 1h30m, Cottura 22m·250°C, total 5h2m) derived from recipe fields, it IS inside .print-area (closest('.print-area') === true), and changing timeline-target 15:00→06:00 recomputes backwards correctly (start 09:58→00:58, last phase ends exactly 06:00). Recipes with <2 timings (Miglioratore Naturale Pro, Poolish, Panettone Uvetta) correctly show the empty state 'Questa ricetta non ha una sequenza di lievitazione/cottura con tempi…' with no fake clocks and no time input.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PianoProduzioneAI recipe picker", "issue": "The picker sheet is z-50 like the fixed BottomNav (also z-50), so the footer button 'Fatto' is covered by the bottom nav and is NOT clickable on mobile 390x844 (Playwright: 'bottom-nav subtree intercepts pointer events', 30s timeout). Workaround used: capo-picker-close (X). Raise the picker overlay z-index above the nav (or add bottom padding).", "selector": "[data-testid=\"capo-picker-done\"]", "priority": "HIGH"}
+    ],
+    "integration_issues": [
+      {"flow": "Fermentazione — cancel reminder", "issue": "cancelRun() only clears the run state/localStorage; the global timer created by addTimer('Impasto pronto 🍞', 96min) stays in mikilab_timers and keeps running/notifying after the user cancelled the reminder. Verified: after ferment-cancel, mikilab_timers still contains the running 5760s timer.", "affected_selectors": ["[data-testid=\"ferment-cancel\"]"]},
+      {"flow": "Piano IA — voice read", "issue": "capo-voice is rendered while the plan text is still streaming, so opening hands-free mid-stream makes the step total jump under the user (Passo 1/8 → 2/13 → 1/14). Consider disabling capo-voice (or re-anchoring idx) until streaming finishes.", "affected_selectors": ["[data-testid=\"capo-voice\"]", "[data-testid=\"handsfree-counter\"]"]},
+      {"flow": "Bakers map — city geocoding", "issue": "geocodeCity() uses Open-Meteo count=1 with no country bias: 'Milano' resolved to Milano, TEXAS (marker near Waco, US) instead of Milano, Italy. Same pattern in FermentazionePredittiva city search. Suggest showing the resolved 'city, country' for confirmation or biasing by user country.", "affected_selectors": ["[data-testid=\"bakers-city\"]", "[data-testid=\"bakers-save\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "RecipeTimeline empty state", "issues": ["~1/3 of the mikilab catalogue (all 17 Panettoni + ~20 others) only has 1 derived timing (bake_minutes) and therefore shows 'questa ricetta non ha una sequenza di lievitazione/cottura', which reads oddly for a Panettone. Not a code bug (guard is correct) but a data gap: fill mix_minutes/bulk_fermentation_hours/proofing_hours or work_phases for those recipes."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix z-index of the capo recipe-picker sheet: 'Fatto' (capo-picker-done) is unreachable under the BottomNav on mobile.",
+    "ferment-cancel must also remove the timer it created (store timer id in mikilab_ferment_run and call removeTimer on cancel).",
+    "Disable/guard capo-voice until the plan stream ends (step count shifts mid-read).",
+    "Optional: bias city geocoding by country (Milano → Texas) and/or show resolved country before saving.",
+    "Optional data work: add real timings (mix/bulk/proof) to Panettoni & other 1-phase recipes so the timeline is usable there."
+  ],
+  "critical_code_review_comments": [
+    "RecipeTimeline.jsx: `isReal` (line 44) is computed but never used — dead code.",
+    "PianoProduzioneAI.jsx is very large (>1300 lines); the plan-result block (print area, PDF/voice/share buttons, cost table) should be extracted into its own component.",
+    "FermentazionePredittiva.jsx: the 1s interval only runs while `run` is set (good), but progress/remain are recomputed on every tick for the whole tool tree; acceptable, no action needed."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% of the 4 requested refinements pass; 3 side issues found (1 HIGH)"},
+  "seed_data_creation": "Temporary baker pin 'Test/Milano' created and removed (verified /api/bakers/map empty). One AI production plan generated for admin (Ciabatta x40) — left in the lab state, remove with capo-new-plan if unwanted. One fermentation timer 'Impasto pronto 🍞' remains in localStorage due to the cancel bug (client-side only).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Login flow: click header 'Accedi'/'Sign in' → auth-email/auth-password/auth-submit. The lab tab is data-testid='nav-tab-maestro' ('Il Tuo Laboratorio') — there is no nav-tab-capo/lab. Recipes: use [data-testid=recipe-search] with the recipe name, then [data-testid=recipe-row-<id>]; note search results are cumulative across opened folders. Useful ids: Baguette a Lievito Madre 18ec13d5-dbd5-41bf-a478-1f3ed65dba46 (4 real timeline phases), Miglioratore a052ba40-… / Poolish 3108e83f-… (empty timeline state). Plan generation with all modules OFF takes ~40-60s and streams; capo-voice appears before streaming ends. In the capo recipe picker use capo-picker-close, NOT capo-picker-done (covered by bottom nav).",
+  "rca_of_the_issue": "Picker bug: overlay container uses `fixed inset-0 z-50` (PianoProduzioneAI.jsx ~line 1012) while BottomNav is `fixed bottom-0 z-50`; equal stacking order + later DOM position makes the nav win, covering the sheet footer. Ferment cancel bug: startReminder() calls addTimer() but the returned timer is never tracked, so cancelRun() (line 109) cannot remove it."
+}
