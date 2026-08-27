@@ -3451,7 +3451,226 @@ async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_
     return {"recipes": recipes}
 
 
+class ScanFlourRequest(BaseModel):
+    image_base64: str
+    lang: str = "it"
+
+
+SCAN_FLOUR_PROMPT = (
+    "Sei un tecnologo della panificazione. Nella foto c'è un SACCO/CONFEZIONE di FARINA (etichetta, scheda tecnica o fronte pacco). "
+    "Leggi i dati e restituisci SOLO un oggetto JSON valido, senza testo prima o dopo, con ESATTAMENTE queste chiavi "
+    "(usa null se il dato non è presente o non deducibile, NON inventare):\n"
+    '{"brand": string|null, "product_name": string|null, "flour_type": string|null, '
+    '"w_index": number|null, "protein_percent": number|null, "grain": string|null, '
+    '"ideal_use": string|null, "absorption_percent": number|null, "notes": string}\n'
+    'Note: "flour_type" = tipo (es. "Tipo 00", "Tipo 0", "Manitoba", "Integrale", "Farro/Dinkel", "Type 550", "T65"). '
+    '"w_index" = forza W (numero puro, se indicata o stimabile dalle proteine). '
+    '"protein_percent" = proteine in g/100g (numero). "grain" = cereale (grano tenero, farro, segale, ecc.). '
+    '"ideal_use" = a cosa è adatta (breve, es. "lunghe lievitazioni", "biscotti/frolla", "pane diretto"). '
+    "Se la forza W non è stampata ma ci sono le proteine, stimala e indicalo in 'notes'. "
+    "Rispondi nella lingua richiesta per i campi testuali. Solo JSON."
+)
+
+
+@api_router.post("/maestro/scan-flour")
+async def scan_flour(payload: ScanFlourRequest, user: dict = Depends(require_pro)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    img = payload.image_base64
+    if "," in img and img.strip().startswith("data:"):
+        img = img.split(",", 1)[1]
+    lang_line = {"de": "Rispondi in tedesco.", "en": "Answer in English.", "es": "Responde en español."}.get(payload.lang, "Rispondi in italiano.")
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"flour-{uuid.uuid4()}",
+        system_message="Leggi le etichette delle farine e restituisci solo JSON valido.",
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1200)
+    user_msg = UserMessage(text=SCAN_FLOUR_PROMPT + "\n" + lang_line, file_contents=[ImageContent(image_base64=img)])
+    text = ""
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("scan-flour error")
+        raise HTTPException(status_code=500, detail="Errore nell'analisi della foto")
+    raw = text.strip().strip("`")
+    if raw.lower().startswith("json"):
+        raw = raw[4:].strip()
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Etichetta farina non riconosciuta nella foto")
+    try:
+        return json.loads(raw[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile leggere i dati della farina")
+
+
 import xml.etree.ElementTree as ET
+
+
+# ---------------------------------------------------------------------------
+# Import ricette via EMAIL (Mailgun Inbound Routes)
+# L'utente inoltra una ricetta a recipes@mikilab.de; Mailgun fa POST qui.
+# ---------------------------------------------------------------------------
+async def _llm_json(system_msg: str, prompt: str, image_b64: str = None, max_tokens: int = 2000):
+    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"inbound-{uuid.uuid4()}", system_message=system_msg)\
+        .with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=max_tokens)
+    if image_b64:
+        msg = UserMessage(text=prompt, file_contents=[ImageContent(image_base64=image_b64)])
+    else:
+        msg = UserMessage(text=prompt)
+    text = ""
+    async for event in chat.stream_message(msg):
+        if isinstance(event, TextDelta):
+            text += event.content
+        elif isinstance(event, StreamDone):
+            break
+    raw = text.strip().strip("`")
+    if raw.lower().startswith("json"):
+        raw = raw[4:].strip()
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        return None
+    try:
+        return json.loads(raw[s:e + 1])
+    except Exception:
+        return None
+
+
+async def _recipes_from_email(body_text: str, attachments: list, lang: str = "it"):
+    """Ritorna una lista di dict-ricetta estratti dal corpo email e dagli allegati (PDF/immagini)."""
+    import base64 as _base64
+    out = []
+    for att in attachments:
+        data = att.get("data")
+        ctype = (att.get("content_type") or "").lower()
+        fname = (att.get("filename") or "").lower()
+        if not data:
+            continue
+        try:
+            if "pdf" in ctype or fname.endswith(".pdf"):
+                import io as _io
+                from pypdf import PdfReader
+                reader = PdfReader(_io.BytesIO(data))
+                pdf_text = "\n".join([(p.extract_text() or "") for p in reader.pages[:40]]).strip()
+                if len(pdf_text) >= 20:
+                    parsed = await _llm_json("Estrai ricette da testo e restituisci solo JSON valido.",
+                                             SCAN_PDF_MULTI_PROMPT + "\n\nTESTO DAL PDF:\n" + pdf_text[:18000], max_tokens=8000)
+                    recs = (parsed or {}).get("recipes") if isinstance(parsed, dict) else None
+                    if isinstance(recs, list):
+                        out.extend([r for r in recs if isinstance(r, dict) and (r.get("name") or "").strip()])
+            elif ctype.startswith("image/") or fname.endswith((".jpg", ".jpeg", ".png", ".webp")):
+                b64 = _base64.b64encode(data).decode()
+                parsed = await _llm_json("Estrai ricette da foto e restituisci solo JSON valido.", SCAN_PROMPT, image_b64=b64)
+                if isinstance(parsed, dict) and (parsed.get("name") or "").strip():
+                    out.append(parsed)
+        except Exception:
+            logger.exception("inbound attachment parse error")
+    if not out and body_text and len(body_text.strip()) >= 40:
+        try:
+            parsed = await _llm_json("Estrai ricette da testo e restituisci solo JSON valido.",
+                                     SCAN_PDF_MULTI_PROMPT + "\n\nTESTO DELL'EMAIL:\n" + body_text[:18000], max_tokens=6000)
+            recs = (parsed or {}).get("recipes") if isinstance(parsed, dict) else None
+            if isinstance(recs, list):
+                out.extend([r for r in recs if isinstance(r, dict) and (r.get("name") or "").strip()])
+        except Exception:
+            logger.exception("inbound body parse error")
+    return out
+
+
+def _mailgun_verify(timestamp: str, token: str, signature: str) -> bool:
+    import hmac as _hmac, hashlib as _hashlib, time as _time
+    key = os.environ.get("MAILGUN_WEBHOOK_SIGNING_KEY", "")
+    if not key or not timestamp or not token or not signature:
+        return False
+    try:
+        if abs(_time.time() - int(timestamp)) > 300:
+            return False
+    except (ValueError, TypeError):
+        return False
+    expected = _hmac.new(key.encode(), (timestamp + token).encode(), _hashlib.sha256).hexdigest()
+    return _hmac.compare_digest(expected, signature)
+
+
+@api_router.post("/inbound/email")
+async def inbound_email(request: Request):
+    form = await request.form()
+    if not _mailgun_verify(form.get("timestamp"), form.get("token"), form.get("signature")):
+        raise HTTPException(status_code=406, detail="Invalid Mailgun signature")
+    token = form.get("token")
+    if token and await db.inbound_tokens.find_one({"_id": token}):
+        return {"ok": True, "duplicate": True}
+
+    sender = (form.get("sender") or form.get("from") or "").strip().lower()
+    # Estrai l'indirizzo email pulito da "Nome <email>"
+    m = re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", sender)
+    sender_email = (m.group(0).lower() if m else sender)
+
+    # Raccogli allegati (multipart: attachment-1, attachment-2, ...)
+    attachments = []
+    for field, value in form.multi_items():
+        if field.startswith("attachment-") and hasattr(value, "read"):
+            data = await value.read()
+            if len(data) > 15 * 1024 * 1024:
+                continue
+            attachments.append({"filename": getattr(value, "filename", field),
+                                "content_type": getattr(value, "content_type", ""), "data": data})
+
+    body_text = form.get("stripped-text") or form.get("body-plain") or ""
+    subject = form.get("subject") or ""
+
+    log = {"id": str(uuid.uuid4()), "sender": sender_email, "subject": subject,
+           "created_at": now_iso(), "matched_user": None, "recipes_created": 0, "status": "received"}
+
+    user = await db.users.find_one({"email": sender_email}, {"_id": 0, "user_id": 1, "email": 1}) if sender_email else None
+    if not user:
+        log["status"] = "no_user"
+        if token:
+            await db.inbound_tokens.insert_one({"_id": token, "created_at": now_iso()})
+        await db.inbound_emails.insert_one(log)
+        return {"ok": True, "matched": False, "detail": "sender not registered"}
+
+    log["matched_user"] = user["user_id"]
+    recipes = await _recipes_from_email(body_text, attachments, "it")
+    created = 0
+    for r in recipes:
+        try:
+            r["collection_name"] = "personal"
+            recipe = Recipe(**{k: v for k, v in r.items() if k in Recipe.model_fields})
+            doc = recipe.model_dump()
+            doc["owner_id"] = user["user_id"]
+            doc["source"] = "email"
+            tr = await _translate_recipe_de(doc)
+            for k in ("name_de", "flour_type_de", "notes_de", "procedure_de"):
+                if tr.get(k):
+                    doc[k] = tr[k]
+            await db.recipes.insert_one(doc)
+            created += 1
+        except Exception:
+            logger.exception("inbound recipe create error")
+
+    log["recipes_created"] = created
+    log["status"] = "done" if created else "no_recipe"
+    if token:
+        await db.inbound_tokens.insert_one({"_id": token, "created_at": now_iso()})
+    await db.inbound_emails.insert_one(log)
+    return {"ok": True, "matched": True, "recipes_created": created}
+
+
+@api_router.get("/inbound/status")
+async def inbound_status(user: dict = Depends(current_user)):
+    """Ultimi import via email dell'utente + indirizzo dedicato."""
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "email": 1})
+    rows = await db.inbound_emails.find({"matched_user": user["user_id"]}, {"_id": 0})\
+        .sort("created_at", -1).to_list(20)
+    return {"inbound_address": os.environ.get("INBOUND_ADDRESS", "recipes@mikilab.de"),
+            "enabled": bool(os.environ.get("MAILGUN_WEBHOOK_SIGNING_KEY")),
+            "your_email": (u or {}).get("email"), "history": rows}
+
+
 
 
 def _fetch_rss(query: str, hl: str, gl: str, ceid: str, region: str, limit: int = 5):

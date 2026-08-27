@@ -17,6 +17,7 @@ import CapoLaboratorio from "@/sections/CapoLaboratorio";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
 import ClimaTermostato from "@/sections/ClimaTermostato";
 import ScanRecipe from "@/sections/ScanRecipe";
+import ScanFlour from "@/sections/ScanFlour";
 import BackwardScheduler from "@/sections/BackwardScheduler";
 import ShoppingList from "@/sections/ShoppingList";
 import ShiftRoles from "@/sections/ShiftRoles";
@@ -115,6 +116,7 @@ export default function Maestro() {
         {tool === "salespoints" && <SalesPoints />}
         {tool === "dayclose" && <DayClose />}
         {tool === "diagnosi" && <PhotoDiagnosi />}
+        {tool === "scanflour" && <ScanFlour />}
         {tool === "suono" && <SoundDiagnosi />}
         {tool === "enterprise" && <EnterpriseHub />}
       </div>

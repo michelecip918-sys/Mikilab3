@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
-import { Camera, Loader2, ScanLine, PenLine, Upload, FileText, CheckCircle2, ChevronRight } from "lucide-react";
+import { Camera, Loader2, ScanLine, PenLine, Upload, FileText, CheckCircle2, ChevronRight, Mail, Copy } from "lucide-react";
 import { API, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -16,6 +16,12 @@ export default function ScanRecipe({ embedded = false }) {
   const [savedIdx, setSavedIdx] = useState([]); // indici già salvati
   const [activeIdx, setActiveIdx] = useState(null); // indice della ricetta aperta nel dialog
   const fileRef = useRef(null);
+  const [inbound, setInbound] = useState(null);
+
+  useEffect(() => {
+    fetch(`${API}/inbound/status`, { credentials: "include" })
+      .then((r) => (r.ok ? r.json() : null)).then(setInbound).catch(() => {});
+  }, []);
 
   const onPhoto = (file) => {
     if (!file) return;
@@ -87,6 +93,25 @@ export default function ScanRecipe({ embedded = false }) {
 
   const openPdfRecipe = (idx) => {
     setScanned(pdfRecipes[idx]); setActiveIdx(idx); setDialogOpen(true);
+  };
+
+  const [savingAll, setSavingAll] = useState(false);
+  const saveAll = async () => {
+    if (savingAll) return;
+    setSavingAll(true);
+    const done = [...savedIdx];
+    let ok = 0, fail = 0;
+    for (let i = 0; i < pdfRecipes.length; i++) {
+      if (done.includes(i)) continue;
+      try {
+        await recipesApi.create({ ...pdfRecipes[i], collection_name: "personal" });
+        done.push(i); ok++;
+        setSavedIdx([...done]);
+      } catch { fail++; }
+    }
+    setSavingAll(false);
+    if (ok) toast.success(tri(`${ok} ricette salvate nel tuo ricettario`, `${ok} Rezepte gespeichert`, `${ok} recipes saved to your book`, `${ok} recetas guardadas`));
+    if (fail) toast.error(tri(`${fail} non salvate, riprova`, `${fail} nicht gespeichert`, `${fail} not saved, try again`, `${fail} no guardadas`));
   };
 
   const handleSave = async (payload) => {
@@ -161,6 +186,13 @@ export default function ScanRecipe({ embedded = false }) {
             </h3>
           </div>
           <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Tocca una ricetta per rivederla e salvarla nel tuo ricettario.", "Tippe auf ein Rezept, um es zu prüfen und zu speichern.", "Tap a recipe to review and save it to your book.")}</p>
+          {pdfRecipes.some((_, i) => !savedIdx.includes(i)) && (
+            <button data-testid="pdf-save-all" onClick={saveAll} disabled={savingAll}
+              className="w-full mb-3 inline-flex items-center justify-center gap-2 bg-[#2e8b6f] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
+              {savingAll ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
+              {tri("Salva tutte", "Alle speichern", "Save all", "Guardar todas")} ({pdfRecipes.filter((_, i) => !savedIdx.includes(i)).length})
+            </button>
+          )}
           <ul className="space-y-2">
             {pdfRecipes.map((r, i) => {
               const done = savedIdx.includes(i);
@@ -183,6 +215,49 @@ export default function ScanRecipe({ embedded = false }) {
             className="mt-3 text-[12px] font-bold text-[#3f7cac] underline">
             {tri("Chiudi elenco", "Liste schließen", "Close list")}
           </button>
+        </div>
+      )}
+
+      {inbound && inbound.your_email && (
+        <div data-testid="inbound-email-panel" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5">
+          <div className="flex items-center gap-2 mb-2 text-[#3f7cac]">
+            <Mail className="w-5 h-5" />
+            <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Import via Email", "Import per E-Mail", "Email import", "Importar por email")}</h3>
+            {inbound.enabled
+              ? <span className="ml-auto text-[10px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 px-2 py-0.5 rounded-full">{tri("Attivo", "Aktiv", "Active", "Activo")}</span>
+              : <span className="ml-auto text-[10px] font-bold text-[#a9772f] bg-[#a9772f]/10 px-2 py-0.5 rounded-full">{tri("In arrivo", "Bald", "Coming soon", "Próximamente")}</span>}
+          </div>
+          <p className="text-[12px] text-[#7E8A93] mb-3">
+            {inbound.enabled
+              ? tri(`Inoltra le ricette (PDF, foto o testo) dalla tua email registrata a questo indirizzo: le trasformo in schede automaticamente.`,
+                    `Leite Rezepte (PDF, Foto oder Text) von deiner registrierten E-Mail an diese Adresse: ich erstelle die Karten automatisch.`,
+                    `Forward recipes (PDF, photo or text) from your registered email to this address: I turn them into cards automatically.`,
+                    `Reenvía recetas (PDF, foto o texto) desde tu email registrado a esta dirección: las convierto en fichas.`)
+              : tri("Presto potrai inoltrare le ricette via email e trovarle già pronte qui.", "Bald kannst du Rezepte per E-Mail weiterleiten und sie hier fertig finden.", "Soon you'll be able to forward recipes by email and find them ready here.", "Pronto podrás reenviar recetas por email y encontrarlas aquí listas.")}
+          </p>
+          {inbound.enabled && inbound.inbound_address && (
+            <button data-testid="inbound-copy-address" onClick={() => { navigator.clipboard?.writeText(inbound.inbound_address); toast.success(tri("Indirizzo copiato", "Adresse kopiert", "Address copied", "Dirección copiada")); }}
+              className="w-full inline-flex items-center gap-2 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#3f7cac]/40 text-[#234b6e] dark:text-[#a9d2ec] font-semibold px-4 py-2.5 rounded-xl active:scale-98">
+              <span className="flex-1 text-left truncate text-sm">{inbound.inbound_address}</span>
+              <Copy className="w-4 h-4 shrink-0" />
+            </button>
+          )}
+          {inbound.your_email && (
+            <p className="text-[11px] text-[#7E8A93] mt-2">
+              {tri("Inoltra dalla tua email:", "Weiterleiten von deiner E-Mail:", "Forward from your email:", "Reenvía desde tu email:")} <b>{inbound.your_email}</b>
+            </p>
+          )}
+          {Array.isArray(inbound.history) && inbound.history.length > 0 && (
+            <ul className="mt-3 space-y-1">
+              {inbound.history.slice(0, 5).map((h, i) => (
+                <li key={i} className="flex items-center gap-2 text-[12px] text-[#3F4A54] dark:text-[#AEB8BF]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#2e8b6f] shrink-0" />
+                  <span className="truncate flex-1">{h.subject || tri("Email", "E-Mail", "Email", "Email")}</span>
+                  <span className="text-[#7E8A93] shrink-0">{h.recipes_created} {tri("ricette", "Rezepte", "recipes", "recetas")}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 
