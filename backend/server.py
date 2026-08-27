@@ -795,6 +795,8 @@ async def auth_register(payload: RegisterReq, response: Response):
 @api_router.post("/auth/verify-email")
 async def verify_email(body: dict, response: Response):
     token = (body or {}).get("token", "")
+    if not isinstance(token, str) or not token:
+        raise HTTPException(status_code=400, detail="Token non valido")
     rec = await db.email_verifications.find_one({"token": token}, {"_id": 0})
     if not rec:
         raise HTTPException(status_code=400, detail="Link non valido o già usato")
@@ -4771,7 +4773,7 @@ app.include_router(api_router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
+    allow_credentials=False,
     allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
     allow_methods=["*"],
     allow_headers=["*"],

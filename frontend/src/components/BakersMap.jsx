@@ -60,8 +60,10 @@ export default function BakersMap({ open, onClose }) {
       if (p.lat == null || p.lng == null) return;
       const isMine = mine && p.name === mine.name && p.lat === mine.lat && p.lng === mine.lng;
       const m = L.marker([p.lat, p.lng], { icon: mkIcon(isMine) }).addTo(layer);
-      const safe = (s) => (s || "").replace(/</g, "&lt;");
-      const linkHtml = p.link ? `<br/><a href="${safe(p.link)}" target="_blank" rel="noopener" style="color:#3f7cac;font-weight:600">🔗 ${safe(p.link.replace(/^https?:\/\//, ""))}</a>` : "";
+      const safe = (s) => (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? safe(u) : "");
+      const lurl = safeUrl(p.link);
+      const linkHtml = lurl ? `<br/><a href="${lurl}" target="_blank" rel="noopener noreferrer" style="color:#3f7cac;font-weight:600">🔗 ${safe((p.link || "").replace(/^https?:\/\//, ""))}</a>` : "";
       m.bindPopup(`<b>${safe(p.name)}</b>${p.city ? `<br/>📍 ${safe(p.city)}` : ""}${p.bio ? `<br/><span style="color:#555">${safe(p.bio)}</span>` : ""}${linkHtml}`);
     });
     if (list.length) {
