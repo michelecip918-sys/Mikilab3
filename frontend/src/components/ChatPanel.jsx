@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { X, Send, ArrowLeft, Loader2, MessageSquare, Search, ImagePlus } from "lucide-react";
+import { X, Send, ArrowLeft, Loader2, MessageSquare, Search, ImagePlus, Smile } from "lucide-react";
 import { dmApi, friendsApi, uploadApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -39,6 +39,21 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
   const [q, setQ] = useState("");
   const endRef = useRef(null);
   const pollRef = useRef(null);
+  const [reactFor, setReactFor] = useState(null); // id messaggio con picker aperto
+  const REACTIONS = ["👍", "🔥", "🥖"];
+
+  const react = async (msgId, emoji) => {
+    setReactFor(null);
+    if (!msgId || String(msgId).startsWith("tmp-")) return;
+    const res = await dmApi.react(msgId, emoji);
+    if (res) setMsgs((p) => p.map((m) => (m.id === msgId ? { ...m, reactions: res.reactions } : m)));
+  };
+
+  const reactionSummary = (rs) => {
+    const counts = {};
+    (rs || []).forEach((r) => { counts[r.emoji] = (counts[r.emoji] || 0) + 1; });
+    return Object.entries(counts);
+  };
 
   const loadConvos = useCallback(async () => {
     setLoadingList(true);
@@ -139,13 +154,36 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               ) : (
                 msgs.map((m) => {
                   const mine = m.from_id === user.user_id;
+                  const summary = reactionSummary(m.reactions);
                   return (
-                    <div key={m.id} data-testid={`chat-msg-${m.id}`} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                      <div className={`max-w-[78%] rounded-2xl px-3.5 py-2 ${mine ? "bg-[#3f7cac] text-white rounded-br-sm" : "bg-white dark:bg-[#232A31] text-[#2B303B] dark:text-[#e4eff8] rounded-bl-sm border border-[#d5e4f0] dark:border-[#38424B]"}`}>
-                        {m.image_url && <img src={m.image_url} alt="" data-testid="chat-msg-image" className="rounded-xl mb-1 max-h-56 w-full object-cover" />}
-                        {m.text && <p className="text-sm whitespace-pre-line leading-snug break-words">{m.text}</p>}
-                        <p className={`text-[10px] mt-0.5 text-right ${mine ? "text-white/70" : "text-[#7E8A93]"}`}>{timeShort(m.created_at, lang)}</p>
+                    <div key={m.id} data-testid={`chat-msg-${m.id}`} className={`flex flex-col ${mine ? "items-end" : "items-start"}`}>
+                      <div className={`group relative flex items-end gap-1 max-w-[85%] ${mine ? "flex-row-reverse" : ""}`}>
+                        <div className={`rounded-2xl px-3.5 py-2 ${mine ? "bg-[#3f7cac] text-white rounded-br-sm" : "bg-white dark:bg-[#232A31] text-[#2B303B] dark:text-[#e4eff8] rounded-bl-sm border border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                          {m.image_url && <img src={m.image_url} alt="" data-testid="chat-msg-image" className="rounded-xl mb-1 max-h-56 w-full object-cover" />}
+                          {m.text && <p className="text-sm whitespace-pre-line leading-snug break-words">{m.text}</p>}
+                          <p className={`text-[10px] mt-0.5 text-right ${mine ? "text-white/70" : "text-[#7E8A93]"}`}>{timeShort(m.created_at, lang)}</p>
+                        </div>
+                        {!String(m.id).startsWith("tmp-") && (
+                          <button data-testid={`chat-react-btn-${m.id}`} onClick={() => setReactFor(reactFor === m.id ? null : m.id)}
+                            className="opacity-60 hover:opacity-100 text-[#7E8A93] shrink-0 p-1"><Smile className="w-4 h-4" /></button>
+                        )}
+                        {reactFor === m.id && (
+                          <div data-testid={`chat-react-picker-${m.id}`} className={`absolute -top-9 ${mine ? "right-8" : "left-8"} z-10 flex items-center gap-1 bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-full px-2 py-1 shadow-lg`}>
+                            {REACTIONS.map((e) => (
+                              <button key={e} data-testid={`chat-react-${m.id}-${e}`} onClick={() => react(m.id, e)} className="text-lg leading-none hover:scale-125 transition-transform">{e}</button>
+                            ))}
+                          </div>
+                        )}
                       </div>
+                      {summary.length > 0 && (
+                        <div data-testid={`chat-reactions-${m.id}`} className={`flex gap-1 mt-0.5 ${mine ? "pr-1" : "pl-1"}`}>
+                          {summary.map(([e, n]) => (
+                            <button key={e} onClick={() => react(m.id, e)} className="inline-flex items-center gap-0.5 text-[11px] bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-full px-1.5 py-0.5">
+                              <span>{e}</span>{n > 1 && <span className="font-bold text-[#7E8A93]">{n}</span>}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })

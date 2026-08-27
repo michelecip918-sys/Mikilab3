@@ -199,6 +199,7 @@ export const dmApi = {
   send: (to_id, text, image_url) => api.post(`/community/messages`, { to_id, text, image_url }).then((r) => r.data),
   thread: (other_id) => api.get(`/community/messages/${other_id}`).then((r) => r.data).catch(() => ({ messages: [], other: null })),
   conversations: () => api.get(`/community/conversations`).then((r) => r.data.conversations || []).catch(() => []),
+  react: (msg_id, emoji) => api.post(`/community/messages/${msg_id}/react`, { emoji }).then((r) => r.data).catch(() => null),
 };
 
 export const academyApi = {
@@ -208,6 +209,7 @@ export const academyApi = {
   leaderboard: () => api.get(`/academy/leaderboard`).then((r) => r.data).catch(() => ({ rows: [] })),
   sosHistory: () => api.get(`/academy/sos-history`).then((r) => r.data.items || []).catch(() => []),
   sosDelete: (id) => api.delete(`/academy/sos-history/${id}`).then((r) => r.data),
+  sosRecipe: (diagnosis, lang) => api.post(`/academy/sos-recipe`, { diagnosis, lang }).then((r) => r.data).catch(() => ({ recipe_id: null })),
 };
 
 export const pushApi = {

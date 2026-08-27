@@ -2247,7 +2247,7 @@ async def academy_quiz(payload: QuizRequest):
 
 
 # --- Badge Academy (es. "Fornaio Diplomato" al superamento di serie al livello Master) ---
-_ALLOWED_BADGES = {"diplomato", "master_baker"}
+_ALLOWED_BADGES = {"diplomato", "master_baker", "fornaio_settimana"}
 
 
 class BadgeReq(BaseModel):
@@ -2340,9 +2340,9 @@ async def academy_sos_history_delete(item_id: str, user: dict = Depends(current_
 
 
 # --- Classifica Quiz (punti Master settimanali tra amici) ---
-def _iso_week():
-    from datetime import date
-    y, w, _ = date.today().isocalendar()
+def _iso_week(offset: int = 0):
+    from datetime import date, timedelta
+    y, w, _ = (date.today() + timedelta(weeks=offset)).isocalendar()
     return f"{y}-W{w:02d}"
 
 
@@ -2375,9 +2375,29 @@ async def _accepted_friend_ids(user_id: str):
     return [(f["to_id"] if f["from_id"] == user_id else f["from_id"]) for f in frs]
 
 
+async def _crown_last_week_champion():
+    """Assegna (una sola volta) il badge 'fornaio_settimana' al vincitore globale della settimana scorsa."""
+    last = _iso_week(-1)
+    already = await db.weekly_winners.find_one({"_id": last})
+    if already:
+        return already.get("user_id")
+    top = await db.quiz_scores.find({"week": last, "points": {"$gt": 0}}, {"_id": 0}).sort("points", -1).limit(1).to_list(1)
+    if not top:
+        await db.weekly_winners.insert_one({"_id": last, "user_id": None})
+        return None
+    winner = top[0]["user_id"]
+    await db.weekly_winners.insert_one({"_id": last, "user_id": winner, "points": top[0].get("points", 0)})
+    await db.users.update_one({"user_id": winner}, {"$addToSet": {"badges": "fornaio_settimana"}})
+    return winner
+
+
 @api_router.get("/academy/leaderboard")
 async def academy_leaderboard(user: dict = Depends(current_user)):
     week = _iso_week()
+    try:
+        await _crown_last_week_champion()
+    except Exception:
+        logger.exception("crown champion error")
     ids = await _accepted_friend_ids(user["user_id"])
     ids.append(user["user_id"])
     scores = await db.quiz_scores.find({"week": week, "user_id": {"$in": ids}}, {"_id": 0}).to_list(500)
@@ -2388,11 +2408,72 @@ async def academy_leaderboard(user: dict = Depends(current_user)):
         "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
         "picture": u.get("picture", ""),
         "diplomato": "diplomato" in (u.get("badges") or []),
+        "champion": "fornaio_settimana" in (u.get("badges") or []),
         "points": smap.get(u["user_id"], 0),
         "me": u["user_id"] == user["user_id"],
     } for u in us]
     rows.sort(key=lambda r: (-r["points"], r["name"].lower()))
-    return {"week": week, "rows": rows}
+    # campione della settimana scorsa (globale)
+    champion = None
+    lw = await db.weekly_winners.find_one({"_id": _iso_week(-1)})
+    if lw and lw.get("user_id"):
+        cu = await db.users.find_one({"user_id": lw["user_id"]}, {"_id": 0, "name": 1, "picture": 1, "email": 1})
+        if cu:
+            champion = {"name": cu.get("name") or (cu.get("email") or "Fornaio").split("@")[0],
+                        "picture": cu.get("picture", ""), "points": lw.get("points", 0),
+                        "me": lw["user_id"] == user["user_id"]}
+    return {"week": week, "rows": rows, "champion": champion}
+
+
+class SosRecipeReq(BaseModel):
+    diagnosis: str
+    lang: str = "it"
+
+
+@api_router.post("/academy/sos-recipe")
+async def academy_sos_recipe(body: SosRecipeReq, user: dict = Depends(current_user)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(500, "LLM key non configurata")
+    di: str = (body.diagnosis or "").strip()[:2000]
+    if not di: 
+        raise HTTPException(400, "Diagnosi mancante")
+    recs = await db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0, "id": 1, "name": 1}).to_list(1000)
+    if not recs:
+        return {"recipe_id": None}
+    idset = {r["id"]: r["name"] for r in recs}
+    listing = "\n".join(f"{r['id']} :: {r['name']}" for r in recs[:200])
+    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo"}[lang]
+    prompt = (
+        "Sei Mohammadreza. Data questa DIAGNOSI di un pane fatto in casa, scegli DALLA LISTA la ricetta MikiLab più adatta "
+        "per allenarsi e correggere quel difetto (una ricetta che, seguendone bene il procedimento, aiuta a superare il problema).\n\n"
+        f"DIAGNOSI:\n{di}\n\nLISTA RICETTE (id :: nome):\n{listing}\n\n"
+        f"Rispondi SOLO con JSON valido: {{\"recipe_id\": \"<id esatto dalla lista>\", \"reason\": \"<motivo in 1 frase, in {lang_name}>\"}}."
+    )
+    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"sosrec-{uuid.uuid4().hex[:8]}",
+                   system_message="Consigli ricette per correggere difetti di panificazione. Rispondi SOLO JSON.").with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=300)
+    text = ""
+    try:
+        async for event in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("sos-recipe error")
+        return {"recipe_id": None}
+    raw = text.strip().strip("`")
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        return {"recipe_id": None}
+    try:
+        data = json.loads(raw[s:e + 1])
+    except Exception:
+        return {"recipe_id": None}
+    rid = data.get("recipe_id")
+    if rid not in idset:
+        return {"recipe_id": None}
+    return {"recipe_id": rid, "name": idset[rid], "reason": str(data.get("reason", "")).strip()}
 
 
 # --- Web Push per promemoria persistenti (VAPID) ---
@@ -4744,6 +4825,30 @@ async def dm_thread(other_id: str, user: dict = Depends(current_user)):
     if other:
         other_info = {"user_id": other_id, "name": other.get("name") or (other.get("email") or "Fornaio").split("@")[0], "picture": other.get("picture", "")}
     return {"messages": msgs, "other": other_info}
+
+
+_REACT_EMOJIS = {"👍", "🔥", "🥖", "❤️", "👏", "😮"}
+
+
+class ReactReq(BaseModel):
+    emoji: str
+
+
+@api_router.post("/community/messages/{msg_id}/react")
+async def dm_react(msg_id: str, body: ReactReq, user: dict = Depends(current_user)):
+    emoji = (body.emoji or "").strip()
+    if emoji not in _REACT_EMOJIS:
+        raise HTTPException(400, "Emoji non valida")
+    me = user["user_id"]
+    msg = await db.dm_messages.find_one({"id": msg_id}, {"_id": 0, "from_id": 1, "to_id": 1, "reactions": 1})
+    if not msg or me not in (msg.get("from_id"), msg.get("to_id")):
+        raise HTTPException(404, "Messaggio non trovato")
+    reactions = [r for r in (msg.get("reactions") or []) if r.get("user_id") != me]
+    existing = next((r for r in (msg.get("reactions") or []) if r.get("user_id") == me), None)
+    if not (existing and existing.get("emoji") == emoji):
+        reactions.append({"user_id": me, "emoji": emoji})  # aggiungi/cambia; se stessa emoji -> toggle off
+    await db.dm_messages.update_one({"id": msg_id}, {"$set": {"reactions": reactions}})
+    return {"reactions": reactions}
 
 
 # --- Notifiche Community (like/commenti sui propri post) ---

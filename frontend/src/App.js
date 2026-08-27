@@ -173,7 +173,7 @@ function App() {
             {tab === "maestro" && <PaywallGate feature="lab" sectionName={tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}><Maestro /></PaywallGate>}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} onNavigate={navigate} />}
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
-            {tab === "community" && <Community />}
+            {tab === "community" && <Community onNavigate={navigate} />}
             {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
             {tab === "shop" && <><Academy /><Shop hideCourses /></>}
           </motion.div>

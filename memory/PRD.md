@@ -1723,3 +1723,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Residui pre-esistenti non bloccanti: 401 console per anonimo, brand header troncato su schermi <400px, doppio quiz legacy in Impara, `/api/academy/sos` riusa VisionRequest (campo `mode` richiesto, inviato dal frontend). server.py ~5900 righe (candidato a split in router academy/push).
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
 
+
+## v70 (27 Ago 2026) — Consiglia dal SOS, Sfida Settimanale, Reazioni chat
+- **Consiglia dal SOS**: dopo la diagnosi SOS, `POST /api/academy/sos-recipe {diagnosis,lang}` (Claude sceglie dalla lista ricette MikiLab) → SosImpasto mostra card `sos-recipe-suggestion` (nome + motivo); il tap apre la scheda ricetta (naviga a Ricette + evento `mikilab-open-recipe`).
+- **Sfida Settimanale "Fornaio della Settimana"**: leaderboard riformulata come sfida — `GET /api/academy/leaderboard` ritorna anche `champion` (vincitore globale settimana precedente); `_crown_last_week_champion` assegna il badge `fornaio_settimana` (idempotente, via `weekly_winners`). EvolvingQuiz: 👑 sul 1° (punti>0), banner `quiz-champion`, badge 🏆/🎓 nelle righe. ProfilePanel mostra chip `profile-badge-champion`.
+- **Sticker & Reazioni chat**: `POST /api/community/messages/{id}/react {emoji}` toggle (👍🔥🥖, whitelist `_REACT_EMOJIS`; 400 emoji invalida, 404 se non partecipante). ChatPanel: pulsante `chat-react-btn-*` → picker `chat-react-picker-*` → chip `chat-reactions-*` (ricliccando si toglie). thread ritorna `reactions`.
+- **FIX race deep-link (post-test iteration_94)**: RecipeList ora conserva un `pendingOpenId` (+ `window.__mikilabPendingRecipe`) e apre la ricetta quando le ricette sono caricate — risolve la corsa del vecchio setTimeout 600ms. Verificato: navigazione a freddo apre correttamente la scheda.
+- **Test iteration_94**: backend 16/16, frontend 90% → unica anomalia (race deep-link) corretta e riverificata via screenshot.
+- Note minori non bloccanti: picker reazioni `-top-9` può essere tagliato dall'header per il messaggio più in alto; trigger reazione (smiley) poco contrastato; `sos-recipe` ritorna {recipe_id:null} con HTTP 200 in caso di nessun match (UI semplicemente non mostra la card). server.py monolite (~9k righe) da splittare (facoltativo).
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.
+

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Loader2, Stethoscope, RotateCcw } from "lucide-react";
+import { X, Loader2, Stethoscope, RotateCcw, BookOpen, ChevronRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
-import { API, uploadApi } from "@/lib/api";
+import { API, uploadApi, academyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 
@@ -16,20 +16,23 @@ function fileToDataUrl(file) {
 }
 
 // SOS Impasto: manda la foto del pane a Mohammadreza per una diagnosi immediata (login richiesto).
-export default function SosImpasto({ open, onClose }) {
+export default function SosImpasto({ open, onClose, onNavigate }) {
   const { lang } = useLang();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
   const { user, setAuthOpen } = useAuth();
   const [photo, setPhoto] = useState("");
   const [result, setResult] = useState("");
   const [busy, setBusy] = useState(false);
+  const [rec, setRec] = useState(null); // ricetta consigliata
+  const [recLoading, setRecLoading] = useState(false);
   const endRef = useRef(null);
-  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [result]);
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [result, rec]);
 
   if (!open) return null;
 
   const analyze = async (dataUrl, thumbUrl) => {
-    setBusy(true); setResult("");
+    setBusy(true); setResult(""); setRec(null);
+    let full = "";
     try {
       const res = await fetch(`${API}/academy/sos`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
@@ -45,12 +48,26 @@ export default function SosImpasto({ open, onClose }) {
           const line = part.replace(/^data: ?/, "").trim(); if (!line) continue;
           let obj; try { obj = JSON.parse(line); } catch { continue; }
           if (obj.done) continue;
-          if (obj.d) setResult((p) => p + obj.d);
+          if (obj.d) { full += obj.d; setResult((p) => p + obj.d); }
         }
       }
     } catch {
       setResult(tri("Ops, riprova tra poco.", "Ups, versuch es gleich nochmal.", "Oops, try again shortly.", "Ups, inténtalo de nuevo."));
     } finally { setBusy(false); }
+    // consiglio ricetta MikiLab in base alla diagnosi
+    if (full.trim() && !full.startsWith("[")) {
+      setRecLoading(true);
+      try { const r = await academyApi.sosRecipe(full, lang); if (r && r.recipe_id) setRec(r); } catch { /* */ }
+      finally { setRecLoading(false); }
+    }
+  };
+
+  const openRecipe = () => {
+    if (!rec) return;
+    window.__mikilabPendingRecipe = rec.recipe_id; // risolto da RecipeList al caricamento
+    onClose();
+    if (onNavigate) onNavigate("ricette");
+    setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id: rec.recipe_id } })), 300);
   };
 
   const onFile = async (f) => {
@@ -62,7 +79,7 @@ export default function SosImpasto({ open, onClose }) {
     analyze(dataUrl, thumbUrl);
   };
 
-  const reset = () => { setPhoto(""); setResult(""); };
+  const reset = () => { setPhoto(""); setResult(""); setRec(null); };
 
   return (
     <div className="fixed inset-0 z-[75] flex items-end sm:items-center justify-center" data-testid="sos-panel">
@@ -106,6 +123,25 @@ export default function SosImpasto({ open, onClose }) {
               )}
               <div ref={endRef} />
             </div>
+          )}
+
+          {rec && (
+            <button data-testid="sos-recipe-suggestion" onClick={openRecipe}
+              className="w-full flex items-center gap-3 rounded-2xl p-3.5 text-left bg-gradient-to-br from-[#a9772f] to-[#7a531d] text-white shadow-md active:scale-98 transition-all">
+              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5" /></div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/80">{tri("Ricetta consigliata da Mohammadreza", "Von Mohammadreza empfohlenes Rezept", "Recipe recommended by Mohammadreza", "Receta recomendada por Mohammadreza")}</p>
+                <p className="font-display text-base font-bold leading-tight truncate">{rec.name}</p>
+                {rec.reason && <p className="text-[12px] text-white/90 leading-snug line-clamp-2">{rec.reason}</p>}
+              </div>
+              <ChevronRight className="w-5 h-5 shrink-0" />
+            </button>
+          )}
+          {busy && result && (
+            <p className="text-[11px] text-[#7E8A93] text-center">{tri("Cerco la ricetta più adatta…", "Suche das passende Rezept…", "Finding the best recipe…", "Buscando la mejor receta…")}</p>
+          )}
+          {recLoading && !rec && (
+            <p className="text-[11px] text-[#a9772f] text-center flex items-center justify-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {tri("Cerco la ricetta più adatta…", "Suche das passende Rezept…", "Finding the best recipe…", "Buscando la mejor receta…")}</p>
           )}
         </div>
       </div>

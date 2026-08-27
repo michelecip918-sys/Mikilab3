@@ -34,7 +34,7 @@ function timeAgo(iso, lang) {
   } catch { return ""; }
 }
 
-export default function Community() {
+export default function Community({ onNavigate }) {
   const { lang } = useLang();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
   const { user, setAuthOpen } = useAuth();
@@ -213,7 +213,7 @@ export default function Community() {
         onMessage={(u) => { setFriendsOpen(false); setChatUser(u); setChatOpen(true); }} />
       {profileUser && <ProfilePanel userId={profileUser} onClose={() => setProfileUser(null)} onMessage={(u) => { setProfileUser(null); setChatUser(u); setChatOpen(true); }} />}
       <ChatPanel open={chatOpen} onClose={() => { setChatOpen(false); setChatUser(null); loadMsgUnread(); window.dispatchEvent(new Event("mikilab-notif-refresh")); }} initialUser={chatUser} />
-      <SosImpasto open={sosOpen} onClose={() => setSosOpen(false)} />
+      <SosImpasto open={sosOpen} onClose={() => setSosOpen(false)} onNavigate={onNavigate} />
       <BakersMap open={mapOpen} onClose={() => setMapOpen(false)} />
 
       <AvatarBubbles variant="community" />

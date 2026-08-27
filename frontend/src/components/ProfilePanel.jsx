@@ -99,6 +99,11 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                     🎓 {tri("Fornaio Diplomato", "Diplom-Bäcker", "Certified Baker", "Panadero Diplomado")}
                   </span>
                 )}
+                {(data.badges || []).includes("fornaio_settimana") && (
+                  <span data-testid="profile-badge-champion" className="mt-1.5 ml-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r from-[#a9772f] to-[#7a531d] text-white px-2.5 py-1 rounded-full">
+                    🏆 {tri("Fornaio della Settimana", "Bäcker der Woche", "Baker of the Week", "Panadero de la Semana")}
+                  </span>
+                )}
                 {user && !isMe && (
                   <div className="flex items-center gap-2 mt-2">
                     <button data-testid="profile-follow" onClick={follow} disabled={followed}

@@ -30,8 +30,9 @@ export default function EvolvingQuiz() {
   const [best, setBest] = useState(() => Number(localStorage.getItem(BKEY) || 0));
   const [masterStreak, setMasterStreak] = useState(0);
   const [board, setBoard] = useState(null);
+  const [champion, setChampion] = useState(null);
   const [showBoard, setShowBoard] = useState(false);
-  const loadBoard = () => { if (user) academyApi.leaderboard().then((d) => setBoard(d.rows || [])).catch(() => setBoard([])); };
+  const loadBoard = () => { if (user) academyApi.leaderboard().then((d) => { setBoard(d.rows || []); setChampion(d.champion || null); }).catch(() => setBoard([])); };
   const [diploma, setDiploma] = useState(() => { try { return localStorage.getItem(DIPLOMA_KEY) === "1"; } catch { return false; } });
 
   useEffect(() => {
@@ -124,21 +125,29 @@ export default function EvolvingQuiz() {
       {user && (
         <button data-testid="quiz-leaderboard-toggle" onClick={() => { const n = !showBoard; setShowBoard(n); if (n) loadBoard(); }}
           className="w-full mb-3 flex items-center justify-center gap-2 text-[12px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 py-2 rounded-xl active:scale-98">
-          <Trophy className="w-4 h-4" /> {showBoard ? tri("Nascondi classifica", "Rangliste ausblenden", "Hide leaderboard", "Ocultar clasificación") : tri("Classifica settimanale (amici)", "Wöchentliche Rangliste (Freunde)", "Weekly leaderboard (friends)", "Clasificación semanal (amigos)")}
+          <Trophy className="w-4 h-4" /> {showBoard ? tri("Nascondi sfida", "Challenge ausblenden", "Hide challenge", "Ocultar desafío") : tri("Sfida della Settimana 👑", "Challenge der Woche 👑", "Weekly Challenge 👑", "Desafío de la Semana 👑")}
         </button>
       )}
       {user && showBoard && (
         <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-3 space-y-1.5">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Punti Master di questa settimana", "Master-Punkte diese Woche", "This week's Master points", "Puntos Master de esta semana")}</p>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Sfida «Fornaio della Settimana» — punti Master tra amici", "Challenge «Bäcker der Woche» — Master-Punkte unter Freunden", "«Baker of the Week» challenge — Master points among friends", "Desafío «Panadero de la Semana» — puntos Master entre amigos")}</p>
+          {champion && (
+            <div data-testid="quiz-champion" className="flex items-center gap-2.5 rounded-lg bg-gradient-to-r from-[#a9772f] to-[#8a5a2b] text-white px-2.5 py-2 mb-1">
+              <span className="text-lg">🏆</span>
+              <div className="w-7 h-7 rounded-full overflow-hidden bg-white/20 flex items-center justify-center text-xs font-bold shrink-0">{champion.picture ? <img src={champion.picture} alt="" className="w-full h-full object-cover" /> : (champion.name || "F")[0].toUpperCase()}</div>
+              <span className="flex-1 min-w-0 truncate text-[13px] font-bold">{tri("Campione scorsa settimana:", "Champion letzte Woche:", "Last week's champion:", "Campeón semana pasada:")} {champion.name}{champion.me ? tri(" (tu!)", " (du!)", " (you!)", " (tú!)") : ""}</span>
+            </div>
+          )}
           {board === null ? (
             <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-[#2e8b6f]" /></div>
           ) : board.length === 0 ? (
-            <p className="text-sm text-[#7E8A93] py-2">{tri("Ancora nessun punto. Rispondi al livello Master per scalare la classifica!", "Noch keine Punkte. Beantworte Master-Fragen, um zu klettern!", "No points yet. Answer Master questions to climb!", "Sin puntos aún. ¡Responde en Master para subir!")}</p>
+            <p className="text-sm text-[#7E8A93] py-2">{tri("Ancora nessun punto. Rispondi al livello Master per scalare la classifica e diventare Fornaio della Settimana!", "Noch keine Punkte. Beantworte Master-Fragen, um Bäcker der Woche zu werden!", "No points yet. Answer Master questions to become Baker of the Week!", "Sin puntos aún. ¡Responde en Master para ser Panadero de la Semana!")}</p>
           ) : board.map((r, idx) => (
-            <div key={r.user_id} data-testid={`leaderboard-row-${r.user_id}`} className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 ${r.me ? "bg-[#3f7cac]/10" : ""}`}>
-              <span className={`w-5 text-center text-sm font-extrabold ${idx === 0 ? "text-[#a9772f]" : "text-[#7E8A93]"}`}>{idx + 1}</span>
+            <div key={r.user_id} data-testid={`leaderboard-row-${r.user_id}`} className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 ${r.me ? "bg-[#3f7cac]/10" : ""} ${idx === 0 && r.points > 0 ? "ring-1 ring-[#a9772f]/40" : ""}`}>
+              <span className={`w-5 text-center text-sm font-extrabold ${idx === 0 ? "text-[#a9772f]" : "text-[#7E8A93]"}`}>{idx === 0 && r.points > 0 ? "👑" : idx + 1}</span>
               <div className="w-8 h-8 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white text-xs font-bold shrink-0">{r.picture ? <img src={r.picture} alt={r.name} className="w-full h-full object-cover" /> : (r.name || "F")[0].toUpperCase()}</div>
               <span className="flex-1 min-w-0 truncate text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{r.name}{r.me ? tri(" (tu)", " (du)", " (you)", " (tú)") : ""}</span>
+              {r.champion && <span title="Fornaio della Settimana" className="text-sm">🏆</span>}
               {r.diplomato && <span title="Fornaio Diplomato" className="text-sm">🎓</span>}
               <span className="text-sm font-extrabold text-[#2e8b6f]">{r.points}</span>
             </div>

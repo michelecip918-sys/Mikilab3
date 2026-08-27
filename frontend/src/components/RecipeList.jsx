@@ -34,6 +34,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [toDelete, setToDelete] = useState(null);
   const [scaling, setScaling] = useState(null);
   const [viewing, setViewing] = useState(null);
+  const [pendingOpenId, setPendingOpenId] = useState(null);
   const [unlockRecipe, setUnlockRecipe] = useState(null);
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("all");
@@ -98,17 +99,28 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   }, [recipes, collectionName]);
 
 
-  // Apertura ricetta da eventi esterni (es. vetrina "Novità dal MikiLab")
+  // Apertura ricetta da eventi esterni (es. vetrina "Novità", consiglio SOS).
+  // Salva l'id richiesto e lo risolve appena le ricette sono caricate (evita race di timing).
   useEffect(() => {
     if (collectionName !== "mikilab") return;
     const onOpen = (e) => {
       const id = e?.detail?.id;
-      const target = recipes.find((x) => x.id === id);
-      if (target) setViewing(target);
+      if (id) { window.__mikilabPendingRecipe = id; setPendingOpenId(id); }
     };
     window.addEventListener("mikilab-open-recipe", onOpen);
+    if (window.__mikilabPendingRecipe) setPendingOpenId(window.__mikilabPendingRecipe);
     return () => window.removeEventListener("mikilab-open-recipe", onOpen);
-  }, [recipes, collectionName]);
+  }, [collectionName]);
+
+  useEffect(() => {
+    if (collectionName !== "mikilab" || !pendingOpenId || !recipes.length) return;
+    const target = recipes.find((x) => x.id === pendingOpenId);
+    if (target) {
+      setViewing(target);
+      setPendingOpenId(null);
+      window.__mikilabPendingRecipe = null;
+    }
+  }, [recipes, pendingOpenId, collectionName]);
 
 
   // tiene aggiornata la ricetta aperta dopo un salvataggio/scala

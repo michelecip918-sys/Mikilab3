@@ -1,0 +1,47 @@
+{
+  "summary": "Iteration 94 tested end-to-end: (1) SOS→recipe suggestion, (2) Weekly Challenge leaderboard, (3) chat sticker reactions + regressions. Backend: 16/16 pytest passed (auth guards, 400/404 edge cases, AI suggestion validity, reaction add/change/toggle, leaderboard structure/sorting, DM send/unread, quiz). Frontend (mobile 390x844, amico1): leaderboard shows crown on amico1 (300 pts, 🎓 badge) with 'Weekly Challenge 👑' toggle; no champion banner (weekly_winners empty for last week = expected); chat reaction button→picker(👍🔥🥖)→chip→toggle-off all work; SOS diagnosis + 'sos-recipe-suggestion' card appears in ~15-20s with a relevant MikiLab recipe and reason. Only defect found: clicking the SOS suggestion opened the recipe detail in 2 of 3 attempts — intermittent race (event dispatched 600ms after navigation, before RecipeList has fetched recipes).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "SOS suggestion -> open recommended recipe",
+        "issue": "Intermittent (~33-50% failure in observed runs): SosImpasto dispatches 'mikilab-open-recipe' with a fixed setTimeout of 600ms after onNavigate('ricette'). If RecipeList has not finished loading /api/recipes (cold navigation to Recipes section), the listener's `recipes` array is still empty, no match is found and the event is lost silently — user lands on the Recipes list with no recipe opened and no feedback. Fix: store the requested id in RecipeList state (pendingOpenId) and resolve it in an effect once `recipes` arrives (or retry the dispatch/pass id via URL param).",
+        "affected_selectors": ["sos-recipe-suggestion", "recipe-detail-<id>"]
+      }
+    ],
+    "design_issues": [
+      {
+        "screen": "ChatPanel reactions",
+        "issues": ["Emoji picker is positioned '-top-9' over the previous bubble; for the topmost visible message in the scroll area it can be partially clipped by the chat header. Usable but consider flipping below when near the top.", "Reaction trigger button is a low-contrast small smiley next to the bubble (easy to miss); no tooltip/aria-label."]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter94_sos_recipe_challenge_reactions.py",
+    "/app/test_reports/pytest/iter94.xml"
+  ],
+  "action_items": [
+    "Fix the race in the SOS→recipe deep-link: make RecipeList keep a pending id and open the recipe once recipes are loaded (remove reliance on the 600ms setTimeout in SosImpasto.openRecipe)."
+  ],
+  "critical_code_review_comments": [
+    "SosImpasto.openRecipe uses a hard-coded 600ms setTimeout for a cross-section event — non-deterministic; RecipeList's window listener only matches against already-fetched `recipes`, so early events are dropped with no fallback/user feedback.",
+    "backend/server.py is a single monolith (~9k lines) — split by domain (academy, community/dm, recipes, subscription) as recommended in previous iterations.",
+    "POST /api/academy/sos-recipe swallows all failures returning {recipe_id: null} with HTTP 200; the UI then shows nothing at all. Consider returning a flag/reason so the client can show 'no suggestion available'.",
+    "Reactions store raw user_id lists; GET thread returns reactions without display names — fine for chips today, but any future 'who reacted' UI will need a name lookup."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter94_sos_recipe_challenge_reactions.py",
+    "/app/test_reports/iteration_94.json"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "90%"},
+  "seed_data_creation": "Temporary DM messages (TEST_iter94*) between amico1/amico2 and one admin→amico2 message for the 404 case; all TEST_iter94 messages and the example.com image message were deleted from db.dm_messages after testing. Two real photo messages sent via UI regression remain in the amico1↔amico2 thread.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "amico1@mikilab.de / Test1234! (leader, 300 pts, diplomato), amico2@mikilab.de / Test1234!, admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Backend suite: /app/backend/tests/test_iter94_sos_recipe_challenge_reactions.py (16 tests, ~36s, includes AI sos-recipe with 180s timeout). MikiLab recipes are locked for amico1 (non-PRO) so recipe detail opens with the PRO paywall block — that is expected. Recipes section renders recipes inside collapsed category accordions, so [data-testid^='recipe-row-'] is absent until a category is expanded; use the 'mikilab-open-recipe' event or expand a category. quiz-champion banner will stay absent until db.weekly_winners has a user_id for last ISO week (insert one to test the banner and ProfilePanel profile-badge-champion). SOS AI takes ~15-25s for diagnosis + ~5-15s for the recipe suggestion.",
+  "rca_of_the_issue": "SosImpasto.openRecipe(): onClose() → onNavigate('ricette') → setTimeout(dispatch 'mikilab-open-recipe', 600ms). RecipeList registers the listener in a useEffect keyed on [recipes, collectionName] and looks the id up in the current `recipes` array. On a cold navigation the /api/recipes fetch (121 mikilab recipes) frequently resolves after 600ms, so the handler runs with recipes=[] , finds nothing and the event is never replayed → recipe never opens. Reproduced by dispatching the event 600ms after clicking nav-tab-ricette from another section (failed), while the same dispatch on an already-loaded Recipes section always works."
+}
