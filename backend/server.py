@@ -3366,6 +3366,56 @@ async def scan_recipe(payload: ScanRecipeRequest, user: dict = Depends(require_p
     return data
 
 
+class ScanPdfRequest(BaseModel):
+    pdf_base64: str
+    lang: str = "it"
+
+
+@api_router.post("/maestro/scan-recipe-pdf")
+async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_pro)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    import base64 as _b64, io as _io
+    raw_b64 = payload.pdf_base64
+    if "," in raw_b64 and raw_b64.strip().startswith("data:"):
+        raw_b64 = raw_b64.split(",", 1)[1]
+    try:
+        pdf_bytes = _b64.b64decode(raw_b64)
+        from pypdf import PdfReader
+        reader = PdfReader(_io.BytesIO(pdf_bytes))
+        pages = [(p.extract_text() or "") for p in reader.pages[:10]]
+        pdf_text = "\n".join(pages).strip()
+    except Exception:
+        logger.exception("pdf parse error")
+        raise HTTPException(status_code=422, detail="PDF non leggibile")
+    if len(pdf_text) < 20:
+        raise HTTPException(status_code=422, detail="Il PDF non contiene testo estraibile (forse è solo un'immagine: usa il caricamento immagine)")
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"scanpdf-{uuid.uuid4()}",
+        system_message="Estrai ricette da testo e restituisci solo JSON valido.",
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
+    prompt = SCAN_PROMPT + "\n\nTESTO DELLA RICETTA (dal PDF):\n" + pdf_text[:12000]
+    text = ""
+    try:
+        async for event in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("scan-recipe-pdf error")
+        raise HTTPException(status_code=500, detail="Errore nell'analisi del PDF")
+    rawt = text.strip().strip("`")
+    s, e = rawt.find("{"), rawt.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Ricetta non riconosciuta nel PDF")
+    try:
+        return json.loads(rawt[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile leggere la ricetta dal PDF")
+
+
 import xml.etree.ElementTree as ET
 
 

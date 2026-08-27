@@ -91,6 +91,7 @@ export default function Marketplace() {
   const publish = async () => {
     if (!user) { toast.error(tri("Accedi per pubblicare un annuncio", "Zum Veröffentlichen anmelden", "Log in to post a listing")); return; }
     if (!form.title.trim()) return;
+    if (!form.contact.trim()) { setErr(tri("Inserisci un contatto (email, telefono/WhatsApp o link): serve a chi è interessato per scriverti.", "Gib einen Kontakt an (E-Mail, Telefon/WhatsApp oder Link).", "Add a contact (email, phone/WhatsApp or link) so buyers can reach you.")); return; }
     setErr(""); setPublishing(true);
     try {
       let photoUrl = "";
@@ -171,7 +172,7 @@ export default function Marketplace() {
             <input data-testid="market-place" value={form.place} onChange={(e) => setForm({ ...form, place: e.target.value })} placeholder={tri("Zona / Città", "Ort / Stadt", "Area / City")} className={inp} />
           </div>
           <textarea data-testid="market-desc" value={form.desc} onChange={(e) => setForm({ ...form, desc: e.target.value })} rows={2} placeholder={tri("Descrizione…", "Beschreibung…", "Description…")} className={inp} />
-          <input data-testid="market-contact" value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} placeholder={tri("Contatto (WhatsApp o email — vuoto = Michele)", "Kontakt (WhatsApp/E-Mail — leer = Michele)", "Contact (WhatsApp/email — empty = Michele)")} className={inp} />
+          <input data-testid="market-contact" value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} placeholder={tri("Contatto obbligatorio: email, WhatsApp o link dell'annuncio *", "Kontakt (Pflicht): E-Mail, WhatsApp oder Link *", "Contact (required): email, WhatsApp or listing link *")} className={inp} />
           {form.photo
             ? <div className="relative"><img src={form.photo} alt="" className="w-full h-40 object-cover rounded-xl" /><button data-testid="market-photo-clear" onClick={() => setForm({ ...form, photo: "" })} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1"><X className="w-4 h-4" /></button></div>
             : <DualPhotoButtons testid="market-photo" onFile={(f) => compress(f, (d) => setForm((s) => ({ ...s, photo: d })))} />}

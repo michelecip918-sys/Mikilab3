@@ -48,6 +48,30 @@ export default function ScanRecipe({ embedded = false }) {
     reader.readAsDataURL(file);
   };
 
+  const onFile = (file) => {
+    if (!file) return;
+    if (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) {
+      setLoading(true);
+      const r = new FileReader();
+      r.onload = async () => {
+        try {
+          const res = await fetch(`${API}/maestro/scan-recipe-pdf`, {
+            method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+            body: JSON.stringify({ pdf_base64: r.result, lang }),
+          });
+          if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || ""); }
+          const data = await res.json();
+          setScanned(data); setDialogOpen(true); toast.success(t("scan_done"));
+        } catch (err) {
+          toast.error(err?.message || t("scan_error"));
+        } finally { setLoading(false); }
+      };
+      r.readAsDataURL(file);
+      return;
+    }
+    onPhoto(file);
+  };
+
   const handleSave = async (payload) => {
     try {
       await recipesApi.create({ ...payload, collection_name: "personal" });
@@ -90,11 +114,11 @@ export default function ScanRecipe({ embedded = false }) {
         {!loading && (
           <div className="mt-4 pt-4 border-t border-[#d5e4f0] dark:border-[#38424B]">
             {/* Carica da file dal PC (o dall'allegato ricevuto via email): immagini/scansioni delle ricette */}
-            <input ref={fileRef} type="file" accept="image/*" className="hidden"
-              onChange={(e) => { const f = e.target.files?.[0]; if (f) onPhoto(f); e.target.value = ""; }} />
+            <input ref={fileRef} type="file" accept="image/*,application/pdf,.pdf" className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
             <button data-testid="scan-upload-file-btn" onClick={() => fileRef.current?.click()}
               className="inline-flex items-center gap-2 bg-[#2e8b6f] text-white font-semibold px-5 py-3 rounded-2xl active:scale-97 transition-all mb-3">
-              <Upload className="w-5 h-5" /> {tri("Carica dal PC / da email", "Vom PC / aus E-Mail laden", "Upload from PC / email")}
+              <Upload className="w-5 h-5" /> {tri("Carica dal PC / da email (immagine o PDF)", "Vom PC / aus E-Mail laden (Bild oder PDF)", "Upload from PC / email (image or PDF)")}
             </button>
             <p className="text-[11px] text-[#7E8A93] mb-3">{tri("Hai già le ricette in una cartella del computer o ricevute via email? Caricale qui: le leggo io e le trasformo in scheda.", "Hast du Rezepte in einem PC-Ordner oder per E-Mail erhalten? Lade sie hier hoch: ich lese sie und erstelle die Karte.", "Got recipes in a folder on your PC or received by email? Upload them here: I'll read them and turn them into a recipe card.")}</p>
             <p className="text-xs text-[#7E8A93] mb-2">{tri("Oppure scrivi la ricetta a mano da zero:", "Oder schreibe das Rezept von Hand:", "Or write the recipe by hand from scratch:")}</p>
