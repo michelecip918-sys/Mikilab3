@@ -245,6 +245,17 @@ export default function RecipeGenerator() {
             <>
               <p className="text-xs font-bold uppercase tracking-wide text-[#3f7cac] mb-2">{T("Procedimento su misura","Maßgeschneiderter Ablauf","Tailored process","Procedimiento a medida")}</p>
               <div data-testid="gen-procedure" className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-wrap leading-relaxed">{result.procedure}</div>
+              <div data-testid="gen-disclaimer" className="mt-4 flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-50 dark:bg-amber-500/10 px-3 py-2.5">
+                <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-700 dark:text-amber-300/90 leading-relaxed">
+                  {T(
+                    "Procedimento generato dall'IA a scopo indicativo. Vanno sempre validati da un fornaio in base a farina, ambiente e attrezzatura: adatta tempi, temperature e idratazione alla tua esperienza.",
+                    "KI-generierter Ablauf als Richtwert. Er muss stets von einem Bäcker anhand von Mehl, Umgebung und Ausstattung geprüft werden: passe Zeiten, Temperaturen und Hydratation an deine Erfahrung an.",
+                    "AI-generated process for guidance only. Always validate with a baker based on flour, environment and equipment: adjust times, temperatures and hydration to your experience.",
+                    "Procedimiento generado por IA a título orientativo. Debe validarlo siempre un panadero según la harina, el entorno y el equipo: ajusta tiempos, temperaturas e hidratación a tu experiencia."
+                  )}
+                </p>
+              </div>
             </>
           )}
 
