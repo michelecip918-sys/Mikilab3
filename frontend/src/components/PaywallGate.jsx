@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check, Store, Truck, CalendarClock, CreditCard } from "lucide-react";
+import { Lock, Crown, Clock, Sparkles, ClipboardList, CalendarDays, Flame, Thermometer, ScanLine, Camera, GraduationCap, BookOpen, Check, Store, Truck, CalendarClock, CreditCard, ShieldCheck } from "lucide-react";
 import { subscriptionApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
@@ -248,6 +248,10 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
               <p className="text-xs text-[#7E8A93]">{tri("all'anno", "pro Jahr", "per year")}</p>
             </button>
           </div>
+
+          <p data-testid="paywall-trust-badge" className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#2e6690] dark:text-[#a9d2ec] -mt-1">
+            <ShieldCheck className="w-3.5 h-3.5" /> {tri("Nessun addebito automatico · disdici quando vuoi", "Keine automatische Belastung · jederzeit kündbar", "No automatic charge · cancel anytime")}
+          </p>
 
           {!status?.trial_used && (
             <div className="rounded-2xl bg-[#5aa0cf]/10 border border-[#5aa0cf]/30 p-4">

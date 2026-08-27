@@ -1610,3 +1610,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
   - Tutte con notes/procedure/name in IT/DE/EN. Verificato via API (categorie/metodo/immagini/proc_len OK) + screenshot (immagini caricano).
 - **Promemoria fine prova (email automatica giorno 6)**: `_send_trial_reminders()` nel loop follow-up (ogni 6h). Seleziona entitlements `source in [trial_card, trial]`, pro, `expires_at` entro 24h e ancora attivo, `trial_reminder_sent != True` → invia email Resend (IT+DE) con CTA "Abbonati e continua" (link mikilab.de), poi marca `trial_reminder_sent=True` (idempotente, invia una sola volta). Sottolinea "nessun addebito automatico". HTML: `_trial_reminder_email_html()`. Verificato end-to-end con `delivered@resend.dev` (invio + flag + idempotenza).
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v56 (27 Ago 2026) — Altre ricette colorate + Badge fiducia paywall
+- **4 nuove ricette MikiLab** colorate NATURALMENTE, metodo INDIRETTO + procedimenti lunghi (IT/DE/EN), seed persistente. SEED_VERSION `2026-06-v56-colorate2`. Script: `backend/seed_speciali_colorate2.py`. Totale mikilab: 117.
+  - **Pane alla Curcuma e Zenzero** (giallo oro, biga), **Pane agli Spinaci** (verde, poolish), **Pane Nero al Carbone Vegetale** (nero + sesamo nero, lm), **Cornetto Bicolore Carbone e Vaniglia** (bianco/nero, biga). Immagini generate Nano Banana. Verificato via API (metodo/categoria/img/proc_len) + screenshot.
+- **Badge fiducia abbonamento**: in PaywallGate, sotto le card prezzi, riga `paywall-trust-badge` con icona ShieldCheck: "Nessun addebito automatico · disdici quando vuoi" (IT/DE/EN). Verificato a schermo.
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
