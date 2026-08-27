@@ -233,7 +233,7 @@ export default function Community({ onNavigate }) {
       </div>
 
       <div className="bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 rounded-2xl p-4 mb-5">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{tri("Cosa vuoi condividere?", "Was möchtest du teilen?", "What do you want to share?", "¿Qué quieres compartir?")}</p>
+        <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2">{tri("Cosa vuoi condividere?", "Was möchtest du teilen?", "What do you want to share?", "¿Qué quieres compartir?")}</p>
         <div className="grid grid-cols-3 gap-1.5 mb-2">
           {CATS.map(({ id, Icon, color }) => (
             <button key={id} data-testid={`community-cat-${id}`} onClick={() => setCat(id)}

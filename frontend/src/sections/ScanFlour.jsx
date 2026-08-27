@@ -1,15 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Loader2, Wheat, Gauge, Beaker, Sparkles } from "lucide-react";
-import { API } from "@/lib/api";
+import { Loader2, Wheat, Gauge, Beaker, Sparkles, Save, Trash2, Archive } from "lucide-react";
+import { API, floursApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 
 export default function ScanFlour() {
   const { lang } = useLang();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const { user, setAuthOpen } = useAuth();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [pantry, setPantry] = useState([]);
+
+  const loadPantry = () => { if (user) floursApi.list().then(setPantry).catch(() => {}); };
+  useEffect(() => { loadPantry(); /* eslint-disable-next-line */ }, [user]);
+
+  const saveToPantry = async () => {
+    if (!user) { setAuthOpen && setAuthOpen(true); return; }
+    if (!result) return;
+    setSaving(true);
+    try {
+      await floursApi.create({
+        brand: result.brand || null, product_name: result.product_name || null,
+        flour_type: result.flour_type || null, w_index: result.w_index ?? null,
+        protein_percent: result.protein_percent ?? null, grain: result.grain || null,
+        ideal_use: result.ideal_use || null, absorption_percent: result.absorption_percent ?? null,
+        notes: result.notes || null,
+      });
+      toast.success(tri("Farina salvata in dispensa!", "Mehl im Vorrat gespeichert!", "Flour saved to your pantry!", "¡Harina guardada en la despensa!"));
+      loadPantry();
+    } catch {
+      toast.error(tri("Errore nel salvataggio.", "Fehler beim Speichern.", "Save error.", "Error al guardar."));
+    } finally { setSaving(false); }
+  };
+
+  const removeFlour = async (id) => {
+    try { await floursApi.remove(id); setPantry((p) => p.filter((f) => f.id !== id)); } catch { /* */ }
+  };
 
   const onPhoto = (file) => {
     if (!file) return;
@@ -94,6 +124,35 @@ export default function ScanFlour() {
           {result.notes && (
             <p className="mt-3 text-[13px] text-[#7E8A93] leading-relaxed whitespace-pre-line">{result.notes}</p>
           )}
+          <button data-testid="flour-save-pantry" onClick={saveToPantry} disabled={saving}
+            className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-[#2e8b6f] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
+            {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+            {tri("Salva in dispensa", "Im Vorrat speichern", "Save to pantry", "Guardar en despensa")}
+          </button>
+        </div>
+      )}
+
+      {pantry.length > 0 && (
+        <div data-testid="flour-pantry" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5">
+          <div className="flex items-center gap-2 mb-3 text-[#a9772f]">
+            <Archive className="w-5 h-5" />
+            <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("La mia dispensa farine", "Mein Mehlvorrat", "My flour pantry", "Mi despensa de harinas")}</h3>
+          </div>
+          <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Le tue farine salvate: usale come riferimento (forza W e proteine) quando crei una ricetta.", "Deine gespeicherten Mehle: nutze sie als Referenz (W-Kraft und Protein) beim Erstellen eines Rezepts.", "Your saved flours: use them as reference (W strength and protein) when creating a recipe.", "Tus harinas guardadas: úsalas como referencia (fuerza W y proteína) al crear una receta.")}</p>
+          <ul className="space-y-2">
+            {pantry.map((f) => (
+              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] px-3.5 py-2.5">
+                <Wheat className="w-5 h-5 text-[#a9772f] shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{f.product_name || f.brand || f.flour_type || tri("Farina", "Mehl", "Flour", "Harina")}</p>
+                  <p className="text-[11px] text-[#7E8A93] truncate">
+                    {[f.flour_type, f.w_index != null ? `W ${f.w_index}` : null, f.protein_percent != null ? `${f.protein_percent}g prot.` : null].filter(Boolean).join(" · ")}
+                  </p>
+                </div>
+                <button data-testid={`flour-pantry-del-${f.id}`} onClick={() => removeFlour(f.id)} className="text-[#C0574D] p-1.5 shrink-0 active:scale-90"><Trash2 className="w-4 h-4" /></button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

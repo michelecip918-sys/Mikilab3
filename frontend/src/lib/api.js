@@ -129,6 +129,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   shopWaitlist: () => api.get(`/admin/shop/waitlist`).then((r) => r.data),
   setSiteSettings: (data) => api.put(`/admin/site-settings`, data).then((r) => r.data),
   bakeAlongNotify: () => api.post(`/admin/bakealong/notify`).then((r) => r.data),
+  bakeAlongAward: (week) => api.post(`/admin/bakealong/award`, {}, { params: week ? { week } : {} }).then((r) => r.data),
 };
 
 export const siteSettingsApi = {
@@ -147,6 +148,7 @@ export const bakeAlongApi = {
   current: (lang) => api.get(`/bakealong/current`, { params: { lang } }).then((r) => r.data).catch(() => null),
   submit: (image_url, text) => api.post(`/bakealong/submit`, { image_url, text }).then((r) => r.data),
   entries: (week) => api.get(`/bakealong/entries`, { params: week ? { week } : {} }).then((r) => r.data).catch(() => ({ entries: [] })),
+  winners: () => api.get(`/bakealong/winners`).then((r) => r.data.winners || []).catch(() => []),
   like: (id) => api.post(`/community/posts/${id}/like`).then((r) => r.data),
 };
 
@@ -239,6 +241,12 @@ export const haccpApi = {
   list: () => api.get(`/haccp-logs`).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/haccp-logs`, data).then((r) => r.data),
   remove: (id) => api.delete(`/haccp-logs/${id}`).then((r) => r.data),
+};
+
+export const floursApi = {
+  list: () => api.get(`/flours`).then((r) => r.data.items || []).catch(() => []),
+  create: (data) => api.post(`/flours`, data).then((r) => r.data),
+  remove: (id) => api.delete(`/flours/${id}`).then((r) => r.data),
 };
 
 export const inventoryApi = {

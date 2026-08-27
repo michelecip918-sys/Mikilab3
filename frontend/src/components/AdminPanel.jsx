@@ -31,6 +31,14 @@ export default function AdminPanel({ open, onOpenChange }) {
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setBaBusy(false); }
   };
+  const awardBakeAlong = async () => {
+    setBaBusy(true);
+    try {
+      const r = await adminApi.bakeAlongAward();
+      toast.success(r.winner ? (de ? "Sieger: " : "Vincitore: ") + (r.winner.name || "?") : (de ? "Keine Teilnahme" : "Nessuna partecipazione"));
+    } catch { toast.error(de ? "Fehler" : "Errore"); }
+    finally { setBaBusy(false); }
+  };
   const [settings, setSettings] = useState({ whatsapp_number: "", avatar_bubbles: {}, folder_covers: {} });
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
@@ -184,6 +192,10 @@ export default function AdminPanel({ open, onOpenChange }) {
               {baBusy ? (de ? "Sende…" : "Invio…") : (de ? "Senden" : "Invia ora")}
             </button>
           </div>
+          <button data-testid="admin-bakealong-award" onClick={awardBakeAlong} disabled={baBusy}
+            className="mt-2 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[#C0574D] text-white active:scale-97 disabled:opacity-60">
+            🥇 {de ? "Wochensieger krönen" : "Proclama il vincitore della settimana"}
+          </button>
         </div>
         <div data-testid="admin-site-settings" className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
           <p className="text-sm font-bold text-[#234b6e] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>

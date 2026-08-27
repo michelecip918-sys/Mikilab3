@@ -3544,6 +3544,41 @@ async def scan_flour(payload: ScanFlourRequest, user: dict = Depends(require_pro
         raise HTTPException(status_code=422, detail="Impossibile leggere i dati della farina")
 
 
+# --- Dispensa Farine: salva le farine scansionate (W, proteine) per riusarle nelle ricette ---
+class FlourReq(BaseModel):
+    brand: Optional[str] = Field(None, max_length=120)
+    product_name: Optional[str] = Field(None, max_length=160)
+    flour_type: Optional[str] = Field(None, max_length=120)
+    w_index: Optional[float] = None
+    protein_percent: Optional[float] = None
+    grain: Optional[str] = Field(None, max_length=120)
+    ideal_use: Optional[str] = Field(None, max_length=300)
+    absorption_percent: Optional[float] = None
+    notes: Optional[str] = Field(None, max_length=1000)
+
+
+@api_router.get("/flours")
+async def flours_list(user: dict = Depends(current_user)):
+    docs = await db.flours.find({"owner_id": user["user_id"]}, {"_id": 0, "owner_id": 0}).sort("created_at", -1).to_list(200)
+    return {"items": docs}
+
+
+@api_router.post("/flours")
+async def flours_create(body: FlourReq, user: dict = Depends(current_user)):
+    doc = body.model_dump()
+    doc["id"] = str(uuid.uuid4())
+    doc["owner_id"] = user["user_id"]
+    doc["created_at"] = now_iso()
+    await db.flours.insert_one(doc)
+    return {k: v for k, v in doc.items() if k not in ("_id", "owner_id")}
+
+
+@api_router.delete("/flours/{flour_id}")
+async def flours_delete(flour_id: str, user: dict = Depends(current_user)):
+    await db.flours.delete_one({"id": flour_id, "owner_id": user["user_id"]})
+    return {"ok": True}
+
+
 import xml.etree.ElementTree as ET
 
 
@@ -5078,6 +5113,60 @@ async def admin_bakealong_notify(user: dict = Depends(require_admin)):
     return {"ok": True, "notified_subscribers": n}
 
 
+async def _award_bakealong_winner(week: str):
+    """Assegna la coccarda 'Campione Bake-Along' al vincitore (più voti) della settimana indicata. Idempotente per settimana."""
+    if not week:
+        return None
+    if await db.bakealong_winners.find_one({"week": week}):
+        return None  # già assegnato
+    docs = await db.community_posts.find({"category": "bakealong", "challenge_week": week}, {"_id": 0}).to_list(500)
+    if not docs:
+        return None
+    docs.sort(key=lambda d: (len(d.get("likes", []) or []), d.get("created_at", "")), reverse=True)
+    win = docs[0]
+    likes = len(win.get("likes", []) or [])
+    winner = {
+        "week": week, "user_id": win.get("author_id"), "name": win.get("author_name"),
+        "avatar": win.get("author_avatar", ""), "likes": likes, "post_id": win.get("id"),
+        "image_url": win.get("image_url"), "challenge_id": win.get("challenge_id"),
+        "created_at": now_iso(),
+    }
+    await db.bakealong_winners.insert_one(winner)
+    winner.pop("_id", None)
+    if win.get("author_id"):
+        await db.users.update_one({"user_id": win["author_id"]}, {"$addToSet": {"badges": "bakealong_champion"}})
+        # notifica + push al vincitore
+        try:
+            await db.notifications.insert_one({
+                "id": str(uuid.uuid4()), "user_id": win["author_id"], "actor_id": "system",
+                "type": "bakealong_win", "post_id": win.get("id"), "actor_name": "MikiLab",
+                "snippet": f"Hai vinto la sfida Bake-Along ({likes} voti)! 🏆", "read": False, "created_at": now_iso(),
+            })
+            subs = await db.push_subs.find({"user_id": win["author_id"]}, {"_id": 0}).to_list(10)
+            if subs:
+                _, priv = await _get_vapid()
+                payload = {"title": "🏆 Sei il Campione Bake-Along!", "body": f"Hai vinto la sfida della settimana con {likes} voti!", "url": "/?tab=impara"}
+                for s in subs:
+                    await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+        except Exception:
+            logger.exception("bakealong winner notify error")
+    return winner
+
+
+@api_router.get("/bakealong/winners")
+async def bakealong_winners(limit: int = 12):
+    rows = await db.bakealong_winners.find({}, {"_id": 0}).sort("week", -1).to_list(max(1, min(limit, 50)))
+    return {"winners": rows}
+
+
+@api_router.post("/admin/bakealong/award")
+async def admin_bakealong_award(user: dict = Depends(require_admin), week: Optional[str] = None):
+    """Assegna manualmente la coccarda al vincitore della settimana indicata (default: settimana corrente)."""
+    wk = week or _iso_week()
+    w = await _award_bakealong_winner(wk)
+    return {"ok": True, "week": wk, "winner": w}
+
+
 async def _bakealong_notify_loop():
     """A inizio di ogni nuova settimana ISO avvisa (web push + campanella) tutti gli iscritti della nuova sfida Bake-Along."""
     await asyncio.sleep(20)  # attende l'avvio completo
@@ -5090,6 +5179,11 @@ async def _bakealong_notify_loop():
                 # Primo avvio: memorizza la settimana corrente SENZA notificare (niente spam al deploy)
                 await db.app_config.update_one({"_id": "bakealong_notify"}, {"$set": {"week": wk}}, upsert=True)
             elif last != wk:
+                # Proclama il vincitore della settimana appena conclusa (last), poi annuncia la nuova sfida
+                try:
+                    await _award_bakealong_winner(last)
+                except Exception:
+                    logger.exception("award winner on rollover error")
                 n = await _broadcast_bakealong()
                 await db.app_config.update_one({"_id": "bakealong_notify"}, {"$set": {"week": wk}}, upsert=True)
                 logger.info(f"Bake-Along: notificata nuova sfida a {n} iscritti")
@@ -5288,12 +5382,14 @@ async def community_profile(user_id: str):
     if other_ids:
         us = await db.users.find({"user_id": {"$in": other_ids}}, {"_id": 0, "user_id": 1, "name": 1, "picture": 1, "email": 1}).to_list(200)
         contacts = [{"user_id": x["user_id"], "name": x.get("name") or (x.get("email") or "Fornaio").split("@")[0], "picture": x.get("picture", "")} for x in us]
+    ba_wins = await db.bakealong_winners.count_documents({"user_id": user_id})
     return {
         "user_id": user_id,
         "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
         "picture": u.get("picture", ""), "bio": u.get("bio", ""),
         "joined": u.get("created_at"), "followers_count": len(other_ids),
         "contacts": contacts, "badges": u.get("badges", []),
+        "bakealong_wins": ba_wins,
         "posts": posts, "posts_count": len(posts), "listings_count": listings,
     }
 

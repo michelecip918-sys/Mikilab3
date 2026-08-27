@@ -411,7 +411,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                         <div className={`absolute inset-0 ${coverSrc ? "bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/30 to-[#1A1412]/10" : "bg-[#5aa0cf]/12"}`} />
                         <div className="relative z-10 w-full flex items-center gap-2 px-3.5 py-3">
                           <span className="text-2xl drop-shadow">{cat.icon}</span>
-                          <h2 className={`font-display text-base font-bold uppercase tracking-wide flex-1 text-left ${coverSrc ? "text-white drop-shadow" : "text-[#3f7cac]"}`}>{t(cat.label)}</h2>
+                          <h2 className={`font-display text-xl font-bold flex-1 text-left ${coverSrc ? "text-white drop-shadow" : "text-[#3f7cac]"}`}>{t(cat.label)}</h2>
                           <span className={`text-xs font-mono-data font-bold px-2 py-0.5 rounded-full ${coverSrc ? "bg-white/25 text-white" : "bg-[#3f7cac]/15 text-[#3f7cac]"}`}>{items.length}</span>
                           <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${coverSrc ? "text-white" : "text-[#7E8A93]"} ${open ? "rotate-180" : ""}`} />
                         </div>

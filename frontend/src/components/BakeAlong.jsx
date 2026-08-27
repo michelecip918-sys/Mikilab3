@@ -13,14 +13,16 @@ export default function BakeAlong() {
   const { user, setAuthOpen } = useAuth();
   const [data, setData] = useState(null);
   const [entries, setEntries] = useState([]);
+  const [champion, setChampion] = useState(null);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const fileRef = useRef(null);
 
   const load = async () => {
-    const [c, e] = await Promise.all([bakeAlongApi.current(lang), bakeAlongApi.entries()]);
+    const [c, e, w] = await Promise.all([bakeAlongApi.current(lang), bakeAlongApi.entries(), bakeAlongApi.winners()]);
     setData(c); setEntries(e.entries || []);
+    setChampion((w && w.length) ? w[0] : null);
   };
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [lang]);
 
@@ -141,6 +143,14 @@ export default function BakeAlong() {
           <p className="text-[12px] text-[#7E8A93] text-center pt-1">
             {tri("Settimana scorsa:", "Letzte Woche:", "Last week:", "Semana pasada:")} <b>{data.last_week_theme.title}</b>
           </p>
+        )}
+        {champion && (
+          <div data-testid="bake-along-champion" className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#C0574D]/12 to-[#a9772f]/12 border border-[#a9772f]/30 px-3 py-2">
+            {champion.avatar ? <img src={champion.avatar} alt="" className="w-8 h-8 rounded-full object-cover" /> : <span className="text-xl">🥇</span>}
+            <p className="text-[13px] text-[#2B303B] dark:text-[#e4eff8]">
+              {tri("Campione:", "Champion:", "Champion:", "Campeón:")} <b>{champion.name}</b> <span className="text-[#7E8A93]">· {champion.likes} {tri("voti", "Stimmen", "votes", "votos")}</span>
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -104,6 +104,11 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                     🏆 {tri("Fornaio della Settimana", "Bäcker der Woche", "Baker of the Week", "Panadero de la Semana")}
                   </span>
                 )}
+                {((data.badges || []).includes("bakealong_champion") || (data.bakealong_wins || 0) > 0) && (
+                  <span data-testid="profile-badge-bakealong" className="mt-1.5 ml-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r from-[#C0574D] to-[#a9772f] text-white px-2.5 py-1 rounded-full">
+                    🥇 {tri("Campione Bake-Along", "Bake-Along-Champion", "Bake-Along Champion", "Campeón Bake-Along")}{(data.bakealong_wins || 0) > 1 ? ` ×${data.bakealong_wins}` : ""}
+                  </span>
+                )}
                 {user && !isMe && (
                   <div className="flex items-center gap-2 mt-2">
                     <button data-testid="profile-follow" onClick={follow} disabled={followed}

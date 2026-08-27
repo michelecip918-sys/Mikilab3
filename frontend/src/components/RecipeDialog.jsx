@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { Camera, X, Loader2, ImagePlus } from "lucide-react";
 import { COUNTRIES, flagEmoji } from "@/lib/countries";
 import { STANDARD_PRICES, standardCosting } from "@/data/prices";
-import { uploadApi } from "@/lib/api";
+import { uploadApi, floursApi } from "@/lib/api";
 
 const FIELDS = [
   { key: "flour_grams", labelKey: "field_flour_g" },
@@ -37,14 +37,21 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const [pctMode, setPctMode] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [pantry, setPantry] = useState([]);
   const { t, lang } = useLang();
 
   useEffect(() => {
     if (open) {
       setForm(initial ? { ...empty, ...normalize(initial) } : empty);
       setPctMode(false);
+      floursApi.list().then(setPantry).catch(() => setPantry([]));
     }
   }, [open, initial]);
+
+  const pickFlour = (f) => {
+    const wtxt = f.w_index != null ? ` · W ${f.w_index}` : "";
+    set("flour_type", `${f.flour_type || f.product_name || f.brand || ""}${wtxt}`.trim());
+  };
 
   const hydration =
     Number(form.flour_grams) > 0 && Number(form.water_grams) > 0
@@ -231,6 +238,16 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               placeholder={t("field_flour_ph")}
               className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] focus:border-[#3f7cac] focus:ring-2 focus:ring-[#3f7cac]/20 rounded-xl p-3 text-base outline-none"
             />
+            {pantry.length > 0 && (
+              <div data-testid="recipe-flour-pantry" className="mt-2 flex flex-wrap gap-1.5">
+                {pantry.slice(0, 12).map((f) => (
+                  <button key={f.id} type="button" data-testid={`recipe-flour-pick-${f.id}`} onClick={() => pickFlour(f)}
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#8a5a2b] bg-[#a9772f]/10 border border-[#a9772f]/30 px-2.5 py-1 rounded-full active:scale-95">
+                    {(f.flour_type || f.product_name || f.brand || "Farina")}{f.w_index != null ? ` · W${f.w_index}` : ""}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
