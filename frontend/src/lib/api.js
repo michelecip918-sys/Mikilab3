@@ -147,6 +147,10 @@ export const bakersApi = {
   remove: () => api.delete(`/bakers/me`).then((r) => r.data),
 };
 
+export const pantryApi = {
+  whatCanIMake: (data) => api.post(`/recipes/what-can-i-make`, data).then((r) => r.data),
+};
+
 export const storesApi = {
   list: () => api.get(`/stores`).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/stores`, data).then((r) => r.data),

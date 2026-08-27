@@ -938,6 +938,69 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
     return docs
 
 
+class WhatCanIMake(BaseModel):
+    ingredients: str
+    collection_name: str = "mikilab"
+    lang: str = "it"
+
+
+@api_router.post("/recipes/what-can-i-make")
+async def what_can_i_make(payload: WhatCanIMake, user: dict = Depends(current_user)):
+    if not (payload.ingredients or "").strip():
+        return {"makable": [], "almost": []}
+    q = {"collection_name": payload.collection_name}
+    if payload.collection_name == "personal":
+        q["owner_id"] = user["user_id"]
+    docs = await db.recipes.find(q, {"_id": 0}).to_list(300)
+    by_id = {d.get("id"): d for d in docs}
+    items = []
+    for d in docs[:80]:
+        extra = d.get("extra_ingredients") or []
+        extra_names = ", ".join([e.get("name", "") for e in extra if isinstance(e, dict)][:8])
+        items.append({"id": d.get("id"), "name": d.get("name"), "farina": d.get("flour_type") or "", "prefermento": d.get("preferment_type") or "", "extra": extra_names})
+    if not items:
+        return {"makable": [], "almost": []}
+    lang_name = {"de": "tedesco", "en": "inglese", "es": "spagnolo"}.get(payload.lang, "italiano")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"wcim-{uuid.uuid4().hex[:8]}",
+            system_message=("Sei un assistente da panificio. L'utente elenca gli ingredienti che ha in casa. "
+                            "Data la lista di ricette (con farina, prefermento, ingredienti extra), decidi quali può fare ORA "
+                            "e quali gli mancano per 1-2 ingredienti. Considera che acqua e sale sono quasi sempre disponibili; "
+                            "farina, lievito/lievito madre e gli extra sono i veri discriminanti. Sii pratico e non troppo severo. "
+                            "REGOLA FERREA: se per una ricetta manca anche UN SOLO ingrediente chiave (una farina specifica, il lievito/lievito madre, o un extra citato tipo olive/noci/semi/uvetta), NON metterla in 'makable' ma in 'almost' con cosa manca. In 'makable' vanno SOLO ricette per cui l'utente ha davvero tutto. "
+                            f"Rispondi SOLO con JSON valido. Le note ('note' e 'missing') scrivile in {lang_name}."),
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=3500)
+        prompt = (f"INGREDIENTI CHE HO: {payload.ingredients}\n\nRICETTE:\n{json.dumps(items, ensure_ascii=False)}\n\n"
+                  "Restituisci SOLO JSON compatto (niente markdown, niente testo fuori dal JSON): "
+                  "{\"makable\":[{\"id\":\"..\",\"note\":\"max 5 parole\"}], "
+                  "\"almost\":[{\"id\":\"..\",\"missing\":\"1-2 parole\"}]}. "
+                  "Note e missing MOLTO brevi. Max 12 in makable, max 8 in almost.")
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        full = full.strip().replace("```json", "").replace("```", "")
+        m = re.search(r"\{.*\}", full, re.S)
+        parsed = json.loads(m.group(0)) if m else {"makable": [], "almost": []}
+    except Exception as e:
+        logging.warning(f"what-can-i-make failed: {e}")
+        return {"makable": [], "almost": [], "error": True}
+
+    def enrich(arr, key):
+        out = []
+        for it in (arr or []):
+            d = by_id.get(it.get("id"))
+            if not d:
+                continue
+            out.append({"id": d.get("id"), "name": d.get("name"), "image_url": d.get("image_url"), key: it.get(key, "")})
+        return out
+    return {"makable": enrich(parsed.get("makable"), "note"), "almost": enrich(parsed.get("almost"), "missing")}
+
+
+
 # ==========================================================================
 # GENERATORE DI RICETTE CUSTOM (Il Tuo Laboratorio) — metodo Mickey Lab
 # Calcolo deterministico con percentuali del panificatore + procedimento AI.

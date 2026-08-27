@@ -1,0 +1,35 @@
+{
+  "summary": "Frontend-only E2E test (mobile 390x844, IT, admin@mikilab.de) of the 2 new FASE-3 lab tools. (5) COSTO ENERGIA FORNO: math 100% correct — defaults (6kW/40min/0.30€/60%/30pz) → energia-kwh '2.40 kWh', energia-cost '€ 0.72', energia-per '€ 0.024'; power=12 → '4.80 kWh' / '€ 1.44' (doubled) and per-piece 0.048; pieces=60 → per-piece '€ 0.024' (halved); values update in real time and persist in localStorage mikilab_energia. BUT a HIGH-priority input bug: the 5 number inputs lose focus after EVERY keystroke, so typing digit-by-digit only records the first character (typed '125' in energia-power → value '1'; typed '50' in energia-minutes → '5'; document.activeElement becomes null). Only programmatic .fill() (single-shot value set) works — a real user cannot type multi-digit values. (1) COSA POSSO FARE: found via tools-search 'cosa' → capo-quicklink-cosafare → cosaposso-tool. Ingredients 'farina 0, farina integrale, lievito madre, acqua, sale, olive, noci' with scope mikilab → AI answered in ~20s: cosa-makable with 12 real recipe cards (Focaccia Integrale ai Semi, Focaccia alle Olive e Rosmarino, Focaccia Genovese, Pane Casereccio, Panino alle Olive…) with short coherent notes + images, and cosa-almost with 7 cards showing 'Manca: uvetta / mix semi / lievito di birra / semola, patata'. Scope 'personal' for admin returned 1 makable ('Pane ai Cereali — Usa farina 0 o integrale', no image), no cosa-empty needed. No console errors during the AI call; loading state ('Cerco…' spinner) and disabled-when-empty button work.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "CostoEnergia.jsx", "issue": "Inputs lose focus after each keystroke: the `Field` sub-component is DEFINED INSIDE CostoEnergia, so a new component type is created on every state change and React unmounts/remounts the <input>. Typing '125' into energia-power leaves '1', typing '50' into energia-minutes leaves '5', document.activeElement becomes null. Users cannot enter multi-digit values. Fix: move `Field` (and the `inp` class string) OUTSIDE the component, or inline the <input> markup / memoize with useCallback-free static component.", "selector": "[data-testid=\"energia-power\"], [data-testid=\"energia-minutes\"], [data-testid=\"energia-price\"], [data-testid=\"energia-duty\"], [data-testid=\"energia-pieces\"]", "priority": "HIGH"}
+    ],
+    "integration_issues": [
+      {"flow": "Cosa posso fare — AI classification", "issue": "MINOR (AI/prompt quality): a few cards are classified as 'makable' while their own note admits a missing ingredient — e.g. 'Panino alle Olive → Farina 0 e olive, lievito manca' and 'Focaccia con Pomodorini Secchi e Origano → Farina 0, mancano solo pomodorini' appear in cosa-makable instead of cosa-almost. Consider tightening the prompt so anything with a missing ingredient goes to `almost`.", "affected_selectors": ["[data-testid=\"cosa-makable\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Costo Energia Forno", "issues": ["Suffix labels (kW/MIN/€/KWH) sit on top of the number and overlap the browser's native number spinner arrows when the field is focused (visible in the 'MIN' field), slightly clipping the text."]},
+      {"screen": "Cosa posso fare (personal scope)", "issues": ["Personal recipes without image_url render a plain empty grey square; a small icon/initial placeholder would look better."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "HIGH: fix focus loss in CostoEnergia.jsx by hoisting the `Field` component out of the render body (single blocking bug found).",
+    "Optional: tighten the what-can-i-make prompt so recipes whose note mentions a missing ingredient are placed in `almost`, not `makable`.",
+    "Optional: avoid suffix/spinner overlap in the energia number inputs (add pr-12 and appearance-none)."
+  ],
+  "critical_code_review_comments": [
+    "CostoEnergia.jsx L30-38: component defined inside a component → remount on every keystroke (React anti-pattern). Same pattern should be audited in other new tools.",
+    "CosaPosso.jsx: catch block swallows the error object; log/inspect status so a 402/403 paywall or 500 can be distinguished from an empty result (currently any failure shows the generic 'Ricerca non riuscita').",
+    "CosaPosso.jsx: the same data-testid 'cosa-empty' is used for both 'no results' and 'request failed' — split ids for clearer testing."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "90% (all functional flows pass; 1 HIGH input-focus bug in Costo Energia)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Tools are reached via nav-tab-maestro → tools-search (type 'energia' / 'cosa') → capo-quicklink-<id>; go back with the 'Torna agli strumenti' button. The AI call /api/recipes/what-can-i-make answers in ~15-25s. Because of the remount bug, use page.fill() (not keyboard.type) for energia inputs until it is fixed. Admin DOES have 1 personal recipe ('Pane ai Cereali'), so cosa-empty is not reachable with the admin account for scope=personal.",
+  "rca_of_the_issue": "Costo Energia focus loss: `const Field = ({...}) => (...)` is declared inside CostoEnergia, so every setState creates a brand-new function identity; React treats it as a different element type and unmounts/remounts the DOM input, discarding focus and caret. Repro: open energia tool, click energia-power, type '125' → field shows '1'. Fix: hoist Field to module scope and pass value/onChange as props."
+}

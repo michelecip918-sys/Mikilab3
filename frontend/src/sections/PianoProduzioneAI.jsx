@@ -94,6 +94,8 @@ const GOAL_TEXT = {
 const TOOLS = [
   { id: "generatore", Icon: Sparkles, cat: "impasto", it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
   { id: "fermentazione", Icon: Activity, cat: "impasto", it: "Fermentazione Predittiva", de: "Gärungs-Prognose", en: "Fermentation Forecast", es: "Fermentación Predictiva" },
+  { id: "cosafare", Icon: Search, cat: "impasto", it: "Cosa posso fare?", de: "Was kann ich machen?", en: "What can I make?", es: "¿Qué puedo hacer?" },
+  { id: "energia", Icon: Flame, cat: "gestione", it: "Costo Energia Forno", de: "Ofen-Energiekosten", en: "Oven Energy Cost", es: "Coste Energía Horno" },
   { id: "mydata", Icon: Archive, cat: "gestione", it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
   { id: "macchine", Icon: Wrench, cat: "gestione", it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
   { id: "twin", Icon: FlaskConical, cat: "impasto", it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
