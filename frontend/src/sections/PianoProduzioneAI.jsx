@@ -138,6 +138,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [recipes, setRecipes] = useState([]);
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
+  const [weeklyStartId, setWeeklyStartId] = useState("");
+  const [extraToday, setExtraToday] = useState([]);
+  const [extraOpen, setExtraOpen] = useState(false);
   const [preferment, setPreferment] = useState("solido");
   const [planGoal, setPlanGoal] = useState("qualita");
   const [bizType, setBizType] = useState("pro");
@@ -443,6 +446,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         start_time: modules.orari ? startTime : null,
         lab_temp_c: modules.clima && labTemp !== "" ? Number(labTemp) : null,
         standard_temp_c: Number(stdTemp) || 26, notes: [(GOAL_TEXT[planGoal] && (GOAL_TEXT[planGoal][lang] || GOAL_TEXT[planGoal].it)), notes].filter(Boolean).join(" · "), lang, preferment_choice: preferment, machines: getActiveMachineNames(),
+        start_name: useWeekly && weeklyStartId ? ((weeklyItems.find((w) => w.recipe_id === weeklyStartId) || {}).recipe_name || null) : null,
+        extra_today: extraToday.filter((x) => x.recipe_id || x.name).map((x) => ({ recipe_id: x.recipe_id || null, name: x.name || (recipeById[x.recipe_id] ? recipeById[x.recipe_id].name : ""), quantity: x.qty === "" ? null : Number(x.qty), unit: x.unit || "pezzi" })),
         active_modules: Object.keys(modules).filter((k) => modules[k]),
       }),
     });
@@ -870,7 +875,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         )}
       </Section>
 
-      <Section icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
+      <Section highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
         <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
             <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
               className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#a9d2ec] border-[#d5e4f0] dark:border-[#38424B]"}`}>
@@ -881,9 +886,51 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <button data-testid="capo-source-manual" onClick={() => setUseWeekly(false)}
               className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${!useWeekly ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#a9d2ec] border-[#d5e4f0] dark:border-[#38424B]"}`}>
               <ChefHat className="w-5 h-5 mb-1" />
-              <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Scegli ricette ora", "Rezepte jetzt wählen", "Pick recipes now")}</p>
-              <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "Inserisci prodotti a mano", "Produkte manuell", "Add products manually")}</p>
+              <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Aggiungi al piano settimanale", "Zum Wochenplan hinzufügen", "Add to weekly plan")}</p>
+              <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "es. per oggi · a mano", "z. B. für heute · manuell", "e.g. for today · manually")}</p>
             </button>
+        </div>
+        {/* Ordine EXTRA solo per oggi: si somma al piano di oggi senza modificare il Piano settimanale salvato */}
+        <div data-testid="capo-extra-today" className="mb-3 rounded-xl border border-[#C88A2B]/40 bg-[#C88A2B]/8 overflow-hidden">
+          <button type="button" data-testid="capo-extra-toggle" onClick={() => { setExtraOpen((s) => !s); if (!extraOpen && extraToday.length === 0) setExtraToday([{ recipe_id: "", name: "", qty: "", unit: "pezzi" }]); }}
+            className="w-full flex items-center gap-2 px-3 py-2.5 text-left active:scale-[0.99] transition-transform">
+            <span className="w-7 h-7 rounded-lg bg-[#C88A2B] text-white flex items-center justify-center shrink-0"><Plus className="w-4 h-4" /></span>
+            <span className="min-w-0">
+              <span className="block text-[13px] font-bold text-[#7a4e12] dark:text-[#E4C98B] leading-tight">{tri3(lang, "Ordine extra di oggi", "Extra-Bestellung heute", "Extra order for today")}</span>
+              <span className="block text-[10.5px] text-[#7a4e12]/80 dark:text-[#E4C98B]/80 leading-snug">{tri3(lang, "Solo per oggi · si somma al piano, senza modificarlo", "Nur heute · wird addiert, ohne Änderung", "Today only · added on top, plan unchanged")}</span>
+            </span>
+            {extraToday.filter((x) => x.recipe_id || x.name).length > 0 && (
+              <span className="ml-auto text-[10px] font-extrabold text-white bg-[#C88A2B] px-2 py-0.5 rounded-full shrink-0">{extraToday.filter((x) => x.recipe_id || x.name).length}</span>
+            )}
+          </button>
+          {extraOpen && (
+            <div className="px-3 pb-3 space-y-2">
+              {extraToday.map((p, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <select data-testid={`capo-extra-recipe-${i}`} value={p.recipe_id || ""}
+                    onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
+                    className="flex-1 min-w-0 bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#C88A2B]">
+                    <option value="">{t("capo_pick_recipe")}</option>
+                    {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                  </select>
+                  <div className="relative w-[92px] shrink-0">
+                    <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
+                      onChange={(e) => setExtraToday((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
+                      className="w-full bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 pr-9 text-sm outline-none focus:border-[#C88A2B]" />
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
+                  </div>
+                  <button type="button" data-testid={`capo-extra-remove-${i}`} onClick={() => setExtraToday((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                </div>
+              ))}
+              <button type="button" data-testid="capo-extra-add" onClick={() => setExtraToday((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi" }])}
+                className="text-sm font-medium text-[#C88A2B] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+              <p className="text-[11px] text-[#7a4e12]/80 dark:text-[#E4C98B]/80 leading-snug">
+                {tri3(lang, "L'IA aggiungerà una sezione «⭐ Solo per oggi» con impasti e infornate extra, senza toccare il tuo Piano settimanale.",
+                  "Die KI fügt einen Abschnitt «⭐ Nur heute» hinzu, ohne den Wochenplan zu ändern.",
+                  "The AI will add a '⭐ Today only' section with the extra work, without changing your Weekly Plan.")}
+              </p>
+            </div>
+          )}
         </div>
         {useWeekly && weeklyItems.length === 0 && (
           <div data-testid="capo-weekly-empty" className="mb-3 rounded-xl bg-[#C88A2B]/12 border border-[#C88A2B]/40 px-3 py-2.5">
@@ -902,14 +949,29 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         )}
         {useWeekly && weeklyItems.length > 0 && (
-          <div data-testid="capo-weekly-note" className="mb-3 rounded-xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/35 px-3 py-2.5 flex items-start gap-2">
-            <CalendarDays className="w-4 h-4 text-[#234b6e] dark:text-[#8FB0C2] shrink-0 mt-0.5" />
-            <p className="text-[12px] text-[#234b6e] dark:text-[#8FB0C2] leading-snug">
-              {tri3(lang,
-                `Genero dal Piano Settimanale (${weeklyItems.length} voci). Per cambiare quantità o giorni apri «Produzione Settimanale». Puoi scegliere l'impasto di partenza qui sotto.`,
-                `Ich generiere aus dem Wochenplan (${weeklyItems.length} Einträge). Zum Ändern öffne „Wochenproduktion". Den Start-Teig kannst du unten wählen.`,
-                `Generating from the Weekly Plan (${weeklyItems.length} items). To change quantities/days open 'Weekly Production'. You can pick the starting dough below.`)}
-            </p>
+          <div data-testid="capo-weekly-note" className="mb-3 rounded-xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/35 px-3 py-2.5 space-y-2.5">
+            <div className="flex items-start gap-2">
+              <CalendarDays className="w-4 h-4 text-[#234b6e] dark:text-[#8FB0C2] shrink-0 mt-0.5" />
+              <p className="text-[12px] text-[#234b6e] dark:text-[#8FB0C2] leading-snug">
+                {tri3(lang,
+                  `Genero dal Piano Settimanale (${weeklyItems.length} voci). Per cambiare quantità o giorni apri «Produzione Settimanale».`,
+                  `Ich generiere aus dem Wochenplan (${weeklyItems.length} Einträge). Zum Ändern öffne „Wochenproduktion".`,
+                  `Generating from the Weekly Plan (${weeklyItems.length} items). To change quantities/days open 'Weekly Production'.`)}
+              </p>
+            </div>
+            <div>
+              <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#24303c] dark:text-[#a9d2ec] mb-1">
+                <Flag className="w-3.5 h-3.5" /> {tri3(lang, "Inizia con quale impasto?", "Mit welchem Teig beginnen?", "Start with which dough?")}
+              </label>
+              <select data-testid="capo-weekly-start" value={weeklyStartId}
+                onChange={(e) => setWeeklyStartId(e.target.value)}
+                className="w-full bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#3f7cac]">
+                <option value="">{tri3(lang, "Lascia decidere all'IA", "KI entscheiden lassen", "Let the AI decide")}</option>
+                {[...new Map(weeklyItems.map((w) => [w.recipe_id, w])).values()].map((w) => (
+                  <option key={w.recipe_id} value={w.recipe_id}>{w.recipe_name}</option>
+                ))}
+              </select>
+            </div>
           </div>
         )}
         <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">
@@ -1333,12 +1395,16 @@ function RecipePrint({ r, lang }) {
   );
 }
 
-function Section({ icon, title, children }) {
+function Section({ icon, title, children, highlight, badge }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+      className={`mb-4 rounded-2xl p-4 ${highlight
+        ? "bg-white dark:bg-[#232A31] border-2 border-[#C88A2B] shadow-lg shadow-[#C88A2B]/20 ring-1 ring-[#C88A2B]/30"
+        : "bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]"}`}>
       <div className="flex items-center gap-2 mb-3 text-[#3f7cac]">
         {icon}
         <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{title}</h2>
+        {badge && <span className="ml-auto text-[10px] font-extrabold uppercase tracking-wide text-white bg-[#C88A2B] px-2 py-0.5 rounded-full shadow">{badge}</span>}
       </div>
       {children}
     </motion.div>

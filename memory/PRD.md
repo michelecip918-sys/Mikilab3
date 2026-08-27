@@ -1631,3 +1631,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Mercatino dell'Usato (Marketplace.jsx)**: aggiunti 5 annunci di ESEMPIO multilingua (DE Stuttgart, IT Napoli, FR Lyon, ES Madrid, EN London) con coordinate — non salvati, non eliminabili (`sample`). **Modalità geolocalizzazione** (`market-geo`, "Vicino a me"): usa navigator.geolocation, calcola la distanza (haversine) e ordina gli annunci per vicinanza; badge distanza "· X km" sulle card e avviso `market-geo-active`.
 - Verificato a schermo: header social, filtro Colorati (12 ricette + 12 badge), scheda perché, mercatino con card multilingua + pulsante geo.
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v59 (27 Ago 2026) — Generatore Piano: evidenza, rinomina, impasto di partenza, ordine extra oggi
+- **"Compila per generare" IN EVIDENZA**: Section con prop `highlight` (bordo/ombra arancio) + badge "Inizia qui/Start here".
+- **Rinomina pulsante**: "Scegli ricette ora" → **"Aggiungi al piano settimanale"** (sottotitolo "es. per oggi · a mano"). IT/DE/EN.
+- **"Inizia con quale impasto?"** (piano settimanale): dropdown `capo-weekly-start` tra le voci del Piano Settimanale → invia `start_name`; l'IA avvia da quell'impasto (verificato: "(priorità richiesta)").
+- **"Ordine extra di oggi"** (`capo-extra-today`): pannello con prodotti+quantità SOLO per oggi → invia `extra_today[]`; il backend li SOMMA alla produzione di oggi e crea una sezione separata "⭐ Solo per oggi — Ordine extra" SENZA modificare il Piano settimanale salvato (verificato E2E: "Cornetti sfogliati *(extra oggi)*").
+- Backend `CapoPlanRequest`: aggiunti `start_name` + `extra_today`; direttive prompt [PARTENZA]/[EXTRA-OGGI] in `capo_plan_stream`.
+- Verificato: UI (screenshot) + stream reale con account PRO.
+- **ANCORA IN SOSPESO (grandi, lato server)**: (C) Mercatino REALE condiviso su DB con foto su storage; (D) Profili Social (foto/bio/ricette pubblicate).
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.

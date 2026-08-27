@@ -285,6 +285,8 @@ class CapoPlanRequest(BaseModel):
     preferment_choice: Optional[str] = None  # "solido" | "licoli" | "poolish" | "lievito_birra"
     active_modules: Optional[List[str]] = None  # moduli opzionali attivi; None = tutti attivi (retrocompat)
     machines: Optional[List[str]] = None  # macchinari attivi nel laboratorio (Parco Macchine)
+    start_name: Optional[str] = None  # impasto/ricetta da cui INIZIARE (usato anche col Piano settimanale)
+    extra_today: List[dict] = []      # ordine extra SOLO per oggi [{recipe_id,name,quantity,unit}]
     lang: str = "it"
 
 
@@ -2206,6 +2208,16 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                 "to_proof": w.get("to_proof"), "to_fridge": w.get("to_fridge"), "to_freezer": w.get("to_freezer"),
             })
 
+    # Ordine EXTRA solo per oggi: si SOMMA al piano ma NON modifica il Piano settimanale salvato.
+    extra_items = list(payload.extra_today or [])
+    if extra_items:
+        for it in extra_items:
+            items.append({
+                "recipe_id": it.get("recipe_id"), "name": it.get("name"),
+                "quantity": it.get("quantity"), "unit": it.get("unit") or "pezzi",
+                "day": "oggi", "_extra_today": True,
+            })
+
     de = payload.lang == "de"
     _mods = payload.active_modules
     _all_on = _mods is None
@@ -2222,12 +2234,28 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                          "per ogni prodotto aggiungi una breve riga 'Macchina:' con Modalità di Produzione (Manuale/Semiautomatica/Industriale), Resa Oraria Stimata e un punto di attenzione.")
     # Il panettiere può scegliere la PRIMA ricetta da cui far partire la produzione.
     start_names = [str(it.get("name")) for it in items if it.get("start") and it.get("name")]
+    if not start_names and payload.start_name:
+        start_names = [str(payload.start_name)]
     if start_names:
         sn = start_names[0]
         products_txt += (
             f"\n\n[START] Der Bäcker will die Produktion mit «{sn}» BEGINNEN: setze diesen Teig als ERSTES an (zuerst kneten/ansetzen) und richte alle anderen Zeiten danach aus."
             if de else
             f"\n\n[PARTENZA] Il panettiere vuole INIZIARE la produzione da «{sn}»: avvia questo impasto per PRIMO (primo da impastare/avviare) e allinea tutti gli altri tempi di conseguenza."
+        )
+    # Ordine extra SOLO per oggi: direttiva per una sezione dedicata, senza toccare il piano settimanale.
+    if extra_items:
+        ex_txt = ", ".join([f"{(it.get('name') or '').strip()}"
+                            + (f" x{it.get('quantity')}" if it.get('quantity') not in (None, "") else "")
+                            for it in extra_items if (it.get('name') or '').strip()])
+        products_txt += (
+            f"\n\n[EXTRA-HEUTE] ZUSÄTZLICHE Bestellung NUR für HEUTE: {ex_txt}. "
+            "Füge diese Mengen zur heutigen Produktion HINZU (zum Wochenplan addieren, aber den gespeicherten Wochenplan NICHT ändern). "
+            "Erstelle am Ende einen KLAR getrennten Abschnitt mit der Überschrift «⭐ SOLO PER OGGI — Ordine extra» / «⭐ NUR HEUTE — Extra-Bestellung», der die zusätzlichen Impasti, Zeiten und Infornate NUR für heute zeigt."
+            if de else
+            f"\n\n[EXTRA-OGGI] Ordine AGGIUNTIVO SOLO per OGGI: {ex_txt}. "
+            "Somma queste quantità alla produzione di oggi (aggiungile al piano settimanale MA NON modificare il piano settimanale salvato). "
+            "Alla fine crea una sezione CHIARAMENTE separata con titolo «⭐ SOLO PER OGGI — Ordine extra» che mostri impasti, tempi e infornate aggiuntive SOLO per la giornata di oggi."
         )
     # Direttiva di lingua FORTE, sia in apertura che in chiusura del prompt utente.
     lang_lead = ("[SPRACHE: DEUTSCH] Schreibe den GESAMTEN Plan AUSSCHLIESSLICH auf DEUTSCH.\n\n"
