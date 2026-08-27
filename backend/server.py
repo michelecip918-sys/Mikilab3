@@ -342,7 +342,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v54-panettoni-procedure-de"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v55-speciali-colorate"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -5114,6 +5114,61 @@ async def _send_weekly_stock_summaries():
             logging.getLogger(__name__).error(f"weekly stock summary failed: {e}")
 
 
+def _trial_reminder_email_html(hours_left: int, subscribe_url: str) -> str:
+    return (
+        "<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto;color:#2B303B'>"
+        "<h2 style='color:#B34A26'>MikiLab · La tua prova sta per finire ⏳</h2>"
+        f"<p>Ciao! La tua <b>prova gratuita di 7 giorni</b> di «Il Tuo Laboratorio» scade tra circa <b>{hours_left} ore</b>.</p>"
+        "<p>Ricorda: <b>non abbiamo addebitato nulla</b> e non ci sarà alcun rinnovo automatico. "
+        "Se vuoi continuare a usare piano di produzione IA, ricette, costi e tutti gli strumenti, "
+        "attiva l'abbonamento quando vuoi.</p>"
+        f"<p><a href='{subscribe_url}' style='background:#B34A26;color:#fff;text-decoration:none;"
+        "padding:12px 22px;border-radius:12px;font-weight:bold;display:inline-block'>Abbonati e continua →</a></p>"
+        "<hr style='border:none;border-top:1px solid #eee;margin:18px 0'>"
+        "<h3 style='color:#B34A26;margin:0 0 6px'>🇩🇪 Deine Testphase endet bald</h3>"
+        f"<p style='color:#555'>Deine 7-tägige kostenlose Testphase endet in ca. {hours_left} Stunden. "
+        "Wir haben nichts belastet, es gibt keine automatische Verlängerung. "
+        "Abonniere jederzeit, um weiterzumachen.</p>"
+        "<p style='color:#888;font-size:12px'>MikiLab · mikilab.de</p></div>"
+    )
+
+
+async def _send_trial_reminders():
+    """Promemoria automatico verso la fine della prova (giorno 6 su 7): invita ad abbonarsi.
+    NESSUN addebito automatico: l'utente deve abbonarsi manualmente."""
+    if not RESEND_API_KEY:
+        return
+    now = datetime.now(timezone.utc)
+    soon = (now + timedelta(hours=24)).isoformat()
+    now_s = now.isoformat()
+    subscribe_url = "https://mikilab.de/?sub=open"
+    cursor = db.entitlements.find({
+        "source": {"$in": ["trial_card", "trial"]},
+        "pro": True,
+        "trial_reminder_sent": {"$ne": True},
+        "expires_at": {"$ne": None, "$lte": soon, "$gt": now_s},
+    })
+    async for ent in cursor:
+        email = ent.get("email")
+        if not email:
+            continue
+        try:
+            ms = (datetime.fromisoformat(ent["expires_at"]) - now).total_seconds()
+            hours_left = max(1, int(ms // 3600))
+        except Exception:
+            hours_left = 24
+        try:
+            params = {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [email],
+                      "subject": "MikiLab · La tua prova gratuita sta per finire ⏳",
+                      "html": _trial_reminder_email_html(hours_left, subscribe_url)}
+            await asyncio.to_thread(_resend.Emails.send, params)
+            await db.entitlements.update_one({"email": email},
+                {"$set": {"trial_reminder_sent": True, "trial_reminder_at": now_iso()}})
+            logging.getLogger(__name__).info(f"trial reminder sent to {email}")
+        except Exception as e:
+            logging.getLogger(__name__).error(f"trial reminder send failed for {email}: {e}")
+
+
 async def _followup_loop():
     while True:
         try:
@@ -5124,6 +5179,10 @@ async def _followup_loop():
             await _send_weekly_stock_summaries()
         except Exception as e:
             logging.getLogger(__name__).error(f"weekly stock loop error: {e}")
+        try:
+            await _send_trial_reminders()
+        except Exception as e:
+            logging.getLogger(__name__).error(f"trial reminder loop error: {e}")
         await asyncio.sleep(6 * 3600)  # ogni 6 ore
 
 

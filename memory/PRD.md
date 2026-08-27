@@ -1599,3 +1599,14 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
   - **RIMOSSA** la vecchia prova device senza registrazione (localStorage `mikilab_local_trial`) e i pulsanti 1h/24h dal paywall (abusabili): ora la prova richiede login + carta. Endpoint legacy `/api/trial/activate` resta ma non più usato dalla UI.
   - Verificato: `trial/checkout` ritorna URL Stripe valido; UI mostra il nuovo pulsante (screenshot).
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v55 (27 Ago 2026) — Ricette speciali colorate + Promemoria fine prova
+- **5 nuove ricette MikiLab** col metodo INDIRETTO (biga/poolish + lievito madre) e procedimenti LUNGHI, colori NATURALI (nessun colorante). Aggiunte al seed `mikilab_seed_data.json` (persistenti al redeploy) → SEED_VERSION `2026-06-v55-speciali-colorate`. Script: `backend/seed_speciali_colorate.py`. Totale mikilab: 113.
+  - **Cornetto Bicolore Cacao e Vaniglia** [viennoiserie, biga]: pasta chiara vaniglia + pasta scura cacao laminate insieme.
+  - **Cornetto Doppio Gusto Pistacchio e Cioccolato** [viennoiserie, poolish]: pasta verde con pasta di pistacchio puro + farcia cioccolato (immagine generata Nano Banana).
+  - **Pane all'Nduja** [pane, biga]: rosso-arancio naturale da nduja + paprika affumicata.
+  - **Pane alla Barbabietola** [pane, lm]: rosa-magenta naturale da purea di barbabietola.
+  - **Panini Basilico e Pomodoro** [panini, poolish]: bicolore marmorizzato rosso (concentrato pomodoro) + verde (basilico/pesto) (immagine generata Nano Banana).
+  - Tutte con notes/procedure/name in IT/DE/EN. Verificato via API (categorie/metodo/immagini/proc_len OK) + screenshot (immagini caricano).
+- **Promemoria fine prova (email automatica giorno 6)**: `_send_trial_reminders()` nel loop follow-up (ogni 6h). Seleziona entitlements `source in [trial_card, trial]`, pro, `expires_at` entro 24h e ancora attivo, `trial_reminder_sent != True` → invia email Resend (IT+DE) con CTA "Abbonati e continua" (link mikilab.de), poi marca `trial_reminder_sent=True` (idempotente, invia una sola volta). Sottolinea "nessun addebito automatico". HTML: `_trial_reminder_email_html()`. Verificato end-to-end con `delivered@resend.dev` (invio + flag + idempotenza).
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
