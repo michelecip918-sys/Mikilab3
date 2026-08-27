@@ -1,0 +1,37 @@
+{
+  "summary": "Frontend E2E (mobile 390x844, IT, admin@mikilab.de) delle 5 richieste: (1) nuovo modulo 'Orario Infornate' OK, (2) riordino strumenti col dito framer-motion OK, (3) tabella 'Orario Infornate' in fondo al Piano IA NON GENERATA (piano troncato per max_tokens) — CRITICO, (4) Note del fornaio + PrintHeader nel print-area OK, (5) hint 'personal-lab-hint' nelle Ricette personali OK. RCA confermata anche via test backend sullo stream /api/capo/plan.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "/api/capo/plan (capo_plan_stream, phase=daily)", "issue": "Con i moduli ON di default (celle, orari, freezer, spesa, foodcost, infornate) il piano viene TRONCATO a max_tokens=2400 e la sezione finale '## \ud83d\udd25 Orario Infornate' non viene mai generata. Riprodotto 2/2 dalla UI (piano finisce a metà frase, es. 'Se capienza forno consente 15 pani per volta: **1') e 1/1 via API. Con active_modules=['infornate'] soltanto, la sezione compare (test passa) => il problema è il budget token, non la direttiva. Fix suggerito: alzare max_tokens quando 'infornate' è ON (>=4000) e/o spostare la TABELLA INFORNATE prima di Lista Spesa/Food cost, e/o generarla con una seconda chiamata dedicata; dichiararla obbligatoria nel prompt ('se lo spazio è poco, accorcia le altre sezioni').", "priority": "CRITICAL"}
+    ],
+    "minor": [
+      {"endpoint": "/api/capo/plan", "issue": "Nessun rilevamento/avviso di troncamento: lo stream termina con {\"done\": true} anche quando la risposta è tagliata a metà frase; l'utente vede un piano incompleto senza alcun segnale."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Piano IA con modulo Orario Infornate ON", "issue": "Nel piano generato (data-testid capo-plan) non compare alcuna sezione/tabella 'Orario Infornate' (0 tabelle markdown renderizzate, nessun heading \ud83d\udd25); testo del piano troncato. Causa lato backend (max_tokens).", "affected_selectors": ["capo-plan", "capo-module-infornate"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_capo_infornate.py"],
+  "action_items": [
+    "Aumentare max_tokens in capo_plan_stream quando il modulo 'infornate' è attivo (phase daily/default) oppure generare la TABELLA INFORNATE con una chiamata separata, così la sezione finale non venga tagliata.",
+    "Rendere la TABELLA INFORNATE prioritaria nel prompt (o posizionarla prima di Lista Spesa / Food cost) dato che i moduli di default consumano tutto il budget token.",
+    "Aggiungere gestione del troncamento (stop_reason=max_tokens) con avviso in UI o continuazione automatica dello stream."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx supera 1200 righe: candidato allo split (moduli, strumenti/riordino, area stampa).",
+    "renderToolCard mantiene ancora il vecchio drag&drop HTML5 (draggable/onDragStart) ormai inutilizzato in modalità Personalizza: codice morto da rimuovere per evitare confusione.",
+    "In capo_plan_stream i blocchi prompt IT/DE sono duplicati per ogni modulo: estrarre in una mappa di direttive per lingua (DRY)."
+  ],
+  "updated_files": ["/app/backend/tests/test_capo_infornate.py"],
+  "success_rate": {"backend": "50% (1/2 test capo/plan: la sezione infornate manca con i moduli di default)", "frontend": "80% (4/5 feature verificate OK)"},
+  "seed_data_creation": "Nessuna. Usato account admin@mikilab.de e ricette esistenti (100 opzioni nel dropdown). Nota: le preferenze strumenti in localStorage (mikilab_tool_prefs) sono state modificate dai test di riordino (order/pinned: 'macchine' pinnato).",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login via header 'Accedi' -> auth-email/auth-password/auth-submit; NON c'è schermata di login forzata all'avvio)",
+  "context_for_next_testing_agent": "Dettaglio verifiche: (1) capo-module-infornate presente, aria-pressed=true di default, tool-info-infornate mostra la spiegazione 'TABELLA INFORNATE'. (2) 'Personalizza' (tools-edit-toggle) mostra 19 righe verticali con tool-grip-*; frecce up/down riordinano; page.drag_and_drop NON funziona con framer-motion Reorder (serve drag manuale con page.mouse.move/down/up a step, che funziona e riordina); ordine persiste in localStorage mikilab_tool_prefs.order dopo reload; tool-hide/tool-pin funzionano senza avviare il drag; 'Fatto' riporta alle 4 categorie (tools-cat-*). (4) capo-baker-note -> capo-baker-note-print con testo identico + PrintHeader '.print-area .print-only' = 'MikiLab · Piano di Produzione · data'. (5) personal-lab-hint visibile solo su ricette-tab-personal. La generazione del piano richiede ~55s. Per riprodurre il bug infornate: pytest /app/backend/tests/test_capo_infornate.py (il test con i moduli di default fallisce, quello con solo 'infornate' passa).",
+  "rca_of_the_issue": "capo_plan_stream imposta max_tokens=2400 per phase='daily' (3000 per il default) e la direttiva del modulo 'infornate' chiede la tabella 'ALLA FINE del piano'. Con i 6 moduli ON di default (celle/orari/freezer/spesa/foodcost/infornate) il modello esaurisce il budget token durante le sezioni precedenti (Logica Freezer, Sequenza oraria, Squadra, Avvisi, Lista Spesa) e lo stream si chiude a metà frase prima di scrivere '## \ud83d\udd25 Orario Infornate'. Prova del contrario: con active_modules=['infornate'] la sezione viene generata correttamente."
+}

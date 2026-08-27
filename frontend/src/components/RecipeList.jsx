@@ -231,6 +231,19 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         </button>
       )}
 
+      {collectionName === "personal" && !readOnly && (
+        <div data-testid="personal-lab-hint" className="-mt-2 mb-5 flex items-start gap-2 rounded-2xl border border-[#3f7cac]/30 bg-[#3f7cac]/8 px-3.5 py-2.5">
+          <ChefHat className="w-4 h-4 text-[#3f7cac] shrink-0 mt-0.5" />
+          <p className="text-[12.5px] leading-snug text-[#2B303B] dark:text-[#cfe0ec]">
+            {triM(
+              "Queste sono le tue ricette da panettiere: le ritrovi nel Laboratorio → Piano di Lavoro (gruppo «Le mie ricette») per generare il piano di produzione, gli orari e le infornate.",
+              "Das sind deine Bäcker-Rezepte: du findest sie im Labor → Arbeitsplan (Gruppe „Meine Rezepte“), um Produktionsplan, Zeiten und Backfahrplan zu erstellen.",
+              "These are your baker's recipes: find them in the Lab → Work Plan (group 'My recipes') to generate the production plan, timings and baking schedule."
+            )}
+          </p>
+        </div>
+      )}
+
       {loading ? (
         <p className="text-center text-[#7E8A93] py-8">{t("loading")}</p>
       ) : recipes.length === 0 ? (

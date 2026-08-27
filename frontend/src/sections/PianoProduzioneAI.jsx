@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -16,21 +16,58 @@ import { getActiveMachineNames } from "@/lib/machines";
 import { guideFor } from "@/lib/toolGuide";
 import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
+import PrintHeader from "@/components/PrintHeader";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
 const tri3 = (lang, i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : i);
+
+// Estrae la sezione "Orario Infornate" dal markdown del piano per renderla come tabella modificabile.
+const cleanCell = (c) => (c || "").replace(/\*\*/g, "").replace(/__/g, "").replace(/`/g, "").replace(/\*/g, "").trim();
+const parseInfornate = (text) => {
+  if (!text) return { body: text || "", headers: null, rows: null, heading: null };
+  const lines = text.split("\n");
+  let hIdx = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^#{1,4}\s*.*(orario infornate|backfahrplan|baking schedule|horario|🔥)/i.test(lines[i])) { hIdx = i; break; }
+  }
+  if (hIdx < 0) return { body: text, headers: null, rows: null, heading: null };
+  const tbl = [];
+  let started = false;
+  for (let i = hIdx + 1; i < lines.length; i++) {
+    const l = lines[i].trim();
+    if (l.startsWith("|")) { tbl.push(l); started = true; }
+    else if (started && l === "") continue;
+    else if (started) break;
+  }
+  if (tbl.length < 2) return { body: text, headers: null, rows: null, heading: null };
+  const parseRow = (l) => l.replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => cleanCell(c));
+  const headers = parseRow(tbl[0]);
+  const rows = tbl.slice(1).filter((l) => !/^[\s|:-]+$/.test(l)).map(parseRow).map((r) => headers.map((_, k) => r[k] ?? ""));
+  const body = lines.slice(0, hIdx).join("\n").trimEnd();
+  return { body, headers, rows, heading: lines[hIdx] };
+};
+// Ricostruisce il markdown della tabella infornate dai valori modificati.
+const serializeInfTable = (headers, rows) => {
+  const head = `| ${headers.join(" | ")} |`;
+  const sep = `| ${headers.map(() => "---").join(" | ")} |`;
+  const body = (rows || []).map((r) => `| ${headers.map((_, k) => (r[k] ?? "")).join(" | ")} |`).join("\n");
+  return [head, sep, body].filter(Boolean).join("\n");
+};
+
+
 
 // Piano di Produzione con IA (spostato dalla "Impostazione Macchine").
 // Config macchine/celle letta in sola lettura per alimentare l'IA.
 const isPanettoneRecipe = (r) => /panettone/i.test(r?.name || "") || /panettone/i.test(r?.menu_category || "");
 
 // Moduli opzionali del Piano IA: si accendono/spengono senza bloccare il piano base.
-const DEFAULT_MODULES = { celle: true, orari: true, freezer: true, spesa: true, foodcost: true, turni: false, clima: false, punti: false, antispreco: false };
+const DEFAULT_MODULES = { celle: true, orari: true, freezer: true, spesa: true, foodcost: true, infornate: true, turni: false, clima: false, punti: false, antispreco: false };
 const MODULES = [
   { id: "celle", Icon: Wrench, it: "Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers" },
   { id: "orari", Icon: Clock, it: "Orari d'inizio", de: "Startzeiten", en: "Start times" },
   { id: "freezer", Icon: Snowflake, it: "Giacenze Freezer", de: "Gefrierbestand", en: "Freezer stock" },
+  { id: "infornate", Icon: Flame, it: "Orario Infornate", de: "Backzeiten", en: "Baking schedule" },
   { id: "turni", Icon: Users, it: "Turni & Personale", de: "Schichten & Personal", en: "Shifts & staff" },
   { id: "clima", Icon: Thermometer, it: "Meteo & Clima", de: "Wetter & Klima", en: "Weather & climate" },
   { id: "spesa", Icon: ShoppingCart, it: "Lista Spesa", de: "Einkaufsliste", en: "Shopping list" },
@@ -40,7 +77,7 @@ const MODULES = [
 ];
 
 // Ogni interruttore-modulo apre lo strumento corrispondente per configurarlo.
-const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco" };
+const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco", infornate: "inversa" };
 
 // Obiettivo del piano: frase passata all'AI per orientare la generazione.
 const GOAL_TEXT = {
@@ -106,8 +143,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const favDragMoved = useRef(false);
   const [guideId, setGuideId] = useState(null); // strumento spiegato da Mohammadreza
   const [generating, setGenerating] = useState(false);
-  const [savedAt, setSavedAt] = useState(null);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [savedAt, setSavedAt] = useState(null);  const [pickerOpen, setPickerOpen] = useState(false);
+  const [bakerNote, setBakerNote] = useState("");
+  const [planTruncated, setPlanTruncated] = useState(false);
+  const [infEdit, setInfEdit] = useState(null); // tabella infornate modificabile {headers, rows}
   const [pickSearch, setPickSearch] = useState("");
   const [savedProducts, setSavedProducts] = useState([]);
   const [modules, setModules] = useState(DEFAULT_MODULES);
@@ -227,6 +266,36 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       </div>
     );
   };
+
+  // Riga riordinabile col DITO (framer-motion) — usata solo in modalità "Personalizza".
+  const renderToolReorderRow = ({ id, Icon, it, de, en }) => {
+    const label = tri3(lang, it, de, en);
+    const isHidden = hiddenTools.has(id);
+    const isPinned = (toolPrefs.pinned || []).includes(id);
+    const stop = (e) => e.stopPropagation();
+    return (
+      <Reorder.Item as="div" key={id} value={id} data-testid={`capo-quicklink-${id}`}
+        whileDrag={{ scale: 1.03, zIndex: 5, boxShadow: "0 8px 20px rgba(0,0,0,0.15)" }}
+        className={`relative flex items-center gap-2 bg-white dark:bg-[#232A31] border border-dashed border-[#3f7cac]/50 rounded-2xl px-2.5 py-2.5 select-none touch-none cursor-grab active:cursor-grabbing ${isHidden ? "opacity-40" : ""}`}>
+        <GripVertical className="w-4 h-4 text-[#9aa4ac] shrink-0" data-testid={`tool-grip-${id}`} />
+        <Icon className="w-5 h-5 text-[#3f7cac] shrink-0" />
+        <span className="text-[12px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] flex-1 min-w-0 truncate">{label}</span>
+        <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onPointerDown={stop} onClick={(e) => { stop(e); toggleHideTool(id); }}
+          className="w-7 h-7 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#3f7cac] active:scale-90 shrink-0">
+          {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+        </button>
+        <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onPointerDown={stop} onClick={(e) => { stop(e); togglePinTool(id); }}
+          className={`w-7 h-7 rounded-full flex items-center justify-center active:scale-90 shrink-0 ${isPinned ? "bg-[#C88A2B] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#C88A2B]"}`}>
+          <Star className={`w-3.5 h-3.5 ${isPinned ? "fill-white" : ""}`} />
+        </button>
+        <div className="flex flex-col shrink-0">
+          <button type="button" data-testid={`tool-up-${id}`} aria-label="up" onPointerDown={stop} onClick={(e) => { stop(e); moveTool(id, -1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronUp className="w-3.5 h-3.5" /></button>
+          <button type="button" data-testid={`tool-down-${id}`} aria-label="down" onPointerDown={stop} onClick={(e) => { stop(e); moveTool(id, 1); }} className="w-6 h-4 flex items-center justify-center text-[#7E8A93] active:scale-90"><ChevronDown className="w-3.5 h-3.5" /></button>
+        </div>
+      </Reorder.Item>
+    );
+  };
+
 
   // I PREFERITI sono SOLO quelli scelti a mano con la stella (nessuna aggiunta automatica).
   const favRow = useMemo(() => {
@@ -382,6 +451,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     const decoder = new TextDecoder();
     let buffer = "";
     let done = false;
+    let truncated = false;
     while (true) {
       const { done: rd, value } = await reader.read();
       if (rd) break;
@@ -391,11 +461,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         const line = part.replace(/^data: ?/, "").trim();
         if (!line) continue;
         let obj; try { obj = JSON.parse(line); } catch { continue; }
-        if (obj.done) { done = true; continue; }
+        if (obj.done) { done = true; if (obj.truncated) truncated = true; continue; }
         if (obj.d) { acc += obj.d; setPlan((p) => p + obj.d); }
       }
     }
-    return { ok: done, text: acc };
+    return { ok: done, text: acc, truncated };
   };
 
   const persistPlan = async (text) => {
@@ -411,10 +481,30 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   };
 
   const clearPlan = async () => {
-    setPlan(""); setSavedAt(null);
+    setPlan(""); setSavedAt(null); setPlanTruncated(false); setInfEdit(null);
     try { await capoPlanApi.clear(); } catch { /* */ }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  // Ogni volta che cambia il testo del piano, ri-estrae la tabella infornate (modificabile a mano).
+  useEffect(() => {
+    const p = parseInfornate(plan);
+    setInfEdit(p.headers && p.headers.length ? { headers: p.headers, rows: p.rows || [], heading: p.heading } : null);
+  }, [plan]);
+
+  const infPersistRef = useRef(null);
+  // Applica una modifica alla tabella: aggiorna l'editor, riscrive il markdown del piano e lo salva (debounce).
+  const commitInf = (headers, rows, heading) => {
+    setInfEdit({ headers, rows, heading });
+    const body = parseInfornate(plan).body;
+    const newPlan = `${body}\n\n${heading || "## 🔥 Orario Infornate"}\n\n${serializeInfTable(headers, rows)}`.trimEnd();
+    setPlan(newPlan);
+    if (infPersistRef.current) clearTimeout(infPersistRef.current);
+    infPersistRef.current = setTimeout(() => { persistPlan(newPlan); }, 1200);
+  };
+  const infSetCell = (ri, ci, val) => { if (!infEdit) return; const rows = infEdit.rows.map((r, i) => (i === ri ? r.map((c, k) => (k === ci ? val : c)) : r)); commitInf(infEdit.headers, rows, infEdit.heading); };
+  const infDelRow = (ri) => { if (!infEdit) return; commitInf(infEdit.headers, infEdit.rows.filter((_, i) => i !== ri), infEdit.heading); };
+  const infAddRow = () => { if (!infEdit) return; commitInf(infEdit.headers, [...infEdit.rows, infEdit.headers.map(() => "")], infEdit.heading); };
 
   // Aggiorna da solo le giacenze freezer: scala i pezzi usati (match per nome, anche parziale).
   const updateFreezerAfterPlan = async () => {
@@ -492,22 +582,29 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         "To generate the plan, add at least one recipe with a quantity."));
       return;
     }
-    setGenerating(true); setPlan(""); setSavedAt(null);
+    setGenerating(true); setPlan(""); setSavedAt(null); setPlanTruncated(false);
     const twoPhase = useWeekly || products.some((p) => p.day);
     try {
       let ok = true;
       let fullText = "";
+      let wasTruncated = false;
       if (twoPhase) {
         const r1 = await streamPhase("weekly", t("capo_phase_weekly"));
         const r2 = await streamPhase("daily", t("capo_phase_daily"));
         ok = r1.ok && r2.ok;
+        wasTruncated = r1.truncated || r2.truncated;
         fullText = [r1.text, r2.text].filter(Boolean).join("\n\n");
       } else {
         const r1 = await streamPhase("daily", null);
         ok = r1.ok;
+        wasTruncated = r1.truncated;
         fullText = r1.text;
       }
+      fullText = fullText.replace(/\[\[PLAN_END\]\]/g, "").trimEnd();
+      setPlan((p) => p.replace(/\[\[PLAN_END\]\]/g, "").trimEnd());
+      setPlanTruncated(wasTruncated);
       if (!ok) toast.warning(t("capo_plan_incomplete"));
+      else if (wasTruncated) toast.warning(tri3(lang, "Piano molto lungo: potrebbe essere incompleto. Rigeneralo o spegni qualche modulo.", "Sehr langer Plan: evtl. unvollständig. Neu erstellen oder Module ausschalten.", "Very long plan: it may be incomplete. Regenerate or turn off some modules.", "Plan muy largo: puede estar incompleto. Regénéralo o apaga algún módulo."));
       else fireHighFive(lang === "de" ? "Plan erstellt! 👏" : lang === "en" ? "Plan generated! 👏" : lang === "es" ? "¡Plan generado! 👏" : "Piano generato! 👏");
       if (fullText.trim()) { await persistPlan(fullText); await updateFreezerAfterPlan();
         try { const u = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); products.forEach((p) => { if (p.recipe_id && Number(p.qty) > 0) u[p.recipe_id] = (u[p.recipe_id] || 0) + 1; }); localStorage.setItem("mikilab_recipe_usage", JSON.stringify(u)); } catch { /* */ }
@@ -730,11 +827,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               </div>
             )}
 
-            {(editTools || toolQuery.trim()) ? (
+            {editTools ? (
+              <Reorder.Group as="div" axis="y" values={visibleTools.map((t) => t.id)}
+                onReorder={(ids) => savePrefs({ ...toolPrefs, order: ids })} className="space-y-2">
+                {visibleTools.map((tl) => renderToolReorderRow(tl))}
+              </Reorder.Group>
+            ) : toolQuery.trim() ? (
               <div className="grid grid-cols-3 gap-2">
                 {visibleTools.filter(({ it, de, en }) => {
                   const q = toolQuery.trim().toLowerCase();
-                  if (!q || editTools) return true;
+                  if (!q) return true;
                   return `${it} ${de} ${en}`.toLowerCase().includes(q);
                 }).map((tl) => renderToolCard(tl))}
               </div>
@@ -1058,6 +1160,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               className="no-print mt-2 w-full inline-flex items-center justify-center gap-2 text-sm font-semibold text-[#234b6e] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] px-4 py-2.5 rounded-2xl active:scale-98 transition-all">
               <Archive className="w-4 h-4" /> {tri3(lang, "Salva questo piano nell'archivio", "Diesen Plan im Archiv speichern", "Save this plan to the archive")}
             </button>
+            <div className="no-print mt-3">
+              <label className="block text-[11px] font-bold uppercase tracking-wide text-[#3f7cac] mb-1.5">{tri3(lang, "Note del fornaio (finiscono nel PDF)", "Notizen des Bäckers (kommen ins PDF)", "Baker's notes (added to the PDF)", "Notas del panadero (van al PDF)")}</label>
+              <textarea data-testid="capo-baker-note" value={bakerNote} onChange={(e) => setBakerNote(e.target.value)} rows={2}
+                placeholder={tri3(lang, "Es. attaccare la biga alle 22:00, controllare il forno n.2…", "z. B. Biga um 22:00 ansetzen, Ofen Nr. 2 prüfen…", "e.g. start the biga at 22:00, check oven no. 2…", "Ej. iniciar la biga a las 22:00, revisar el horno n.º 2…")}
+                className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31] px-3 py-2 text-sm outline-none focus:border-[#3f7cac] resize-y" />
+            </div>
             <button data-testid="capo-print" onClick={() => window.print()}
               className="no-print mt-3 w-full bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
@@ -1068,9 +1176,73 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </button>
 
             <div className="print-area mt-4 space-y-4">
+              <PrintHeader title={tri3(lang, "Piano di Produzione", "Produktionsplan", "Production Plan", "Plan de Producción")} lang={lang} />
+              {bakerNote.trim() && (
+                <div data-testid="capo-baker-note-print" className="print-table rounded-xl border border-[#C88A2B]/40 bg-[#C88A2B]/8 px-3 py-2.5">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-[#A66A15] mb-1">{tri3(lang, "Note del fornaio", "Notizen des Bäckers", "Baker's notes", "Notas del panadero")}</p>
+                  <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-wrap leading-relaxed">{bakerNote}</p>
+                </div>
+              )}
               <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#3f7cac] mb-2">{t("capo_plan_title")}</p>
-                <ReactMarkdown>{plan}</ReactMarkdown>
+                {planTruncated && (
+                  <div data-testid="capo-plan-truncated" className="no-print mb-3 flex items-start gap-2 rounded-xl border border-[#C0574D]/40 bg-[#C0574D]/10 px-3 py-2.5">
+                    <AlertTriangle className="w-4 h-4 text-[#C0574D] shrink-0 mt-0.5" />
+                    <p className="text-xs text-[#8f3a32] dark:text-[#e79a91] leading-relaxed">
+                      {tri3(lang,
+                        "⚠️ Il piano potrebbe essere incompleto (troppo lungo). Rigeneralo, oppure spegni qualche modulo per accorciarlo.",
+                        "⚠️ Der Plan ist evtl. unvollständig (zu lang). Neu erstellen oder Module ausschalten.",
+                        "⚠️ The plan may be incomplete (too long). Regenerate it, or turn off some modules to shorten it.",
+                        "⚠️ El plan puede estar incompleto (demasiado largo). Regénéralo o apaga algún módulo.")}
+                    </p>
+                  </div>
+                )}
+                {(() => {
+                  const showInf = !generating && infEdit && infEdit.headers && infEdit.headers.length > 0;
+                  const body = showInf ? parseInfornate(plan).body : plan;
+                  return (
+                    <>
+                      <ReactMarkdown>{body}</ReactMarkdown>
+                      {showInf && (
+                        <div data-testid="capo-infornate-editor" className="mt-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-[12px] font-bold text-[#2B303B] dark:text-[#e4eff8]">🔥 {tri3(lang, "Orario Infornate (modificabile)", "Backfahrplan (bearbeitbar)", "Baking schedule (editable)", "Horario de horneado (editable)")}</p>
+                            <button data-testid="capo-inf-add-row" onClick={infAddRow} className="no-print inline-flex items-center gap-1 text-[11px] font-semibold text-[#3f7cac] border border-[#3f7cac]/40 px-2 py-1 rounded-lg active:scale-95">
+                              <Plus className="w-3.5 h-3.5" /> {tri3(lang, "Riga", "Zeile", "Row", "Fila")}
+                            </button>
+                          </div>
+                          <div className="overflow-x-auto print-table rounded-xl border border-[#d5e4f0] dark:border-[#38424B]">
+                            <table className="w-full text-[12px] border-collapse">
+                              <thead>
+                                <tr className="bg-[#e4eff8] dark:bg-[#2A323A]">
+                                  {infEdit.headers.map((h, ci) => (
+                                    <th key={ci} className="text-left font-bold text-[#234b6e] dark:text-[#a9d2ec] px-2 py-1.5 whitespace-nowrap">{h}</th>
+                                  ))}
+                                  <th className="no-print w-8" />
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {infEdit.rows.map((r, ri) => (
+                                  <tr key={ri} data-testid={`capo-inf-row-${ri}`} className="border-t border-[#d5e4f0] dark:border-[#38424B]">
+                                    {infEdit.headers.map((_, ci) => (
+                                      <td key={ci} className="px-1 py-1 align-top">
+                                        <input data-testid={`capo-inf-cell-${ri}-${ci}`} value={r[ci] ?? ""} onChange={(e) => infSetCell(ri, ci, e.target.value)}
+                                          className="w-full min-w-[70px] bg-transparent px-1.5 py-1 rounded-md outline-none focus:bg-[#3f7cac]/8 border border-transparent focus:border-[#3f7cac]/40" />
+                                      </td>
+                                    ))}
+                                    <td className="no-print px-1 py-1 align-middle">
+                                      <button data-testid={`capo-inf-del-${ri}`} onClick={() => infDelRow(ri)} aria-label="delete row" className="text-[#C0574D] p-1 active:scale-90"><X className="w-3.5 h-3.5" /></button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
                 <div data-testid="capo-plan-disclaimer" className="mt-4 flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-50 dark:bg-amber-500/10 px-3 py-2.5">
                   <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                   <p className="text-xs text-amber-700 dark:text-amber-300/90 leading-relaxed">

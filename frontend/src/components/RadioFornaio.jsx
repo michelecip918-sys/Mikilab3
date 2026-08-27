@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw, Search } from "lucide-react";
+import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw, Search, Plus, Trash2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAmbient } from "@/audio/AmbientContext";
 import { useBackClose } from "@/lib/backNav";
@@ -93,9 +93,14 @@ export default function RadioFornaio() {
   const [status, setStatus] = useState("idle"); // idle | loading | playing | error
   const [volume, setVolume] = useState(0.9);
   const [favs, setFavs] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_radio_favs") || "[]"); } catch { return []; } });
+  const [custom, setCustom] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_radio_custom") || "[]"); } catch { return []; } });
+  const [showAdd, setShowAdd] = useState(false);
+  const [cName, setCName] = useState("");
+  const [cUrl, setCUrl] = useState("");
   const [lastId, setLastId] = useState(() => localStorage.getItem("mikilab_radio_last") || null);
   const [q, setQ] = useState("");
   const toggleFav = (id) => setFavs((f) => { const n = f.includes(id) ? f.filter((x) => x !== id) : [...f, id]; try { localStorage.setItem("mikilab_radio_favs", JSON.stringify(n)); } catch { /* */ } return n; });
+  const saveCustom = (list) => { setCustom(list); try { localStorage.setItem("mikilab_radio_custom", JSON.stringify(list)); } catch { /* */ } };
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -139,7 +144,22 @@ export default function RadioFornaio() {
     if (p && p.catch) p.catch(() => setStatus("error"));
   };
 
-  const allStations = [...STATIONS.it, ...STATIONS.de, ...STATIONS.intl, ...STATIONS.uk, ...STATIONS.es];
+  const allStations = [...custom, ...STATIONS.it, ...STATIONS.de, ...STATIONS.intl, ...STATIONS.uk, ...STATIONS.es];
+
+  const addCustom = () => {
+    const url = cUrl.trim();
+    if (!/^https?:\/\//i.test(url)) { alert(tri("Inserisci un URL valido che inizia con http:// o https://", "Gib eine gültige URL ein (http:// oder https://)", "Enter a valid URL starting with http:// or https://", "Introduce una URL válida (http:// o https://)")); return; }
+    const name = cName.trim() || url.replace(/^https?:\/\//i, "").split("/")[0];
+    const st = { id: `custom_${Date.now()}`, name, url, custom: true };
+    saveCustom([...custom, st]);
+    setCName(""); setCUrl(""); setShowAdd(false);
+    playStation(st);
+  };
+  const removeCustom = (id) => {
+    saveCustom(custom.filter((s) => s.id !== id));
+    setFavs((f) => { const n = f.filter((x) => x !== id); try { localStorage.setItem("mikilab_radio_favs", JSON.stringify(n)); } catch { /* */ } return n; });
+    if (current === id) stop();
+  };
 
   const [listening, setListening] = useState(false);
   const listenStation = () => {
@@ -274,6 +294,27 @@ export default function RadioFornaio() {
               {q && <button data-testid="radio-search-clear" onClick={() => setQ("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#7E8A93] p-1"><X className="w-4 h-4" /></button>}
             </div>
 
+            <button data-testid="radio-add-toggle" onClick={() => setShowAdd((v) => !v)}
+              className={`w-full mb-3 flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-semibold text-left transition-all active:scale-98 ${showAdd ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#1F252B] text-[#3f7cac] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+              <Plus className="w-4 h-4 shrink-0" />
+              {tri("Aggiungi la tua radio (URL)", "Eigenen Sender hinzufügen (URL)", "Add your radio (URL)", "Añade tu radio (URL)")}
+            </button>
+            {showAdd && (
+              <div data-testid="radio-add-form" className="mb-3 rounded-xl border border-[#3f7cac]/40 bg-[#3f7cac]/8 p-3 space-y-2">
+                <input data-testid="radio-add-name" value={cName} onChange={(e) => setCName(e.target.value)}
+                  placeholder={tri("Nome (facoltativo)", "Name (optional)", "Name (optional)", "Nombre (opcional)")}
+                  className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-3 py-2 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
+                <input data-testid="radio-add-url" value={cUrl} onChange={(e) => setCUrl(e.target.value)}
+                  placeholder="https://…/stream.mp3"
+                  className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-3 py-2 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
+                <p className="text-[10.5px] text-[#7E8A93] leading-snug">{tri("Incolla il link diretto dello stream (.mp3, .aac o .m3u8).", "Füge den direkten Stream-Link ein (.mp3, .aac oder .m3u8).", "Paste the direct stream link (.mp3, .aac or .m3u8).", "Pega el enlace directo del stream (.mp3, .aac o .m3u8).")}</p>
+                <button data-testid="radio-add-save" onClick={addCustom}
+                  className="w-full bg-[#3f7cac] text-white font-semibold px-3 py-2 rounded-lg active:scale-98 text-sm">
+                  {tri("Salva e ascolta", "Speichern & hören", "Save & listen", "Guardar y escuchar")}
+                </button>
+              </div>
+            )}
+
             {q.trim() ? (() => {
               const res = allStations.filter((s) => s.name.toLowerCase().includes(q.trim().toLowerCase()));
               return res.length
@@ -287,6 +328,32 @@ export default function RadioFornaio() {
                 <RotateCcw className="w-4 h-4 shrink-0" />
                 <span className="truncate">{tri("Riprendi", "Weiter", "Resume", "Reanudar")}: {lastStation.name}</span>
               </button>
+            )}
+            {custom.length > 0 && (
+              <div className="mb-3" data-testid="radio-custom-group">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5">📻 {tri("Le mie radio", "Meine Sender", "My radios", "Mis radios")}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {custom.map((st) => {
+                    const active = current === st.id;
+                    const isFav = favs.includes(st.id);
+                    return (
+                      <div key={st.id} data-testid={`radio-station-${st.id}`} onClick={() => playStation(st)}
+                        className={`relative flex items-center gap-2 pl-3 pr-12 py-2.5 rounded-xl text-sm font-medium text-left transition-all active:scale-98 border cursor-pointer ${active ? "bg-[#3f7cac] text-white border-[#3f7cac] shadow-sm" : "bg-white dark:bg-[#1F252B] text-[#2B303B] dark:text-[#e4eff8] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                        {active && status === "loading" ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : active && status === "playing" ? <Square className="w-4 h-4 shrink-0 fill-current" /> : <Play className="w-4 h-4 shrink-0" />}
+                        <span className="truncate">{st.name}</span>
+                        <button type="button" data-testid={`radio-fav-${st.id}`} aria-label="favorite" onClick={(e) => { e.stopPropagation(); toggleFav(st.id); }}
+                          className="absolute right-7 top-1/2 -translate-y-1/2 p-1 active:scale-90">
+                          <Star className={`w-4 h-4 ${isFav ? "fill-[#C88A2B] text-[#C88A2B]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
+                        </button>
+                        <button type="button" data-testid={`radio-custom-remove-${st.id}`} aria-label="remove" onClick={(e) => { e.stopPropagation(); removeCustom(st.id); }}
+                          className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 active:scale-90">
+                          <Trash2 className={`w-4 h-4 ${active ? "text-white/70" : "text-[#C0574D]"}`} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             )}
             {favStations.length > 0 && renderGroup(`⭐ ${tri("Preferite", "Favoriten", "Favorites", "Favoritas")}`, favStations)}
             {renderGroup(`🇮🇹 ${t("radio_it")}`, STATIONS.it)}

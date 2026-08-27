@@ -2321,24 +2321,50 @@ async def capo_plan_stream(payload: CapoPlanRequest):
             prompt += ("\n\nEINKAUFSLISTE: Füge am Ende eine kurze Einkaufsliste hinzu (Mehle nach Typ, Wasser, Vorteig, Salz, Zusätze)."
                        if de else
                        "\n\nLISTA SPESA: aggiungi in fondo una breve lista della spesa (farine per tipo, acqua, prefermento, sale, extra).")
+        if mod_on("infornate"):
+            prompt += (
+                "\n\nWICHTIG — BACK-TABELLE (Backfahrplan): Füge GANZ AM ENDE des Plans einen eigenen Abschnitt "
+                "**## 🔥 Backfahrplan** mit einer klaren TABELLE (Markdown) hinzu, konsolidiert aus dem Tages-/Wochenplan. "
+                "Spalten: Uhrzeit (konkrete Backuhrzeit) | Produkt | Menge | Ofen | Temperatur °C | Minuten | Dampf (ja/nein). "
+                "Ordne die Zeilen chronologisch nach Backuhrzeit und staffle die Chargen so, dass der Ofen nicht überlastet wird "
+                "(Ofenkapazität und Reihenfolge beachten: gleiche Temperaturen bündeln, zuerst was länger backt). "
+                "Berechne die Backuhrzeit rückwärts aus Formen + Stückgare je Produkt. Wenn eine Ofentemperatur/Backzeit im Rezept fehlt, gib einen sinnvollen Richtwert an und markiere ihn mit (Richtwert)."
+                if de else
+                "\n\nIMPORTANTE — TABELLA INFORNATE (piano di cottura): aggiungi ALLA FINE del piano una sezione dedicata "
+                "**## 🔥 Orario Infornate** con una TABELLA chiara (markdown), consolidata dal piano giornaliero/settimanale. "
+                "Colonne: Ora (orario concreto di infornata) | Prodotto | Quantità | Forno | Temperatura °C | Minuti | Vapore (sì/no). "
+                "Ordina le righe in ordine cronologico di infornata e scaglia le infornate per non intasare il forno "
+                "(rispetta la capienza del forno e l'ordine: raggruppa le stesse temperature, gestisci prima ciò che cuoce più a lungo). "
+                "Calcola l'ora di infornata a ritroso da formatura + appretto di ogni prodotto. Se in ricetta manca temperatura/tempo di cottura, proponi un valore sensato e segnalalo con (indicativo)."
+            )
+            prompt += ("\n\nWICHTIG: Dieser Abschnitt **## 🔥 Backfahrplan** ist PFLICHT und muss IMMER vollständig erscheinen. Wenn der Platz knapp wird, kürze die anderen Abschnitte (Team, Hinweise, Einkaufsliste), aber lasse die Back-Tabelle NIE weg."
+                       if de else
+                       "\n\nIMPORTANTE: la sezione **## 🔥 Orario Infornate** è OBBLIGATORIA e deve SEMPRE comparire completa. Se lo spazio scarseggia, accorcia le altre sezioni (squadra, avvisi, lista spesa) ma NON omettere mai la tabella delle infornate.")
+            max_tokens = max(max_tokens, 4500)
 
     prompt += lang_instr
+    prompt += "\n\n---\nTermina SEMPRE la risposta con un'ultima riga che contiene ESATTAMENTE il marcatore [[PLAN_END]] (verrà rimosso automaticamente). Non scrivere nulla dopo il marcatore."
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=f"capo-{uuid.uuid4()}",
         system_message=system + _capo_lang(payload.lang),
     ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=max_tokens)
 
+    acc = ""
     try:
         async for event in chat.stream_message(UserMessage(text=prompt)):
             if isinstance(event, TextDelta):
+                acc += event.content
                 yield f"data: {json.dumps({'d': event.content})}\n\n"
             elif isinstance(event, StreamDone):
                 break
     except Exception:
         logger.exception("capo plan stream error")
         yield f"data: {json.dumps({'d': '[Errore nella generazione del piano. Riprova.]'})}\n\n"
-    yield f"data: {json.dumps({'done': True})}\n\n"
+        yield f"data: {json.dumps({'done': True, 'truncated': False, 'error': True})}\n\n"
+        return
+    truncated = "[[PLAN_END]]" not in acc
+    yield f"data: {json.dumps({'done': True, 'truncated': truncated})}\n\n"
 
 
 @api_router.post("/capo/plan")

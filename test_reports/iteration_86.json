@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend-only test (mobile 390x844) of the 3 new features: (1) Radio custom URL, (2) editable Infornate table, (3) truncation notice / [[PLAN_END]] marker. All 3 features work. Radio: invalid URL -> alert and nothing saved; valid URL -> station in radio-custom-group, saved in localStorage mikilab_radio_custom, persists after panel close/reopen AND page reload, star adds to mikilab_radio_favs, remove button deletes from UI and localStorage. Plan generation (admin login, single recipe 30pz, single-phase, ~54s) completed: capo-plan present, NO '[[PLAN_END]]' in the rendered plan, NO false capo-plan-truncated banner. capo-infornate-editor rendered with 3 rows x 7 cols of editable inputs (capo-inf-cell-r-c); editing a cell persists in-session (survives scroll, add-row, delete-row); capo-inf-add-row 3->4 rows, capo-inf-del-3 back to 3 rows. No duplicated markdown infornate table inside capo-plan (body has no 'Orario Infornate' heading and 0 <table> elements outside the editor).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PianoProduzioneAI / capo-infornate-editor", "issue": "Cell values keep RAW markdown emphasis from the AI table: cell 0-0 = '**07:30**', vapore cells = '**Si** (pressione...)'. The editable inputs should strip **/*/`/ backticks when parsing the markdown table so the baker doesn't see/edit asterisks.", "selector": "[data-testid='capo-inf-cell-0-0']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Infornate editor persistence", "issue": "Manual edits to the infornate table are session-only: after a page reload (plan restored from server) cell 0-0 reverts from the edited '05:45' back to '**07:30**'. Added/deleted rows are likewise lost. Also capo-share/capo-print send the original `plan` text, so shared/printed output does not include manual edits.", "affected_selectors": ["[data-testid='capo-inf-cell-0-0']", "[data-testid='capo-inf-add-row']", "[data-testid='capo-share']"]}
+    ],
+    "design_issues": [
+      {"screen": "Orario Infornate editor (390px)", "issues": ["Table needs horizontal scroll (expected on mobile) but column content is clipped mid-word (e.g. '40-45 mir', '**Si** (pr'); consider narrower columns or wrapping inputs"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Strip markdown emphasis (** __ * `) when parsing the infornate table into the editable inputs (parseInfornate in PianoProduzioneAI.jsx).",
+    "Persist the edited infornate table (e.g. save infEdit in the plan state via capoPlanApi.save and re-hydrate on load) and use the edited table for share/print output."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is 1325 lines — split (plan form, modules, infornate editor) into modules.",
+    "useEffect([plan]) rebuilds infEdit from the plan text, discarding user edits any time plan changes (e.g. reload/restore) — intended state should be kept separately/persisted."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% of requested flows functional (2 non-blocking issues)"},
+  "seed_data_creation": "Temporary localStorage radio station 'Test Radio' created and removed during the test; a production plan was generated and saved for admin@mikilab.de.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked)",
+  "context_for_next_testing_agent": "Radio custom-URL feature fully verified (validation, save, persistence, fav, remove). Infornate editor + PLAN_END/truncation verified with a single-phase plan (~54s generation, use 6s polling loop up to 3min). Remaining open items: markdown asterisks inside infornate input cells and non-persistence of manual edits after reload. Note: f-strings with escaped quotes break the Playwright runner — use string concatenation in selectors.",
+  "rca_of_the_issue": "Both open issues stem from infEdit being a pure derived state of the markdown plan text: parseInfornate does not sanitize markdown emphasis, and the useEffect on [plan] resets infEdit on every plan (re)load, so manual edits are never stored server-side."
+}
