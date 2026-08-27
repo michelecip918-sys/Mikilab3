@@ -1656,3 +1656,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Moderazione mercatino**: l'admin può già eliminare QUALSIASI annuncio (pulsante cestino visibile su tutti gli annunci per role=admin; endpoint DELETE consente owner/admin).
 - **ANCORA IN SOSPESO (grandi)**: Profili Social (pagina avatar/bio/ricette pubblicate); intro social nuova/colorata/giovanile; più opzioni di pubblicazione (consigli/idee) nel composer social; pannello admin dedicato moderazione.
 - NB: PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v62 (27 Ago 2026) — Social più vivo: intro colorata + più opzioni di pubblicazione
+- **Intro Social nuova** (`social-intro`): banner gradiente vivace/giovanile "Benvenuto nel Social dei Panettieri 🥐🔥" con 3 scorciatoie rapide (Mostra la sfornata→foto, Lancia un'idea→idea, Chiedi aiuto→domanda) che impostano la categoria e portano al composer. IT/DE/EN/ES.
+- **Più opzioni di pubblicazione**: aggiunte categorie post **Idea** (Sparkles, magenta) ed **Evento** (CalendarDays, verde) oltre a Consiglio/Foto/Ricetta/Domanda. Composer ora griglia 3 col con titolo "Cosa vuoi condividere?". Backend `COMMUNITY_CATEGORIES` esteso a {consiglio,foto,ricetta,domanda,idea,evento}. Verificato: creazione post categoria "idea" OK.
+- **ANCORA IN SOSPESO**: Profili Social (pagina profilo con avatar, bio, ricette pubblicate) — prossima fase dedicata; pannello admin moderazione (admin già può eliminare qualsiasi annuncio/post).
+- NB: PREVIEW → serve REDEPLOY per mikilab.de.

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -13,9 +13,11 @@ import { friendsApi } from "@/lib/api";
 
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
+  { id: "idea", Icon: Sparkles, color: "#d62976" },
   { id: "foto", Icon: Camera, color: "#6E8CA0" },
   { id: "ricetta", Icon: BookOpen, color: "#5aa0cf" },
   { id: "domanda", Icon: HelpCircle, color: "#3F7CAC" },
+  { id: "evento", Icon: CalendarDays, color: "#2e8b6f" },
 ];
 
 function timeAgo(iso, lang) {
@@ -36,9 +38,11 @@ export default function Community() {
 
   const catLabel = (id) => ({
     consiglio: tri("Consiglio", "Tipp", "Tip", "Consejo"),
+    idea: tri("Idea", "Idee", "Idea", "Idea"),
     foto: tri("Foto", "Foto", "Photo", "Foto"),
     ricetta: tri("Ricetta", "Rezept", "Recipe", "Receta"),
     domanda: tri("Domanda", "Frage", "Question", "Pregunta"),
+    evento: tri("Evento", "Event", "Event", "Evento"),
   }[id] || id);
 
   const [posts, setPosts] = useState([]);
@@ -181,8 +185,25 @@ export default function Community() {
         );
       })()}
 
+      {/* Intro viva e giovanile del Social */}
+      <div data-testid="social-intro" className="rounded-2xl p-4 mb-4 text-white relative overflow-hidden"
+        style={{ background: "linear-gradient(120deg,#4f5bd5,#962fbf 45%,#d62976 80%,#fa7e1e)" }}>
+        <p className="font-display text-lg font-extrabold leading-tight">{tri("Benvenuto nel Social dei Panettieri! 🥐🔥", "Willkommen im Bäcker-Social! 🥐🔥", "Welcome to the Bakers' Social! 🥐🔥", "¡Bienvenido al Social de Panaderos! 🥐🔥")}</p>
+        <p className="text-[12.5px] text-white/90 mt-1 leading-snug">{tri("Mostra le tue sfornate, lancia idee, chiedi aiuto e trova colleghi vicino a te. Qui si cresce insieme.", "Zeig deine Backwerke, teile Ideen, frag um Rat und finde Kollegen in der Nähe.", "Show your bakes, drop ideas, ask for help and find fellow bakers near you.", "Muestra tus horneadas, lanza ideas, pide ayuda y encuentra colegas cerca.")}</p>
+        <div className="flex gap-2 mt-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+          {[["foto", tri("📸 Mostra la sfornata", "📸 Backwerk zeigen", "📸 Show your bake", "📸 Muestra tu horneada")],
+            ["idea", tri("✨ Lancia un'idea", "✨ Idee teilen", "✨ Drop an idea", "✨ Lanza una idea")],
+            ["domanda", tri("🙋 Chiedi aiuto", "🙋 Um Rat fragen", "🙋 Ask for help", "🙋 Pide ayuda")]].map(([id, lbl]) => (
+            <button key={id} data-testid={`social-quick-${id}`}
+              onClick={() => { if (!user) { setAuthOpen(true); return; } setCat(id); document.querySelector('[data-testid="community-text"]')?.focus(); document.querySelector('[data-testid="community-text"]')?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
+              className="shrink-0 text-[12px] font-bold bg-white/20 hover:bg-white/30 border border-white/40 px-3 py-1.5 rounded-full active:scale-95 transition-all whitespace-nowrap">{lbl}</button>
+          ))}
+        </div>
+      </div>
+
       <div className="bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 rounded-2xl p-4 mb-5">
-        <div className="grid grid-cols-4 gap-1.5 mb-2">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{tri("Cosa vuoi condividere?", "Was möchtest du teilen?", "What do you want to share?", "¿Qué quieres compartir?")}</p>
+        <div className="grid grid-cols-3 gap-1.5 mb-2">
           {CATS.map(({ id, Icon, color }) => (
             <button key={id} data-testid={`community-cat-${id}`} onClick={() => setCat(id)}
               className={`flex flex-col items-center gap-1 py-2 rounded-xl border text-[11px] font-semibold transition-all ${cat === id ? "text-white border-transparent" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}
