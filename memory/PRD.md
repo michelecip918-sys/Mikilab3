@@ -1641,3 +1641,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Verificato: UI (screenshot) + stream reale con account PRO.
 - **ANCORA IN SOSPESO (grandi, lato server)**: (C) Mercatino REALE condiviso su DB con foto su storage; (D) Profili Social (foto/bio/ricette pubblicate).
 - NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+
+## v60 (27 Ago 2026) — "Apri strumento" spostato · Notifiche Community · Mercatino REALE
+- **"Apri strumento"**: rimosso dal popup "i" (ora solo "Ho capito"); aggiunto un pulsante `capo-module-open-<id>` SOTTO il nome di ogni interruttore del piano (apre lo strumento associato via MODULE_TOOL).
+- **Notifiche Community**: backend ora notifica anche le **richieste di amicizia** (`friend_request`) e le **accettazioni** (`friend_accept`) via `_notify`; NotificationBell mostra icona/testo per gli amici. Aggiunto **pallino rosso sull'icona Community** in BottomNav (`nav-community-badge`) legato a `/notifications` unread (polling 45s + evento `mikilab-notif-refresh` + focus). Verificato E2E (richiesta amicizia → badge "1").
+- **Mercatino REALE (server)**: nuovi endpoint `GET/POST/DELETE /api/community/market` (collezione `market_listings`), annunci condivisi tra tutti, **solo utenti registrati** pubblicano, delete owner/admin. Foto caricate su **Emergent Object Storage** (riuso `/upload` + `uploadApi.image`). Frontend `Marketplace.jsx` riscritto (via `marketApi`, non più localStorage); mantiene 5 annunci ESEMPIO multilingua + geolocalizzazione. Verificato via curl (create/list/401/delete) + UI.
+- **ANCORA IN SOSPESO**: (D) Profili Social (avatar/bio/ricette pubblicate); spostare "Le mie ricette" da Ricette → Il Tuo Laboratorio (fatto "alla fine").
+- NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.

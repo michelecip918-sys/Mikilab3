@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Bell, Heart, MessageCircle } from "lucide-react";
+import { Bell, Heart, MessageCircle, UserPlus } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { notificationsApi } from "@/lib/api";
@@ -44,6 +44,7 @@ export default function NotificationBell() {
     if (next && unread > 0) {
       setUnread(0);
       setItems((p) => p.map((n) => ({ ...n, read: true })));
+      window.dispatchEvent(new CustomEvent("mikilab-notif-refresh"));
       try { await notificationsApi.markRead(); } catch { load(); }
     }
   };
@@ -81,12 +82,18 @@ export default function NotificationBell() {
             <div>
               {items.map((n) => (
                 <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#38424B] last:border-0 ${!n.read ? "bg-[#3f7cac]/5" : ""}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : "bg-[#3F7CAC]/15 text-[#3F7CAC]"}`}>
-                    {n.type === "like" ? <Heart className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#3F7CAC]/15 text-[#3F7CAC]"}`}>
+                    {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] leading-snug">
-                      <b>{n.actor_name}</b> {n.type === "like" ? tri("ha messo mi piace al tuo post", "gefällt dein Beitrag", "liked your post") : tri("ha commentato il tuo post", "hat deinen Beitrag kommentiert", "commented on your post")}
+                      <b>{n.actor_name}</b> {n.type === "like"
+                        ? tri("ha messo mi piace al tuo post", "gefällt dein Beitrag", "liked your post")
+                        : n.type === "friend_request"
+                          ? tri("ti ha inviato una richiesta di amicizia", "hat dir eine Freundschaftsanfrage gesendet", "sent you a friend request")
+                          : n.type === "friend_accept"
+                            ? tri("ha accettato la tua richiesta di amicizia", "hat deine Freundschaftsanfrage angenommen", "accepted your friend request")
+                            : tri("ha commentato il tuo post", "hat deinen Beitrag kommentiert", "commented on your post")}
                     </p>
                     {n.snippet && <p className="text-xs text-[#7E8A93] truncate">“{n.snippet}”</p>}
                     <p className="text-[11px] text-[#7E8A93] mt-0.5">{ago(n.created_at)}</p>

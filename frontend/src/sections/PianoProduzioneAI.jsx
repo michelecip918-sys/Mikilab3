@@ -716,10 +716,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
               <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
               <div className="flex gap-2 mt-2">
-                <button data-testid="tool-guide-open" onClick={() => { const g = MODULE_TOOL[guideId] || guideId; setGuideId(null); onOpenTool && onOpenTool(g); }}
-                  className="text-xs font-bold bg-white text-[#234b6e] px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Apri strumento", "Werkzeug öffnen", "Open tool")}</button>
                 <button data-testid="tool-guide-close" onClick={() => setGuideId(null)}
-                  className="text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Chiudi", "Schließen", "Close")}</button>
+                  className="text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Ho capito", "Verstanden", "Got it")}</button>
               </div>
             </div>
           </div>
@@ -742,6 +740,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 </button>
                 <Icon className={`w-5 h-5 ${on ? "text-white" : "text-[#9aa4ac]"}`} />
                 <span className="text-[10.5px] font-semibold leading-tight">{tri3(lang, it, de, en)}</span>
+                {onOpenTool && (MODULE_TOOL[id]) && (
+                  <button type="button" data-testid={`capo-module-open-${id}`}
+                    onClick={(e) => { e.stopPropagation(); openToolTracked(MODULE_TOOL[id] || id); }}
+                    className={`mt-0.5 inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full active:scale-95 transition-all ${on ? "bg-white text-[#234b6e]" : "bg-[#3f7cac]/12 text-[#3f7cac] border border-[#3f7cac]/30"}`}>
+                    <Wrench className="w-2.5 h-2.5" /> {tri3(lang, "Apri strumento", "Öffnen", "Open tool")}
+                  </button>
+                )}
               </div>
             );
           })}

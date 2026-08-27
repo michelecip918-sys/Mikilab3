@@ -180,9 +180,14 @@ export const shiftsApi = {
   remove: (id) => api.delete(`/shifts/${id}`).then((r) => r.data),
 };
 
-export const notificationsApi = {
-  list: () => api.get(`/notifications`).then((r) => r.data).catch(() => ({ items: [], unread: 0 })),
+export const notificationsApi = {  list: () => api.get(`/notifications`).then((r) => r.data).catch(() => ({ items: [], unread: 0 })),
   markRead: () => api.post(`/notifications/read`).then((r) => r.data),
+};
+
+export const marketApi = {
+  list: () => api.get(`/community/market`).then((r) => r.data.items || []).catch(() => []),
+  create: (payload) => api.post(`/community/market`, payload).then((r) => r.data),
+  remove: (id) => api.delete(`/community/market/${id}`).then((r) => r.data),
 };
 
 export const doughSessionsApi = {

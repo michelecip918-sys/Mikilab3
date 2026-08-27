@@ -1,8 +1,22 @@
 import { Home, BookOpen, Wrench, GraduationCap, Users } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
 import { useLang } from "@/i18n/LanguageContext";
+import { notificationsApi } from "@/lib/api";
 
 export default function BottomNav({ active, onChange }) {
   const { t } = useLang();
+  const [unread, setUnread] = useState(0);
+  const loadUnread = useCallback(async () => {
+    try { const d = await notificationsApi.list(); setUnread(d.unread || 0); } catch { setUnread(0); }
+  }, []);
+  useEffect(() => {
+    loadUnread();
+    const id = setInterval(loadUnread, 45000);
+    const onRefresh = () => loadUnread();
+    window.addEventListener("mikilab-notif-refresh", onRefresh);
+    window.addEventListener("focus", onRefresh);
+    return () => { clearInterval(id); window.removeEventListener("mikilab-notif-refresh", onRefresh); window.removeEventListener("focus", onRefresh); };
+  }, [loadUnread]);
   // Impara resta evidenziato anche quando si è in News/Enciclopedia (stessa pagina).
   const norm = ["news", "enciclopedia"].includes(active) ? "impara" : active;
   const TABS = [
@@ -34,11 +48,16 @@ export default function BottomNav({ active, onChange }) {
               key={id}
               data-testid={`nav-tab-${id}`}
               onClick={() => onChange(id)}
-              className={`flex flex-col items-center justify-center gap-1 py-2 px-0.5 rounded-xl transition-all min-h-[52px] ${
+              className={`relative flex flex-col items-center justify-center gap-1 py-2 px-0.5 rounded-xl transition-all min-h-[52px] ${
                 on ? "bg-[#3f7cac] text-white shadow-md" : "text-[#7E8A93] hover:bg-[#e4eff8] dark:hover:bg-[#2A323A]"
               }`}
             >
-              <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />
+              <span className="relative">
+                <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />
+                {id === "community" && unread > 0 && (
+                  <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#f0f6fb] dark:ring-[#1B2127]">{unread > 9 ? "9+" : unread}</span>
+                )}
+              </span>
               <span className="text-[10px] font-semibold leading-none text-center">{label}</span>
             </button>
           );

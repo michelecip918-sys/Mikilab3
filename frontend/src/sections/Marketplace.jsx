@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { Store, Plus, Trash2, Tag, X, MessageCircle, Mail, MapPin, Navigation } from "lucide-react";
+import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
-import { loadMarket, MARKET_KEY, markMarketSeen } from "@/lib/market";
+import { marketApi, uploadApi } from "@/lib/api";
 
-// Punto 17 — Marketplace Usato (bacheca LOCALE sul dispositivo).
-// Attrezzatura di laboratorio usata: pubblica, filtra e contatta via WhatsApp/email.
+// Marketplace Usato — annunci REALI salvati sul server e condivisi tra tutti i fornai.
 
 const WA_NUMBER = "491601253378";
-const uid = () => Math.random().toString(36).slice(2, 9);
 
 // Annunci di ESEMPIO multilingua (non salvati; mostrano che il mercatino è aperto a fornai di più Paesi).
 const SAMPLES = [
@@ -59,13 +59,16 @@ export default function Marketplace() {
   ];
   const catLabel = (id) => (CATS.find((c) => c.id === id) || {}).label || id;
 
-  const [items, setItems] = useState(() => loadMarket());
+  const { user } = useAuth();
+  const [items, setItems] = useState([]);
+  useEffect(() => { marketApi.list().then(setItems); }, []);
   const [filter, setFilter] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [err, setErr] = useState("");
   const [form, setForm] = useState({ title: "", cat: "impastatrice", price: "", condition: "buono", place: "", desc: "", photo: "", contact: "" });
   const [geo, setGeo] = useState(null);
   const [geoBusy, setGeoBusy] = useState(false);
+  const [publishing, setPublishing] = useState(false);
 
   const requestGeo = () => {
     if (geo) { setGeo(null); return; }
@@ -78,8 +81,6 @@ export default function Marketplace() {
     );
   };
 
-  useEffect(() => { try { localStorage.setItem(MARKET_KEY, JSON.stringify(items)); markMarketSeen(); } catch { /* quota */ } }, [items]);
-
   const CONDS = [
     { id: "nuovo", label: tri("Come nuovo", "Wie neu", "Like new") },
     { id: "buono", label: tri("Buono", "Gut", "Good") },
@@ -87,20 +88,29 @@ export default function Marketplace() {
   ];
   const condLabel = (id) => (CONDS.find((c) => c.id === id) || {}).label || id;
 
-  const publish = () => {
+  const publish = async () => {
+    if (!user) { toast.error(tri("Accedi per pubblicare un annuncio", "Zum Veröffentlichen anmelden", "Log in to post a listing")); return; }
     if (!form.title.trim()) return;
-    const item = { id: uid(), ...form, title: form.title.trim(), createdAt: Date.now() };
-    const next = [item, ...items];
+    setErr(""); setPublishing(true);
     try {
-      localStorage.setItem("mikilab_market", JSON.stringify(next));
-      setItems(next);
+      let photoUrl = "";
+      if (form.photo) {
+        const blob = await (await fetch(form.photo)).blob();
+        photoUrl = await uploadApi.image(blob, "annuncio.jpg");
+      }
+      const created = await marketApi.create({ ...form, title: form.title.trim(), photo: photoUrl, price: String(form.price || ""), lat: geo ? geo.lat : null, lng: geo ? geo.lng : null });
+      setItems((p) => [created, ...p]);
       setForm({ title: "", cat: "impastatrice", price: "", condition: "buono", place: "", desc: "", photo: "", contact: "" });
       setShowForm(false);
+      toast.success(tri("Annuncio pubblicato! Ora è visibile a tutti i fornai.", "Anzeige veröffentlicht! Für alle sichtbar.", "Listing published! Visible to all bakers."));
     } catch {
-      setErr(tri("Memoria piena: rimuovi qualche annuncio o usa una foto più piccola.", "Speicher voll: Anzeigen entfernen oder kleineres Foto nutzen.", "Storage full: remove listings or use a smaller photo."));
-    }
+      setErr(tri("Errore durante la pubblicazione. Riprova.", "Fehler beim Veröffentlichen.", "Error publishing. Try again."));
+    } finally { setPublishing(false); }
   };
-  const remove = (id) => setItems((p) => p.filter((x) => x.id !== id));
+  const remove = async (id) => {
+    try { await marketApi.remove(id); setItems((p) => p.filter((x) => x.id !== id)); }
+    catch { toast.error(tri("Non puoi rimuovere questo annuncio", "Du kannst diese Anzeige nicht entfernen", "You can't remove this listing")); }
+  };
 
   const contactHref = (it) => {
     const raw = (it.contact || "").trim();
@@ -163,7 +173,7 @@ export default function Marketplace() {
           {form.photo
             ? <div className="relative"><img src={form.photo} alt="" className="w-full h-40 object-cover rounded-xl" /><button data-testid="market-photo-clear" onClick={() => setForm({ ...form, photo: "" })} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1"><X className="w-4 h-4" /></button></div>
             : <DualPhotoButtons testid="market-photo" onFile={(f) => compress(f, (d) => setForm((s) => ({ ...s, photo: d })))} />}
-          <button data-testid="market-publish" onClick={publish} className="w-full bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{tri("Pubblica", "Veröffentlichen", "Publish")}</button>
+          <button data-testid="market-publish" onClick={publish} disabled={publishing} className="w-full bg-[#5aa0cf] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{publishing ? tri("Pubblico…", "Wird veröffentlicht…", "Publishing…") : tri("Pubblica", "Veröffentlichen", "Publish")}</button>
           {err && <p data-testid="market-error" className="text-sm text-[#E4572E]">{err}</p>}
         </div>
       )}
@@ -199,7 +209,7 @@ export default function Marketplace() {
                     className="flex-1 flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2 rounded-lg active:scale-95 transition-transform">
                     {(it.contact || "").includes("@") ? <Mail className="w-3.5 h-3.5" /> : <MessageCircle className="w-3.5 h-3.5" />} {tri("Contatta", "Kontakt", "Contact")}
                   </a>
-                  {!it.sample && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
+                  {!it.sample && user && (it.owner_id === user.user_id || user.role === "admin") && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
                 </div>
               </div>
             </div>
