@@ -2034,3 +2034,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Conferma via email (Resend)**: al mittente viene inviata "Ricetta salvata ✅ — MikiLab" con l'elenco delle ricette create (best-effort, try/except; usa RESEND_API_KEY + SENDER_EMAIL=noreply@mikilab.de). Nessun errore backend nei test.
 - Testato end-to-end via curl (import da michelecip918@gmail.com → recipes_created=1 + notifica). Dati di test ripuliti.
 - "Snellisci Home": non eseguito per scelta prudente (serve indicazione utente su QUALI scorciatoie togliere) — offerto come follow-up.
+
+## v-fork.36 (2026-06) — Snellimento Home/Lab/Social + evidenza Laboratorio
+- **Home snellita**: rimossi i riquadri "Sapori di Casa / Calcolatore Metodo", "Ricette Custodite / Mani Sporche" e il blocco "News · Arte Bianca" (tutti raggiungibili dal menù globale / Lab tools). Risolve anche l'overlap del FAB Radio sulla card Custodite.
+- **Il Tuo Laboratorio in evidenza dopo Le Mie Ricette**: nel blocco "Il cuore di MikiLab" ora l'ordine è: 1) Le Mie Ricette + I Miei Corsi, 2) card grande "Il Tuo Laboratorio" con badge "Inizia qui" (ring dorato, icona più grande).
+- **Lab: subito alla generazione**: all'apertura del Laboratorio (prima volta per sessione) scroll automatico gentile a `capo-source-choice` (Scegli ricette → Genera). Guard sessionStorage `mikilab_lab_scrolled`.
+- **Social snellito**: header Community reso compatto (avatar 12, titolo + una riga, pulsante Profilo), rimossi paragrafi ridondanti e logo doppio. Navigazione via menù globale.
+- Compilazione pulita.

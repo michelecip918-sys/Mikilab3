@@ -143,34 +143,25 @@ export default function Community({ onNavigate }) {
 
   return (
     <div className="pb-40" data-testid="community">
-      {/* Header social brandizzato — SOLO nella Community: si capisce che è un nuovo social nel sito */}
-      <div data-testid="community-social-header" className="relative overflow-hidden rounded-3xl p-5 mb-5 text-white shadow-lg"
-        style={{ background: "linear-gradient(135deg,#0f2231 0%,#123c4a 40%,#1f5a68 70%,#a9772f 100%)" }}>
+      {/* Header social — compatto (navigazione via menù globale) */}
+      <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
+        style={{ background: "linear-gradient(135deg,#123c4a 0%,#1f5a68 60%,#a9772f 100%)" }}>
         <div className="flex items-center gap-3">
           <div className="relative shrink-0">
-            <div className="w-16 h-16 rounded-2xl bg-white/25 border-2 border-white/70 overflow-hidden shadow-md">
+            <div className="w-12 h-12 rounded-xl bg-white/25 border-2 border-white/70 overflow-hidden shadow">
               <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab" className="w-full h-full object-cover" />
             </div>
-            <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-xl bg-white shadow flex items-center justify-center overflow-hidden border border-white">
-              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="ML" className="w-full h-full object-contain" />
-            </div>
           </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="font-display text-2xl font-extrabold leading-none drop-shadow-sm">MikiLab Social</h1>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-white text-[#123c4a] px-2 py-0.5 rounded-full shadow">{tri("Nuovo", "Neu", "New", "Nuevo")}</span>
-            </div>
-            <p className="text-sm text-white/95 mt-1 leading-snug font-semibold">
-              {tri("Il nuovo social dei fornai, dentro il mio sito", "Das neue Bäcker-Social, direkt auf meiner Seite", "The new bakers' social, right inside my site", "La nueva red de panaderos, dentro de mi sitio")}
-            </p>
-            <p className="text-[11px] text-white/85 mt-0.5">{tri("Consigli, foto, ricette, amici e mercatino tra colleghi", "Tipps, Fotos, Rezepte, Freunde und Markt", "Tips, photos, recipes, friends and marketplace", "Consejos, fotos, recetas, amigos y mercadillo")}</p>
-            {user && (
-              <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
-                className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold bg-white/20 hover:bg-white/30 border border-white/40 px-3 py-1.5 rounded-full active:scale-95 transition-all">
-                <UserPlus className="w-3.5 h-3.5" /> {tri("Il mio profilo", "Mein Profil", "My profile", "Mi perfil")}
-              </button>
-            )}
+          <div className="min-w-0 flex-1">
+            <h1 className="font-display text-xl font-extrabold leading-none drop-shadow-sm">MikiLab Social</h1>
+            <p className="text-[12px] text-white/90 mt-1 leading-snug">{tri("Consigli, foto, ricette, amici e mercatino", "Tipps, Fotos, Rezepte, Freunde & Markt", "Tips, photos, recipes, friends & market", "Consejos, fotos, recetas y mercadillo")}</p>
           </div>
+          {user && (
+            <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
+              className="shrink-0 inline-flex items-center gap-1.5 text-[12px] font-bold bg-white/20 hover:bg-white/30 border border-white/40 px-3 py-1.5 rounded-full active:scale-95 transition-all">
+              <UserPlus className="w-3.5 h-3.5" /> {tri("Profilo", "Profil", "Profile", "Perfil")}
+            </button>
+          )}
         </div>
       </div>
 

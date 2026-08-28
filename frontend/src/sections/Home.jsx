@@ -310,42 +310,6 @@ export default function Home({ onNavigate }) {
         <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
       </button>
 
-      {/* Sapori di Casa (Matera & Puglia) + Calcolatore Metodo */}
-      <div className="grid grid-cols-2 gap-3">
-        <button data-testid="home-sapori-btn" onClick={() => setSapori(true)}
-          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
-          style={{ background: "linear-gradient(135deg,#B45309,#8C4A27)" }}>
-          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><UtensilsCrossed className="w-6 h-6" /></div>
-          <p className="font-display text-base font-bold leading-tight">{L("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{L("Matera & Puglia: pane, focacce e pasta fatta in casa", "Matera & Puglia: Brot & Pasta", "Matera & Puglia: bread & pasta", "Matera y Puglia: pan y pasta")}</p>
-        </button>
-        <button data-testid="home-calc-btn" onClick={() => setCalc(true)}
-          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
-          style={{ background: "linear-gradient(135deg,#D97706,#B45309)" }}>
-          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Calculator className="w-6 h-6" /></div>
-          <p className="font-display text-base font-bold leading-tight">{L("Calcolatore Metodo", "Methoden-Rechner", "Method Calculator", "Calculadora Método")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{L("Dosi, idratazione e incordatura per alta alveolatura", "Mengen & Hydratation", "Doses & hydration", "Dosis e hidratación")}</p>
-        </button>
-      </div>
-
-      {/* Ricette Custodite + Mani Sporche */}
-      <div className="grid grid-cols-2 gap-3">
-        <button data-testid="home-custodite-btn" onClick={() => openLabTool("custodite")}
-          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
-          style={{ background: "linear-gradient(135deg,#8C4A27,#5A3418)" }}>
-          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Landmark className="w-6 h-6" /></div>
-          <p className="font-display text-base font-bold leading-tight">{L("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{L("I pani del Sud, adattati alle tue dosi + scheda con QR", "Traditionsbrote mit QR-Karte", "Southern breads adapted to your amounts + QR card", "Panes del Sur + ficha QR")}</p>
-        </button>
-        <button data-testid="home-manisporche-btn" onClick={() => openLabTool("manisporche")}
-          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
-          style={{ background: "linear-gradient(135deg,#6E371C,#3a2415)" }}>
-          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Hand className="w-6 h-6" /></div>
-          <p className="font-display text-base font-bold leading-tight">{L("Mani Sporche", "Schmutzige Hände", "Dirty Hands", "Manos Sucias")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{L("Tasti giganti e voce: timer e comandi con le mani in pasta", "Große Tasten & Stimme", "Giant buttons & voice while your hands are busy", "Botones gigantes y voz")}</p>
-        </button>
-      </div>
-
       {/* Glossario Interattivo dell'Arte Bianca */}
       <button data-testid="home-glossario-btn" onClick={() => setGlossario(true)}
         className="w-full flex items-center gap-4 rounded-2xl p-4 bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-98 transition-all text-left">
@@ -589,9 +553,6 @@ export default function Home({ onNavigate }) {
         </AnimatePresence>
       </div>
 
-      {/* News · Arte Bianca (curate dall'admin) */}
-      <HomeNews />
-
       {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
       <div data-testid="home-core">
         <div className="flex items-center gap-2 mb-1 px-1">
@@ -600,24 +561,8 @@ export default function Home({ onNavigate }) {
         </div>
         <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3 ml-1" />
 
-        {/* Laboratorio — card grande in evidenza */}
-        <button data-testid="home-core-maestro" onClick={() => go("maestro")}
-          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#8C4A27] to-[#6E371C] ring-2 ring-[#C88A2B]/70 overflow-hidden">
-          <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-          <div className="flex items-center gap-3 mt-1">
-            <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-6 h-6" /></div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="font-display text-lg font-bold">{L("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}</h3>
-                <span className="text-[10px] font-bold bg-[#C88A2B] text-white px-2 py-0.5 rounded-full">PRO</span>
-              </div>
-              <p className="text-white/85 text-sm leading-snug">{L("Piano di produzione IA, costi, celle e impasti — tutto in un posto.", "KI-Produktionsplan, Kosten, Kammern und Teige — alles an einem Ort.", "AI production plan, costs, cells and doughs — all in one place.")}</p>
-            </div>
-            <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
-          </div>
-        </button>
-
-        <div className="grid grid-cols-2 gap-3">
+        {/* 1) Le Mie Ricette + I Miei Corsi */}
+        <div className="grid grid-cols-2 gap-3 mb-3">
           <button data-testid="home-core-ricette" onClick={() => go("ricette")}
             className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#24303c] to-[#16202b] min-h-[112px] flex flex-col gap-2">
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
@@ -631,6 +576,24 @@ export default function Home({ onNavigate }) {
             <p className="text-[11px] text-white/85 leading-snug">{L("Corsi online di Michele (in arrivo)", "Micheles Online-Kurse (bald)", "Michele's online courses (soon)")}</p>
           </button>
         </div>
+
+        {/* 2) Il Tuo Laboratorio — grande e in evidenza, subito dopo le ricette */}
+        <button data-testid="home-core-maestro" onClick={() => go("maestro")}
+          className="relative w-full text-left rounded-3xl p-5 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#8C4A27] to-[#6E371C] ring-2 ring-[#C88A2B]/70 overflow-hidden">
+          <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+          <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wide bg-[#C88A2B] text-white px-2 py-0.5 rounded-full">{L("Inizia qui", "Hier starten", "Start here", "Empieza aquí")}</span>
+          <div className="flex items-center gap-3 mt-1">
+            <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-7 h-7" /></div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="font-display text-xl font-bold">{L("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}</h3>
+                <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">PRO</span>
+              </div>
+              <p className="text-white/85 text-sm leading-snug">{L("Genera il piano IA, timer, costi, celle e impasti — tutto in un posto.", "KI-Plan, Timer, Kosten, Kammern & Teige — alles an einem Ort.", "Generate the AI plan, timers, costs, cells & doughs — all in one place.")}</p>
+            </div>
+            <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
+          </div>
+        </button>
       </div>
 
       {/* ===== CHIEDI AL MAESTRO ===== */}

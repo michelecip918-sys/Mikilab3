@@ -156,6 +156,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
   const { addTimer } = useTimers();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Snellimento: alla prima apertura del laboratorio, porta subito alla scelta ricette / generazione.
+  useEffect(() => {
+    if (!onOpenTool) return;
+    try { if (sessionStorage.getItem("mikilab_lab_scrolled")) return; } catch { /* */ }
+    const id = setTimeout(() => {
+      const el = document.querySelector('[data-testid="capo-source-choice"]');
+      if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); try { sessionStorage.setItem("mikilab_lab_scrolled", "1"); } catch { /* */ } }
+    }, 500);
+    return () => clearTimeout(id);
+  }, [onOpenTool]);
   const startPhaseTimer = (label, min, repeat) => {
     addTimer(label, min, repeat);
     toast.success(tri3(lang, `Timer «${label}» avviato (${min}′)`, `Timer „${label}" gestartet (${min}′)`, `Timer "${label}" started (${min}′)`, `Temporizador "${label}" iniciado (${min}′)`));
