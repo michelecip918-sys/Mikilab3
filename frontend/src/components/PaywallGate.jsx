@@ -243,7 +243,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
                    "No payments: earn access by completing MikiLab community challenges (create posts, invite colleagues, share and more).")}
             </p>
           </div>
-          <button data-testid="paywall-challenge" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } toast.message(tri("Le Sfide arrivano a brevissimo — resta connesso!", "Die Challenges kommen in Kürze!", "Challenges are coming very soon!")); }}
+          <button data-testid="paywall-challenge" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } }}
             className="w-full bg-[#a9772f] hover:bg-[#8a5a2b] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Sparkles className="w-5 h-5" /> {tri("Completa la Sfida per Accedere", "Challenge abschließen, um zuzugreifen", "Complete the challenge to unlock")}
           </button>

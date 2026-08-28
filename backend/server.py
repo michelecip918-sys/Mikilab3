@@ -5050,6 +5050,117 @@ async def community_delete(post_id: str, user: dict = Depends(current_user)):
     return {"ok": True}
 
 
+# --- MOTORE SFIDE: sblocco contenuti completando le sfide (no denaro) ---
+CHALLENGE_CATALOG = [
+    {"id": "post_recipe_question", "type": "internal", "label": "Crea un post chiedendo pareri su una ricetta"},
+    {"id": "add_2_colleagues", "type": "internal", "label": "Aggiungi 2 colleghi alla tua rete"},
+    {"id": "upload_dough_photo", "type": "internal", "label": "Carica una foto del tuo impasto"},
+    {"id": "reply_user", "type": "internal", "label": "Rispondi/commenta il post di un altro utente"},
+    {"id": "whatsapp_share", "type": "honor", "label": "Invia una ricetta/PDF a un collega su WhatsApp"},
+    {"id": "fb_comment", "type": "honor", "label": "Lascia un commento sul profilo Facebook di Michele"},
+    {"id": "share_group", "type": "honor", "label": "Condividi MikiLab in un gruppo di settore"},
+    {"id": "leave_review", "type": "honor", "label": "Lascia una recensione o invita un nuovo utente"},
+]
+CHALLENGE_IDS = {c["id"] for c in CHALLENGE_CATALOG}
+
+
+async def _verify_internal_challenge(cid: str, uid: str) -> bool:
+    if cid == "post_recipe_question":
+        return await db.community_posts.count_documents({"author_id": uid}) >= 1
+    if cid == "upload_dough_photo":
+        return await db.community_posts.count_documents({"author_id": uid, "image_url": {"$nin": [None, ""]}}) >= 1
+    if cid == "add_2_colleagues":
+        return await db.friendships.count_documents({"status": "accepted", "$or": [{"from_id": uid}, {"to_id": uid}]}) >= 2
+    if cid == "reply_user":
+        n = 0
+        async for p in db.community_posts.find({"comments.author_id": uid}, {"_id": 1}).limit(1):
+            n = 1
+        return n >= 1
+    return False
+
+
+class ChallengeReq(BaseModel):
+    challenge_id: str
+
+
+@api_router.get("/challenges/catalog")
+async def challenges_catalog():
+    return {"catalog": CHALLENGE_CATALOG}
+
+
+# Soglie di sblocco (riusano gli entitlements esistenti → RecipeList/PaywallGate già li rispettano)
+CHALLENGE_UNLOCK_PANETTONI = 3   # a 3 sfide: Panettoni + Academy (Impara/Diagnosi)
+CHALLENGE_UNLOCK_ALL = 6         # a 6 sfide: tutto (Laboratorio incluso)
+
+
+async def _apply_challenge_unlocks(email: str, n: int) -> dict:
+    """Concede gli entitlements in base al numero di sfide completate (nessun pagamento)."""
+    ent_set = {}
+    if n >= CHALLENGE_UNLOCK_PANETTONI:
+        ent_set["unlock_panettoni"] = True
+        ent_set["academy"] = True
+        ent_set.setdefault("plan_tier", "home")
+    if n >= CHALLENGE_UNLOCK_ALL:
+        ent_set["unlock_all"] = True
+        ent_set["pro"] = True
+        ent_set["plan_tier"] = "lab"
+    if ent_set:
+        ent_set["source"] = "challenges"
+        ent_set["updated_at"] = now_iso()
+        await db.entitlements.update_one({"email": email.strip().lower()}, {"$set": ent_set}, upsert=True)
+    return {"unlocked_panettoni": n >= CHALLENGE_UNLOCK_PANETTONI, "unlocked_all": n >= CHALLENGE_UNLOCK_ALL}
+
+
+@api_router.get("/challenges/state")
+async def challenges_state(user: dict = Depends(current_user)):
+    doc = await db.user_challenges.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    done = doc.get("completed", []) if doc else []
+    n = len(done)
+    return {"completed": done, "count": n, "total": len(CHALLENGE_CATALOG),
+            "need_panettoni": CHALLENGE_UNLOCK_PANETTONI, "need_all": CHALLENGE_UNLOCK_ALL,
+            "unlocked_panettoni": n >= CHALLENGE_UNLOCK_PANETTONI, "unlocked_all": n >= CHALLENGE_UNLOCK_ALL}
+
+
+@api_router.post("/challenges/complete")
+async def challenges_complete(body: ChallengeReq, user: dict = Depends(current_user)):
+    cid = body.challenge_id
+    if cid not in CHALLENGE_IDS:
+        raise HTTPException(400, "Sfida sconosciuta")
+    item = next(c for c in CHALLENGE_CATALOG if c["id"] == cid)
+    if item["type"] == "internal" and not await _verify_internal_challenge(cid, user["user_id"]):
+        raise HTTPException(400, "Sfida non ancora completata: completala nella community e riprova.")
+    await db.user_challenges.update_one({"user_id": user["user_id"]},
+                                        {"$addToSet": {"completed": cid}, "$setOnInsert": {"created_at": now_iso()}}, upsert=True)
+    doc = await db.user_challenges.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    done = doc.get("completed", [])
+    unlocks = await _apply_challenge_unlocks(user["email"], len(done))
+    return {"ok": True, "completed": done, "count": len(done),
+            "need_panettoni": CHALLENGE_UNLOCK_PANETTONI, "need_all": CHALLENGE_UNLOCK_ALL, **unlocks}
+
+
+def _panettone_required(index: int) -> int:
+    # Combinazione progressiva: la ricetta 1 richiede 2 sfide, la 17 fino a 8 (cap = n° sfide disponibili).
+    return min(2 + index, len(CHALLENGE_CATALOG))
+
+
+@api_router.get("/content/access/{content_id}")
+async def content_access(content_id: str, user: dict = Depends(current_user)):
+    if user.get("role") == "admin":
+        return {"unlocked": True, "admin": True}
+    doc = await db.user_challenges.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    done = set(doc.get("completed", []) if doc else [])
+    # Panettone: content_id 'panettone_<n>' (1..17) → combinazioni progressive
+    if content_id.startswith("panettone_"):
+        try:
+            idx = int(content_id.split("_")[1]) - 1
+        except (ValueError, IndexError):
+            idx = 0
+        need = _panettone_required(max(0, idx))
+    else:
+        need = 3  # ricette/schede premium generiche
+    return {"unlocked": len(done) >= need, "required": need, "done": len(done), "missing": max(0, need - len(done))}
+
+
 # --- Bake-Along: sfide settimanali di panificazione della community + classifica ---
 BAKEALONG_THEMES = [
     {"id": "pane_integrale", "it": ("Pane Integrale", "Sforna un pane 100% integrale ben alveolato.", "Idrata di più (l'integrale beve tanto), usa autolisi lunga e pieghe delicate."),

@@ -1,0 +1,31 @@
+{
+  "summary": "Tested Motore Sfide (backend + frontend), mandatory registration gate on Social, Sapori di Casa and Calcolatore Metodo. Backend: 10/10 pytest passed (catalog=8 with 4 honor/4 internal, state defaults total=8/need_panettoni=3/need_all=6, honor complete + idempotency, internal unmet -> 400, unknown id -> 400, threshold 3 -> academy+unlock_panettoni (pro=false), threshold 6 -> pro+unlock_all, /api/content/access). Frontend (mobile 390x844): guest Sfide overlay shows title/progress/8 items/sfide-register; guest Social shows community-auth-gate + community-register-btn with no feed; logged-in (amico2) shows community-feed and no gate; honor challenge whatsapp_share completes with success toast and progress 0/8 -> 1/8, item marked done; internal challenge shows error toast; paywall-challenge in Your Lab PaywallGate opens the Sfide overlay; Sapori di Casa 4 tabs all render content and sapori-back returns Home; Calcolatore Metodo recalculates all calc-row-* + calc-water-temp + calc-mix-min on input/select change and calc-back returns Home. No critical issues found.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Sfide - internal challenge not yet met", "issue": "Error toast shows the backend Italian detail string ('Sfida non ancora completata: completala nella community e riprova.') even when UI language is EN/DE/ES. Sfide.jsx prefers e.response.data.detail over the localized fallback.", "affected_selectors": ["[data-testid='sfide-complete-add_2_colleagues']"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_iter96_challenges.py", "/app/test_reports/pytest/pytest_iter96.xml"],
+  "action_items": [
+    "(minor i18n) Localize the internal-challenge failure toast instead of showing the raw Italian backend detail, or return a language-aware detail from /api/challenges/complete.",
+    "(minor) Duplicate data-testid 'calc-flour': AcademyHome.jsx (select) and CalcolatoreMetodo.jsx (input). Rename one (e.g. 'calcmetodo-flour') to avoid ambiguous selectors in tests."
+  ],
+  "critical_code_review_comments": [
+    "server.py is ~6850 lines — well over the 700-line guideline; consider splitting challenges/entitlements into routers/modules.",
+    "_apply_challenge_unlocks overwrites entitlements with source='challenges' via upsert $set; a paying user (source='stripe') who completes 6 challenges would have source/plan_tier overwritten. Consider preserving paid source metadata."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter96_challenges.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Test used amico2@mikilab.de. Its user_challenges + entitlements were reset before tests and RESET TO CLEAN (0 challenges, no entitlements) after tests. One temporary community post (TEST_iter96) was created and deleted.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "amico2@mikilab.de / Test1234! (clean, 0 challenges), amico1@mikilab.de / Test1234!, admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Reusable challenge tests: /app/backend/tests/test_iter96_challenges.py (run with `pytest tests/test_iter96_challenges.py -p xdist -n0`); it resets amico2 challenges/entitlements via pymongo at start. Browser language is EN, so UI strings appear in English; data-testids are invariant. To reach a PaywallGate for 'paywall-challenge', use bottom nav 'nav-tab-maestro' (Your Lab) with a non-pro logged user. Note amico2 gets pro/unlock_all after 6 challenges — reset entitlements when a non-pro user is needed.",
+  "rca_of_the_issue": "N/A - no failures. Only i18n leakage of backend detail string and a duplicate data-testid observed."
+}

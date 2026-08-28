@@ -25,6 +25,7 @@ import { consumeBack } from "@/lib/backNav";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Maintenance from "@/components/Maintenance";
 import LegalPage from "@/sections/LegalPage";
+import Sfide from "@/components/Sfide";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
@@ -56,7 +57,15 @@ function App() {
   const { user, authOpen, setAuthOpen } = useAuth();
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [legalOpen, setLegalOpen] = useState(false);
+  const [sfideOpen, setSfideOpen] = useState(false);
   const publicBatch = new URLSearchParams(window.location.search).get("lotto");
+
+  // Apertura del Motore Sfide da qualunque punto (PaywallGate, Home, ecc.)
+  useEffect(() => {
+    const h = () => setSfideOpen(true);
+    window.addEventListener("mikilab-go-challenges", h);
+    return () => window.removeEventListener("mikilab-go-challenges", h);
+  }, []);
 
   // Gestione tasto Indietro: sincronizza i tab con la history del browser.
   const navigate = useCallback((next) => {
@@ -245,6 +254,7 @@ function App() {
       )}
 
       <Toaster position="top-center" richColors />
+      <Sfide open={sfideOpen} onClose={() => setSfideOpen(false)} />
       {resetToken && (
         <ResetPassword
           token={resetToken}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles, Trophy, Calculator, UtensilsCrossed } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -12,6 +12,8 @@ import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
+import SaporiCasa from "@/sections/SaporiCasa";
+import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
 import { getProfile } from "@/components/Onboarding";
 import { getLevelProgress } from "@/lib/level";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -195,6 +197,8 @@ export default function Home({ onNavigate }) {
     profileApi.get(user.user_id).then((p) => setIsChampion((p?.badges || []).includes("fornaio_settimana"))).catch(() => {});
   }, [user]);
   const [legal, setLegal] = useState(false);
+  const [sapori, setSapori] = useState(false);
+  const [calc, setCalc] = useState(false);
   const [open, setOpen] = useState(null);
   const [storyOpen, setStoryOpen] = useState(() => {
     try { return !localStorage.getItem("mikilab_home_story_seen"); } catch { return true; }
@@ -250,6 +254,9 @@ export default function Home({ onNavigate }) {
     );
   }
 
+  if (sapori) return <SaporiCasa onBack={() => setSapori(false)} />;
+  if (calc) return <CalcolatoreMetodo onBack={() => setCalc(false)} />;
+
   return (
     <div className="pb-2 space-y-6">
       {/* Card in alto: avatar digitale animato (finto video) */}
@@ -280,6 +287,37 @@ export default function Home({ onNavigate }) {
       </div>
 
       <GuidaAvatar />
+
+      {/* Motore Sfide — sblocca contenuti completando le sfide (no pagamenti) */}
+      <button data-testid="home-sfide-btn" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } }}
+        className="w-full flex items-center gap-4 rounded-3xl p-5 text-[#FFFDF9] shadow-lg active:scale-98 transition-all"
+        style={{ background: "linear-gradient(135deg,#8C4A27 0%,#6E371C 60%,#4A3222 100%)" }}>
+        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Trophy className="w-6 h-6" /></div>
+        <div className="flex-1 min-w-0 text-left">
+          <h3 className="font-display text-lg font-bold">{L("Motore Sfide", "Challenges", "Challenge Engine", "Motor de Retos")}</h3>
+          <p className="text-[#FFFDF9]/85 text-sm leading-snug">{L("Sblocca ricette e schede completando le sfide. Nessun pagamento.", "Inhalte durch Challenges freischalten. Keine Zahlung.", "Unlock recipes by completing challenges. No payment.", "Desbloquea recetas con retos. Sin pago.")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
+      </button>
+
+      {/* Sapori di Casa (Matera & Puglia) + Calcolatore Metodo */}
+      <div className="grid grid-cols-2 gap-3">
+        <button data-testid="home-sapori-btn" onClick={() => setSapori(true)}
+          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
+          style={{ background: "linear-gradient(135deg,#B45309,#8C4A27)" }}>
+          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><UtensilsCrossed className="w-6 h-6" /></div>
+          <p className="font-display text-base font-bold leading-tight">{L("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{L("Matera & Puglia: pane, focacce e pasta fatta in casa", "Matera & Puglia: Brot & Pasta", "Matera & Puglia: bread & pasta", "Matera y Puglia: pan y pasta")}</p>
+        </button>
+        <button data-testid="home-calc-btn" onClick={() => setCalc(true)}
+          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
+          style={{ background: "linear-gradient(135deg,#D97706,#B45309)" }}>
+          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Calculator className="w-6 h-6" /></div>
+          <p className="font-display text-base font-bold leading-tight">{L("Calcolatore Metodo", "Methoden-Rechner", "Method Calculator", "Calculadora Método")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{L("Dosi, idratazione e incordatura per alta alveolatura", "Mengen & Hydratation", "Doses & hydration", "Dosis e hidratación")}</p>
+        </button>
+      </div>
+
 
       {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
       {isChampion && (

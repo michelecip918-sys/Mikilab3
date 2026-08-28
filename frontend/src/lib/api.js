@@ -69,6 +69,12 @@ export const friendsApi = {
   suggestions: () => api.get(`/friends/suggestions`).then((r) => r.data.suggestions || []).catch(() => []),
 };
 
+export const challengesApi = {
+  catalog: () => api.get(`/challenges/catalog`).then((r) => r.data.catalog || []).catch(() => []),
+  state: () => api.get(`/challenges/state`).then((r) => r.data).catch(() => null),
+  complete: (challenge_id) => api.post(`/challenges/complete`, { challenge_id }).then((r) => r.data),
+};
+
 export const newsItemsApi = {
   list: () => api.get(`/news-items`).then((r) => r.data),
   create: (data) => api.post(`/news-items`, data).then((r) => r.data),

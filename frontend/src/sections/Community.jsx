@@ -116,6 +116,31 @@ export default function Community({ onNavigate }) {
   const visible = filter === "all" ? posts : posts.filter((p) => p.category === filter);
   const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
 
+  // Registrazione OBBLIGATORIA per accedere al Social
+  if (!user) {
+    return (
+      <div className="pb-40" data-testid="community-auth-gate">
+        <div className="relative overflow-hidden rounded-3xl p-7 text-[#FFFDF9] shadow-xl text-center"
+          style={{ background: "linear-gradient(135deg,#8C4A27 0%,#6E371C 60%,#4A3222 100%)" }}>
+          <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-4">
+            <Users className="w-8 h-8" />
+          </div>
+          <h1 className="font-display text-2xl font-bold">{tri("Social dei Panettieri", "Bäcker-Social", "Bakers' Social", "Social de Panaderos")}</h1>
+          <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">
+            {tri("Registrati gratis per vedere la bacheca, i colleghi, il mercatino e partecipare alle sfide.",
+                 "Registriere dich, um Pinnwand, Kollegen, Markt und Challenges zu sehen.",
+                 "Register to see the feed, colleagues, marketplace and join the challenges.",
+                 "Regístrate para ver el muro, colegas, mercadillo y participar en los retos.")}
+          </p>
+          <button data-testid="community-register-btn" onClick={() => setAuthOpen(true)}
+            className="mt-5 w-full bg-[#FFFDF9] text-[#6E371C] font-bold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
+            {tri("Registrati per entrare", "Registrieren und eintreten", "Register to enter", "Regístrate para entrar")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="pb-40" data-testid="community">
       {/* Header social brandizzato — SOLO nella Community: si capisce che è un nuovo social nel sito */}
