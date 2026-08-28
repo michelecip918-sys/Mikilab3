@@ -278,7 +278,7 @@ export default function Home({ onNavigate }) {
         <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
         <div className="relative">
           <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-[#a9772f] mb-2">MikiLab</span>
-          <h1 className="font-display text-2xl sm:text-4xl font-extrabold leading-[1.1] text-[#4a3212] break-words hyphens-auto">
+          <h1 className="font-display text-2xl sm:text-4xl font-extrabold leading-[1.1] text-[#4a3212] break-words">
             {L("Ricette Esclusive & Consulenza Operativa",
                "Exklusive Rezepte & operative Beratung",
                "Exclusive Recipes & Operational Consulting",
