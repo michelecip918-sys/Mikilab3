@@ -21,6 +21,11 @@ export default function LabPasticceria({ onBack }) {
 
   // Grandi Lievitati: schedule 3 rinfreschi a 30°C
   const [firstRefresh, setFirstRefresh] = useState("08:00");
+  const [lmWeight, setLmWeight] = useState(200);
+  const bagnetto = useMemo(() => {
+    const g = Number(lmWeight) || 0;
+    return { water: g, sugar: Math.round(g * 0.02 * 10) / 10, temp: 18 };
+  }, [lmWeight]);
   const schedule = useMemo(() => {
     const [h, m] = firstRefresh.split(":").map(Number);
     const start = new Date(); start.setHours(h || 8, m || 0, 0, 0);
@@ -91,6 +96,13 @@ export default function LabPasticceria({ onBack }) {
             <div className="flex items-center gap-2 text-[13px] pt-2 border-t border-[#E6D8C3]"><span className="w-6 h-6 rounded-full bg-[#D97706] text-white text-[11px] font-bold flex items-center justify-center">★</span><span className="text-[#6B5546] font-semibold">{L("Primo impasto pronto", "First dough ready")}</span><span className="ml-auto font-mono-data font-bold text-[#8C4A27]">{schedule.impasto}</span></div>
           </div>
           <p className="text-[12px] text-[#6B5546] mt-2 leading-snug">{L("Tra un rinfresco e l'altro il lievito madre deve triplicare a 28-30°C. Il bagnetto in acqua (a 18°C con poco zucchero) prima dell'ultimo rinfresco riduce l'acidità.", "Between refreshes the sourdough should triple at 28-30°C. A water bath (18°C, a little sugar) before the last refresh lowers acidity.")}</p>
+          <div className="mt-3 pt-3 border-t border-[#E6D8C3]">
+            <p className={lbl}>{L("Peso lievito madre per il bagnetto (g)", "Sourdough weight for the water bath (g)")}</p>
+            <input data-testid="gl-lm" type="number" value={lmWeight} onChange={(e) => setLmWeight(e.target.value)} className={inp} />
+            <div data-testid="gl-bagnetto" className="mt-2 rounded-xl bg-[#FEF3C7] p-3 text-[13px] text-[#8C4A27] font-semibold">
+              {L("Bagnetto", "Water bath")}: <span className="font-mono-data">{num(bagnetto.water)} g {L("acqua", "water")}</span> {L("a", "at")} {bagnetto.temp}°C + <span className="font-mono-data">{bagnetto.sugar} g {L("zucchero", "sugar")}</span> · {L("immergi 15-20 min", "soak 15-20 min")}
+            </div>
+          </div>
         </div>
       )}
 

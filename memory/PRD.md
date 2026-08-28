@@ -1978,3 +1978,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Entrambe wired in Maestro.jsx (render) + PianoProduzioneAI TOOLS (icone Pizza/Cake), in cima alla griglia strumenti. Client-side, palette Arte Bianca.
 ### RESTA DA FARE (suggeriti, non richiesti esplicitamente in questo giro)
 - Badge "Diplomato MikiLab" su profilo pubblico/Community; quiz con immagini; scheda ricetta aperta layout premium.
+
+## v-fork.27 (2026-08) — Avatar 3D + rifiniture Lab Pizzeria/Pasticceria
+- **AVATAR 3D (Task 3, fatto+verificato)**: generati 2 avatar Pixar/Memoji (Michele: orecchino + tatuaggio avambraccio + grembiule MikiLab braccia scoperte; Mohammadreza: barba + grembiule coordinato). Inseriti in cornici circolari brand (border marrone/ambra) in `GuidaAvatar.jsx` (intro). URL statici emergentagent. NB: stilizzati, non fedeli a foto reali (nessuna reference foto fornita).
+- **RIFINITURE LAB (Task 1)**: LabPasticceria → aggiunto calcolo dosi BAGNETTO (peso LM → acqua 18°C + 2% zucchero, 15-20 min). LabPizzeria Matrix → aggiunto input indice P/L che aggiusta la nota appretto (tenace/estensibile).
+### NON FATTO — da fare prossimo giro
+- **Task 2 "Le Ricette Custodite di Michele & Mohammadreza"**: sezione con ricette tradizionali (Pane Matera/Altamura/Focaccia Barese + lievitati persiani), pulsante "Adatta alle mie dosi" (ricalcolo su farina utente), scheda condivisibile 1-click (IG/WhatsApp/stampa) + etichette QR. Feature ampia, rinviata per budget di contesto.

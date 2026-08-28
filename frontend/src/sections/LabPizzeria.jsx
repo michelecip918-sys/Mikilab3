@@ -35,14 +35,19 @@ export default function LabPizzeria({ onBack }) {
 
   // Matrix W
   const [w, setW] = useState(300);
+  const [pl, setPl] = useState(0.55);
   const matrix = useMemo(() => {
-    const W = Number(w) || 0;
-    if (W < 220) return { fridge: "6-12 h", appretto: "1-2 h", note: L("Farina debole: maturazione breve, meglio a temperatura ambiente.", "Weak flour: short maturation, better at room temp.") };
-    if (W < 260) return { fridge: "24 h", appretto: "3-4 h", note: L("Farina media: 24h in frigo per un impasto leggero.", "Medium flour: 24h in the fridge for a light dough.") };
-    if (W < 300) return { fridge: "48 h", appretto: "4-6 h", note: L("Farina forte: 48h di maturazione controllata.", "Strong flour: 48h controlled maturation.") };
-    if (W < 340) return { fridge: "72 h", appretto: "6-8 h", note: L("Farina molto forte: fino a 72h, alta digeribilità.", "Very strong flour: up to 72h, high digestibility.") };
-    return { fridge: "72-96 h", appretto: "8-10 h", note: L("Manitoba: maturazioni lunghissime, gestisci bene il freddo.", "Manitoba: very long maturation, manage cold well.") };
-  }, [w, lang]);
+    const W = Number(w) || 0; const PL = Number(pl) || 0;
+    const plNote = PL >= 0.65 ? L(" Farina tenace (P/L alto): allunga un po' l'appretto e stendi con delicatezza.", " Tenacious flour (high P/L): extend appretto a bit and shape gently.")
+      : PL <= 0.4 ? L(" Farina estensibile (P/L basso): impasto rilassato, riduci leggermente l'appretto.", " Extensible flour (low P/L): relaxed dough, slightly reduce appretto.") : "";
+    let base;
+    if (W < 220) base = { fridge: "6-12 h", appretto: "1-2 h", note: L("Farina debole: maturazione breve, meglio a temperatura ambiente.", "Weak flour: short maturation, better at room temp.") };
+    else if (W < 260) base = { fridge: "24 h", appretto: "3-4 h", note: L("Farina media: 24h in frigo per un impasto leggero.", "Medium flour: 24h in the fridge for a light dough.") };
+    else if (W < 300) base = { fridge: "48 h", appretto: "4-6 h", note: L("Farina forte: 48h di maturazione controllata.", "Strong flour: 48h controlled maturation.") };
+    else if (W < 340) base = { fridge: "72 h", appretto: "6-8 h", note: L("Farina molto forte: fino a 72h, alta digeribilità.", "Very strong flour: up to 72h, high digestibility.") };
+    else base = { fridge: "72-96 h", appretto: "8-10 h", note: L("Manitoba: maturazioni lunghissime, gestisci bene il freddo.", "Manitoba: very long maturation, manage cold well.") };
+    return { ...base, note: base.note + plNote };
+  }, [w, pl, lang]);
 
   // Service Planner
   const [pizzas, setPizzas] = useState(50);
@@ -100,6 +105,8 @@ export default function LabPizzeria({ onBack }) {
         <div className={card} data-testid="pizzeria-matrix">
           <p className={lbl}>{L("Forza della farina (W)", "Flour strength (W)")}</p>
           <input data-testid="pz-w" type="number" value={w} onChange={(e) => setW(Number(e.target.value))} className={inp + " mb-3"} />
+          <p className={lbl}>{L("Indice P/L (tenacità/estensibilità)", "P/L index (tenacity/extensibility)")}</p>
+          <input data-testid="pz-pl" type="number" step="0.05" value={pl} onChange={(e) => setPl(e.target.value)} className={inp + " mb-3"} />
           <div className="grid grid-cols-2 gap-2 mb-2">
             <div className="rounded-xl bg-[#FEF3C7] p-3 text-center"><p className="text-[11px] font-semibold text-[#92400E]">{L("Maturazione in frigo", "Cold maturation")}</p><p data-testid="pz-fridge" className="font-display text-xl font-bold text-[#8C4A27]">{matrix.fridge}</p></div>
             <div className="rounded-xl bg-[#FEF3C7] p-3 text-center"><p className="text-[11px] font-semibold text-[#92400E]">{L("Appretto (fuori frigo)", "Appretto (room)")}</p><p data-testid="pz-appretto" className="font-display text-xl font-bold text-[#8C4A27]">{matrix.appretto}</p></div>
