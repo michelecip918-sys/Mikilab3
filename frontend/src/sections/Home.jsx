@@ -11,6 +11,7 @@ import ChatPanel from "@/components/ChatPanel";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import HomeNews from "@/components/HomeNews";
+import GuidaAvatar from "@/components/GuidaAvatar";
 import { getProfile } from "@/components/Onboarding";
 import { getLevelProgress } from "@/lib/level";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -277,6 +278,8 @@ export default function Home({ onNavigate }) {
           </p>
         </div>
       </div>
+
+      <GuidaAvatar />
 
       {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
       {isChampion && (

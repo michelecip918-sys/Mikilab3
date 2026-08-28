@@ -161,7 +161,7 @@ function App() {
     <AmbientProvider>
     <TimerProvider>
     <SoundFXProvider>
-    <div className="App min-h-screen bg-[#f0f6fb] dark:bg-[#1B2127]">
+    <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1B2127]">
       {/* Sfondo tematico: filigrana grano/farina elegante su ogni pagina (contrasto garantito dalle card) */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-repeat opacity-[0.55] dark:opacity-[0.05]"
         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px" }} />
