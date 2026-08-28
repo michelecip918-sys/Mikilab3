@@ -2014,3 +2014,6 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **QUIZ CON IMMAGINI (ImparaLivelli)**: campo `img` opzionale sulle domande; render `data-testid quiz-image` (h-44, onError→hide). Aggiunte 3 immagini: L3 Panettone (capovolto), L4 Focacce (patata), L5 Pizza (forno napoletano). Toast "Panettoni sbloccati" ora mostrato UNA sola volta (guard localStorage mikilab_panettoni_celebrated).
 - **TIMER DI FASE NEL PIANO IA**: barra `capo-phase-timers` (compare quando esiste un piano) con 4 pulsanti `capo-phase-timer-pieghe|puntata|appretto|cottura` che avviano lo Smart Timer globale (useTimers.addTimer, pieghe=ripetuto 30′). Suona anche su altri strumenti.
 - Testato iteration_99: frontend 100% degli scenari richiesti (6/6 intestazioni colorate, 3 immagini quiz naturalWidth=1000, barra timer di fase funzionante con toast). Nessuna schermata bianca. Le foto reali delle Ricette Custodite NON sono state aggiunte (scelta utente).
+
+## v-fork.32 (2026-06) — Rimossa sezione Shop dalla Home
+- Rimosso il blocco `home-shop-corsi` ("MikiLab Shop & Corsi" con tab Shop Ricette / I Miei Corsi) in fondo alla Home + stato `shopTab` inutilizzato. La Home ora termina con Chiedi al Maestro → Condividi/Installa → Note legali.
