@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -104,13 +104,14 @@ const TOOLS = [
   { id: "pesata", Icon: Scale, cat: "impasto", it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
   { id: "timer", Icon: TimerIcon, cat: "cottura", it: "Timer", de: "Timer", en: "Timer" },
   { id: "meteo", Icon: CloudSun, cat: "cottura", it: "Meteo", de: "Wetter", en: "Weather" },
-  { id: "ph", Icon: FlaskConical, cat: "impasto", it: "pH Lievito", de: "pH Sauerteig", en: "Sourdough pH" },
+  { id: "ph", Icon: FlaskConical, cat: "impasto", it: "Registro Lievito Madre", de: "Sauerteig-Register", en: "Sourdough Log", es: "Registro Masa Madre" },
   { id: "diagnosi", Icon: Camera, cat: "gestione", it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
   { id: "suono", Icon: Camera, cat: "gestione", it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
   { id: "sessioni", Icon: Thermometer, cat: "gestione", it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
   { id: "check", Icon: ListChecks, cat: "gestione", it: "Checklist", de: "Checklisten", en: "Checklists" },
   { id: "shelf", Icon: CalendarClock, cat: "vendita", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
   { id: "aggiungi", Icon: BookOpen, cat: "impasto", it: "Le Mie Ricette", de: "Meine Rezepte", en: "My Recipes", es: "Mis Recetas" },
+  { id: "cantiere", Icon: FileText, cat: "gestione", it: "Ricetta di Cantiere (PDF)", de: "Baustellen-Rezept (PDF)", en: "Worksite Recipe (PDF)", es: "Receta de Obra (PDF)" },
   { id: "scanflour", Icon: Wheat, cat: "impasto", it: "Scanner Farina", de: "Mehl-Scanner", en: "Flour Scanner", es: "Escáner de Harina" },
   { id: "metodo", Icon: Calculator, cat: "impasto", it: "Calcolatore Metodo", de: "Methoden-Rechner", en: "Method Calculator", es: "Calculadora Método" },
   { id: "convlievito", Icon: RefreshCw, cat: "impasto", it: "Convertitore Lieviti", de: "Hefe-Umrechner", en: "Leavening Converter", es: "Conversor Levaduras" },
@@ -119,6 +120,9 @@ const TOOLS = [
   { id: "recupero", Icon: Recycle, cat: "impasto", it: "Angolo del Recupero", de: "Resteverwertung", en: "Recovery Corner", es: "Rincón Aprovechamiento" },
   { id: "saporicasa", Icon: UtensilsCrossed, cat: "impasto", it: "Sapori di Casa", de: "Geschmack von zu Hause", en: "Home Flavours", es: "Sabores de Casa" },
   { id: "weatherbaker", Icon: CloudSun, cat: "impasto", it: "Smart Weather-Baker", de: "Smart Weather-Baker", en: "Smart Weather-Baker", es: "Smart Weather-Baker" },
+  { id: "simforno", Icon: Flame, cat: "cottura", it: "Simulatore Forno di Casa", de: "Heimofen-Simulator", en: "Home Oven Simulator", es: "Simulador Horno" },
+  { id: "timelapse", Icon: TrendingUp, cat: "gestione", it: "Time-Lapse Raddoppio", de: "Time-Lapse Verdopplung", en: "Doubling Time-Lapse", es: "Time-Lapse Duplicado" },
+  { id: "bancalievito", Icon: Sprout, cat: "gestione", it: "Banca del Lievito", de: "Sauerteig-Bank", en: "Starter Bank", es: "Banco de Masa Madre" },
   { id: "trovafarina", Icon: Search, cat: "impasto", it: "Trova-Farina Europeo", de: "Mehl-Finder Europa", en: "European Flour Finder", es: "Buscador de Harinas" },
   { id: "esuberozero", Icon: Recycle, cat: "impasto", it: "Esubero Zero-Sprechi", de: "Sauerteig-Rest", en: "Zero-Waste Discard", es: "Descarte Cero" },
 ];

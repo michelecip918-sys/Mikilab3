@@ -1924,3 +1924,16 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ### DEFERITI (heavy o già coperti) da fare se richiesti
 - Simulatore Forno interattivo (parziale in SaporiCasa "Testato in Forno di Casa"); Generatore Etichette QR (già `BatchTraceability`); Banca del Lievito mappa (estendere `BakersMap`); Time-Lapse Tracker (richiede analisi foto/IA).
 - Dizionari completi FR/FA; recolor Arte Bianca completo sezioni legacy; Home banner "Sapore del Giorno" + Glossario; Profilo (Ricettario personale, Registro LM, PDF "Ricetta di Cantiere").
+
+## v-fork.20 (2026-08) — Altri tool unici + FR/FA nav + Profilo (Ricettario/Registro LM/PDF Cantiere)
+- **NUOVI TOOL (Lab grid + Maestro render, client-side, Arte Bianca)**:
+  - `simforno` → `SimulatoreForno.jsx`: da tipo forno/temp/pietra/prodotto → temp da impostare (ventilato -10°C), preriscaldo (pietra 45'), minuti vapore, consiglio spiffero. Verificato.
+  - `timelapse` → `TimeLapseTracker.jsx`: foto inizio/adesso (uploadApi.image), slider crescita %, anello progresso verso raddoppio, timer persistito in localStorage.
+  - `bancalievito` → `BancaLievito.jsx`: directory community (bakersApi.map) per scambio starter + apre `BakersMap` (mappa Leaflet, mettiti sulla mappa).
+  - `cantiere` → `CantiereRicetta.jsx`: elenca ricette personali+recipes → genera PDF "Ricetta di Cantiere" (jsPDF, caratteri grandi: dosi, tempi, forno, procedimento, note) multilingua. Verificato (lista + pulsante PDF).
+- **PROFILO/RICETTARIO**: `aggiungi` = "Le Mie Ricette" (Ricettario Personale, già esistente); `ph` rinominato **"Registro Lievito Madre"** (SourdoughTracker, già esistente); PDF Cantiere nuovo (sopra).
+- **LINGUE FR + FA**: selettore già a 6 lingue (v-fork.19). Aggiunti dizionari `fr` e `fa` in `translations.js` per navigazione/header (nav_home/ricette/maestro/impara, brand_subtitle, login_cta, lang_label, theme_toggle). Verificato: bottom-nav in FR = Accueil/Recettes/Apprendre. Il RESTO delle chiavi (≈660) ricade su EN via t()/tri() → **traduzione integrale FR/FA ancora da completare** (fase dedicata, molto estesa).
+### RESTA DA FARE
+- Dizionari FR/FA completi (≈660 chiavi ciascuno).
+- Recolor Arte Bianca completo (Home hero/banner social ancora blu #3f7cac).
+- Home banner "Il Sapore del Giorno" + Glossario Interattivo; percorsi Impara a livelli con quiz.

@@ -61,6 +61,10 @@ import SaporiCasa from "@/sections/SaporiCasa";
 import TrovaFarina from "@/sections/TrovaFarina";
 import EsuberoZero from "@/sections/EsuberoZero";
 import SmartWeatherBaker from "@/sections/SmartWeatherBaker";
+import SimulatoreForno from "@/sections/SimulatoreForno";
+import TimeLapseTracker from "@/sections/TimeLapseTracker";
+import BancaLievito from "@/sections/BancaLievito";
+import CantiereRicetta from "@/sections/CantiereRicetta";
 import { toast } from "sonner";
 
 export default function Maestro() {
@@ -135,6 +139,10 @@ export default function Maestro() {
         {tool === "trovafarina" && <TrovaFarina />}
         {tool === "esuberozero" && <EsuberoZero />}
         {tool === "weatherbaker" && <SmartWeatherBaker />}
+        {tool === "simforno" && <SimulatoreForno />}
+        {tool === "timelapse" && <TimeLapseTracker />}
+        {tool === "bancalievito" && <BancaLievito />}
+        {tool === "cantiere" && <CantiereRicetta />}
         {tool === "suono" && <SoundDiagnosi />}
         {tool === "enterprise" && <EnterpriseHub />}
       </div>
