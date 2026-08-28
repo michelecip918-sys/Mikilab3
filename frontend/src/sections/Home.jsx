@@ -12,6 +12,8 @@ import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
 import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
+import SaporeDelGiorno from "@/components/SaporeDelGiorno";
+import Glossario from "@/sections/Glossario";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
 import { getProfile } from "@/components/Onboarding";
@@ -20,33 +22,33 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 
 const CONCEPTS = {
   it: [
-    { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#3f7cac] to-[#234b6e]",
+    { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#8C4A27] to-[#4A3222]",
       body: "MikiLab è il mio laboratorio creativo e scientifico digitale dedicato all'arte bianca. Nasce per fondere la passione artigianale con lo studio metodico delle farine e dei processi fermentativi. Qui la panificazione non è una semplice sequenza di gesti, ma una costante ricerca dell'eccellenza, dove ogni ingrediente è calibrato al milligrammo per ottenere strutture perfette, digeribilità estrema e sapori autentici. È il luogo in cui la tradizione dell'arte panificatoria incontra l'innovazione e la precisione." },
-    { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#6E8CA0] to-[#5E7E90]",
+    { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#B45309] to-[#8C4A27]",
       body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato Mikilab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
-    { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#5aa0cf] to-[#2e6690]",
+    { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#D97706] to-[#B45309]",
       body: "Il mio metodo unisce la grande tradizione italiana alla precisione tecnica tedesca. Lavoro quotidianamente sia con metodi diretti sia con metodi indiretti, anche se prediligo nettamente questi ultimi: prefermenti come lievito madre, poolish, biga e precotture come il kochstück sono la vera anima delle mie ricette. Prediligere l'indiretto significa dare tempo al tempo, permettendo agli enzimi di trasformare la materia prima per ottenere una complessità aromatica unica, una crosta fragrante e un'alveolatura sviluppata. Tuttavia, amo ogni sfumatura della panificazione: la farina giusta al momento giusto e il rispetto rigoroso dei tempi sono la chiave per dominare ogni tipo di impasto." },
-    { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#234b6e] to-[#1B2127]",
+    { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#6E371C] to-[#2C1E16]",
       body: "Lavorare in serenità significa trasformare il laboratorio in un ambiente organizzato, efficiente e privo di stress. Con una pianificazione accurata dei tempi di fermentazione, l'uso di standard precisi e la scelta di tecniche affidabili, ogni imprevisto viene eliminato. Le piccole intuizioni pratiche, unite all'esperienza sul campo, semplificano le operazioni quotidiane rendendo il lavoro costante, sicuro e piacevole. Panificare con serenità è il segreto per esprimere la massima qualità senza mai perdere la passione per questo mestiere." },
   ],
   de: [
-    { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#3f7cac] to-[#234b6e]",
+    { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#8C4A27] to-[#4A3222]",
       body: "MikiLab ist mein kreatives und wissenschaftliches digitales Labor für die Backkunst. Es verbindet handwerkliche Leidenschaft mit dem methodischen Studium von Mehlen und Fermentationsprozessen. Hier ist Backen keine bloße Abfolge von Handgriffen, sondern eine ständige Suche nach Exzellenz, bei der jede Zutat auf das Milligramm genau kalibriert wird – für perfekte Strukturen, höchste Bekömmlichkeit und authentische Aromen. Hier trifft die Tradition der Backkunst auf Innovation und Präzision." },
-    { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#6E8CA0] to-[#5E7E90]",
+    { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#B45309] to-[#8C4A27]",
       body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. Mikilab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
-    { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#5aa0cf] to-[#2e6690]",
+    { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#D97706] to-[#B45309]",
       body: "Meine Methode verbindet die große italienische Tradition mit deutscher technischer Präzision. Ich arbeite täglich sowohl mit direkten als auch mit indirekten Methoden, bevorzuge aber klar Letztere: Vorteige wie Lievito Madre, Poolish, Biga und Kochstücke sind die wahre Seele meiner Rezepte. Indirekt zu arbeiten heißt, der Zeit Zeit zu geben, damit die Enzyme den Rohstoff verwandeln – für einzigartige Aromatik, knusprige Kruste und offene Porung. Dennoch liebe ich jede Nuance des Backens: das richtige Mehl zum richtigen Zeitpunkt und die strikte Einhaltung der Zeiten sind der Schlüssel, um jeden Teig zu beherrschen." },
-    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#234b6e] to-[#1B2127]",
+    { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#6E371C] to-[#2C1E16]",
       body: "Entspannt zu arbeiten bedeutet, die Backstube in eine organisierte, effiziente und stressfreie Umgebung zu verwandeln. Mit sorgfältiger Planung der Gärzeiten, präzisen Standards und zuverlässigen Techniken werden Überraschungen ausgeschlossen. Kleine praktische Einsichten, verbunden mit Erfahrung, vereinfachen den Alltag und machen die Arbeit gleichmäßig, sicher und angenehm. Mit Gelassenheit zu backen ist das Geheimnis für höchste Qualität, ohne je die Leidenschaft für dieses Handwerk zu verlieren." },
   ],
   en: [
-    { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#3f7cac] to-[#234b6e]",
+    { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#8C4A27] to-[#4A3222]",
       body: "MikiLab is my creative, scientific digital lab dedicated to the baking art. It was born to blend artisan passion with the methodical study of flours and fermentation. Here baking is not a mere sequence of gestures but a constant pursuit of excellence, where every ingredient is calibrated to the milligram for perfect structures, extreme digestibility and authentic flavours. It's where the tradition of baking meets innovation and precision." },
-    { id: "chi", title: "About me", icon: ChefHat, grad: "from-[#5aa0cf] to-[#2e6690]",
+    { id: "chi", title: "About me", icon: ChefHat, grad: "from-[#D97706] to-[#B45309]",
       body: "I'm Michele, a baker by passion even before by trade. I love spelt, sourdough and the scent of freshly baked bread. I created Mikilab to put my recipes and my way of working into every baker's pocket, with the same care I bring to the bakery every day." },
-    { id: "metodo", title: "My method", icon: FlaskConical, grad: "from-[#5aa0cf] to-[#2e6690]",
+    { id: "metodo", title: "My method", icon: FlaskConical, grad: "from-[#D97706] to-[#B45309]",
       body: "My method blends the great Italian tradition with German technical precision. I work daily with both direct and indirect methods, though I clearly prefer the latter: preferments such as sourdough, poolish, biga and pre-cooks like kochstück are the true soul of my recipes. Choosing indirect means giving time to time, letting enzymes transform the raw material for unique aromatic complexity, a fragrant crust and an open crumb. Yet I love every nuance of baking: the right flour at the right moment and strict respect for timings are the key to mastering any dough." },
-    { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#234b6e] to-[#1B2127]",
+    { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#6E371C] to-[#2C1E16]",
       body: "Working with peace of mind means turning the bakery into an organised, efficient and stress-free environment. With careful planning of fermentation times, precise standards and reliable techniques, surprises are eliminated. Small practical insights, combined with hands-on experience, simplify daily operations and make the work steady, safe and pleasant. Baking calmly is the secret to expressing top quality without ever losing the passion for this craft." },
   ],
 };
@@ -121,7 +123,7 @@ function HomeAvatarScene({ lang }) {
       {/* Solo FOTO: nessun audio/video, l'avatar comunica per iscritto (fumetto) */}
       <img src={`${BASE}/michele-avatar-full.jpg`} alt="Michele" data-testid="home-avatar-full"
         className="absolute inset-0 w-full h-full object-contain" loading="lazy" />
-      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#5aa0cf] via-[#6E8CA0] to-[#A9C5D4]" />
+      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#D97706] via-[#B45309] to-[#e7d5b4]" />
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
 
       <div className="absolute top-4 left-4 right-4 z-30 pointer-events-none">
@@ -199,6 +201,7 @@ export default function Home({ onNavigate }) {
   const [legal, setLegal] = useState(false);
   const [sapori, setSapori] = useState(false);
   const [calc, setCalc] = useState(false);
+  const [glossario, setGlossario] = useState(false);
   const [open, setOpen] = useState(null);
   const [storyOpen, setStoryOpen] = useState(() => {
     try { return !localStorage.getItem("mikilab_home_story_seen"); } catch { return true; }
@@ -256,11 +259,15 @@ export default function Home({ onNavigate }) {
 
   if (sapori) return <SaporiCasa onBack={() => setSapori(false)} />;
   if (calc) return <CalcolatoreMetodo onBack={() => setCalc(false)} />;
+  if (glossario) return <Glossario onBack={() => setGlossario(false)} />;
 
   return (
     <div className="pb-2 space-y-6">
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
+
+      {/* Banner dinamico: Il Sapore del Giorno */}
+      <SaporeDelGiorno />
 
       {/* HERO — Titolo principale + didascalia (tema arte bianca) */}
       <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#e4d6bd]"
@@ -318,6 +325,17 @@ export default function Home({ onNavigate }) {
         </button>
       </div>
 
+      {/* Glossario Interattivo dell'Arte Bianca */}
+      <button data-testid="home-glossario-btn" onClick={() => setGlossario(true)}
+        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-98 transition-all text-left">
+        <div className="w-12 h-12 rounded-2xl bg-[#8C4A27]/12 flex items-center justify-center shrink-0"><BookOpen className="w-6 h-6 text-[#8C4A27]" /></div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8] leading-tight">{L("Glossario dell'Arte Bianca", "Glossar der Backkunst", "Baking Craft Glossary", "Glosario del Arte Blanco")}</h3>
+          <p className="text-[#6B5546] dark:text-[#AEB8BF] text-[13px] leading-snug">{L("Autolisi, incordatura, poolish… i termini spiegati semplice", "Fachbegriffe einfach erklärt", "Technical terms in plain words", "Términos técnicos explicados")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-[#8C4A27]/70 shrink-0" />
+      </button>
+
 
       {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
       {isChampion && (
@@ -373,7 +391,7 @@ export default function Home({ onNavigate }) {
       {/* ===== MIKILAB + SCOPRI MIKILAB uniti in un'unica card ===== */}
       <div data-testid="home-story" className="-mt-2">
         <button data-testid="home-story-toggle" onClick={toggleStory}
-          className="w-full text-left relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white shadow-lg active:scale-98 transition-all">
+          className="w-full text-left relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#6E371C] to-[#8C4A27] text-white shadow-lg active:scale-98 transition-all">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="p-5" data-testid="home-slogan">
             <p className="font-display text-lg sm:text-xl font-bold leading-tight mt-1">MikiLab</p>

@@ -1937,3 +1937,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Dizionari FR/FA completi (≈660 chiavi ciascuno).
 - Recolor Arte Bianca completo (Home hero/banner social ancora blu #3f7cac).
 - Home banner "Il Sapore del Giorno" + Glossario Interattivo; percorsi Impara a livelli con quiz.
+
+## v-fork.21 (2026-08) — Traduzioni FR/FA complete + Recolor Arte Bianca + Home speciale
+- **TRADUZIONI FR + FA COMPLETE**: creati `i18n/fr.js` e `i18n/fa.js` (672 chiavi ciascuno = tutte le chiavi del dizionario), importati in `translations.js` (`fr`, `fa`). `t()` ora usa la lingua scelta → EN → IT. Verificato: nav/Ricette in FR (Accueil/Recettes/Ajouter), FA con `dir=rtl` e nav in persiano (خانه/دستورها). Script rigenerabili in `/app/memory/gen_fr.py` e `/app/memory/gen_fa.py` (usano json.dump → sintassi JS sempre valida). NB: alcune stringhe usano `tri()` LOCALE a 3 arg (es. footer App.js) che per fr/fa ricade su IT; il `tri()` del context ricade su EN. Rifinitura minore se serve.
+- **RECOLOR ARTE BIANCA**: footer globale (App.js) da blu (#234b6e/#3f7cac) a marrone (#6E371C/#8C4A27) + link legali #8C4A27; card concetto Home ("Cos'è/Chi sono/Metodo/Serenità") e banner "Scopri MikiLab" e barra accento avatar → toni farina/legno (#8C4A27/#B45309/#D97706).
+- **HOME SPECIALE**: `components/SaporeDelGiorno.jsx` — banner "Il Sapore del Giorno" (rotazione giornaliera 7 prodotti, multilingua) sotto l'avatar. `sections/Glossario.jsx` — Glossario Interattivo dell'Arte Bianca (19 termini con ricerca, apribile da `home-glossario-btn`). Entrambi verificati.
+### RESTA DA FARE
+- Rifinire i `tri()` locali (App.js footer, alcune sezioni) per FR/FA se si vuole zero fallback.
+- Recolor completo sezioni ancora blu (RecipeList/Community interni).
+- Percorsi Impara a livelli con quiz finali.

@@ -1,3 +1,6 @@
+import fr from "./fr.js";
+import fa from "./fa.js";
+
 export const translations = {
   it: {
     // Header
@@ -2796,26 +2799,6 @@ export const translations = {
     news_region_germania: "Germany",
     news_region_italia: "Italy",
   },
-  fr: {
-    brand_subtitle: "Le laboratoire de Michele",
-    brand_slogan: "Le monde artisanal pour boulangers, pâtissiers et pizzaïolos",
-    nav_home: "Accueil",
-    nav_ricette: "Recettes",
-    nav_maestro: "Ton Laboratoire",
-    nav_impara: "Apprendre",
-    lang_label: "Langue",
-    login_cta: "Se connecter",
-    theme_toggle: "Thème",
-  },
-  fa: {
-    brand_subtitle: "کارگاه میکله",
-    brand_slogan: "دنیای صنعتگری برای نانوایان، قنادها و پیتزاسازها",
-    nav_home: "خانه",
-    nav_ricette: "دستورها",
-    nav_maestro: "کارگاه شما",
-    nav_impara: "آموزش",
-    lang_label: "زبان",
-    login_cta: "ورود",
-    theme_toggle: "پوسته",
-  },
+  fr,
+  fa,
 };
