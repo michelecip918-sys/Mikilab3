@@ -77,10 +77,19 @@ export default function Maestro() {
   const openTool = (id) => { scrollRef.current = window.scrollY; setTool(id); window.scrollTo(0, 0); };
   const back = () => setTool(null);
   useEffect(() => {
-    try {
-      const pending = localStorage.getItem("mikilab_pending_tool");
-      if (pending) { localStorage.removeItem("mikilab_pending_tool"); setTool(pending); window.scrollTo(0, 0); }
-    } catch { /* */ }
+    const readPending = () => {
+      try {
+        const pending = localStorage.getItem("mikilab_pending_tool");
+        if (pending) { localStorage.removeItem("mikilab_pending_tool"); setTool(pending); window.scrollTo(0, 0); }
+      } catch { /* */ }
+    };
+    readPending();
+    const openTool = (e) => {
+      const id = e?.detail?.id;
+      if (id) { try { localStorage.removeItem("mikilab_pending_tool"); } catch { /* */ } setTool(id); window.scrollTo(0, 0); }
+    };
+    window.addEventListener("mikilab-open-lab-tool", openTool);
+    return () => window.removeEventListener("mikilab-open-lab-tool", openTool);
   }, []);
   useEffect(() => {
     if (!tool) requestAnimationFrame(() => window.scrollTo(0, scrollRef.current || 0));

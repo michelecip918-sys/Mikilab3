@@ -16,6 +16,7 @@ import EnterpriseHub from "@/sections/EnterpriseHub";
 import PaywallGate from "@/components/PaywallGate";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
+import SiteMenu from "@/components/SiteMenu";
 import { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
 import AuthScreen from "@/components/AuthScreen";
@@ -176,6 +177,7 @@ function App() {
         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px" }} />
       <div className="relative z-10">
       <Header />
+      <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} />
       <InstallBanner />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-64">
         <ErrorBoundary resetKey={tab} lang={lang}>

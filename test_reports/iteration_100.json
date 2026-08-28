@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend-only test of the new global hamburger SiteMenu (MikiLab). Verified: site-menu-open present in header on all tabs (Home/Ricette/Impara/Community/Lab); drawer opens via portal; all 6 sections + all 6 tool categories present; 44 tool buttons (>20 required); close button and backdrop click both close the drawer; section navigation works (Ricette title 'Le Ricette di MikiLab' in IT, 'The MikiLab Recipes' in EN); Sfide section opens sfide-overlay; tool navigation from a NON-maestro tab works (custodite -> custodite-list, timer -> Smart Timer Multi-Impasto) after admin login. No JS errors, no white screens. ONE REAL BUG: choosing a tool from the menu while ALREADY on the 'Il Tuo Laboratorio' tab does nothing (stale localStorage key then hijacks a later Lab visit).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "SiteMenu -> tool while already on 'Il Tuo Laboratorio' tab",
+        "issue": "Clicking any site-menu-tool-* when the current tab is already 'maestro' does NOT open/switch the tool (drawer closes, screen unchanged). Reproduced: opened tool timer from Home (OK), then chose site-menu-tool-custodite from the menu -> still Smart Timer; localStorage 'mikilab_pending_tool' remained 'custodite'. Root cause: Maestro.jsx reads localStorage 'mikilab_pending_tool' only in a mount-time useEffect ([] deps); navigate('maestro') while tab==='maestro' does not remount Maestro, so the pending id is never consumed. SECOND EFFECT: the stale key then hijacks the next Lab visit - clicking site-menu-section-maestro afterwards opened the stale tool (custodite) instead of the tool list.",
+        "affected_selectors": ["site-menu-tool-custodite", "site-menu-tool-timer", "site-menu-section-maestro"]
+      }
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Make tool selection work in-place: in SiteMenu.goTool also dispatch window event (e.g. 'mikilab-open-tool' with the id) and in Maestro.jsx add a window listener that calls setTool(id) + consumes/removes localStorage 'mikilab_pending_tool'. Alternatively remount Maestro with a key when a pending tool is set.",
+    "Always clear 'mikilab_pending_tool' after use (and defensively on Maestro unmount) to prevent the stale-tool hijack of a later 'Il Tuo Laboratorio' navigation."
+  ],
+  "critical_code_review_comments": [
+    "Maestro.jsx pending-tool useEffect has empty deps -> not reactive to repeat navigations from the global menu; use a custom window event instead of localStorage-only handoff.",
+    "localStorage handoff has no TTL/cleanup: a value written but never consumed permanently changes the Lab landing behaviour."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "93% (14/15 checks passed)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login OK, PRO gating passed for lab tools)",
+  "context_for_next_testing_agent": "Global SiteMenu verified end-to-end except the same-tab tool switch. Note: default UI language in a fresh browser session was EN, so assert section titles per selected lang (use lang-select). IntroGuide did not block interaction in headless runs. Tool count = 44.",
+  "rca_of_the_issue": "SiteMenu writes the tool id to localStorage then calls onNavigate('maestro'). If the active tab is already 'maestro', React does not remount Maestro, and Maestro only reads the key in a mount-time effect, so the tool never opens and the key stays behind, later hijacking the Lab landing screen."
+}

@@ -2017,3 +2017,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 
 ## v-fork.32 (2026-06) — Rimossa sezione Shop dalla Home
 - Rimosso il blocco `home-shop-corsi` ("MikiLab Shop & Corsi" con tab Shop Ricette / I Miei Corsi) in fondo alla Home + stato `shopTab` inutilizzato. La Home ora termina con Chiedi al Maestro → Condividi/Installa → Note legali.
+
+## v-fork.33 (2026-06) — Menù globale (hamburger) in tutto il sito
+- Nuovo `SiteMenu.jsx` montato in App: pulsante `site-menu-open` (icona a tre linee) nell'header, presente in OGNI tab. Apre un drawer laterale con: 5 Sezioni (Home, Le Ricette di MikiLab, Il Tuo Laboratorio, Impara, Community & Mercatino) + Motore Sfide, e TUTTI gli strumenti del Laboratorio raggruppati nelle 6 sezioni colorate (44 tool). Clic su un tool → apre direttamente lo strumento nel Laboratorio.
+- Espone `export const TOOLS/TOOL_CATS` da PianoProduzioneAI (riuso nel menù). Apertura via evento globale `mikilab-open-lab-tool` (+ localStorage `mikilab_pending_tool`): Maestro ascolta l'evento e legge il pending al mount → funziona sia da altri tab sia quando si è già nel Laboratorio (fix bug iteration_100 93

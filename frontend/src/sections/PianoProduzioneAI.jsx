@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -90,7 +90,7 @@ const GOAL_TEXT = {
 };
 
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
-const TOOLS = [
+export const TOOLS = [
   // 🍞 Laboratorio Panificazione
   { id: "generatore", Icon: Sparkles, cat: "panificazione", it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
   { id: "fermentazione", Icon: Activity, cat: "panificazione", it: "Fermentazione Predittiva", de: "Gärungs-Prognose", en: "Fermentation Forecast", es: "Fermentación Predictiva" },
@@ -143,7 +143,7 @@ const TOOLS = [
   { id: "shelf", Icon: CalendarClock, cat: "coldchain", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
 ];
 
-const TOOL_CATS = [
+export const TOOL_CATS = [
   { key: "panificazione", Icon: Wheat, color: "#B45309", it: "Laboratorio Panificazione", de: "Backlabor", en: "Baking Lab", es: "Lab de Panificación" },
   { key: "pizzeria", Icon: Pizza, color: "#C0574D", it: "Laboratorio Pizzeria", de: "Pizzeria-Labor", en: "Pizzeria Lab", es: "Lab de Pizzería" },
   { key: "pasticceria", Icon: Cake, color: "#A16207", it: "Laboratorio Pasticceria & Gelateria", de: "Konditorei & Eis", en: "Pastry & Gelato Lab", es: "Pastelería y Helado" },
@@ -155,6 +155,7 @@ const TOOL_CATS = [
 export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
   const { addTimer } = useTimers();
+  const [menuOpen, setMenuOpen] = useState(false);
   const startPhaseTimer = (label, min, repeat) => {
     addTimer(label, min, repeat);
     toast.success(tri3(lang, `Timer «${label}» avviato (${min}′)`, `Timer „${label}" gestartet (${min}′)`, `Timer "${label}" started (${min}′)`, `Temporizador "${label}" iniciado (${min}′)`));
@@ -681,10 +682,54 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         ]} />}
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#2f6a97] to-[#6E371C] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+        {onOpenTool && (
+          <button data-testid="lab-menu-open" onClick={() => setMenuOpen(true)} aria-label="Menu strumenti"
+            className="absolute top-4 right-4 w-11 h-11 rounded-xl bg-white/15 border border-white/30 flex items-center justify-center active:scale-95 hover:bg-white/25 transition-all">
+            <Menu className="w-6 h-6" />
+          </button>
+        )}
         <Sparkles className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Produktionsplan mit KI" : lang === "en" ? "AI Production Plan" : lang === "es" ? "Plan de Producción con IA" : "Piano di Produzione con IA"}</h1>
         <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Fülle die Daten aus und lass den Plan generieren" : lang === "en" ? "Fill in the data and generate the plan" : lang === "es" ? "Rellena los datos y genera tu plan de trabajo" : "Compila i dati e genera il tuo piano di lavoro"}</p>
       </div>
+
+      {onOpenTool && menuOpen && (
+        <div data-testid="lab-menu-drawer" className="fixed inset-0 z-[200]" onClick={() => setMenuOpen(false)}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" />
+          <div onClick={(e) => e.stopPropagation()}
+            className="absolute top-0 right-0 h-full w-[85%] max-w-sm bg-[#FAF5EC] dark:bg-[#1A1F24] shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+            <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-[#6E371C] text-white">
+              <span className="font-display text-lg font-bold flex items-center gap-2"><Wrench className="w-5 h-5" /> {tri3(lang, "Tutti gli strumenti", "Alle Werkzeuge", "All tools", "Todas las herramientas")}</span>
+              <button data-testid="lab-menu-close" onClick={() => setMenuOpen(false)} className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center active:scale-95"><X className="w-5 h-5" /></button>
+            </div>
+            <div className="p-3 space-y-4">
+              {TOOL_CATS.map((c) => {
+                const items = TOOLS.filter((tl) => tl.cat === c.key);
+                if (items.length === 0) return null;
+                return (
+                  <div key={c.key} data-testid={`lab-menu-cat-${c.key}`}>
+                    <div className="flex items-center gap-2 mb-1.5 pb-1 border-b" style={{ borderColor: `${c.color}40` }}>
+                      <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: `${c.color}1a` }}>
+                        <c.Icon className="w-3.5 h-3.5" style={{ color: c.color }} />
+                      </span>
+                      <span className="font-display text-sm font-bold" style={{ color: c.color }}>{tri3(lang, c.it, c.de, c.en, c.es)}</span>
+                    </div>
+                    <div className="grid grid-cols-1 gap-1">
+                      {items.map((tl) => (
+                        <button key={tl.id} data-testid={`lab-menu-tool-${tl.id}`} onClick={() => { setMenuOpen(false); onOpenTool(tl.id); window.scrollTo(0, 0); }}
+                          className="flex items-center gap-2.5 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] active:scale-98 hover:border-[#B45309]/60 transition-all">
+                          <tl.Icon className="w-4 h-4 shrink-0" style={{ color: c.color }} />
+                          <span className="text-sm font-medium text-[#2B303B] dark:text-[#e4eff8] truncate">{tri3(lang, tl.it, tl.de, tl.en, tl.es)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {onOpenTool && (
         <div data-testid="capo-quicklinks" className="mb-5">

@@ -1,4 +1,4 @@
-import { Moon, Sun, Clock, LogOut, LogIn, Crown } from "lucide-react";
+import { Moon, Sun, Clock, LogOut, LogIn, Crown, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -28,6 +28,10 @@ export default function Header() {
     >
       <div className="px-4 py-3 flex items-center justify-between gap-2">
       <div className="flex items-center gap-2.5 min-w-0 flex-1">
+        <button data-testid="site-menu-open" onClick={() => window.dispatchEvent(new Event("mikilab-open-menu"))} aria-label="Menu"
+          className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] flex items-center justify-center text-[#6E371C] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
+          <Menu className="w-5 h-5" />
+        </button>
         <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#232A31] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-full h-full object-cover" />
         </div>
