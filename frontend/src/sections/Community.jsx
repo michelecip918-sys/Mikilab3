@@ -169,6 +169,13 @@ export default function Community({ onNavigate }) {
 
   return (
     <div className="pb-40" data-testid="community">
+      <div className="flex items-center gap-3 mb-3" data-testid="community-title">
+        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-10 h-10 rounded-xl object-cover ring-1 ring-[#B45309]/40" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <div className="min-w-0">
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{tri("Social", "Social", "Social", "Social")}</h1>
+          <p className="text-sm text-[#7E8A93] leading-snug">{tri("La community dei fornai MikiLab", "Die MikiLab Bäcker-Community", "The MikiLab bakers community", "La comunidad de panaderos MikiLab", "La communauté des boulangers MikiLab", "جامعهٔ نانوایان میکی‌لب")}</p>
+        </div>
+      </div>
       {/* Header social — compatto (navigazione via menù globale) */}
       <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
         style={{ background: "linear-gradient(135deg,#123c4a 0%,#1f5a68 60%,#a9772f 100%)" }}>
@@ -191,57 +198,44 @@ export default function Community({ onNavigate }) {
         </div>
       </div>
 
-      <button data-testid="community-marketplace-top-btn"
-        onClick={() => { markMarketSeen(); setMarketNew(0); const el = document.querySelector("[data-testid='community-marketplace']"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#C88A2B] to-[#A66A15] text-white shadow-md active:scale-98 transition-all">
-        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-          <Store className="w-6 h-6" />
-          {marketNew > 0 && <span data-testid="market-new-badge" className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#C0574D] text-white text-[11px] font-extrabold flex items-center justify-center ring-2 ring-white">{marketNew}</span>}
-        </div>
-        <div className="flex-1 min-w-0 text-left">
-          <p className="font-display text-base font-bold leading-tight">{tri("Mercatino dell'Usato", "Gebraucht-Markt", "Used Marketplace", "Mercadillo de Segunda Mano")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{marketNew > 0 ? tri(`${marketNew} nuovi annunci da vedere!`, `${marketNew} neue Anzeigen!`, `${marketNew} new listings to see!`) : tri("Compra e vendi macchinari e attrezzature tra artigiani", "Kaufe & verkaufe Maschinen und Ausrüstung unter Handwerkern", "Buy & sell machinery and equipment among artisans", "Compra y vende maquinaria y equipos entre artesanos")}</p>
-        </div>
-        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Vai", "Los", "Go", "Ir")}</span>
-      </button>
+      {/* Azioni Social compatte (le stesse sono anche nel menu ☰) */}
+      <div className="grid grid-cols-4 gap-2 mb-4" data-testid="community-quick-actions">
+        <button data-testid="community-marketplace-top-btn"
+          onClick={() => { markMarketSeen(); setMarketNew(0); const el = document.querySelector("[data-testid='community-marketplace']"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-95 hover:border-[#B45309]/60 transition-all">
+          <div className="relative w-9 h-9 rounded-xl bg-[#C88A2B]/15 flex items-center justify-center">
+            <Store className="w-5 h-5 text-[#A66A15]" />
+            {marketNew > 0 && <span data-testid="market-new-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#C0574D] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{marketNew}</span>}
+          </div>
+          <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Mercatino", "Markt", "Market", "Mercado")}</span>
+        </button>
 
-      <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
-        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-md active:scale-98 transition-all">
-        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-          <UserPlus className="w-6 h-6" />
-          {friendReqCount > 0 && <span data-testid="friends-req-badge" className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#C0574D] text-white text-[11px] font-extrabold flex items-center justify-center ring-2 ring-white">{friendReqCount}</span>}
-        </div>
-        <div className="flex-1 min-w-0 text-left">
-          <p className="font-display text-base font-bold leading-tight">{tri("Amici & Colleghi", "Freunde & Kollegen", "Friends & Colleagues", "Amigos y Colegas")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{friendReqCount > 0 ? tri(`${friendReqCount} richieste di amicizia in attesa`, `${friendReqCount} Freundschaftsanfragen`, `${friendReqCount} friend requests pending`) : tri("Aggiungi colleghi e segui chi ti ispira", "Kollegen hinzufügen und folgen", "Add colleagues and follow who inspires you", "Añade colegas y sigue a quien te inspira")}</p>
-        </div>
-        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
-      </button>
+        <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-95 hover:border-[#B45309]/60 transition-all">
+          <div className="relative w-9 h-9 rounded-xl bg-[#8C4A27]/15 flex items-center justify-center">
+            <UserPlus className="w-5 h-5 text-[#8C4A27]" />
+            {friendReqCount > 0 && <span data-testid="friends-req-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#C0574D] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{friendReqCount}</span>}
+          </div>
+          <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Amici", "Freunde", "Friends", "Amigos")}</span>
+        </button>
 
-      <button data-testid="community-messages-btn" onClick={() => { if (needLogin()) return; setChatUser(null); setChatOpen(true); }}
-        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#7a4fbf] to-[#4a2e78] text-white shadow-md active:scale-98 transition-all">
-        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-          <MessageCircle className="w-6 h-6" />
-          {msgUnread > 0 && <span data-testid="messages-unread-badge" className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#C0574D] text-white text-[11px] font-extrabold flex items-center justify-center ring-2 ring-white">{msgUnread > 9 ? "9+" : msgUnread}</span>}
-        </div>
-        <div className="flex-1 min-w-0 text-left">
-          <p className="font-display text-base font-bold leading-tight">{tri("Messaggi", "Nachrichten", "Messages", "Mensajes")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{tri("Scrivi in privato ai tuoi amici fornai", "Schreibe deinen Bäcker-Freunden privat", "Message your baker friends privately", "Escribe en privado a tus amigos panaderos")}</p>
-        </div>
-        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
-      </button>
+        <button data-testid="community-messages-btn" onClick={() => { if (needLogin()) return; setChatUser(null); setChatOpen(true); }}
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-95 hover:border-[#B45309]/60 transition-all">
+          <div className="relative w-9 h-9 rounded-xl bg-[#7a4fbf]/15 flex items-center justify-center">
+            <MessageCircle className="w-5 h-5 text-[#7a4fbf]" />
+            {msgUnread > 0 && <span data-testid="messages-unread-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#C0574D] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{msgUnread > 9 ? "9+" : msgUnread}</span>}
+          </div>
+          <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Messaggi", "Nachrichten", "Messages", "Mensajes")}</span>
+        </button>
 
-      <button data-testid="community-map-btn" onClick={() => setMapOpen(true)}
-        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#2e8b6f] to-[#1c5c49] text-white shadow-md active:scale-98 transition-all">
-        <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-          <MapPin className="w-6 h-6" />
-        </div>
-        <div className="flex-1 min-w-0 text-left">
-          <p className="font-display text-base font-bold leading-tight">{tri("Mappa dei Fornai", "Bäcker-Karte", "Bakers Map", "Mapa de Panaderos")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{tri("Scopri i fornai MikiLab nel mondo e fatti conoscere", "Entdecke MikiLab-Bäcker weltweit und zeige dich", "Discover MikiLab bakers worldwide and get known", "Descubre panaderos MikiLab en el mundo y date a conocer")}</p>
-        </div>
-        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri("Apri", "Öffnen", "Open", "Abrir")}</span>
-      </button>
+        <button data-testid="community-map-btn" onClick={() => setMapOpen(true)}
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-95 hover:border-[#B45309]/60 transition-all">
+          <div className="relative w-9 h-9 rounded-xl bg-[#2e8b6f]/15 flex items-center justify-center">
+            <MapPin className="w-5 h-5 text-[#2e8b6f]" />
+          </div>
+          <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Mappa", "Karte", "Map", "Mapa")}</span>
+        </button>
+      </div>
 
       <FriendsPanel open={friendsOpen} onClose={() => setFriendsOpen(false)} onCount={setFriendReqCount}
         onMessage={(u) => { setFriendsOpen(false); setChatUser(u); setChatOpen(true); }} />

@@ -128,22 +128,21 @@ function HomeAvatarScene({ lang }) {
       <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#D97706] via-[#B45309] to-[#e7d5b4]" />
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
 
-      <div className="absolute top-4 left-4 right-4 z-30 pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 p-5 z-30 flex flex-col items-start gap-3">
         <AnimatePresence mode="wait">
           <motion.div
             key={idx} data-testid="home-scene-bubble"
-            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.4 }}
-            className="inline-block max-w-[85%] bg-[#1B2127]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-tl-md shadow-xl ring-1 ring-white/20"
+            className="inline-block max-w-[90%] bg-[#1B2127]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-bl-md shadow-xl ring-1 ring-white/20"
           >
             {phrases[idx]}
           </motion.div>
         </AnimatePresence>
-      </div>
-
-      <div className="absolute bottom-0 left-0 p-5 z-20 pointer-events-none">
-        <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-        <p className="text-white/85 text-sm mt-0.5">{mkTri(lang)("Il tuo compagno digitale", "Dein digitaler Begleiter", "Your digital companion", "Tu compañero digital")} 🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 🇮🇷</p>
+        <div className="pointer-events-none">
+          <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
+          <p className="text-white/85 text-sm mt-0.5">{mkTri(lang)("Il tuo compagno digitale", "Dein digitaler Begleiter", "Your digital companion", "Tu compañero digital")} 🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 🇮🇷</p>
+        </div>
       </div>
     </div>
   );
