@@ -1984,3 +1984,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **RIFINITURE LAB (Task 1)**: LabPasticceria → aggiunto calcolo dosi BAGNETTO (peso LM → acqua 18°C + 2% zucchero, 15-20 min). LabPizzeria Matrix → aggiunto input indice P/L che aggiusta la nota appretto (tenace/estensibile).
 ### NON FATTO — da fare prossimo giro
 - **Task 2 "Le Ricette Custodite di Michele & Mohammadreza"**: sezione con ricette tradizionali (Pane Matera/Altamura/Focaccia Barese + lievitati persiani), pulsante "Adatta alle mie dosi" (ricalcolo su farina utente), scheda condivisibile 1-click (IG/WhatsApp/stampa) + etichette QR. Feature ampia, rinviata per budget di contesto.
+
+## v-fork.28 (2026-08) — Avatar Michele taglio militare
+- Rigenerato avatar Michele con buzz-cut militare + fade, orecchino e tatuaggio avambraccio mantenuti, grembiule MikiLab. URL aggiornato in GuidaAvatar (c99aac6a...). Mohammadreza invariato (045758ee...). Verificato caricamento.
+- NB: il banner Home "MikiLab Avatar" (HomeAvatarScene) usa un asset animato separato, non aggiornato.
+### NON FATTO (budget contesto) — prossimo giro
+- Task 2 "Ricette Custodite" (Pani del Sud + persiani, "Adatta alle mie dosi", scheda condivisibile/QR).
+- Task 3: "Mani Sporche" (tasti XL + voce) e "Smart Timer Multi-Impasto". NB: Convertitore Lieviti e Voice Assistant ESISTONO già (ConvertitoreLieviti.jsx, VoiceAssistant).

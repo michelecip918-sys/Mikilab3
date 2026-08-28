@@ -61,7 +61,7 @@ export default function GuidaAvatar() {
 
         <div data-testid="guida-avatar-intro" className="flex items-start gap-3 rounded-2xl bg-white p-3.5 border border-[#E6D8C3]">
           <div className="w-20 h-20 rounded-full shrink-0 overflow-hidden border-4 shadow-md" style={{ borderColor: who === "michele" ? "#8C4A27" : "#D97706" }}>
-            <img src={who === "michele" ? "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/f5af702d79e706d50cf9967a9376551bf3a1ac2ae0df7f97263345823a6ed43b.jpeg" : "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/045758ee362c4a5e183bda0811b41950c1ed65e7bd1ea7b210377bf9a403c65a.jpeg"} alt={active.name} className="w-full h-full object-cover" />
+            <img src={who === "michele" ? "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/c99aac6a20fcfdfa27f74c3f3eeb65336c18f8eb8e0e888a4f8f79fd3254d134.jpeg" : "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/045758ee362c4a5e183bda0811b41950c1ed65e7bd1ea7b210377bf9a403c65a.jpeg"} alt={active.name} className="w-full h-full object-cover" />
           </div>
           <div>
             <p className="font-bold text-[#2C1E16]">{active.name} <span className="text-[11px] font-semibold text-[#8C7362]">· {active.role}</span></p>
