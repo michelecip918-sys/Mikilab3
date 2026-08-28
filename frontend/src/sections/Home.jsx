@@ -11,6 +11,7 @@ import { useAuth } from "@/auth/AuthContext";
 import ChatPanel from "@/components/ChatPanel";
 import LegalPage from "@/sections/LegalPage";
 import ShareInstall from "@/components/ShareInstall";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
@@ -183,7 +184,7 @@ const FEATURES = [
 
 export default function Home({ onNavigate }) {
   const { t, lang } = useLang();
-  const { user } = useAuth();
+  const { user, setAuthOpen } = useAuth();
   const [chat, setChat] = useState(false);
   const [convos, setConvos] = useState([]);
   const [chatUser, setChatUser] = useState(null);
@@ -272,27 +273,50 @@ export default function Home({ onNavigate }) {
       {/* Banner dinamico: Il Sapore del Giorno */}
       <SaporeDelGiorno onOpen={() => onNavigate && onNavigate("ricette")} />
 
-      {/* HERO — Titolo principale + didascalia (tema arte bianca) */}
+      {/* HERO — 100% gratis (lead magnet: account gratuito) */}
       <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#e4d6bd]"
         style={{ background: "linear-gradient(135deg,#f7efe0 0%,#efe2cb 55%,#e7d5b4 100%)" }}>
         <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
         <div className="relative">
-          <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-[#a9772f] mb-2">MikiLab</span>
+          <span data-testid="home-hero-badge" className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#3a6b3a] bg-[#dff0dd] border border-[#8fbf8f] rounded-full px-3 py-1 mb-3">
+            {L("✅ 100% Gratuito · Nessun pagamento · Nessuna carta",
+               "✅ 100% Kostenlos · Keine Zahlung · Keine Karte",
+               "✅ 100% Free · No payment · No card",
+               "✅ 100% Gratis · Sin pago · Sin tarjeta",
+               "✅ 100% Gratuit · Aucun paiement · Aucune carte",
+               "✅ ۱۰۰٪ رایگان · بدون پرداخت · بدون کارت")}
+          </span>
           <h1 className="font-display text-2xl sm:text-4xl font-extrabold leading-[1.1] text-[#4a3212] break-words">
-            {L("Ricette Esclusive & Consulenza Operativa",
-               "Exklusive Rezepte & operative Beratung",
-               "Exclusive Recipes & Operational Consulting",
-               "Recetas Exclusivas & Consultoría Operativa")}
-            <span className="block text-[#a9772f] text-xl sm:text-2xl mt-1.5 font-bold">
-              {L("per Pasticceria, Panificazione e Pizzeria", "für Konditorei, Bäckerei und Pizzeria", "for Pastry, Baking and Pizzeria", "para Pastelería, Panadería y Pizzería")}
-            </span>
+            {L("Il tuo laboratorio di panificazione, 100% gratis",
+               "Deine Backstube, 100% kostenlos",
+               "Your bakery lab, 100% free",
+               "Tu laboratorio de panificación, 100% gratis",
+               "Ton laboratoire de boulangerie, 100% gratuit",
+               "آزمایشگاه نان‌پزی شما، ۱۰۰٪ رایگان")}
           </h1>
           <p className="text-sm sm:text-base text-[#6b563a] leading-relaxed mt-3 max-w-xl">
-            {L("Accedi a ricette testate, schede tecniche e strategie pratiche per l'organizzazione del laboratorio, guadagnando l'accesso con le sfide della nostra community.",
-               "Zugang zu erprobten Rezepten, technischen Datenblättern und praktischen Strategien für die Labororganisation – freigeschaltet durch die Challenges unserer Community.",
-               "Access tested recipes, technical sheets and practical strategies to organise your lab, unlocking them through our community challenges.",
-               "Accede a recetas probadas, fichas técnicas y estrategias prácticas para organizar el laboratorio, desbloqueándolas con los retos de nuestra comunidad.")}
+            {L("Ricette testate col mio metodo, piani di produzione con l'IA, timer e calcolo costi. Tutto sbloccato, per sempre. Crea il tuo account gratis e inizia subito.",
+               "Erprobte Rezepte nach meiner Methode, KI-Produktionspläne, Timer und Kostenrechnung. Alles freigeschaltet, für immer. Erstelle dein kostenloses Konto und leg sofort los.",
+               "Tested recipes with my method, AI production plans, timers and cost calculation. Everything unlocked, forever. Create your free account and start now.",
+               "Recetas probadas con mi método, planes de producción con IA, temporizadores y cálculo de costes. Todo desbloqueado, para siempre. Crea tu cuenta gratis y empieza ya.",
+               "Des recettes testées selon ma méthode, des plans de production avec l'IA, des minuteurs et le calcul des coûts. Tout débloqué, pour toujours. Crée ton compte gratuit et commence tout de suite.",
+               "دستورهای آزموده‌شده به روش من، برنامه‌های تولید با هوش مصنوعی، تایمر و محاسبه هزینه. همه‌چیز باز، برای همیشه. حساب رایگان خود را بسازید و همین حالا شروع کنید.")}
           </p>
+          <div className="mt-4 flex flex-col sm:flex-row gap-2.5">
+            {!user ? (
+              <button data-testid="home-hero-cta" onClick={() => { setAuthOpen(true); try { window.dispatchEvent(new CustomEvent("mikilab-open-auth", { detail: { mode: "register" } })); } catch { /* */ } }}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#8C4A27] text-white font-bold text-sm sm:text-base px-6 py-3.5 shadow-lg active:scale-97 transition-all">
+                {L("Crea il tuo account gratis", "Kostenloses Konto erstellen", "Create your free account", "Crea tu cuenta gratis", "Crée ton compte gratuit", "حساب رایگان خود را بسازید")}
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            ) : (
+              <button data-testid="home-hero-cta" onClick={() => go("maestro")}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#8C4A27] text-white font-bold text-sm sm:text-base px-6 py-3.5 shadow-lg active:scale-97 transition-all">
+                {L("Vai al tuo Laboratorio", "Zu deiner Backstube", "Go to your Lab", "Ir a tu Laboratorio", "Aller à ton Laboratoire", "به آزمایشگاه خود بروید")}
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -585,7 +609,7 @@ export default function Home({ onNavigate }) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h3 className="font-display text-xl font-bold">{L("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}</h3>
-                <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">PRO</span>
+                <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">{L("Gratis", "Gratis", "Free", "Gratis", "Gratuit", "رایگان")}</span>
               </div>
               <p className="text-white/85 text-sm leading-snug">{L("Genera il piano IA, timer, costi, celle e impasti — tutto in un posto.", "KI-Plan, Timer, Kosten, Kammern & Teige — alles an einem Ort.", "Generate the AI plan, timers, costs, cells & doughs — all in one place.")}</p>
             </div>
@@ -606,6 +630,9 @@ export default function Home({ onNavigate }) {
         </div>
         <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
       </button>
+
+      {/* Newsletter — lead magnet 100% gratis */}
+      <NewsletterSignup />
 
       {/* Condividi & Installa app */}
       <ShareInstall />

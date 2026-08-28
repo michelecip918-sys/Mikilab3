@@ -2116,3 +2116,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - `rLoc`/`ingLoc` (lib/loc.js) ora fanno fallback alla mappa triFR/triFA per fr/fa.
 - Tradotti 110 nomi ricette MikiLab (+ mantenimento nomi propri: Matera, Altamura...) → mappa 2183 voci.
 - PianoProduzioneAI: selettori, lista "Scegli", lista spesa e schede usano rLoc/locName → nomi tradotti in tutte le lingue.
+
+## v-fork.48 (2026-06) — Strategia marketing 100% gratis: Hero + Newsletter
+- **Passo 1 — Hero Home riscritto** (`Home.jsx`, `home-hero`): titolo "Il tuo laboratorio di panificazione, 100% gratis", badge verde di fiducia `home-hero-badge` ("✅ 100% Gratuito · Nessun pagamento · Nessuna carta"), sottotitolo sul valore gratuito, CTA `home-hero-cta` → "Crea il tuo account gratis" (guest) apre AuthScreen in modalità **register**; se loggato → "Vai al tuo Laboratorio". Tutto in 6 lingue (it/de/en/es/fr/fa).
+- **Passo 3 — Newsletter lead magnet** (`components/NewsletterSignup.jsx`, montato in fondo alla Home prima di ShareInstall): sezione discreta "📬 Ricevi la ricetta della settimana", input `newsletter-email-input` + `newsletter-submit-btn`, stato successo `newsletter-success`. 6 lingue.
+- **Backend** (`server.py`): `POST /api/newsletter/subscribe` {email,lang,source} → upsert in `newsletter_subscribers`, rate-limit 20/h per IP, email di benvenuto via Resend (solo al primo insert, 4 lingue). `GET /api/admin/newsletter` (solo admin) per l'elenco iscritti. API frontend: `newsletterApi.subscribe`.
+- **Fix coerenza free**: rimosso il badge "PRO" dalla card "Il Tuo Laboratorio" nell'Home → ora "Gratis/Free".
+- **Auth register mode**: AuthScreen accetta `initialMode`; App ascolta l'evento `mikilab-open-auth` {mode} per aprire login/registrazione nella tab giusta.
+- Testato: curl (valida/duplicato/invalida 400) + screenshot interattivi (CTA apre register, newsletter mostra success). Dati di test ripuliti.

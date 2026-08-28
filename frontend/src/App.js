@@ -59,6 +59,7 @@ function App() {
   const { user, authOpen, setAuthOpen } = useAuth();
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [legalOpen, setLegalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("login");
   const [sfideOpen, setSfideOpen] = useState(false);
   const publicBatch = new URLSearchParams(window.location.search).get("lotto");
 
@@ -68,6 +69,13 @@ function App() {
     window.addEventListener("mikilab-go-challenges", h);
     return () => window.removeEventListener("mikilab-go-challenges", h);
   }, []);
+
+  // Apertura login/registrazione con modalità scelta (es. CTA "Crea account gratis")
+  useEffect(() => {
+    const h = (e) => { setAuthMode((e && e.detail && e.detail.mode) || "login"); setAuthOpen(true); };
+    window.addEventListener("mikilab-open-auth", h);
+    return () => window.removeEventListener("mikilab-open-auth", h);
+  }, [setAuthOpen]);
 
   // Gestione tasto Indietro: sincronizza i tab con la history del browser.
   const navigate = useCallback((next) => {
@@ -242,7 +250,7 @@ function App() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-[70] bg-[#f0f6fb] dark:bg-[#1B2127] overflow-auto"
           >
-            <AuthScreen onClose={() => setAuthOpen(false)} />
+            <AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} />
           </motion.div>
         )}
       </AnimatePresence>

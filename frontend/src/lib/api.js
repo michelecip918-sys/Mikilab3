@@ -97,6 +97,11 @@ export const newsApi = {
   list: () => api.get(`/news`).then((r) => r.data),
 };
 
+export const newsletterApi = {
+  subscribe: (email, lang, source = "home") =>
+    api.post(`/newsletter/subscribe`, { email, lang, source }).then((r) => r.data),
+};
+
 export const announcementsApi = {
   list: () => api.get(`/announcements`).then((r) => r.data),
   create: (data) => api.post(`/announcements`, data).then((r) => r.data),

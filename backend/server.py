@@ -4911,6 +4911,72 @@ async def admin_shop_waitlist(admin: dict = Depends(require_admin)):
 
 
 # ---------------------------------------------------------------------------
+# Newsletter (lead magnet 100% gratis): "Ricevi la ricetta della settimana"
+# ---------------------------------------------------------------------------
+class NewsletterReq(BaseModel):
+    email: str = Field(..., max_length=200)
+    lang: str = "it"
+    source: Optional[str] = "home"
+
+
+def _newsletter_welcome_html(lang: str) -> tuple:
+    L = (lang or "it").lower()
+    data = {
+        "it": ("🥖 Benvenuto nella famiglia MikiLab!",
+               "Grazie per esserti iscritto! Ogni settimana riceverai una ricetta del mio metodo — Biga, Poolish, Lievito Madre e il Miglioratore Naturale — spiegata passo passo.",
+               "Tutto è 100% gratis: nessun pagamento, nessuna carta. A presto, Michele."),
+        "de": ("🥖 Willkommen in der MikiLab-Familie!",
+               "Danke für deine Anmeldung! Jede Woche bekommst du ein Rezept nach meiner Methode — Biga, Poolish, Lievito Madre und der natürliche Backmittel — Schritt für Schritt erklärt.",
+               "Alles ist 100% kostenlos: keine Zahlung, keine Karte. Bis bald, Michele."),
+        "en": ("🥖 Welcome to the MikiLab family!",
+               "Thanks for subscribing! Every week you'll get a recipe from my method — Biga, Poolish, Sourdough and the Natural Improver — explained step by step.",
+               "Everything is 100% free: no payment, no card. See you soon, Michele."),
+        "es": ("🥖 ¡Bienvenido a la familia MikiLab!",
+               "¡Gracias por suscribirte! Cada semana recibirás una receta de mi método — Biga, Poolish, Masa Madre y el Mejorante Natural — explicada paso a paso.",
+               "Todo es 100% gratis: sin pagos, sin tarjeta. ¡Hasta pronto, Michele!"),
+    }
+    title, body1, body2 = data.get(L, data["it"])
+    html = (f"<div style='font-family:Arial,sans-serif;max-width:480px;margin:auto'>"
+            f"<h2 style='color:#B45309'>{title}</h2>"
+            f"<p style='color:#3F4A54;line-height:1.6'>{body1}</p>"
+            f"<p style='color:#3F4A54;line-height:1.6'>{body2}</p>"
+            f"<p style='color:#a9772f;font-weight:bold'>MikiLab · 100% gratis 🇮🇹 🇩🇪</p></div>")
+    return title, html
+
+
+@api_router.post("/newsletter/subscribe")
+async def newsletter_subscribe(body: NewsletterReq, request: Request):
+    email = (body.email or "").strip().lower()
+    if not email or "@" not in email or "." not in email.split("@")[-1]:
+        raise HTTPException(400, "Email non valida")
+    if not await _rate_limit("newsletter_ip", _client_ip(request), 20, 3600):
+        raise HTTPException(status_code=429, detail="Troppe richieste. Riprova più tardi.")
+    existing = await db.newsletter_subscribers.find_one({"email": email})
+    already = bool(existing)
+    await db.newsletter_subscribers.update_one(
+        {"email": email},
+        {"$set": {"email": email, "lang": body.lang, "source": body.source, "updated_at": now_iso()},
+         "$setOnInsert": {"id": str(uuid.uuid4()), "created_at": now_iso()}},
+        upsert=True,
+    )
+    if RESEND_API_KEY and not already:
+        try:
+            subject, html = _newsletter_welcome_html(body.lang)
+            await asyncio.to_thread(_resend.Emails.send, {
+                "from": f"MikiLab <{SENDER_EMAIL}>", "to": [email], "subject": subject, "html": html})
+        except Exception:
+            logger.exception("newsletter welcome email error")
+    return {"ok": True, "already": already}
+
+
+@api_router.get("/admin/newsletter")
+async def admin_newsletter(admin: dict = Depends(require_admin)):
+    rows = await db.newsletter_subscribers.find({}, {"_id": 0}).sort("created_at", -1).to_list(5000)
+    return {"count": len(rows), "subscribers": rows}
+
+
+
+# ---------------------------------------------------------------------------
 # Impostazioni sito editabili dall'admin: numero WhatsApp, testi fumetti avatar,
 # copertine delle cartelle ricette. Lettura pubblica, scrittura solo admin.
 # ---------------------------------------------------------------------------

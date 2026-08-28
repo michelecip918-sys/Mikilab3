@@ -5,11 +5,11 @@ import { authApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 
-export default function AuthScreen({ onClose }) {
+export default function AuthScreen({ onClose, initialMode = "login" }) {
   const { setUser } = useAuth();
   const { lang, tri } = useLang();
   const de = lang === "de";
-  const [mode, setMode] = useState("login");
+  const [mode, setMode] = useState(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
