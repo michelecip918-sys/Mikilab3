@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useRef, useState, useEffect } from "react";
 import { Mic, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
@@ -92,7 +93,7 @@ export default function VoiceAssistant({ onNavigate }) {
     setTranscript("");
     const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
     const rec = new Rec();
-    rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
+    rec.lang = mkTri(lang)("it-IT", "de-DE", "en-GB");
     rec.interimResults = false;
     rec.maxAlternatives = 1;
     rec.continuous = false;

@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
@@ -89,15 +90,15 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
     const s = `${form.name || ""} ${form.menu_category || ""} ${form.preferment_type || ""}`.toLowerCase();
     let p;
     if (/panettone|colomba|pandoro|lievitato/.test(s))
-      p = { energy_kcal: 360, fat: 15, saturates: 8, carbs: 50, sugars: 26, fibre: 2, protein: 7, salt: 0.5, allergens: lang === "de" ? "Gluten, Eier, Milch, Schalenfrüchte" : lang === "en" ? "Gluten, Eggs, Milk, Nuts" : lang === "es" ? "Gluten, Huevos, Leche, Frutos secos" : "Glutine, Uova, Latte, Frutta a guscio" };
+      p = { energy_kcal: 360, fat: 15, saturates: 8, carbs: 50, sugars: 26, fibre: 2, protein: 7, salt: 0.5, allergens: mkTri(lang)("Glutine, Uova, Latte, Frutta a guscio", "Gluten, Eier, Milch, Schalenfrüchte", "Gluten, Eggs, Milk, Nuts", "Gluten, Huevos, Leche, Frutos secos") };
     else if (/focaccia|pizza|puccia/.test(s))
-      p = { energy_kcal: 270, fat: 6, saturates: 1, carbs: 45, sugars: 2, fibre: 2.5, protein: 7.5, salt: 1.4, allergens: lang === "de" ? "Gluten" : lang === "en" ? "Gluten" : lang === "es" ? "Gluten" : "Glutine" };
+      p = { energy_kcal: 270, fat: 6, saturates: 1, carbs: 45, sugars: 2, fibre: 2.5, protein: 7.5, salt: 1.4, allergens: mkTri(lang)("Glutine", "Gluten", "Gluten", "Gluten") };
     else if (/brezel|laugen|taralli|frisell/.test(s))
-      p = { energy_kcal: 300, fat: 4, saturates: 0.8, carbs: 55, sugars: 2, fibre: 2.5, protein: 9, salt: 2.2, allergens: lang === "de" ? "Gluten" : lang === "en" ? "Gluten" : lang === "es" ? "Gluten" : "Glutine" };
+      p = { energy_kcal: 300, fat: 4, saturates: 0.8, carbs: 55, sugars: 2, fibre: 2.5, protein: 9, salt: 2.2, allergens: mkTri(lang)("Glutine", "Gluten", "Gluten", "Gluten") };
     else if (/croissant|plunder|sfogli|brioche|zopf|latte/.test(s))
-      p = { energy_kcal: 400, fat: 20, saturates: 12, carbs: 45, sugars: 10, fibre: 2, protein: 7, salt: 0.9, allergens: lang === "de" ? "Gluten, Milch, Eier" : lang === "en" ? "Gluten, Milk, Eggs" : lang === "es" ? "Gluten, Leche, Huevos" : "Glutine, Latte, Uova" };
+      p = { energy_kcal: 400, fat: 20, saturates: 12, carbs: 45, sugars: 10, fibre: 2, protein: 7, salt: 0.9, allergens: mkTri(lang)("Glutine, Latte, Uova", "Gluten, Milch, Eier", "Gluten, Milk, Eggs", "Gluten, Leche, Huevos") };
     else
-      p = { energy_kcal: 250, fat: 1.5, saturates: 0.3, carbs: 49, sugars: 2, fibre: 3.5, protein: 8.5, salt: 1.2, allergens: lang === "de" ? "Gluten" : lang === "en" ? "Gluten" : lang === "es" ? "Gluten" : "Glutine" };
+      p = { energy_kcal: 250, fat: 1.5, saturates: 0.3, carbs: 49, sugars: 2, fibre: 3.5, protein: 8.5, salt: 1.2, allergens: mkTri(lang)("Glutine", "Gluten", "Gluten", "Gluten") };
     setForm((f) => ({ ...f, label: { ...(f.label || emptyLabel), ...p, net_weight_g: (f.label && f.label.net_weight_g) || "" } }));
   };
 
@@ -219,12 +220,12 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           </div>
 
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Echter Name (optional)" : lang === "en" ? "Real name (optional)" : lang === "es" ? "Nombre real (opcional)" : "Nome reale (opzionale)"}</label>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Nome reale (opzionale)", "Echter Name (optional)", "Real name (optional)", "Nombre real (opcional)")}</label>
             <input
               data-testid="recipe-realname-input"
               value={form.real_name || ""}
               onChange={(e) => set("real_name", e.target.value)}
-              placeholder={lang === "de" ? "z. B. Kartoffelbrot" : lang === "en" ? "e.g. Potato bread" : lang === "es" ? "p. ej. Pan de patata" : "es. Pane alle Patate"}
+              placeholder={mkTri(lang)("es. Pane alle Patate", "z. B. Kartoffelbrot", "e.g. Potato bread", "p. ej. Pan de patata")}
               className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none"
             />
           </div>
@@ -451,12 +452,12 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#E6D8C3] dark:border-[#38424B]" /> : null}
               <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#8C4A27] hover:bg-[#336a94] text-white rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
-                {uploading ? t("photo_uploading") : (lang === "de" ? "Jetzt aufnehmen" : lang === "en" ? "Take photo" : lang === "es" ? "Hacer foto" : "Scatta ora")}
+                {uploading ? t("photo_uploading") : (mkTri(lang)("Scatta ora", "Jetzt aufnehmen", "Take photo", "Hacer foto"))}
                 <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
               <label data-testid="recipe-photo-attach" className={`cursor-pointer bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2B303B] dark:text-[#e4eff8] ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 <ImagePlus className="w-4 h-4 text-[#B45309]" />
-                {lang === "de" ? "Anhängen" : lang === "en" ? "Attach" : lang === "es" ? "Adjuntar" : "Allega"}
+                {mkTri(lang)("Allega", "Anhängen", "Attach", "Adjuntar")}
                 <input type="file" accept="image/*" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
               {form.image_url && !uploading ? <button onClick={() => set("image_url", "")} className="text-[#C0574D] p-1"><X className="w-4 h-4" /></button> : null}
@@ -595,23 +596,23 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
 
           {/* Etichetta UE — dichiarazione nutrizionale per 100 g + allergeni + ingredienti */}
           <div className="pt-2 border-t border-[#E6D8C3] dark:border-[#38424B]" data-testid="recipe-label-section">
-            <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-1">{lang === "de" ? "EU-Etikett (Nährwerte)" : lang === "en" ? "EU label (nutrition)" : lang === "es" ? "Etiqueta UE (valores nutricionales)" : "Etichetta UE (valori nutrizionali)"}</p>
-            <p className="text-[11px] text-[#7E8A93] mb-2 leading-snug">{lang === "de" ? "Werte pro 100 g. Energie in kJ wird automatisch berechnet." : lang === "en" ? "Values per 100 g. Energy in kJ is auto-calculated." : lang === "es" ? "Valores por 100 g. La energía en kJ se calcula automáticamente." : "Valori per 100 g. L'energia in kJ è calcolata in automatico."}</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-1">{mkTri(lang)("Etichetta UE (valori nutrizionali)", "EU-Etikett (Nährwerte)", "EU label (nutrition)", "Etiqueta UE (valores nutricionales)")}</p>
+            <p className="text-[11px] text-[#7E8A93] mb-2 leading-snug">{mkTri(lang)("Valori per 100 g. L'energia in kJ è calcolata in automatico.", "Werte pro 100 g. Energie in kJ wird automatisch berechnet.", "Values per 100 g. Energy in kJ is auto-calculated.", "Valores por 100 g. La energía en kJ se calcula automáticamente.")}</p>
             <button type="button" data-testid="label-fill-typical" onClick={fillTypicalLabel}
               className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] bg-[#8C4A27]/10 border border-[#8C4A27]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
-              ✨ {lang === "de" ? "Typische Werte einsetzen (zu prüfen)" : lang === "en" ? "Fill typical values (to verify)" : lang === "es" ? "Rellenar valores típicos (a verificar)" : "Compila valori tipici (da verificare)"}
+              ✨ {mkTri(lang)("Compila valori tipici (da verificare)", "Typische Werte einsetzen (zu prüfen)", "Fill typical values (to verify)", "Rellenar valores típicos (a verificar)")}
             </button>
             <div className="grid grid-cols-2 gap-2">
               {[
-                ["energy_kcal", lang === "de" ? "Energie (kcal)" : lang === "en" ? "Energy (kcal)" : lang === "es" ? "Energía (kcal)" : "Energia (kcal)"],
-                ["fat", lang === "de" ? "Fett (g)" : lang === "en" ? "Fat (g)" : lang === "es" ? "Grasas (g)" : "Grassi (g)"],
-                ["saturates", lang === "de" ? "davon gesättigt (g)" : lang === "en" ? "of which saturates (g)" : lang === "es" ? "de las cuales saturadas (g)" : "di cui saturi (g)"],
-                ["carbs", lang === "de" ? "Kohlenhydrate (g)" : lang === "en" ? "Carbohydrate (g)" : lang === "es" ? "Hidratos de carbono (g)" : "Carboidrati (g)"],
-                ["sugars", lang === "de" ? "davon Zucker (g)" : lang === "en" ? "of which sugars (g)" : lang === "es" ? "de los cuales azúcares (g)" : "di cui zuccheri (g)"],
-                ["fibre", lang === "de" ? "Ballaststoffe (g)" : lang === "en" ? "Fibre (g)" : lang === "es" ? "Fibra (g)" : "Fibre (g)"],
-                ["protein", lang === "de" ? "Eiweiß (g)" : lang === "en" ? "Protein (g)" : lang === "es" ? "Proteínas (g)" : "Proteine (g)"],
-                ["salt", lang === "de" ? "Salz (g)" : lang === "en" ? "Salt (g)" : lang === "es" ? "Sal (g)" : "Sale (g)"],
-                ["net_weight_g", lang === "de" ? "Nettogewicht (g)" : lang === "en" ? "Net weight (g)" : lang === "es" ? "Peso neto (g)" : "Peso netto (g)"],
+                ["energy_kcal", mkTri(lang)("Energia (kcal)", "Energie (kcal)", "Energy (kcal)", "Energía (kcal)")],
+                ["fat", mkTri(lang)("Grassi (g)", "Fett (g)", "Fat (g)", "Grasas (g)")],
+                ["saturates", mkTri(lang)("di cui saturi (g)", "davon gesättigt (g)", "of which saturates (g)", "de las cuales saturadas (g)")],
+                ["carbs", mkTri(lang)("Carboidrati (g)", "Kohlenhydrate (g)", "Carbohydrate (g)", "Hidratos de carbono (g)")],
+                ["sugars", mkTri(lang)("di cui zuccheri (g)", "davon Zucker (g)", "of which sugars (g)", "de los cuales azúcares (g)")],
+                ["fibre", mkTri(lang)("Fibre (g)", "Ballaststoffe (g)", "Fibre (g)", "Fibra (g)")],
+                ["protein", mkTri(lang)("Proteine (g)", "Eiweiß (g)", "Protein (g)", "Proteínas (g)")],
+                ["salt", mkTri(lang)("Sale (g)", "Salz (g)", "Salt (g)", "Sal (g)")],
+                ["net_weight_g", mkTri(lang)("Peso netto (g)", "Nettogewicht (g)", "Net weight (g)", "Peso neto (g)")],
               ].map(([k, lbl]) => (
                 <div key={k}>
                   <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{lbl}</label>
@@ -624,20 +625,20 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               ))}
             </div>
             <div className="mt-2">
-              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Allergene (durch Komma getrennt)" : lang === "en" ? "Allergens (comma separated)" : lang === "es" ? "Alérgenos (separados por comas)" : "Allergeni (separati da virgola)"}</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Allergeni (separati da virgola)", "Allergene (durch Komma getrennt)", "Allergens (comma separated)", "Alérgenos (separados por comas)")}</label>
               <input
                 data-testid="label-allergens-input" value={lab.allergens}
                 onChange={(e) => setLab("allergens", e.target.value)}
-                placeholder={lang === "de" ? "z. B. Gluten, Milch, Eier" : lang === "en" ? "e.g. Gluten, Milk, Eggs" : lang === "es" ? "p. ej. Gluten, Leche, Huevos" : "es. Glutine, Latte, Uova"}
+                placeholder={mkTri(lang)("es. Glutine, Latte, Uova", "z. B. Gluten, Milch, Eier", "e.g. Gluten, Milk, Eggs", "p. ej. Gluten, Leche, Huevos")}
                 className="mt-0.5 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
               />
             </div>
             <div className="mt-2">
-              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Zutatenliste" : lang === "en" ? "Ingredients list" : lang === "es" ? "Lista de ingredientes" : "Elenco ingredienti"}</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Elenco ingredienti", "Zutatenliste", "Ingredients list", "Lista de ingredientes")}</label>
               <textarea
                 data-testid="label-ingredients-input" rows={2} value={lab.ingredients}
                 onChange={(e) => setLab("ingredients", e.target.value)}
-                placeholder={lang === "de" ? "WEIZENMEHL, Wasser, Sauerteig, Salz…" : lang === "en" ? "WHEAT flour, water, sourdough, salt…" : lang === "es" ? "Harina de TRIGO, agua, masa madre, sal…" : "Farina di GRANO tenero, acqua, lievito madre, sale…"}
+                placeholder={mkTri(lang)("Farina di GRANO tenero, acqua, lievito madre, sale…", "WEIZENMEHL, Wasser, Sauerteig, Salz…", "WHEAT flour, water, sourdough, salt…", "Harina de TRIGO, agua, masa madre, sal…")}
                 className="mt-0.5 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27] resize-none"
               />
             </div>

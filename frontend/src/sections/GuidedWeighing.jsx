@@ -155,7 +155,7 @@ export default function GuidedWeighing() {
   const startVoiceCmd = () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { toast.error(tri("Riconoscimento vocale non supportato", "Spracherkennung nicht unterstützt", "Speech recognition not supported")); return; }
-    const r = new SR(); r.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT"; r.continuous = false;
+    const r = new SR(); r.lang = mkTri(lang)("it-IT", "de-DE", "en-GB"); r.continuous = false;
     r.onresult = (e) => { const t = e.results[0][0].transcript.toLowerCase(); if (/avanti|prossimo|next|weiter/.test(t) && state !== "over") next(); };
     r.start(); toast.message(tri("Di' 'Avanti'…", "Sag 'Weiter'…", "Say 'Next'…"));
   };
@@ -300,7 +300,7 @@ export default function GuidedWeighing() {
           {sessSaved ? (
             <div className="flex items-center gap-2 text-[#B45309] font-semibold text-sm" data-testid="gw-savesession-ok"><CheckCircle2 className="w-5 h-5" /> {tri("Salvata nel Diario Impasti", "Im Teig-Tagebuch gespeichert", "Saved to the Dough Log")}</div>
           ) : !sessOpen ? (
-            <button data-testid="gw-savesession-open" onClick={() => { setSessOpen(true); setSess((s) => ({ ...s, recipe_name: s.recipe_name || tri("Pesata del ", "Wiegen vom ", "Weighing of ") + new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT") })); }} className="w-full flex items-center justify-center gap-2 text-[#8C4A27] font-semibold py-1">
+            <button data-testid="gw-savesession-open" onClick={() => { setSessOpen(true); setSess((s) => ({ ...s, recipe_name: s.recipe_name || tri("Pesata del ", "Wiegen vom ", "Weighing of ") + new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB")) })); }} className="w-full flex items-center justify-center gap-2 text-[#8C4A27] font-semibold py-1">
               <Thermometer className="w-4 h-4" /> {tri("Salva come sessione impasto (Giorno Dopo)", "Als Teig-Sitzung speichern (Tag danach)", "Save as dough session (Day After)")}
             </button>
           ) : (

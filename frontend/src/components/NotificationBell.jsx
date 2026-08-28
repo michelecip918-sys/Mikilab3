@@ -9,7 +9,7 @@ import { mkTri } from "@/i18n/triMaps";
 export default function NotificationBell() {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const loc = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
+  const loc = mkTri(lang)("it-IT", "de-DE", "en-GB");
   const { user } = useAuth();
 
   const [open, setOpen] = useState(false);

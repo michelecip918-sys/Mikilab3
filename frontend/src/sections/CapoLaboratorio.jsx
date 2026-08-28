@@ -223,10 +223,10 @@ function LabCamera() {
       {!open ? (
         <div className="grid grid-cols-2 gap-2">
           <button data-testid="capo-film-start" onClick={start} className="bg-[#8C4A27] hover:bg-[#336a94] text-white rounded-xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2">
-            <Camera className="w-4 h-4" /> {lang === "de" ? "Jetzt filmen" : lang === "en" ? "Film now" : "Filma ora"}
+            <Camera className="w-4 h-4" /> {mkTri(lang)("Filma ora", "Jetzt filmen", "Film now")}
           </button>
           <label data-testid="capo-film-attach" className="cursor-pointer bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 text-[#2B303B] dark:text-[#e4eff8]">
-            <ImagePlus className="w-4 h-4 text-[#B45309]" /> {lang === "de" ? "Anhängen" : lang === "en" ? "Attach" : "Allega"}
+            <ImagePlus className="w-4 h-4 text-[#B45309]" /> {mkTri(lang)("Allega", "Anhängen", "Attach")}
             <input type="file" accept="image/*" className="hidden" onChange={onAttach} />
           </label>
         </div>

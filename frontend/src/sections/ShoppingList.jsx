@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { ShoppingCart, AlertTriangle, Share2, Printer } from "lucide-react";
@@ -40,28 +41,28 @@ export default function ShoppingList() {
         <div className="w-11 h-11 rounded-2xl bg-[#8C4A27] flex items-center justify-center"><ShoppingCart className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("tool_spesa")}</h1>
-          <p className="text-sm text-[#7E8A93]">{lang === "de" ? "Zutaten aus dem Wochenplan" : lang === "en" ? "Ingredients from the weekly plan" : "Ingredienti dal piano settimanale"}</p>
+          <p className="text-sm text-[#7E8A93]">{mkTri(lang)("Ingredienti dal piano settimanale", "Zutaten aus dem Wochenplan", "Ingredients from the weekly plan")}</p>
         </div>
       </div>
 
       {loaded && !hasData ? (
         <div className="flex items-start gap-3 bg-[#B45309]/15 border border-[#B45309]/30 rounded-2xl p-4">
           <AlertTriangle className="w-5 h-5 text-[#8C4A27] shrink-0 mt-0.5" />
-          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? "Kein Wochenplan gefunden. Trage zuerst Produkte in 'Woche planen' ein und speichere." : lang === "en" ? "No plan found. First add products in 'Plan the Week' and save." : "Nessun piano trovato. Inserisci prima i prodotti in 'Pianifica la Settimana' e salva."}</p>
+          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{mkTri(lang)("Nessun piano trovato. Inserisci prima i prodotti in 'Pianifica la Settimana' e salva.", "Kein Wochenplan gefunden. Trage zuerst Produkte in 'Woche planen' ein und speichere.", "No plan found. First add products in 'Plan the Week' and save.")}</p>
         </div>
       ) : (
         <>
           <div className="print-area">
-            <PrintHeader title={lang === "de" ? "Einkaufsliste" : lang === "en" ? "Shopping list" : "Lista della spesa"} lang={lang} />
+            <PrintHeader title={mkTri(lang)("Lista della spesa", "Einkaufsliste", "Shopping list")} lang={lang} />
             <SupplierOrder totals={totals} />
           </div>
-          <button data-testid="spesa-share" onClick={() => shareContent(lang === "de" ? "Einkaufsliste — MikiLab" : lang === "en" ? "Shopping list — MikiLab" : "Lista della spesa — MikiLab", buildShoppingText(totals, lang), lang)}
+          <button data-testid="spesa-share" onClick={() => shareContent(mkTri(lang)("Lista della spesa — MikiLab", "Einkaufsliste — MikiLab", "Shopping list — MikiLab"), buildShoppingText(totals, lang), lang)}
             className="mt-3 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#E6D8C3] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
-            <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : "Condividi"}
+            <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share")}
           </button>
           <button data-testid="spesa-pdf" onClick={() => window.print()}
             className="no-print mt-2 w-full bg-[#B45309] hover:bg-[#336a94] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
-            <Printer className="w-5 h-5" /> {lang === "de" ? "Als PDF / Drucken" : lang === "en" ? "PDF / Print" : "PDF / Stampa"}
+            <Printer className="w-5 h-5" /> {mkTri(lang)("PDF / Stampa", "Als PDF / Drucken", "PDF / Print")}
           </button>
         </>
       )}

@@ -147,7 +147,7 @@ export default function SourdoughTracker() {
               return (
                 <div key={e.id} className={`flex items-center justify-between rounded-xl px-3 py-2 border text-sm ${ok ? "bg-[#B45309]/12 border-[#B45309]/30" : "bg-white dark:bg-[#232A31] border-[#E6D8C3] dark:border-[#38424B]"}`}>
                   <span className="font-mono-data font-semibold text-[#2B303B] dark:text-[#e4eff8]">pH {Number(e.ph).toFixed(1)} · {e.temp}°C</span>
-                  <span className="text-xs text-[#7E8A93]">{new Date(e.ts).toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" })}</span>
+                  <span className="text-xs text-[#7E8A93]">{new Date(e.ts).toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}</span>
                 </div>
               );
             })}

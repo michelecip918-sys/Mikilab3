@@ -1,7 +1,8 @@
+import { mkTri } from "@/i18n/triMaps";
 // Intestazione visibile SOLO in stampa/PDF (logo MikiLab + titolo + data).
 export default function PrintHeader({ title = "", lang = "it" }) {
   const base = process.env.PUBLIC_URL || "";
-  const d = new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT");
+  const d = new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"));
   return (
     <div className="print-only" style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: "2px solid #8C4A27", paddingBottom: 8 }}>

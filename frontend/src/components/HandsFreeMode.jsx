@@ -13,7 +13,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
   const lang = langProp || ctxLang;
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { addTimer } = useTimers();
-  const voiceLang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
+  const voiceLang = mkTri(lang)("it-IT", "de-DE", "en-GB", "es-ES");
 
   const steps = useMemo(() => {
     const raw = (procedure || "").split(/\n+/).map((s) => s.trim()).filter(Boolean);

@@ -2106,3 +2106,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Contenuti dinamici/seed FR/FA**: WEEKLY_THEMES + endpoint weekly-theme (fr/fa), academy_quiz (fr/fa + lang_name), BAKEALONG_THEMES (fr/fa), `_translate_recipe_lang`/`_LANG_NAMES` (fr/fa), diagnosi/coach lang allargati.
 - **Scorciatoie personalizzabili**: `QUICK_CATALOG` (16 strumenti) nel Piano Produzione IA; pulsante "Personalizza" (capo-quicktools-edit) → editor toggle (max 6), persistenza localStorage `mikilab_quicktools`, feedback toast al superamento di 6.
 - Verificato: testing_agent iteration_108 backend 100% (16/16), frontend 85% (residuo Shop poi rimosso); smoke test finale OK.
+
+## v-fork.46 (2026-06) — Titoli sezione + copertura FR/FA ampliata
+- Titoli in cima a Ricette/Your Lab/Impara (6 lingue). Fix troncamento: rimosso hyphens-auto (parole tagliate a metà).
+- Causa "non traduce tutto": ~144 ternari hardcoded `lang==="de"?...` che bypassavano la mappa. Codemod (codemod_ternary.py) ha convertito 112 in mkTri(lang)(...) su 32 file (compila ok). Restano 32 con rami non-letterali.
+- Estratte+tradotte 66 nuove stringhe (ex-ternari) → mappa FR/FA ora 2073 voci.

@@ -30,7 +30,7 @@ export default function AcademyCoach() {
     try {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(cleanForSpeech(raw));
-      u.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
+      u.lang = mkTri(lang)("it-IT", "de-DE", "en-GB", "es-ES");
       u.rate = 1; u.pitch = 1;
       window.speechSynthesis.speak(u);
     } catch { /* ignore */ }
@@ -96,7 +96,7 @@ export default function AcademyCoach() {
     if (listening) { try { recRef.current?.stop(); } catch { /* */ } return; }
     const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
     const rec = new Rec();
-    rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
+    rec.lang = mkTri(lang)("it-IT", "de-DE", "en-GB", "es-ES");
     rec.interimResults = false; rec.maxAlternatives = 1; rec.continuous = false;
     rec.onstart = () => setListening(true);
     rec.onresult = (e) => { const heard = e.results[0][0].transcript; setListening(false); if (heard) ask(heard); };

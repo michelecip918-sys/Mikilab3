@@ -56,7 +56,7 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
     const [hh, mm] = (target || "00:00").split(":").map((x) => parseInt(x, 10) || 0);
     const end = new Date(); end.setHours(hh, mm, 0, 0);
     let cur = new Date(end.getTime() - totalMins * 60000); // inizio prima fase
-    const fmt = (dt) => dt.toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT", { hour: "2-digit", minute: "2-digit" });
+    const fmt = (dt) => dt.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB", "es-ES"), { hour: "2-digit", minute: "2-digit" });
     const out = phases.map((p, i) => {
       const start = new Date(cur);
       cur = new Date(cur.getTime() + p.mins * 60000);

@@ -23,7 +23,7 @@ export default function MyData({ onOpenTool }) {
     setChats(getChats());
   }, []);
 
-  const fmt = (iso) => { try { return new Date(iso).toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "short", year: "numeric" }); } catch { return ""; } };
+  const fmt = (iso) => { try { return new Date(iso).toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { day: "2-digit", month: "short", year: "numeric" }); } catch { return ""; } };
 
   const TABS = [
     { id: "piani", Icon: CalendarDays, label: tri("Piani di Lavoro", "Arbeitspläne", "Work Plans"), n: plans.length },

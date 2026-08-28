@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { ChefHat, Plus, Trash2, AlertTriangle, Cog, Hand, Bell, Users, Flame } from "lucide-react";
@@ -38,7 +39,7 @@ function toLocalInput(d) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 function fmt(date, lang) {
-  return date.toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" });
 }
 
 export default function StartDoughs() {

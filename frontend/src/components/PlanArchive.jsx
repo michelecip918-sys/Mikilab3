@@ -37,7 +37,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
   useEffect(() => { load(); }, [load]);
 
   const defaultName = () => {
-    const d = new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT");
+    const d = new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"));
     return tri(`Piano del ${d}`, `Plan vom ${d}`, `Plan of ${d}`);
   };
 
@@ -109,7 +109,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
 
   const fmtDate = (iso) => {
     try {
-      return new Date(iso).toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT",
+      return new Date(iso).toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"),
         { day: "2-digit", month: "short", year: "numeric" });
     } catch { return ""; }
   };

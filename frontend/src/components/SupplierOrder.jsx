@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Wheat, Droplets, ShoppingCart, Share2, Mail, Store, ExternalLink, ChevronDown } from "lucide-react";
@@ -30,8 +31,8 @@ export default function SupplierOrder({ totals }) {
 
   const sendEmail = () => {
     const to = (email || supplier.email || "").trim();
-    const subject = lang === "de" ? "Bestellung Mikilab" : lang === "en" ? "Mikilab order" : "Ordine Mikilab";
-    const body = orderText() + (lang === "de" ? "\n\nDanke!" : lang === "en" ? "\n\nThanks!" : "\n\nGrazie!");
+    const subject = mkTri(lang)("Ordine Mikilab", "Bestellung Mikilab", "Mikilab order");
+    const body = orderText() + (mkTri(lang)("\n\nGrazie!", "\n\nDanke!", "\n\nThanks!"));
     if (to) localStorage.setItem(EMAIL_KEY, to);
     window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };

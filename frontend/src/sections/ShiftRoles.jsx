@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
 import { Users, Plus, X } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -11,7 +12,7 @@ const ROLES = {
 
 export default function ShiftRoles() {
   const { lang } = useLang();
-  const roles = ROLES[lang === "de" ? "de" : lang === "en" ? "en" : "it"];
+  const roles = ROLES[mkTri(lang)("it", "de", "en")];
   const [people, setPeople] = useState(() => { try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; } });
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(people)); }, [people]);
@@ -25,17 +26,17 @@ export default function ShiftRoles() {
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 rounded-2xl bg-[#8C4A27] flex items-center justify-center"><Users className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{lang === "de" ? "Schichten & Aufgaben" : lang === "en" ? "Shifts & Roles" : "Turni & Mansioni"}</h1>
-          <p className="text-sm text-[#7E8A93]">{lang === "de" ? "Rollen im Team zuweisen" : lang === "en" ? "Assign roles to the team" : "Assegna i ruoli al team"}</p>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{mkTri(lang)("Turni & Mansioni", "Schichten & Aufgaben", "Shifts & Roles")}</h1>
+          <p className="text-sm text-[#7E8A93]">{mkTri(lang)("Assegna i ruoli al team", "Rollen im Team zuweisen", "Assign roles to the team")}</p>
         </div>
       </div>
 
       <div className="space-y-3" data-testid="shift-list">
-        {people.length === 0 && <p className="text-sm text-[#9AA6AE] text-center py-6">{lang === "de" ? "Noch niemand im Einsatz." : lang === "en" ? "No one on shift yet." : "Nessuno in turno."}</p>}
+        {people.length === 0 && <p className="text-sm text-[#9AA6AE] text-center py-6">{mkTri(lang)("Nessuno in turno.", "Noch niemand im Einsatz.", "No one on shift yet.")}</p>}
         {people.map((p) => (
           <div key={p.id} data-testid={`shift-${p.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-3 space-y-2">
             <div className="flex items-center gap-2">
-              <input data-testid={`shift-name-${p.id}`} value={p.name} placeholder={lang === "de" ? "Name" : lang === "en" ? "Name" : "Nome"}
+              <input data-testid={`shift-name-${p.id}`} value={p.name} placeholder={mkTri(lang)("Nome", "Name", "Name")}
                 onChange={(e) => upd(p.id, { name: e.target.value })}
                 className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]" />
               <button onClick={() => del(p.id)} className="text-[#C0574D] p-1"><X className="w-4 h-4" /></button>
@@ -44,7 +45,7 @@ export default function ShiftRoles() {
               className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]">
               {roles.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
-            <input data-testid={`shift-task-${p.id}`} value={p.task} placeholder={lang === "de" ? "Aufgabe / Notiz (optional)" : lang === "en" ? "Task / note (optional)" : "Compito / nota (opzionale)"}
+            <input data-testid={`shift-task-${p.id}`} value={p.task} placeholder={mkTri(lang)("Compito / nota (opzionale)", "Aufgabe / Notiz (optional)", "Task / note (optional)")}
               onChange={(e) => upd(p.id, { task: e.target.value })}
               className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]" />
           </div>
@@ -52,7 +53,7 @@ export default function ShiftRoles() {
       </div>
 
       <button data-testid="shift-add" onClick={add} className="w-full mt-4 bg-[#8C4A27] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
-        <Plus className="w-5 h-5" /> {lang === "de" ? "Person hinzufügen" : lang === "en" ? "Add person" : "Aggiungi persona"}
+        <Plus className="w-5 h-5" /> {mkTri(lang)("Aggiungi persona", "Person hinzufügen", "Add person")}
       </button>
     </div>
   );

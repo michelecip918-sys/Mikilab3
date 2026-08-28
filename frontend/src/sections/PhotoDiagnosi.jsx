@@ -96,7 +96,7 @@ export default function PhotoDiagnosi() {
     { id: "scopri", label: t("photo_mode_discover"), desc: t("photo_mode_discover_desc"), Icon: Lightbulb },
     { id: "macchine", label: t("photo_mode_machines"), desc: t("photo_mode_machines_desc"), Icon: Cog },
   ];
-  const modeLabel = (id) => (id === "suono" ? (lang === "de" ? "Klang-Diagnose" : lang === "en" ? "Sound diagnosis" : "Diagnosi Sonora") : (MODES.find((m) => m.id === id) || {}).label || id);
+  const modeLabel = (id) => (id === "suono" ? (mkTri(lang)("Diagnosi Sonora", "Klang-Diagnose", "Sound diagnosis")) : (MODES.find((m) => m.id === id) || {}).label || id);
 
   const loadRecent = async () => {
     try {
@@ -270,13 +270,13 @@ export default function PhotoDiagnosi() {
       {result && (
         <button data-testid="photo-share-btn" onClick={() => shareContent(`${modeLabel(mode)} — MikiLab`, result, lang)}
           className="mt-2 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl border border-[#E6D8C3] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
-          <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : "Condividi"}
+          <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share")}
         </button>
       )}
       {result && (
         <button data-testid="photo-pdf-btn" onClick={() => window.print()}
           className="no-print mt-2 w-full bg-[#B45309] hover:bg-[#336a94] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
-          <Printer className="w-5 h-5" /> {lang === "de" ? "Als PDF / Drucken" : lang === "en" ? "PDF / Print" : "PDF / Stampa"}
+          <Printer className="w-5 h-5" /> {mkTri(lang)("PDF / Stampa", "Als PDF / Drucken", "PDF / Print")}
         </button>
       )}
 
@@ -285,11 +285,11 @@ export default function PhotoDiagnosi() {
           <div className="flex items-center gap-2 mb-3 text-[#8C4A27]">
             <History className="w-5 h-5" />
             <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">
-              {lang === "de" ? "Letzte Diagnosen" : lang === "en" ? "Recent diagnoses" : "Diagnosi Recenti"}
+              {mkTri(lang)("Diagnosi Recenti", "Letzte Diagnosen", "Recent diagnoses")}
             </h2>
           </div>
           <p className="text-xs text-[#7E8A93] mb-3">
-            {lang === "de" ? "Sieh dir Ursache & Lösung erneut an, ohne ein neues Foto zu machen." : lang === "en" ? "Review cause & fix again, without taking a new photo." : "Rivedi causa e soluzione senza rifare la foto."}
+            {mkTri(lang)("Rivedi causa e soluzione senza rifare la foto.", "Sieh dir Ursache & Lösung erneut an, ohne ein neues Foto zu machen.", "Review cause & fix again, without taking a new photo.")}
           </p>
           <div className="space-y-2.5">
             {recent.map((d) => {
@@ -303,7 +303,7 @@ export default function PhotoDiagnosi() {
                     </div>
                     <button data-testid={`diagnosi-open-${d.id}`} onClick={() => setOpenRec(isOpen ? null : d.id)} className="flex-1 min-w-0 text-left">
                       <p className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{modeLabel(d.mode)}</p>
-                      <p className="text-[11px] text-[#7E8A93]">{new Date(d.created_at).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
+                      <p className="text-[11px] text-[#7E8A93]">{new Date(d.created_at).toLocaleString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
                     </button>
                     <button data-testid={`diagnosi-share-${d.id}`} onClick={() => shareContent(`${modeLabel(d.mode)} — MikiLab`, d.result, lang)} className="p-2 text-[#8C4A27] active:scale-90 shrink-0" aria-label="share"><Share2 className="w-4 h-4" /></button>
                     <button data-testid={`diagnosi-delete-${d.id}`} onClick={() => deleteRecent(d.id)} className="p-2 text-[#C0574D] active:scale-90 shrink-0" aria-label="delete"><Trash2 className="w-4 h-4" /></button>

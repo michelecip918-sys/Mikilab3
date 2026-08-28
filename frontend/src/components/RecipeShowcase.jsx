@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, Wheat } from "lucide-react";
@@ -22,11 +23,11 @@ export default function RecipeShowcase({ onOpen }) {
     <div data-testid="home-showcase">
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">
-          {lang === "de" ? "Meine Rezepte" : lang === "en" ? "My recipes" : "Le mie ricette"}
+          {mkTri(lang)("Le mie ricette", "Meine Rezepte", "My recipes")}
         </h2>
         <button data-testid="home-recipes-all" onClick={() => onOpen && onOpen()}
           className="text-sm font-medium text-[#8C4A27] flex items-center gap-1">
-          {lang === "de" ? "Alle" : lang === "en" ? "All" : "Tutte"} <ChevronRight className="w-4 h-4" />
+          {mkTri(lang)("Tutte", "Alle", "All")} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 

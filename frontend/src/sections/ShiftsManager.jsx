@@ -15,7 +15,7 @@ const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); r
 export default function ShiftsManager({ store, storeName }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const loc = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
+  const loc = mkTri(lang)("it-IT", "de-DE", "en-GB");
 
   const [weekStart, setWeekStart] = useState(() => mondayOf(new Date()));
   const [shifts, setShifts] = useState([]);

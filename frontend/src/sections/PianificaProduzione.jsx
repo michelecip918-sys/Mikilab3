@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { CalendarClock, Plus, Trash2, Flame, AlertTriangle } from "lucide-react";
@@ -15,7 +16,7 @@ function toLocalInput(d) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 function fmt(date, lang) {
-  return date.toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { weekday: "short", hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { weekday: "short", hour: "2-digit", minute: "2-digit" });
 }
 
 // Suggested baking temp/time by bread type; adjusted for fan ovens.

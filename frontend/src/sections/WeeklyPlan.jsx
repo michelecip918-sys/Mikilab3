@@ -351,7 +351,7 @@ export default function WeeklyPlan() {
         @media print{.recipe{page-break-inside:avoid}}
       </style></head><body>
       <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#24303c 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
-      <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
+      <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${subtitle ? `<div class="shop">🏪 ${esc(subtitle)}</div>` : ""}
       <h1>${L.summary}</h1>${summaryHtml}
       <h1>${L.recipes}</h1>${recipeHtml}
@@ -387,12 +387,12 @@ export default function WeeklyPlan() {
         weight: Number(it.grams_per_piece || 0),
         pieces: Number(it.pieces || 0),
         shop: it.sale_point || "",
-        expiry: exp.toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT"),
+        expiry: exp.toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB")),
       };
     }).filter((x) => x.name);
     if (rows.length === 0) { toast.error(t("weekly_empty_share")); return; }
     const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    const date = new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT");
+    const date = new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"));
     const CAP = 40;
     const labels = [];
     rows.forEach((x) => {
@@ -489,7 +489,7 @@ export default function WeeklyPlan() {
         .grp li b{font-family:monospace;color:#6E371C}
       </style></head><body>
       <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#24303c 60%,#C88A2B 82%,#1E1B18 100%);margin-bottom:10px"></div>
-      <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT")}</div></div></div>
+      <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${sections}
       </body></html>`);
     w.document.close();

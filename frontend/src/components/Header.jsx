@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { Moon, Sun, Clock, LogOut, LogIn, Crown, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -46,7 +47,7 @@ export default function Header() {
         <div data-testid="header-clock" className="hidden min-[420px]:flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#2A323A] rounded-xl border border-[#E6D8C3] dark:border-[#38424B] px-2.5 py-1.5">
           <Clock className="w-3.5 h-3.5 text-[#8C4A27]" />
           <span className="font-mono-data text-xs font-bold text-[#2B303B] dark:text-[#e4eff8]">
-            {now.toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" })}
+            {now.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}
           </span>
         </div>
 

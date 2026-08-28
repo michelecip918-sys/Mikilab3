@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { rLoc, ingLoc } from "@/lib/loc";
 
 const GRAM_FIELDS = ["flour_grams", "water_grams", "sourdough_grams", "salt_grams"];
@@ -22,7 +23,7 @@ export function computeShopping(items, recipeById, lang) {
     const factor = totalDough / recTotal;
     const flourG = Number(r.flour_grams || 0) * factor;
     if (flourG > 0) {
-      const type = (rLoc(r, "flour_type", lang) || (lang === "de" ? "Mehl" : lang === "en" ? "Flour" : "Farina")).trim();
+      const type = (rLoc(r, "flour_type", lang) || (mkTri(lang)("Farina", "Mehl", "Flour"))).trim();
       flourByType[type] = (flourByType[type] || 0) + flourG;
       anyFlour += flourG;
     }
@@ -42,18 +43,18 @@ export function computeShopping(items, recipeById, lang) {
 }
 
 export function otherLabel(f, lang) {
-  if (f === "water_grams") return lang === "de" ? "Wasser" : lang === "en" ? "Water" : "Acqua";
-  if (f === "sourdough_grams") return lang === "de" ? "Vorteig/Sauerteig" : lang === "en" ? "Preferment/Sourdough" : "Prefermento/Lievito madre";
-  return lang === "de" ? "Salz" : lang === "en" ? "Salt" : "Sale";
+  if (f === "water_grams") return mkTri(lang)("Acqua", "Wasser", "Water");
+  if (f === "sourdough_grams") return mkTri(lang)("Prefermento/Lievito madre", "Vorteig/Sauerteig", "Preferment/Sourdough");
+  return mkTri(lang)("Sale", "Salz", "Salt");
 }
 
 export function buildShoppingText(totals, lang) {
-  let out = lang === "de" ? "Einkaufsliste Mikilab\n\n" : lang === "en" ? "Mikilab shopping list\n\n" : "Lista della spesa Mikilab\n\n";
-  out += lang === "de" ? "MEHL:\n" : lang === "en" ? "FLOURS:\n" : "FARINE:\n";
+  let out = mkTri(lang)("Lista della spesa Mikilab\n\n", "Einkaufsliste Mikilab\n\n", "Mikilab shopping list\n\n");
+  out += mkTri(lang)("FARINE:\n", "MEHL:\n", "FLOURS:\n");
   Object.entries(totals.flourByType).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => { out += `  • ${k}: ${fmtQty(v)}\n`; });
   Object.entries(totals.others).forEach(([f, v]) => { out += `  • ${otherLabel(f, lang)}: ${fmtQty(v)}\n`; });
   if (Object.keys(totals.extras).length) {
-    out += lang === "de" ? "\nWEITERE ZUTATEN:\n" : lang === "en" ? "\nOTHER INGREDIENTS:\n" : "\nALTRI INGREDIENTI:\n";
+    out += mkTri(lang)("\nALTRI INGREDIENTI:\n", "\nWEITERE ZUTATEN:\n", "\nOTHER INGREDIENTS:\n");
     Object.entries(totals.extras).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => { out += `  • ${k}: ${fmtQty(v)}\n`; });
   }
   return out.trim();

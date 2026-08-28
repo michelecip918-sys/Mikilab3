@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useRef, useState, useEffect } from "react";
 import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw, Search, Plus, Trash2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -76,10 +77,10 @@ export default function RadioFornaio() {
   const { on: ambientOn, toggle: toggleAmbient, volume: ambientVol, setVolume: setAmbientVol, mode: ambientMode, setMode: setAmbientMode } = useAmbient();
   const { sfxEnabled, toggleSfx, sfxVolume, setSfxVol } = useSoundFX();
   const AMB = [
-    { id: "fire", label: lang === "de" ? "Ofen" : lang === "en" ? "Oven" : "Forno", emoji: "🔥" },
-    { id: "rain", label: lang === "de" ? "Regen" : lang === "en" ? "Rain" : "Pioggia", emoji: "🌧️" },
-    { id: "mixer", label: lang === "de" ? "Kneter" : lang === "en" ? "Mixer" : "Impastatrice", emoji: "🌀" },
-    { id: "morning", label: lang === "de" ? "Morgen" : lang === "en" ? "Morning" : "Mattino", emoji: "🌅" },
+    { id: "fire", label: mkTri(lang)("Forno", "Ofen", "Oven"), emoji: "🔥" },
+    { id: "rain", label: mkTri(lang)("Pioggia", "Regen", "Rain"), emoji: "🌧️" },
+    { id: "mixer", label: mkTri(lang)("Impastatrice", "Kneter", "Mixer"), emoji: "🌀" },
+    { id: "morning", label: mkTri(lang)("Mattino", "Morgen", "Morning"), emoji: "🌅" },
   ];
   const [open, setOpen] = useState(false);
   // Tasto Indietro: chiude SOLO il pannello (la radio continua a suonare), non naviga via.
@@ -168,7 +169,7 @@ export default function RadioFornaio() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { setListening(false); alert(t("voice_unsupported")); return; }
     const rec = new SR();
-    rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
+    rec.lang = mkTri(lang)("it-IT", "de-DE", "en-GB");
     rec.onresult = (e) => {
       const said = (e.results[0][0].transcript || "").toLowerCase();
       setListening(false);

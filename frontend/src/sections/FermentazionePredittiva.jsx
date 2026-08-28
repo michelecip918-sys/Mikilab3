@@ -93,7 +93,7 @@ export default function FermentazionePredittiva() {
 
   const readyAt = useMemo(() => {
     const d = new Date(Date.now() + est.minutes * 60000);
-    return d.toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT", { hour: "2-digit", minute: "2-digit" });
+    return d.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB", "es-ES"), { hour: "2-digit", minute: "2-digit" });
   }, [est.minutes, lang]);
 
   const hh = Math.floor(est.minutes / 60);

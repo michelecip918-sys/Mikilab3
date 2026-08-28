@@ -17,7 +17,7 @@ const fmt = (s) => {
 export default function ManiSporche() {
   const { lang } = useLang();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
-  const voiceLang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
+  const voiceLang = mkTri(lang)("it-IT", "de-DE", "en-GB", "es-ES");
   const { timers, nowTs, addTimer, toggle, reset, remove } = useTimers();
   void nowTs;
 
@@ -89,8 +89,8 @@ export default function ManiSporche() {
 
       {/* Orologio grande */}
       <div className="rounded-3xl bg-[#3a2415] text-white p-6 text-center mb-4">
-        <p className="font-mono-data text-6xl font-bold tracking-tight" data-testid="manisporche-clock">{clock.toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" })}</p>
-        <p className="text-white/60 text-sm mt-1">{clock.toLocaleDateString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { weekday: "long", day: "numeric", month: "long" })}</p>
+        <p className="font-mono-data text-6xl font-bold tracking-tight" data-testid="manisporche-clock">{clock.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}</p>
+        <p className="text-white/60 text-sm mt-1">{clock.toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { weekday: "long", day: "numeric", month: "long" })}</p>
       </div>
 
       {/* Preset XL */}

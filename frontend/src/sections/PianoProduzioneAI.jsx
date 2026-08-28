@@ -536,7 +536,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       }),
     });
     if (!res.ok) {
-      toast.error(res.status === 402 || res.status === 403 ? (lang === "de" ? "PRO erforderlich" : lang === "en" ? "PRO required" : lang === "es" ? "Se requiere PRO" : "Serve l'abbonamento PRO") : t("chat_error"));
+      toast.error(res.status === 402 || res.status === 403 ? (mkTri(lang)("Serve l'abbonamento PRO", "PRO erforderlich", "PRO required", "Se requiere PRO")) : t("chat_error"));
       return { ok: false, text: "" };
     }
     let acc = "";
@@ -699,7 +699,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       setPlanTruncated(wasTruncated);
       if (!ok) toast.warning(t("capo_plan_incomplete"));
       else if (wasTruncated) toast.warning(tri3(lang, "Piano molto lungo: potrebbe essere incompleto. Rigeneralo o spegni qualche modulo.", "Sehr langer Plan: evtl. unvollständig. Neu erstellen oder Module ausschalten.", "Very long plan: it may be incomplete. Regenerate or turn off some modules.", "Plan muy largo: puede estar incompleto. Regénéralo o apaga algún módulo."));
-      else fireHighFive(lang === "de" ? "Plan erstellt! 👏" : lang === "en" ? "Plan generated! 👏" : lang === "es" ? "¡Plan generado! 👏" : "Piano generato! 👏");
+      else fireHighFive(mkTri(lang)("Piano generato! 👏", "Plan erstellt! 👏", "Plan generated! 👏", "¡Plan generado! 👏"));
       if (fullText.trim()) { await persistPlan(fullText); await updateFreezerAfterPlan();
         try { const u = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); products.forEach((p) => { if (p.recipe_id && Number(p.qty) > 0) u[p.recipe_id] = (u[p.recipe_id] || 0) + 1; }); localStorage.setItem("mikilab_recipe_usage", JSON.stringify(u)); } catch { /* */ }
       }
@@ -735,7 +735,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         )}
         <Sparkles className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{lang === "de" ? labSlogan.de : lang === "en" ? labSlogan.en : lang === "es" ? labSlogan.es : labSlogan.it}</h1>
-        <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Wähle die Rezepte und erzeuge deinen KI-Produktionsplan" : lang === "en" ? "Pick your recipes and generate your AI production plan" : lang === "es" ? "Elige tus recetas y genera tu plan de producción con IA" : "Scegli le ricette e genera il tuo piano di produzione con l'IA"}</p>
+        <p className="text-white/85 text-sm mt-1">{mkTri(lang)("Scegli le ricette e genera il tuo piano di produzione con l'IA", "Wähle die Rezepte und erzeuge deinen KI-Produktionsplan", "Pick your recipes and generate your AI production plan", "Elige tus recetas y genera tu plan de producción con IA")}</p>
       </div>
 
       {onOpenTool && menuOpen && (
@@ -1318,17 +1318,17 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         )}
         <div className="mt-3">
-          <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Ziel des Plans" : lang === "en" ? "Plan goal" : lang === "es" ? "Objetivo del plan" : "Obiettivo del piano"}</label>
+          <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Obiettivo del piano", "Ziel des Plans", "Plan goal", "Objetivo del plan")}</label>
           <select data-testid="capo-plan-goal" value={planGoal} onChange={(e) => setPlanGoal(e.target.value)}
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#8C4A27]">
-            <option value="qualita">{lang === "de" ? "🥖 Handwerkliche Qualität (langsame Gare, Struktur)" : lang === "en" ? "🥖 Artisan quality (slow proof, structure)" : lang === "es" ? "🥖 Calidad artesanal (fermentaciones lentas, estructura)" : "🥖 Qualità artigianale (lievitazioni lente, struttura)"}</option>
-            <option value="resa">{lang === "de" ? "📈 Maximaler Output (Öfen/Kammern optimieren)" : lang === "en" ? "📈 Maximum output (optimise ovens/cells)" : lang === "es" ? "📈 Máximo rendimiento (optimizar hornos/cámaras)" : "📈 Massima resa (ottimizza forni/celle)"}</option>
-            <option value="tempo">{lang === "de" ? "⏱️ Zeit sparen (schnellere Abläufe)" : lang === "en" ? "⏱️ Save time (faster sequences)" : lang === "es" ? "⏱️ Ahorrar tiempo (secuencias más rápidas)" : "⏱️ Risparmio di tempo (sequenze più rapide)"}</option>
-            <option value="spreco">{lang === "de" ? "♻️ Weniger Abfall (Teig/Unverkauftes verwerten)" : lang === "en" ? "♻️ Less waste (reuse dough/unsold)" : lang === "es" ? "♻️ Menos desperdicio (reutilizar masa/no vendido)" : "♻️ Riduci gli sprechi (recupero impasti/invenduto)"}</option>
-            <option value="grandi">{lang === "de" ? "🎁 Nur große Hefegebäcke (Panettone, Colomba…)" : lang === "en" ? "🎁 Large leavened cakes only (panettone, colomba…)" : lang === "es" ? "🎁 Solo grandes levados (panettone, colomba…)" : "🎁 Solo grandi lievitati (panettoni, colombe…)"}</option>
-            <option value="lotti">{lang === "de" ? "📦 Wenige Teige, große Chargen" : lang === "en" ? "📦 Few doughs, large batches" : lang === "es" ? "📦 Pocas masas, grandes lotes" : "📦 Pochi impasti, grandi lotti"}</option>
+            <option value="qualita">{mkTri(lang)("🥖 Qualità artigianale (lievitazioni lente, struttura)", "🥖 Handwerkliche Qualität (langsame Gare, Struktur)", "🥖 Artisan quality (slow proof, structure)", "🥖 Calidad artesanal (fermentaciones lentas, estructura)")}</option>
+            <option value="resa">{mkTri(lang)("📈 Massima resa (ottimizza forni/celle)", "📈 Maximaler Output (Öfen/Kammern optimieren)", "📈 Maximum output (optimise ovens/cells)", "📈 Máximo rendimiento (optimizar hornos/cámaras)")}</option>
+            <option value="tempo">{mkTri(lang)("⏱️ Risparmio di tempo (sequenze più rapide)", "⏱️ Zeit sparen (schnellere Abläufe)", "⏱️ Save time (faster sequences)", "⏱️ Ahorrar tiempo (secuencias más rápidas)")}</option>
+            <option value="spreco">{mkTri(lang)("♻️ Riduci gli sprechi (recupero impasti/invenduto)", "♻️ Weniger Abfall (Teig/Unverkauftes verwerten)", "♻️ Less waste (reuse dough/unsold)", "♻️ Menos desperdicio (reutilizar masa/no vendido)")}</option>
+            <option value="grandi">{mkTri(lang)("🎁 Solo grandi lievitati (panettoni, colombe…)", "🎁 Nur große Hefegebäcke (Panettone, Colomba…)", "🎁 Large leavened cakes only (panettone, colomba…)", "🎁 Solo grandes levados (panettone, colomba…)")}</option>
+            <option value="lotti">{mkTri(lang)("📦 Pochi impasti, grandi lotti", "📦 Wenige Teige, große Chargen", "📦 Few doughs, large batches", "📦 Pocas masas, grandes lotes")}</option>
           </select>
-          <p className="mt-1 text-[11px] text-[#7E8A93] leading-snug">{lang === "de" ? "Orientiert die KI bei der Erstellung deines Plans." : lang === "en" ? "Guides the AI when building your plan." : lang === "es" ? "Orienta a la IA al generar tu plan." : "Orienta l'AI nella generazione del tuo piano."}</p>
+          <p className="mt-1 text-[11px] text-[#7E8A93] leading-snug">{mkTri(lang)("Orienta l'AI nella generazione del tuo piano.", "Orientiert die KI bei der Erstellung deines Plans.", "Guides the AI when building your plan.", "Orienta a la IA al generar tu plan.")}</p>
         </div>
 
         <div className="mt-3">
@@ -1447,7 +1447,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   </p>
                   {savedAt && (
                     <p className="text-[11px] text-[#7E8A93] mt-0.5">
-                      {tri3(lang, "Salvato il", "Gespeichert am", "Saved on", "Guardado el")} {new Date(savedAt).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                      {tri3(lang, "Salvato il", "Gespeichert am", "Saved on", "Guardado el")} {new Date(savedAt).toLocaleString(mkTri(lang)("it-IT", "de-DE", "en-GB", "es-ES"), { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
                     </p>
                   )}
                 </div>
@@ -1496,9 +1496,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <ChefHat className="w-5 h-5" /> {tri3(lang, "Leggi il piano a voce (mani libere)", "Plan vorlesen (Hände frei)", "Read the plan aloud (hands-free)", "Leer el plan en voz alta (manos libres)")}
               </button>
             )}
-            <button data-testid="capo-share" onClick={() => shareContent(lang === "de" ? "Produktionsplan — MikiLab" : lang === "en" ? "Production plan — MikiLab" : lang === "es" ? "Plan de producción — MikiLab" : "Piano di Produzione — MikiLab", plan, lang)}
+            <button data-testid="capo-share" onClick={() => shareContent(mkTri(lang)("Piano di Produzione — MikiLab", "Produktionsplan — MikiLab", "Production plan — MikiLab", "Plan de producción — MikiLab"), plan, lang)}
               className="no-print mt-2 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#E6D8C3] dark:border-[#38424B] active:scale-98 transition-all flex items-center justify-center gap-2">
-              <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : lang === "es" ? "Compartir" : "Condividi"}
+              <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share", "Compartir")}
             </button>
 
             <div className="print-area mt-4 space-y-4">
@@ -1624,10 +1624,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
 function RecipePrint({ r, lang }) {
   const ing = [
-    [lang === "de" ? "Mehl" : lang === "en" ? "Flour" : lang === "es" ? "Harina" : "Farina", r.flour_grams],
-    [lang === "de" ? "Wasser" : lang === "en" ? "Water" : lang === "es" ? "Agua" : "Acqua", r.water_grams],
-    [lang === "de" ? "Vorteig/Sauerteig" : lang === "en" ? "Preferment/Sourdough" : lang === "es" ? "Prefermento/Masa madre" : "Prefermento/Lievito madre", r.sourdough_grams],
-    [lang === "de" ? "Salz" : lang === "en" ? "Salt" : lang === "es" ? "Sal" : "Sale", r.salt_grams],
+    [mkTri(lang)("Farina", "Mehl", "Flour", "Harina"), r.flour_grams],
+    [mkTri(lang)("Acqua", "Wasser", "Water", "Agua"), r.water_grams],
+    [mkTri(lang)("Prefermento/Lievito madre", "Vorteig/Sauerteig", "Preferment/Sourdough", "Prefermento/Masa madre"), r.sourdough_grams],
+    [mkTri(lang)("Sale", "Salz", "Salt", "Sal"), r.salt_grams],
   ].filter(([, g]) => Number(g) > 0);
   const proc = rLoc(r, "procedure", lang);
   return (
