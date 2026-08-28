@@ -2048,3 +2048,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Ordina feed**: 3 opzioni Recenti(all)/Popolari(popular)/Amici(friends). Backend `community_list` ordina per numero di like quando scope=popular; `communityApi.list` passa lo scope per qualsiasi valore ≠ all.
 - **Header**: fix troncamento titolo "MikiLab" a schermi stretti (gruppo sinistro compatto, logo 9, subtitle nascosto sotto 440px).
 - Testato iteration_101: frontend 100% (7/7). Nota LOW pre-esistente: overlay full-screen (Sfide/Amici/Mappa) non si chiudono con ESC (solo col tasto X) — fuori scope.
+
+## v-fork.38 (2026-06) — Sapori & Scopri in Ricette + slogan sezioni
+- **Ricette tab** rinominata "Scopri MikiLab e le sue Ricette" (heroTitle). Aggiunti in cima 2 nuovi bottoni util: **Scopri MikiLab** (nuovo componente ScopriMikiLab: intro Michele + GuidaAvatar) e **Sapori di Casa** (apre SaporiCasa). La GuidaAvatar è stata SPOSTATA dalla Home a Ricette/Scopri (Home più snella).
+- **Titolo interno Laboratorio**: hero ora "Bentornato a lavoro, Chef 👨‍🍳" + sottotitolo "Scegli le ricette e genera il tuo piano di produzione con l'IA".
+- **Titolo interno Social**: header ora "È ora di rilassarti, Chef 🥐" + "Stacca dal forno: idee, foto, amici e mercatino".
+- Nota: la Home mantiene solo il teaser collassato "MikiLab/Scopri" (home-story); la sezione discovery completa vive ora in Ricette. Verificato: compilazione pulita, nessun errore JS aprendo Ricette→Scopri.

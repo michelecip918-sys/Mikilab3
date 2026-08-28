@@ -296,8 +296,6 @@ export default function Home({ onNavigate }) {
         </div>
       </div>
 
-      <GuidaAvatar />
-
       {/* Motore Sfide — sblocca contenuti completando le sfide (no pagamenti) */}
       <button data-testid="home-sfide-btn" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } }}
         className="w-full flex items-center gap-4 rounded-3xl p-5 text-[#FFFDF9] shadow-lg active:scale-98 transition-all"

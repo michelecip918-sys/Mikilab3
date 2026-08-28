@@ -699,8 +699,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </button>
         )}
         <Sparkles className="w-7 h-7 mb-2" />
-        <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Produktionsplan mit KI" : lang === "en" ? "AI Production Plan" : lang === "es" ? "Plan de Producción con IA" : "Piano di Produzione con IA"}</h1>
-        <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Fülle die Daten aus und lass den Plan generieren" : lang === "en" ? "Fill in the data and generate the plan" : lang === "es" ? "Rellena los datos y genera tu plan de trabajo" : "Compila i dati e genera il tuo piano di lavoro"}</p>
+        <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Willkommen zurück, Chef 👨‍🍳" : lang === "en" ? "Welcome back to work, Chef 👨‍🍳" : lang === "es" ? "Bienvenido al trabajo, Chef 👨‍🍳" : "Bentornato a lavoro, Chef 👨‍🍳"}</h1>
+        <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Wähle die Rezepte und erzeuge deinen KI-Produktionsplan" : lang === "en" ? "Pick your recipes and generate your AI production plan" : lang === "es" ? "Elige tus recetas y genera tu plan de producción con IA" : "Scegli le ricette e genera il tuo piano di produzione con l'IA"}</p>
       </div>
 
       {onOpenTool && menuOpen && (

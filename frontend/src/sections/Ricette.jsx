@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { ChevronLeft, Tag, BookOpen, Wheat } from "lucide-react";
+import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed, Compass } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import { NovitaColorate } from "@/components/NovitaColorate";
 import PanettoneLabels from "@/sections/PanettoneLabels";
 import GuidaMetodi from "@/sections/Enciclopedia";
 import FlourTable from "@/components/FlourTable";
+import SaporiCasa from "@/sections/SaporiCasa";
+import ScopriMikiLab from "@/sections/ScopriMikiLab";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 
@@ -17,6 +19,8 @@ export default function Ricette() {
 
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
   if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /></Sub>;
+  if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
+  if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">
@@ -41,6 +45,8 @@ export default function Ricette() {
     <div data-testid="ricette-page">
       {coll === "mikilab" && (
         <div className="grid grid-cols-3 gap-2.5 mb-4">
+          <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab")} onClick={() => setView("scopri")} />
+          <UtilBtn testid="ricette-sapori-btn" Icon={UtensilsCrossed} label={tri("Sapori di Casa", "Geschmack v. zu Hause", "Home Flavours", "Sabores de Casa")} onClick={() => setView("sapori")} />
           <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia", "Enciclopedia")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas")} onClick={() => setView("farine")} />
           <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
@@ -51,7 +57,7 @@ export default function Ricette() {
         collectionName="mikilab"
         heroImage={`${process.env.PUBLIC_URL}/michele-avatar-full.jpg`}
         heroPosition="50% 15%"
-        heroTitle={tri("Le Ricette di MikiLab", "Die MikiLab-Rezepte", "The MikiLab Recipes", "Las Recetas de MikiLab")}
+        heroTitle={tri("Scopri MikiLab e le sue Ricette", "Entdecke MikiLab & seine Rezepte", "Discover MikiLab & its Recipes", "Descubre MikiLab y sus Recetas")}
         heroSubtitle={t("mikilab_subtitle")}
         emptyText={t("mikilab_empty")}
         extraHeader={<NovitaColorate />}

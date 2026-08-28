@@ -170,8 +170,8 @@ export default function Community({ onNavigate }) {
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="font-display text-xl font-extrabold leading-none drop-shadow-sm">MikiLab Social</h1>
-            <p className="text-[12px] text-white/90 mt-1 leading-snug">{tri("Consigli, foto, ricette, amici e mercatino", "Tipps, Fotos, Rezepte, Freunde & Markt", "Tips, photos, recipes, friends & market", "Consejos, fotos, recetas y mercadillo")}</p>
+            <h1 className="font-display text-xl font-extrabold leading-none drop-shadow-sm">{tri("È ora di rilassarti, Chef 🥐", "Zeit zum Entspannen, Chef 🥐", "Time to relax, Chef 🥐", "Hora de relajarte, Chef 🥐")}</h1>
+            <p className="text-[12px] text-white/90 mt-1 leading-snug">{tri("Stacca dal forno: idee, foto, amici e mercatino tra colleghi", "Pause vom Ofen: Ideen, Fotos, Freunde & Markt", "Off the oven: ideas, photos, friends & market", "Fuera del horno: ideas, fotos, amigos y mercadillo")}</p>
           </div>
           {user && (
             <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
