@@ -1,105 +1,168 @@
 {
-  "project_name": "MikiLab",
-  "tagline": "MikiLab - Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli",
-  "app_type": "hybrid_fullstack_pwa",
-  "target_audience": "Professional Bakers, Pastry Chefs, and Pizza Makers (Panettieri, Pasticcieri e Pizzaioli - Non Hobbisti)",
-  "language_support": ["IT", "DE", "EN"],
-  "design_archetype": "ORGANIC & EARTHY / SWISS HIGH-CONTRAST HYBRID",
+  "project_info": {
+    "app_name": "MikiLab",
+    "main_h1": "MikiLab — Ricette Esclusive & Consulenza Operativa per Pasticceria, Panificazione e Pizzeria",
+    "subtitle": "Accedi a ricette testate, schede tecniche e strategie pratiche per l'organizzazione del laboratorio guadagnando crediti nella nostra community.",
+    "theme_archetype": "Arte Bianca & Artisan Craft (Warm Flour, Terracotta & Raw Timber)",
+    "primary_language": "it",
+    "supported_languages": ["it", "de", "en", "es"]
+  },
+  "design_rules": {
+    "zero_payment_policy": {
+      "forbidden_words": ["Gratis", "Free", "Acquista", "Paga", "Prezzo", "Compra", "Stripe"],
+      "dynamic_button_labels": [
+        "Sblocca Contenuto",
+        "Completa la Sfida per Accedere",
+        "Guadagna la Scheda"
+      ]
+    },
+    "background_treatment": {
+      "strategy": "Eliminate dark blue/gold and full-screen mixer stock images. Use warm organic flour & wood texture overlays (#FDFBF7 base), subtle vector wheat oat line art, linen card fills, and micro-embossed grain textures.",
+      "hero_overlay_max_opacity": "bg-amber-950/40"
+    }
+  },
+  "color_palette": {
+    "css_variables": {
+      "--bg-primary": "#FDFBF7",
+      "--bg-card": "#FAF5EC",
+      "--bg-card-hover": "#F5EFE2",
+      "--bg-accent-subtle": "#F2E8D5",
+      "--text-main": "#2C1E16",
+      "--text-muted": "#6B5546",
+      "--text-light": "#8C7362",
+      "--border-warm": "#E6D8C3",
+      "--border-focus": "#D97706",
+      "--brand-primary": "#8C4A27",
+      "--brand-primary-hover": "#6E371C",
+      "--brand-accent": "#D97706",
+      "--brand-amber": "#B45309",
+      "--brand-wood": "#4A3222",
+      "--badge-bg": "#FEF3C7",
+      "--badge-text": "#92400E"
+    },
+    "tailwind_equivalents": {
+      "bg_main": "bg-[#FDFBF7]",
+      "card_bg": "bg-[#FAF5EC]",
+      "border": "border-[#E6D8C3]",
+      "text_main": "text-[#2C1E16]",
+      "text_muted": "text-[#6B5546]",
+      "cta_primary": "bg-[#8C4A27] hover:bg-[#6E371C] text-[#FFFDF9]",
+      "cta_challenge": "bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-amber-50 shadow-md hover:from-amber-800 hover:to-amber-950"
+    }
+  },
   "typography": {
-    "heading_font": "Cabinet Grotesk, Clash Display, or Playfair Display for editorial impact",
-    "body_font": "Inter or DM Sans for maximum legibility in high-density laboratory tables",
-    "mono_font": "JetBrains Mono for numerical dough formulas, hydration %, and temperatures",
-    "sizes": {
-      "h1": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight",
-      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
-      "h3": "text-xl sm:text-2xl font-semibold",
-      "h4": "text-lg sm:text-xl font-medium",
-      "body": "text-sm sm:text-base leading-relaxed",
-      "caption": "text-xs font-mono uppercase tracking-widest opacity-80"
+    "font_family_heading": "Cinzel, Cormorant Garamond, serif",
+    "font_family_body": "Plus Jakarta Sans, system-ui, sans-serif",
+    "font_family_mono": "JetBrains Mono, monospace",
+    "heading_hierarchy": {
+      "h1": "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#2C1E16]",
+      "h2": "text-2xl sm:text-3xl font-bold tracking-tight text-[#2C1E16]",
+      "h3": "text-xl sm:text-2xl font-semibold text-[#4A3222]",
+      "h4": "text-lg font-semibold text-[#6B5546]",
+      "body": "text-base leading-relaxed text-[#2C1E16]",
+      "caption": "text-xs tracking-wider uppercase text-[#8C7362]"
     }
   },
-  "colors": {
-    "primary_base_sage": "#5E8B7E",
-    "primary_deep_sage": "#2D5A4C",
-    "accent_terracotta": "#C85A32",
-    "accent_crostata": "#D96B43",
-    "accent_gold": "#D4AF37",
-    "background_light_cream": "#FAF7F2",
-    "background_soft_cream": "#EAF0EC",
-    "text_charcoal": "#2B303B",
-    "text_graphite": "#1E232A",
-    "dark_mode_bg": "#232A31",
-    "dark_mode_surface": "#1A2026",
-    "dark_mode_border": "#2E363F",
-    "overlay_contrast_light": "bg-white/92 backdrop-blur-md",
-    "overlay_contrast_dark": "bg-[#232A31]/90 backdrop-blur-md"
-  },
-  "branding_elements": {
-    "logo": "Stylized 'ML' Logo in Header (Home) and Footer (All Sections)",
-    "watermark_pattern": "Subtle wheat ears, flour dusting, dough mixer filigree background in SVG/CSS on EVERY section (Home, Ricette, Il Tuo Laboratorio, Impara, Community) with heavy contrast overlay for 100% text readability",
-    "slogan_banner": "MikiLab - Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli",
-    "michele_avatar": {
-      "header_avatar": "/michele-avatar.jpg",
-      "real_lab_photos": [
-        "/michele-real.webp",
-        "/michele-real2.jpg",
-        "/michele-real-lab.jpg",
-        "/michele-photo.jpg",
-        "/michele-avatar-full.jpg"
-      ],
-      "footer_feature": "Prominent large real photo of Michele holding sourdough bread in arms showing craft tattoos, placed in the page footer across all sections",
-      "mohammadreza_guide": "/mohammed-avatar.jpg"
+  "home_sections_blueprint": [
+    {
+      "step": 1,
+      "id": "hero-novita",
+      "title": "Hero / Novità in Evidenza",
+      "heading": "Nuove Ricette & Aggiornamenti",
+      "description": "Presentazione H1 + Novità settimanali, ultime ricette e sfide attive con carosello o griglia ad alto impatto visivo."
+    },
+    {
+      "step": 2,
+      "id": "catalogo-ricette",
+      "title": "Ricette & Schede Tecniche",
+      "heading": "Catalogo sbloccabile a Sfide",
+      "description": "Filtri per categoria (Panificazione, Pizzeria, Pasticceria, Basi) + badge di difficoltà + pulsante 'Sblocca Contenuto' o 'Completa la Sfida per Accedere'."
+    },
+    {
+      "step": 3,
+      "id": "impara-da-casa",
+      "title": "Impara da Casa",
+      "heading": "Guide passo-passo per Amatori & Mamme",
+      "description": "Sezione tutorial semplificati per impasti casalinghi con pasta madre, teglia, pizza in pala e dolci tradizionali con step visuali sbloccabili."
+    },
+    {
+      "step": 4,
+      "id": "consulenza-b2b",
+      "title": "Consulenza Laboratorio B2B",
+      "heading": "Ottimizzazione e Strategia Operativa",
+      "layout": "Struttura pulita sintetica a 3 punti cardine: 1) Ottimizzazione Spazi & Layout, 2) Gestione Tempi & Flussi di Lavoro, 3) Riduzione Sprechi & Food Cost.",
+      "single_cta": {
+        "text": "Genera Piano di Lavoro e Avvia Sblocco",
+        "action_test_id": "b2b-consultancy-generate-plan-btn"
+      }
+    },
+    {
+      "step": 5,
+      "id": "social-community",
+      "title": "Social & Community",
+      "heading": "Bacheca, Amicizie & Mercatino Usato",
+      "description": "Area riservata con feed di foto impasti, commenti, reazioni, richiesta amicizie, chat privata e mercatino attrezzature da laboratorio usate."
+    },
+    {
+      "step": 6,
+      "id": "chi-sono-avatar",
+      "title": "Chi Sono & Guide Avatar",
+      "heading": "La Storia di Michele & Guida al Sito",
+      "description": "Presentazione di Michele Bordin e della sua esperienza + Sezione Avatar interattiva 'Guida al Sito' con Michele e Mohamed che spiegano come funziona il sistema di sblocco ricette."
     }
+  ],
+  "avatar_guide_section": {
+    "avatars": [
+      {
+        "name": "Michele Bordin",
+        "role": "Maestro Panificatore & Fondatore MikiLab",
+        "image": "/michele-avatar.jpg",
+        "topics": ["Storia di MikiLab", "Filosofia Arte Bianca", "Consulenza B2B e Organizzazione"]
+      },
+      {
+        "name": "Mohamed",
+        "role": "Assistente Tecnico & Guida Sfide",
+        "image": "/mohammed-avatar.jpg",
+        "topics": ["Come funzionano i Crediti", "Guida alle Sfide della Community", "Sblocco Ricette & Panettone 17"]
+      }
+    ],
+    "interactive_features": [
+      "Dialoghi step-by-step con bolle interattive",
+      "Riproduzione vocale / audio se abilitato",
+      "Selettore argomenti e pillole di saggezza per laboratori"
+    ]
   },
-  "key_sections_and_fixes": {
-    "home": {
-      "hero": "Prominent ML logo + Slogan banner + Michele real photo badge + Professional target clear callout (Panettieri, Pasticcieri, Pizzaioli)",
-      "news_feed": "'Arte Bianca' live news feed embedded directly in Home with category tags (Grani Antichi, Lievitazione, Trend Mercato, Normative)",
-      "module_cards": "Grid cards linking to Laboratorio, Ricette, Academy, Community, and Archivio Salvati"
-    },
-    "ricette": {
-      "top_bar_fix": "Fix truncated text on 'Enciclopedia' and 'Tabelle & Farine' cards by enforcing flex-wrap, responsive min-widths, and padding p-3 md:p-4 text-center overflow-visible",
-      "category_accordions": "Pane, Panini, Snack, Focacce, Panettoni rendered as CLOSED accordions by default, with down chevron arrow and numeric badge count"
-    },
-    "il_tuo_laboratorio": {
-      "pro_tools": "Gradi Acqua, Calcola Temperatura, Adatta Forno, Gestione Lievito Madre, Backward Scheduler, Food Cost, Haccp Log",
-      "guides": "Mohammedreza AI Assistant + WhatsApp direct support floating FAB"
-    },
-    "impara_academy": {
-      "highlight": "Strongly highlighted Academy section with clear 3-track progression: Base, Intermedio, Avanzato",
-      "content": "Course cards with video previews, duration, skill certificate tags, and interactive quizzes"
-    },
-    "community": {
-      "social_feed": "Feed layout with posts, photo uploads, like/comment buttons, 'A cosa stai lavorando oggi?' composer box, quick filters (Pane, Pastry, Pizza, Farine)",
-      "used_marketplace": "Tab for 'Marketplace Usato' (Impastatrici usate, Forni, Attrezzature professionali)"
-    },
-    "archivio_i_miei_dati": {
-      "tabs": ["Piani Produzione", "Ricette Salvate", "Documenti & PDF", "Chat AI History"]
-    },
-    "language_switcher": {
-      "languages": ["IT", "DE", "EN"],
-      "visual": "Trilingual pill selector with subtle Italian/German Flag accent colors"
+  "image_urls": {
+    "sourdough_hero": "https://images.unsplash.com/photo-1613396874083-2d5fbe59ae79?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwxfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBmbG91ciUyMHdvb2QlMjB0YWJsZXxlbnwwfHx8fDE3ODc5MDQwODN8MA&ixlib=rb-4.1.0&q=85",
+    "flour_duster": "https://images.unsplash.com/photo-1635341814289-55cf1490024c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHw0fHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBmbG91ciUyMHdvb2QlMjB0YWJsZXxlbnwwfHx8fDE3ODc5MDQwODN8MA&ixlib=rb-4.1.0&q=85",
+    "artisan_loaf": "https://images.unsplash.com/photo-1686154596696-d6f594a98af9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwyfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBmbG91ciUyMHdvb2QlMjB0YWJsZXxlbnwwfHx8fDE3ODc5MDQwODN8MA&ixlib=rb-4.1.0&q=85",
+    "michele_avatar_local": "/michele-avatar.jpg",
+    "mohammed_avatar_local": "/mohammed-avatar.jpg"
+  },
+  "testing_and_accessibility": {
+    "mandatory_data_testid": true,
+    "apca_contrast_target": "75+ Lc",
+    "data_testid_examples": {
+      "hero_title": "mikilab-hero-h1",
+      "unlock_recipe_btn": "unlock-recipe-button-id",
+      "b2b_consultancy_btn": "b2b-consultancy-generate-plan-btn",
+      "avatar_michele_dialog": "avatar-michele-speech-bubble",
+      "avatar_mohamed_dialog": "avatar-mohamed-speech-bubble",
+      "challenge_start_btn": "start-challenge-button"
     }
-  },
-  "component_path": "/app/frontend/src",
-  "media_urls": {
-    "michele_real_lab_1": "/michele-real.webp",
-    "michele_real_lab_2": "/michele-real2.jpg",
-    "michele_real_lab_3": "/michele-photo.jpg",
-    "michele_real_lab_4": "/michele-real-lab.jpg",
-    "michele_full_tattoo": "/michele-avatar-full.jpg",
-    "dough_kneading_action": "https://images.pexels.com/photos/6605188/pexels-photo-6605188.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "pizza_dough_prep": "https://images.pexels.com/photos/5056624/pexels-photo-5056624.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "artisan_sourdough_display": "https://images.pexels.com/photos/30826792/pexels-photo-30826792.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    "wheat_field_close_up": "https://images.pexels.com/photos/29385833/pexels-photo-29385833.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
   },
   "instructions_to_main_agent": [
-    "Ensure all interactive elements have data-testid attributes.",
-    "Do NOT use pure transparent backgrounds on headers or dropdown menus.",
-    "Check that the 'Enciclopedia' and 'Tabelle & Farine' buttons on Ricette page never clip or truncate text.",
-    "Verify recipe categories start in a collapsed/closed state by default with arrow indicator.",
-    "Keep the Sage Green (#5E8B7E) and Terracotta (#C85A32) color hierarchy consistent.",
-    "Ensure Michele real photos are embedded throughout all sections, especially the large footer element."
+    "Strictly follow the 'Arte Bianca' warm flour & wood color scheme (#FDFBF7, #FAF5EC, #8C4A27, #D97706). Remove all generic blue/gold or white mixer backgrounds.",
+    "Do NOT mention any prices or the word 'Gratis'. Use dynamic challenge CTAs: 'Sblocca Contenuto', 'Completa la Sfida per Accedere', 'Guadagna la Scheda'.",
+    "Ensure the Home page displays the 6 sections in the exact requested order.",
+    "B2B section must be clean with 3 key pillars (Spazi, Tempi/Flussi, Riduzione Sprechi) and ONE single CTA 'Genera Piano di Lavoro e Avvia Sblocco'.",
+    "Keep interactive Michele & Mohamed Avatar Guide clean, step-by-step, and fully functional in Italian with multi-language fallback.",
+    "Ensure all interactive elements have explicit data-testid attributes."
   ],
-  "UNIVERSAL GUIDELINES FOR MAIN AGENT": "Follow mobile-first PWA responsiveness, preserve high contrast over watermark background, never use raw transparent overlays on dropdowns or sticky navigation."
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Maintain high contrast APCA standards across all flour-toned containers.",
+    "Do not use transparent backgrounds under header, dropdowns, or modals.",
+    "Use subtle spring animations and micro-interactions on challenge unlock cards.",
+    "Always test interface in Italian as primary language."
+  ]
 }

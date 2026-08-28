@@ -3832,6 +3832,14 @@ _stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
 PRICE_LOOKUP = {"monthly": "pro_monthly", "yearly": "pro_yearly"}
 
+# Pagamenti disattivati: MikiLab sblocca i contenuti tramite SFIDE, non con denaro.
+PAYMENTS_ENABLED = os.environ.get("PAYMENTS_ENABLED", "false").lower() == "true"
+
+
+def _require_payments():
+    if not PAYMENTS_ENABLED:
+        raise HTTPException(status_code=503, detail="Pagamenti disattivati: sblocca i contenuti completando le sfide della community.")
+
 # Listino interno (prezzi gestiti lato codice, in centesimi EUR)
 INTERNAL_PRICES = {
     ("lab", "monthly"): {"amount": 2999, "interval": "month", "name": "Il Tuo Laboratorio — Mensile"},
@@ -3850,6 +3858,7 @@ class CheckoutReq(BaseModel):
 
 @api_router.post("/subscription/checkout")
 async def create_checkout(body: CheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
     email = user["email"]
     p = INTERNAL_PRICES.get((body.tier, body.plan)) or INTERNAL_PRICES[("lab", "monthly")]
     # Cliente per email (riuso se esiste)
@@ -3883,6 +3892,7 @@ class BundleCheckoutReq(BaseModel):
 
 @api_router.post("/recipes/bundle-checkout")
 async def bundle_checkout(body: BundleCheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
     b = BUNDLE_DEFS.get(body.bundle)
     if not b:
         raise HTTPException(400, "Pacchetto non valido")
@@ -4235,6 +4245,7 @@ class TrialCardReq(BaseModel):
 
 @api_router.post("/trial/checkout")
 async def trial_checkout(body: TrialCardReq, user: dict = Depends(current_user)):
+    _require_payments()
     """Prova 7 giorni: raccoglie la carta con Stripe (mode=setup) SENZA addebitare nulla."""
     email = user["email"].strip().lower()
     ent = await db.entitlements.find_one({"email": email})
@@ -4305,6 +4316,8 @@ async def trial_checkout_status(session_id: str, user: dict = Depends(current_us
 
 @api_router.post("/webhook/stripe")
 async def stripe_webhook(request: Request):
+    if not PAYMENTS_ENABLED:
+        return {"ok": True, "ignored": True}  # pagamenti disattivati
     payload = await request.body()
     sig = request.headers.get("stripe-signature", "")
     try:
@@ -4399,6 +4412,7 @@ async def academy_my(user: dict = Depends(current_user)):
 
 @api_router.post("/academy/checkout")
 async def academy_checkout(body: AcademyCheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
     email = user["email"].strip().lower()
     origin = body.origin_url.rstrip("/")
     if body.kind == "course":
@@ -4469,6 +4483,7 @@ class RecipeCheckoutReq(BaseModel):
 
 @api_router.post("/recipe/checkout")
 async def recipe_checkout(body: RecipeCheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
     email = user["email"].strip().lower()
     cents = RECIPE_PRICES.get(body.kind)
     if not cents:
