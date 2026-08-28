@@ -80,6 +80,23 @@ export default function Community({ onNavigate }) {
   const load = async (f = feed) => { setLoading(true); setPosts(await communityApi.list(f)); setLoading(false); };
   useEffect(() => { load(feed); }, [feed]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Menù contestuale del Social: apre le viste e imposta l'ordinamento del feed via eventi.
+  useEffect(() => {
+    const onView = (e) => {
+      const v = e?.detail?.view;
+      if (v === "friends") setFriendsOpen(true);
+      else if (v === "map") setMapOpen(true);
+      else if (v === "messages") { if (user) { setChatUser(null); setChatOpen(true); } else setAuthOpen(true); }
+      else if (v === "profile") { if (user) setProfileUser(user.user_id); else setAuthOpen(true); }
+      else if (v === "market") { markMarketSeen(); setMarketNew(0); document.querySelector('[data-testid="community-marketplace"]')?.scrollIntoView({ behavior: "smooth", block: "start" }); }
+      else if (v === "feed") document.querySelector('[data-testid="feed-toggle"]')?.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    const onFeed = (e) => { const o = e?.detail?.order; if (o) { if (o === "friends" && !user) { setAuthOpen(true); return; } setFeed(o); document.querySelector('[data-testid="feed-toggle"]')?.scrollIntoView({ behavior: "smooth", block: "center" }); } };
+    window.addEventListener("mikilab-social-view", onView);
+    window.addEventListener("mikilab-social-feed", onFeed);
+    return () => { window.removeEventListener("mikilab-social-view", onView); window.removeEventListener("mikilab-social-feed", onFeed); };
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const needLogin = () => { if (!user) { setAuthOpen(true); return true; } return false; };
 
   const onPhoto = async (e) => {
@@ -238,22 +255,6 @@ export default function Community({ onNavigate }) {
         );
       })()}
 
-      {/* Intro viva e giovanile del Social */}
-      <div data-testid="social-intro" className="rounded-2xl p-4 mb-4 text-white relative overflow-hidden"
-        style={{ background: "linear-gradient(120deg,#0f2231,#123c4a 40%,#1f5a68 72%,#a9772f)" }}>
-        <p className="font-display text-lg font-extrabold leading-tight">{tri("Benvenuto nel Social dei Panettieri! 🥐🔥", "Willkommen im Bäcker-Social! 🥐🔥", "Welcome to the Bakers' Social! 🥐🔥", "¡Bienvenido al Social de Panaderos! 🥐🔥")}</p>
-        <p className="text-[12.5px] text-white/90 mt-1 leading-snug">{tri("Mostra le tue sfornate, lancia idee, chiedi aiuto e trova colleghi vicino a te. Qui si cresce insieme.", "Zeig deine Backwerke, teile Ideen, frag um Rat und finde Kollegen in der Nähe.", "Show your bakes, drop ideas, ask for help and find fellow bakers near you.", "Muestra tus horneadas, lanza ideas, pide ayuda y encuentra colegas cerca.")}</p>
-        <div className="flex gap-2 mt-3 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-          {[["foto", tri("📸 Mostra la sfornata", "📸 Backwerk zeigen", "📸 Show your bake", "📸 Muestra tu horneada")],
-            ["idea", tri("✨ Lancia un'idea", "✨ Idee teilen", "✨ Drop an idea", "✨ Lanza una idea")],
-            ["domanda", tri("🙋 Chiedi aiuto", "🙋 Um Rat fragen", "🙋 Ask for help", "🙋 Pide ayuda")]].map(([id, lbl]) => (
-            <button key={id} data-testid={`social-quick-${id}`}
-              onClick={() => { if (!user) { setAuthOpen(true); return; } setCat(id); document.querySelector('[data-testid="community-text"]')?.focus(); document.querySelector('[data-testid="community-text"]')?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
-              className="shrink-0 text-[12px] font-bold bg-white/20 hover:bg-white/30 border border-white/40 px-3 py-1.5 rounded-full active:scale-95 transition-all whitespace-nowrap">{lbl}</button>
-          ))}
-        </div>
-      </div>
-
       <div className="bg-[#B45309]/10 border border-[#B45309]/30 rounded-2xl p-4 mb-5">
         <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2">{tri("Cosa vuoi condividere?", "Was möchtest du teilen?", "What do you want to share?", "¿Qué quieres compartir?")}</p>
         <div className="grid grid-cols-3 gap-1.5 mb-2">
@@ -289,9 +290,9 @@ export default function Community({ onNavigate }) {
         ))}
       </div>
 
-      {/* Feed */}
+      {/* Feed — ordinamento */}
       <div data-testid="feed-toggle" className="flex gap-2 mb-3">
-        {[["all", tri("Tutti", "Alle", "All", "Todos")], ["friends", tri("Dai tuoi contatti", "Von Kontakten", "From your contacts", "De tus contactos")]].map(([id, lbl]) => (
+        {[["all", tri("Recenti", "Neueste", "Recent", "Recientes")], ["popular", tri("Popolari", "Beliebt", "Popular", "Populares")], ["friends", tri("Amici", "Freunde", "Friends", "Amigos")]].map(([id, lbl]) => (
           <button key={id} data-testid={`feed-tab-${id}`} onClick={() => { if (id === "friends" && needLogin()) return; setFeed(id); }}
             className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${feed === id ? "bg-[#123c4a] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#7E8A93]"}`}>{lbl}</button>
         ))}

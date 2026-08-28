@@ -5005,6 +5005,8 @@ async def community_list(request: Request, limit: int = 200, scope: str = "all")
         ids.add(me)
         q = {"author_id": {"$in": list(ids)}}
     docs = await db.community_posts.find(q, {"_id": 0}).sort("created_at", -1).to_list(limit)
+    if scope == "popular":
+        docs.sort(key=lambda d: (len(d.get("likes") or []), d.get("created_at") or ""), reverse=True)
     return [_post_public(d, user) for d in docs]
 
 

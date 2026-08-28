@@ -27,17 +27,17 @@ export default function Header() {
       className="sticky top-0 z-40 bg-[#FAF5EC]/95 dark:bg-[#1B2127]/95 backdrop-blur-md border-b border-[#E6D8C3] dark:border-[#38424B]"
     >
       <div className="px-4 py-3 flex items-center justify-between gap-2">
-      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+      <div className="flex items-center gap-2 min-w-0">
         <button data-testid="site-menu-open" onClick={() => window.dispatchEvent(new Event("mikilab-open-menu"))} aria-label="Menu"
           className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] flex items-center justify-center text-[#6E371C] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
           <Menu className="w-5 h-5" />
         </button>
-        <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#232A31] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
+        <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#232A31] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-full h-full object-cover" />
         </div>
-        <div className="min-w-0 leading-none">
-          <p className="font-display text-lg font-extrabold tracking-tight text-[#6E371C] dark:text-[#e4eff8] truncate">MikiLab</p>
-          <p className="hidden min-[380px]:block text-[10px] font-semibold text-[#7E8A93] truncate">{t("brand_subtitle")}</p>
+        <div className="leading-none shrink-0">
+          <p className="font-display text-lg font-extrabold tracking-tight text-[#6E371C] dark:text-[#e4eff8] whitespace-nowrap">MikiLab</p>
+          <p className="hidden min-[440px]:block text-[10px] font-semibold text-[#7E8A93] truncate max-w-[140px]">{t("brand_subtitle")}</p>
         </div>
       </div>
 

@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only test (mobile 390x844, IT locale, admin@mikilab.de) of the CONTEXTUAL hamburger SiteMenu + simplified Social with feed ordering. ALL 7 requested scenarios PASS. Contextual title (site-menu-title): Home='MikiLab', Impara='MikiLab', Ricette='Le Ricette', Community='Social', Maestro='Il Tuo Laboratorio'. LAB context: site-menu-search + all 6 tool categories (panificazione/pizzeria/pasticceria/custodite/manisporche/coldchain) + 44 site-menu-tool-* buttons; typing 'timer' shows site-menu-search-results with 'Smart Timer Multi-Impasto'; NO social block. SOCIAL context: site-menu-social present with site-menu-feed-all/popular/friends and all 6 site-menu-social-* items; NO lab categories. Feed ordering: feed-toggle with Recenti/Popolari/Amici; feed-tab-popular triggers GET /api/community/posts?scope=popular; site-menu-feed-popular and -friends close the menu, set the active order (feed-tab highlighted) and refetch. Social menu actions open the right views: friends-panel, bakers-map, community-marketplace scrolled into view, messages. Sections block always present (home/ricette/maestro/impara/community + sfide), current section badged 'qui', site-menu-section-ricette navigates to Ricette (menu title becomes 'Le Ricette'), site-menu-section-sfide opens sfide-overlay. Regression: social-intro removed (count 0), all 5 tabs render (no white screen), no blocking JS errors (only expected 401s for auth-gated endpoints while guest).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Sfide overlay / FriendsPanel / BakersMap", "issue": "ESC key does not close these full-screen overlays; only the explicit close button works. While open, their backdrop (absolute inset-0 in FriendsPanel) intercepts clicks on the header hamburger and bottom nav, so a user who misses the small X can feel trapped. Minor UX/a11y, not a functional blocker.", "selector": "sfide-overlay, friends-panel, bakers-map", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Header (guest, 390px)", "issues": ["App title truncated to 'Mi...' and subtitle to 'Il labor...' because the 'Accedi' button consumes width; consider hiding the subtitle below 400px"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional/low priority: add Escape-key + backdrop-click close to sfide-overlay, friends-panel and bakers-map.",
+    "Optional: prevent header title truncation on 390px for guests."
+  ],
+  "critical_code_review_comments": [
+    "SiteMenu.jsx is contextual and clean; goSocial/goFeed use a 180ms delayed window event when navigating from another tab - works, but is timing-based; consider a pending-view state consumed by Community on mount (same class of bug reported in iteration_100 for pending tools).",
+    "Note: previous iteration_100 bug (choosing a tool from the menu while already on the maestro tab) was NOT re-verified in this run; it is unrelated to the current contextual-menu changes."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested", "frontend": "100% (7/7 requested scenarios)" },
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked; login modal reached via header 'Accedi')",
+  "context_for_next_testing_agent": "UI default locale in this environment is EN - set localStorage 'mikilab_lang'='it' then reload to assert Italian strings. TOOL_CATS keys are panificazione/pizzeria/pasticceria/custodite/manisporche/coldchain (NOT gestione/qualita/formazione). App allows guest browsing; login via header 'Accedi' button then auth-email/auth-password/auth-submit. Overlays (sfide-overlay, friends-panel, bakers-map) must be closed with their close testids, ESC does not work and their backdrop blocks nav clicks.",
+  "rca_of_the_issue": "No functional defect found in the contextual menu / social feed ordering feature set."
+}

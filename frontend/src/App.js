@@ -177,7 +177,7 @@ function App() {
         style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px" }} />
       <div className="relative z-10">
       <Header />
-      <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} />
+      <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />
       <InstallBanner />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-64">
         <ErrorBoundary resetKey={tab} lang={lang}>

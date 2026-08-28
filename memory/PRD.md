@@ -2041,3 +2041,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Lab: subito alla generazione**: all'apertura del Laboratorio (prima volta per sessione) scroll automatico gentile a `capo-source-choice` (Scegli ricette → Genera). Guard sessionStorage `mikilab_lab_scrolled`.
 - **Social snellito**: header Community reso compatto (avatar 12, titolo + una riga, pulsante Profilo), rimossi paragrafi ridondanti e logo doppio. Navigazione via menù globale.
 - Compilazione pulita.
+
+## v-fork.37 (2026-06) — Menù CONTESTUALE per sezione + Social semplificato + ordina feed
+- **Menù contestuale** (SiteMenu riceve prop `tab`): il titolo indica la sezione ("Menù di questa sezione" + nome). Nel **Laboratorio** mostra ricerca + preferiti + le 6 categorie di strumenti (niente voci social). Nel **Social** mostra "Ordina la bacheca" (Recenti/Popolari/Amici) + le 6 voci Social (Feed/Amici/Messaggi/Mercatino/Mappa/Profilo) via eventi window (`mikilab-social-view`, `mikilab-social-feed`). In Home/Impara/Ricette: guida rapida. In fondo sempre "Vai a un'altra sezione" con la corrente evidenziata.
+- **Social semplificato**: rimosso il blocco ridondante `social-intro`. Header Community compatto (v-fork.36). Le viste (Amici/Mappa/Messaggi/Mercatino/Profilo) si aprono anche dal menù.
+- **Ordina feed**: 3 opzioni Recenti(all)/Popolari(popular)/Amici(friends). Backend `community_list` ordina per numero di like quando scope=popular; `communityApi.list` passa lo scope per qualsiasi valore ≠ all.
+- **Header**: fix troncamento titolo "MikiLab" a schermi stretti (gruppo sinistro compatto, logo 9, subtitle nascosto sotto 440px).
+- Testato iteration_101: frontend 100% (7/7). Nota LOW pre-esistente: overlay full-screen (Sfide/Amici/Mappa) non si chiudono con ESC (solo col tasto X) — fuori scope.
