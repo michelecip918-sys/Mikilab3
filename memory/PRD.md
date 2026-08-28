@@ -1846,3 +1846,12 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Aggiornato `STRIPE_WEBHOOK_SECRET` in /app/backend/.env → whsec_ZRlLJijxsfmzbLh9EcNpIta2cAwkpIkW (sostituito il precedente whsec_HEOi...). Backend riavviato; `_stripe.Webhook.construct_event` usa la nuova chiave sull'endpoint POST /api/webhook/stripe. Verificato: chiave caricata (…cAwkpIkW) + firma non valida → HTTP 400 (verifica attiva).
 - AZIONE UTENTE: redeploy per portare il secret in produzione + "Invia un ping" da Stripe per conferma 2xx.
 - NOTA (non modificata): mismatch ambiente chiavi Stripe — STRIPE_SECRET_KEY=sk_live_… ma STRIPE_PUBLISHABLE_KEY=pk_test_… con STRIPE_MODE=test. Da allineare (tutte live) se si vuole vendere davvero; non toccato perché fuori scope e gestione chiavi Stripe riservata.
+
+## v-fork.12 (2026-08) — Modalità Manutenzione / Coming Soon
+- Richiesta: nascondere al pubblico tutte le pagine/ricette, mostrare "Mikilab sta arrivando. Sito in manutenzione.", disattivare i bottoni/chiamate Stripe sul frontend, poi deploy.
+- IMPLEMENTATO: `components/Maintenance.jsx` (Coming Soon in italiano, logo + gradient). In `App.js` il default export è ora `AppGate` (senza hook → niente violazione rules-of-hooks): se `process.env.REACT_APP_MAINTENANCE === "true"` mostra <Maintenance/> a tutti, TRANNE al proprietario con `?preview=mikilab2026` (salva `mk_preview=1` in localStorage → accede al sito reale). In manutenzione l'intera app (pagine, ricette, bottoni pagamento/Stripe) NON viene renderizzata → pagamenti disattivati sul frontend by design.
+- FLAG: `REACT_APP_MAINTENANCE=true` in frontend/.env (REACT_APP_BACKEND_URL intatto). Per RIAPRIRE: impostare `REACT_APP_MAINTENANCE=false` (o rimuovere) + redeploy.
+- FIX DEPLOY: rimossi da /app/.gitignore i pattern `.env`/`.env.*`/`*.env` (altrimenti il flag non sarebbe arrivato in produzione). deployment_agent = PASS.
+- VERIFICATO via screenshot: pubblico → Coming Soon; `?preview=mikilab2026` → sito reale completo.
+- Stripe "livelli" (allineamento live/test): NON eseguito — in manutenzione i pagamenti sono off; per andare live serve la publishable key pk_live_ dell'utente. Da fare alla riapertura.
+- AZIONE UTENTE: premere DEPLOY per pubblicare la manutenzione su mikilab.de. Accesso admin: https://mikilab.de/?preview=mikilab2026

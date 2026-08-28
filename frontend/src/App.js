@@ -23,6 +23,7 @@ import ResetPassword from "@/components/ResetPassword";
 import PublicBatch from "@/sections/PublicBatch";
 import { consumeBack } from "@/lib/backNav";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import Maintenance from "@/components/Maintenance";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
@@ -248,4 +249,17 @@ function App() {
   );
 }
 
-export default App;
+export default function AppGate() {
+  // --- Modalità manutenzione / Coming Soon ---
+  // Attiva con REACT_APP_MAINTENANCE=true. Accesso riservato al proprietario con ?preview=mikilab2026 (salvato in localStorage).
+  if (process.env.REACT_APP_MAINTENANCE === "true") {
+    try {
+      const qp = new URLSearchParams(window.location.search);
+      if (qp.get("preview") === "mikilab2026") localStorage.setItem("mk_preview", "1");
+    } catch { /* */ }
+    let bypass = false;
+    try { bypass = localStorage.getItem("mk_preview") === "1"; } catch { /* */ }
+    if (!bypass) return <Maintenance />;
+  }
+  return <App />;
+}
