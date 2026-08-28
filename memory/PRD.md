@@ -1971,3 +1971,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **SFIDE + IMPARA INSIEME**: `Sfide.jsx` mostra il blocco `sfide-learn` "Percorsi Impara completati" (icona GraduationCap + chip con spunta) leggendo gli id `learn_*` da `state.completed`. Verificato (chip "The Basics"/"Sourdough").
 - **RECOLOR GLOBALE**: sweep su tutte le sezioni/componenti con blu residui (#3f7cac→#8C4A27, #234b6e→#6E371C, #5aa0cf/#6E8CA0→#B45309, #2e6690→#8C4A27, #5E7E90→#8C6B4A, #A9C5D4→#e7d5b4, bordi #d5e4f0→#E6D8C3, bg #f0f6fb→#FAF5EC). Schede ricetta aperte e strumenti Laboratorio ora Arte Bianca. Zero blu saturi residui.
 - **DIPLOMA CONDIVISIBILE**: in `ImparaLivelli.jsx` blocco diploma con pulsanti `impara-share-wa` (WhatsApp via wa.me) e `impara-share-more` (Web Share API → Instagram/altro, fallback copia testo).
+
+## v-fork.26 (2026-08) — Sotto-sezioni "Laboratorio Pizzeria" e "Laboratorio Pasticceria & Lievitati"
+- **LAB PIZZERIA** (`sections/LabPizzeria.jsx`, tool grid id `labpizzeria`): 3 schede — Biga & Poolish (prefermento, acqua, temp, % chiusura per Napoletana/Teglia/Pala), Matrix W (ore maturazione frigo 24-96h + appretto per forza W), Service Planner (n pizze → kg farina/acqua/lievito + cassette). Verificato (W300→72h).
+- **LAB PASTICCERIA & LIEVITATI** (`sections/LabPasticceria.jsx`, id `labpasticceria`): 3 schede — Grandi Lievitati & pH (schedule 3 rinfreschi a 30°C ogni 4h + nota bagnetto/curva), Bilanciatore Frolle & Brioche (% burro/tuorli/zucchero con avviso cedimento maglia), POD & PAC (bilanciamento dolcezza/anticongelante gelato vetrina -12°C con range ideali).
+- Entrambe wired in Maestro.jsx (render) + PianoProduzioneAI TOOLS (icone Pizza/Cake), in cima alla griglia strumenti. Client-side, palette Arte Bianca.
+### RESTA DA FARE (suggeriti, non richiesti esplicitamente in questo giro)
+- Badge "Diplomato MikiLab" su profilo pubblico/Community; quiz con immagini; scheda ricetta aperta layout premium.

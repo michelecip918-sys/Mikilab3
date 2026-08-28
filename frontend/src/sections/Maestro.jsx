@@ -65,6 +65,8 @@ import SimulatoreForno from "@/sections/SimulatoreForno";
 import TimeLapseTracker from "@/sections/TimeLapseTracker";
 import BancaLievito from "@/sections/BancaLievito";
 import CantiereRicetta from "@/sections/CantiereRicetta";
+import LabPizzeria from "@/sections/LabPizzeria";
+import LabPasticceria from "@/sections/LabPasticceria";
 import { toast } from "sonner";
 
 export default function Maestro() {
@@ -143,6 +145,8 @@ export default function Maestro() {
         {tool === "timelapse" && <TimeLapseTracker />}
         {tool === "bancalievito" && <BancaLievito />}
         {tool === "cantiere" && <CantiereRicetta />}
+        {tool === "labpizzeria" && <LabPizzeria />}
+        {tool === "labpasticceria" && <LabPasticceria />}
         {tool === "suono" && <SoundDiagnosi />}
         {tool === "enterprise" && <EnterpriseHub />}
       </div>
