@@ -1,7 +1,7 @@
 import { mkTri, triFR, triFA } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles, Trophy, Calculator, UtensilsCrossed, Landmark } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles, Trophy, Calculator, UtensilsCrossed, Landmark, Pizza, Croissant } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -317,6 +317,26 @@ export default function Home({ onNavigate }) {
               </button>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Selettore rapido dei laboratori: Panetteria · Pizzeria · Pasticceria */}
+      <div data-testid="home-lab-switch">
+        <div className="flex items-center gap-2 mb-2 px-1">
+          <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Scegli il tuo laboratorio", "Wähle dein Labor", "Choose your lab", "Elige tu laboratorio")}</h2>
+        </div>
+        <div className="grid grid-cols-3 gap-2.5">
+          {[
+            { id: "pianoai", Icon: Wrench, label: L("Panetteria", "Bäckerei", "Bakery", "Panadería"), grad: "from-[#8C4A27] to-[#6E371C]" },
+            { id: "labpizzeria", Icon: Pizza, label: L("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería"), grad: "from-[#B45309] to-[#8C4A27]" },
+            { id: "labpasticceria", Icon: Croissant, label: L("Pasticceria", "Konditorei", "Pastry", "Pastelería"), grad: "from-[#6E371C] to-[#2C1E16]" },
+          ].map(({ id, Icon, label, grad }) => (
+            <button key={id} data-testid={`home-lab-${id}`} onClick={() => openLabTool(id)}
+              className={`flex flex-col items-center justify-center gap-2 rounded-2xl p-4 text-white shadow-md active:scale-95 transition-all bg-gradient-to-br ${grad} min-h-[104px]`}>
+              <div className="w-11 h-11 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center"><Icon className="w-6 h-6" /></div>
+              <span className="font-display text-[13px] font-bold text-center leading-tight">{label}</span>
+            </button>
+          ))}
         </div>
       </div>
 

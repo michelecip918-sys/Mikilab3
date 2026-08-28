@@ -1,7 +1,8 @@
 import { mkTri } from "@/i18n/triMaps";
 import { useState, useMemo } from "react";
-import { ChevronRight, Pizza, Droplets, FlaskConical, ClipboardList, Grid3x3 } from "lucide-react";
+import { ChevronRight, Pizza, FlaskConical, ClipboardList, Grid3x3, Thermometer, CalendarDays, Euro } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import FoodCostBox from "@/components/FoodCostBox";
 
 const TYPES = {
   napoletana: { it: "Napoletana", hyd: 62, panetto: 260, box: 20 },
@@ -63,10 +64,43 @@ export default function LabPizzeria({ onBack }) {
     return { doughTot, flourKg, waterKg, yeastG, boxes };
   }, [pizzas, sptype]);
 
+  // Teorema Temperatura Acqua (fattore macchina)
+  const [tDough, setTDough] = useState(24);
+  const [tRoom2, setTRoom2] = useState(20);
+  const [tFlour, setTFlour] = useState(19);
+  const [tFriction, setTFriction] = useState(6);
+  const [factor, setFactor] = useState(3);
+  const waterT = useMemo(() => {
+    const f = Number(factor) || 3;
+    const wt = (Number(tDough) || 0) * f - ((Number(tRoom2) || 0) + (Number(tFlour) || 0) + (Number(tFriction) || 0));
+    return Math.round(wt);
+  }, [tDough, tRoom2, tFlour, tFriction, factor]);
+
+  // Piano Settimanale Production (Lun-Dom): impasti e palline per giorno
+  const DAYS = [
+    L("Lunedì", "Monday", "Lunes", "Lundi"), L("Martedì", "Tuesday", "Martes", "Mardi"),
+    L("Mercoledì", "Wednesday", "Miércoles", "Mercredi"), L("Giovedì", "Thursday", "Jueves", "Jeudi"),
+    L("Venerdì", "Friday", "Viernes", "Vendredi"), L("Sabato", "Saturday", "Sábado", "Samedi"),
+    L("Domenica", "Sunday", "Domingo", "Dimanche"),
+  ];
+  const [week, setWeek] = useState(DAYS.map(() => ({ type: "napoletana", balls: 0 })));
+  const setDay = (i, k, v) => setWeek((l) => l.map((d, j) => (j === i ? { ...d, [k]: v } : d)));
+  const weekTot = useMemo(() => {
+    let balls = 0, dough = 0, flour = 0;
+    week.forEach((d) => {
+      const t = TYPES[d.type]; const b = Number(d.balls) || 0;
+      balls += b; const dt = b * t.panetto; dough += dt; flour += dt / (1 + t.hyd / 100);
+    });
+    return { balls, dough, flourKg: flour / 1000 };
+  }, [week]);
+
   const TABS = [
     { id: "prefermenti", Icon: FlaskConical, label: L("Biga & Poolish", "Biga & Poolish") },
     { id: "matrix", Icon: Grid3x3, label: L("Matrix W", "W Matrix") },
-    { id: "planner", Icon: ClipboardList, label: L("Service", "Service") },
+    { id: "acqua", Icon: Thermometer, label: L("T° Acqua", "Water T°") },
+    { id: "planner", Icon: ClipboardList, label: L("Palline/Teglie", "Balls/Trays") },
+    { id: "settimana", Icon: CalendarDays, label: L("Settimana", "Week") },
+    { id: "foodcost", Icon: Euro, label: L("Food Cost", "Food Cost") },
   ];
 
   return (
@@ -78,9 +112,9 @@ export default function LabPizzeria({ onBack }) {
         <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">{L("Prefermenti, maturazione e organizzazione del servizio per Napoletana, Teglia e Pala.", "Preferments, maturation and service planning for Neapolitan, Pan and Pala.")}</p>
       </div>
 
-      <div className="flex gap-1.5 bg-[#F2E8D5] p-1.5 rounded-2xl mb-5 border border-[#E6D8C3]">
+      <div className="flex flex-wrap gap-1.5 bg-[#F2E8D5] p-1.5 rounded-2xl mb-5 border border-[#E6D8C3]">
         {TABS.map(({ id, Icon, label }) => (
-          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-bold transition-all ${tab === id ? "bg-[#8C4A27] text-[#FFFDF9] shadow" : "text-[#6B5546]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-bold transition-all ${tab === id ? "bg-[#8C4A27] text-[#FFFDF9] shadow" : "text-[#6B5546]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
@@ -129,6 +163,44 @@ export default function LabPizzeria({ onBack }) {
           </div>
         </div>
       )}
+      {tab === "acqua" && (
+        <div className={card} data-testid="pizzeria-acqua">
+          <p className="text-[12.5px] text-[#6B5546] mb-3">{L("Teorema della temperatura acqua: (T° impasto × fattore macchina) − (T° ambiente + T° farina + T° attrito).", "Water temperature theorem: (dough T° × machine factor) − (room T° + flour T° + friction T°).")}</p>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div><p className={lbl}>{L("T° impasto voluta", "Desired dough T°")}</p><input data-testid="pz-tdough" type="number" value={tDough} onChange={(e) => setTDough(e.target.value)} className={inp} /></div>
+            <div><p className={lbl}>{L("Fattore macchina", "Machine factor")}</p><input data-testid="pz-factor" type="number" value={factor} onChange={(e) => setFactor(e.target.value)} className={inp} /></div>
+            <div><p className={lbl}>{L("T° ambiente", "Room T°")}</p><input data-testid="pz-troom2" type="number" value={tRoom2} onChange={(e) => setTRoom2(e.target.value)} className={inp} /></div>
+            <div><p className={lbl}>{L("T° farina", "Flour T°")}</p><input data-testid="pz-tflour" type="number" value={tFlour} onChange={(e) => setTFlour(e.target.value)} className={inp} /></div>
+            <div><p className={lbl}>{L("T° attrito", "Friction T°")}</p><input data-testid="pz-tfriction" type="number" value={tFriction} onChange={(e) => setTFriction(e.target.value)} className={inp} /></div>
+          </div>
+          <div data-testid="pz-water-out" className="rounded-xl bg-[#FEF3C7] p-4 text-center">
+            <p className="text-[12px] font-semibold text-[#92400E]">{L("Temperatura acqua consigliata", "Recommended water temperature")}</p>
+            <p className="font-display text-4xl font-bold text-[#8C4A27]">{waterT}°C</p>
+          </div>
+        </div>
+      )}
+
+      {tab === "settimana" && (
+        <div className={card} data-testid="pizzeria-settimana">
+          <p className="text-[12.5px] text-[#6B5546] mb-3">{L("Pianifica impasti e palline da Lunedì a Domenica.", "Plan doughs and dough balls from Monday to Sunday.")}</p>
+          <div className="space-y-2 mb-3">
+            {DAYS.map((d, i) => (
+              <div key={i} className="flex items-center gap-2" data-testid={`pz-week-${i}`}>
+                <span className="w-24 shrink-0 text-[13px] font-semibold text-[#6B5546]">{d}</span>
+                <select data-testid={`pz-week-type-${i}`} value={week[i].type} onChange={(e) => setDay(i, "type", e.target.value)} className={inp + " flex-1 min-w-0"}>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v.it}</option>)}</select>
+                <input data-testid={`pz-week-balls-${i}`} type="number" value={week[i].balls} onChange={(e) => setDay(i, "balls", e.target.value)} placeholder={L("palline", "balls")} className={inp + " w-24 shrink-0"} />
+              </div>
+            ))}
+          </div>
+          <div data-testid="pz-week-out" className="rounded-xl bg-[#FEF3C7] p-3 divide-y divide-[#E6D8C3]">
+            {[[L("Palline totali", "Total balls"), `${num(weekTot.balls)}`], [L("Impasto totale", "Total dough"), `${num(weekTot.dough)} g`], [L("Farina totale", "Total flour"), `${weekTot.flourKg.toFixed(1)} kg`]].map(([k, v], i) => (
+              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#6B5546]">{k}</span><span className="font-mono-data font-bold text-[#8C4A27]">{v}</span></div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tab === "foodcost" && <FoodCostBox />}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = "mikilab-v6";
+const CACHE_NAME = "mikilab-v8";
 
 self.addEventListener("install", () => {
   self.skipWaiting();

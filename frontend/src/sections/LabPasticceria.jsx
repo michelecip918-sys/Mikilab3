@@ -1,7 +1,8 @@
 import { mkTri } from "@/i18n/triMaps";
 import { useState, useMemo } from "react";
-import { ChevronRight, Cake, Clock, Scale, IceCream2, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ChevronRight, Cake, Clock, Scale, IceCream2, AlertTriangle, CheckCircle2, Milk, FileText, Euro } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import FoodCostBox from "@/components/FoodCostBox";
 
 // Coefficienti POD (potere dolcificante) e PAC (potere anticongelante)
 const SUGARS = {
@@ -65,10 +66,36 @@ export default function LabPasticceria({ onBack }) {
       podOk: podR >= 180 && podR <= 280, pacOk: pacR >= 250 && pacR <= 300 };
   }, [sg, mix]);
 
+  // Creme & Farciture: base crema pasticcera scalabile
+  const [milk, setMilk] = useState(1000);
+  const [cream, setCream] = useState("pasticcera");
+  const creme = useMemo(() => {
+    const m = Number(milk) || 0;
+    if (cream === "pasticcera") return [[L("Latte", "Milk"), m], [L("Tuorli", "Yolks"), Math.round(m * 0.24)], [L("Zucchero", "Sugar"), Math.round(m * 0.25)], [L("Amido/farina", "Starch/flour"), Math.round(m * 0.08)], [L("Vaniglia (bacche)", "Vanilla (pods)"), Math.max(1, Math.round(m / 500))]];
+    if (cream === "chantilly") return [[L("Panna 35%", "Cream 35%"), m], [L("Crema pasticcera", "Pastry cream"), Math.round(m)], [L("Zucchero a velo", "Icing sugar"), Math.round(m * 0.1)]];
+    if (cream === "ganache") return [[L("Cioccolato fondente", "Dark chocolate"), m], [L("Panna 35%", "Cream 35%"), Math.round(m)], [L("Burro", "Butter"), Math.round(m * 0.1)]];
+    return [[L("Mascarpone", "Mascarpone"), m], [L("Tuorli", "Yolks"), Math.round(m * 0.2)], [L("Zucchero", "Sugar"), Math.round(m * 0.2)], [L("Panna semimontata", "Semi-whipped cream"), Math.round(m * 0.5)]];
+  }, [milk, cream, lang]);
+
+  // Schede Prodotto & Allergeni (14 allergeni UE)
+  const ALLERGENS = [
+    L("Glutine", "Gluten"), L("Crostacei", "Crustaceans"), L("Uova", "Eggs"), L("Pesce", "Fish"),
+    L("Arachidi", "Peanuts"), L("Soia", "Soy"), L("Latte", "Milk"), L("Frutta a guscio", "Nuts"),
+    L("Sedano", "Celery"), L("Senape", "Mustard"), L("Sesamo", "Sesame"), L("Solfiti", "Sulphites"),
+    L("Lupini", "Lupin"), L("Molluschi", "Molluscs"),
+  ];
+  const [prodName, setProdName] = useState("");
+  const [prodIng, setProdIng] = useState("");
+  const [allg, setAllg] = useState([]);
+  const toggleAllg = (a) => setAllg((l) => (l.includes(a) ? l.filter((x) => x !== a) : [...l, a]));
+
   const TABS = [
     { id: "lievitati", Icon: Clock, label: L("Grandi Lievitati", "Big Leavened") },
-    { id: "frolle", Icon: Scale, label: L("Frolle & Brioche", "Pastry & Brioche") },
-    { id: "podpac", Icon: IceCream2, label: L("POD & PAC", "POD & PAC") },
+    { id: "frolle", Icon: Scale, label: L("Zuccheri & Grassi", "Sugars & Fats") },
+    { id: "podpac", Icon: IceCream2, label: L("PAC/POD", "PAC/POD") },
+    { id: "creme", Icon: Milk, label: L("Creme & Farciture", "Creams & Fillings") },
+    { id: "schede", Icon: FileText, label: L("Schede & Allergeni", "Sheets & Allergens") },
+    { id: "foodcost", Icon: Euro, label: L("Food Cost", "Food Cost") },
   ];
 
   return (
@@ -80,9 +107,9 @@ export default function LabPasticceria({ onBack }) {
         <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">{L("Grandi lievitati, bilanciamento impasti dolci e gelateria da vetrina.", "Big leavened cakes, sweet dough balancing and display gelato.")}</p>
       </div>
 
-      <div className="flex gap-1.5 bg-[#F2E8D5] p-1.5 rounded-2xl mb-5 border border-[#E6D8C3]">
+      <div className="flex flex-wrap gap-1.5 bg-[#F2E8D5] p-1.5 rounded-2xl mb-5 border border-[#E6D8C3]">
         {TABS.map(({ id, Icon, label }) => (
-          <button key={id} data-testid={`pasticceria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-bold transition-all ${tab === id ? "bg-[#8C4A27] text-[#FFFDF9] shadow" : "text-[#6B5546]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`pasticceria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-bold transition-all ${tab === id ? "bg-[#8C4A27] text-[#FFFDF9] shadow" : "text-[#6B5546]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
@@ -137,6 +164,49 @@ export default function LabPasticceria({ onBack }) {
           </div>
         </div>
       )}
+      {tab === "creme" && (
+        <div className={card} data-testid="pasticceria-creme">
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div><p className={lbl}>{L("Tipo di crema", "Cream type")}</p>
+              <select data-testid="cr-type" value={cream} onChange={(e) => setCream(e.target.value)} className={inp + " !font-sans"}>
+                <option value="pasticcera">{L("Crema pasticcera", "Pastry cream")}</option>
+                <option value="chantilly">{L("Chantilly", "Chantilly")}</option>
+                <option value="ganache">{L("Ganache", "Ganache")}</option>
+                <option value="tiramisu">{L("Crema al mascarpone", "Mascarpone cream")}</option>
+              </select>
+            </div>
+            <div><p className={lbl}>{L("Base (g)", "Base (g)")}</p><input data-testid="cr-milk" type="number" value={milk} onChange={(e) => setMilk(e.target.value)} className={inp} /></div>
+          </div>
+          <div data-testid="cr-out" className="rounded-xl bg-[#FEF3C7] p-3 divide-y divide-[#E6D8C3]">
+            {creme.map(([k, v], i) => (
+              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#6B5546]">{k}</span><span className="font-mono-data font-bold text-[#8C4A27]">{num(v)} g</span></div>
+            ))}
+          </div>
+          <p className="text-[12px] text-[#6B5546] mt-2 leading-snug">{L("Dosi indicative scalate sulla base. Cuoci la pasticcera a 82-85°C; raffredda rapidamente e conserva a +4°C.", "Indicative doses scaled to the base. Cook pastry cream to 82-85°C; cool fast and keep at +4°C.")}</p>
+        </div>
+      )}
+
+      {tab === "schede" && (
+        <div className={card} data-testid="pasticceria-schede">
+          <p className={lbl}>{L("Nome prodotto", "Product name")}</p>
+          <input data-testid="sc-name" value={prodName} onChange={(e) => setProdName(e.target.value)} className={inp + " !font-sans mb-3"} placeholder={L("Es. Cornetto alla crema", "e.g. Cream croissant")} />
+          <p className={lbl}>{L("Ingredienti", "Ingredients")}</p>
+          <textarea data-testid="sc-ing" value={prodIng} onChange={(e) => setProdIng(e.target.value)} rows={3} className={inp + " !font-sans mb-3"} placeholder={L("Farina, burro, uova, zucchero…", "Flour, butter, eggs, sugar…")} />
+          <p className={lbl}>{L("Allergeni presenti", "Allergens present")}</p>
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {ALLERGENS.map((a) => (
+              <button key={a} data-testid={`sc-allg-${a}`} onClick={() => toggleAllg(a)} className={`text-[12px] font-semibold px-2.5 py-1 rounded-full border transition-all ${allg.includes(a) ? "bg-[#DC2626] text-white border-[#DC2626]" : "bg-white dark:bg-[#232A31] text-[#6B5546] border-[#E6D8C3]"}`}>{a}</button>
+            ))}
+          </div>
+          <div data-testid="sc-preview" className="rounded-xl bg-white dark:bg-[#1B2127] border border-[#E6D8C3] dark:border-[#38424B] p-4">
+            <p className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8]">{prodName || L("Scheda prodotto", "Product sheet")}</p>
+            {prodIng && <p className="text-[13px] text-[#3F4A54] dark:text-[#AEB8BF] mt-1"><b>{L("Ingredienti", "Ingredients")}:</b> {prodIng.split(/,|\n/).map((w, i) => { const t = w.trim(); const isA = allg.some((a) => t.toLowerCase().includes(a.toLowerCase())); return t ? <span key={i}>{i > 0 ? ", " : ""}<span className={isA ? "font-bold text-[#DC2626]" : ""}>{t}</span></span> : null; })}</p>}
+            <p className="text-[13px] mt-2"><b className="text-[#DC2626]">{L("Allergeni", "Allergens")}:</b> {allg.length ? allg.join(", ") : L("nessuno indicato", "none indicated")}</p>
+          </div>
+        </div>
+      )}
+
+      {tab === "foodcost" && <FoodCostBox />}
     </div>
   );
 }

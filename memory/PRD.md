@@ -2139,3 +2139,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ### Nuovo logo/branding
 - Logo emblema dorato (M + spighe su fondo espresso) generato (Nano Banana). Impostato come `logo.png`, `favicon.ico`+`favicon-32.png`, `apple-touch-icon.png`, PWA `icon-192/512`, `logo-256`. OG image coordinata (`og-image.jpg` 1200x630). Header e **footer di ogni sezione** (`page-footer`/`footer-logo`) mostrano il nuovo logo. `sw.js` CACHE → v6.
 - Verificato via screenshot: header+footer logo, hero IT, doppia nomenclatura IT+FR (Fil de France→Pain Français (Baguette)), FR UI completa. Newsletter+popup+CTA register testati (turno precedente).
+
+## v-fork.50 (2026-06) — Hub Pizzeria/Pasticceria espansi + Food Cost + selettore Home + nuovo logo avatar
+- **PANIFICAZIONE: non toccata** (nessuna modifica ai tool del laboratorio panificazione).
+- **Hub Pizzeria** (`LabPizzeria.jsx`) ora 6 moduli (tab wrap): Biga & Poolish, Matrix W, **T° Acqua** (teorema: T°impasto×fattore − (ambiente+farina+attrito)), **Palline/Teglie** (ex Service), **Settimana** (piano produzione Lun–Dom: impasto+palline/giorno → palline/impasto/farina totali), **Food Cost**. testid `pizzeria-tab-*`, `pizzeria-acqua/settimana`, `pz-week-*`.
+- **Hub Pasticceria & Gelateria** (`LabPasticceria.jsx`) ora 6 moduli: Grandi Lievitati, **Zuccheri & Grassi** (ex Frolle), **PAC/POD**, **Creme & Farciture** (pasticcera/chantilly/ganache/mascarpone scalabili), **Schede & Allergeni** (nome+ingredienti+14 allergeni UE con anteprima scheda, allergeni evidenziati), **Food Cost**. testid `pasticceria-tab-*`, `pasticceria-creme/schede`, `sc-*`, `cr-*`.
+- **Food Cost & Margini** (`components/FoodCostBox.jsx`, condiviso): ingredienti (costo/kg × qty) + spese % + pezzi + prezzo → costo totale/pezzo, ricavo, margine %, ricarico %. Valido per ogni ricetta. Presente come tab in entrambi gli hub. testid `foodcost-box`, `fc-*`.
+- **Home — selettore laboratori** (`home-lab-switch`): 3 pulsanti Panetteria (`home-lab-pianoai`) · Pizzeria (`home-lab-labpizzeria`) · Pasticceria (`home-lab-labpasticceria`) → aprono direttamente il tool nel Laboratorio via `openLabTool`.
+- **Nuovo logo (avatar)**: emblema circolare dorato realistico con l'avatar di Michele che impasta al forno a legna, camicia blu con crest ML/MIKILAB. Tatuaggio reale (pantera + dragone verde, dalla foto utente) concentrato su UN braccio + orecchino. Applicato a logo.png, favicon(.ico/32), apple-touch, PWA 192/512, logo-256, header + footer. `sw.js` CACHE → v8.
+- Verificato via screenshot: selettore Home, Pizzeria (6 tab, Food Cost calcola), Pasticceria (6 tab, Schede & Allergeni), nuovo logo in header. Panificazione intatta.
+- NB: preview ≠ produzione → serve REDEPLOY.
