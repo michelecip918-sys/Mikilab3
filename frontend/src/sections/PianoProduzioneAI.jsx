@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -102,7 +102,9 @@ const TOOLS = [
   { id: "termo", Icon: Thermometer, cat: "impasto", it: "Termostato & Clima", de: "Thermostat & Klima", en: "Thermostat & Climate" },
   { id: "acqua", Icon: Droplets, cat: "impasto", it: "Temp. Acqua", de: "Wasser-Temp.", en: "Water Temp." },
   { id: "pesata", Icon: Scale, cat: "impasto", it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
-  { id: "timer", Icon: TimerIcon, cat: "cottura", it: "Timer", de: "Timer", en: "Timer" },
+  { id: "manisporche", Icon: Hand, cat: "impasto", it: "Mani Sporche", de: "Schmutzige Hände", en: "Dirty Hands", es: "Manos Sucias" },
+  { id: "custodite", Icon: Landmark, cat: "impasto", it: "Ricette Custodite", de: "Bewahrte Rezepte", en: "Treasured Recipes", es: "Recetas Custodiadas" },
+  { id: "timer", Icon: TimerIcon, cat: "cottura", it: "Smart Timer Multi-Impasto", de: "Smart Timer Multi-Teig", en: "Smart Multi-Dough Timer" },
   { id: "meteo", Icon: CloudSun, cat: "cottura", it: "Meteo", de: "Wetter", en: "Weather" },
   { id: "ph", Icon: FlaskConical, cat: "impasto", it: "Registro Lievito Madre", de: "Sauerteig-Register", en: "Sourdough Log", es: "Registro Masa Madre" },
   { id: "diagnosi", Icon: Camera, cat: "gestione", it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },

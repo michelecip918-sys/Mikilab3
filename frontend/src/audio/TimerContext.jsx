@@ -37,7 +37,12 @@ export function TimerProvider({ children }) {
   useEffect(() => {
     const expired = timers.filter((t) => t.running && t.endsAt && t.endsAt <= now() && !t.notified);
     if (expired.length === 0) return;
-    setTimers((prev) => prev.map((t) => (expired.find((e) => e.id === t.id) ? { ...t, running: false, remaining: 0, endsAt: null, notified: true } : t)));
+    setTimers((prev) => prev.map((t) => {
+      if (!expired.find((e) => e.id === t.id)) return t;
+      // Timer ripetuto (es. pieghe ogni 30′): suona e riparte da capo.
+      if (t.repeat) return { ...t, remaining: t.total, running: true, endsAt: now() + t.total * 1000, notified: false };
+      return { ...t, running: false, remaining: 0, endsAt: null, notified: true };
+    }));
     setRinging((prev) => [...prev, ...expired.map((t) => ({ id: t.id, name: t.name || t.label }))]);
     expired.forEach((t) => {
       try {
@@ -84,12 +89,12 @@ export function TimerProvider({ children }) {
     return () => stopAlarm();
   }, [ringing.length, startAlarm, stopAlarm]);
 
-  const addTimer = useCallback((label, minutes) => {
+  const addTimer = useCallback((label, minutes, repeat = false) => {
     const secs = Math.round((Number(minutes) || 0) * 60);
     if (secs <= 0) return null;
     try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch { /* */ }
     const id = uid();
-    setTimers((prev) => [...prev, { id, name: label || "", label: label || "Timer", total: secs, remaining: secs, running: true, endsAt: now() + secs * 1000, notified: false }]);
+    setTimers((prev) => [...prev, { id, name: label || "", label: label || "Timer", total: secs, remaining: secs, running: true, endsAt: now() + secs * 1000, notified: false, repeat: !!repeat }]);
     return id;
   }, []);
 

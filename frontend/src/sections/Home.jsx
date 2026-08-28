@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles, Trophy, Calculator, UtensilsCrossed } from "lucide-react";
+import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles, Trophy, Calculator, UtensilsCrossed, Landmark } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -215,6 +215,7 @@ export default function Home({ onNavigate }) {
   const concepts = CONCEPTS[lang] || CONCEPTS.it;
   const activeConcept = concepts.find((c) => c.id === open) || null;
   const go = (tab) => onNavigate && onNavigate(tab);
+  const openLabTool = (id) => { try { localStorage.setItem("mikilab_pending_tool", id); } catch { /* */ } onNavigate && onNavigate("maestro"); };
   const jokes = JOKES[lang] || JOKES.it;
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
@@ -325,6 +326,24 @@ export default function Home({ onNavigate }) {
           <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Calculator className="w-6 h-6" /></div>
           <p className="font-display text-base font-bold leading-tight">{L("Calcolatore Metodo", "Methoden-Rechner", "Method Calculator", "Calculadora Método")}</p>
           <p className="text-[11px] text-white/85 leading-snug">{L("Dosi, idratazione e incordatura per alta alveolatura", "Mengen & Hydratation", "Doses & hydration", "Dosis e hidratación")}</p>
+        </button>
+      </div>
+
+      {/* Ricette Custodite + Mani Sporche */}
+      <div className="grid grid-cols-2 gap-3">
+        <button data-testid="home-custodite-btn" onClick={() => openLabTool("custodite")}
+          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
+          style={{ background: "linear-gradient(135deg,#8C4A27,#5A3418)" }}>
+          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Landmark className="w-6 h-6" /></div>
+          <p className="font-display text-base font-bold leading-tight">{L("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{L("I pani del Sud, adattati alle tue dosi + scheda con QR", "Traditionsbrote mit QR-Karte", "Southern breads adapted to your amounts + QR card", "Panes del Sur + ficha QR")}</p>
+        </button>
+        <button data-testid="home-manisporche-btn" onClick={() => openLabTool("manisporche")}
+          className="text-left rounded-2xl p-4 text-[#FFFDF9] shadow-md active:scale-97 transition-all min-h-[118px] flex flex-col gap-2"
+          style={{ background: "linear-gradient(135deg,#6E371C,#3a2415)" }}>
+          <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><Hand className="w-6 h-6" /></div>
+          <p className="font-display text-base font-bold leading-tight">{L("Mani Sporche", "Schmutzige Hände", "Dirty Hands", "Manos Sucias")}</p>
+          <p className="text-[11px] text-white/85 leading-snug">{L("Tasti giganti e voce: timer e comandi con le mani in pasta", "Große Tasten & Stimme", "Giant buttons & voice while your hands are busy", "Botones gigantes y voz")}</p>
         </button>
       </div>
 

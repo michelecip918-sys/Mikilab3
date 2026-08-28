@@ -1,0 +1,37 @@
+{
+  "summary": "Frontend-only E2E testing (admin@mikilab.de) of the new session features: Home avatar, GuidaAvatar tabs, Ricette Custodite, Modalita Mani Sporche, Smart Timer Multi-Impasto and base navigation regression. 21/23 checks passed. Only defect found: 2 of 3 Unsplash recipe images in Ricette Custodite fail to load (naturalWidth=0, empty grey thumbnails) with no onError fallback.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "RicetteCustodite",
+        "issue": "2 of 3 recipe images are broken (HTTP 404 from Unsplash): 'matera' -> images.unsplash.com/photo-1585478259715-876acc5be8eb and 'focaccia' -> images.unsplash.com/photo-1620921575116-fb8902865800. Both render as empty grey boxes in the list card AND in the detail hero (naturalWidth=0). Only 'altamura' (photo-1549931319-a545dcf3bc73) loads. No onError/placeholder fallback is implemented.",
+        "selector": "[data-testid=\"custodite-list\"] img, [data-testid=\"custodite-detail\"] img",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Ricette Custodite (list + detail)",
+        "issues": ["Broken image placeholders leave a large empty grey area in the detail hero, where the white title overlay sits on a near-white background (low contrast until the image loads)."]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Replace the two dead Unsplash URLs for 'matera' and 'focaccia' in /app/frontend/src/sections/RicetteCustodite.jsx with valid/self-hosted images, and add an onError fallback (local placeholder) so a dead CDN URL never shows a broken box."
+  ],
+  "critical_code_review_comments": [
+    "RicetteCustodite.jsx: recipe images are hardcoded external Unsplash URLs with no error handling - single point of failure for the UI. Prefer /public assets or an onError swap to a local placeholder.",
+    "GuidaAvatar.jsx uses /mohammed-avatar.jpg while /public also contains an unused mohammadreza-avatar.jpg - consolidate to avoid confusion (current path resolves 200, image loads fine)."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (skipped per request)", "frontend": "91% (21/23 checks)" },
+  "seed_data_creation": "None persisted. Timers created during test (Folds/Bulk/TEST_Baguette) were removed at the end of the run.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked, logout-btn appears, PRO/paywall bypassed as expected)",
+  "context_for_next_testing_agent": "Verified PASS: (1) Home 'MikiLab Avatar' card home-founder-photo/home-avatar-full loads /michele-avatar-full.jpg naturalWidth=1024; (2) GuidaAvatar tabs guida-tab-michele (/michele-avatar-real.jpg) and guida-tab-mohamed (/mohammed-avatar.jpg) both load nw=1024 - NOTE the second tab testid is 'guida-tab-mohamed', not 'guida-tab-mohammadreza'; (3) home-custodite-btn navigates to Your Lab and auto-opens custodite-list with exactly 3 recipes; custodite-open-matera -> custodite-detail; custodite-flour 1000->2000 doubles all grams (1000/780/250/22/5 -> 2000/1560/500/44/10); custodite-quick-500/1000/2000 update the input; custodite-qr renders a real 220px QR; share/copy/print visible; (4) home-manisporche-btn opens manisporche, manisporche-clock shows HH:MM, manisporche-preset-pieghe creates a countdown timer in manisporche-timers (29:59 -> 29:55), manisporche-mic present; (5) Your Lab quicklinks capo-quicklink-timer/custodite/manisporche all exist; timer title 'Smart Timer Multi-Impasto' in IT (EN locale shows 'Smart Multi-Dough Timer'), timer-preset-pieghe + timer-preset-puntata create 2 counting cards, timer-repeat checkbox toggles, timer-add creates a named custom timer; (6) bottom nav home/ricette/maestro/impara/community all render content. Headless browser locale is en-US so UI defaults to EN - set localStorage 'mikilab_lang'='it' before reload to test Italian copy. Console errors are only pre-login 401s on /api/auth/me and /api/notifications (expected) plus the 404s from the two dead Unsplash images.",
+  "rca_of_the_issue": "The two broken images are external Unsplash photo IDs that now return HTTP 404. Reproduce: login as admin -> home-custodite-btn -> inspect img naturalWidth in custodite-list (matera and focaccia = 0). Mitigation: host the images locally in /app/frontend/public and add an img onError handler."
+}

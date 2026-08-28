@@ -67,6 +67,8 @@ import BancaLievito from "@/sections/BancaLievito";
 import CantiereRicetta from "@/sections/CantiereRicetta";
 import LabPizzeria from "@/sections/LabPizzeria";
 import LabPasticceria from "@/sections/LabPasticceria";
+import RicetteCustodite from "@/sections/RicetteCustodite";
+import ManiSporche from "@/sections/ManiSporche";
 import { toast } from "sonner";
 
 export default function Maestro() {
@@ -74,6 +76,12 @@ export default function Maestro() {
   const scrollRef = useRef(0);
   const openTool = (id) => { scrollRef.current = window.scrollY; setTool(id); window.scrollTo(0, 0); };
   const back = () => setTool(null);
+  useEffect(() => {
+    try {
+      const pending = localStorage.getItem("mikilab_pending_tool");
+      if (pending) { localStorage.removeItem("mikilab_pending_tool"); setTool(pending); window.scrollTo(0, 0); }
+    } catch { /* */ }
+  }, []);
   useEffect(() => {
     if (!tool) requestAnimationFrame(() => window.scrollTo(0, scrollRef.current || 0));
     else window.scrollTo(0, 0);
@@ -147,6 +155,8 @@ export default function Maestro() {
         {tool === "cantiere" && <CantiereRicetta />}
         {tool === "labpizzeria" && <LabPizzeria />}
         {tool === "labpasticceria" && <LabPasticceria />}
+        {tool === "custodite" && <RicetteCustodite />}
+        {tool === "manisporche" && <ManiSporche />}
         {tool === "suono" && <SoundDiagnosi />}
         {tool === "enterprise" && <EnterpriseHub />}
       </div>
