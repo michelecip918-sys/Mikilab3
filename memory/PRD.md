@@ -1946,3 +1946,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Rifinire i `tri()` locali (App.js footer, alcune sezioni) per FR/FA se si vuole zero fallback.
 - Recolor completo sezioni ancora blu (RecipeList/Community interni).
 - Percorsi Impara a livelli con quiz finali.
+
+## v-fork.22 (2026-08) — Rifinitura FR/FA + Recolor interni + Sapore del Giorno cliccabile
+- **RIFINITURA FR/FA**: App.js `tri` locale ora mappa en/es/fr/fa → inglese (prima fr/fa→IT). Slogan footer usa `t("brand_slogan")` (FR/FA verificati: "artisanal"/"صنعتگری"). `Home.jsx` helper locale `L` aggiornato: fr/fa → inglese (hero e card Home non più in IT per FR/FA). Restano pochi helper locali in altre sezioni (long tail) → EN via context tri.
+- **RECOLOR INTERNI**: `Community.jsx` e `Ricette.jsx` — blu (#3f7cac→#8C4A27, #234b6e→#6E371C, #5aa0cf/#6E8CA0→#B45309, #2e6690→#8C4A27, bordi #d5e4f0→#E6D8C3, bg #f0f6fb→#FAF5EC). Community verificato in Arte Bianca.
+- **SAPORE DEL GIORNO CLICCABILE**: `SaporeDelGiorno` ora è un button con prop `onOpen` → `onNavigate("ricette")`. Verificato: apre le Ricette.
+### RESTA DA FARE (P1, feature ampia)
+- **Impara a Livelli**: ristrutturare LearnHub in percorsi a livelli con quiz finali collegati a Motore Sfide/sblocco Panettoni (non ancora fatto — richiede nuova UI livelli + wiring quiz→sfide).

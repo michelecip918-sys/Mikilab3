@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ChevronRight } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 
 // Rotazione giornaliera (day-of-year) tra i "sapori del giorno"
@@ -13,7 +13,7 @@ const FLAVORS = [
   { emoji: "🍕", it: ["Pizza in teglia", "Alta idratazione e lunga maturazione: leggera e alveolata."], de: ["Blechpizza", "Hohe Hydratation & lange Reife."], en: ["Pan Pizza", "High hydration & long maturation: light and airy."], es: ["Pizza en bandeja", "Alta hidratación y larga maduración."] },
 ];
 
-export default function SaporeDelGiorno() {
+export default function SaporeDelGiorno({ onOpen }) {
   const { lang } = useLang();
   const f = useMemo(() => {
     const now = new Date();
@@ -24,7 +24,8 @@ export default function SaporeDelGiorno() {
   const label = lang === "de" ? "Der Geschmack des Tages" : lang === "es" ? "El sabor del día" : (lang === "en" || lang === "fr" || lang === "fa") ? "Flavour of the Day" : "Il Sapore del Giorno";
 
   return (
-    <div data-testid="home-sapore-giorno" className="relative overflow-hidden rounded-3xl p-5 text-[#FFFDF9] shadow-lg flex items-center gap-4"
+    <button type="button" data-testid="home-sapore-giorno" onClick={onOpen} disabled={!onOpen}
+      className="w-full text-left relative overflow-hidden rounded-3xl p-5 text-[#FFFDF9] shadow-lg flex items-center gap-4 active:scale-98 transition-all"
       style={{ background: "linear-gradient(135deg,#D97706 0%,#B45309 55%,#8C4A27 100%)" }}>
       <div aria-hidden className="absolute -right-6 -bottom-8 w-36 h-36 rounded-full opacity-25" style={{ background: "radial-gradient(circle,#FEF3C7,transparent 70%)" }} />
       <div className="text-5xl leading-none shrink-0">{f.emoji}</div>
@@ -33,6 +34,7 @@ export default function SaporeDelGiorno() {
         <p className="font-display text-xl font-bold leading-tight mt-0.5">{txt[0]}</p>
         <p className="text-[#FFFDF9]/85 text-[13px] leading-snug mt-1">{txt[1]}</p>
       </div>
-    </div>
+      {onOpen && <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />}
+    </button>
   );
 }

@@ -20,7 +20,7 @@ export default function Ricette() {
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#234b6e] p-6 text-white">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#6E371C] p-6 text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas")}</h1></div>
           <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3" />
@@ -63,9 +63,9 @@ export default function Ricette() {
 function UtilBtn({ testid, Icon, label, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick}
-      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#6E8CA0]/60 transition-all min-w-0">
-      <div className="w-10 h-10 rounded-xl bg-[#6E8CA0]/15 border border-[#6E8CA0]/30 flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-[#3f7cac]" />
+      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#B45309]/60 transition-all min-w-0">
+      <div className="w-10 h-10 rounded-xl bg-[#B45309]/15 border border-[#B45309]/30 flex items-center justify-center shrink-0">
+        <Icon className="w-5 h-5 text-[#8C4A27]" />
       </div>
       <span className="w-full font-display text-xs sm:text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight break-words hyphens-auto">{label}</span>
     </button>
@@ -77,7 +77,7 @@ function Sub({ onBack, children }) {
   const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : "Ricette";
   return (
     <div className="pb-4">
-      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#3f7cac] font-medium mb-4">
+      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
         <ChevronLeft className="w-5 h-5" /> {backLabel}
       </button>
       {children}

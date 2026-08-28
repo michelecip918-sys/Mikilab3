@@ -16,8 +16,8 @@ import { friendsApi, dmApi } from "@/lib/api";
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
   { id: "idea", Icon: Sparkles, color: "#8a5a2b" },
-  { id: "foto", Icon: Camera, color: "#6E8CA0" },
-  { id: "ricetta", Icon: BookOpen, color: "#5aa0cf" },
+  { id: "foto", Icon: Camera, color: "#B45309" },
+  { id: "ricetta", Icon: BookOpen, color: "#B45309" },
   { id: "domanda", Icon: HelpCircle, color: "#3F7CAC" },
   { id: "evento", Icon: CalendarDays, color: "#2e8b6f" },
 ];
@@ -114,7 +114,7 @@ export default function Community({ onNavigate }) {
   };
 
   const visible = filter === "all" ? posts : posts.filter((p) => p.category === filter);
-  const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
+  const inp = "w-full bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]";
 
   // Registrazione OBBLIGATORIA per accedere al Social
   if (!user) {
@@ -189,7 +189,7 @@ export default function Community({ onNavigate }) {
       </button>
 
       <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
-        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white shadow-md active:scale-98 transition-all">
+        className="w-full flex items-center gap-3 mb-4 rounded-2xl p-4 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-md active:scale-98 transition-all">
         <div className="relative w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
           <UserPlus className="w-6 h-6" />
           {friendReqCount > 0 && <span data-testid="friends-req-badge" className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-[#C0574D] text-white text-[11px] font-extrabold flex items-center justify-center ring-2 ring-white">{friendReqCount}</span>}
@@ -240,7 +240,7 @@ export default function Community({ onNavigate }) {
         try { const p = JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); done = ["ricettario", "farine", "corsi"].every((x) => p.includes(x)); } catch { /* */ }
         if (!done) return null;
         return (
-          <div data-testid="community-badge" className="flex items-center gap-2 mb-4 rounded-2xl bg-gradient-to-r from-[#5aa0cf] to-[#2e6690] text-white px-4 py-2.5 shadow">
+          <div data-testid="community-badge" className="flex items-center gap-2 mb-4 rounded-2xl bg-gradient-to-r from-[#B45309] to-[#8C4A27] text-white px-4 py-2.5 shadow">
             <span className="text-lg">🏅</span>
             <p className="text-sm font-semibold">{tri("Hai il badge «Fornaio Diplomato» — condividilo con i colleghi!", "Du hast das Abzeichen «Diplom-Bäcker» — teile es mit Kollegen!", "You have the «Certified Baker» badge — share it with peers!", "Tienes la insignia «Panadero Diplomado» — ¡compártela con tus colegas!")}</p>
           </div>
@@ -263,12 +263,12 @@ export default function Community({ onNavigate }) {
         </div>
       </div>
 
-      <div className="bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 rounded-2xl p-4 mb-5">
+      <div className="bg-[#B45309]/10 border border-[#B45309]/30 rounded-2xl p-4 mb-5">
         <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2">{tri("Cosa vuoi condividere?", "Was möchtest du teilen?", "What do you want to share?", "¿Qué quieres compartir?")}</p>
         <div className="grid grid-cols-3 gap-1.5 mb-2">
           {CATS.map(({ id, Icon, color }) => (
             <button key={id} data-testid={`community-cat-${id}`} onClick={() => setCat(id)}
-              className={`flex flex-col items-center gap-1 py-2 rounded-xl border text-[11px] font-semibold transition-all ${cat === id ? "text-white border-transparent" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}
+              className={`flex flex-col items-center gap-1 py-2 rounded-xl border text-[11px] font-semibold transition-all ${cat === id ? "text-white border-transparent" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}
               style={cat === id ? { background: color } : {}}>
               <Icon className="w-4 h-4" /> {catLabel(id)}
             </button>
@@ -279,12 +279,12 @@ export default function Community({ onNavigate }) {
           className={inp} />
         {photo && <div className="relative mt-2"><img src={photo} alt="" className="w-full h-40 object-cover rounded-xl" /><button data-testid="community-photo-clear" onClick={() => setPhoto("")} className="absolute top-2 right-2 bg-black/60 text-white rounded-full px-2 py-0.5 text-xs">✕</button></div>}
         <div className="flex items-center gap-2 mt-2">
-          <label data-testid="community-photo-btn" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] text-sm font-semibold text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">
-            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4 text-[#5aa0cf]" />} {tri("Foto", "Foto", "Photo", "Foto")}
+          <label data-testid="community-photo-btn" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] text-sm font-semibold text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">
+            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4 text-[#B45309]" />} {tri("Foto", "Foto", "Photo", "Foto")}
             <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
           <button data-testid="community-submit" data-sfx="save" onClick={submit} disabled={posting}
-            className="ml-auto flex items-center gap-1.5 bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-xl active:scale-98 transition-all">
+            className="ml-auto flex items-center gap-1.5 bg-[#8C4A27] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-xl active:scale-98 transition-all">
             {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Pubblica", "Posten", "Post", "Publicar")}
           </button>
         </div>
@@ -292,9 +292,9 @@ export default function Community({ onNavigate }) {
 
       {/* Filtri */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="community-filters">
-        <button data-testid="community-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}>{tri("Tutti", "Alle", "All", "Todos")}</button>
+        <button data-testid="community-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>{tri("Tutti", "Alle", "All", "Todos")}</button>
         {CATS.map((c) => (
-          <button key={c.id} data-testid={`community-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}>{catLabel(c.id)}</button>
+          <button key={c.id} data-testid={`community-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>{catLabel(c.id)}</button>
         ))}
       </div>
 
@@ -306,14 +306,14 @@ export default function Community({ onNavigate }) {
         ))}
       </div>
       {loading ? (
-        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#3f7cac]" /></div>
+        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#8C4A27]" /></div>
       ) : (
         <div className="space-y-3" data-testid="community-feed">
           {visible.length === 0 && <p className="text-center text-sm text-[#7E8A93] py-8">{tri("Ancora nessun post. Inizia tu la conversazione!", "Noch keine Beiträge. Starte du das Gespräch!", "No posts yet. Start the conversation!", "Aún no hay publicaciones. ¡Empieza tú la conversación!")}</p>}
           {visible.map((p) => {
             const C = CATS.find((c) => c.id === p.category) || CATS[0];
             return (
-              <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4 shadow-sm">
+              <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-4 shadow-sm">
                 <div className="flex items-center gap-2 mb-2">
                   <button data-testid={`post-author-${p.id}`} onClick={() => p.author_id && setProfileUser(p.author_id)} className="flex items-center gap-2 min-w-0 active:scale-98 transition-transform">
                     <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-display font-bold overflow-hidden" style={{ background: C.color }}>{p.author_avatar ? <img src={p.author_avatar} alt="" className="w-full h-full object-cover" /> : (p.author_name || "F")[0].toUpperCase()}</div>
@@ -328,7 +328,7 @@ export default function Community({ onNavigate }) {
                 {p.text && <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-line leading-relaxed">{lang === "de" ? (p.text_de || p.text) : lang === "es" ? (p.text_es || p.text_en || p.text) : lang === "en" ? (p.text_en || p.text) : p.text}</p>}
                 {p.image_url && <img src={p.image_url} alt="" className="w-full rounded-xl mt-2 max-h-80 object-cover" />}
 
-                <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#d5e4f0] dark:border-[#38424B]">
+                <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#E6D8C3] dark:border-[#38424B]">
                   <button data-testid={`community-like-${p.id}`} onClick={() => like(p.id)} className={`flex items-center gap-1.5 text-sm font-semibold ${p.liked_by_me ? "text-[#E4572E]" : "text-[#7E8A93]"}`}>
                     <Heart className={`w-4 h-4 ${p.liked_by_me ? "fill-[#E4572E]" : ""}`} /> {p.like_count || 0}
                   </button>
@@ -342,15 +342,15 @@ export default function Community({ onNavigate }) {
                   <div className="mt-3 space-y-2">
                     {(p.comments || []).map((c) => (
                       <div key={c.id} className="flex gap-2 text-sm items-start">
-                        <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-[#3f7cac] flex items-center justify-center text-white text-[10px] font-bold">{c.author_avatar ? <img src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : (c.author_name || "F")[0].toUpperCase()}</div>
-                        <div className="min-w-0"><span className="font-semibold text-[#3f7cac]">{c.author_name}:</span> <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? (c.text_de || c.text) : lang === "es" ? (c.text_es || c.text_en || c.text) : lang === "en" ? (c.text_en || c.text) : c.text}</span></div>
+                        <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-[#8C4A27] flex items-center justify-center text-white text-[10px] font-bold">{c.author_avatar ? <img src={c.author_avatar} alt="" className="w-full h-full object-cover" /> : (c.author_name || "F")[0].toUpperCase()}</div>
+                        <div className="min-w-0"><span className="font-semibold text-[#8C4A27]">{c.author_name}:</span> <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? (c.text_de || c.text) : lang === "es" ? (c.text_es || c.text_en || c.text) : lang === "en" ? (c.text_en || c.text) : c.text}</span></div>
                       </div>
                     ))}
                     {commentFor === p.id && (
                       <div className="flex gap-2 mt-1">
                         <input data-testid={`community-comment-input-${p.id}`} value={commentText} onChange={(e) => setCommentText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendComment(p.id)}
                           placeholder={tri("Scrivi un commento…", "Kommentar schreiben…", "Write a comment…", "Escribe un comentario…")} className={inp + " py-2"} />
-                        <button data-testid={`community-comment-send-${p.id}`} onClick={() => sendComment(p.id)} className="px-3 rounded-xl bg-[#3f7cac] text-white"><Send className="w-4 h-4" /></button>
+                        <button data-testid={`community-comment-send-${p.id}`} onClick={() => sendComment(p.id)} className="px-3 rounded-xl bg-[#8C4A27] text-white"><Send className="w-4 h-4" /></button>
                       </div>
                     )}
                   </div>
@@ -362,7 +362,7 @@ export default function Community({ onNavigate }) {
       )}
 
       {/* Marketplace Usato — compravendita macchinari/attrezzature tra artigiani */}
-      <div data-testid="community-marketplace" className="mt-8 pt-6 border-t border-[#d5e4f0] dark:border-[#38424B]">
+      <div data-testid="community-marketplace" className="mt-8 pt-6 border-t border-[#E6D8C3] dark:border-[#38424B]">
         <Marketplace />
       </div>
     </div>

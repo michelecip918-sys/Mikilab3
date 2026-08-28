@@ -216,7 +216,7 @@ export default function Home({ onNavigate }) {
   const jokes = JOKES[lang] || JOKES.it;
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
-  const L = (it_, de_, en_, es_) => (de ? de_ : lang === "en" ? en_ : lang === "es" ? (es_ ?? en_) : it_);
+  const L = (it_, de_, en_, es_) => (de ? de_ : lang === "en" ? en_ : lang === "es" ? (es_ ?? en_) : (lang === "fr" || lang === "fa") ? (en_ ?? it_) : it_);
   const profile = getProfile();
 
   const [panettoni, setPanettoni] = useState([]);
@@ -267,7 +267,7 @@ export default function Home({ onNavigate }) {
       <HomeAvatarScene lang={lang} />
 
       {/* Banner dinamico: Il Sapore del Giorno */}
-      <SaporeDelGiorno />
+      <SaporeDelGiorno onOpen={() => onNavigate && onNavigate("ricette")} />
 
       {/* HERO — Titolo principale + didascalia (tema arte bianca) */}
       <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#e4d6bd]"

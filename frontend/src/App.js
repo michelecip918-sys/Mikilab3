@@ -36,8 +36,8 @@ import { recipePurchaseApi, subscriptionApi, api } from "@/lib/api";
 import { toast } from "sonner";
 
 function App() {
-  const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const { lang, t } = useLang();
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
   useState(() => {
     // Ingresso diretto: niente più schermata di domande. Semino un profilo di default completo.
@@ -213,7 +213,7 @@ function App() {
                   </div>
                   <p className="font-display text-lg font-extrabold tracking-tight">MikiLab · Michele</p>
                 </div>
-                <p className="text-[11px] text-white/85 leading-snug mt-1">{tri("Il Mondo Artigianale per Panettieri, Pasticcieri e Pizzaioli", "Die Handwerkswelt für Bäcker, Konditoren und Pizzabäcker", "The Artisan World for Bakers, Pastry Chefs and Pizzaioli")}</p>
+                <p className="text-[11px] text-white/85 leading-snug mt-1">{t("brand_slogan")}</p>
               </div>
             </div>
           </div>
