@@ -5249,6 +5249,7 @@ def _user_card(u: dict) -> dict:
         "user_id": u.get("user_id"),
         "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
         "picture": u.get("picture") or "",
+        "email": u.get("email") or "",
     }
 
 

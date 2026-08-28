@@ -1832,3 +1832,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
   3) UPSERT ATOMICO race-safe in `auth_google` ($setOnInsert + upsert, catch DuplicateKeyError) e `auth_register` (insert in try/except DuplicateKeyError → 400 "Email già registrata").
 - VERIFICATO via curl: indice presente, 0 email duplicate, michelecip918=1 account, flusso amicizia (request→incoming+notifica→accept=friends) OK, registrazione duplicata → HTTP 400. (Integration_expert consultato prima della modifica auth, come da prassi.)
 - NOTA: la specifica richiesta persa non era nel DB (nessuna friendship su michelecip918) → causa= split-brain; chiesto all'utente di far re-inviare la richiesta (ora arriverà all'unico account).
+
+## v-fork.9 (2026-08) — Notifiche più rapide + Trova amici per email
+- **Notifiche più rapide**: NotificationBell polling 45s→15s; FriendsPanel si auto-aggiorna ogni 15s mentre è aperto (le richieste in arrivo compaiono senza riaprire); Community aggiorna il badge "Richieste" ogni 15s (prima solo al mount). Le richieste di amicizia ora appaiono quasi subito senza ricaricare.
+- **Trova amici per nome/email**: `_user_card` ora include `email`; la tab "Trova" (FriendsPanel) filtra per nome OR email e mostra l'email sotto il nome di ogni utente (Row `sub`). Verificato via screenshot: cercando "michelecip918" trova "Michele Signorella / michelecip918@gmail.com" con tasto Aggiungi.

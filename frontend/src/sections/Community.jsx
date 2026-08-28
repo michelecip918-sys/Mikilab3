@@ -67,7 +67,13 @@ export default function Community({ onNavigate }) {
   const [msgUnread, setMsgUnread] = useState(0);
   const [feed, setFeed] = useState("all");
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
-  useEffect(() => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); }, []);
+  useEffect(() => {
+    const loadReq = () => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); };
+    loadReq();
+    if (!user) return undefined;
+    const id = setInterval(loadReq, 15000);
+    return () => clearInterval(id);
+  }, [user]);
   const loadMsgUnread = () => { if (user) dmApi.conversations().then((c) => setMsgUnread((c || []).reduce((a, x) => a + (x.unread || 0), 0))).catch(() => {}); };
   useEffect(() => { loadMsgUnread(); }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 

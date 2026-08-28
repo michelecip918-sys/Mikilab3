@@ -25,7 +25,7 @@ export default function NotificationBell() {
   useEffect(() => { load(); }, [load]);
   useEffect(() => {
     if (!user) return;
-    const id = setInterval(load, 45000);
+    const id = setInterval(load, 15000);
     return () => clearInterval(id);
   }, [user, load]);
 
