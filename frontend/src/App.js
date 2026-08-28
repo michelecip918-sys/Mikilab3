@@ -24,6 +24,7 @@ import PublicBatch from "@/sections/PublicBatch";
 import { consumeBack } from "@/lib/backNav";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Maintenance from "@/components/Maintenance";
+import LegalPage from "@/sections/LegalPage";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
@@ -54,6 +55,7 @@ function App() {
   const tabRef = useRef("home");
   const { user, authOpen, setAuthOpen } = useAuth();
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
+  const [legalOpen, setLegalOpen] = useState(false);
   const publicBatch = new URLSearchParams(window.location.search).get("lotto");
 
   // Gestione tasto Indietro: sincronizza i tab con la history del browser.
@@ -207,6 +209,11 @@ function App() {
             </div>
           </div>
           <p className="text-center text-[10px] text-[#9AA6AE] mt-3">© {new Date().getFullYear()} MikiLab · mikilab.de</p>
+          <div className="flex items-center justify-center gap-4 mt-2">
+            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3f7cac] hover:underline">Impressum</button>
+            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3f7cac] hover:underline">Datenschutz</button>
+            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3f7cac] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
+          </div>
         </footer>
       </main>
       <BottomNav active={tab} onChange={navigate} />
@@ -227,6 +234,15 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {legalOpen && (
+        <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#1B2127] overflow-auto">
+          <div className="max-w-xl mx-auto px-4 py-5">
+            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#3f7cac]">← {tri("Chiudi", "Schließen", "Close")}</button>
+            <LegalPage />
+          </div>
+        </div>
+      )}
 
       <Toaster position="top-center" richColors />
       {resetToken && (

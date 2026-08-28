@@ -1855,3 +1855,14 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - VERIFICATO via screenshot: pubblico → Coming Soon; `?preview=mikilab2026` → sito reale completo.
 - Stripe "livelli" (allineamento live/test): NON eseguito — in manutenzione i pagamenti sono off; per andare live serve la publishable key pk_live_ dell'utente. Da fare alla riapertura.
 - AZIONE UTENTE: premere DEPLOY per pubblicare la manutenzione su mikilab.de. Accesso admin: https://mikilab.de/?preview=mikilab2026
+
+## v-fork.13 (2026-08) — Riorganizzazione MikiLab — FASE 1 (blocco 1) + scelte utente
+- SCELTE UTENTE (motore sfide): 1a Onore+interne verificate · 2b Sblocco DIRETTO (no crediti; Panettone 17 = combinazioni multiple) · 3b Base libero + premium a sfide · contatti→michelecip918@gmail.com · Impressum a segnaposto · Fase 1 prima.
+- FATTO E VERIFICATO in questo blocco:
+  - Manutenzione OFF (REACT_APP_MAINTENANCE=false) → sito pubblico.
+  - Home: nuovo HERO H1 "Ricette Esclusive & Consulenza Operativa per Pasticceria, Panificazione e Pizzeria" + didascalia, tema "arte bianca" (toni farina/legno) — `sections/Home.jsx` (`home-hero`).
+  - Footer (App.js): link Impressum / Datenschutz / Contatti → overlay `LegalPage` (`legal-overlay`).
+  - LegalPage: aggiunta sezione Impressum §5 TMG con SEGNAPOSTO (Nome/Cognome/Indirizzo Stoccarda/Email) + MODULO CONTATTI (`contact-form`).
+  - Backend `POST /api/contact` → salva in `contact_messages` + invia email via Resend a michelecip918@gmail.com (CONTACT_EMAIL). Verificato via curl (200, salvato) + screenshot.
+- ANCORA DA FARE (prossimi blocchi Fase 1): redesign "arte bianca" completo del sito (design_agent), sezione "Guida al Sito" con avatar Michele & Mohamed passo-passo, rimozione bottoni Stripe/pagamenti + parola "Gratis" → CTA "Sblocca Contenuto/Completa la Sfida", registrazione OBBLIGATORIA per Social/download, riorg Home nelle 6 sezioni con B2B a UN solo pulsante ("Genera Piano di Lavoro e Avvia Sblocco").
+- FASE 2 (dopo): motore sfide dinamico (onore+verifica interna) + sblocco Panettone 17 ricette a combinazioni progressive.

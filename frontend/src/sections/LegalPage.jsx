@@ -1,4 +1,7 @@
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Building2, Mail, Send, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
 const T = {
@@ -43,6 +46,22 @@ const T = {
 export default function LegalPage() {
   const { lang } = useLang();
   const c = T[lang] || T.it;
+  const tr = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [sending, setSending] = useState(false);
+
+  const submit = async () => {
+    if (form.message.trim().length < 3) { toast.error(tr("Scrivi un messaggio", "Bitte Nachricht schreiben", "Write a message")); return; }
+    setSending(true);
+    try {
+      const res = await fetch(`${API}/contact`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      if (!res.ok) throw new Error();
+      toast.success(tr("Messaggio inviato! Ti rispondo presto.", "Nachricht gesendet!", "Message sent!", "¡Mensaje enviado!"));
+      setForm({ name: "", email: "", message: "" });
+    } catch { toast.error(tr("Errore, riprova", "Fehler, erneut versuchen", "Error, try again")); }
+    finally { setSending(false); }
+  };
+
   return (
     <div data-testid="legal-page" className="pb-4 space-y-4">
       <div className="rounded-3xl p-6 bg-gradient-to-br from-[#5aa0cf] to-[#2e6690] text-white">
@@ -56,6 +75,37 @@ export default function LegalPage() {
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.b}</p>
         </div>
       ))}
+
+      {/* Impressum (Germania) — segnaposto da compilare */}
+      <div data-testid="impressum" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5">
+        <div className="flex items-center gap-2 mb-2"><Building2 className="w-5 h-5 text-[#3f7cac]" /><h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">Impressum</h2></div>
+        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
+          {tr("Ai sensi del § 5 TMG (Germania):", "Angaben gemäß § 5 TMG:", "Information pursuant to § 5 TMG (Germany):")}
+        </p>
+        <div className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-2 leading-relaxed">
+          <p>[Nome] [Cognome]</p>
+          <p>[Indirizzo], Stoccarda (Stuttgart), Deutschland</p>
+          <p>E-Mail: [email]</p>
+        </div>
+        <p className="text-[11px] text-[#7E8A93] mt-2 italic">{tr("(Dati segnaposto: verranno compilati dal titolare.)", "(Platzhalter: werden vom Betreiber ausgefüllt.)", "(Placeholder data: to be filled by the owner.)")}</p>
+      </div>
+
+      {/* Modulo contatti */}
+      <div data-testid="contact-form" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5">
+        <div className="flex items-center gap-2 mb-3"><Mail className="w-5 h-5 text-[#a9772f]" /><h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tr("Contattaci", "Kontakt", "Contact us", "Contáctanos")}</h2></div>
+        <input data-testid="contact-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tr("Il tuo nome", "Dein Name", "Your name", "Tu nombre")}
+          className="w-full mb-2 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#3f7cac]" />
+        <input data-testid="contact-email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" type="email"
+          className="w-full mb-2 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#3f7cac]" />
+        <textarea data-testid="contact-message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} placeholder={tr("Il tuo messaggio…", "Deine Nachricht…", "Your message…", "Tu mensaje…")}
+          className="w-full mb-3 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#3f7cac]" />
+        <button data-testid="contact-send" onClick={submit} disabled={sending}
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#3f7cac] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 disabled:opacity-60">
+          {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+          {tr("Invia messaggio", "Nachricht senden", "Send message", "Enviar mensaje")}
+        </button>
+      </div>
+
       <p className="text-center text-xs text-[#7E8A93] italic">{c.note}</p>
     </div>
   );

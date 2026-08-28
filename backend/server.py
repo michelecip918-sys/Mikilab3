@@ -4593,6 +4593,38 @@ class ForgotReq(BaseModel):
     lang: str = "it"
 
 
+class ContactReq(BaseModel):
+    name: str = Field("", max_length=120)
+    email: str = Field("", max_length=200)
+    message: str = Field(..., min_length=3, max_length=4000)
+
+
+CONTACT_TO_EMAIL = os.environ.get("CONTACT_EMAIL", "michelecip918@gmail.com")
+
+
+@api_router.post("/contact")
+async def contact_send(body: ContactReq):
+    name = (body.name or "").strip() or "Anonimo"
+    reply = (body.email or "").strip()
+    msg = body.message.strip()
+    # Salva sempre (fallback anche se l'email non parte)
+    doc = {"id": str(uuid.uuid4()), "name": name, "email": reply, "message": msg, "created_at": now_iso()}
+    await db.contact_messages.insert_one(doc)
+    if RESEND_API_KEY:
+        try:
+            html = (f"<h3>Nuovo messaggio dal sito MikiLab</h3>"
+                    f"<p><b>Nome:</b> {name}</p><p><b>Email:</b> {reply or '—'}</p>"
+                    f"<p><b>Messaggio:</b></p><p style='white-space:pre-wrap'>{msg}</p>")
+            params = {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [CONTACT_TO_EMAIL],
+                      "subject": f"📩 Contatto MikiLab da {name}", "html": html}
+            if reply:
+                params["reply_to"] = reply
+            await asyncio.to_thread(_resend.Emails.send, params)
+        except Exception:
+            logger.exception("contact email send error")
+    return {"ok": True}
+
+
 class ResetReq(BaseModel):
     token: str
     password: str

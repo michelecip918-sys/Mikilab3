@@ -254,6 +254,30 @@ export default function Home({ onNavigate }) {
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
+      {/* HERO — Titolo principale + didascalia (tema arte bianca) */}
+      <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#e4d6bd]"
+        style={{ background: "linear-gradient(135deg,#f7efe0 0%,#efe2cb 55%,#e7d5b4 100%)" }}>
+        <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
+        <div className="relative">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-[#a9772f] mb-2">MikiLab</span>
+          <h1 className="font-display text-3xl sm:text-4xl font-extrabold leading-[1.1] text-[#4a3212]">
+            {L("Ricette Esclusive & Consulenza Operativa",
+               "Exklusive Rezepte & operative Beratung",
+               "Exclusive Recipes & Operational Consulting",
+               "Recetas Exclusivas & Consultoría Operativa")}
+            <span className="block text-[#a9772f] text-xl sm:text-2xl mt-1.5 font-bold">
+              {L("per Pasticceria, Panificazione e Pizzeria", "für Konditorei, Bäckerei und Pizzeria", "for Pastry, Baking and Pizzeria", "para Pastelería, Panadería y Pizzería")}
+            </span>
+          </h1>
+          <p className="text-sm sm:text-base text-[#6b563a] leading-relaxed mt-3 max-w-xl">
+            {L("Accedi a ricette testate, schede tecniche e strategie pratiche per l'organizzazione del laboratorio, guadagnando l'accesso con le sfide della nostra community.",
+               "Zugang zu erprobten Rezepten, technischen Datenblättern und praktischen Strategien für die Labororganisation – freigeschaltet durch die Challenges unserer Community.",
+               "Access tested recipes, technical sheets and practical strategies to organise your lab, unlocking them through our community challenges.",
+               "Accede a recetas probadas, fichas técnicas y estrategias prácticas para organizar el laboratorio, desbloqueándolas con los retos de nuestra comunidad.")}
+          </p>
+        </div>
+      </div>
+
       {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
       {isChampion && (
         <div data-testid="home-champion-banner" className="rounded-2xl p-4 text-white shadow-md flex items-center gap-3" style={{ background: "linear-gradient(135deg,#a9772f,#7a531d)" }}>
