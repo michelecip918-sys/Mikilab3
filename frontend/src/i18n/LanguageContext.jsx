@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { translations } from "@/i18n/translations";
 import { mkTri } from "@/i18n/triMaps";
+import { applyMeta } from "@/i18n/meta";
 
 const LanguageContext = createContext(null);
 const SUPPORTED = ["it", "de", "en", "es", "fr", "fa"];
@@ -25,6 +26,7 @@ export function LanguageProvider({ children }) {
     localStorage.setItem("mikilab_lang", lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+    applyMeta(lang);
   }, [lang]);
 
   const setLang = useCallback((l) => setLangState(SUPPORTED.includes(l) ? l : "it"), []);

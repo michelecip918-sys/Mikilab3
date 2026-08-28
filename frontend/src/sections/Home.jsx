@@ -220,7 +220,7 @@ export default function Home({ onNavigate }) {
   const jokes = JOKES[lang] || JOKES.it;
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
-  const L = (it_, de_, en_, es_) => mkTri(lang)(it_, de_, en_, es_);
+  const L = (...a) => mkTri(lang)(...a);
   const profile = getProfile();
 
   const [panettoni, setPanettoni] = useState([]);
@@ -323,13 +323,13 @@ export default function Home({ onNavigate }) {
       {/* Selettore rapido dei laboratori: Panetteria · Pizzeria · Pasticceria */}
       <div data-testid="home-lab-switch">
         <div className="flex items-center gap-2 mb-2 px-1">
-          <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Scegli il tuo laboratorio", "Wähle dein Labor", "Choose your lab", "Elige tu laboratorio")}</h2>
+          <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Scegli il tuo laboratorio", "Wähle dein Labor", "Choose your lab", "Elige tu laboratorio", "Choisis ton laboratoire", "آزمایشگاه خود را انتخاب کنید")}</h2>
         </div>
         <div className="grid grid-cols-3 gap-2.5">
           {[
-            { id: "pianoai", Icon: Wrench, label: L("Panetteria", "Bäckerei", "Bakery", "Panadería"), grad: "from-[#8C4A27] to-[#6E371C]" },
-            { id: "labpizzeria", Icon: Pizza, label: L("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería"), grad: "from-[#B45309] to-[#8C4A27]" },
-            { id: "labpasticceria", Icon: Croissant, label: L("Pasticceria", "Konditorei", "Pastry", "Pastelería"), grad: "from-[#6E371C] to-[#2C1E16]" },
+            { id: "pianoai", Icon: Wrench, label: L("Panetteria", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی"), grad: "from-[#8C4A27] to-[#6E371C]" },
+            { id: "labpizzeria", Icon: Pizza, label: L("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزریا"), grad: "from-[#B45309] to-[#8C4A27]" },
+            { id: "labpasticceria", Icon: Croissant, label: L("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی‌پزی"), grad: "from-[#6E371C] to-[#2C1E16]" },
           ].map(({ id, Icon, label, grad }) => (
             <button key={id} data-testid={`home-lab-${id}`} onClick={() => openLabTool(id)}
               className={`flex flex-col items-center justify-center gap-2 rounded-2xl p-4 text-white shadow-md active:scale-95 transition-all bg-gradient-to-br ${grad} min-h-[104px]`}>

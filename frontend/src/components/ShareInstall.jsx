@@ -5,12 +5,14 @@ import { useLang } from "@/i18n/LanguageContext";
 
 // Condivisione app (tutti i metodi) + installazione PWA.
 export default function ShareInstall() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [deferred, setDeferred] = useState(null);
   const [installed, setInstalled] = useState(false);
   const [iosHint, setIosHint] = useState(false);
 
-  const url = typeof window !== "undefined" ? window.location.origin : "https://mikilab.de";
+  // Link con anteprima social tradotta (l'endpoint serve OG per lingua e reindirizza all'app).
+  const backend = process.env.REACT_APP_BACKEND_URL || (typeof window !== "undefined" ? window.location.origin : "https://mikilab.de");
+  const url = `${backend}/api/share/${lang}`;
   const text = t("share_text");
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request
-from fastapi.responses import StreamingResponse, Response
+from fastapi.responses import StreamingResponse, Response, HTMLResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -5022,6 +5022,81 @@ async def admin_newsletter(admin: dict = Depends(require_admin)):
 async def newsletter_count():
     n = await db.newsletter_subscribers.count_documents({})
     return {"count": n}
+
+
+# ---------------------------------------------------------------------------
+# Anteprima social multilingua: /api/share/<lang>
+# I crawler (WhatsApp/Telegram/Facebook) leggono gli OG tradotti; gli utenti
+# vengono reindirizzati all'app nella lingua corrispondente.
+# ---------------------------------------------------------------------------
+SHARE_META = {
+    "it": ("MikiLab — Panificazione, Pizzeria & Pasticceria",
+           "Il laboratorio completo del fornaio: ricette, piani di produzione con l'IA e food cost. 100% gratis, nessun pagamento.", "it_IT"),
+    "en": ("MikiLab — Bakery, Pizzeria & Pastry Lab",
+           "The baker's complete workshop: recipes, AI production plans and food cost. 100% free, no payment.", "en_US"),
+    "es": ("MikiLab — Panadería, Pizzería y Pastelería",
+           "El laboratorio completo del panadero: recetas, planes de producción con IA y food cost. 100% gratis, sin pagos.", "es_ES"),
+    "fr": ("MikiLab — Boulangerie, Pizzeria & Pâtisserie",
+           "Le laboratoire complet du boulanger : recettes, plans de production IA et food cost. 100% gratuit, sans paiement.", "fr_FR"),
+    "de": ("MikiLab — Bäckerei, Pizzeria & Konditorei",
+           "Die komplette Backstube: Rezepte, KI-Produktionspläne und Food Cost. 100% kostenlos, keine Zahlung.", "de_DE"),
+    "fa": ("MikiLab — نانوایی، پیتزا و شیرینی‌پزی",
+           "کارگاه کامل نانوا: دستورها، برنامه تولید با هوش مصنوعی و محاسبه هزینه. ۱۰۰٪ رایگان.", "fa_IR"),
+}
+
+
+def _share_base_url(request: Request) -> str:
+    proto = request.headers.get("x-forwarded-proto", request.url.scheme)
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host") or request.url.netloc
+    return f"{proto}://{host}"
+
+
+@api_router.get("/share/{lang}", response_class=HTMLResponse)
+@api_router.get("/share", response_class=HTMLResponse)
+async def share_preview(request: Request, lang: str = "it"):
+    lang = (lang or "it").lower()
+    if lang not in SHARE_META:
+        lang = "it"
+    title, desc, locale = SHARE_META[lang]
+    base = _share_base_url(request)
+    og_img = f"{base}/og-{lang}.jpg"
+    target = f"{base}/{lang}"
+    alternates = "\n".join(
+        f'<meta property="og:locale:alternate" content="{v[2]}" />' for k, v in SHARE_META.items() if k != lang
+    )
+    html = f"""<!doctype html>
+<html lang="{lang}">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content="{desc}" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="MikiLab" />
+<meta property="og:title" content="{title}" />
+<meta property="og:description" content="{desc}" />
+<meta property="og:image" content="{og_img}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="{target}" />
+<meta property="og:locale" content="{locale}" />
+{alternates}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{title}" />
+<meta name="twitter:description" content="{desc}" />
+<meta name="twitter:image" content="{og_img}" />
+<link rel="canonical" href="{target}" />
+<meta http-equiv="refresh" content="0; url={target}" />
+<script>window.location.replace({target!r});</script>
+</head>
+<body style="font-family:system-ui;background:#f7efe0;color:#4a3212;text-align:center;padding:40px">
+<img src="{base}/logo.png" alt="MikiLab" width="120" height="120" style="border-radius:24px" />
+<h1>MikiLab</h1>
+<p>{desc}</p>
+<p><a href="{target}">→ MikiLab</a></p>
+</body>
+</html>"""
+    return HTMLResponse(content=html, headers={"Cache-Control": "public, max-age=300"})
 
 
 

@@ -2149,3 +2149,15 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Nuovo logo (avatar)**: emblema circolare dorato realistico con l'avatar di Michele che impasta al forno a legna, camicia blu con crest ML/MIKILAB. Tatuaggio reale (pantera + dragone verde, dalla foto utente) concentrato su UN braccio + orecchino. Applicato a logo.png, favicon(.ico/32), apple-touch, PWA 192/512, logo-256, header + footer. `sw.js` CACHE → v8.
 - Verificato via screenshot: selettore Home, Pizzeria (6 tab, Food Cost calcola), Pasticceria (6 tab, Schede & Allergeni), nuovo logo in header. Panificazione intatta.
 - NB: preview ≠ produzione → serve REDEPLOY.
+
+## v-fork.51 (2026-06) — Logo definitivo (tatuaggio tigre) + Metadati social multilingua
+### Logo
+- Logo finale v6: emblema circolare dorato, avatar di Michele che impasta al forno a legna, **tatuaggio reale tigre/pantera + dragone verde ben visibile su un solo braccio** + orecchino. Applicato a logo.png, favicon.ico/32, apple-touch, PWA 192/512, logo-256, logo-emblem.png, header + footer. `sw.js` CACHE → v9.
+### Metadati dinamici multilingua (OG/SEO/<title>)
+- **Client** (`src/i18n/meta.js` + hook in `LanguageContext`): al cambio lingua aggiorna `document.title`, meta description, og:title/description/image/locale/url e twitter. Dizionario META per it/en/es/fr/de/fa. `<html lang>` già gestito.
+- **Server** (`GET /api/share/{lang}` + `/api/share`, HTMLResponse): serve OG TRADOTTI (title/description/locale + immagine `og-<lang>.jpg` + alternates) ai crawler (WhatsApp/Telegram/FB) e **reindirizza gli utenti** a `/{lang}` (meta refresh + JS). Base URL da header x-forwarded. SHARE_META per 6 lingue.
+- **Immagini OG per lingua** (`backend/gen_og_images.py`, PIL): `og-it/en/es/fr/de.jpg` (1200×630) con il NUOVO logo + testo tradotto (tagline multi-lab + pill "100% gratis/free/…"). `og-image.jpg` = default IT.
+- **ShareInstall**: il link condiviso ora è `${REACT_APP_BACKEND_URL}/api/share/${lang}` → anteprima tradotta nella lingua corrente + nuovo logo su tutti i canali.
+- **index.html**: default riposizionati su "Panificazione, Pizzeria & Pasticceria · 100% gratis", og:locale + alternates (it/de/en/es/fr/fa), nuovo og-image, apple title MikiLab, hreflang fr aggiunto.
+- **Fix i18n Home**: `L()` ora inoltra tutte e 6 le lingue → hero e selettore laboratori ora tradotti anche in FR/FA (prima ricadevano su EN).
+- Verificato: `/fr` → title/OG/description/immagine in francese, html lang=fr, hero+selettore in francese; endpoint share testati per it/en/es/fr/de; og-*.jpg 200. NB: preview ≠ produzione → serve REDEPLOY.
