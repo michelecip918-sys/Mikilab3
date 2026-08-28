@@ -25,13 +25,13 @@ const PATHS = [
     intro: { it: "Il grande lievitato: primo e secondo impasto, incordatura, pirlatura e cottura al cuore.", en: "The great leavened cake: first and second dough, gluten, shaping and core baking." },
     quiz: [
       { q: { it: "Quanti impasti principali ha il panettone classico?", en: "How many main doughs does classic panettone have?" }, a: [{ it: "Uno", en: "One" }, { it: "Due (primo e secondo)", en: "Two (first and second)" }, { it: "Cinque", en: "Five" }], c: 1 },
-      { q: { it: "Perché si capovolge dopo la cottura?", en: "Why is it turned upside down after baking?" }, a: [{ it: "Per non farlo collassare mentre si raffredda", en: "So it doesn't collapse while cooling" }, { it: "Per decorarlo", en: "To decorate it" }, { it: "Per cuocerlo di più", en: "To bake it more" }], c: 0 },
+      { q: { it: "Perché si capovolge dopo la cottura?", en: "Why is it turned upside down after baking?" }, img: "https://images.unsplash.com/photo-1606589121362-2de49373c497?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000", a: [{ it: "Per non farlo collassare mentre si raffredda", en: "So it doesn't collapse while cooling" }, { it: "Per decorarlo", en: "To decorate it" }, { it: "Per cuocerlo di più", en: "To bake it more" }], c: 0 },
       { q: { it: "La temperatura al cuore a fine cottura è circa…", en: "The core temperature at the end of baking is about…" }, a: [{ it: "60°C", en: "60°C" }, { it: "94-96°C", en: "94-96°C" }, { it: "120°C", en: "120°C" }], c: 1 },
     ] },
   { id: "focacce", it: "Livello 4 · Focacce", en: "Level 4 · Focaccia", icon: "🫓",
     intro: { it: "Alta idratazione, olio e teglia: focaccia barese e materana alla semola.", en: "High hydration, oil and pan: Bari and Matera semolina focaccia." },
     quiz: [
-      { q: { it: "Cosa rende soffice a lungo la focaccia barese?", en: "What keeps Bari focaccia soft for long?" }, a: [{ it: "La patata nell'impasto", en: "The potato in the dough" }, { it: "Poco olio", en: "Little oil" }, { it: "Farina debole", en: "Weak flour" }], c: 0 },
+      { q: { it: "Cosa rende soffice a lungo la focaccia barese?", en: "What keeps Bari focaccia soft for long?" }, img: "https://images.unsplash.com/photo-1784822109223-20ceba260902?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000", a: [{ it: "La patata nell'impasto", en: "The potato in the dough" }, { it: "Poco olio", en: "Little oil" }, { it: "Farina debole", en: "Weak flour" }], c: 0 },
       { q: { it: "La focaccia materana usa soprattutto…", en: "Matera focaccia mainly uses…" }, a: [{ it: "Semola rimacinata di grano duro", en: "Durum semolina rimacinata" }, { it: "Farina di riso", en: "Rice flour" }, { it: "Farina di mais", en: "Corn flour" }], c: 0 },
       { q: { it: "Per una bella crosta sotto serve…", en: "For a good bottom crust you need…" }, a: [{ it: "Teglia unta e ben calda dal basso", en: "Oiled pan, hot from below" }, { it: "Teglia fredda", en: "A cold pan" }, { it: "Niente olio", en: "No oil" }], c: 0 },
     ] },
@@ -39,7 +39,7 @@ const PATHS = [
     intro: { it: "Impasti diretti e indiretti, maturazione e cottura ad alta temperatura.", en: "Direct and indirect doughs, maturation and high-temperature baking." },
     quiz: [
       { q: { it: "La lunga maturazione in frigo serve a…", en: "Long cold maturation is used to…" }, a: [{ it: "Migliorare digeribilità e aroma", en: "Improve digestibility and aroma" }, { it: "Far lievitare più in fretta", en: "Rise faster" }, { it: "Aggiungere sale", en: "Add salt" }], c: 0 },
-      { q: { it: "Per la pizza napoletana serve un forno…", en: "Neapolitan pizza needs an oven…" }, a: [{ it: "Molto caldo (400°C+)", en: "Very hot (400°C+)" }, { it: "A 150°C", en: "At 150°C" }, { it: "Spento", en: "Turned off" }], c: 0 },
+      { q: { it: "Per la pizza napoletana serve un forno…", en: "Neapolitan pizza needs an oven…" }, img: "https://images.unsplash.com/photo-1579751626657-72bc17010498?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000", a: [{ it: "Molto caldo (400°C+)", en: "Very hot (400°C+)" }, { it: "A 150°C", en: "At 150°C" }, { it: "Spento", en: "Turned off" }], c: 0 },
       { q: { it: "Per una pizza in teglia leggera serve…", en: "For a light pan pizza you need…" }, a: [{ it: "Alta idratazione", en: "High hydration" }, { it: "Impasto asciutto", en: "A dry dough" }, { it: "Nessuna lievitazione", en: "No proofing" }], c: 0 },
     ] },
   { id: "pasta", it: "Livello 6 · Pasta Fresca", en: "Level 6 · Fresh Pasta", icon: "🍝",
@@ -89,7 +89,14 @@ export default function ImparaLivelli({ onBack }) {
       setDone((d) => new Set([...d, active.id]));
       window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
       toast.success(L("Livello superato! Conta come una sfida 🏆", "Level passed! It counts as a challenge 🏆"));
-      if (r.unlocked_panettoni) toast.success(L("Hai sbloccato i Panettoni! 🥖", "You unlocked the Panettoni! 🥖"), { duration: 6000 });
+      if (r.unlocked_panettoni) {
+        try {
+          if (!localStorage.getItem("mikilab_panettoni_celebrated")) {
+            localStorage.setItem("mikilab_panettoni_celebrated", "1");
+            toast.success(L("Hai sbloccato i Panettoni! 🥖", "You unlocked the Panettoni! 🥖"), { duration: 6000 });
+          }
+        } catch { /* */ }
+      }
       setActive(null);
     } catch { toast.error(L("Errore, riprova.", "Error, try again.")); }
     finally { setBusy(false); }
@@ -108,6 +115,7 @@ export default function ImparaLivelli({ onBack }) {
           <h1 className="font-display text-xl font-bold mt-1">{L("Domanda", "Question")} {step + 1}/{active.quiz.length}</h1>
         </div>
         <p className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8] mb-3">{T(q.q)}</p>
+        {q.img && <img data-testid="quiz-image" src={q.img} onError={(e) => { e.currentTarget.style.display = "none"; }} alt="" className="w-full h-44 object-cover rounded-2xl mb-4 border border-[#E6D8C3] dark:border-[#38424B]" />}
         <div className="space-y-2.5" data-testid="quiz-options">
           {q.a.map((opt, ai) => (
             <button key={ai} data-testid={`quiz-opt-${ai}`} onClick={() => answer(ai)}

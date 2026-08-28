@@ -1,0 +1,42 @@
+{
+  "summary": "Frontend-only testing of the 3 new MikiLab additions (colored Lab section headers, quiz images in 'Impara a Livelli', phase-timer bar inside the AI plan) + 5-tab regression. Logged in as admin@mikilab.de. ALL THREE FEATURES WORK. 6/6 tool category headers render with a colored icon in a rounded square, colored title and underline (distinct colors: #B45309/#C0574D/#A16207/#6E371C/#8C4A27/#8C6B4A). Quiz images verified on the 3 levels that have them (L3 Panettone Q2, L4 Focacce Q1, L5 Pizza Q2) - data-testid quiz-image present, visible, naturalWidth=1000. Phase-timer bar: no restored plan existed initially, so I seeded a saved plan via PUT /api/capo/last-plan (then deleted it) -> capo-saved-banner + capo-phase-timers appeared, all 4 buttons (pieghe/puntata/appretto/cottura) visible and clicking puntata/pieghe fired the Smart Timer with a confirmation toast ('Timer \"Bulk\" started (90')' / 'Timer \"Folds\" started (30')'). No white screens, no JS page errors on any of the 5 tabs (IT and EN).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "Impara a Livelli - level completion",
+        "issue": "The toast 'Hai sbloccato i Panettoni! 🥖' is shown again on EVERY level completed after the first unlock (L3, L4, L5 each re-showed it). challengesApi.learnComplete keeps returning unlocked_panettoni=true; the UI should only celebrate the first time. Cosmetic/UX only, no functional impact.",
+        "affected_selectors": ["[data-sonner-toast]"]
+      }
+    ],
+    "design_issues": [
+      {
+        "screen": "Il Tuo Laboratorio - tool grid category headers",
+        "issues": ["Category titles carry BOTH an emoji prefix (🍞/🍕/🧁/📜/🛠️/🏬) and the new colored lucide icon square, which is visually redundant; consider dropping the emoji from the label now that a dedicated icon exists."]
+      },
+      {
+        "screen": "Header (390px mobile)",
+        "issues": ["App title truncates to 'Miki...' and subtitle to 'Il laborat…' because the header row holds too many controls (lang, theme, PRO crown, bell, logout). Pre-existing, low priority."]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: show the 'Panettoni unlocked' toast only once (guard on previous entitlement state).",
+    "Optional: remove the duplicated emoji in TOOL_CATS titles now that colored icons exist."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is 1546 lines - well over the 700-line guideline; the tool grid, plan render and phase-timer bar should be extracted into sub-components.",
+    "quiz-image uses onError to hide the broken image but keeps the layout gap-free; fine, but consider a placeholder + alt text (currently alt=\"\") for a11y.",
+    "capo-phase-timers is correctly gated on `plan` truthiness (verified), so its absence without a plan is expected behaviour, not a defect."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "100% of requested scenarios passed" },
+  "seed_data_creation": "Temporarily seeded a saved plan for admin via PUT /api/capo/last-plan (plan_text '## TEST_ Piano di prova') to make capo-phase-timers render; deleted afterwards (DELETE /api/capo/last-plan -> 200). NOTE: while testing quizzes I completed Impara levels 1-5 for admin@mikilab.de (challenges progress + unlock_panettoni entitlement now set for that account).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Admin account now has Impara levels base/lievito/panettone/focacce/pizza completed (level 6 'pasta' still open) and unlock_panettoni=true. UI language follows navigator.language, so headless Chromium starts in EN - use [data-testid=lang-select] -> 'it' for Italian checks. Login is via header [data-testid=login-btn] then auth-email/auth-password/auth-submit (no auto modal). IntroGuide + LabTour ('Ciao, sono Mohammadreza') overlays appear; intro-close-btn closes the first, the Lab tour bottom card can obstruct lower elements - scroll_into_view was enough. To test capo-phase-timers without a slow AI generation, seed PUT /api/capo/last-plan then DELETE it.",
+  "rca_of_the_issue": "N/A - no defects blocking the reviewed features. The 'phase timers not visible' state observed at first load was simply the absence of a restored plan (component gates the bar on `plan`)."
+}
