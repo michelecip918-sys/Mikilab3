@@ -1,5 +1,6 @@
 import React from "react";
 import { AlertTriangle, RotateCcw, Home } from "lucide-react";
+import { mkTri } from "@/i18n/triMaps";
 
 // Intercetta i crash di render così lo schermo non resta bianco.
 // Si auto-ripristina quando cambia `resetKey` (es. cambio tab / tasto Indietro).
@@ -27,7 +28,7 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (!this.state.hasError) return this.props.children;
     const lang = this.props.lang;
-    const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+    const tri = (i, d, e) => mkTri(lang)(i, d, e);
     return (
       <div data-testid="error-boundary" className="max-w-md mx-auto mt-10 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-6 text-center">
         <div className="w-14 h-14 mx-auto rounded-full bg-[#C0574D]/12 flex items-center justify-center mb-3">

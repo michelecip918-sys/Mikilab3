@@ -4,6 +4,7 @@ import { academyApi, profileApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 const DIPLOMA_KEY = "mikilab_diplomato";
 const MASTER_TARGET = 5; // risposte corrette di fila al livello Master per il diploma
@@ -12,7 +13,7 @@ const MASTER_TARGET = 5; // risposte corrette di fila al livello Master per il d
 export default function EvolvingQuiz() {
   const { lang } = useLang();
   const { user } = useAuth();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
 
   const LEVELS = [
     { id: "apprendista", label: tri("Apprendista", "Anfänger", "Apprentice", "Aprendiz"), color: "#B45309" },

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
 import { BellRing, X } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Engine dei timer a livello APP: continua a contare e a suonare l'allarme
 // anche quando l'utente è su un altro strumento o tab. Wall-clock (endsAt).
@@ -12,7 +13,7 @@ export const remainingOf = (t) => (t.running && t.endsAt ? Math.max(0, Math.roun
 
 export function TimerProvider({ children }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const [timers, setTimers] = useState(() => {
     try { return JSON.parse(localStorage.getItem("mikilab_timers") || "[]"); } catch { return []; }

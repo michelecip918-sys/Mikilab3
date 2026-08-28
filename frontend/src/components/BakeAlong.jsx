@@ -4,12 +4,13 @@ import { bakeAlongApi, uploadApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 const RANK_COLORS = ["#d4af37", "#9aa7b0", "#b07a44"];
 
 export default function BakeAlong() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { user, setAuthOpen } = useAuth();
   const [data, setData] = useState(null);
   const [entries, setEntries] = useState([]);

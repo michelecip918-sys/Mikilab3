@@ -3,6 +3,7 @@ import { CalendarClock, BadgeCheck, FlaskConical } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipePicker from "@/components/RecipePicker";
 import { recipeCategory } from "@/lib/recipeCats";
+import { mkTri } from "@/i18n/triMaps";
 
 const PRODUCTS = [
   { id: "pane", base: 3 }, { id: "panettone", base: 30 }, { id: "brezel", base: 2 }, { id: "dolci", base: 5 },
@@ -11,7 +12,7 @@ const CAT_BASE = { basi: 5, pane: 3, panini: 2, snack: 2, focacce: 3, viennoiser
 
 export default function ShelfLife() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [prod, setProd] = useState("pane");
   const [ph, setPh] = useState("4.3");
   const [hours, setHours] = useState("18");

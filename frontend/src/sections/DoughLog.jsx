@@ -6,6 +6,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { doughSessionsApi, recipesApi } from "@/lib/api";
 import { rLoc } from "@/lib/loc";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // FASE 2 — Diario Impasti & Algoritmo "Giorno Dopo".
 // Salva le sessioni (temp impasto/ambiente/umidità/acqua) e propone la correzione
@@ -13,7 +14,7 @@ import { toast } from "sonner";
 
 export default function DoughLog() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const { user, setAuthOpen } = useAuth();
 
   const [recipes, setRecipes] = useState([]);

@@ -3,10 +3,11 @@ import { Store, Plus, Trash2, Pencil, MapPin, Phone, Check, X, Loader2 } from "l
 import { useLang } from "@/i18n/LanguageContext";
 import { storesApi } from "@/lib/api";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 export default function StoresManager({ stores, reload, current, setCurrent }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const [editing, setEditing] = useState(null); // id | "new" | null
   const [form, setForm] = useState({ name: "", address: "", phone: "", note: "" });

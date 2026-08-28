@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Timer as TimerIcon, Play, Pause, RotateCcw, Trash2, Plus, RefreshCw } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers, remainingOf } from "@/audio/TimerContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Punto 14 — Timer da Laboratorio (UI). L'engine (conteggio + allarme globale)
 // vive in TimerProvider così suona anche su altri strumenti/tab.
@@ -17,7 +18,7 @@ const fmt = (s) => {
 
 export default function Timer() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const { timers, nowTs, addTimer, toggle, reset, remove } = useTimers();
 
   const PRESETS = [

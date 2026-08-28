@@ -35,10 +35,11 @@ import { SoundFXProvider } from "@/audio/SoundFXContext";
 import ambient from "@/lib/ambientMusic";
 import { recipePurchaseApi, subscriptionApi, api } from "@/lib/api";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 function App() {
   const { lang, t } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
   useState(() => {
     // Ingresso diretto: niente più schermata di domande. Semino un profilo di default completo.

@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useMemo } from "react";
 import { ChevronRight, BookOpen, Search } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -26,7 +27,7 @@ const TERMS = [
 
 export default function Glossario({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [q, setQ] = useState("");
   const list = useMemo(() => {
     const s = q.trim().toLowerCase();

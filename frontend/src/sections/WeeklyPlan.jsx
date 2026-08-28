@@ -9,6 +9,7 @@ import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
 import { jsPDF } from "jspdf";
+import { mkTri } from "@/i18n/triMaps";
 
 const DAYS = [
   { id: "lun" }, { id: "mar" }, { id: "mer" }, { id: "gio" },
@@ -53,7 +54,7 @@ export default function WeeklyPlan() {
   const [loaded, setLoaded] = useState(false);
   const [salesPoints, setSalesPoints] = useState([]);
   const { t, lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   useEffect(() => {
     setSalesPoints(getSalesPoints());

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { translations } from "@/i18n/translations";
+import { mkTri } from "@/i18n/triMaps";
 
 const LanguageContext = createContext(null);
 const SUPPORTED = ["it", "de", "en", "es", "fr", "fa"];
@@ -37,14 +38,8 @@ export function LanguageProvider({ children }) {
     [lang]
   );
 
-  // Testi inline: tri(it, de, en, es). fr/fa ricadono su EN (poi IT).
-  const tri = useCallback((it_, de_, en_, es_) => {
-    if (lang === "de") return de_ ?? it_;
-    if (lang === "en") return en_ ?? it_;
-    if (lang === "es") return es_ ?? en_ ?? it_;
-    if (lang === "fr" || lang === "fa") return en_ ?? it_;
-    return it_;
-  }, [lang]);
+  // Testi inline: tri(it, de, en, es[, fr, fa]). fr/fa usano la mappa auto-generata, poi EN, poi IT.
+  const tri = useCallback((it_, de_, en_, es_, fr_, fa_) => mkTri(lang)(it_, de_, en_, es_, fr_, fa_), [lang]);
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t, tri }}>

@@ -1,11 +1,12 @@
 import { Cog } from "lucide-react";
 import { machineScheda } from "@/lib/machines";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Scheda Macchina dinamica: riflette il Parco Macchine attivo (Modalità / Resa / Attenzioni).
 export default function MachineScheda() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const s = machineScheda(lang);
   return (
     <div data-testid="recipe-machine-scheda" className="mt-4 rounded-2xl border border-[#8C4A27]/40 bg-[#8C4A27]/8 p-4">

@@ -5,6 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { batchesApi } from "@/lib/api";
 import { getProfile } from "@/components/Onboarding";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Punto 19 — Tracciabilità Lotti: schede lotto con QR stampabile per tracciare
 // ogni infornata dalla farina al prodotto finito. Bacheca LOCALE (localStorage).
@@ -19,7 +20,7 @@ const genCode = () => {
 
 export default function BatchTraceability() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const [batches, setBatches] = useState(() => {
     try { return JSON.parse(localStorage.getItem("mikilab_batches") || "[]"); } catch { return []; }

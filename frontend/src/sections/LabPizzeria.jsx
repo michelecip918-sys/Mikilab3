@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useMemo } from "react";
 import { ChevronRight, Pizza, Droplets, FlaskConical, ClipboardList, Grid3x3 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -11,7 +12,7 @@ const PREF = { biga: { hyd: 0.45, name: "Biga (45%)" }, poolish: { hyd: 1.0, nam
 
 export default function LabPizzeria({ onBack }) {
   const { lang } = useLang();
-  const L = (i, e) => (lang === "it" ? i : (e ?? i));
+  const L = (i, e) => mkTri(lang)(i, e, e, e);
   const num = (v) => Math.round(v).toLocaleString(lang === "it" ? "it" : "en");
   const inp = "w-full bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2C1E16] dark:text-[#e4eff8] focus:border-[#D97706] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#6B5546] dark:text-[#AEB8BF] mb-1";

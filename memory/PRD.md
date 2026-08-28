@@ -2085,3 +2085,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Fix**: bug copia negli appunti (custodite-copy) ora async con fallback execCommand + toast.error su fallimento (niente overlay CRA / falso successo).
 - Verificato: testing_agent iteration_103 = 100% frontend (30/30). Bug iteration_102 risolti.
 - NOTA fuori scope: il resto dell'app (Lab, Community, Learn) in modalità FR ricade ancora sull'inglese (tri() globale senza stringhe fr) — traduzione completa app in francese resta backlog P1.
+
+## v-fork.44 (2026-06) — Localizzazione COMPLETA Francese (fr) + Persiano (fa)
+- Obiettivo utente: "francese e persiano devono tradurre TUTTO come tedesco/spagnolo/inglese."
+- **Infrastruttura**: nuovo `/app/frontend/src/i18n/triMaps.js` con `mkTri(lang)`, `triFR/triFA`, `deepT`, `pick`. Mappa runtime `triTranslations.json` (IT->{fr,fa}) con ~1998 stringhe tradotte via LLM (Claude Sonnet) attraverso script batch in `/app/scripts/` (extract_tri.js, extract_data.js, translate_tri2.py, codemod_tri.py, codemod_L.py).
+- **Codemod**: convertite 73 definizioni locali `tri/triM/triNav/tri3` + 21 helper `L` posizionali per delegare a `mkTri(lang)` (fr/fa risolti via mappa, fallback EN->IT). `LanguageContext.tri` idem. `t()` a chiave già aveva fr.js/fa.js.
+- **Dati statici tradotti** via mappa+deepT/pick: content.js (Enciclopedia/corsi/novità), Enciclopedia/GuidaMetodi (METODI_SECTIONS, ENC_ENTRIES), PaywallGate FEATURES, Home SCENE_PHRASES + hero + sottotitolo avatar, SaporeDelGiorno, AvatarBubbles, Beginners (DAILY_RECIPES/QUIZ/BEGINNERS + label), LegalPage, IntroGuide, RicetteCustodite (fa), chip filtro base ricette, back-label Home.
+- **Persiano**: font Vazirmatn per html[lang=fa] + dir=rtl (già in LanguageContext). Override FA manuali per nomi propri ricette (es. 'نان ماترا').
+- **Bug risolto in corso**: shadowing dell'import `pick` con helper locali in AvatarBubbles/Beginners (crash Learn) -> rinominati bubbleText/choose.
+- Verificato: testing_agent iterations 104-107, ~95%+, nessun crash, FR/FA completi su Home/Recipes/Your Lab/Learn/Social/Enciclopedia/RicetteCustodite; IT/DE/ES regressione ok; RTL+font persiano ok.
+- Gap residui accettati (dinamici/pre-esistenti, non testo UI statico): Glossario TERMS (italiano anche in DE/EN), contenuti seed sfida settimanale, alcuni dati record dinamici (ricette utente, prodotti shop, array farine) ricadono su EN.

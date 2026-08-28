@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BookOpen, ChevronDown } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { pick } from "@/i18n/triMaps";
 import { MikiAvatar } from "@/components/MikiAvatar";
 import { SECTIONS as METODI_SECTIONS } from "@/sections/GuidaMetodi";
 
@@ -142,8 +143,8 @@ export default function Enciclopedia({ embedded = false }) {
   const [open, setOpen] = useState(embedded ? -1 : 0);
   const [panelOpen, setPanelOpen] = useState(false);
   // Prima i METODI (Poolish, Lievito Madre, Roggen, Backmittel), poi ingredienti e termini tecnici.
-  const methodEntries = METODI_SECTIONS.map((s) => { const loc = s[lang] || s.it; return { t: loc.title, b: loc.body }; });
-  const list = [...methodEntries, ...(ENC_ENTRIES[lang] || ENC_ENTRIES.it)];
+  const methodEntries = METODI_SECTIONS.map((s) => { const loc = pick(s, lang); return { t: loc.title, b: loc.body }; });
+  const list = [...methodEntries, ...pick(ENC_ENTRIES, lang)];
 
   const accordion = (
     <div className="space-y-2">

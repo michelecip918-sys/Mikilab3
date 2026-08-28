@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Celebrazione "batti il 5" globale (Michele + Mohammed) con coriandoli e suono.
 // Attiva con: fireHighFive("messaggio opzionale")
@@ -32,7 +33,7 @@ function playApplause() {
 
 export default function HighFive() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [show, setShow] = useState(false);
   const [msg, setMsg] = useState("");
   const timer = useRef(null);

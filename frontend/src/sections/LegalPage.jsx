@@ -1,6 +1,7 @@
 import { ShieldCheck, Building2, Mail, Send, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { mkTri, pick } from "@/i18n/triMaps";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
@@ -45,8 +46,8 @@ const T = {
 
 export default function LegalPage() {
   const { lang } = useLang();
-  const c = T[lang] || T.it;
-  const tr = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const c = pick(T, lang);
+  const tr = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
 

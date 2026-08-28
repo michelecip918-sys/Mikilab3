@@ -4,6 +4,7 @@ import { dmApi, friendsApi, uploadApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 function timeShort(iso, lang) {
   try {
@@ -22,7 +23,7 @@ const AvatarImg = ({ pic, name, size = "w-10 h-10" }) => (
 // Se `initialUser` è passato ({user_id, name, picture}) apre direttamente quella chat.
 export default function ChatPanel({ open, onClose, initialUser = null }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { user } = useAuth();
 
   const [active, setActive] = useState(null); // {user_id, name, picture}

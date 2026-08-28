@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -20,6 +21,16 @@ body {
 
 .font-display { font-family: 'Playfair Display', serif; }
 .font-mono-data { font-family: 'JetBrains Mono', monospace; }
+
+/* Persiano/Farsi: usa Vazirmatn (shaping arabo corretto) per tutte le famiglie */
+html[lang="fa"] body,
+html[lang="fa"] .font-display,
+html[lang="fa"] .font-mono-data,
+html[lang="fa"] button,
+html[lang="fa"] input,
+html[lang="fa"] textarea {
+  font-family: 'Vazirmatn', 'Manrope', sans-serif !important;
+}
 
 /* Firma MikiLab: nastro tricolore calmo Italia + Germania (verde → crema → rosso → oro → carbone) */
 .it-de-ribbon {

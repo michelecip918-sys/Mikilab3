@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { Archive, RotateCcw, Trash2, Save, X, Loader2, Pencil, Check } from "lucide-react";
 import { plansArchiveApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Archivio riutilizzabile dei Piani di Lavoro salvati (kind: "weekly" | "capo").
 // - getPayload(): ritorna l'oggetto da salvare (o null se non c'è nulla)
@@ -12,7 +13,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // Espone via ref: openSave() → apre l'input nome e scorre in vista (salvataggio con un tocco).
 const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave, onRepeat, repeatLabel, describe }, ref) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [naming, setNaming] = useState(false);

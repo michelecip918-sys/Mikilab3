@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useMemo } from "react";
 import { ChevronRight, Recycle, Scale } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -14,7 +15,7 @@ const RECIPES = [
 
 export default function EsuberoZero({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const rL = (r) => (lang === "de" ? r.de : lang === "es" ? r.es : (lang === "en" || lang === "fr" || lang === "fa") ? r.en : r.it);
   const [g, setG] = useState(150);
   const grams = useMemo(() => Math.max(0, Number(g) || 0), [g]);

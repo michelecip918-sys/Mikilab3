@@ -4,6 +4,7 @@ import { X, Home as HomeIcon, BookOpen, Wrench, GraduationCap, Users, Trophy, Me
   Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { TOOLS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
+import { mkTri } from "@/i18n/triMaps";
 
 const FAV_KEY = "mikilab_menu_favs";
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -12,7 +13,7 @@ const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u
 // Social → voci social + ordina feed) + una lista compatta per saltare tra le sezioni.
 export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [favs, setFavs] = useState(() => { try { return JSON.parse(localStorage.getItem(FAV_KEY) || "[]"); } catch { return []; } });

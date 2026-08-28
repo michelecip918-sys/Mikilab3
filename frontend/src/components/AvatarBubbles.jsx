@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
+import { pick } from "@/i18n/triMaps";
 import { siteSettingsApi } from "@/lib/api";
 
 const base = process.env.PUBLIC_URL || "";
@@ -36,13 +37,13 @@ export default function AvatarBubbles({ variant = "impara" }) {
   const [overrides, setOverrides] = useState({});
   useEffect(() => { siteSettingsApi.get().then((s) => setOverrides((s && s.avatar_bubbles) || {})).catch(() => {}); }, []);
   const msgs = SCRIPTS[variant] || SCRIPTS.impara;
-  const pick = (m) => {
+  const bubbleText = (m) => {
     const ov = overrides[`${variant}.${m.who}`];
     if (ov) {
-      const txt = lang === "de" ? (ov.de || ov.it) : lang === "es" ? (ov.es || ov.en || ov.it) : lang === "en" ? (ov.en || ov.it) : ov.it;
+      const txt = pick(ov, lang);
       if (txt) return txt;
     }
-    return lang === "de" ? m.de : lang === "es" ? (m.es || m.en || m.it) : lang === "en" ? m.en : m.it;
+    return pick(m, lang);
   };
 
   return (
@@ -61,7 +62,7 @@ export default function AvatarBubbles({ variant = "impara" }) {
                   ? "bg-[#B45309]/5 border-[#B45309]/20 rounded-bl-sm"
                   : "bg-[#B45309]/5 border-[#B45309]/20 rounded-br-sm"}`}>
               <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#3a5233]" : "text-[#274038]"}`}>{NAME[m.who]}</p>
-              <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{pick(m)}</p>
+              <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{bubbleText(m)}</p>
             </div>
           </motion.div>
         );

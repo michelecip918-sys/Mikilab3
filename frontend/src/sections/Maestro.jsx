@@ -70,6 +70,7 @@ import LabPasticceria from "@/sections/LabPasticceria";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import ManiSporche from "@/sections/ManiSporche";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
@@ -96,7 +97,7 @@ export default function Maestro() {
     else window.scrollTo(0, 0);
   }, [tool]);
   const { t, lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   useBackClose(!!tool, back);
 
   if (tool) {

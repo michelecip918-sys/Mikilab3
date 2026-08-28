@@ -6,11 +6,12 @@ import { useLang } from "@/i18n/LanguageContext";
 import { parseTimeline, saveReminders } from "@/lib/reminders";
 import { cleanForSpeech } from "@/lib/voice";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Assistente "Mohammadreza" per l'home baker: scheduling inverso + calcoli + troubleshooting.
 export default function AcademyCoach() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const sidRef = useRef(`academy-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Volume2, Loader2, Check } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 export const VOICE_OPTIONS = [
   { id: "nPczCjzI2devNBz1zQrb", name: "Brian", desc: { it: "Profonda, rassicurante", de: "Tief, beruhigend", en: "Deep, reassuring" } },
@@ -18,7 +19,7 @@ export const getVoiceId = (who) =>
 
 export default function VoiceSettings({ open, onClose }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [momy, setMomy] = useState(getVoiceId("momy"));
   const [michele, setMichele] = useState(getVoiceId("michele"));
   const [previewing, setPreviewing] = useState(null);

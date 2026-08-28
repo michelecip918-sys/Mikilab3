@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { X, Cog, Snowflake, Wind, Thermometer, Video, Camera, ImagePlus } from "lucide-react";
 import { API, labConfigApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 import { fireHighFive } from "@/components/HighFive";
 
 const CELL_TYPES = ["frigo", "freezer", "lievitazione", "lievitazione_frigo"];
@@ -54,8 +55,8 @@ export default function CapoLaboratorio() {
           <div className="flex-1 bg-black" /><div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-[#e7d5b4]" />
         </div>
         <Cog className="w-7 h-7 mb-2" />
-        <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Maschinen einrichten" : lang === "en" ? "Machine Setup" : "Impostazione Macchine"}</h1>
-        <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Kneter, Gärzellen und Team — für die KI-Planung" : lang === "en" ? "Mixers, cells and team — used by AI planning" : "Impastatrici, celle e squadra — usati dalla pianificazione IA"}</p>
+        <h1 className="font-display text-2xl font-bold">{mkTri(lang)("Impostazione Macchine", "Maschinen einrichten", "Machine Setup")}</h1>
+        <p className="text-white/85 text-sm mt-1">{mkTri(lang)("Impastatrici, celle e squadra — usati dalla pianificazione IA", "Kneter, Gärzellen und Team — für die KI-Planung", "Mixers, cells and team — used by AI planning")}</p>
       </div>
 
       {/* Attrezzature e celle */}

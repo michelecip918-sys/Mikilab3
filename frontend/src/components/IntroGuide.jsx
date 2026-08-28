@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useLang } from "@/i18n/LanguageContext";
+import { pick } from "@/i18n/triMaps";
 
 const CONTENT = {
   it: { title: "La Tua Guida alla Panificazione", greet: "Ciao! Ti do il benvenuto nel mio panificio digitale.", desc: "Ricette, calcoli di laboratorio e supporto intelligente sempre a portata di mano.", start: "Inizia Ora" },
@@ -19,7 +20,7 @@ const LANGS = [
 export default function IntroGuide() {
   const { lang, setLang } = useLang();
   const [open, setOpen] = useState(false);
-  const c = CONTENT[lang] || CONTENT.it;
+  const c = pick(CONTENT, lang);
 
   useEffect(() => { setOpen(true); }, []);
 

@@ -3,11 +3,12 @@ import { Bell, Heart, MessageCircle, UserPlus, Flame, Mail } from "lucide-react"
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { notificationsApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 // Campanella notifiche Community (like/commenti sui propri post).
 export default function NotificationBell() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const loc = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
   const { user } = useAuth();
 

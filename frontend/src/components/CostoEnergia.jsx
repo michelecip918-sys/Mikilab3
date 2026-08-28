@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Flame, Zap, Euro } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Costo Energia Forno — kWh e € per ogni cottura (e per pezzo).
 const LS = "mikilab_energia";
@@ -19,7 +20,7 @@ const Field = ({ label, tid, val, set, step, suffix }) => (
 
 export default function CostoEnergia() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const saved = load() || {};
   const [power, setPower] = useState(saved.power ?? "6");
   const [minutes, setMinutes] = useState(saved.minutes ?? "40");

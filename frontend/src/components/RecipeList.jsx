@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand } from "lucide-react";
@@ -46,7 +47,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   useBackClose(!!viewing, () => setViewing(null));
   useBackClose(dialogOpen, () => setDialogOpen(false));
   useBackClose(!!scaling, () => setScaling(null));
-  const triM = (i_, d_, e_) => (lang === "de" ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
+  const triM = (i_, d_, e_) => mkTri(lang)(i_, d_, e_);
   const { user, setAuthOpen } = useAuth();
   // Mikilab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
   const canEdit = collectionName === "mikilab" ? user?.role === "admin" : true;
@@ -571,7 +572,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onUnlock, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
   const de = lang === "de";
-  const tri = (i_, d_, e_) => (de ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
+  const tri = (i_, d_, e_) => mkTri(lang)(i_, d_, e_);
   const isPanettone = /panettone|colomba|pandoro/i.test(r.name || "");
   const [farro, setFarro] = useState(false);
   const [handsFree, setHandsFree] = useState(false);
@@ -1001,18 +1002,18 @@ function recipeBase(r) {
   return [...new Set(out)];
 }
 function baseLabel(k, lang) {
-  const de = lang === "de", en = lang === "en", es = lang === "es";
+  const T = mkTri(lang);
   switch (k) {
-    case "all": return de ? "Alle" : en ? "All" : es ? "Todas" : "Tutte";
+    case "all": return T("Tutte", "Alle", "All", "Todas");
     case "poolish": return "Poolish";
     case "biga": return "Biga";
-    case "lm": return de ? "Sauerteig" : en ? "Sourdough" : es ? "Masa madre" : "Lievito Madre";
-    case "segale": return de ? "Roggen-ST" : en ? "Rye sourdough" : es ? "MM de centeno" : "LM di Segale";
+    case "lm": return T("Lievito Madre", "Sauerteig", "Sourdough", "Masa madre");
+    case "segale": return T("LM di Segale", "Roggen-ST", "Rye sourdough", "MM de centeno");
     case "licoli": return "LiCoLi";
-    case "kochstuck": return de ? "Kochstück" : en ? "Cooked flour" : es ? "Harina cocida" : "Farina Cotta";
+    case "kochstuck": return T("Farina Cotta", "Kochstück", "Cooked flour", "Harina cocida");
     case "quark": return "Quark";
-    case "indiretto": return de ? "Indirekt" : en ? "Indirect" : es ? "Indirecto" : "Indiretto";
-    case "diretto": return de ? "Direkt" : en ? "Direct" : es ? "Directo" : "Diretto";
+    case "indiretto": return T("Indiretto", "Indirekt", "Indirect", "Indirecto");
+    case "diretto": return T("Diretto", "Direkt", "Direct", "Directo");
     default: return k;
   }
 }
@@ -1127,7 +1128,7 @@ const PAN_GLAZE = [
 
 function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange }) {
   const de = lang === "de";
-  const tri = (i_, d_, e_) => (de ? d_ : (lang === "en" || lang === "es") ? e_ : i_);
+  const tri = (i_, d_, e_) => mkTri(lang)(i_, d_, e_);
   const [glazeTot, setGlazeTot] = useState(150);
   const targetVal = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
   const fct = flourG > 0 ? targetVal / flourG : 1;

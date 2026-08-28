@@ -5,12 +5,13 @@ import { plansArchiveApi, recipesApi, chatApi } from "@/lib/api";
 import { getChats, removeChat } from "@/lib/chatHistory";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Archivio "I Miei Dati Salvati": Piani (archivio), Ricette (personali), Documenti & PDF, Chat AI.
 export default function MyData({ onOpenTool }) {
   const { lang } = useLang();
   const { user } = useAuth();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [tab, setTab] = useState("piani");
   const [plans, setPlans] = useState([]);
   const [recipes, setRecipes] = useState([]);

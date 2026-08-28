@@ -3,13 +3,14 @@ import { Sparkles, Leaf } from "lucide-react";
 import { recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { COLORED_RECIPES } from "@/lib/coloredRecipes";
+import { mkTri } from "@/i18n/triMaps";
 
 const NEW_COLOR = COLORED_RECIPES;
 
 // Vetrina "Novità dal MikiLab": evidenzia le ricette colorate naturalmente.
 export const NovitaColorate = () => {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const rn = (r) => (lang === "de" ? (r.name_de || r.name) : lang === "en" ? (r.name_en || r.name) : lang === "es" ? (r.name_es || r.name_en || r.name) : r.name);
   const [items, setItems] = useState([]);
 

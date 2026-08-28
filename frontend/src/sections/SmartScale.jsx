@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Scale, Bluetooth, Plus, Trash2, RotateCcw, AlertTriangle, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 const STORE = "mikilab_scale_recipe";
 const TOL = 0.02; // ±2%
@@ -15,7 +16,7 @@ const DEFAULT_ROWS = [
 
 export default function SmartScale() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [rows, setRows] = useState(() => {
     try { const s = JSON.parse(localStorage.getItem(STORE)); if (Array.isArray(s) && s.length) return s; } catch { /* */ }
     return DEFAULT_ROWS;

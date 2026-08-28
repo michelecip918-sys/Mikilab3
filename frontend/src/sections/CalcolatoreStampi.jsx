@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useMemo } from "react";
 import { ChevronRight, Cookie, Square, Circle } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -9,7 +10,7 @@ const DENS = { focaccia: 0.65, pizza: 0.5, pane: 0.75 };
 
 export default function CalcolatoreStampi({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
   const inp = "w-full bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2C1E16] dark:text-[#e4eff8] focus:border-[#D97706] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#6B5546] dark:text-[#AEB8BF] mb-1";

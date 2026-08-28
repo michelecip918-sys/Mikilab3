@@ -4,6 +4,7 @@ import { friendsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 const Avatar = ({ c }) => (
   <div className="w-10 h-10 rounded-xl bg-[#8C4A27]/15 flex items-center justify-center overflow-hidden shrink-0">
@@ -15,7 +16,7 @@ const Avatar = ({ c }) => (
 export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
   const { lang } = useLang();
   const { user } = useAuth();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [tab, setTab] = useState("richieste");
   const [dir, setDir] = useState([]);
   const [rel, setRel] = useState({ friends: [], incoming: [], outgoing: [] });

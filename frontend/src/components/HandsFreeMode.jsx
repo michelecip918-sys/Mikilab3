@@ -5,12 +5,13 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
 import { cleanForSpeech } from "@/lib/voice";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Modalità "Mani in Pasta": legge i passaggi a voce, comandi vocali e schermo sempre acceso.
 export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClose }) {
   const { lang: ctxLang } = useLang();
   const lang = langProp || ctxLang;
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { addTimer } = useTimers();
   const voiceLang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
 

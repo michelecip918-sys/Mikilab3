@@ -3,11 +3,12 @@ import { Store, Plus, Trash2, MapPin, Clock, Save } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { getSalesPoints, saveSalesPoints } from "@/lib/salesPoints";
+import { mkTri } from "@/i18n/triMaps";
 
 // Passo 3 · Logistica & Punti Vendita — CRUD punti vendita (localStorage).
 export default function SalesPoints() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [points, setPoints] = useState([]);
   const [form, setForm] = useState({ name: "", address: "", hours: "" });
 

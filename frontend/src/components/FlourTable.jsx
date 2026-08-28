@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Table2, ChevronDown } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Tabella Farine unificata: UNA riga per tipo di farina con sigla DE · nome IT, W (forza) e proteine.
 const FLOURS = [
@@ -27,7 +28,7 @@ const SIGNS = [
 
 export default function FlourTable({ embedded = false }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [open, setOpen] = useState(embedded);
 
   const th = "text-left text-[10px] font-bold uppercase tracking-wide text-[#8C4A27] px-2 py-1.5";

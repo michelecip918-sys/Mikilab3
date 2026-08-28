@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { CloudSun, Droplets, Thermometer, Timer, MapPin, Loader2, Wind } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Punto 12 — Intelligenza Predittiva Meteo (Open-Meteo, nessuna chiave).
 // Adatta automaticamente la temperatura dell'acqua e i tempi di lievitazione
@@ -8,7 +9,7 @@ import { useLang } from "@/i18n/LanguageContext";
 
 export default function Meteo() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");

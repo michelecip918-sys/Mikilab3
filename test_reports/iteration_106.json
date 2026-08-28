@@ -1,0 +1,40 @@
+{
+  "summary": "Frontend-only RE-TEST of full FR/FA localisation after iteration_105 fixes (public preview URL, mobile 390x844). Found and fixed a CRITICAL regression introduced by the fix: the new `pick` import from i18n/triMaps was shadowed by local helpers in components/AvatarBubbles.jsx (infinite recursion -> RangeError: Maximum call stack size exceeded, ErrorBoundary on the whole Learn tab in EVERY language) and in sections/Beginners.jsx BakerQuiz (TDZ: local `const pick` declared after `pick(QUIZ, lang)`; dead code, latent). After renaming the local helpers (bubbleText / choose) all requested flows pass: Encyclopedia titles+bodies fully FR/FA, Learn tab (AvatarBubbles + 'Recette du jour'/'دستور روز' + 'Petits pains au lait'/'نان‌های شیری') FR/FA, Home avatar subtitle + 'LA SAVEUR DU JOUR'/'طعم روز' + FR/IR flags, FA Ricette Custodite titles Persian, LegalPage FR/FA, IntroGuide FR/FA, 5-tab regression FR/FA/IT/DE/ES without crash or 'undefined', dir=rtl + Vazirmatn for FA. Only residual gaps: base-filter-diretto/indiretto chips still Italian, 'Ingredienti:' prefix in the daily-recipe card, 'Home' back-label on LegalPage, weekly-challenge title 'Farine e forza (W)'.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "components/AvatarBubbles.jsx:40 / sections/Beginners.jsx:242", "issue": "CRITICAL (found, FIXED BY ME): local `const pick = (m) => {... return pick(m, lang) }` shadowed the imported triMaps `pick` -> infinite recursion 'RangeError: Maximum call stack size exceeded at pick', React ErrorBoundary replaced the whole Learn tab in ALL languages (it/de/en/es/fr/fa). Same shadowing in Beginners BakerQuiz caused a latent TDZ ReferenceError ('Cannot access pick before initialization') - BakerQuiz is currently dead code (defined, never rendered). Fixed by renaming locals to bubbleText() / choose(); please keep and consider an ESLint no-shadow rule.", "selector": "[data-testid=\"nav-tab-impara\"]", "priority": "CRITICAL"},
+      {"component": "Recipes tab method filter chips", "issue": "STILL OPEN (from it_105): [data-testid=base-filter-diretto] and base-filter-indiretto render Italian 'Diretto'/'Indiretto' in BOTH fr and fa (verified via exact-text node -> BUTTON base-filter-diretto). Other chips (Toutes/همه) are translated.", "selector": "[data-testid=\"base-filter-diretto\"]", "priority": "LOW"},
+      {"component": "sections/Beginners.jsx daily-recipe card", "issue": "Partial translation: the ingredient line keeps the Italian label 'Ingredienti:' in FR ('Ingredienti: 500 g farine · 250 g lait...') and FA ('Ingredienti: ۵۰۰ گرم آرد...'). Rest of the card is translated.", "selector": "[data-testid=\"nav-tab-impara\"]", "priority": "LOW"},
+      {"component": "sections/LegalPage.jsx back link", "issue": "Back link label renders literal 'Home' in FR and FA (not 'Accueil' / 'خانه'). Also the trailing Impressum block stays German/English (probably intentional legal text).", "selector": "text=Home", "priority": "LOW"},
+      {"component": "Learn/Home weekly challenge", "issue": "Weekly-challenge title 'Farine e forza (W)' stays Italian in FR/FA (and in EN/DE) - looks like backend/seed content, flagged only for awareness.", "selector": "[data-testid=\"evolving-quiz\"]", "priority": "LOW"},
+      {"component": "FR copy typo", "issue": "AvatarBubbles FR string has a typo: 'tu trouvres ici la recette du jour' -> 'tu trouves'.", "selector": "[data-testid=\"bubble-michele\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home FR (hero card)", "issues": ["Long FR heading 'Recettes Exclusives & Conseil Opérationnel' + 'pour Pâtisserie, Boulangerie et Pizzeria' overflows/clips at the card edge on 390px width (text runs under the card border)."]},
+      {"screen": "FA all screens", "issues": ["OK: dir=rtl, fontFamily 'Vazirmatn, Manrope, sans-serif', layout mirrored correctly, Persian glyphs shaped correctly."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "KEEP the shadowing fix (AvatarBubbles bubbleText, Beginners choose) and add an ESLint no-shadow / no-restricted-shadow rule for the imported `pick` - this crashed the whole Learn tab in every language.",
+    "Remove or wire up the dead BakerQuiz component in sections/Beginners.jsx (unused since EvolvingQuiz replaced it).",
+    "Translate the base-filter-diretto / base-filter-indiretto chips (add 'Diretto'/'Indiretto' FR/FA map keys or mkTri at the chip render site).",
+    "Translate the 'Ingredienti:' prefix in DAILY_RECIPES and the LegalPage back-label 'Home'.",
+    "Fix FR typo 'tu trouvres' -> 'tu trouves'; check Home FR hero heading overflow at 390px."
+  ],
+  "critical_code_review_comments": [
+    "Importing a generically-named helper (`pick`) into files that already define local `pick` helpers is fragile: two of six call sites broke immediately (one runtime crash, one latent TDZ). Rename the export to something unambiguous (e.g. `pickLang`) across the codebase.",
+    "The ErrorBoundary swallowed the crash into a generic retry card, so the Learn tab looked 'translated but broken'; consider logging component name + language to help future regressions surface faster.",
+    "pick()/deepT() silently return the Italian source when the map lacks a key, so gaps are invisible - add a dev-mode console warning for missing FR/FA keys."
+  ],
+  "updated_files": ["/app/frontend/src/components/AvatarBubbles.jsx", "/app/frontend/src/sections/Beginners.jsx"],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "~95% after my shadowing fix - all requested FR/FA flows translated and crash-free; 5 low-priority residual strings"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "not needed - public navigation",
+  "context_for_next_testing_agent": "Language switch: page.select_option('[data-testid=\"lang-select\"]', 'fr'|'fa'). Bottom-nav testids are nav-tab-home / nav-tab-ricette / nav-tab-maestro / nav-tab-impara / nav-tab-community (NOT lab/social). Encyclopedia is reached from Recipes tab by clicking text=/Encyclop|دانشنامه/i; accordion entries expand by clicking the title text. Ricette Custodite: click [data-testid=\"ricette-custodite-band\"] then read [data-testid=\"custodite-list\"] (reload before, sub-view state persists). VERIFIED FR+FA: Encyclopedia titles+bodies, Learn tab bubbles + daily recipe, Home hero/subtitle/'LA SAVEUR DU JOUR', FA custodite Persian titles, LegalPage, IntroGuide, Your Lab paywall grid, Community tab, IT/DE/ES regression, dir/rtl+Vazirmatn. Only 401s on unauthenticated API calls in console (pre-existing).",
+  "rca_of_the_issue": "iteration_105's fix introduced `import { pick } from '@/i18n/triMaps'` into components/AvatarBubbles.jsx and sections/Beginners.jsx, but both files already had local helpers named `pick`. In AvatarBubbles the local wrapper called `pick(m, lang)` which resolved to itself -> unbounded recursion -> RangeError caught by ErrorBoundary, blanking the Learn tab in every language. In Beginners, `const questions = pick(QUIZ, lang)` at line 232 resolves to the local `const pick` declared at line 242 -> TDZ ReferenceError (latent, BakerQuiz unused). Renaming the locals (bubbleText/choose) restored both, after which every FR/FA translation target verified as fixed."
+}

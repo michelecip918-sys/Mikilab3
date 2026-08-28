@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { FlaskConical, Plus, Trash2, Bluetooth, CheckCircle2, Bell } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { speak, primeVoice } from "@/lib/voice";
+import { mkTri } from "@/i18n/triMaps";
 
 const STORE = "mikilab_sourdough_log";
 // Finestra ideale per legare i Panettoni: pH 4,1–4,3 a 28–30°C
@@ -14,7 +15,7 @@ function loadLog() {
 
 export default function SourdoughTracker() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [ph, setPh] = useState("");
   const [temp, setTemp] = useState("");
   const [log, setLog] = useState(loadLog);

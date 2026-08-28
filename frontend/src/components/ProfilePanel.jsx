@@ -4,6 +4,7 @@ import { profileApi, uploadApi, friendsApi, academyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 const PRESET_AVATARS = [
   { id: "baker", url: "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/f4f92c7fc737861a39742c7684cca7caf5b4ed4335220b146233944408fd3db3.jpeg", it: "Panettiere", de: "Bäcker", en: "Baker", es: "Panadero" },
@@ -21,7 +22,7 @@ const PRESET_AVATARS = [
 // Pagina profilo social: avatar, bio e ricette/post pubblicati dal fornaio.
 export default function ProfilePanel({ userId, onClose, onMessage }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [editing, setEditing] = useState(false);

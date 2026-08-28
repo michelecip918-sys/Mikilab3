@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Search, Loader2, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { pantryApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 // "Cosa posso fare con…?" — scrivi gli ingredienti che hai, l'IA trova le ricette fattibili.
 export default function CosaPosso() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [ing, setIng] = useState("");
   const [scope, setScope] = useState("mikilab");
   const [loading, setLoading] = useState(false);

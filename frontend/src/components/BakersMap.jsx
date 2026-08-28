@@ -5,11 +5,12 @@ import { X, MapPin, Loader2, Trash2, Navigation, Store } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { bakersApi } from "@/lib/api";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Mappa dei Fornai MikiLab — Leaflet + OpenStreetMap (nessuna chiave). Posizione opt-in e approssimata.
 export default function BakersMap({ open, onClose }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const mapEl = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);

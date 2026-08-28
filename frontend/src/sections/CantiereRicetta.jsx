@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
 import { ChevronRight, FileText, Loader2, Printer } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -7,7 +8,7 @@ import { toast } from "sonner";
 
 export default function CantiereRicetta({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [recipes, setRecipes] = useState(null);
   const [busy, setBusy] = useState(false);
 

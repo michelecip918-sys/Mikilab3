@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { newsItemsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
+import { mkTri } from "@/i18n/triMaps";
 
 const EMPTY = { title: "", title_de: "", title_en: "", body: "", body_de: "", body_en: "", tag: "", link: "" };
 
@@ -11,7 +12,7 @@ export default function HomeNews() {
   const { lang } = useLang();
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(null); // id | "new" | null
   const [form, setForm] = useState(EMPTY);

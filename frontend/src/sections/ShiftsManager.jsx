@@ -3,6 +3,7 @@ import { CalendarClock, Plus, Trash2, ChevronLeft, ChevronRight, Clock, User, Ma
 import { useLang } from "@/i18n/LanguageContext";
 import { shiftsApi } from "@/lib/api";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Enterprise (e) — Pianificazione Turni: calendario settimanale per negozio,
 // con totale ore per persona. Dati sul backend, scoped per proprietario/negozio.
@@ -13,7 +14,7 @@ const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); r
 
 export default function ShiftsManager({ store, storeName }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const loc = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
 
   const [weekStart, setWeekStart] = useState(() => mondayOf(new Date()));

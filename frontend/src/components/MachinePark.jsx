@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Cog, Check, Bookmark, Plus, X } from "lucide-react";
 import { MACHINE_CATEGORIES, getActiveMachineIds, setActiveMachineIds, BUILTIN_PRESETS, getUserPresets, saveUserPreset, deleteUserPreset, presetLabel } from "@/lib/machines";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Parco Macchine: ON/OFF dei macchinari professionali. Le scelte adattano ricette e piani via AI.
 export default function MachinePark() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [active, setActive] = useState(() => new Set(getActiveMachineIds()));
   const [userPresets, setUserPresets] = useState(() => getUserPresets());
 

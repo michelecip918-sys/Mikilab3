@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import QRCode from "qrcode";
 import { Landmark, Wheat, Share2, Printer, ChevronLeft, Scale, MapPin, Clock, Sparkles, ShieldCheck } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { triFR, triFA } from "@/i18n/triMaps";
 import { toast } from "sonner";
 
 // "Le Ricette Custodite" — pani del Sud d'Italia + Germania, con il metodo di Michele.
@@ -601,7 +602,13 @@ const onImgErr = (e) => { if (e.currentTarget.src !== FALLBACK_IMG) e.currentTar
 
 export default function RicetteCustodite({ initialId = null }) {
   const { lang } = useLang();
-  const L = (o) => (o ? (o[lang] ?? o.fr ?? o.en ?? o.it) : "");
+  const L = (o) => {
+    if (!o) return "";
+    if (o[lang]) return o[lang];
+    if (lang === "fa") return triFA(o.it) ?? o.en ?? o.it;
+    if (lang === "fr") return triFR(o.it) ?? o.en ?? o.it;
+    return o.en ?? o.it;
+  };
   const [openId, setOpenId] = useState(initialId);
   const [cat, setCat] = useState("all");
   const [flour, setFlour] = useState(1000);

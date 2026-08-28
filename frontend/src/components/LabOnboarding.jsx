@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, Check } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 const DONE_KEY = "mikilab_lab_tour_done";
 const base = process.env.PUBLIC_URL || "";
@@ -14,7 +15,7 @@ export function openLabTour() {
 }
 
 function buildSlides(lang) {
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   return [
     {
       who: "michele", avatar: MICHELE,
@@ -101,7 +102,7 @@ function buildSlides(lang) {
 
 export default function LabOnboarding() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [show, setShow] = useState(false);
   const [i, setI] = useState(0);
   const slides = buildSlides(lang);

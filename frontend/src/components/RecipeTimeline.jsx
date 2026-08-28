@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Clock } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Timeline ricetta: distribuisce le fasi a ritroso dall'ora di sforno.
 const parseDuration = (s) => {
@@ -24,7 +25,7 @@ const COLORS = ["#8C4A27", "#B45309", "#2e8b6f", "#C88A2B", "#a05eb5", "#C0574D"
 export default function RecipeTimeline({ recipe, lang: langProp }) {
   const { lang: ctxLang } = useLang();
   const lang = langProp || ctxLang;
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
 
   const phases = useMemo(() => {
     const wp = Array.isArray(recipe.work_phases) ? recipe.work_phases.filter((p) => p && (p.name || p.time)) : [];

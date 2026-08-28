@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState } from "react";
 import { ChevronRight, Wheat, UtensilsCrossed, Grid3x3, Flame, Droplets, Clock } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -44,7 +45,7 @@ const MATRIX = [
 
 export default function SaporiCasa({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [tab, setTab] = useState("forno");
 
   const TABS = [

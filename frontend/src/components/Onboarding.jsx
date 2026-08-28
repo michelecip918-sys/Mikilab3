@@ -2,13 +2,14 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Store, Cog, Target, ChevronRight, Check } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 export const ONBOARD_KEY = "mikilab_onboarding";
 export const getProfile = () => { try { return JSON.parse(localStorage.getItem(ONBOARD_KEY)); } catch { return null; } };
 
 export default function Onboarding({ onDone }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [step, setStep] = useState(0);
   const [p, setP] = useState({ labName: "", type: "panificio", equip: [], focus: "pane" });
   const set = (patch) => setP((x) => ({ ...x, ...patch }));

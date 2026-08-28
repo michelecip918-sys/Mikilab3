@@ -7,6 +7,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import { jsPDF } from "jspdf";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Metadati locali (icona + testo multilingua). Il tipo (internal/honor) arriva dal catalogo backend.
 const META = {
@@ -66,7 +67,7 @@ const WA_TEXT = "MikiLab â€” Ricette esclusive e strumenti per l'Arte Bianca ðŸ¥
 export default function Sfide({ open, onClose }) {
   const { user, setAuthOpen } = useAuth();
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const flang = ["it", "de", "en", "es"].includes(lang) ? lang : "it";
 
   const [catalog, setCatalog] = useState([]);

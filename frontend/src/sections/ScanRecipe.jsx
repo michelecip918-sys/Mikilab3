@@ -5,10 +5,11 @@ import { API, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipeDialog from "@/components/RecipeDialog";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
+import { mkTri } from "@/i18n/triMaps";
 
 export default function ScanRecipe({ embedded = false }) {
   const { t, lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [loading, setLoading] = useState(false);
   const [scanned, setScanned] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);

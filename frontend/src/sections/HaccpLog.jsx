@@ -4,13 +4,14 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { haccpApi } from "@/lib/api";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // FASE 3 — Registro HACCP materie prime con scansione fotocamera (Barcode/QR).
 // Usa BarcodeDetector (Chrome) quando disponibile; fallback all'inserimento manuale.
 
 export default function HaccpLog() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const { user, setAuthOpen } = useAuth();
 
   const [logs, setLogs] = useState([]);

@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import GuidaAvatar from "@/components/GuidaAvatar";
 import { Info, Sparkles } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -5,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // "Scopri MikiLab" — spostato dalla Home dentro Le Ricette di MikiLab per liberare spazio.
 export default function ScopriMikiLab() {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   return (
     <div className="space-y-5" data-testid="scopri-mikilab">
       <div className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-xl">

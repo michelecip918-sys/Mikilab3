@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, BookOpen } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { pick } from "@/i18n/triMaps";
 import { HeroAvatar } from "@/components/MikiAvatar";
 
 // "Guida ai miei metodi" — ora confluisce nell'Enciclopedia del mio pane (unica sezione).
@@ -54,7 +55,7 @@ export default function GuidaMetodi() {
 
       <div className="space-y-3">
         {SECTIONS.map((s) => {
-          const c = s[lang] || s.it;
+          const c = pick(s, lang);
           const isOpen = open === s.id;
           return (
             <div key={s.id} data-testid={`guida-${s.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] overflow-hidden">

@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
 import { ChevronRight, MapPin, Loader2, Sprout, ExternalLink } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -6,7 +7,7 @@ import BakersMap from "@/components/BakersMap";
 
 export default function BancaLievito({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [list, setList] = useState(null);
   const [mapOpen, setMapOpen] = useState(false);
 

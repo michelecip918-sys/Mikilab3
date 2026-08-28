@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect, useCallback } from "react";
 import { ChevronRight, GraduationCap, Lock, Check, Trophy, Loader2, Award, Send, Share2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -55,7 +56,7 @@ export default function ImparaLivelli({ onBack }) {
   const { lang } = useLang();
   const { user, setAuthOpen } = useAuth();
   const T = (o) => (o ? (o[lang] || o.en || o.it) : "");
-  const L = (i, e) => (lang === "it" ? i : (e ?? i));
+  const L = (i, e) => mkTri(lang)(i, e, e, e);
 
   const [done, setDone] = useState(new Set());
   const [active, setActive] = useState(null);

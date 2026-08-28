@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Recycle, TrendingUp } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import RecipePicker from "@/components/RecipePicker";
+import { mkTri } from "@/i18n/triMaps";
 
 export default function AntiWaste() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [kg, setKg] = useState("2");
   const [cost, setCost] = useState("1.5"); // costo materia già sostenuto €/kg
   const [rec, setRec] = useState("pangrattato");

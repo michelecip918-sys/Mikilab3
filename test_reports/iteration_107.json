@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend-only verification of the 5 LOW residuals from iteration_106 on MikiLab (390px mobile viewport, public preview URL). Verified: base method chips FR/FA, Learn tab ingredient label, Home/Legal back-button label, FR 'trouvres' typo, FR hero overflow, plus 5-tab regression in FR/FA/IT/DE/ES. 5 of 6 items PASS; 1 partial fail (base-filter-lm and 2 other base chips still show English in FR/FA).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList baseLabel()", "issue": "FR/FA still render English for sourdough-family chips: base-filter-lm='Sourdough' (expected FR 'Levain' / FA 'خمیر ترش'), base-filter-segale='Rye sourdough' (expected 'Levain de seigle' / Persian), base-filter-kochstuck='Cooked flour' (expected 'Farine cuite' / Persian). Cause: mkTri falls back to the EN argument because triTranslations.json has no keys for 'Lievito Madre', 'LM di Segale', 'Farina Cotta'. diretto/indiretto/all/colorati are correctly translated.", "selector": "[data-testid=\"base-filter-lm\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verified_fixes": [
+    "base-filter-diretto: FR 'Direct', FA 'مستقیم' — PASS",
+    "base-filter-indiretto: FR 'Indirect', FA 'غیرمستقیم' — PASS",
+    "Learn tab (nav-tab-impara): no 'Ingredienti:' leftover; FR shows 'Ingrédients:', FA shows 'مواد اولیه:'; no crash in FR/FA — PASS",
+    "home-back-btn / legal-back-btn: FR 'Accueil', FA 'خانه' — PASS (chat + LegalPage both)",
+    "AvatarBubbles FR: 'trouvres' no longer present anywhere in rendered DOM (map contains only 'trouves') — PASS",
+    "Home FR hero @390px: heading 'Recettes Exclusives & Conseil Opérationnel / pour Pâtisserie, Boulangerie et Pizzeria' wraps inside the card; the only element exceeding card bounds is the decorative absolute circle (.absolute -right-8 -top-8), clipped by overflow-hidden — PASS",
+    "Regression: all 5 tabs (home, ricette, maestro, impara, community) navigate without crash or non-401 console errors in FR, FA, IT, DE, ES; nav labels correctly localised in all 5 languages"
+  ],
+  "test_report_links": [],
+  "action_items": [
+    "Add FR/FA entries for 'Lievito Madre', 'LM di Segale', 'Farina Cotta' in /app/frontend/src/i18n/triTranslations.json (or pass explicit fr/fa args in baseLabel of RecipeList.jsx) so base chips are not English in FR/FA."
+  ],
+  "critical_code_review_comments": [
+    "baseLabel() relies on the EN fallback of mkTri; any base key missing from triTranslations.json silently leaks English into FR/FA. Prefer explicit fr/fa arguments for a closed enum like this."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "95% (5/6 residuals fixed; 1 partial)" },
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "iteration_107 confirmed the iteration_106 LOW fixes: diretto/indiretto chips, Ingredienti label, Home back label, FR typo, hero overflow — all OK. Only remaining LOW: base-filter-lm/segale/kochstuck untranslated (English) in FR/FA. Nav tab testids are nav-tab-home|ricette|maestro|impara|community (there is no nav-tab-laboratorio / nav-tab-social). 401 console errors on load are expected for anonymous session (auth-gated endpoints).",
+  "rca_of_the_issue": "mkTri(lang) resolves FR/FA via triFR/triFA lookup on the Italian string and otherwise falls back to the English argument. 'Lievito Madre', 'LM di Segale', 'Farina Cotta' are absent from triTranslations.json, so FR/FA chips display the English labels."
+}

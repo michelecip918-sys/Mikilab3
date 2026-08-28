@@ -4,6 +4,7 @@ import { FlaskConical, Droplets, Wheat, Thermometer, Clock, TrendingUp, Grid3x3,
 import { recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Punto 22 — Digital Twin dell'Impasto: simula forza, idratazione, temperatura e
 // lievito PRIMA di impastare e prevede curva di lievitazione e alveolatura attesa.
@@ -25,7 +26,7 @@ function Slider({ label, testid, Icon, value, set, min, max, step = 1, unit }) {
 
 export default function DoughTwin() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const [hyd, setHyd] = useState(65);      // idratazione %
   const [w, setW] = useState(260);         // forza farina W

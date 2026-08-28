@@ -5,6 +5,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { doughSessionsApi } from "@/lib/api";
 import { speak as speakMale } from "@/lib/voice";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // FASE 1 — Pesata Guidata & Bilancia Smart (semaforo, voce, riscalamento, multi-impastata,
 //          Web Bluetooth 0x181D con fallback manuale/simulatore).
@@ -27,7 +28,7 @@ const DEFAULT = [
 
 export default function GuidedWeighing() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const { user, setAuthOpen } = useAuth();
 
   const [ingredients, setIngredients] = useState(() => {

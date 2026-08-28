@@ -7,6 +7,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { shareContent } from "@/lib/share";
 import ListenButton from "@/components/ListenButton";
 import { addXP } from "@/lib/level";
+import { mkTri } from "@/i18n/triMaps";
 
 // Estrae feature acustiche semplici dall'inviluppo di volume campionato.
 function computeFeatures(samples, duration) {
@@ -31,7 +32,7 @@ function computeFeatures(samples, duration) {
 
 export default function SoundDiagnosi() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [recording, setRecording] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState("");

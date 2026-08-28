@@ -1,3 +1,4 @@
+import { mkTri, triFR, triFA } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles, Trophy, Calculator, UtensilsCrossed, Landmark } from "lucide-react";
@@ -111,7 +112,7 @@ const SCENE_PHRASES = {
 
 function HomeAvatarScene({ lang }) {
   const de = lang === "de";
-  const phrases = SCENE_PHRASES[lang] || SCENE_PHRASES.it;
+  const phrases = SCENE_PHRASES[lang] || (lang === "fr" ? SCENE_PHRASES.it.map((s) => triFR(s) || s) : lang === "fa" ? SCENE_PHRASES.it.map((s) => triFA(s) || s) : SCENE_PHRASES.it);
   const [idx, setIdx] = useState(0);
   const BASE = process.env.PUBLIC_URL || "";
   useEffect(() => {
@@ -142,7 +143,7 @@ function HomeAvatarScene({ lang }) {
 
       <div className="absolute bottom-0 left-0 p-5 z-20 pointer-events-none">
         <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-        <p className="text-white/85 text-sm mt-0.5">{de ? "Dein digitaler Begleiter" : lang === "en" ? "Your digital companion" : lang === "es" ? "Tu compañero digital" : "Il tuo compagno digitale"} 🇮🇹 🇩🇪 🇬🇧 🇪🇸</p>
+        <p className="text-white/85 text-sm mt-0.5">{mkTri(lang)("Il tuo compagno digitale", "Dein digitaler Begleiter", "Your digital companion", "Tu compañero digital")} 🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 🇮🇷</p>
       </div>
     </div>
   );
@@ -219,7 +220,7 @@ export default function Home({ onNavigate }) {
   const jokes = JOKES[lang] || JOKES.it;
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
-  const L = (it_, de_, en_, es_) => (de ? de_ : lang === "en" ? en_ : lang === "es" ? (es_ ?? en_) : (lang === "fr" || lang === "fa") ? (en_ ?? it_) : it_);
+  const L = (it_, de_, en_, es_) => mkTri(lang)(it_, de_, en_, es_);
   const profile = getProfile();
 
   const [panettoni, setPanettoni] = useState([]);
@@ -241,7 +242,7 @@ export default function Home({ onNavigate }) {
     return (
       <div className="pb-4">
         <button data-testid="home-back-btn" onClick={() => setChat(false)} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
-          <ChevronRight className="w-5 h-5 rotate-180" /> Home
+          <ChevronRight className="w-5 h-5 rotate-180" /> {mkTri(lang)("Home", "Home", "Home", "Inicio", "Accueil", "خانه")}
         </button>
         <MaestroSaTutto />
       </div>
@@ -252,7 +253,7 @@ export default function Home({ onNavigate }) {
     return (
       <div className="pb-4">
         <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
-          <ChevronRight className="w-5 h-5 rotate-180" /> Home
+          <ChevronRight className="w-5 h-5 rotate-180" /> {mkTri(lang)("Home", "Home", "Home", "Inicio", "Accueil", "خانه")}
         </button>
         <LegalPage />
       </div>
@@ -278,7 +279,7 @@ export default function Home({ onNavigate }) {
         <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
         <div className="relative">
           <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-[#a9772f] mb-2">MikiLab</span>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold leading-[1.1] text-[#4a3212]">
+          <h1 className="font-display text-2xl sm:text-4xl font-extrabold leading-[1.1] text-[#4a3212] break-words hyphens-auto">
             {L("Ricette Esclusive & Consulenza Operativa",
                "Exklusive Rezepte & operative Beratung",
                "Exclusive Recipes & Operational Consulting",

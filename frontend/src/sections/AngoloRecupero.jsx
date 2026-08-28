@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState } from "react";
 import { ChevronRight, Recycle, Croissant, Sparkles } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -21,7 +22,7 @@ const ESUBERO = [
 
 export default function AngoloRecupero({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [tab, setTab] = useState("raffermo");
   const list = tab === "raffermo" ? RAFFERMO : ESUBERO;
 

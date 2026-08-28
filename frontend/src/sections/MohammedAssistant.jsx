@@ -4,6 +4,7 @@ import { Sparkles, Send, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { registerChat } from "@/lib/chatHistory";
+import { mkTri } from "@/i18n/triMaps";
 
 const AVATAR = `${process.env.PUBLIC_URL}/mohammed-avatar.jpg`;
 const sid = () => {
@@ -15,7 +16,7 @@ const sid = () => {
 // Assistente "Mohammed" — accoglienza + guida operativa de "Il Tuo Laboratorio".
 export default function MohammedAssistant() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");

@@ -5,6 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 import { marketApi, uploadApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 // Marketplace Usato — annunci REALI salvati sul server e condivisi tra tutti i fornai.
 
@@ -47,7 +48,7 @@ function compress(file, cb) {
 
 export default function Marketplace() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const CATS = [
     { id: "impastatrice", label: tri("Impastatrici", "Kneter", "Mixers") },

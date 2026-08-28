@@ -12,6 +12,7 @@ import { addXP } from "@/lib/level";
 import { HeroAvatar } from "@/components/MikiAvatar";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
 import LabTour from "@/components/LabTour";
+import { mkTri } from "@/i18n/triMaps";
 
 // Downscale + compress an image file to a base64 JPEG (keeps payload small)
 function fileToCompressedBase64(file, maxDim = 1024, quality = 0.8) {
@@ -85,7 +86,7 @@ export default function PhotoDiagnosi() {
   const [recent, setRecent] = useState([]);
   const [openRec, setOpenRec] = useState(null);
   const { t, lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [tourForce, setTourForce] = useState(0);
 
   const MODES = [

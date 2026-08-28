@@ -3,6 +3,7 @@ import { Euro, Zap, TrendingUp, Plus, Trash2, Flame, Share2 } from "lucide-react
 import { useLang } from "@/i18n/LanguageContext";
 import { shareContent } from "@/lib/share";
 import RecipePicker from "@/components/RecipePicker";
+import { mkTri } from "@/i18n/triMaps";
 
 const STORE = "mikilab_foodcost";
 const load = () => { try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) return s; } catch { /* */ } return null; };
@@ -22,7 +23,7 @@ const DEFAULTS = {
 
 export default function FoodCost() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [s, setS] = useState(() => load() || DEFAULTS);
   const [recipe, setRecipe] = useState(null);
   const onPickRecipe = (r) => {

@@ -1,13 +1,14 @@
 import { useRef } from "react";
 import { Camera, ImagePlus } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Doppia opzione ovunque: "Scatta ora" (fotocamera diretta) + "Allega" (galleria/file).
 export default function DualPhotoButtons({ onFile, allowVideo = false, testid = "photo" }) {
   const camRef = useRef(null);
   const galRef = useRef(null);
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const acc = allowVideo ? "image/*,video/*" : "image/*";
   const pick = (e) => { const f = e.target.files && e.target.files[0]; if (f) onFile(f); e.target.value = ""; };
   return (

@@ -4,6 +4,7 @@ import { subscriptionApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Elenco funzioni mostrate PRIMA del prezzo ("Guarda cosa fa"), per far vedere il valore.
 const FEATURES = {
@@ -99,8 +100,7 @@ const FEATURES = {
 export default function PaywallGate({ children, sectionName, feature = "lab" }) {
   const { user, setAuthOpen } = useAuth();
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
-  const flang = lang === "de" ? "de" : lang === "en" ? "en" : "it";
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const email = user?.email;
   // Tier: "home" (€12,99) per Academy/Principianti · "lab" (€29,99) per il laboratorio.
   const tierForFeature = (feature === "beginners" || feature === "home") ? "home" : "lab";
@@ -201,7 +201,12 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
           {tri("Guarda cosa fa 👇", "Sieh, was es kann 👇", "See what it does 👇")}
         </h3>
         <div className="space-y-2.5">
-          {(FEATURES[feature]?.[flang] || FEATURES[feature]?.it || []).map(([Icon, title, desc], i) => (
+          {(FEATURES[feature]?.it || []).map(([Icon, itTitle, itDesc], i) => {
+            const deRow = FEATURES[feature]?.de?.[i] || [];
+            const enRow = FEATURES[feature]?.en?.[i] || [];
+            const title = mkTri(lang)(itTitle, deRow[1], enRow[1]);
+            const desc = mkTri(lang)(itDesc, deRow[2], enRow[2]);
+            return (
             <div key={i} data-testid={`paywall-feature-${i}`}
               className="flex items-start gap-3 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-[#B45309]/15 border border-[#B45309]/30 flex items-center justify-center shrink-0">
@@ -214,7 +219,8 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
                 <p className="text-xs text-[#7E8A93] leading-snug mt-0.5">{desc}</p>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
         <p className="text-center text-sm font-semibold text-[#a9772f] mt-4">
           {tri("Sbloccalo completando le sfide 👇", "Schalte es mit Challenges frei 👇", "Unlock it by completing challenges 👇")}

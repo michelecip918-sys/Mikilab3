@@ -5,10 +5,11 @@ import { API, floursApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import DualPhotoButtons from "@/components/DualPhotoButtons";
+import { mkTri } from "@/i18n/triMaps";
 
 export default function ScanFlour() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { user, setAuthOpen } = useAuth();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);

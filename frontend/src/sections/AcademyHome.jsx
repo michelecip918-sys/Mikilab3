@@ -4,10 +4,11 @@ import { useLang } from "@/i18n/LanguageContext";
 import { subscriptionApi } from "@/lib/api";
 import { FLOURS, CALC_RECIPES } from "@/data/academy";
 import Beginners from "@/sections/Beginners";
+import { mkTri } from "@/i18n/triMaps";
 
 export default function AcademyHome({ onNavigate }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const L = (o) => (o ? o[lang] || o.en || o.it : "");
   const [sub, setSub] = useState("ricettario");
   const [status, setStatus] = useState(null);
@@ -151,7 +152,7 @@ export default function AcademyHome({ onNavigate }) {
 // --- Ricettario dinamico: calcolo dosi da teglia + farina --------------------
 function DynamicRecipes() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const L = (o) => (o ? o[lang] || o.en || o.it : "");
   const [recipe, setRecipe] = useState(CALC_RECIPES[0].id);
   const [width, setWidth] = useState("30");
@@ -283,7 +284,7 @@ function Row({ label, val, bold }) {
 // --- Database farine ---------------------------------------------------------
 function FlourDB() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [q, setQ] = useState("");
   const rows = FLOURS.filter((f) => `${f.name} ${f.type_de}`.toLowerCase().includes(q.toLowerCase()));
   return (

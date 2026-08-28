@@ -5,12 +5,13 @@ import { storesApi } from "@/lib/api";
 import StoresManager from "@/sections/StoresManager";
 import OrdersManager from "@/sections/OrdersManager";
 import ShiftsManager from "@/sections/ShiftsManager";
+import { mkTri } from "@/i18n/triMaps";
 
 const STORE_KEY = "mikilab_current_store";
 
 export default function EnterpriseHub() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const [sub, setSub] = useState("negozi");
   const [stores, setStores] = useState([]);

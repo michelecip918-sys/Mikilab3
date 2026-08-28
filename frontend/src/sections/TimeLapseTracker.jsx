@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
 import { ChevronRight, Camera, Loader2, Play, RotateCcw, TrendingUp } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -8,7 +9,7 @@ const KEY = "mikilab_timelapse";
 
 export default function TimeLapseTracker({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [data, setData] = useState(() => { try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch { return null; } });
   const [rise, setRise] = useState(data?.rise ?? 0);
   const [uploading, setUploading] = useState("");

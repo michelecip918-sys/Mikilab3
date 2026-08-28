@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState } from "react";
 import { ChefHat, Sparkles, Trophy, Users, BookOpen, MessageCircle } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -5,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // Sezione "Guida al Sito": gli avatar di Michele & Mohamed spiegano MikiLab passo-passo.
 export default function GuidaAvatar() {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [who, setWho] = useState("michele");
 
   const michele = {

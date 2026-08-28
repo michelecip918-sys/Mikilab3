@@ -14,6 +14,7 @@ import EvolvingQuiz from "@/components/EvolvingQuiz";
 import BakeAlong from "@/components/BakeAlong";
 import SosImpasto from "@/components/SosImpasto";
 import LabTour from "@/components/LabTour";
+import { mkTri, pick } from "@/i18n/triMaps";
 
 const HOME_DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
@@ -228,7 +229,7 @@ const QUIZ = {
 
 function BakerQuiz() {
   const { t, lang } = useLang();
-  const questions = QUIZ[lang] || QUIZ.it;
+  const questions = pick(QUIZ, lang);
   const QKEY = "mikilab_quiz_best";
   const [best, setBest] = useState(() => Number(localStorage.getItem(QKEY) || 0));
   const [started, setStarted] = useState(false);
@@ -238,7 +239,7 @@ function BakerQuiz() {
   const [done, setDone] = useState(false);
 
   const start = () => { setStarted(true); setIdx(0); setPicked(null); setScore(0); setDone(false); };
-  const pick = (i) => {
+  const choose = (i) => {
     if (picked != null) return;
     setPicked(i);
     if (i === questions[idx].correct) setScore((s) => s + 1);
@@ -298,7 +299,7 @@ function BakerQuiz() {
           if (picked != null && isCorrect) cls = "bg-[#B45309]/20 border-[#B45309]";
           else if (picked != null && chosen && !isCorrect) cls = "bg-[#C0574D]/15 border-[#C0574D]";
           return (
-            <button key={i} data-testid={`quiz-option-${i}`} onClick={() => pick(i)} disabled={picked != null}
+            <button key={i} data-testid={`quiz-option-${i}`} onClick={() => choose(i)} disabled={picked != null}
               className={`w-full flex items-center gap-2 text-left text-sm px-4 py-3 rounded-xl border transition-all ${cls}`}>
               <span className="flex-1 text-[#2B303B] dark:text-[#e4eff8]">{opt}</span>
               {picked != null && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#B45309] shrink-0" />}
@@ -346,11 +347,11 @@ const DAILY_RECIPES = {
 
 export default function Beginners({ onNavigate }) {
   const { t, lang } = useLang();
-  const tri3 = (l, i, d, e, s) => (l === "de" ? (d ?? i) : l === "en" ? (e ?? i) : l === "es" ? (s ?? e ?? i) : i);
+  const tri3 = (l, i, d, e, s) => mkTri(l)(i, d, e, s);
   const [sosOpen, setSosOpen] = useState(false);
-  const beginners = BEGINNERS[lang] || BEGINNERS.it;
+  const beginners = pick(BEGINNERS, lang);
   const courses = content[lang].freeCourses || [];
-  const daily = DAILY_RECIPES[lang] || DAILY_RECIPES.it;
+  const daily = pick(DAILY_RECIPES, lang);
   const today = daily[Math.floor(Date.now() / 86400000) % daily.length];
 
   const PATH = [
@@ -444,10 +445,10 @@ export default function Beginners({ onNavigate }) {
       <div data-testid="recipe-of-day" className="rounded-2xl p-5 text-white bg-gradient-to-br from-[#24303c] to-[#16202b] shadow-md">
         <div className="flex items-center gap-2 mb-1">
           <Star className="w-4 h-4" />
-          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages" : lang === "es" ? "Receta del día" : lang === "en" ? "Recipe of the day" : "Ricetta del giorno"}</span>
+          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{mkTri(lang)("Ricetta del giorno","Rezept des Tages","Recipe of the day","Receta del día")}</span>
         </div>
         <h3 className="font-display text-xl font-bold leading-tight">{today.name}</h3>
-        <p className="text-sm text-white/90 mt-2"><b>{lang === "de" ? "Zutaten" : lang === "es" ? "Ingredientes" : lang === "en" ? "Ingredients" : "Ingredienti"}:</b> {today.ing}</p>
+        <p className="text-sm text-white/90 mt-2"><b>{mkTri(lang)("Ingredienti", "Zutaten", "Ingredients", "Ingredientes")}:</b> {today.ing}</p>
         <p className="text-sm text-white/90 mt-1.5 leading-snug">{today.steps}</p>
       </div>
 

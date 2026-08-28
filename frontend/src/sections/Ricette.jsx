@@ -10,10 +10,11 @@ import ScopriMikiLab from "@/sections/ScopriMikiLab";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
+import { mkTri, triFA } from "@/i18n/triMaps";
 
 export default function Ricette() {
   const { t, lang } = useLang();
-  const tri = (i, d, e, s, f) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "fr" ? (f ?? e ?? i) : (lang === "en" || lang === "fa") ? (e ?? i) : i);
+  const tri = (i, d, e, s, f) => mkTri(lang)(i, d, e, s, f);
   const [view, setView] = useState("main");
   const [custoditeInit, setCustoditeInit] = useState(null);
   const coll = "mikilab";
@@ -123,7 +124,7 @@ function UtilBtn({ testid, Icon, label, onClick }) {
 
 function Sub({ onBack, children }) {
   const { lang } = useLang();
-  const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : lang === "es" ? "Recetas" : lang === "fr" ? "Recettes" : "Ricette";
+  const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : lang === "es" ? "Recetas" : lang === "fr" ? "Recettes" : lang === "fa" ? (triFA("Ricette") || "دستورها") : "Ricette";
   return (
     <div className="pb-4">
       <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">

@@ -1,4 +1,5 @@
 // Contenuti statici curati bilingue (IT/DE) per "Il Maestro sa tutto"
+import { triFR, triFA } from "@/i18n/triMaps";
 
 export const content = {
   it: {
@@ -200,7 +201,22 @@ export const content = {
 
 // Fallback lingua: finché i contenuti EN non sono tradotti, EN usa l'italiano
 // (evita il crash `content[lang]` undefined quando la lingua è 'en').
+
+// Traduzione profonda IT->FR/FA tramite la mappa auto-generata (solo stringhe di testo note).
+function deepT(obj, fn) {
+  if (typeof obj === "string") return fn(obj) || obj;
+  if (Array.isArray(obj)) return obj.map((x) => deepT(x, fn));
+  if (obj && typeof obj === "object") {
+    const o = {};
+    for (const k in obj) o[k] = deepT(obj[k], fn);
+    return o;
+  }
+  return obj;
+}
+
 if (!content.en) content.en = content.it;
 if (!content.es) content.es = content.it;
+if (!content.fr) content.fr = deepT(content.it, triFR);
+if (!content.fa) content.fa = deepT(content.it, triFA);
 // serve a far scattare la notifica "nuovi corsi" all'utente.
 export const COURSES_VERSION = 1;

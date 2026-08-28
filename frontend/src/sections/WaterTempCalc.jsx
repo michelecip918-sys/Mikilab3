@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Droplets, Thermometer } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 function Field({ testid, label, value, onChange, hint }) {
   return (
@@ -20,7 +21,7 @@ function Field({ testid, label, value, onChange, hint }) {
 // Temp Acqua = (Temp Impasto Desiderata × 3) − (Temp Ambiente + Temp Farina + Riscaldamento Meccanico)
 export default function WaterTempCalc() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [dough, setDough] = useState("24");
   const [ambient, setAmbient] = useState("22");
   const [flour, setFlour] = useState("20");

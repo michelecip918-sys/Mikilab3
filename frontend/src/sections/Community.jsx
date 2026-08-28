@@ -12,6 +12,7 @@ import ProfilePanel from "@/components/ProfilePanel";
 import ChatPanel from "@/components/ChatPanel";
 import BakersMap from "@/components/BakersMap";
 import { friendsApi, dmApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 const CATS = [
   { id: "consiglio", Icon: Lightbulb, color: "#E0A458" },
@@ -35,7 +36,7 @@ function timeAgo(iso, lang) {
 
 export default function Community({ onNavigate }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { user, setAuthOpen } = useAuth();
 
   const catLabel = (id) => ({

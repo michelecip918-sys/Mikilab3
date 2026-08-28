@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { QrCode, Wheat, Calendar, ShieldCheck, Store, Package, Loader2, AlertCircle } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { batchesApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 // Pagina PUBBLICA di tracciabilità (nessun login). Aperta scansionando il QR
 // del lotto: ?lotto=<id>. Mostra farina, date e provenienza al cliente finale.
 export default function PublicBatch({ id }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [batch, setBatch] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

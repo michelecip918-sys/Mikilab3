@@ -3,6 +3,7 @@ import { Hand, Mic, MicOff, Volume2, RefreshCw, Trash2, Clock } from "lucide-rea
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers, remainingOf } from "@/audio/TimerContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Modalità "Mani Sporche": interfaccia XL a mani libere, comandi vocali,
 // timer di lavorazione grandi. Pensata per usare l'app con le mani infarinate.
@@ -15,7 +16,7 @@ const fmt = (s) => {
 
 export default function ManiSporche() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const voiceLang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
   const { timers, nowTs, addTimer, toggle, reset, remove } = useTimers();
   void nowTs;

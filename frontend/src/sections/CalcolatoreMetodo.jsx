@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { useState, useMemo } from "react";
 import { ChevronRight, Calculator, Droplets, Wheat, FlaskConical, Thermometer, Clock, Lightbulb } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -13,7 +14,7 @@ const PREF = {
 
 export default function CalcolatoreMetodo({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? d : lang === "en" ? e : lang === "es" ? (s ?? e) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
 
   const [flour, setFlour] = useState(1000);
   const [hyd, setHyd] = useState(75);

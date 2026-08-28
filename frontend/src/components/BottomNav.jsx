@@ -2,10 +2,11 @@ import { Home, BookOpen, Wrench, GraduationCap, Users } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { notificationsApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 export default function BottomNav({ active, onChange }) {
   const { t, lang } = useLang();
-  const triNav = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const triNav = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [unread, setUnread] = useState(0);
   const loadUnread = useCallback(async () => {
     try { const d = await notificationsApi.list(); setUnread(d.unread || 0); } catch { setUnread(0); }

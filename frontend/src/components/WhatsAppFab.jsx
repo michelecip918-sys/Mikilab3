@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { siteSettingsApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 const WA_DEFAULT = "491601253378"; // +49 160 1253378
 
@@ -19,7 +20,7 @@ export default function WhatsAppFab() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => { window.removeEventListener("scroll", onScroll); clearTimeout(timer); };
   }, []);
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const msg = tri(
     "Ciao Michele! Ti scrivo da MikiLab.",
     "Hallo Michele! Ich schreibe dir über MikiLab.",

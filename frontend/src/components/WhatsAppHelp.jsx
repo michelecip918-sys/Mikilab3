@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MessageCircle } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { siteSettingsApi } from "@/lib/api";
+import { mkTri } from "@/i18n/triMaps";
 
 const WA_DEFAULT = "491601253378"; // +49 160 1253378
 
@@ -11,7 +12,7 @@ export default function WhatsAppHelp({ context = "assistenza", className = "" })
   const { lang } = useLang();
   const [WA_NUMBER, setWaNumber] = useState(WA_DEFAULT);
   useEffect(() => { siteSettingsApi.get().then((s) => { if (s && s.whatsapp_number) setWaNumber(s.whatsapp_number); }).catch(() => {}); }, []);
-  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
   const COPY = {
     corsi: {

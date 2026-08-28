@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Sparkles, ChevronRight } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri, triFR, triFA } from "@/i18n/triMaps";
 
 // Rotazione giornaliera (day-of-year) tra i "sapori del giorno"
 const FLAVORS = [
@@ -20,8 +21,9 @@ export default function SaporeDelGiorno({ onOpen }) {
     const day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
     return FLAVORS[day % FLAVORS.length];
   }, []);
-  const txt = f[lang] || f.en || f.it;
-  const label = lang === "de" ? "Der Geschmack des Tages" : lang === "es" ? "El sabor del día" : (lang === "en" || lang === "fr" || lang === "fa") ? "Flavour of the Day" : "Il Sapore del Giorno";
+  const trArr = (arr) => arr ? arr.map((s) => (lang === "fr" ? triFR(s) : lang === "fa" ? triFA(s) : null) || s) : arr;
+  const txt = f[lang] || ((lang === "fr" || lang === "fa") ? trArr(f.it) : null) || f.en || f.it;
+  const label = mkTri(lang)("Il Sapore del Giorno", "Der Geschmack des Tages", "Flavour of the Day", "El sabor del día");
 
   return (
     <button type="button" data-testid="home-sapore-giorno" onClick={onOpen} disabled={!onOpen}

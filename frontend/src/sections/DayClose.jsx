@@ -13,6 +13,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { capoPlanApi, labConfigApi, recipesApi, inventoryApi, dayCloseApi } from "@/lib/api";
 import { computeShopping } from "@/lib/shopping";
 import { SUPPLIERS } from "@/data/suppliers";
+import { mkTri } from "@/i18n/triMaps";
 
 const CLEAN_ITEMS = [
   ["mixers", "Impastatrici", "Kneter"],
@@ -32,7 +33,7 @@ const genLot = () => {
 
 export default function DayClose() {
   const { lang } = useLang();
-  const tri = (i, d) => (lang === "de" ? d : i);
+  const tri = (i, d) => mkTri(lang)(i, d);
   const { user, setAuthOpen } = useAuth();
 
   const [step, setStep] = useState(1);

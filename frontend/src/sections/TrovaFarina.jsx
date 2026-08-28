@@ -1,3 +1,4 @@
+import { mkTri } from "@/i18n/triMaps";
 import { ChevronRight, Wheat, Search } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 
@@ -21,7 +22,7 @@ const ROWS = [
 
 export default function TrovaFarina({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const uL = (arr) => (lang === "de" ? arr[1] : lang === "es" ? arr[3] : (lang === "en" || lang === "fr" || lang === "fa") ? arr[2] : arr[0]);
   const flagRow = [["it", "🇮🇹"], ["de", "🇩🇪"], ["fr", "🇫🇷"], ["es", "🇪🇸"]];
 

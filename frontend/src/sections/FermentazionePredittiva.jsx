@@ -3,6 +3,7 @@ import { Activity, MapPin, Loader2, Thermometer, Percent, Bell, Sparkles, CloudS
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
 import { toast } from "sonner";
+import { mkTri } from "@/i18n/triMaps";
 
 // Fermentazione Predittiva — modello Q10 (la lievitazione accelera/rallenta col calore)
 // + meteo automatico (Open-Meteo, nessuna chiave) + promemoria "impasto pronto".
@@ -15,7 +16,7 @@ const PREF_TYPES = [
 
 export default function FermentazionePredittiva() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const { addTimer, remove: removeTimer } = useTimers();
 
   const [loading, setLoading] = useState(false);

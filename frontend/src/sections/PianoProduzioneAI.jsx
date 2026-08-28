@@ -20,10 +20,11 @@ import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
+import { mkTri } from "@/i18n/triMaps";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
-const tri3 = (lang, i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
+const tri3 = (lang, i, d, e, s) => mkTri(lang)(i, d, e, s);
 
 // Estrae la sezione "Orario Infornate" dal markdown del piano per renderla come tabella modificabile.
 const cleanCell = (c) => (c || "").replace(/\*\*/g, "").replace(/__/g, "").replace(/`/g, "").replace(/\*/g, "").trim();
