@@ -1840,3 +1840,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v-fork.10 (2026-08) — Suggeriti per te (amici) + pulizia directory
 - **Suggeriti per te**: nuovo endpoint `GET /api/friends/suggestions` — combina friends-of-friends (amici in comune, con conteggio), partecipanti Bake-Along (interesse simile) e fornai attivi nel Social; esclude sé stessi/amici/richieste in corso; ritorna card con `reason` (mutual/bakealong/active) + `mutuals`. `_user_card` già con email. API `friendsApi.suggestions`. UI: sezione "Suggeriti per te" (`friends-suggestions`) in cima alla tab "Trova" del FriendsPanel quando la ricerca è vuota, con motivazione localizzata e tasto Aggiungi (`friend-sugg-add-<id>`); sotto "Tutti i fornai". Verificato via curl (amico1 → 2 suggeriti "active") e screenshot.
 - **Pulizia directory**: rimossi 11 account di test fittizi (name "t", email @example.com/@test.dev, avanzi dei test rate-limit) + relative sessioni/amicizie/notifiche, così la ricerca amici mostra solo fornai reali.
+
+## v-fork.11 (2026-08) — Stripe webhook signing secret configurato
+- Utente ha fornito il webhook signing secret di Stripe per la destinazione https://mikilab.de/api/webhook/stripe.
+- Aggiornato `STRIPE_WEBHOOK_SECRET` in /app/backend/.env → whsec_ZRlLJijxsfmzbLh9EcNpIta2cAwkpIkW (sostituito il precedente whsec_HEOi...). Backend riavviato; `_stripe.Webhook.construct_event` usa la nuova chiave sull'endpoint POST /api/webhook/stripe. Verificato: chiave caricata (…cAwkpIkW) + firma non valida → HTTP 400 (verifica attiva).
+- AZIONE UTENTE: redeploy per portare il secret in produzione + "Invia un ping" da Stripe per conferma 2xx.
+- NOTA (non modificata): mismatch ambiente chiavi Stripe — STRIPE_SECRET_KEY=sk_live_… ma STRIPE_PUBLISHABLE_KEY=pk_test_… con STRIPE_MODE=test. Da allineare (tutte live) se si vuole vendere davvero; non toccato perché fuori scope e gestione chiavi Stripe riservata.
