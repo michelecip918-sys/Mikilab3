@@ -249,6 +249,17 @@ export default function ScanRecipe({ embedded = false }) {
               <Copy className="w-4 h-4 shrink-0" />
             </button>
           )}
+          {inbound.webhook_url && (
+            <div data-testid="inbound-webhook-admin" className="mt-3 rounded-xl bg-[#B45309]/10 border border-[#B45309]/30 p-3">
+              <p className="text-[11px] font-bold text-[#8C4A27] mb-1">{tri("Admin · URL webhook per la Route Mailgun", "Admin · Webhook-URL für Mailgun-Route", "Admin · Webhook URL for Mailgun Route", "Admin · URL webhook Mailgun")}</p>
+              <button data-testid="inbound-copy-webhook" onClick={() => { navigator.clipboard?.writeText(inbound.webhook_url); toast.success(tri("URL webhook copiato", "Webhook-URL kopiert", "Webhook URL copied", "URL copiada")); }}
+                className="w-full inline-flex items-center gap-2 bg-white dark:bg-[#1F252B] border border-[#8C4A27]/40 text-[#6E371C] dark:text-[#a9d2ec] font-mono-data text-[11px] px-3 py-2 rounded-lg active:scale-98">
+                <span className="flex-1 text-left truncate">{inbound.webhook_url}</span>
+                <Copy className="w-4 h-4 shrink-0" />
+              </button>
+              <p className="text-[10px] text-[#7E8A93] mt-1">{tri('Incollalo nell\'azione "Forward" della Route con match_recipient("recipes@mikilab.de").', 'In die „Forward"-Aktion der Route einfügen.', 'Paste it into the route\'s "Forward" action.', 'Pégalo en la acción "Forward" de la ruta.')}</p>
+            </div>
+          )}
           {inbound.your_email && (
             <p className="text-[11px] text-[#7E8A93] mt-2">
               {tri("Inoltra dalla tua email:", "Weiterleiten von deiner E-Mail:", "Forward from your email:", "Reenvía desde tu email:")} <b>{inbound.your_email}</b>

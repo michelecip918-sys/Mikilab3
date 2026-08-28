@@ -3698,7 +3698,7 @@ def _mailgun_verify(timestamp: str, token: str, signature: str) -> bool:
     if not key or not timestamp or not token or not signature:
         return False
     try:
-        if abs(_time.time() - int(timestamp)) > 300:
+        if abs(_time.time() - int(timestamp)) > 900:
             return False
     except (ValueError, TypeError):
         return False
@@ -3709,8 +3709,14 @@ def _mailgun_verify(timestamp: str, token: str, signature: str) -> bool:
 @api_router.post("/inbound/email")
 async def inbound_email(request: Request):
     form = await request.form()
-    if not _mailgun_verify(form.get("timestamp"), form.get("token"), form.get("signature")):
-        raise HTTPException(status_code=406, detail="Invalid Mailgun signature")
+    # Autenticazione webhook: firma Mailgun VALIDA *oppure* secret token condiviso nell'URL/route.
+    sig_ok = _mailgun_verify(form.get("timestamp"), form.get("token"), form.get("signature"))
+    shared = os.environ.get("INBOUND_SHARED_SECRET", "")
+    provided = request.query_params.get("k") or form.get("k") or ""
+    import hmac as _hmac2
+    secret_ok = bool(shared) and _hmac2.compare_digest(provided, shared)
+    if not (sig_ok or secret_ok):
+        raise HTTPException(status_code=406, detail="Unauthorized inbound request")
     token = form.get("token")
     if token and await db.inbound_tokens.find_one({"_id": token}):
         return {"ok": True, "duplicate": True}
@@ -3774,12 +3780,19 @@ async def inbound_email(request: Request):
 @api_router.get("/inbound/status")
 async def inbound_status(user: dict = Depends(current_user)):
     """Ultimi import via email dell'utente + indirizzo dedicato."""
-    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "email": 1})
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "email": 1, "role": 1})
     rows = await db.inbound_emails.find({"matched_user": user["user_id"]}, {"_id": 0})\
         .sort("created_at", -1).to_list(20)
-    return {"inbound_address": os.environ.get("INBOUND_ADDRESS", "recipes@mikilab.de"),
-            "enabled": bool(os.environ.get("MAILGUN_WEBHOOK_SIGNING_KEY")),
+    shared = os.environ.get("INBOUND_SHARED_SECRET", "")
+    enabled = bool(os.environ.get("MAILGUN_WEBHOOK_SIGNING_KEY") or shared)
+    resp = {"inbound_address": os.environ.get("INBOUND_ADDRESS", "recipes@mikilab.de"),
+            "enabled": enabled,
             "your_email": (u or {}).get("email"), "history": rows}
+    # URL del webhook (con secret) mostrato SOLO all'admin per configurare la Route su Mailgun.
+    if (u or {}).get("role") == "admin" and shared:
+        base = os.environ.get("INBOUND_PUBLIC_BASE", "https://mikilab.de").rstrip("/")
+        resp["webhook_url"] = f"{base}/api/inbound/email?k={shared}"
+    return resp
 
 
 
