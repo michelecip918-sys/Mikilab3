@@ -186,12 +186,12 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
         <h2 className="font-display text-2xl font-bold">{sectionName} · {tierForFeature === "home" ? "Academy" : "PRO"}</h2>
         <p className="text-white/85 text-sm mt-2">
           {feature === "beginners" || feature === "home"
-            ? tri("«Impara da Casa» — la tua Academy completa a €12,99/mese: corsi, ricettario dinamico, database farine e 10 Diagnosi Foto al mese.",
-                  "«Von zu Hause lernen» — deine komplette Academy für €12,99/Monat: Kurse, dynamisches Rezeptbuch, Mehl-Datenbank und 10 Foto-Diagnosen/Monat.",
-                  "«Learn from Home» — your complete Academy at €12.99/month: courses, dynamic recipe book, flour database and 10 photo diagnoses/month.")
-            : tri("Questa sezione è riservata agli abbonati PRO. Sblocca tutti gli strumenti del laboratorio.",
-                  "Dieser Bereich ist PRO-Abonnenten vorbehalten. Schalte alle Werkzeuge frei.",
-                  "This section is reserved for PRO members. Unlock all the lab tools.")}
+            ? tri("«Impara da Casa» — la tua Academy: corsi, ricettario dinamico, database farine e Diagnosi Foto. Sblocca i contenuti completando le sfide della community.",
+                  "«Von zu Hause lernen» — deine Academy: Kurse, dynamisches Rezeptbuch, Mehl-Datenbank und Foto-Diagnose. Schalte Inhalte über Community-Challenges frei.",
+                  "«Learn from Home» — your Academy: courses, dynamic recipe book, flour database and photo diagnosis. Unlock content by completing community challenges.")
+            : tri("Questa sezione si sblocca completando le sfide della community MikiLab. Nessun pagamento.",
+                  "Dieser Bereich wird durch das Abschließen von Community-Challenges freigeschaltet. Keine Zahlung.",
+                  "This section unlocks by completing MikiLab community challenges. No payment.")}
         </p>
       </div>
 
@@ -216,59 +216,37 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             </div>
           ))}
         </div>
-        <p className="text-center text-sm font-semibold text-[#3f7cac] mt-4">
-          {tri("Provalo gratis o abbonati per sbloccare tutto 👇", "Kostenlos testen oder abonnieren, um alles freizuschalten 👇", "Try it free or subscribe to unlock everything 👇")}
+        <p className="text-center text-sm font-semibold text-[#a9772f] mt-4">
+          {tri("Sbloccalo completando le sfide 👇", "Schalte es mit Challenges frei 👇", "Unlock it by completing challenges 👇")}
         </p>
       </div>
 
       {!email ? (
         <div className="mt-5 space-y-3">
-          <p data-testid="paywall-trial-hint" className="text-center text-sm text-[#7E8A93]">
-            {tri("Accedi per iniziare la prova gratuita di 7 giorni.", "Melde dich an, um die 7-tägige Testphase zu starten.", "Log in to start your 7-day free trial.")}
+          <p data-testid="paywall-register-hint" className="text-center text-sm text-[#7E8A93]">
+            {tri("Registrati con la tua email per partecipare alle sfide e sbloccare i contenuti.", "Registriere dich mit deiner E-Mail, um an Challenges teilzunehmen und Inhalte freizuschalten.", "Register with your email to join challenges and unlock content.")}
           </p>
-          <button data-testid="paywall-login" onClick={() => setAuthOpen(true)}
+          <button data-testid="paywall-register" onClick={() => setAuthOpen(true)}
             className="w-full bg-[#3f7cac] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
-            {tri("Accedi per continuare", "Anmelden, um fortzufahren", "Log in to continue")}
+            {tri("Registrati per iniziare", "Registrieren und loslegen", "Register to start")}
           </button>
         </div>
       ) : (
         <div className="mt-5 space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <button data-testid="sub-monthly" onClick={() => subscribe("monthly")}
-              className="rounded-2xl border-2 border-[#3f7cac] p-4 text-center active:scale-97 transition-all bg-white dark:bg-[#232A31]">
-              <Crown className="w-6 h-6 text-[#3f7cac] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1">{PRICES.monthly}</p>
-              <p className="text-xs text-[#7E8A93]">{tri("al mese", "pro Monat", "per month")}</p>
-            </button>
-            <button data-testid="sub-yearly" onClick={() => subscribe("yearly")}
-              className="rounded-2xl border-2 border-[#6E8CA0] p-4 text-center active:scale-97 transition-all bg-[#6E8CA0]/10 relative">
-              <span className="absolute -top-2 right-2 text-[9px] font-bold bg-[#5aa0cf] text-white px-1.5 py-0.5 rounded-full">{PRICES.disc}</span>
-              <Crown className="w-6 h-6 text-[#6E8CA0] mx-auto" />
-              <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1">{PRICES.yearly}</p>
-              <p className="text-xs text-[#7E8A93]">{tri("all'anno", "pro Jahr", "per year")}</p>
-            </button>
+          <div className="rounded-2xl bg-[#a9772f]/10 border border-[#a9772f]/30 p-4 text-center">
+            <p className="flex items-center justify-center gap-2 text-sm font-bold text-[#8a5a2b] dark:text-[#e0b877]">
+              <Sparkles className="w-4 h-4" /> {tri("Sbloccalo con le Sfide", "Mit Challenges freischalten", "Unlock with Challenges")}
+            </p>
+            <p className="text-xs text-[#7E8A93] mt-1 leading-snug">
+              {tri("Niente pagamenti: guadagni l'accesso completando le sfide della community MikiLab (crea post, invita colleghi, condividi e altro).",
+                   "Keine Zahlungen: Zugang durch das Abschließen von MikiLab-Community-Challenges (Beiträge erstellen, Kollegen einladen, teilen usw.).",
+                   "No payments: earn access by completing MikiLab community challenges (create posts, invite colleagues, share and more).")}
+            </p>
           </div>
-
-          <p data-testid="paywall-trust-badge" className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#2e6690] dark:text-[#a9d2ec] -mt-1">
-            <ShieldCheck className="w-3.5 h-3.5" /> {tri("Nessun addebito automatico · disdici quando vuoi", "Keine automatische Belastung · jederzeit kündbar", "No automatic charge · cancel anytime")}
-          </p>
-
-          {!status?.trial_used && (
-            <div className="rounded-2xl bg-[#5aa0cf]/10 border border-[#5aa0cf]/30 p-4">
-              <p className="flex items-center gap-2 text-sm font-semibold text-[#2e6690] dark:text-[#a9d2ec]">
-                <Sparkles className="w-4 h-4" /> {tri("Prova gratis 7 giorni", "7 Tage kostenlos testen", "7-day free trial")}
-              </p>
-              <p className="text-xs text-[#7E8A93] mt-1 leading-snug">
-                {tri("Richiede una carta ma NON addebitiamo nulla. Alla fine dei 7 giorni decidi tu se abbonarti: nessun rinnovo automatico.",
-                     "Erfordert eine Karte, aber wir belasten nichts. Nach 7 Tagen entscheidest du, ob du abonnierst: keine automatische Verlängerung.",
-                     "Requires a card but we charge nothing. After 7 days you decide whether to subscribe: no automatic renewal.")}
-              </p>
-              <button data-testid="trial-7d-card" onClick={startCardTrial}
-                className="w-full mt-2.5 bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold py-2.5 rounded-xl active:scale-97 transition-all flex items-center justify-center gap-2">
-                <CreditCard className="w-4 h-4" /> {tri("Inizia la prova (carta richiesta)", "Test starten (Karte erforderlich)", "Start trial (card required)")}
-              </button>
-            </div>
-          )}
+          <button data-testid="paywall-challenge" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } toast.message(tri("Le Sfide arrivano a brevissimo — resta connesso!", "Die Challenges kommen in Kürze!", "Challenges are coming very soon!")); }}
+            className="w-full bg-[#a9772f] hover:bg-[#8a5a2b] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            <Sparkles className="w-5 h-5" /> {tri("Completa la Sfida per Accedere", "Challenge abschließen, um zuzugreifen", "Complete the challenge to unlock")}
+          </button>
         </div>
       )}
     </div>

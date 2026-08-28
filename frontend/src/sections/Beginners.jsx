@@ -444,7 +444,7 @@ export default function Beginners({ onNavigate }) {
       <div data-testid="recipe-of-day" className="rounded-2xl p-5 text-white bg-gradient-to-br from-[#24303c] to-[#16202b] shadow-md">
         <div className="flex items-center gap-2 mb-1">
           <Star className="w-4 h-4" />
-          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages · gratis" : lang === "es" ? "Receta del día · gratis" : lang === "en" ? "Recipe of the day · free" : "Ricetta del giorno · gratis"}</span>
+          <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{lang === "de" ? "Rezept des Tages" : lang === "es" ? "Receta del día" : lang === "en" ? "Recipe of the day" : "Ricetta del giorno"}</span>
         </div>
         <h3 className="font-display text-xl font-bold leading-tight">{today.name}</h3>
         <p className="text-sm text-white/90 mt-2"><b>{lang === "de" ? "Zutaten" : lang === "es" ? "Ingredientes" : lang === "en" ? "Ingredients" : "Ingredienti"}:</b> {today.ing}</p>
