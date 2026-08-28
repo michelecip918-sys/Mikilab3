@@ -67,6 +67,9 @@ export default function RecipeShowcase({ onOpen }) {
                 <h3 className="font-display text-base font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] line-clamp-2">
                   {rLoc(r, "name", lang)}
                 </h3>
+                {rLoc(r, "real_name", lang) && rLoc(r, "real_name", lang).toLowerCase() !== (rLoc(r, "name", lang) || "").toLowerCase() ? (
+                  <p className="text-[11px] font-medium text-[#8C4A27] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p>
+                ) : null}
                 {r.flour_type ? (
                   <p className="text-[11px] text-[#7E8A93] truncate mt-0.5">{rLoc(r, "flour_type", lang)}</p>
                 ) : null}

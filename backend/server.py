@@ -131,6 +131,14 @@ class Recipe(BaseModel):
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
     real_name_en: Optional[str] = None
+    real_name_es: Optional[str] = None
+    real_name_fr: Optional[str] = None
+    real_name_fa: Optional[str] = None
+    name_fr: Optional[str] = None
+    name_fa: Optional[str] = None
+    flour_type_fr: Optional[str] = None
+    notes_fr: Optional[str] = None
+    procedure_fr: Optional[str] = None
     menu_category: Optional[str] = None  # basi | pane | panini | panettoni
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
@@ -181,6 +189,14 @@ class RecipeCreate(BaseModel):
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
     real_name_en: Optional[str] = None
+    real_name_es: Optional[str] = None
+    real_name_fr: Optional[str] = None
+    real_name_fa: Optional[str] = None
+    name_fr: Optional[str] = None
+    name_fa: Optional[str] = None
+    flour_type_fr: Optional[str] = None
+    notes_fr: Optional[str] = None
+    procedure_fr: Optional[str] = None
     menu_category: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
@@ -213,6 +229,9 @@ class RecipeUpdate(BaseModel):
     procedure: Optional[str] = None
     real_name: Optional[str] = None
     real_name_de: Optional[str] = None
+    real_name_en: Optional[str] = None
+    real_name_es: Optional[str] = None
+    real_name_fr: Optional[str] = None
     menu_category: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
@@ -345,7 +364,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v57-colorate3"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v58-i18n-doublename"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -2684,6 +2703,30 @@ def _capo_lang(lang):
     return LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"])
 
 
+def _rec_loc_field(rec, base, lang):
+    """Campo localizzato di una ricetta (dict) con fallback a IT (per il backend)."""
+    if not rec:
+        return ""
+    if lang in ("de", "en", "es", "fr", "fa"):
+        v = rec.get(f"{base}_{lang}")
+        if v and str(v).strip():
+            return v
+        if lang == "es":
+            v = rec.get(f"{base}_en")
+            if v and str(v).strip():
+                return v
+    return rec.get(base) or ""
+
+
+def _rec_double_name(rec, lang="it"):
+    """Doppia nomenclatura: 'Nome Fantastico (Nome Reale)' localizzato."""
+    fantasy = str(_rec_loc_field(rec, "name", lang) or rec.get("name") or "").strip()
+    real = str(_rec_loc_field(rec, "real_name", lang) or "").strip()
+    if real and real.lower() != fantasy.lower() and real.lower() not in fantasy.lower():
+        return f"{fantasy} ({real})"
+    return fantasy
+
+
 async def _capo_item_line(it, lang="it"):
     """Formatta un prodotto con i dettagli ricetta dal DB."""
     de = lang == "de"
@@ -2691,7 +2734,7 @@ async def _capo_item_line(it, lang="it"):
     rec = await db.recipes.find_one({"id": rid}, {"_id": 0}) if rid else None
     qty = it.get("quantity")
     unit = it.get("unit") or ("Stück" if de else "pezzi")
-    name = (rec or {}).get("name") or it.get("name") or "?"
+    name = _rec_double_name(rec, lang) if rec else (it.get("name") or "?")
     line = f"- {name}: {qty} {unit}" if qty else f"- {name}"
     dest = []
     if it.get("to_proof"):
@@ -4973,6 +5016,12 @@ async def newsletter_subscribe(body: NewsletterReq, request: Request):
 async def admin_newsletter(admin: dict = Depends(require_admin)):
     rows = await db.newsletter_subscribers.find({}, {"_id": 0}).sort("created_at", -1).to_list(5000)
     return {"count": len(rows), "subscribers": rows}
+
+
+@api_router.get("/newsletter/count")
+async def newsletter_count():
+    n = await db.newsletter_subscribers.count_documents({})
+    return {"count": n}
 
 
 

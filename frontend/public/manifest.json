@@ -1,7 +1,7 @@
 {
-  "short_name": "Mikilab",
-  "name": "Mikilab — Il laboratorio del pane",
-  "description": "Ricette di panificazione artigianale (farro, lievito madre, grandi lievitati), pianificazione della produzione e Maestro AI. Bilingue IT/DE.",
+  "short_name": "MikiLab",
+  "name": "MikiLab — Ricette di pane artigianale 100% gratis",
+  "description": "MikiLab è 100% gratis: ricette col metodo di Michele (farro, lievito madre, poolish, biga), piano di produzione con l'IA e diagnosi dell'impasto da foto. In IT/DE/EN/ES/FR.",
   "lang": "it",
   "categories": ["food", "productivity", "lifestyle"],
   "icons": [

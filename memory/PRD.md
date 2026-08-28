@@ -2124,3 +2124,18 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Fix coerenza free**: rimosso il badge "PRO" dalla card "Il Tuo Laboratorio" nell'Home → ora "Gratis/Free".
 - **Auth register mode**: AuthScreen accetta `initialMode`; App ascolta l'evento `mikilab-open-auth` {mode} per aprire login/registrazione nella tab giusta.
 - Testato: curl (valida/duplicato/invalida 400) + screenshot interattivi (CTA apre register, newsletter mostra success). Dati di test ripuliti.
+
+## v-fork.49 (2026-06) — Marketing (social proof/popup/SEO) + Doppia nomenclatura ricette i18n + Nuovo logo
+### Marketing
+- **Social proof** sotto la newsletter (`newsletter-social-proof`): "Già X fornai iscritti" (6 lingue), visibile solo se X>0; endpoint pubblico `GET /api/newsletter/count`.
+- **Popup iscrizione** (`components/NewsletterPopup.jsx`, montato in App): appare una volta dopo ~14s (localStorage `mikilab_newsletter_popup_seen`), dismissibile, invia a `/api/newsletter/subscribe` (source=popup). 6 lingue.
+- **SEO/OG (Passo 2)**: `public/index.html` + `manifest.json` aggiornati con posizionamento "100% GRATIS": `<title>`, meta description, keywords, og:title/description/image (1200x630), twitter card. Nome ufficiale app = MikiLab.
+### Doppia nomenclatura ricette (IT/EN/FR/ES)
+- **Regola**: ogni ricetta mostra "Nome Fantastico (Nome Reale)". Helper `recipeTitle(recipe, lang)` in `lib/loc.js` (guardia: niente parentesi se il reale coincide/è contenuto nel fantastico). Backend: `_rec_double_name()` usato in `_capo_item_line` → il Piano IA riceve i nomi doppi localizzati.
+- **Wiring frontend**: PianoProduzioneAI (selettori, lista "Scegli", schede piano), WeeklyPlan (stampa/PDF), RecipeShowcase (sottotitolo real_name). RecipeList già mostrava name+real_name su due righe.
+- **Modello backend** esteso: `name_fr/name_fa`, `real_name_es/fr/fa`, `flour_type_fr`, `notes_fr`, `procedure_fr` (Recipe/Create/Update) — così i campi non vengono strippati da response_model.
+- **Backfill LLM** (`backend/backfill_recipe_i18n.py`, idempotente): 120/120 ricette MikiLab → real_name(IT) per i 66 mancanti + traduzioni EN/ES/FR di name, real_name, flour_type, notes, procedure. Copertura ora 120/120 (notes 105 = solo dove esistono).
+- **Durabilità**: `mikilab_seed_data.json` RIGENERATO dal DB (120 ricette con tutte le traduzioni), `SEED_VERSION` → `2026-06-v58-i18n-doublename`. Backup in `mikilab_seed_data.backup.json`. Serve REDEPLOY per la produzione.
+### Nuovo logo/branding
+- Logo emblema dorato (M + spighe su fondo espresso) generato (Nano Banana). Impostato come `logo.png`, `favicon.ico`+`favicon-32.png`, `apple-touch-icon.png`, PWA `icon-192/512`, `logo-256`. OG image coordinata (`og-image.jpg` 1200x630). Header e **footer di ogni sezione** (`page-footer`/`footer-logo`) mostrano il nuovo logo. `sw.js` CACHE → v6.
+- Verificato via screenshot: header+footer logo, hero IT, doppia nomenclatura IT+FR (Fil de France→Pain Français (Baguette)), FR UI completa. Newsletter+popup+CTA register testati (turno precedente).

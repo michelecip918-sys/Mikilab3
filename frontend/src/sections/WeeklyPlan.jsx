@@ -4,7 +4,7 @@ import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
-import { rLoc, ingLoc } from "@/lib/loc";
+import { rLoc, ingLoc, recipeTitle } from "@/lib/loc";
 import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
@@ -280,7 +280,7 @@ export default function WeeklyPlan() {
             const doses = (r && factor)
               ? GRAM_FIELDS.filter((f) => r[f.key] != null).map((f) => `${t(f.labelKey)} ${fmtQty(r[f.key] * factor)}`)
               : [];
-            return `<li><b>${esc(rLoc(r, "name", lang) || it.recipe_name)}</b> — ${pieces} × ${gpp}g = <b>${fmtQty(totalDough)}</b>${doses.length ? ` <span class="doses">(${doses.map(esc).join(" · ")})</span>` : ""}</li>`;
+            return `<li><b>${esc(r ? recipeTitle(r, lang) : it.recipe_name)}</b> — ${pieces} × ${gpp}g = <b>${fmtQty(totalDough)}</b>${doses.length ? ` <span class="doses">(${doses.map(esc).join(" · ")})</span>` : ""}</li>`;
           }).join("")}
         </ul>
       </div>`).join("");
@@ -311,7 +311,7 @@ export default function WeeklyPlan() {
           const flourT = rLoc(r, "flour_type", lang);
           return `
             <div class="recipe">
-              <h3>${esc(rLoc(r, "name", lang))} <span class="meta">${pieces} × ${gpp}g = ${fmtQty(totalDough)}</span></h3>
+              <h3>${esc(recipeTitle(r, lang))} <span class="meta">${pieces} × ${gpp}g = ${fmtQty(totalDough)}</span></h3>
               ${flourT ? `<p class="flour">${esc(flourT)}</p>` : ""}
               <div class="block"><h4>${L.ingredients}</h4><ul class="ings">${ings.map((x) => `<li>${x}</li>`).join("")}</ul></div>
               ${proc ? `<div class="block"><h4>${L.procedure}</h4><p class="proc">${esc(proc).replace(/\n/g, "<br>")}</p></div>` : ""}

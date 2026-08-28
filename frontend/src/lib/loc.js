@@ -22,6 +22,18 @@ export function rLoc(recipe, field, lang) {
   return it;
 }
 
+// Titolo con DOPPIA NOMENCLATURA: "Nome Fantastico (Nome Reale)".
+// Se non c'è un nome reale (o coincide col nome), ritorna solo il nome.
+export function recipeTitle(recipe, lang) {
+  if (!recipe) return "";
+  const fantasy = (rLoc(recipe, "name", lang) || "").trim();
+  const real = (rLoc(recipe, "real_name", lang) || "").trim();
+  if (real && real.toLowerCase() !== fantasy.toLowerCase() && !fantasy.toLowerCase().includes(real.toLowerCase())) {
+    return `${fantasy} (${real})`;
+  }
+  return fantasy;
+}
+
 // Traduzione IT->DE dei nomi ingredienti/extra più comuni in panetteria.
 const INGREDIENT_DE = {
   "zucchero": "Zucker",

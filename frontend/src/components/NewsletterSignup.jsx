@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Mail, CheckCircle2, Send } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mail, CheckCircle2, Send, Users } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { newsletterApi } from "@/lib/api";
@@ -11,6 +11,9 @@ export default function NewsletterSignup() {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState("");
+  const [count, setCount] = useState(0);
+
+  useEffect(() => { newsletterApi.count().then((n) => setCount(n || 0)); }, []);
 
   const valid = /\S+@\S+\.\S+/.test(email);
 
@@ -22,6 +25,7 @@ export default function NewsletterSignup() {
     try {
       await newsletterApi.subscribe(email.trim(), lang, "home");
       setDone(true);
+      setCount((c) => c + 1);
     } catch {
       setErr(L(
         "Qualcosa è andato storto. Riprova.",
@@ -64,6 +68,20 @@ export default function NewsletterSignup() {
             </p>
           </div>
         </div>
+
+        {count > 0 && (
+          <div data-testid="newsletter-social-proof" className="flex items-center gap-2 mt-2 text-[#f0dcb4] text-[13px] font-semibold">
+            <Users className="w-4 h-4 shrink-0" />
+            <span>{L(
+              `Già ${count} fornai iscritti`,
+              `Bereits ${count} Bäcker dabei`,
+              `Already ${count} bakers subscribed`,
+              `Ya ${count} panaderos suscritos`,
+              `Déjà ${count} boulangers inscrits`,
+              `از قبل ${count} نانوا عضو شده‌اند`,
+            )}</span>
+          </div>
+        )}
 
         {done ? (
           <div data-testid="newsletter-success" className="flex items-center gap-2 mt-3 rounded-2xl bg-white/12 border border-white/20 px-4 py-3 text-white">

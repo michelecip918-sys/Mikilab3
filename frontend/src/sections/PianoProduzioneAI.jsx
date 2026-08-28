@@ -17,7 +17,7 @@ import { getActiveMachineNames } from "@/lib/machines";
 import { guideFor } from "@/lib/toolGuide";
 import { playSfx } from "@/lib/uiSounds";
 import { shareContent } from "@/lib/share";
-import { rLoc } from "@/lib/loc";
+import { rLoc, recipeTitle } from "@/lib/loc";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
 import { mkTri, triFR, triFA } from "@/i18n/triMaps";
@@ -1113,7 +1113,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
                     className="flex-1 min-w-0 bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#C88A2B]">
                     <option value="">{t("capo_pick_recipe")}</option>
-                    {recipes.map((r) => <option key={r.id} value={r.id}>{rLoc(r, "name", lang)}</option>)}
+                    {recipes.map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
                   </select>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
@@ -1186,12 +1186,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   <option value="">{t("capo_pick_recipe")}</option>
                   {recipes.some((r) => r._own) && (
                     <optgroup label={tri3(lang, "Le mie ricette (panettiere)", "Meine Rezepte", "My recipes")}>
-                      {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{rLoc(r, "name", lang)}</option>)}
+                      {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
                     </optgroup>
                   )}
                   {recipes.some((r) => !r._own) && (
                     <optgroup label={tri3(lang, "Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}>
-                      {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{rLoc(r, "name", lang)}</option>)}
+                      {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
                     </optgroup>
                   )}
                 </select>
@@ -1293,7 +1293,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     <button key={r.id} data-testid={`capo-pick-${r.id}`} onClick={() => (sel ? removeByRecipe(r.id) : addRecipes([r.id]))}
                       className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#8C4A27]/12 border border-[#8C4A27]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#2A323A] border border-transparent"}`}>
                       {sel ? <CheckCircle2 className="w-5 h-5 text-[#8C4A27] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#E6D8C3] dark:border-[#4a5560] shrink-0" />}
-                      <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{rLoc(r, "name", lang)}</span>
+                      <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{recipeTitle(r, lang)}</span>
                       {r._own && <span className="text-[10px] text-[#C88A2B]">★</span>}
                     </button>
                   );
@@ -1634,7 +1634,7 @@ function RecipePrint({ r, lang }) {
   const proc = rLoc(r, "procedure", lang);
   return (
     <div className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-4">
-      <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{rLoc(r, "name", lang)}</h3>
+      <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{recipeTitle(r, lang)}</h3>
       <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-0.5">
         {ing.map(([label, g]) => (
           <div key={label} className="flex items-center justify-between text-xs">

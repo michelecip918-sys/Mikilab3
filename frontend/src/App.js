@@ -19,6 +19,7 @@ import IntroGuide from "@/components/IntroGuide";
 import SiteMenu from "@/components/SiteMenu";
 import { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
+import NewsletterPopup from "@/components/NewsletterPopup";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import PublicBatch from "@/sections/PublicBatch";
@@ -188,6 +189,7 @@ function App() {
       <Header />
       <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />
       <InstallBanner />
+      <NewsletterPopup />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-64">
         <ErrorBoundary resetKey={tab} lang={lang}>
         <AnimatePresence mode="wait">
@@ -211,22 +213,13 @@ function App() {
         </ErrorBoundary>
 
         <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#38424B]">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#6E371C] to-[#8C4A27] text-white p-4 shadow-lg">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2C1E16] via-[#4A3222] to-[#6E371C] text-white p-6 shadow-lg text-center">
             <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-            <div className="flex items-center gap-4 mt-1">
-              <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele — MikiLab" loading="lazy"
-                className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#D4AF37]/70 shadow-md shrink-0"
-                onError={(e) => { e.currentTarget.src = `${process.env.PUBLIC_URL}/michele-real2.jpg`; }} />
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg overflow-hidden bg-[#232A31] ring-1 ring-[#D4AF37]/60 shrink-0">
-                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="ML" className="w-full h-full object-cover" />
-                  </div>
-                  <p className="font-display text-lg font-extrabold tracking-tight">MikiLab · Michele</p>
-                </div>
-                <p className="text-[11px] text-white/85 leading-snug mt-1">{t("brand_slogan")}</p>
-              </div>
-            </div>
+            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" data-testid="footer-logo" loading="lazy"
+              className="w-20 h-20 rounded-2xl object-cover mx-auto ring-2 ring-[#D4AF37]/60 shadow-lg mt-1" />
+            <p className="font-display text-2xl font-extrabold tracking-tight mt-3">MikiLab</p>
+            <p className="text-[12px] text-white/85 leading-snug mt-1 max-w-xs mx-auto">{t("brand_slogan")}</p>
+            <p className="text-[11px] text-[#e7d5b4]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
           </div>
           <p className="text-center text-[10px] text-[#9AA6AE] mt-3">© {new Date().getFullYear()} MikiLab · mikilab.de</p>
           <div className="flex items-center justify-center gap-4 mt-2">

@@ -100,6 +100,7 @@ export const newsApi = {
 export const newsletterApi = {
   subscribe: (email, lang, source = "home") =>
     api.post(`/newsletter/subscribe`, { email, lang, source }).then((r) => r.data),
+  count: () => api.get(`/newsletter/count`).then((r) => r.data.count).catch(() => 0),
 };
 
 export const announcementsApi = {
