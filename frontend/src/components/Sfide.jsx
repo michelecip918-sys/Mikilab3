@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Trophy, Check, Loader2, MessageSquare, UserPlus, Camera, MessageCircle, Send, Facebook, Users, Star, Lock, Sparkles } from "lucide-react";
+import { X, Trophy, Check, Loader2, MessageSquare, UserPlus, Camera, MessageCircle, Send, Facebook, Users, Star, Lock, Sparkles, GraduationCap } from "lucide-react";
 import { challengesApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
@@ -50,6 +50,15 @@ const META = {
     de: ["Bewertung abgeben", "Hinterlasse eine Bewertung oder lade einen neuen Bäcker ein."],
     en: ["Leave a review", "Leave a review or invite a new baker to join."],
     es: ["Deja una reseña", "Deja una reseña o invita a un nuevo panadero."] },
+};
+
+const LEARN_LABELS = {
+  base: { it: "Le Basi", en: "The Basics", de: "Die Grundlagen", es: "Lo básico", icon: "🌾" },
+  lievito: { it: "Il Lievito Madre", en: "Sourdough", de: "Sauerteig", es: "Masa madre", icon: "🫧" },
+  panettone: { it: "Il Panettone", en: "Panettone", de: "Panettone", es: "Panettone", icon: "🎄" },
+  focacce: { it: "Focacce", en: "Focaccia", de: "Focaccia", es: "Focaccia", icon: "🫓" },
+  pizza: { it: "Pizza", en: "Pizza", de: "Pizza", es: "Pizza", icon: "🍕" },
+  pasta: { it: "Pasta Fresca", en: "Fresh Pasta", de: "Frische Pasta", es: "Pasta fresca", icon: "🍝" },
 };
 
 const WA_TEXT = "MikiLab — Ricette esclusive e strumenti per l'Arte Bianca 🥖 https://mikilab.de";
@@ -180,6 +189,25 @@ export default function Sfide({ open, onClose }) {
               </button>
             )}
           </div>
+
+          {/* Percorsi Impara completati (mostrati insieme alle sfide) */}
+          {user && [...completed].some((c) => c.startsWith("learn_")) && (
+            <div data-testid="sfide-learn" className="mt-4 rounded-2xl bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4">
+              <p className="font-display text-base font-bold text-[#2C1E16] dark:text-[#e4eff8] flex items-center gap-2 mb-2.5">
+                <GraduationCap className="w-5 h-5 text-[#8C4A27]" /> {tri("Percorsi Impara completati", "Abgeschlossene Lernpfade", "Completed Learn paths", "Rutas de aprendizaje completadas")}
+              </p>
+              <div className="flex flex-wrap gap-2" data-testid="sfide-learn-list">
+                {[...completed].filter((c) => c.startsWith("learn_")).map((c) => {
+                  const k = c.replace("learn_", ""); const m = LEARN_LABELS[k]; if (!m) return null;
+                  return (
+                    <span key={c} data-testid={`sfide-learn-${k}`} className="inline-flex items-center gap-1.5 bg-[#FEF3C7] border border-[#D97706] text-[#8C4A27] text-[12.5px] font-bold px-3 py-1.5 rounded-full">
+                      <span>{m.icon}</span>{m[lang] || m.en || m.it}<Check className="w-3.5 h-3.5" />
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {!user && (
             <div className="mt-4 rounded-2xl bg-[#F2E8D5] border border-[#E6D8C3] p-4 text-center">

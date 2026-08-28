@@ -137,45 +137,45 @@ export default function AdminPanel({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#f0f6fb] dark:bg-[#1B2127] border-[#d5e4f0] dark:border-[#38424B]">
+      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#FAF5EC] dark:bg-[#1B2127] border-[#E6D8C3] dark:border-[#38424B]">
         <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
-          <Crown className="w-5 h-5 text-[#6E8CA0]" /> {de ? "Admin · VIP-Zugänge" : "Admin · Accessi VIP"}
+          <Crown className="w-5 h-5 text-[#B45309]" /> {de ? "Admin · VIP-Zugänge" : "Admin · Accessi VIP"}
         </DialogTitle>
         <DialogDescription className="text-sm text-[#7E8A93]">
           {de ? "Verschenke kostenlosen PRO-Zugang (unbegrenzt oder befristet)." : "Regala accesso PRO gratuito (illimitato o a tempo)."}
         </DialogDescription>
 
-        <div className="rounded-2xl bg-[#5aa0cf]/10 border border-[#5aa0cf]/30 p-4 space-y-3">
-          <p className="flex items-center gap-2 text-sm font-semibold text-[#2e6690] dark:text-[#a9d2ec]">
+        <div className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4 space-y-3">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#8C4A27] dark:text-[#a9d2ec]">
             <Gift className="w-4 h-4" /> {de ? "PRO verschenken" : "Regala PRO"}
           </p>
           <input
             data-testid="admin-grant-email" type="email" value={email}
             onChange={(e) => setEmail(e.target.value)} placeholder="email@esempio.it"
-            className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
+            className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
           />
           <select
             data-testid="admin-grant-days" value={days} onChange={(e) => setDays(e.target.value)}
-            className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
+            className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
           >
             {dayOpts.map((o) => <option key={o.v} value={o.v}>{de ? o.de : o.it}</option>)}
           </select>
           <button
             data-testid="admin-grant-btn" onClick={grant} disabled={busy}
-            className="w-full bg-[#5aa0cf] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all"
+            className="w-full bg-[#B45309] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all"
           >
             {de ? "PRO schenken" : "Regala PRO"}
           </button>
         </div>
 
-        <div data-testid="admin-shop" className="rounded-2xl bg-[#234b6e]/10 border border-[#234b6e]/30 p-4 mt-2">
+        <div data-testid="admin-shop" className="rounded-2xl bg-[#6E371C]/10 border border-[#6E371C]/30 p-4 mt-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-[#234b6e] dark:text-[#8FB0C2]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
+              <p className="text-sm font-semibold text-[#6E371C] dark:text-[#8FB0C2]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
               <p className="text-[11px] text-[#7E8A93]">{de ? "Warteliste" : "Lista d'attesa"}: <b>{shop.waitlist_count}</b> · {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}</p>
             </div>
             <button data-testid="admin-shop-toggle" onClick={toggleShop}
-              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#5aa0cf] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#234b6e] dark:text-[#8FB0C2] border border-[#234b6e]/30"}`}>
+              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#B45309] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#6E371C] dark:text-[#8FB0C2] border border-[#6E371C]/30"}`}>
               {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}
             </button>
           </div>
@@ -197,29 +197,29 @@ export default function AdminPanel({ open, onOpenChange }) {
             🥇 {de ? "Wochensieger krönen" : "Proclama il vincitore della settimana"}
           </button>
         </div>
-        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
-          <p className="text-sm font-bold text-[#234b6e] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
+        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
+          <p className="text-sm font-bold text-[#6E371C] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
 
           {/* WhatsApp */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#2e6690] dark:text-[#a9d2ec] mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] dark:text-[#a9d2ec] mb-1.5">
               <MessageCircle className="w-4 h-4 text-[#25D366]" /> {de ? "WhatsApp-Nummer (nur Ziffern, mit Ländervorwahl)" : "Numero WhatsApp (solo cifre, con prefisso)"}
             </label>
             <input data-testid="admin-wa-number" value={settings.whatsapp_number}
               onChange={(e) => setSettings((s) => ({ ...s, whatsapp_number: e.target.value }))}
               placeholder="491601253378"
-              className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
           </div>
 
           {/* Fumetti avatar */}
           <div>
-            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#2e6690] dark:text-[#a9d2ec] mb-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] dark:text-[#a9d2ec] mb-1.5">
               <MessageSquareText className="w-4 h-4" /> {de ? "Avatar-Sprechblasen (leer = Standardtext)" : "Fumetti avatar (vuoto = testo predefinito)"}
             </p>
             <div className="space-y-3">
               {BUBBLE_SECTIONS.map((sec) => (
-                <div key={sec.variant} className="rounded-xl bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-2.5">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#3f7cac] mb-1.5">{de ? sec.de : sec.it}</p>
+                <div key={sec.variant} className="rounded-xl bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] p-2.5">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27] mb-1.5">{de ? sec.de : sec.it}</p>
                   {["michele", "momy"].map((who) => (
                     <div key={who} className="mb-1.5">
                       <p className="text-[10px] font-semibold text-[#7E8A93] uppercase">{who}</p>
@@ -227,12 +227,12 @@ export default function AdminPanel({ open, onOpenChange }) {
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.it) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "it", e.target.value)}
                         placeholder={de ? "Text IT" : "Testo IT"}
-                        className="w-full bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
+                        className="w-full bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
                       <input data-testid={`admin-bubble-${sec.variant}-${who}-de`}
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.de) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "de", e.target.value)}
                         placeholder="Text DE"
-                        className="w-full bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                        className="w-full bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
                     </div>
                   ))}
                 </div>
@@ -242,7 +242,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
           {/* Copertine cartelle */}
           <div>
-            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#2e6690] dark:text-[#a9d2ec] mb-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] dark:text-[#a9d2ec] mb-1.5">
               <ImageIcon className="w-4 h-4" /> {de ? "Ordner-Titelbilder (Bild antippen)" : "Copertine cartelle (tocca una foto)"}
             </p>
             <div className="space-y-2.5">
@@ -261,7 +261,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                         const active = sel === r.image_url;
                         return (
                           <button key={r.id} data-testid={`admin-cover-pick-${cat.key}-${r.id}`} onClick={() => setCover(cat.key, r.image_url)}
-                            className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${active ? "border-[#5aa0cf] ring-2 ring-[#5aa0cf]/40" : "border-transparent opacity-80"}`}>
+                            className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${active ? "border-[#B45309] ring-2 ring-[#B45309]/40" : "border-transparent opacity-80"}`}>
                             <img src={r.image_url.startsWith("http") ? r.image_url : `${process.env.PUBLIC_URL}${r.image_url}`} alt={r.name} className="w-full h-full object-cover" />
                           </button>
                         );
@@ -274,7 +274,7 @@ export default function AdminPanel({ open, onOpenChange }) {
           </div>
 
           <button data-testid="admin-save-settings" onClick={saveSettings} disabled={savingSet}
-            className="w-full flex items-center justify-center gap-2 bg-[#234b6e] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#6E371C] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all">
             <Save className="w-4 h-4" /> {de ? "Einstellungen speichern" : "Salva impostazioni sito"}
           </button>
         </div>
@@ -285,9 +285,9 @@ export default function AdminPanel({ open, onOpenChange }) {
             <Languages className="w-4 h-4" /> {de ? "Rezept-Übersetzungen IT/DE/EN" : "Traduzioni ricette IT/DE/EN"}
           </p>
           {trCoverage.incomplete.length === 0 ? (
-            <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-xl bg-[#5aa0cf]/12 border border-[#5aa0cf]/35 px-3 py-2.5">
+            <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-xl bg-[#B45309]/12 border border-[#B45309]/35 px-3 py-2.5">
               <CheckCircle2 className="w-5 h-5 text-[#336a94] shrink-0" />
-              <p className="text-sm font-semibold text-[#2e6690] dark:text-[#a9d2ec]">
+              <p className="text-sm font-semibold text-[#8C4A27] dark:text-[#a9d2ec]">
                 {de ? `Alle ${trCoverage.total} Rezepte verifiziert ✓ (IT/DE/EN)` : `Tutte le ${trCoverage.total} ricette verificate ✓ (IT/DE/EN)`}
               </p>
             </div>
@@ -306,7 +306,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               <div className="space-y-1.5 max-h-44 overflow-y-auto">
                 {trCoverage.incomplete.map((r) => (
                   <div key={r.id} data-testid={`admin-translation-missing-${r.id}`}
-                    className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg px-2.5 py-2">
+                    className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2.5 py-2">
                     <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</span>
                     <span className="shrink-0 flex gap-1">
                       {r.miss.map((l) => (
@@ -321,7 +321,7 @@ export default function AdminPanel({ open, onOpenChange }) {
         </div>
 
         <div className="flex items-center justify-between mt-2 mb-1">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#3f7cac]">{de ? "Zugänge" : "Accessi"}</p>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27]">{de ? "Zugänge" : "Accessi"}</p>
           <button data-testid="admin-refresh" onClick={load} className="text-[#7E8A93] active:scale-90">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </button>
@@ -332,11 +332,11 @@ export default function AdminPanel({ open, onOpenChange }) {
             <p className="text-sm text-[#7E8A93] text-center py-4">{de ? "Noch keine Zugänge." : "Nessun accesso ancora."}</p>
           ) : list.map((e) => (
             <div key={e.email} data-testid={`ent-row-${e.email}`}
-              className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5">
+              className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5">
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{e.email}</p>
                 <p className="text-[11px] text-[#7E8A93]">
-                  <span className={`font-bold ${e.active ? "text-[#5aa0cf]" : "text-[#C0574D]"}`}>
+                  <span className={`font-bold ${e.active ? "text-[#B45309]" : "text-[#C0574D]"}`}>
                     {e.active ? "PRO" : (de ? "inaktiv" : "inattivo")}
                   </span>
                   {" · "}{e.source || "—"}{" · "}{fmt(e.expires_at)}

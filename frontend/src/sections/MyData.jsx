@@ -38,10 +38,10 @@ export default function MyData({ onOpenTool }) {
       <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] mb-1">{tri("I Miei Dati Salvati", "Meine gespeicherten Daten", "My Saved Data")}</h2>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Tutto ciò che salvi, in un unico posto.", "Alles, was du speicherst, an einem Ort.", "Everything you save, in one place.")}</p>
 
-      <div className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-4 border border-[#d5e4f0] dark:border-[#38424B]">
+      <div className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-4 border border-[#E6D8C3] dark:border-[#38424B]">
         {TABS.map(({ id, Icon, label, n }) => (
           <button key={id} data-testid={`mydata-tab-${id}`} onClick={() => setTab(id)}
-            className={`flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-semibold transition-all ${tab === id ? "bg-[#3f7cac] text-white shadow" : "text-[#7E8A93]"}`}>
+            className={`flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-semibold transition-all ${tab === id ? "bg-[#8C4A27] text-white shadow" : "text-[#7E8A93]"}`}>
             <Icon className="w-4 h-4" />
             <span className="leading-tight text-center">{label}{n != null ? ` (${n})` : ""}</span>
           </button>
@@ -52,10 +52,10 @@ export default function MyData({ onOpenTool }) {
         <div className="space-y-2" data-testid="mydata-piani">
           {plans.length === 0 ? <Empty text={tri("Nessun piano salvato. Salvane uno dal Piano Settimanale o dal Piano IA.", "Keine Pläne. Speichere einen im Wochenplan oder KI-Plan.", "No saved plans. Save one from the Weekly or AI plan.")} /> :
             plans.map((p) => (
-              <div key={p.id} className="flex items-center gap-2 rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-3">
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.kind === "capo" ? "bg-[#6E8CA0]/15 text-[#234b6e] dark:text-[#8FB0C2]" : "bg-[#5aa0cf]/15 text-[#2e6690] dark:text-[#a9d2ec]"}`}>{p.kind === "capo" ? tri("Piano IA", "KI-Plan", "AI Plan") : tri("Settimanale", "Woche", "Weekly")}</span>
+              <div key={p.id} className="flex items-center gap-2 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-3">
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.kind === "capo" ? "bg-[#B45309]/15 text-[#6E371C] dark:text-[#8FB0C2]" : "bg-[#B45309]/15 text-[#8C4A27] dark:text-[#a9d2ec]"}`}>{p.kind === "capo" ? tri("Piano IA", "KI-Plan", "AI Plan") : tri("Settimanale", "Woche", "Weekly")}</span>
                 <div className="min-w-0 flex-1"><p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{p.name}</p><p className="text-[11px] text-[#7E8A93] flex items-center gap-1"><Clock className="w-3 h-3" />{fmt(p.created_at)}</p></div>
-                <button data-testid={`mydata-open-plan-${p.id}`} onClick={() => onOpenTool && onOpenTool(p.kind === "capo" ? "pianoai" : "settimana")} className="text-xs font-semibold text-[#3f7cac]">{tri("Apri", "Öffnen", "Open")}</button>
+                <button data-testid={`mydata-open-plan-${p.id}`} onClick={() => onOpenTool && onOpenTool(p.kind === "capo" ? "pianoai" : "settimana")} className="text-xs font-semibold text-[#8C4A27]">{tri("Apri", "Öffnen", "Open")}</button>
               </div>
             ))}
         </div>
@@ -65,7 +65,7 @@ export default function MyData({ onOpenTool }) {
         <div className="space-y-2" data-testid="mydata-ricette">
           {recipes.length === 0 ? <Empty text={tri("Nessuna ricetta personale. Aggiungile da Ricette → Le Mie Ricette.", "Keine eigenen Rezepte. Füge sie unter Rezepte → Meine Rezepte hinzu.", "No personal recipes. Add them under Recipes → My Recipes.")} /> :
             recipes.map((r) => (
-              <div key={r.id} className="rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-3">
+              <div key={r.id} className="rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-3">
                 <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</p>
                 {r.category && <p className="text-[11px] text-[#7E8A93]">{r.category}</p>}
               </div>
@@ -113,9 +113,9 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
   };
 
   return (
-    <div data-testid={`mydata-chat-${chat.id}`} className="rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] overflow-hidden">
+    <div data-testid={`mydata-chat-${chat.id}`} className="rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] overflow-hidden">
       <div className="flex items-center gap-2 p-3">
-        <div className="w-9 h-9 rounded-xl bg-[#3f7cac]/15 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-[#3f7cac]" /></div>
+        <div className="w-9 h-9 rounded-xl bg-[#8C4A27]/15 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-[#8C4A27]" /></div>
         <button data-testid={`mydata-chat-toggle-${chat.id}`} onClick={toggle} className="min-w-0 flex-1 text-left">
           <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{label}</p>
           <p className="text-[11px] text-[#7E8A93] flex items-center gap-1"><Clock className="w-3 h-3" />{fmt(chat.ts)}</p>
@@ -130,7 +130,7 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
           ) : (msgs && msgs.length > 0) ? (
             msgs.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#3f7cac] text-white whitespace-pre-wrap" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8]"}`}>
+                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#8C4A27] text-white whitespace-pre-wrap" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8]"}`}>
                   {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
                 </div>
               </div>
@@ -145,5 +145,5 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
 }
 
 function Empty({ text }) {
-  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-dashed border-[#d5e4f0] dark:border-[#38424B] p-4 text-sm text-[#7E8A93] leading-snug">{text}</div>;
+  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-dashed border-[#E6D8C3] dark:border-[#38424B] p-4 text-sm text-[#7E8A93] leading-snug">{text}</div>;
 }

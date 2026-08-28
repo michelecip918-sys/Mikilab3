@@ -36,10 +36,10 @@ export default function PanettoneLabels() {
 
   return (
     <div className="pb-24">
-      <div className="no-print relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#3f7cac] to-[#234b6e] p-6 text-white">
+      <div className="no-print relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#5aa0cf]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
+          <div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#B45309]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-[#e7d5b4]" />
         </div>
         <Tag className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("labels_title")}</h1>
@@ -49,14 +49,14 @@ export default function PanettoneLabels() {
       <div className="no-print flex gap-2 mb-3">
         {["labels", "listino"].map((v) => (
           <button key={v} data-testid={`view-${v}`} onClick={() => setView(v)}
-            className={`flex-1 px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${view === v ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+            className={`flex-1 px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${view === v ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>
             {t(v === "labels" ? "view_labels" : "view_listino")}
           </button>
         ))}
       </div>
 
       <button data-testid="labels-print-btn" onClick={() => window.print()}
-        className="no-print w-full mb-5 bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="no-print w-full mb-5 bg-[#8C4A27] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <Printer className="w-5 h-5" /> {view === "labels" ? t("labels_print") : t("listino_print")}
       </button>
 
@@ -66,19 +66,19 @@ export default function PanettoneLabels() {
         <p className="no-print text-center text-[#7E8A93] py-8">{t("labels_empty")}</p>
       ) : view === "listino" ? (
         <div className="print-area">
-          <div className="rounded-2xl border-2 border-[#3f7cac] bg-white text-[#2B303B] overflow-hidden">
-            <div className="relative bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white p-5 text-center">
+          <div className="rounded-2xl border-2 border-[#8C4A27] bg-white text-[#2B303B] overflow-hidden">
+            <div className="relative bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white p-5 text-center">
               <div className="absolute top-0 left-0 right-0 flex h-1.5">
-                <div className="flex-1 bg-[#5aa0cf]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
-                <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
+                <div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#B45309]" />
+                <div className="flex-1 bg-black" /><div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-[#e7d5b4]" />
               </div>
-              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#A9C5D4]/70 mx-auto mb-1.5 mt-1" />
+              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#e7d5b4]/70 mx-auto mb-1.5 mt-1" />
               <h2 className="font-display text-2xl font-extrabold">Panettoni Mikilab</h2>
               <p className="text-white/85 text-xs mt-0.5">{t("listino_subtitle")}</p>
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#e4eff8] text-[#234b6e] text-xs uppercase tracking-wide">
+                <tr className="bg-[#e4eff8] text-[#6E371C] text-xs uppercase tracking-wide">
                   <th className="text-left p-2.5">{t("listino_col_flavor")}</th>
                   <th className="text-right p-2.5 whitespace-nowrap">500 g</th>
                   <th className="text-right p-2.5 whitespace-nowrap">100 g</th>
@@ -88,7 +88,7 @@ export default function PanettoneLabels() {
                 {items.map((r) => {
                   const c = r.costing || {};
                   return (
-                    <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#d5e4f0]">
+                    <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#E6D8C3]">
                       <td className="p-2.5 font-semibold">{flavor(r.name)}</td>
                       <td className="p-2.5 text-right font-mono-data">{c.b2b_500g != null ? `€ ${Number(c.b2b_500g).toFixed(2)}` : "—"}</td>
                       <td className="p-2.5 text-right font-mono-data">{c.b2b_100g != null ? `€ ${Number(c.b2b_100g).toFixed(2)}` : "—"}</td>
@@ -115,21 +115,21 @@ export default function PanettoneLabels() {
             if (sl.includes("cocco") || sl.includes("kokos")) alg.push(tri("frutta a guscio (cocco)", "Schalenfrüchte (Kokos)", "tree nuts (coconut)"));
             return (
               <div key={r.id} data-testid={`label-${r.id}`}
-                className="rounded-2xl border-2 border-[#3f7cac] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
+                className="rounded-2xl border-2 border-[#8C4A27] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
                 style={{ pageBreakInside: "avoid" }}>
-                {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#d5e4f0]" />}
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#A9C5D4]/70 mb-1.5 -mt-6 bg-white" />
+                {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#E6D8C3]" />}
+                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#e7d5b4]/70 mb-1.5 -mt-6 bg-white" />
                 <p className="font-display text-lg font-bold leading-tight">Panettone Artigianale MikiLab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
-                  <span className="inline-block w-3 h-2 bg-[#5aa0cf]" /><span className="inline-block w-3 h-2 bg-[#6E8CA0]" />
+                  <span className="inline-block w-3 h-2 bg-[#B45309]" /><span className="inline-block w-3 h-2 bg-[#B45309]" />
                   <span className="px-1">•</span>
-                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#A9C5D4]" />
+                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#e7d5b4]" />
                 </div>
-                <p className="font-display text-xl font-extrabold text-[#3f7cac]">{flavor(r.name)}</p>
+                <p className="font-display text-xl font-extrabold text-[#8C4A27]">{flavor(r.name)}</p>
                 {susp.length > 0 && (
                   <p className="text-xs text-[#3F4A54] mt-1.5"><span className="font-semibold">{t("labels_ingredients")}:</span> {susp.join(", ")}</p>
                 )}
-                <p className="text-[11px] font-bold text-[#234b6e] mt-1.5">{tri("Peso netto", "Nettogewicht", "Net weight")}: ~1 kg</p>
+                <p className="text-[11px] font-bold text-[#6E371C] mt-1.5">{tri("Peso netto", "Nettogewicht", "Net weight")}: ~1 kg</p>
                 <p data-testid={`label-allergens-${r.id}`} className="text-[10px] text-[#3F4A54] mt-1 leading-snug">
                   <span className="font-semibold uppercase">{tri("Allergeni", "Allergene", "Allergens")}:</span>{" "}
                   {alg.map((a, i) => (
@@ -138,7 +138,7 @@ export default function PanettoneLabels() {
                   {". "}
                   {tri("Può contenere tracce di soia.", "Kann Spuren von Soja enthalten.", "May contain traces of soy.")}
                 </p>
-                <table data-testid={`label-nutrition-${r.id}`} className="w-full text-[9px] text-[#2B303B] mt-2 border border-[#d5e4f0]">
+                <table data-testid={`label-nutrition-${r.id}`} className="w-full text-[9px] text-[#2B303B] mt-2 border border-[#E6D8C3]">
                   <thead>
                     <tr className="bg-[#e4eff8]">
                       <th className="text-left px-1.5 py-0.5 font-bold uppercase" colSpan={2}>
@@ -156,7 +156,7 @@ export default function PanettoneLabels() {
                       [tri("Proteine", "Eiweiß", "Protein"), gf(nv.prot), true],
                       [tri("Sale", "Salz", "Salt"), gf(nv.salt), true],
                     ]; })().map(([k, v, bold], i) => (
-                      <tr key={i} className="border-t border-[#d5e4f0]">
+                      <tr key={i} className="border-t border-[#E6D8C3]">
                         <td className={`text-left px-1.5 py-0.5 ${bold ? "font-semibold" : "pl-3 text-[#3F4A54]"}`}>{k}</td>
                         <td className="text-right px-1.5 py-0.5 font-mono-data">{v}</td>
                       </tr>

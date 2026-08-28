@@ -29,7 +29,7 @@ export default class ErrorBoundary extends React.Component {
     const lang = this.props.lang;
     const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
     return (
-      <div data-testid="error-boundary" className="max-w-md mx-auto mt-10 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-6 text-center">
+      <div data-testid="error-boundary" className="max-w-md mx-auto mt-10 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-6 text-center">
         <div className="w-14 h-14 mx-auto rounded-full bg-[#C0574D]/12 flex items-center justify-center mb-3">
           <AlertTriangle className="w-7 h-7 text-[#C0574D]" />
         </div>
@@ -41,11 +41,11 @@ export default class ErrorBoundary extends React.Component {
         </p>
         <div className="flex flex-col gap-2 mt-5">
           <button data-testid="error-retry" onClick={() => this.setState({ hasError: false })}
-            className="inline-flex items-center justify-center gap-2 bg-[#3f7cac] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+            className="inline-flex items-center justify-center gap-2 bg-[#8C4A27] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
             <RotateCcw className="w-4.5 h-4.5" /> {tri("Riprova", "Erneut versuchen", "Retry")}
           </button>
           <button data-testid="error-home" onClick={() => { window.location.assign(window.location.origin + "/"); }}
-            className="inline-flex items-center justify-center gap-2 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] text-[#234b6e] dark:text-[#a9d2ec] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+            className="inline-flex items-center justify-center gap-2 bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] text-[#6E371C] dark:text-[#a9d2ec] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
             <Home className="w-4.5 h-4.5" /> {tri("Torna alla Home", "Zur Startseite", "Go Home")}
           </button>
         </div>

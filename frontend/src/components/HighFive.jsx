@@ -8,7 +8,7 @@ export function fireHighFive(msg) {
   window.dispatchEvent(new CustomEvent("mikilab-highfive", { detail: { msg } }));
 }
 
-const COLORS = ["#2e3d4c", "#5aa0cf", "#6E8CA0", "#E7B24A", "#3f7cac", "#C0574D"];
+const COLORS = ["#2e3d4c", "#B45309", "#B45309", "#E7B24A", "#8C4A27", "#C0574D"];
 
 function playApplause() {
   try {

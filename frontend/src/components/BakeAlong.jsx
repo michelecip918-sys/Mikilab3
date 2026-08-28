@@ -53,7 +53,7 @@ export default function BakeAlong() {
   const th = data.theme || {};
 
   return (
-    <div data-testid="bake-along" className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]">
+    <div data-testid="bake-along" className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B]">
       {/* Header sfida */}
       <div className="p-5 text-white" style={{ background: "linear-gradient(135deg,#7a1f1f,#a9772f 90%)" }}>
         <div className="flex items-center gap-2 mb-1">
@@ -88,7 +88,7 @@ export default function BakeAlong() {
             {showForm && (
               <textarea data-testid="bake-along-note" value={note} onChange={(e) => setNote(e.target.value)} rows={2}
                 placeholder={tri("Racconta com'è andata (facoltativo)…", "Erzähl, wie es lief (optional)…", "Tell us how it went (optional)…", "Cuenta cómo fue (opcional)…")}
-                className="w-full mb-2 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#a9772f] text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full mb-2 bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#a9772f] text-[#2B303B] dark:text-[#e4eff8]" />
             )}
             <button data-testid="bake-along-participate" disabled={busy}
               onClick={() => { if (!user) { setAuthOpen && setAuthOpen(true); return; } if (!showForm) { setShowForm(true); } else { fileRef.current?.click(); } }}
@@ -114,7 +114,7 @@ export default function BakeAlong() {
             <ul className="space-y-2.5" data-testid="bake-along-leaderboard">
               {entries.map((e) => (
                 <li key={e.id} data-testid={`bake-along-entry-${e.id}`}
-                  className="flex items-center gap-3 rounded-xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-2.5">
+                  className="flex items-center gap-3 rounded-xl bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] p-2.5">
                   <div className="relative shrink-0">
                     <img src={e.image_url} alt="" className="w-16 h-16 rounded-lg object-cover" />
                     {e.rank <= 3 && (

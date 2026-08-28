@@ -137,7 +137,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                   <div className="grid grid-cols-4 gap-2">
                     {PRESET_AVATARS.map((a) => (
                       <button key={a.id} data-testid={`avatar-preset-${a.id}`} onClick={() => setPic(a.url)}
-                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#a9772f] ring-2 ring-[#a9772f]/40" : "border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#a9772f] ring-2 ring-[#a9772f]/40" : "border-[#E6D8C3] dark:border-[#38424B]"}`}>
                         <img src={a.url} alt={a[lang] || a.it} className="w-full aspect-square object-cover" />
                         <span className="block text-[9px] font-semibold text-[#3F4A54] dark:text-[#AEB8BF] py-0.5">{a[lang] || a.it}</span>
                       </button>
@@ -147,10 +147,10 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                 </div>
                 <textarea data-testid="profile-bio-input" value={bio} onChange={(e) => setBio(e.target.value)} rows={3} maxLength={300}
                   placeholder={tri("Scrivi una breve bio: chi sei, il tuo forno, la tua specialità…", "Kurze Bio: wer du bist, deine Bäckerei, deine Spezialität…", "Short bio: who you are, your bakery, your specialty…", "Bio breve: quién eres, tu horno, tu especialidad…")}
-                  className="w-full bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none" />
+                  className="w-full bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none" />
                 <div className="flex gap-2">
                   <button data-testid="profile-save" onClick={save} disabled={saving} className="flex-1 bg-[#123c4a] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-60">{saving ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
-                  <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-xl border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
+                  <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-xl border border-[#E6D8C3] dark:border-[#38424B] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
                 </div>
               </>
             ) : (
@@ -202,7 +202,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
               ) : (
                 <div className="space-y-2">
                   {data.posts.map((p) => (
-                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-xl bg-[#f0f6fb] dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-3">
+                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-xl bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-3">
                       <span className="text-[10px] font-bold uppercase tracking-wide text-[#123c4a] dark:text-[#8FB0C2]">{p.category}</span>
                       <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] mt-0.5 line-clamp-3">{p.text}</p>
                       {p.photo && <img src={p.photo} alt="" className="w-full h-32 object-cover rounded-lg mt-2" />}

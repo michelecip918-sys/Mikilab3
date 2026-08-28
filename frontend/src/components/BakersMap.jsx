@@ -63,7 +63,7 @@ export default function BakersMap({ open, onClose }) {
       const safe = (s) => (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
       const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? safe(u) : "");
       const lurl = safeUrl(p.link);
-      const linkHtml = lurl ? `<br/><a href="${lurl}" target="_blank" rel="noopener noreferrer" style="color:#3f7cac;font-weight:600">🔗 ${safe((p.link || "").replace(/^https?:\/\//, ""))}</a>` : "";
+      const linkHtml = lurl ? `<br/><a href="${lurl}" target="_blank" rel="noopener noreferrer" style="color:#8C4A27;font-weight:600">🔗 ${safe((p.link || "").replace(/^https?:\/\//, ""))}</a>` : "";
       m.bindPopup(`<b>${safe(p.name)}</b>${p.city ? `<br/>📍 ${safe(p.city)}` : ""}${p.bio ? `<br/><span style="color:#555">${safe(p.bio)}</span>` : ""}${linkHtml}`);
     });
     if (list.length) {
@@ -113,7 +113,7 @@ export default function BakersMap({ open, onClose }) {
   };
 
   if (!open) return null;
-  const inp = "w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
+  const inp = "w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]";
 
   return (
     <div className="fixed inset-0 z-[80] bg-[#12212e] flex flex-col" data-testid="bakers-map">
@@ -123,10 +123,10 @@ export default function BakersMap({ open, onClose }) {
       </div>
       <div ref={mapEl} data-testid="bakers-map-canvas" className="flex-1 w-full" style={{ minHeight: 0 }} />
 
-      <div className="bg-[#f0f6fb] dark:bg-[#1B2127] border-t border-[#d5e4f0] dark:border-[#38424B] p-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
+      <div className="bg-[#FAF5EC] dark:bg-[#1B2127] border-t border-[#E6D8C3] dark:border-[#38424B] p-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
         {!showForm ? (
           <button data-testid="bakers-optin-toggle" onClick={() => setShowForm(true)}
-            className="w-full flex items-center justify-center gap-2 bg-[#3f7cac] text-white font-semibold py-3 rounded-2xl active:scale-98">
+            className="w-full flex items-center justify-center gap-2 bg-[#8C4A27] text-white font-semibold py-3 rounded-2xl active:scale-98">
             <MapPin className="w-5 h-5" /> {mine ? tri("Modifica la mia posizione", "Meinen Standort bearbeiten", "Edit my location", "Editar mi ubicación") : tri("Mettimi sulla mappa", "Auf die Karte setzen", "Put me on the map", "Ponme en el mapa")}
           </button>
         ) : (
@@ -134,15 +134,15 @@ export default function BakersMap({ open, onClose }) {
             <input data-testid="bakers-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={tri("Nome / forno", "Name / Bäckerei", "Name / bakery", "Nombre / panadería")} className={inp} />
             <div className="grid grid-cols-[1fr_auto] gap-2">
               <input data-testid="bakers-city" value={city} onChange={(e) => { setCity(e.target.value); setCoords(null); }} placeholder={tri("Città", "Stadt", "City", "Ciudad")} className={inp} />
-              <button data-testid="bakers-gps" onClick={useGeo} disabled={busy} className="px-3 rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] text-[#3f7cac]" title="GPS">{busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Navigation className="w-5 h-5" />}</button>
+              <button data-testid="bakers-gps" onClick={useGeo} disabled={busy} className="px-3 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] text-[#8C4A27]" title="GPS">{busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Navigation className="w-5 h-5" />}</button>
             </div>
             <input data-testid="bakers-bio" value={bio} onChange={(e) => setBio(e.target.value)} maxLength={200} placeholder={tri("Due parole su di te (facoltativo)", "Kurz über dich (optional)", "A short bio (optional)", "Bio breve (opcional)")} className={inp} />
             <input data-testid="bakers-link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={200} placeholder={tri("Sito o Instagram (facoltativo)", "Website oder Instagram (optional)", "Website or Instagram (optional)", "Web o Instagram (opcional)")} className={inp} />
             <p className="text-[10.5px] text-[#7E8A93]">{tri("La posizione è approssimata alla città (privacy). Comparire è facoltativo.", "Standort auf Stadt gerundet (Privatsphäre). Freiwillig.", "Location is rounded to the city (privacy). Opt-in.", "Ubicación aproximada a la ciudad (privacidad). Opcional.")}</p>
             <div className="flex gap-2">
-              <button data-testid="bakers-save" onClick={save} disabled={busy} className="flex-1 bg-[#3f7cac] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-50">{busy ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
+              <button data-testid="bakers-save" onClick={save} disabled={busy} className="flex-1 bg-[#8C4A27] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-50">{busy ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
               {mine && <button data-testid="bakers-remove" onClick={removeMe} disabled={busy} className="px-3 rounded-xl bg-[#C0574D]/15 text-[#C0574D]"><Trash2 className="w-5 h-5" /></button>}
-              <button data-testid="bakers-cancel" onClick={() => setShowForm(false)} className="px-3 rounded-xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93]"><X className="w-5 h-5" /></button>
+              <button data-testid="bakers-cancel" onClick={() => setShowForm(false)} className="px-3 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] text-[#7E8A93]"><X className="w-5 h-5" /></button>
             </div>
           </div>
         )}

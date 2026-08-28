@@ -1966,3 +1966,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **DIPLOMA PDF**: in `ImparaLivelli.jsx`, quando tutti i percorsi sono completati appare `impara-diploma-pdf` → genera "Diploma dell'Arte Bianca" (jsPDF landscape con nome, elenco percorsi, data). Verificato UI.
 - **PIÙ LIVELLI IMPARA**: ora 6 percorsi (base, lievito, panettone, focacce, pizza, pasta) ognuno con quiz da 3 domande. Backend `LEARN_PATHS` esteso ai 6 id. Verificato via curl (3 percorsi completati → unlocked_panettoni=True) e UI (6 livelli + diploma).
 - **FR/FA senza residui**: sweep aggiuntivo (6 file: NovitaColorate, Ricette, BottomNav, ProfilePanel, EULabel, Shop `pick`) — gli helper locali con coda `? e : i)` ora ricadono su inglese per fr/fa. Restano solo i NOMI propri delle ricette (dati).
+
+## v-fork.25 (2026-08) — Sfide+Impara insieme, Recolor globale, Diploma condivisibile
+- **SFIDE + IMPARA INSIEME**: `Sfide.jsx` mostra il blocco `sfide-learn` "Percorsi Impara completati" (icona GraduationCap + chip con spunta) leggendo gli id `learn_*` da `state.completed`. Verificato (chip "The Basics"/"Sourdough").
+- **RECOLOR GLOBALE**: sweep su tutte le sezioni/componenti con blu residui (#3f7cac→#8C4A27, #234b6e→#6E371C, #5aa0cf/#6E8CA0→#B45309, #2e6690→#8C4A27, #5E7E90→#8C6B4A, #A9C5D4→#e7d5b4, bordi #d5e4f0→#E6D8C3, bg #f0f6fb→#FAF5EC). Schede ricetta aperte e strumenti Laboratorio ora Arte Bianca. Zero blu saturi residui.
+- **DIPLOMA CONDIVISIBILE**: in `ImparaLivelli.jsx` blocco diploma con pulsanti `impara-share-wa` (WhatsApp via wa.me) e `impara-share-more` (Web Share API → Instagram/altro, fallback copia testo).

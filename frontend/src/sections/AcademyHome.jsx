@@ -65,7 +65,7 @@ export default function AcademyHome({ onNavigate }) {
       <div data-testid="academy-path" className="mb-5">
         <div className="flex items-center justify-between mb-2">
           <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Il tuo percorso", "Dein Lernpfad", "Your path")}</p>
-          <span data-testid="academy-path-progress" className="text-xs font-bold text-[#5aa0cf]">{pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length}/3 {tri("completati", "erledigt", "done")}</span>
+          <span data-testid="academy-path-progress" className="text-xs font-bold text-[#B45309]">{pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length}/3 {tri("completati", "erledigt", "done")}</span>
         </div>
         <div className="grid grid-cols-3 gap-2">
           {[
@@ -76,11 +76,11 @@ export default function AcademyHome({ onNavigate }) {
             const done = pathDone.includes(id);
             return (
               <button key={id} data-testid={`academy-path-${id}`} onClick={() => setSub(id)}
-                className={`group relative rounded-2xl border p-3 text-left active:scale-97 transition-all ${done ? "bg-[#5aa0cf]/12 border-[#5aa0cf]/50" : "bg-white dark:bg-[#232A31] border-[#d5e4f0] dark:border-[#38424B] hover:border-[#5aa0cf]/60"}`}>
-                {done && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-[#5aa0cf]" data-testid={`academy-path-done-${id}`} />}
+                className={`group relative rounded-2xl border p-3 text-left active:scale-97 transition-all ${done ? "bg-[#B45309]/12 border-[#B45309]/50" : "bg-white dark:bg-[#232A31] border-[#E6D8C3] dark:border-[#38424B] hover:border-[#B45309]/60"}`}>
+                {done && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-[#B45309]" data-testid={`academy-path-done-${id}`} />}
                 <div className="flex items-center gap-1.5 mb-1.5">
-                  <span className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${done ? "bg-[#5aa0cf] text-white" : "bg-[#e4eff8] dark:bg-[#1F252B] text-[#5aa0cf]"}`}>{done ? "✓" : n}</span>
-                  <Icon className="w-4 h-4 text-[#5aa0cf]" />
+                  <span className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${done ? "bg-[#B45309] text-white" : "bg-[#e4eff8] dark:bg-[#1F252B] text-[#B45309]"}`}>{done ? "✓" : n}</span>
+                  <Icon className="w-4 h-4 text-[#B45309]" />
                 </div>
                 <p className="text-xs font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-snug">{label}</p>
               </button>
@@ -88,7 +88,7 @@ export default function AcademyHome({ onNavigate }) {
           })}
         </div>
         {pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length === 3 && (
-          <div data-testid="academy-path-complete" className="mt-3 rounded-2xl bg-gradient-to-br from-[#5aa0cf] to-[#2e6690] text-white p-4 text-center shadow-lg">
+          <div data-testid="academy-path-complete" className="mt-3 rounded-2xl bg-gradient-to-br from-[#B45309] to-[#8C4A27] text-white p-4 text-center shadow-lg">
             <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-2"><CheckCircle2 className="w-7 h-7" /></div>
             <p className="font-display text-lg font-bold">🎉 {tri("Percorso completato!", "Pfad abgeschlossen!", "Path complete!")}</p>
             <p className="text-sm text-white/85 mt-0.5">{tri("Hai sbloccato il badge «Fornaio Diplomato». Sei pronto per Il Tuo Laboratorio!", "Du hast das Abzeichen «Diplom-Bäcker» freigeschaltet. Bereit für deine Backstube!", "You unlocked the «Certified Baker» badge. Ready for Your Lab!")}</p>
@@ -98,13 +98,13 @@ export default function AcademyHome({ onNavigate }) {
       </div>
 
       {/* Sub-nav */}
-      <div data-testid="academy-subnav" className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-5 border border-[#d5e4f0] dark:border-[#38424B]">
+      <div data-testid="academy-subnav" className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-5 border border-[#E6D8C3] dark:border-[#38424B]">
         {TABS.map(({ id, label, Icon }) => {
           const on = sub === id;
           const isQuiz = id === "corsi";
           return (
             <button key={id} data-testid={`academy-tab-${id}`} onClick={() => setSub(id)}
-              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#5aa0cf] text-white shadow-md" : isQuiz ? "text-[#234b6e] dark:text-[#C88A2B] bg-[#C88A2B]/15 ring-2 ring-[#C88A2B]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#2A323A]"}`}>
+              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#B45309] text-white shadow-md" : isQuiz ? "text-[#6E371C] dark:text-[#C88A2B] bg-[#C88A2B]/15 ring-2 ring-[#C88A2B]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#2A323A]"}`}>
               <Icon className="w-4 h-4 shrink-0" /><span className="truncate">{label}</span>
               {isQuiz && !on && <span className="absolute -top-1.5 -right-1 text-[9px] font-black bg-[#C88A2B] text-white px-1.5 py-0.5 rounded-full leading-none">🎯</span>}
             </button>
@@ -116,14 +116,14 @@ export default function AcademyHome({ onNavigate }) {
       {sub === "farine" && <FlourDB />}
       {sub === "diagnosi" && (
         <div className="space-y-4" data-testid="academy-diagnosi">
-          <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5 text-center">
-            <div className="w-14 h-14 rounded-full bg-[#5aa0cf]/15 flex items-center justify-center mx-auto mb-3">
-              <Camera className="w-7 h-7 text-[#5aa0cf]" />
+          <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-5 text-center">
+            <div className="w-14 h-14 rounded-full bg-[#B45309]/15 flex items-center justify-center mx-auto mb-3">
+              <Camera className="w-7 h-7 text-[#B45309]" />
             </div>
             <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Diagnosi Foto IA", "Foto-Diagnose KI", "AI Photo Diagnosis")}</p>
             <p className="text-sm text-[#7E8A93] mt-1 max-w-sm mx-auto">{tri("Scatta o carica una foto del tuo impasto o della crosta: l'IA ti dice cosa correggere in cottura e lievitazione.", "Mach oder lade ein Foto von Teig oder Kruste hoch: die KI sagt dir, was du bei Backen und Gärung korrigieren sollst.", "Take or upload a photo of your dough or crust: the AI tells you what to fix in baking and proofing.")}</p>
             {typeof diagLimit === "number" && (
-              <p className="text-xs font-semibold text-[#3f7cac] mt-2">{tri("Hai usato", "Du hast", "You've used")} {diagUsed}/{diagLimit} {tri("Diagnosi questo mese", "Diagnosen diesen Monat", "diagnoses this month")}</p>
+              <p className="text-xs font-semibold text-[#8C4A27] mt-2">{tri("Hai usato", "Du hast", "You've used")} {diagUsed}/{diagLimit} {tri("Diagnosi questo mese", "Diagnosen diesen Monat", "diagnoses this month")}</p>
             )}
             {typeof diagLimit === "number" && diagLimit > 0 && diagUsed >= diagLimit ? (
               <div data-testid="diagnosi-limit-upsell" className="mt-4 rounded-2xl bg-[#2e3d4c]/10 border border-[#2e3d4c]/30 p-4">
@@ -136,7 +136,7 @@ export default function AcademyHome({ onNavigate }) {
               </div>
             ) : (
               <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
-                className="mt-4 inline-flex items-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+                className="mt-4 inline-flex items-center gap-2 bg-[#8C4A27] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
                 <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis")}
               </button>
             )}
@@ -190,16 +190,16 @@ function DynamicRecipes() {
     const html = `<!doctype html><html><head><meta charset="utf-8"><title>MikiLab · ${nm.it}</title>
       <style>
         body{font-family:Georgia,serif;color:#2B303B;margin:24px;background:#fff}
-        .head{text-align:center;border-bottom:3px solid #5aa0cf;padding-bottom:10px;margin-bottom:18px}
-        .head h1{margin:0;color:#2e6690}
+        .head{text-align:center;border-bottom:3px solid #B45309;padding-bottom:10px;margin-bottom:18px}
+        .head h1{margin:0;color:#8C4A27}
         .head p{margin:2px 0 0;color:#7E8A93;font-size:13px}
-        .card{border:1px solid #d5e4f0;border-radius:12px;padding:14px 18px;margin-bottom:14px;page-break-inside:avoid}
+        .card{border:1px solid #E6D8C3;border-radius:12px;padding:14px 18px;margin-bottom:14px;page-break-inside:avoid}
         .card h2{margin:0 0 2px;font-size:18px}
         .sub{margin:0 0 8px;color:#7E8A93;font-size:12px}
         table{width:100%;border-collapse:collapse}
         td{padding:4px 0;border-bottom:1px solid #e4eff8;font-size:15px}
-        .hint{margin:10px 0 0;color:#2e6690;font-size:13px}
-        .flag{font-size:12px;font-weight:bold;color:#5aa0cf;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px}
+        .hint{margin:10px 0 0;color:#8C4A27;font-size:13px}
+        .flag{font-size:12px;font-weight:bold;color:#B45309;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px}
         .foot{text-align:center;color:#7E8A93;font-size:11px;margin-top:16px}
       </style></head><body>
       <div class="head"><h1>MikiLab · Michele</h1><p>${nm.it} — ${LBL.it.tin} ${width}×${length} cm · ${flour}</p></div>
@@ -217,13 +217,13 @@ function DynamicRecipes() {
 
   return (
     <div className="space-y-4" data-testid="dynamic-recipes">
-      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4 space-y-3">
+      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4 space-y-3">
         <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Calcola le dosi", "Mengen berechnen", "Calculate the doses")}</p>
         <div className="grid grid-cols-1 gap-3">
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Ricetta", "Rezept", "Recipe")}</span>
             <select data-testid="calc-recipe" value={recipe} onChange={(e) => setRecipe(e.target.value)}
-              className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5">
+              className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5">
               {CALC_RECIPES.map((c) => <option key={c.id} value={c.id}>{L(c.name)}</option>)}
             </select>
           </label>
@@ -231,18 +231,18 @@ function DynamicRecipes() {
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Larghezza teglia (cm)", "Blechbreite (cm)", "Tin width (cm)")}</span>
               <input data-testid="calc-width" type="number" value={width} onChange={(e) => setWidth(e.target.value)}
-                className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5" />
+                className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5" />
             </label>
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Lunghezza teglia (cm)", "Blechlänge (cm)", "Tin length (cm)")}</span>
               <input data-testid="calc-length" type="number" value={length} onChange={(e) => setLength(e.target.value)}
-                className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5" />
+                className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5" />
             </label>
           </div>
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Farina", "Mehl", "Flour")}</span>
             <select data-testid="calc-flour" value={flour} onChange={(e) => setFlour(e.target.value)}
-              className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5">
+              className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5">
               {FLOURS.map((f) => <option key={f.name} value={f.name}>{f.name} · {f.type_de}</option>)}
             </select>
           </label>
@@ -250,7 +250,7 @@ function DynamicRecipes() {
       </div>
 
       {/* Risultato */}
-      <div className="print-area rounded-2xl bg-gradient-to-br from-[#5aa0cf]/10 to-[#2e6690]/5 border border-[#5aa0cf]/30 p-5" data-testid="calc-result">
+      <div className="print-area rounded-2xl bg-gradient-to-br from-[#B45309]/10 to-[#8C4A27]/5 border border-[#B45309]/30 p-5" data-testid="calc-result">
         <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{L(r.name)} · {flour}</p>
         <p className="text-xs text-[#7E8A93] mb-3">{tri("Teglia", "Blech", "Tin")} {width}×{length} cm</p>
         <div className="space-y-1.5 font-mono-data text-sm">
@@ -260,11 +260,11 @@ function DynamicRecipes() {
           {r.bp.oil > 0 && <Row label={tri("Olio EVO", "Olivenöl", "Olive oil")} val={`${g(r.bp.oil)} g`} />}
           <Row label={tri("Lievito di birra", "Frischhefe", "Fresh yeast")} val={`${g(r.bp.yeast)} g`} />
         </div>
-        <p className="text-sm text-[#2e6690] dark:text-[#a9d2ec] mt-3">💡 {L(r.hint)}</p>
+        <p className="text-sm text-[#8C4A27] dark:text-[#a9d2ec] mt-3">💡 {L(r.hint)}</p>
       </div>
 
       <button data-testid="calc-print" onClick={downloadPdf}
-        className="w-full flex items-center justify-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+        className="w-full flex items-center justify-center gap-2 bg-[#8C4A27] hover:bg-[#336a94] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
         <Printer className="w-5 h-5" /> {tri("Scarica scheda PDF (IT · DE · EN)", "PDF-Karte herunterladen (IT · DE · EN)", "Download recipe card PDF (IT · DE · EN)")}
       </button>
     </div>
@@ -275,7 +275,7 @@ function Row({ label, val, bold }) {
   return (
     <div className={`flex items-center justify-between ${bold ? "font-bold" : ""}`}>
       <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{label}</span>
-      <span className="text-[#234b6e] dark:text-[#8FB0C2]">{val}</span>
+      <span className="text-[#6E371C] dark:text-[#8FB0C2]">{val}</span>
     </div>
   );
 }
@@ -290,19 +290,19 @@ function FlourDB() {
     <div className="space-y-3" data-testid="flour-db">
       <input data-testid="flour-search" value={q} onChange={(e) => setQ(e.target.value)}
         placeholder={tri("Cerca farina (es. 00, Dinkel, Manitoba)", "Mehl suchen (z.B. 00, Dinkel, Manitoba)", "Search flour (e.g. 00, Dinkel, Manitoba)")}
-        className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5 text-sm" />
-      <div className="rounded-2xl overflow-hidden border border-[#d5e4f0] dark:border-[#38424B]">
+        className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#1B2127] px-3 py-2.5 text-sm" />
+      <div className="rounded-2xl overflow-hidden border border-[#E6D8C3] dark:border-[#38424B]">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 bg-[#e4eff8] dark:bg-[#1F252B] px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">
           <span>IT</span><span>DE (Type)</span><span>W</span>
         </div>
         {rows.map((f, i) => (
-          <div key={f.name} data-testid={`flour-row-${i}`} className="grid grid-cols-[1fr_1fr_auto] gap-2 px-3 py-2.5 text-sm border-t border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31]">
+          <div key={f.name} data-testid={`flour-row-${i}`} className="grid grid-cols-[1fr_1fr_auto] gap-2 px-3 py-2.5 text-sm border-t border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31]">
             <div>
               <p className="font-semibold text-[#2B303B] dark:text-[#e4eff8]">{f.name}</p>
               <p className="text-xs text-[#7E8A93]">{f.use[lang] || f.use.it}</p>
             </div>
             <span className="text-[#3F4A54] dark:text-[#AEB8BF] self-center">{f.type_de}</span>
-            <span className="font-mono-data text-[#234b6e] dark:text-[#8FB0C2] self-center">{f.w}</span>
+            <span className="font-mono-data text-[#6E371C] dark:text-[#8FB0C2] self-center">{f.w}</span>
           </div>
         ))}
       </div>

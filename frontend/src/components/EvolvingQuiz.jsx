@@ -15,7 +15,7 @@ export default function EvolvingQuiz() {
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
 
   const LEVELS = [
-    { id: "apprendista", label: tri("Apprendista", "Anfänger", "Apprentice", "Aprendiz"), color: "#5aa0cf" },
+    { id: "apprendista", label: tri("Apprendista", "Anfänger", "Apprentice", "Aprendiz"), color: "#B45309" },
     { id: "avanzato", label: tri("Home Baker Avanzato", "Fortgeschritten", "Advanced", "Avanzado"), color: "#a9772f" },
     { id: "master", label: tri("Master Baker di Casa", "Heim-Master", "Home Master", "Master de Casa"), color: "#2e8b6f" },
   ];
@@ -96,7 +96,7 @@ export default function EvolvingQuiz() {
   const curLevel = LEVELS.find((l) => l.id === level) || LEVELS[0];
 
   return (
-    <div data-testid="evolving-quiz" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-5">
+    <div data-testid="evolving-quiz" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-5">
       <div className="flex items-center gap-2 mb-1">
         <GraduationCap className="w-5 h-5 text-[#a9772f]" />
         <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Quiz del Fornaio Casalingo", "Heim-Bäcker-Quiz", "Home Baker Quiz", "Quiz del Panadero Casero")}</h3>
@@ -147,7 +147,7 @@ export default function EvolvingQuiz() {
       </div>
 
       <div className="flex items-center justify-between mb-3 text-xs">
-        <span data-testid="quiz-streak" className="font-semibold text-[#3f7cac] flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" /> {tri("Serie", "Serie", "Streak", "Racha")}: {streak}</span>
+        <span data-testid="quiz-streak" className="font-semibold text-[#8C4A27] flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" /> {tri("Serie", "Serie", "Streak", "Racha")}: {streak}</span>
         <span data-testid="quiz-best" className="font-semibold text-[#a9772f] flex items-center gap-1"><Trophy className="w-3.5 h-3.5" /> {tri("Record", "Rekord", "Best", "Récord")}: {best}</span>
       </div>
 
@@ -158,7 +158,7 @@ export default function EvolvingQuiz() {
         </button>
       )}
       {user && showBoard && (
-        <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-3 space-y-1.5">
+        <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] p-3 space-y-1.5">
           <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Sfida «Fornaio della Settimana» — punti Master tra amici", "Challenge «Bäcker der Woche» — Master-Punkte unter Freunden", "«Baker of the Week» challenge — Master points among friends", "Desafío «Panadero de la Semana» — puntos Master entre amigos")}</p>
           {champion && (
             <div data-testid="quiz-champion" className="flex items-center gap-2.5 rounded-lg bg-gradient-to-r from-[#a9772f] to-[#8a5a2b] text-white px-2.5 py-2 mb-1">
@@ -172,7 +172,7 @@ export default function EvolvingQuiz() {
           ) : board.length === 0 ? (
             <p className="text-sm text-[#7E8A93] py-2">{tri("Ancora nessun punto. Rispondi al livello Master per scalare la classifica e diventare Fornaio della Settimana!", "Noch keine Punkte. Beantworte Master-Fragen, um Bäcker der Woche zu werden!", "No points yet. Answer Master questions to become Baker of the Week!", "Sin puntos aún. ¡Responde en Master para ser Panadero de la Semana!")}</p>
           ) : board.map((r, idx) => (
-            <div key={r.user_id} data-testid={`leaderboard-row-${r.user_id}`} className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 ${r.me ? "bg-[#3f7cac]/10" : ""} ${idx === 0 && r.points > 0 ? "ring-1 ring-[#a9772f]/40" : ""}`}>
+            <div key={r.user_id} data-testid={`leaderboard-row-${r.user_id}`} className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 ${r.me ? "bg-[#8C4A27]/10" : ""} ${idx === 0 && r.points > 0 ? "ring-1 ring-[#a9772f]/40" : ""}`}>
               <span className={`w-5 text-center text-sm font-extrabold ${idx === 0 ? "text-[#a9772f]" : "text-[#7E8A93]"}`}>{idx === 0 && r.points > 0 ? "👑" : idx + 1}</span>
               <div className="w-8 h-8 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white text-xs font-bold shrink-0">{r.picture ? <img src={r.picture} alt={r.name} className="w-full h-full object-cover" /> : (r.name || "F")[0].toUpperCase()}</div>
               <span className="flex-1 min-w-0 truncate text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{r.name}{r.me ? tri(" (tu)", " (du)", " (you)", " (tú)") : ""}</span>
@@ -200,7 +200,7 @@ export default function EvolvingQuiz() {
             {q.options.map((opt, i) => {
               const isCorrect = i === q.correct;
               const chosen = picked === i;
-              let cls = "bg-[#e4eff8] dark:bg-[#2A323A] border-[#d5e4f0] dark:border-[#38424B]";
+              let cls = "bg-[#e4eff8] dark:bg-[#2A323A] border-[#E6D8C3] dark:border-[#38424B]";
               if (picked != null && isCorrect) cls = "bg-[#2e8b6f]/15 border-[#2e8b6f]";
               else if (picked != null && chosen && !isCorrect) cls = "bg-[#C0574D]/15 border-[#C0574D]";
               return (
@@ -215,7 +215,7 @@ export default function EvolvingQuiz() {
           </div>
 
           {picked != null && (
-            <div data-testid="quiz-explanation" className="mt-3 rounded-xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-3">
+            <div data-testid="quiz-explanation" className="mt-3 rounded-xl bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] p-3">
               <p className={`text-sm font-bold mb-1 ${picked === q.correct ? "text-[#2e8b6f]" : "text-[#C0574D]"}`}>
                 {picked === q.correct ? tri("✅ Corretto!", "✅ Richtig!", "✅ Correct!", "✅ ¡Correcto!") : tri("❌ Sbagliato", "❌ Falsch", "❌ Wrong", "❌ Incorrecto")}
               </p>

@@ -26,15 +26,15 @@ export default function ResetPassword({ token, onDone }) {
   };
 
   return (
-    <div data-testid="reset-screen" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#1B2127] overflow-auto flex items-center justify-center px-4">
+    <div data-testid="reset-screen" className="fixed inset-0 z-[80] bg-[#FAF5EC] dark:bg-[#1B2127] overflow-auto flex items-center justify-center px-4">
       <div className="w-full max-w-sm relative">
         <button data-testid="reset-close" onClick={onDone} aria-label="Chiudi"
-          className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] flex items-center justify-center text-[#7E8A93] z-10">
+          className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] flex items-center justify-center text-[#7E8A93] z-10">
           <X className="w-5 h-5" />
         </button>
         <div className="text-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-[#3f7cac]/10 border border-[#3f7cac]/30 flex items-center justify-center mx-auto mb-3">
-            <KeyRound className="w-8 h-8 text-[#3f7cac]" />
+          <div className="w-16 h-16 rounded-2xl bg-[#8C4A27]/10 border border-[#8C4A27]/30 flex items-center justify-center mx-auto mb-3">
+            <KeyRound className="w-8 h-8 text-[#8C4A27]" />
           </div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">
             {tri("Nuova password", "Neues Passwort", "New password", "Nueva contraseña")}
@@ -56,7 +56,7 @@ export default function ResetPassword({ token, onDone }) {
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
           <button data-testid="reset-submit" type="submit" disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#8C4A27] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
             {tri("Cambia password", "Passwort ändern", "Change password", "Cambiar contraseña")}
           </button>
         </form>
@@ -67,8 +67,8 @@ export default function ResetPassword({ token, onDone }) {
 
 function Field({ icon, children }) {
   return (
-    <div className="flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl px-4 py-3">
-      <span className="text-[#3f7cac]">{icon}</span>
+    <div className="flex items-center gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl px-4 py-3">
+      <span className="text-[#8C4A27]">{icon}</span>
       {children}
     </div>
   );

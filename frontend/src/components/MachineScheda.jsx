@@ -8,8 +8,8 @@ export default function MachineScheda() {
   const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const s = machineScheda(lang);
   return (
-    <div data-testid="recipe-machine-scheda" className="mt-4 rounded-2xl border border-[#3f7cac]/40 bg-[#3f7cac]/8 p-4">
-      <p className="text-[11px] font-bold uppercase tracking-wide text-[#234b6e] dark:text-[#a9d2ec] flex items-center gap-1.5 mb-2">
+    <div data-testid="recipe-machine-scheda" className="mt-4 rounded-2xl border border-[#8C4A27]/40 bg-[#8C4A27]/8 p-4">
+      <p className="text-[11px] font-bold uppercase tracking-wide text-[#6E371C] dark:text-[#a9d2ec] flex items-center gap-1.5 mb-2">
         <Cog className="w-4 h-4" /> {tri("Scheda Macchina", "Maschinen-Blatt", "Machine Sheet")}
       </p>
       <div className="space-y-1 text-sm text-[#2B303B] dark:text-[#EAF0EC]">

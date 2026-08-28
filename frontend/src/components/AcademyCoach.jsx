@@ -124,7 +124,7 @@ export default function AcademyCoach() {
   const hasTimeline = (txt) => parseTimeline(txt).length > 0;
 
   return (
-    <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]">
+    <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B]">
       <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 55%,#a9772f)" }}>
         <div className="w-11 h-11 rounded-xl bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
           <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
@@ -155,7 +155,7 @@ export default function AcademyCoach() {
         <div className="flex flex-wrap gap-1.5">
           {CHIPS.map((c, i) => (
             <button key={i} data-testid={`academy-chip-${i}`} onClick={() => ask(c.text)} disabled={busy}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#123c4a] dark:text-[#8FB0C2] bg-[#3f7cac]/10 border border-[#3f7cac]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#123c4a] dark:text-[#8FB0C2] bg-[#8C4A27]/10 border border-[#8C4A27]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
               <c.Icon className="w-3.5 h-3.5" /> {c.label}
             </button>
           ))}
@@ -165,9 +165,9 @@ export default function AcademyCoach() {
           <div className="space-y-3 max-h-[420px] overflow-y-auto" data-testid="academy-coach-thread">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#3f7cac] text-white rounded-br-sm" : "bg-[#f0f6fb] dark:bg-[#1F252B] text-[#2B303B] dark:text-[#e4eff8] border border-[#d5e4f0] dark:border-[#38424B] rounded-bl-sm"}`}>
+                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#8C4A27] text-white rounded-br-sm" : "bg-[#FAF5EC] dark:bg-[#1F252B] text-[#2B303B] dark:text-[#e4eff8] border border-[#E6D8C3] dark:border-[#38424B] rounded-bl-sm"}`}>
                   {m.role === "assistant" ? (
-                    m.content ? <div className="markdown-body leading-relaxed"><ReactMarkdown>{m.content}</ReactMarkdown></div> : <Loader2 className="w-4 h-4 animate-spin text-[#3f7cac]" />
+                    m.content ? <div className="markdown-body leading-relaxed"><ReactMarkdown>{m.content}</ReactMarkdown></div> : <Loader2 className="w-4 h-4 animate-spin text-[#8C4A27]" />
                   ) : <p className="whitespace-pre-line">{m.content}</p>}
                   {m.role === "assistant" && m.content && !busy && hasTimeline(m.content) && (
                     <button data-testid={`academy-save-timeline-${i}`} data-sfx="save" onClick={() => saveTimeline(m.content)}
@@ -185,7 +185,7 @@ export default function AcademyCoach() {
         <div className="flex items-center gap-2 pt-1">
           <input data-testid="academy-coach-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()}
             placeholder={tri("Scrivi o parla a Mohammadreza…", "Schreib oder sprich mit Mohammadreza…", "Type or talk to Mohammadreza…", "Escribe o habla con Mohammadreza…")}
-            className="flex-1 bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]" />
+            className="flex-1 bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]" />
           {speechSupported && (
             <button data-testid="academy-coach-mic" onClick={startListening} disabled={busy}
               title={tri("Parla con Mohammadreza", "Mit Mohammadreza sprechen", "Talk to Mohammadreza", "Habla con Mohammadreza")}
@@ -193,7 +193,7 @@ export default function AcademyCoach() {
               <Mic className="w-5 h-5" />
             </button>
           )}
-          <button data-testid="academy-coach-send" data-sfx="confirm" onClick={() => ask()} disabled={busy || !input.trim()} className="w-11 h-11 rounded-full bg-[#3f7cac] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
+          <button data-testid="academy-coach-send" data-sfx="confirm" onClick={() => ask()} disabled={busy || !input.trim()} className="w-11 h-11 rounded-full bg-[#8C4A27] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
             {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           </button>
         </div>

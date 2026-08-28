@@ -247,12 +247,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         onDragOver={editTools ? (e) => e.preventDefault() : undefined}
         onDrop={editTools ? (e) => { e.preventDefault(); reorderTool(dragId, id); setDragId(null); } : undefined}
         onDragEnd={editTools ? () => setDragId(null) : undefined}
-        className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-move border-dashed border-[#3f7cac]/50" : "cursor-pointer border-[#d5e4f0] dark:border-[#38424B] active:scale-95 hover:border-[#3f7cac]/60"} ${isHidden ? "opacity-40" : ""} ${dragId === id ? "opacity-50 scale-95 ring-2 ring-[#3f7cac]" : ""}`}>
+        className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#232A31] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-move border-dashed border-[#8C4A27]/50" : "cursor-pointer border-[#E6D8C3] dark:border-[#38424B] active:scale-95 hover:border-[#8C4A27]/60"} ${isHidden ? "opacity-40" : ""} ${dragId === id ? "opacity-50 scale-95 ring-2 ring-[#8C4A27]" : ""}`}>
         {editTools ? (
           <>
             <div className="absolute top-1 left-1 flex gap-0.5">
               <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onClick={(e) => { e.stopPropagation(); toggleHideTool(id); }}
-                className="w-6 h-6 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#3f7cac] active:scale-90">
+                className="w-6 h-6 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#8C4A27] active:scale-90">
                 {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               </button>
               <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onClick={(e) => { e.stopPropagation(); togglePinTool(id); }}
@@ -284,7 +284,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             )}
           </>
         )}
-        <Icon className="w-5 h-5 text-[#3f7cac]" />
+        <Icon className="w-5 h-5 text-[#8C4A27]" />
         <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8]">{label}</span>
       </div>
     );
@@ -299,12 +299,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     return (
       <Reorder.Item as="div" key={id} value={id} data-testid={`capo-quicklink-${id}`}
         whileDrag={{ scale: 1.03, zIndex: 5, boxShadow: "0 8px 20px rgba(0,0,0,0.15)" }}
-        className={`relative flex items-center gap-2 bg-white dark:bg-[#232A31] border border-dashed border-[#3f7cac]/50 rounded-2xl px-2.5 py-2.5 select-none touch-none cursor-grab active:cursor-grabbing ${isHidden ? "opacity-40" : ""}`}>
+        className={`relative flex items-center gap-2 bg-white dark:bg-[#232A31] border border-dashed border-[#8C4A27]/50 rounded-2xl px-2.5 py-2.5 select-none touch-none cursor-grab active:cursor-grabbing ${isHidden ? "opacity-40" : ""}`}>
         <GripVertical className="w-4 h-4 text-[#9aa4ac] shrink-0" data-testid={`tool-grip-${id}`} />
-        <Icon className="w-5 h-5 text-[#3f7cac] shrink-0" />
+        <Icon className="w-5 h-5 text-[#8C4A27] shrink-0" />
         <span className="text-[12px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] flex-1 min-w-0 truncate">{label}</span>
         <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onPointerDown={stop} onClick={(e) => { stop(e); toggleHideTool(id); }}
-          className="w-7 h-7 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#3f7cac] active:scale-90 shrink-0">
+          className="w-7 h-7 rounded-full bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#8C4A27] active:scale-90 shrink-0">
           {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
         </button>
         <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onPointerDown={stop} onClick={(e) => { stop(e); togglePinTool(id); }}
@@ -656,7 +656,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           { target: null, title: tri3(lang, "🔥 Sfida della Settimana", "🔥 Challenge der Woche", "🔥 Weekly Challenge"),
             body: tri3(lang, "Nella sezione «Impara» c'è ogni settimana una sfida a tema del Quiz del Fornaio: gareggia con gli amici e diventa «Fornaio della Settimana» 🏆!", "Im Bereich „Lernen“ gibt es jede Woche eine Themen-Challenge im Bäcker-Quiz: tritt gegen Freunde an und werde „Bäcker der Woche“ 🏆!", "In the 'Learn' section there's a weekly themed Baker Quiz challenge: compete with friends and become 'Baker of the Week' 🏆!") },
         ]} />}
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#2f6a97] to-[#234b6e] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#2f6a97] to-[#6E371C] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <Sparkles className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Produktionsplan mit KI" : lang === "en" ? "AI Production Plan" : lang === "es" ? "Plan de Producción con IA" : "Piano di Produzione con IA"}</h1>
@@ -666,11 +666,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       {onOpenTool && (
         <div data-testid="capo-quicklinks" className="mb-5">
           <div className="flex items-center justify-between">
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[#234b6e] dark:text-[#a9d2ec] mb-0.5">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#6E371C] dark:text-[#a9d2ec] mb-0.5">
               {tri3(lang, "INIZIA", "START", "START")}
             </p>
             <button data-testid="lab-tour-replay" onClick={() => setTourForce((n) => n + 1)}
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3f7cac] px-2.5 py-1 rounded-full border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31] active:scale-95 transition-all">
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#8C4A27] px-2.5 py-1 rounded-full border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] active:scale-95 transition-all">
               <HelpCircle className="w-3.5 h-3.5" /> {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
             </button>
           </div>
@@ -683,7 +683,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Metodo", "Methoden-Rechner", "Method Calculator") },
             ].map(({ id, Icon, label }) => (
               <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
-                className="flex items-center gap-2 bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
+                className="flex items-center gap-2 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
                 <Icon className="w-5 h-5 shrink-0" />
                 <span className="text-[12px] font-bold leading-tight">{label}</span>
               </button>
@@ -694,7 +694,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
       {(mixers.length === 0 || cells.length === 0) && modules.celle && (
         <div data-testid="capo-setup-hint" className="mb-4 rounded-2xl bg-[#C88A2B]/12 border border-[#C88A2B]/35 p-3.5">
-          <p className="text-sm text-[#234b6e] dark:text-[#8FB0C2] leading-snug">
+          <p className="text-sm text-[#6E371C] dark:text-[#8FB0C2] leading-snug">
             {(() => {
               const miss = [];
               if (mixers.length === 0) miss.push(tri3(lang, "impastatrici", "Kneter", "mixers"));
@@ -719,14 +719,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       {/* Spiegazione Mohammadreza: pannello FISSO in fondo, visibile ovunque (niente scroll in alto) */}
       {guideId && (
         <div data-testid="tool-guide-bubble" className="fixed inset-x-0 bottom-0 z-[80] px-3 pb-[max(16px,env(safe-area-inset-bottom))] pt-2 pointer-events-none">
-          <div className="mx-auto max-w-md pointer-events-auto flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white p-3 shadow-2xl ring-1 ring-white/15">
+          <div className="mx-auto max-w-md pointer-events-auto flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#6E371C] to-[#8C4A27] text-white p-3 shadow-2xl ring-1 ring-white/15">
             <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-xl object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
               <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
               {onOpenTool && guideToolId(guideId) && (
                 <button data-testid="tool-guide-open" onClick={() => { const tid = guideToolId(guideId); setGuideId(null); openToolTracked(tid); }}
-                  className="mt-2 mr-2 inline-flex items-center gap-1 text-xs font-bold bg-white text-[#234b6e] px-3 py-1.5 rounded-lg active:scale-95"><Wrench className="w-3.5 h-3.5" /> {tri3(lang, "Apri strumento", "Öffnen", "Open tool")}</button>
+                  className="mt-2 mr-2 inline-flex items-center gap-1 text-xs font-bold bg-white text-[#6E371C] px-3 py-1.5 rounded-lg active:scale-95"><Wrench className="w-3.5 h-3.5" /> {tri3(lang, "Apri strumento", "Öffnen", "Open tool")}</button>
               )}
               <button data-testid="tool-guide-close" onClick={() => setGuideId(null)}
                 className="mt-2 inline-flex text-xs font-semibold bg-white/15 text-white px-3 py-1.5 rounded-lg active:scale-95">{tri3(lang, "Ho capito", "Verstanden", "Got it")}</button>
@@ -755,12 +755,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <div key={id} data-testid={`capo-module-${id}`} aria-pressed={on} onClick={() => toggleMod(id)}
                 className={`relative flex flex-col items-center justify-center gap-1 rounded-2xl p-3 pt-5 text-center transition-all active:scale-95 border min-h-[82px] cursor-pointer ${
                   on
-                    ? "bg-[#3f7cac] text-white border-[#3f7cac] shadow-sm"
-                    : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                    ? "bg-[#8C4A27] text-white border-[#8C4A27] shadow-sm"
+                    : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#E6D8C3] dark:border-[#38424B]"}`}>
                 <span className={`absolute top-1.5 left-1.5 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
                 <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
                   onClick={(e) => { e.stopPropagation(); openGuide(id); }}
-                  className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 shadow-sm ring-2 ${on ? "bg-white text-[#3f7cac] ring-[#3f7cac]" : "bg-[#C88A2B] text-white ring-white dark:ring-[#232A31]"}`}>
+                  className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 shadow-sm ring-2 ${on ? "bg-white text-[#8C4A27] ring-[#8C4A27]" : "bg-[#C88A2B] text-white ring-white dark:ring-[#232A31]"}`}>
                   <Info className="w-3.5 h-3.5" />
                 </button>
                 <Icon className={`w-5 h-5 ${on ? "text-white" : "text-[#9aa4ac]"}`} />
@@ -768,7 +768,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 {onOpenTool && (MODULE_TOOL[id]) && (
                   <button type="button" data-testid={`capo-module-open-${id}`}
                     onClick={(e) => { e.stopPropagation(); openToolTracked(MODULE_TOOL[id] || id); }}
-                    className={`mt-0.5 inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full active:scale-95 transition-all ${on ? "bg-white text-[#234b6e]" : "bg-[#3f7cac]/12 text-[#3f7cac] border border-[#3f7cac]/30"}`}>
+                    className={`mt-0.5 inline-flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-full active:scale-95 transition-all ${on ? "bg-white text-[#6E371C]" : "bg-[#8C4A27]/12 text-[#8C4A27] border border-[#8C4A27]/30"}`}>
                     <Wrench className="w-2.5 h-2.5" /> {tri3(lang, "Apri strumento", "Öffnen", "Open tool")}
                   </button>
                 )}
@@ -785,14 +785,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
         {onOpenTool && (
           <>
-            <div className="mt-4 mb-2 h-px bg-[#d5e4f0] dark:bg-[#38424B]" />
+            <div className="mt-4 mb-2 h-px bg-[#E6D8C3] dark:bg-[#38424B]" />
             {!editTools && (() => {
               const discovered = TOOLS.filter((t) => toolUsage[t.id]).length;
               const total = TOOLS.length;
               const pct = Math.round((discovered / total) * 100);
               const done = discovered >= total;
               return (
-                <div data-testid="tools-discovery" className={`mb-3 rounded-2xl border p-3 ${done ? "bg-[#3f7cac]/10 border-[#3f7cac]/40" : "bg-[#C88A2B]/10 border-[#C88A2B]/40"}`}>
+                <div data-testid="tools-discovery" className={`mb-3 rounded-2xl border p-3 ${done ? "bg-[#8C4A27]/10 border-[#8C4A27]/40" : "bg-[#C88A2B]/10 border-[#C88A2B]/40"}`}>
                   <div className="flex items-center justify-between mb-1.5">
                     <p className="text-[12px] font-bold text-[#2B303B] dark:text-[#e4eff8]">
                       {done
@@ -802,7 +802,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     <span data-testid="tools-discovery-pct" className={`text-[12px] font-extrabold ${done ? "text-[#336a94]" : "text-[#A66A15]"}`}>{pct}%</span>
                   </div>
                   <div className="h-2 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
-                    <div className={`h-full rounded-full transition-all duration-500 ${done ? "bg-[#3f7cac]" : "bg-[#C88A2B]"}`} style={{ width: `${pct}%` }} />
+                    <div className={`h-full rounded-full transition-all duration-500 ${done ? "bg-[#8C4A27]" : "bg-[#C88A2B]"}`} style={{ width: `${pct}%` }} />
                   </div>
                   {!done && (
                     <p className="text-[10.5px] text-[#7E8A93] mt-1.5">{tri3(lang, `Apri quelli con il pallino «NUOVO»: ne restano ${total - discovered}.`, `Öffne die mit „NEU“: noch ${total - discovered} übrig.`, `Open the ones marked 'NEW': ${total - discovered} left.`)}</p>
@@ -841,11 +841,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               );
             })()}
             <div className="flex items-center justify-between mb-0.5">
-              <p className="font-display text-lg font-bold text-[#234b6e] dark:text-[#a9d2ec]">
+              <p className="font-display text-lg font-bold text-[#6E371C] dark:text-[#a9d2ec]">
                 {tri3(lang, "Apri uno strumento", "Werkzeug öffnen", "Open a tool", "Abrir una herramienta")}
               </p>
               <button data-testid="tools-edit-toggle" onClick={() => setEditTools((v) => !v)}
-                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${editTools ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3f7cac] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${editTools ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#8C4A27] border-[#E6D8C3] dark:border-[#38424B]"}`}>
                 <Settings2 className="w-3.5 h-3.5" /> {editTools ? tri3(lang, "Fatto", "Fertig", "Done") : tri3(lang, "Personalizza", "Anpassen", "Customize")}
               </button>
             </div>
@@ -860,7 +860,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <Search className="w-4 h-4 text-[#7E8A93] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input data-testid="tools-search" value={toolQuery} onChange={(e) => setToolQuery(e.target.value)}
                   placeholder={tri3(lang, "Cerca uno strumento…", "Werkzeug suchen…", "Search a tool…", "Buscar herramienta…")}
-                  className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31] pl-9 pr-3 py-2 text-sm outline-none focus:border-[#3f7cac]" />
+                  className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] pl-9 pr-3 py-2 text-sm outline-none focus:border-[#8C4A27]" />
               </div>
             )}
 
@@ -893,7 +893,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   if (items.length === 0) return null;
                   return (
                     <div key={c.key} data-testid={`tools-cat-${c.key}`}>
-                      <p className="font-display text-lg font-bold text-[#3f7cac] mb-2">{tri3(lang, c.it, c.de, c.en, c.es)}</p>
+                      <p className="font-display text-lg font-bold text-[#8C4A27] mb-2">{tri3(lang, c.it, c.de, c.en, c.es)}</p>
                       <div className="grid grid-cols-3 gap-2">
                         {items.map((tl) => renderToolCard(tl))}
                       </div>
@@ -914,13 +914,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       <Section order={2} highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
         <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
             <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
-              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#a9d2ec] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#a9d2ec] border-[#E6D8C3] dark:border-[#38424B]"}`}>
               <CalendarDays className="w-5 h-5 mb-1" />
               <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Piano Settimanale", "Wochenplan", "Weekly Plan")}</p>
               <p className={`text-[10.5px] leading-snug ${useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "Usa quello inserito (modificabile)", "Bereits erfasst (änderbar)", "Use what you entered (editable)")}</p>
             </button>
             <button data-testid="capo-source-manual" onClick={() => setUseWeekly(false)}
-              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${!useWeekly ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#234b6e] dark:text-[#a9d2ec] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${!useWeekly ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#a9d2ec] border-[#E6D8C3] dark:border-[#38424B]"}`}>
               <ChefHat className="w-5 h-5 mb-1" />
               <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Aggiungi al piano settimanale", "Zum Wochenplan hinzufügen", "Add to weekly plan")}</p>
               <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "es. per oggi · a mano", "z. B. für heute · manuell", "e.g. for today · manually")}</p>
@@ -945,14 +945,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <div key={i} className="flex items-center gap-2">
                   <select data-testid={`capo-extra-recipe-${i}`} value={p.recipe_id || ""}
                     onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                    className="flex-1 min-w-0 bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#C88A2B]">
+                    className="flex-1 min-w-0 bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#C88A2B]">
                     <option value="">{t("capo_pick_recipe")}</option>
                     {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
                   </select>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
                       onChange={(e) => setExtraToday((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-                      className="w-full bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 pr-9 text-sm outline-none focus:border-[#C88A2B]" />
+                      className="w-full bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 pr-9 text-sm outline-none focus:border-[#C88A2B]" />
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
                   </div>
                   <button type="button" data-testid={`capo-extra-remove-${i}`} onClick={() => setExtraToday((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
@@ -985,10 +985,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         )}
         {useWeekly && weeklyItems.length > 0 && (
-          <div data-testid="capo-weekly-note" className="mb-3 rounded-xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/35 px-3 py-2.5 space-y-2.5">
+          <div data-testid="capo-weekly-note" className="mb-3 rounded-xl bg-[#B45309]/12 border border-[#B45309]/35 px-3 py-2.5 space-y-2.5">
             <div className="flex items-start gap-2">
-              <CalendarDays className="w-4 h-4 text-[#234b6e] dark:text-[#8FB0C2] shrink-0 mt-0.5" />
-              <p className="text-[12px] text-[#234b6e] dark:text-[#8FB0C2] leading-snug">
+              <CalendarDays className="w-4 h-4 text-[#6E371C] dark:text-[#8FB0C2] shrink-0 mt-0.5" />
+              <p className="text-[12px] text-[#6E371C] dark:text-[#8FB0C2] leading-snug">
                 {tri3(lang,
                   `Genero dal Piano Settimanale (${weeklyItems.length} voci). Per cambiare quantità o giorni apri «Produzione Settimanale».`,
                   `Ich generiere aus dem Wochenplan (${weeklyItems.length} Einträge). Zum Ändern öffne „Wochenproduktion".`,
@@ -1001,7 +1001,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               </label>
               <select data-testid="capo-weekly-start" value={weeklyStartId}
                 onChange={(e) => setWeeklyStartId(e.target.value)}
-                className="w-full bg-white dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#3f7cac]">
+                className="w-full bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]">
                 <option value="">{tri3(lang, "Lascia decidere all'IA", "KI entscheiden lassen", "Let the AI decide")}</option>
                 {[...new Map(weeklyItems.map((w) => [w.recipe_id, w])).values()].map((w) => (
                   <option key={w.recipe_id} value={w.recipe_id}>{w.recipe_name}</option>
@@ -1012,11 +1012,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         )}
         <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">
           {products.map((p, i) => (
-            <div key={i} className="bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-2.5 space-y-2">
+            <div key={i} className="bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-2.5 space-y-2">
               <div className="flex items-center gap-2">
                 <select data-testid={`capo-product-recipe-${i}`} value={p.recipe_id || ""}
                   onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#3f7cac]">
+                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]">
                   <option value="">{t("capo_pick_recipe")}</option>
                   {recipes.some((r) => r._own) && (
                     <optgroup label={tri3(lang, "Le mie ricette (panettiere)", "Meine Rezepte", "My recipes")}>
@@ -1037,7 +1037,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   className={`w-full flex items-center justify-center gap-1.5 text-xs font-semibold py-1.5 rounded-lg border transition-all active:scale-97 ${
                     p.start
                       ? "bg-[#24303c] text-white border-[#24303c]"
-                      : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#d5e4f0] dark:border-[#38424B]"}`}>
+                      : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#E6D8C3] dark:border-[#38424B]"}`}>
                   <Flag className="w-3.5 h-3.5" />
                   {p.start
                     ? tri3(lang, "Impasto di partenza", "Start-Teig", "Starting dough")
@@ -1048,12 +1048,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <div className="relative flex-1">
                   <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Quantità", "Menge", "Quantity")}
                     onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-                    className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 pr-12 text-sm outline-none focus:border-[#3f7cac]" />
+                    className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 pr-12 text-sm outline-none focus:border-[#8C4A27]" />
                   <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
                 </div>
                 <button type="button" data-testid={`capo-product-opts-${i}`}
                   onClick={() => setProducts((l) => l.map((x, k) => k === i ? { ...x, _opts: !x._opts } : x))}
-                  className="shrink-0 text-xs font-semibold text-[#3f7cac] px-2.5 py-2 rounded-lg border border-[#d5e4f0] dark:border-[#38424B] active:scale-95 transition-all">
+                  className="shrink-0 text-xs font-semibold text-[#8C4A27] px-2.5 py-2 rounded-lg border border-[#E6D8C3] dark:border-[#38424B] active:scale-95 transition-all">
                   {p._opts ? tri3(lang, "Meno", "Weniger", "Less") : tri3(lang, "Opzioni", "Optionen", "Options")}
                 </button>
               </div>
@@ -1061,7 +1061,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <div className="flex items-center gap-2 flex-wrap">
                   <select data-testid={`capo-product-unit-${i}`} value={p.unit}
                     onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))}
-                    className="w-[80px] shrink-0 bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#3f7cac]">
+                    className="w-[80px] shrink-0 bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]">
                     <option value="pezzi">{t("capo_unit_pieces")}</option>
                     <option value="kg">{t("capo_unit_kg")}</option>
                   </select>
@@ -1069,13 +1069,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     <div className="relative w-[80px] shrink-0">
                       <input data-testid={`capo-product-gpp-${i}`} type="number" value={p.gpp ?? ""} placeholder="g/pz"
                         onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, gpp: e.target.value } : x))}
-                        className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#3f7cac]" />
+                        className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#8C4A27]" />
                       <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">g</span>
                     </div>
                   )}
                   <select data-testid={`capo-product-day-${i}`} value={p.day || ""}
                     onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-                    className="flex-1 min-w-[110px] bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#3f7cac]">
+                    className="flex-1 min-w-[110px] bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]">
                     {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
                   </select>
                 </div>
@@ -1083,10 +1083,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
           ))}
           <div className="flex flex-wrap items-center gap-2 mt-1">
-            <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#3f7cac] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
-            <button data-testid="capo-open-picker" onClick={() => { setPickSearch(""); setPickerOpen(true); }} className="text-sm font-semibold text-white bg-[#3f7cac] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><ChefHat className="w-4 h-4" /> {tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</button>
+            <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#8C4A27] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+            <button data-testid="capo-open-picker" onClick={() => { setPickSearch(""); setPickerOpen(true); }} className="text-sm font-semibold text-white bg-[#8C4A27] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><ChefHat className="w-4 h-4" /> {tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</button>
             {savedProducts.length > 0 && (
-              <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#234b6e] dark:text-[#a9d2ec] bg-[#5aa0cf]/12 border border-[#5aa0cf]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
+              <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#6E371C] dark:text-[#a9d2ec] bg-[#B45309]/12 border border-[#B45309]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
             )}
           </div>
           <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
@@ -1111,30 +1111,30 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {pickerOpen && (
           <div className="fixed inset-0 z-[70] bg-black/50 flex items-end sm:items-center justify-center" onClick={() => setPickerOpen(false)}>
             <div className="bg-white dark:bg-[#1B2127] w-full sm:max-w-md max-h-[82vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <div className="p-4 border-b border-[#d5e4f0] dark:border-[#38424B]">
+              <div className="p-4 border-b border-[#E6D8C3] dark:border-[#38424B]">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</h3>
                   <button data-testid="capo-picker-close" onClick={() => setPickerOpen(false)} className="text-[#7E8A93] p-1"><X className="w-5 h-5" /></button>
                 </div>
                 <input data-testid="capo-picker-search" value={pickSearch} onChange={(e) => setPickSearch(e.target.value)} autoFocus
                   placeholder={tri3(lang, "Cerca ricetta…", "Rezept suchen…", "Search recipe…")}
-                  className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#3f7cac]" />
+                  className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#8C4A27]" />
               </div>
               <div className="overflow-y-auto p-2 flex-1">
                 {recipes.filter((r) => (r.name || "").toLowerCase().includes(pickSearch.toLowerCase())).map((r) => {
                   const sel = products.some((p) => p.recipe_id === r.id);
                   return (
                     <button key={r.id} data-testid={`capo-pick-${r.id}`} onClick={() => (sel ? removeByRecipe(r.id) : addRecipes([r.id]))}
-                      className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#3f7cac]/12 border border-[#3f7cac]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#2A323A] border border-transparent"}`}>
-                      {sel ? <CheckCircle2 className="w-5 h-5 text-[#3f7cac] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#d5e4f0] dark:border-[#4a5560] shrink-0" />}
+                      className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#8C4A27]/12 border border-[#8C4A27]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#2A323A] border border-transparent"}`}>
+                      {sel ? <CheckCircle2 className="w-5 h-5 text-[#8C4A27] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#E6D8C3] dark:border-[#4a5560] shrink-0" />}
                       <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</span>
                       {r._own && <span className="text-[10px] text-[#C88A2B]">★</span>}
                     </button>
                   );
                 })}
               </div>
-              <div className="p-3 border-t border-[#d5e4f0] dark:border-[#38424B]">
-                <button data-testid="capo-picker-done" onClick={() => setPickerOpen(false)} className="w-full bg-[#3f7cac] text-white font-semibold py-2.5 rounded-xl active:scale-98">
+              <div className="p-3 border-t border-[#E6D8C3] dark:border-[#38424B]">
+                <button data-testid="capo-picker-done" onClick={() => setPickerOpen(false)} className="w-full bg-[#8C4A27] text-white font-semibold py-2.5 rounded-xl active:scale-98">
                   {tri3(lang, "Fatto", "Fertig", "Done")} ({products.filter((p) => p.recipe_id).length})
                 </button>
               </div>
@@ -1149,14 +1149,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           {modules.clima && <LabelInput testid="capo-std-temp" label={tri3(lang, "Temp. standard laboratorio", "Standardtemperatur", "Standard lab temp")} type="number" value={stdTemp} onChange={setStdTemp} unit="°C" />}
         </div>
         {modules.clima && tempMsg && (
-          <div data-testid="capo-temp-msg" className={`mt-2 text-sm rounded-xl px-3 py-2 border ${tempDelta && Math.abs(tempDelta) >= 1 ? "bg-[#6E8CA0]/15 border-[#6E8CA0]/40 text-[#234b6e] dark:text-[#8FB0C2]" : "bg-[#5aa0cf]/12 border-[#5aa0cf]/30 text-[#2e6690] dark:text-[#a9d2ec]"}`}>
+          <div data-testid="capo-temp-msg" className={`mt-2 text-sm rounded-xl px-3 py-2 border ${tempDelta && Math.abs(tempDelta) >= 1 ? "bg-[#B45309]/15 border-[#B45309]/40 text-[#6E371C] dark:text-[#8FB0C2]" : "bg-[#B45309]/12 border-[#B45309]/30 text-[#8C4A27] dark:text-[#a9d2ec]"}`}>
             <Thermometer className="w-4 h-4 inline mr-1" />{tempMsg}
           </div>
         )}
         <div className="mt-3">
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{lang === "de" ? "Ziel des Plans" : lang === "en" ? "Plan goal" : lang === "es" ? "Objetivo del plan" : "Obiettivo del piano"}</label>
           <select data-testid="capo-plan-goal" value={planGoal} onChange={(e) => setPlanGoal(e.target.value)}
-            className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#3f7cac]">
+            className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#8C4A27]">
             <option value="qualita">{lang === "de" ? "🥖 Handwerkliche Qualität (langsame Gare, Struktur)" : lang === "en" ? "🥖 Artisan quality (slow proof, structure)" : lang === "es" ? "🥖 Calidad artesanal (fermentaciones lentas, estructura)" : "🥖 Qualità artigianale (lievitazioni lente, struttura)"}</option>
             <option value="resa">{lang === "de" ? "📈 Maximaler Output (Öfen/Kammern optimieren)" : lang === "en" ? "📈 Maximum output (optimise ovens/cells)" : lang === "es" ? "📈 Máximo rendimiento (optimizar hornos/cámaras)" : "📈 Massima resa (ottimizza forni/celle)"}</option>
             <option value="tempo">{lang === "de" ? "⏱️ Zeit sparen (schnellere Abläufe)" : lang === "en" ? "⏱️ Save time (faster sequences)" : lang === "es" ? "⏱️ Ahorrar tiempo (secuencias más rápidas)" : "⏱️ Risparmio di tempo (sequenze più rapide)"}</option>
@@ -1175,7 +1175,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 "Ciao Mohammadreza, sono in laboratorio e devo gestire la produzione. Voglio che analizzi la situazione, ricalcoli l'intero piano di lavoro a ritroso e mi dica esattamente cosa fare ora per ora. Se ci sono ordini urgenti, adatta gli slot del forno, le impastatrici e la cella frigo senza far bruciare o ritardare gli altri pani. Calcola anche la temperatura dell'acqua, l'idratazione corretta e inviami la timeline aggiornata con la conferma da premere.",
                 "Hallo Mohammadreza, ich bin in der Backstube und muss die Produktion steuern. Analysiere die Lage, rechne den gesamten Arbeitsplan rückwärts neu und sag mir Stunde für Stunde genau, was zu tun ist. Bei dringenden Bestellungen passe Ofen-, Kneter- und Kühlzeiten an, ohne andere Brote zu verbrennen oder zu verzögern. Berechne auch Wassertemperatur und Hydratation und schick mir die aktualisierte Timeline mit Bestätigung.",
                 "Hi Mohammadreza, I'm in the bakery and need to manage production. Analyse the situation, recalculate the whole work plan backwards and tell me exactly what to do hour by hour. If there are urgent orders, adapt oven, mixer and fridge slots without burning or delaying the other breads. Also calculate water temperature and correct hydration and send me the updated timeline with a confirmation to press."))}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#3f7cac] bg-[#3f7cac]/10 border border-[#3f7cac]/30 px-2.5 py-1 rounded-full active:scale-95">
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#8C4A27] bg-[#8C4A27]/10 border border-[#8C4A27]/30 px-2.5 py-1 rounded-full active:scale-95">
               <Sparkles className="w-3 h-3" /> {tri3(lang, "Gestisci la produzione ora", "Produktion jetzt steuern", "Manage production now")}
             </button>
             <button type="button" data-testid="capo-cmd-emergenza"
@@ -1204,7 +1204,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </button>
           </div>
           <textarea data-testid="capo-notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
-            className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#3f7cac] resize-none" />
+            className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#8C4A27] resize-none" />
         </div>
 
         {modules.foodcost && (() => {
@@ -1228,24 +1228,24 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           const eur = (n) => `€${(n || 0).toFixed(2)}`;
           const missing = rows.some((x) => x.cpp == null || x.sell === 0);
           return (
-            <div data-testid="capo-cost-summary" className="mt-4 rounded-2xl bg-[#234b6e]/8 border border-[#234b6e]/25 p-4">
+            <div data-testid="capo-cost-summary" className="mt-4 rounded-2xl bg-[#6E371C]/8 border border-[#6E371C]/25 p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Euro className="w-4 h-4 text-[#234b6e] dark:text-[#a9d2ec]" />
-                <span className="text-[11px] font-bold uppercase tracking-wide text-[#234b6e] dark:text-[#a9d2ec]">{tri3(lang, "Costi & Margine", "Kosten & Marge", "Costs & Margin")}</span>
+                <Euro className="w-4 h-4 text-[#6E371C] dark:text-[#a9d2ec]" />
+                <span className="text-[11px] font-bold uppercase tracking-wide text-[#6E371C] dark:text-[#a9d2ec]">{tri3(lang, "Costi & Margine", "Kosten & Marge", "Costs & Margin")}</span>
               </div>
               <div className="space-y-1.5">
                 {rows.map((x, i) => (
                   <div key={i} data-testid={`capo-cost-row-${i}`} className="flex items-center justify-between text-sm">
                     <span className="text-[#3F4A54] dark:text-[#AEB8BF] truncate flex-1">{x.name} <span className="text-[#7E8A93]">×{x.qty}</span></span>
                     <span className="font-mono-data text-[#7E8A93] mr-3">{x.cost != null ? eur(x.cost) : "—"}</span>
-                    <span className="font-mono-data font-semibold text-[#234b6e] dark:text-[#a9d2ec]">{x.rev != null ? eur(x.rev) : "—"}</span>
+                    <span className="font-mono-data font-semibold text-[#6E371C] dark:text-[#a9d2ec]">{x.rev != null ? eur(x.rev) : "—"}</span>
                   </div>
                 ))}
               </div>
-              <div className="mt-3 pt-3 border-t border-[#234b6e]/20 grid grid-cols-3 gap-2 text-center">
+              <div className="mt-3 pt-3 border-t border-[#6E371C]/20 grid grid-cols-3 gap-2 text-center">
                 <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Costo", "Kosten", "Cost")}</p><p className="font-mono-data font-bold text-[#2e3d4c]">{eur(totCost)}</p></div>
-                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Ricavo", "Umsatz", "Revenue")}</p><p className="font-mono-data font-bold text-[#234b6e] dark:text-[#a9d2ec]">{eur(totRev)}</p></div>
-                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Margine", "Marge", "Margin")}</p><p className="font-mono-data font-bold text-[#3f7cac]">{eur(margin)}{marginPct != null ? ` · ${marginPct.toFixed(0)}%` : ""}</p></div>
+                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Ricavo", "Umsatz", "Revenue")}</p><p className="font-mono-data font-bold text-[#6E371C] dark:text-[#a9d2ec]">{eur(totRev)}</p></div>
+                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Margine", "Marge", "Margin")}</p><p className="font-mono-data font-bold text-[#8C4A27]">{eur(margin)}{marginPct != null ? ` · ${marginPct.toFixed(0)}%` : ""}</p></div>
               </div>
               {missing && (
                 <p className="text-[11px] text-[#7E8A93] mt-2 leading-snug">
@@ -1259,7 +1259,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         })()}
 
         <button data-testid="capo-generate" onClick={generate} disabled={generating || !canGenerate}
-          className="mt-3 w-full bg-[#3f7cac] hover:bg-[#336a94] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="mt-3 w-full bg-[#8C4A27] hover:bg-[#336a94] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("capo_generate")}
         </button>
         {!canGenerate && (
@@ -1272,11 +1272,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
         {plan && (
           <>
-            <div data-testid="capo-saved-banner" className="no-print mt-4 rounded-2xl bg-[#5aa0cf]/12 border border-[#5aa0cf]/35 p-3.5 flex items-center justify-between gap-3">
+            <div data-testid="capo-saved-banner" className="no-print mt-4 rounded-2xl bg-[#B45309]/12 border border-[#B45309]/35 p-3.5 flex items-center justify-between gap-3">
               <div className="flex items-start gap-2 min-w-0">
                 <CheckCircle2 className="w-5 h-5 text-[#336a94] shrink-0 mt-0.5" />
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-[#234b6e] dark:text-[#a9d2ec] leading-tight">
+                  <p className="text-sm font-semibold text-[#6E371C] dark:text-[#a9d2ec] leading-tight">
                     {savedAt
                       ? tri3(lang, "Piano salvato — resta qui finché non lo chiudi tu", "Plan gespeichert — bleibt hier, bis du ihn schließt", "Plan saved — it stays here until you close it")
                       : tri3(lang, "Piano generato", "Plan erstellt", "Plan generated")}
@@ -1289,22 +1289,22 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 </div>
               </div>
               <button data-testid="capo-new-plan" onClick={clearPlan}
-                className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-[#234b6e] dark:text-[#e4eff8] bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] px-3 py-2 rounded-xl active:scale-95 transition-all">
+                className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-[#6E371C] dark:text-[#e4eff8] bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] px-3 py-2 rounded-xl active:scale-95 transition-all">
                 <RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Nuovo piano", "Neuer Plan", "New plan")}
               </button>
             </div>
             <button data-testid="capo-quick-archive" onClick={() => capoArchiveRef.current?.openSave()}
-              className="no-print mt-2 w-full inline-flex items-center justify-center gap-2 text-sm font-semibold text-[#234b6e] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] px-4 py-2.5 rounded-2xl active:scale-98 transition-all">
+              className="no-print mt-2 w-full inline-flex items-center justify-center gap-2 text-sm font-semibold text-[#6E371C] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] px-4 py-2.5 rounded-2xl active:scale-98 transition-all">
               <Archive className="w-4 h-4" /> {tri3(lang, "Salva questo piano nell'archivio", "Diesen Plan im Archiv speichern", "Save this plan to the archive")}
             </button>
             <div className="no-print mt-3">
-              <label className="block text-[11px] font-bold uppercase tracking-wide text-[#3f7cac] mb-1.5">{tri3(lang, "Note del fornaio (finiscono nel PDF)", "Notizen des Bäckers (kommen ins PDF)", "Baker's notes (added to the PDF)", "Notas del panadero (van al PDF)")}</label>
+              <label className="block text-[11px] font-bold uppercase tracking-wide text-[#8C4A27] mb-1.5">{tri3(lang, "Note del fornaio (finiscono nel PDF)", "Notizen des Bäckers (kommen ins PDF)", "Baker's notes (added to the PDF)", "Notas del panadero (van al PDF)")}</label>
               <textarea data-testid="capo-baker-note" value={bakerNote} onChange={(e) => setBakerNote(e.target.value)} rows={2}
                 placeholder={tri3(lang, "Es. attaccare la biga alle 22:00, controllare il forno n.2…", "z. B. Biga um 22:00 ansetzen, Ofen Nr. 2 prüfen…", "e.g. start the biga at 22:00, check oven no. 2…", "Ej. iniciar la biga a las 22:00, revisar el horno n.º 2…")}
-                className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-white dark:bg-[#232A31] px-3 py-2 text-sm outline-none focus:border-[#3f7cac] resize-y" />
+                className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] px-3 py-2 text-sm outline-none focus:border-[#8C4A27] resize-y" />
             </div>
             <button data-testid="capo-print" onClick={() => window.print()}
-              className="no-print mt-3 w-full bg-[#5aa0cf] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+              className="no-print mt-3 w-full bg-[#B45309] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
             </button>
             {!generating && (
@@ -1314,7 +1314,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               </button>
             )}
             <button data-testid="capo-share" onClick={() => shareContent(lang === "de" ? "Produktionsplan — MikiLab" : lang === "en" ? "Production plan — MikiLab" : lang === "es" ? "Plan de producción — MikiLab" : "Piano di Produzione — MikiLab", plan, lang)}
-              className="no-print mt-2 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#d5e4f0] dark:border-[#38424B] active:scale-98 transition-all flex items-center justify-center gap-2">
+              className="no-print mt-2 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#E6D8C3] dark:border-[#38424B] active:scale-98 transition-all flex items-center justify-center gap-2">
               <Share2 className="w-5 h-5" /> {lang === "de" ? "Teilen" : lang === "en" ? "Share" : lang === "es" ? "Compartir" : "Condividi"}
             </button>
 
@@ -1326,8 +1326,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-wrap leading-relaxed">{bakerNote}</p>
                 </div>
               )}
-              <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-[#3f7cac] mb-2">{t("capo_plan_title")}</p>
+              <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C4A27] mb-2">{t("capo_plan_title")}</p>
                 {planTruncated && (
                   <div data-testid="capo-plan-truncated" className="no-print mb-3 flex items-start gap-2 rounded-xl border border-[#C0574D]/40 bg-[#C0574D]/10 px-3 py-2.5">
                     <AlertTriangle className="w-4 h-4 text-[#C0574D] shrink-0 mt-0.5" />
@@ -1350,27 +1350,27 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                         <div data-testid="capo-infornate-editor" className="mt-4">
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-[12px] font-bold text-[#2B303B] dark:text-[#e4eff8]">🔥 {tri3(lang, "Orario Infornate (modificabile)", "Backfahrplan (bearbeitbar)", "Baking schedule (editable)", "Horario de horneado (editable)")}</p>
-                            <button data-testid="capo-inf-add-row" onClick={infAddRow} className="no-print inline-flex items-center gap-1 text-[11px] font-semibold text-[#3f7cac] border border-[#3f7cac]/40 px-2 py-1 rounded-lg active:scale-95">
+                            <button data-testid="capo-inf-add-row" onClick={infAddRow} className="no-print inline-flex items-center gap-1 text-[11px] font-semibold text-[#8C4A27] border border-[#8C4A27]/40 px-2 py-1 rounded-lg active:scale-95">
                               <Plus className="w-3.5 h-3.5" /> {tri3(lang, "Riga", "Zeile", "Row", "Fila")}
                             </button>
                           </div>
-                          <div className="overflow-x-auto print-table rounded-xl border border-[#d5e4f0] dark:border-[#38424B]">
+                          <div className="overflow-x-auto print-table rounded-xl border border-[#E6D8C3] dark:border-[#38424B]">
                             <table className="w-full text-[12px] border-collapse">
                               <thead>
                                 <tr className="bg-[#e4eff8] dark:bg-[#2A323A]">
                                   {infEdit.headers.map((h, ci) => (
-                                    <th key={ci} className="text-left font-bold text-[#234b6e] dark:text-[#a9d2ec] px-2 py-1.5 whitespace-nowrap">{h}</th>
+                                    <th key={ci} className="text-left font-bold text-[#6E371C] dark:text-[#a9d2ec] px-2 py-1.5 whitespace-nowrap">{h}</th>
                                   ))}
                                   <th className="no-print w-8" />
                                 </tr>
                               </thead>
                               <tbody>
                                 {infEdit.rows.map((r, ri) => (
-                                  <tr key={ri} data-testid={`capo-inf-row-${ri}`} className="border-t border-[#d5e4f0] dark:border-[#38424B]">
+                                  <tr key={ri} data-testid={`capo-inf-row-${ri}`} className="border-t border-[#E6D8C3] dark:border-[#38424B]">
                                     {infEdit.headers.map((_, ci) => (
                                       <td key={ci} className="px-1 py-1 align-top">
                                         <input data-testid={`capo-inf-cell-${ri}-${ci}`} value={r[ci] ?? ""} onChange={(e) => infSetCell(ri, ci, e.target.value)}
-                                          className="w-full min-w-[70px] bg-transparent px-1.5 py-1 rounded-md outline-none focus:bg-[#3f7cac]/8 border border-transparent focus:border-[#3f7cac]/40" />
+                                          className="w-full min-w-[70px] bg-transparent px-1.5 py-1 rounded-md outline-none focus:bg-[#8C4A27]/8 border border-transparent focus:border-[#8C4A27]/40" />
                                       </td>
                                     ))}
                                     <td className="no-print px-1 py-1 align-middle">
@@ -1403,7 +1403,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
               {usedRecipes.length > 0 && (
                 <div data-testid="capo-recipes" className="space-y-3">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-[#3f7cac]">{t("capo_recipes_title")}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-[#8C4A27]">{t("capo_recipes_title")}</p>
                   {usedRecipes.map((r) => <RecipePrint key={r.id} r={r} lang={lang} />)}
                 </div>
               )}
@@ -1448,13 +1448,13 @@ function RecipePrint({ r, lang }) {
   ].filter(([, g]) => Number(g) > 0);
   const proc = rLoc(r, "procedure", lang);
   return (
-    <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4">
+    <div className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-4">
       <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{rLoc(r, "name", lang)}</h3>
       <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-0.5">
         {ing.map(([label, g]) => (
           <div key={label} className="flex items-center justify-between text-xs">
             <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{label}</span>
-            <span className="font-mono-data font-bold text-[#234b6e] dark:text-[#8FB0C2]">{g} g</span>
+            <span className="font-mono-data font-bold text-[#6E371C] dark:text-[#8FB0C2]">{g} g</span>
           </div>
         ))}
       </div>
@@ -1467,13 +1467,13 @@ function RecipePrint({ r, lang }) {
 }
 
 function Section({ icon, title, children, highlight, badge, order }) {
-  const ACCENTS = { 1: "#3f7cac", 2: "#C88A2B", 3: "#2e8b6f", 4: "#7a4fbf", 5: "#b23a2f" };
-  const accent = ACCENTS[order] || "#3f7cac";
+  const ACCENTS = { 1: "#8C4A27", 2: "#C88A2B", 3: "#2e8b6f", 4: "#7a4fbf", 5: "#b23a2f" };
+  const accent = ACCENTS[order] || "#8C4A27";
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} style={order ? { order } : undefined}
       className={`relative mb-4 rounded-2xl p-4 pl-5 overflow-hidden ${highlight
         ? "bg-white dark:bg-[#232A31] border-2 border-[#C88A2B] shadow-lg shadow-[#C88A2B]/20 ring-1 ring-[#C88A2B]/30"
-        : "bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B]"}`}>
+        : "bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B]"}`}>
       <span className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: accent }} />
       <div className="flex items-center gap-2.5 mb-3">
         <span className="w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0" style={{ background: accent }}>{icon}</span>
@@ -1491,7 +1491,7 @@ function LabelInput({ testid, label, type, value, onChange, unit }) {
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type={type} value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#3f7cac]" />
+          className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#8C4A27]" />
         {unit && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93] pointer-events-none">{unit}</span>}
       </div>
     </div>

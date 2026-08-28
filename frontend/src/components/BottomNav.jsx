@@ -31,15 +31,15 @@ export default function BottomNav({ active, onChange }) {
   return (
     <nav
       data-testid="bottom-nav"
-      className="fixed bottom-0 inset-x-0 bg-[#f0f6fb]/95 dark:bg-[#1B2127]/95 backdrop-blur-md border-t border-[#d5e4f0] dark:border-[#38424B] z-50 shadow-[0_-4px_20px_rgba(44,34,30,0.06)]"
+      className="fixed bottom-0 inset-x-0 bg-[#FAF5EC]/95 dark:bg-[#1B2127]/95 backdrop-blur-md border-t border-[#E6D8C3] dark:border-[#38424B] z-50 shadow-[0_-4px_20px_rgba(44,34,30,0.06)]"
     >
       <div aria-hidden className="flex h-1 w-full">
-        <div className="flex-1 bg-[#5aa0cf]" />
+        <div className="flex-1 bg-[#B45309]" />
         <div className="flex-1 bg-white" />
-        <div className="flex-1 bg-[#6E8CA0]" />
+        <div className="flex-1 bg-[#B45309]" />
         <div className="flex-1 bg-[#2B303B]" />
-        <div className="flex-1 bg-[#6E8CA0]" />
-        <div className="flex-1 bg-[#A9C5D4]" />
+        <div className="flex-1 bg-[#B45309]" />
+        <div className="flex-1 bg-[#e7d5b4]" />
       </div>
       <div className="max-w-xl mx-auto grid grid-cols-5 gap-0.5 px-1 py-2" style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
         {TABS.map(({ id, label, Icon, logo }) => {
@@ -50,7 +50,7 @@ export default function BottomNav({ active, onChange }) {
               data-testid={`nav-tab-${id}`}
               onClick={() => onChange(id)}
               className={`relative flex flex-col items-center justify-center gap-1 py-2 px-0.5 rounded-xl transition-all min-h-[52px] ${
-                on ? "bg-[#3f7cac] text-white shadow-md" : "text-[#7E8A93] hover:bg-[#e4eff8] dark:hover:bg-[#2A323A]"
+                on ? "bg-[#8C4A27] text-white shadow-md" : "text-[#7E8A93] hover:bg-[#e4eff8] dark:hover:bg-[#2A323A]"
               }`}
             >
               <span className="relative">
@@ -62,7 +62,7 @@ export default function BottomNav({ active, onChange }) {
                   <Icon className="w-5 h-5" strokeWidth={on ? 2.4 : 2} />
                 )}
                 {id === "community" && unread > 0 && (
-                  <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#f0f6fb] dark:ring-[#1B2127]">{unread > 9 ? "9+" : unread}</span>
+                  <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#FAF5EC] dark:ring-[#1B2127]">{unread > 9 ? "9+" : unread}</span>
                 )}
               </span>
               <span className="text-[10px] font-semibold leading-none text-center">{label}</span>

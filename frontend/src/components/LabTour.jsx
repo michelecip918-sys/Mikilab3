@@ -64,10 +64,10 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
   return (
     <div data-testid="lab-tour" className="fixed inset-0 z-[60] pointer-events-none">
       <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-      <div ref={cardRef} className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-24 w-[92%] max-w-md rounded-2xl bg-white dark:bg-[#1B2127] border border-[#d5e4f0] dark:border-[#38424B] shadow-2xl p-4">
+      <div ref={cardRef} className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-24 w-[92%] max-w-md rounded-2xl bg-white dark:bg-[#1B2127] border border-[#E6D8C3] dark:border-[#38424B] shadow-2xl p-4">
         <button data-testid="lab-tour-skip" onClick={finish} className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center text-[#7E8A93]"><X className="w-4 h-4" /></button>
         <div className="flex items-start gap-3">
-          <img src={AVATAR} alt="Mohammadreza" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#3f7cac]/50 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={AVATAR} alt="Mohammadreza" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#8C4A27]/50 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="min-w-0 flex-1 pr-6">
             <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{s.title}</h3>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-snug mt-0.5">{s.body}</p>
@@ -75,12 +75,12 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
         </div>
         <div className="flex items-center justify-between mt-3">
           <div className="flex gap-1.5">
-            {steps.map((_, i) => (<span key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? "bg-[#3f7cac]" : "bg-[#d5e4f0] dark:bg-[#38424B]"}`} />))}
+            {steps.map((_, i) => (<span key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? "bg-[#8C4A27]" : "bg-[#E6D8C3] dark:bg-[#38424B]"}`} />))}
           </div>
           <div className="flex items-center gap-2">
             {!last && <button data-testid="lab-tour-skip-2" onClick={finish} className="text-xs font-semibold text-[#7E8A93] px-2 py-2">{L.skip}</button>}
             <button data-testid="lab-tour-next" onClick={() => (last ? finish() : setStep(step + 1))}
-              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#3f7cac] hover:bg-[#336a94] text-white px-4 py-2 rounded-xl active:scale-95 transition-all">
+              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#8C4A27] hover:bg-[#336a94] text-white px-4 py-2 rounded-xl active:scale-95 transition-all">
               {last ? L.done : L.next}
               {!last && <ArrowRight className="w-4 h-4" />}
             </button>

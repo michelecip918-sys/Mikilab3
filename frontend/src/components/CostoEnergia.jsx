@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 const LS = "mikilab_energia";
 const load = () => { try { return JSON.parse(localStorage.getItem(LS) || "null"); } catch { return null; } };
 
-const INP = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
+const INP = "w-full bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]";
 const Field = ({ label, tid, val, set, step, suffix }) => (
   <label className="text-[11px] font-semibold uppercase text-[#7E8A93] flex flex-col gap-1">
     <span>{label}</span>

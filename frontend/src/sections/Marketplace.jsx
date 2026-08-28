@@ -131,12 +131,12 @@ export default function Marketplace() {
       .sort((a, b) => (a._km ?? 1e9) - (b._km ?? 1e9));
   }
   const priceFmt = (v) => { try { return new Intl.NumberFormat(lang === "en" ? "en-GB" : lang === "de" ? "de-DE" : "it-IT").format(Number(v)); } catch { return String(v); } };
-  const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
+  const inp = "w-full bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]";
 
   return (
     <div className="pb-40">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#3f7cac] flex items-center justify-center"><Store className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#8C4A27] flex items-center justify-center"><Store className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Marketplace Usato", "Gebraucht-Markt", "Used Marketplace")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Compra e vendi attrezzatura da laboratorio", "Backstuben-Ausrüstung kaufen & verkaufen", "Buy & sell bakery equipment")}</p>
@@ -145,7 +145,7 @@ export default function Marketplace() {
 
       <div className="flex gap-2 mb-4">
         <button data-testid="market-add" onClick={() => setShowForm((s) => !s)}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#3f7cac] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all">
+          className="flex-1 flex items-center justify-center gap-2 bg-[#8C4A27] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all">
           <Plus className="w-5 h-5" /> {tri("Pubblica un annuncio", "Anzeige aufgeben", "Post a listing")}
         </button>
         <button data-testid="market-geo" onClick={requestGeo}
@@ -157,7 +157,7 @@ export default function Marketplace() {
 
       {/* Form nuovo annuncio */}
       {showForm && (
-        <div data-testid="market-form" className="bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 rounded-2xl p-4 mb-5 space-y-3">
+        <div data-testid="market-form" className="bg-[#B45309]/10 border border-[#B45309]/30 rounded-2xl p-4 mb-5 space-y-3">
           <input data-testid="market-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={tri("Titolo (es. Impastatrice a spirale 40kg)", "Titel (z.B. Spiralkneter 40kg)", "Title (e.g. 40kg spiral mixer)")} className={inp} />
           <div className="grid grid-cols-2 gap-2">
             <select data-testid="market-cat" value={form.cat} onChange={(e) => setForm({ ...form, cat: e.target.value })} className={inp}>
@@ -176,16 +176,16 @@ export default function Marketplace() {
           {form.photo
             ? <div className="relative"><img src={form.photo} alt="" className="w-full h-40 object-cover rounded-xl" /><button data-testid="market-photo-clear" onClick={() => setForm({ ...form, photo: "" })} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1"><X className="w-4 h-4" /></button></div>
             : <DualPhotoButtons testid="market-photo" onFile={(f) => compress(f, (d) => setForm((s) => ({ ...s, photo: d })))} />}
-          <button data-testid="market-publish" onClick={publish} disabled={publishing} className="w-full bg-[#5aa0cf] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{publishing ? tri("Pubblico…", "Wird veröffentlicht…", "Publishing…") : tri("Pubblica", "Veröffentlichen", "Publish")}</button>
+          <button data-testid="market-publish" onClick={publish} disabled={publishing} className="w-full bg-[#B45309] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{publishing ? tri("Pubblico…", "Wird veröffentlicht…", "Publishing…") : tri("Pubblica", "Veröffentlichen", "Publish")}</button>
           {err && <p data-testid="market-error" className="text-sm text-[#E4572E]">{err}</p>}
         </div>
       )}
 
       {/* Filtri categoria */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="market-filters">
-        <button data-testid="market-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}>{tri("Tutti", "Alle", "All")}</button>
+        <button data-testid="market-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>{tri("Tutti", "Alle", "All")}</button>
         {CATS.map((c) => (
-          <button key={c.id} data-testid={`market-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}>{c.label}</button>
+          <button key={c.id} data-testid={`market-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>{c.label}</button>
         ))}
       </div>
 
@@ -193,20 +193,20 @@ export default function Marketplace() {
       <div className="grid grid-cols-2 gap-3" data-testid="market-list">
         {visible.length === 0 && <p className="col-span-2 text-center text-sm text-[#7E8A93] py-8">{tri("Nessun annuncio. Pubblica il primo!", "Keine Anzeigen. Gib die erste auf!", "No listings yet. Post the first!")}</p>}
         {visible.map((it) => (
-          <div key={it.id} data-testid={`market-card-${it.id}`} className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl overflow-hidden shadow-sm flex flex-col">
+          <div key={it.id} data-testid={`market-card-${it.id}`} className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl overflow-hidden shadow-sm flex flex-col">
             {it.photo
               ? <img src={it.photo} alt={it.title} className="w-full h-28 object-cover" />
-              : <div className="w-full h-28 bg-[#6E8CA0]/15 flex items-center justify-center"><Store className="w-8 h-8 text-[#6E8CA0]" /></div>}
+              : <div className="w-full h-28 bg-[#B45309]/15 flex items-center justify-center"><Store className="w-8 h-8 text-[#B45309]" /></div>}
             <div className="p-3 flex flex-col flex-1">
               <p className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight line-clamp-2">{it.title}</p>
               <div className="flex items-center gap-1 mt-1 flex-wrap">
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#6E8CA0]/15 text-[#3f7cac] font-semibold flex items-center gap-0.5"><Tag className="w-2.5 h-2.5" />{catLabel(it.cat)}</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#B45309]/15 text-[#8C4A27] font-semibold flex items-center gap-0.5"><Tag className="w-2.5 h-2.5" />{catLabel(it.cat)}</span>
                 <span className="text-[10px] text-[#7E8A93]">{condLabel(it.condition)}</span>
               </div>
               {it.place && <p className="text-[11px] text-[#7E8A93] mt-0.5 flex items-center gap-1"><MapPin className="w-3 h-3" />{it.place}{it._km != null ? ` · ${it._km} km` : ""}</p>}
               {it.desc && <p className="text-[11px] text-[#7E8A93] mt-1 line-clamp-2">{it.desc}</p>}
               <div className="mt-auto pt-2">
-                {it.price && <p className="font-mono-data text-lg font-bold text-[#5aa0cf]">€ {priceFmt(it.price)}</p>}
+                {it.price && <p className="font-mono-data text-lg font-bold text-[#B45309]">€ {priceFmt(it.price)}</p>}
                 <div className="flex items-center gap-1.5 mt-1.5">
                   {contactHref(it) ? (
                     <a data-testid={`market-contact-${it.id}`} href={contactHref(it)} target="_blank" rel="noopener noreferrer"
@@ -214,9 +214,9 @@ export default function Marketplace() {
                       {(it.contact || "").includes("@") ? <Mail className="w-3.5 h-3.5" /> : <MessageCircle className="w-3.5 h-3.5" />} {tri("Contatta", "Kontakt", "Contact")}
                     </a>
                   ) : (
-                    <span data-testid={`market-nocontact-${it.id}`} className="flex-1 text-center text-[11px] text-[#7E8A93] py-2 border border-dashed border-[#d5e4f0] dark:border-[#38424B] rounded-lg">{tri("Nessun contatto indicato", "Kein Kontakt angegeben", "No contact provided")}</span>
+                    <span data-testid={`market-nocontact-${it.id}`} className="flex-1 text-center text-[11px] text-[#7E8A93] py-2 border border-dashed border-[#E6D8C3] dark:border-[#38424B] rounded-lg">{tri("Nessun contatto indicato", "Kein Kontakt angegeben", "No contact provided")}</span>
                   )}
-                  {!it.sample && user && (it.owner_id === user.user_id || user.role === "admin") && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#d5e4f0] dark:border-[#38424B] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
+                  {!it.sample && user && (it.owner_id === user.user_id || user.role === "admin") && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#E6D8C3] dark:border-[#38424B] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
                 </div>
               </div>
             </div>

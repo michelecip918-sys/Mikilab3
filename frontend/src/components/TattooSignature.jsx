@@ -12,7 +12,7 @@ export function TattooSignature({ className = "", testid = "tattoo-signature" })
     : "Fatto con le mani di Michele";
 
   return (
-    <div data-testid={testid} className={`flex items-center gap-3 rounded-2xl bg-[#1A1412]/[0.04] dark:bg-white/[0.04] border border-[#d5e4f0] dark:border-[#38424B] p-2.5 ${className}`}>
+    <div data-testid={testid} className={`flex items-center gap-3 rounded-2xl bg-[#1A1412]/[0.04] dark:bg-white/[0.04] border border-[#E6D8C3] dark:border-[#38424B] p-2.5 ${className}`}>
       <img
         src={`${BASE}/bio-dough.jpg`}
         alt="Michele"

@@ -14,11 +14,11 @@ function Slider({ label, testid, Icon, value, set, min, max, step = 1, unit }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1"><Icon className="w-3.5 h-3.5 text-[#3f7cac]" />{label}</span>
+        <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1"><Icon className="w-3.5 h-3.5 text-[#8C4A27]" />{label}</span>
         <span className="font-mono-data text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{value}{unit}</span>
       </div>
       <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => set(Number(e.target.value))}
-        className="w-full accent-[#3f7cac]" data-testid={testid} />
+        className="w-full accent-[#8C4A27]" data-testid={testid} />
     </div>
   );
 }
@@ -185,7 +185,7 @@ export default function DoughTwin() {
   return (
     <div className="pb-40">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#5aa0cf] to-[#234b6e] flex items-center justify-center"><FlaskConical className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#B45309] to-[#6E371C] flex items-center justify-center"><FlaskConical className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Digital Twin Impasto", "Digitaler Teig-Zwilling", "Dough Digital Twin")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Simula il risultato prima di impastare", "Simuliere das Ergebnis vor dem Kneten", "Simulate the result before mixing")}</p>
@@ -193,11 +193,11 @@ export default function DoughTwin() {
       </div>
 
       {/* Ricetta di partenza + orario d'inizio */}
-      <div className="bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] rounded-2xl p-4 mb-4 space-y-3">
+      <div className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-4 mb-4 space-y-3">
         <div>
-          <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><ChefHat className="w-3.5 h-3.5 text-[#3f7cac]" />{tri("Parti da una ricetta", "Von einem Rezept starten", "Start from a recipe")}</span>
+          <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><ChefHat className="w-3.5 h-3.5 text-[#8C4A27]" />{tri("Parti da una ricetta", "Von einem Rezept starten", "Start from a recipe")}</span>
           <select data-testid="twin-recipe" value={recipeId} onChange={(e) => applyRecipe(e.target.value)}
-            className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#3f7cac]">
+            className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#8C4A27]">
             <option value="">{tri("Manuale (usa i cursori)", "Manuell (Regler nutzen)", "Manual (use sliders)")}</option>
             {recipes.some((r) => r._own) && (
               <optgroup label={tri("Le mie ricette", "Meine Rezepte", "My recipes")}>
@@ -210,9 +210,9 @@ export default function DoughTwin() {
           </select>
         </div>
         <div>
-          <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><Clock className="w-3.5 h-3.5 text-[#3f7cac]" />{tri("Ora d'inizio impasto", "Startzeit Teig", "Dough start time")}</span>
+          <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><Clock className="w-3.5 h-3.5 text-[#8C4A27]" />{tri("Ora d'inizio impasto", "Startzeit Teig", "Dough start time")}</span>
           <input data-testid="twin-start-time" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
-            className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#3f7cac] font-mono-data" />
+            className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#8C4A27] font-mono-data" />
         </div>
       </div>
 
@@ -242,7 +242,7 @@ export default function DoughTwin() {
       </div>
 
       {/* Parametri */}
-      <div className="bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 rounded-2xl p-4 mb-4 space-y-3">
+      <div className="bg-[#B45309]/10 border border-[#B45309]/30 rounded-2xl p-4 mb-4 space-y-3">
         <Slider label={tri("Idratazione", "Hydratation", "Hydration")} testid="twin-slider-hyd" Icon={Droplets} value={hyd} set={setHyd} min={50} max={100} unit="%" />
         <Slider label={tri("Forza W", "Stärke W", "Strength W")} testid="twin-slider-w" Icon={Wheat} value={w} set={setW} min={140} max={400} step={10} unit="" />
         <Slider label={tri("Temperatura", "Temperatur", "Temperature")} testid="twin-slider-temp" Icon={Thermometer} value={temp} set={setTemp} min={16} max={34} unit="°C" />
@@ -252,7 +252,7 @@ export default function DoughTwin() {
             <div className="flex gap-1.5">
               {[["ldb", tri("Birra", "Hefe", "Yeast")], ["madre", tri("Madre", "Sauer", "Sourdough")]].map(([id, lb]) => (
                 <button key={id} data-testid={`twin-type-${id}`} onClick={() => { setYeastType(id); setYeast(id === "ldb" ? 1 : 20); }}
-                  className={`flex-1 py-2 rounded-xl text-sm font-semibold border ${yeastType === id ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#d5e4f0] dark:border-[#38424B]"}`}>{lb}</button>
+                  className={`flex-1 py-2 rounded-xl text-sm font-semibold border ${yeastType === id ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#3F4A54] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>{lb}</button>
               ))}
             </div>
           </div>
@@ -263,22 +263,22 @@ export default function DoughTwin() {
 
       {/* Risultati sintetici */}
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4">
           <p className="text-[11px] font-bold uppercase text-[#7E8A93] flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{tri("Lievitazione", "Gärzeit", "Proof time")}</p>
           <p data-testid="twin-time" className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1">{fmtH(sim.tPeak)}</p>
           <p className="text-[11px] text-[#7E8A93]">{tri("al picco", "bis zum Peak", "to peak")}</p>
         </div>
-        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4">
           <p className="text-[11px] font-bold uppercase text-[#7E8A93] flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5" />{tri("Volume picco", "Peak-Volumen", "Peak volume")}</p>
-          <p data-testid="twin-volume" className="font-mono-data text-2xl font-bold text-[#5aa0cf] mt-1">{sim.vMax.toFixed(1)}×</p>
+          <p data-testid="twin-volume" className="font-mono-data text-2xl font-bold text-[#B45309] mt-1">{sim.vMax.toFixed(1)}×</p>
           <p className="text-[11px] text-[#7E8A93]">{tri("rispetto all'inizio", "vs. Start", "vs start")}</p>
         </div>
-        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4">
           <p className="text-[11px] font-bold uppercase text-[#7E8A93] flex items-center gap-1"><Droplets className="w-3.5 h-3.5" />{tri("Idratazione ideale", "Ideale Hydratation", "Ideal hydration")}</p>
           <p data-testid="twin-rechyd" className="font-mono-data text-2xl font-bold text-[#3F7CAC] mt-1">~{sim.recHyd}%</p>
           <p className="text-[11px] text-[#7E8A93]">{sim.hydDelta > 8 ? tri("sei sopra", "du bist drüber", "you're above") : sim.hydDelta < -10 ? tri("sei sotto", "du bist drunter", "you're below") : tri("in equilibrio", "im Gleichgewicht", "balanced")}</p>
         </div>
-        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+        <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4">
           <p className="text-[11px] font-bold uppercase text-[#7E8A93] flex items-center gap-1"><Grid3x3 className="w-3.5 h-3.5" />{tri("Alveolatura", "Porung", "Crumb")}</p>
           <p data-testid="twin-alveo" className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1 leading-tight">{alveoLabel}</p>
           <p className="text-[11px] text-[#7E8A93]">{Math.round(sim.alveo)}/100</p>
@@ -286,7 +286,7 @@ export default function DoughTwin() {
       </div>
 
       {/* Curva di lievitazione */}
-      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-3 mb-4" data-testid="twin-chart">
+      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-3 mb-4" data-testid="twin-chart">
         <p className="text-[11px] font-bold uppercase text-[#7E8A93] mb-2 px-1">{tri("Curva di lievitazione (volume nel tempo)", "Gärkurve (Volumen über Zeit)", "Proofing curve (volume over time)")}</p>
         <ResponsiveContainer width="100%" height={180}>
           <LineChart data={sim.pts} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
@@ -294,13 +294,13 @@ export default function DoughTwin() {
             <YAxis tick={{ fontSize: 10, fill: "#7E8A93" }} domain={[1, "auto"]} />
             <Tooltip formatter={(v) => [`${v}×`, tri("Volume", "Volumen", "Volume")]} labelFormatter={(l) => `${l} h`} />
             <ReferenceLine x={Math.round(sim.tPeak * 10) / 10} stroke="#E4572E" strokeDasharray="4 3" label={{ value: tri("picco", "Peak", "peak"), fontSize: 10, fill: "#E4572E", position: "top" }} />
-            <Line type="monotone" dataKey="v" stroke="#3f7cac" strokeWidth={2.5} dot={false} />
+            <Line type="monotone" dataKey="v" stroke="#8C4A27" strokeWidth={2.5} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
       {/* Anteprima alveolatura */}
-      <div className="rounded-2xl overflow-hidden border border-[#d5e4f0] dark:border-[#38424B] mb-4" data-testid="twin-crumb">
+      <div className="rounded-2xl overflow-hidden border border-[#E6D8C3] dark:border-[#38424B] mb-4" data-testid="twin-crumb">
         <div className="relative h-28 bg-[#E8DCC2]">
           {bubbles.map((b, i) => (
             <span key={i} className="absolute rounded-full bg-[#3a2f22]/85"
@@ -313,8 +313,8 @@ export default function DoughTwin() {
       {/* Consigli */}
       <div className="space-y-2" data-testid="twin-advice">
         {advice.map((a, i) => (
-          <div key={i} className="flex items-start gap-2 bg-[#5aa0cf]/10 border border-[#5aa0cf]/25 rounded-xl p-3">
-            <Sparkles className="w-4 h-4 text-[#5aa0cf] shrink-0 mt-0.5" />
+          <div key={i} className="flex items-start gap-2 bg-[#B45309]/10 border border-[#B45309]/25 rounded-xl p-3">
+            <Sparkles className="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-snug">{a}</p>
           </div>
         ))}

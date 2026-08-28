@@ -85,7 +85,7 @@ export default function Academy() {
 
   return (
     <div data-testid="academy-page" className="pb-4 space-y-6">
-      <div className="rounded-3xl bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white p-7 text-center shadow-xl">
+      <div className="rounded-3xl bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white p-7 text-center shadow-xl">
         <GraduationCap className="w-12 h-12 mx-auto mb-2" />
         <h1 className="font-display text-3xl font-bold">{tri("Academy & Servizi", "Academy & Services", "Academy & Services")}</h1>
         <p className="text-white/85 text-sm mt-2">
@@ -95,29 +95,29 @@ export default function Academy() {
 
       {/* Corsi */}
       <div>
-        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#5aa0cf] mb-3 flex items-center gap-2">
+        <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B45309] mb-3 flex items-center gap-2">
           <GraduationCap className="w-4 h-4" /> {tri("Corsi Video", "Video-Kurse", "Video Courses")}
         </h2>
         <div className="grid grid-cols-1 gap-3">
           {cat.courses.map((c) => {
             const isOwned = !!owned[c.id];
             return (
-              <div key={c.id} data-testid={`academy-course-${c.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] shadow-sm overflow-hidden">
+              <div key={c.id} data-testid={`academy-course-${c.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm overflow-hidden">
                 <div className="p-4">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{title(c)}</h3>
-                    <span className="shrink-0 font-mono-data font-bold text-[#3f7cac]">{euro(c.price_cents)}</span>
+                    <span className="shrink-0 font-mono-data font-bold text-[#8C4A27]">{euro(c.price_cents)}</span>
                   </div>
                   <p className="text-sm text-[#7E8A93] mt-1 leading-snug">{desc(c)}</p>
                   <p className="text-[11px] text-[#7E8A93] mt-1.5 flex items-center gap-1"><PlayCircle className="w-3.5 h-3.5" /> {dur(c)}</p>
 
                   {isOwned ? (
                     <div className="mt-3">
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-[#5aa0cf] mb-2"><Check className="w-4 h-4" /> {tri("Sbloccato", "Freigeschaltet", "Unlocked")}</span>
-                      <video data-testid={`academy-video-${c.id}`} src={owned[c.id]} controls playsInline className="w-full rounded-xl border border-[#d5e4f0] dark:border-[#38424B] bg-black" />
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-[#B45309] mb-2"><Check className="w-4 h-4" /> {tri("Sbloccato", "Freigeschaltet", "Unlocked")}</span>
+                      <video data-testid={`academy-video-${c.id}`} src={owned[c.id]} controls playsInline className="w-full rounded-xl border border-[#E6D8C3] dark:border-[#38424B] bg-black" />
                     </div>
                   ) : (
-                    <div data-testid={`academy-course-soon-${c.id}`} className="mt-3 w-full bg-[#5aa0cf]/12 border border-[#5aa0cf]/30 text-[#2e6690] dark:text-[#a9d2ec] font-semibold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
+                    <div data-testid={`academy-course-soon-${c.id}`} className="mt-3 w-full bg-[#B45309]/12 border border-[#B45309]/30 text-[#8C4A27] dark:text-[#a9d2ec] font-semibold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
                       <CalendarClock className="w-4 h-4" /> {tri("In arrivo · presto disponibile", "Bald verfügbar", "Coming soon")}
                     </div>
                   )}
@@ -131,30 +131,30 @@ export default function Academy() {
       {/* Consulenza 1-to-1 */}
       {cat.consult && (
         <div data-testid="academy-consult">
-          <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#6E8CA0] mb-3 flex items-center gap-2">
+          <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B45309] mb-3 flex items-center gap-2">
             <CalendarClock className="w-4 h-4" /> {tri("Consulenza 1-to-1", "1-zu-1-Beratung", "1-to-1 Consultation")}
           </h2>
-          <div className="rounded-2xl bg-[#6E8CA0]/10 border border-[#6E8CA0]/30 p-4">
+          <div className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4">
             <div className="flex items-start justify-between gap-2">
               <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-snug flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-[#3f7cac]" /> {tri("Videochiamata su misura col Maestro per ricette, forni e produzione.", "Maßgeschneiderter Videocall mit dem Meister zu Rezepten, Öfen und Produktion.", "Tailored video call with the Master on recipes, ovens and production.")}
+                <Sparkles className="w-4 h-4 text-[#8C4A27]" /> {tri("Videochiamata su misura col Maestro per ricette, forni e produzione.", "Maßgeschneiderter Videocall mit dem Meister zu Rezepten, Öfen und Produktion.", "Tailored video call with the Master on recipes, ovens and production.")}
               </p>
-              <span className="shrink-0 font-mono-data font-bold text-[#3f7cac]">{euro(cat.consult.price_cents)}</span>
+              <span className="shrink-0 font-mono-data font-bold text-[#8C4A27]">{euro(cat.consult.price_cents)}</span>
             </div>
             <p className="text-[11px] text-[#7E8A93] mt-1">{dur(cat.consult)}</p>
             <div className="grid grid-cols-1 gap-2 mt-3">
               <input data-testid="consult-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Il tuo nome", "Dein Name", "Your name")}
-                className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
               <div className="grid grid-cols-2 gap-2">
                 <input data-testid="consult-date" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                  className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
                 <input data-testid="consult-phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={tri("Telefono", "Telefon", "Phone")}
-                  className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                  className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
               </div>
               <input data-testid="consult-topic" value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })} placeholder={tri("Argomento (es. panettone, forno…)", "Thema (z.B. Panettone, Ofen…)", "Topic (e.g. panettone, oven…)")}
-                className="w-full bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
               <button data-testid="consult-book-btn" onClick={bookConsult} disabled={busy === "consult"}
-                className="w-full bg-[#6E8CA0] hover:bg-[#5E7E90] text-white font-semibold py-2.5 rounded-xl active:scale-98 text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+                className="w-full bg-[#B45309] hover:bg-[#8C6B4A] text-white font-semibold py-2.5 rounded-xl active:scale-98 text-sm flex items-center justify-center gap-2 disabled:opacity-60">
                 {busy === "consult" ? <Loader2 className="w-4 h-4 animate-spin" /> : <CalendarClock className="w-4 h-4" />}
                 {tri("Prenota e paga", "Buchen & zahlen", "Book & pay")} · {euro(cat.consult.price_cents)}
               </button>

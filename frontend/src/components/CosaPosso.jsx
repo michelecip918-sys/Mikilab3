@@ -27,9 +27,9 @@ export default function CosaPosso() {
     } finally { setLoading(false); }
   };
 
-  const inp = "w-full bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3f7cac]";
+  const inp = "w-full bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]";
   const Card = ({ item, kind }) => (
-    <div data-testid={`cosa-${kind}-${item.id}`} className="flex items-center gap-3 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-3">
+    <div data-testid={`cosa-${kind}-${item.id}`} className="flex items-center gap-3 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-3">
       {item.image_url ? <img src={item.image_url} alt={item.name} className="w-14 h-14 rounded-xl object-cover shrink-0" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         : <div className="w-14 h-14 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] shrink-0" />}
       <div className="min-w-0 flex-1">
@@ -59,7 +59,7 @@ export default function CosaPosso() {
       <div className="flex gap-2 mb-3">
         {[["mikilab", tri("Ricette di Michele", "Micheles Rezepte", "Michele's recipes", "Recetas de Michele")], ["personal", tri("Le mie ricette", "Meine Rezepte", "My recipes", "Mis recetas")]].map(([id, lbl]) => (
           <button key={id} data-testid={`cosa-scope-${id}`} onClick={() => setScope(id)}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-98 ${scope === id ? "bg-[#3f7cac] text-white border-[#3f7cac]" : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#d5e4f0] dark:border-[#38424B]"}`}>{lbl}</button>
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-98 ${scope === id ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#E6D8C3] dark:border-[#38424B]"}`}>{lbl}</button>
         ))}
       </div>
 

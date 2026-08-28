@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ChevronRight, GraduationCap, Lock, Check, Trophy, Loader2, Award } from "lucide-react";
+import { ChevronRight, GraduationCap, Lock, Check, Trophy, Loader2, Award, Send, Share2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { challengesApi } from "@/lib/api";
@@ -153,6 +153,16 @@ export default function ImparaLivelli({ onBack }) {
     toast.success(L("Diploma scaricato! 🎓", "Diploma downloaded! 🎓"));
   };
 
+  const diplomaShareText = L(
+    "Ho conseguito il Diploma dell'Arte Bianca su MikiLab completando tutti i percorsi! 🎓🥖 https://mikilab.de",
+    "I earned the MikiLab Baking Craft Diploma by completing all the paths! 🎓🥖 https://mikilab.de");
+  const shareDiploma = async () => {
+    try {
+      if (navigator.share) { await navigator.share({ title: "MikiLab Diploma", text: diplomaShareText, url: "https://mikilab.de" }); }
+      else { await navigator.clipboard.writeText(diplomaShareText); toast.success(L("Testo copiato! Incollalo nella tua storia Instagram.", "Text copied! Paste it into your Instagram story.")); }
+    } catch { /* annullato */ }
+  };
+
   return (
     <div className="pb-8" data-testid="impara-livelli">
       {onBack && <button data-testid="impara-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
@@ -193,6 +203,16 @@ export default function ImparaLivelli({ onBack }) {
             className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-[#FFFDF9] font-semibold px-4 py-3 active:scale-98 transition-all">
             <Award className="w-5 h-5" /> {L("Scarica il Diploma MikiLab (PDF)", "Download the MikiLab Diploma (PDF)")}
           </button>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <a data-testid="impara-share-wa" href={`https://wa.me/?text=${encodeURIComponent(diplomaShareText)}`} target="_blank" rel="noreferrer"
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#2e8b6f] hover:bg-[#1c5c49] text-[#FFFDF9] font-semibold px-3 py-2.5 active:scale-98 transition-all">
+              <Send className="w-4 h-4" /> WhatsApp
+            </a>
+            <button data-testid="impara-share-more" onClick={shareDiploma}
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#8C4A27] hover:bg-[#6E371C] text-[#FFFDF9] font-semibold px-3 py-2.5 active:scale-98 transition-all">
+              <Share2 className="w-4 h-4" /> {L("Instagram / Altro", "Instagram / More")}
+            </button>
+          </div>
         </div>
       )}
     </div>

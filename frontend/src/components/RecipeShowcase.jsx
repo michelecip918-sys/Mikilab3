@@ -25,7 +25,7 @@ export default function RecipeShowcase({ onOpen }) {
           {lang === "de" ? "Meine Rezepte" : lang === "en" ? "My recipes" : "Le mie ricette"}
         </h2>
         <button data-testid="home-recipes-all" onClick={() => onOpen && onOpen()}
-          className="text-sm font-medium text-[#3f7cac] flex items-center gap-1">
+          className="text-sm font-medium text-[#8C4A27] flex items-center gap-1">
           {lang === "de" ? "Alle" : lang === "en" ? "All" : "Tutte"} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
@@ -41,7 +41,7 @@ export default function RecipeShowcase({ onOpen }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.03, 0.3) }}
-              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] shadow-sm active:scale-[0.98] hover:border-[#6E8CA0]/60 transition-all text-left"
+              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-[0.98] hover:border-[#B45309]/60 transition-all text-left"
             >
               <div className="relative h-36 w-full overflow-hidden bg-[#e4eff8] dark:bg-[#1F252B]">
                 {r.image_url ? (

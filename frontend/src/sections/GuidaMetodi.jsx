@@ -41,10 +41,10 @@ export default function GuidaMetodi() {
   const [open, setOpen] = useState("poolish");
   return (
     <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#3f7cac] to-[#234b6e] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#5aa0cf]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#6E8CA0]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#6E8CA0]" /><div className="flex-1 bg-[#A9C5D4]" />
+          <div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#B45309]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-[#e7d5b4]" />
         </div>
         <HeroAvatar />
         <BookOpen className="w-7 h-7 mb-2" />
@@ -57,12 +57,12 @@ export default function GuidaMetodi() {
           const c = s[lang] || s.it;
           const isOpen = open === s.id;
           return (
-            <div key={s.id} data-testid={`guida-${s.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] overflow-hidden">
+            <div key={s.id} data-testid={`guida-${s.id}`} className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] overflow-hidden">
               <button data-testid={`guida-toggle-${s.id}`} onClick={() => setOpen(isOpen ? "" : s.id)}
                 className="w-full flex items-center gap-3 p-4 text-left">
                 <span className="text-2xl">{s.icon}</span>
                 <span className="flex-1 font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{c.title}</span>
-                <ChevronDown className={`w-5 h-5 text-[#3f7cac] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <ChevronDown className={`w-5 h-5 text-[#8C4A27] transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
               <AnimatePresence initial={false}>
                 {isOpen && (

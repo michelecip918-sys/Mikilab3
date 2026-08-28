@@ -30,21 +30,21 @@ export default function FlourTable({ embedded = false }) {
   const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [open, setOpen] = useState(embedded);
 
-  const th = "text-left text-[10px] font-bold uppercase tracking-wide text-[#3f7cac] px-2 py-1.5";
+  const th = "text-left text-[10px] font-bold uppercase tracking-wide text-[#8C4A27] px-2 py-1.5";
   const td = "px-2 py-1.5 text-xs text-[#2B303B] dark:text-[#e4eff8] border-t border-[#e4eff8] dark:border-[#38424B]";
 
   const body = (
     <div className="space-y-4">
       <div>
         <p className="text-xs font-bold uppercase text-[#2e3d4c] mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
-        <div className="overflow-x-auto rounded-xl border border-[#d5e4f0] dark:border-[#38424B]">
+        <div className="overflow-x-auto rounded-xl border border-[#E6D8C3] dark:border-[#38424B]">
           <table className="w-full border-collapse">
-            <thead className="bg-[#f0f6fb] dark:bg-[#1F252B]">
+            <thead className="bg-[#FAF5EC] dark:bg-[#1F252B]">
               <tr><th className={th}>{tri("Tipo (DE · IT)", "Typ (DE · IT)", "Type (DE · IT)")}</th><th className={th}>W {tri("(forza)", "(Stärke)", "(strength)")}</th><th className={th}>{tri("Proteine", "Protein", "Protein")}</th><th className={th}>{tri("Metodo", "Methode", "Method")}</th></tr>
             </thead>
             <tbody>
               {FLOURS.map((r, i) => (
-                <tr key={i} className={i % 2 ? "bg-[#f0f6fb]/50 dark:bg-[#1F252B]/50" : ""}>
+                <tr key={i} className={i % 2 ? "bg-[#FAF5EC]/50 dark:bg-[#1F252B]/50" : ""}>
                   <td className={td + " font-semibold"}>{r[0]}</td>
                   <td className={td + " font-mono-data"}>{r[1]}</td>
                   <td className={td + " font-mono-data"}>{r[2]}</td>
@@ -58,14 +58,14 @@ export default function FlourTable({ embedded = false }) {
 
       <div>
         <p className="text-xs font-bold uppercase text-[#2e3d4c] mb-1.5">{tri("Abbreviazioni d'impasto", "Teig-Abkürzungen", "Dough abbreviations")}</p>
-        <div className="overflow-x-auto rounded-xl border border-[#d5e4f0] dark:border-[#38424B]">
+        <div className="overflow-x-auto rounded-xl border border-[#E6D8C3] dark:border-[#38424B]">
           <table className="w-full border-collapse">
-            <thead className="bg-[#f0f6fb] dark:bg-[#1F252B]">
+            <thead className="bg-[#FAF5EC] dark:bg-[#1F252B]">
               <tr><th className={th}>{tri("Sigla", "Kürzel", "Code")}</th><th className={th}>🇮🇹 IT</th><th className={th}>🇩🇪 DE</th><th className={th}>🌍 EN</th></tr>
             </thead>
             <tbody>
               {SIGNS.map((r, i) => (
-                <tr key={i} className={i % 2 ? "bg-[#f0f6fb]/50 dark:bg-[#1F252B]/50" : ""}>
+                <tr key={i} className={i % 2 ? "bg-[#FAF5EC]/50 dark:bg-[#1F252B]/50" : ""}>
                   <td className={td + " font-mono-data font-semibold"}>{r[0]}</td>
                   <td className={td}>{r[1]}</td><td className={td}>{r[2]}</td><td className={td}>{r[3]}</td>
                 </tr>
@@ -75,7 +75,7 @@ export default function FlourTable({ embedded = false }) {
         </div>
       </div>
 
-      <div className="rounded-xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-3 text-xs text-[#234b6e] dark:text-[#8FB0C2] leading-relaxed">
+      <div className="rounded-xl bg-[#B45309]/12 border border-[#B45309]/30 p-3 text-xs text-[#6E371C] dark:text-[#8FB0C2] leading-relaxed">
         ⚠️ {tri(
           "Nota del Maestro: nel sistema tedesco il 630 è il FARRO (Dinkel), mentre il 550 è il GRANO (Weizen). Le ricette con 630 (farro) e con farine ad alta estrazione sono quasi sempre IMPASTI INDIRETTI (con prefermento/lievito madre); alcune usano un tocco di aceto/acido per dare struttura al glutine più debole del farro.",
           "Meister-Hinweis: Im deutschen System ist 630 der DINKEL, während 550 der WEIZEN ist. Rezepte mit 630 (Dinkel) und hoch ausgemahlenen Mehlen sind fast immer INDIREKTE TEIGE (mit Vorteig/Sauerteig); manche nutzen etwas Essig/Säure, um dem schwächeren Dinkelkleber Struktur zu geben.",
@@ -87,7 +87,7 @@ export default function FlourTable({ embedded = false }) {
   if (embedded) {
     return (
       <div data-testid="flour-table" className="pb-24">
-        <div className="flex items-center gap-2 mb-3 text-[#3f7cac]">
+        <div className="flex items-center gap-2 mb-3 text-[#8C4A27]">
           <Table2 className="w-5 h-5" />
           <h1 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Tabella Farine & Sigle", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</h1>
         </div>
@@ -97,9 +97,9 @@ export default function FlourTable({ embedded = false }) {
   }
 
   return (
-    <div data-testid="flour-table" className="mb-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] overflow-hidden">
+    <div data-testid="flour-table" className="mb-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] overflow-hidden">
       <button data-testid="flour-table-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 text-left">
-        <Table2 className="w-5 h-5 text-[#3f7cac]" />
+        <Table2 className="w-5 h-5 text-[#8C4A27]" />
         <span className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex-1">{tri("Tabella Farine & Sigle (DE / IT / EN)", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</span>
         <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform ${open ? "rotate-180" : ""}`} />
       </button>

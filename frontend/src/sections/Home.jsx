@@ -149,7 +149,7 @@ function HomeAvatarScene({ lang }) {
 }
 
 const FEATURES = [
-  { icon: Wrench, color: "#3f7cac",
+  { icon: Wrench, color: "#8C4A27",
     it: ["Il Tuo Laboratorio", "Piano di produzione con l'IA: orari d'inizio, celle, impasti, lista spesa, costi e margini — e la tabella delle infornate."],
     de: ["Dein Labor", "KI-Produktionsplan: Startzeiten, Kammern, Teige, Einkaufsliste, Kosten & Margen — und die Back-Tabelle."],
     en: ["Your Lab", "AI production plan: start times, cells, doughs, shopping list, costs & margins — plus the baking schedule."],
@@ -164,17 +164,17 @@ const FEATURES = [
     de: ["Hände im Teig & Zeitplan", "Rezepte freihändig vorlesen lassen und den Zeitplan rückwärts ab dem Ausbacken sehen."],
     en: ["Hands-free & Timeline", "Have recipes read aloud hands-free and see the timeline with times counted back from baking."],
     es: ["Manos en la Masa y Timeline", "Escucha las recetas con las manos libres y ve la línea de tiempo a partir del horneado."] },
-  { icon: BookOpen, color: "#234b6e",
+  { icon: BookOpen, color: "#6E371C",
     it: ["Le Mie Ricette + Generatore", "Le ricette col mio metodo (dosi, idratazione, costi) e un generatore IA per crearne di nuove su misura."],
     de: ["Meine Rezepte + Generator", "Rezepte mit meiner Methode (Mengen, Hydratation, Kosten) und ein KI-Generator für neue, maßgeschneiderte."],
     en: ["My Recipes + Generator", "Recipes with my method (doses, hydration, costs) and an AI generator to create tailored new ones."],
     es: ["Mis Recetas + Generador", "Recetas con mi método (dosis, hidratación, costes) y un generador IA para crear nuevas a medida."] },
-  { icon: GraduationCap, color: "#5aa0cf",
+  { icon: GraduationCap, color: "#B45309",
     it: ["Impara", "Lezioni passo-passo e la diagnosi dell'impasto da una foto: capisci subito cosa migliorare."],
     de: ["Lernen", "Schritt-für-Schritt-Lektionen und Teig-Diagnose per Foto: sofort verstehen, was zu verbessern ist."],
     en: ["Learn", "Step-by-step lessons and dough diagnosis from a photo: instantly see what to improve."],
     es: ["Aprende", "Lecciones paso a paso y diagnóstico de la masa por foto: entiende al instante qué mejorar."] },
-  { icon: Users, color: "#6E8CA0",
+  { icon: Users, color: "#B45309",
     it: ["Community & Mappa dei Fornai", "Confrontati con altri fornai e scopri chi usa MikiLab nel mondo sulla mappa."],
     de: ["Community & Bäcker-Karte", "Tausche dich mit anderen Bäckern aus und entdecke auf der Karte, wer MikiLab weltweit nutzt."],
     en: ["Community & Bakers Map", "Connect with other bakers and discover who uses MikiLab worldwide on the map."],
@@ -240,7 +240,7 @@ export default function Home({ onNavigate }) {
   if (chat) {
     return (
       <div className="pb-4">
-        <button data-testid="home-back-btn" onClick={() => setChat(false)} className="flex items-center gap-1 text-[#3f7cac] font-medium mb-4">
+        <button data-testid="home-back-btn" onClick={() => setChat(false)} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
           <ChevronRight className="w-5 h-5 rotate-180" /> Home
         </button>
         <MaestroSaTutto />
@@ -251,7 +251,7 @@ export default function Home({ onNavigate }) {
   if (legal) {
     return (
       <div className="pb-4">
-        <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#3f7cac] font-medium mb-4">
+        <button data-testid="legal-back-btn" onClick={() => setLegal(false)} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
           <ChevronRight className="w-5 h-5 rotate-180" /> Home
         </button>
         <LegalPage />
@@ -379,7 +379,7 @@ export default function Home({ onNavigate }) {
 
       {/* Messaggi non letti dagli amici */}
       {convos.length > 0 && (
-        <div data-testid="home-unread-chats" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+        <div data-testid="home-unread-chats" className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4">
           <div className="flex items-center gap-2 mb-2">
             <MessageCircle className="w-4 h-4 text-[#7a4fbf]" />
             <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{L("Messaggi non letti", "Ungelesene Nachrichten", "Unread messages", "Mensajes no leídos")}</p>
@@ -388,7 +388,7 @@ export default function Home({ onNavigate }) {
           <div className="space-y-1.5">
             {convos.slice(0, 4).map((c) => (
               <button key={c.other_id} data-testid={`home-chat-${c.other_id}`} onClick={() => { setChatUser({ user_id: c.other_id, name: c.name, picture: c.picture }); setChatOpen(true); }}
-                className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-[#f0f6fb] dark:hover:bg-[#2A323A] active:scale-98 transition-all text-left">
+                className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-[#FAF5EC] dark:hover:bg-[#2A323A] active:scale-98 transition-all text-left">
                 <div className="w-9 h-9 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white text-sm font-bold shrink-0">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
@@ -429,7 +429,7 @@ export default function Home({ onNavigate }) {
               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
               <div className="space-y-6 pt-6">
                 {/* Scopri MikiLab — versione semplificata: un solo testo */}
-                <div data-testid="home-about" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white shadow-xl">
+                <div data-testid="home-about" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-xl">
                   <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele" className="w-full h-52 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
@@ -454,16 +454,16 @@ export default function Home({ onNavigate }) {
                   </div>
                 </div>
 
-                <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white shadow-xl p-7 text-center">
+                <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-xl p-7 text-center">
                   <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
-                    className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#A9C5D4]/70 shadow-lg mx-auto mb-4" />
+                    className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#e7d5b4]/70 shadow-lg mx-auto mb-4" />
                   <h1 className="font-display text-3xl font-bold">Mikilab</h1>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
                 </div>
 
-                <div data-testid="home-promo" className="rounded-3xl bg-[#e4eff8] dark:bg-[#1F252B] border border-[#6E8CA0]/40 shadow-md p-5 flex items-start gap-4">
+                <div data-testid="home-promo" className="rounded-3xl bg-[#e4eff8] dark:bg-[#1F252B] border border-[#B45309]/40 shadow-md p-5 flex items-start gap-4">
                   <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="Michele" loading="lazy"
-                    className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#6E8CA0]/50 shrink-0"
+                    className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#B45309]/50 shrink-0"
                     onError={(e) => { e.currentTarget.style.display = "none"; }} />
                   <p className="text-sm text-[#3F4A54] dark:text-[#e4eff8] leading-relaxed">
                     {L(
@@ -474,12 +474,12 @@ export default function Home({ onNavigate }) {
                   </p>
                 </div>
 
-                <div data-testid="home-features" className="rounded-3xl bg-white dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] shadow-md overflow-hidden">
-                  <div className="bg-gradient-to-br from-[#234b6e] to-[#3f7cac] text-white px-5 py-4 flex items-center gap-2">
+                <div data-testid="home-features" className="rounded-3xl bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] shadow-md overflow-hidden">
+                  <div className="bg-gradient-to-br from-[#6E371C] to-[#8C4A27] text-white px-5 py-4 flex items-center gap-2">
                     <Sparkles className="w-5 h-5" />
                     <h3 className="font-display text-lg font-bold">{L("Cosa puoi fare con MikiLab", "Was du mit MikiLab machen kannst", "What you can do with MikiLab", "Qué puedes hacer con MikiLab")}</h3>
                   </div>
-                  <div className="divide-y divide-[#d5e4f0] dark:divide-[#38424B]">
+                  <div className="divide-y divide-[#E6D8C3] dark:divide-[#38424B]">
                     {FEATURES.map((f, i) => {
                       const Icon = f.icon;
                       const txt = f[lang] || f.it;
@@ -539,7 +539,7 @@ export default function Home({ onNavigate }) {
                           {isOpen && (
                             <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
-                              <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#1F252B] border border-t-0 border-[#d5e4f0] dark:border-[#38424B] overflow-hidden">
+                              <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#1F252B] border border-t-0 border-[#E6D8C3] dark:border-[#38424B] overflow-hidden">
                                 {CONCEPT_PHOTOS[c.id] && (
                                   <img src={CONCEPT_PHOTOS[c.id]} alt={c.title}
                                     data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy"
@@ -560,8 +560,8 @@ export default function Home({ onNavigate }) {
                   })}
                 </div>
 
-                <div data-testid="home-joke" className="flex items-start gap-3 rounded-2xl bg-[#6E8CA0]/12 border border-[#6E8CA0]/30 p-4">
-                  <Laugh className="w-5 h-5 text-[#3f7cac] shrink-0 mt-0.5" />
+                <div data-testid="home-joke" className="flex items-start gap-3 rounded-2xl bg-[#B45309]/12 border border-[#B45309]/30 p-4">
+                  <Laugh className="w-5 h-5 text-[#8C4A27] shrink-0 mt-0.5" />
                   <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] italic leading-relaxed">{joke}</p>
                 </div>
                 </>)}
@@ -584,7 +584,7 @@ export default function Home({ onNavigate }) {
 
         {/* Laboratorio — card grande in evidenza */}
         <button data-testid="home-core-maestro" onClick={() => go("maestro")}
-          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#3f7cac] to-[#234b6e] ring-2 ring-[#C88A2B]/70 overflow-hidden">
+          className="relative w-full text-left rounded-3xl p-5 mb-3 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#8C4A27] to-[#6E371C] ring-2 ring-[#C88A2B]/70 overflow-hidden">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-3 mt-1">
             <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-6 h-6" /></div>
@@ -607,7 +607,7 @@ export default function Home({ onNavigate }) {
             <p className="text-[11px] text-white/85 leading-snug">{L("Le ricette col mio metodo", "Rezepte mit meiner Methode", "Recipes with my method")}</p>
           </button>
           <button data-testid="home-core-corsi" onClick={() => go("shop")}
-            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#5aa0cf] to-[#2e6690] min-h-[112px] flex flex-col gap-2">
+            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#B45309] to-[#8C4A27] min-h-[112px] flex flex-col gap-2">
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><GraduationCap className="w-6 h-6" /></div>
             <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
             <p className="text-[11px] text-white/85 leading-snug">{L("Corsi online di Michele (in arrivo)", "Micheles Online-Kurse (bald)", "Michele's online courses (soon)")}</p>
@@ -617,7 +617,7 @@ export default function Home({ onNavigate }) {
 
       {/* ===== CHIEDI AL MAESTRO ===== */}
       <button data-testid="home-chat-btn" onClick={() => setChat(true)}
-        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#5aa0cf] to-[#2e6690] text-white shadow-lg active:scale-98 transition-all">
+        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#B45309] to-[#8C4A27] text-white shadow-lg active:scale-98 transition-all">
         <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
           <MessageCircle className="w-6 h-6" />
         </div>
@@ -634,27 +634,27 @@ export default function Home({ onNavigate }) {
       {/* MikiLab Shop & Corsi — IN FONDO, "in arrivo a breve" (niente redirect alle ricette) */}
       <div data-testid="home-shop-corsi" className="mb-4">
         <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2">{L("MikiLab Shop & Corsi", "MikiLab Shop & Kurse", "MikiLab Shop & Courses")}</p>
-        <div className="grid grid-cols-2 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-3 border border-[#d5e4f0] dark:border-[#38424B]">
+        <div className="grid grid-cols-2 gap-1.5 bg-[#e4eff8] dark:bg-[#1F252B] p-1.5 rounded-2xl mb-3 border border-[#E6D8C3] dark:border-[#38424B]">
           <button data-testid="shop-tab-premium" onClick={() => setShopTab("premium")}
-            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "premium" ? "bg-[#3f7cac] text-white shadow" : "text-[#7E8A93]"}`}>
+            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "premium" ? "bg-[#8C4A27] text-white shadow" : "text-[#7E8A93]"}`}>
             {L("Shop Ricette", "Rezept-Shop", "Recipe Shop")}
           </button>
           <button data-testid="shop-tab-corsi" onClick={() => setShopTab("corsi")}
-            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "corsi" ? "bg-[#3f7cac] text-white shadow" : "text-[#7E8A93]"}`}>
+            className={`py-2 rounded-xl text-sm font-semibold transition-all ${shopTab === "corsi" ? "bg-[#8C4A27] text-white shadow" : "text-[#7E8A93]"}`}>
             {L("I Miei Corsi", "Meine Kurse", "My Courses")}
           </button>
         </div>
 
-        <div data-testid="shop-coming-soon" className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#234b6e] p-6 text-center text-white">
+        <div data-testid="shop-coming-soon" className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#6E371C] p-6 text-center text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           {shopTab === "premium" ? (
             <>
               <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-2"><ChefHat className="w-6 h-6" /></div>
               <p className="font-display text-lg font-bold">{L("Shop di tutte le mie ricette", "Shop all meiner Rezepte", "Shop of all my recipes")}</p>
-              <span className="inline-block mt-2 text-[11px] font-bold bg-[#5aa0cf] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
+              <span className="inline-block mt-2 text-[11px] font-bold bg-[#B45309] text-white px-3 py-1 rounded-full uppercase tracking-wide">{L("Disponibile ora", "Jetzt verfügbar", "Available now")}</span>
               <p className="text-sm text-white/85 mt-2 leading-snug">{L("Sfoglia e acquista le ricette di Michele, complete di dosi e procedimento.", "Stöbere und kaufe Micheles Rezepte, komplett mit Mengen und Zubereitung.", "Browse and buy Michele's recipes, complete with doses and method.")}</p>
               <button data-testid="shop-recipes-cta" onClick={() => go("ricette")}
-                className="mt-3 inline-flex items-center gap-2 bg-white text-[#234b6e] font-bold px-5 py-2.5 rounded-2xl active:scale-95 transition-all">
+                className="mt-3 inline-flex items-center gap-2 bg-white text-[#6E371C] font-bold px-5 py-2.5 rounded-2xl active:scale-95 transition-all">
                 <ShoppingBag className="w-4 h-4" /> {L("Vai alle ricette", "Zu den Rezepten", "Go to recipes")}
               </button>
             </>

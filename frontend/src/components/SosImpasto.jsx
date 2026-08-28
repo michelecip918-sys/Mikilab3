@@ -115,7 +115,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
           )}
 
           {(busy || result) && (
-            <div data-testid="sos-result" className="rounded-2xl bg-[#f0f6fb] dark:bg-[#1F252B] border border-[#d5e4f0] dark:border-[#38424B] p-4">
+            <div data-testid="sos-result" className="rounded-2xl bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] p-4">
               {busy && !result ? (
                 <div className="flex items-center gap-2 text-[#b23a2f]"><Loader2 className="w-5 h-5 animate-spin" /> {tri("Analisi in corso…", "Analyse läuft…", "Analysing…", "Analizando…")}</div>
               ) : (
