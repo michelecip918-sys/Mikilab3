@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // Selettore delle ricette DEL PANETTIERE (collezione personale) da usare nei calcolatori.
 export default function RecipePicker({ value, onChange, testid = "recipe-picker", label, className = "" }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [recipes, setRecipes] = useState([]);
   useEffect(() => { recipesApi.list("personal").then((r) => setRecipes(r || [])).catch(() => {}); }, []);
   return (

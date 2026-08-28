@@ -15,7 +15,7 @@ const sid = () => {
 // Assistente "Mohammed" — accoglienza + guida operativa de "Il Tuo Laboratorio".
 export default function MohammedAssistant() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");

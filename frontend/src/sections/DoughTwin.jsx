@@ -25,7 +25,7 @@ function Slider({ label, testid, Icon, value, set, min, max, step = 1, unit }) {
 
 export default function DoughTwin() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
 
   const [hyd, setHyd] = useState(65);      // idratazione %
   const [w, setW] = useState(260);         // forza farina W

@@ -57,7 +57,7 @@ const WA_TEXT = "MikiLab â€” Ricette esclusive e strumenti per l'Arte Bianca ðŸ¥
 export default function Sfide({ open, onClose }) {
   const { user, setAuthOpen } = useAuth();
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const flang = ["it", "de", "en", "es"].includes(lang) ? lang : "it";
 
   const [catalog, setCatalog] = useState([]);

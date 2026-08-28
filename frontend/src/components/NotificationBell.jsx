@@ -7,7 +7,7 @@ import { notificationsApi } from "@/lib/api";
 // Campanella notifiche Community (like/commenti sui propri post).
 export default function NotificationBell() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const loc = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT";
   const { user } = useAuth();
 

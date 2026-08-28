@@ -10,7 +10,7 @@ import { toast } from "sonner";
 // Assistente "Mohammadreza" per l'home baker: scheduling inverso + calcoli + troubleshooting.
 export default function AcademyCoach() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const sidRef = useRef(`academy-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");

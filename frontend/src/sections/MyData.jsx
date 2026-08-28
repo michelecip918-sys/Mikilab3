@@ -10,7 +10,7 @@ import { useAuth } from "@/auth/AuthContext";
 export default function MyData({ onOpenTool }) {
   const { lang } = useLang();
   const { user } = useAuth();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [tab, setTab] = useState("piani");
   const [plans, setPlans] = useState([]);
   const [recipes, setRecipes] = useState([]);

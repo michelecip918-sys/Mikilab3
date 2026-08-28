@@ -11,7 +11,7 @@ const euro = (cents) => "€ " + (cents / 100).toFixed(cents % 100 === 0 ? 0 : 2
 export default function Academy() {
   const { lang } = useLang();
   const { user, setAuthOpen } = useAuth();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [cat, setCat] = useState({ courses: [], consult: null });
   const [owned, setOwned] = useState({}); // id -> video_url
   const [busy, setBusy] = useState(null);

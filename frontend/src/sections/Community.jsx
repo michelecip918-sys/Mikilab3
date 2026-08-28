@@ -35,7 +35,7 @@ function timeAgo(iso, lang) {
 
 export default function Community({ onNavigate }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const { user, setAuthOpen } = useAuth();
 
   const catLabel = (id) => ({

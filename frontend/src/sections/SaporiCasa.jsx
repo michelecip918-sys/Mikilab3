@@ -44,7 +44,7 @@ const MATRIX = [
 
 export default function SaporiCasa({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : i);
+  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const [tab, setTab] = useState("forno");
 
   const TABS = [

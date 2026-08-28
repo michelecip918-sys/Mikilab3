@@ -18,7 +18,7 @@ function fileToDataUrl(file) {
 // SOS Impasto: manda la foto del pane a Mohammadreza per una diagnosi immediata (login richiesto).
 export default function SosImpasto({ open, onClose, onNavigate }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const { user, setAuthOpen } = useAuth();
   const [photo, setPhoto] = useState("");
   const [result, setResult] = useState("");

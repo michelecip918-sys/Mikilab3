@@ -8,7 +8,7 @@ import DualPhotoButtons from "@/components/DualPhotoButtons";
 
 export default function ScanFlour() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const { user, setAuthOpen } = useAuth();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);

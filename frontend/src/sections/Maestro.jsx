@@ -77,7 +77,7 @@ export default function Maestro() {
     else window.scrollTo(0, 0);
   }, [tool]);
   const { t, lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   useBackClose(!!tool, back);
 
   if (tool) {

@@ -22,7 +22,7 @@ const AvatarImg = ({ pic, name, size = "w-10 h-10" }) => (
 // Se `initialUser` è passato ({user_id, name, picture}) apre direttamente quella chat.
 export default function ChatPanel({ open, onClose, initialUser = null }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const { user } = useAuth();
 
   const [active, setActive] = useState(null); // {user_id, name, picture}

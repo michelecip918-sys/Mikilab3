@@ -14,6 +14,7 @@ import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import Glossario from "@/sections/Glossario";
+import ImparaLivelli from "@/sections/ImparaLivelli";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
 import { getProfile } from "@/components/Onboarding";
@@ -202,6 +203,7 @@ export default function Home({ onNavigate }) {
   const [sapori, setSapori] = useState(false);
   const [calc, setCalc] = useState(false);
   const [glossario, setGlossario] = useState(false);
+  const [imparaLiv, setImparaLiv] = useState(false);
   const [open, setOpen] = useState(null);
   const [storyOpen, setStoryOpen] = useState(() => {
     try { return !localStorage.getItem("mikilab_home_story_seen"); } catch { return true; }
@@ -260,6 +262,7 @@ export default function Home({ onNavigate }) {
   if (sapori) return <SaporiCasa onBack={() => setSapori(false)} />;
   if (calc) return <CalcolatoreMetodo onBack={() => setCalc(false)} />;
   if (glossario) return <Glossario onBack={() => setGlossario(false)} />;
+  if (imparaLiv) return <ImparaLivelli onBack={() => setImparaLiv(false)} />;
 
   return (
     <div className="pb-2 space-y-6">
@@ -332,6 +335,17 @@ export default function Home({ onNavigate }) {
         <div className="flex-1 min-w-0">
           <h3 className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8] leading-tight">{L("Glossario dell'Arte Bianca", "Glossar der Backkunst", "Baking Craft Glossary", "Glosario del Arte Blanco")}</h3>
           <p className="text-[#6B5546] dark:text-[#AEB8BF] text-[13px] leading-snug">{L("Autolisi, incordatura, poolish… i termini spiegati semplice", "Fachbegriffe einfach erklärt", "Technical terms in plain words", "Términos técnicos explicados")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-[#8C4A27]/70 shrink-0" />
+      </button>
+
+      {/* Impara a Livelli — quiz che conta come sfida */}
+      <button data-testid="home-impara-livelli-btn" onClick={() => setImparaLiv(true)}
+        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-98 transition-all text-left">
+        <div className="w-12 h-12 rounded-2xl bg-[#D97706]/15 flex items-center justify-center shrink-0"><GraduationCap className="w-6 h-6 text-[#B45309]" /></div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8] leading-tight">{L("Impara a Livelli", "Lernen nach Stufen", "Learn by Levels", "Aprende por Niveles")}</h3>
+          <p className="text-[#6B5546] dark:text-[#AEB8BF] text-[13px] leading-snug">{L("Supera i quiz: ogni livello conta come una sfida verso i Panettoni", "Quiz bestehen: jede Stufe zählt als Challenge", "Pass the quizzes: each level counts as a challenge", "Supera los cuestionarios: cada nivel cuenta como reto")}</p>
         </div>
         <ChevronRight className="w-6 h-6 text-[#8C4A27]/70 shrink-0" />
       </button>

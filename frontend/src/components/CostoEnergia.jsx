@@ -19,7 +19,7 @@ const Field = ({ label, tid, val, set, step, suffix }) => (
 
 export default function CostoEnergia() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" ? e : i));
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
   const saved = load() || {};
   const [power, setPower] = useState(saved.power ?? "6");
   const [minutes, setMinutes] = useState(saved.minutes ?? "40");

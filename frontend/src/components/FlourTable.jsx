@@ -27,7 +27,7 @@ const SIGNS = [
 
 export default function FlourTable({ embedded = false }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [open, setOpen] = useState(embedded);
 
   const th = "text-left text-[10px] font-bold uppercase tracking-wide text-[#3f7cac] px-2 py-1.5";

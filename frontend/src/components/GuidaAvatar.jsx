@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 // Sezione "Guida al Sito": gli avatar di Michele & Mohamed spiegano MikiLab passo-passo.
 export default function GuidaAvatar() {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const L = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const [who, setWho] = useState("michele");
 
   const michele = {

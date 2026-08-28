@@ -23,7 +23,7 @@ const DEFECTS = [
 
 export default function SosImpastoGuida({ onBack, onOpenTool }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : i);
+  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const [open, setOpen] = useState(null);
 
   return (

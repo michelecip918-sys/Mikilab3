@@ -85,7 +85,7 @@ export default function PhotoDiagnosi() {
   const [recent, setRecent] = useState([]);
   const [openRec, setOpenRec] = useState(null);
   const { t, lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [tourForce, setTourForce] = useState(0);
 
   const MODES = [

@@ -73,6 +73,7 @@ export const challengesApi = {
   catalog: () => api.get(`/challenges/catalog`).then((r) => r.data.catalog || []).catch(() => []),
   state: () => api.get(`/challenges/state`).then((r) => r.data).catch(() => null),
   complete: (challenge_id) => api.post(`/challenges/complete`, { challenge_id }).then((r) => r.data),
+  learnComplete: (path_id) => api.post(`/learn/complete`, { path_id }).then((r) => r.data),
 };
 
 export const newsItemsApi = {

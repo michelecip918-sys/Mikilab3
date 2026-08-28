@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClose }) {
   const { lang: ctxLang } = useLang();
   const lang = langProp || ctxLang;
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" ? e : i));
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
   const { addTimer } = useTimers();
   const voiceLang = lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : lang === "es" ? "es-ES" : "it-IT";
 

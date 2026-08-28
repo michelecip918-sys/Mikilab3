@@ -7,7 +7,7 @@ const PNAME = { lm: "Lievito Madre solido (50%)", licoli: "Li.Co.Li. (100%)", bi
 
 export default function ConvertitoreLieviti({ onBack }) {
   const { lang } = useLang();
-  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : i);
+  const L = (i, d, e, s) => (lang === "de" ? (d ?? i) : lang === "en" ? (e ?? i) : lang === "es" ? (s ?? e ?? i) : (lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
   const inp = "w-full bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2C1E16] dark:text-[#e4eff8] focus:border-[#D97706] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#6B5546] dark:text-[#AEB8BF] mb-1";

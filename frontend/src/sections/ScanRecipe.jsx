@@ -8,7 +8,7 @@ import DualPhotoButtons from "@/components/DualPhotoButtons";
 
 export default function ScanRecipe({ embedded = false }) {
   const { t, lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [loading, setLoading] = useState(false);
   const [scanned, setScanned] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);

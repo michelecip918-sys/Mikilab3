@@ -27,7 +27,7 @@ export default class ErrorBoundary extends React.Component {
   render() {
     if (!this.state.hasError) return this.props.children;
     const lang = this.props.lang;
-    const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+    const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
     return (
       <div data-testid="error-boundary" className="max-w-md mx-auto mt-10 rounded-2xl bg-white dark:bg-[#232A31] border border-[#d5e4f0] dark:border-[#38424B] p-6 text-center">
         <div className="w-14 h-14 mx-auto rounded-full bg-[#C0574D]/12 flex items-center justify-center mb-3">

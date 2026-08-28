@@ -15,7 +15,7 @@ const PREF_TYPES = [
 
 export default function FermentazionePredittiva() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" ? e : i));
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
   const { addTimer, remove: removeTimer } = useTimers();
 
   const [loading, setLoading] = useState(false);

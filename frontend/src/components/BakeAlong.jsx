@@ -9,7 +9,7 @@ const RANK_COLORS = ["#d4af37", "#9aa7b0", "#b07a44"];
 
 export default function BakeAlong() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const { user, setAuthOpen } = useAuth();
   const [data, setData] = useState(null);
   const [entries, setEntries] = useState([]);

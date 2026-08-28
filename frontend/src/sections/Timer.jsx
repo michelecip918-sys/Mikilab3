@@ -17,7 +17,7 @@ const fmt = (s) => {
 
 export default function Timer() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const { timers, nowTs, addTimer, toggle, reset, remove } = useTimers();
 
   const PRESETS = [

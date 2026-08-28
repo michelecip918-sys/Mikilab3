@@ -53,7 +53,7 @@ export default function WeeklyPlan() {
   const [loaded, setLoaded] = useState(false);
   const [salesPoints, setSalesPoints] = useState([]);
   const { t, lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
 
   useEffect(() => {
     setSalesPoints(getSalesPoints());

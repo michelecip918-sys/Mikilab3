@@ -5,7 +5,7 @@ import RecipePicker from "@/components/RecipePicker";
 
 export default function AntiWaste() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [kg, setKg] = useState("2");
   const [cost, setCost] = useState("1.5"); // costo materia già sostenuto €/kg
   const [rec, setRec] = useState("pangrattato");

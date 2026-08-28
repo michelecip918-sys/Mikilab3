@@ -24,7 +24,7 @@ const COLORS = ["#3f7cac", "#5aa0cf", "#2e8b6f", "#C88A2B", "#a05eb5", "#C0574D"
 export default function RecipeTimeline({ recipe, lang: langProp }) {
   const { lang: ctxLang } = useLang();
   const lang = langProp || ctxLang;
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" ? e : i));
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
 
   const phases = useMemo(() => {
     const wp = Array.isArray(recipe.work_phases) ? recipe.work_phases.filter((p) => p && (p.name || p.time)) : [];

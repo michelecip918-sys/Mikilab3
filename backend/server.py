@@ -5138,6 +5138,29 @@ async def challenges_complete(body: ChallengeReq, user: dict = Depends(current_u
             "need_panettoni": CHALLENGE_UNLOCK_PANETTONI, "need_all": CHALLENGE_UNLOCK_ALL, **unlocks}
 
 
+# --- Impara a Livelli: completare il quiz di un percorso conta come sfida ---
+LEARN_PATHS = {"base", "lievito", "panettone"}
+
+
+class LearnReq(BaseModel):
+    path_id: str
+
+
+@api_router.post("/learn/complete")
+async def learn_complete(body: LearnReq, user: dict = Depends(current_user)):
+    pid = body.path_id
+    if pid not in LEARN_PATHS:
+        raise HTTPException(400, "Percorso sconosciuto")
+    cid = f"learn_{pid}"
+    await db.user_challenges.update_one({"user_id": user["user_id"]},
+                                        {"$addToSet": {"completed": cid}, "$setOnInsert": {"created_at": now_iso()}}, upsert=True)
+    doc = await db.user_challenges.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    done = doc.get("completed", [])
+    unlocks = await _apply_challenge_unlocks(user["email"], len(done))
+    return {"ok": True, "completed": done, "count": len(done),
+            "need_panettoni": CHALLENGE_UNLOCK_PANETTONI, "need_all": CHALLENGE_UNLOCK_ALL, **unlocks}
+
+
 def _panettone_required(index: int) -> int:
     # Combinazione progressiva: la ricetta 1 richiede 2 sfide, la 17 fino a 8 (cap = n° sfide disponibili).
     return min(2 + index, len(CHALLENGE_CATALOG))

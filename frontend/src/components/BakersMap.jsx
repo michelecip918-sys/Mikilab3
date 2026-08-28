@@ -9,7 +9,7 @@ import { toast } from "sonner";
 // Mappa dei Fornai MikiLab — Leaflet + OpenStreetMap (nessuna chiave). Posizione opt-in e approssimata.
 export default function BakersMap({ open, onClose }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" ? e : i));
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
   const mapEl = useRef(null);
   const mapRef = useRef(null);
   const layerRef = useRef(null);

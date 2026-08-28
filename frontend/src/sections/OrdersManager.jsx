@@ -11,7 +11,7 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 
 export default function OrdersManager({ store, stores }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const storeName = (id) => (stores.find((s) => s.id === id) || {}).name || tri("Senza negozio", "Ohne Filiale", "No store");
 
   const STATUS = {

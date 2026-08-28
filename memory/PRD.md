@@ -1953,3 +1953,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **SAPORE DEL GIORNO CLICCABILE**: `SaporeDelGiorno` ora è un button con prop `onOpen` → `onNavigate("ricette")`. Verificato: apre le Ricette.
 ### RESTA DA FARE (P1, feature ampia)
 - **Impara a Livelli**: ristrutturare LearnHub in percorsi a livelli con quiz finali collegati a Motore Sfide/sblocco Panettoni (non ancora fatto — richiede nuova UI livelli + wiring quiz→sfide).
+
+## v-fork.23 (2026-08) — Impara a Livelli + Rifinitura FR/FA totale + Recolor interni
+- **IMPARA A LIVELLI (nuova feature, verificata end-to-end)**: `sections/ImparaLivelli.jsx` — 3 livelli progressivi (Basi, Lievito Madre, Panettone) con quiz finale (3 domande, pass ≥2/3). Livelli sbloccati in sequenza. Superare un quiz chiama `POST /api/learn/complete {path_id}` (backend: LEARN_PATHS={base,lievito,panettone}) che aggiunge `learn_<id>` a `user_challenges.completed` e applica `_apply_challenge_unlocks` → CONTA come sfida e avvicina allo sblocco Panettoni (3 sfide) e Tutto (6). Card in Home `home-impara-livelli-btn`. `challengesApi.learnComplete` in api.js. Verificato: quiz superato → toast "conta come sfida" → livello 2 sbloccato, 3 con lucchetto, progresso 1/3.
+- **RIFINITURA FR/FA TOTALE**: sweep su 69 file (sections+components) — tutti gli helper locali `tri`/`L` che ricadevano su italiano per fr/fa ora ricadono su INGLESE (mai più italiano). Verificato: pagina Ricette in FR (header/tab/nav/footer/strumenti tradotti). Residuo (long tail): pochi testi promo hardcoded in RecipeList ("Novità dal MikiLab", "Perché coloriamo naturalmente") + Shop `pick` + i NOMI delle ricette (dati propri, non traducibili).
+- **RECOLOR INTERNI**: Community.jsx e Ricette.jsx da blu a toni Arte Bianca (già in v-fork.22).
+### RESTA DA FARE (minori)
+- Tradurre i pochi testi promo hardcoded in RecipeList + Shop pick per FR/FA.
+- Certificato/Diploma PDF a fine percorsi Impara (come per le sfide).

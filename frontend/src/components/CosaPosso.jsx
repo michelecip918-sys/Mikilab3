@@ -6,7 +6,7 @@ import { pantryApi } from "@/lib/api";
 // "Cosa posso fare con…?" — scrivi gli ingredienti che hai, l'IA trova le ricette fattibili.
 export default function CosaPosso() {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" ? e : i));
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
   const [ing, setIng] = useState("");
   const [scope, setScope] = useState("mikilab");
   const [loading, setLoading] = useState(false);

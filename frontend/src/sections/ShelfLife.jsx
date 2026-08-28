@@ -11,7 +11,7 @@ const CAT_BASE = { basi: 5, pane: 3, panini: 2, snack: 2, focacce: 3, viennoiser
 
 export default function ShelfLife() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [prod, setProd] = useState("pane");
   const [ph, setPh] = useState("4.3");
   const [hours, setHours] = useState("18");

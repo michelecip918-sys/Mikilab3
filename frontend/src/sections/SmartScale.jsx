@@ -15,7 +15,7 @@ const DEFAULT_ROWS = [
 
 export default function SmartScale() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [rows, setRows] = useState(() => {
     try { const s = JSON.parse(localStorage.getItem(STORE)); if (Array.isArray(s) && s.length) return s; } catch { /* */ }
     return DEFAULT_ROWS;

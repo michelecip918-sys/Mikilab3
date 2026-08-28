@@ -12,7 +12,7 @@ const MASTER_TARGET = 5; // risposte corrette di fila al livello Master per il d
 export default function EvolvingQuiz() {
   const { lang } = useLang();
   const { user } = useAuth();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
 
   const LEVELS = [
     { id: "apprendista", label: tri("Apprendista", "Anfänger", "Apprentice", "Aprendiz"), color: "#5aa0cf" },

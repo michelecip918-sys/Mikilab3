@@ -14,7 +14,7 @@ export function openLabTour() {
 }
 
 function buildSlides(lang) {
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   return [
     {
       who: "michele", avatar: MICHELE,
@@ -101,7 +101,7 @@ function buildSlides(lang) {
 
 export default function LabOnboarding() {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [show, setShow] = useState(false);
   const [i, setI] = useState(0);
   const slides = buildSlides(lang);

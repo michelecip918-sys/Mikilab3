@@ -99,7 +99,7 @@ const FEATURES = {
 export default function PaywallGate({ children, sectionName, feature = "lab" }) {
   const { user, setAuthOpen } = useAuth();
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const flang = lang === "de" ? "de" : lang === "en" ? "en" : "it";
   const email = user?.email;
   // Tier: "home" (€12,99) per Academy/Principianti · "lab" (€29,99) per il laboratorio.

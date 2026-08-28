@@ -32,7 +32,7 @@ const EXTRAS = [
 
 export default function RecipeGenerator() {
   const { lang } = useLang();
-  const T = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? (e ?? i) : i);
+  const T = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "it" ? i : (e ?? i));
   const [product, setProduct] = useState("");
   const [preferment, setPreferment] = useState("diretto");
   const [hydration, setHydration] = useState(70);

@@ -18,7 +18,7 @@ export const getVoiceId = (who) =>
 
 export default function VoiceSettings({ open, onClose }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "es") ? e : i);
+  const tri = (i, d, e) => (lang === "de" ? d : lang === "it" ? i : (e ?? i));
   const [momy, setMomy] = useState(getVoiceId("momy"));
   const [michele, setMichele] = useState(getVoiceId("michele"));
   const [previewing, setPreviewing] = useState(null);
