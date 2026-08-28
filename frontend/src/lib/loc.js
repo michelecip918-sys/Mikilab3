@@ -1,4 +1,5 @@
-// Restituisce il campo tradotto in tedesco se presente, altrimenti l'originale italiano.
+// Restituisce il campo tradotto se presente, altrimenti fallback mappa FR/FA, poi originale italiano.
+import { triFR, triFA } from "@/i18n/triMaps";
 export function rLoc(recipe, field, lang) {
   if (!recipe) return "";
   if (lang === "de") {
@@ -15,7 +16,10 @@ export function rLoc(recipe, field, lang) {
     const en = recipe[`${field}_en`];
     if (en != null && String(en).trim() !== "") return en;
   }
-  return recipe[field] ?? "";
+  const it = recipe[field] ?? "";
+  if (lang === "fr") return recipe[`${field}_fr`] || triFR(it) || it;
+  if (lang === "fa") return recipe[`${field}_fa`] || triFA(it) || it;
+  return it;
 }
 
 // Traduzione IT->DE dei nomi ingredienti/extra più comuni in panetteria.
@@ -95,7 +99,10 @@ const INGREDIENT_DE = {
 };
 
 export function ingLoc(name, lang) {
-  if ((lang !== "de" && lang !== "en" && lang !== "es") || !name) return name;
+  if (!name) return name;
+  if (lang === "fr") { const v = triFR(name); return v || name; }
+  if (lang === "fa") { const v = triFA(name); return v || name; }
+  if (lang !== "de" && lang !== "en" && lang !== "es") return name;
   const MAP = lang === "de" ? INGREDIENT_DE : lang === "es" ? INGREDIENT_ES : INGREDIENT_EN;
   const key = String(name).trim().toLowerCase();
   if (MAP[key]) return MAP[key];

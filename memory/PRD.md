@@ -2111,3 +2111,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Titoli in cima a Ricette/Your Lab/Impara (6 lingue). Fix troncamento: rimosso hyphens-auto (parole tagliate a metà).
 - Causa "non traduce tutto": ~144 ternari hardcoded `lang==="de"?...` che bypassavano la mappa. Codemod (codemod_ternary.py) ha convertito 112 in mkTri(lang)(...) su 32 file (compila ok). Restano 32 con rami non-letterali.
 - Estratte+tradotte 66 nuove stringhe (ex-ternari) → mappa FR/FA ora 2073 voci.
+
+## v-fork.47 (2026-06) — Nomi ricette tradotti nel piano (FR/FA)
+- `rLoc`/`ingLoc` (lib/loc.js) ora fanno fallback alla mappa triFR/triFA per fr/fa.
+- Tradotti 110 nomi ricette MikiLab (+ mantenimento nomi propri: Matera, Altamura...) → mappa 2183 voci.
+- PianoProduzioneAI: selettori, lista "Scegli", lista spesa e schede usano rLoc/locName → nomi tradotti in tutte le lingue.

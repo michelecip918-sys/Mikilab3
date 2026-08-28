@@ -20,7 +20,7 @@ import { shareContent } from "@/lib/share";
 import { rLoc } from "@/lib/loc";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
-import { mkTri } from "@/i18n/triMaps";
+import { mkTri, triFR, triFA } from "@/i18n/triMaps";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
@@ -221,6 +221,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     if (cur.length >= 6) { toast.error(tri3(lang, "Massimo 6 strumenti: rimuovine uno prima", "Maximal 6 Tools: entferne zuerst eines", "Max 6 tools: remove one first", "Máximo 6: quita uno primero")); return cur; }
     return [...cur, id];
   });
+  // Traduce un nome ricetta salvato (italiano) nel piano generato per FR/FA.
+  const locName = (s) => (lang === "fr" ? (triFR(s) || s) : lang === "fa" ? (triFA(s) || s) : s);
   const [preferment, setPreferment] = useState("solido");
   const [planGoal, setPlanGoal] = useState("qualita");
   const [bizType, setBizType] = useState("pro");
@@ -1111,7 +1113,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
                     className="flex-1 min-w-0 bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#C88A2B]">
                     <option value="">{t("capo_pick_recipe")}</option>
-                    {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                    {recipes.map((r) => <option key={r.id} value={r.id}>{rLoc(r, "name", lang)}</option>)}
                   </select>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
@@ -1184,12 +1186,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   <option value="">{t("capo_pick_recipe")}</option>
                   {recipes.some((r) => r._own) && (
                     <optgroup label={tri3(lang, "Le mie ricette (panettiere)", "Meine Rezepte", "My recipes")}>
-                      {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                      {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{rLoc(r, "name", lang)}</option>)}
                     </optgroup>
                   )}
                   {recipes.some((r) => !r._own) && (
                     <optgroup label={tri3(lang, "Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}>
-                      {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                      {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{rLoc(r, "name", lang)}</option>)}
                     </optgroup>
                   )}
                 </select>
@@ -1291,7 +1293,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     <button key={r.id} data-testid={`capo-pick-${r.id}`} onClick={() => (sel ? removeByRecipe(r.id) : addRecipes([r.id]))}
                       className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#8C4A27]/12 border border-[#8C4A27]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#2A323A] border border-transparent"}`}>
                       {sel ? <CheckCircle2 className="w-5 h-5 text-[#8C4A27] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#E6D8C3] dark:border-[#4a5560] shrink-0" />}
-                      <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</span>
+                      <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{rLoc(r, "name", lang)}</span>
                       {r._own && <span className="text-[10px] text-[#C88A2B]">★</span>}
                     </button>
                   );
@@ -1400,7 +1402,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <div className="space-y-1.5">
                 {rows.map((x, i) => (
                   <div key={i} data-testid={`capo-cost-row-${i}`} className="flex items-center justify-between text-sm">
-                    <span className="text-[#3F4A54] dark:text-[#AEB8BF] truncate flex-1">{x.name} <span className="text-[#7E8A93]">×{x.qty}</span></span>
+                    <span className="text-[#3F4A54] dark:text-[#AEB8BF] truncate flex-1">{locName(x.name)} <span className="text-[#7E8A93]">×{x.qty}</span></span>
                     <span className="font-mono-data text-[#7E8A93] mr-3">{x.cost != null ? eur(x.cost) : "—"}</span>
                     <span className="font-mono-data font-semibold text-[#6E371C] dark:text-[#a9d2ec]">{x.rev != null ? eur(x.rev) : "—"}</span>
                   </div>
