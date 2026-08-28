@@ -383,7 +383,7 @@ export default function Home({ onNavigate }) {
       <ChatPanel open={chatOpen} onClose={() => { setChatOpen(false); setChatUser(null); }} initialUser={chatUser} />
 
       {/* ===== MIKILAB + SCOPRI MIKILAB uniti in un'unica card ===== */}
-      <div data-testid="home-story" className="-mt-2">
+      {false && (<div data-testid="home-story" className="-mt-2">
         <button data-testid="home-story-toggle" onClick={toggleStory}
           className="w-full text-left relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#6E371C] to-[#8C4A27] text-white shadow-lg active:scale-98 transition-all">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
@@ -549,7 +549,7 @@ export default function Home({ onNavigate }) {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </div>)}
 
       {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
       <div data-testid="home-core">

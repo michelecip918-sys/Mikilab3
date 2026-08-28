@@ -2054,3 +2054,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Titolo interno Laboratorio**: hero ora "Bentornato a lavoro, Chef 👨‍🍳" + sottotitolo "Scegli le ricette e genera il tuo piano di produzione con l'IA".
 - **Titolo interno Social**: header ora "È ora di rilassarti, Chef 🥐" + "Stacca dal forno: idee, foto, amici e mercatino".
 - Nota: la Home mantiene solo il teaser collassato "MikiLab/Scopri" (home-story); la sezione discovery completa vive ora in Ricette. Verificato: compilazione pulita, nessun errore JS aprendo Ricette→Scopri.
+
+## v-fork.39 (2026-06) — Home minimale + slogan a rotazione + fascia Sapori
+- **Home minimale**: rimosso (disattivato) il teaser "Scopri MikiLab" (home-story) dalla Home; la discovery vive in Ricette. Home ora: Avatar → Sapore del giorno → hero Consulenza → Motore Sfide → Glossario → Chiedi al Maestro → Cuore MikiLab → ShareInstall.
+- **Slogan a rotazione**: Laboratorio (hero) e Social (header) pescano una frase casuale a ogni visita. Lab: "Bentornato a lavoro/Che si sforna oggi/Pronti partenza impasto/Grembiule allacciato". Social: "È ora di rilassarti/Pausa caffè/Due chiacchiere/Mostra la tua sfornata".
+- **Fascia "Sapori di Casa"** con foto in cima al tab Ricette (ricette-sapori-band) → apre SaporiCasa; rimosso il bottone util ridondante.
+- Verificato: compilazione pulita, Home renderizzata senza errori console.

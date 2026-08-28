@@ -44,9 +44,21 @@ export default function Ricette() {
   return (
     <div data-testid="ricette-page">
       {coll === "mikilab" && (
+        <button data-testid="ricette-sapori-band" onClick={() => setView("sapori")}
+          className="relative w-full h-28 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left">
+          <img src="https://images.unsplash.com/photo-1598616068594-93ef7202a8ca?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 10%,#6E371Caa 55%,#6E371C22)" }} />
+          <div className="relative h-full flex flex-col justify-center px-4 text-white">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-white/20 border border-white/30 px-2 py-0.5 rounded-full w-fit mb-1"><UtensilsCrossed className="w-3 h-3" /> {tri("Tradizione", "Tradition", "Tradition", "Tradición")}</span>
+            <h3 className="font-display text-xl font-bold leading-tight">{tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa")}</h3>
+            <p className="text-[12px] text-white/90">{tri("Matera & Puglia: pane, focacce e pasta fatta in casa", "Matera & Puglia: Brot, Focaccia & Pasta", "Matera & Puglia: bread, focaccia & pasta", "Matera y Puglia: pan, focaccia y pasta")}</p>
+          </div>
+        </button>
+      )}
+
+      {coll === "mikilab" && (
         <div className="grid grid-cols-3 gap-2.5 mb-4">
           <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab")} onClick={() => setView("scopri")} />
-          <UtilBtn testid="ricette-sapori-btn" Icon={UtensilsCrossed} label={tri("Sapori di Casa", "Geschmack v. zu Hause", "Home Flavours", "Sabores de Casa")} onClick={() => setView("sapori")} />
           <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia", "Enciclopedia")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas")} onClick={() => setView("farine")} />
           <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />

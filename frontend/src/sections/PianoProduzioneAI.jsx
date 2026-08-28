@@ -156,6 +156,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
   const { addTimer } = useTimers();
   const [menuOpen, setMenuOpen] = useState(false);
+  const LAB_SLOGANS = [
+    { it: "Bentornato a lavoro, Chef 👨‍🍳", de: "Willkommen zurück, Chef 👨‍🍳", en: "Welcome back to work, Chef 👨‍🍳", es: "Bienvenido al trabajo, Chef 👨‍🍳" },
+    { it: "Che si sforna oggi? 🔥", de: "Was wird heute gebacken? 🔥", en: "What are we baking today? 🔥", es: "¿Qué horneamos hoy? 🔥" },
+    { it: "Pronti, partenza… impasto! 🥖", de: "Auf die Plätze, fertig… Teig! 🥖", en: "Ready, set… dough! 🥖", es: "Preparados, listos… ¡masa! 🥖" },
+    { it: "Grembiule allacciato, Chef? 💪", de: "Schürze umgebunden, Chef? 💪", en: "Apron on, Chef? 💪", es: "¿Delantal puesto, Chef? 💪" },
+  ];
+  const [labSlogan] = useState(() => LAB_SLOGANS[Math.floor(Math.random() * LAB_SLOGANS.length)]);
   // Snellimento: alla prima apertura del laboratorio, porta subito alla scelta ricette / generazione.
   useEffect(() => {
     if (!onOpenTool) return;
@@ -699,7 +706,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </button>
         )}
         <Sparkles className="w-7 h-7 mb-2" />
-        <h1 className="font-display text-2xl font-bold">{lang === "de" ? "Willkommen zurück, Chef 👨‍🍳" : lang === "en" ? "Welcome back to work, Chef 👨‍🍳" : lang === "es" ? "Bienvenido al trabajo, Chef 👨‍🍳" : "Bentornato a lavoro, Chef 👨‍🍳"}</h1>
+        <h1 className="font-display text-2xl font-bold">{lang === "de" ? labSlogan.de : lang === "en" ? labSlogan.en : lang === "es" ? labSlogan.es : labSlogan.it}</h1>
         <p className="text-white/85 text-sm mt-1">{lang === "de" ? "Wähle die Rezepte und erzeuge deinen KI-Produktionsplan" : lang === "en" ? "Pick your recipes and generate your AI production plan" : lang === "es" ? "Elige tus recetas y genera tu plan de producción con IA" : "Scegli le ricette e genera il tuo piano di produzione con l'IA"}</p>
       </div>
 

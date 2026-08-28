@@ -97,6 +97,14 @@ export default function Community({ onNavigate }) {
     return () => { window.removeEventListener("mikilab-social-view", onView); window.removeEventListener("mikilab-social-feed", onFeed); };
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const SOCIAL_SLOGANS = [
+    { it: "È ora di rilassarti, Chef 🥐", de: "Zeit zum Entspannen, Chef 🥐", en: "Time to relax, Chef 🥐", es: "Hora de relajarte, Chef 🥐" },
+    { it: "Pausa caffè tra fornai ☕", de: "Kaffeepause unter Bäckern ☕", en: "Coffee break among bakers ☕", es: "Pausa café entre panaderos ☕" },
+    { it: "Due chiacchiere con i colleghi 💬", de: "Ein Schwatz mit Kollegen 💬", en: "A chat with fellow bakers 💬", es: "Charla con colegas 💬" },
+    { it: "Mostra la tua sfornata! 📸", de: "Zeig dein Backwerk! 📸", en: "Show your bake! 📸", es: "¡Muestra tu horneada! 📸" },
+  ];
+  const [socialSlogan] = useState(() => SOCIAL_SLOGANS[Math.floor(Math.random() * SOCIAL_SLOGANS.length)]);
+
   const needLogin = () => { if (!user) { setAuthOpen(true); return true; } return false; };
 
   const onPhoto = async (e) => {
@@ -170,7 +178,7 @@ export default function Community({ onNavigate }) {
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="font-display text-xl font-extrabold leading-none drop-shadow-sm">{tri("È ora di rilassarti, Chef 🥐", "Zeit zum Entspannen, Chef 🥐", "Time to relax, Chef 🥐", "Hora de relajarte, Chef 🥐")}</h1>
+            <h1 className="font-display text-xl font-extrabold leading-none drop-shadow-sm">{lang === "de" ? socialSlogan.de : lang === "en" ? socialSlogan.en : lang === "es" ? socialSlogan.es : socialSlogan.it}</h1>
             <p className="text-[12px] text-white/90 mt-1 leading-snug">{tri("Stacca dal forno: idee, foto, amici e mercatino tra colleghi", "Pause vom Ofen: Ideen, Fotos, Freunde & Markt", "Off the oven: ideas, photos, friends & market", "Fuera del horno: ideas, fotos, amigos y mercadillo")}</p>
           </div>
           {user && (
