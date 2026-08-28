@@ -92,10 +92,10 @@ const RECIPES = [
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1509440159596-0249088772ff?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200";
 const onImgErr = (e) => { if (e.currentTarget.src !== FALLBACK_IMG) e.currentTarget.src = FALLBACK_IMG; };
 
-export default function RicetteCustodite() {
+export default function RicetteCustodite({ initialId = null }) {
   const { lang } = useLang();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : ((lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i));
-  const [openId, setOpenId] = useState(null);
+  const [openId, setOpenId] = useState(initialId);
   const [flour, setFlour] = useState(1000);
   const [qr, setQr] = useState("");
 

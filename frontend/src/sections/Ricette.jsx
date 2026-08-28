@@ -15,13 +15,14 @@ export default function Ricette() {
   const { t, lang } = useLang();
   const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const [view, setView] = useState("main");
+  const [custoditeInit, setCustoditeInit] = useState(null);
   const coll = "mikilab";
   useBackClose(view !== "main", () => setView("main"));
 
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
   if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /></Sub>;
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
-  if (view === "custodite") return <Sub onBack={() => setView("main")}><RicetteCustodite /></Sub>;
+  if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
@@ -45,6 +46,19 @@ export default function Ricette() {
 
   return (
     <div data-testid="ricette-page">
+      {coll === "mikilab" && (
+        <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}
+          className="relative w-full h-32 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left ring-2 ring-[#C88A2B]/60">
+          <img src="https://images.unsplash.com/photo-1549413468-cd78edb7e75c?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 15%,#6E371Caa 60%,#6E371C22)" }} />
+          <div className="relative h-full flex flex-col justify-center px-4 text-white">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#C88A2B] px-2 py-0.5 rounded-full w-fit mb-1">★ {tri("In vetrina", "Im Schaufenster", "Featured", "En vitrina")}</span>
+            <h3 className="font-display text-xl font-bold leading-tight">{tri("Pane di Matera IGP", "Materaner Brot", "Bread of Matera", "Pan de Matera")}</h3>
+            <p className="text-[12px] text-white/90">{tri("La ricetta della tradizione, adattata alle tue dosi", "Das Traditionsrezept, an deine Mengen angepasst", "The traditional recipe, adapted to your amounts", "La receta tradicional, adaptada a tus dosis")}</p>
+          </div>
+        </button>
+      )}
+
       {coll === "mikilab" && (
         <div data-testid="ricette-tradizione" className="mb-4">
           <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2 px-1 flex items-center gap-1.5"><UtensilsCrossed className="w-4 h-4" /> {tri("La Tradizione", "Die Tradition", "The Tradition", "La Tradición")}</p>

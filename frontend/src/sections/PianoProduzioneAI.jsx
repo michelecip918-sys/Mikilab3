@@ -998,6 +998,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       </Section>
 
       <Section order={2} highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
+        <div data-testid="capo-plan-switch" className="flex items-center gap-1 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] mb-2">
+          <button data-testid="capo-switch-weekly" onClick={() => setUseWeekly(true)}
+            className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${useWeekly ? "bg-[#8C4A27] text-white shadow-sm" : "text-[#7E8A93]"}`}>{tri3(lang, "Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal")}</button>
+          <button data-testid="capo-switch-today" onClick={() => setUseWeekly(false)}
+            className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${!useWeekly ? "bg-[#8C4A27] text-white shadow-sm" : "text-[#7E8A93]"}`}>{tri3(lang, "Ordine di oggi", "Heutige Bestellung", "Today's order", "Pedido de hoy")}</button>
+        </div>
         <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
             <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
               className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#a9d2ec] border-[#E6D8C3] dark:border-[#38424B]"}`}>
@@ -1020,6 +1026,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 { id: "macchine", Icon: Wrench, label: tri3(lang, "Parco Macchine", "Maschinenpark", "Machine Park", "Maquinaria") },
                 { id: "fermentazione", Icon: Activity, label: tri3(lang, "Fermentazione", "Gärung", "Fermentation", "Fermentación") },
                 { id: "twin", Icon: FlaskConical, label: tri3(lang, "Digital Twin", "Teig-Zwilling", "Dough Twin", "Gemelo Digital") },
+                { id: "weatherbaker", Icon: CloudSun, label: tri3(lang, "Weather-Baker", "Weather-Baker", "Weather-Baker", "Weather-Baker") },
+                { id: "convlievito", Icon: RefreshCw, label: tri3(lang, "Conv. Lieviti", "Hefe-Umr.", "Yeast Conv.", "Conv. Levad.") },
+                { id: "timer", Icon: TimerIcon, label: tri3(lang, "Smart Timer", "Smart Timer", "Smart Timer", "Smart Timer") },
               ].map((q) => (
                 <button key={q.id} data-testid={`capo-quicktool-${q.id}`} onClick={() => onOpenTool(q.id)}
                   className="flex flex-col items-center gap-1 py-2.5 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] active:scale-95 hover:border-[#B45309] transition-all">

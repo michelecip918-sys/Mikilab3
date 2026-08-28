@@ -2071,3 +2071,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Strumenti rapidi nel passo "Scegli"** del Laboratorio (capo-quick-tools): scorciatoie a Parco Macchine (macchine), Fermentazione Predittiva (fermentazione), Digital Twin (twin) via onOpenTool.
 - **Racconto in viaggio** (ScopriMikiLab, data-testid scopri-timeline): mini-timeline a 3 tappe (incontro in viaggio → spalla a spalla al forno → nasce MikiLab), 4 lingue.
 - Note: "Custodite in evidenza" nella lista e fascia unica "La Tradizione" non fatti (offerti come follow-up). Compilazione pulita.
+
+## v-fork.42 (2026-06) — Custodite in vetrina + interruttore piano + più strumenti rapidi
+- **Custodite in vetrina** (Ricette): card grande in alto (ricette-vetrina) "Pane di Matera IGP" → apre direttamente il dettaglio Custodite. RicetteCustodite ora accetta prop `initialId`.
+- **Interruttore piano rapido** (Lab, capo-plan-switch): switch segmentato "Piano Settimanale ⟷ Ordine di oggi" sopra le card del passo Scegli (setUseWeekly).
+- **Strumenti rapidi ampliati** (capo-quick-tools): ora 6 scorciatoie — Parco Macchine, Fermentazione, Digital Twin, Smart Weather-Baker, Convertitore Lieviti, Smart Timer.
+- Verificato: compilazione pulita, Home renderizzata senza errori console.
