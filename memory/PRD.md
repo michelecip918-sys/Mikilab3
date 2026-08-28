@@ -1895,3 +1895,19 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ### RESTA DA FARE (grandi, prossimo ciclo)
 - **Home a 6 sezioni** strette (Hero, Ricette & Schede, Impara da Casa, Consulenza B2B a 1 solo CTA, Social, Chi Sono & Guide) come da design_guidelines.json.
 - **Recolor Arte Bianca COMPLETO** su tutte le sezioni legacy (Ricette/Community/Maestro/Learn ancora con hex blu/oro #3f7cac ecc.). I nuovi componenti (Sfide/Sapori/Calcolatore/hero Home) sono già Arte Bianca.
+
+## v-fork.18 (2026-08) — "Il Tuo Laboratorio" casalingo: rimozione voci industriali + 6 nuovi tool community
+- **RIMOSSE dall'UI (codice/backend INTATTI, riattivabili)**: dai TOOLS grid `haccp` (Registro HACCP) e `lotti` (Tracciabilità Lotti); dai quicklink `enterprise` (Multi-negozio) e `dayclose` (Concludi Giornata); dai MODULI del Piano IA `freezer` (Giacenze Freezer), `turni` (Turni & Personale), `punti` (Punti Vendita). Verificato via screenshot admin: tutti assenti. La GENERAZIONE PIANI resta attiva (moduli casalinghi: celle, orari, infornate, clima, spesa, foodcost, antispreco).
+- **NUOVI TOOL COMMUNITY (Maestro.jsx render cases + PianoProduzioneAI TOOLS grid + quicklink `metodo`)**:
+  - `metodo` → `CalcolatoreMetodo.jsx` (dosi/idratazione/scomputo prefermento/temp acqua/tempi incordatura). Già in Home, ora anche nel Lab.
+  - `convlievito` → `ConvertitoreLieviti.jsx`: birra fresco⇄secco (3:1), birra→LM (~×20), converti prefermento tra idratazioni (LM/Licoli/Biga/Poolish). Client-side, verificato (12g→4g, 5g→100g, 200g LM→Licoli +100g acqua).
+  - `stampi` → `CalcolatoreStampi.jsx`: pirottini panettone (100/500/750/1000g × pezzi → impasto totale) + teglia/tortiera (area × densità prodotto → peso impasto).
+  - `sosimpasto` → `SosImpastoGuida.jsx`: "Trova il Tuo Errore" — 8 difetti (causa/rimedio) statici, nessun costo IA + link opzionale alla Diagnosi Foto IA (onOpenTool).
+  - `recupero` → `AngoloRecupero.jsx`: pane raffermo (pancotto, pallotte, panzanella, pangrattato, French toast, budino) + esubero LM (waffle, crackers, grissini, piadina, biscotti).
+  - `saporicasa` → `SaporiCasa.jsx` (già esistente) ora anche apribile dal Lab.
+- Tutti i nuovi componenti in palette Arte Bianca (#8C4A27/#D97706/#FAF5EC), back button opzionale (Maestro fornisce il suo).
+### RESTA DA FARE (fasi successive della grande richiesta)
+- **Home & struttura**: banner "Il Sapore del Giorno", Glossario Interattivo Arte Bianca, pulsante "Aggiungi Ricetta" sempre visibile in Home.
+- **Profilo utente**: "Il Mio Ricettario Personale", Registro Digitale Lievito Madre, PDF "Ricetta di Cantiere" stampabile.
+- **Impara**: percorsi formativi a livelli con quiz finali (motore sfide progressivo + lucchetti Panettoni già attivi).
+- **Recolor Arte Bianca COMPLETO** su sezioni legacy (Ricette/Community/Home hero blu ecc.).

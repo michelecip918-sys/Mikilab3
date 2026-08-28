@@ -48,9 +48,9 @@ export default function CalcolatoreMetodo({ onBack }) {
 
   return (
     <div className="pb-8" data-testid="calc-metodo">
-      <button data-testid="calc-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
+      {onBack && <button data-testid="calc-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
         <ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}
-      </button>
+      </button>}
 
       <div className="relative overflow-hidden rounded-3xl p-6 text-[#FFFDF9] shadow-xl mb-5"
         style={{ background: "linear-gradient(135deg,#8C4A27 0%,#6E371C 60%,#4A3222 100%)" }}>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -64,17 +64,14 @@ const serializeInfTable = (headers, rows) => {
 const isPanettoneRecipe = (r) => /panettone/i.test(r?.name || "") || /panettone/i.test(r?.menu_category || "");
 
 // Moduli opzionali del Piano IA: si accendono/spengono senza bloccare il piano base.
-const DEFAULT_MODULES = { celle: true, orari: true, freezer: true, spesa: true, foodcost: true, infornate: true, turni: false, clima: false, punti: false, antispreco: false };
+const DEFAULT_MODULES = { celle: true, orari: true, spesa: true, foodcost: true, infornate: true, clima: false, antispreco: false };
 const MODULES = [
   { id: "celle", Icon: Wrench, it: "Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers" },
   { id: "orari", Icon: Clock, it: "Orari d'inizio", de: "Startzeiten", en: "Start times" },
-  { id: "freezer", Icon: Snowflake, it: "Giacenze Freezer", de: "Gefrierbestand", en: "Freezer stock" },
   { id: "infornate", Icon: Flame, it: "Orario Infornate", de: "Backzeiten", en: "Baking schedule" },
-  { id: "turni", Icon: Users, it: "Turni & Personale", de: "Schichten & Personal", en: "Shifts & staff" },
   { id: "clima", Icon: Thermometer, it: "Meteo & Clima", de: "Wetter & Klima", en: "Weather & climate" },
   { id: "spesa", Icon: ShoppingCart, it: "Lista Spesa", de: "Einkaufsliste", en: "Shopping list" },
   { id: "foodcost", Icon: Euro, it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & margin" },
-  { id: "punti", Icon: Store, it: "Punti Vendita", de: "Verkaufspunkte", en: "Sales points" },
   { id: "antispreco", Icon: Recycle, it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-waste" },
 ];
 
@@ -111,12 +108,16 @@ const TOOLS = [
   { id: "diagnosi", Icon: Camera, cat: "gestione", it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
   { id: "suono", Icon: Camera, cat: "gestione", it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
   { id: "sessioni", Icon: Thermometer, cat: "gestione", it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
-  { id: "lotti", Icon: QrCode, cat: "gestione", it: "Tracciabilità Lotti", de: "Chargen", en: "Batch Traceability" },
-  { id: "haccp", Icon: ScanLine, cat: "gestione", it: "Registro HACCP", de: "HACCP-Register", en: "HACCP Log" },
   { id: "check", Icon: ListChecks, cat: "gestione", it: "Checklist", de: "Checklisten", en: "Checklists" },
   { id: "shelf", Icon: CalendarClock, cat: "vendita", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
   { id: "aggiungi", Icon: BookOpen, cat: "impasto", it: "Le Mie Ricette", de: "Meine Rezepte", en: "My Recipes", es: "Mis Recetas" },
   { id: "scanflour", Icon: Wheat, cat: "impasto", it: "Scanner Farina", de: "Mehl-Scanner", en: "Flour Scanner", es: "Escáner de Harina" },
+  { id: "metodo", Icon: Calculator, cat: "impasto", it: "Calcolatore Metodo", de: "Methoden-Rechner", en: "Method Calculator", es: "Calculadora Método" },
+  { id: "convlievito", Icon: RefreshCw, cat: "impasto", it: "Convertitore Lieviti", de: "Hefe-Umrechner", en: "Leavening Converter", es: "Conversor Levaduras" },
+  { id: "stampi", Icon: Cookie, cat: "cottura", it: "Stampi & Pirottini", de: "Formen-Rechner", en: "Pan Calculator", es: "Calculadora Moldes" },
+  { id: "sosimpasto", Icon: Stethoscope, cat: "gestione", it: "SOS Impasto", de: "SOS Teig", en: "Dough SOS", es: "SOS Masa" },
+  { id: "recupero", Icon: Recycle, cat: "impasto", it: "Angolo del Recupero", de: "Resteverwertung", en: "Recovery Corner", es: "Rincón Aprovechamiento" },
+  { id: "saporicasa", Icon: UtensilsCrossed, cat: "impasto", it: "Sapori di Casa", de: "Geschmack von zu Hause", en: "Home Flavours", es: "Sabores de Casa" },
 ];
 
 const TOOL_CATS = [
@@ -672,8 +673,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               { id: "aggiungi", Icon: BookOpen, label: tri3(lang, "Inserisci Ricette", "Rezepte hinzufügen", "Add Recipes") },
               { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Piano Giornaliero", "Tagesplan", "Daily Plan") },
               { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
-              { id: "enterprise", Icon: Building2, label: tri3(lang, "Multi-negozio", "Multi-Filiale", "Multi-store") },
-              { id: "dayclose", Icon: CheckCircle2, label: tri3(lang, "Concludi Giornata", "Tag abschließen", "Close the Day") },
+              { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Metodo", "Methoden-Rechner", "Method Calculator") },
             ].map(({ id, Icon, label }) => (
               <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
                 className="flex items-center gap-2 bg-gradient-to-br from-[#3f7cac] to-[#234b6e] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">

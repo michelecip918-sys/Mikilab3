@@ -56,9 +56,9 @@ export default function SaporiCasa({ onBack }) {
 
   return (
     <div className="pb-8" data-testid="sapori-casa">
-      <button data-testid="sapori-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
+      {onBack && <button data-testid="sapori-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
         <ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}
-      </button>
+      </button>}
 
       <div className="relative overflow-hidden rounded-3xl p-6 text-[#FFFDF9] shadow-xl mb-4"
         style={{ background: "linear-gradient(135deg,#8C4A27 0%,#B45309 55%,#D97706 100%)" }}>

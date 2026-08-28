@@ -52,6 +52,12 @@ import RecipeGenerator from "@/components/RecipeGenerator";
 import FermentazionePredittiva from "@/sections/FermentazionePredittiva";
 import CosaPosso from "@/components/CosaPosso";
 import CostoEnergia from "@/components/CostoEnergia";
+import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
+import ConvertitoreLieviti from "@/sections/ConvertitoreLieviti";
+import CalcolatoreStampi from "@/sections/CalcolatoreStampi";
+import SosImpastoGuida from "@/sections/SosImpastoGuida";
+import AngoloRecupero from "@/sections/AngoloRecupero";
+import SaporiCasa from "@/sections/SaporiCasa";
 import { toast } from "sonner";
 
 export default function Maestro() {
@@ -117,6 +123,12 @@ export default function Maestro() {
         {tool === "dayclose" && <DayClose />}
         {tool === "diagnosi" && <PhotoDiagnosi />}
         {tool === "scanflour" && <ScanFlour />}
+        {tool === "metodo" && <CalcolatoreMetodo />}
+        {tool === "convlievito" && <ConvertitoreLieviti />}
+        {tool === "stampi" && <CalcolatoreStampi />}
+        {tool === "sosimpasto" && <SosImpastoGuida onOpenTool={openTool} />}
+        {tool === "recupero" && <AngoloRecupero />}
+        {tool === "saporicasa" && <SaporiCasa />}
         {tool === "suono" && <SoundDiagnosi />}
         {tool === "enterprise" && <EnterpriseHub />}
       </div>
