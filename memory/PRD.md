@@ -2060,3 +2060,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Slogan a rotazione**: Laboratorio (hero) e Social (header) pescano una frase casuale a ogni visita. Lab: "Bentornato a lavoro/Che si sforna oggi/Pronti partenza impasto/Grembiule allacciato". Social: "È ora di rilassarti/Pausa caffè/Due chiacchiere/Mostra la tua sfornata".
 - **Fascia "Sapori di Casa"** con foto in cima al tab Ricette (ricette-sapori-band) → apre SaporiCasa; rimosso il bottone util ridondante.
 - Verificato: compilazione pulita, Home renderizzata senza errori console.
+
+## v-fork.40 (2026-06) — "conosciuti in viaggio" + Ricette Custodite spostate nelle Ricette
+- **Testo storia (GuidaAvatar)**: rimossa la parola "emigrati/Emigranten/emigrants/emigrantes" → ora "conosciuti in viaggio / auf Reisen kennengelernt / met while travelling / conocidos de viaje" (intro + story, 4 lingue).
+- **Ricette Custodite spostate**: rimosse dal Laboratorio (tool `custodite` e categoria `custodite` eliminati da TOOLS/TOOL_CATS → spariscono da griglia Lab e menù contestuale Lab). Ora vivono nel tab **Le Ricette di MikiLab**, unite a **Sapori di Casa** in un blocco "La Tradizione" con due fasce foto (ricette-sapori-band → SaporiCasa, ricette-custodite-band → RicetteCustodite). Il branch render in Maestro resta ma non è più raggiungibile dal Lab.
+- Verificato: compilazione pulita, nessun errore console aprendo Ricette e la fascia Custodite.

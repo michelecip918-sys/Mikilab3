@@ -116,8 +116,6 @@ export const TOOLS = [
   { id: "labpizzeria", Icon: Pizza, cat: "pizzeria", it: "Laboratorio Pizzeria", de: "Pizzeria-Labor", en: "Pizzeria Lab", es: "Lab Pizzería" },
   // 🧁 Laboratorio Pasticceria & Gelateria
   { id: "labpasticceria", Icon: Cake, cat: "pasticceria", it: "Laboratorio Pasticceria & Gelateria", de: "Konditorei & Eis-Labor", en: "Pastry & Gelato Lab", es: "Lab Pastelería y Helado" },
-  // 📜 Le Ricette Custodite
-  { id: "custodite", Icon: Landmark, cat: "custodite", it: "Ricette Custodite", de: "Bewahrte Rezepte", en: "Treasured Recipes", es: "Recetas Custodiadas" },
   // 🛠️ Strumenti Mani in Pasta
   { id: "manisporche", Icon: Hand, cat: "manisporche", it: "Mani Sporche (Voce)", de: "Schmutzige Hände (Stimme)", en: "Dirty Hands (Voice)", es: "Manos Sucias (Voz)" },
   { id: "convlievito", Icon: RefreshCw, cat: "manisporche", it: "Convertitore Lieviti", de: "Hefe-Umrechner", en: "Leavening Converter", es: "Conversor Levaduras" },
@@ -147,7 +145,6 @@ export const TOOL_CATS = [
   { key: "panificazione", Icon: Wheat, color: "#B45309", it: "Laboratorio Panificazione", de: "Backlabor", en: "Baking Lab", es: "Lab de Panificación" },
   { key: "pizzeria", Icon: Pizza, color: "#C0574D", it: "Laboratorio Pizzeria", de: "Pizzeria-Labor", en: "Pizzeria Lab", es: "Lab de Pizzería" },
   { key: "pasticceria", Icon: Cake, color: "#A16207", it: "Laboratorio Pasticceria & Gelateria", de: "Konditorei & Eis", en: "Pastry & Gelato Lab", es: "Pastelería y Helado" },
-  { key: "custodite", Icon: Landmark, color: "#6E371C", it: "Le Ricette Custodite", de: "Bewahrte Rezepte", en: "Treasured Recipes", es: "Recetas Custodiadas" },
   { key: "manisporche", Icon: Hand, color: "#8C4A27", it: "Strumenti Mani in Pasta", de: "Werkzeuge (Hände im Teig)", en: "Hands-in-Dough Tools", es: "Herramientas Manos en Masa" },
   { key: "coldchain", Icon: Building2, color: "#8C6B4A", it: "Gestione Attività & Cold Chain", de: "Betrieb & Kühlkette", en: "Business & Cold Chain", es: "Gestión y Cadena de Frío" },
 ];

@@ -7,6 +7,7 @@ import GuidaMetodi from "@/sections/Enciclopedia";
 import FlourTable from "@/components/FlourTable";
 import SaporiCasa from "@/sections/SaporiCasa";
 import ScopriMikiLab from "@/sections/ScopriMikiLab";
+import RicetteCustodite from "@/sections/RicetteCustodite";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 
@@ -20,6 +21,7 @@ export default function Ricette() {
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
   if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /></Sub>;
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
+  if (view === "custodite") return <Sub onBack={() => setView("main")}><RicetteCustodite /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
@@ -44,16 +46,29 @@ export default function Ricette() {
   return (
     <div data-testid="ricette-page">
       {coll === "mikilab" && (
-        <button data-testid="ricette-sapori-band" onClick={() => setView("sapori")}
-          className="relative w-full h-28 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left">
-          <img src="https://images.unsplash.com/photo-1598616068594-93ef7202a8ca?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 10%,#6E371Caa 55%,#6E371C22)" }} />
-          <div className="relative h-full flex flex-col justify-center px-4 text-white">
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-white/20 border border-white/30 px-2 py-0.5 rounded-full w-fit mb-1"><UtensilsCrossed className="w-3 h-3" /> {tri("Tradizione", "Tradition", "Tradition", "Tradición")}</span>
-            <h3 className="font-display text-xl font-bold leading-tight">{tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa")}</h3>
-            <p className="text-[12px] text-white/90">{tri("Matera & Puglia: pane, focacce e pasta fatta in casa", "Matera & Puglia: Brot, Focaccia & Pasta", "Matera & Puglia: bread, focaccia & pasta", "Matera y Puglia: pan, focaccia y pasta")}</p>
+        <div data-testid="ricette-tradizione" className="mb-4">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2 px-1 flex items-center gap-1.5"><UtensilsCrossed className="w-4 h-4" /> {tri("La Tradizione", "Die Tradition", "The Tradition", "La Tradición")}</p>
+          <div className="grid grid-cols-2 gap-2.5">
+            <button data-testid="ricette-sapori-band" onClick={() => setView("sapori")}
+              className="relative h-28 rounded-2xl overflow-hidden shadow-md active:scale-98 transition-all text-left">
+              <img src="https://images.unsplash.com/photo-1598616068594-93ef7202a8ca?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#6E371C88)" }} />
+              <div className="relative h-full flex flex-col justify-end p-3 text-white">
+                <h3 className="font-display text-base font-bold leading-tight">{tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa")}</h3>
+                <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pane, focacce e pasta fatta in casa", "Brot, Focaccia & Pasta", "Bread, focaccia & pasta", "Pan, focaccia y pasta")}</p>
+              </div>
+            </button>
+            <button data-testid="ricette-custodite-band" onClick={() => setView("custodite")}
+              className="relative h-28 rounded-2xl overflow-hidden shadow-md active:scale-98 transition-all text-left">
+              <img src="https://images.unsplash.com/photo-1590301157172-7ba48dd1c2b2?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#8C4A2788)" }} />
+              <div className="relative h-full flex flex-col justify-end p-3 text-white">
+                <h3 className="font-display text-base font-bold leading-tight">{tri("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas")}</h3>
+                <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pani del Sud + adatta le dosi + QR", "Süd-Brote + Mengen + QR", "Southern breads + adapt doses + QR", "Panes del Sur + dosis + QR")}</p>
+              </div>
+            </button>
           </div>
-        </button>
+        </div>
       )}
 
       {coll === "mikilab" && (
