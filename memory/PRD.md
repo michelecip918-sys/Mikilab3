@@ -2028,3 +2028,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Sicurezza**: senza secret né firma → 406. Tolleranza timestamp Mailgun 300→900s (playbook). URL webhook (con secret) esposto SOLO all'admin in `/api/inbound/status` (`webhook_url`) e mostrato con tasto Copia nel pannello Import (ScanRecipe) per configurare la Route Mailgun.
 - **Passo manuale lato utente (Mailgun dashboard)**: verificare dominio mikilab.de (EU, MX mxa/mxb.eu.mailgun.org) + Route `match_recipient("recipes@mikilab.de")` → Forward all'URL webhook copiabile. Il nostro lato è pronto.
 - **Menù globale**: aggiunta **barra di ricerca** strumento (`site-menu-search`) e **Preferiti ⭐** (`site-menu-fav-<id>`, localStorage `mikilab_menu_favs`, gruppo `site-menu-cat-preferiti`). Compilazione pulita.
+
+## v-fork.35 (2026-06) — Import via Email: notifica in-app + conferma email
+- **Notifica in-app**: quando l'inbound crea ricette, inserisce una notifica type="email_import" (campanella NotificationBell, icona Mail ambra, messaggio "🥖 nuove ricette importate via email!" + snippet count/oggetto). Verificato via DB (user_71c771f5c202).
+- **Conferma via email (Resend)**: al mittente viene inviata "Ricetta salvata ✅ — MikiLab" con l'elenco delle ricette create (best-effort, try/except; usa RESEND_API_KEY + SENDER_EMAIL=noreply@mikilab.de). Nessun errore backend nei test.
+- Testato end-to-end via curl (import da michelecip918@gmail.com → recipes_created=1 + notifica). Dati di test ripuliti.
+- "Snellisci Home": non eseguito per scelta prudente (serve indicazione utente su QUALI scorciatoie togliere) — offerto come follow-up.

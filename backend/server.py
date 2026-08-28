@@ -3774,6 +3774,35 @@ async def inbound_email(request: Request):
     if token:
         await db.inbound_tokens.insert_one({"_id": token, "created_at": now_iso()})
     await db.inbound_emails.insert_one(log)
+
+    if created:
+        # Notifica in-app (campanella)
+        try:
+            await db.notifications.insert_one({
+                "id": str(uuid.uuid4()), "user_id": user["user_id"], "actor_id": "system",
+                "type": "email_import", "post_id": None, "actor_name": "Import via Email",
+                "snippet": (f"{created} " + ("ricetta" if created == 1 else "ricette") + (f" · {subject}" if subject else ""))[:80],
+                "count": created, "read": False, "created_at": now_iso(),
+            })
+        except Exception:
+            logger.exception("inbound notification error")
+        # Conferma via email al mittente (best-effort)
+        if RESEND_API_KEY and sender_email:
+            try:
+                names = ", ".join([(r.get("name") or "").strip() for r in recipes if (r.get("name") or "").strip()][:5])
+                html = (f"<div style='font-family:sans-serif'><h2>Ricetta salvata ✅</h2>"
+                        f"<p>Ho ricevuto la tua email e ho creato <b>{created} "
+                        f"{'ricetta' if created == 1 else 'ricette'}</b> nel tuo profilo MikiLab.</p>"
+                        + (f"<p>📋 {names}</p>" if names else "")
+                        + "<p>Aprile in <b>Le Ricette di MikiLab → Le Mie Ricette</b>. Buon lavoro! 🥖</p>"
+                        "<p style='color:#8C8C8C;font-size:12px'>MikiLab · Import via Email</p></div>")
+                await asyncio.to_thread(_resend.Emails.send, {
+                    "from": f"MikiLab <{SENDER_EMAIL}>", "to": [sender_email],
+                    "subject": "Ricetta salvata ✅ — MikiLab", "html": html,
+                })
+            except Exception:
+                logger.exception("inbound confirmation email error")
+
     return {"ok": True, "matched": True, "recipes_created": created}
 
 
