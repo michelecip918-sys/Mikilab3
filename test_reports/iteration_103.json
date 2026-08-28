@@ -1,0 +1,27 @@
+{
+  "summary": "RE-TEST frontend-only (mobile 390x844) dei 2 bug di iteration_102 su MikiLab. (1) Bug copia negli appunti in 'Ricette Custodite': RISOLTO - click su custodite-copy non genera piu' unhandled promise rejection ne' overlay CRA (iframe overlay = 0), mostra toast 'Copiee !' (fallback execCommand riuscito in headless), UI resta usabile (custodite-back funziona dopo il click), nessun pageerror in console. (2) Francese nella pagina Ricette: RISOLTO - con lang-select='fr' compaiono 'A la une' (reso uppercase via CSS), 'Pain de Matera', 'La Tradition', 'Recettes Gardees' + sottotitolo 'Pains du Sud + adapte les doses + QR', 'Saveurs de la Maison', 'Decouvre MikiLab', 'Encyclopedie', 'Tableaux & Farines'; nessun testo EN/IT residuo (Featured/Treasured Recipes/In vetrina/Ricette Custodite assenti); back button ricette-back-btn = 'Recettes' in FR e 'Ricette' in IT. REGRESSIONI OK: conteggi categorie all=26, basilicata=5, puglia=5, lievitati=5, colorati=6, germania=5; banner custodite-improver-note presente; riga ingrediente 'Ameliorant Naturel MikiLab' (FR) e 'Miglioratore Naturale MikiLab' (IT); ricalcolo dosi corretto e proporzionale (500/1000/2000 + input manuale 750 -> 750/390/225/45/15/15 g); custodite-share, custodite-print, custodite-qr presenti.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Ricette (FR/IT) - hero 'Decouvre MikiLab et ses Recettes'", "issues": ["Il titolo su 2 righe si sovrappone al sottotitolo che risulta troncato a sinistra ('es recettes du labo, a parcourir'): leggibilita' compromessa su viewport 390px", "Le bande a strisce colorate (bandiere) sopra/sotto l'hero appaiono tagliate e visivamente disallineate rispetto al card radius"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "OPZIONALE (minore): Ricette.jsx riga 32 - il tri() del titolo 'Tabelle & Farine' non ha il 5o argomento fr, quindi in FR mostra l'inglese 'Tables & Flours' pur essendoci il bottone 'Tableaux & Farines'. Verificare anche le altre stringhe della sotto-pagina farine/guida/scopri per il 5o argomento fr mancante.",
+    "OPZIONALE (design): sistemare overflow/troncamento del sottotitolo hero nella pagina Ricette su mobile"
+  ],
+  "critical_code_review_comments": [
+    "copyText in RicetteCustodite.jsx e' ora corretto (await + try/catch + fallback textarea/execCommand + toast.error): nessun falso successo osservato, ma il doppio blocco fallback e' duplicato - estrarre un helper unico per DRY.",
+    "Il fallback tri(i,d,e,s,f) ricade su 'e' (inglese) quando f e' assente: utile ma nasconde le stringhe FR non tradotte; considerare un check dev-time per individuare le chiavi mancanti."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (out of scope)", "frontend": "100% (30/30 asserzioni eseguite passate)"},
+  "seed_data_creation": "nessuna",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "I 2 bug di iteration_102 (copia appunti custodite-copy e localizzazione FR pagina Ricette) sono verificati risolti. Nota per i futuri test: 'A la une' e 'La Tradition' appaiono in MAIUSCOLO nel DOM renderizzato (CSS uppercase) - confrontare in upper-case per evitare falsi negativi. La clipboard in headless funziona via fallback execCommand e mostra toast di successo. Non testati (fuori scope): Lab, Community, Apprendre, backend.",
+  "rca_of_the_issue": "Bug precedenti: (1) navigator.clipboard.writeText restituiva una Promise rifiutata non gestita in headless -> overlay CRA; ora gestita con await/try-catch e fallback execCommand con toast.error. (2) L'helper tri() di Ricette.jsx accettava solo 4 lingue e non aveva le stringhe fr -> testi in italiano/inglese in modalita' FR; ora accetta il 5o argomento fr e il backLabel gestisce fr/es."
+}

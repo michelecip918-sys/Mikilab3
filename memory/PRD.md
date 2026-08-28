@@ -2077,3 +2077,11 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Interruttore piano rapido** (Lab, capo-plan-switch): switch segmentato "Piano Settimanale ⟷ Ordine di oggi" sopra le card del passo Scegli (setUseWeekly).
 - **Strumenti rapidi ampliati** (capo-quick-tools): ora 6 scorciatoie — Parco Macchine, Fermentazione, Digital Twin, Smart Weather-Baker, Convertitore Lieviti, Smart Timer.
 - Verificato: compilazione pulita, Home renderizzata senza errori console.
+
+## v-fork.43 (2026-06) — Espansione massiva Ricette Custodite + multilingua FR
+- **RicetteCustodite.jsx riscritto**: struttura dati multilingua (it/de/en/es/**fr**) con helper `L(obj)` + dizionario ingredienti condiviso `ING`. 26 ricette in 5 categorie con filtri a chip (custodite-filters): Basilicata (5), Puglia (5), Grandi Lievitati (5), Pani Colorati/Speciali (6, incl. innovazioni: cornetti colorati, baguette colorata, panettone colorato), Germania (5: Brezel, Laugenbrötchen, Roggenbrot, Vollkornbrot, Kaisersemmel).
+- **Miglioratore Naturale MikiLab** presente come ingrediente in OGNI ricetta + banner "arma segreta" nel dettaglio (custodite-improver-note, 5 lingue) con messaggio "senza di lui non riescono / controllo cosa mangio". Ogni ricetta usa Biga/Poolish/Lievito Madre.
+- **Francese esteso** alla pagina Ricette (Ricette.jsx: tri locale ora accetta 5° arg fr; bande vetrina/tradizione/custodite/sapori, UtilBtn, hero, sotto-pagina Farine e back button ora in FR).
+- **Fix**: bug copia negli appunti (custodite-copy) ora async con fallback execCommand + toast.error su fallimento (niente overlay CRA / falso successo).
+- Verificato: testing_agent iteration_103 = 100% frontend (30/30). Bug iteration_102 risolti.
+- NOTA fuori scope: il resto dell'app (Lab, Community, Learn) in modalità FR ricade ancora sull'inglese (tri() globale senza stringhe fr) — traduzione completa app in francese resta backlog P1.

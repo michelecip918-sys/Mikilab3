@@ -13,7 +13,7 @@ import { useBackClose } from "@/lib/backNav";
 
 export default function Ricette() {
   const { t, lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
+  const tri = (i, d, e, s, f) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "fr" ? (f ?? e ?? i) : (lang === "en" || lang === "fa") ? (e ?? i) : i);
   const [view, setView] = useState("main");
   const [custoditeInit, setCustoditeInit] = useState(null);
   const coll = "mikilab";
@@ -29,13 +29,15 @@ export default function Ricette() {
       <div data-testid="ricette-farine" className="space-y-4">
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#6E371C] p-6 text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-          <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas")}</h1></div>
+          <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")}</h1></div>
           <div className="h-1 w-12 rounded-full bg-[#C88A2B] mb-3" />
           <p className="text-sm text-white/90 leading-relaxed italic">
             {tri(
               "«La farina è la mia lingua madre. In Italia ho imparato che ogni grano racconta una storia: la forza (W), l'assorbimento, i tempi. Qui trovi le sigle e le tabelle che uso ogni giorno per scegliere la farina giusta per ogni impasto. Rispetta il grano e il grano ti ripagherà.» — Michele",
               "„Mehl ist meine Muttersprache. In Italien habe ich gelernt, dass jedes Korn eine Geschichte erzählt: Stärke (W), Wasseraufnahme, Zeiten. Hier findest du die Kürzel und Tabellen, die ich täglich nutze, um das richtige Mehl für jeden Teig zu wählen. Respektiere das Korn, und das Korn belohnt dich.“ — Michele",
-              "\"Flour is my mother tongue. In Italy I learned that every grain tells a story: strength (W), absorption, timing. Here are the codes and tables I use every day to choose the right flour for each dough. Respect the grain and the grain will reward you.\" — Michele"
+              "\"Flour is my mother tongue. In Italy I learned that every grain tells a story: strength (W), absorption, timing. Here are the codes and tables I use every day to choose the right flour for each dough. Respect the grain and the grain will reward you.\" — Michele",
+              "«La harina es mi lengua materna. En Italia aprendí que cada grano cuenta una historia: la fuerza (W), la absorción, los tiempos. Aquí tienes las siglas y tablas que uso cada día para elegir la harina justa para cada masa. Respeta el grano y el grano te lo devolverá.» — Michele",
+              "« La farine est ma langue maternelle. En Italie j'ai appris que chaque grain raconte une histoire : la force (W), l'absorption, les temps. Voici les sigles et les tableaux que j'utilise chaque jour pour choisir la bonne farine pour chaque pâte. Respecte le grain et le grain te le rendra. » — Michele"
             )}
           </p>
         </div>
@@ -52,24 +54,24 @@ export default function Ricette() {
           <img src="https://images.unsplash.com/photo-1549413468-cd78edb7e75c?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 15%,#6E371Caa 60%,#6E371C22)" }} />
           <div className="relative h-full flex flex-col justify-center px-4 text-white">
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#C88A2B] px-2 py-0.5 rounded-full w-fit mb-1">★ {tri("In vetrina", "Im Schaufenster", "Featured", "En vitrina")}</span>
-            <h3 className="font-display text-xl font-bold leading-tight">{tri("Pane di Matera IGP", "Materaner Brot", "Bread of Matera", "Pan de Matera")}</h3>
-            <p className="text-[12px] text-white/90">{tri("La ricetta della tradizione, adattata alle tue dosi", "Das Traditionsrezept, an deine Mengen angepasst", "The traditional recipe, adapted to your amounts", "La receta tradicional, adaptada a tus dosis")}</p>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#C88A2B] px-2 py-0.5 rounded-full w-fit mb-1">★ {tri("In vetrina", "Im Schaufenster", "Featured", "En vitrina", "À la une")}</span>
+            <h3 className="font-display text-xl font-bold leading-tight">{tri("Pane di Matera IGP", "Materaner Brot", "Bread of Matera", "Pan de Matera", "Pain de Matera")}</h3>
+            <p className="text-[12px] text-white/90">{tri("La ricetta della tradizione, adattata alle tue dosi", "Das Traditionsrezept, an deine Mengen angepasst", "The traditional recipe, adapted to your amounts", "La receta tradicional, adaptada a tus dosis", "La recette de tradition, adaptée à tes quantités")}</p>
           </div>
         </button>
       )}
 
       {coll === "mikilab" && (
         <div data-testid="ricette-tradizione" className="mb-4">
-          <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2 px-1 flex items-center gap-1.5"><UtensilsCrossed className="w-4 h-4" /> {tri("La Tradizione", "Die Tradition", "The Tradition", "La Tradición")}</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2 px-1 flex items-center gap-1.5"><UtensilsCrossed className="w-4 h-4" /> {tri("La Tradizione", "Die Tradition", "The Tradition", "La Tradición", "La Tradition")}</p>
           <div className="grid grid-cols-2 gap-2.5">
             <button data-testid="ricette-sapori-band" onClick={() => setView("sapori")}
               className="relative h-28 rounded-2xl overflow-hidden shadow-md active:scale-98 transition-all text-left">
               <img src="https://images.unsplash.com/photo-1598616068594-93ef7202a8ca?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
               <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#6E371C88)" }} />
               <div className="relative h-full flex flex-col justify-end p-3 text-white">
-                <h3 className="font-display text-base font-bold leading-tight">{tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa")}</h3>
-                <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pane, focacce e pasta fatta in casa", "Brot, Focaccia & Pasta", "Bread, focaccia & pasta", "Pan, focaccia y pasta")}</p>
+                <h3 className="font-display text-base font-bold leading-tight">{tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa", "Saveurs de la Maison")}</h3>
+                <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pane, focacce e pasta fatta in casa", "Brot, Focaccia & Pasta", "Bread, focaccia & pasta", "Pan, focaccia y pasta", "Pain, focaccia & pâtes maison")}</p>
               </div>
             </button>
             <button data-testid="ricette-custodite-band" onClick={() => setView("custodite")}
@@ -77,8 +79,8 @@ export default function Ricette() {
               <img src="https://images.unsplash.com/photo-1590301157172-7ba48dd1c2b2?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
               <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#8C4A2788)" }} />
               <div className="relative h-full flex flex-col justify-end p-3 text-white">
-                <h3 className="font-display text-base font-bold leading-tight">{tri("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas")}</h3>
-                <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pani del Sud + adatta le dosi + QR", "Süd-Brote + Mengen + QR", "Southern breads + adapt doses + QR", "Panes del Sur + dosis + QR")}</p>
+                <h3 className="font-display text-base font-bold leading-tight">{tri("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas", "Recettes Gardées")}</h3>
+                <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pani del Sud + adatta le dosi + QR", "Süd-Brote + Mengen + QR", "Southern breads + adapt doses + QR", "Panes del Sur + dosis + QR", "Pains du Sud + adapte les doses + QR")}</p>
               </div>
             </button>
           </div>
@@ -87,9 +89,9 @@ export default function Ricette() {
 
       {coll === "mikilab" && (
         <div className="grid grid-cols-3 gap-2.5 mb-4">
-          <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab")} onClick={() => setView("scopri")} />
-          <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia", "Enciclopedia")} onClick={() => setView("guida")} />
-          <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas")} onClick={() => setView("farine")} />
+          <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab", "Découvre MikiLab")} onClick={() => setView("scopri")} />
+          <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia", "Enciclopedia", "Encyclopédie")} onClick={() => setView("guida")} />
+          <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
           <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
         </div>
       )}
@@ -98,7 +100,7 @@ export default function Ricette() {
         collectionName="mikilab"
         heroImage={`${process.env.PUBLIC_URL}/michele-avatar-full.jpg`}
         heroPosition="50% 15%"
-        heroTitle={tri("Scopri MikiLab e le sue Ricette", "Entdecke MikiLab & seine Rezepte", "Discover MikiLab & its Recipes", "Descubre MikiLab y sus Recetas")}
+        heroTitle={tri("Scopri MikiLab e le sue Ricette", "Entdecke MikiLab & seine Rezepte", "Discover MikiLab & its Recipes", "Descubre MikiLab y sus Recetas", "Découvre MikiLab et ses Recettes")}
         heroSubtitle={t("mikilab_subtitle")}
         emptyText={t("mikilab_empty")}
         extraHeader={<NovitaColorate />}
@@ -121,7 +123,7 @@ function UtilBtn({ testid, Icon, label, onClick }) {
 
 function Sub({ onBack, children }) {
   const { lang } = useLang();
-  const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : "Ricette";
+  const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : lang === "es" ? "Recetas" : lang === "fr" ? "Recettes" : "Ricette";
   return (
     <div className="pb-4">
       <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">

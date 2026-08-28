@@ -1,0 +1,38 @@
+{
+  "summary": "Frontend-only testing of the expanded 'Ricette Custodite' section (RicetteCustodite.jsx). Verified navigation (nav-tab-ricette -> ricette-custodite-band -> custodite-list), the 6 category chips and per-category counts (all=26, basilicata=5, puglia=5, lievitati=5, colorati=6, germania=5), recipe detail (improver banner, ingredients incl. 'Miglioratore Naturale MikiLab' row, method), dose recalculation (custodite-flour input + quick 500/1000/2000 + edge cases empty/negative), action buttons (share opens wa.me, print calls window.print, QR rendered) and multilingual rendering in IT/FR/DE/ES/FA. FRENCH mode renders fully French inside Ricette Custodite (list header 'Les Recettes Gardees', filters 'Toutes/Basilicate/Pouilles/Grands Leves/Pains Colores/Allemagne', 'Bretzel', 'Ingredients', 'Preparation', 'Ameliorant Naturel MikiLab') with no Italian/English leakage in the section itself. Two real bugs found outside/at the edge of the new component: the FR language does NOT apply to the Ricette page shell (English/Italian leaks) and the Copy button raises an unhandled promise rejection while still showing a success toast.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RicetteCustodite - custodite-copy", "issue": "navigator.clipboard.writeText() is called inside a synchronous try/catch, so a rejected promise is never handled -> 'Uncaught runtime errors: Failed to execute writeText on Clipboard: Write permission denied' CRA overlay covered the whole page and blocked further clicks. Worse: the success toast 'Copiee !' is shown even when the copy actually FAILED (false positive). Fix: await/`.then().catch()` with a document.execCommand or textarea fallback and only toast on success.", "selector": "[data-testid=\"custodite-copy\"]", "priority": "HIGH"},
+      {"component": "Floating Radio widget", "issue": "The circular floating 'Radio' widget (bottom-left) overlaps the left edge of the recipe detail content at 390px width: it sits on top of the ingredient rows / 'Adatta alle mie dosi' block (e.g. hides the start of the 'MikiLab Natural Improver' row). Needs offset or higher bottom placement.", "selector": "text=Radio", "priority": "MEDIUM"},
+      {"component": "RicetteCustodite detail", "issue": "Very large empty gap under the Share/Copy/Print row (pb-40 + page padding) before the footer card; looks like broken layout on mobile.", "selector": "[data-testid=\"custodite-detail\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "FRENCH language mode (explicit user requirement)", "issue": "Inside RicetteCustodite everything is correctly French, but the surrounding Recipes page is NOT: with lang=fr the featured band shows '\u2605 FEATURED / Bread of Matera', the section shows 'THE TRADITION', the entry band shows 'Treasured Recipes / Southern breads + adapt doses + QR' (English) and the sub-page back button shows 'Ricette' (Italian). Root cause: LanguageContext.tri() maps fr/fa -> en (line 45) and Ricette.jsx Sub() backLabel only handles de/en, defaulting to Italian. Same fallback affects every other screen using tri()/t().", "affected_selectors": ["[data-testid=\"ricette-custodite-band\"]", "[data-testid=\"ricette-vetrina\"]", "[data-testid=\"ricette-tradizione\"]", "[data-testid=\"ricette-back-btn\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Ricette Custodite detail (mobile 390px)", "issues": ["Floating Radio button overlaps content on the left", "Large blank area between action buttons and footer"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix custodite-copy: handle the clipboard promise (async/await + catch, fallback) and only show the 'Copied' toast on real success - currently an unhandled rejection triggers the dev error overlay and blocks the UI.",
+    "Complete FRENCH support outside RicetteCustodite: add a French branch to LanguageContext.tri() (or add fr strings) and to Ricette.jsx Sub() backLabel, so the Recipes page bands/labels are French instead of English/Italian (explicit user requirement).",
+    "Move/offset the floating Radio widget so it does not overlap recipe content at 390px width.",
+    "Optional: 'Bagno di bicarbonato/soda' (Brezel, Laugenbroetchen) is defined with pct 0 and is therefore filtered out of custodite-ingredients - either give it a percentage or show it as a note, otherwise the alkaline bath never appears in the ingredient list.",
+    "Optional refactor: RicetteCustodite.jsx is 773 lines (>700). Extract the RECIPES/ING/CATS data into src/data/custoditeRecipes.js."
+  ],
+  "critical_code_review_comments": [
+    "RicetteCustodite.jsx line 636: copyText() wraps an async clipboard call in a sync try/catch and toasts success unconditionally - unhandled rejection + misleading UX.",
+    "i18n/LanguageContext.jsx line 45: fr and fa deliberately fall back to English, which contradicts the requirement 'FRENCH mode must display French'. RicetteCustodite has its own L() helper so it is unaffected, but the rest of the app is English in FR.",
+    "Ricette.jsx line 124: backLabel has no fr/es/fa case and falls back to Italian.",
+    "RicetteCustodite.jsx is 773 lines; recipe data should live in a separate data module."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "88%"},
+  "seed_data_creation": "none (no login required, static data)",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Note: the app persists language in localStorage (mikilab_lang) and defaults to the browser language - the automation browser starts in EN, so always set the language explicitly via page.select_option('[data-testid=\"lang-select\"]', 'it'|'fr'|...) before asserting text. Verified counts: all=26, basilicata=5, puglia=5, lievitati=5, colorati=6, germania=5. Do NOT click custodite-copy in dev until the clipboard promise bug is fixed - the CRA error overlay iframe intercepts all subsequent clicks.",
+  "rca_of_the_issue": "1) Copy bug: navigator.clipboard.writeText returns a Promise; the surrounding try/catch cannot catch its rejection, so a blocked clipboard permission produces an unhandled rejection (webpack-dev-server-client-overlay iframe covers the page and intercepts pointer events) while toast.success still fires. 2) FR leakage: LanguageContext.tri() explicitly returns the English string for lang 'fr'/'fa', and Ricette.jsx's Sub() back label defaults to Italian; only RicetteCustodite implements a real fr dictionary via its local L() helper."
+}
