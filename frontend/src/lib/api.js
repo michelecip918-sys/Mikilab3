@@ -66,6 +66,7 @@ export const friendsApi = {
   request: (to_id) => api.post(`/friends/request`, { to_id }).then((r) => r.data),
   respond: (from_id, action) => api.post(`/friends/respond`, { from_id, action }).then((r) => r.data),
   remove: (other_id) => api.post(`/friends/remove`, { other_id }).then((r) => r.data),
+  suggestions: () => api.get(`/friends/suggestions`).then((r) => r.data.suggestions || []).catch(() => []),
 };
 
 export const newsItemsApi = {

@@ -5352,6 +5352,79 @@ async def friends_remove(body: FriendRemoveReq, user: dict = Depends(current_use
     return {"status": "none"}
 
 
+@api_router.get("/friends/suggestions")
+async def friends_suggestions(user: dict = Depends(current_user), limit: int = 8):
+    """Suggeriti per te: amici in comune (friends-of-friends) + fornai attivi con interessi simili."""
+    me = user["user_id"]
+    # Relazioni esistenti da escludere (amici, richieste in corso, me stesso)
+    my_frs = await db.friendships.find({"$or": [{"from_id": me}, {"to_id": me}]}, {"_id": 0}).to_list(2000)
+    exclude = {me}
+    my_friend_ids = []
+    for f in my_frs:
+        other = f["to_id"] if f["from_id"] == me else f["from_id"]
+        exclude.add(other)
+        if f.get("status") == "accepted":
+            my_friend_ids.append(other)
+
+    cand = {}  # id -> {score, reason, mutuals}
+    # 1) Amici di amici (con conteggio amici in comune e un nome esempio)
+    if my_friend_ids:
+        ffs = await db.friendships.find(
+            {"status": "accepted", "$or": [{"from_id": {"$in": my_friend_ids}}, {"to_id": {"$in": my_friend_ids}}]},
+            {"_id": 0}).to_list(5000)
+        fof = {}
+        for f in ffs:
+            for side in ("from_id", "to_id"):
+                oid = f[side]
+                via = f["to_id"] if side == "from_id" else f["from_id"]
+                if oid in exclude or via not in my_friend_ids:
+                    continue
+                fof.setdefault(oid, set()).add(via)
+        for oid, vias in fof.items():
+            cand[oid] = {"score": 100 + len(vias), "reason": "mutual", "mutuals": len(vias)}
+
+    # 2) Partecipanti alle sfide Bake-Along (interesse simile)
+    ba = await db.community_posts.find({"category": "bakealong"}, {"_id": 0, "author_id": 1}).to_list(1000)
+    for p in ba:
+        oid = p.get("author_id")
+        if oid and oid not in exclude and oid not in cand:
+            cand[oid] = {"score": 50, "reason": "bakealong", "mutuals": 0}
+
+    # 3) Fornai attivi di recente nel Social
+    if len(cand) < limit + 4:
+        recent = await db.community_posts.find({"is_deleted": {"$ne": True}}, {"_id": 0, "author_id": 1})\
+            .sort("created_at", -1).to_list(300)
+        for p in recent:
+            oid = p.get("author_id")
+            if oid and oid not in exclude and oid not in cand:
+                cand[oid] = {"score": 20, "reason": "active", "mutuals": 0}
+
+    if not cand:
+        return {"suggestions": []}
+
+    top = sorted(cand.items(), key=lambda kv: kv[1]["score"], reverse=True)[:limit]
+    ids = [oid for oid, _ in top]
+    users = await db.users.find({"user_id": {"$in": ids}}, {"_id": 0}).to_list(200)
+    umap = {u["user_id"]: u for u in users}
+
+    # Nome di un amico in comune (per il testo "amico di …")
+    via_name = {}
+    if my_friend_ids:
+        fus = await db.users.find({"user_id": {"$in": my_friend_ids}}, {"_id": 0, "user_id": 1, "name": 1, "email": 1}).to_list(500)
+        via_name = {u["user_id"]: (u.get("name") or (u.get("email") or "Fornaio").split("@")[0]) for u in fus}
+
+    out = []
+    for oid, meta in top:
+        u = umap.get(oid)
+        if not u:
+            continue
+        card = _user_card(u)
+        card["reason"] = meta["reason"]
+        card["mutuals"] = meta["mutuals"]
+        out.append(card)
+    return {"suggestions": out}
+
+
 
 class MarketListingReq(BaseModel):
     title: str

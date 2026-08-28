@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { X, UserPlus, Check, Clock, Users2, Search, UserMinus, Loader2, Send } from "lucide-react";
+import { X, UserPlus, Check, Clock, Users2, Search, UserMinus, Loader2, Send, Sparkles } from "lucide-react";
 import { friendsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -19,15 +19,17 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
   const [tab, setTab] = useState("richieste");
   const [dir, setDir] = useState([]);
   const [rel, setRel] = useState({ friends: [], incoming: [], outgoing: [] });
+  const [sugg, setSugg] = useState([]);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
 
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const [d, r] = await Promise.all([friendsApi.directory(), friendsApi.list()]);
+      const [d, r, s] = await Promise.all([friendsApi.directory(), friendsApi.list(), friendsApi.suggestions()]);
       setDir(Array.isArray(d) ? d : []);
       setRel(r || { friends: [], incoming: [], outgoing: [] });
+      setSugg(Array.isArray(s) ? s : []);
       onCount && onCount((r?.incoming || []).length);
     } catch { /* not logged in */ }
     finally { setLoading(false); }
@@ -111,6 +113,26 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
                     <input data-testid="friends-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tri("Cerca per nome o email…", "Nach Name oder E-Mail suchen…", "Search by name or email…")}
                       className="bg-transparent flex-1 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC]" />
                   </div>
+
+                  {!q.trim() && sugg.length > 0 && (
+                    <div data-testid="friends-suggestions" className="mb-2">
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] px-1 py-1.5 flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />{tri("Suggeriti per te", "Für dich vorgeschlagen", "Suggested for you")}</p>
+                      {sugg.map((c) => {
+                        const reason = c.reason === "mutual"
+                          ? (c.mutuals > 0 ? tri(`${c.mutuals} amici in comune`, `${c.mutuals} gemeinsame Freunde`, `${c.mutuals} mutual friends`) : tri("Amico di un amico", "Freund eines Freundes", "Friend of a friend"))
+                          : c.reason === "bakealong" ? tri("Partecipa alle sfide Bake-Along", "Nimmt an Bake-Along teil", "Joins Bake-Along challenges")
+                          : tri("Fornaio attivo nella community", "Aktiv in der Community", "Active baker in the community");
+                        return (
+                          <Row key={`sg-${c.user_id}`} c={c} testid={`friend-sugg-${c.user_id}`} sub={reason}>
+                            <button data-testid={`friend-sugg-add-${c.user_id}`} onClick={() => act(() => friendsApi.request(c.user_id), tri("Richiesta inviata!", "Anfrage gesendet!", "Request sent!"))}
+                              className="px-3 py-1.5 rounded-lg bg-[#3f7cac] text-white text-xs font-bold flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" />{tri("Aggiungi", "Hinzufügen", "Add")}</button>
+                          </Row>
+                        );
+                      })}
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] px-1 pt-3 pb-1">{tri("Tutti i fornai", "Alle Bäcker", "All bakers")}</p>
+                    </div>
+                  )}
+
                   {filtered.length === 0 ? <Empty text={tri("Nessun utente trovato.", "Keine Nutzer.", "No users found.")} />
                     : filtered.map((c) => (
                       <Row key={c.user_id} c={c} testid={`friend-dir-${c.user_id}`} sub={c.email}>
