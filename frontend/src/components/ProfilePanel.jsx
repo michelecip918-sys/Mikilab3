@@ -21,7 +21,7 @@ const PRESET_AVATARS = [
 // Pagina profilo social: avatar, bio e ricette/post pubblicati dal fornaio.
 export default function ProfilePanel({ userId, onClose, onMessage }) {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [editing, setEditing] = useState(false);

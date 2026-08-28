@@ -9,7 +9,7 @@ const NEW_COLOR = COLORED_RECIPES;
 // Vetrina "Novità dal MikiLab": evidenzia le ricette colorate naturalmente.
 export const NovitaColorate = () => {
   const { lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const rn = (r) => (lang === "de" ? (r.name_de || r.name) : lang === "en" ? (r.name_en || r.name) : lang === "es" ? (r.name_es || r.name_en || r.name) : r.name);
   const [items, setItems] = useState([]);
 

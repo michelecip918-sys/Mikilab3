@@ -10,7 +10,7 @@ import { useBackClose } from "@/lib/backNav";
 
 export default function Ricette() {
   const { t, lang } = useLang();
-  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
+  const tri = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const [view, setView] = useState("main");
   const coll = "mikilab";
   useBackClose(view !== "main", () => setView("main"));

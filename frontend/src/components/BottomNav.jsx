@@ -5,7 +5,7 @@ import { notificationsApi } from "@/lib/api";
 
 export default function BottomNav({ active, onChange }) {
   const { t, lang } = useLang();
-  const triNav = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : lang === "en" ? e : i);
+  const triNav = (i, d, e, s) => (lang === "de" ? d : lang === "es" ? (s ?? e ?? i) : (lang === "en" || lang === "fr" || lang === "fa") ? (e ?? i) : i);
   const [unread, setUnread] = useState(0);
   const loadUnread = useCallback(async () => {
     try { const d = await notificationsApi.list(); setUnread(d.unread || 0); } catch { setUnread(0); }

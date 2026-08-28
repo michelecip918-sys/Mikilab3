@@ -5139,7 +5139,7 @@ async def challenges_complete(body: ChallengeReq, user: dict = Depends(current_u
 
 
 # --- Impara a Livelli: completare il quiz di un percorso conta come sfida ---
-LEARN_PATHS = {"base", "lievito", "panettone"}
+LEARN_PATHS = {"base", "lievito", "panettone", "focacce", "pizza", "pasta"}
 
 
 class LearnReq(BaseModel):

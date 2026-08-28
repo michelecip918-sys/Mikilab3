@@ -2,7 +2,7 @@ import { Tag, Printer } from "lucide-react";
 import QRCode from "qrcode";
 import { rLoc } from "@/lib/loc";
 
-const L = (lang, i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
+const L = (lang, i, d, e) => (lang === "de" ? d : (lang === "en" || lang === "fr" || lang === "fa") ? e : i);
 
 export function hasLabelData(label) {
   if (!label) return false;

@@ -3,6 +3,7 @@ import { ChevronRight, GraduationCap, Lock, Check, Trophy, Loader2, Award } from
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { challengesApi } from "@/lib/api";
+import { jsPDF } from "jspdf";
 import { toast } from "sonner";
 
 const PATHS = [
@@ -26,6 +27,27 @@ const PATHS = [
       { q: { it: "Quanti impasti principali ha il panettone classico?", en: "How many main doughs does classic panettone have?" }, a: [{ it: "Uno", en: "One" }, { it: "Due (primo e secondo)", en: "Two (first and second)" }, { it: "Cinque", en: "Five" }], c: 1 },
       { q: { it: "Perché si capovolge dopo la cottura?", en: "Why is it turned upside down after baking?" }, a: [{ it: "Per non farlo collassare mentre si raffredda", en: "So it doesn't collapse while cooling" }, { it: "Per decorarlo", en: "To decorate it" }, { it: "Per cuocerlo di più", en: "To bake it more" }], c: 0 },
       { q: { it: "La temperatura al cuore a fine cottura è circa…", en: "The core temperature at the end of baking is about…" }, a: [{ it: "60°C", en: "60°C" }, { it: "94-96°C", en: "94-96°C" }, { it: "120°C", en: "120°C" }], c: 1 },
+    ] },
+  { id: "focacce", it: "Livello 4 · Focacce", en: "Level 4 · Focaccia", icon: "🫓",
+    intro: { it: "Alta idratazione, olio e teglia: focaccia barese e materana alla semola.", en: "High hydration, oil and pan: Bari and Matera semolina focaccia." },
+    quiz: [
+      { q: { it: "Cosa rende soffice a lungo la focaccia barese?", en: "What keeps Bari focaccia soft for long?" }, a: [{ it: "La patata nell'impasto", en: "The potato in the dough" }, { it: "Poco olio", en: "Little oil" }, { it: "Farina debole", en: "Weak flour" }], c: 0 },
+      { q: { it: "La focaccia materana usa soprattutto…", en: "Matera focaccia mainly uses…" }, a: [{ it: "Semola rimacinata di grano duro", en: "Durum semolina rimacinata" }, { it: "Farina di riso", en: "Rice flour" }, { it: "Farina di mais", en: "Corn flour" }], c: 0 },
+      { q: { it: "Per una bella crosta sotto serve…", en: "For a good bottom crust you need…" }, a: [{ it: "Teglia unta e ben calda dal basso", en: "Oiled pan, hot from below" }, { it: "Teglia fredda", en: "A cold pan" }, { it: "Niente olio", en: "No oil" }], c: 0 },
+    ] },
+  { id: "pizza", it: "Livello 5 · Pizza", en: "Level 5 · Pizza", icon: "🍕",
+    intro: { it: "Impasti diretti e indiretti, maturazione e cottura ad alta temperatura.", en: "Direct and indirect doughs, maturation and high-temperature baking." },
+    quiz: [
+      { q: { it: "La lunga maturazione in frigo serve a…", en: "Long cold maturation is used to…" }, a: [{ it: "Migliorare digeribilità e aroma", en: "Improve digestibility and aroma" }, { it: "Far lievitare più in fretta", en: "Rise faster" }, { it: "Aggiungere sale", en: "Add salt" }], c: 0 },
+      { q: { it: "Per la pizza napoletana serve un forno…", en: "Neapolitan pizza needs an oven…" }, a: [{ it: "Molto caldo (400°C+)", en: "Very hot (400°C+)" }, { it: "A 150°C", en: "At 150°C" }, { it: "Spento", en: "Turned off" }], c: 0 },
+      { q: { it: "Per una pizza in teglia leggera serve…", en: "For a light pan pizza you need…" }, a: [{ it: "Alta idratazione", en: "High hydration" }, { it: "Impasto asciutto", en: "A dry dough" }, { it: "Nessuna lievitazione", en: "No proofing" }], c: 0 },
+    ] },
+  { id: "pasta", it: "Livello 6 · Pasta Fresca", en: "Level 6 · Fresh Pasta", icon: "🍝",
+    intro: { it: "Semola e acqua o uovo: orecchiette, cavatelli e fettuccelle della tradizione.", en: "Semolina and water or egg: traditional orecchiette, cavatelli and fettuccelle." },
+    quiz: [
+      { q: { it: "Le orecchiette pugliesi si fanno con…", en: "Puglia orecchiette are made with…" }, a: [{ it: "Semola rimacinata e acqua", en: "Semolina and water" }, { it: "Farina 00 e burro", en: "00 flour and butter" }, { it: "Solo uova", en: "Only eggs" }], c: 0 },
+      { q: { it: "Il condimento classico delle orecchiette è…", en: "The classic orecchiette sauce is…" }, a: [{ it: "Cime di rapa", en: "Turnip tops (cime di rapa)" }, { it: "Pesto genovese", en: "Genovese pesto" }, { it: "Carbonara", en: "Carbonara" }], c: 0 },
+      { q: { it: "La sfoglia all'uovo va fatta riposare…", en: "Egg pasta dough should rest…" }, a: [{ it: "~30 min sotto un panno", en: "~30 min under a cloth" }, { it: "In freezer 2 ore", en: "In the freezer 2 hours" }, { it: "Non serve riposo", en: "No rest needed" }], c: 0 },
     ] },
 ];
 
@@ -103,6 +125,34 @@ export default function ImparaLivelli({ onBack }) {
   }
 
   const doneCount = done.size;
+
+  const downloadDiploma = () => {
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    const W = 297, H = 210;
+    doc.setFillColor(253, 251, 247); doc.rect(0, 0, W, H, "F");
+    doc.setDrawColor(140, 74, 39); doc.setLineWidth(3); doc.rect(10, 10, W - 20, H - 20);
+    doc.setDrawColor(217, 119, 6); doc.setLineWidth(0.8); doc.rect(14, 14, W - 28, H - 28);
+    doc.setTextColor(140, 74, 39); doc.setFont("times", "bold"); doc.setFontSize(40);
+    doc.text("MikiLab", W / 2, 44, { align: "center" });
+    doc.setFontSize(22); doc.setTextColor(107, 85, 70);
+    doc.text(L("Diploma dell'Arte Bianca", "Diploma of the Baking Craft"), W / 2, 60, { align: "center" });
+    doc.setFont("times", "italic"); doc.setFontSize(14); doc.setTextColor(60, 40, 30);
+    doc.text(L("Si attesta che", "This certifies that"), W / 2, 86, { align: "center" });
+    doc.setFont("times", "bold"); doc.setFontSize(28); doc.setTextColor(140, 74, 39);
+    doc.text(user?.name || user?.email || "Baker", W / 2, 102, { align: "center" });
+    doc.setFont("times", "normal"); doc.setFontSize(14); doc.setTextColor(60, 40, 30);
+    doc.text(L(`ha completato tutti i ${PATHS.length} percorsi Impara di MikiLab`, `has completed all ${PATHS.length} MikiLab Learn paths`), W / 2, 118, { align: "center", maxWidth: W - 60 });
+    doc.setFontSize(12); doc.setTextColor(107, 85, 70);
+    doc.text(PATHS.map((p) => T(p)).join("  ·  "), W / 2, 132, { align: "center", maxWidth: W - 50 });
+    doc.setFont("times", "bold"); doc.setFontSize(16); doc.setTextColor(140, 74, 39);
+    doc.text("🎓 " + L("Diplomato MikiLab", "MikiLab Graduate"), W / 2, 150, { align: "center" });
+    doc.setFont("times", "normal"); doc.setFontSize(11); doc.setTextColor(140, 115, 98);
+    doc.text(new Date().toLocaleDateString(lang === "it" ? "it" : "en-GB"), W / 2, 166, { align: "center" });
+    doc.text("mikilab.de", W / 2, 173, { align: "center" });
+    doc.save("MikiLab-Diploma.pdf");
+    toast.success(L("Diploma scaricato! 🎓", "Diploma downloaded! 🎓"));
+  };
+
   return (
     <div className="pb-8" data-testid="impara-livelli">
       {onBack && <button data-testid="impara-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
@@ -134,9 +184,15 @@ export default function ImparaLivelli({ onBack }) {
       </div>
 
       {doneCount === PATHS.length && (
-        <div data-testid="impara-diploma" className="mt-5 rounded-2xl bg-[#FEF3C7] border border-[#D97706] p-4 flex items-center gap-3">
-          <Award className="w-8 h-8 text-[#8C4A27] shrink-0" />
-          <p className="text-[13.5px] font-semibold text-[#6B5546]">{L("Complimenti! Hai completato tutti i percorsi Impara.", "Congratulations! You completed all the Learn paths.")}</p>
+        <div data-testid="impara-diploma" className="mt-5 rounded-2xl bg-[#FEF3C7] border border-[#D97706] p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <Award className="w-8 h-8 text-[#8C4A27] shrink-0" />
+            <p className="text-[13.5px] font-semibold text-[#6B5546]">{L("Complimenti! Hai completato tutti i percorsi Impara.", "Congratulations! You completed all the Learn paths.")}</p>
+          </div>
+          <button data-testid="impara-diploma-pdf" onClick={downloadDiploma}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-[#FFFDF9] font-semibold px-4 py-3 active:scale-98 transition-all">
+            <Award className="w-5 h-5" /> {L("Scarica il Diploma MikiLab (PDF)", "Download the MikiLab Diploma (PDF)")}
+          </button>
         </div>
       )}
     </div>

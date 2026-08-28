@@ -1961,3 +1961,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ### RESTA DA FARE (minori)
 - Tradurre i pochi testi promo hardcoded in RecipeList + Shop pick per FR/FA.
 - Certificato/Diploma PDF a fine percorsi Impara (come per le sfide).
+
+## v-fork.24 (2026-08) — Diploma PDF Impara + 6 livelli + FR/FA senza residui
+- **DIPLOMA PDF**: in `ImparaLivelli.jsx`, quando tutti i percorsi sono completati appare `impara-diploma-pdf` → genera "Diploma dell'Arte Bianca" (jsPDF landscape con nome, elenco percorsi, data). Verificato UI.
+- **PIÙ LIVELLI IMPARA**: ora 6 percorsi (base, lievito, panettone, focacce, pizza, pasta) ognuno con quiz da 3 domande. Backend `LEARN_PATHS` esteso ai 6 id. Verificato via curl (3 percorsi completati → unlocked_panettoni=True) e UI (6 livelli + diploma).
+- **FR/FA senza residui**: sweep aggiuntivo (6 file: NovitaColorate, Ricette, BottomNav, ProfilePanel, EULabel, Shop `pick`) — gli helper locali con coda `? e : i)` ora ricadono su inglese per fr/fa. Restano solo i NOMI propri delle ricette (dati).
