@@ -18,13 +18,18 @@ export default function GuidaAvatar() {
       "¡Hola! Soy Michele. Creé MikiLab para compartir recetas probadas y años de experiencia, sin barreras de precio."),
   };
   const mohamed = {
-    name: "Mohamed",
-    role: L("Il tuo Coach di Laboratorio", "Dein Labor-Coach", "Your Lab Coach", "Tu Coach de Laboratorio"),
+    name: "Mohammadreza",
+    role: L("Amico, socio & Coach di Laboratorio", "Freund, Partner & Labor-Coach", "Friend, partner & Lab Coach", "Amigo, socio y Coach de Laboratorio"),
     intro: L(
-      "Sono Mohamed, la guida IA. Ti accompagno passo-passo su ricette, tempi e organizzazione del laboratorio.",
-      "Ich bin Mohamed, dein KI-Guide. Ich begleite dich Schritt für Schritt bei Rezepten, Timing und Labororganisation.",
-      "I'm Mohamed, your AI guide. I walk you step-by-step through recipes, timing and lab organisation.",
-      "Soy Mohamed, tu guía IA. Te acompaño paso a paso en recetas, tiempos y organización."),
+      "Sono Mohammadreza. Con Michele ci siamo conosciuti da emigrati e abbiamo lavorato spalla a spalla: oggi sono la guida che ti accompagna passo-passo su ricette, tempi e organizzazione.",
+      "Ich bin Mohammadreza. Michele und ich haben uns als Emigranten kennengelernt und Schulter an Schulter gearbeitet: heute bin ich der Guide für Rezepte, Zeiten und Organisation.",
+      "I'm Mohammadreza. Michele and I met as emigrants and worked side by side: today I'm the guide who walks you through recipes, timing and organisation.",
+      "Soy Mohammadreza. Michele y yo nos conocimos como emigrantes y trabajamos codo con codo: hoy soy la guía de recetas, tiempos y organización."),
+    story: L(
+      "La nostra è una storia di amicizia e riscatto. Arrivati in Germania da emigrati, lontani da casa, ci siamo trovati fianco a fianco davanti al forno: notti di lavoro, tanta fatica e la voglia di ricominciare. Michele mi ha insegnato l'arte bianca, io gli ho dato una mano a non mollare mai. MikiLab nasce anche da qui — dall'idea che il pane unisce le persone e che nessuno debba sentirsi solo in un paese nuovo.",
+      "Unsere ist eine Geschichte von Freundschaft und Neuanfang. Als Emigranten nach Deutschland gekommen, fern der Heimat, standen wir Seite an Seite am Ofen: Nachtschichten, harte Arbeit und der Wille, neu anzufangen. Michele brachte mir die Backkunst bei, ich half ihm, nie aufzugeben. MikiLab entstand auch daraus — aus der Idee, dass Brot Menschen verbindet.",
+      "Ours is a story of friendship and redemption. Arriving in Germany as emigrants, far from home, we found ourselves side by side at the oven: night shifts, hard work and the will to start over. Michele taught me the baking craft, I helped him never give up. MikiLab was born from this too — the idea that bread brings people together.",
+      "La nuestra es una historia de amistad y superación. Llegados a Alemania como emigrantes, lejos de casa, nos encontramos codo con codo ante el horno: noches de trabajo, esfuerzo y ganas de empezar de nuevo. Michele me enseñó el arte blanco, yo le ayudé a no rendirse. MikiLab también nace de aquí."),
   };
   const active = who === "michele" ? michele : mohamed;
 
@@ -49,7 +54,7 @@ export default function GuidaAvatar() {
           {["michele", "mohamed"].map((k) => (
             <button key={k} data-testid={`guida-tab-${k}`} onClick={() => setWho(k)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${who === k ? "bg-[#8C4A27] text-[#FFFDF9]" : "bg-[#F2E8D5] text-[#6B5546]"}`}>
-              <ChefHat className="w-4 h-4" /> {k === "michele" ? "Michele" : "Mohamed"}
+              <ChefHat className="w-4 h-4" /> {k === "michele" ? "Michele" : "Mohammadreza"}
             </button>
           ))}
         </div>
@@ -63,6 +68,13 @@ export default function GuidaAvatar() {
             <p className="text-sm text-[#6B5546] mt-0.5 leading-relaxed">{active.intro}</p>
           </div>
         </div>
+
+        {who === "mohamed" && active.story && (
+          <div data-testid="guida-mohamed-story" className="mt-3 rounded-2xl bg-[#FEF3C7] border border-[#E6D8C3] p-4">
+            <p className="font-display text-base font-bold text-[#8C4A27] mb-1">{L("La nostra storia", "Unsere Geschichte", "Our story", "Nuestra historia")}</p>
+            <p className="text-[13.5px] text-[#6B5546] leading-relaxed">{active.story}</p>
+          </div>
+        )}
 
         <div className="mt-3 space-y-2">
           {steps.map((s, i) => (

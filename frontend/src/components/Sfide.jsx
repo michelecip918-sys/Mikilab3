@@ -5,6 +5,7 @@ import { challengesApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
+import { jsPDF } from "jspdf";
 import { toast } from "sonner";
 
 // Metadati locali (icona + testo multilingua). Il tipo (internal/honor) arriva dal catalogo backend.
@@ -91,6 +92,34 @@ export default function Sfide({ open, onClose }) {
 
   if (!open) return null;
 
+  const downloadCertificate = () => {
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    const W = 297, H = 210;
+    doc.setFillColor(253, 251, 247); doc.rect(0, 0, W, H, "F");
+    doc.setDrawColor(140, 74, 39); doc.setLineWidth(3); doc.rect(10, 10, W - 20, H - 20);
+    doc.setDrawColor(217, 119, 6); doc.setLineWidth(0.8); doc.rect(14, 14, W - 28, H - 28);
+    doc.setTextColor(140, 74, 39); doc.setFont("times", "bold"); doc.setFontSize(40);
+    doc.text("MikiLab", W / 2, 45, { align: "center" });
+    doc.setFontSize(20); doc.setTextColor(107, 85, 70);
+    doc.text(tri("Certificato di Panificazione", "Back-Zertifikat", "Baking Certificate", "Certificado de Panificación"), W / 2, 62, { align: "center" });
+    doc.setFont("times", "italic"); doc.setFontSize(14); doc.setTextColor(60, 40, 30);
+    doc.text(tri("Si attesta che", "Hiermit wird bestätigt, dass", "This certifies that", "Se certifica que"), W / 2, 88, { align: "center" });
+    doc.setFont("times", "bold"); doc.setFontSize(28); doc.setTextColor(140, 74, 39);
+    doc.text(user?.name || user?.email || "Baker", W / 2, 104, { align: "center" });
+    doc.setFont("times", "normal"); doc.setFontSize(14); doc.setTextColor(60, 40, 30);
+    const done = state?.count || 0; const all = state?.unlocked_all;
+    const line = all
+      ? tri(`ha completato TUTTE le ${done} sfide e sbloccato i 17 Panettoni MikiLab`, `hat ALLE ${done} Challenges abgeschlossen`, `has completed ALL ${done} challenges and unlocked the 17 MikiLab Panettoni`, `ha completado TODOS los ${done} retos`)
+      : tri(`ha completato ${done} sfide della community MikiLab`, `hat ${done} Community-Challenges abgeschlossen`, `has completed ${done} MikiLab community challenges`, `ha completado ${done} retos`);
+    doc.text(line, W / 2, 120, { align: "center", maxWidth: W - 60 });
+    doc.text("🥖 " + tri("Panificatore MikiLab", "MikiLab-Bäcker", "MikiLab Baker", "Panadero MikiLab"), W / 2, 140, { align: "center" });
+    doc.setFontSize(11); doc.setTextColor(140, 115, 98);
+    doc.text(new Date().toLocaleDateString(lang === "en" ? "en-GB" : lang), W / 2, 165, { align: "center" });
+    doc.text("mikilab.de", W / 2, 172, { align: "center" });
+    doc.save("MikiLab-Certificato.pdf");
+    toast.success(tri("Certificato scaricato! 📜", "Zertifikat heruntergeladen! 📜", "Certificate downloaded! 📜", "¡Certificado descargado! 📜"));
+  };
+
   const completed = new Set(state?.completed || []);
   const count = state?.count || 0;
   const total = state?.total || catalog.length || 8;
@@ -144,6 +173,12 @@ export default function Sfide({ open, onClose }) {
                 <p className="text-[13px] font-bold text-[#2C1E16] dark:text-[#e4eff8] leading-tight">{tri("Sblocca tutto", "Alles freischalten", "Unlock everything", "Desbloquea todo")}</p>
               </div>
             </div>
+            {user && count >= (state?.need_panettoni || 3) && (
+              <button data-testid="sfide-certificate" onClick={downloadCertificate}
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-[#FFFDF9] font-semibold px-4 py-2.5 active:scale-98 transition-all">
+                <Trophy className="w-4.5 h-4.5" /> {tri("Scarica il Certificato PDF", "PDF-Zertifikat herunterladen", "Download PDF Certificate", "Descargar Certificado PDF")}
+              </button>
+            )}
           </div>
 
           {!user && (

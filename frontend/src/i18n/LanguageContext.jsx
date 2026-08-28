@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import { translations } from "@/i18n/translations";
 
 const LanguageContext = createContext(null);
-const SUPPORTED = ["it", "de", "en", "es"];
+const SUPPORTED = ["it", "de", "en", "es", "fr", "fa"];
 
 function initialLang() {
   // 1) prefisso lingua nell'URL (/it /de /en /es) → SEO / condivisione
@@ -23,11 +23,12 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("mikilab_lang", lang);
     document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
   }, [lang]);
 
   const setLang = useCallback((l) => setLangState(SUPPORTED.includes(l) ? l : "it"), []);
 
-  // t(key): lingua scelta → EN → IT → key. Così ES/DE mancanti ricadono su EN (mai italiano per EN/ES).
+  // t(key): lingua scelta → EN → IT → key. Così le lingue senza dizionario ricadono su EN.
   const t = useCallback(
     (key) => {
       const L = translations[lang] || {};
@@ -36,11 +37,12 @@ export function LanguageProvider({ children }) {
     [lang]
   );
 
-  // Testi inline: tri(it, de, en, es). Fallback: es→en→it, en→it, de→it.
+  // Testi inline: tri(it, de, en, es). fr/fa ricadono su EN (poi IT).
   const tri = useCallback((it_, de_, en_, es_) => {
     if (lang === "de") return de_ ?? it_;
     if (lang === "en") return en_ ?? it_;
     if (lang === "es") return es_ ?? en_ ?? it_;
+    if (lang === "fr" || lang === "fa") return en_ ?? it_;
     return it_;
   }, [lang]);
 

@@ -118,6 +118,9 @@ const TOOLS = [
   { id: "sosimpasto", Icon: Stethoscope, cat: "gestione", it: "SOS Impasto", de: "SOS Teig", en: "Dough SOS", es: "SOS Masa" },
   { id: "recupero", Icon: Recycle, cat: "impasto", it: "Angolo del Recupero", de: "Resteverwertung", en: "Recovery Corner", es: "Rincón Aprovechamiento" },
   { id: "saporicasa", Icon: UtensilsCrossed, cat: "impasto", it: "Sapori di Casa", de: "Geschmack von zu Hause", en: "Home Flavours", es: "Sabores de Casa" },
+  { id: "weatherbaker", Icon: CloudSun, cat: "impasto", it: "Smart Weather-Baker", de: "Smart Weather-Baker", en: "Smart Weather-Baker", es: "Smart Weather-Baker" },
+  { id: "trovafarina", Icon: Search, cat: "impasto", it: "Trova-Farina Europeo", de: "Mehl-Finder Europa", en: "European Flour Finder", es: "Buscador de Harinas" },
+  { id: "esuberozero", Icon: Recycle, cat: "impasto", it: "Esubero Zero-Sprechi", de: "Sauerteig-Rest", en: "Zero-Waste Discard", es: "Descarte Cero" },
 ];
 
 const TOOL_CATS = [

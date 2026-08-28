@@ -58,6 +58,9 @@ import CalcolatoreStampi from "@/sections/CalcolatoreStampi";
 import SosImpastoGuida from "@/sections/SosImpastoGuida";
 import AngoloRecupero from "@/sections/AngoloRecupero";
 import SaporiCasa from "@/sections/SaporiCasa";
+import TrovaFarina from "@/sections/TrovaFarina";
+import EsuberoZero from "@/sections/EsuberoZero";
+import SmartWeatherBaker from "@/sections/SmartWeatherBaker";
 import { toast } from "sonner";
 
 export default function Maestro() {
@@ -129,6 +132,9 @@ export default function Maestro() {
         {tool === "sosimpasto" && <SosImpastoGuida onOpenTool={openTool} />}
         {tool === "recupero" && <AngoloRecupero />}
         {tool === "saporicasa" && <SaporiCasa />}
+        {tool === "trovafarina" && <TrovaFarina />}
+        {tool === "esuberozero" && <EsuberoZero />}
+        {tool === "weatherbaker" && <SmartWeatherBaker />}
         {tool === "suono" && <SoundDiagnosi />}
         {tool === "enterprise" && <EnterpriseHub />}
       </div>

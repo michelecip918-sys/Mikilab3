@@ -46,26 +46,26 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Language switcher IT / DE */}
+        {/* Selettore lingue internazionali: IT · DE · EN · ES · FR · FA (Farsi) */}
         <div
           data-testid="lang-switcher"
-          className="flex items-center bg-[#e4eff8] dark:bg-[#2A323A] rounded-xl border border-[#d5e4f0] dark:border-[#38424B] p-0.5"
+          className="relative flex items-center bg-[#e4eff8] dark:bg-[#2A323A] rounded-xl border border-[#d5e4f0] dark:border-[#38424B]"
           aria-label={t("lang_label")}
         >
-          {["it", "de", "en", "es"].map((l) => (
-            <button
-              key={l}
-              data-testid={`lang-${l}`}
-              onClick={() => setLang(l)}
-              className={`px-2 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
-                lang === l
-                  ? "bg-[#3f7cac] text-white shadow-sm"
-                  : "text-[#7E8A93]"
-              }`}
-            >
-              {l}
-            </button>
-          ))}
+          <select
+            data-testid="lang-select"
+            value={lang}
+            onChange={(e) => setLang(e.target.value)}
+            className="appearance-none bg-transparent text-xs font-bold uppercase text-[#234b6e] dark:text-[#e4eff8] pl-2.5 pr-6 py-2 rounded-xl outline-none cursor-pointer"
+          >
+            <option value="it">🇮🇹 IT</option>
+            <option value="de">🇩🇪 DE</option>
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+            <option value="fr">🇫🇷 FR</option>
+            <option value="fa">🇮🇷 FA</option>
+          </select>
+          <span className="pointer-events-none absolute right-1.5 text-[#7E8A93] text-[10px]">▼</span>
         </div>
 
         <button

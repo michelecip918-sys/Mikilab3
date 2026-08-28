@@ -1911,3 +1911,16 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Profilo utente**: "Il Mio Ricettario Personale", Registro Digitale Lievito Madre, PDF "Ricetta di Cantiere" stampabile.
 - **Impara**: percorsi formativi a livelli con quiz finali (motore sfide progressivo + lucchetti Panettoni già attivi).
 - **Recolor Arte Bianca COMPLETO** su sezioni legacy (Ricette/Community/Home hero blu ecc.).
+
+## v-fork.19 (2026-08) — 6 lingue, storia Mohammadreza, tool unici, certificato PDF, meta social
+- **SELETTORE LINGUE (6)**: `LanguageContext` SUPPORTED += `fr`, `fa`. Header ora è un DROPDOWN `lang-select` con IT·DE·EN·ES·FR·FA (bandiere, pari dignità). `tri()`: fr/fa → EN → IT. **RTL** automatico per Farsi (`document.documentElement.dir='rtl'`). Clock/locale invariati (fallback). NB: dizionari fr/fa non tradotti → ricadono su EN (t() e tri()); traduzione completa fr/fa = fase dedicata se richiesta.
+- **STORIA MOHAMMADREZA (solo in "Chi Siamo"/Avatar)**: `GuidaAvatar.jsx` tab "Mohamed" rinominato **Mohammadreza** + blocco `guida-mohamed-story` (amicizia, riscatto, lavoro spalla a spalla da emigrati, IT/DE/EN/ES). "Il Tuo Laboratorio" resta tecnico (MohammedAssistant invariato, nessuna storia personale lì).
+- **TOOL UNICI (nuovi, client-side, in Lab grid + Maestro render)**:
+  - `weatherbaker` → `SmartWeatherBaker.jsx`: da temp+umidità(+città) calcola correzione idratazione, tempi puntata (fattore 2^((24-T)/8)) e temp acqua (regola 60/70). Verificato (30°C → 1h47m, acqua 14°C, avviso "fa caldo").
+  - `trovafarina` → `TrovaFarina.jsx`: equivalenze farine supermercato IT/DE/FR/ES per uso (pane forte, pizza, dolci, integrale, segale, semola) con Type/W.
+  - `esuberozero` → `EsuberoZero.jsx`: peso esubero → ricette (pancake/crackers/grissini) con dosi scalate.
+- **CERTIFICATO PDF SFIDE**: `Sfide.jsx` pulsante `sfide-certificate` (jsPDF@2) visibile a ≥3 sfide → PDF "Panificatore MikiLab" con nome, n° sfide, data.
+- **META SOCIAL**: og/twitter già presenti; aggiunti `og:locale:alternate` en_GB/es_ES/fr_FR/fa_IR. Condivisione WhatsApp/FB/IG via ShareInstall già attiva.
+### DEFERITI (heavy o già coperti) da fare se richiesti
+- Simulatore Forno interattivo (parziale in SaporiCasa "Testato in Forno di Casa"); Generatore Etichette QR (già `BatchTraceability`); Banca del Lievito mappa (estendere `BakersMap`); Time-Lapse Tracker (richiede analisi foto/IA).
+- Dizionari completi FR/FA; recolor Arte Bianca completo sezioni legacy; Home banner "Sapore del Giorno" + Glossario; Profilo (Ricettario personale, Registro LM, PDF "Ricetta di Cantiere").
