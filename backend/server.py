@@ -576,22 +576,13 @@ async def optional_user(request: Request):
 # Entitlement / PRO helpers (blindatura server-side)
 # ---------------------------------------------------------------------------
 async def _email_has_pro(email: Optional[str]) -> bool:
-    if not email:
-        return False
-    ent = await db.entitlements.find_one({"email": email.strip().lower()}, {"_id": 0})
-    if not ent or not ent.get("pro"):
-        return False
-    exp = ent.get("expires_at")
-    return True if not exp else exp > now_iso()
+    # Accesso completo GRATUITO per tutti: nessun contenuto a pagamento.
+    return True
 
 
 async def user_is_pro(user: Optional[dict]) -> bool:
-    """PRO se abbonato/prova attiva OPPURE admin (accesso completo)."""
-    if not user:
-        return False
-    if user.get("role") == "admin":
-        return True
-    return await _email_has_pro(user.get("email"))
+    """Accesso completo GRATUITO per tutti (anche visitatori non loggati)."""
+    return True
 
 
 async def require_pro(user: dict = Depends(current_user)):
@@ -796,7 +787,7 @@ async def _send_verification(email: str, origin_url: str, lang: str):
 @api_router.post("/auth/register")
 async def auth_register(payload: RegisterReq, request: Request, response: Response):
     email = payload.email.strip().lower()
-    lang = payload.lang if payload.lang in ("it", "de", "en", "es") else "it"
+    lang = payload.lang if payload.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     # Anti-spam: max 5 registrazioni all'ora per dispositivo/IP
     if not await _rate_limit("register", _client_ip(request), 5, 3600):
         raise HTTPException(status_code=429, detail="Troppe registrazioni da questo dispositivo. Riprova più tardi.")
@@ -854,7 +845,7 @@ async def verify_email(body: dict, response: Response):
 @api_router.post("/auth/resend-verification")
 async def resend_verification(body: ResendVerifyReq):
     email = (body.email or "").strip().lower()
-    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
+    lang = body.lang if body.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     u = await db.users.find_one({"email": email, "auth_provider": "email"})
     if u and not u.get("email_verified"):
         await _send_verification(email, body.origin_url or "", lang)
@@ -980,6 +971,9 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
                     return True
                 return d.get("id") in unlocked
             docs = [d if _visible(d) else _teaser_recipe(d) for d in docs]
+        # Accesso GRATUITO totale: nessuna ricetta bloccata.
+        for d in docs:
+            d["locked"] = False
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
@@ -1009,7 +1003,7 @@ async def what_can_i_make(payload: WhatCanIMake, user: dict = Depends(current_us
         items.append({"id": d.get("id"), "name": d.get("name"), "farina": d.get("flour_type") or "", "prefermento": d.get("preferment_type") or "", "extra": extra_names})
     if not items:
         return {"makable": [], "almost": []}
-    lang_name = {"de": "tedesco", "en": "inglese", "es": "spagnolo"}.get(payload.lang, "italiano")
+    lang_name = _LANG_NAMES.get(payload.lang, "italiano")
     try:
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"wcim-{uuid.uuid4().hex[:8]}",
@@ -1122,7 +1116,7 @@ def _round5(x: float) -> float:
 async def generate_recipe(body: RecipeGenReq, user: dict = Depends(current_user)):
     if not await user_is_pro(user):
         raise HTTPException(status_code=403, detail="Serve l'abbonamento PRO")
-    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
+    lang = body.lang if body.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     hyd = max(50, min(100, int(body.hydration)))
     pf = GEN_PREFERMENT.get(body.preferment, GEN_PREFERMENT["diretto"])
     salt_pct = 2.0
@@ -1456,12 +1450,12 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depe
     return merged
 
 
-_LANG_NAMES = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo"}
+_LANG_NAMES = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano (farsi)"}
 
 
 async def _translate_recipe_lang(doc, target):
-    """Traduce nome + campi ricetta nella lingua target (it/de/en/es). Ritorna dict {campo_<lang>: valore}."""
-    if target not in ("it", "de", "en", "es"):
+    """Traduce nome + campi ricetta nella lingua target (it/de/en/es/fr/fa). Ritorna dict {campo_<lang>: valore}."""
+    if target not in ("it", "de", "en", "es", "fr", "fa"):
         return {}
     try:
         fields = {k: doc.get(k) for k in ["name", "flour_type", "notes", "procedure"] if doc.get(k)}
@@ -2199,14 +2193,14 @@ class QuizRequest(BaseModel):
 
 # Temi rotanti della "Sfida a Tema" settimanale
 WEEKLY_THEMES = [
-    {"id": "idratazione", "it": "Idratazione", "de": "Hydratation", "en": "Hydration", "es": "Hidratación"},
-    {"id": "lievito_madre", "it": "Lievito madre", "de": "Sauerteig", "en": "Sourdough starter", "es": "Masa madre"},
-    {"id": "fermentazione", "it": "Fermentazione e maturazione", "de": "Gärung & Reifung", "en": "Fermentation & maturation", "es": "Fermentación y maduración"},
-    {"id": "farine", "it": "Farine e forza (W)", "de": "Mehle & Stärke (W)", "en": "Flours & strength (W)", "es": "Harinas y fuerza (W)"},
-    {"id": "cottura", "it": "Cottura e forno di casa", "de": "Backen & Hausofen", "en": "Baking & home oven", "es": "Cocción y horno de casa"},
-    {"id": "pieghe", "it": "Pieghe e incordatura", "de": "Falten & Teigstruktur", "en": "Folds & gluten development", "es": "Pliegues y amasado"},
-    {"id": "temperatura", "it": "Temperatura e clima della cucina", "de": "Temperatur & Küchenklima", "en": "Temperature & kitchen climate", "es": "Temperatura y clima de la cocina"},
-    {"id": "difetti", "it": "Difetti del pane e rimedi", "de": "Brotfehler & Lösungen", "en": "Bread faults & fixes", "es": "Defectos del pan y soluciones"},
+    {"id": "idratazione", "it": "Idratazione", "de": "Hydratation", "en": "Hydration", "es": "Hidratación", "fr": "Hydratation", "fa": "هیدراتاسیون"},
+    {"id": "lievito_madre", "it": "Lievito madre", "de": "Sauerteig", "en": "Sourdough starter", "es": "Masa madre", "fr": "Levain", "fa": "خمیر ترش"},
+    {"id": "fermentazione", "it": "Fermentazione e maturazione", "de": "Gärung & Reifung", "en": "Fermentation & maturation", "es": "Fermentación y maduración", "fr": "Fermentation & maturation", "fa": "تخمیر و رسیدن"},
+    {"id": "farine", "it": "Farine e forza (W)", "de": "Mehle & Stärke (W)", "en": "Flours & strength (W)", "es": "Harinas y fuerza (W)", "fr": "Farines & force (W)", "fa": "آردها و قدرت (W)"},
+    {"id": "cottura", "it": "Cottura e forno di casa", "de": "Backen & Hausofen", "en": "Baking & home oven", "es": "Cocción y horno de casa", "fr": "Cuisson & four maison", "fa": "پخت و فر خانگی"},
+    {"id": "pieghe", "it": "Pieghe e incordatura", "de": "Falten & Teigstruktur", "en": "Folds & gluten development", "es": "Pliegues y amasado", "fr": "Rabats & réseau glutineux", "fa": "تاها و شکل‌گیری گلوتن"},
+    {"id": "temperatura", "it": "Temperatura e clima della cucina", "de": "Temperatur & Küchenklima", "en": "Temperature & kitchen climate", "es": "Temperatura y clima de la cocina", "fr": "Température & climat de la cuisine", "fa": "دما و آب‌وهوای آشپزخانه"},
+    {"id": "difetti", "it": "Difetti del pane e rimedi", "de": "Brotfehler & Lösungen", "en": "Bread faults & fixes", "es": "Defectos del pan y soluciones", "fr": "Défauts du pain & remèdes", "fa": "عیوب نان و راه‌حل‌ها"},
 ]
 
 
@@ -2218,7 +2212,7 @@ def _weekly_theme_index():
 
 @api_router.get("/academy/weekly-theme")
 async def academy_weekly_theme(lang: str = "it"):
-    lang = lang if lang in ("it", "de", "en", "es") else "it"
+    lang = lang if lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     idx = _weekly_theme_index()
     th = WEEKLY_THEMES[idx]
     return {"week": _iso_week(), "theme_id": th["id"], "title": th.get(lang, th["it"])}
@@ -2250,7 +2244,7 @@ _QUIZ_LEVELS = {
 async def academy_quiz(payload: QuizRequest):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
-    lang = payload.lang if payload.lang in ("it", "de", "en", "es") else "it"
+    lang = payload.lang if payload.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     level = payload.level if payload.level in _QUIZ_LEVELS else "apprendista"
     lvl_desc = _QUIZ_LEVELS[level].get(lang, _QUIZ_LEVELS[level]["it"])
     avoid = ""
@@ -2259,7 +2253,7 @@ async def academy_quiz(payload: QuizRequest):
     theme_hint = ""
     if payload.theme:
         theme_hint = f" La domanda DEVE riguardare specificamente il tema: «{payload.theme[:60]}»."
-    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo"}[lang]
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano (farsi)"}[lang]
     schema = '{"question": "...", "options": ["...","...","..."], "correct": 0, "explanation": "spiegazione tecnica e scientifica del perche la risposta corretta e giusta (2-4 frasi)", "level": "' + level + '"}'
     prompt = (
         "Genera UNA domanda a risposta multipla per un QUIZ di panificazione CASALINGA. "
@@ -2513,8 +2507,8 @@ async def academy_sos_recipe(body: SosRecipeReq, user: dict = Depends(current_us
         return {"recipe_id": None}
     idset = {r["id"]: r["name"] for r in recs}
     listing = "\n".join(f"{r['id']} :: {r['name']}" for r in recs[:200])
-    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
-    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo"}[lang]
+    lang = body.lang if body.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
+    lang_name = _LANG_NAMES.get(lang, "italiano")
     prompt = (
         "Sei Mohammadreza. Data questa DIAGNOSI di un pane fatto in casa, scegli DALLA LISTA la ricetta MikiLab più adatta "
         "per allenarsi e correggere quel difetto (una ricetta che, seguendone bene il procedimento, aiuta a superare il problema).\n\n"
@@ -3938,7 +3932,7 @@ async def bundle_checkout(body: BundleCheckoutReq, user: dict = Depends(current_
     b = BUNDLE_DEFS.get(body.bundle)
     if not b:
         raise HTTPException(400, "Pacchetto non valido")
-    lang = body.lang if body.lang in ("it", "de", "en", "es") else "it"
+    lang = body.lang if body.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     email = user["email"]
     existing = _stripe.Customer.list(email=email, limit=1).data
     customer = existing[0] if existing else _stripe.Customer.create(email=email)
@@ -4214,6 +4208,16 @@ async def _grant_from_email(email, source="stripe", days=None, tier="lab"):
 
 @api_router.get("/subscription/status")
 async def subscription_status(user: Optional[dict] = Depends(optional_user)):
+    # Accesso completo GRATUITO per tutti: sempre "pro" attivo, nessun pagamento.
+    return {"pro": True, "academy": True, "plan_tier": "lab", "source": "free",
+            "expires_at": None, "trial_used": False,
+            "is_admin": bool(user and user.get("role") == "admin"),
+            "unlock_all": True, "unlock_panettoni": True,
+            "unlocked_recipes": [], "unlocked_bundles": [],
+            "diagnosi_used": 0, "diagnosi_limit": None}
+
+
+async def _subscription_status_legacy(user: Optional[dict] = Depends(optional_user)):
     if not user:
         return {"pro": False, "academy": False, "plan_tier": None, "source": None, "expires_at": None,
                 "trial_used": False, "is_admin": False, "unlock_all": False, "unlock_panettoni": False,
@@ -5233,35 +5237,51 @@ BAKEALONG_THEMES = [
     {"id": "pane_integrale", "it": ("Pane Integrale", "Sforna un pane 100% integrale ben alveolato.", "Idrata di più (l'integrale beve tanto), usa autolisi lunga e pieghe delicate."),
      "de": ("Vollkornbrot", "Backe ein 100% Vollkornbrot mit schöner Porung.", "Mehr Wasser (Vollkorn saugt stark), lange Autolyse und sanftes Falten."),
      "en": ("Whole Wheat Bread", "Bake a 100% whole wheat loaf with an open crumb.", "Hydrate more (whole wheat drinks a lot), long autolyse and gentle folds."),
-     "es": ("Pan Integral", "Hornea un pan 100% integral bien alveolado.", "Más hidratación, autólisis larga y pliegues suaves.")},
+     "es": ("Pan Integral", "Hornea un pan 100% integral bien alveolado.", "Más hidratación, autólisis larga y pliegues suaves."),
+     "fr": ("Pain Complet", "Réussis un pain 100% complet bien alvéolé.", "Hydrate davantage (le complet boit beaucoup), autolyse longue et rabats délicats."),
+     "fa": ("نان سبوس‌دار", "یک نان ۱۰۰٪ سبوس‌دار با مغز حفره‌دار بپز.", "بیشتر هیدراته کن (سبوس آب زیاد می‌گیرد)، اتولیز طولانی و تاهای ملایم.")},
     {"id": "baguette", "it": ("Baguette Croccante", "La baguette più croccante e alveolata che riesci a fare.", "Poolish la sera prima, vapore in forno nei primi 10 minuti."),
      "de": ("Knuspriges Baguette", "Das knusprigste, luftigste Baguette, das du hinbekommst.", "Poolish am Vorabend, Dampf in den ersten 10 Minuten."),
      "en": ("Crusty Baguette", "The crustiest, airiest baguette you can make.", "Poolish the night before, steam for the first 10 minutes."),
-     "es": ("Baguette Crujiente", "La baguette más crujiente y alveolada que puedas.", "Poolish la noche antes, vapor los primeros 10 minutos.")},
+     "es": ("Baguette Crujiente", "La baguette más crujiente y alveolada que puedas.", "Poolish la noche antes, vapor los primeros 10 minutos."),
+     "fr": ("Baguette Croustillante", "La baguette la plus croustillante et alvéolée possible.", "Poolish la veille, vapeur au four les 10 premières minutes."),
+     "fa": ("باگت ترد", "تردترین و حفره‌دارترین باگتی که می‌توانی.", "پولیش شب قبل، بخار در ۱۰ دقیقه اول فر.")},
     {"id": "focaccia", "it": ("Focaccia Alveolata", "Focaccia soffice e piena di bolle.", "Alta idratazione, lievitazione in teglia unta, fossette con le dita e olio."),
      "de": ("Luftige Focaccia", "Weiche Focaccia voller Blasen.", "Hohe Hydratation, Gare im geölten Blech, Dellen mit den Fingern und Öl."),
      "en": ("Bubbly Focaccia", "Soft focaccia full of bubbles.", "High hydration, proof in an oiled pan, dimple with fingers and oil."),
-     "es": ("Focaccia Alveolada", "Focaccia esponjosa y llena de burbujas.", "Alta hidratación, fermentación en bandeja aceitada, hoyuelos y aceite.")},
+     "es": ("Focaccia Alveolada", "Focaccia esponjosa y llena de burbujas.", "Alta hidratación, fermentación en bandeja aceitada, hoyuelos y aceite."),
+     "fr": ("Focaccia Alvéolée", "Focaccia moelleuse et pleine de bulles.", "Forte hydratation, pousse en plaque huilée, creux aux doigts et huile."),
+     "fa": ("فوکاچیای حفره‌دار", "فوکاچیای نرم و پر از حباب.", "هیدراتاسیون بالا، تخمیر در سینی روغنی، گودی با انگشت و روغن.")},
     {"id": "cinnamon", "it": ("Girelle alla Cannella", "Soft rolls alla cannella con glassa.", "Impasto arricchito con burro e latte, seconda lievitazione ben fatta."),
      "de": ("Zimtschnecken", "Weiche Zimtschnecken mit Glasur.", "Angereicherter Teig mit Butter und Milch, gute zweite Gare."),
      "en": ("Cinnamon Rolls", "Soft cinnamon rolls with glaze.", "Enriched dough with butter and milk, good second proof."),
-     "es": ("Rollos de Canela", "Rollos suaves de canela con glaseado.", "Masa enriquecida con mantequilla y leche, buena segunda fermentación.")},
+     "es": ("Rollos de Canela", "Rollos suaves de canela con glaseado.", "Masa enriquecida con mantequilla y leche, buena segunda fermentación."),
+     "fr": ("Roulés à la Cannelle", "Roulés moelleux à la cannelle avec glaçage.", "Pâte enrichie beurre et lait, bonne deuxième pousse."),
+     "fa": ("رول دارچینی", "رول‌های نرم دارچینی با روکش.", "خمیر غنی با کره و شیر، تخمیر دوم خوب.")},
     {"id": "pizza", "it": ("Pizza in Teglia", "Pizza in teglia alta idratazione, cornicione alveolato.", "80% idratazione, maturazione in frigo 24-48h, teglia ben calda."),
      "de": ("Blechpizza", "Blechpizza mit hoher Hydratation, luftiger Rand.", "80% Hydratation, 24-48h Kühlreifung, heißes Blech."),
      "en": ("Pan Pizza", "High-hydration pan pizza with an airy crust.", "80% hydration, 24-48h cold maturation, very hot pan."),
-     "es": ("Pizza en Bandeja", "Pizza en bandeja alta hidratación, borde alveolado.", "80% hidratación, maduración en frío 24-48h, bandeja caliente.")},
+     "es": ("Pizza en Bandeja", "Pizza en bandeja alta hidratación, borde alveolado.", "80% hidratación, maduración en frío 24-48h, bandeja caliente."),
+     "fr": ("Pizza en Plaque", "Pizza en plaque très hydratée, bord alvéolé.", "80% d'hydratation, maturation au frigo 24-48h, plaque bien chaude."),
+     "fa": ("پیتزای سینی", "پیتزای سینی با هیدراتاسیون بالا و لبه حفره‌دار.", "۸۰٪ هیدراتاسیون، رسیدن در یخچال ۲۴-۴۸ ساعت، سینی داغ.")},
     {"id": "rustico", "it": ("Pane Rustico a Lievito Madre", "Un bel pane rustico con la tua pasta madre.", "Rinfresca la madre al top, cottura in pentola per la crosta."),
      "de": ("Rustikales Sauerteigbrot", "Ein schönes rustikales Brot mit deinem Sauerteig.", "Sauerteig auf dem Höhepunkt auffrischen, im Topf backen."),
      "en": ("Rustic Sourdough", "A beautiful rustic loaf with your sourdough.", "Refresh the starter at its peak, bake in a pot for the crust."),
-     "es": ("Pan Rústico de Masa Madre", "Un buen pan rústico con tu masa madre.", "Refresca la madre en su punto, hornea en olla para la corteza.")},
+     "es": ("Pan Rústico de Masa Madre", "Un buen pan rústico con tu masa madre.", "Refresca la madre en su punto, hornea en olla para la corteza."),
+     "fr": ("Pain Rustique au Levain", "Un beau pain rustique avec ton levain.", "Rafraîchis le levain à son pic, cuisson en cocotte pour la croûte."),
+     "fa": ("نان روستایی با خمیر ترش", "یک نان روستایی زیبا با خمیر ترش خودت.", "خمیر ترش را در اوج تازه کن، در قابلمه بپز برای پوسته.")},
     {"id": "brioche", "it": ("Brioche Soffice", "La brioche più soffice e filante.", "Burro freddo a fine impasto, incordatura perfetta, frigo prima di formare."),
      "de": ("Fluffige Brioche", "Die weichste, fluffigste Brioche.", "Kalte Butter am Ende, perfekte Teigstruktur, vor dem Formen kühlen."),
      "en": ("Soft Brioche", "The softest, fluffiest brioche.", "Cold butter at the end, perfect gluten, chill before shaping."),
-     "es": ("Brioche Suave", "La brioche más suave y esponjosa.", "Mantequilla fría al final, amasado perfecto, frío antes de formar.")},
+     "es": ("Brioche Suave", "La brioche más suave y esponjosa.", "Mantequilla fría al final, amasado perfecto, frío antes de formar."),
+     "fr": ("Brioche Moelleuse", "La brioche la plus moelleuse et filante.", "Beurre froid en fin de pétrissage, réseau parfait, frigo avant façonnage."),
+     "fa": ("بریوش نرم", "نرم‌ترین و کش‌دارترین بریوش.", "کره سرد در پایان ورز، شکل‌گیری کامل گلوتن، یخچال قبل از فرم دادن.")},
     {"id": "grissini", "it": ("Grissini & Snack", "Grissini o crackers croccanti fatti in casa.", "Impasto povero d'acqua, stesura sottile, cottura bassa e lunga."),
      "de": ("Grissini & Snacks", "Knusprige Grissini oder Cracker selbstgemacht.", "Wasserarmer Teig, dünn ausrollen, niedrig und lange backen."),
      "en": ("Grissini & Snacks", "Crunchy homemade grissini or crackers.", "Low-water dough, roll thin, bake low and long."),
-     "es": ("Grissini & Snacks", "Grissini o crackers crujientes caseros.", "Masa con poca agua, estirado fino, cocción baja y larga.")},
+     "es": ("Grissini & Snacks", "Grissini o crackers crujientes caseros.", "Masa con poca agua, estirado fino, cocción baja y larga."),
+     "fr": ("Gressins & Snacks", "Gressins ou crackers croustillants maison.", "Pâte peu hydratée, abaisse fine, cuisson basse et longue."),
+     "fa": ("گریسینی و اسنک", "گریسینی یا کراکر ترد خانگی.", "خمیر کم‌آب، پهن‌کردن نازک، پخت با حرارت پایین و طولانی.")},
 ]
 
 
@@ -5272,7 +5292,7 @@ def _bakealong_index(offset: int = 0):
 
 
 def _bakealong_theme(lang: str, offset: int = 0):
-    lang = lang if lang in ("it", "de", "en", "es") else "it"
+    lang = lang if lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     th = BAKEALONG_THEMES[_bakealong_index(offset)]
     title, desc, tip = th.get(lang, th["it"])
     return {"id": th["id"], "title": title, "description": desc, "tip": tip}

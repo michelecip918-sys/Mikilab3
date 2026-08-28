@@ -2095,3 +2095,14 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Bug risolto in corso**: shadowing dell'import `pick` con helper locali in AvatarBubbles/Beginners (crash Learn) -> rinominati bubbleText/choose.
 - Verificato: testing_agent iterations 104-107, ~95%+, nessun crash, FR/FA completi su Home/Recipes/Your Lab/Learn/Social/Enciclopedia/RicetteCustodite; IT/DE/ES regressione ok; RTL+font persiano ok.
 - Gap residui accettati (dinamici/pre-esistenti, non testo UI statico): Glossario TERMS (italiano anche in DE/EN), contenuti seed sfida settimanale, alcuni dati record dinamici (ricette utente, prodotti shop, array farine) ricadono su EN.
+
+## v-fork.45 (2026-06) — Rimozione TOTALE paywall + 5 feature
+- **Nessun contenuto a pagamento** (richiesta utente "niente di niente"):
+  - Backend: `user_is_pro`/`_email_has_pro` → sempre True; `/subscription/status` → pro/academy true, diagnosi_limit null; `get_recipes` forza `locked=False` su tutte (121 ricette, 0 bloccate).
+  - Frontend: `PaywallGate.hasAccess=true` sempre; `Shop.jsx` sostituito con schermata "È tutto gratis" (rimossi bundle €50/€40/€20/€10, "abbonati PRO €29,99", waitlist). Le sfide community restano come sblocco GRATUITO gamificato ("No payment").
+- **Selettore lingua in ricetta**: aggiunti FR e FA ai pallini (RecipeList recipe-lang-*).
+- **Rilevamento lingua automatico**: già presente in `initialLang()` (URL → localStorage → navigator.language). Confermato.
+- **Glossario multilingua**: `glossary_i18n.json` (19 termini × de/en/es/fr/fa via LLM); Glossario.jsx rende per lingua.
+- **Contenuti dinamici/seed FR/FA**: WEEKLY_THEMES + endpoint weekly-theme (fr/fa), academy_quiz (fr/fa + lang_name), BAKEALONG_THEMES (fr/fa), `_translate_recipe_lang`/`_LANG_NAMES` (fr/fa), diagnosi/coach lang allargati.
+- **Scorciatoie personalizzabili**: `QUICK_CATALOG` (16 strumenti) nel Piano Produzione IA; pulsante "Personalizza" (capo-quicktools-edit) → editor toggle (max 6), persistenza localStorage `mikilab_quicktools`, feedback toast al superamento di 6.
+- Verificato: testing_agent iteration_108 backend 100% (16/16), frontend 85% (residuo Shop poi rimosso); smoke test finale OK.

@@ -1,0 +1,46 @@
+{
+  "summary": "Iteration 108 — verified full paywall removal + 5 new features (FR/FA recipe lang pills, multilingual glossary, FR/FA weekly challenge, customizable quick tools, auto language detection). Backend: 16/16 pytest passed (/api/subscription/status pro=true for guest+admin, /api/recipes?collection_name=mikilab returns 0 locked and full `procedure` for all 121 recipes incl. 'Lievito Madre di Segale', /api/academy/weekly-theme in it/de/en/es/fr/fa). Frontend (mobile 390x844): no PRO teaser/lock icons on recipe list or detail (Segale + 18 Panettoni fully readable), Your Lab + Diagnosi + Piano IA open with no price screen, recipe-lang-fr/fa pills present and switch UI, glossary translated in DE/EN/ES/FR/FA (19 terms, RTL ok for FA), weekly theme translated (FR 'Farines & force (W)', FA persian), quick tools customize/6-limit/persistence/open all work, auto-detect starts app in FR with navigator=fr-FR and empty localStorage, no JS page errors navigating all 5 tabs in it/fr/fa. ONE requirement violation found: the Shop & Academy page still sells recipe bundles and PRO subscription.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/recipes (mikilab)", "issue": "Docs return locked=null instead of false (code only overwrites when truthy). Harmless today (frontend uses truthiness) but inconsistent with the API model."},
+      {"endpoint": "/api/recipe/checkout, /api/subscription/checkout", "issue": "Stripe payment endpoints still live and still reachable from the Shop UI, although the product is now fully free."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Shop.jsx / AcademyHome (tab 'shop', reachable from Home button home-core-corsi)", "issue": "PAYWALL STILL PRESENT: bundle prices €50 (Pasticceria) / €40 (Pane) / €20 (Panini) / €10 (Snack), CTA 'oppure abbonati PRO (tutto incluso) · €29,99/mese', copy 'Acquista il ricettario o abbonati PRO' and consulting 'Prenota e paga · €120'. Clicking these starts a real Stripe checkout. Violates requirement (A) 'niente a pagamento'.", "selector": "[data-testid=\"home-core-corsi\"] -> Shop section", "priority": "HIGH"},
+      {"component": "Home hero + Motore Sfide overlay (sfide-overlay)", "issue": "Content is still framed as locked: 'Sblocca ricette e schede completando le sfide', 🔒 badges '3 sfide → Panettoni + Academy' and '6 sfide → Sblocca tutto', 'Registrati gratis per partecipare alle sfide e sbloccare i contenuti'. Everything is already free, so this copy is misleading.", "selector": "[data-testid=\"sfide-overlay\"]", "priority": "MEDIUM"},
+      {"component": "Header brand", "issue": "Brand title truncated to 'M…' on 390px viewport in FR/FA (long 'Se connecter' / RTL login button squeezes the title).", "selector": "header title", "priority": "LOW"},
+      {"component": "PianoProduzioneAI quick tools editor", "issue": "When 6 tools are already selected, tapping a 7th does nothing with no feedback (no toast/disabled style) — user cannot tell why nothing happened.", "selector": "[data-testid^=\"capo-quicktoggle-\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Recipe detail language switch FR/FA", "issue": "Pills recipe-lang-fr / recipe-lang-fa exist and switch the app chrome, but the recipe body (title, real_name, procedure, notes) stays in ITALIAN because recipes only have _de/_en/_es fields. Fallback should at least use the EN fields for FR/FA (or run the translate pipeline) — currently a FR/FA user reads an Italian procedure.", "affected_selectors": ["[data-testid=\"recipe-lang-fr\"]", "[data-testid=\"recipe-lang-fa\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Your Lab / Piano IA", "issues": ["Recipe picker uses the native browser <select> ('Scegli una ricetta…') instead of the shadcn Select used elsewhere (pre-existing)"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter108_free_all.py", "/app/test_reports/pytest/iter108.xml"],
+  "action_items": [
+    "Remove/neutralise all payment CTAs in sections/Shop.jsx and AcademyHome.jsx (bundle prices €50/€40/€20/€10, '€29,99/mese' subscribe, 'Prenota e paga · €120') — this is the last remaining paywall reachable from Home → Corsi.",
+    "Rewrite the challenge-engine and Home hero copy: content is no longer unlockable/locked ('Sblocca…', 🔒 badges) since everything is free.",
+    "Recipe detail in FR/FA still shows Italian content — add fr/fa recipe fields or fall back to EN.",
+    "Optional: delete dead paywall code (PaywallGate paywall branch ~200 lines, RecipeList buy-single/panettoni/all dialog + recipe-teaser block, backend _teaser_recipe/_visible) to avoid regressions.",
+    "Add feedback when the 6-tool quick-tools limit is reached."
+  ],
+  "critical_code_review_comments": [
+    "backend/server.py is 6935 lines — split into routers (recipes, subscription, academy, community).",
+    "PaywallGate.jsx keeps a full unreachable paywall UI + Stripe handlers behind `const hasAccess = true;` — dead code that can silently come back.",
+    "GET /api/recipes forces locked=False only when the value is truthy, leaving locked=null; set it explicitly to False for a consistent contract.",
+    "Glossary i18n JSON verified complete: all 19 terms have t+d for de/en/es/fr/fa (no missing keys)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter108_free_all.py"],
+  "success_rate": {"backend": "100%", "frontend": "85%"},
+  "seed_data_creation": "None (read-only tests; localStorage mikilab_quicktools modified in the test browser only)",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (used only for subscription status check); all other flows tested as guest",
+  "context_for_next_testing_agent": "Recipe rows use data-testid recipe-row-<id> (NOT recipe-card-*), search input is recipe-search. Piano Produzione IA renders inline inside nav-tab-maestro (no maestro-tool-* testids; tools are capo-quicklink-<id>). An onboarding tour modal appears on the Lab/Diagnosi tabs — dismiss with the 'Salta' text button. Quick tools: capo-quick-tools / capo-quicktools-edit / capo-quicktools-editor / capo-quicktoggle-<id> / capo-quicktool-<id>, persisted in localStorage 'mikilab_quicktools'. Re-test the Shop page (Home → home-core-corsi) after the paywall copy is removed.",
+  "rca_of_the_issue": "Paywall removal was applied to PaywallGate, RecipeList and the recipes API (user_is_pro -> True), but sections/Shop.jsx and AcademyHome.jsx were not touched: they hardcode bundle prices and call recipePurchaseApi.checkout/subscriptionApi.checkout directly without going through PaywallGate, so they still expose paid flows."
+}

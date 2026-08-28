@@ -161,12 +161,12 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
 
   if (loading) return <div className="py-20 text-center text-[#7E8A93]">…</div>;
 
-  // PRO / prova attiva → contenuto sbloccato (+ banner countdown se prova)
-  const hasAccess = usesAcademy ? (status?.academy || status?.pro) : status?.pro;
+  // Accesso completo GRATUITO per tutti: nessun blocco PRO, nessun prezzo.
+  const hasAccess = true;
   if (hasAccess) {
     return (
       <>
-        {status.source === "trial" && left && (
+        {status?.source === "trial" && left && (
           <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#B45309]/15 border border-[#B45309]/40 px-3 py-2 text-sm font-semibold text-[#6E371C] dark:text-[#8FB0C2]">
             <Clock className="w-4 h-4" /> {tri("Prova PRO — resta:", "PRO-Test — verbleibend:", "PRO trial — left:")} <span className="font-mono-data">{left}</span>
           </div>

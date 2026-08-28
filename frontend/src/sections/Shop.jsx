@@ -98,81 +98,21 @@ export default function Shop({ hideCourses = false }) {
 
       <AvatarBubbles variant="shop" />
 
-      {/* Ricettario MikiLab — ACQUISTABILE ora (revenue) */}
-      <div data-testid="shop-recipes-block" className="rounded-3xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm overflow-hidden">
-        <div className="p-5">
-          <div className="flex items-center gap-2 mb-1.5">
-            <BookOpen className="w-5 h-5 text-[#8C4A27]" />
-            <span className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27]">{tri("Disponibile ora", "Jetzt verfügbar", "Available now", "Disponible ahora")}</span>
-          </div>
-          <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Pacchetti Ricette di Michele", "Micheles Rezept-Pakete", "Michele's Recipe Packs", "Packs de Recetas de Michele")}</h2>
-          <p className="text-sm text-[#7E8A93] mt-1 leading-snug">
-            {tri("Acquista un pacchetto e sblocca SUBITO tutte le ricette della categoria (dosi, procedimento, fasi) nel tuo laboratorio.",
-              "Kaufe ein Paket und schalte SOFORT alle Rezepte der Kategorie frei.",
-              "Buy a pack and INSTANTLY unlock all recipes in that category.",
-              "Compra un pack y desbloquea AL INSTANTE todas las recetas de la categoría (cantidades, elaboración, fases) en tu laboratorio.")}
-          </p>
-          <div className="grid grid-cols-1 gap-2.5 mt-4">
-            {[
-              { b: "pasticceria", it: "Pasticceria Lievitata & Viennoiserie", de: "Feine Hefebackwaren & Viennoiserie", en: "Leavened Pastry & Viennoiserie", es: "Bollería Fermentada y Viennoiserie", price: "€50", grad: true },
-              { b: "pane", it: "Pane & Panificati", de: "Brot & Backwaren", en: "Bread & Baked Goods", es: "Pan y Panificados", price: "€40", grad: true },
-              { b: "panini", it: "Pacchetto Panini", de: "Paket Brötchen", en: "Buns Pack", es: "Pack de Bollos", price: "€20" },
-              { b: "snack", it: "Snack & Sfizi Salati", de: "Snacks & herzhafte Häppchen", en: "Snacks & Savory Bites", es: "Snacks y Aperitivos Salados", price: "€10" },
-            ].map((x) => {
-              const owned = (ent?.unlocked_bundles || []).includes(x.b) || ent?.unlock_all;
-              return (
-                <button key={x.b} data-testid={`shop-bundle-${x.b}`} disabled={owned} onClick={() => buyBundle(x.b)}
-                  className={`w-full flex items-center justify-between rounded-2xl px-4 py-3 active:scale-98 transition-all ${owned ? "bg-[#B45309]/15 border border-[#B45309]/40" : x.grad ? "bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white" : "bg-[#B45309]/10 border-2 border-[#B45309]"}`}>
-                  <span className="text-left min-w-0">
-                    <span className={`block font-semibold truncate ${x.grad && !owned ? "text-white" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{tri(x.it, x.de, x.en, x.es)}</span>
-                    <span className={`block text-xs ${x.grad && !owned ? "text-white/80" : "text-[#7E8A93]"}`}>{owned ? tri("Acquistato ✓ — ricette sbloccate", "Gekauft ✓", "Purchased ✓", "Comprado ✓ — recetas desbloqueadas") : tri("Tutte le ricette della categoria, per sempre", "Alle Rezepte der Kategorie, für immer", "All category recipes, forever", "Todas las recetas de la categoría, para siempre")}</span>
-                  </span>
-                  <span className={`font-display text-lg font-bold shrink-0 ml-2 ${x.grad && !owned ? "text-white" : "text-[#6E371C] dark:text-[#8FB0C2]"}`}>{owned ? "✓" : x.price}</span>
-                </button>
-              );
-            })}
-            <div className="text-center pt-0.5">
-              <button data-testid="shop-subscribe-pro" onClick={subscribePro}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#8C4A27] hover:underline">
-                <Crown className="w-4 h-4" /> {tri("oppure abbonati PRO (tutto incluso) · €29,99/mese", "oder PRO abonnieren · €29,99/Monat", "or subscribe PRO · €29.99/month", "o suscríbete PRO (todo incluido) · €29,99/mes")}
-              </button>
-            </div>
-          </div>
+      {/* Tutto gratuito: nessun acquisto, nessun abbonamento */}
+      <div data-testid="shop-free-block" className="rounded-3xl bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-sm overflow-hidden p-6 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-3">
+          <BookOpen className="w-7 h-7 text-white" />
         </div>
+        <h2 className="font-display text-2xl font-bold">{tri("È tutto gratis 🎉", "Alles gratis 🎉", "It's all free 🎉", "¡Todo gratis! 🎉", "Tout est gratuit 🎉", "همه چیز رایگان است 🎉")}</h2>
+        <p className="text-white/90 text-sm mt-2 leading-relaxed max-w-md mx-auto">
+          {tri("Ogni ricetta, scheda tecnica e strumento del laboratorio è sbloccato per tutti. Nessun pagamento, nessun abbonamento: buona panificazione!",
+            "Jedes Rezept, jede Karte und jedes Werkzeug ist für alle freigeschaltet. Keine Zahlung, kein Abo — frohes Backen!",
+            "Every recipe, tech sheet and lab tool is unlocked for everyone. No payment, no subscription — happy baking!",
+            "Cada receta, ficha y herramienta está desbloqueada para todos. Sin pagos, sin suscripción: ¡feliz panificación!",
+            "Chaque recette, fiche technique et outil du labo est débloqué pour tous. Aucun paiement, aucun abonnement — bonne panification !",
+            "هر دستور، برگهٔ فنی و ابزار کارگاه برای همه باز است. بدون پرداخت، بدون اشتراک — نان‌پزی خوش!")}
+        </p>
       </div>
-
-      {!data.enabled && (sent ? (
-        <div data-testid="shop-waitlist-done" className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-5 text-center">
-          <Check className="w-8 h-8 text-[#B45309] mx-auto mb-2" />
-          <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{tri("Grazie! Ti avviseremo al lancio.","Danke! Wir benachrichtigen dich zum Start.","Thanks! We'll notify you at launch.")}</p>
-        </div>
-      ) : (
-        <div className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4">
-          <p className="flex items-center gap-2 text-sm font-semibold text-[#6E371C] dark:text-[#8FB0C2] mb-2">
-            <Mail className="w-4 h-4" /> {tri("Lista d'attesa per il lancio","Warteliste für den Start","Launch waitlist")}
-          </p>
-          <div className="flex gap-2">
-            <input data-testid="shop-waitlist-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@esempio.it"
-              className="flex-1 bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
-            <button data-testid="shop-waitlist-btn" onClick={() => join(null)}
-              className="bg-[#8C4A27] text-white font-semibold px-4 rounded-xl active:scale-97">{tri("Iscrivimi","Eintragen","Join")}</button>
-          </div>
-        </div>
-      ))}
-
-      {panettoni.length > 0 && (
-        <div>
-          <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#8C4A27] mb-3 flex items-center gap-2"><ShoppingBag className="w-4 h-4" /> {de ? "Panettoni" : "Panettoni"}</h2>
-          <div className="grid grid-cols-1 gap-3">{panettoni.map((p) => <Card key={p.id} p={p} />)}</div>
-        </div>
-      )}
-      {corsi.length > 0 && (
-        <div>
-          <h2 className="font-display text-sm font-bold uppercase tracking-wide text-[#B45309] mb-3 flex items-center gap-2"><GraduationCap className="w-4 h-4" /> {tri("Academy · Corsi","Academy · Kurse","Academy · Courses")}</h2>
-          <div className="grid grid-cols-1 gap-3">{corsi.map((p) => <Card key={p.id} p={p} />)}</div>
-        </div>
-      )}
     </div>
   );
 }

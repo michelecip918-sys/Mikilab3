@@ -80,6 +80,27 @@ const MODULES = [
 // Ogni interruttore-modulo apre lo strumento corrispondente per configurarlo.
 const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco", infornate: "inversa" };
 
+// Catalogo strumenti rapidi personalizzabili (l'utente sceglie quali 6 mostrare nel passo "Scegli")
+const QUICK_CATALOG = [
+  { id: "macchine", Icon: Wrench, t: ["Parco Macchine", "Maschinenpark", "Machine Park", "Maquinaria"] },
+  { id: "fermentazione", Icon: Activity, t: ["Fermentazione", "Gärung", "Fermentation", "Fermentación"] },
+  { id: "twin", Icon: FlaskConical, t: ["Digital Twin", "Teig-Zwilling", "Dough Twin", "Gemelo Digital"] },
+  { id: "weatherbaker", Icon: CloudSun, t: ["Weather-Baker", "Weather-Baker", "Weather-Baker", "Weather-Baker"] },
+  { id: "convlievito", Icon: RefreshCw, t: ["Conv. Lieviti", "Hefe-Umr.", "Yeast Conv.", "Conv. Levad."] },
+  { id: "timer", Icon: TimerIcon, t: ["Smart Timer", "Smart Timer", "Smart Timer", "Smart Timer"] },
+  { id: "metodo", Icon: Calculator, t: ["Calcolatore Metodo", "Methoden-Rechner", "Method Calculator", "Calc. Método"] },
+  { id: "acqua", Icon: Droplets, t: ["Temp. Acqua", "Wassertemp.", "Water Temp", "Temp. Agua"] },
+  { id: "stampi", Icon: Scale, t: ["Calcolo Stampi", "Formen-Rechner", "Tin Calc", "Moldes"] },
+  { id: "trovafarina", Icon: Wheat, t: ["Trova Farina", "Mehl finden", "Find Flour", "Buscar Harina"] },
+  { id: "bancalievito", Icon: Sprout, t: ["Banca Lievito", "Hefebank", "Yeast Bank", "Banco Levad."] },
+  { id: "esuberozero", Icon: Recycle, t: ["Esubero Zero", "Reste Null", "Zero Waste", "Cero Resto"] },
+  { id: "spreco", Icon: AlertTriangle, t: ["Anti-Spreco", "Anti-Abfall", "Anti-Waste", "Anti-Desp."] },
+  { id: "foodcost", Icon: Euro, t: ["Food Cost", "Food Cost", "Food Cost", "Food Cost"] },
+  { id: "diagnosi", Icon: Stethoscope, t: ["Diagnosi", "Diagnose", "Diagnosis", "Diagnóstico"] },
+  { id: "sosimpasto", Icon: Hand, t: ["SOS Impasto", "SOS Teig", "SOS Dough", "SOS Masa"] },
+];
+const QUICK_DEFAULT = ["macchine", "fermentazione", "twin", "weatherbaker", "convlievito", "timer"];
+
 // Obiettivo del piano: frase passata all'AI per orientare la generazione.
 const GOAL_TEXT = {
   qualita: { it: "Obiettivo: massima qualità artigianale — privilegia lievitazioni lente, struttura e sapore.", de: "Ziel: maximale handwerkliche Qualität — bevorzuge langsame Gare, Struktur und Geschmack.", en: "Goal: top artisan quality — favour slow proofing, structure and flavour." },
@@ -190,6 +211,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [weeklyStartId, setWeeklyStartId] = useState("");
   const [extraToday, setExtraToday] = useState([]);
   const [extraOpen, setExtraOpen] = useState(false);
+  const [quickTools, setQuickTools] = useState(() => {
+    try { const s = JSON.parse(localStorage.getItem("mikilab_quicktools")); return (Array.isArray(s) && s.length) ? s.slice(0, 6) : QUICK_DEFAULT; } catch { return QUICK_DEFAULT; }
+  });
+  const [editQuick, setEditQuick] = useState(false);
+  useEffect(() => { try { localStorage.setItem("mikilab_quicktools", JSON.stringify(quickTools)); } catch { /* */ } }, [quickTools]);
+  const toggleQuick = (id) => setQuickTools((cur) => {
+    if (cur.includes(id)) return cur.filter((x) => x !== id);
+    if (cur.length >= 6) { toast.error(tri3(lang, "Massimo 6 strumenti: rimuovine uno prima", "Maximal 6 Tools: entferne zuerst eines", "Max 6 tools: remove one first", "Máximo 6: quita uno primero")); return cur; }
+    return [...cur, id];
+  });
   const [preferment, setPreferment] = useState("solido");
   const [planGoal, setPlanGoal] = useState("qualita");
   const [bizType, setBizType] = useState("pro");
@@ -1021,23 +1052,42 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
         {onOpenTool && (
           <div data-testid="capo-quick-tools" className="mb-3">
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27] mb-1.5">{tri3(lang, "Strumenti rapidi", "Schnellzugriff", "Quick tools", "Herramientas rápidas")}</p>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { id: "macchine", Icon: Wrench, label: tri3(lang, "Parco Macchine", "Maschinenpark", "Machine Park", "Maquinaria") },
-                { id: "fermentazione", Icon: Activity, label: tri3(lang, "Fermentazione", "Gärung", "Fermentation", "Fermentación") },
-                { id: "twin", Icon: FlaskConical, label: tri3(lang, "Digital Twin", "Teig-Zwilling", "Dough Twin", "Gemelo Digital") },
-                { id: "weatherbaker", Icon: CloudSun, label: tri3(lang, "Weather-Baker", "Weather-Baker", "Weather-Baker", "Weather-Baker") },
-                { id: "convlievito", Icon: RefreshCw, label: tri3(lang, "Conv. Lieviti", "Hefe-Umr.", "Yeast Conv.", "Conv. Levad.") },
-                { id: "timer", Icon: TimerIcon, label: tri3(lang, "Smart Timer", "Smart Timer", "Smart Timer", "Smart Timer") },
-              ].map((q) => (
-                <button key={q.id} data-testid={`capo-quicktool-${q.id}`} onClick={() => onOpenTool(q.id)}
-                  className="flex flex-col items-center gap-1 py-2.5 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] active:scale-95 hover:border-[#B45309] transition-all">
-                  <q.Icon className="w-4 h-4 text-[#B45309]" />
-                  <span className="text-[11px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{q.label}</span>
-                </button>
-              ))}
+            <div className="flex items-center justify-between mb-1.5">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27]">{tri3(lang, "Strumenti rapidi", "Schnellzugriff", "Quick tools", "Herramientas rápidas")}</p>
+              <button data-testid="capo-quicktools-edit" onClick={() => setEditQuick((s) => !s)}
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#8C4A27] px-2.5 py-1 rounded-full border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] active:scale-95 transition-all">
+                {editQuick ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Settings2 className="w-3.5 h-3.5" />}
+                {editQuick ? tri3(lang, "Fatto", "Fertig", "Done", "Listo") : tri3(lang, "Personalizza", "Anpassen", "Customize", "Personalizar")}
+              </button>
             </div>
+            {editQuick ? (
+              <div data-testid="capo-quicktools-editor">
+                <p className="text-[10.5px] text-[#7E8A93] mb-2">{tri3(lang, `Scegli fino a 6 strumenti (${quickTools.length}/6)`, `Bis zu 6 Tools wählen (${quickTools.length}/6)`, `Choose up to 6 tools (${quickTools.length}/6)`, `Elige hasta 6 (${quickTools.length}/6)`)}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {QUICK_CATALOG.map((q) => {
+                    const on = quickTools.includes(q.id);
+                    return (
+                      <button key={q.id} data-testid={`capo-quicktoggle-${q.id}`} onClick={() => toggleQuick(q.id)}
+                        className={`flex items-center gap-2 py-2 px-2.5 rounded-xl border text-left active:scale-95 transition-all ${on ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#2B303B] dark:text-[#e4eff8] border-[#E6D8C3] dark:border-[#38424B]"}`}>
+                        <q.Icon className={`w-4 h-4 shrink-0 ${on ? "text-white" : "text-[#B45309]"}`} />
+                        <span className="text-[11px] font-semibold leading-tight flex-1 min-w-0">{tri3(lang, q.t[0], q.t[1], q.t[2], q.t[3])}</span>
+                        {on ? <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> : <Plus className="w-3.5 h-3.5 shrink-0 text-[#7E8A93]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {quickTools.map((id) => QUICK_CATALOG.find((c) => c.id === id)).filter(Boolean).map((q) => (
+                  <button key={q.id} data-testid={`capo-quicktool-${q.id}`} onClick={() => onOpenTool(q.id)}
+                    className="flex flex-col items-center gap-1 py-2.5 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] active:scale-95 hover:border-[#B45309] transition-all">
+                    <q.Icon className="w-4 h-4 text-[#B45309]" />
+                    <span className="text-[11px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri3(lang, q.t[0], q.t[1], q.t[2], q.t[3])}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
         {/* Ordine EXTRA solo per oggi: si somma al piano di oggi senza modificare il Piano settimanale salvato */}

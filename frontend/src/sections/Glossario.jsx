@@ -1,4 +1,5 @@
 import { mkTri } from "@/i18n/triMaps";
+import GLOSS from "@/i18n/glossary_i18n.json";
 import { useState, useMemo } from "react";
 import { ChevronRight, BookOpen, Search } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -29,11 +30,13 @@ export default function Glossario({ onBack }) {
   const { lang } = useLang();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [q, setQ] = useState("");
+  const gt = (x) => (lang === "it" ? x.t : (GLOSS[x.t]?.t?.[lang] || x.t));
+  const gd = (x) => (lang === "it" ? x.d : (GLOSS[x.t]?.d?.[lang] || x.d));
   const list = useMemo(() => {
     const s = q.trim().toLowerCase();
     const sorted = [...TERMS].sort((a, b) => a.t.localeCompare(b.t));
-    return s ? sorted.filter((x) => x.t.toLowerCase().includes(s) || x.d.toLowerCase().includes(s)) : sorted;
-  }, [q]);
+    return s ? sorted.filter((x) => (gt(x) + " " + gd(x)).toLowerCase().includes(s) || x.t.toLowerCase().includes(s)) : sorted;
+  }, [q, lang]); // eslint-disable-line
 
   return (
     <div className="pb-8" data-testid="glossario">
@@ -53,8 +56,8 @@ export default function Glossario({ onBack }) {
       <div className="space-y-2.5" data-testid="glossario-list">
         {list.map((x, i) => (
           <div key={x.t} data-testid={`glossario-term-${i}`} className="rounded-2xl bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4 shadow-sm">
-            <p className="font-display text-[16px] font-bold text-[#8C4A27] leading-tight">{x.t}</p>
-            <p className="text-[13.5px] text-[#6B5546] dark:text-[#AEB8BF] leading-relaxed mt-1">{x.d}</p>
+            <p className="font-display text-[16px] font-bold text-[#8C4A27] leading-tight">{gt(x)}</p>
+            <p className="text-[13.5px] text-[#6B5546] dark:text-[#AEB8BF] leading-relaxed mt-1">{gd(x)}</p>
           </div>
         ))}
         {list.length === 0 && <p className="text-center text-sm text-[#8C7362] py-8">{L("Nessun termine trovato.", "Kein Begriff gefunden.", "No term found.", "Ningún término.")}</p>}
