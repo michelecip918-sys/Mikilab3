@@ -90,52 +90,65 @@ const GOAL_TEXT = {
 
 // Strumenti apribili (personalizzabili: riordina/nascondi). Gli interruttori-modulo sono a parte.
 const TOOLS = [
-  { id: "generatore", Icon: Sparkles, cat: "impasto", it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
-  { id: "fermentazione", Icon: Activity, cat: "impasto", it: "Fermentazione Predittiva", de: "Gärungs-Prognose", en: "Fermentation Forecast", es: "Fermentación Predictiva" },
-  { id: "cosafare", Icon: Search, cat: "impasto", it: "Cosa posso fare?", de: "Was kann ich machen?", en: "What can I make?", es: "¿Qué puedo hacer?" },
-  { id: "energia", Icon: Flame, cat: "gestione", it: "Costo Energia Forno", de: "Ofen-Energiekosten", en: "Oven Energy Cost", es: "Coste Energía Horno" },
-  { id: "mydata", Icon: Archive, cat: "gestione", it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
-  { id: "macchine", Icon: Wrench, cat: "gestione", it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
-  { id: "twin", Icon: FlaskConical, cat: "impasto", it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
-  { id: "adatta", Icon: Flame, cat: "cottura", it: "Adatta Forno", de: "Ofen anpassen", en: "Adapt Oven" },
-  { id: "bilancia", Icon: Scale, cat: "impasto", it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
-  { id: "termo", Icon: Thermometer, cat: "impasto", it: "Termostato & Clima", de: "Thermostat & Klima", en: "Thermostat & Climate" },
-  { id: "acqua", Icon: Droplets, cat: "impasto", it: "Temp. Acqua", de: "Wasser-Temp.", en: "Water Temp." },
-  { id: "pesata", Icon: Scale, cat: "impasto", it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
-  { id: "manisporche", Icon: Hand, cat: "impasto", it: "Mani Sporche", de: "Schmutzige Hände", en: "Dirty Hands", es: "Manos Sucias" },
-  { id: "custodite", Icon: Landmark, cat: "impasto", it: "Ricette Custodite", de: "Bewahrte Rezepte", en: "Treasured Recipes", es: "Recetas Custodiadas" },
-  { id: "timer", Icon: TimerIcon, cat: "cottura", it: "Smart Timer Multi-Impasto", de: "Smart Timer Multi-Teig", en: "Smart Multi-Dough Timer" },
-  { id: "meteo", Icon: CloudSun, cat: "cottura", it: "Meteo", de: "Wetter", en: "Weather" },
-  { id: "ph", Icon: FlaskConical, cat: "impasto", it: "Registro Lievito Madre", de: "Sauerteig-Register", en: "Sourdough Log", es: "Registro Masa Madre" },
-  { id: "diagnosi", Icon: Camera, cat: "gestione", it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
-  { id: "suono", Icon: Camera, cat: "gestione", it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
-  { id: "sessioni", Icon: Thermometer, cat: "gestione", it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
-  { id: "check", Icon: ListChecks, cat: "gestione", it: "Checklist", de: "Checklisten", en: "Checklists" },
-  { id: "shelf", Icon: CalendarClock, cat: "vendita", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
-  { id: "labpizzeria", Icon: Pizza, cat: "impasto", it: "Laboratorio Pizzeria", de: "Pizzeria-Labor", en: "Pizzeria Lab", es: "Lab Pizzería" },
-  { id: "labpasticceria", Icon: Cake, cat: "impasto", it: "Laboratorio Pasticceria & Lievitati", de: "Konditorei-Labor", en: "Pastry & Leavened Lab", es: "Lab Pastelería" },
-  { id: "aggiungi", Icon: BookOpen, cat: "impasto", it: "Le Mie Ricette", de: "Meine Rezepte", en: "My Recipes", es: "Mis Recetas" },
-  { id: "cantiere", Icon: FileText, cat: "gestione", it: "Ricetta di Cantiere (PDF)", de: "Baustellen-Rezept (PDF)", en: "Worksite Recipe (PDF)", es: "Receta de Obra (PDF)" },
-  { id: "scanflour", Icon: Wheat, cat: "impasto", it: "Scanner Farina", de: "Mehl-Scanner", en: "Flour Scanner", es: "Escáner de Harina" },
-  { id: "metodo", Icon: Calculator, cat: "impasto", it: "Calcolatore Metodo", de: "Methoden-Rechner", en: "Method Calculator", es: "Calculadora Método" },
-  { id: "convlievito", Icon: RefreshCw, cat: "impasto", it: "Convertitore Lieviti", de: "Hefe-Umrechner", en: "Leavening Converter", es: "Conversor Levaduras" },
-  { id: "stampi", Icon: Cookie, cat: "cottura", it: "Stampi & Pirottini", de: "Formen-Rechner", en: "Pan Calculator", es: "Calculadora Moldes" },
-  { id: "sosimpasto", Icon: Stethoscope, cat: "gestione", it: "SOS Impasto", de: "SOS Teig", en: "Dough SOS", es: "SOS Masa" },
-  { id: "recupero", Icon: Recycle, cat: "impasto", it: "Angolo del Recupero", de: "Resteverwertung", en: "Recovery Corner", es: "Rincón Aprovechamiento" },
-  { id: "saporicasa", Icon: UtensilsCrossed, cat: "impasto", it: "Sapori di Casa", de: "Geschmack von zu Hause", en: "Home Flavours", es: "Sabores de Casa" },
-  { id: "weatherbaker", Icon: CloudSun, cat: "impasto", it: "Smart Weather-Baker", de: "Smart Weather-Baker", en: "Smart Weather-Baker", es: "Smart Weather-Baker" },
-  { id: "simforno", Icon: Flame, cat: "cottura", it: "Simulatore Forno di Casa", de: "Heimofen-Simulator", en: "Home Oven Simulator", es: "Simulador Horno" },
-  { id: "timelapse", Icon: TrendingUp, cat: "gestione", it: "Time-Lapse Raddoppio", de: "Time-Lapse Verdopplung", en: "Doubling Time-Lapse", es: "Time-Lapse Duplicado" },
-  { id: "bancalievito", Icon: Sprout, cat: "gestione", it: "Banca del Lievito", de: "Sauerteig-Bank", en: "Starter Bank", es: "Banco de Masa Madre" },
-  { id: "trovafarina", Icon: Search, cat: "impasto", it: "Trova-Farina Europeo", de: "Mehl-Finder Europa", en: "European Flour Finder", es: "Buscador de Harinas" },
-  { id: "esuberozero", Icon: Recycle, cat: "impasto", it: "Esubero Zero-Sprechi", de: "Sauerteig-Rest", en: "Zero-Waste Discard", es: "Descarte Cero" },
+  // 🍞 Laboratorio Panificazione
+  { id: "generatore", Icon: Sparkles, cat: "panificazione", it: "Generatore Ricette", de: "Rezept-Generator", en: "Recipe Generator", es: "Generador de Recetas" },
+  { id: "fermentazione", Icon: Activity, cat: "panificazione", it: "Fermentazione Predittiva", de: "Gärungs-Prognose", en: "Fermentation Forecast", es: "Fermentación Predictiva" },
+  { id: "weatherbaker", Icon: CloudSun, cat: "panificazione", it: "Smart Weather-Baker", de: "Smart Weather-Baker", en: "Smart Weather-Baker", es: "Smart Weather-Baker" },
+  { id: "trovafarina", Icon: Search, cat: "panificazione", it: "Conversione Farine", de: "Mehl-Umrechnung", en: "Flour Conversion", es: "Conversión de Harinas" },
+  { id: "scanflour", Icon: Wheat, cat: "panificazione", it: "Scanner Farina", de: "Mehl-Scanner", en: "Flour Scanner", es: "Escáner de Harina" },
+  { id: "simforno", Icon: Flame, cat: "panificazione", it: "Gestione Vapore & Forno", de: "Dampf & Ofen", en: "Steam & Oven", es: "Vapor y Horno" },
+  { id: "adatta", Icon: Flame, cat: "panificazione", it: "Adatta Forno", de: "Ofen anpassen", en: "Adapt Oven" },
+  { id: "acqua", Icon: Droplets, cat: "panificazione", it: "Temp. Acqua", de: "Wasser-Temp.", en: "Water Temp." },
+  { id: "metodo", Icon: Calculator, cat: "panificazione", it: "Calcolatore Metodo", de: "Methoden-Rechner", en: "Method Calculator", es: "Calculadora Método" },
+  { id: "twin", Icon: FlaskConical, cat: "panificazione", it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
+  { id: "cosafare", Icon: Search, cat: "panificazione", it: "Cosa posso fare?", de: "Was kann ich machen?", en: "What can I make?", es: "¿Qué puedo hacer?" },
+  { id: "stampi", Icon: Cookie, cat: "panificazione", it: "Stampi & Pirottini", de: "Formen-Rechner", en: "Pan Calculator", es: "Calculadora Moldes" },
+  { id: "bilancia", Icon: Scale, cat: "panificazione", it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
+  { id: "pesata", Icon: Scale, cat: "panificazione", it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
+  { id: "saporicasa", Icon: UtensilsCrossed, cat: "panificazione", it: "Sapori di Casa", de: "Geschmack von zu Hause", en: "Home Flavours", es: "Sabores de Casa" },
+  { id: "esuberozero", Icon: Recycle, cat: "panificazione", it: "Esubero Zero-Sprechi", de: "Sauerteig-Rest", en: "Zero-Waste Discard", es: "Descarte Cero" },
+  { id: "recupero", Icon: Recycle, cat: "panificazione", it: "Angolo del Recupero", de: "Resteverwertung", en: "Recovery Corner", es: "Rincón Aprovechamiento" },
+  { id: "energia", Icon: Flame, cat: "panificazione", it: "Costo Energia Forno", de: "Ofen-Energiekosten", en: "Oven Energy Cost", es: "Coste Energía Horno" },
+  { id: "timelapse", Icon: TrendingUp, cat: "panificazione", it: "Time-Lapse Raddoppio", de: "Time-Lapse Verdopplung", en: "Doubling Time-Lapse", es: "Time-Lapse Duplicado" },
+  { id: "termo", Icon: Thermometer, cat: "panificazione", it: "Termostato & Clima", de: "Thermostat & Klima", en: "Thermostat & Climate" },
+  // 🍕 Laboratorio Pizzeria
+  { id: "labpizzeria", Icon: Pizza, cat: "pizzeria", it: "Laboratorio Pizzeria", de: "Pizzeria-Labor", en: "Pizzeria Lab", es: "Lab Pizzería" },
+  // 🧁 Laboratorio Pasticceria & Gelateria
+  { id: "labpasticceria", Icon: Cake, cat: "pasticceria", it: "Laboratorio Pasticceria & Gelateria", de: "Konditorei & Eis-Labor", en: "Pastry & Gelato Lab", es: "Lab Pastelería y Helado" },
+  // 📜 Le Ricette Custodite
+  { id: "custodite", Icon: Landmark, cat: "custodite", it: "Ricette Custodite", de: "Bewahrte Rezepte", en: "Treasured Recipes", es: "Recetas Custodiadas" },
+  // 🛠️ Strumenti Mani in Pasta
+  { id: "manisporche", Icon: Hand, cat: "manisporche", it: "Mani Sporche (Voce)", de: "Schmutzige Hände (Stimme)", en: "Dirty Hands (Voice)", es: "Manos Sucias (Voz)" },
+  { id: "convlievito", Icon: RefreshCw, cat: "manisporche", it: "Convertitore Lieviti", de: "Hefe-Umrechner", en: "Leavening Converter", es: "Conversor Levaduras" },
+  { id: "timer", Icon: TimerIcon, cat: "manisporche", it: "Smart Timer Multi-Impasto", de: "Smart Timer Multi-Teig", en: "Smart Multi-Dough Timer" },
+  { id: "ph", Icon: FlaskConical, cat: "manisporche", it: "Registro Lievito Madre", de: "Sauerteig-Register", en: "Sourdough Log", es: "Registro Masa Madre" },
+  { id: "sosimpasto", Icon: Stethoscope, cat: "manisporche", it: "SOS Impasto", de: "SOS Teig", en: "Dough SOS", es: "SOS Masa" },
+  { id: "aggiungi", Icon: BookOpen, cat: "manisporche", it: "Le Mie Ricette", de: "Meine Rezepte", en: "My Recipes", es: "Mis Recetas" },
+  { id: "cantiere", Icon: FileText, cat: "manisporche", it: "Ricetta di Cantiere (PDF)", de: "Baustellen-Rezept (PDF)", en: "Worksite Recipe (PDF)", es: "Receta de Obra (PDF)" },
+  { id: "bancalievito", Icon: Sprout, cat: "manisporche", it: "Banca del Lievito", de: "Sauerteig-Bank", en: "Starter Bank", es: "Banco de Masa Madre" },
+  // 🏬 Gestione Attività & Cold Chain
+  { id: "capo", Icon: Building2, cat: "coldchain", it: "Controllo Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers", es: "Cámaras y Amasadoras" },
+  { id: "freezer", Icon: Snowflake, cat: "coldchain", it: "Giacenze Freezer", de: "Gefrier-Bestand", en: "Freezer Stock", es: "Stock Congelador" },
+  { id: "salespoints", Icon: Store, cat: "coldchain", it: "Punti Vendita", de: "Verkaufsstellen", en: "Sales Points", es: "Puntos de Venta" },
+  { id: "dayclose", Icon: CheckCircle2, cat: "coldchain", it: "Chiusura Giornata (HACCP)", de: "Tagesabschluss (HACCP)", en: "Day Close (HACCP)", es: "Cierre del Día (HACCP)" },
+  { id: "foodcost", Icon: Euro, cat: "coldchain", it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & Margin", es: "Costes y Margen" },
+  { id: "spreco", Icon: Recycle, cat: "coldchain", it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-Waste", es: "Anti-Desperdicio" },
+  { id: "mydata", Icon: Archive, cat: "coldchain", it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
+  { id: "macchine", Icon: Wrench, cat: "coldchain", it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
+  { id: "diagnosi", Icon: Camera, cat: "coldchain", it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
+  { id: "suono", Icon: Camera, cat: "coldchain", it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
+  { id: "sessioni", Icon: Thermometer, cat: "coldchain", it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
+  { id: "check", Icon: ListChecks, cat: "coldchain", it: "Checklist Laboratorio", de: "Checklisten", en: "Checklists" },
+  { id: "shelf", Icon: CalendarClock, cat: "coldchain", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
 ];
 
 const TOOL_CATS = [
-  { key: "impasto", it: "Impasto", de: "Teig", en: "Dough", es: "Masa" },
-  { key: "cottura", it: "Cottura", de: "Backen", en: "Baking", es: "Cocción" },
-  { key: "gestione", it: "Gestione", de: "Verwaltung", en: "Management", es: "Gestión" },
-  { key: "vendita", it: "Vendita", de: "Verkauf", en: "Sales", es: "Venta" },
+  { key: "panificazione", it: "🍞 Laboratorio Panificazione", de: "🍞 Backlabor", en: "🍞 Baking Lab", es: "🍞 Lab de Panificación" },
+  { key: "pizzeria", it: "🍕 Laboratorio Pizzeria", de: "🍕 Pizzeria-Labor", en: "🍕 Pizzeria Lab", es: "🍕 Lab de Pizzería" },
+  { key: "pasticceria", it: "🧁 Laboratorio Pasticceria & Gelateria", de: "🧁 Konditorei & Eis", en: "🧁 Pastry & Gelato Lab", es: "🧁 Pastelería y Helado" },
+  { key: "custodite", it: "📜 Le Ricette Custodite", de: "📜 Bewahrte Rezepte", en: "📜 Treasured Recipes", es: "📜 Recetas Custodiadas" },
+  { key: "manisporche", it: "🛠️ Strumenti Mani in Pasta", de: "🛠️ Werkzeuge (Hände im Teig)", en: "🛠️ Hands-in-Dough Tools", es: "🛠️ Herramientas Manos en Masa" },
+  { key: "coldchain", it: "🏬 Gestione Attività & Cold Chain", de: "🏬 Betrieb & Kühlkette", en: "🏬 Business & Cold Chain", es: "🏬 Gestión y Cadena de Frío" },
 ];
 
 export default function PianoProduzioneAI({ onOpenTool }) {
@@ -686,7 +699,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
               { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Metodo", "Methoden-Rechner", "Method Calculator") },
             ].map(({ id, Icon, label }) => (
-              <button key={id} data-testid={`capo-quicklink-${id}`} onClick={() => onOpenTool(id)}
+              <button key={id} data-testid={`capo-quickstart-${id}`} onClick={() => onOpenTool(id)}
                 className="flex items-center gap-2 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
                 <Icon className="w-5 h-5 shrink-0" />
                 <span className="text-[12px] font-bold leading-tight">{label}</span>

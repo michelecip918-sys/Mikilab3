@@ -46,7 +46,7 @@ export default function GuidaAvatar() {
           <Sparkles className="w-5 h-5" />
           <h2 className="font-display text-xl font-bold">{L("Guida al Sito", "Website-Guide", "Site Guide", "Guía del Sitio")}</h2>
         </div>
-        <p className="text-[#FFFDF9]/85 text-sm mt-1">{L("Michele & Mohamed ti spiegano come funziona MikiLab.", "Michele & Mohamed erklären dir MikiLab.", "Michele & Mohamed explain how MikiLab works.", "Michele & Mohamed te explican MikiLab.")}</p>
+        <p className="text-[#FFFDF9]/85 text-sm mt-1">{L("Michele & Mohammadreza ti spiegano come funziona MikiLab.", "Michele & Mohammadreza erklären dir MikiLab.", "Michele & Mohammadreza explain how MikiLab works.", "Michele & Mohammadreza te explican MikiLab.")}</p>
       </div>
 
       <div className="p-4">

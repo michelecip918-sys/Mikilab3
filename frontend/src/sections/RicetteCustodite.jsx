@@ -216,8 +216,8 @@ export default function RicetteCustodite() {
       <div className="flex items-center gap-3 mb-2">
         <div className="w-11 h-11 rounded-2xl bg-[#8C4A27] flex items-center justify-center"><Landmark className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Le Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas")}</h1>
-          <p className="text-sm text-[#7E8A93]">{tri("I pani della tradizione, adattati alle tue dosi", "Traditionsbrote, an deine Mengen angepasst", "Traditional breads, adapted to your amounts", "Panes de la tradición")}</p>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("📜 Le Ricette Custodite", "📜 Bewahrte Rezepte", "📜 Treasured Recipes", "📜 Recetas Custodiadas")}</h1>
+          <p className="text-sm text-[#7E8A93]">{tri("Tradizione del Sud Italia — adattate alle tue dosi + QR", "Süditalienische Tradition — an deine Mengen + QR", "Southern Italy tradition — adapted to your amounts + QR", "Tradición del Sur de Italia + QR")}</p>
         </div>
       </div>
 

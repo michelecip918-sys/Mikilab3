@@ -1,0 +1,54 @@
+{
+  "summary": "Frontend-only regression of the Lab reorganisation (IT locale forced via localStorage mikilab_lang='it'). Verified: all 5 bottom-nav tabs render content with no white screens and no blocking JS errors; hero titles '📖 Le Ricette di MikiLab' and '🌐 Community & Feed Social'; admin login (admin@mikilab.de) bypasses the 'Il Tuo Laboratorio' paywall; all 6 official category headings (tools-cat-panificazione 20 tools, pizzeria 1, pasticceria 1, custodite 1, manisporche 8, coldchain 13) render with at least one clickable tool; opened labpizzeria, labpasticceria, timer, manisporche, freezer, capo, simforno - all render without errors; Ricette Custodite list (3 recipes, all 3 images now load naturalWidth=1200 - previous iteration_97 bug FIXED), detail + flour 1000->2000 doubles every gram value, QR/share/print present; Home + Site Guide avatars all load. 2 defects found: duplicate tool cards/data-testid in the grid and a stale provisional title in SimulatoreForno.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "PianoProduzioneAI (griglia strumenti)",
+        "issue": "DUPLICATI ancora presenti: 'capo-quicklink-aggiungi' compare 2 volte ('Inserisci Ricette' nel blocco rapido in alto + 'Le Mie Ricette' in 🛠️ Strumenti Mani in Pasta) e 'capo-quicklink-metodo' compare 2 volte ('Calcolatore Metodo' nel blocco rapido + in 🍞 Laboratorio Panificazione). data-testid duplicati rompono i selettori univoci nei test (ho dovuto usare .last).",
+        "selector": "[data-testid=\"capo-quicklink-aggiungi\"], [data-testid=\"capo-quicklink-metodo\"]",
+        "priority": "MEDIUM"
+      },
+      {
+        "component": "SimulatoreForno.jsx",
+        "issue": "Titolo provvisorio ancora presente: la card in griglia si chiama 'Gestione Vapore & Forno' ma la schermata aperta mostra h1 'Simulatore Forno di Casa' (verificato a runtime: testo 'Gestione Vapore' assente nella pagina del tool). Incoerenza di naming richiesta dall'utente.",
+        "selector": "[data-testid=\"capo-quicklink-simforno\"] -> h1",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Ricette (hero)",
+        "issues": ["Le bandierine/immagini in alto a destra si sovrappongono al titolo hero '📖 Le Ricette di MikiLab' su viewport 390px (testo su bandiere, leggibilità ridotta)."]
+      },
+      {
+        "screen": "Home - Guida al Sito",
+        "issues": ["Sottotitolo dice 'Michele & Mohamed ti spiegano...' mentre il tab/card usa 'Mohammadreza': naming incoerente."]
+      },
+      {
+        "screen": "Il Tuo Laboratorio - griglia",
+        "issues": ["Le categorie 🍕 Pizzeria, 🧁 Pasticceria e 📜 Custodite contengono una sola card ciascuna: intestazione grande con 1 tile lascia molto spazio vuoto (valutare card full-width o merge visivo)."]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Rimuovere i duplicati 'aggiungi' e 'metodo' dal blocco rapido in alto (o filtrarli dalle categorie) per avere data-testid univoci.",
+    "Rinominare l'h1 di /app/frontend/src/sections/SimulatoreForno.jsx in 'Gestione Vapore & Forno' (4 lingue) per allinearlo alla card.",
+    "Sistemare la sovrapposizione bandierine/titolo nel hero di Ricette.",
+    "Uniformare 'Mohamed' -> 'Mohammadreza' nel testo della Guida al Sito."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx: il filtro delle categorie esclude solo suggestedTools, non i tool del blocco 'primi passi' (aggiungi/lavoro/settimana/metodo/generatore) -> duplicazione di card e di data-testid.",
+    "PianoProduzioneAI.jsx ha 900+ righe con TOOLS/TOOL_CATS/render inline: estrarre la configurazione dei tool in un modulo dedicato."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (skipped per request)", "frontend": "88% (22/25 checks: 2 duplicati/naming + 1 sovrapposizione hero)" },
+  "seed_data_creation": "Nessun dato persistito (nessun timer avviato in questa iterazione).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! - login OK, logout-btn e corona admin visibili, paywall lab bypassato",
+  "context_for_next_testing_agent": "Locale headless = en-US: impostare localStorage 'mikilab_lang'='it' e 'mikilab_intro_seen'='1' prima del reload; l'IntroGuide riappare DOPO il login (chiudere con intro-close-btn). Login: login-btn -> auth-screen -> auth-email/auth-password/auth-submit. Nel Lab i tool si aprono con [data-testid=capo-quicklink-<id>] (usare .last per aggiungi/metodo che sono duplicati) e si torna con maestro-back-btn. Verificati OK: tools-cat-* (6/6), labpizzeria/labpasticceria/timer/manisporche/freezer/capo/simforno aprono, custodite 3 ricette + immagini ora tutte valide (nw=1200), scaling farina 2000 -> 2000/1560/500/44/10, custodite-qr genera QR base64 220px. Nessun 'Meteo' duplicato nella griglia (rimosso correttamente). Errori console: solo 401 su /api/auth/me e /api/notifications pre-login (attesi).",
+  "rca_of_the_issue": "Duplicati: il blocco quick-start in cima alla griglia riusa gli stessi id dei TOOLS categorizzati e il filtro per categoria esclude solo suggestedTools -> stesso data-testid renderizzato due volte. Titolo forno: la rinomina e' stata fatta solo nella label TOOLS (PianoProduzioneAI.jsx riga ~101) e non nell'h1 del componente SimulatoreForno.jsx (riga 39)."
+}

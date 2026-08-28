@@ -125,7 +125,7 @@ export default function Community({ onNavigate }) {
           <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-4">
             <Users className="w-8 h-8" />
           </div>
-          <h1 className="font-display text-2xl font-bold">{tri("Social dei Panettieri", "Bäcker-Social", "Bakers' Social", "Social de Panaderos")}</h1>
+          <h1 className="font-display text-2xl font-bold">{tri("🌐 Community & Feed Social", "🌐 Community & Social-Feed", "🌐 Community & Social Feed", "🌐 Comunidad y Feed Social")}</h1>
           <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">
             {tri("Registrati gratis per vedere la bacheca, i colleghi, il mercatino e partecipare alle sfide.",
                  "Registriere dich, um Pinnwand, Kollegen, Markt und Challenges zu sehen.",

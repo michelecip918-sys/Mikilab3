@@ -36,7 +36,7 @@ export default function SimulatoreForno({ onBack }) {
       {onBack && <button data-testid="simforno-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
       <div className="relative overflow-hidden rounded-3xl p-6 text-[#FFFDF9] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#8C4A27,#6E371C 60%,#4A3222)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Flame className="w-7 h-7" /></div>
-        <h1 className="font-display text-2xl font-bold">{L("Simulatore Forno di Casa", "Heimofen-Simulator", "Home Oven Simulator", "Simulador Horno Casero")}</h1>
+        <h1 className="font-display text-2xl font-bold">{L("Gestione Vapore & Forno", "Dampf & Ofen", "Steam & Oven", "Vapor y Horno")}</h1>
         <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">{L("Tempistiche esatte per vapore, pietra refrattaria e spiffero: cuoci come un pro anche col forno di casa.", "Genaue Zeiten für Dampf, Stein und Ofen.", "Exact timing for steam, stone and oven quirks.", "Tiempos exactos para vapor, piedra y horno.")}</p>
       </div>
 

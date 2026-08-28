@@ -51,7 +51,7 @@ export default function Ricette() {
         collectionName="mikilab"
         heroImage={`${process.env.PUBLIC_URL}/michele-avatar-full.jpg`}
         heroPosition="50% 15%"
-        heroTitle={t("brand_subtitle")}
+        heroTitle={tri("Le Ricette di MikiLab", "Die MikiLab-Rezepte", "The MikiLab Recipes", "Las Recetas de MikiLab")}
         heroSubtitle={t("mikilab_subtitle")}
         emptyText={t("mikilab_empty")}
         extraHeader={<NovitaColorate />}
