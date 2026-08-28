@@ -106,7 +106,6 @@ export const TOOLS = [
   { id: "stampi", Icon: Cookie, cat: "panificazione", it: "Stampi & Pirottini", de: "Formen-Rechner", en: "Pan Calculator", es: "Calculadora Moldes" },
   { id: "bilancia", Icon: Scale, cat: "panificazione", it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
   { id: "pesata", Icon: Scale, cat: "panificazione", it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
-  { id: "saporicasa", Icon: UtensilsCrossed, cat: "panificazione", it: "Sapori di Casa", de: "Geschmack von zu Hause", en: "Home Flavours", es: "Sabores de Casa" },
   { id: "esuberozero", Icon: Recycle, cat: "panificazione", it: "Esubero Zero-Sprechi", de: "Sauerteig-Rest", en: "Zero-Waste Discard", es: "Descarte Cero" },
   { id: "recupero", Icon: Recycle, cat: "panificazione", it: "Angolo del Recupero", de: "Resteverwertung", en: "Recovery Corner", es: "Rincón Aprovechamiento" },
   { id: "energia", Icon: Flame, cat: "panificazione", it: "Costo Energia Forno", de: "Ofen-Energiekosten", en: "Oven Energy Cost", es: "Coste Energía Horno" },
@@ -1013,6 +1012,24 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "es. per oggi · a mano", "z. B. für heute · manuell", "e.g. for today · manually")}</p>
             </button>
         </div>
+        {onOpenTool && (
+          <div data-testid="capo-quick-tools" className="mb-3">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27] mb-1.5">{tri3(lang, "Strumenti rapidi", "Schnellzugriff", "Quick tools", "Herramientas rápidas")}</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { id: "macchine", Icon: Wrench, label: tri3(lang, "Parco Macchine", "Maschinenpark", "Machine Park", "Maquinaria") },
+                { id: "fermentazione", Icon: Activity, label: tri3(lang, "Fermentazione", "Gärung", "Fermentation", "Fermentación") },
+                { id: "twin", Icon: FlaskConical, label: tri3(lang, "Digital Twin", "Teig-Zwilling", "Dough Twin", "Gemelo Digital") },
+              ].map((q) => (
+                <button key={q.id} data-testid={`capo-quicktool-${q.id}`} onClick={() => onOpenTool(q.id)}
+                  className="flex flex-col items-center gap-1 py-2.5 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] active:scale-95 hover:border-[#B45309] transition-all">
+                  <q.Icon className="w-4 h-4 text-[#B45309]" />
+                  <span className="text-[11px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{q.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         {/* Ordine EXTRA solo per oggi: si somma al piano di oggi senza modificare il Piano settimanale salvato */}
         <div data-testid="capo-extra-today" className="mb-3 rounded-xl border border-[#C88A2B]/40 bg-[#C88A2B]/8 overflow-hidden">
           <button type="button" data-testid="capo-extra-toggle" onClick={() => { setExtraOpen((s) => !s); if (!extraOpen && extraToday.length === 0) setExtraToday([{ recipe_id: "", name: "", qty: "", unit: "pezzi" }]); }}

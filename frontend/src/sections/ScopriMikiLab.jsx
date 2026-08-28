@@ -32,6 +32,25 @@ export default function ScopriMikiLab() {
 
       <GuidaAvatar />
 
+      {/* Racconto in viaggio — timeline */}
+      <div data-testid="scopri-timeline" className="rounded-2xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] p-4">
+        <p className="font-display text-lg font-bold text-[#6E371C] dark:text-[#e4eff8] mb-3">{L("Il racconto in viaggio", "Die Reise-Geschichte", "The journey story", "El relato del viaje")}</p>
+        <div className="relative pl-6">
+          <div className="absolute left-[7px] top-1 bottom-1 w-0.5 bg-[#B45309]/30" />
+          {[
+            { t: L("L'incontro in viaggio", "Die Begegnung auf Reisen", "Meeting while travelling", "El encuentro de viaje"), d: L("Michele e Mohammadreza si conoscono lontani da casa.", "Michele und Mohammadreza treffen sich fern der Heimat.", "Michele and Mohammadreza meet far from home.", "Michele y Mohammadreza se conocen lejos de casa.") },
+            { t: L("Spalla a spalla al forno", "Schulter an Schulter am Ofen", "Side by side at the oven", "Codo con codo ante el horno"), d: L("Notti di lavoro, tanta fatica e la voglia di ricominciare.", "Nachtschichten, harte Arbeit, Neuanfang.", "Night shifts, hard work, a fresh start.", "Noches de trabajo y ganas de empezar.") },
+            { t: L("Nasce MikiLab", "MikiLab entsteht", "MikiLab is born", "Nace MikiLab"), d: L("L'idea che il pane unisce le persone, per aiutare ogni fornaio.", "Die Idee, dass Brot Menschen verbindet.", "The idea that bread brings people together.", "La idea de que el pan une a las personas.") },
+          ].map((s, i) => (
+            <div key={i} className="relative mb-4 last:mb-0">
+              <span className="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#B45309] border-2 border-white dark:border-[#232A31]" />
+              <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{s.t}</p>
+              <p className="text-[12.5px] text-[#3F4A54] dark:text-[#AEB8BF] leading-snug">{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="flex items-start gap-2 text-xs text-[#7E8A93] px-1">
         <Info className="w-4 h-4 shrink-0 mt-0.5" />
         <span>{L("Michele e Mohammadreza ti guidano nel sito, sezione per sezione.", "Michele und Mohammadreza führen dich durch die Seite.", "Michele and Mohammadreza guide you through the site.", "Michele y Mohammadreza te guían por el sitio.")}</span>

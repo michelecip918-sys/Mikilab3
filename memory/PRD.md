@@ -2065,3 +2065,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Testo storia (GuidaAvatar)**: rimossa la parola "emigrati/Emigranten/emigrants/emigrantes" → ora "conosciuti in viaggio / auf Reisen kennengelernt / met while travelling / conocidos de viaje" (intro + story, 4 lingue).
 - **Ricette Custodite spostate**: rimosse dal Laboratorio (tool `custodite` e categoria `custodite` eliminati da TOOLS/TOOL_CATS → spariscono da griglia Lab e menù contestuale Lab). Ora vivono nel tab **Le Ricette di MikiLab**, unite a **Sapori di Casa** in un blocco "La Tradizione" con due fasce foto (ricette-sapori-band → SaporiCasa, ricette-custodite-band → RicetteCustodite). Il branch render in Maestro resta ma non è più raggiungibile dal Lab.
 - Verificato: compilazione pulita, nessun errore console aprendo Ricette e la fascia Custodite.
+
+## v-fork.41 (2026-06) — Sapori fuori dal Lab + strumenti rapidi nel "Scegli" + timeline Scopri
+- **Sapori di Casa rimosso dal Laboratorio** (tool `saporicasa` eliminato da TOOLS): resta solo nel tab Ricette (blocco La Tradizione).
+- **Strumenti rapidi nel passo "Scegli"** del Laboratorio (capo-quick-tools): scorciatoie a Parco Macchine (macchine), Fermentazione Predittiva (fermentazione), Digital Twin (twin) via onOpenTool.
+- **Racconto in viaggio** (ScopriMikiLab, data-testid scopri-timeline): mini-timeline a 3 tappe (incontro in viaggio → spalla a spalla al forno → nasce MikiLab), 4 lingue.
+- Note: "Custodite in evidenza" nella lista e fascia unica "La Tradizione" non fatti (offerti come follow-up). Compilazione pulita.
