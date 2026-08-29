@@ -2373,3 +2373,11 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **Audit Pane**: verificato già pulito dalla passata accenti site-wide; le apostrofi rimaste sono virgolette legittime ('a cornetto', 'Pan di Cristal') — nessuna correzione necessaria.
 - **Dedup (approvato dall'utente)**: Newsletter rimossa dalla Home (resta in Impara). Promo "Mercatino dell'usato" aggiunta alla Home (`home-market-promo`, apre il Social→market via evento `mikilab-social-view`). SaporiCasa in Home era già codice morto (non renderizzato). NB: rimozione voci "market"/"saporicasa" dal MENU del Laboratorio rimandata (richiede modifica menu, basso impatto) — da fare come piccolo follow-up.
 - **Avatar operativi** (`AvatarBubbles.jsx`): riscritti gli script — Michele = guida operativa in prima persona; Mohammadreza = aiutante disponibile. Aggiunte varianti `home` e `ricette` e renderizzato `<AvatarBubbles>` in Home e Ricette (avatar ora in tutte le sezioni principali). Verificato a schermo, 0 errori JS.
+
+## v-fork.83 (2026-06) — FIX: titoli ricetta non tradotti nei selettori
+- **BUG risolto**: i selettori (dropdown) di scelta ricetta mostravano `r.name` (solo italiano) invece del titolo localizzato.
+  - `WeeklyPlan.jsx` (WeeklyItemRow, Laboratorio): aggiunto `const { lang } = useLang();` e opzione → `recipeTitle(r, lang)`.
+  - `Beginners.jsx` (pianificatore "Impara da casa", `home-product-recipe-*`): import `recipeTitle` + opzione → `recipeTitle(r, lang)`.
+  - Verificato a schermo: opzioni ora localizzate (es. "Whole Soul", "Sourdough Baguette", "Brezel (Classic Bretzel)"). 0 errori JS.
+- I nomi tradotti (name_en/name_de/…) esistono già nel DB, quindi la traduzione compare correttamente in tutte le lingue.
+- PENDING (approvati, prossimo giro): pulizia voci menu Laboratorio (market/saporicasa — non trovata voce menu distinta, probabilmente non raggiungibile); asterisco Miglioratore nei procedimenti; foto reali nelle schede ricetta/profilo; avatar dinamici (messaggi in base a cosa manca).

@@ -741,6 +741,7 @@ export default function WeeklyPlan() {
 }
 
 function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, onChange, onRemove }) {
+  const { lang } = useLang();
   const pieces = Number(item.pieces || 0);
   const gpp = Number(item.grams_per_piece || 0);
   const totalDough = pieces * gpp;
@@ -765,7 +766,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
           className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#ff6b00]"
         >
           {recipes.map((r) => (
-            <option key={r.id} value={r.id}>{r.name}</option>
+            <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>
           ))}
         </select>
         <button onClick={onRemove} data-testid={`weekly-remove-${item.id}`} className="w-8 h-8 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] shrink-0">
