@@ -584,10 +584,16 @@ export default function WeeklyPlan() {
       <div className="mt-5 space-y-4">
         {DAYS.map((d) => {
           const dayItems = items.filter((x) => x.day === d.id);
+          const dayPieces = dayItems.reduce((s, x) => s + Number(x.pieces || 0), 0);
           return (
-            <div key={d.id} data-testid={`weekly-day-${d.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4">
+            <div key={d.id} data-testid={`weekly-day-${d.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 transition-colors hover:border-[#ff6b00]/40" style={{ borderLeft: `3px solid ${dayItems.length ? "#ff6b00" : "#3a3a3a"}` }}>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t(`day_${d.id}`)}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t(`day_${d.id}`)}</h3>
+                  {dayPieces > 0 && (
+                    <span data-testid={`weekly-day-total-${d.id}`} className="text-[11px] font-bold text-[#ff6b00] bg-[#ff6b00]/15 px-2 py-0.5 rounded-full">{dayPieces} {tri("pz", "St.", "pcs")}</span>
+                  )}
+                </div>
                 <button
                   data-testid={`weekly-add-${d.id}`}
                   onClick={() => addItem(d.id)}

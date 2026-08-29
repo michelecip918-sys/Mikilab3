@@ -191,6 +191,16 @@ export default function Maestro() {
       {/* Snellito: si arriva SUBITO al Piano di Produzione IA (hero + scegli ricette + genera) */}
       <PianoProduzioneAI onOpenTool={openTool} />
 
+      {/* Firma personale: Michele al lavoro (identità del laboratorio) */}
+      <div data-testid="maestro-signature" className="mt-5 relative overflow-hidden rounded-2xl border border-[#2e2e2e]">
+        <img src="/bio-dough-2.jpg" alt={mkTri(lang)("Michele al lavoro", "Michele bei der Arbeit", "Michele at work", "Michele trabajando", "Michele au travail", "میکله در حال کار")}
+          className="w-full h-28 object-cover object-center" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/50 to-transparent" />
+        <p className="absolute inset-y-0 left-0 flex items-center px-4 max-w-[70%] text-white font-display text-sm font-bold leading-tight drop-shadow">
+          {mkTri(lang)("Ogni impasto passa dalle mie mani, prima che dalle tue.", "Jeder Teig geht durch meine Hände, bevor er zu deinen kommt.", "Every dough passes through my hands, before yours.", "Cada masa pasa por mis manos, antes que por las tuyas.", "Chaque pâte passe par mes mains, avant les tiennes.", "هر خمیر پیش از دستان تو، از دستان من می‌گذرد.")}
+        </p>
+      </div>
+
       {/* Assistente e aiuto: sotto il piano, per chi vuole approfondire */}
       <div className="mt-5">
         <MohammedAssistant />

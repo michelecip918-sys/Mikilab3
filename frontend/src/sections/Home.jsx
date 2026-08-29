@@ -366,6 +366,17 @@ export default function Home({ onNavigate }) {
         </div>
       </div>
 
+      {/* Tocco personale: il mestiere sulla pelle */}
+      <div data-testid="home-personal-photo" className="relative overflow-hidden rounded-2xl border border-[#2e2e2e]">
+        <img src={`${process.env.PUBLIC_URL}/bio-dough-3.jpg`} alt={L("Le mani di Michele", "Micheles Hände", "Michele's hands", "Las manos de Michele", "Les mains de Michele", "دستان میکله")}
+          className="w-full h-36 object-cover object-center" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-3.5">
+          <p className="text-white font-display text-base font-bold leading-tight drop-shadow">{L("Il mestiere che porto sulla pelle", "Das Handwerk, das ich auf der Haut trage", "The craft I carry on my skin", "El oficio que llevo en la piel", "Le métier que je porte sur la peau", "حرفه‌ای که روی پوستم دارم")}</p>
+          <p className="text-white/80 text-[12px] leading-snug mt-0.5">{L("Pane vero, tempo giusto, mani in pasta: benvenuto nel mio MikiLab.", "Echtes Brot, richtige Zeit, Hände im Teig: willkommen in meinem MikiLab.", "Real bread, the right time, hands in the dough: welcome to my MikiLab.", "Pan de verdad, el tiempo justo, manos en la masa: bienvenido a mi MikiLab.", "Du vrai pain, le bon temps, les mains dans la pâte : bienvenue dans mon MikiLab.", "نان واقعی، زمان درست، دست در خمیر: به میکی‌لب من خوش آمدی.")}</p>
+        </div>
+      </div>
+
       {/* Selettore rapido dei laboratori: Panetteria · Pizzeria · Pasticceria */}
       <div data-testid="home-lab-switch">
         <div className="flex items-center gap-2 mb-2 px-1">
