@@ -9,9 +9,9 @@ export default function SectionHero({ image, title, subtitle, testid, position =
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div aria-hidden className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(120% 60% at 50% 8%, rgba(255,226,170,.30), transparent 55%)" }} />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1B1410]/92 via-[#1B1410]/25 to-transparent px-4 pt-12 pb-3">
-            <h1 className="font-display text-2xl font-bold text-white leading-tight drop-shadow-lg">{title}</h1>
-            {subtitle && <p className="text-white/85 text-[13px] leading-snug mt-0.5">{subtitle}</p>}
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#141414] via-[#141414]/70 to-transparent px-4 pt-16 pb-3">
+            <h1 className="font-display text-2xl font-bold text-white leading-tight" style={{ textShadow: "0 2px 8px rgba(0,0,0,.85)" }}>{title}</h1>
+            {subtitle && <p className="text-white/90 text-[13px] leading-snug mt-0.5" style={{ textShadow: "0 1px 5px rgba(0,0,0,.9)" }}>{subtitle}</p>}
           </div>
         </div>
       </div>

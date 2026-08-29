@@ -2460,3 +2460,19 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Fix stati contraddittori**: resa la catena STRETTAMENTE sequenziale: c1=recipesDone; c2=c1&&weeklyDone; c3=c2&&extraDone. Elimina i casi "Completato+Bloccato" sul Passo 2 e "Passo 3 sbloccato mentre Passo 2 bloccato" (erano causati dal piano settimanale globale lato backend).
 ### BUG BACKEND DA SISTEMARE (segnalato, non ancora fatto — richiede conferma)
 - `GET/PUT /api/weekly-plan` salva un piano GLOBALE ({_key:'default'}, senza auth): TUTTI gli utenti leggono/scrivono lo STESSO piano settimanale. Va reso per-owner (come /api/capo/last-plan). Impatta multi-utente e fa risultare auto1=true per chiunque.
+
+## v-fork.95 (2026-06) — Action items batch (piano per-utente, contatore ricette, setup bar, hero scrim)
+- **Piano settimanale PER-UTENTE (bug reale risolto)**: `GET/PUT /api/weekly-plan` ora richiedono auth e usano `_key=user_id` (come capo/last-plan). Verificato via curl: GET senza auth→401, con auth→piano per-owner. Fine del piano condiviso globale.
+- **Contatore ricette nel Passo 1** (LabWizard `lab-wizard-recipe-count`): "Hai X ricette tue — aggiungine 1 per partire" (0 → arancione) / "X ricette tue ✓" (verde). Usa il conteggio delle ricette personali.
+- **Barra Setup**: etichetta della progress del Percorso Guidato cambiata in "Setup · X/3 completato".
+- **Hero scrim** (SectionHero.jsx, vale per TUTTE le sezioni incl. Laboratorio e Ricette): velo scuro più forte (from #141414 via /70) + text-shadow sul titolo/sottotitolo → testo leggibile su qualsiasi foto.
+- **Blocco PRO Laboratorio: NON ripristinato (per scelta)** — l'accesso libero è VOLUTO by design: backend `user_is_pro`→True e `_email_has_pro`→True, frontend PaywallGate `hasAccess=true` ("Accesso completo GRATUITO per tutti"), coerente con "piattaforma gratuita" del brief iniziale. Reintrodurre un paywall PRO è una decisione di monetizzazione da confermare con l'utente.
+### FASE 3 (prossima): Impara & Social più scorrevoli/essenziali su smartphone.
+
+## v-fork.96 (2026-06) — FASE 3: Impara scorrevole + fix vista Livelli + rifiniture
+- **Impara accesso rapido scorrevole**: riga orizzontale `impara-quick-access` con 5 pill (impara-quick-livelli/quiz/maestro/ricetta/sos) sotto l'hero → naviga/scrolla subito alle parti chiave (mobile-first). Verificato iteration_121 (tutte funzionanti).
+- **FIX HIGH (ImparaLivelli.jsx)**: le card dei livelli COMPLETATI usavano bg-[#ffffff] → testo bianco su bianco (invisibile in dark). Cambiato in bg-[#ff6b00]/15 border-[#ff6b00] → testo leggibile.
+- **Rifinitura**: pill quiz/ricetta usano scrollIntoView block:'center' (prima 'start' nascondeva l'intestazione sotto la top bar).
+- **Social/Community**: già scorrevole ed essenziale (filtri con overflow-x-auto, feed space-y, quick-actions in griglia) → nessuna modifica necessaria.
+- **Paywall**: confermato LASCIATO GRATUITO (giudizio): coerente con piattaforma gratuita; reintroduzione = decisione monetizzazione futura.
+- NB: un DEPLOY è stato avviato durante la sessione; queste ultime modifiche sono in preview e richiederebbero un re-deploy per andare live.

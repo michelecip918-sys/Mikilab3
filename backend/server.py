@@ -1609,8 +1609,8 @@ async def save_production_plan(payload: ProductionPlan, user: dict = Depends(cur
 # Weekly plan (single persisted plan)
 # ---------------------------------------------------------------------------
 @api_router.get("/weekly-plan")
-async def get_weekly_plan():
-    doc = await db.weekly_plan.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+async def get_weekly_plan(user: dict = Depends(current_user)):
+    doc = await db.weekly_plan.find_one({"_key": user["user_id"]}, {"_id": 0, "_key": 0})
     return doc  # may be null if never saved
 
 
@@ -1619,7 +1619,7 @@ async def save_weekly_plan(payload: WeeklyPlan, user: dict = Depends(current_use
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.weekly_plan.update_one(
-        {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
+        {"_key": user["user_id"]}, {"$set": {**doc, "_key": user["user_id"]}}, upsert=True
     )
     return payload
 

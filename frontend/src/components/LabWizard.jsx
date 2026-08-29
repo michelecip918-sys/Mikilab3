@@ -36,6 +36,7 @@ export default function LabWizard({ onOpenTool }) {
   const [manual, setManual] = useState(readManual);
   const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(true);
+  const [personalCount, setPersonalCount] = useState(0);
 
   const refresh = useCallback(async () => {
     try {
@@ -51,6 +52,7 @@ export default function LabWizard({ onOpenTool }) {
       setRecipeById(map);
       setAuto1(items.length > 0);
       setAuto2(Array.isArray(personal) && personal.length > 0);
+      setPersonalCount(Array.isArray(personal) ? personal.length : 0);
     } catch { /* */ }
     finally { setLoaded(true); }
   }, []);
@@ -224,7 +226,7 @@ export default function LabWizard({ onOpenTool }) {
       <div data-testid="lab-wizard-progress" className="mb-1.5">
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">
-            {tri("Passo", "Schritt", "Step", "Paso", "Étape", "مرحله")} {activeStep} {tri("di", "von", "of", "de", "de", "از")} 3
+            {tri("Setup", "Setup", "Setup", "Setup", "Setup", "راه‌اندازی")} · {done}/3 {tri("completato", "erledigt", "done", "completado", "fait", "کامل")}
           </span>
           <span className="text-xs font-bold text-[#ff6b00]">{pct}%</span>
         </div>
@@ -264,6 +266,13 @@ export default function LabWizard({ onOpenTool }) {
                         </div>
                         <h3 className="font-display text-base font-bold text-white mt-0.5">{s.title}</h3>
                         <p className="text-[13px] text-[#9aa4ab] leading-snug mt-0.5">{s.desc}</p>
+                        {s.n === 1 && (
+                          <p data-testid="lab-wizard-recipe-count" className={`text-[12px] font-bold mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full ${personalCount === 0 ? "text-[#ff6b00] bg-[#ff6b00]/15" : "text-[#7bd88f] bg-[#7bd88f]/15"}`}>
+                            {personalCount === 0
+                              ? tri("Hai 0 ricette tue — aggiungine 1 per partire", "Du hast 0 eigene Rezepte — füge 1 hinzu, um zu starten", "You have 0 of your recipes — add 1 to get started", "Tienes 0 recetas tuyas — añade 1 para empezar", "Tu as 0 recette perso — ajoutes-en 1 pour démarrer", "۰ دستور شخصی داری — ۱ تا اضافه کن تا شروع کنی")
+                              : `${personalCount} ${tri("ricette tue ✓", "eigene Rezepte ✓", "of your recipes ✓", "recetas tuyas ✓", "recettes perso ✓", "دستور شخصی ✓")}`}
+                          </p>
+                        )}
                         <div className="flex items-center gap-2 flex-wrap mt-2.5">
                           <button
                             data-testid={`lab-wizard-cta-${s.n}`}

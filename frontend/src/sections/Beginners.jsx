@@ -396,6 +396,24 @@ export default function Beginners({ onNavigate }) {
       <SectionHero testid="impara-title" image="hero-impara.jpg" position="50% 25%"
         title={mkTri(lang)("Impara", "Lernen", "Learn", "Aprende", "Apprendre", "بیاموز")}
         subtitle={mkTri(lang)("Fai il pane a casa, passo dopo passo", "Backe Brot zu Hause, Schritt für Schritt", "Bake bread at home, step by step", "Haz pan en casa, paso a paso", "Fais ton pain à la maison, pas à pas", "نان خانگی، گام‌به‌گام")} />
+
+      {/* Accesso rapido scorrevole: salta subito alla parte che ti serve (mobile-first) */}
+      <div data-testid="impara-quick-access" className="flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1 snap-x snap-mandatory">
+        {[
+          { id: "livelli", Icon: Trophy, label: mkTri(lang)("Livelli", "Level", "Levels", "Niveles", "Niveaux", "سطح‌ها"), act: () => setImparaLiv(true) },
+          { id: "quiz", Icon: ChefHat, label: mkTri(lang)("Quiz", "Quiz", "Quiz", "Quiz", "Quiz", "کوئیز"), act: () => document.querySelector('[data-testid="evolving-quiz"],[data-testid="quiz-panel"]')?.scrollIntoView({ behavior: "smooth", block: "center" }) },
+          { id: "maestro", Icon: MessageCircle, label: mkTri(lang)("Chiedi al Maestro", "Frag den Meister", "Ask the Master", "Pregunta al Maestro", "Demande au Maître", "از استاد بپرس"), act: () => setAskMaster(true) },
+          { id: "ricetta", Icon: Sprout, label: mkTri(lang)("Ricetta del giorno", "Rezept des Tages", "Recipe of the day", "Receta del día", "Recette du jour", "دستور روز"), act: () => document.querySelector('[data-testid="recipe-of-day"]')?.scrollIntoView({ behavior: "smooth", block: "center" }) },
+          { id: "sos", Icon: Stethoscope, label: mkTri(lang)("SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa", "SOS Pâte", "اورژانس خمیر"), act: () => setSosOpen(true) },
+        ].map(({ id, Icon, label, act }) => (
+          <button key={id} data-testid={`impara-quick-${id}`} onClick={act}
+            className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#1e1e1e] border border-[#ff6b00]/40 text-white active:scale-95 hover:border-[#ff6b00] transition-all">
+            <Icon className="w-4.5 h-4.5 text-[#ff6b00]" />
+            <span className="text-sm font-bold whitespace-nowrap">{label}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="mb-4" data-testid="impara-newsletter"><NewsletterSignup /></div>
       <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_impara_tour_v1"
         labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip", "Saltar"), next: tri3(lang, "Avanti", "Weiter", "Next", "Siguiente"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!", "¡Entendido!") }}

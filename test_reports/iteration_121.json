@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only test (mobile 390x844, admin@mikilab.de) of the 3 requested items: (1) Impara horizontal quick-access row with 5 pills, (2) Laboratorio wizard recipe counter + 'Setup X/3' progress label, (3) SectionHero readability. All 3 requested features WORK. Found 1 HIGH contrast bug in the ImparaLivelli view (reachable from the new 'Livelli' pill): completed level cards render white text on white background (text invisible).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ImparaLivelli path cards", "issue": "Completed levels use bg-[#ffffff] with dark:text-[#e4eff8] -> computed color rgb(255,255,255) on background rgb(255,255,255): titles/intros ('Level 1 · The Basics' ... 'Level 5 · Pizza') are completely invisible in dark mode (5/6 cards affected). Verified via computed styles + screenshot.", "selector": "[data-testid^='impara-path-'] p", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Impara quick access (quiz / recipe-of-day pills)", "issues": ["scrollIntoView({block:'start'}) lands the target at viewport y=0, so the section heading is hidden behind the sticky top bar (~64px). Add scroll-margin-top to evolving-quiz / recipe-of-day or use block:'center'."]},
+      {"screen": "Impara — Plan your Production", "issues": ["Uses native browser <select> dropdowns ('Choose a recipe', 'Any day') instead of the shadcn Select used elsewhere (pre-existing, cosmetic)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix ImparaLivelli completed-card contrast: white-on-white text for done levels (dark:text-* over bg-[#ffffff]).",
+    "Optional: add scroll-margin-top to evolving-quiz and recipe-of-day so quick-access scroll targets are not covered by the sticky header."
+  ],
+  "critical_code_review_comments": [
+    "ImparaLivelli.jsx L191-195: the 'ok' (completed) branch forces bg-[#ffffff] while the text keeps dark:text-[#e4eff8]/dark:text-[#AEB8BF] -> unreadable in dark theme; pick an explicit dark text color for completed cards.",
+    "Beginners.jsx quick-access pills query the DOM directly with document.querySelector for scroll targets; works, but fails silently if the target is not mounted (e.g. quiz hidden for non-entitled users) - consider a fallback/toast."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "100% of requested features pass (3/3); 1 unrelated HIGH contrast bug found"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked: login-btn -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "Verified: impara-quick-access exists directly under the hero, flex-row with overflow-x:auto (scrollWidth 749 vs clientWidth 366, scrollLeft settable) and all 5 pills present. (a) impara-quick-livelli opens impara-livelli view (back = impara-back); (b) impara-quick-quiz scrolls to evolving-quiz (scrollY 0->4062); (c) impara-quick-maestro opens Ask the Master with impara-askmaster-back and returning restores the row; (d) impara-quick-ricetta scrolls to recipe-of-day (0->1890); (e) impara-quick-sos opens sos-panel. Lab: lab-wizard-progress shows 'SETUP · 1/3 DONE' + 33%; lab-wizard-recipe-count shows '1 of your recipes ✓' in green (#7bd88f) - the orange 0-recipe state was code-verified only (admin already has 1 personal recipe); test with a fresh user to see the orange variant. Heroes (impara-title/ricette-title/maestro-title) titles are clearly readable over the photos. Note: clicking nav-tab-impara while already inside an Impara sub-view does NOT reset the sub-view; use the back buttons.",
+  "rca_of_the_issue": "ImparaLivelli completed cards: Tailwind classes bg-[#ffffff] (unconditional) + dark:text-[#e4eff8] mean that under the app's dark theme the text color resolves to near-white over a hard-coded white background, giving ~1:1 contrast. Repro: login -> Learn tab -> 'Livelli' pill -> first 5 cards show only the emoji and check icon."
+}

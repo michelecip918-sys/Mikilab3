@@ -188,7 +188,7 @@ export default function ImparaLivelli({ onBack }) {
           const unlocked = isUnlocked(idx);
           return (
             <button key={p.id} data-testid={`impara-path-${p.id}`} onClick={() => openPath(p, idx)}
-              className={`w-full text-left flex items-center gap-4 rounded-2xl p-4 border shadow-sm transition-all ${ok ? "bg-[#ffffff] border-[#ff6b00]" : unlocked ? "bg-[#121212] dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98" : "bg-[#1e1e1e]/50 border-[#2e2e2e] opacity-70"}`}>
+              className={`w-full text-left flex items-center gap-4 rounded-2xl p-4 border shadow-sm transition-all ${ok ? "bg-[#ff6b00]/15 border-[#ff6b00]" : unlocked ? "bg-[#121212] dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98" : "bg-[#1e1e1e]/50 border-[#2e2e2e] opacity-70"}`}>
               <div className="text-3xl shrink-0">{p.icon}</div>
               <div className="flex-1 min-w-0">
                 <p className="font-display text-[16px] font-bold text-[#ff6b00] dark:text-[#e4eff8] leading-tight">{T(p)}</p>
