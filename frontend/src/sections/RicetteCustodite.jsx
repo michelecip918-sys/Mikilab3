@@ -117,11 +117,11 @@ const RECIPES = [
     id: "pane_basilicata", region: "basilicata", flag: "🇮🇹", img: IMG.rustic1, place: PLACE.basilicata,
     name: { it: "Pane Lucano di Grano Duro", de: "Lukanisches Hartweizenbrot", en: "Lucanian Durum Bread", es: "Pan Lucano de Trigo Duro", fr: "Pain Lucanien au Blé Dur" },
     story: {
-      it: "Rustico lucano con Biga e Lievito Madre: crosta scura, lunga conservazione. Il Miglioratore è la mia arma segreta.",
-      de: "Rustikal mit Biga und Sauerteig: dunkle Kruste, lange haltbar. Der Verbesserer ist meine Geheimwaffe.",
-      en: "Rustic with Biga and sourdough: dark crust, keeps for days. The Improver is my secret weapon.",
-      es: "Rústico con Biga y masa madre: corteza oscura. El Mejorador es mi arma secreta.",
-      fr: "Rustique avec Biga et levain : croûte foncée, longue conservation. L'Améliorant est mon arme secrète.",
+      it: "Rustico lucano con Biga e Lievito Madre: crosta scura, lunga conservazione. Il Miglioratore Naturale è la mia firma.",
+      de: "Rustikal mit Biga und Sauerteig: dunkle Kruste, lange haltbar. Der natürliche Verbesserer ist meine Handschrift.",
+      en: "Rustic with Biga and sourdough: dark crust, keeps for days. The Natural Improver is my signature.",
+      es: "Rústico con Biga y masa madre: corteza oscura, larga conservación. El Mejorador Natural es mi firma.",
+      fr: "Rustique avec Biga et levain : croûte foncée, longue conservation. L'Améliorant Naturel est ma signature.",
     },
     ing: [g(ING.semola, 100), g(ING.acqua, 72), g(ING.biga, 40), g(ING.lm, 20), g(ING.migl, 2), g(ING.sale, 2.2)],
     proc: {
@@ -713,11 +713,11 @@ export default function RicetteCustodite({ initialId = null }) {
               <ShieldCheck className="w-6 h-6 shrink-0 mt-0.5 text-[#f0c9a3]" />
               <p className="text-sm leading-relaxed">
                 {L({
-                  it: "La mia arma segreta è il Miglioratore Naturale MikiLab: senza di lui questa ricetta non riesce. Con questo sistema controllo meglio ciò che mangio.",
-                  de: "Meine Geheimwaffe ist der natürliche MikiLab-Verbesserer: ohne ihn gelingt dieses Rezept nicht. So kontrolliere ich besser, was ich esse.",
-                  en: "My secret weapon is the MikiLab Natural Improver: without it this recipe won't work. With this method I control better what I eat.",
-                  es: "Mi arma secreta es el Mejorador Natural MikiLab: sin él esta receta no sale. Así controlo mejor lo que como.",
-                  fr: "Mon arme secrète est l'Améliorant Naturel MikiLab : sans lui cette recette ne réussit pas. Ainsi je contrôle mieux ce que je mange.",
+                  it: "Il Miglioratore Naturale MikiLab è la mia firma. Il pane riesce anche con altri miglioratori: io uso il mio perché l'ho creato io e amo controllare ogni ingrediente di ciò che mangio. Le percentuali nascono dal mio metodo e dalle mie prove.",
+                  de: "Der natürliche MikiLab-Verbesserer ist meine Handschrift. Das Brot gelingt auch mit anderen Verbesserern: ich nehme meinen, weil ich ihn selbst entwickelt habe und gern jede Zutat kontrolliere. Die Prozente stammen aus meiner Methode und meinen Versuchen.",
+                  en: "The MikiLab Natural Improver is my signature. The bread works with other improvers too: I use mine because I created it and I love controlling every ingredient I eat. The percentages come from my own method and testing.",
+                  es: "El Mejorador Natural MikiLab es mi firma. El pan también sale con otros mejoradores: uso el mío porque lo creé yo y me gusta controlar cada ingrediente de lo que como. Los porcentajes nacen de mi método y mis pruebas.",
+                  fr: "L'Améliorant Naturel MikiLab est ma signature. Le pain réussit aussi avec d'autres améliorants : j'utilise le mien parce que je l'ai créé et j'aime contrôler chaque ingrédient de ce que je mange. Les pourcentages viennent de ma méthode et de mes essais.",
                 })}
               </p>
             </div>

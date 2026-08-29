@@ -2347,3 +2347,9 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **Chip "Per giorno" cliccabili** (`lab-wizard-day-<gg>`): toccando un giorno si genera il piano SOLO per quel giorno — evento `mikilab-generate-today` con `detail.day`; in `PianoProduzioneAI` il listener filtra `weeklyItems` per `w.day===day`. Fix: `generateToday` non passa più l'evento click come giorno (onClick wrapper).
 - Verificato a schermo: tutti i testid presenti, 0 errori JS; sfida toggla a "Tried! 🏆", spesa mostra 25.44/21.56/5.09 kg + farine per tipo, chip giorno generano senza crash.
 - IN SOSPESO (approvato ma da fare "uno alla volta"): refinement dark/ordinato di uno strumento del laboratorio (Piano Settimanale / Produzione Oggi) — attende conferma di quale.
+
+## v-fork.79 (2026-06) — Messaggio Miglioratore corretto (non è indispensabile)
+- **Fix richiesto dall'utente**: il Miglioratore Naturale MikiLab NON è indispensabile — il pane riesce anche con altri miglioratori. Riscritto il box `custodite-improver-note` (RicetteCustodite.jsx, 5 lingue): ora dice che è la "firma" di Michele, che il pane riesce anche con altri, ma lui usa il suo perché l'ha creato e ama controllare ogni ingrediente; le percentuali nascono dal suo metodo/prove. Rimosso "senza di lui questa ricetta non riesce".
+- Allineata anche la descrizione "Pane Lucano di Grano Duro": "arma segreta" → "la mia firma" (5 lingue).
+- Verificato: DB `recipes` NON contiene più frasi overclaim ("senza di lui...") nei procedimenti (0 su 121); erano solo chiavi stale in triTranslations, non renderizzate. Nessuna modifica DB/seed necessaria.
+- IN CORSO (richiesta ampia utente): revisione/miglioria progressiva di TUTTI i testi (ricette, spiegazioni, titoli, sottotitoli) mantenendo metodo e ricette di Michele — da proseguire sezione per sezione, senza cancellare nulla.
