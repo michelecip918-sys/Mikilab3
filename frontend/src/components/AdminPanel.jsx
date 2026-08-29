@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail } from "lucide-react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
@@ -43,6 +43,29 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
   const [subs, setSubs] = useState([]);
+  const [nl, setNl] = useState({ subject: "", title: "", body: "", lang: "" });
+  const [nlSending, setNlSending] = useState(false);
+
+  const downloadCsv = () => {
+    const rows = [["email", "lang", "source", "created_at"], ...subs.map((s) => [s.email, s.lang || "", s.source || "", s.created_at || ""])];
+    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = `mikilab-newsletter-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+  };
+
+  const sendNewsletter = async () => {
+    if (!nl.subject.trim() || !nl.title.trim() || !nl.body.trim()) { toast.error(de ? "Betreff, Titel und Text ausfüllen" : "Compila oggetto, titolo e testo"); return; }
+    setNlSending(true);
+    try {
+      const r = await adminApi.newsletterSend(nl.subject, nl.title, nl.body, nl.lang);
+      toast.success((de ? "Gesendet an " : "Inviata a ") + (r.sent ?? 0) + (de ? " Abonnenten" : " iscritti") + (r.failed ? ` (${r.failed} ${de ? "Fehler" : "errori"})` : ""));
+      setNl({ subject: "", title: "", body: "", lang: "" });
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || (de ? "Fehler" : "Errore"));
+    } finally { setNlSending(false); }
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -141,10 +164,10 @@ export default function AdminPanel({ open, onOpenChange }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#FAF5EC] dark:bg-[#1B2127] border-[#E6D8C3] dark:border-[#38424B]">
         <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
-          <Crown className="w-5 h-5 text-[#B45309]" /> {de ? "Admin · VIP-Zugänge" : "Admin · Accessi VIP"}
+          <Crown className="w-5 h-5 text-[#B45309]" /> {de ? "Admin-Panel" : "Pannello Admin"}
         </DialogTitle>
         <DialogDescription className="text-sm text-[#7E8A93]">
-          {de ? "Verschenke kostenlosen PRO-Zugang (unbegrenzt oder befristet)." : "Regala accesso PRO gratuito (illimitato o a tempo)."}
+          {de ? "Verwalte Inhalte, Abonnenten und spezielle Zugänge." : "Gestisci contenuti, iscritti e accessi speciali."}
         </DialogDescription>
 
         <div className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4 space-y-3">
@@ -206,10 +229,16 @@ export default function AdminPanel({ open, onOpenChange }) {
               <span className="text-[11px] font-bold bg-[#3a6b3a]/20 text-[#2f5a2f] dark:text-[#9cd6a0] rounded-full px-2 py-0.5">{subs.length}</span>
             </p>
             {subs.length > 0 && (
-              <button data-testid="admin-newsletter-copy" onClick={() => { navigator.clipboard.writeText(subs.map((s) => s.email).join(", ")); toast.success(de ? "E-Mails kopiert" : "Email copiate"); }}
-                className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#232A31] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95 shrink-0">
-                {de ? "Alle kopieren" : "Copia tutte"}
-              </button>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button data-testid="admin-newsletter-csv" onClick={downloadCsv}
+                  className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#232A31] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95">
+                  CSV
+                </button>
+                <button data-testid="admin-newsletter-copy" onClick={() => { navigator.clipboard.writeText(subs.map((s) => s.email).join(", ")); toast.success(de ? "E-Mails kopiert" : "Email copiate"); }}
+                  className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#232A31] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95">
+                  {de ? "Alle kopieren" : "Copia tutte"}
+                </button>
+              </div>
             )}
           </div>
           {subs.length === 0 ? (
@@ -227,6 +256,34 @@ export default function AdminPanel({ open, onOpenChange }) {
               ))}
             </div>
           )}
+
+          {/* Invia la ricetta della settimana a tutti gli iscritti (Resend) */}
+          <div data-testid="admin-newsletter-send" className="mt-3 pt-3 border-t border-[#3a6b3a]/25">
+            <p className="flex items-center gap-1.5 text-xs font-bold text-[#2f5a2f] dark:text-[#9cd6a0] mb-2">
+              <Send className="w-4 h-4" /> {de ? "Newsletter senden" : "Invia newsletter"}
+            </p>
+            <input data-testid="nl-send-subject" value={nl.subject} onChange={(e) => setNl((n) => ({ ...n, subject: e.target.value }))}
+              placeholder={de ? "Betreff der E-Mail" : "Oggetto dell'email"}
+              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+            <input data-testid="nl-send-title" value={nl.title} onChange={(e) => setNl((n) => ({ ...n, title: e.target.value }))}
+              placeholder={de ? "Titel (im Inhalt)" : "Titolo (nel contenuto)"}
+              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+            <textarea data-testid="nl-send-body" value={nl.body} onChange={(e) => setNl((n) => ({ ...n, body: e.target.value }))} rows={4}
+              placeholder={de ? "Text der Wochenrezept-Nachricht…" : "Testo della ricetta della settimana…"}
+              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+            <div className="flex items-center gap-2">
+              <select data-testid="nl-send-lang" value={nl.lang} onChange={(e) => setNl((n) => ({ ...n, lang: e.target.value }))}
+                className="bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-2 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]">
+                <option value="">{de ? "Alle Sprachen" : "Tutte le lingue"}</option>
+                <option value="it">IT</option><option value="de">DE</option><option value="en">EN</option>
+                <option value="es">ES</option><option value="fr">FR</option><option value="fa">FA</option>
+              </select>
+              <button data-testid="nl-send-btn" onClick={sendNewsletter} disabled={nlSending}
+                className="flex-1 flex items-center justify-center gap-2 bg-[#3a6b3a] disabled:opacity-50 text-white font-semibold py-2 rounded-xl active:scale-98 transition-all">
+                <Send className="w-4 h-4" /> {nlSending ? (de ? "Sende…" : "Invio…") : (de ? "An alle senden" : "Invia a tutti")}
+              </button>
+            </div>
+          </div>
         </div>
 
         <div data-testid="admin-site-settings" className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">

@@ -2172,3 +2172,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **AdminPanel** (`admin-newsletter`): nuova sezione "Iscritti Newsletter" con conteggio, lista email (badge lingua + source) e pulsante "Copia tutte" (copia tutte le email separate da virgola negli appunti). Carica da `GET /api/admin/newsletter` via `adminApi.newsletter()`.
 - Verificato: login admin → menu ☰ → Pannello Admin → sezione mostra l'iscritto con lingua/sorgente; endpoint testato via curl (count/subscribers). Dato demo ripulito.
 - Nota: campanella notifiche ha GIÀ il badge non-letti (`notif-badge`) e l'header desktop mostra già orologio (≥560px) e sottotitolo (≥440px) — quei due Action Items risultavano già soddisfatti.
+
+## v-fork.54 (2026-06) — Admin: Export CSV + Invio Newsletter + rinomina wording
+- **Invio Newsletter** (`POST /api/admin/newsletter/send`, solo admin): {subject,title,body,lang?} → invia a tutti gli iscritti (o filtrati per lingua) via Resend con template HTML brandizzato (logo + titolo + testo + footer). Ritorna {sent,failed,total}. UI in AdminPanel (`admin-newsletter-send`, `nl-send-subject/title/body/lang/btn`). Testato via curl: sent:1,failed:0.
+- **Export CSV** (`admin-newsletter-csv`): download client-side degli iscritti (email,lang,source,created_at) come file CSV. Più pulsante "Copia tutte".
+- **Rinomina wording**: titolo AdminPanel "Admin · Accessi VIP" → "Pannello Admin" (de "Admin-Panel"), descrizione aggiornata ("Gestisci contenuti, iscritti e accessi speciali"). Coerente col modello 100% gratis.
+- Backend riavviato OK; frontend compila senza errori (smoke test). Dato demo ripulito.
+- NB: invio email dipende dal dominio Resend verificato (`noreply@mikilab.de`). Servirà Redeploy per la produzione.
