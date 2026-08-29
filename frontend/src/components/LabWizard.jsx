@@ -1,10 +1,14 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CalendarDays, BookOpen, PlusCircle, Lock, Check, ArrowRight, Route, RotateCcw, ChevronDown, ChevronUp, Sparkles, ListChecks } from "lucide-react";
+import { CalendarDays, BookOpen, PlusCircle, Lock, Check, ArrowRight, Route, RotateCcw, ChevronDown, ChevronUp, Sparkles, ListChecks, ShoppingCart, Share2, Printer, Trophy } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { computeShopping, fmtQty } from "@/lib/shopping";
+import { recipeTitle } from "@/lib/loc";
+import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+
+const CHAL_KEY = "mikilab_wizard_challenge";
 
 const MANUAL_KEY = "mikilab_wizard_manual";
 const WEEK_KEY = "mikilab_wizard_week";
@@ -95,11 +99,48 @@ export default function LabWizard({ onOpenTool }) {
   }, [weeklyItems, recipeById, lang]);
   const flourTot = shopping.anyFlour || 0;
   const waterTot = (shopping.others && shopping.others.water_grams) || 0;
+  const prefermentTot = (shopping.others && shopping.others.sourdough_grams) || 0;
+  const flourTypes = useMemo(() => Object.entries(shopping.flourByType || {}).sort((a, b) => b[1] - a[1]), [shopping]);
+  const [shopOpen, setShopOpen] = useState(false);
 
-  const generateToday = () => {
-    window.dispatchEvent(new CustomEvent("mikilab-generate-today"));
+  const generateToday = (day) => {
+    window.dispatchEvent(new CustomEvent("mikilab-generate-today", { detail: day ? { day } : {} }));
     const el = document.querySelector('[data-testid="capo-generate"]');
     if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
+  };
+
+  const buildSummaryText = () => {
+    let s = tri("Riepilogo settimana — MikiLab", "Wochen-Übersicht — MikiLab", "Week summary — MikiLab", "Resumen semana — MikiLab", "Résumé semaine — MikiLab", "خلاصهٔ هفته — MikiLab") + "\n\n";
+    summary.forEach((x) => { s += `• ${x.name}: ${x.pieces} pz\n`; });
+    if (byDay.length) s += "\n" + tri("Per giorno", "Pro Tag", "By day", "Por día", "Par jour", "به تفکیک روز") + ": " + byDay.map((d) => `${dayLabel(d.day)} ${d.pieces}`).join(" · ") + "\n";
+    if (flourTot > 0) s += `\n🌾 ${fmtQty(flourTot)}` + (waterTot > 0 ? ` · 💧 ${fmtQty(waterTot)}` : "");
+    return s.trim();
+  };
+  const shareSummary = async () => {
+    const text = buildSummaryText();
+    try {
+      if (navigator.share) { await navigator.share({ title: "MikiLab", text }); }
+      else { await navigator.clipboard.writeText(text); toast.success(tri("Riepilogo copiato!", "Übersicht kopiert!", "Summary copied!", "¡Resumen copiado!", "Résumé copié !", "خلاصه کپی شد!")); }
+    } catch { /* */ }
+  };
+
+  // Sfida della settimana: prova una ricetta nuova (stabile per settimana)
+  const challenge = useMemo(() => {
+    const inWeek = new Set(weeklyItems.map((w) => w.recipe_id));
+    const pool = Object.values(recipeById).filter((r) => r && r.id && !inWeek.has(r.id) && !r.locked);
+    if (pool.length === 0) return null;
+    const wk = isoWeekKey();
+    let h = 0; for (let i = 0; i < wk.length; i++) h = (h * 31 + wk.charCodeAt(i)) >>> 0;
+    return pool[h % pool.length];
+  }, [recipeById, weeklyItems]);
+  const [chalDone, setChalDone] = useState(false);
+  useEffect(() => {
+    try { const c = JSON.parse(localStorage.getItem(CHAL_KEY) || "{}"); setChalDone(c.week === isoWeekKey() && !!c.done); } catch { /* */ }
+  }, []);
+  const toggleChallenge = () => {
+    const nd = !chalDone; setChalDone(nd);
+    try { localStorage.setItem(CHAL_KEY, JSON.stringify({ week: isoWeekKey(), done: nd })); } catch { /* */ }
+    if (nd) toast.success(tri("Sfida completata! 🏆", "Challenge geschafft! 🏆", "Challenge done! 🏆", "¡Reto completado! 🏆", "Défi réussi ! 🏆", "چالش انجام شد! 🏆"));
   };
 
   const c1 = auto1 || !!manual["1"];
@@ -250,7 +291,15 @@ export default function LabWizard({ onOpenTool }) {
                   <h3 className="font-display text-sm font-bold text-white">
                     {tri("Riepilogo settimana", "Wochen-Übersicht", "Week summary", "Resumen de la semana", "Résumé de la semaine", "خلاصهٔ هفته")}
                   </h3>
-                  <span className="ms-auto text-[11px] font-bold text-[#ff6b00] bg-[#ff6b00]/15 px-2 py-0.5 rounded-full">
+                  <button data-testid="lab-wizard-share" onClick={shareSummary} title={tri("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
+                    className="ms-auto w-7 h-7 rounded-lg bg-[#1e1e1e] border border-[#333] text-[#ff6b00] flex items-center justify-center active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+                    <Share2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button data-testid="lab-wizard-print" onClick={() => { try { window.print(); } catch { /* */ } }} title={tri("Stampa", "Drucken", "Print", "Imprimir", "Imprimer", "چاپ")}
+                    className="w-7 h-7 rounded-lg bg-[#1e1e1e] border border-[#333] text-[#ff6b00] flex items-center justify-center active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+                    <Printer className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-[11px] font-bold text-[#ff6b00] bg-[#ff6b00]/15 px-2 py-0.5 rounded-full">
                     {totalPieces} {tri("pz", "St.", "pcs", "uds", "pcs", "عدد")}
                   </span>
                 </div>
@@ -267,20 +316,35 @@ export default function LabWizard({ onOpenTool }) {
                 </div>
                 {byDay.length > 0 && (
                   <div data-testid="lab-wizard-byday" className="mt-3 pt-2.5 border-t border-[#2a2a2a]">
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5">{tri("Per giorno", "Pro Tag", "By day", "Por día", "Par jour", "به تفکیک روز")}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5">{tri("Per giorno · tocca per generare", "Pro Tag · tippen zum Erstellen", "By day · tap to generate", "Por día · toca para generar", "Par jour · touchez pour générer", "به تفکیک روز · برای ساخت لمس کن")}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {byDay.map(({ day, pieces }) => (
-                        <span key={day} data-testid={`lab-wizard-day-${day}`} className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#cfd6da] bg-[#1e1e1e] border border-[#333] rounded-full px-2.5 py-1">
+                        <button key={day} data-testid={`lab-wizard-day-${day}`} onClick={() => generateToday(day)}
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#cfd6da] bg-[#1e1e1e] border border-[#333] rounded-full px-2.5 py-1 active:scale-95 hover:border-[#ff6b00]/70 transition-all">
                           <span className="text-[#ff6b00] font-bold">{dayLabel(day)}</span>
                           <span className="font-mono-data">{pieces}</span>
-                        </span>
+                        </button>
                       ))}
                     </div>
                   </div>
                 )}
                 {(flourTot > 0 || waterTot > 0) && (
                   <div data-testid="lab-wizard-shopping" className="mt-3 pt-2.5 border-t border-[#2a2a2a]">
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5">{tri("Spesa stimata", "Geschätzter Einkauf", "Estimated shopping", "Compra estimada", "Achats estimés", "خرید تخمینی")}</p>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Spesa stimata", "Geschätzter Einkauf", "Estimated shopping", "Compra estimada", "Achats estimés", "خرید تخمینی")}</p>
+                      {(flourTypes.length > 1 || prefermentTot > 0) && (
+                        <button data-testid="lab-wizard-shop-expand" onClick={() => setShopOpen((v) => !v)} className="text-[10px] font-bold text-[#ff6b00] inline-flex items-center gap-0.5">
+                          {shopOpen ? tri("meno", "weniger", "less", "menos", "moins", "کمتر") : tri("dettagli", "Details", "details", "detalles", "détails", "جزئیات")}
+                          {shopOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                        </button>
+                      )}
+                      {onOpenTool && (
+                        <button data-testid="lab-wizard-open-shopping" onClick={() => onOpenTool("spesa")}
+                          className="ms-auto inline-flex items-center gap-1 text-[10.5px] font-bold text-white bg-[#ff6b00] px-2.5 py-1 rounded-full active:scale-95 hover:bg-[#ff8226] transition-all">
+                          <ShoppingCart className="w-3 h-3" /> {tri("Lista completa", "Volle Liste", "Full list", "Lista completa", "Liste complète", "لیست کامل")}
+                        </button>
+                      )}
+                    </div>
                     <div className="flex flex-wrap gap-1.5">
                       <span data-testid="lab-wizard-flour" className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#cfd6da] bg-[#1e1e1e] border border-[#333] rounded-full px-3 py-1">
                         🌾 <span className="text-[#F0B429]">{tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")}</span> <span className="font-mono-data text-white">{fmtQty(flourTot)}</span>
@@ -290,7 +354,23 @@ export default function LabWizard({ onOpenTool }) {
                           💧 <span className="text-[#5aa9e6]">{tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")}</span> <span className="font-mono-data text-white">{fmtQty(waterTot)}</span>
                         </span>
                       )}
+                      {prefermentTot > 0 && (
+                        <span data-testid="lab-wizard-preferment" className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#cfd6da] bg-[#1e1e1e] border border-[#333] rounded-full px-3 py-1">
+                          🫧 <span className="text-[#C77D48]">{tri("Prefermento", "Vorteig", "Preferment", "Prefermento", "Préferment", "پیش‌خمیر")}</span> <span className="font-mono-data text-white">{fmtQty(prefermentTot)}</span>
+                        </span>
+                      )}
                     </div>
+                    {shopOpen && flourTypes.length > 0 && (
+                      <div data-testid="lab-wizard-flour-detail" className="mt-2 space-y-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Farine per tipo (W/forza)", "Mehle nach Typ (W)", "Flours by type (W)", "Harinas por tipo (W)", "Farines par type (W)", "آردها بر اساس نوع")}</p>
+                        {flourTypes.map(([type, g], i) => (
+                          <div key={i} data-testid={`lab-wizard-flour-type-${i}`} className="flex items-center justify-between gap-2 text-[12px]">
+                            <span className="text-[#cfd6da] truncate">{type}</span>
+                            <span className="font-mono-data font-bold text-white shrink-0">{fmtQty(g)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -301,11 +381,33 @@ export default function LabWizard({ onOpenTool }) {
                 <p className="text-sm text-[#ff6b00] font-semibold mb-2.5">
                   {tri("🎉 Percorso completato! Genera il piano di produzione di oggi, pronto da stampare.", "🎉 Ablauf abgeschlossen! Erstelle den heutigen Produktionsplan, druckfertig.", "🎉 Path complete! Generate today's production plan, ready to print.", "🎉 ¡Ruta completada! Genera el plan de producción de hoy, listo para imprimir.", "🎉 Parcours terminé ! Génère le plan de production du jour, prêt à imprimer.", "🎉 مسیر کامل شد! برنامهٔ تولید امروز را بساز، آمادهٔ چاپ.")}
                 </p>
-                <button data-testid="lab-wizard-generate-today" onClick={generateToday}
+                <button data-testid="lab-wizard-generate-today" onClick={() => generateToday()}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm bg-[#ff6b00] text-white shadow-[0_4px_14px_rgba(255,107,0,0.4)] active:scale-95 hover:bg-[#ff8226] transition-all">
                   <Sparkles className="w-4 h-4" />
                   {tri("Genera il piano di oggi", "Heutigen Plan erstellen", "Generate today's plan", "Generar el plan de hoy", "Générer le plan du jour", "ساخت برنامهٔ امروز")}
                 </button>
+              </div>
+            )}
+
+            {/* Sfida della settimana: prova una ricetta nuova (torna ogni lunedì) */}
+            {challenge && (
+              <div data-testid="lab-wizard-challenge" className={`mt-3 rounded-2xl border p-3.5 flex items-start gap-3 ${chalDone ? "border-[#ff6b00]/60 bg-[#ff6b00]/10" : "border-[#3a3a3a] bg-[#181818]"}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${chalDone ? "bg-[#ff6b00] text-white" : "bg-[#2a2a2a] text-[#F0B429]"}`}>
+                  <Trophy className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Sfida della settimana", "Challenge der Woche", "Weekly challenge", "Reto de la semana", "Défi de la semaine", "چالش هفته")}</p>
+                  <h3 className="font-display text-sm font-bold text-white mt-0.5 leading-tight">
+                    {tri("Prova una ricetta nuova:", "Probiere ein neues Rezept:", "Try a new recipe:", "Prueba una receta nueva:", "Essaie une nouvelle recette :", "یک دستور جدید امتحان کن:")} <span className="text-[#ff6b00]">{recipeTitle(challenge, lang)}</span>
+                  </h3>
+                  <button data-testid="lab-wizard-challenge-done" onClick={toggleChallenge}
+                    className={`mt-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-semibold text-sm border transition-all active:scale-95 ${chalDone ? "border-[#ff6b00] text-[#ff6b00] bg-[#ff6b00]/10" : "border-[#3a3a3a] text-[#9aa4ab] hover:border-[#ff6b00]/60"}`}>
+                    <Check className="w-4 h-4" />
+                    {chalDone
+                      ? tri("Provata! 🏆", "Geschafft! 🏆", "Tried! 🏆", "¡Probada! 🏆", "Essayée ! 🏆", "امتحان شد! 🏆")
+                      : tri("L'ho provata", "Ausprobiert", "I tried it", "La probé", "Je l'ai essayée", "امتحانش کردم")}
+                  </button>
+                </div>
               </div>
             )}
 

@@ -2339,3 +2339,11 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **Contrasto gate Community** (`Community.jsx` `community-auth-gate`): card ridisegnata dark (gradiente arancio→#1e1e1e) con testo bianco ad alto contrasto e CTA arancione con ombra (coerente con la regola dark: statico bianco, cliccabile arancio).
 - **Filtro Base + Categoria**: già combinati in `RecipeList` (condizioni AND su `catFilter` e `baseFilter`) — verificato, nessuna modifica necessaria.
 - Verificato a schermo: wizard "Week summary" (102 pz, per-giorno Mon/Wed, farina/acqua), gate Community dark. Compilazione pulita. Nessuna funzione/dato rimosso.
+
+## v-fork.78 (2026-06) — Wizard: spesa dettagliata, sfida settimana, condividi/stampa, chip giorno cliccabili
+- **Spesa dettagliata** (`lab-wizard-shopping`): oltre a Farina/Acqua ora mostra Prefermento (🫧) e un espandibile "dettagli" (`lab-wizard-shop-expand`) con Farine per tipo (W/forza) da `computeShopping.flourByType`; pulsante "Lista completa" (`lab-wizard-open-shopping` → `onOpenTool('spesa')`).
+- **Sfida della settimana** (`lab-wizard-challenge`): al completamento del percorso propone una ricetta NUOVA (non nel piano, stabile per settimana via hash isoWeek) con toggle "L'ho provata"/"Provata! 🏆" persistito per settimana (`mikilab_wizard_challenge`) + toast. Invoglia il ritorno ogni lunedì.
+- **Condividi/Stampa riepilogo** (`lab-wizard-share`, `lab-wizard-print`): share nativo/clipboard del testo riepilogo (ricette+per-giorno+spesa) e `window.print()`.
+- **Chip "Per giorno" cliccabili** (`lab-wizard-day-<gg>`): toccando un giorno si genera il piano SOLO per quel giorno — evento `mikilab-generate-today` con `detail.day`; in `PianoProduzioneAI` il listener filtra `weeklyItems` per `w.day===day`. Fix: `generateToday` non passa più l'evento click come giorno (onClick wrapper).
+- Verificato a schermo: tutti i testid presenti, 0 errori JS; sfida toggla a "Tried! 🏆", spesa mostra 25.44/21.56/5.09 kg + farine per tipo, chip giorno generano senza crash.
+- IN SOSPESO (approvato ma da fare "uno alla volta"): refinement dark/ordinato di uno strumento del laboratorio (Piano Settimanale / Produzione Oggi) — attende conferma di quale.

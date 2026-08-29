@@ -784,9 +784,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
   // Genera automaticamente il piano di oggi dal Piano Settimanale (evento dal Percorso Guidato).
   useEffect(() => {
-    const onGen = () => {
+    const onGen = (e) => {
+      const day = e && e.detail && e.detail.day;
+      const src = day ? weeklyItems.filter((w) => w.day === day) : weeklyItems;
       const map = {};
-      weeklyItems.forEach((w) => {
+      src.forEach((w) => {
         if (!w.recipe_id) return;
         if (!map[w.recipe_id]) map[w.recipe_id] = { recipe_id: w.recipe_id, name: w.recipe_name || "", qty: 0, unit: "pezzi", gpp: w.grams_per_piece || "", day: "", start: false };
         map[w.recipe_id].qty += Number(w.pieces || 0);
