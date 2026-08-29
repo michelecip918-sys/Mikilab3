@@ -10,7 +10,7 @@ const SEEN_KEY = "mikilab_newsletter_popup_seen";
 
 export default function NewsletterPopup() {
   const { lang } = useLang();
-  const { user } = useAuth();
+  const { user, authOpen } = useAuth();
   const L = (...a) => mkTri(lang)(...a);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -47,7 +47,7 @@ export default function NewsletterPopup() {
 
   return (
     <AnimatePresence>
-      {open && (
+      {open && !authOpen && (
         <motion.div
           data-testid="newsletter-popup"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}

@@ -410,7 +410,7 @@ export default function Beginners({ onNavigate }) {
       <AvatarBubbles variant="impara" />
 
       <button data-testid="impara-livelli-btn" onClick={() => setImparaLiv(true)}
-        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white shadow-md active:scale-98 transition-all text-left">
+        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#F0B429] to-[#ff6b00] text-white shadow-md active:scale-98 transition-all text-left hover:shadow-lg">
         <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0"><Trophy className="w-6 h-6 text-[#f0dcb4]" /></div>
         <div className="flex-1 min-w-0">
           <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Impara a Livelli", "Lernen nach Stufen", "Learn by Levels", "Aprende por Niveles", "Apprendre par Niveaux", "یادگیری مرحله‌ای")}</h3>
@@ -420,7 +420,7 @@ export default function Beginners({ onNavigate }) {
       </button>
 
       <button data-testid="impara-askmaster-btn" onClick={() => setAskMaster(true)}
-        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white shadow-md active:scale-98 transition-all text-left">
+        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white shadow-md active:scale-98 transition-all text-left hover:shadow-lg">
         <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><MessageCircle className="w-6 h-6" /></div>
         <div className="flex-1 min-w-0">
           <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Chiedi al Maestro", "Frag den Meister", "Ask the Master", "Pregunta al Maestro", "Demande au Maître", "از استاد بپرس")}</h3>

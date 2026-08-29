@@ -232,6 +232,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
   const [pendingGenerate, setPendingGenerate] = useState(false);
+  const printAfterRef = useRef(false);
   const [weeklyStartId, setWeeklyStartId] = useState("");
   const [extraToday, setExtraToday] = useState([]);
   const [extraOpen, setExtraOpen] = useState(false);
@@ -799,6 +800,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       }
       setUseWeekly(false);
       setProducts(prods);
+      printAfterRef.current = true;
       setPendingGenerate(true);
     };
     window.addEventListener("mikilab-generate-today", onGen);
@@ -810,7 +812,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       setPendingGenerate(false);
       const el = document.querySelector('[data-testid="capo-generate"]');
       el && el.scrollIntoView({ behavior: "smooth", block: "center" });
-      generate();
+      (async () => {
+        await generate();
+        if (printAfterRef.current) {
+          printAfterRef.current = false;
+          setTimeout(() => { try { window.print(); } catch { /* */ } }, 700);
+        }
+      })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingGenerate, canGenerate, generating]);

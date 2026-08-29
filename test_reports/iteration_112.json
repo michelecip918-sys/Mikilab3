@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend-only regression test (mobile 390x844, EN default) of the 7 requested areas on the public preview URL, logged in as fornaio@mikilab.de. LabWizard 3-step gating, week summary/byDay, generate-today, collapse & reset all verified working. Recipe category badges + colored category filter chips verified (no raw JSX text). RecipeDialog category select has NO 'pane' option and starts on placeholder. Community gate (guest) + board heading & 4 posts (logged) verified. Impara page + both gradient buttons and back navigation verified. No JS page errors, no 5xx API errors observed.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Community guest gate (community-auth-gate)", "issues": ["Sub-text 'Register to see the feed, colleagues, marketplace and join the challenges.' is mid-grey on the full-orange card => low contrast; title text is dark-on-orange. Consider white/near-white text on the orange card."]},
+      {"screen": "Recipes list / global", "issues": ["Floating 'Radio' FAB (bottom-left) overlaps recipe cards / wizard content on 390px width; it sits on top of list rows."]},
+      {"screen": "Login flow", "issues": ["NewsletterPopup can appear right after clicking 'Sign in' and covers the auth modal / blocks bottom-nav clicks until dismissed (z-[85] full-screen overlay). Not a functional bug but hurts first-run UX and automation."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: raise contrast of text inside community-auth-gate orange card.",
+    "Optional: prevent NewsletterPopup from opening while auth modal is open.",
+    "Optional: keep Radio FAB from overlapping list content on small screens."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is 1826 lines and RecipeList.jsx 1260 lines — both exceed the 700-line guideline; consider splitting into focused modules.",
+    "LabWizard: 'lab-wizard-mark-1' is intentionally hidden when the weekly plan exists (auto-complete). Fine, but note tests must not assume mark-1 exists.",
+    "LabWizard summary key fallback uses Math.random() when recipe_id/recipe_name are missing — produces unstable React-independent map keys; prefer index-based fallback."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "100% of requested flows passed (7/7)" },
+  "seed_data_creation": "None. Used existing account fornaio@mikilab.de and its existing weekly plan (Anima Integrale 62 pz, Baguette a Lievito Madre 40 pz). Wizard manual step flags were toggled and then reset via lab-wizard-reset.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "fornaio@mikilab.de / Mikilab2026! (login-btn -> auth-tab-login -> auth-email/auth-password -> auth-submit)",
+  "context_for_next_testing_agent": "Correct testids: header login button is 'login-btn' (NOT header-login-btn); bottom nav social tab is 'nav-tab-community' (NOT nav-tab-social); auth submit is 'auth-submit'. Overlays to dismiss after load/login/lab entry: newsletter-popup-close, intro-start-btn, lab-tour-skip, lab-onboarding-skip (newsletter popup can appear with delay, re-run the dismiss helper). Verified results: lab-wizard step1 auto-complete from saved weekly plan, cta-3 disabled while locked, mark-2 -> 67% and step3 unlocks, mark-3 -> 100% + lab-wizard-complete + lab-wizard-generate-today (click actually generated today's plan, no crash, no PRO block for this account), collapse hides steps, reset returns to 33%/step3 locked. Recipes: rows are inside collapsed folders (cat-folder-<key>), so recipe-cat-icon-* badges only render after expanding a folder (32 badges in viennoiserie, colored rgba(232,130,58,.15)). cat-filter-pane leaves only cat-section-pane; cat-filter-all restores all 5 sections. RecipeDialog options: '', basi, panini, viennoiserie, focacce, snack. Community: guest -> community-auth-gate; logged -> community-board-heading + 4 community-post-*.",
+  "rca_of_the_issue": "N/A - no functional defects reproduced. 401s on /api/auth/me, /api/notifications, /api/friends occur only in the guest state and are expected."
+}

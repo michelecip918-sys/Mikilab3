@@ -2324,3 +2324,12 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **Community Dark** (`Community.jsx`): intestazione tematica "Bacheca della community" (`community-board-heading`, icona in badge arancio); post card più leggibili sul nero (`dark:bg-[#1c1c1c]`, bordo `#343434`, shadow-md, hover arancio) con accento colore categoria a sinistra (`borderLeft` = colore categoria).
 - **Icone Categoria** (`recipeCats.js` + `RecipeList.jsx`): nuova mappa `CAT_COLORS` (basi oro, viennoiserie ambra, pane crosta, focacce oliva, snack rosso-brezel). Badge colorato per riga ricetta (`recipe-cat-icon-<id>`) + badge/contatore colorato nelle intestazioni cartella categoria.
 - Verificato a schermo: wizard 100% con summary (es. 102 pz), CTA genera presente; ricette con badge colorati; Community (loggato) con heading + 4 post accentati. Nessun doppione, nessuna funzione rimossa.
+
+## v-fork.76 (2026-06) — 4 Next Actions + rifiniture, testato 100%
+- **Stampa Piano** (PianoProduzioneAI): dopo la generazione avviata dal wizard (evento `mikilab-generate-today`), `printAfterRef` → `window.print()` automatico a piano pronto.
+- **Riepilogo per Giorno** (LabWizard `lab-wizard-byday`): chip Lun–Dom con totale pezzi per giorno, sotto il riepilogo ricette (6 lingue).
+- **Filtro Colore categorie** (RecipeList `recipe-cat-filters`): riga chip colorate (cat-filter-all + 5 categorie) che filtrano via `catFilter`; colori da `CAT_COLORS`. FIX: ripristinato ternario `filtered.length===0 ? ... : ...` (un edit precedente aveva rotto il JSX facendo comparire testo grezzo `) : (`).
+- **Reset Automatico Lunedì** (LabWizard): `isoWeekKey` + `mikilab_wizard_week`; a nuova settimana azzera i flag manuali del percorso senza toccare dati salvati.
+- **Impara** (Beginners): pulsanti `impara-livelli-btn` (gradiente oro→arancio) e `impara-askmaster-btn` (arancio→arancio scuro) resi distinti + hover shadow.
+- **Fix UX**: `NewsletterPopup` non appare più sopra il modale di login (`open && !authOpen`).
+- Testato: iteration_112 → 7/7 flussi frontend PASS (100%), nessun errore JS/5xx. Rimaste solo rifiniture opzionali (contrasto card auth-gate, FAB Radio su schermi piccoli).

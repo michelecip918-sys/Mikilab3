@@ -6,8 +6,18 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const MANUAL_KEY = "mikilab_wizard_manual";
+const WEEK_KEY = "mikilab_wizard_week";
 const readManual = () => { try { return JSON.parse(localStorage.getItem(MANUAL_KEY)) || {}; } catch { return {}; } };
 const writeManual = (m) => { try { localStorage.setItem(MANUAL_KEY, JSON.stringify(m)); } catch { /* */ } };
+const DAY_ORDER = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
+function isoWeekKey(d = new Date()) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil((((t - yearStart) / 86400000) + 1) / 7);
+  return `${t.getUTCFullYear()}-W${wk}`;
+}
 
 // Percorso guidato a 3 step sbloccabili per "Il Tuo Laboratorio".
 // Arricchisce (non sostituisce) gli strumenti: sotto restano tutte le sezioni esistenti.
@@ -37,6 +47,16 @@ export default function LabWizard({ onOpenTool }) {
 
   useEffect(() => { refresh(); }, [refresh]);
 
+  // Reset automatico del percorso a ogni nuova settimana (lunedì), senza toccare i dati salvati.
+  useEffect(() => {
+    try {
+      const cur = isoWeekKey();
+      const stored = localStorage.getItem(WEEK_KEY);
+      if (stored && stored !== cur) { setManual({}); writeManual({}); }
+      localStorage.setItem(WEEK_KEY, cur);
+    } catch { /* */ }
+  }, []);
+
   // Riepilogo settimana: ricette scelte + totale pezzi (aggregato su tutti i giorni)
   const summary = useMemo(() => {
     const map = {};
@@ -48,6 +68,19 @@ export default function LabWizard({ onOpenTool }) {
     return Object.values(map).sort((a, b) => b.pieces - a.pieces);
   }, [weeklyItems]);
   const totalPieces = summary.reduce((s, x) => s + x.pieces, 0);
+
+  // Riepilogo per giorno della settimana
+  const byDay = useMemo(() => {
+    const m = {};
+    weeklyItems.forEach((w) => { const d = w.day || "?"; m[d] = (m[d] || 0) + Number(w.pieces || 0); });
+    return DAY_ORDER.filter((d) => m[d] > 0).map((d) => ({ day: d, pieces: m[d] }));
+  }, [weeklyItems]);
+  const dayLabel = (d) => ({
+    lun: tri("Lun", "Mo", "Mon", "Lun", "Lun", "دو"), mar: tri("Mar", "Di", "Tue", "Mar", "Mar", "سه"),
+    mer: tri("Mer", "Mi", "Wed", "Mié", "Mer", "چه"), gio: tri("Gio", "Do", "Thu", "Jue", "Jeu", "پن"),
+    ven: tri("Ven", "Fr", "Fri", "Vie", "Ven", "جم"), sab: tri("Sab", "Sa", "Sat", "Sáb", "Sam", "شن"),
+    dom: tri("Dom", "So", "Sun", "Dom", "Dim", "یک"),
+  }[d] || d);
 
   const generateToday = () => {
     window.dispatchEvent(new CustomEvent("mikilab-generate-today"));
@@ -218,6 +251,19 @@ export default function LabWizard({ onOpenTool }) {
                     <p className="text-[11px] text-[#7E8A93] pt-0.5">+{summary.length - 8} {tri("altre ricette", "weitere Rezepte", "more recipes", "más recetas", "autres recettes", "دستور دیگر")}</p>
                   )}
                 </div>
+                {byDay.length > 0 && (
+                  <div data-testid="lab-wizard-byday" className="mt-3 pt-2.5 border-t border-[#2a2a2a]">
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5">{tri("Per giorno", "Pro Tag", "By day", "Por día", "Par jour", "به تفکیک روز")}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {byDay.map(({ day, pieces }) => (
+                        <span key={day} data-testid={`lab-wizard-day-${day}`} className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#cfd6da] bg-[#1e1e1e] border border-[#333] rounded-full px-2.5 py-1">
+                          <span className="text-[#ff6b00] font-bold">{dayLabel(day)}</span>
+                          <span className="font-mono-data">{pieces}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

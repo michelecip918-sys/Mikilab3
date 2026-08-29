@@ -386,6 +386,27 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </div>
             )}
 
+            {/* Filtro rapido per categoria (chip colorate) */}
+            <div data-testid="recipe-cat-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 px-0.5 scrollbar-none max-w-full">
+              <button data-testid="cat-filter-all" onClick={() => setCatFilter("all")}
+                className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${catFilter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2b2b2b] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                {triM("Tutte", "Alle", "All")}
+              </button>
+              {CATS.map((c) => {
+                const active = catFilter === c.key;
+                const col = CAT_COLORS[c.key] || "#ff6b00";
+                return (
+                  <button key={c.key} data-testid={`cat-filter-${c.key}`} onClick={() => setCatFilter(active ? "all" : c.key)}
+                    className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97"
+                    style={active
+                      ? { background: col, color: "#fff", borderColor: col, boxShadow: `0 3px 10px ${col}55` }
+                      : { background: "transparent", color: col, borderColor: col + "66" }}>
+                    <span>{c.icon}</span>{t(c.label)}
+                  </button>
+                );
+              })}
+            </div>
+
             {filtered.length === 0 ? (
               <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
                 {triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
