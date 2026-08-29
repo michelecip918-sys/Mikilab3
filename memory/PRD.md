@@ -2202,3 +2202,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Box "Ordine extra di oggi" evidenziato** (`capo-extra-today`): cornice/gradiente forte, badge "ALL'ULTIMO MINUTO", descrizione più chiara. Verificato a schermo.
 - Compilazione OK. NB: i banner WeeklyPlan verificati via codice (non a schermo, richiede tool settimana/login); serve Redeploy per produzione.
 - IN SOSPESO (approvati "Next Action ok" ma non ancora costruiti per budget): Categoria in salvataggio ricetta, Icone categoria nelle liste, Filtro rapido categorie nel piano.
+
+## v-fork.58 (2026-06) — Laboratorio: sezioni "INIZIA" + "SCEGLI ANCHE" unite
+- Le due sezioni ora sono UNA sola `<Section>` titolata "INIZIA — passi base e interruttori" (PianoProduzioneAI.jsx): in alto i 4 pulsanti (Inserisci Ricette, Piano Giornaliero, Produzione Settimanale, Calcolatore Metodo) + "Come si fa?", poi divisore, poi hint ON/OFF + griglia interruttori. Rimosso il blocco `capo-quicklinks` standalone. Verificato a schermo (IT), nessun errore compilazione.
+- DA COSTRUIRE (approvati "fai tutto", batch grande - prossimo turno): 1) Categoria+nome reale nel form di salvataggio ricetta; 2) Icone categoria nelle liste; 3) Filtro rapido categorie nel piano; 4) Piano settimanale suggerito dall'IA dai prodotti più frequenti.

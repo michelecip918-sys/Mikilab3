@@ -794,35 +794,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      {onOpenTool && (
-        <div data-testid="capo-quicklinks" className="mb-5">
-          <div className="flex items-center justify-between">
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[#6E371C] dark:text-[#a9d2ec] mb-0.5">
-              {tri3(lang, "INIZIA", "START", "START")}
-            </p>
-            <button data-testid="lab-tour-replay" onClick={() => setTourForce((n) => n + 1)}
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#8C4A27] px-2.5 py-1 rounded-full border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] active:scale-95 transition-all">
-              <HelpCircle className="w-3.5 h-3.5" /> {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
-            </button>
-          </div>
-          <p className="text-[10.5px] text-[#7E8A93] mb-2">{tri3(lang, "Passi base per generare il piano", "Basisschritte für den Plan", "Base steps to generate the plan")}</p>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { id: "aggiungi", Icon: BookOpen, label: tri3(lang, "Inserisci Ricette", "Rezepte hinzufügen", "Add Recipes") },
-              { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Piano Giornaliero", "Tagesplan", "Daily Plan") },
-              { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
-              { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Metodo", "Methoden-Rechner", "Method Calculator") },
-            ].map(({ id, Icon, label }) => (
-              <button key={id} data-testid={`capo-quickstart-${id}`} onClick={() => onOpenTool(id)}
-                className="flex items-center gap-2 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
-                <Icon className="w-5 h-5 shrink-0" />
-                <span className="text-[12px] font-bold leading-tight">{label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {(mixers.length === 0 || cells.length === 0) && modules.celle && (
         <div data-testid="capo-setup-hint" className="mb-4 rounded-2xl bg-[#C88A2B]/12 border border-[#C88A2B]/35 p-3.5">
           <p className="text-sm text-[#6E371C] dark:text-[#8FB0C2] leading-snug">
@@ -866,7 +837,33 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         </div>
       )}
-      <Section order={1} icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "SCEGLI ANCHE (interruttori del piano)", "AUCH WÄHLEN (Plan-Schalter)", "ALSO CHOOSE (plan switches)")}>
+      <Section order={1} icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "INIZIA — passi base e interruttori", "START — Basisschritte & Schalter", "START — base steps & switches")}>
+        {onOpenTool && (
+          <div data-testid="capo-quicklinks" className="mb-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[10.5px] text-[#7E8A93]">{tri3(lang, "Passi base per generare il piano", "Basisschritte für den Plan", "Base steps to generate the plan")}</p>
+              <button data-testid="lab-tour-replay" onClick={() => setTourForce((n) => n + 1)}
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#8C4A27] px-2.5 py-1 rounded-full border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] active:scale-95 transition-all">
+                <HelpCircle className="w-3.5 h-3.5" /> {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              {[
+                { id: "aggiungi", Icon: BookOpen, label: tri3(lang, "Inserisci Ricette", "Rezepte hinzufügen", "Add Recipes") },
+                { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Piano Giornaliero", "Tagesplan", "Daily Plan") },
+                { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
+                { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Metodo", "Methoden-Rechner", "Method Calculator") },
+              ].map(({ id, Icon, label }) => (
+                <button key={id} data-testid={`capo-quickstart-${id}`} onClick={() => onOpenTool(id)}
+                  className="flex items-center gap-2 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
+                  <Icon className="w-5 h-5 shrink-0" />
+                  <span className="text-[12px] font-bold leading-tight">{label}</span>
+                </button>
+              ))}
+            </div>
+            <div className="h-px bg-[#E6D8C3] dark:bg-[#38424B] my-4" />
+          </div>
+        )}
         <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#C88A2B]/15 border border-[#C88A2B]/45 px-3 py-2.5">
           <SlidersHorizontal className="w-4 h-4 text-[#A66A15] shrink-0" />
           <p className="text-[12px] font-bold text-[#7a4e12] dark:text-[#E4C98B] leading-snug">
