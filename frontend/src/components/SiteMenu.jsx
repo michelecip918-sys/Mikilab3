@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Home as HomeIcon, BookOpen, Wrench, GraduationCap, Users, Trophy, Menu, Search, Star,
-  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame } from "lucide-react";
+  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import { TOOLS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -13,6 +14,7 @@ const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u
 // Social → voci social + ordina feed) + una lista compatta per saltare tra le sezioni.
 export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const { lang } = useLang();
+  const { user } = useAuth();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -203,6 +205,13 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-white/20"><Trophy className="w-4 h-4" /></span>
               <span className="font-display text-sm font-semibold">{tri("Motore Sfide", "Challenges", "Challenges", "Desafíos")}</span>
             </button>
+            {user?.role === "admin" && (
+              <button data-testid="site-menu-admin" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-admin")); }}
+                className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#232A31] border border-[#B45309]/40 active:scale-98 hover:border-[#B45309]/70 transition-all">
+                <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#B45309]/15"><Shield className="w-4 h-4 text-[#B45309]" /></span>
+                <span className="font-display text-sm font-semibold text-[#B45309]">{tri("Pannello Admin", "Admin-Panel", "Admin Panel", "Panel Admin")}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

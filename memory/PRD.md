@@ -2161,3 +2161,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **index.html**: default riposizionati su "Panificazione, Pizzeria & Pasticceria · 100% gratis", og:locale + alternates (it/de/en/es/fr/fa), nuovo og-image, apple title MikiLab, hreflang fr aggiunto.
 - **Fix i18n Home**: `L()` ora inoltra tutte e 6 le lingue → hero e selettore laboratori ora tradotti anche in FR/FA (prima ricadevano su EN).
 - Verificato: `/fr` → title/OG/description/immagine in francese, html lang=fr, hero+selettore in francese; endpoint share testati per it/en/es/fr/de; og-*.jpg 200. NB: preview ≠ produzione → serve REDEPLOY.
+
+## v-fork.52 (2026-06) — Fix header (MikiLab non più coperto) + Admin spostato nel menu
+- **Header** (`Header.jsx`): blocco brand ora `flex-1 min-w-0` con `truncate` su "MikiLab" → non viene MAI coperto dal selettore lingua (fix "IT copre MikiLab"). Orologio nascosto sotto 560px. Selettore lingua più compatto.
+- **Tasto "VIP"/corona rimosso dall'header**: era il Pannello Admin (solo admin). Spostato nel menu ☰ come voce "Pannello Admin" (icona Shield, `site-menu-admin`, solo `user.role==="admin"`), che apre l'AdminPanel via evento `mikilab-open-admin` (listener in Header). Meno affollamento nell'header e coerente col modello 100% gratis (niente più "VIP").
+- Verificato via screenshot @412px: "MikiLab" + sottotitolo pienamente leggibili, nessuna sovrapposizione.
+- NB: queste modifiche NON sono nel deploy già avviato → servirà un nuovo Redeploy per portarle in produzione.
