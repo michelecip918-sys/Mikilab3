@@ -2395,3 +2395,9 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 
 ## v-fork.86 (2026-06) — Puntino notifica sull'assistente
 - **Notifica sul fumetto** (`AvatarBubbles.jsx`): puntino arancione lampeggiante (`assistant-dot`, animate-pulse, ring sul fondo) sull'avatar di Mohammadreza quando c'è un suggerimento attivo (`hint`): piano settimanale non salvato (lab) o sfida della settimana da provare (home/impara). Verificato a schermo, 0 errori JS.
+
+## v-fork.87 (2026-06) — Controllo pre-lancio (iteration 113) + fix
+- **Test pre-lancio**: Backend 19/19 pytest PASS (auth, 121 ricette con nomi localizzati/no _id, GET pubblici, community/market, weekly-plan, challenges, quiz IA guest+logged). 0 errori 5xx. Frontend ~90% (7.5/8).
+- **FIX HIGH**: `Maestro.jsx` importava `AvatarBubbles` ma non lo renderizzava → aggiunto `<AvatarBubbles variant="lab" />` sopra il LabWizard. Ora Michele (apre "Aggiungi ricetta") e Mohammadreza (scrolla al Percorso Guidato) + hint piano settimanale + puntino notifica compaiono nel Laboratorio. Verificato a schermo.
+- **FIX MEDIUM**: `NewsletterPopup` copriva l'intera schermata (fixed inset-0) bloccando la bottom-nav → cambiato in `fixed inset-x-0 top-0 bottom-20` così la barra di navigazione resta cliccabile mentre il popup è aperto.
+- Deploy in corso (job avviato). Pronti al lancio.

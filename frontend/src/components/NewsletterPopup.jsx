@@ -51,7 +51,7 @@ export default function NewsletterPopup() {
         <motion.div
           data-testid="newsletter-popup"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[85] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-x-0 top-0 bottom-20 z-[85] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
           onClick={dismiss}
         >
           <motion.div
