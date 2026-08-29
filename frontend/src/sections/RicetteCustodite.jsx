@@ -742,7 +742,7 @@ export default function RicetteCustodite({ initialId = null }) {
               <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{L({ it: "Quanta farina hai?", de: "Wie viel Mehl hast du?", en: "How much flour do you have?", es: "¿Cuánta harina tienes?", fr: "Combien de farine as-tu ?" })}</span>
               <input data-testid="custodite-flour" type="number" inputMode="numeric" value={flour} onChange={(e) => setFlour(e.target.value)} className={inp} />
               <span className="text-sm text-[#7E8A93]">g</span>
-              <div className="flex gap-1.5 ml-auto">
+              <div className="flex gap-1.5 ms-auto">
                 {[500, 1000, 2000].map((v) => (
                   <button key={v} data-testid={`custodite-quick-${v}`} onClick={() => setFlour(v)}
                     className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] active:scale-95">{v >= 1000 ? `${v / 1000}kg` : `${v}g`}</button>
@@ -806,7 +806,7 @@ export default function RicetteCustodite({ initialId = null }) {
       </div>
 
       {/* Filtri categoria */}
-      <div className="flex gap-2 overflow-x-auto no-scrollbar mt-4 pb-1" data-testid="custodite-filters">
+      <div className="flex flex-wrap gap-2 mt-4 pb-1" data-testid="custodite-filters">
         {CATS.map((c) => (
           <button key={c.id} data-testid={`custodite-cat-${c.id}`} onClick={() => setCat(c.id)}
             className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all active:scale-95 ${cat === c.id ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#a9d2ec] border-[#E6D8C3] dark:border-[#38424B]"}`}>
@@ -818,9 +818,9 @@ export default function RicetteCustodite({ initialId = null }) {
       <div className="grid gap-3 mt-4">
         {list.map((r) => (
           <button key={r.id} data-testid={`custodite-open-${r.id}`} onClick={() => setOpenId(r.id)}
-            className="flex items-center gap-3 text-left rounded-2xl overflow-hidden border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] shadow-sm active:scale-98 transition-all hover:border-[#B45309]/50">
+            className="flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] shadow-sm active:scale-98 transition-all hover:border-[#B45309]/50">
             <img src={r.img} onError={onImgErr} alt="" className="w-24 h-24 object-cover shrink-0" />
-            <div className="py-2 pr-3 min-w-0">
+            <div className="py-2 pe-3 min-w-0">
               <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{r.flag} {L(r.name)}</p>
               <p className="text-xs text-[#7E8A93] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {L(r.place)}</p>
               <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1 line-clamp-2">{L(r.story)}</p>

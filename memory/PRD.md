@@ -2257,3 +2257,7 @@ Richiesta utente (ordine D-A-B-C-E + lista tassativa a 6 punti). TUTTO testato (
 **Rifiniture da iteration_109**: NewsletterPopup non appare più agli utenti loggati; rimosso prefisso icona ridondante nelle opzioni selettore.
 
 **Backlog residuo (P3)**: chip filtri `custodite-filters` tagliati a sinistra in RTL; bottom-nav 'Home'/'Social' in inglese (pre-esistente); rumore 401 in console per guest (innocuo). Anteprima piano in fase selezione ricette.
+
+## v-fork.65 (2026-06) — Rifinitura RTL Persiano
+- `RicetteCustodite.jsx`: filtri categoria da `overflow-x-auto` → `flex-wrap` (niente più chip tagliati a sinistra in RTL/FA); card lista con classi logiche `text-start` + `pe-3`; quick-buttons dosi `ml-auto` → `ms-auto`.
+- Verificato a schermo in FA: Home, Ricette, Laboratorio, Custodite (lista + dettaglio + tabella ingredienti) tutti allineati RTL correttamente, numeri/percentuali LTR.
