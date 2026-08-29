@@ -2189,3 +2189,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Editor formattazione**: markdown-lite nel corpo (`**grassetto**`, `*corsivo*`, `[testo](url)`) via `_md_lite()` + campo **URL immagine** (`nl-send-image`) inserita in cima all'email.
 - API `adminApi.newsletterSend(payload)` (unificata), `newsletterHistory()`.
 - Backend riavviato OK; endpoint testati. NB: serve Redeploy per la produzione.
+
+## v-fork.56 (2026-06) — Piano Produzione: categorie nel selettore + note UX
+- **Selettori ricette raggruppati per categoria** (`renderCatOptions` via `recipeCategory`): optgroup ✨ Basi, 🥐 Viennoiserie, 🍞 Pane, 🫓 Focacce, 🥨 Snack. Applicato a `capo-product-recipe`, `capo-extra-recipe`, `capo-weekly-start` (per gli iscritti/utenti). Verificato DOM: 121 ricette in 5 gruppi.
+- **Piano giornaliero "solo per oggi"** (`capo-today-note`): nota sotto il toggle quando in modalità "Ordine di oggi" — spiega che è valido solo per oggi e non tocca il Piano Settimanale. 4 lingue.
+- **Box "Parti con impasto a tua scelta"** (`capo-weekly-start-box`): evidenziato (gradiente marrone + ring dorato), etichetta rinominata + nota esplicativa; opzioni raggruppate per categoria.
+- Verificato via screenshot/DOM; nessun errore compilazione. NB: serve Redeploy per la produzione.

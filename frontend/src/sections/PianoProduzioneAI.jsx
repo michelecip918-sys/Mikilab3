@@ -18,6 +18,7 @@ import { guideFor } from "@/lib/toolGuide";
 import { playSfx } from "@/lib/uiSounds";
 import { shareContent } from "@/lib/share";
 import { rLoc, recipeTitle } from "@/lib/loc";
+import { recipeCategory } from "@/lib/recipeCats";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
 import { mkTri, triFR, triFA } from "@/i18n/triMaps";
@@ -501,6 +502,21 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   }, []);
 
   const recipeById = useMemo(() => Object.fromEntries(recipes.map((r) => [r.id, r])), [recipes]);
+
+  // Raggruppa le ricette per categoria (Basi, Viennoiserie, Pane, Focacce, Snack) per i menu a tendina.
+  const catGroups = (list) => {
+    const groups = {};
+    list.forEach((r) => {
+      const c = recipeCategory(r);
+      (groups[c.key] = groups[c.key] || { label: c.label, icon: c.icon, rank: c.rank, items: [] }).items.push(r);
+    });
+    return Object.values(groups).sort((a, b) => a.rank - b.rank);
+  };
+  const renderCatOptions = (list) => catGroups(list).map((g) => (
+    <optgroup key={g.key || g.label} label={`${g.icon} ${t(g.label)}`}>
+      {g.items.map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
+    </optgroup>
+  ));
 
   const shopTotals = useMemo(() => {
     const list = products
@@ -1038,6 +1054,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <button data-testid="capo-switch-today" onClick={() => setUseWeekly(false)}
             className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${!useWeekly ? "bg-[#8C4A27] text-white shadow-sm" : "text-[#7E8A93]"}`}>{tri3(lang, "Ordine di oggi", "Heutige Bestellung", "Today's order", "Pedido de hoy")}</button>
         </div>
+        {!useWeekly && (
+          <p data-testid="capo-today-note" className="text-[11.5px] text-[#8C4A27] dark:text-[#e0b487] font-semibold mb-2 flex items-start gap-1.5 leading-snug">
+            <span>☀️</span>
+            <span>{tri3(lang,
+              "Calcola solo per oggi: è un piano valido soltanto per la giornata di oggi, non modifica il Piano Settimanale salvato.",
+              "Nur für heute: ein Plan, der nur für den heutigen Tag gilt und den gespeicherten Wochenplan nicht ändert.",
+              "Calculates for today only: a plan valid just for today, it doesn't change your saved Weekly Plan.",
+              "Calcula solo para hoy: un plan válido solo para hoy, no modifica el Plan Semanal guardado.")}</span>
+          </p>
+        )}
         <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
             <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
               className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#a9d2ec] border-[#E6D8C3] dark:border-[#38424B]"}`}>
@@ -1113,7 +1139,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
                     className="flex-1 min-w-0 bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#C88A2B]">
                     <option value="">{t("capo_pick_recipe")}</option>
-                    {recipes.map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
+                    {renderCatOptions(recipes)}
                   </select>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
@@ -1161,18 +1187,26 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   `Generating from the Weekly Plan (${weeklyItems.length} items). To change quantities/days open 'Weekly Production'.`)}
               </p>
             </div>
-            <div>
-              <label className="flex items-center gap-1.5 text-[11px] font-bold text-[#24303c] dark:text-[#a9d2ec] mb-1">
-                <Flag className="w-3.5 h-3.5" /> {tri3(lang, "Inizia con quale impasto?", "Mit welchem Teig beginnen?", "Start with which dough?")}
+            <div data-testid="capo-weekly-start-box" className="rounded-xl bg-gradient-to-br from-[#8C4A27] to-[#6E371C] p-3 ring-2 ring-[#D4AF37]/70 shadow-md">
+              <label className="flex items-center gap-1.5 text-[12px] font-extrabold text-white mb-1.5">
+                <Flag className="w-4 h-4 text-[#f0c9a3]" /> {tri3(lang, "Parti con impasto a tua scelta", "Starte mit deinem Wunschteig", "Start with the dough of your choice")}
               </label>
               <select data-testid="capo-weekly-start" value={weeklyStartId}
                 onChange={(e) => setWeeklyStartId(e.target.value)}
-                className="w-full bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]">
+                className="w-full bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2.5 text-sm outline-none focus:border-[#D4AF37]">
                 <option value="">{tri3(lang, "Lascia decidere all'IA", "KI entscheiden lassen", "Let the AI decide")}</option>
-                {[...new Map(weeklyItems.map((w) => [w.recipe_id, w])).values()].map((w) => (
-                  <option key={w.recipe_id} value={w.recipe_id}>{w.recipe_name}</option>
-                ))}
+                {(() => {
+                  const uniq = [...new Map(weeklyItems.map((w) => [w.recipe_id, w])).values()];
+                  const groups = {};
+                  uniq.forEach((w) => { const r = recipeById[w.recipe_id] || { name: w.recipe_name }; const c = recipeCategory(r); (groups[c.key] = groups[c.key] || { label: c.label, icon: c.icon, rank: c.rank, items: [] }).items.push(w); });
+                  return Object.values(groups).sort((a, b) => a.rank - b.rank).map((g) => (
+                    <optgroup key={g.label} label={`${g.icon} ${t(g.label)}`}>
+                      {g.items.map((w) => <option key={w.recipe_id} value={w.recipe_id}>{w.recipe_name}</option>)}
+                    </optgroup>
+                  ));
+                })()}
               </select>
+              <p className="text-[11px] text-white/80 mt-1.5 leading-snug">{tri3(lang, "Sottolinea da quale impasto vuoi iniziare la giornata: l'IA costruirà il piano attorno a questo.", "Wähle den Teig, mit dem du den Tag beginnst: die KI baut den Plan darum herum.", "Choose the dough to start the day with: the AI will build the plan around it.")}</p>
             </div>
           </div>
         )}
@@ -1189,11 +1223,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                       {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
                     </optgroup>
                   )}
-                  {recipes.some((r) => !r._own) && (
-                    <optgroup label={tri3(lang, "Ricette MikiLab", "MikiLab-Rezepte", "MikiLab recipes")}>
-                      {recipes.filter((r) => !r._own).map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
-                    </optgroup>
-                  )}
+                  {renderCatOptions(recipes.filter((r) => !r._own))}
                 </select>
                 <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
