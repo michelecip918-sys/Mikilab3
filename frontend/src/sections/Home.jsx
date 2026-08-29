@@ -15,6 +15,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
+import AvatarBubbles from "@/components/AvatarBubbles";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
 import { getProfile } from "@/components/Onboarding";
@@ -309,6 +310,9 @@ export default function Home({ onNavigate }) {
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
+      {/* Avatar: Michele operativo + Mohammadreza pronto ad aiutare */}
+      <AvatarBubbles variant="home" />
+
       {/* Promo Social: unisciti alla community MikiLab */}
       <button data-testid="home-social-promo" onClick={() => go("community")}
         className="w-full text-left rounded-3xl p-5 border-2 border-[#ff6b00] bg-gradient-to-br from-[#ff6b00] to-[#c94f00] shadow-[0_4px_0_rgba(0,0,0,.35),0_6px_14px_rgba(255,107,0,.3)] active:scale-98 transition-all flex items-center gap-4">
@@ -318,6 +322,17 @@ export default function Home({ onNavigate }) {
           <p className="text-white/90 text-[13px] leading-snug">{mkTri(lang)("Condividi i tuoi pani, sfida altri fornai e scopri il Social di MikiLab", "Teile deine Brote und entdecke das MikiLab Social", "Share your breads, challenge bakers and explore MikiLab Social", "Comparte tus panes y descubre el Social de MikiLab", "Partage tes pains et découvre le Social MikiLab", "نان‌هایت را به اشتراک بگذار و سوشیال میکی‌لب را کشف کن")}</p>
         </div>
         <ChevronRight className="w-6 h-6 text-white shrink-0" />
+      </button>
+
+      {/* Promo Mercatino dell'usato (nel Social) */}
+      <button data-testid="home-market-promo" onClick={() => { go("community"); setTimeout(() => { try { window.dispatchEvent(new CustomEvent("mikilab-social-view", { detail: { view: "market" } })); } catch { /* */ } }, 500); }}
+        className="w-full text-left rounded-2xl p-4 border border-[#ff6b00]/40 bg-[#1a1a1a] active:scale-98 transition-all flex items-center gap-3 hover:border-[#ff6b00]/70">
+        <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0" style={{ boxShadow: "inset 0 0 0 1px #ff6b00" }}><ShoppingBag className="w-5 h-5 text-[#ff6b00]" /></div>
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-base font-bold text-white leading-tight">{mkTri(lang)("Mercatino dell'usato", "Gebraucht-Markt", "Used market", "Mercadillo de segunda mano", "Marché d'occasion", "بازار دست‌دوم")}</p>
+          <p className="text-[#9aa4ab] text-[13px] leading-snug">{mkTri(lang)("Compra e vendi attrezzatura da forno tra fornai", "Kaufe und verkaufe Bäckerei-Ausrüstung", "Buy and sell bakery equipment between bakers", "Compra y vende equipo de panadería entre panaderos", "Achète et vends du matériel de boulangerie", "خرید و فروش تجهیزات نانوایی میان نانوایان")}</p>
+        </div>
+        <ChevronRight className="w-5 h-5 text-[#ff6b00] shrink-0" />
       </button>
 
       {/* HERO — 100% gratis (lead magnet: account gratuito) */}
@@ -645,9 +660,6 @@ export default function Home({ onNavigate }) {
           </div>
         </button>
       </div>
-
-      {/* Newsletter — lead magnet 100% gratis */}
-      <NewsletterSignup />
 
       {/* Condividi & Installa app */}
       <ShareInstall />

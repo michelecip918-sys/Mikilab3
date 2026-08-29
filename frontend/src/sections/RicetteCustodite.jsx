@@ -5,6 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { triFR, triFA } from "@/i18n/triMaps";
 import { toast } from "sonner";
 import SectionHero from "@/components/SectionHero";
+import MiglioratoreDetail from "@/components/MiglioratoreDetail";
 
 // "Le Ricette Custodite" — pani del Sud d'Italia + Germania, con il metodo di Michele.
 // Ogni ingrediente è in % sul peso della farina → "Adatta alle mie dosi" ricalcola tutto.
@@ -734,6 +735,7 @@ export default function RicetteCustodite({ initialId = null }) {
                 <span key={i} data-testid={`migl-chip-${i}`} className="text-[11px] font-semibold bg-white/15 border border-white/25 rounded-full px-2.5 py-1">{L(chip)}</span>
               ))}
             </div>
+            <MiglioratoreDetail />
           </div>
 
           {/* Adatta alle mie dosi */}

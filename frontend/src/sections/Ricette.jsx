@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed, Compass } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
+import AvatarBubbles from "@/components/AvatarBubbles";
 import SectionHero from "@/components/SectionHero";
 import { NovitaColorate } from "@/components/NovitaColorate";
 import PanettoneLabels from "@/sections/PanettoneLabels";
@@ -55,6 +56,7 @@ export default function Ricette() {
       <SectionHero testid="ricette-title" image="hero-ricette.jpg" position="50% 30%"
         title={mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
         subtitle={mkTri(lang)("Ricette artigianali spiegate passo dopo passo, con il mio metodo", "Handwerkliche Rezepte, Schritt für Schritt nach meiner Methode", "Artisan recipes explained step by step, with my method", "Recetas artesanales explicadas paso a paso, con mi método", "Recettes artisanales expliquées pas à pas, avec ma méthode", "دستورهای دست‌ساز، گام‌به‌گام با روش من")} />
+      <AvatarBubbles variant="ricette" />
       <div className="mb-4"><SaporeDelGiorno /></div>
       {coll === "mikilab" && (
         <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}
