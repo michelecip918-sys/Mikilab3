@@ -135,7 +135,6 @@ export default function Maestro() {
         {tool === "timer" && <Timer />}
         {tool === "meteo" && <Meteo />}
         {tool === "twin" && <DoughTwin />}
-        {tool === "market" && <Marketplace />}
         {tool === "lotti" && <BatchTraceability />}
         {tool === "settimana" && <WeeklyPlan />}
         {tool === "inversa" && <BackwardScheduler />}

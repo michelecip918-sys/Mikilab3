@@ -2401,3 +2401,8 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **FIX HIGH**: `Maestro.jsx` importava `AvatarBubbles` ma non lo renderizzava → aggiunto `<AvatarBubbles variant="lab" />` sopra il LabWizard. Ora Michele (apre "Aggiungi ricetta") e Mohammadreza (scrolla al Percorso Guidato) + hint piano settimanale + puntino notifica compaiono nel Laboratorio. Verificato a schermo.
 - **FIX MEDIUM**: `NewsletterPopup` copriva l'intera schermata (fixed inset-0) bloccando la bottom-nav → cambiato in `fixed inset-x-0 top-0 bottom-20` così la barra di navigazione resta cliccabile mentre il popup è aperto.
 - Deploy in corso (job avviato). Pronti al lancio.
+
+## v-fork.88 (2026-06) — Mercatino (Marketplace) rimosso dal sito (richiesta utente)
+- Rimossi tutti i punti d'ingresso/render del Mercatino: Home (`home-market-promo`), Community (sezione `community-marketplace` + tile `community-marketplace-top-btn`, grid quick-actions → grid-cols-3), menu Social in SiteMenu (voce "market" + rinominato "Community & Mercatino" → "Community"), Laboratorio (`tool === "market"` render).
+- Componente `Marketplace.jsx` conservato (non referenziato) — nessuna cancellazione file. Branch `v==="market"` in Community lasciato come no-op innocuo.
+- Verificato a schermo: home-market-promo/community-marketplace/tile = assenti; 0 errori JS; compilazione pulita.

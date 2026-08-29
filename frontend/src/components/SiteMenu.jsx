@@ -52,13 +52,12 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
     { id: "ricette", Icon: BookOpen, label: tri("Le Ricette di MikiLab", "Die MikiLab-Rezepte", "The MikiLab Recipes", "Las Recetas de MikiLab"), color: "#ff6b00" },
     { id: "maestro", Icon: Wrench, label: tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio"), color: "#ff6b00" },
     { id: "impara", Icon: GraduationCap, label: tri("Impara a Livelli", "Lerne in Stufen", "Learn by Levels", "Aprende por Niveles"), color: "#A16207" },
-    { id: "community", Icon: Users, label: tri("Community & Mercatino", "Community & Markt", "Community & Market", "Comunidad y Mercado"), color: "#ff6b00" },
+    { id: "community", Icon: Users, label: tri("Community", "Community", "Community", "Comunidad"), color: "#ff6b00" },
   ];
   const SOCIAL = [
     { v: "feed", Icon: Rss, label: tri("Bacheca (Feed)", "Pinnwand (Feed)", "Feed", "Muro (Feed)"), color: "#1c1c1c" },
     { v: "friends", Icon: UserPlus, label: tri("Amici & Colleghi", "Freunde & Kollegen", "Friends & Colleagues", "Amigos y Colegas"), color: "#ff6b00" },
     { v: "messages", Icon: MessageCircle, label: tri("Messaggi", "Nachrichten", "Messages", "Mensajes"), color: "#ff6b00" },
-    { v: "market", Icon: Store, label: tri("Mercatino dell'Usato", "Gebraucht-Markt", "Used Market", "Mercadillo"), color: "#ff6b00" },
     { v: "map", Icon: MapPin, label: tri("Mappa dei Fornai", "Bäcker-Karte", "Bakers Map", "Mapa de Panaderos"), color: "#2e8b6f" },
     { v: "profile", Icon: User, label: tri("Il mio profilo", "Mein Profil", "My profile", "Mi perfil"), color: "#ff6b00" },
   ];

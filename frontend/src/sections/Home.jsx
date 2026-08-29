@@ -324,17 +324,6 @@ export default function Home({ onNavigate }) {
         <ChevronRight className="w-6 h-6 text-white shrink-0" />
       </button>
 
-      {/* Promo Mercatino dell'usato (nel Social) */}
-      <button data-testid="home-market-promo" onClick={() => { go("community"); setTimeout(() => { try { window.dispatchEvent(new CustomEvent("mikilab-social-view", { detail: { view: "market" } })); } catch { /* */ } }, 500); }}
-        className="w-full text-left rounded-2xl p-4 border border-[#ff6b00]/40 bg-[#1a1a1a] active:scale-98 transition-all flex items-center gap-3 hover:border-[#ff6b00]/70">
-        <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0" style={{ boxShadow: "inset 0 0 0 1px #ff6b00" }}><ShoppingBag className="w-5 h-5 text-[#ff6b00]" /></div>
-        <div className="min-w-0 flex-1">
-          <p className="font-display text-base font-bold text-white leading-tight">{mkTri(lang)("Mercatino dell'usato", "Gebraucht-Markt", "Used market", "Mercadillo de segunda mano", "Marché d'occasion", "بازار دست‌دوم")}</p>
-          <p className="text-[#9aa4ab] text-[13px] leading-snug">{mkTri(lang)("Compra e vendi attrezzatura da forno tra fornai", "Kaufe und verkaufe Bäckerei-Ausrüstung", "Buy and sell bakery equipment between bakers", "Compra y vende equipo de panadería entre panaderos", "Achète et vends du matériel de boulangerie", "خرید و فروش تجهیزات نانوایی میان نانوایان")}</p>
-        </div>
-        <ChevronRight className="w-5 h-5 text-[#ff6b00] shrink-0" />
-      </button>
-
       {/* HERO — 100% gratis (lead magnet: account gratuito) */}
       <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#ff6b00]/40"
         style={{ background: "linear-gradient(135deg,#1a1a1a 0%,#241206 55%,#3a1a00 100%)" }}>

@@ -196,17 +196,7 @@ export default function Community({ onNavigate }) {
       </div>
 
       {/* Azioni Social compatte (le stesse sono anche nel menu ☰) */}
-      <div className="grid grid-cols-4 gap-2 mb-4" data-testid="community-quick-actions">
-        <button data-testid="community-marketplace-top-btn"
-          onClick={() => { markMarketSeen(); setMarketNew(0); const el = document.querySelector("[data-testid='community-marketplace']"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
-          <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
-            <Store className="w-5 h-5 text-[#ff6b00]" />
-            {marketNew > 0 && <span data-testid="market-new-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff6b00] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{marketNew}</span>}
-          </div>
-          <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Mercatino", "Markt", "Market", "Mercado")}</span>
-        </button>
-
+      <div className="grid grid-cols-3 gap-2 mb-4" data-testid="community-quick-actions">
         <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
           className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
           <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
@@ -359,10 +349,6 @@ export default function Community({ onNavigate }) {
         </div>
       )}
 
-      {/* Marketplace Usato — compravendita macchinari/attrezzature tra artigiani */}
-      <div data-testid="community-marketplace" className="mt-8 pt-6 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
-        <Marketplace />
-      </div>
     </div>
   );
 }
