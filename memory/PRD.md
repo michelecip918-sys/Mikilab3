@@ -2333,3 +2333,9 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **Impara** (Beginners): pulsanti `impara-livelli-btn` (gradiente oro→arancio) e `impara-askmaster-btn` (arancio→arancio scuro) resi distinti + hover shadow.
 - **Fix UX**: `NewsletterPopup` non appare più sopra il modale di login (`open && !authOpen`).
 - Testato: iteration_112 → 7/7 flussi frontend PASS (100%), nessun errore JS/5xx. Rimaste solo rifiniture opzionali (contrasto card auth-gate, FAB Radio su schermi piccoli).
+
+## v-fork.77 (2026-06) — Mini lista spesa wizard + gate Community dark + filtri combinati
+- **Lista Spesa nel Wizard** (`LabWizard.jsx` `lab-wizard-shopping`): oltre a ricette/pezzi e per-giorno, ora stima Farina totale (🌾) e Acqua (💧) dal Piano Settimanale via `computeShopping` (fetch anche `recipesApi.list('mikilab')` per la mappa ricette). Mostrata solo se ci sono dati.
+- **Contrasto gate Community** (`Community.jsx` `community-auth-gate`): card ridisegnata dark (gradiente arancio→#1e1e1e) con testo bianco ad alto contrasto e CTA arancione con ombra (coerente con la regola dark: statico bianco, cliccabile arancio).
+- **Filtro Base + Categoria**: già combinati in `RecipeList` (condizioni AND su `catFilter` e `baseFilter`) — verificato, nessuna modifica necessaria.
+- Verificato a schermo: wizard "Week summary" (102 pz, per-giorno Mon/Wed, farina/acqua), gate Community dark. Compilazione pulita. Nessuna funzione/dato rimosso.

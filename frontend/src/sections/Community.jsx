@@ -147,20 +147,20 @@ export default function Community({ onNavigate }) {
   if (!user) {
     return (
       <div className="pb-40" data-testid="community-auth-gate">
-        <div className="relative overflow-hidden rounded-3xl p-7 text-[#161616] shadow-xl text-center"
-          style={{ background: "linear-gradient(135deg,#ff6b00 0%,#ff6b00 60%,#ff6b00 100%)" }}>
-          <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-4">
-            <Users className="w-8 h-8" />
+        <div className="relative overflow-hidden rounded-3xl p-7 text-white shadow-xl text-center border border-[#ff6b00]/40"
+          style={{ background: "linear-gradient(135deg,#c94f00 0%,#1e1e1e 85%)" }}>
+          <div className="w-16 h-16 rounded-2xl bg-[#ff6b00]/20 border border-[#ff6b00]/40 flex items-center justify-center mx-auto mb-4">
+            <Users className="w-8 h-8 text-[#ff6b00]" />
           </div>
-          <h1 className="font-display text-2xl font-bold">{tri("🌐 Community & Feed Social", "🌐 Community & Social-Feed", "🌐 Community & Social Feed", "🌐 Comunidad y Feed Social")}</h1>
-          <p className="text-[#161616]/85 text-sm mt-2 leading-snug">
+          <h1 className="font-display text-2xl font-bold text-white">{tri("🌐 Community & Feed Social", "🌐 Community & Social-Feed", "🌐 Community & Social Feed", "🌐 Comunidad y Feed Social")}</h1>
+          <p className="text-white/90 text-sm mt-2 leading-snug">
             {tri("Registrati gratis per vedere la bacheca, i colleghi, il mercatino e partecipare alle sfide.",
                  "Registriere dich, um Pinnwand, Kollegen, Markt und Challenges zu sehen.",
                  "Register to see the feed, colleagues, marketplace and join the challenges.",
                  "Regístrate para ver el muro, colegas, mercadillo y participar en los retos.")}
           </p>
           <button data-testid="community-register-btn" onClick={() => setAuthOpen(true)}
-            className="mt-5 w-full bg-[#161616] text-[#ff6b00] font-bold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
+            className="mt-5 w-full bg-[#ff6b00] text-white font-bold px-5 py-3.5 rounded-2xl shadow-[0_4px_14px_rgba(255,107,0,0.4)] active:scale-98 hover:bg-[#ff8226] transition-all">
             {tri("Registrati per entrare", "Registrieren und eintreten", "Register to enter", "Regístrate para entrar")}
           </button>
         </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CalendarDays, BookOpen, PlusCircle, Lock, Check, ArrowRight, Route, RotateCcw, ChevronDown, ChevronUp, Sparkles, ListChecks } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
+import { computeShopping, fmtQty } from "@/lib/shopping";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -27,18 +28,23 @@ export default function LabWizard({ onOpenTool }) {
   const [auto1, setAuto1] = useState(false);
   const [auto2, setAuto2] = useState(false);
   const [weeklyItems, setWeeklyItems] = useState([]);
+  const [recipeById, setRecipeById] = useState({});
   const [manual, setManual] = useState(readManual);
   const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(true);
 
   const refresh = useCallback(async () => {
     try {
-      const [weekly, personal] = await Promise.all([
+      const [weekly, personal, miki] = await Promise.all([
         weeklyApi.get().catch(() => null),
         recipesApi.list("personal").catch(() => []),
+        recipesApi.list("mikilab").catch(() => []),
       ]);
       const items = (weekly && Array.isArray(weekly.items)) ? weekly.items : [];
       setWeeklyItems(items);
+      const map = {};
+      [...(Array.isArray(miki) ? miki : []), ...(Array.isArray(personal) ? personal : [])].forEach((r) => { if (r && r.id) map[r.id] = r; });
+      setRecipeById(map);
       setAuto1(items.length > 0);
       setAuto2(Array.isArray(personal) && personal.length > 0);
     } catch { /* */ }
@@ -81,6 +87,14 @@ export default function LabWizard({ onOpenTool }) {
     ven: tri("Ven", "Fr", "Fri", "Vie", "Ven", "جم"), sab: tri("Sab", "Sa", "Sat", "Sáb", "Sam", "شن"),
     dom: tri("Dom", "So", "Sun", "Dom", "Dim", "یک"),
   }[d] || d);
+
+  // Mini lista spesa: farina totale + acqua stimata dal piano settimanale
+  const shopping = useMemo(() => {
+    const list = weeklyItems.filter((w) => w.recipe_id).map((w) => ({ recipe_id: w.recipe_id, grams: Number(w.pieces || 0) * Number(w.grams_per_piece || 0) }));
+    try { return computeShopping(list, recipeById, lang); } catch { return { anyFlour: 0, others: {} }; }
+  }, [weeklyItems, recipeById, lang]);
+  const flourTot = shopping.anyFlour || 0;
+  const waterTot = (shopping.others && shopping.others.water_grams) || 0;
 
   const generateToday = () => {
     window.dispatchEvent(new CustomEvent("mikilab-generate-today"));
@@ -261,6 +275,21 @@ export default function LabWizard({ onOpenTool }) {
                           <span className="font-mono-data">{pieces}</span>
                         </span>
                       ))}
+                    </div>
+                  </div>
+                )}
+                {(flourTot > 0 || waterTot > 0) && (
+                  <div data-testid="lab-wizard-shopping" className="mt-3 pt-2.5 border-t border-[#2a2a2a]">
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5">{tri("Spesa stimata", "Geschätzter Einkauf", "Estimated shopping", "Compra estimada", "Achats estimés", "خرید تخمینی")}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      <span data-testid="lab-wizard-flour" className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#cfd6da] bg-[#1e1e1e] border border-[#333] rounded-full px-3 py-1">
+                        🌾 <span className="text-[#F0B429]">{tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")}</span> <span className="font-mono-data text-white">{fmtQty(flourTot)}</span>
+                      </span>
+                      {waterTot > 0 && (
+                        <span data-testid="lab-wizard-water" className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#cfd6da] bg-[#1e1e1e] border border-[#333] rounded-full px-3 py-1">
+                          💧 <span className="text-[#5aa9e6]">{tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")}</span> <span className="font-mono-data text-white">{fmtQty(waterTot)}</span>
+                        </span>
+                      )}
                     </div>
                   </div>
                 )}
