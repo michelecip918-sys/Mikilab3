@@ -576,7 +576,8 @@ export default function Home({ onNavigate }) {
         {/* 1) Le Mie Ricette + I Miei Corsi */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <button data-testid="home-core-ricette" onClick={() => go("ricette")}
-            className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#24303c] to-[#16202b] min-h-[112px] flex flex-col gap-2">
+            className="relative text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#24303c] to-[#16202b] min-h-[112px] flex flex-col gap-2 ring-2 ring-[#C88A2B]/70 overflow-hidden">
+            <span className="absolute top-2.5 right-2.5 text-[9px] font-bold uppercase tracking-wide bg-[#C88A2B] text-white px-2 py-0.5 rounded-full">{L("Inizia qui", "Hier starten", "Start here", "Empieza aquí", "Commence ici", "از اینجا شروع کن")}</span>
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
             <p className="font-display text-base font-bold leading-tight">{L("Le Mie Ricette", "Meine Rezepte", "My Recipes")}</p>
             <p className="text-[11px] text-white/85 leading-snug">{L("Le ricette col mio metodo", "Rezepte mit meiner Methode", "Recipes with my method")}</p>
@@ -593,7 +594,6 @@ export default function Home({ onNavigate }) {
         <button data-testid="home-core-maestro" onClick={() => go("maestro")}
           className="relative w-full text-left rounded-3xl p-5 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#8C4A27] to-[#6E371C] ring-2 ring-[#C88A2B]/70 overflow-hidden">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-          <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wide bg-[#C88A2B] text-white px-2 py-0.5 rounded-full">{L("Inizia qui", "Hier starten", "Start here", "Empieza aquí")}</span>
           <div className="flex items-center gap-3 mt-1">
             <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-7 h-7" /></div>
             <div className="flex-1 min-w-0">

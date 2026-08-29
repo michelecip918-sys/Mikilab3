@@ -2228,3 +2228,6 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - Rimossi da Home i pulsanti `home-impara-livelli-btn` e `home-chat-btn` (+ import/stati inutilizzati puliti).
 - Aggiunti nella sezione Impara (Beginners.jsx): `impara-livelli-btn` → ImparaLivelli (early return), `impara-askmaster-btn` → MaestroSaTutto (early return con back). Verificato a schermo, compila.
 - IN SOSPESO (da chiarire con utente): spostare "Inizia qui" (sezione INIZIA del laboratorio?) nella vetrina "Ricette del MikiLab" in Home (titolo dorato?).
+
+## v-fork.63 (2026-06) — Badge "INIZIA QUI" spostato su "Le Mie Ricette"
+- In Home ("Il cuore di MikiLab"): il badge dorato "Inizia qui" è stato tolto dalla card "Il Tuo Laboratorio" (home-core-maestro) e messo sulla card "Le Mie Ricette" (home-core-ricette), con ring dorato in evidenza. Obiettivo: i visitatori vedono prima le ricette di Michele, poi il resto. Verificato a schermo.
