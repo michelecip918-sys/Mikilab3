@@ -2453,3 +2453,10 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Verifica (iteration_119)**: scrollY=0 a 400/1000/1500/2500/3500ms su desktop+mobile, primo e secondo ingresso; maestro-top-aggiungi visibile; ordine e flusso OK. Nessun ui_bug.
 - **Warning noto (non funzionale)**: console React "<span> cannot be a child of <option>" nel sottoalbero PianoProduzioneAI — non individuato nel sorgente (nessun span-in-option letterale); non impatta funzionalità. Da indagare a parte.
 - **Backlog design (pre-esistente)**: hero "Your Lab"/Ricette poco leggibile su foto (scrim più forte).
+
+## v-fork.94 (2026-06) — Percorso Guidato: ordine LOGICO corretto (ricette PRIMA del piano)
+- **Segnalazione utente (giusta)**: nel Percorso Guidato il Passo 1 era "Produzione Settimanale" e il Passo 2 "Inserimento Ricetta" BLOCCATO dietro il passo 1 → illogico (servono prima le ricette) e motivo per cui l'utente "non vedeva l'inserimento ricette" (era bloccato).
+- **Fix (LabWizard.jsx)**: INVERTITI i passi → Passo 1 = "Inserisci le tue Ricette" (BookOpen, sempre sbloccato, apre openTool('aggiungi')), Passo 2 = "Produzione Settimanale" (CalendarDays, sbloccato dopo il Passo 1), Passo 3 = "Extra per Oggi". Verificato iteration_120: ordine corretto, CTA1 apre l'aggiunta ricetta, unlock chain OK.
+- **Fix stati contraddittori**: resa la catena STRETTAMENTE sequenziale: c1=recipesDone; c2=c1&&weeklyDone; c3=c2&&extraDone. Elimina i casi "Completato+Bloccato" sul Passo 2 e "Passo 3 sbloccato mentre Passo 2 bloccato" (erano causati dal piano settimanale globale lato backend).
+### BUG BACKEND DA SISTEMARE (segnalato, non ancora fatto — richiede conferma)
+- `GET/PUT /api/weekly-plan` salva un piano GLOBALE ({_key:'default'}, senza auth): TUTTI gli utenti leggono/scrivono lo STESSO piano settimanale. Va reso per-owner (come /api/capo/last-plan). Impatta multi-utente e fa risultare auto1=true per chiunque.

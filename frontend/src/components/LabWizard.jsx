@@ -151,9 +151,14 @@ export default function LabWizard({ onOpenTool }) {
     } catch { /* */ }
   };
 
-  const c1 = auto1 || !!manual["1"];
-  const c2 = auto2 || !!manual["2"];
-  const c3 = !!manual["3"];
+  // Logica corretta e SEQUENZIALE: un passo è completo solo se lo sono anche i precedenti.
+  // (Evita stati contraddittori tipo "Completato + Bloccato" dovuti a segnali automatici indipendenti.)
+  const recipesDone = auto2 || !!manual["1"];   // passo 1: hai inserito/hai ricette tue
+  const weeklyDone = auto1 || !!manual["2"];     // passo 2: hai salvato il piano settimanale
+  const extraDone = !!manual["3"];               // passo 3: extra di oggi
+  const c1 = recipesDone;
+  const c2 = c1 && weeklyDone;
+  const c3 = c2 && extraDone;
   const done = (c1 ? 1 : 0) + (c2 ? 1 : 0) + (c3 ? 1 : 0);
   const pct = Math.round((done / 3) * 100);
   const activeStep = !c1 ? 1 : !c2 ? 2 : !c3 ? 3 : 3;
@@ -175,18 +180,18 @@ export default function LabWizard({ onOpenTool }) {
 
   const STEPS = [
     {
-      n: 1, Icon: CalendarDays, unlocked: true, complete: c1, auto: auto1,
-      title: tri("Produzione Settimanale", "Wochenproduktion", "Weekly Production", "Producción Semanal", "Production Hebdomadaire", "تولید هفتگی"),
-      desc: tri("Pianifica cosa produrre nella settimana e salva il piano.", "Plane die Wochenproduktion und speichere den Plan.", "Plan what to produce this week and save the plan.", "Planifica la producción de la semana y guarda el plan.", "Planifie la production de la semaine et enregistre le plan.", "تولید هفته را برنامه‌ریزی کن و ذخیره کن."),
-      cta: tri("Pianifica la settimana", "Woche planen", "Plan the week", "Planificar la semana", "Planifier la semaine", "برنامه‌ریزی هفته"),
-      action: () => onOpenTool && onOpenTool("settimana"),
-    },
-    {
-      n: 2, Icon: BookOpen, unlocked: c1, complete: c2, auto: auto2,
-      title: tri("Inserimento Ricetta", "Rezept hinzufügen", "Add Recipe", "Añadir Receta", "Ajouter une Recette", "افزودن دستور"),
-      desc: tri("Inserisci e salva i dati della ricetta da eseguire.", "Gib die Daten des auszuführenden Rezepts ein und speichere.", "Enter and save the recipe you want to make.", "Introduce y guarda los datos de la receta a ejecutar.", "Saisis et enregistre la recette à réaliser.", "داده‌های دستور موردنظر را وارد و ذخیره کن."),
+      n: 1, Icon: BookOpen, unlocked: true, complete: c1, auto: auto2,
+      title: tri("Inserisci le tue Ricette", "Rezepte hinzufügen", "Add your Recipes", "Añade tus Recetas", "Ajoute tes Recettes", "دستورهایت را وارد کن"),
+      desc: tri("Prima di tutto: inserisci o scansiona le tue ricette (o scegli tra quelle MikiLab). Sono la base del piano.", "Zuerst: füge deine Rezepte hinzu oder scanne sie (oder wähle aus den MikiLab-Rezepten). Sie sind die Basis des Plans.", "First of all: add or scan your recipes (or choose from MikiLab's). They're the base of the plan.", "Ante todo: añade o escanea tus recetas (o elige entre las de MikiLab). Son la base del plan.", "Avant tout : ajoute ou scanne tes recettes (ou choisis parmi celles de MikiLab). Ce sont la base du plan.", "قبل از هر چیز: دستورهایت را وارد یا اسکن کن. پایهٔ برنامه هستند."),
       cta: tri("Inserisci una ricetta", "Rezept hinzufügen", "Add a recipe", "Añadir una receta", "Ajouter une recette", "افزودن دستور"),
       action: () => onOpenTool && onOpenTool("aggiungi"),
+    },
+    {
+      n: 2, Icon: CalendarDays, unlocked: c1, complete: c2, auto: auto1,
+      title: tri("Produzione Settimanale", "Wochenproduktion", "Weekly Production", "Producción Semanal", "Production Hebdomadaire", "تولید هفتگی"),
+      desc: tri("Ora che hai le ricette, pianifica cosa produrre nella settimana e salva il piano.", "Jetzt, wo du die Rezepte hast, plane die Wochenproduktion und speichere den Plan.", "Now that you have the recipes, plan what to produce this week and save the plan.", "Ahora que tienes las recetas, planifica la producción de la semana y guarda el plan.", "Maintenant que tu as les recettes, planifie la production de la semaine et enregistre le plan.", "حالا که دستورها را داری، تولید هفته را برنامه‌ریزی و ذخیره کن."),
+      cta: tri("Pianifica la settimana", "Woche planen", "Plan the week", "Planificar la semana", "Planifier la semaine", "برنامه‌ریزی هفته"),
+      action: () => onOpenTool && onOpenTool("settimana"),
     },
     {
       n: 3, Icon: PlusCircle, unlocked: c2, complete: c3, auto: false,

@@ -1,0 +1,35 @@
+{
+  "summary": "Frontend-only retest del Percorso Guidato (LabWizard) dopo l'inversione dei passi. Testato su mobile 390x844 con admin@mikilab.de e amico2@mikilab.de. ORDINE VERIFICATO CORRETTO: Passo 1 = 'Inserisci le tue Ricette' (BookOpen, sempre sbloccato, CTA 'Inserisci una ricetta' funzionante), Passo 2 = 'Produzione Settimanale' (CalendarDays, unlocked solo dopo Passo 1), Passo 3 = 'Extra per Oggi'. CTA1 apre correttamente RecipeList personal + ScanRecipe (add-recipe-btn + scan-dual), maestro-back-btn torna al wizard, maestro-top-aggiungi ancora presente e funzionante. Unlock chain verificata con account senza ricette personali (amico2): Passo 2 BLOCCATO (lab-wizard-badge-locked-2, CTA disabled) e si sblocca dopo lab-wizard-mark-1; progress bar/'Passo X di 3' coerenti (33% -> 67%); 'Restart the path' riporta allo stato iniziale. Trovate 2 incongruenze di stato (badge Done+Locked contemporanei sul Passo 2, Passo 3 sbloccato mentre il Passo 2 è ancora bloccato) causate dal piano settimanale GLOBALE lato backend.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET/PUT /api/weekly-plan", "issue": "Il piano settimanale è salvato con chiave globale {_key:'default'} e la GET non richiede autenticazione: tutti gli utenti (admin, fornaio, amico1, amico2) leggono/scrivono LO STESSO piano (4 items identici). Effetto sul wizard: auto1=true per qualunque account, quindi il Passo 2 risulta 'Completato' anche per chi non ha mai salvato nulla. Va reso per-owner (come /api/capo/last-plan)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "LabWizard step 2", "issue": "Stato contraddittorio: con account senza ricette personali il Passo 2 mostra CONTEMPORANEAMENTE il badge 'Completato' (lab-wizard-badge-done-2) e 'Bloccato' (lab-wizard-badge-locked-2), con CTA disabilitata che dice 'Completa prima il passo precedente'. Se complete=true il passo dovrebbe risultare sbloccato (es. unlocked: c1 || c2) oppure il badge Done non deve comparire quando locked.", "selector": "[data-testid='lab-wizard-step-2']", "priority": "MEDIUM"},
+      {"component": "LabWizard step 3", "issue": "Passo 3 'Extra per Oggi' risulta SBLOCCATO (CTA abilitata) mentre il Passo 2 è ancora bloccato, perché unlocked=c2 e c2 è true per via del piano settimanale globale. Rompe la promessa 'ogni passo sblocca il successivo'.", "selector": "[data-testid='lab-wizard-cta-3']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Rendere GET/PUT /api/weekly-plan per-utente (chiave = user_id) e proteggere la GET con auth: è la causa dell'auto-completamento del Passo 2 per tutti gli account.",
+    "Evitare lo stato Done+Locked simultaneo sul Passo 2 (unlocked: c1 || c2, oppure nascondere il badge Done quando locked).",
+    "Rendere il Passo 3 dipendente da un Passo 2 effettivamente sbloccato/completato (es. unlocked: c1 && c2)."
+  ],
+  "critical_code_review_comments": [
+    "LabWizard.jsx: la relazione unlocked/complete non è mutuamente coerente (un passo può essere 'complete' ma 'locked'); derivare locked da !unlocked && !complete.",
+    "server.py:1611 get_weekly_plan() non ha dipendenza current_user e usa una chiave singleton: data leak tra utenti."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (skipped per richiesta)", "frontend": "90%"},
+  "seed_data_creation": "Nessun dato creato; usati account esistenti admin@mikilab.de e amico2@mikilab.de. Rimosse le chiavi localStorage mikilab_wizard_manual/week nel browser di test.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! ; amico2@mikilab.de / Test1234!",
+  "context_for_next_testing_agent": "L'ordine dei passi del wizard è ora corretto e verificato (1 Ricette, 2 Settimana, 3 Extra) e l'unlock chain funziona (lab-wizard-mark-1 sblocca il passo 2). Restano solo le incongruenze di stato dovute al piano settimanale globale (/api/weekly-plan singleton). Per un account 'vergine' usare amico2 (0 ricette personali) e ripulire localStorage mikilab_wizard_manual.",
+  "rca_of_the_issue": "Il piano settimanale è persistito con chiave fissa '_key: default' quindi auto1 (weeklyDone) è true per qualsiasi utente; il Passo 2 risulta quindi 'complete' pur essendo 'locked' (unlocked=c1=false) e il Passo 3 risulta sbloccato (unlocked=c2=true) anche a percorso appena iniziato."
+}
