@@ -2381,3 +2381,8 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
   - Verificato a schermo: opzioni ora localizzate (es. "Whole Soul", "Sourdough Baguette", "Brezel (Classic Bretzel)"). 0 errori JS.
 - I nomi tradotti (name_en/name_de/…) esistono già nel DB, quindi la traduzione compare correttamente in tutte le lingue.
 - PENDING (approvati, prossimo giro): pulizia voci menu Laboratorio (market/saporicasa — non trovata voce menu distinta, probabilmente non raggiungibile); asterisco Miglioratore nei procedimenti; foto reali nelle schede ricetta/profilo; avatar dinamici (messaggi in base a cosa manca).
+
+## v-fork.84 (2026-06) — Selettori ricetta a SEZIONI + avatar dinamici e cliccabili
+- **Selettore ricetta raggruppato per sezioni** (`components/RecipeOptions.jsx`): i dropdown in "Il tuo laboratorio" (WeeklyPlan) e "Impara da casa" (Beginners) ora usano `<optgroup>` per categoria (✨ Basi, 🥐 Viennoiserie, 🍞 Pane, 🫓 Focacce, 🥨 Snack) con etichette e titoli ricetta TRADOTTI (recipeTitle + t(cat.label)). Verificato a schermo. 0 errori JS.
+- **Avatar dinamici** (`AvatarBubbles.jsx`): il fumetto di Mohammadreza mostra un suggerimento contestuale: lab → se manca il piano settimanale "Non hai ancora salvato il piano..." altrimenti "genera il piano di oggi"; home/impara → se la sfida non è fatta "Prova la sfida della settimana!". `bubble-hint-<variant>`.
+- **Assistente cliccabile**: toccando il fumetto di Mohammadreza si naviga alla sezione utile (home→Ricette, ricette→Laboratorio, impara→Laboratorio) o si scrolla al Percorso Guidato (lab). Evento `mikilab-goto` gestito in `App.js` → `navigate(tab)`. Etichetta "Portami lì →". Verificato: click porta a Ricette.

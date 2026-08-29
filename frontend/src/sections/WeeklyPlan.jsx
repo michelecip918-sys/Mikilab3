@@ -5,6 +5,7 @@ import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
 import { rLoc, ingLoc, recipeTitle } from "@/lib/loc";
+import RecipeOptions from "@/components/RecipeOptions";
 import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
@@ -765,9 +766,8 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
           onChange={(e) => onRecipeChange(e.target.value)}
           className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#ff6b00]"
         >
-          {recipes.map((r) => (
-            <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>
-          ))}
+          <option value="">{t("capo_pick_recipe")}</option>
+          <RecipeOptions recipes={recipes} />
         </select>
         <button onClick={onRemove} data-testid={`weekly-remove-${item.id}`} className="w-8 h-8 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] shrink-0">
           <Trash2 className="w-4 h-4" />

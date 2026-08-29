@@ -103,6 +103,14 @@ function App() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  // Navigazione da assistente/avatar cliccabile
+  useEffect(() => {
+    const h = (e) => { const tab = e && e.detail && e.detail.tab; if (tab) navigate(tab); };
+    window.addEventListener("mikilab-goto", h);
+    return () => window.removeEventListener("mikilab-goto", h);
+  }, [navigate]);
+
+
   // chiudi il modale login appena l'utente è autenticato
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
 

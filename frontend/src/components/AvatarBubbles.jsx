@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-import { pick } from "@/i18n/triMaps";
-import { siteSettingsApi } from "@/lib/api";
+import { pick, mkTri } from "@/i18n/triMaps";
+import { siteSettingsApi, weeklyApi } from "@/lib/api";
 
 const base = process.env.PUBLIC_URL || "";
 const AV = {
@@ -54,6 +55,36 @@ export default function AvatarBubbles({ variant = "impara" }) {
     return pick(m, lang);
   };
 
+  // Aiuto dinamico: cosa manca / cosa fare adesso
+  const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const [hint, setHint] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      if (variant === "lab") {
+        const w = await weeklyApi.get().catch(() => null);
+        const empty = !(w && Array.isArray(w.items) && w.items.length);
+        if (alive) setHint(empty
+          ? tri("Non hai ancora salvato il piano settimanale: iniziamo dal Passo 1.", "Du hast den Wochenplan noch nicht gespeichert: starten wir mit Schritt 1.", "You haven't saved the weekly plan yet: let's start with Step 1.", "Aún no has guardado el plan semanal: empecemos por el Paso 1.", "Tu n'as pas encore enregistré le plan hebdomadaire : commençons par l'étape 1.", "هنوز برنامهٔ هفتگی را ذخیره نکرده‌ای: از مرحلهٔ ۱ شروع کنیم.")
+          : tri("Piano settimanale pronto: genera il piano di oggi!", "Wochenplan bereit: erstelle den heutigen Plan!", "Weekly plan ready: generate today's plan!", "Plan semanal listo: ¡genera el plan de hoy!", "Plan hebdomadaire prêt : génère le plan du jour !", "برنامهٔ هفتگی آماده است: برنامهٔ امروز را بساز!"));
+      } else if (variant === "impara" || variant === "home") {
+        let done = false;
+        try { const c = JSON.parse(localStorage.getItem("mikilab_wizard_challenge") || "{}"); done = !!c.done; } catch { /* */ }
+        if (alive && !done) setHint(tri("👉 Prova la sfida della settimana!", "👉 Probier die Challenge der Woche!", "👉 Try this week's challenge!", "👉 ¡Prueba el reto de la semana!", "👉 Tente le défi de la semaine !", "👉 چالش این هفته را امتحان کن!"));
+      }
+    })();
+    return () => { alive = false; };
+  }, [variant, lang]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Assistente cliccabile: porta nella sezione/strumento giusto
+  const GOTO = { home: "ricette", ricette: "maestro", impara: "maestro" };
+  const handleGo = () => {
+    if (variant === "lab") { document.querySelector('[data-testid="lab-wizard"]')?.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+    const tab = GOTO[variant];
+    if (tab) window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab } }));
+  };
+  const clickable = variant === "lab" || !!GOTO[variant];
+
   return (
     <div data-testid="avatar-bubbles" className="mb-5 space-y-3">
       {msgs.map((m, idx) => {
@@ -65,12 +96,22 @@ export default function AvatarBubbles({ variant = "impara" }) {
               className={`w-11 h-11 rounded-full object-cover shadow-sm shrink-0 ring-2 ${isMichele ? "ring-[#ff6b00]/60" : "ring-[#ff6b00]/60"}`}
               onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <div data-testid={`bubble-${m.who}`}
-              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border ${
+              onClick={!isMichele && clickable ? handleGo : undefined}
+              role={!isMichele && clickable ? "button" : undefined}
+              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border transition-all ${
                 isMichele
                   ? "bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-bl-sm"
-                  : "bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-br-sm"}`}>
+                  : `bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-br-sm ${clickable ? "cursor-pointer hover:border-[#ff6b00]/60 hover:bg-[#ff6b00]/10 active:scale-98" : ""}`}`}>
               <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#9cd6a0]" : "text-[#f0b76b]"}`}>{NAME[m.who]}</p>
               <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{bubbleText(m)}</p>
+              {!isMichele && hint && (
+                <p data-testid={`bubble-hint-${variant}`} className="text-[12px] font-semibold text-[#ff6b00] leading-snug mt-1">{hint}</p>
+              )}
+              {!isMichele && clickable && (
+                <span className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00]">
+                  {tri("Portami lì", "Bring mich hin", "Take me there", "Llévame allí", "Emmène-moi", "من را ببر")} <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              )}
             </div>
           </motion.div>
         );

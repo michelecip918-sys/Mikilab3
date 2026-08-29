@@ -1,5 +1,6 @@
 import { useLang } from "@/i18n/LanguageContext";
 import { recipeTitle } from "@/lib/loc";
+import RecipeOptions from "@/components/RecipeOptions";
 import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
 import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame, ChevronRight, MessageCircle } from "lucide-react";
@@ -91,7 +92,7 @@ function HomePlanner() {
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value } : x))}
               className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
               <option value="">{t("capo_pick_recipe")}</option>
-              {recipes.map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
+              <RecipeOptions recipes={recipes} />
             </select>
             <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
