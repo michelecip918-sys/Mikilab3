@@ -215,20 +215,20 @@ function App() {
         </AnimatePresence>
         </ErrorBoundary>
 
-        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#38424B]">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2C1E16] via-[#4A3222] to-[#6E371C] text-white p-6 shadow-lg text-center">
+        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#2e2e2e]">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#ff6b00] via-[#ff6b00] to-[#ff6b00] text-white p-6 shadow-lg text-center">
             <div className="it-de-ribbon absolute top-0 left-0 right-0" />
             <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" data-testid="footer-logo" loading="lazy"
               className="w-20 h-20 rounded-2xl object-cover mx-auto ring-2 ring-[#D4AF37]/60 shadow-lg mt-1" />
             <p className="font-display text-2xl font-extrabold tracking-tight mt-3">MikiLab</p>
             <p className="text-[12px] text-white/85 leading-snug mt-1 max-w-xs mx-auto">{t("brand_slogan")}</p>
-            <p className="text-[11px] text-[#e7d5b4]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
+            <p className="text-[11px] text-[#ffc700]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
           </div>
           <p className="text-center text-[10px] text-[#9AA6AE] mt-3">© {new Date().getFullYear()} MikiLab · mikilab.de</p>
           <div className="flex items-center justify-center gap-4 mt-2">
-            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#8C4A27] hover:underline">Impressum</button>
-            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#8C4A27] hover:underline">Datenschutz</button>
-            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#8C4A27] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
+            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#ff6b00] hover:underline">Impressum</button>
+            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#ff6b00] hover:underline">Datenschutz</button>
+            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#ff6b00] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
           </div>
         </footer>
       </main>
@@ -244,7 +244,7 @@ function App() {
           <motion.div
             data-testid="auth-modal"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-[#f0f6fb] dark:bg-[#1B2127] overflow-auto"
+            className="fixed inset-0 z-[70] bg-[#f0f6fb] dark:bg-[#121212] overflow-auto"
           >
             <AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} />
           </motion.div>
@@ -252,7 +252,7 @@ function App() {
       </AnimatePresence>
 
       {legalOpen && (
-        <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#1B2127] overflow-auto">
+        <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#121212] overflow-auto">
           <div className="max-w-xl mx-auto px-4 py-5">
             <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#3f7cac]">← {tri("Chiudi", "Schließen", "Close")}</button>
             <LegalPage />

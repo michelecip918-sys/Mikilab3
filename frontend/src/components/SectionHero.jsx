@@ -3,7 +3,7 @@ export default function SectionHero({ image, title, subtitle, testid, position =
   const BASE = process.env.PUBLIC_URL || "";
   return (
     <div data-testid={testid} className="relative mb-4 pt-2">
-      <div className="relative rounded-t-[70px] rounded-b-[22px] p-2 shadow-xl" style={{ background: "linear-gradient(160deg,#a5533a,#7c3a26 55%,#5a2b1c)" }}>
+      <div className="relative rounded-t-[70px] rounded-b-[22px] p-2 shadow-xl" style={{ background: "linear-gradient(160deg,#ff8a33,#ff6b00 55%,#c94f00)" }}>
         <div className="relative rounded-t-[62px] rounded-b-[16px] overflow-hidden bg-[#2B303B] grain-overlay">
           <img src={`${BASE}/${image}`} alt={title} className="w-full h-40 object-cover" style={{ objectPosition: position }} loading="eager"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />

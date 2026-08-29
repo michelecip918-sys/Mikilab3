@@ -197,7 +197,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto thin-scroll bg-[#FAF5EC] dark:bg-[#1B2127] border-[#E6D8C3] dark:border-[#38424B]">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto thin-scroll bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e]">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-[#2B303B] dark:text-[#e4eff8]">
             {initial ? t("edit_recipe") : t("new_recipe")}
@@ -215,7 +215,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               value={form.name}
               onChange={(e) => set("name", e.target.value)}
               placeholder={t("field_name_ph")}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-base outline-none"
             />
           </div>
 
@@ -226,7 +226,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               value={form.real_name || ""}
               onChange={(e) => set("real_name", e.target.value)}
               placeholder={mkTri(lang)("es. Pane alle Patate", "z. B. Kartoffelbrot", "e.g. Potato bread", "p. ej. Pan de patata")}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-base outline-none"
             />
           </div>
 
@@ -236,7 +236,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               data-testid="recipe-menu-category-select"
               value={form.menu_category || ""}
               onChange={(e) => set("menu_category", e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-base outline-none"
             >
               <option value="">{mkTri(lang)("Automatica (dal nome)", "Automatisch (aus Name)", "Automatic (from name)", "Automática (del nombre)", "Automatique (du nom)")}</option>
               <option value="basi">✨ {mkTri(lang)("Basi & Lieviti", "Basis & Hefen", "Bases & Starters", "Bases y Levaduras", "Bases & Levains")}</option>
@@ -255,13 +255,13 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               value={form.flour_type}
               onChange={(e) => set("flour_type", e.target.value)}
               placeholder={t("field_flour_ph")}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-base outline-none"
             />
             {pantry.length > 0 && (
               <div data-testid="recipe-flour-pantry" className="mt-2 flex flex-wrap gap-1.5">
                 {pantry.slice(0, 12).map((f) => (
                   <button key={f.id} type="button" data-testid={`recipe-flour-pick-${f.id}`} onClick={() => pickFlour(f)}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#8a5a2b] bg-[#a9772f]/10 border border-[#a9772f]/30 px-2.5 py-1 rounded-full active:scale-95">
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] bg-[#ffc700]/10 border border-[#ffc700]/30 px-2.5 py-1 rounded-full active:scale-95">
                     {(f.flour_type || f.product_name || f.brand || "Farina")}{f.w_index != null ? ` · W${f.w_index}` : ""}
                   </button>
                 ))}
@@ -275,7 +275,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               data-testid="recipe-origin-select"
               value={form.origin || ""}
               onChange={(e) => set("origin", e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
             >
               <option value="">{t("origin_none")}</option>
               {COUNTRIES.map((c) => (
@@ -290,7 +290,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               data-testid="recipe-dough-category-select"
               value={form.dough_category || ""}
               onChange={(e) => set("dough_category", e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
             >
               <option value="">{t("dc_none")}</option>
               <option value="pre">{t("dc_pre")}</option>
@@ -306,7 +306,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               data-testid="recipe-water-temp-input"
               type="number" step="0.5" value={form.water_temp_c ?? ""}
               onChange={(e) => set("water_temp_c", e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
             />
           </div>
 
@@ -316,7 +316,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               data-testid="recipe-preferment-select"
               value={form.preferment_type || "none"}
               onChange={(e) => set("preferment_type", e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
             >
               {PREFERMENTS.map((p) => (
                 <option key={p} value={p}>{t(`pf_${p}`)}</option>
@@ -326,14 +326,14 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
 
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("dose_mode")}</span>
-            <div className="flex items-center bg-[#e4eff8] dark:bg-[#2A323A] rounded-xl border border-[#E6D8C3] dark:border-[#38424B] p-0.5">
+            <div className="flex items-center bg-[#e4eff8] dark:bg-[#242424] rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] p-0.5">
               {[["grams", "dose_grams"], ["pct", "dose_pct"]].map(([m, lk]) => (
                 <button
                   key={m} type="button"
                   data-testid={`dose-mode-${m}`}
                   onClick={() => setPctMode(m === "pct")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    (pctMode ? "pct" : "grams") === m ? "bg-[#8C4A27] text-white shadow-sm" : "text-[#7E8A93]"
+                    (pctMode ? "pct" : "grams") === m ? "bg-[#ff6b00] text-white shadow-sm" : "text-[#7E8A93]"
                   }`}
                 >
                   {t(lk)}
@@ -368,7 +368,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                       type="number"
                       value={displayVal}
                       onChange={(e) => onCh(e.target.value)}
-                      className="w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 pr-8 text-base outline-none"
+                      className="w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 pr-8 text-base outline-none"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93] pointer-events-none">{unit}</span>
                   </div>
@@ -378,9 +378,9 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           </div>
 
           {hydration != null && (
-            <div className="flex items-center justify-between bg-[#B45309]/15 border border-[#B45309]/30 rounded-xl px-4 py-2.5">
+            <div className="flex items-center justify-between bg-[#ff6b00]/15 border border-[#ff6b00]/30 rounded-xl px-4 py-2.5">
               <span className="text-sm font-medium text-[#3F4A54] dark:text-[#8FB0C2]">{t("hydration")}</span>
-              <span data-testid="recipe-hydration" className="font-mono-data font-bold text-[#6E371C] dark:text-[#8FB0C2]">
+              <span data-testid="recipe-hydration" className="font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2]">
                 {hydration}%
               </span>
             </div>
@@ -388,13 +388,13 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
 
           {/* Lavorazione e cottura */}
           <div className="pt-1">
-            <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2">{t("work_bake_section")}</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{t("work_bake_section")}</p>
             <div className="mb-3">
               <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("field_method")}</label>
               <select
                 data-testid="recipe-method-select" value={form.method_type || "indiretto"}
                 onChange={(e) => set("method_type", e.target.value)}
-                className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+                className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
               >
                 <option value="indiretto">{t("method_indiretto")}</option>
                 <option value="diretto">{t("method_diretto")}</option>
@@ -406,7 +406,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                 <input
                   data-testid="recipe-mix_minutes-input" type="number" value={form.mix_minutes}
                   onChange={(e) => set("mix_minutes", e.target.value)}
-                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
                 />
               </div>
               <div>
@@ -414,7 +414,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                 <select
                   data-testid="recipe-oven-select" value={form.oven_type || "statico"}
                   onChange={(e) => set("oven_type", e.target.value)}
-                  className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+                  className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
                 >
                   {OVEN_TYPES.map((o) => (
                     <option key={o} value={o}>{t(o === "ventilato" ? "oven_type_fan" : o === "rotor" ? "oven_type_rotor" : "oven_type_static")}</option>
@@ -426,7 +426,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                 <input
                   data-testid="recipe-bake_temp-input" type="number" value={form.bake_temp}
                   onChange={(e) => set("bake_temp", e.target.value)}
-                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
                 />
               </div>
               <div>
@@ -434,7 +434,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                 <input
                   data-testid="recipe-bake_minutes-input" type="number" value={form.bake_minutes}
                   onChange={(e) => set("bake_minutes", e.target.value)}
-                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] rounded-xl p-3 text-base outline-none"
+                  className="mt-1 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] rounded-xl p-3 text-base outline-none"
                 />
               </div>
             </div>
@@ -447,7 +447,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               value={form.notes}
               onChange={(e) => set("notes", e.target.value)}
               rows={3}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none resize-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-base outline-none resize-none"
             />
           </div>
 
@@ -459,7 +459,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               value={form.procedure}
               onChange={(e) => set("procedure", e.target.value)}
               rows={5}
-              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none resize-none"
+              className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-base outline-none resize-none"
             />
           </div>
 
@@ -467,18 +467,18 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("field_photo")}</label>
             <div className="mt-1 flex items-center gap-2 flex-wrap">
-              {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#E6D8C3] dark:border-[#38424B]" /> : null}
-              <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#8C4A27] hover:bg-[#336a94] text-white rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#2b2b2b] dark:border-[#2e2e2e]" /> : null}
+              <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#ff6b00] hover:bg-[#336a94] text-white rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
                 {uploading ? t("photo_uploading") : (mkTri(lang)("Scatta ora", "Jetzt aufnehmen", "Take photo", "Hacer foto"))}
                 <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
-              <label data-testid="recipe-photo-attach" className={`cursor-pointer bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2B303B] dark:text-[#e4eff8] ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
-                <ImagePlus className="w-4 h-4 text-[#B45309]" />
+              <label data-testid="recipe-photo-attach" className={`cursor-pointer bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 text-[#2B303B] dark:text-[#e4eff8] ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+                <ImagePlus className="w-4 h-4 text-[#ff6b00]" />
                 {mkTri(lang)("Allega", "Anhängen", "Attach", "Adjuntar")}
                 <input type="file" accept="image/*" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
-              {form.image_url && !uploading ? <button onClick={() => set("image_url", "")} className="text-[#C0574D] p-1"><X className="w-4 h-4" /></button> : null}
+              {form.image_url && !uploading ? <button onClick={() => set("image_url", "")} className="text-[#ff6b00] p-1"><X className="w-4 h-4" /></button> : null}
             </div>
           </div>
 
@@ -491,25 +491,25 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                   <input
                     data-testid={`phase-name-${i}`} value={p.name} placeholder={t("phase_name_ph")}
                     onChange={(ev) => setPhase(i, { name: ev.target.value })}
-                    className="flex-1 min-w-0 bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
                   <input
                     data-testid={`phase-time-${i}`} value={p.time} placeholder={t("phase_time_ph")}
                     onChange={(ev) => setPhase(i, { time: ev.target.value })}
-                    className="w-20 shrink-0 bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="w-20 shrink-0 bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
                   <div className="relative w-16 shrink-0">
                     <input
                       data-testid={`phase-temp-${i}`} type="number" value={p.temp} placeholder="°"
                       onChange={(ev) => setPhase(i, { temp: ev.target.value })}
-                      className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 pr-5 text-sm outline-none focus:border-[#8C4A27]"
+                      className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 pr-5 text-sm outline-none focus:border-[#ff6b00]"
                     />
                     <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93] pointer-events-none">°</span>
                   </div>
-                  <button onClick={() => removePhase(i)} className="text-[#C0574D] p-1"><X className="w-4 h-4" /></button>
+                  <button onClick={() => removePhase(i)} className="text-[#ff6b00] p-1"><X className="w-4 h-4" /></button>
                 </div>
               ))}
-              <button data-testid="phase-add-btn" onClick={addPhase} className="text-sm font-medium text-[#8C4A27] flex items-center gap-1">+ {t("work_phases_add")}</button>
+              <button data-testid="phase-add-btn" onClick={addPhase} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1">+ {t("work_phases_add")}</button>
             </div>
           </div>
 
@@ -522,34 +522,34 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                   <input
                     data-testid={`extra-ing-name-${i}`} value={e.name} placeholder={t("ing_extra_name")}
                     onChange={(ev) => setIng(i, { name: ev.target.value })}
-                    className="flex-1 min-w-0 bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
                   <div className="relative w-24 shrink-0">
                     <input
                       data-testid={`extra-ing-pct-${i}`} type="number" step="0.1" value={e.percent} placeholder="%"
                       onChange={(ev) => setIng(i, { percent: ev.target.value })}
-                      className="w-full text-right font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#8C4A27]"
+                      className="w-full text-right font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#ff6b00]"
                     />
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93] pointer-events-none">%</span>
                   </div>
-                  <button onClick={() => removeIng(i)} className="text-[#C0574D] p-1" aria-label={t("delete")}>✕</button>
+                  <button onClick={() => removeIng(i)} className="text-[#ff6b00] p-1" aria-label={t("delete")}>✕</button>
                 </div>
               ))}
-              <button data-testid="extra-ing-add-btn" onClick={addIng} className="text-sm font-medium text-[#8C4A27] flex items-center gap-1">
+              <button data-testid="extra-ing-add-btn" onClick={addIng} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1">
                 + {t("ing_extra_add")}
               </button>
             </div>
           </div>
 
           {/* Costi e prezzo di vendita */}
-          <div className="pt-2 border-t border-[#E6D8C3] dark:border-[#38424B]" data-testid="recipe-costing-section">
-            <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2">{t("cost_section")}</p>
-            <div className="flex items-start gap-2 mb-2 bg-[#B45309]/12 border border-[#B45309]/30 rounded-lg px-3 py-2">
+          <div className="pt-2 border-t border-[#2b2b2b] dark:border-[#2e2e2e]" data-testid="recipe-costing-section">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{t("cost_section")}</p>
+            <div className="flex items-start gap-2 mb-2 bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-lg px-3 py-2">
               <p className="text-[11px] text-[#3F4A54] dark:text-[#AEB8BF] flex-1 leading-snug">{t("cost_auto_note")}</p>
               <button
                 type="button" data-testid="cost-use-standard-btn"
                 onClick={() => setForm((f) => ({ ...f, costing: { ...(f.costing || emptyCost), ...STANDARD_PRICES } }))}
-                className="text-[11px] font-semibold text-[#8C4A27] whitespace-nowrap shrink-0"
+                className="text-[11px] font-semibold text-[#ff6b00] whitespace-nowrap shrink-0"
               >
                 {t("cost_use_standard")}
               </button>
@@ -561,7 +561,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                   <input
                     data-testid={`cost-${k}-input`} type="number" step="0.01" value={c[k]}
                     onChange={(e) => setC(k, e.target.value)}
-                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
                 </div>
               ))}
@@ -573,19 +573,19 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                   <input
                     data-testid={`cost-extra-name-${i}`} value={e.name} placeholder={t("cost_extra_name")}
                     onChange={(ev) => setExtra(i, { name: ev.target.value })}
-                    className="flex-1 min-w-0 bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
                   <input
                     data-testid={`cost-extra-price-${i}`} type="number" step="0.01" value={e.cost} placeholder="€"
                     onChange={(ev) => setExtra(i, { cost: ev.target.value })}
-                    className="w-20 text-right font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="w-20 text-right font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
-                  <button onClick={() => removeExtra(i)} className="text-[#C0574D] p-1" aria-label={t("delete")}>✕</button>
+                  <button onClick={() => removeExtra(i)} className="text-[#ff6b00] p-1" aria-label={t("delete")}>✕</button>
                 </div>
               ))}
               <button
                 data-testid="cost-add-extra-btn" onClick={addExtra}
-                className="text-sm font-medium text-[#8C4A27] flex items-center gap-1"
+                className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"
               >
                 + {t("cost_extra_add")}
               </button>
@@ -598,14 +598,14 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                   <input
                     data-testid={`cost-${k}-input`} type="number" step="0.01" value={c[k]}
                     onChange={(e) => setC(k, e.target.value)}
-                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
                 </div>
               ))}
             </div>
 
             {prodCost > 0 && (
-              <div className="mt-3 space-y-1.5 bg-[#e4eff8] dark:bg-[#2A323A] rounded-xl p-3" data-testid="cost-summary">
+              <div className="mt-3 space-y-1.5 bg-[#e4eff8] dark:bg-[#242424] rounded-xl p-3" data-testid="cost-summary">
                 <Row label={t("cost_total")} value={`€ ${prodCost.toFixed(2)}`} />
                 {costPerPiece != null && <Row label={t("cost_per_piece")} value={`€ ${costPerPiece.toFixed(2)}`} />}
               </div>
@@ -613,11 +613,11 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           </div>
 
           {/* Etichetta UE — dichiarazione nutrizionale per 100 g + allergeni + ingredienti */}
-          <div className="pt-2 border-t border-[#E6D8C3] dark:border-[#38424B]" data-testid="recipe-label-section">
-            <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-1">{mkTri(lang)("Etichetta UE (valori nutrizionali)", "EU-Etikett (Nährwerte)", "EU label (nutrition)", "Etiqueta UE (valores nutricionales)")}</p>
+          <div className="pt-2 border-t border-[#2b2b2b] dark:border-[#2e2e2e]" data-testid="recipe-label-section">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-1">{mkTri(lang)("Etichetta UE (valori nutrizionali)", "EU-Etikett (Nährwerte)", "EU label (nutrition)", "Etiqueta UE (valores nutricionales)")}</p>
             <p className="text-[11px] text-[#7E8A93] mb-2 leading-snug">{mkTri(lang)("Valori per 100 g. L'energia in kJ è calcolata in automatico.", "Werte pro 100 g. Energie in kJ wird automatisch berechnet.", "Values per 100 g. Energy in kJ is auto-calculated.", "Valores por 100 g. La energía en kJ se calcula automáticamente.")}</p>
             <button type="button" data-testid="label-fill-typical" onClick={fillTypicalLabel}
-              className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] bg-[#8C4A27]/10 border border-[#8C4A27]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
+              className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
               ✨ {mkTri(lang)("Compila valori tipici (da verificare)", "Typische Werte einsetzen (zu prüfen)", "Fill typical values (to verify)", "Rellenar valores típicos (a verificar)")}
             </button>
             <div className="grid grid-cols-2 gap-2">
@@ -637,7 +637,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                   <input
                     data-testid={`label-${k}-input`} type="number" step="0.1" value={lab[k]}
                     onChange={(e) => setLab(k, e.target.value)}
-                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
                   />
                 </div>
               ))}
@@ -648,7 +648,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                 data-testid="label-allergens-input" value={lab.allergens}
                 onChange={(e) => setLab("allergens", e.target.value)}
                 placeholder={mkTri(lang)("es. Glutine, Latte, Uova", "z. B. Gluten, Milch, Eier", "e.g. Gluten, Milk, Eggs", "p. ej. Gluten, Leche, Huevos")}
-                className="mt-0.5 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]"
+                className="mt-0.5 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]"
               />
             </div>
             <div className="mt-2">
@@ -657,7 +657,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
                 data-testid="label-ingredients-input" rows={2} value={lab.ingredients}
                 onChange={(e) => setLab("ingredients", e.target.value)}
                 placeholder={mkTri(lang)("Farina di GRANO tenero, acqua, lievito madre, sale…", "WEIZENMEHL, Wasser, Sauerteig, Salz…", "WHEAT flour, water, sourdough, salt…", "Harina de TRIGO, agua, masa madre, sal…")}
-                className="mt-0.5 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27] resize-none"
+                className="mt-0.5 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00] resize-none"
               />
             </div>
           </div>
@@ -667,7 +667,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
           <button
             data-testid="recipe-cancel-btn"
             onClick={() => onOpenChange(false)}
-            className="flex-1 bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-xl border border-[#E6D8C3] dark:border-[#38424B]"
+            className="flex-1 bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e]"
           >
             {t("cancel")}
           </button>
@@ -675,7 +675,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             data-testid="recipe-save-btn"
             onClick={submit}
             disabled={saving}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#8C4A27] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
+            className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
           >
             {saving && <Loader2 className="w-4 h-4 animate-spin" />}
             {saving ? t("saving") : t("save")}

@@ -7,9 +7,9 @@ import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 
 const Avatar = ({ c }) => (
-  <div className="w-10 h-10 rounded-xl bg-[#8C4A27]/15 flex items-center justify-center overflow-hidden shrink-0">
+  <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center overflow-hidden shrink-0">
     {c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-      : <span className="font-bold text-[#8C4A27]">{(c.name || "?").slice(0, 1).toUpperCase()}</span>}
+      : <span className="font-bold text-[#ff6b00]">{(c.name || "?").slice(0, 1).toUpperCase()}</span>}
   </div>
 );
 
@@ -61,9 +61,9 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
   return (
     <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center" data-testid="friends-panel">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#1B2127] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[85vh] flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-[#E6D8C3] dark:border-[#38424B]">
-          <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2"><Users2 className="w-5 h-5 text-[#8C4A27]" />{tri("Amici", "Freunde", "Friends")}</h3>
+      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#121212] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[85vh] flex flex-col">
+        <div className="flex items-center justify-between p-4 border-b border-[#2b2b2b] dark:border-[#2e2e2e]">
+          <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2"><Users2 className="w-5 h-5 text-[#ff6b00]" />{tri("Amici", "Freunde", "Friends")}</h3>
           <button data-testid="friends-close" onClick={onClose} className="w-9 h-9 rounded-full flex items-center justify-center text-[#7E8A93]"><X className="w-5 h-5" /></button>
         </div>
 
@@ -74,7 +74,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
             <div className="grid grid-cols-3 gap-1.5 p-3">
               {TABS.map((t) => (
                 <button key={t.id} data-testid={`friends-tab-${t.id}`} onClick={() => setTab(t.id)}
-                  className={`py-2 rounded-xl text-xs font-semibold transition-all ${tab === t.id ? "bg-[#8C4A27] text-white" : "bg-[#e4eff8] dark:bg-[#232A31] text-[#7E8A93]"}`}>
+                  className={`py-2 rounded-xl text-xs font-semibold transition-all ${tab === t.id ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>
                   {t.label}{t.n ? ` (${t.n})` : ""}
                 </button>
               ))}
@@ -88,9 +88,9 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
                 : rel.incoming.map((c) => (
                   <Row key={c.user_id} c={c} testid={`friend-incoming-${c.user_id}`}>
                     <button data-testid={`friend-accept-${c.user_id}`} onClick={() => act(() => friendsApi.respond(c.user_id, "accept"), tri("Ora siete amici!", "Ihr seid jetzt Freunde!", "You are now friends!"))}
-                      className="px-3 py-1.5 rounded-lg bg-[#8C4A27] text-white text-xs font-bold flex items-center gap-1"><Check className="w-3.5 h-3.5" />{tri("Accetta", "Annehmen", "Accept")}</button>
+                      className="px-3 py-1.5 rounded-lg bg-[#ff6b00] text-white text-xs font-bold flex items-center gap-1"><Check className="w-3.5 h-3.5" />{tri("Accetta", "Annehmen", "Accept")}</button>
                     <button data-testid={`friend-decline-${c.user_id}`} onClick={() => act(() => friendsApi.respond(c.user_id, "decline"))}
-                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#2A323A] text-[#7E8A93] text-xs font-semibold">{tri("Rifiuta", "Ablehnen", "Decline")}</button>
+                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93] text-xs font-semibold">{tri("Rifiuta", "Ablehnen", "Decline")}</button>
                   </Row>
                 )))}
 
@@ -100,16 +100,16 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
                   <Row key={c.user_id} c={c} testid={`friend-item-${c.user_id}`}>
                     {onMessage && (
                       <button data-testid={`friend-message-${c.user_id}`} onClick={() => onMessage({ user_id: c.user_id, name: c.name, picture: c.picture })}
-                        className="px-3 py-1.5 rounded-lg bg-[#8C4A27] text-white text-xs font-bold flex items-center gap-1"><Send className="w-3.5 h-3.5" />{tri("Scrivi", "Schreiben", "Message")}</button>
+                        className="px-3 py-1.5 rounded-lg bg-[#ff6b00] text-white text-xs font-bold flex items-center gap-1"><Send className="w-3.5 h-3.5" />{tri("Scrivi", "Schreiben", "Message")}</button>
                     )}
                     <button data-testid={`friend-remove-${c.user_id}`} onClick={() => act(() => friendsApi.remove(c.user_id))}
-                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#2A323A] text-[#C0574D] text-xs font-semibold flex items-center gap-1"><UserMinus className="w-3.5 h-3.5" />{tri("Rimuovi", "Entfernen", "Remove")}</button>
+                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00] text-xs font-semibold flex items-center gap-1"><UserMinus className="w-3.5 h-3.5" />{tri("Rimuovi", "Entfernen", "Remove")}</button>
                   </Row>
                 )))}
 
               {tab === "trova" && !loading && (
                 <>
-                  <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#232A31] rounded-xl px-3 py-2 mb-1">
+                  <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl px-3 py-2 mb-1">
                     <Search className="w-4 h-4 text-[#7E8A93]" />
                     <input data-testid="friends-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tri("Cerca per nome o email…", "Nach Name oder E-Mail suchen…", "Search by name or email…")}
                       className="bg-transparent flex-1 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC]" />
@@ -117,7 +117,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
 
                   {!q.trim() && sugg.length > 0 && (
                     <div data-testid="friends-suggestions" className="mb-2">
-                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#C88A2B] px-1 py-1.5 flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />{tri("Suggeriti per te", "Für dich vorgeschlagen", "Suggested for you")}</p>
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#ffc700] px-1 py-1.5 flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />{tri("Suggeriti per te", "Für dich vorgeschlagen", "Suggested for you")}</p>
                       {sugg.map((c) => {
                         const reason = c.reason === "mutual"
                           ? (c.mutuals > 0 ? tri(`${c.mutuals} amici in comune`, `${c.mutuals} gemeinsame Freunde`, `${c.mutuals} mutual friends`) : tri("Amico di un amico", "Freund eines Freundes", "Friend of a friend"))
@@ -126,7 +126,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
                         return (
                           <Row key={`sg-${c.user_id}`} c={c} testid={`friend-sugg-${c.user_id}`} sub={reason}>
                             <button data-testid={`friend-sugg-add-${c.user_id}`} onClick={() => act(() => friendsApi.request(c.user_id), tri("Richiesta inviata!", "Anfrage gesendet!", "Request sent!"))}
-                              className="px-3 py-1.5 rounded-lg bg-[#8C4A27] text-white text-xs font-bold flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" />{tri("Aggiungi", "Hinzufügen", "Add")}</button>
+                              className="px-3 py-1.5 rounded-lg bg-[#ff6b00] text-white text-xs font-bold flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" />{tri("Aggiungi", "Hinzufügen", "Add")}</button>
                           </Row>
                         );
                       })}
@@ -137,12 +137,12 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
                   {filtered.length === 0 ? <Empty text={tri("Nessun utente trovato.", "Keine Nutzer.", "No users found.")} />
                     : filtered.map((c) => (
                       <Row key={c.user_id} c={c} testid={`friend-dir-${c.user_id}`} sub={c.email}>
-                        {c.status === "friends" && <span className="text-xs font-semibold text-[#8C4A27] flex items-center gap-1"><Check className="w-3.5 h-3.5" />{tri("Amici", "Freunde", "Friends")}</span>}
+                        {c.status === "friends" && <span className="text-xs font-semibold text-[#ff6b00] flex items-center gap-1"><Check className="w-3.5 h-3.5" />{tri("Amici", "Freunde", "Friends")}</span>}
                         {c.status === "outgoing" && <span className="text-xs font-semibold text-[#7E8A93] flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{tri("In attesa", "Ausstehend", "Pending")}</span>}
                         {c.status === "incoming" && <button data-testid={`friend-accept2-${c.user_id}`} onClick={() => act(() => friendsApi.respond(c.user_id, "accept"), tri("Ora siete amici!", "Freunde!", "Now friends!"))}
-                          className="px-3 py-1.5 rounded-lg bg-[#8C4A27] text-white text-xs font-bold">{tri("Accetta", "Annehmen", "Accept")}</button>}
+                          className="px-3 py-1.5 rounded-lg bg-[#ff6b00] text-white text-xs font-bold">{tri("Accetta", "Annehmen", "Accept")}</button>}
                         {c.status === "none" && <button data-testid={`friend-add-${c.user_id}`} onClick={() => act(() => friendsApi.request(c.user_id), tri("Richiesta inviata!", "Anfrage gesendet!", "Request sent!"))}
-                          className="px-3 py-1.5 rounded-lg bg-[#8C4A27] text-white text-xs font-bold flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" />{tri("Aggiungi", "Hinzufügen", "Add")}</button>}
+                          className="px-3 py-1.5 rounded-lg bg-[#ff6b00] text-white text-xs font-bold flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" />{tri("Aggiungi", "Hinzufügen", "Add")}</button>}
                       </Row>
                     ))}
                 </>
@@ -157,7 +157,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
 
 function Row({ c, children, testid, sub }) {
   return (
-    <div data-testid={testid} className="flex items-center gap-3 rounded-xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-2.5">
+    <div data-testid={testid} className="flex items-center gap-3 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-2.5">
       <Avatar c={c} />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{c.name}</p>
@@ -169,5 +169,5 @@ function Row({ c, children, testid, sub }) {
 }
 
 function Empty({ text }) {
-  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-dashed border-[#E6D8C3] dark:border-[#38424B] p-4 text-sm text-[#7E8A93]">{text}</div>;
+  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-dashed border-[#2b2b2b] dark:border-[#2e2e2e] p-4 text-sm text-[#7E8A93]">{text}</div>;
 }

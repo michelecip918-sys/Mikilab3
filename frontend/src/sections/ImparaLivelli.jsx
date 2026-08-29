@@ -110,23 +110,23 @@ export default function ImparaLivelli({ onBack }) {
     const picked = answers[step];
     return (
       <div className="pb-8" data-testid="impara-quiz">
-        <button data-testid="quiz-back" onClick={() => setActive(null)} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Percorsi", "Paths")}</button>
-        <div className="rounded-3xl p-5 text-[#FFFDF9] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#8C4A27,#6E371C 70%,#4A3222)" }}>
-          <p className="text-[11px] font-bold uppercase tracking-widest text-[#FEF3C7]">{T(active)}</p>
+        <button data-testid="quiz-back" onClick={() => setActive(null)} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Percorsi", "Paths")}</button>
+        <div className="rounded-3xl p-5 text-[#161616] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 70%,#ff6b00)" }}>
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#ffffff]">{T(active)}</p>
           <h1 className="font-display text-xl font-bold mt-1">{L("Domanda", "Question")} {step + 1}/{active.quiz.length}</h1>
         </div>
-        <p className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8] mb-3">{T(q.q)}</p>
-        {q.img && <img data-testid="quiz-image" src={q.img} onError={(e) => { e.currentTarget.style.display = "none"; }} alt="" className="w-full h-44 object-cover rounded-2xl mb-4 border border-[#E6D8C3] dark:border-[#38424B]" />}
+        <p className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8] mb-3">{T(q.q)}</p>
+        {q.img && <img data-testid="quiz-image" src={q.img} onError={(e) => { e.currentTarget.style.display = "none"; }} alt="" className="w-full h-44 object-cover rounded-2xl mb-4 border border-[#2b2b2b] dark:border-[#2e2e2e]" />}
         <div className="space-y-2.5" data-testid="quiz-options">
           {q.a.map((opt, ai) => (
             <button key={ai} data-testid={`quiz-opt-${ai}`} onClick={() => answer(ai)}
-              className={`w-full text-left rounded-2xl p-4 border font-medium transition-all ${picked === ai ? "bg-[#8C4A27] text-[#FFFDF9] border-transparent" : "bg-[#FAF5EC] dark:bg-[#232A31] text-[#2C1E16] dark:text-[#e4eff8] border-[#E6D8C3] dark:border-[#38424B]"}`}>
+              className={`w-full text-left rounded-2xl p-4 border font-medium transition-all ${picked === ai ? "bg-[#ff6b00] text-[#161616] border-transparent" : "bg-[#121212] dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#e4eff8] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
               {T(opt)}
             </button>
           ))}
         </div>
         <button data-testid="quiz-next" disabled={picked === undefined || busy} onClick={() => (last ? finish() : setStep(step + 1))}
-          className="mt-5 w-full flex items-center justify-center gap-2 bg-[#D97706] hover:bg-[#B45309] disabled:opacity-40 text-[#FFFDF9] font-semibold py-3.5 rounded-2xl active:scale-98 transition-all">
+          className="mt-5 w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff6b00] disabled:opacity-40 text-[#161616] font-semibold py-3.5 rounded-2xl active:scale-98 transition-all">
           {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : last ? <><Trophy className="w-5 h-5" /> {L("Completa il livello", "Finish the level")}</> : L("Avanti", "Next")}
         </button>
       </div>
@@ -174,12 +174,12 @@ export default function ImparaLivelli({ onBack }) {
 
   return (
     <div className="pb-8" data-testid="impara-livelli">
-      {onBack && <button data-testid="impara-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#FFFDF9] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#8C4A27,#6E371C 60%,#4A3222)" }}>
+      {onBack && <button data-testid="impara-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><GraduationCap className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Impara a Livelli", "Learn by Levels")}</h1>
-        <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">{L("Supera il quiz di ogni livello: ogni percorso completato conta come una sfida e ti avvicina allo sblocco dei 17 Panettoni.", "Pass each level's quiz: every completed path counts as a challenge and gets you closer to unlocking the 17 Panettoni.")}</p>
-        <p className="text-[12px] font-bold text-[#FEF3C7] mt-3">{doneCount}/{PATHS.length} {L("livelli superati", "levels passed")}</p>
+        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Supera il quiz di ogni livello: ogni percorso completato conta come una sfida e ti avvicina allo sblocco dei 17 Panettoni.", "Pass each level's quiz: every completed path counts as a challenge and gets you closer to unlocking the 17 Panettoni.")}</p>
+        <p className="text-[12px] font-bold text-[#ffffff] mt-3">{doneCount}/{PATHS.length} {L("livelli superati", "levels passed")}</p>
       </div>
 
       <div className="space-y-3" data-testid="impara-paths">
@@ -188,37 +188,37 @@ export default function ImparaLivelli({ onBack }) {
           const unlocked = isUnlocked(idx);
           return (
             <button key={p.id} data-testid={`impara-path-${p.id}`} onClick={() => openPath(p, idx)}
-              className={`w-full text-left flex items-center gap-4 rounded-2xl p-4 border shadow-sm transition-all ${ok ? "bg-[#FEF3C7] border-[#D97706]" : unlocked ? "bg-[#FAF5EC] dark:bg-[#232A31] border-[#E6D8C3] dark:border-[#38424B] active:scale-98" : "bg-[#F2E8D5]/50 border-[#E6D8C3] opacity-70"}`}>
+              className={`w-full text-left flex items-center gap-4 rounded-2xl p-4 border shadow-sm transition-all ${ok ? "bg-[#ffffff] border-[#ff6b00]" : unlocked ? "bg-[#121212] dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-98" : "bg-[#1a1a1a]/50 border-[#2b2b2b] opacity-70"}`}>
               <div className="text-3xl shrink-0">{p.icon}</div>
               <div className="flex-1 min-w-0">
-                <p className="font-display text-[16px] font-bold text-[#2C1E16] dark:text-[#e4eff8] leading-tight">{T(p)}</p>
-                <p className="text-[12.5px] text-[#6B5546] dark:text-[#AEB8BF] leading-snug mt-0.5">{T(p.intro)}</p>
+                <p className="font-display text-[16px] font-bold text-[#ff6b00] dark:text-[#e4eff8] leading-tight">{T(p)}</p>
+                <p className="text-[12.5px] text-[#ff6b00] dark:text-[#AEB8BF] leading-snug mt-0.5">{T(p.intro)}</p>
               </div>
-              {ok ? <div className="w-9 h-9 rounded-full bg-[#D97706] text-white flex items-center justify-center shrink-0"><Check className="w-5 h-5" /></div>
-                : unlocked ? <ChevronRight className="w-6 h-6 text-[#8C4A27]/70 shrink-0" />
-                : <Lock className="w-5 h-5 text-[#8C7362] shrink-0" />}
+              {ok ? <div className="w-9 h-9 rounded-full bg-[#ff6b00] text-white flex items-center justify-center shrink-0"><Check className="w-5 h-5" /></div>
+                : unlocked ? <ChevronRight className="w-6 h-6 text-[#ff6b00]/70 shrink-0" />
+                : <Lock className="w-5 h-5 text-[#ff8a33] shrink-0" />}
             </button>
           );
         })}
       </div>
 
       {doneCount === PATHS.length && (
-        <div data-testid="impara-diploma" className="mt-5 rounded-2xl bg-[#FEF3C7] border border-[#D97706] p-4">
+        <div data-testid="impara-diploma" className="mt-5 rounded-2xl bg-[#ffffff] border border-[#ff6b00] p-4">
           <div className="flex items-center gap-3 mb-3">
-            <Award className="w-8 h-8 text-[#8C4A27] shrink-0" />
-            <p className="text-[13.5px] font-semibold text-[#6B5546]">{L("Complimenti! Hai completato tutti i percorsi Impara.", "Congratulations! You completed all the Learn paths.")}</p>
+            <Award className="w-8 h-8 text-[#ff6b00] shrink-0" />
+            <p className="text-[13.5px] font-semibold text-[#ff6b00]">{L("Complimenti! Hai completato tutti i percorsi Impara.", "Congratulations! You completed all the Learn paths.")}</p>
           </div>
           <button data-testid="impara-diploma-pdf" onClick={downloadDiploma}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-[#FFFDF9] font-semibold px-4 py-3 active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] hover:bg-[#ff6b00] text-[#161616] font-semibold px-4 py-3 active:scale-98 transition-all">
             <Award className="w-5 h-5" /> {L("Scarica il Diploma MikiLab (PDF)", "Download the MikiLab Diploma (PDF)")}
           </button>
           <div className="grid grid-cols-2 gap-2 mt-2">
             <a data-testid="impara-share-wa" href={`https://wa.me/?text=${encodeURIComponent(diplomaShareText)}`} target="_blank" rel="noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl bg-[#2e8b6f] hover:bg-[#1c5c49] text-[#FFFDF9] font-semibold px-3 py-2.5 active:scale-98 transition-all">
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#2e8b6f] hover:bg-[#1c5c49] text-[#161616] font-semibold px-3 py-2.5 active:scale-98 transition-all">
               <Send className="w-4 h-4" /> WhatsApp
             </a>
             <button data-testid="impara-share-more" onClick={shareDiploma}
-              className="flex items-center justify-center gap-2 rounded-xl bg-[#8C4A27] hover:bg-[#6E371C] text-[#FFFDF9] font-semibold px-3 py-2.5 active:scale-98 transition-all">
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] hover:bg-[#ff6b00] text-[#161616] font-semibold px-3 py-2.5 active:scale-98 transition-all">
               <Share2 className="w-4 h-4" /> {L("Instagram / Altro", "Instagram / More")}
             </button>
           </div>

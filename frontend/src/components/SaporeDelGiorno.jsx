@@ -39,7 +39,7 @@ export default function SaporeDelGiorno({ onOpen }) {
         {onOpen && <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-[#e9c98f]/80" />}
       </div>
       {/* mensola / ledge */}
-      <div aria-hidden className="wood-surface h-3 rounded-b-xl border-x-2 border-b-2 border-[#5a3a1e] shadow-[0_6px_10px_rgba(44,30,16,.35)] mx-2" />
+      <div aria-hidden className="wood-surface h-3 rounded-b-xl border-x-2 border-b-2 border-[#2e2e2e] shadow-[0_6px_10px_rgba(44,30,16,.35)] mx-2" />
     </button>
   );
 }

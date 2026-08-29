@@ -7,8 +7,8 @@ import { mkTri } from "@/i18n/triMaps";
 export default function FoodCostBox() {
   const { lang } = useLang();
   const L = (i, e, s, f) => mkTri(lang)(i, e, e, s || e, f || e);
-  const inp = "w-full bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2C1E16] dark:text-[#e4eff8] focus:border-[#D97706] font-mono-data";
-  const lbl = "text-[12px] font-semibold text-[#6B5546] dark:text-[#AEB8BF] mb-1";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   const [rows, setRows] = useState([
     { name: L("Farina", "Flour", "Harina", "Farine"), cost: 1.2, qty: 1 },
@@ -35,13 +35,13 @@ export default function FoodCostBox() {
   }, [rows, pieces, price, overhead]);
 
   const eur = (v) => (Number(v) || 0).toLocaleString(lang === "it" ? "it" : "en", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const card = "rounded-2xl bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm";
 
   return (
     <div className={card} data-testid="foodcost-box">
       <div className="flex items-center gap-2 mb-3">
-        <TrendingUp className="w-5 h-5 text-[#8C4A27]" />
-        <h3 className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8]">{L("Food Cost & Margini", "Food Cost & Margins", "Food Cost y Márgenes", "Food Cost & Marges")}</h3>
+        <TrendingUp className="w-5 h-5 text-[#ff6b00]" />
+        <h3 className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8]">{L("Food Cost & Margini", "Food Cost & Margins", "Food Cost y Márgenes", "Food Cost & Marges")}</h3>
       </div>
 
       <p className={lbl}>{L("Ingredienti (costo al kg/l · quantità in kg/l)", "Ingredients (cost per kg/l · qty in kg/l)", "Ingredientes (coste por kg/l · cantidad kg/l)", "Ingrédients (coût au kg/l · quantité kg/l)")}</p>
@@ -51,11 +51,11 @@ export default function FoodCostBox() {
             <input data-testid={`fc-name-${i}`} value={r.name} onChange={(e) => set(i, "name", e.target.value)} placeholder={L("Ingrediente", "Ingredient", "Ingrediente", "Ingrédient")} className={inp + " flex-1 min-w-0 !font-sans"} />
             <input data-testid={`fc-cost-${i}`} type="number" step="0.01" value={r.cost} onChange={(e) => set(i, "cost", e.target.value)} className={inp + " w-20 shrink-0"} title="€/kg" />
             <input data-testid={`fc-qty-${i}`} type="number" step="0.01" value={r.qty} onChange={(e) => set(i, "qty", e.target.value)} className={inp + " w-20 shrink-0"} title="kg" />
-            <button data-testid={`fc-del-${i}`} onClick={() => del(i)} className="text-[#B45309] shrink-0 p-1"><Trash2 className="w-4 h-4" /></button>
+            <button data-testid={`fc-del-${i}`} onClick={() => del(i)} className="text-[#ff6b00] shrink-0 p-1"><Trash2 className="w-4 h-4" /></button>
           </div>
         ))}
       </div>
-      <button data-testid="fc-add" onClick={add} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#8C4A27] mb-4"><Plus className="w-4 h-4" /> {L("Aggiungi ingrediente", "Add ingredient", "Añadir ingrediente", "Ajouter un ingrédient")}</button>
+      <button data-testid="fc-add" onClick={add} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#ff6b00] mb-4"><Plus className="w-4 h-4" /> {L("Aggiungi ingrediente", "Add ingredient", "Añadir ingrediente", "Ajouter un ingrédient")}</button>
 
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div><p className={lbl}>{L("Pezzi", "Pieces", "Piezas", "Pièces")}</p><input data-testid="fc-pieces" type="number" value={pieces} onChange={(e) => setPieces(Number(e.target.value))} className={inp} /></div>
@@ -63,7 +63,7 @@ export default function FoodCostBox() {
         <div><p className={lbl}>{L("Spese % ", "Overhead %", "Gastos %", "Frais %")}</p><input data-testid="fc-overhead" type="number" value={overhead} onChange={(e) => setOverhead(e.target.value)} className={inp} /></div>
       </div>
 
-      <div data-testid="fc-out" className="rounded-xl bg-[#FEF3C7] p-3 divide-y divide-[#E6D8C3]">
+      <div data-testid="fc-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2b2b2b]">
         {[
           [L("Costo ingredienti", "Ingredient cost", "Coste ingredientes", "Coût ingrédients"), `€ ${eur(calc.ingCost)}`],
           [L("Spese generali", "Overhead", "Gastos generales", "Frais généraux"), `€ ${eur(calc.oh)}`],
@@ -71,19 +71,19 @@ export default function FoodCostBox() {
           [L("Costo a pezzo", "Cost per piece", "Coste por pieza", "Coût par pièce"), `€ ${eur(calc.perPiece)}`],
           [L("Ricavo", "Revenue", "Ingresos", "Revenu"), `€ ${eur(calc.revenue)}`],
         ].map(([k, v], i) => (
-          <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#6B5546]">{k}</span><span className="font-mono-data font-bold text-[#8C4A27]">{v}</span></div>
+          <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#ff6b00]">{k}</span><span className="font-mono-data font-bold text-[#ff6b00]">{v}</span></div>
         ))}
       </div>
       <div className="grid grid-cols-2 gap-2 mt-2">
         <div data-testid="fc-margin" className={`rounded-xl p-3 text-center border ${calc.profit >= 0 ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#FEE2E2] border-[#DC2626]"}`}>
-          <p className="text-[11px] font-semibold text-[#6B5546]">{L("Margine", "Margin", "Margen", "Marge")}</p>
-          <p className="font-display text-2xl font-bold text-[#8C4A27]">{calc.marginPct.toFixed(0)}%</p>
-          <p className="text-[11px] text-[#6B5546]">€ {eur(calc.profit)}</p>
+          <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Margine", "Margin", "Margen", "Marge")}</p>
+          <p className="font-display text-2xl font-bold text-[#ff6b00]">{calc.marginPct.toFixed(0)}%</p>
+          <p className="text-[11px] text-[#ff6b00]">€ {eur(calc.profit)}</p>
         </div>
-        <div className="rounded-xl p-3 text-center border bg-[#FEF3C7] border-[#D97706]">
-          <p className="text-[11px] font-semibold text-[#6B5546]">{L("Ricarico", "Markup", "Margen s/coste", "Marge s/coût")}</p>
-          <p className="font-display text-2xl font-bold text-[#8C4A27]">{calc.markupPct.toFixed(0)}%</p>
-          <p className="text-[11px] text-[#6B5546]">{L("sul costo", "on cost", "sobre coste", "sur coût")}</p>
+        <div className="rounded-xl p-3 text-center border bg-[#ffffff] border-[#ff6b00]">
+          <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Ricarico", "Markup", "Margen s/coste", "Marge s/coût")}</p>
+          <p className="font-display text-2xl font-bold text-[#ff6b00]">{calc.markupPct.toFixed(0)}%</p>
+          <p className="text-[11px] text-[#ff6b00]">{L("sul costo", "on cost", "sobre coste", "sur coût")}</p>
         </div>
       </div>
     </div>

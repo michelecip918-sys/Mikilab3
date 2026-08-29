@@ -64,7 +64,7 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={panelRef}>
       <button data-testid="notif-bell" onClick={toggle}
-        className="relative w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] flex items-center justify-center text-[#8C4A27] active:scale-95 transition-all"
+        className="relative w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
         aria-label={tri("Notifiche", "Benachrichtigungen", "Notifications")}>
         <Bell className="w-4.5 h-4.5" />
         {unread > 0 && (
@@ -73,8 +73,8 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div data-testid="notif-panel" className="absolute right-0 mt-2 w-80 max-w-[90vw] max-h-[70vh] overflow-auto rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-2xl z-50">
-          <div className="px-4 py-3 border-b border-[#e4eff8] dark:border-[#38424B] sticky top-0 bg-white dark:bg-[#232A31]">
+        <div data-testid="notif-panel" className="absolute right-0 mt-2 w-80 max-w-[90vw] max-h-[70vh] overflow-auto rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-2xl z-50">
+          <div className="px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] sticky top-0 bg-white dark:bg-[#1e1e1e]">
             <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Notifiche", "Benachrichtigungen", "Notifications")}</p>
           </div>
           {items.length === 0 ? (
@@ -82,8 +82,8 @@ export default function NotificationBell() {
           ) : (
             <div>
               {items.map((n) => (
-                <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#38424B] last:border-0 ${!n.read ? "bg-[#8C4A27]/5" : ""}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type === "email_import" ? "bg-[#B45309]/15 text-[#B45309]" : (n.type === "bakealong" || n.type === "bakealong_win") ? "bg-[#a9772f]/15 text-[#a9772f]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#3F7CAC]/15 text-[#3F7CAC]"}`}>
+                <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] last:border-0 ${!n.read ? "bg-[#ff6b00]/5" : ""}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type === "email_import" ? "bg-[#ff6b00]/15 text-[#ff6b00]" : (n.type === "bakealong" || n.type === "bakealong_win") ? "bg-[#ffc700]/15 text-[#ffc700]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#3F7CAC]/15 text-[#3F7CAC]"}`}>
                     {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type === "email_import" ? <Mail className="w-4 h-4" /> : (n.type === "bakealong" || n.type === "bakealong_win") ? <Flame className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
                   </div>
                   <div className="min-w-0 flex-1">

@@ -54,13 +54,13 @@ export default function AvatarBubbles({ variant = "impara" }) {
           <motion.div key={idx} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.12 }}
             className={`flex items-end gap-2.5 ${isMichele ? "" : "flex-row-reverse"}`}>
             <img src={AV[m.who]} alt={NAME[m.who]}
-              className={`w-11 h-11 rounded-full object-cover shadow-sm shrink-0 ring-2 ${isMichele ? "ring-[#B45309]/60" : "ring-[#B45309]/60"}`}
+              className={`w-11 h-11 rounded-full object-cover shadow-sm shrink-0 ring-2 ${isMichele ? "ring-[#ff6b00]/60" : "ring-[#ff6b00]/60"}`}
               onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <div data-testid={`bubble-${m.who}`}
               className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border ${
                 isMichele
-                  ? "bg-[#B45309]/5 border-[#B45309]/20 rounded-bl-sm"
-                  : "bg-[#B45309]/5 border-[#B45309]/20 rounded-br-sm"}`}>
+                  ? "bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-bl-sm"
+                  : "bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-br-sm"}`}>
               <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#3a5233]" : "text-[#274038]"}`}>{NAME[m.who]}</p>
               <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{bubbleText(m)}</p>
             </div>

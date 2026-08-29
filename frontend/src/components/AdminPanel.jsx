@@ -12,7 +12,7 @@ const escapeHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "
 const mdLiteHtml = (s) => escapeHtml(s)
   .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
   .replace(/\*(.+?)\*/g, "<em>$1</em>")
-  .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" style="color:#8C4A27">$1</a>')
+  .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" style="color:#ff6b00">$1</a>')
   .replace(/\n/g, "<br/>");
 
 const BUBBLE_SECTIONS = [
@@ -196,63 +196,63 @@ export default function AdminPanel({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#FAF5EC] dark:bg-[#1B2127] border-[#E6D8C3] dark:border-[#38424B]">
+      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e]">
         <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
-          <Crown className="w-5 h-5 text-[#B45309]" /> {de ? "Admin-Panel" : "Pannello Admin"}
+          <Crown className="w-5 h-5 text-[#ff6b00]" /> {de ? "Admin-Panel" : "Pannello Admin"}
         </DialogTitle>
         <DialogDescription className="text-sm text-[#7E8A93]">
           {de ? "Verwalte Inhalte, Abonnenten und spezielle Zugänge." : "Gestisci contenuti, iscritti e accessi speciali."}
         </DialogDescription>
 
-        <div className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4 space-y-3">
-          <p className="flex items-center gap-2 text-sm font-semibold text-[#8C4A27] dark:text-[#a9d2ec]">
+        <div className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 space-y-3">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">
             <Gift className="w-4 h-4" /> {de ? "PRO verschenken" : "Regala PRO"}
           </p>
           <input
             data-testid="admin-grant-email" type="email" value={email}
             onChange={(e) => setEmail(e.target.value)} placeholder="email@esempio.it"
-            className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
+            className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
           />
           <select
             data-testid="admin-grant-days" value={days} onChange={(e) => setDays(e.target.value)}
-            className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
+            className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
           >
             {dayOpts.map((o) => <option key={o.v} value={o.v}>{de ? o.de : o.it}</option>)}
           </select>
           <button
             data-testid="admin-grant-btn" onClick={grant} disabled={busy}
-            className="w-full bg-[#B45309] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all"
+            className="w-full bg-[#ff6b00] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all"
           >
             {de ? "PRO schenken" : "Regala PRO"}
           </button>
         </div>
 
-        <div data-testid="admin-shop" className="rounded-2xl bg-[#6E371C]/10 border border-[#6E371C]/30 p-4 mt-2">
+        <div data-testid="admin-shop" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-[#6E371C] dark:text-[#8FB0C2]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
+              <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#8FB0C2]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
               <p className="text-[11px] text-[#7E8A93]">{de ? "Warteliste" : "Lista d'attesa"}: <b>{shop.waitlist_count}</b> · {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}</p>
             </div>
             <button data-testid="admin-shop-toggle" onClick={toggleShop}
-              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#B45309] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#6E371C] dark:text-[#8FB0C2] border border-[#6E371C]/30"}`}>
+              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00] dark:text-[#8FB0C2] border border-[#ff6b00]/30"}`}>
               {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}
             </button>
           </div>
         </div>
 
-        <div data-testid="admin-bakealong" className="rounded-2xl bg-[#a9772f]/10 border border-[#a9772f]/30 p-4 mt-2">
+        <div data-testid="admin-bakealong" className="rounded-2xl bg-[#ffc700]/10 border border-[#ffc700]/30 p-4 mt-2">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[#8a5a2b] dark:text-[#e0b877]">Bake-Along</p>
+              <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#e0b877]">Bake-Along</p>
               <p className="text-[11px] text-[#7E8A93]">{de ? "Alle Abonnenten über die Wochen-Challenge benachrichtigen" : "Avvisa tutti gli iscritti della sfida della settimana"}</p>
             </div>
             <button data-testid="admin-bakealong-notify" onClick={notifyBakeAlong} disabled={baBusy}
-              className="px-3 py-2 rounded-xl text-sm font-semibold bg-[#a9772f] text-white active:scale-97 disabled:opacity-60 shrink-0">
+              className="px-3 py-2 rounded-xl text-sm font-semibold bg-[#ffc700] text-white active:scale-97 disabled:opacity-60 shrink-0">
               {baBusy ? (de ? "Sende…" : "Invio…") : (de ? "Senden" : "Invia ora")}
             </button>
           </div>
           <button data-testid="admin-bakealong-award" onClick={awardBakeAlong} disabled={baBusy}
-            className="mt-2 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[#C0574D] text-white active:scale-97 disabled:opacity-60">
+            className="mt-2 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[#ff6b00] text-white active:scale-97 disabled:opacity-60">
             🥇 {de ? "Wochensieger krönen" : "Proclama il vincitore della settimana"}
           </button>
         </div>
@@ -265,11 +265,11 @@ export default function AdminPanel({ open, onOpenChange }) {
             {subs.length > 0 && (
               <div className="flex items-center gap-1.5 shrink-0">
                 <button data-testid="admin-newsletter-csv" onClick={downloadCsv}
-                  className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#232A31] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95">
+                  className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#1e1e1e] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95">
                   CSV
                 </button>
                 <button data-testid="admin-newsletter-copy" onClick={() => { navigator.clipboard.writeText(subs.map((s) => s.email).join(", ")); toast.success(de ? "E-Mails kopiert" : "Email copiate"); }}
-                  className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#232A31] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95">
+                  className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#1e1e1e] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95">
                   {de ? "Alle kopieren" : "Copia tutte"}
                 </button>
               </div>
@@ -280,10 +280,10 @@ export default function AdminPanel({ open, onOpenChange }) {
           ) : (
             <div className="space-y-1.5 max-h-44 overflow-y-auto">
               {subs.map((s) => (
-                <div key={s.email} data-testid={`nl-row-${s.email}`} className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2.5 py-2">
+                <div key={s.email} data-testid={`nl-row-${s.email}`} className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2.5 py-2">
                   <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{s.email}</span>
                   <span className="shrink-0 flex items-center gap-1.5">
-                    <span className="text-[10px] font-bold uppercase text-[#8C4A27] bg-[#8C4A27]/10 rounded px-1.5 py-0.5">{s.lang || "it"}</span>
+                    <span className="text-[10px] font-bold uppercase text-[#ff6b00] bg-[#ff6b00]/10 rounded px-1.5 py-0.5">{s.lang || "it"}</span>
                     <span className="text-[10px] text-[#7E8A93]">{s.source || "home"}</span>
                   </span>
                 </div>
@@ -298,24 +298,24 @@ export default function AdminPanel({ open, onOpenChange }) {
             </p>
             <input data-testid="nl-send-subject" value={nl.subject} onChange={(e) => setNl((n) => ({ ...n, subject: e.target.value }))}
               placeholder={de ? "Betreff der E-Mail" : "Oggetto dell'email"}
-              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <input data-testid="nl-send-title" value={nl.title} onChange={(e) => setNl((n) => ({ ...n, title: e.target.value }))}
               placeholder={de ? "Titel (im Inhalt)" : "Titolo (nel contenuto)"}
-              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <textarea data-testid="nl-send-body" value={nl.body} onChange={(e) => setNl((n) => ({ ...n, body: e.target.value }))} rows={4}
               placeholder={de ? "Text… **fett**, *kursiv*, [Link](https://…)" : "Testo… **grassetto**, *corsivo*, [link](https://…)"}
-              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <input data-testid="nl-send-image" value={nl.image_url} onChange={(e) => setNl((n) => ({ ...n, image_url: e.target.value }))}
               placeholder={de ? "Bild-URL (optional)" : "URL immagine (opzionale)"}
-              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <p className="text-[10px] text-[#7E8A93] mb-2">{de ? "Formatierung: **fett**, *kursiv*, [Text](URL)" : "Formattazione: **grassetto**, *corsivo*, [testo](URL)"}</p>
 
             {/* Anteprima live: come apparirà l'email agli iscritti */}
             {(nl.title.trim() || nl.body.trim() || nl.image_url.trim()) && (
               <div className="mb-2">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#2f5a2f] dark:text-[#9cd6a0] mb-1">{de ? "Vorschau" : "Anteprima"}</p>
-                <div data-testid="nl-preview" className="rounded-xl border border-[#E6D8C3] dark:border-[#38424B] overflow-hidden bg-white">
-                  <div className="bg-[#8C4A27] px-4 py-3 flex items-center gap-2">
+                <div data-testid="nl-preview" className="rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden bg-white">
+                  <div className="bg-[#ff6b00] px-4 py-3 flex items-center gap-2">
                     <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-8 h-8 rounded-lg object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                     <span className="font-display text-white font-bold text-base">MikiLab</span>
                   </div>
@@ -332,13 +332,13 @@ export default function AdminPanel({ open, onOpenChange }) {
             )}
             <div className="flex items-center gap-2">
               <select data-testid="nl-send-lang" value={nl.lang} onChange={(e) => setNl((n) => ({ ...n, lang: e.target.value }))}
-                className="bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-2 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]">
+                className="bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-2 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]">
                 <option value="">{de ? "Alle Sprachen" : "Tutte le lingue"}</option>
                 <option value="it">IT</option><option value="de">DE</option><option value="en">EN</option>
                 <option value="es">ES</option><option value="fr">FR</option><option value="fa">FA</option>
               </select>
               <button data-testid="nl-test-btn" onClick={sendTest} disabled={nlTesting}
-                className="flex items-center justify-center gap-1.5 bg-white dark:bg-[#1F252B] border border-[#3a6b3a]/50 text-[#2f5a2f] dark:text-[#9cd6a0] disabled:opacity-50 font-semibold px-3 py-2 rounded-xl active:scale-98 transition-all text-sm">
+                className="flex items-center justify-center gap-1.5 bg-white dark:bg-[#181818] border border-[#3a6b3a]/50 text-[#2f5a2f] dark:text-[#9cd6a0] disabled:opacity-50 font-semibold px-3 py-2 rounded-xl active:scale-98 transition-all text-sm">
                 {nlTesting ? "…" : (de ? "An mich" : "A me")}
               </button>
               <button data-testid="nl-send-btn" onClick={sendNewsletter} disabled={nlSending}
@@ -352,7 +352,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                 <p className="text-[11px] font-bold text-[#2f5a2f] dark:text-[#9cd6a0] mb-1.5">{de ? "Verlauf" : "Storico invii"}</p>
                 <div className="space-y-1 max-h-32 overflow-y-auto">
                   {nlHistory.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between gap-2 text-[11px] bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2 py-1.5">
+                    <div key={c.id} className="flex items-center justify-between gap-2 text-[11px] bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5">
                       <span className="truncate text-[#2B303B] dark:text-[#e4eff8]">{c.subject}</span>
                       <span className="shrink-0 text-[#7E8A93]">{(c.created_at || "").slice(0, 10)} · {c.sent}/{c.total} · {(c.lang || "all").toUpperCase()}</span>
                     </div>
@@ -363,29 +363,29 @@ export default function AdminPanel({ open, onOpenChange }) {
           </div>
         </div>
 
-        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
-          <p className="text-sm font-bold text-[#6E371C] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
+        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
+          <p className="text-sm font-bold text-[#ff6b00] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
 
           {/* WhatsApp */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] dark:text-[#a9d2ec] mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
               <MessageCircle className="w-4 h-4 text-[#25D366]" /> {de ? "WhatsApp-Nummer (nur Ziffern, mit Ländervorwahl)" : "Numero WhatsApp (solo cifre, con prefisso)"}
             </label>
             <input data-testid="admin-wa-number" value={settings.whatsapp_number}
               onChange={(e) => setSettings((s) => ({ ...s, whatsapp_number: e.target.value }))}
               placeholder="491601253378"
-              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
           </div>
 
           {/* Fumetti avatar */}
           <div>
-            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] dark:text-[#a9d2ec] mb-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
               <MessageSquareText className="w-4 h-4" /> {de ? "Avatar-Sprechblasen (leer = Standardtext)" : "Fumetti avatar (vuoto = testo predefinito)"}
             </p>
             <div className="space-y-3">
               {BUBBLE_SECTIONS.map((sec) => (
-                <div key={sec.variant} className="rounded-xl bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] p-2.5">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27] mb-1.5">{de ? sec.de : sec.it}</p>
+                <div key={sec.variant} className="rounded-xl bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] p-2.5">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1.5">{de ? sec.de : sec.it}</p>
                   {["michele", "momy"].map((who) => (
                     <div key={who} className="mb-1.5">
                       <p className="text-[10px] font-semibold text-[#7E8A93] uppercase">{who}</p>
@@ -393,12 +393,12 @@ export default function AdminPanel({ open, onOpenChange }) {
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.it) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "it", e.target.value)}
                         placeholder={de ? "Text IT" : "Testo IT"}
-                        className="w-full bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
+                        className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
                       <input data-testid={`admin-bubble-${sec.variant}-${who}-de`}
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.de) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "de", e.target.value)}
                         placeholder="Text DE"
-                        className="w-full bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                        className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
                     </div>
                   ))}
                 </div>
@@ -408,7 +408,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
           {/* Copertine cartelle */}
           <div>
-            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#8C4A27] dark:text-[#a9d2ec] mb-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
               <ImageIcon className="w-4 h-4" /> {de ? "Ordner-Titelbilder (Bild antippen)" : "Copertine cartelle (tocca una foto)"}
             </p>
             <div className="space-y-2.5">
@@ -420,14 +420,14 @@ export default function AdminPanel({ open, onOpenChange }) {
                   <div key={cat.key} data-testid={`admin-cover-${cat.key}`} className="min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <p className="text-[11px] font-semibold text-[#2B303B] dark:text-[#e4eff8]">{cat.icon} {t(cat.label)}</p>
-                      {sel && <button data-testid={`admin-cover-clear-${cat.key}`} onClick={() => setCover(cat.key, "")} className="text-[10px] text-[#C0574D] font-semibold">{de ? "Zurücksetzen" : "Ripristina"}</button>}
+                      {sel && <button data-testid={`admin-cover-clear-${cat.key}`} onClick={() => setCover(cat.key, "")} className="text-[10px] text-[#ff6b00] font-semibold">{de ? "Zurücksetzen" : "Ripristina"}</button>}
                     </div>
                     <div className="flex gap-2 overflow-x-auto pb-1 min-w-0 max-w-full">
                       {imgs.map((r) => {
                         const active = sel === r.image_url;
                         return (
                           <button key={r.id} data-testid={`admin-cover-pick-${cat.key}-${r.id}`} onClick={() => setCover(cat.key, r.image_url)}
-                            className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${active ? "border-[#B45309] ring-2 ring-[#B45309]/40" : "border-transparent opacity-80"}`}>
+                            className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${active ? "border-[#ff6b00] ring-2 ring-[#ff6b00]/40" : "border-transparent opacity-80"}`}>
                             <img src={r.image_url.startsWith("http") ? r.image_url : `${process.env.PUBLIC_URL}${r.image_url}`} alt={r.name} className="w-full h-full object-cover" />
                           </button>
                         );
@@ -440,7 +440,7 @@ export default function AdminPanel({ open, onOpenChange }) {
           </div>
 
           <button data-testid="admin-save-settings" onClick={saveSettings} disabled={savingSet}
-            className="w-full flex items-center justify-center gap-2 bg-[#6E371C] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all">
             <Save className="w-4 h-4" /> {de ? "Einstellungen speichern" : "Salva impostazioni sito"}
           </button>
         </div>
@@ -451,16 +451,16 @@ export default function AdminPanel({ open, onOpenChange }) {
             <Languages className="w-4 h-4" /> {de ? "Rezept-Übersetzungen IT/DE/EN" : "Traduzioni ricette IT/DE/EN"}
           </p>
           {trCoverage.incomplete.length === 0 ? (
-            <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-xl bg-[#B45309]/12 border border-[#B45309]/35 px-3 py-2.5">
+            <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/35 px-3 py-2.5">
               <CheckCircle2 className="w-5 h-5 text-[#336a94] shrink-0" />
-              <p className="text-sm font-semibold text-[#8C4A27] dark:text-[#a9d2ec]">
+              <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">
                 {de ? `Alle ${trCoverage.total} Rezepte verifiziert ✓ (IT/DE/EN)` : `Tutte le ${trCoverage.total} ricette verificate ✓ (IT/DE/EN)`}
               </p>
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-2 rounded-xl bg-[#C88A2B]/12 border border-[#C88A2B]/40 px-3 py-2.5 mb-2">
-                <AlertTriangle className="w-5 h-5 text-[#C88A2B] shrink-0" />
+              <div className="flex items-center gap-2 rounded-xl bg-[#ffc700]/12 border border-[#ffc700]/40 px-3 py-2.5 mb-2">
+                <AlertTriangle className="w-5 h-5 text-[#ffc700] shrink-0" />
                 <p data-testid="admin-translation-count" className="text-sm font-semibold text-[#8a5a1a] dark:text-[#e0b877]">
                   {de ? `${trCoverage.incomplete.length} von ${trCoverage.total} Rezepten unvollständig` : `${trCoverage.incomplete.length} ricette su ${trCoverage.total} da completare`}
                 </p>
@@ -472,11 +472,11 @@ export default function AdminPanel({ open, onOpenChange }) {
               <div className="space-y-1.5 max-h-44 overflow-y-auto">
                 {trCoverage.incomplete.map((r) => (
                   <div key={r.id} data-testid={`admin-translation-missing-${r.id}`}
-                    className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2.5 py-2">
+                    className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2.5 py-2">
                     <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</span>
                     <span className="shrink-0 flex gap-1">
                       {r.miss.map((l) => (
-                        <span key={l} className="text-[10px] font-bold text-[#C0574D] bg-[#C0574D]/12 border border-[#C0574D]/30 rounded px-1.5 py-0.5">{l}</span>
+                        <span key={l} className="text-[10px] font-bold text-[#ff6b00] bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded px-1.5 py-0.5">{l}</span>
                       ))}
                     </span>
                   </div>
@@ -487,7 +487,7 @@ export default function AdminPanel({ open, onOpenChange }) {
         </div>
 
         <div className="flex items-center justify-between mt-2 mb-1">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#8C4A27]">{de ? "Zugänge" : "Accessi"}</p>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00]">{de ? "Zugänge" : "Accessi"}</p>
           <button data-testid="admin-refresh" onClick={load} className="text-[#7E8A93] active:scale-90">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </button>
@@ -498,11 +498,11 @@ export default function AdminPanel({ open, onOpenChange }) {
             <p className="text-sm text-[#7E8A93] text-center py-4">{de ? "Noch keine Zugänge." : "Nessun accesso ancora."}</p>
           ) : list.map((e) => (
             <div key={e.email} data-testid={`ent-row-${e.email}`}
-              className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5">
+              className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5">
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{e.email}</p>
                 <p className="text-[11px] text-[#7E8A93]">
-                  <span className={`font-bold ${e.active ? "text-[#B45309]" : "text-[#C0574D]"}`}>
+                  <span className={`font-bold ${e.active ? "text-[#ff6b00]" : "text-[#ff6b00]"}`}>
                     {e.active ? "PRO" : (de ? "inaktiv" : "inattivo")}
                   </span>
                   {" · "}{e.source || "—"}{" · "}{fmt(e.expires_at)}
@@ -510,7 +510,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               </div>
               {e.active && (
                 <button data-testid={`ent-revoke-${e.email}`} onClick={() => revoke(e.email)}
-                  className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#2A323A] flex items-center justify-center text-[#C0574D] shrink-0 active:scale-95">
+                  className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center text-[#ff6b00] shrink-0 active:scale-95">
                   <Trash2 className="w-4 h-4" />
                 </button>
               )}

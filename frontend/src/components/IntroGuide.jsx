@@ -26,12 +26,12 @@ export default function IntroGuide() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && setOpen(false)}>
-      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#FAF5EC] dark:bg-[#1B2127] border-[#E6D8C3] dark:border-[#38424B] p-0 overflow-hidden">
+      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e] p-0 overflow-hidden">
         <DialogTitle className="sr-only">{c.title}</DialogTitle>
         <DialogDescription className="sr-only">{c.desc}</DialogDescription>
-        <div className="bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white p-6 text-center">
+        <div className="bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-6 text-center">
           <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab Avatar"
-            className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#e7d5b4]/70 shadow-lg mx-auto mb-3"
+            className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ffc700]/70 shadow-lg mx-auto mb-3"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <p className="text-sm text-white/90 mb-1">{c.greet}</p>
           <h2 className="font-display text-2xl font-bold leading-tight">{c.title}</h2>
@@ -44,7 +44,7 @@ export default function IntroGuide() {
             {LANGS.map((l) => (
               <button key={l.id} data-testid={`intro-lang-${l.id}`} onClick={() => setLang(l.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
-                  lang === l.id ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#7E8A93] border-[#E6D8C3] dark:border-[#38424B]"
+                  lang === l.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93] border-[#2b2b2b] dark:border-[#2e2e2e]"
                 }`}>
                 <span>{l.flag}</span> {l.label}
               </button>
@@ -54,7 +54,7 @@ export default function IntroGuide() {
           <button
             data-testid="intro-close-btn"
             onClick={() => setOpen(false)}
-            className="mt-5 w-full bg-[#8C4A27] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2"
+            className="mt-5 w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2"
           >
             <Sparkles className="w-5 h-5" /> {c.start} →
           </button>

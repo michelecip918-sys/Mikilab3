@@ -9,7 +9,7 @@ function Field({ testid, label, value, onChange, hint }) {
       <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type="number" value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full font-mono-data bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-3 pr-8 outline-none focus:border-[#8C4A27]" />
+          className="w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-3 pr-8 outline-none focus:border-[#ff6b00]" />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">°C</span>
       </div>
       {hint ? <p className="text-[10px] text-[#7E8A93] mt-1 leading-snug">{hint}</p> : null}

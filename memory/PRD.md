@@ -2279,3 +2279,9 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - (c) Banner tematico esteso a Ricette Custodite (`custodite-hero`, riusa hero-ricette.jpg) + fa aggiunto ai titoli.
 - Verificato IT a schermo: Home (dust+jar+plaque+peel nav), Ricette, Laboratorio, Impara, Social, Custodite — nessun errore. Navigazione a pale funzionante su tutte le tab.
 - Nota deploy: immagini in /public + traduzioni v64 + redesign vanno in produzione al prossimo publish/redeploy.
+
+## v-fork.68 (2026-06) — Palette globale Nero/Arancio/Giallo (alto contrasto)
+- Refactor cromatico completo su 144+ file (`scripts/recolor_palette.py`): marroni/terracotta/rosso-brand → arancio #FF6B00; oro/ambra → giallo #FFC700; crema/beige → nero (#121212/#1e1e1e); neutri scuri → scala nera; VIOLA banner sfida → arancio. Testi bianchi.
+- Tema scuro FORZATO come unico tema: `index.js` aggiunge classe `dark`; Header default dark; toggle nascosto (evita "light" incoerente).
+- Chrome tema panificio ricolorata: `.wood-surface` → carboncino scuro; portale/cornici SectionHero → gradiente arancio; nav a pale → icone arancio, pala attiva giallo + anello giallo; barra superiore scura con accenti arancio.
+- Cards Panetteria/Pizzeria/Pasticceria arancioni; CTA gialle/arancio; nessun marrone/crema/viola residuo (verificato via grep). Verificato a schermo: Home, Ricette, Laboratorio, Impara, Sfide.

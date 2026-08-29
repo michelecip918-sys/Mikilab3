@@ -158,7 +158,7 @@ export default function DayClose() {
     setSaving(false);
   };
 
-  const inp = "w-full bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // Consumi settimanali (farina vs lievito) dagli scarichi delle chiusure archiviate
   const consumption = useMemo(() => {
@@ -204,21 +204,21 @@ export default function DayClose() {
       <Header tri={tri} />
 
       {/* Toggle Nuova chiusura / Storico */}
-      <div data-testid="dayclose-modeswitch" className="grid grid-cols-2 gap-2 mb-4 bg-[#e4eff8] dark:bg-[#2A323A] rounded-2xl p-1">
+      <div data-testid="dayclose-modeswitch" className="grid grid-cols-2 gap-2 mb-4 bg-[#e4eff8] dark:bg-[#242424] rounded-2xl p-1">
         <button data-testid="dayclose-mode-wizard" onClick={() => setMode("wizard")}
-          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "wizard" ? "bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
+          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "wizard" ? "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
           <CheckSquare className="w-4 h-4" /> {tri("Nuova chiusura", "Neuer Abschluss")}
         </button>
         <button data-testid="dayclose-mode-storico" onClick={() => { setMode("storico"); loadClosures(); }}
-          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "storico" ? "bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
+          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "storico" ? "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
           <History className="w-4 h-4" /> {tri("Storico chiusure", "Archiv")}
         </button>
       </div>
 
       {mode === "storico" ? (
         <div data-testid="dayclose-storico" className="space-y-3">
-          <div data-testid="consumption-chart" className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-4">
-            <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#8C4A27] mb-3"><BarChart3 className="w-4 h-4" /> {tri("Consumi settimanali (farina e lieviti)", "Wochenverbrauch (Mehl & Hefen)")}</p>
+          <div data-testid="consumption-chart" className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4">
+            <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#ff6b00] mb-3"><BarChart3 className="w-4 h-4" /> {tri("Consumi settimanali (farina e lieviti)", "Wochenverbrauch (Mehl & Hefen)")}</p>
             {hasConsumption ? (
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={consumption} margin={{ top: 6, right: 10, left: 2, bottom: 0 }} barGap={2}>
@@ -227,8 +227,8 @@ export default function DayClose() {
                   <YAxis tick={{ fontSize: 11, fill: "#7E8A93" }} axisLine={false} tickLine={false} width={52} unit="kg" />
                   <Tooltip cursor={{ fill: "rgba(63,124,172,0.08)" }} formatter={(v, n) => [`${v} kg`, n]} labelFormatter={(l) => tri("Settimana del ", "Woche vom ") + l} />
                   <Legend wrapperStyle={{ fontSize: 12 }} iconType="circle" />
-                  <Bar dataKey="flour" name={tri("Farina", "Mehl")} fill="#8C4A27" radius={[4, 4, 0, 0]} maxBarSize={26} />
-                  <Bar dataKey="yeast" name={tri("Lievito", "Hefe")} fill="#C88A2B" radius={[4, 4, 0, 0]} maxBarSize={26} />
+                  <Bar dataKey="flour" name={tri("Farina", "Mehl")} fill="#ff6b00" radius={[4, 4, 0, 0]} maxBarSize={26} />
+                  <Bar dataKey="yeast" name={tri("Lievito", "Hefe")} fill="#ffc700" radius={[4, 4, 0, 0]} maxBarSize={26} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -245,13 +245,13 @@ export default function DayClose() {
             const list = closures.filter((c) => !q || (c.date || "").toLowerCase().includes(q) || (c.production_lot || "").toLowerCase().includes(q));
             if (!list.length) return <p data-testid="storico-empty" className="text-sm text-[#7E8A93] text-center py-8">{tri("Nessuna chiusura archiviata.", "Keine archivierten Abschlüsse.")}</p>;
             return list.map((c) => (
-              <div key={c.id} data-testid={`storico-item-${c.id}`} className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-3.5 flex items-center justify-between gap-3">
+              <div key={c.id} data-testid={`storico-item-${c.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-3.5 flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{c.date} · <span className="font-mono-data text-[#6E371C] dark:text-[#8FB0C2]">{c.production_lot || tri("senza lotto", "ohne Charge")}</span></p>
+                  <p className="text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{c.date} · <span className="font-mono-data text-[#ff6b00] dark:text-[#8FB0C2]">{c.production_lot || tri("senza lotto", "ohne Charge")}</span></p>
                   <p className="text-[11px] text-[#7E8A93] mt-0.5">{tri("Operatore", "Bediener")}: {c.operator || "—"} · {(c.produced || []).length} {tri("prodotti", "Produkte")} · {(c.temps || []).filter((t) => t.temp_c != null && t.temp_c !== "").length} {tri("temp.", "Temp.")} · {Object.values(c.cleaning || {}).filter(Boolean).length} {tri("pulizie", "Reinigungen")}</p>
                 </div>
                 <button data-testid={`storico-pdf-${c.id}`} onClick={() => downloadPdf(c.id, c.production_lot)}
-                  className="shrink-0 inline-flex items-center gap-1.5 bg-[#8C4A27] text-white text-xs font-semibold px-3 py-2 rounded-xl active:scale-95">
+                  className="shrink-0 inline-flex items-center gap-1.5 bg-[#ff6b00] text-white text-xs font-semibold px-3 py-2 rounded-xl active:scale-95">
                   <FileText className="w-3.5 h-3.5" /> PDF
                 </button>
               </div>
@@ -264,12 +264,12 @@ export default function DayClose() {
       <div data-testid="dayclose-stepper" className="flex items-center gap-1 mb-5">
         {[1, 2, 3].map((n) => (
           <div key={n} className="flex items-center flex-1">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${step >= n ? "bg-[#8C4A27] text-white" : "bg-[#e4eff8] dark:bg-[#2A323A] text-[#7E8A93]"}`}>{n}</div>
-            {n < 3 && <div className={`h-1 flex-1 rounded ${step > n ? "bg-[#8C4A27]" : "bg-[#e4eff8] dark:bg-[#2A323A]"}`} />}
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${step >= n ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93]"}`}>{n}</div>
+            {n < 3 && <div className={`h-1 flex-1 rounded ${step > n ? "bg-[#ff6b00]" : "bg-[#e4eff8] dark:bg-[#242424]"}`} />}
           </div>
         ))}
       </div>
-      <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-3">
+      <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-3">
         {step === 1 ? tri("1 · Tracciabilità & Lotti", "1 · Rückverfolgbarkeit & Chargen")
           : step === 2 ? tri("2 · Registro Sanitario & HACCP", "2 · Hygiene- & HACCP-Register")
           : tri("3 · Chiusura & Archiviazione", "3 · Abschluss & Archivierung")}
@@ -281,7 +281,7 @@ export default function DayClose() {
           <Card icon={<QrCode className="w-4 h-4" />} title={tri("Lotto di produzione", "Produktionscharge")}>
             <div className="flex gap-2">
               <input data-testid="dayclose-lot" value={lot} onChange={(e) => setLot(e.target.value)} className={inp + " font-mono-data"} />
-              <button data-testid="dayclose-lot-regen" onClick={() => setLot(genLot())} className="shrink-0 px-3 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] text-[#8C4A27] text-xs font-semibold">{tri("Nuovo", "Neu")}</button>
+              <button data-testid="dayclose-lot-regen" onClick={() => setLot(genLot())} className="shrink-0 px-3 rounded-xl bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00] text-xs font-semibold">{tri("Nuovo", "Neu")}</button>
             </div>
             <p className="text-[11px] text-[#7E8A93] mt-1.5">{tri("Assegnato ai prodotti pronti alla vendita.", "Wird den verkaufsfertigen Produkten zugewiesen.")}</p>
           </Card>
@@ -294,30 +294,30 @@ export default function DayClose() {
                     onChange={(e) => setProduced((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
                   <input data-testid={`dayclose-prod-qty-${i}`} type="number" value={p.qty} placeholder={tri("Qtà", "Menge")}
                     onChange={(e) => setProduced((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-24"} />
-                  <button onClick={() => setProduced((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                  <button onClick={() => setProduced((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>
                 </div>
               ))}
-              <button data-testid="dayclose-prod-add" onClick={() => setProduced((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pz", gpp: "" }])} className="text-sm font-medium text-[#8C4A27] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi prodotto", "Produkt hinzufügen")}</button>
+              <button data-testid="dayclose-prod-add" onClick={() => setProduced((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pz", gpp: "" }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi prodotto", "Produkt hinzufügen")}</button>
             </div>
           </Card>
 
           <Card icon={<Boxes className="w-4 h-4" />} title={tri("Magazzino materie prime", "Rohstofflager")}>
             {lowStock.length > 0 && (
-              <div data-testid="dayclose-lowstock" className="flex flex-wrap items-center gap-2 bg-[#C0574D]/10 border border-[#C0574D]/30 rounded-xl px-3 py-2 mb-2 text-[#C0574D] text-xs font-semibold">
+              <div data-testid="dayclose-lowstock" className="flex flex-wrap items-center gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-xl px-3 py-2 mb-2 text-[#ff6b00] text-xs font-semibold">
                 <AlertTriangle className="w-4 h-4 shrink-0" /> {tri(`${lowStock.length} materie sotto soglia`, `${lowStock.length} Rohstoffe unter Schwelle`)}
                 <button data-testid="dayclose-order-supplier" onClick={supplierOrder}
-                  className="ml-auto inline-flex items-center gap-1.5 bg-[#C0574D] text-white px-2.5 py-1 rounded-full active:scale-95">
+                  className="ml-auto inline-flex items-center gap-1.5 bg-[#ff6b00] text-white px-2.5 py-1 rounded-full active:scale-95">
                   <Send className="w-3 h-3" /> {tri("Ordina al fornitore", "Beim Lieferanten bestellen")}
                 </button>
               </div>
             )}
             <div className="space-y-2">
               {inventory.map((it, i) => (
-                <div key={it.id || i} className="rounded-xl border border-[#E6D8C3] dark:border-[#38424B] p-2 space-y-1.5">
+                <div key={it.id || i} className="rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] p-2 space-y-1.5">
                   <div className="flex items-center gap-2">
                     <input data-testid={`inv-name-${i}`} value={it.name} placeholder={tri("Materia prima", "Rohstoff")}
                       onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
-                    <button onClick={() => setInventory((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => setInventory((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><Trash2 className="w-4 h-4" /></button>
                   </div>
                   <div className="flex items-center gap-2">
                     <input data-testid={`inv-qty-${i}`} type="number" value={it.qty} placeholder={tri("Qtà", "Menge")}
@@ -327,19 +327,19 @@ export default function DayClose() {
                     </select>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 text-[11px] font-semibold text-[#C88A2B] shrink-0"><AlertTriangle className="w-3.5 h-3.5" /> {tri("Soglia avviso", "Warnschwelle")}</span>
+                    <span className="flex items-center gap-1 text-[11px] font-semibold text-[#ffc700] shrink-0"><AlertTriangle className="w-3.5 h-3.5" /> {tri("Soglia avviso", "Warnschwelle")}</span>
                     <input data-testid={`inv-threshold-${i}`} type="number" value={it.threshold ?? ""} placeholder={tri("es. 10", "z. B. 10")}
                       onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, threshold: e.target.value === "" ? null : Number(e.target.value) } : x))} className={inp + " flex-1 min-w-0"} />
                   </div>
                 </div>
               ))}
               <div className="flex flex-wrap items-center gap-2">
-                <button data-testid="inv-add" onClick={() => setInventory((l) => [...l, { name: "", category: "farina", qty: 0, unit: "kg", threshold: null }])} className="text-sm font-medium text-[#8C4A27] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi materia", "Rohstoff")}</button>
-                <button data-testid="inv-save" onClick={saveInventory} className="text-sm font-semibold text-white bg-[#B45309] px-3 py-1.5 rounded-full flex items-center gap-1"><Save className="w-3.5 h-3.5" /> {tri("Salva magazzino", "Lager speichern")}</button>
+                <button data-testid="inv-add" onClick={() => setInventory((l) => [...l, { name: "", category: "farina", qty: 0, unit: "kg", threshold: null }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi materia", "Rohstoff")}</button>
+                <button data-testid="inv-save" onClick={saveInventory} className="text-sm font-semibold text-white bg-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1"><Save className="w-3.5 h-3.5" /> {tri("Salva magazzino", "Lager speichern")}</button>
               </div>
-              <p className="text-[11px] text-[#7E8A93] flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 text-[#C88A2B] shrink-0 mt-0.5" /> {tri("Imposta una soglia: ricevi un'email quando la materia scende sotto quel livello.", "Lege eine Schwelle fest: du erhältst eine E-Mail, wenn der Rohstoff darunter fällt.")}</p>
-              <div className="pt-2 border-t border-[#E6D8C3] dark:border-[#38424B]">
-                <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-[#8C4A27] mb-1"><Send className="w-3.5 h-3.5" /> {tri("Email fornitore (per ordine rapido)", "Lieferanten-E-Mail (Schnellbestellung)")}</label>
+              <p className="text-[11px] text-[#7E8A93] flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 text-[#ffc700] shrink-0 mt-0.5" /> {tri("Imposta una soglia: ricevi un'email quando la materia scende sotto quel livello.", "Lege eine Schwelle fest: du erhältst eine E-Mail, wenn der Rohstoff darunter fällt.")}</p>
+              <div className="pt-2 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
+                <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-[#ff6b00] mb-1"><Send className="w-3.5 h-3.5" /> {tri("Email fornitore (per ordine rapido)", "Lieferanten-E-Mail (Schnellbestellung)")}</label>
                 <input data-testid="supplier-email" type="email" value={supplierEmail}
                   onChange={(e) => { setSupplierEmail(e.target.value); try { localStorage.setItem("mikilab_supplier_email", e.target.value); } catch { /* */ } }}
                   placeholder="ordini@fornitore.it" className={inp} />
@@ -349,17 +349,17 @@ export default function DayClose() {
           </Card>
 
           <Card icon={<Package className="w-4 h-4" />} title={tri("Scarico materie prime (dal piano)", "Rohstoff-Abbuchung (aus Plan)")}>
-            <button data-testid="dayclose-suggest" onClick={suggestConsume} className="w-full mb-2 text-sm font-semibold text-white bg-[#8C4A27] py-2 rounded-xl active:scale-98 flex items-center justify-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Calcola scarico dal piano", "Abbuchung aus Plan berechnen")}</button>
+            <button data-testid="dayclose-suggest" onClick={suggestConsume} className="w-full mb-2 text-sm font-semibold text-white bg-[#ff6b00] py-2 rounded-xl active:scale-98 flex items-center justify-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Calcola scarico dal piano", "Abbuchung aus Plan berechnen")}</button>
             <div className="space-y-2">
               {consume.map((c, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <input data-testid={`consume-name-${i}`} value={c.name} onChange={(e) => setConsume((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
                   <input data-testid={`consume-qty-${i}`} type="number" value={c.qty} onChange={(e) => setConsume((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))} className={inp + " w-20"} />
                   <span className="text-xs text-[#7E8A93] shrink-0">kg</span>
-                  <button onClick={() => setConsume((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                  <button onClick={() => setConsume((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>
                 </div>
               ))}
-              <button data-testid="consume-add" onClick={() => setConsume((l) => [...l, { name: "", qty: "" }])} className="text-sm font-medium text-[#8C4A27] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi voce", "Eintrag")}</button>
+              <button data-testid="consume-add" onClick={() => setConsume((l) => [...l, { name: "", qty: "" }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi voce", "Eintrag")}</button>
               <p className="text-[11px] text-[#7E8A93]">{tri("Alla chiusura queste quantità vengono scalate dal magazzino.", "Beim Abschluss werden diese Mengen vom Lager abgezogen.")}</p>
             </div>
           </Card>
@@ -379,10 +379,10 @@ export default function DayClose() {
                       onChange={(e) => setTemps((l) => l.map((x, k) => k === i ? { ...x, temp_c: e.target.value } : x))} className={inp + " pr-7"} />
                     <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#7E8A93]">°C</span>
                   </div>
-                  <button onClick={() => setTemps((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                  <button onClick={() => setTemps((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>
                 </div>
               ))}
-              <button data-testid="temp-add" onClick={() => setTemps((l) => [...l, { name: "", temp_c: "" }])} className="text-sm font-medium text-[#8C4A27] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi punto", "Punkt hinzufügen")}</button>
+              <button data-testid="temp-add" onClick={() => setTemps((l) => [...l, { name: "", temp_c: "" }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi punto", "Punkt hinzufügen")}</button>
             </div>
           </Card>
 
@@ -392,7 +392,7 @@ export default function DayClose() {
                 const on = !!cleaning[tri(it, de)] || !!cleaning[it];
                 return (
                   <button key={key} data-testid={`clean-${key}`} onClick={() => setCleaning((c) => ({ ...c, [tri(it, de)]: !on }))}
-                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left border transition-all active:scale-97 ${on ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#2B303B] dark:text-[#e4eff8] border-[#E6D8C3] dark:border-[#38424B]"}`}>
+                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left border transition-all active:scale-97 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
                     <CheckSquare className={`w-4 h-4 shrink-0 ${on ? "text-white" : "text-[#7E8A93]"}`} />
                     <span className="text-xs font-semibold leading-tight">{tri(it, de)}</span>
                   </button>
@@ -432,14 +432,14 @@ export default function DayClose() {
               <li>• {tri("Temperature registrate", "Temperaturen")}: {temps.filter((t) => t.name && t.temp_c !== "").length}</li>
               <li>• {tri("Sanificazioni", "Reinigungen")}: {Object.values(cleaning).filter(Boolean).length}</li>
             </ul>
-            <div className="mt-3 flex items-start gap-2 bg-[#B45309]/12 border border-[#B45309]/30 rounded-xl p-2.5">
-              <ShieldCheck className="w-4 h-4 text-[#8C4A27] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
-              <p className="text-[12px] text-[#6E371C] dark:text-[#8FB0C2]">{tri("Alla conferma i dati vengono archiviati e sincronizzati automaticamente nel Registro HACCP.", "Bei Bestätigung werden die Daten archiviert und automatisch ins HACCP-Register übernommen.")}</p>
+            <div className="mt-3 flex items-start gap-2 bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-xl p-2.5">
+              <ShieldCheck className="w-4 h-4 text-[#ff6b00] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
+              <p className="text-[12px] text-[#ff6b00] dark:text-[#8FB0C2]">{tri("Alla conferma i dati vengono archiviati e sincronizzati automaticamente nel Registro HACCP.", "Bei Bestätigung werden die Daten archiviert und automatisch ins HACCP-Register übernommen.")}</p>
             </div>
           </Card>
 
           <button data-testid="dayclose-confirm" onClick={doClose} disabled={saving}
-            className="w-full flex items-center justify-center gap-2 bg-[#B45309] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
+            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
             <CheckSquare className="w-5 h-5" /> {saving ? tri("Chiusura…", "Abschluss…") : tri("Concludi turno & archivia", "Schicht abschließen & archivieren")}
           </button>
         </div>
@@ -448,12 +448,12 @@ export default function DayClose() {
       {/* Nav */}
       <div className="flex items-center justify-between mt-5">
         <button data-testid="dayclose-prev" onClick={() => setStep((s) => Math.max(1, s - 1))} disabled={step === 1}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] text-[#6E371C] dark:text-[#a9d2ec] font-semibold text-sm disabled:opacity-40 active:scale-95">
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold text-sm disabled:opacity-40 active:scale-95">
           <ChevronLeft className="w-4 h-4" /> {tri("Indietro", "Zurück")}
         </button>
         {step < 3 && (
           <button data-testid="dayclose-next" onClick={() => setStep((s) => Math.min(3, s + 1))}
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#8C4A27] text-white font-semibold text-sm active:scale-95">
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#ff6b00] text-white font-semibold text-sm active:scale-95">
             {tri("Avanti", "Weiter")} <ChevronRight className="w-4 h-4" />
           </button>
         )}
@@ -489,7 +489,7 @@ export default function DayClose() {
             <div className="mt-6 flex flex-col items-center gap-2.5" onClick={(e) => e.stopPropagation()}>
               {lastId && (
                 <button data-testid="dayclose-download-pdf" onClick={() => downloadPdf(lastId, lot)}
-                  className="inline-flex items-center gap-2 bg-[#B45309] text-white font-bold px-6 py-2.5 rounded-full active:scale-95">
+                  className="inline-flex items-center gap-2 bg-[#ff6b00] text-white font-bold px-6 py-2.5 rounded-full active:scale-95">
                   <Download className="w-4 h-4" /> {tri("Scarica report PDF", "PDF-Bericht laden")}
                 </button>
               )}
@@ -507,7 +507,7 @@ export default function DayClose() {
 function Header({ tri }) {
   return (
     <div className="flex items-center gap-3 mb-4">
-      <div className="w-11 h-11 rounded-2xl bg-[#B45309] flex items-center justify-center"><CalendarCheck className="w-6 h-6 text-white" /></div>
+      <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><CalendarCheck className="w-6 h-6 text-white" /></div>
       <div>
         <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Chiusura Turno & Registro HACCP", "Schichtabschluss & HACCP-Register")}</h1>
         <p className="text-sm text-[#7E8A93]">{tri("Tracciabilità, registro sanitario e archiviazione in 3 passi", "Rückverfolgbarkeit, Hygiene und Archivierung in 3 Schritten")}</p>
@@ -518,8 +518,8 @@ function Header({ tri }) {
 
 function Card({ icon, title, children }) {
   return (
-    <div className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-4">
-      <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#8C4A27] mb-2.5">{icon} {title}</p>
+    <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4">
+      <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#ff6b00] mb-2.5">{icon} {title}</p>
       {children}
     </div>
   );
@@ -550,7 +550,7 @@ function SignaturePad({ value, onChange, tri }) {
 
   return (
     <div>
-      <div className="relative rounded-xl border-2 border-dashed border-[#c7d6e5] dark:border-[#38424B] bg-[#f8fbfe] dark:bg-[#1F252B] overflow-hidden">
+      <div className="relative rounded-xl border-2 border-dashed border-[#c7d6e5] dark:border-[#2e2e2e] bg-[#f8fbfe] dark:bg-[#181818] overflow-hidden">
         <canvas ref={ref} width={600} height={180} data-testid="signature-pad"
           onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerLeave={end}
           className="w-full touch-none" style={{ height: "150px", cursor: "crosshair" }} />
@@ -561,7 +561,7 @@ function SignaturePad({ value, onChange, tri }) {
         )}
       </div>
       <button type="button" data-testid="signature-clear" onClick={clear}
-        className="mt-2 text-xs font-semibold text-[#C0574D] active:scale-95">
+        className="mt-2 text-xs font-semibold text-[#ff6b00] active:scale-95">
         {tri("Cancella firma", "Unterschrift löschen")}
       </button>
     </div>

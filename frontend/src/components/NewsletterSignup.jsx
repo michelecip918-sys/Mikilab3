@@ -42,7 +42,7 @@ export default function NewsletterSignup() {
 
   return (
     <div data-testid="home-newsletter" className="relative overflow-hidden rounded-3xl p-6 border border-[#e4d6bd] shadow-md"
-      style={{ background: "linear-gradient(135deg,#2C1E16 0%,#4A3222 60%,#6E371C 100%)" }}>
+      style={{ background: "linear-gradient(135deg,#ff6b00 0%,#ff6b00 60%,#ff6b00 100%)" }}>
       <div aria-hidden className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full opacity-20" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
       <div className="relative">
         <div className="flex items-center gap-3 mb-2">
@@ -103,13 +103,13 @@ export default function NewsletterSignup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={L("La tua email", "Deine E-Mail", "Your email", "Tu email", "Ton e-mail", "ایمیل شما")}
-              className="flex-1 rounded-2xl bg-white/95 text-[#2C1E16] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#C88A2B] placeholder:text-[#8a7a63]"
+              className="flex-1 rounded-2xl bg-white/95 text-[#ff6b00] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ffc700] placeholder:text-[#8a7a63]"
             />
             <button
               data-testid="newsletter-submit-btn"
               type="submit"
               disabled={!valid || busy}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#C88A2B] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ffc700] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
               {busy

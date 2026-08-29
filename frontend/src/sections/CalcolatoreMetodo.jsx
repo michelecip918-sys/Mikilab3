@@ -44,20 +44,20 @@ export default function CalcolatoreMetodo({ onBack }) {
   }, [flour, hyd, salt, prefType, prefPct, tRoom, tFlour, wStrength]);
 
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
-  const inp = "w-full bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2C1E16] dark:text-[#e4eff8] focus:border-[#D97706] font-mono-data";
-  const lbl = "text-[12px] font-semibold text-[#6B5546] dark:text-[#AEB8BF] mb-1 flex items-center gap-1.5";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1 flex items-center gap-1.5";
 
   return (
     <div className="pb-8" data-testid="calc-metodo">
-      {onBack && <button data-testid="calc-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
+      {onBack && <button data-testid="calc-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4">
         <ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}
       </button>}
 
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#FFFDF9] shadow-xl mb-5"
-        style={{ background: "linear-gradient(135deg,#8C4A27 0%,#6E371C 60%,#4A3222 100%)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5"
+        style={{ background: "linear-gradient(135deg,#ff6b00 0%,#ff6b00 60%,#ff6b00 100%)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Calculator className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Idratazione & Parametri Base", "Hydratation & Basiswerte", "Hydration & Base Parameters", "Hidratación y Parámetros Base")}</h1>
-        <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">{L("Dosi, idratazione, scomputo del prefermento, temperatura acqua e tempi di incordatura per impasti ad alta alveolatura.", "Mengen, Hydratation, Vorteig-Verrechnung, Wassertemperatur und Knetzeiten für offene Porung.", "Doses, hydration, preferment offset, water temperature and mixing times for open-crumb doughs.", "Dosis, hidratación, cálculo del prefermento, temperatura del agua y tiempos de amasado para alveolado abierto.")}</p>
+        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Dosi, idratazione, scomputo del prefermento, temperatura acqua e tempi di incordatura per impasti ad alta alveolatura.", "Mengen, Hydratation, Vorteig-Verrechnung, Wassertemperatur und Knetzeiten für offene Porung.", "Doses, hydration, preferment offset, water temperature and mixing times for open-crumb doughs.", "Dosis, hidratación, cálculo del prefermento, temperatura del agua y tiempos de amasado para alveolado abierto.")}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
@@ -79,9 +79,9 @@ export default function CalcolatoreMetodo({ onBack }) {
       </div>
 
       {/* Risultati */}
-      <div data-testid="calc-results" className="rounded-3xl bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] overflow-hidden shadow-md">
-        <div className="bg-[#8C4A27] text-[#FFFDF9] px-5 py-3"><p className="font-display text-lg font-bold">{L("Ricetta calcolata", "Berechnetes Rezept", "Calculated recipe", "Receta calculada")}</p></div>
-        <div className="divide-y divide-[#E6D8C3] dark:divide-[#38424B]">
+      <div data-testid="calc-results" className="rounded-3xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden shadow-md">
+        <div className="bg-[#ff6b00] text-[#161616] px-5 py-3"><p className="font-display text-lg font-bold">{L("Ricetta calcolata", "Berechnetes Rezept", "Calculated recipe", "Receta calculada")}</p></div>
+        <div className="divide-y divide-[#2b2b2b] dark:divide-[#2e2e2e]">
           {[
             [L("Acqua totale", "Wasser gesamt", "Total water", "Agua total"), `${num(r.totalWater)} g`],
             [L("Sale", "Salz", "Salt", "Sal"), `${num(r.saltG)} g`],
@@ -92,26 +92,26 @@ export default function CalcolatoreMetodo({ onBack }) {
             [L("Acqua nell'impasto finale", "Wasser im Hauptteig", "Water in final dough", "Agua en masa final"), `${num(r.waterInDough)} g`],
           ].map(([k, v], i) => (
             <div key={i} data-testid={`calc-row-${i}`} className="flex items-center justify-between px-5 py-2.5">
-              <span className="text-[13px] text-[#6B5546] dark:text-[#AEB8BF]">{k}</span>
-              <span className="font-mono-data font-bold text-[#2C1E16] dark:text-[#e4eff8]">{v}</span>
+              <span className="text-[13px] text-[#ff6b00] dark:text-[#AEB8BF]">{k}</span>
+              <span className="font-mono-data font-bold text-[#ff6b00] dark:text-[#e4eff8]">{v}</span>
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-px bg-[#E6D8C3] dark:bg-[#38424B]">
-          <div className="bg-[#FEF3C7] dark:bg-[#2A2118] p-4 text-center">
-            <p className="text-[11px] font-semibold text-[#92400E] flex items-center justify-center gap-1"><Thermometer className="w-3.5 h-3.5" /> {L("Temperatura acqua", "Wassertemperatur", "Water temperature", "Temp. agua")}</p>
-            <p data-testid="calc-water-temp" className="font-display text-2xl font-bold text-[#8C4A27] mt-1">{r.waterTemp}°C</p>
+        <div className="grid grid-cols-2 gap-px bg-[#2b2b2b] dark:bg-[#2e2e2e]">
+          <div className="bg-[#ffffff] dark:bg-[#2A2118] p-4 text-center">
+            <p className="text-[11px] font-semibold text-[#ff6b00] flex items-center justify-center gap-1"><Thermometer className="w-3.5 h-3.5" /> {L("Temperatura acqua", "Wassertemperatur", "Water temperature", "Temp. agua")}</p>
+            <p data-testid="calc-water-temp" className="font-display text-2xl font-bold text-[#ff6b00] mt-1">{r.waterTemp}°C</p>
           </div>
-          <div className="bg-[#FEF3C7] dark:bg-[#2A2118] p-4 text-center">
-            <p className="text-[11px] font-semibold text-[#92400E] flex items-center justify-center gap-1"><Clock className="w-3.5 h-3.5" /> {L("Impasto (spirale)", "Kneten (Spirale)", "Mixing (spiral)", "Amasado (espiral)")}</p>
-            <p data-testid="calc-mix-min" className="font-display text-2xl font-bold text-[#8C4A27] mt-1">{r.mixMin} min</p>
+          <div className="bg-[#ffffff] dark:bg-[#2A2118] p-4 text-center">
+            <p className="text-[11px] font-semibold text-[#ff6b00] flex items-center justify-center gap-1"><Clock className="w-3.5 h-3.5" /> {L("Impasto (spirale)", "Kneten (Spirale)", "Mixing (spiral)", "Amasado (espiral)")}</p>
+            <p data-testid="calc-mix-min" className="font-display text-2xl font-bold text-[#ff6b00] mt-1">{r.mixMin} min</p>
           </div>
         </div>
       </div>
 
-      <div className="mt-5 rounded-2xl bg-[#F2E8D5] border border-[#E6D8C3] p-4">
-        <p className="font-display text-base font-bold text-[#8C4A27] flex items-center gap-2 mb-2"><Lightbulb className="w-4.5 h-4.5" /> {L("Alta alveolatura — consigli", "Offene Porung — Tipps", "Open crumb — tips", "Alveolado abierto — consejos")}</p>
-        <ul className="text-[13px] text-[#6B5546] leading-relaxed space-y-1.5 list-disc pl-4">
+      <div className="mt-5 rounded-2xl bg-[#1a1a1a] border border-[#2b2b2b] p-4">
+        <p className="font-display text-base font-bold text-[#ff6b00] flex items-center gap-2 mb-2"><Lightbulb className="w-4.5 h-4.5" /> {L("Alta alveolatura — consigli", "Offene Porung — Tipps", "Open crumb — tips", "Alveolado abierto — consejos")}</p>
+        <ul className="text-[13px] text-[#ff6b00] leading-relaxed space-y-1.5 list-disc pl-4">
           <li>{L("Bassinage: aggiungi l'ultima acqua a filo solo dopo l'incordatura completa (velo).", "Bassinage: das letzte Wasser erst nach voller Glutenentwicklung zugeben.", "Bassinage: add the last water only after full gluten development.", "Bassinage: añade el agua final solo tras el desarrollo completo del gluten.")}</li>
           <li>{L("Farine forti (W≥300) per idratazioni oltre il 75%.", "Starke Mehle (W≥300) für Hydratation über 75%.", "Strong flours (W≥300) for hydration above 75%.", "Harinas fuertes (W≥300) para hidratación superior al 75%.")}</li>
           <li>{L("Pieghe di rinforzo ogni 30 min nella prima ora di puntata.", "Dehnen & Falten alle 30 min in der ersten Stockgare-Stunde.", "Stretch & folds every 30 min in the first hour of bulk.", "Pliegues cada 30 min en la primera hora de fermentación.")}</li>

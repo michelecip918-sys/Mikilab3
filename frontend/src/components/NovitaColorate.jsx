@@ -30,11 +30,11 @@ export const NovitaColorate = () => {
   return (
     <div data-testid="ricette-novita">
       <div className="flex items-center gap-2 mb-1">
-        <Sparkles className="w-5 h-5 text-[#C88A2B]" />
+        <Sparkles className="w-5 h-5 text-[#ffc700]" />
         <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">
           {tri("Novità dal MikiLab", "Neu bei MikiLab", "New at MikiLab", "Novedades de MikiLab")}
         </h2>
-        <span className="text-[10px] font-bold uppercase tracking-wide text-[#C88A2B] bg-[#C88A2B]/15 border border-[#C88A2B]/40 px-2 py-0.5 rounded-full">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-[#ffc700] bg-[#ffc700]/15 border border-[#ffc700]/40 px-2 py-0.5 rounded-full">
           {tri("Colori naturali", "Natürliche Farben", "Natural colours", "Colores naturales")}
         </span>
       </div>
@@ -47,7 +47,7 @@ export const NovitaColorate = () => {
       <div className="grid grid-cols-3 gap-2">
         {items.map((r) => (
           <button key={r.id} data-testid={`novita-card-${r.id}`} onClick={() => open(r)}
-            className="text-left rounded-xl overflow-hidden bg-[#f8fbfe] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-97 transition-all">
+            className="text-left rounded-xl overflow-hidden bg-[#f8fbfe] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-97 transition-all">
             <div className="h-16 w-full overflow-hidden">
               <img src={r.image_url} alt={rn(r)} loading="lazy" className="w-full h-full object-cover" />
             </div>
@@ -59,7 +59,7 @@ export const NovitaColorate = () => {
       </div>
 
       {/* Scheda: perché coloriamo naturalmente */}
-      <div data-testid="novita-why" className="mt-4 rounded-2xl bg-gradient-to-br from-[#eaf6ef] to-[#e4eff8] dark:from-[#1c2b26] dark:to-[#1F252B] border border-[#2e8b6f]/30 p-4">
+      <div data-testid="novita-why" className="mt-4 rounded-2xl bg-gradient-to-br from-[#eaf6ef] to-[#e4eff8] dark:from-[#1c2b26] dark:to-[#181818] border border-[#2e8b6f]/30 p-4">
         <div className="flex items-center gap-2 mb-2">
           <Leaf className="w-5 h-5 text-[#2e8b6f]" />
           <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">

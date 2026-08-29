@@ -120,7 +120,7 @@ export function TimerProvider({ children }) {
         <div data-testid="timer-alarm-overlay"
           className="fixed inset-0 z-[90] flex flex-col items-center justify-center p-6 text-center animate-pulse"
           style={{ background: "repeating-linear-gradient(45deg,#E4572E,#E4572E 40px,#111 40px,#111 80px)" }}>
-          <div className="bg-white dark:bg-[#1B2127] rounded-3xl p-8 shadow-2xl max-w-sm w-full">
+          <div className="bg-white dark:bg-[#121212] rounded-3xl p-8 shadow-2xl max-w-sm w-full">
             <BellRing className="w-16 h-16 text-[#E4572E] mx-auto mb-3 animate-bounce" />
             <p className="text-xs font-bold uppercase tracking-widest text-[#7E8A93]">{tri("Tempo scaduto", "Zeit abgelaufen", "Time is up")}{ringing.length > 1 ? ` (${ringing.length})` : ""}</p>
             <h2 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1 mb-6 break-words">{alarm.name || tri("Timer", "Timer", "Timer")}</h2>

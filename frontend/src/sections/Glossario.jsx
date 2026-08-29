@@ -40,27 +40,27 @@ export default function Glossario({ onBack }) {
 
   return (
     <div className="pb-8" data-testid="glossario">
-      {onBack && <button data-testid="glossario-back" onClick={onBack} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#FFFDF9] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#8C4A27,#6E371C 60%,#4A3222)" }}>
+      {onBack && <button data-testid="glossario-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><BookOpen className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Glossario dell'Arte Bianca", "Glossar der Backkunst", "Baking Craft Glossary", "Glosario del Arte Blanco")}</h1>
-        <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">{L("I termini tecnici spiegati in parole semplici. Cerca quello che ti serve.", "Fachbegriffe einfach erklärt.", "Technical terms in plain words. Search what you need.", "Términos técnicos en palabras sencillas.")}</p>
+        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("I termini tecnici spiegati in parole semplici. Cerca quello che ti serve.", "Fachbegriffe einfach erklärt.", "Technical terms in plain words. Search what you need.", "Términos técnicos en palabras sencillas.")}</p>
       </div>
 
       <div className="relative mb-4">
-        <Search className="w-4.5 h-4.5 text-[#8C7362] absolute left-3 top-1/2 -translate-y-1/2" />
+        <Search className="w-4.5 h-4.5 text-[#ff8a33] absolute left-3 top-1/2 -translate-y-1/2" />
         <input data-testid="glossario-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={L("Cerca un termine…", "Begriff suchen…", "Search a term…", "Busca un término…")}
-          className="w-full bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl pl-10 pr-3 py-3 outline-none text-[#2C1E16] dark:text-[#e4eff8] focus:border-[#D97706]" />
+          className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl pl-10 pr-3 py-3 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
       </div>
 
       <div className="space-y-2.5" data-testid="glossario-list">
         {list.map((x, i) => (
-          <div key={x.t} data-testid={`glossario-term-${i}`} className="rounded-2xl bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4 shadow-sm">
-            <p className="font-display text-[16px] font-bold text-[#8C4A27] leading-tight">{gt(x)}</p>
-            <p className="text-[13.5px] text-[#6B5546] dark:text-[#AEB8BF] leading-relaxed mt-1">{gd(x)}</p>
+          <div key={x.t} data-testid={`glossario-term-${i}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm">
+            <p className="font-display text-[16px] font-bold text-[#ff6b00] leading-tight">{gt(x)}</p>
+            <p className="text-[13.5px] text-[#ff6b00] dark:text-[#AEB8BF] leading-relaxed mt-1">{gd(x)}</p>
           </div>
         ))}
-        {list.length === 0 && <p className="text-center text-sm text-[#8C7362] py-8">{L("Nessun termine trovato.", "Kein Begriff gefunden.", "No term found.", "Ningún término.")}</p>}
+        {list.length === 0 && <p className="text-center text-sm text-[#ff8a33] py-8">{L("Nessun termine trovato.", "Kein Begriff gefunden.", "No term found.", "Ningún término.")}</p>}
       </div>
     </div>
   );

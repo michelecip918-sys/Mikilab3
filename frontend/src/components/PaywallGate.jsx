@@ -167,7 +167,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
     return (
       <>
         {status?.source === "trial" && left && (
-          <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#B45309]/15 border border-[#B45309]/40 px-3 py-2 text-sm font-semibold text-[#6E371C] dark:text-[#8FB0C2]">
+          <div data-testid="trial-banner" className="mb-4 flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/40 px-3 py-2 text-sm font-semibold text-[#ff6b00] dark:text-[#8FB0C2]">
             <Clock className="w-4 h-4" /> {tri("Prova PRO — resta:", "PRO-Test — verbleibend:", "PRO trial — left:")} <span className="font-mono-data">{left}</span>
           </div>
         )}
@@ -179,7 +179,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
   // Paywall
   return (
     <div data-testid="paywall" className="py-6">
-      <div className="rounded-3xl bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white p-7 text-center shadow-xl">
+      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-7 text-center shadow-xl">
         <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mx-auto mb-4">
           <Lock className="w-8 h-8" />
         </div>
@@ -208,13 +208,13 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             const desc = mkTri(lang)(itDesc, deRow[2], enRow[2]);
             return (
             <div key={i} data-testid={`paywall-feature-${i}`}
-              className="flex items-start gap-3 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-3.5 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-[#B45309]/15 border border-[#B45309]/30 flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-[#8C4A27]" />
+              className="flex items-start gap-3 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-3.5 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
+                <Icon className="w-5 h-5 text-[#ff6b00]" />
               </div>
               <div className="min-w-0">
                 <p className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight flex items-center gap-1.5">
-                  {title} <Check className="w-3.5 h-3.5 text-[#B45309]" />
+                  {title} <Check className="w-3.5 h-3.5 text-[#ff6b00]" />
                 </p>
                 <p className="text-xs text-[#7E8A93] leading-snug mt-0.5">{desc}</p>
               </div>
@@ -222,7 +222,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             );
           })}
         </div>
-        <p className="text-center text-sm font-semibold text-[#a9772f] mt-4">
+        <p className="text-center text-sm font-semibold text-[#ffc700] mt-4">
           {tri("Sbloccalo completando le sfide 👇", "Schalte es mit Challenges frei 👇", "Unlock it by completing challenges 👇")}
         </p>
       </div>
@@ -233,14 +233,14 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             {tri("Registrati con la tua email per partecipare alle sfide e sbloccare i contenuti.", "Registriere dich mit deiner E-Mail, um an Challenges teilzunehmen und Inhalte freizuschalten.", "Register with your email to join challenges and unlock content.")}
           </p>
           <button data-testid="paywall-register" onClick={() => setAuthOpen(true)}
-            className="w-full bg-[#8C4A27] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
+            className="w-full bg-[#ff6b00] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all">
             {tri("Registrati per iniziare", "Registrieren und loslegen", "Register to start")}
           </button>
         </div>
       ) : (
         <div className="mt-5 space-y-3">
-          <div className="rounded-2xl bg-[#a9772f]/10 border border-[#a9772f]/30 p-4 text-center">
-            <p className="flex items-center justify-center gap-2 text-sm font-bold text-[#8a5a2b] dark:text-[#e0b877]">
+          <div className="rounded-2xl bg-[#ffc700]/10 border border-[#ffc700]/30 p-4 text-center">
+            <p className="flex items-center justify-center gap-2 text-sm font-bold text-[#ff6b00] dark:text-[#e0b877]">
               <Sparkles className="w-4 h-4" /> {tri("Sbloccalo con le Sfide", "Mit Challenges freischalten", "Unlock with Challenges")}
             </p>
             <p className="text-xs text-[#7E8A93] mt-1 leading-snug">
@@ -250,7 +250,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             </p>
           </div>
           <button data-testid="paywall-challenge" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } }}
-            className="w-full bg-[#a9772f] hover:bg-[#8a5a2b] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="w-full bg-[#ffc700] hover:bg-[#ff6b00] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Sparkles className="w-5 h-5" /> {tri("Completa la Sfida per Accedere", "Challenge abschließen, um zuzugreifen", "Complete the challenge to unlock")}
           </button>
         </div>

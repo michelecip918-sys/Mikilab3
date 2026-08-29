@@ -135,15 +135,15 @@ export default function ScanRecipe({ embedded = false }) {
   return (
     <div className={embedded ? "" : "pb-24"}>
       {embedded ? (
-        <div className="flex items-center gap-2 mb-2 text-[#8C4A27]">
+        <div className="flex items-center gap-2 mb-2 text-[#ff6b00]">
           <ScanLine className="w-4 h-4" />
           <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("scan_title")}</h2>
         </div>
       ) : (
-        <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] p-6 text-white">
+        <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] p-6 text-white">
           <div className="absolute top-0 left-0 right-0 flex h-1.5">
-            <div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#B45309]" />
-            <div className="flex-1 bg-black" /><div className="flex-1 bg-[#B45309]" /><div className="flex-1 bg-[#e7d5b4]" />
+            <div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#ff6b00]" />
+            <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ffc700]" />
           </div>
           <ScanLine className="w-7 h-7 mb-2" />
           <h1 className="font-display text-2xl font-bold">{t("scan_title")}</h1>
@@ -151,17 +151,17 @@ export default function ScanRecipe({ embedded = false }) {
         </div>
       )}
 
-      <div className="rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-6 text-center">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-6 text-center">
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{t("scan_hint")}</p>
         {loading ? (
-          <div data-testid="scan-loading" className="inline-flex items-center gap-2 bg-[#8C4A27] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
+          <div data-testid="scan-loading" className="inline-flex items-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
             <Loader2 className="w-5 h-5 animate-spin" /> {t("scan_reading")}
           </div>
         ) : (
           <DualPhotoButtons onFile={onPhoto} testid="scan" />
         )}
         {!loading && (
-          <div className="mt-4 pt-4 border-t border-[#E6D8C3] dark:border-[#38424B]">
+          <div className="mt-4 pt-4 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
             {/* Carica da file dal PC (o dall'allegato ricevuto via email): immagini/scansioni delle ricette */}
             <input ref={fileRef} type="file" accept="image/*,application/pdf,.pdf" className="hidden"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
@@ -172,15 +172,15 @@ export default function ScanRecipe({ embedded = false }) {
             <p className="text-[11px] text-[#7E8A93] mb-3">{tri("Hai già le ricette in una cartella del computer o ricevute via email? Caricale qui: le leggo io e le trasformo in scheda.", "Hast du Rezepte in einem PC-Ordner oder per E-Mail erhalten? Lade sie hier hoch: ich lese sie und erstelle die Karte.", "Got recipes in a folder on your PC or received by email? Upload them here: I'll read them and turn them into a recipe card.")}</p>
             <p className="text-xs text-[#7E8A93] mb-2">{tri("Oppure scrivi la ricetta a mano da zero:", "Oder schreibe das Rezept von Hand:", "Or write the recipe by hand from scratch:")}</p>
             <button data-testid="scan-manual-btn" onClick={() => { setScanned(null); setDialogOpen(true); }}
-              className="inline-flex items-center gap-2 bg-white dark:bg-[#232A31] text-[#6E371C] dark:text-[#e4eff8] font-semibold px-5 py-3 rounded-2xl border-2 border-[#8C4A27]/40 active:scale-97 transition-all">
-              <PenLine className="w-5 h-5 text-[#8C4A27]" /> {tri("Scrivi a mano", "Von Hand schreiben", "Write by hand")}
+              className="inline-flex items-center gap-2 bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#e4eff8] font-semibold px-5 py-3 rounded-2xl border-2 border-[#ff6b00]/40 active:scale-97 transition-all">
+              <PenLine className="w-5 h-5 text-[#ff6b00]" /> {tri("Scrivi a mano", "Von Hand schreiben", "Write by hand")}
             </button>
           </div>
         )}
       </div>
 
       {pdfRecipes.length > 1 && (
-        <div data-testid="pdf-recipes-list" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-4">
+        <div data-testid="pdf-recipes-list" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
           <div className="flex items-center gap-2 mb-3 text-[#2e8b6f]">
             <FileText className="w-5 h-5" />
             <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">
@@ -201,17 +201,17 @@ export default function ScanRecipe({ embedded = false }) {
               return (
                 <li key={i}>
                   <button data-testid={`pdf-recipe-${i}`} onClick={() => openPdfRecipe(i)}
-                    className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-xl border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#FAF5EC] dark:bg-[#1F252B] border-[#E6D8C3] dark:border-[#38424B] hover:border-[#8C4A27]"}`}>
+                    className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-xl border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#121212] dark:bg-[#181818] border-[#2b2b2b] dark:border-[#2e2e2e] hover:border-[#ff6b00]"}`}>
                     {pageThumbs[String(r.page)] ? (
                       <img data-testid={`pdf-recipe-thumb-${i}`} src={pageThumbs[String(r.page)]} alt=""
-                        className="w-12 h-16 object-cover rounded-md border border-[#E6D8C3] dark:border-[#38424B] shrink-0 bg-white" />
+                        className="w-12 h-16 object-cover rounded-md border border-[#2b2b2b] dark:border-[#2e2e2e] shrink-0 bg-white" />
                     ) : (
-                      done ? <CheckCircle2 className="w-5 h-5 text-[#2e8b6f] shrink-0" /> : <ScanLine className="w-5 h-5 text-[#8C4A27] shrink-0" />
+                      done ? <CheckCircle2 className="w-5 h-5 text-[#2e8b6f] shrink-0" /> : <ScanLine className="w-5 h-5 text-[#ff6b00] shrink-0" />
                     )}
                     <span className="flex-1 min-w-0">
                       <span className="block font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name || tri("Ricetta senza nome", "Rezept ohne Namen", "Untitled recipe")}</span>
                       {r.flour_type && <span className="block text-[11px] text-[#7E8A93] truncate">{r.flour_type}</span>}
-                      {r.page && <span className="block text-[10px] text-[#a9772f] font-semibold">{tri(`Pag. ${r.page}`, `S. ${r.page}`, `Page ${r.page}`, `Pág. ${r.page}`)}</span>}
+                      {r.page && <span className="block text-[10px] text-[#ffc700] font-semibold">{tri(`Pag. ${r.page}`, `S. ${r.page}`, `Page ${r.page}`, `Pág. ${r.page}`)}</span>}
                     </span>
                     {done ? <span className="text-[11px] font-bold text-[#2e8b6f] shrink-0">{tri("Salvata", "Gespeichert", "Saved")}</span> : <ChevronRight className="w-4 h-4 text-[#7E8A93] shrink-0" />}
                   </button>
@@ -220,20 +220,20 @@ export default function ScanRecipe({ embedded = false }) {
             })}
           </ul>
           <button data-testid="pdf-recipes-done" onClick={() => { setPdfRecipes([]); setSavedIdx([]); }}
-            className="mt-3 text-[12px] font-bold text-[#8C4A27] underline">
+            className="mt-3 text-[12px] font-bold text-[#ff6b00] underline">
             {tri("Chiudi elenco", "Liste schließen", "Close list")}
           </button>
         </div>
       )}
 
       {inbound && inbound.your_email && (
-        <div data-testid="inbound-email-panel" className="mt-4 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-5">
-          <div className="flex items-center gap-2 mb-2 text-[#8C4A27]">
+        <div data-testid="inbound-email-panel" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+          <div className="flex items-center gap-2 mb-2 text-[#ff6b00]">
             <Mail className="w-5 h-5" />
             <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Import via Email", "Import per E-Mail", "Email import", "Importar por email")}</h3>
             {inbound.enabled
               ? <span className="ml-auto text-[10px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 px-2 py-0.5 rounded-full">{tri("Attivo", "Aktiv", "Active", "Activo")}</span>
-              : <span className="ml-auto text-[10px] font-bold text-[#a9772f] bg-[#a9772f]/10 px-2 py-0.5 rounded-full">{tri("In arrivo", "Bald", "Coming soon", "Próximamente")}</span>}
+              : <span className="ml-auto text-[10px] font-bold text-[#ffc700] bg-[#ffc700]/10 px-2 py-0.5 rounded-full">{tri("In arrivo", "Bald", "Coming soon", "Próximamente")}</span>}
           </div>
           <p className="text-[12px] text-[#7E8A93] mb-3">
             {inbound.enabled
@@ -245,16 +245,16 @@ export default function ScanRecipe({ embedded = false }) {
           </p>
           {inbound.enabled && inbound.inbound_address && (
             <button data-testid="inbound-copy-address" onClick={() => { navigator.clipboard?.writeText(inbound.inbound_address); toast.success(tri("Indirizzo copiato", "Adresse kopiert", "Address copied", "Dirección copiada")); }}
-              className="w-full inline-flex items-center gap-2 bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#8C4A27]/40 text-[#6E371C] dark:text-[#a9d2ec] font-semibold px-4 py-2.5 rounded-xl active:scale-98">
+              className="w-full inline-flex items-center gap-2 bg-[#121212] dark:bg-[#181818] border border-[#ff6b00]/40 text-[#ff6b00] dark:text-[#a9d2ec] font-semibold px-4 py-2.5 rounded-xl active:scale-98">
               <span className="flex-1 text-left truncate text-sm">{inbound.inbound_address}</span>
               <Copy className="w-4 h-4 shrink-0" />
             </button>
           )}
           {inbound.webhook_url && (
-            <div data-testid="inbound-webhook-admin" className="mt-3 rounded-xl bg-[#B45309]/10 border border-[#B45309]/30 p-3">
-              <p className="text-[11px] font-bold text-[#8C4A27] mb-1">{tri("Admin · URL webhook per la Route Mailgun", "Admin · Webhook-URL für Mailgun-Route", "Admin · Webhook URL for Mailgun Route", "Admin · URL webhook Mailgun")}</p>
+            <div data-testid="inbound-webhook-admin" className="mt-3 rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3">
+              <p className="text-[11px] font-bold text-[#ff6b00] mb-1">{tri("Admin · URL webhook per la Route Mailgun", "Admin · Webhook-URL für Mailgun-Route", "Admin · Webhook URL for Mailgun Route", "Admin · URL webhook Mailgun")}</p>
               <button data-testid="inbound-copy-webhook" onClick={() => { navigator.clipboard?.writeText(inbound.webhook_url); toast.success(tri("URL webhook copiato", "Webhook-URL kopiert", "Webhook URL copied", "URL copiada")); }}
-                className="w-full inline-flex items-center gap-2 bg-white dark:bg-[#1F252B] border border-[#8C4A27]/40 text-[#6E371C] dark:text-[#a9d2ec] font-mono-data text-[11px] px-3 py-2 rounded-lg active:scale-98">
+                className="w-full inline-flex items-center gap-2 bg-white dark:bg-[#181818] border border-[#ff6b00]/40 text-[#ff6b00] dark:text-[#a9d2ec] font-mono-data text-[11px] px-3 py-2 rounded-lg active:scale-98">
                 <span className="flex-1 text-left truncate">{inbound.webhook_url}</span>
                 <Copy className="w-4 h-4 shrink-0" />
               </button>

@@ -28,14 +28,14 @@ export default function CosaPosso() {
     } finally { setLoading(false); }
   };
 
-  const inp = "w-full bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#8C4A27]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
   const Card = ({ item, kind }) => (
-    <div data-testid={`cosa-${kind}-${item.id}`} className="flex items-center gap-3 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-3">
+    <div data-testid={`cosa-${kind}-${item.id}`} className="flex items-center gap-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3">
       {item.image_url ? <img src={item.image_url} alt={item.name} className="w-14 h-14 rounded-xl object-cover shrink-0" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        : <div className="w-14 h-14 rounded-xl bg-[#e4eff8] dark:bg-[#2A323A] shrink-0" />}
+        : <div className="w-14 h-14 rounded-xl bg-[#e4eff8] dark:bg-[#242424] shrink-0" />}
       <div className="min-w-0 flex-1">
         <p className="font-semibold text-[15px] text-[#2B303B] dark:text-[#e4eff8] leading-tight">{item.name}</p>
-        <p className={`text-[12px] leading-snug mt-0.5 ${kind === "makable" ? "text-[#2e8b6f]" : "text-[#C88A2B]"}`}>
+        <p className={`text-[12px] leading-snug mt-0.5 ${kind === "makable" ? "text-[#2e8b6f]" : "text-[#ffc700]"}`}>
           {kind === "makable" ? item.note : `${tri("Manca", "Fehlt", "Missing", "Falta")}: ${item.missing}`}
         </p>
       </div>
@@ -60,7 +60,7 @@ export default function CosaPosso() {
       <div className="flex gap-2 mb-3">
         {[["mikilab", tri("Ricette di Michele", "Micheles Rezepte", "Michele's recipes", "Recetas de Michele")], ["personal", tri("Le mie ricette", "Meine Rezepte", "My recipes", "Mis recetas")]].map(([id, lbl]) => (
           <button key={id} data-testid={`cosa-scope-${id}`} onClick={() => setScope(id)}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-98 ${scope === id ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#232A31] text-[#7E8A93] border-[#E6D8C3] dark:border-[#38424B]"}`}>{lbl}</button>
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-98 ${scope === id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>{lbl}</button>
         ))}
       </div>
 
@@ -80,7 +80,7 @@ export default function CosaPosso() {
       )}
       {res && res.almost && res.almost.length > 0 && (
         <div data-testid="cosa-almost">
-          <p className="text-[13px] font-bold text-[#C88A2B] flex items-center gap-1.5 mb-2"><AlertCircle className="w-4 h-4" /> {tri("Ti manca poco", "Fast fertig", "Almost there", "Casi listas")} ({res.almost.length})</p>
+          <p className="text-[13px] font-bold text-[#ffc700] flex items-center gap-1.5 mb-2"><AlertCircle className="w-4 h-4" /> {tri("Ti manca poco", "Fast fertig", "Almost there", "Casi listas")} ({res.almost.length})</p>
           <div className="space-y-2">{res.almost.map((it) => <Card key={it.id} item={it} kind="almost" />)}</div>
         </div>
       )}

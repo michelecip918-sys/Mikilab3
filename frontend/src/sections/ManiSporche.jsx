@@ -80,7 +80,7 @@ export default function ManiSporche() {
   return (
     <div className="pb-40" data-testid="manisporche">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-11 h-11 rounded-2xl bg-[#6E371C] flex items-center justify-center"><Hand className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><Hand className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Mani Sporche", "Schmutzige Hände", "Dirty Hands", "Manos Sucias")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Tasti grandi e voce: usa l'app con le mani in pasta", "Große Tasten und Stimme", "Big buttons and voice", "Botones grandes y voz")}</p>
@@ -94,12 +94,12 @@ export default function ManiSporche() {
       </div>
 
       {/* Preset XL */}
-      <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2">{tri("Avvia un timer", "Timer starten", "Start a timer", "Iniciar temporizador")}</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{tri("Avvia un timer", "Timer starten", "Start a timer", "Iniciar temporizador")}</p>
       <div className="grid grid-cols-2 gap-3 mb-4">
         {PRESETS.map((p) => (
           <button key={p.key} data-testid={`manisporche-preset-${p.key}`} onClick={() => startPreset(p)}
-            className="relative flex flex-col items-center justify-center gap-1 py-7 rounded-3xl bg-white dark:bg-[#232A31] border-2 border-[#E6D8C3] dark:border-[#38424B] active:scale-95 hover:border-[#B45309] transition-all">
-            {p.repeat && <RefreshCw className="absolute top-3 right-3 w-4 h-4 text-[#B45309]" />}
+            className="relative flex flex-col items-center justify-center gap-1 py-7 rounded-3xl bg-white dark:bg-[#1e1e1e] border-2 border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
+            {p.repeat && <RefreshCw className="absolute top-3 right-3 w-4 h-4 text-[#ff6b00]" />}
             <span className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
             <span className="font-mono-data text-base text-[#7E8A93]">{p.min}′</span>
           </button>
@@ -108,33 +108,33 @@ export default function ManiSporche() {
 
       {/* Mic grande */}
       <button data-testid="manisporche-mic" onClick={() => (micOn ? stopMic() : startMic())}
-        className={`w-full flex items-center justify-center gap-3 py-6 rounded-3xl font-display text-xl font-bold text-white active:scale-97 transition-all mb-2 ${micOn ? "bg-[#C0574D] animate-pulse" : "bg-[#8C4A27]"}`}>
+        className={`w-full flex items-center justify-center gap-3 py-6 rounded-3xl font-display text-xl font-bold text-white active:scale-97 transition-all mb-2 ${micOn ? "bg-[#ff6b00] animate-pulse" : "bg-[#ff6b00]"}`}>
         {micOn ? <Mic className="w-7 h-7" /> : <MicOff className="w-7 h-7" />}
         {micOn ? tri("Ti ascolto…", "Ich höre…", "Listening…", "Escuchando…") : tri("Parla", "Sprich", "Speak", "Habla")}
       </button>
       {micOn && (
         <p className="text-center text-xs text-[#7E8A93] mb-4">
           <Volume2 className="w-3.5 h-3.5 inline mr-1" />{tri('Di\': "pieghe", "puntata", "appretto", "cottura", "timer 20 minuti", "ferma"', 'Sag: "falten", "Timer 20 Minuten", "stop"', 'Say: "folds", "timer 20 minutes", "stop"', 'Di: "pliegues", "temporizador 20 minutos", "para"')}
-          {heard && <span className="block italic text-[#B45309] mt-0.5 truncate">"{heard}"</span>}
+          {heard && <span className="block italic text-[#ff6b00] mt-0.5 truncate">"{heard}"</span>}
         </p>
       )}
 
       {/* Timer attivi GRANDI */}
-      <p className="text-xs font-bold uppercase tracking-wide text-[#8C4A27] mb-2 mt-2 flex items-center gap-1.5"><Clock className="w-4 h-4" /> {tri("Timer attivi", "Aktive Timer", "Active timers", "Temporizadores activos")}</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2 mt-2 flex items-center gap-1.5"><Clock className="w-4 h-4" /> {tri("Timer attivi", "Aktive Timer", "Active timers", "Temporizadores activos")}</p>
       <div className="space-y-3" data-testid="manisporche-timers">
         {timers.length === 0 && <p className="text-center text-sm text-[#7E8A93] py-5">{tri("Nessun timer attivo.", "Kein aktiver Timer.", "No active timer.", "Ningún temporizador.")}</p>}
         {timers.map((t) => {
           const rem = remainingOf(t); const done = rem <= 0;
           return (
-            <div key={t.id} className={`rounded-3xl p-5 border-2 ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#232A31] border-[#E6D8C3] dark:border-[#38424B]"}`}>
+            <div key={t.id} className={`rounded-3xl p-5 border-2 ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
               <div className="flex items-center justify-between mb-1">
-                <span className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#B45309]" />}</span>
+                <span className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#ff6b00]" />}</span>
                 <button onClick={() => remove(t.id)} className="text-[#7E8A93] p-1"><Trash2 className="w-6 h-6" /></button>
               </div>
               <p className={`font-mono-data text-6xl font-bold text-center ${done ? "text-[#E4572E]" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{fmt(rem)}</p>
               <div className="grid grid-cols-2 gap-2 mt-3">
-                <button onClick={() => toggle(t.id)} disabled={done} className="bg-[#8C4A27] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97">{t.running ? tri("Pausa", "Pause", "Pause", "Pausa") : tri("Vai", "Start", "Go", "Va")}</button>
-                <button onClick={() => reset(t.id)} className="bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97">{tri("Reset", "Reset", "Reset", "Reset")}</button>
+                <button onClick={() => toggle(t.id)} disabled={done} className="bg-[#ff6b00] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97">{t.running ? tri("Pausa", "Pause", "Pause", "Pausa") : tri("Vai", "Start", "Go", "Va")}</button>
+                <button onClick={() => reset(t.id)} className="bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97">{tri("Reset", "Reset", "Reset", "Reset")}</button>
               </div>
             </div>
           );

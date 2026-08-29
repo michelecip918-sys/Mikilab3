@@ -9,7 +9,7 @@ export default function ScopriMikiLab() {
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   return (
     <div className="space-y-5" data-testid="scopri-mikilab">
-      <div className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-xl">
+      <div className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white shadow-xl">
         <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele" className="w-full h-52 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="p-6">
           <div className="flex items-center gap-3 mb-3">
@@ -34,17 +34,17 @@ export default function ScopriMikiLab() {
       <GuidaAvatar />
 
       {/* Racconto in viaggio — timeline */}
-      <div data-testid="scopri-timeline" className="rounded-2xl border border-[#E6D8C3] dark:border-[#38424B] bg-white dark:bg-[#232A31] p-4">
-        <p className="font-display text-lg font-bold text-[#6E371C] dark:text-[#e4eff8] mb-3">{L("Il racconto in viaggio", "Die Reise-Geschichte", "The journey story", "El relato del viaje")}</p>
+      <div data-testid="scopri-timeline" className="rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
+        <p className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8] mb-3">{L("Il racconto in viaggio", "Die Reise-Geschichte", "The journey story", "El relato del viaje")}</p>
         <div className="relative pl-6">
-          <div className="absolute left-[7px] top-1 bottom-1 w-0.5 bg-[#B45309]/30" />
+          <div className="absolute left-[7px] top-1 bottom-1 w-0.5 bg-[#ff6b00]/30" />
           {[
             { t: L("L'incontro in viaggio", "Die Begegnung auf Reisen", "Meeting while travelling", "El encuentro de viaje"), d: L("Michele e Mohammadreza si conoscono lontani da casa.", "Michele und Mohammadreza treffen sich fern der Heimat.", "Michele and Mohammadreza meet far from home.", "Michele y Mohammadreza se conocen lejos de casa.") },
             { t: L("Spalla a spalla al forno", "Schulter an Schulter am Ofen", "Side by side at the oven", "Codo con codo ante el horno"), d: L("Notti di lavoro, tanta fatica e la voglia di ricominciare.", "Nachtschichten, harte Arbeit, Neuanfang.", "Night shifts, hard work, a fresh start.", "Noches de trabajo y ganas de empezar.") },
             { t: L("Nasce MikiLab", "MikiLab entsteht", "MikiLab is born", "Nace MikiLab"), d: L("L'idea che il pane unisce le persone, per aiutare ogni fornaio.", "Die Idee, dass Brot Menschen verbindet.", "The idea that bread brings people together.", "La idea de que el pan une a las personas.") },
           ].map((s, i) => (
             <div key={i} className="relative mb-4 last:mb-0">
-              <span className="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#B45309] border-2 border-white dark:border-[#232A31]" />
+              <span className="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#ff6b00] border-2 border-white dark:border-[#1e1e1e]" />
               <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{s.t}</p>
               <p className="text-[12.5px] text-[#3F4A54] dark:text-[#AEB8BF] leading-snug">{s.d}</p>
             </div>

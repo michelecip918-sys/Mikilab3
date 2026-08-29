@@ -13,7 +13,7 @@ export default function CoursesPanel() {
       </div>
       <p className="text-xs text-[#7E8A93] -mt-1 leading-relaxed">{t("courses_note")}</p>
       {courses.map((c, i) => (
-        <div key={i} data-testid={`course-${i}`} className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl overflow-hidden">
+        <div key={i} data-testid={`course-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl overflow-hidden">
           <div className="aspect-video bg-black">
             <iframe
               className="w-full h-full"
@@ -25,7 +25,7 @@ export default function CoursesPanel() {
           </div>
           <div className="p-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-[#8C4A27]">{c.category}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">{c.category}</span>
               {c.isNew && (
                 <span data-testid={`course-new-${i}`} className="text-[10px] font-bold uppercase tracking-wide text-white bg-[#8FB0C2] px-2 py-0.5 rounded-full">{t("course_new")}</span>
               )}

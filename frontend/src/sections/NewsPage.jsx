@@ -14,15 +14,15 @@ export default function NewsPage() {
         <HeroAvatar />
         <Newspaper className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("news_page_title")}</h1>
-        <div className="h-1 w-12 rounded-full bg-[#C88A2B] mt-1.5" />
+        <div className="h-1 w-12 rounded-full bg-[#ffc700] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("news_page_sub")}</p>
       </div>
 
       {news.length > 0 && (
         <div className="space-y-3 mb-6">
           {news.map((n, i) => (
-            <div key={i} data-testid={`news-highlight-${i}`} className={`rounded-2xl p-5 border ${n.highlight ? "bg-[#B45309]/10 border-[#B45309]/40" : "bg-white dark:bg-[#232A31] border-[#E6D8C3] dark:border-[#38424B]"}`}>
-              <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-2 ${n.highlight ? "text-white bg-[#8C4A27]" : "text-[#8C4A27] bg-[#B45309]/15"}`}>{n.tag}</span>
+            <div key={i} data-testid={`news-highlight-${i}`} className={`rounded-2xl p-5 border ${n.highlight ? "bg-[#ff6b00]/10 border-[#ff6b00]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+              <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-2 ${n.highlight ? "text-white bg-[#ff6b00]" : "text-[#ff6b00] bg-[#ff6b00]/15"}`}>{n.tag}</span>
               <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{n.title}</h3>
               <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{n.body}</p>
             </div>

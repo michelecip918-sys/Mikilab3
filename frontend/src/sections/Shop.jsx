@@ -58,7 +58,7 @@ export default function Shop({ hideCourses = false }) {
   const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : lang === "es" ? (p[`${base}_es`] || p[`${base}_en`] || p[base]) : (lang === "en" || lang === "fr" || lang === "fa") ? (p[`${base}_en`] || p[base]) : p[base];
 
   const Card = ({ p }) => (
-    <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm">
+    <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm">
       {p.image_url && <img src={p.image_url.startsWith("http") ? p.image_url : `${process.env.PUBLIC_URL}${p.image_url}`} alt={pick(p, "name")} loading="lazy" className="w-full h-40 object-cover"
         onError={(e) => { e.currentTarget.style.display = "none"; }} />}
       <div className="p-4">
@@ -66,17 +66,17 @@ export default function Shop({ hideCourses = false }) {
         <p className="text-sm text-[#7E8A93] mt-1 leading-snug">{pick(p, "desc")}</p>
         {p.sizes?.length ? (
           <div className="flex flex-wrap gap-1.5 mt-2">
-            {p.sizes.map((s) => <span key={s} className="text-xs font-mono-data bg-[#B45309]/15 text-[#6E371C] dark:text-[#8FB0C2] px-2 py-0.5 rounded-full border border-[#B45309]/30">{s}</span>)}
+            {p.sizes.map((s) => <span key={s} className="text-xs font-mono-data bg-[#ff6b00]/15 text-[#ff6b00] dark:text-[#8FB0C2] px-2 py-0.5 rounded-full border border-[#ff6b00]/30">{s}</span>)}
           </div>
         ) : null}
         {p.allergens ? <p className="text-[11px] text-[#7E8A93] mt-2"><b>{tri("Allergeni","Allergene","Allergens","Alérgenos")}:</b> {pick(p, "allergens")}</p> : null}
         {data.enabled ? (
           <button data-testid={`shop-buy-${p.id}`} onClick={() => join(p.id)}
-            className="mt-3 w-full bg-[#8C4A27] text-white font-semibold py-2 rounded-xl active:scale-98 text-sm">
+            className="mt-3 w-full bg-[#ff6b00] text-white font-semibold py-2 rounded-xl active:scale-98 text-sm">
             {p.kind === "corso" ? tri("Iscriviti","Anmelden","Enrol","Inscríbete") : tri("Prenota","Vorbestellen","Pre-order","Reservar")}
           </button>
         ) : (
-          <span className="inline-flex items-center gap-1 mt-3 text-xs font-bold text-[#8C4A27]">
+          <span className="inline-flex items-center gap-1 mt-3 text-xs font-bold text-[#ff6b00]">
             <Clock className="w-3.5 h-3.5" /> {tri("In arrivo","Bald verfügbar","Coming soon","Próximamente")}
           </span>
         )}
@@ -86,7 +86,7 @@ export default function Shop({ hideCourses = false }) {
 
   return (
     <div data-testid="shop-page" className="pb-4 space-y-6">
-      <div className="rounded-3xl bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white p-7 text-center shadow-xl">
+      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-7 text-center shadow-xl">
         <ShoppingBag className="w-12 h-12 mx-auto mb-2" />
         <h1 className="font-display text-3xl font-bold">{de ? "Shop & Academy" : "Shop & Academy"}</h1>
         <p className="text-white/85 text-sm mt-2">
@@ -99,7 +99,7 @@ export default function Shop({ hideCourses = false }) {
       <AvatarBubbles variant="shop" />
 
       {/* Tutto gratuito: nessun acquisto, nessun abbonamento */}
-      <div data-testid="shop-free-block" className="rounded-3xl bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-sm overflow-hidden p-6 text-center">
+      <div data-testid="shop-free-block" className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white shadow-sm overflow-hidden p-6 text-center">
         <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-3">
           <BookOpen className="w-7 h-7 text-white" />
         </div>

@@ -17,15 +17,15 @@ export default function Mikilab() {
       <div className="pb-4">
         <BackBtn onClick={() => setView("main")} />
         <div data-testid="lievito-page" className="space-y-4">
-          <div className="rounded-2xl p-5 bg-[#B45309]/12 border border-[#B45309]/40">
+          <div className="rounded-2xl p-5 bg-[#ff6b00]/12 border border-[#ff6b00]/40">
             <div className="flex items-center gap-2 mb-2">
-              <Wheat className="w-5 h-5 text-[#8C4A27]" />
+              <Wheat className="w-5 h-5 text-[#ff6b00]" />
               <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("lm_page_title")}</h2>
             </div>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{lm.intro}</p>
           </div>
           {lm.sections.map((s, i) => (
-            <div key={i} data-testid={`lm-section-${i}`} className="bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-5">
+            <div key={i} data-testid={`lm-section-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5">
               <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{s.title}</h3>
               <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.body}</p>
             </div>
@@ -56,14 +56,14 @@ export default function Mikilab() {
   return (
     <div>
       {/* Bio: Benvenuti + Chi sono */}
-      <div data-testid="bio-card" className="mb-5 rounded-3xl overflow-hidden bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white">
+      <div data-testid="bio-card" className="mb-5 rounded-3xl overflow-hidden bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white">
         <div className="p-5">
           <div className="flex justify-center mb-3">
             <img
               src={`${process.env.PUBLIC_URL}/logo.png`}
               alt="Mikilab"
               data-testid="bio-logo"
-              className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#e7d5b4]/70 shadow-lg"
+              className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ffc700]/70 shadow-lg"
             />
           </div>
           <p data-testid="bio-welcome-sub" className="text-center text-[11px] uppercase tracking-wider text-white/70 mb-3">{t("bio_welcome_sub")} <span>🇮🇹</span> <span>🇩🇪</span></p>
@@ -73,7 +73,7 @@ export default function Mikilab() {
               src={`${process.env.PUBLIC_URL}/bio-dough.jpg`}
               alt="Michele — impasto in mano"
               data-testid="bio-dough-photo"
-              className="w-full rounded-2xl object-contain bg-[#1B2127] ring-2 ring-[#e7d5b4]/60 shadow-xl"
+              className="w-full rounded-2xl object-contain bg-[#121212] ring-2 ring-[#ffc700]/60 shadow-xl"
             />
             <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
           </figure>
@@ -89,13 +89,13 @@ export default function Mikilab() {
               )}
             </div>
             <div className="flex items-center gap-2">
-              <Heart className="w-5 h-5 text-[#e7d5b4]" />
+              <Heart className="w-5 h-5 text-[#ffc700]" />
               <h3 className="font-display text-lg font-bold">{t("bio_about_title")}</h3>
             </div>
           </div>
           <figure className="mb-4">
             <img data-testid="bio-cartoon" src={`${process.env.PUBLIC_URL}/michele-cartoon.jpg`} alt="Michele — Mikilab"
-              className="w-40 h-40 mx-auto rounded-3xl object-cover border-2 border-[#e7d5b4]/50 shadow-lg" />
+              className="w-40 h-40 mx-auto rounded-3xl object-cover border-2 border-[#ffc700]/50 shadow-lg" />
             <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
           </figure>
           <p className="text-sm text-white/90 leading-relaxed whitespace-pre-line">{t("bio_about_body")}</p>
@@ -108,15 +108,15 @@ export default function Mikilab() {
       <AccessBtn testid="labels-open-btn" Icon={Tag} title={t("tool_labels")} sub={t("mikilab_labels_sub")} onClick={() => setView("labels")} />
 
       {/* Metodo dell'impasto — diretto vs indiretto (prima delle ricette) */}
-      <div data-testid="method-section" className="mt-2 mb-5 rounded-2xl bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] p-5">
+      <div data-testid="method-section" className="mt-2 mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
         <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-5 h-5 text-[#8C4A27]" />
+          <Sparkles className="w-5 h-5 text-[#ff6b00]" />
           <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("method_section_title")}</h2>
         </div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("method_section_body")}</p>
         <div className="grid gap-3 mt-4 sm:grid-cols-2">
           {[["_606t-4KXT4", "method_video1_title"], ["HpOycYo1Cvc", "method_video2_title"]].map(([vid, tk]) => (
-            <div key={vid} data-testid={`method-video-${vid}`} className="rounded-xl overflow-hidden border border-[#E6D8C3] dark:border-[#38424B]">
+            <div key={vid} data-testid={`method-video-${vid}`} className="rounded-xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e]">
               <div className="aspect-video bg-black">
                 <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${vid}`} title={t(tk)}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
@@ -137,9 +137,9 @@ export default function Mikilab() {
       />
 
       {/* Ringraziamenti ai follower */}
-      <div data-testid="thanks-card" className="mt-5 rounded-3xl p-5 bg-[#B45309]/12 border border-[#B45309]/30">
+      <div data-testid="thanks-card" className="mt-5 rounded-3xl p-5 bg-[#ff6b00]/12 border border-[#ff6b00]/30">
         <div className="flex items-center gap-2 mb-2">
-          <BookHeart className="w-5 h-5 text-[#8C4A27] dark:text-[#a9d2ec]" />
+          <BookHeart className="w-5 h-5 text-[#ff6b00] dark:text-[#a9d2ec]" />
           <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("thanks_label")}</h2>
         </div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("thanks_body")}</p>
@@ -150,7 +150,7 @@ export default function Mikilab() {
 
 function BackBtn({ onClick }) {
   return (
-    <button data-testid="mikilab-back-btn" onClick={onClick} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
+    <button data-testid="mikilab-back-btn" onClick={onClick} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4">
       <ChevronLeft className="w-5 h-5" /> Mikilab
     </button>
   );
@@ -158,9 +158,9 @@ function BackBtn({ onClick }) {
 
 function AccessBtn({ testid, Icon, title, sub, onClick }) {
   return (
-    <button data-testid={testid} onClick={onClick} className="w-full mb-3 flex items-center gap-4 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
-      <div className="w-12 h-12 rounded-2xl bg-[#B45309]/15 border border-[#B45309]/30 flex items-center justify-center shrink-0">
-        <Icon className="w-6 h-6 text-[#8C4A27]" />
+    <button data-testid={testid} onClick={onClick} className="w-full mb-3 flex items-center gap-4 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
+      <div className="w-12 h-12 rounded-2xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
+        <Icon className="w-6 h-6 text-[#ff6b00]" />
       </div>
       <div className="flex-1 min-w-0">
         <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{title}</h3>

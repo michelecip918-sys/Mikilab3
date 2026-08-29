@@ -54,9 +54,9 @@ export default function BakeAlong() {
   const th = data.theme || {};
 
   return (
-    <div data-testid="bake-along" className="rounded-2xl overflow-hidden bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B]">
+    <div data-testid="bake-along" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e]">
       {/* Header sfida */}
-      <div className="p-5 text-white" style={{ background: "linear-gradient(135deg,#7a1f1f,#a9772f 90%)" }}>
+      <div className="p-5 text-white" style={{ background: "linear-gradient(135deg,#7a1f1f,#ffc700 90%)" }}>
         <div className="flex items-center gap-2 mb-1">
           <Flame className="w-5 h-5" />
           <span className="text-[11px] font-bold uppercase tracking-wider text-white/85">
@@ -89,11 +89,11 @@ export default function BakeAlong() {
             {showForm && (
               <textarea data-testid="bake-along-note" value={note} onChange={(e) => setNote(e.target.value)} rows={2}
                 placeholder={tri("Racconta com'è andata (facoltativo)…", "Erzähl, wie es lief (optional)…", "Tell us how it went (optional)…", "Cuenta cómo fue (opcional)…")}
-                className="w-full mb-2 bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#a9772f] text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full mb-2 bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#ffc700] text-[#2B303B] dark:text-[#e4eff8]" />
             )}
             <button data-testid="bake-along-participate" disabled={busy}
               onClick={() => { if (!user) { setAuthOpen && setAuthOpen(true); return; } if (!showForm) { setShowForm(true); } else { fileRef.current?.click(); } }}
-              className="w-full inline-flex items-center justify-center gap-2 bg-[#a9772f] hover:bg-[#8a5a2b] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
+              className="w-full inline-flex items-center justify-center gap-2 bg-[#ffc700] hover:bg-[#ff6b00] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
               {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />}
               {showForm ? tri("Carica la foto del tuo pane", "Foto deines Brotes hochladen", "Upload your bread photo", "Sube la foto de tu pan")
                         : tri("Partecipa alla sfida", "An der Challenge teilnehmen", "Join the challenge", "Únete al reto")}
@@ -103,7 +103,7 @@ export default function BakeAlong() {
 
         {/* Classifica */}
         <div>
-          <div className="flex items-center gap-2 mb-2 text-[#a9772f]">
+          <div className="flex items-center gap-2 mb-2 text-[#ffc700]">
             <Trophy className="w-5 h-5" />
             <h4 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Classifica", "Rangliste", "Leaderboard", "Clasificación")}</h4>
           </div>
@@ -115,7 +115,7 @@ export default function BakeAlong() {
             <ul className="space-y-2.5" data-testid="bake-along-leaderboard">
               {entries.map((e) => (
                 <li key={e.id} data-testid={`bake-along-entry-${e.id}`}
-                  className="flex items-center gap-3 rounded-xl bg-[#FAF5EC] dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] p-2.5">
+                  className="flex items-center gap-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] p-2.5">
                   <div className="relative shrink-0">
                     <img src={e.image_url} alt="" className="w-16 h-16 rounded-lg object-cover" />
                     {e.rank <= 3 && (
@@ -131,7 +131,7 @@ export default function BakeAlong() {
                     )}
                   </div>
                   <button data-testid={`bake-along-vote-${e.id}`} onClick={() => vote(e.id)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-bold shrink-0 active:scale-90 transition-all ${e.liked_by_me ? "bg-[#C0574D] text-white" : "bg-white dark:bg-[#232A31] text-[#C0574D] border border-[#C0574D]/40"}`}>
+                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-bold shrink-0 active:scale-90 transition-all ${e.liked_by_me ? "bg-[#ff6b00] text-white" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border border-[#ff6b00]/40"}`}>
                     <Heart className={`w-4 h-4 ${e.liked_by_me ? "fill-current" : ""}`} /> {e.like_count}
                   </button>
                 </li>
@@ -146,7 +146,7 @@ export default function BakeAlong() {
           </p>
         )}
         {champion && (
-          <div data-testid="bake-along-champion" className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#C0574D]/12 to-[#a9772f]/12 border border-[#a9772f]/30 px-3 py-2">
+          <div data-testid="bake-along-champion" className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#ff6b00]/12 to-[#ffc700]/12 border border-[#ffc700]/30 px-3 py-2">
             {champion.avatar ? <img src={champion.avatar} alt="" className="w-8 h-8 rounded-full object-cover" /> : <span className="text-xl">🥇</span>}
             <p className="text-[13px] text-[#2B303B] dark:text-[#e4eff8]">
               {tri("Campione:", "Champion:", "Champion:", "Campeón:")} <b>{champion.name}</b> <span className="text-[#7E8A93]">· {champion.likes} {tri("voti", "Stimmen", "votes", "votos")}</span>

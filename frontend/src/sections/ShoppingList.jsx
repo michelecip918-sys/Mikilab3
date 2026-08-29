@@ -38,7 +38,7 @@ export default function ShoppingList() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#8C4A27] flex items-center justify-center"><ShoppingCart className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><ShoppingCart className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("tool_spesa")}</h1>
           <p className="text-sm text-[#7E8A93]">{mkTri(lang)("Ingredienti dal piano settimanale", "Zutaten aus dem Wochenplan", "Ingredients from the weekly plan")}</p>
@@ -46,8 +46,8 @@ export default function ShoppingList() {
       </div>
 
       {loaded && !hasData ? (
-        <div className="flex items-start gap-3 bg-[#B45309]/15 border border-[#B45309]/30 rounded-2xl p-4">
-          <AlertTriangle className="w-5 h-5 text-[#8C4A27] shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 bg-[#ff6b00]/15 border border-[#ff6b00]/30 rounded-2xl p-4">
+          <AlertTriangle className="w-5 h-5 text-[#ff6b00] shrink-0 mt-0.5" />
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{mkTri(lang)("Nessun piano trovato. Inserisci prima i prodotti in 'Pianifica la Settimana' e salva.", "Kein Wochenplan gefunden. Trage zuerst Produkte in 'Woche planen' ein und speichere.", "No plan found. First add products in 'Plan the Week' and save.")}</p>
         </div>
       ) : (
@@ -57,11 +57,11 @@ export default function ShoppingList() {
             <SupplierOrder totals={totals} />
           </div>
           <button data-testid="spesa-share" onClick={() => shareContent(mkTri(lang)("Lista della spesa — MikiLab", "Einkaufsliste — MikiLab", "Shopping list — MikiLab"), buildShoppingText(totals, lang), lang)}
-            className="mt-3 w-full bg-[#e4eff8] dark:bg-[#2A323A] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#E6D8C3] dark:border-[#38424B] flex items-center justify-center gap-2 active:scale-98 transition-all">
+            className="mt-3 w-full bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share")}
           </button>
           <button data-testid="spesa-pdf" onClick={() => window.print()}
-            className="no-print mt-2 w-full bg-[#B45309] hover:bg-[#336a94] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
+            className="no-print mt-2 w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Printer className="w-5 h-5" /> {mkTri(lang)("PDF / Stampa", "Als PDF / Drucken", "PDF / Print")}
           </button>
         </>
