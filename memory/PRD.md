@@ -2485,3 +2485,12 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **(d) Sblocco con le Sfide: ANNULLATA su richiesta utente** → Laboratorio resta GRATUITO.
 - Verifica iteration_122: tutti e 4 PASS, 0 bug (ui/integration/design). 
 - **Warning dev noto (non risolto, non-blocking)**: console "<span> cannot be a child of <option>" attribuito a PianoProduzioneAI, ma NESSUN <span> letterale trovato nelle option (mkTri/t/recipeTitle ritornano stringhe) → probabile avviso transitorio/misattribuito, nessun impatto funzionale.
+
+## v-fork.98 (2026-06) — Ultimo salvataggio nel Piano Settimanale + Ricette Preferite (cuore)
+- **Ultimo salvataggio nello STRUMENTO Piano Settimanale** (WeeklyPlan.jsx): etichetta `weekly-last-saved` sotto `weekly-save-btn`, valorizzata da weekly.updated_at al load e aggiornata dopo il salvataggio (persistente, per-utente). Verificato iteration_123.
+- **Ricette Preferite** (RecipeList.jsx): 
+  - Cuore `recipe-fav-<id>` in basso a sinistra su ogni card (stopPropagation: non apre il dettaglio); toggle rosso/fill; persistenza in localStorage `mikilab_fav_recipes`.
+  - Chip filtro `cat-filter-favs` ("Preferite (N)") all'inizio della riga filtri: mostra solo i preferiti; incluso in `recipe-clear-filters`; messaggio dedicato quando non ci sono preferiti.
+  - FIX HIGH (iteration_123): la condizione `searching` di auto-apertura delle cartelle categoria ora include `favFilter` e `catFilter` → i preferiti sono subito visibili col filtro attivo.
+- Verifica iteration_123: entrambe le funzioni PASS (toggle, persistenza, filtro, stopPropagation, ultimo salvataggio persistente); regressione apertura dettaglio OK.
+- **Warning dev `<option>`**: 3 tentativi di localizzazione → nessuno `<span>` reale in alcun `<option>`, mkTri/recipeTitle ritornano stringhe → avviso benigno dev-only, ZERO impatto. Chiuso come non-actionable.

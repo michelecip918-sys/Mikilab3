@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only test (admin@mikilab.de) of the two new features. (1) Piano Settimanale 'Ultimo salvataggio' INSIDE the tool: verified label present on load from weekly.updated_at, updates after save (toast 'Weekly plan saved'), persists after leaving ('Back to tools') and re-opening the tool — PASS. (2) Recipe favourites: heart toggle (aria-pressed true/false + red fill), stopPropagation (no recipe dialog opens), localStorage 'mikilab_fav_recipes' persistence across reload, 'Preferite (N)' counter chip, fav filter shows only favourites (results bar 2/120), 'Azzera filtri' resets favFilter, empty-state message 'No favourites yet. Tap the heart...' — all PASS. Regression: clicking card body still opens detail dialog — PASS. One UX defect found: with the Preferite filter active the favourite cards remain hidden because category folders are collapsed by default (favFilter is not part of the 'searching' auto-open condition).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList (fav filter + collapsible category folders)", "issue": "Activating 'Preferite (N)' on a fresh load shows the results bar (e.g. '2 recipes') and the category folder header, but ZERO recipe cards are visible because folders are closed by default. The auto-open condition `const searching = query.trim() !== '' || baseFilter !== 'all'` does not include favFilter. Fix: include `|| favFilter` (and ideally catFilter) so folders open when the favourites filter is on.", "selector": "[data-testid='cat-filter-favs'] / [data-testid='cat-folder-basi']", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Il Tuo Laboratorio (Maestro) — PianoProduzioneAI", "issues": ["React hydration/DOM warning in console: 'In HTML, <span> cannot be a child of <option>' coming from PianoProduzioneAI.jsx (rendered inside Maestro line 232). Invalid markup inside <option>, should be plain text."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "RecipeList.jsx: include favFilter in the `searching` flag so category folders auto-expand when the 'Preferite' filter is active (currently favourite cards are invisible until the user manually opens each folder).",
+    "PianoProduzioneAI.jsx: remove <span> (icon/badge markup) from inside <option> elements to clear the React DOM nesting error."
+  ],
+  "critical_code_review_comments": [
+    "RecipeList.jsx is 1308 lines — should be split (Card, filters bar, dialog) per file-size guideline.",
+    "Favourites are stored only in localStorage, so they are per-browser and NOT per-user across devices; if per-user persistence is expected, back it with the user profile API.",
+    "WeeklyPlan.jsx: savedAt set from client `new Date()` after save instead of the server-returned updated_at — minor clock-drift risk, acceptable."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "92% (11/12 checks passed)"},
+  "seed_data_creation": "Saved a weekly plan for admin (Monday: 2 items) via the tool; favourites toggled and cleaned from localStorage at end of run.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked; login-btn -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "UI language defaults to EN in the test browser, so labels appear as 'Last saved:' and 'Favourites (N)'. Recipe cards live inside collapsible folders (cat-folder-<key>) that are CLOSED by default — you must click a folder before recipe-row-<id>/recipe-fav-<id> exist in the DOM. Known fav recipe ids used: a052ba40-408a-495d-885a-6d7be260f3e9, a72f2b01-d0d0-4159-8569-8280ade0ec0b. Weekly plan tool: nav-tab-maestro -> maestro-top-settimana; exit via 'Back to tools'.",
+  "rca_of_the_issue": "Fav filter invisibility: in RecipeList.jsx the grouped rendering opens a category folder only when `searching` (query or baseFilter) is truthy; favFilter is excluded, so filtered favourites are rendered inside collapsed AnimatePresence blocks and never displayed on first activation."
+}

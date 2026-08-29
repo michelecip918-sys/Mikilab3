@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store, Tag, ShoppingBasket } from "lucide-react";
+import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store, Tag, ShoppingBasket, CheckCircle2 } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
@@ -66,6 +66,7 @@ export default function WeeklyPlan() {
   const [salesPoints, setSalesPoints] = useState([]);
   const [newWeek, setNewWeek] = useState(false);
   const [lastTemplate, setLastTemplate] = useState([]);
+  const [savedAt, setSavedAt] = useState(null);
   const { t, lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
@@ -88,6 +89,7 @@ export default function WeeklyPlan() {
         // Reset settimanale: se il piano salvato è di una settimana precedente,
         // riparti da lista VUOTA e offri "Usa il piano della scorsa settimana".
         const savedItems = (saved && saved.items) || [];
+        setSavedAt(saved && saved.updated_at ? saved.updated_at : null);
         let storedWeek = "";
         try { storedWeek = localStorage.getItem("mikilab_weekly_week") || ""; } catch { /* */ }
         const cur = isoWeekKey(new Date());
@@ -155,6 +157,7 @@ export default function WeeklyPlan() {
         localStorage.setItem("mikilab_weekly_week", isoWeekKey(new Date()));
         localStorage.setItem("mikilab_weekly_template", JSON.stringify(cleanItems()));
       } catch { /* */ }
+      setSavedAt(new Date().toISOString());
       setNewWeek(false);
       toast.success(t("toast_weekly_saved"));
       fireHighFive(t("toast_weekly_saved"));
@@ -636,6 +639,13 @@ export default function WeeklyPlan() {
       >
         <Save className="w-5 h-5" /> {t("weekly_save")}
       </button>
+
+      {savedAt && (
+        <p data-testid="weekly-last-saved" className="text-center text-[12px] font-semibold text-[#7bd88f] mt-2 flex items-center justify-center gap-1.5">
+          <CheckCircle2 className="w-3.5 h-3.5" />
+          {tri("Ultimo salvataggio", "Zuletzt gespeichert", "Last saved")}: {(() => { try { return new Date(savedAt).toLocaleString(lang, { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); } catch { return "—"; } })()}
+        </p>
+      )}
 
       <div className="grid grid-cols-3 gap-2 mt-2">
         <button

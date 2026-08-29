@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart } from "lucide-react";
 import { recipesApi, subscriptionApi, recipePurchaseApi, siteSettingsApi } from "@/lib/api";
 import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -41,6 +41,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("all");
   const [baseFilter, setBaseFilter] = useState("all");
+  const [favFilter, setFavFilter] = useState(false);
+  const [favs, setFavs] = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem("mikilab_fav_recipes") || "[]")); } catch { return new Set(); }
+  });
+  const toggleFav = (id) => setFavs((prev) => {
+    const n = new Set(prev);
+    if (n.has(id)) n.delete(id); else n.add(id);
+    try { localStorage.setItem("mikilab_fav_recipes", JSON.stringify([...n])); } catch { /* */ }
+    return n;
+  });
   const [openCats, setOpenCats] = useState({});
   const [folderCovers, setFolderCovers] = useState({});
   const [translating, setTranslating] = useState(false);
@@ -283,6 +293,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       ) : (() => {
         const q = query.trim().toLowerCase();
         const matches = (r) => {
+          if (favFilter && !favs.has(r.id)) return false;
           if (catFilter !== "all" && recipeCategory(r).key !== catFilter) return false;
           if (baseFilter === "colorati") { if (!isColored(r.name)) return false; }
           else if (baseFilter !== "all" && !recipeBase(r).includes(baseFilter)) return false;
@@ -328,6 +339,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   <Lock data-testid={`recipe-locked-${r.id}`} className="w-3.5 h-3.5 text-[#ff6b00]" />
                 </span>
               )}
+              <button
+                type="button"
+                data-testid={`recipe-fav-${r.id}`}
+                aria-pressed={favs.has(r.id)}
+                onClick={(e) => { e.stopPropagation(); toggleFav(r.id); }}
+                className="absolute bottom-2 left-2 z-20 bg-white/90 dark:bg-[#121212]/80 rounded-full p-1.5 shadow active:scale-90 transition-transform"
+                title={favs.has(r.id) ? triM("Rimuovi dai preferiti", "Aus Favoriten entfernen", "Remove from favourites") : triM("Aggiungi ai preferiti", "Zu Favoriten", "Add to favourites")}
+              >
+                <Heart className={`w-4 h-4 transition-colors ${favs.has(r.id) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
+              </button>
             </div>
             {/* testo */}
             <div className="p-3 min-w-0 flex-1">
@@ -389,6 +410,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
             {/* Filtro rapido per categoria (chip colorate) */}
             <div data-testid="recipe-cat-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 px-0.5 scrollbar-none max-w-full">
+              <button data-testid="cat-filter-favs" onClick={() => setFavFilter((v) => !v)}
+                className={`shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${favFilter ? "bg-[#ff3b5c] text-white border-[#ff3b5c] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff3b5c] border-[#ff3b5c]/40 hover:border-[#ff3b5c]"}`}>
+                <Heart className={`w-3.5 h-3.5 ${favFilter ? "fill-white" : "fill-[#ff3b5c]"}`} />
+                {triM("Preferite", "Favoriten", "Favourites")}{favs.size > 0 ? ` (${favs.size})` : ""}
+              </button>
               <button data-testid="cat-filter-all" onClick={() => setCatFilter("all")}
                 className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${catFilter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
                 {triM("Tutte", "Alle", "All")}
@@ -413,8 +439,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <span className="text-xs font-semibold text-[#7E8A93]">
                 {filtered.length} {filtered.length === 1 ? triM("ricetta", "Rezept", "recipe") : triM("ricette", "Rezepte", "recipes")}
               </span>
-              {(catFilter !== "all" || baseFilter !== "all" || (query || "").trim() !== "") && (
-                <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setQuery(""); }}
+              {(catFilter !== "all" || baseFilter !== "all" || favFilter || (query || "").trim() !== "") && (
+                <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setFavFilter(false); setQuery(""); }}
                   className="inline-flex items-center gap-1 text-xs font-bold text-[#ff6b00] active:scale-95 transition-transform">
                   <X className="w-3.5 h-3.5" /> {triM("Azzera filtri", "Filter zurücksetzen", "Clear filters")}
                 </button>
@@ -423,14 +449,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
             {filtered.length === 0 ? (
               <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
-                {triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
+                {favFilter && favs.size === 0
+                  ? triM("Nessuna preferita ancora. Tocca il ❤ su una ricetta per salvarla qui.", "Noch keine Favoriten. Tippe auf das ❤ einer Rezept, um es hier zu speichern.", "No favourites yet. Tap the ❤ on a recipe to save it here.")
+                  : triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
               </p>
             ) : (
               <div className="space-y-3">
                 {CATS.map((cat) => {
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
-                  const searching = (query || "").trim() !== "" || baseFilter !== "all";
+                  const searching = (query || "").trim() !== "" || baseFilter !== "all" || favFilter || catFilter !== "all";
                   const open = searching ? true : (openCats[cat.key] !== undefined ? openCats[cat.key] : false); // ricerca attiva: apri le cartelle; altrimenti TUTTE le categorie chiuse di default
                   const coverSrc = (() => {
                     const chosen = folderCovers[cat.key];
