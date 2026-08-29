@@ -26,7 +26,7 @@ const HOUR_FIELDS = new Set(["bulk_fermentation_hours", "proofing_hours"]);
 const emptyCost = standardCosting();
 
 const empty = {
-  name: "", real_name: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
+  name: "", real_name: "", menu_category: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", image_url: "", extra_ingredients: [], work_phases: [], costing: standardCosting(),
@@ -151,7 +151,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
     if (!form.name.trim()) return;
     if (saving) return;
     const payload = {
-      name: form.name.trim(), real_name: (form.real_name || "").trim() || null, flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
+      name: form.name.trim(), real_name: (form.real_name || "").trim() || null, menu_category: form.menu_category || null, flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
       preferment_type: form.preferment_type || null,
       oven_type: form.oven_type || null,
       method_type: form.method_type || null,
@@ -228,6 +228,24 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               placeholder={mkTri(lang)("es. Pane alle Patate", "z. B. Kartoffelbrot", "e.g. Potato bread", "p. ej. Pan de patata")}
               className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none"
             />
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Categoria", "Kategorie", "Category", "Categoría", "Catégorie")}</label>
+            <select
+              data-testid="recipe-menu-category-select"
+              value={form.menu_category || ""}
+              onChange={(e) => set("menu_category", e.target.value)}
+              className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] focus:border-[#8C4A27] focus:ring-2 focus:ring-[#8C4A27]/20 rounded-xl p-3 text-base outline-none"
+            >
+              <option value="">{mkTri(lang)("Automatica (dal nome)", "Automatisch (aus Name)", "Automatic (from name)", "Automática (del nombre)", "Automatique (du nom)")}</option>
+              <option value="basi">✨ {mkTri(lang)("Basi & Lieviti", "Basis & Hefen", "Bases & Starters", "Bases y Levaduras", "Bases & Levains")}</option>
+              <option value="pane">🍞 {mkTri(lang)("Pane & Panificati", "Brot & Backwaren", "Bread & Bakes", "Pan y Panificados", "Pain & Panifiés")}</option>
+              <option value="panini">🥖 {mkTri(lang)("Panini & Baguette", "Brötchen & Baguette", "Rolls & Baguette", "Panecillos y Baguette", "Petits pains & Baguette")}</option>
+              <option value="viennoiserie">🥐 {mkTri(lang)("Cornetti & Viennoiserie", "Croissants & Viennoiserie", "Croissants & Viennoiserie", "Cruasanes y Viennoiserie", "Croissants & Viennoiserie")}</option>
+              <option value="focacce">🫓 {mkTri(lang)("Focacce & Lievitati salati", "Focaccia & Herzhaftes", "Focaccia & Savoury", "Focaccias y Salados", "Focaccias & Salés")}</option>
+              <option value="snack">🥨 {mkTri(lang)("Snack & Sfizi", "Snacks", "Snacks", "Snacks", "Snacks")}</option>
+            </select>
           </div>
 
           <div>
@@ -691,6 +709,7 @@ function normalize(r) {
   out.procedure = r.procedure || "";
   out.origin = r.origin || "";
   out.dough_category = r.dough_category || "";
+  out.menu_category = r.menu_category || "";
   out.water_temp_c = r.water_temp_c ?? "";
   const rc = r.costing || {};
   const has = (v) => v !== "" && v != null;

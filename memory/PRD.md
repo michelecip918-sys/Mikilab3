@@ -2217,3 +2217,9 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Titolo sezione** "Ricette" → "Ricette del MikiLab" (6 lingue).
 - Verificato a schermo: Home senza glossario, titolo aggiornato, Enciclopedia del Pane mostra enciclopedia + termini glossario. Nessun errore.
 - BACKLOG APPROVATO (ancora da fare, turno dedicato): Categoria+nome reale nel salvataggio ricetta, Filtro rapido categorie, Icone categoria nelle liste, Piano settimanale suggerito dall'IA.
+
+## v-fork.61 (2026-06) — Categoria in salvataggio + Filtro rapido categorie
+- **RecipeDialog**: aggiunto selettore `recipe-menu-category-select` (menu_category: basi/pane/panini/viennoiserie/focacce/snack, con "Automatica dal nome") + già presente "nome reale". Salvato nel payload; empty/normalize aggiornati. Verificato via API: name/real_name/menu_category persistiti su create.
+- **PianoProduzioneAI**: filtro rapido categorie nel picker "Aggiungi ricette" (`capo-picker-filters`, chip `capo-filter-<key>`) + stato `pickCat`. Filtra la lista per `recipeCategory(r).key`. Verificato: 121 → 32 con filtro Viennoiserie.
+- Nota: la categoria "panini" nel form mappa comunque al gruppo Pane in recipeCats (macro-categoria) salvo estensione futura.
+- BACKLOG APPROVATO rimanente: Icone categoria nelle liste; Piano settimanale suggerito dall'IA.

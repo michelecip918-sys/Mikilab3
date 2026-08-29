@@ -18,7 +18,7 @@ import { guideFor } from "@/lib/toolGuide";
 import { playSfx } from "@/lib/uiSounds";
 import { shareContent } from "@/lib/share";
 import { rLoc, recipeTitle } from "@/lib/loc";
-import { recipeCategory } from "@/lib/recipeCats";
+import { recipeCategory, CATS } from "@/lib/recipeCats";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
 import { mkTri, triFR, triFA } from "@/i18n/triMaps";
@@ -239,6 +239,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [infEdit, setInfEdit] = useState(null); // tabella infornate modificabile {headers, rows}
   const [planHF, setPlanHF] = useState(false); // lettura vocale del piano
   const [pickSearch, setPickSearch] = useState("");
+  const [pickCat, setPickCat] = useState("");
   const [savedProducts, setSavedProducts] = useState([]);
   const [modules, setModules] = useState(DEFAULT_MODULES);
   const toggleMod = (id) => setModules((m) => ({ ...m, [id]: !m[id] }));
@@ -1315,9 +1316,21 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <input data-testid="capo-picker-search" value={pickSearch} onChange={(e) => setPickSearch(e.target.value)} autoFocus
                   placeholder={tri3(lang, "Cerca ricetta…", "Rezept suchen…", "Search recipe…")}
                   className="w-full bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-2.5 text-sm outline-none focus:border-[#8C4A27]" />
+                <div data-testid="capo-picker-filters" className="flex gap-1.5 mt-2 overflow-x-auto pb-1">
+                  <button data-testid="capo-filter-all" onClick={() => setPickCat("")}
+                    className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === "" ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#2A323A] text-[#6B5546] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>
+                    {tri3(lang, "Tutte", "Alle", "All")}
+                  </button>
+                  {CATS.map((c) => (
+                    <button key={c.key} data-testid={`capo-filter-${c.key}`} onClick={() => setPickCat(c.key === pickCat ? "" : c.key)}
+                      className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === c.key ? "bg-[#8C4A27] text-white border-[#8C4A27]" : "bg-white dark:bg-[#2A323A] text-[#6B5546] dark:text-[#AEB8BF] border-[#E6D8C3] dark:border-[#38424B]"}`}>
+                      {c.icon} {t(c.label)}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="overflow-y-auto p-2 flex-1">
-                {recipes.filter((r) => (r.name || "").toLowerCase().includes(pickSearch.toLowerCase())).map((r) => {
+                {recipes.filter((r) => (r.name || "").toLowerCase().includes(pickSearch.toLowerCase())).filter((r) => !pickCat || recipeCategory(r).key === pickCat).map((r) => {
                   const sel = products.some((p) => p.recipe_id === r.id);
                   return (
                     <button key={r.id} data-testid={`capo-pick-${r.id}`} onClick={() => (sel ? removeByRecipe(r.id) : addRecipes([r.id]))}
