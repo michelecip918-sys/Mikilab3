@@ -4,6 +4,7 @@ import { Landmark, Wheat, Share2, Printer, ChevronLeft, Scale, MapPin, Clock, Sp
 import { useLang } from "@/i18n/LanguageContext";
 import { triFR, triFA } from "@/i18n/triMaps";
 import { toast } from "sonner";
+import SectionHero from "@/components/SectionHero";
 
 // "Le Ricette Custodite" — pani del Sud d'Italia + Germania, con il metodo di Michele.
 // Ogni ingrediente è in % sul peso della farina → "Adatta alle mie dosi" ricalcola tutto.
@@ -797,13 +798,9 @@ export default function RicetteCustodite({ initialId = null }) {
 
   return (
     <div className="pb-40" data-testid="custodite-list">
-      <div className="flex items-center gap-3 mb-2">
-        <div className="w-11 h-11 rounded-2xl bg-[#8C4A27] flex items-center justify-center"><Landmark className="w-6 h-6 text-white" /></div>
-        <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{L({ it: "📜 Le Ricette Custodite", de: "📜 Bewahrte Rezepte", en: "📜 Treasured Recipes", es: "📜 Recetas Custodiadas", fr: "📜 Les Recettes Gardées" })}</h1>
-          <p className="text-sm text-[#7E8A93]">{L({ it: "Sud Italia · Germania · Innovazioni — adattate alle tue dosi + QR", de: "Süditalien · Deutschland · Innovationen + QR", en: "Southern Italy · Germany · Innovations + QR", es: "Sur de Italia · Alemania · Innovaciones + QR", fr: "Sud de l'Italie · Allemagne · Innovations + QR" })}</p>
-        </div>
-      </div>
+      <SectionHero testid="custodite-hero" image="hero-ricette.jpg" position="50% 35%"
+        title={L({ it: "📜 Le Ricette Custodite", de: "📜 Bewahrte Rezepte", en: "📜 Treasured Recipes", es: "📜 Recetas Custodiadas", fr: "📜 Les Recettes Gardées", fa: "📜 دستورهای محافظت‌شده" })}
+        subtitle={L({ it: "Sud Italia · Germania · Innovazioni — adattate alle tue dosi + QR", de: "Süditalien · Deutschland · Innovationen + QR", en: "Southern Italy · Germany · Innovations + QR", es: "Sur de Italia · Alemania · Innovaciones + QR", fr: "Sud de l'Italie · Allemagne · Innovations + QR", fa: "جنوب ایتالیا · آلمان · نوآوری‌ها + QR" })} />
 
       {/* Filtri categoria */}
       <div className="flex flex-wrap gap-2 mt-4 pb-1" data-testid="custodite-filters">

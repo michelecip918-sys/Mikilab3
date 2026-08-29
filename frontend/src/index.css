@@ -194,3 +194,22 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
   background-attachment: fixed;
 }
 .dark .app-warm-bg { background: #1B2127; }
+
+/* Pulviscolo di farina che fluttua nel portale */
+@keyframes floatDust {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  20%  { opacity: .8; }
+  100% { transform: translateY(-46px) translateX(10px); opacity: 0; }
+}
+.dust-particle {
+  position: absolute; border-radius: 9999px; background: #fff6e2;
+  box-shadow: 0 0 6px rgba(255,240,200,.9);
+  animation: floatDust linear infinite;
+}
+/* brillìo che scorre sulla pala attiva */
+@keyframes peelShine { 0% { left: -40%; } 60%,100% { left: 130%; } }
+.peel-shine::before {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 35%;
+  background: linear-gradient(100deg, transparent, rgba(255,240,210,.55), transparent);
+  transform: skewX(-18deg); animation: peelShine 3.2s ease-in-out infinite;
+}

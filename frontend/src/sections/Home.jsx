@@ -139,6 +139,16 @@ function HomeAvatarScene({ lang }) {
           {/* pulviscolo di farina sospeso nella luce calda */}
           <div aria-hidden className="absolute inset-0 pointer-events-none opacity-60"
             style={{ background: "radial-gradient(120% 60% at 50% 12%, rgba(255,226,170,.35), transparent 60%)" }} />
+          {/* pulviscolo di farina che fluttua nella luce */}
+          <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
+            {[
+              { l: "18%", b: "22%", s: 4, d: 0, dur: 6 }, { l: "34%", b: "12%", s: 3, d: 1.5, dur: 7 },
+              { l: "52%", b: "30%", s: 5, d: 0.8, dur: 5.5 }, { l: "67%", b: "18%", s: 3, d: 2.2, dur: 6.5 },
+              { l: "80%", b: "26%", s: 4, d: 1.1, dur: 7.5 }, { l: "44%", b: "40%", s: 2, d: 3, dur: 5 },
+            ].map((p, i) => (
+              <span key={i} className="dust-particle" style={{ left: p.l, bottom: p.b, width: p.s, height: p.s, animationDelay: `${p.d}s`, animationDuration: `${p.dur}s` }} />
+            ))}
+          </div>
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1B1410]/92 via-[#1B1410]/25 to-transparent pt-16 pb-4 px-4 z-10">
             <AnimatePresence mode="wait">
               <motion.div

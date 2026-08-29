@@ -57,26 +57,29 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Selettore lingue internazionali: IT · DE · EN · ES · FR · FA (Farsi) */}
+        {/* Selettore lingue come barattolo di spezie: coperchio di legno + vetro ambrato */}
         <div
           data-testid="lang-switcher"
-          className="relative flex items-center bg-[#e4eff8] dark:bg-[#2A323A] rounded-xl border border-[#E6D8C3] dark:border-[#38424B] shrink-0"
+          className="relative shrink-0"
           aria-label={t("lang_label")}
         >
-          <select
-            data-testid="lang-select"
-            value={lang}
-            onChange={(e) => setLang(e.target.value)}
-            className="appearance-none bg-transparent text-xs font-bold uppercase text-[#6E371C] dark:text-[#e4eff8] pl-2 pr-5 py-2 rounded-xl outline-none cursor-pointer"
-          >
-            <option value="it">🇮🇹 IT</option>
-            <option value="de">🇩🇪 DE</option>
-            <option value="en">🇬🇧 EN</option>
-            <option value="es">🇪🇸 ES</option>
-            <option value="fr">🇫🇷 FR</option>
-            <option value="fa">🇮🇷 FA</option>
-          </select>
-          <span className="pointer-events-none absolute right-1.5 text-[#7E8A93] text-[9px]">▼</span>
+          <div aria-hidden className="wood-surface h-2 rounded-t-md border border-b-0 border-[#5a3a1e] mx-1 shadow-sm" />
+          <div className="relative flex items-center rounded-b-lg rounded-t-[3px] border border-[#c9962e]/70 bg-gradient-to-b from-[#f7e6bf] to-[#e7c98c] dark:from-[#3a2f1c] dark:to-[#2a2213] shadow-[inset_0_1px_3px_rgba(255,255,255,.5)]">
+            <select
+              data-testid="lang-select"
+              value={lang}
+              onChange={(e) => setLang(e.target.value)}
+              className="appearance-none bg-transparent text-xs font-extrabold uppercase text-[#6E371C] dark:text-[#f0dcae] pl-2 pr-5 py-1.5 outline-none cursor-pointer"
+            >
+              <option value="it">🇮🇹 IT</option>
+              <option value="de">🇩🇪 DE</option>
+              <option value="en">🇬🇧 EN</option>
+              <option value="es">🇪🇸 ES</option>
+              <option value="fr">🇫🇷 FR</option>
+              <option value="fa">🇮🇷 FA</option>
+            </select>
+            <span className="pointer-events-none absolute right-1.5 text-[#8a6a2e] dark:text-[#c9a86a] text-[9px]">▼</span>
+          </div>
         </div>
 
         <button

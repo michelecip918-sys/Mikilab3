@@ -54,7 +54,7 @@ export default function BottomNav({ active, onChange }) {
               <span
                 className={`relative flex items-center justify-center rounded-[13px] rounded-b-md wood-surface border border-[#3e2510] transition-all duration-300 ${
                   on
-                    ? "w-11 h-11 -translate-y-1.5 wood-emboss ring-2 ring-[#ffcf7a] shadow-[0_0_16px_rgba(255,180,80,.55)]"
+                    ? "w-11 h-11 -translate-y-1.5 wood-emboss ring-2 ring-[#ffcf7a] shadow-[0_0_16px_rgba(255,180,80,.55)] overflow-hidden peel-shine"
                     : "w-10 h-10 opacity-90 shadow-[0_3px_6px_rgba(44,30,16,.4)] group-hover:opacity-100 group-hover:-translate-y-0.5"
                 }`}
                 style={{ transform: `rotate(var(--rot))` }}

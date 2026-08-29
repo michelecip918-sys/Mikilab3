@@ -2272,3 +2272,10 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - Fix regressione: reintegrato import `WhatsAppHelp` in Maestro.jsx (rimosso per errore durante lo swap import).
 - Asset in `/app/frontend/public/`: hero-bakery.jpg (non usato ora), hero-ricette/laboratorio/impara/social.jpg. Avatar sorgente: michele-avatar-full.jpg.
 - Verificato a schermo IT: Home, Ricette, Laboratorio, Impara OK; Social mostra banner da loggato (gate se ospite). Nessun errore runtime.
+
+## v-fork.67 (2026-06) — Rifiniture tema Panificio
+- (a) Pulviscolo di farina animato (`.dust-particle`/`floatDust`) nel portale Home + brillìo scorrevole sulla pala attiva (`.peel-shine`).
+- (b) Selettore lingua ridisegnato come barattolo di spezie (coperchio legno + vetro ambrato) in Header.jsx.
+- (c) Banner tematico esteso a Ricette Custodite (`custodite-hero`, riusa hero-ricette.jpg) + fa aggiunto ai titoli.
+- Verificato IT a schermo: Home (dust+jar+plaque+peel nav), Ricette, Laboratorio, Impara, Social, Custodite — nessun errore. Navigazione a pale funzionante su tutte le tab.
+- Nota deploy: immagini in /public + traduzioni v64 + redesign vanno in produzione al prossimo publish/redeploy.
