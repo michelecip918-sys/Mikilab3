@@ -56,7 +56,7 @@ export default function CalcolatoreMetodo({ onBack }) {
       <div className="relative overflow-hidden rounded-3xl p-6 text-[#FFFDF9] shadow-xl mb-5"
         style={{ background: "linear-gradient(135deg,#8C4A27 0%,#6E371C 60%,#4A3222 100%)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Calculator className="w-7 h-7" /></div>
-        <h1 className="font-display text-2xl font-bold">{L("Calcolatore Metodo MikiLab", "MikiLab Methoden-Rechner", "MikiLab Method Calculator", "Calculadora Método MikiLab")}</h1>
+        <h1 className="font-display text-2xl font-bold">{L("Calcolatore Idratazione & Parametri Base", "Hydratation & Basiswerte", "Hydration & Base Parameters", "Hidratación y Parámetros Base")}</h1>
         <p className="text-[#FFFDF9]/85 text-sm mt-2 leading-snug">{L("Dosi, idratazione, scomputo del prefermento, temperatura acqua e tempi di incordatura per impasti ad alta alveolatura.", "Mengen, Hydratation, Vorteig-Verrechnung, Wassertemperatur und Knetzeiten für offene Porung.", "Doses, hydration, preferment offset, water temperature and mixing times for open-crumb doughs.", "Dosis, hidratación, cálculo del prefermento, temperatura del agua y tiempos de amasado para alveolado abierto.")}</p>
       </div>
 

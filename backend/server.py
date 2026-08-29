@@ -139,6 +139,9 @@ class Recipe(BaseModel):
     flour_type_fr: Optional[str] = None
     notes_fr: Optional[str] = None
     procedure_fr: Optional[str] = None
+    flour_type_fa: Optional[str] = None
+    notes_fa: Optional[str] = None
+    procedure_fa: Optional[str] = None
     menu_category: Optional[str] = None  # basi | pane | panini | panettoni
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
@@ -197,6 +200,9 @@ class RecipeCreate(BaseModel):
     flour_type_fr: Optional[str] = None
     notes_fr: Optional[str] = None
     procedure_fr: Optional[str] = None
+    flour_type_fa: Optional[str] = None
+    notes_fa: Optional[str] = None
+    procedure_fa: Optional[str] = None
     menu_category: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
@@ -364,7 +370,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v58-i18n-doublename"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v64-i18n-fa-ingredients"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",

@@ -7,6 +7,14 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
+// Markdown-lite → HTML per l'anteprima (rispecchia il template inviato via Resend).
+const escapeHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const mdLiteHtml = (s) => escapeHtml(s)
+  .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+  .replace(/\*(.+?)\*/g, "<em>$1</em>")
+  .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" style="color:#8C4A27">$1</a>')
+  .replace(/\n/g, "<br/>");
+
 const BUBBLE_SECTIONS = [
   { variant: "lab", it: "Laboratorio", de: "Backstube" },
   { variant: "impara", it: "Impara", de: "Lernen" },
@@ -301,6 +309,27 @@ export default function AdminPanel({ open, onOpenChange }) {
               placeholder={de ? "Bild-URL (optional)" : "URL immagine (opzionale)"}
               className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <p className="text-[10px] text-[#7E8A93] mb-2">{de ? "Formatierung: **fett**, *kursiv*, [Text](URL)" : "Formattazione: **grassetto**, *corsivo*, [testo](URL)"}</p>
+
+            {/* Anteprima live: come apparirà l'email agli iscritti */}
+            {(nl.title.trim() || nl.body.trim() || nl.image_url.trim()) && (
+              <div className="mb-2">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#2f5a2f] dark:text-[#9cd6a0] mb-1">{de ? "Vorschau" : "Anteprima"}</p>
+                <div data-testid="nl-preview" className="rounded-xl border border-[#E6D8C3] dark:border-[#38424B] overflow-hidden bg-white">
+                  <div className="bg-[#8C4A27] px-4 py-3 flex items-center gap-2">
+                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-8 h-8 rounded-lg object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                    <span className="font-display text-white font-bold text-base">MikiLab</span>
+                  </div>
+                  <div className="p-4">
+                    {nl.image_url.trim() && (
+                      <img data-testid="nl-preview-image" src={nl.image_url} alt="" className="w-full rounded-lg mb-3 max-h-40 object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                    )}
+                    {nl.title.trim() && <h3 data-testid="nl-preview-title" className="font-display text-lg font-bold text-[#2B303B] mb-2">{nl.title}</h3>}
+                    <div data-testid="nl-preview-body" className="text-sm text-[#3F4A54] leading-relaxed" dangerouslySetInnerHTML={{ __html: mdLiteHtml(nl.body) }} />
+                    <p className="text-[10px] text-[#9aa4ac] mt-4 pt-3 border-t border-[#eee]">MikiLab · 100% {de ? "kostenlos" : "gratis"} · noreply@mikilab.de</p>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <select data-testid="nl-send-lang" value={nl.lang} onChange={(e) => setNl((n) => ({ ...n, lang: e.target.value }))}
                 className="bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-2 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]">

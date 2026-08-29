@@ -140,3 +140,18 @@ html[lang="fa"] textarea {
   .print-table .space-y-1 > div { border-bottom: 1px solid #eee; padding: 4px 2px; }
   .print-table .space-y-1 > div:last-child { border-bottom: none; }
 }
+
+/* --- RTL (Persiano / Farsi) --- */
+html[dir="rtl"] body { text-align: right; }
+html[dir="rtl"] .font-mono-data,
+html[dir="rtl"] [data-num],
+html[dir="rtl"] input[type="number"] { direction: ltr; unicode-bidi: plaintext; }
+html[dir="rtl"] table th,
+html[dir="rtl"] table td { text-align: right; }
+html[dir="rtl"] table td.num,
+html[dir="rtl"] table th.num { text-align: left; direction: ltr; }
+html[dir="rtl"] ol,
+html[dir="rtl"] ul { padding-right: 1.1rem; padding-left: 0; }
+/* la navigazione e le griglie di layout restano orientate a sinistra per non rompere l'app */
+html[dir="rtl"] nav,
+html[dir="rtl"] [data-keep-ltr] { direction: ltr; }

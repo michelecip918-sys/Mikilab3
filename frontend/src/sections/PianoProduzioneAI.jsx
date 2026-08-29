@@ -67,19 +67,39 @@ const serializeInfTable = (headers, rows) => {
 const isPanettoneRecipe = (r) => /panettone/i.test(r?.name || "") || /panettone/i.test(r?.menu_category || "");
 
 // Moduli opzionali del Piano IA: si accendono/spengono senza bloccare il piano base.
-const DEFAULT_MODULES = { celle: true, orari: true, spesa: true, foodcost: true, infornate: true, clima: false, antispreco: false };
+const DEFAULT_MODULES = { celle: true, orari: true, spesa: true, foodcost: true, infornate: true, clima: false, antispreco: false, turni: false, macchine: false, forni: false, notte: false };
 const MODULES = [
-  { id: "celle", Icon: Wrench, it: "Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers" },
+  // Controlli di calcolo del piano (raggruppati in "Impostazioni Avanzate IA")
+  { id: "turni", Icon: Users, it: "Turni di Lavoro", de: "Arbeitsschichten", en: "Work shifts", es: "Turnos de trabajo" },
+  { id: "macchine", Icon: Wrench, it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park", es: "Maquinaria" },
+  { id: "forni", Icon: Flame, it: "Ottimizza Forni", de: "Öfen optimieren", en: "Optimise ovens", es: "Optimizar hornos" },
+  { id: "notte", Icon: Snowflake, it: "Pause Notturne", de: "Nachtpausen", en: "Night pauses", es: "Pausas nocturnas" },
+  { id: "celle", Icon: Building2, it: "Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers" },
   { id: "orari", Icon: Clock, it: "Orari d'inizio", de: "Startzeiten", en: "Start times" },
-  { id: "infornate", Icon: Flame, it: "Orario Infornate", de: "Backzeiten", en: "Baking schedule" },
+  { id: "infornate", Icon: CalendarClock, it: "Orario Infornate", de: "Backzeiten", en: "Baking schedule" },
   { id: "clima", Icon: Thermometer, it: "Meteo & Clima", de: "Wetter & Klima", en: "Weather & climate" },
   { id: "spesa", Icon: ShoppingCart, it: "Lista Spesa", de: "Einkaufsliste", en: "Shopping list" },
   { id: "foodcost", Icon: Euro, it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & margin" },
   { id: "antispreco", Icon: Recycle, it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-waste" },
 ];
 
+// Descrizioni brevi di ogni interruttore (mostrate nell'area "Impostazioni Avanzate IA").
+const MODULE_DESC = {
+  turni: { it: "L'IA distribuisce la produzione su più turni (Turno 1, Turno 2). Spento = un unico blocco.", de: "Die KI verteilt die Produktion auf mehrere Schichten. Aus = ein Block.", en: "The AI spreads production across shifts (Shift 1, 2). Off = single block.", es: "La IA reparte la producción en turnos. Apagado = bloque único." },
+  macchine: { it: "Usa il tuo Parco Macchine (spezzatrici, impastatrici rapide, linee) per ricalcolare le velocità.", de: "Nutzt deinen Maschinenpark, um die Geschwindigkeiten neu zu berechnen.", en: "Uses your Machine Park (dividers, fast mixers, lines) to recompute speeds.", es: "Usa tu maquinaria para recalcular las velocidades." },
+  forni: { it: "Ottimizza i carichi del forno per infornate simultanee e meno cambi.", de: "Optimiert die Ofenbeladung für gleichzeitiges Backen.", en: "Optimises oven loads for simultaneous bakes.", es: "Optimiza las cargas del horno para horneadas simultáneas." },
+  notte: { it: "Gestisce fermalievitazione in frigo/cella per ridurre il lavoro notturno.", de: "Steuert die Gärverzögerung, um Nachtarbeit zu reduzieren.", en: "Manages cold retarding to reduce night work.", es: "Gestiona la fermentación en frío para reducir el trabajo nocturno." },
+  celle: { it: "Considera celle frigo/lievitazione e impastatrici configurate.", de: "Berücksichtigt Kammern und Kneter.", en: "Considers configured cells and mixers.", es: "Considera cámaras y amasadoras." },
+  orari: { it: "Calcola gli orari d'inizio a partire dall'ora indicata.", de: "Berechnet Startzeiten ab der angegebenen Uhrzeit.", en: "Computes start times from the given hour.", es: "Calcula las horas de inicio." },
+  infornate: { it: "Aggiunge la tabella oraria delle infornate.", de: "Fügt den Backfahrplan hinzu.", en: "Adds the baking time table.", es: "Añade la tabla de horneadas." },
+  clima: { it: "Adatta acqua e tempi alla temperatura del laboratorio.", de: "Passt Wasser und Zeiten an die Raumtemperatur an.", en: "Adapts water and times to room temperature.", es: "Adapta agua y tiempos a la temperatura." },
+  spesa: { it: "Genera la lista della spesa e l'ordine al fornitore.", de: "Erstellt die Einkaufsliste.", en: "Generates the shopping list.", es: "Genera la lista de la compra." },
+  foodcost: { it: "Calcola costi e margini della produzione.", de: "Berechnet Kosten und Margen.", en: "Computes costs and margins.", es: "Calcula costes y márgenes." },
+  antispreco: { it: "Suggerisce recuperi e riduzione degli sprechi.", de: "Schlägt Resteverwertung vor.", en: "Suggests recovery and waste reduction.", es: "Sugiere aprovechamiento y menos desperdicio." },
+};
+
 // Ogni interruttore-modulo apre lo strumento corrispondente per configurarlo.
-const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco", infornate: "inversa" };
+const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco", infornate: "inversa", macchine: "macchine", forni: "adatta" };
 
 // Catalogo strumenti rapidi personalizzabili (l'utente sceglie quali 6 mostrare nel passo "Scegli")
 const QUICK_CATALOG = [
@@ -89,7 +109,8 @@ const QUICK_CATALOG = [
   { id: "weatherbaker", Icon: CloudSun, t: ["Weather-Baker", "Weather-Baker", "Weather-Baker", "Weather-Baker"] },
   { id: "convlievito", Icon: RefreshCw, t: ["Conv. Lieviti", "Hefe-Umr.", "Yeast Conv.", "Conv. Levad."] },
   { id: "timer", Icon: TimerIcon, t: ["Smart Timer", "Smart Timer", "Smart Timer", "Smart Timer"] },
-  { id: "metodo", Icon: Calculator, t: ["Calcolatore Metodo", "Methoden-Rechner", "Method Calculator", "Calc. Método"] },
+  { id: "metodo", Icon: Calculator, t: ["Calcolatore Idratazione", "Hydratation", "Hydration Calc", "Hidratación"] },
+  { id: "sequenze", Icon: SlidersHorizontal, t: ["Metodo & Sequenze IA", "Methode & Abläufe", "Method & Sequences", "Método y Secuencias"] },
   { id: "acqua", Icon: Droplets, t: ["Temp. Acqua", "Wassertemp.", "Water Temp", "Temp. Agua"] },
   { id: "stampi", Icon: Scale, t: ["Calcolo Stampi", "Formen-Rechner", "Tin Calc", "Moldes"] },
   { id: "trovafarina", Icon: Wheat, t: ["Trova Farina", "Mehl finden", "Find Flour", "Buscar Harina"] },
@@ -123,7 +144,8 @@ export const TOOLS = [
   { id: "simforno", Icon: Flame, cat: "panificazione", it: "Gestione Vapore & Forno", de: "Dampf & Ofen", en: "Steam & Oven", es: "Vapor y Horno" },
   { id: "adatta", Icon: Flame, cat: "panificazione", it: "Adatta Forno", de: "Ofen anpassen", en: "Adapt Oven" },
   { id: "acqua", Icon: Droplets, cat: "panificazione", it: "Temp. Acqua", de: "Wasser-Temp.", en: "Water Temp." },
-  { id: "metodo", Icon: Calculator, cat: "panificazione", it: "Calcolatore Metodo", de: "Methoden-Rechner", en: "Method Calculator", es: "Calculadora Método" },
+  { id: "metodo", Icon: Calculator, cat: "panificazione", it: "Calcolatore Idratazione & Parametri Base", de: "Hydratation & Basiswerte", en: "Hydration & Base Parameters", es: "Hidratación y Parámetros Base" },
+  { id: "sequenze", Icon: SlidersHorizontal, cat: "panificazione", it: "Calcolatore Metodo & Sequenze IA", de: "Methode & Abläufe (KI)", en: "Method & Sequences (AI)", es: "Método y Secuencias (IA)" },
   { id: "twin", Icon: FlaskConical, cat: "panificazione", it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
   { id: "cosafare", Icon: Search, cat: "panificazione", it: "Cosa posso fare?", de: "Was kann ich machen?", en: "What can I make?", es: "¿Qué puedo hacer?" },
   { id: "stampi", Icon: Cookie, cat: "panificazione", it: "Stampi & Pirottini", de: "Formen-Rechner", en: "Pan Calculator", es: "Calculadora Moldes" },
@@ -410,6 +432,21 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   });
   const removeByRecipe = (id) => setProducts((l) => { const n = l.filter((p) => p.recipe_id !== id); return n.length ? n : [{ recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }]; });
   const restorePrevPlan = () => { if (savedProducts.length) { setProducts(savedProducts); toast.success(tri3(lang, "Ricette dell'ultimo piano ricaricate: cambia solo le quantità.", "Rezepte des letzten Plans geladen: nur Mengen anpassen.", "Last plan's recipes loaded: just adjust quantities.")); } };
+  // Piano suggerito dall'IA: pre-compila i prodotti con le ricette usate più spesso.
+  const suggestFromFrequent = () => {
+    let usage = {}; try { usage = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); } catch { /* */ }
+    const ranked = recipes
+      .filter((r) => (usage[r.id] || 0) > 0)
+      .sort((a, b) => (usage[b.id] || 0) - (usage[a.id] || 0))
+      .slice(0, 6);
+    if (ranked.length === 0) {
+      toast.info(tri3(lang, "Genera qualche piano e imparerò quali prodotti usi di più.", "Erstelle ein paar Pläne, dann lerne ich deine häufigsten Produkte.", "Generate a few plans and I'll learn your most-used products.", "Genera algunos planes y aprenderé tus productos más usados."));
+      return;
+    }
+    setProducts(ranked.map((r) => ({ recipe_id: r.id, name: r.name, qty: "20", unit: "pezzi", gpp: "", day: "", start: false })));
+    setUseWeekly(false);
+    toast.success(tri3(lang, `Suggeriti ${ranked.length} prodotti dai più usati: regola le quantità e genera.`, `${ranked.length} häufigste Produkte vorgeschlagen: Mengen anpassen und erstellen.`, `Suggested ${ranked.length} of your most-used products: adjust quantities and generate.`, `Sugeridos ${ranked.length} productos más usados: ajusta cantidades y genera.`));
+  };
 
   // "Ripeti questo piano" dall'archivio: ricarica impostazioni + prodotti + testo,
   // così Michele può ritoccare e rigenerare per la settimana prossima.
@@ -518,6 +555,17 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       {g.items.map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
     </optgroup>
   ));
+  // Opzioni complete con "Ricette personali utente" separate dalle predefinite MikiLab.
+  const renderAllOptions = (list) => (
+    <>
+      {list.some((r) => r._own) && (
+        <optgroup label={tri3(lang, "👤 Le mie ricette personali", "👤 Meine eigenen Rezepte", "👤 My personal recipes", "👤 Mis recetas")}>
+          {list.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>👤 {recipeTitle(r, lang)}</option>)}
+        </optgroup>
+      )}
+      {renderCatOptions(list.filter((r) => !r._own))}
+    </>
+  );
 
   const shopTotals = useMemo(() => {
     const list = products
@@ -548,7 +596,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         staff: modules.turni && staff !== "" ? Number(staff) : null,
         start_time: modules.orari ? startTime : null,
         lab_temp_c: modules.clima && labTemp !== "" ? Number(labTemp) : null,
-        standard_temp_c: Number(stdTemp) || 26, notes: [(GOAL_TEXT[planGoal] && (GOAL_TEXT[planGoal][lang] || GOAL_TEXT[planGoal].it)), notes].filter(Boolean).join(" · "), lang, preferment_choice: preferment, machines: getActiveMachineNames(),
+        standard_temp_c: Number(stdTemp) || 26, notes: [
+          (GOAL_TEXT[planGoal] && (GOAL_TEXT[planGoal][lang] || GOAL_TEXT[planGoal].it)),
+          modules.turni ? mkTri(lang)("Distribuisci la produzione su più turni di lavoro (Turno 1, Turno 2), indicando cosa fa ogni turno.", "Verteile die Produktion auf mehrere Schichten (Schicht 1, 2) und gib an, was jede Schicht macht.", "Spread the production across work shifts (Shift 1, Shift 2), stating what each shift does.", "Reparte la producción en varios turnos (Turno 1, 2), indicando qué hace cada turno.") : "",
+          modules.forni ? mkTri(lang)("Ottimizza i carichi del forno per infornate simultanee, riducendo i cambi di temperatura.", "Optimiere die Ofenbeladung für gleichzeitiges Backen und weniger Temperaturwechsel.", "Optimise oven loads for simultaneous bakes, reducing temperature changes.", "Optimiza las cargas del horno para horneadas simultáneas.") : "",
+          modules.notte ? mkTri(lang)("Usa la fermalievitazione in frigo/cella per ridurre al minimo il lavoro notturno.", "Nutze die Gärverzögerung im Kühlschrank, um Nachtarbeit zu minimieren.", "Use cold retarding to minimise night work.", "Usa la fermentación en frío para minimizar el trabajo nocturno.") : "",
+          notes,
+        ].filter(Boolean).join(" · "), lang, preferment_choice: preferment, machines: modules.macchine ? getActiveMachineNames() : [],
         start_name: useWeekly && weeklyStartId ? ((weeklyItems.find((w) => w.recipe_id === weeklyStartId) || {}).recipe_name || null) : null,
         extra_today: extraToday.filter((x) => x.recipe_id || x.name).map((x) => ({ recipe_id: x.recipe_id || null, name: x.name || (recipeById[x.recipe_id] ? recipeById[x.recipe_id].name : ""), quantity: x.qty === "" ? null : Number(x.qty), unit: x.unit || "pezzi" })),
         active_modules: Object.keys(modules).filter((k) => modules[k]),
@@ -800,13 +854,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <p className="text-sm text-[#6E371C] dark:text-[#8FB0C2] leading-snug">
             {(() => {
               const miss = [];
-              if (mixers.length === 0) miss.push(tri3(lang, "impastatrici", "Kneter", "mixers"));
-              if (cells.length === 0) miss.push(tri3(lang, "celle di lievitazione/frigo/freezer", "Kammern (Gär/Kühl/Gefrier)", "proofing/fridge/freezer cells"));
-              const list = miss.join(tri3(lang, " e ", " und ", " and "));
-              return tri3(lang,
+              if (mixers.length === 0) miss.push(mkTri(lang)("impastatrici", "Kneter", "mixers", "amasadoras", "pétrins", "میکسرها"));
+              if (cells.length === 0) miss.push(mkTri(lang)("celle di lievitazione/frigo/freezer", "Kammern (Gär/Kühl/Gefrier)", "proofing/fridge/freezer cells", "cámaras de fermentación/frío/congelador", "chambres de pousse/froid/congélateur", "سلول‌های تخمیر/یخچال/فریزر"));
+              const list = miss.join(mkTri(lang)(" e ", " und ", " and ", " y ", " et ", " و "));
+              return mkTri(lang)(
                 `💡 Consigliato (non obbligatorio): aggiungi ${list} da «Celle Frigo & Freezer». Con questi dati l'IA genera un piano molto più preciso (portate macchine, destinazioni celle, tempi).`,
                 `💡 Empfohlen (nicht Pflicht): füge ${list} über „Kammern & Gefrier" hinzu. Damit erstellt die KI einen viel präziseren Plan (Maschinen, Kammern, Zeiten).`,
-                `💡 Recommended (not required): add ${list} via "Cells & Freezer". With this data the AI makes a much more precise plan (machine loads, cell destinations, timing).`);
+                `💡 Recommended (not required): add ${list} via "Cells & Freezer". With this data the AI makes a much more precise plan (machine loads, cell destinations, timing).`,
+                `💡 Recomendado (no obligatorio): añade ${list} desde «Cámaras y Congelador». Con estos datos la IA genera un plan mucho más preciso (cargas de máquinas, destinos de cámaras, tiempos).`,
+                `💡 Recommandé (non obligatoire) : ajoute ${list} via « Chambres & Congélateur ». Avec ces données, l'IA génère un plan bien plus précis (charges machines, destinations chambres, horaires).`,
+                `💡 توصیه‌شده (اختیاری): ${list} را از «سلول‌های یخچال و فریزر» اضافه کن. با این داده‌ها هوش مصنوعی برنامه‌ای بسیار دقیق‌تر می‌سازد (ظرفیت ماشین‌ها، مقصد سلول‌ها، زمان‌بندی).`);
             })()}
           </p>
           {onOpenTool && (
@@ -826,7 +883,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-xl object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
-              <p className="text-sm leading-snug mt-0.5">{guideFor(guideId, lang)}</p>
+              <p className="text-sm leading-snug mt-0.5">{(MODULE_DESC[guideId] && (MODULE_DESC[guideId][lang] || MODULE_DESC[guideId].it)) || guideFor(guideId, lang)}</p>
               {onOpenTool && guideToolId(guideId) && (
                 <button data-testid="tool-guide-open" onClick={() => { const tid = guideToolId(guideId); setGuideId(null); openToolTracked(tid); }}
                   className="mt-2 mr-2 inline-flex items-center gap-1 text-xs font-bold bg-white text-[#6E371C] px-3 py-1.5 rounded-lg active:scale-95"><Wrench className="w-3.5 h-3.5" /> {tri3(lang, "Apri strumento", "Öffnen", "Open tool")}</button>
@@ -853,7 +910,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 { id: "aggiungi", Icon: BookOpen, label: tri3(lang, "Inserisci Ricette", "Rezepte hinzufügen", "Add Recipes") },
                 { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Piano Giornaliero", "Tagesplan", "Daily Plan") },
                 { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
-                { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Metodo", "Methoden-Rechner", "Method Calculator") },
+                { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Idratazione", "Hydratation & Basis", "Hydration Calc") },
               ].map(({ id, Icon, label }) => (
                 <button key={id} data-testid={`capo-quickstart-${id}`} onClick={() => onOpenTool(id)}
                   className="flex items-center gap-2 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
@@ -865,13 +922,17 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <div className="h-px bg-[#E6D8C3] dark:bg-[#38424B] my-4" />
           </div>
         )}
+        <div data-testid="capo-advanced-title" className="mb-2 mt-1 flex items-center gap-2">
+          <Settings2 className="w-4 h-4 text-[#8C4A27]" />
+          <h3 className="font-display text-lg font-bold text-[#8C4A27]">{tri3(lang, "Impostazioni Avanzate IA", "Erweiterte KI-Einstellungen", "Advanced AI Settings", "Ajustes avanzados IA")}</h3>
+        </div>
         <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#C88A2B]/15 border border-[#C88A2B]/45 px-3 py-2.5">
           <SlidersHorizontal className="w-4 h-4 text-[#A66A15] shrink-0" />
           <p className="text-[12px] font-bold text-[#7a4e12] dark:text-[#E4C98B] leading-snug">
             {tri3(lang,
-              "👆 Interruttori ON/OFF: accendi solo ciò che vuoi nel piano. Tocca la «i» e Mohammadreza ti spiega cosa fa. Il piano base (ricette + quantità) si genera comunque.",
-              "👆 ON/OFF-Schalter: aktiviere nur, was du im Plan willst. Tippe auf „i“ und Mohammadreza erklärt es. Der Basisplan (Rezepte + Mengen) wird trotzdem erstellt.",
-              "👆 ON/OFF switches: turn on only what you want in the plan. Tap the 'i' and Mohammadreza explains it. The base plan (recipes + quantities) is generated anyway.")}
+              "👆 Filtri di calcolo: accendi solo ciò che vuoi che l'IA consideri nel piano (turni, macchine, forni, pause notturne…). Tocca la «i» per la spiegazione. Il piano base (ricette + quantità) si genera comunque.",
+              "👆 Berechnungsfilter: aktiviere nur, was die KI im Plan berücksichtigen soll (Schichten, Maschinen, Öfen, Nachtpausen…). Tippe auf „i“ für die Erklärung. Der Basisplan wird trotzdem erstellt.",
+              "👆 Calculation filters: turn on only what the AI should consider in the plan (shifts, machines, ovens, night pauses…). Tap 'i' for the explanation. The base plan is generated anyway.")}
           </p>
         </div>
 
@@ -1140,7 +1201,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
                     className="flex-1 min-w-0 bg-white dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#C88A2B]">
                     <option value="">{t("capo_pick_recipe")}</option>
-                    {renderCatOptions(recipes)}
+                    {renderAllOptions(recipes)}
                   </select>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
@@ -1219,12 +1280,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
                   className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#2A323A] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg p-2 text-sm outline-none focus:border-[#8C4A27]">
                   <option value="">{t("capo_pick_recipe")}</option>
-                  {recipes.some((r) => r._own) && (
-                    <optgroup label={tri3(lang, "Le mie ricette (panettiere)", "Meine Rezepte", "My recipes")}>
-                      {recipes.filter((r) => r._own).map((r) => <option key={r.id} value={r.id}>{recipeTitle(r, lang)}</option>)}
-                    </optgroup>
-                  )}
-                  {renderCatOptions(recipes.filter((r) => !r._own))}
+                  {renderAllOptions(recipes)}
                 </select>
                 <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#C0574D] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
@@ -1285,6 +1341,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             {savedProducts.length > 0 && (
               <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#6E371C] dark:text-[#a9d2ec] bg-[#B45309]/12 border border-[#B45309]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
             )}
+            <button data-testid="capo-suggest-frequent" onClick={suggestFromFrequent} className="text-sm font-semibold text-white bg-gradient-to-br from-[#C88A2B] to-[#A66A15] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Suggerisci dai più usati", "Aus meistgenutzten vorschlagen", "Suggest from most-used", "Sugerir de los más usados")}</button>
           </div>
           <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
             <Flag className="w-3.5 h-3.5 text-[#24303c] shrink-0 mt-0.5" />
@@ -1366,11 +1423,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Obiettivo del piano", "Ziel des Plans", "Plan goal", "Objetivo del plan")}</label>
           <select data-testid="capo-plan-goal" value={planGoal} onChange={(e) => setPlanGoal(e.target.value)}
             className="mt-1 w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl p-3 text-sm outline-none focus:border-[#8C4A27]">
-            <option value="qualita">{mkTri(lang)("🥖 Qualità artigianale (lievitazioni lente, struttura)", "🥖 Handwerkliche Qualität (langsame Gare, Struktur)", "🥖 Artisan quality (slow proof, structure)", "🥖 Calidad artesanal (fermentaciones lentas, estructura)")}</option>
-            <option value="resa">{mkTri(lang)("📈 Massima resa (ottimizza forni/celle)", "📈 Maximaler Output (Öfen/Kammern optimieren)", "📈 Maximum output (optimise ovens/cells)", "📈 Máximo rendimiento (optimizar hornos/cámaras)")}</option>
-            <option value="tempo">{mkTri(lang)("⏱️ Risparmio di tempo (sequenze più rapide)", "⏱️ Zeit sparen (schnellere Abläufe)", "⏱️ Save time (faster sequences)", "⏱️ Ahorrar tiempo (secuencias más rápidas)")}</option>
-            <option value="spreco">{mkTri(lang)("♻️ Riduci gli sprechi (recupero impasti/invenduto)", "♻️ Weniger Abfall (Teig/Unverkauftes verwerten)", "♻️ Less waste (reuse dough/unsold)", "♻️ Menos desperdicio (reutilizar masa/no vendido)")}</option>
-            <option value="grandi">{mkTri(lang)("🎁 Solo grandi lievitati (panettoni, colombe…)", "🎁 Nur große Hefegebäcke (Panettone, Colomba…)", "🎁 Large leavened cakes only (panettone, colomba…)", "🎁 Solo grandes levados (panettone, colomba…)")}</option>
+            <option value="qualita">{mkTri(lang)("🥖 Priorità Qualità (Lievitazioni lente e controllo rigoroso)", "🥖 Qualität zuerst (langsame Gare, strenge Kontrolle)", "🥖 Quality first (slow proofing, strict control)", "🥖 Prioridad Calidad (fermentaciones lentas, control riguroso)")}</option>
+            <option value="tempo">{mkTri(lang)("⚡ Produzione Rapida (Sequenze veloci e ritmi serrati)", "⚡ Schnelle Produktion (schnelle Abläufe, straffe Rhythmen)", "⚡ Fast Production (quick sequences, tight rhythm)", "⚡ Producción Rápida (secuencias veloces, ritmos ajustados)")}</option>
+            <option value="resa">{mkTri(lang)("🔥 Massima Resa Forni/Celle (Gestione carichi simultanei)", "🔥 Max. Auslastung Öfen/Kammern (gleichzeitige Ladungen)", "🔥 Max Oven/Cell Output (simultaneous loads)", "🔥 Máx. Rendimiento Hornos/Cámaras (cargas simultáneas)")}</option>
+            <option value="spreco">{mkTri(lang)("♻️ Gestione Sprechi & Recuperi", "♻️ Abfall & Resteverwertung", "♻️ Waste & Recovery management", "♻️ Gestión de Desperdicios y Recuperos")}</option>
+            <option value="grandi">{mkTri(lang)("🎁 Grandi Lievitati (Pianificazione a fasi lunghe)", "🎁 Große Hefegebäcke (lange Phasen)", "🎁 Large Leavened (long-phase planning)", "🎁 Grandes Levados (planificación de fases largas)")}</option>
             <option value="lotti">{mkTri(lang)("📦 Pochi impasti, grandi lotti", "📦 Wenige Teige, große Chargen", "📦 Few doughs, large batches", "📦 Pocas masas, grandes lotes")}</option>
           </select>
           <p className="mt-1 text-[11px] text-[#7E8A93] leading-snug">{mkTri(lang)("Orienta l'AI nella generazione del tuo piano.", "Orientiert die KI bei der Erstellung deines Plans.", "Guides the AI when building your plan.", "Orienta a la IA al generar tu plan.")}</p>

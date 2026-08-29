@@ -331,7 +331,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             {/* testo */}
             <div className="p-3 min-w-0 flex-1">
               <h3 className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight line-clamp-2">
-                {rLoc(r, "name", lang)}
+                <span className="mr-1" aria-hidden>{recipeCategory(r).icon}</span>{rLoc(r, "name", lang)}
               </h3>
               {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-medium text-[#8C4A27] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
               {rLoc(r, "flour_type", lang) ? <p className="text-[10px] text-[#7E8A93] truncate mt-0.5">{(mkTri(lang)("Farina: ", "Mehl: ", "Flour: ", "Harina: "))}{rLoc(r, "flour_type", lang)}</p> : null}
@@ -1147,7 +1147,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
     if (key.includes("zuccher") || key.includes("zucker")) first = 0.45;
     else if (key.includes("tuorl") || key.includes("eigelb")) first = 0.31;
     else if (key.includes("burro") || key.includes("butter")) first = 0.42;
-    items.push({ name: ingLoc(e.name, lang), tot, first });
+    items.push({ name: e[`name_${lang}`] || ingLoc(e.name, lang), tot, first });
   });
   if (r.salt_grams) items.push({ name: t("ing_salt"), tot: G(r.salt_grams), first: 0 });
   const pctOf = (v) => (flourTot > 0 ? `${Math.round((v / flourTot) * 1000) / 10}%` : "—");

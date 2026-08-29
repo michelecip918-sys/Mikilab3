@@ -4,11 +4,13 @@ import { Mail, X, Send, CheckCircle2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { newsletterApi } from "@/lib/api";
+import { useAuth } from "@/auth/AuthContext";
 
 const SEEN_KEY = "mikilab_newsletter_popup_seen";
 
 export default function NewsletterPopup() {
   const { lang } = useLang();
+  const { user } = useAuth();
   const L = (...a) => mkTri(lang)(...a);
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -16,12 +18,13 @@ export default function NewsletterPopup() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
+    if (user) return; // niente popup per utenti loggati (non blocca l'interazione)
     let seen = false;
     try { seen = !!localStorage.getItem(SEEN_KEY); } catch { /* */ }
     if (seen) return;
     const id = setTimeout(() => setOpen(true), 14000);
     return () => clearTimeout(id);
-  }, []);
+  }, [user]);
 
   const dismiss = () => {
     try { localStorage.setItem(SEEN_KEY, "1"); } catch { /* */ }

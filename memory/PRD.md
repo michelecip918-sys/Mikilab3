@@ -2231,3 +2231,29 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 
 ## v-fork.63 (2026-06) — Badge "INIZIA QUI" spostato su "Le Mie Ricette"
 - In Home ("Il cuore di MikiLab"): il badge dorato "Inizia qui" è stato tolto dalla card "Il Tuo Laboratorio" (home-core-maestro) e messo sulla card "Le Mie Ricette" (home-core-ricette), con ring dorato in evidenza. Obiettivo: i visitatori vedono prima le ricette di Michele, poi il resto. Verificato a schermo.
+
+---
+## v-fork.64 (2026-06 · fork) — Pacchetto definitivo UX Laboratorio + Sistema Traduzione Completo
+Richiesta utente (ordine D-A-B-C-E + lista tassativa a 6 punti). TUTTO testato (iteration_109 100%, iteration_110).
+
+**D — Fallback ricette FR/FA**: `lib/loc.js` rLoc ora FR/FA → campo dedicato → triFR/FA → **_en** → it (niente più italiano nei procedimenti lunghi).
+**A — Icone categoria**: prefisso emoji categoria su ogni riga ricetta (`RecipeList` ~333).
+**B — Piano suggerito IA**: pulsante `capo-suggest-frequent` precompila i prodotti dai più usati (localStorage `mikilab_recipe_usage`).
+**C — Anteprima newsletter Admin**: box live `nl-preview` (logo, titolo, corpo md-lite bold/italic, immagine) in AdminPanel.
+**E — Ristrutturazione Laboratorio**:
+  - Toggle centralizzati in area **"Impostazioni Avanzate IA"** (`capo-advanced-title`) con descrizioni per toggle (`MODULE_DESC`).
+  - Nuovi toggle: `turni` (Turni di Lavoro), `macchine` (Parco Macchine, ora gating: machines passate all'IA solo se ON), `forni` (Ottimizza Forni), `notte` (Pause Notturne). Direttive aggiunte al payload IA (notes).
+  - Obiettivi del piano riscritti con diciture esatte (Priorità Qualità, Produzione Rapida, Massima Resa Forni/Celle, Gestione Sprechi & Recuperi, Grandi Lievitati).
+  - Rinominato "Calcolatore Metodo" → **"Calcolatore Idratazione & Parametri Base"**; nuovo strumento **"Calcolatore Metodo & Sequenze IA"** (`CalcolatoreSequenze.jsx`, deterministico: velocità impasto/ritmi/pause/sequenza).
+  - Selettori ricette: optgroup per categoria + gruppo separato "👤 Le mie ricette personali" (`renderAllOptions`).
+
+**SISTEMA TRADUZIONE COMPLETO (punto 1 lista definitiva)**:
+  - Backfill LLM (`backend/backfill_full_i18n.py`): tradotti **549 ingredienti extra** (189 unici) in de/en/es/fr/fa → `extra_ingredients[].name_<lang>`; **campi FA** (name/real_name/flour_type/notes/procedure) per tutte le **120 ricette MikiLab**. Copertura 100%.
+  - Backend `Recipe` model: aggiunti `flour_type_fa/notes_fa/procedure_fa` (altrimenti `response_model=List[Recipe]` li scartava). **Seed rigenerato** da DB (`mikilab_seed_data.json`) + `SEED_VERSION = 2026-06-v64-i18n-fa-ingredients` → produzione riceve le traduzioni al redeploy.
+  - Frontend: ingredienti resi con `e[name_${lang}] || ingLoc` in RecipeList (IngredientTable ~1150) e `lib/shopping.js`.
+  - **Stringhe UI statiche**: generatore `scripts/fill_missing_tri.py` → tradotte 414 stringhe mancanti (nuove + preesistenti) in fr/fa dentro `i18n/triTranslations.json` (2183→2597 voci). Copre Laboratorio, fasi ricetta (biga/lievito), badge RicetteCustodite, tool Sequenze. Hint macchine (template literal) riscritto a 6 lingue.
+  - **RTL persiano**: regole CSS `html[dir="rtl"]` in `index.css` (tabelle a destra, numeri/percentuali LTR, liste, nav LTR).
+
+**Rifiniture da iteration_109**: NewsletterPopup non appare più agli utenti loggati; rimosso prefisso icona ridondante nelle opzioni selettore.
+
+**Backlog residuo (P3)**: chip filtri `custodite-filters` tagliati a sinistra in RTL; bottom-nav 'Home'/'Social' in inglese (pre-esistente); rumore 401 in console per guest (innocuo). Anteprima piano in fase selezione ricette.

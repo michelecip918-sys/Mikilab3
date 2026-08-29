@@ -34,7 +34,7 @@ export function computeShopping(items, recipeById, lang) {
     (r.extra_ingredients || []).forEach((e) => {
       if (e && e.name && e.percent != null && e.percent !== "") {
         const g = Number(r.flour_grams || 0) * factor * (Number(e.percent) / 100);
-        const label = ingLoc(e.name, lang);
+        const label = e[`name_${lang}`] || ingLoc(e.name, lang);
         if (g > 0) extras[label] = (extras[label] || 0) + g;
       }
     });

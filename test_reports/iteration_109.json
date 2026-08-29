@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only UI/integration testing (mobile 430x900) of the AI Production Lab restructure in MikiLab. Verified: Advanced AI Settings area + 4 new toggles (turni/macchine/forni/notte OFF by default, celle/orari ON), toggle ON/OFF with aria-pressed, Mohammadreza info bubbles for all 4 new toggles, conditional capo-staff input, exact plan-goal option labels, recipe picker optgroups by category, 'Suggerisci dai più usati' info toast, new 'Calcolatore Metodo & Sequenze IA' tool (calc-sequenze) with reactive seq-v1/seq-v2 and 7 sequence steps, renamed 'Calcolatore Idratazione & Parametri Base', category emoji prefix on recipe rows, FR recipe detail localisation, Admin live newsletter preview (logo/title/bold/italic/image), and plan generation regression (streamed plan honoring turni+macchine, no 402/PRO block). No blocking defects found.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "NewsletterPopup", "issue": "Full-screen newsletter popup (fixed inset-0 z-[85]) auto-opens right after login for an authenticated user and blocks all taps (bottom nav, Lab toggles) until dismissed - Playwright clicks were intercepted repeatedly. Consider not showing it to logged-in users / delaying it.", "selector": "[data-testid=\"newsletter-popup\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Initial app load (guest)", "issue": "Pre-login calls to /api/auth/me and /api/notifications return 401 and surface as red console errors on every cold load. Functionally harmless but noisy; suppress/expect 401 for anonymous users.", "affected_selectors": []}
+    ],
+    "design_issues": [
+      {"screen": "Lab > recipe picker (capo-product-recipe-0)", "issues": ["Option labels duplicate the name and the real name in nested parentheses, e.g. '✨ Farina Cotta (Kochstück) (Farinata cotta (con fiocchi d'avena))' - very long on a 430px screen"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: do not auto-open the newsletter popup for logged-in users (or delay/queue it) - it currently blocks interaction on the Lab tab immediately after login.",
+    "Optional: avoid 401 console noise for anonymous /api/auth/me and /api/notifications calls.",
+    "Optional: shorten recipe option labels in capo-product-recipe-* (avoid double parentheses)."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is very large (>1600 lines) - should be split (modules panel, products area, plan streaming, tools list) for maintainability.",
+    "lib/loc.js rLoc FR/FA order is recipe[field_fr] -> triFR(it) -> field_en -> it; because triFR() runs before the English fallback, long procedures present in the triFR map will still render FR (correct) but any partially-mapped short string could shadow a better _en value - acceptable but worth noting."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% of the 12 requested checks executed; 10 fully verified, 2 partially (see context)"},
+  "seed_data_creation": "None persisted. Typed a TEST_ newsletter title/body in the Admin preview only (never sent).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin), fornaio@mikilab.de / Mikilab2026! (user) - both work; login button is data-testid=login-btn in header (app opens as guest, no forced login screen)",
+  "context_for_next_testing_agent": "Login: app loads as GUEST; click [data-testid=login-btn] then auth-email/auth-password/auth-submit. A blocking [data-testid=newsletter-popup] appears after login/navigation - dismiss by force-clicking its 'No grazie' text before any other interaction. Lab tour dismissed with 'Salta'. Lab renders inline in nav-tab-maestro; tools open via capo-quicklink-<id> (e.g. capo-quicklink-sequenze). Recipes: nav-tab-ricette shows a hub; recipe rows are inside collapsible cat-folder-<key> folders and use recipe-row-<id>; detail procedure is recipe-procedure-<id>. Admin: header first button -> site-menu-admin -> admin-panel -> admin-newsletter-send (nl-send-subject/title/body/image, live nl-preview*). NOT fully verified: (1) the '👤 Le mie ricette personali' optgroup - test account fornaio@mikilab.de has no personal recipes, so only the 5 category optgroups appeared (correct behaviour, but personal group untested); (2) FR/FA English fallback for a recipe with NO FR translation - the recipe opened had FR content available, so it rendered French; fallback chain verified only by code read of lib/loc.js.",
+  "rca_of_the_issue": "No functional defect found. The only interaction blocker seen during automation was the NewsletterPopup overlay (fixed inset-0 z-[85]) which intercepts pointer events on the whole viewport until dismissed; all Playwright click timeouts in the run were caused by it, not by the Lab UI."
+}

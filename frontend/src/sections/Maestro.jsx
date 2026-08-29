@@ -53,6 +53,7 @@ import FermentazionePredittiva from "@/sections/FermentazionePredittiva";
 import CosaPosso from "@/components/CosaPosso";
 import CostoEnergia from "@/components/CostoEnergia";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
+import CalcolatoreSequenze from "@/sections/CalcolatoreSequenze";
 import ConvertitoreLieviti from "@/sections/ConvertitoreLieviti";
 import CalcolatoreStampi from "@/sections/CalcolatoreStampi";
 import SosImpastoGuida from "@/sections/SosImpastoGuida";
@@ -151,6 +152,7 @@ export default function Maestro() {
         {tool === "diagnosi" && <PhotoDiagnosi />}
         {tool === "scanflour" && <ScanFlour />}
         {tool === "metodo" && <CalcolatoreMetodo />}
+        {tool === "sequenze" && <CalcolatoreSequenze />}
         {tool === "convlievito" && <ConvertitoreLieviti />}
         {tool === "stampi" && <CalcolatoreStampi />}
         {tool === "sosimpasto" && <SosImpastoGuida onOpenTool={openTool} />}

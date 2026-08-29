@@ -17,8 +17,9 @@ export function rLoc(recipe, field, lang) {
     if (en != null && String(en).trim() !== "") return en;
   }
   const it = recipe[field] ?? "";
-  if (lang === "fr") return recipe[`${field}_fr`] || triFR(it) || it;
-  if (lang === "fa") return recipe[`${field}_fa`] || triFA(it) || it;
+  // FR/FA: campo dedicato → mappa short-string → fallback INGLESE (procedimenti/note lunghi) → italiano
+  if (lang === "fr") return recipe[`${field}_fr`] || triFR(it) || recipe[`${field}_en`] || it;
+  if (lang === "fa") return recipe[`${field}_fa`] || triFA(it) || recipe[`${field}_en`] || it;
   return it;
 }
 
