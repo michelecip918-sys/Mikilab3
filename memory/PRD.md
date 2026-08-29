@@ -2476,3 +2476,12 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Social/Community**: già scorrevole ed essenziale (filtri con overflow-x-auto, feed space-y, quick-actions in griglia) → nessuna modifica necessaria.
 - **Paywall**: confermato LASCIATO GRATUITO (giudizio): coerente con piattaforma gratuita; reintroduzione = decisione monetizzazione futura.
 - NB: un DEPLOY è stato avviato durante la sessione; queste ultime modifiche sono in preview e richiederebbero un re-deploy per andare live.
+
+## v-fork.97 (2026-06) — Rifiniture a/b/c (d annullata: Laboratorio gratuito)
+- **(a) Ricette — barra risultati + azzera filtri** (RecipeList.jsx `recipe-results-bar` + `recipe-clear-filters`): conteggio "N ricette" sopra i risultati; quando categoria/base/ricerca sono attivi compare "Azzera filtri" che resetta tutto. Filtri base/categoria (scorrevoli) erano già presenti.
+- **(b) Home — prova sociale** (`home-social-proof`): cluster 3 avatar + "Fornai da Italia e Germania organizzano qui la produzione", sotto le CTA giganti.
+- **(c) Piano Settimanale — Ultimo salvataggio** (LabWizard `lab-wizard-last-saved`, Passo 2): mostra data/ora dell'ultimo piano salvato (da weekly.updated_at, per-utente). Condizionale: assente finché non si salva.
+- **Select eleganti in Impara** (Beginners.jsx): select del pianificatore con chevron arancione, bordi arrotondati, focus ring (coerenti con l'app). NB: in tutta l'app i select sono nativi (nessun shadcn Select).
+- **(d) Sblocco con le Sfide: ANNULLATA su richiesta utente** → Laboratorio resta GRATUITO.
+- Verifica iteration_122: tutti e 4 PASS, 0 bug (ui/integration/design). 
+- **Warning dev noto (non risolto, non-blocking)**: console "<span> cannot be a child of <option>" attribuito a PianoProduzioneAI, ma NESSUN <span> letterale trovato nelle option (mkTri/t/recipeTitle ritornano stringhe) → probabile avviso transitorio/misattribuito, nessun impatto funzionale.

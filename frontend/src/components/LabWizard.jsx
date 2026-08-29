@@ -37,6 +37,7 @@ export default function LabWizard({ onOpenTool }) {
   const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(true);
   const [personalCount, setPersonalCount] = useState(0);
+  const [weeklyUpdatedAt, setWeeklyUpdatedAt] = useState(null);
 
   const refresh = useCallback(async () => {
     try {
@@ -47,6 +48,7 @@ export default function LabWizard({ onOpenTool }) {
       ]);
       const items = (weekly && Array.isArray(weekly.items)) ? weekly.items : [];
       setWeeklyItems(items);
+      setWeeklyUpdatedAt(weekly && weekly.updated_at ? weekly.updated_at : null);
       const map = {};
       [...(Array.isArray(miki) ? miki : []), ...(Array.isArray(personal) ? personal : [])].forEach((r) => { if (r && r.id) map[r.id] = r; });
       setRecipeById(map);
@@ -271,6 +273,11 @@ export default function LabWizard({ onOpenTool }) {
                             {personalCount === 0
                               ? tri("Hai 0 ricette tue — aggiungine 1 per partire", "Du hast 0 eigene Rezepte — füge 1 hinzu, um zu starten", "You have 0 of your recipes — add 1 to get started", "Tienes 0 recetas tuyas — añade 1 para empezar", "Tu as 0 recette perso — ajoutes-en 1 pour démarrer", "۰ دستور شخصی داری — ۱ تا اضافه کن تا شروع کنی")
                               : `${personalCount} ${tri("ricette tue ✓", "eigene Rezepte ✓", "of your recipes ✓", "recetas tuyas ✓", "recettes perso ✓", "دستور شخصی ✓")}`}
+                          </p>
+                        )}
+                        {s.n === 2 && weeklyUpdatedAt && (
+                          <p data-testid="lab-wizard-last-saved" className="text-[12px] font-semibold mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[#7bd88f] bg-[#7bd88f]/15">
+                            {tri("Ultimo salvataggio", "Zuletzt gespeichert", "Last saved", "Último guardado", "Dernier enregistrement", "آخرین ذخیره")}: {(() => { try { return new Date(weeklyUpdatedAt).toLocaleString(lang, { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); } catch { return "—"; } })()}
                           </p>
                         )}
                         <div className="flex items-center gap-2 flex-wrap mt-2.5">

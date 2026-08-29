@@ -337,6 +337,19 @@ export default function Home({ onNavigate }) {
         </button>
       </div>
 
+      {/* Prova sociale: rassicura al primo colpo d'occhio, sotto le CTA */}
+      <div data-testid="home-social-proof" className="flex items-center justify-center gap-3 -mt-1">
+        <div className="flex -space-x-2.5">
+          {["/michele-avatar.jpg", "/mohammed-avatar.jpg", "/bio-photo.jpg"].map((src, i) => (
+            <img key={i} src={`${process.env.PUBLIC_URL || ""}${src}`} alt="" className="w-8 h-8 rounded-full object-cover ring-2 ring-[#121212]" loading="lazy"
+              onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          ))}
+        </div>
+        <p className="text-[12.5px] text-[#9aa4ab] leading-snug">
+          <span className="text-white font-bold">{L("Fornai da Italia e Germania", "Bäcker aus Italien und Deutschland", "Bakers from Italy and Germany", "Panaderos de Italia y Alemania", "Boulangers d'Italie et d'Allemagne", "نانواها از ایتالیا و آلمان")}</span> {L("organizzano qui la produzione", "organisieren hier die Produktion", "organise production here", "organizan aquí la producción", "organisent ici la production", "تولید را اینجا سازماندهی می‌کنند")}
+        </p>
+      </div>
+
       {/* Avatar: Michele operativo + Mohammadreza pronto ad aiutare */}
       <AvatarBubbles variant="home" />
 

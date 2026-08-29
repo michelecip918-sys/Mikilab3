@@ -408,6 +408,19 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               })}
             </div>
 
+            {/* Contatore risultati + azzera filtri: rende chiaro cosa stai vedendo */}
+            <div data-testid="recipe-results-bar" className="flex items-center justify-between gap-2 mb-2 px-0.5">
+              <span className="text-xs font-semibold text-[#7E8A93]">
+                {filtered.length} {filtered.length === 1 ? triM("ricetta", "Rezept", "recipe") : triM("ricette", "Rezepte", "recipes")}
+              </span>
+              {(catFilter !== "all" || baseFilter !== "all" || (query || "").trim() !== "") && (
+                <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setQuery(""); }}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#ff6b00] active:scale-95 transition-transform">
+                  <X className="w-3.5 h-3.5" /> {triM("Azzera filtri", "Filter zurücksetzen", "Clear filters")}
+                </button>
+              )}
+            </div>
+
             {filtered.length === 0 ? (
               <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
                 {triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}

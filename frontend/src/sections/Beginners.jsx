@@ -3,7 +3,7 @@ import { recipeTitle } from "@/lib/loc";
 import RecipeOptions from "@/components/RecipeOptions";
 import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
-import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame, ChevronRight, MessageCircle } from "lucide-react";
+import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame, ChevronRight, ChevronDown, MessageCircle } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -88,20 +88,26 @@ function HomePlanner() {
       <div className="space-y-2" data-testid="home-products">
         {products.map((p, i) => (
           <div key={i} className="flex items-center gap-2">
-            <select data-testid={`home-product-recipe-${i}`} value={p.recipe_id || ""}
-              onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value } : x))}
-              className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
-              <option value="">{t("capo_pick_recipe")}</option>
-              <RecipeOptions recipes={recipes} />
-            </select>
+            <div className="relative flex-1 min-w-0">
+              <select data-testid={`home-product-recipe-${i}`} value={p.recipe_id || ""}
+                onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value } : x))}
+                className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2.5 pl-3 pr-9 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all cursor-pointer">
+                <option value="">{t("capo_pick_recipe")}</option>
+                <RecipeOptions recipes={recipes} />
+              </select>
+              <ChevronDown className="w-4 h-4 text-[#ff6b00] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
             <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-              className="w-16 shrink-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
-            <select data-testid={`home-product-day-${i}`} value={p.day || ""}
-              onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-              className="w-24 shrink-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
-              {HOME_DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
-            </select>
+              className="w-16 shrink-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2.5 px-2 text-sm font-medium text-center outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all" />
+            <div className="relative w-24 shrink-0">
+              <select data-testid={`home-product-day-${i}`} value={p.day || ""}
+                onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
+                className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2.5 pl-3 pr-8 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all cursor-pointer">
+                {HOME_DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
+              </select>
+              <ChevronDown className="w-4 h-4 text-[#ff6b00] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
             {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>}
           </div>
         ))}

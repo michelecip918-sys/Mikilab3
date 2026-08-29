@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only retest of the 4 polish items (a-c) with admin login (admin@mikilab.de). ALL 4 PASS: (1) Impara planner selects are styled (appearance:none, bg #1e1e1e, radius 12px, orange chevron #ff6b00, focus ring rgba(255,107,0,.3) 2px) and fully functional (121 recipe options, day select lun..dom, home-product-add adds row 1, home-generate produced a plan -> home-print appeared); (2) home-social-proof visible right below home-giant-ctas (y 1005 vs CTA y 766), 3 avatars all load (michele/mohammed/bio, naturalWidth>0), copy 'Bakers from Italy and Germany organise production here', layout intact; (3) lab-wizard-last-saved is conditional: NOT present before saving (admin had no saved weekly plan), after saving a weekly plan via maestro-top-settimana + weekly-save-btn ('Weekly plan saved' toast) and revisiting maestro tab it appears in Step 2 as 'Last saved: 08/29, 08:33 PM' and Step 2 flips to DONE; (4) recipe-results-bar shows '120 recipes' total; cat-filter-basi -> 6 recipes + recipe-clear-filters appears; base-filter-poolish -> 14 recipes + clear appears; recipe-search 'pan' -> 66 recipes + clear appears; clicking recipe-clear-filters resets category+base+search (search input empty) and count returns to 120, clear button disappears.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Minor (pre-existing, non-blocking): React console warning on Il Tuo Laboratorio tab — 'In HTML, <span> cannot be a child of <option>. This will cause a hydration error' traced to PianoProduzioneAI (sections/PianoProduzioneAI.jsx, option labels built from a t()/tri helper that returns JSX). Make those option children plain strings."
+  ],
+  "critical_code_review_comments": [
+    "LabWizard reads weekly.updated_at from GET /api/weekly-plan which is per-user (_key=user_id) — correct; label is conditional so a user with no saved plan sees nothing (expected behaviour, verified).",
+    "sections/PianoProduzioneAI.jsx is very large (>1400 lines) — consider splitting into modules per code-review guideline (>700 lines)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (4/4 features)"},
+  "seed_data_creation": "Saved a weekly plan for admin@mikilab.de (Monday, 1 recipe, 10 pcs) in order to verify lab-wizard-last-saved. Can be cleared from the Weekly Plan tool if unwanted.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (works via login-btn -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "Default UI language in the preview is EN, so labels appear as 'Clear filters', 'Last saved', 'Bakers from Italy and Germany'. Admin now HAS a saved weekly plan, so lab-wizard-last-saved will be visible from now on. Popups seen: lab-tour-skip (newsletter popup did not appear this run). Recipe totals: 120 mikilab recipes for admin.",
+  "rca_of_the_issue": "No functional defects found for the 4 requested items. The only observed console warning (span inside <option>) pre-exists in PianoProduzioneAI and does not affect any tested flow."
+}
