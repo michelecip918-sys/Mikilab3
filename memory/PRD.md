@@ -2293,3 +2293,6 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 
 ## v-fork.70 — Giallo sostituito con arancione
 - #FFC700 (giallo) → #FF6B00 (arancione) su 50 file. Nav: pala attiva arancio chiaro #FFB27A per distinzione. Palette finale: nero #121212 + arancio #FF6B00 (+ #FF8A33/#FFB27A per stati), testo bianco/grigio.
+
+## v-fork.71 — Nav a pale ripristinata in legno
+- Ripristinato `.wood-surface` (gradiente legno bruno) e la nav a pale di legno originale (icone incise, manico, etichette crema, anello oro attivo, targa Aperto/barattolo spezie in legno). Resto del sito invariato: tema nero + accenti arancioni.

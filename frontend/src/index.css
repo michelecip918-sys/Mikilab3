@@ -158,10 +158,10 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 
 /* ===== Tema "Panificio Digitale" ===== */
 .wood-surface {
-  background-color: #171717;
+  background-color: #7a4a24;
   background-image:
-    repeating-linear-gradient(90deg, rgba(255,107,0,.05) 0 2px, rgba(255,255,255,.02) 2px 5px, rgba(0,0,0,.25) 5px 9px),
-    linear-gradient(180deg, #262626 0%, #171717 55%, #0d0d0d 100%);
+    repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 2px, rgba(255,255,255,.04) 2px 5px, rgba(0,0,0,.05) 5px 9px),
+    linear-gradient(180deg, #a06a33 0%, #7d4c23 45%, #613914 100%);
   background-blend-mode: overlay, normal;
 }
 .wood-emboss { box-shadow: inset 0 2px 3px rgba(255,240,210,.35), inset 0 -3px 6px rgba(60,35,15,.45), 0 6px 14px rgba(44,30,16,.35); }
