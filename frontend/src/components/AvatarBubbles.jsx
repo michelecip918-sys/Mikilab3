@@ -76,19 +76,33 @@ export default function AvatarBubbles({ variant = "impara" }) {
     return () => { alive = false; };
   }, [variant, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Assistente cliccabile: porta nella sezione/strumento giusto
-  const GOTO = { home: "ricette", ricette: "maestro", impara: "maestro" };
-  const handleGo = () => {
-    if (variant === "lab") { document.querySelector('[data-testid="lab-wizard"]')?.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
-    const tab = GOTO[variant];
-    if (tab) window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab } }));
+  // Assistente cliccabile: porta nella sezione/strumento giusto (Michele + Mohammadreza)
+  const goto = (tab) => window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab } }));
+  const openLabTool = (id) => window.dispatchEvent(new CustomEvent("mikilab-open-lab-tool", { detail: { id } }));
+  const openChallenges = () => window.dispatchEvent(new CustomEvent("mikilab-go-challenges"));
+  const scrollTo = (sel) => document.querySelector(sel)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const ACTIONS = {
+    michele: {
+      home: () => goto("ricette"),
+      ricette: () => goto("maestro"),
+      impara: () => goto("maestro"),
+      lab: () => openLabTool("aggiungi"),
+    },
+    momy: {
+      home: () => goto("ricette"),
+      ricette: () => goto("maestro"),
+      impara: () => goto("maestro"),
+      lab: () => scrollTo('[data-testid="lab-wizard"]'),
+    },
   };
-  const clickable = variant === "lab" || !!GOTO[variant];
+  const actFor = (who) => (ACTIONS[who] && ACTIONS[who][variant]) || null;
+  const hintClickable = variant === "home" || variant === "impara";
 
   return (
     <div data-testid="avatar-bubbles" className="mb-5 space-y-3">
       {msgs.map((m, idx) => {
         const isMichele = m.who === "michele";
+        const act = actFor(m.who);
         return (
           <motion.div key={idx} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.12 }}
             className={`flex items-end gap-2.5 ${isMichele ? "" : "flex-row-reverse"}`}>
@@ -96,18 +110,20 @@ export default function AvatarBubbles({ variant = "impara" }) {
               className={`w-11 h-11 rounded-full object-cover shadow-sm shrink-0 ring-2 ${isMichele ? "ring-[#ff6b00]/60" : "ring-[#ff6b00]/60"}`}
               onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <div data-testid={`bubble-${m.who}`}
-              onClick={!isMichele && clickable ? handleGo : undefined}
-              role={!isMichele && clickable ? "button" : undefined}
-              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border transition-all ${
-                isMichele
-                  ? "bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-bl-sm"
-                  : `bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-br-sm ${clickable ? "cursor-pointer hover:border-[#ff6b00]/60 hover:bg-[#ff6b00]/10 active:scale-98" : ""}`}`}>
+              onClick={act || undefined}
+              role={act ? "button" : undefined}
+              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border transition-all bg-[#ff6b00]/5 border-[#ff6b00]/20 ${isMichele ? "rounded-bl-sm" : "rounded-br-sm"} ${act ? "cursor-pointer hover:border-[#ff6b00]/60 hover:bg-[#ff6b00]/10 active:scale-98" : ""}`}>
               <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#9cd6a0]" : "text-[#f0b76b]"}`}>{NAME[m.who]}</p>
               <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{bubbleText(m)}</p>
               {!isMichele && hint && (
-                <p data-testid={`bubble-hint-${variant}`} className="text-[12px] font-semibold text-[#ff6b00] leading-snug mt-1">{hint}</p>
+                hintClickable ? (
+                  <button data-testid={`bubble-hint-${variant}`} onClick={(e) => { e.stopPropagation(); openChallenges(); }}
+                    className="text-[12px] font-bold text-[#ff6b00] leading-snug mt-1 underline decoration-[#ff6b00]/40 underline-offset-2 active:scale-98">{hint}</button>
+                ) : (
+                  <p data-testid={`bubble-hint-${variant}`} className="text-[12px] font-semibold text-[#ff6b00] leading-snug mt-1">{hint}</p>
+                )
               )}
-              {!isMichele && clickable && (
+              {act && (
                 <span className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00]">
                   {tri("Portami lì", "Bring mich hin", "Take me there", "Llévame allí", "Emmène-moi", "من را ببر")} <ArrowRight className="w-3.5 h-3.5" />
                 </span>

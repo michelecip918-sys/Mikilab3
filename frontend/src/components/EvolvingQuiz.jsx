@@ -105,7 +105,7 @@ export default function EvolvingQuiz() {
       <p className="text-sm text-[#7E8A93] mb-3">{tri("Domande infinite generate dall'IA, con spiegazione tecnica ad ogni risposta.", "Unendliche KI-Fragen mit technischer Erklärung zu jeder Antwort.", "Infinite AI-generated questions with a technical explanation for every answer.", "Preguntas infinitas generadas por IA, con explicación técnica en cada respuesta.")}</p>
 
       {diploma && (
-        <div data-testid="diploma-badge" className="flex items-center gap-2 mb-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#ff6b00] text-white px-3 py-2 shadow-sm">
+        <div data-testid="diploma-badge" className="flex items-center gap-2 mb-3 rounded-xl bg-gradient-to-r from-[#F0B429] to-[#ff6b00] text-white px-3 py-2 shadow-sm">
           <Award className="w-5 h-5 shrink-0" />
           <span className="text-sm font-bold">{tri("Fornaio Diplomato 🎓", "Diplom-Bäcker 🎓", "Certified Baker 🎓", "Panadero Diplomado 🎓")}</span>
         </div>
@@ -162,7 +162,7 @@ export default function EvolvingQuiz() {
         <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3 space-y-1.5">
           <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Sfida «Fornaio della Settimana» — punti Master tra amici", "Challenge «Bäcker der Woche» — Master-Punkte unter Freunden", "«Baker of the Week» challenge — Master points among friends", "Desafío «Panadero de la Semana» — puntos Master entre amigos")}</p>
           {champion && (
-            <div data-testid="quiz-champion" className="flex items-center gap-2.5 rounded-lg bg-gradient-to-r from-[#ff6b00] to-[#ff6b00] text-white px-2.5 py-2 mb-1">
+            <div data-testid="quiz-champion" className="flex items-center gap-2.5 rounded-lg bg-gradient-to-r from-[#ff6b00] to-[#c94f00] text-white px-2.5 py-2 mb-1">
               <span className="text-lg">🏆</span>
               <div className="w-7 h-7 rounded-full overflow-hidden bg-white/20 flex items-center justify-center text-xs font-bold shrink-0">{champion.picture ? <img src={champion.picture} alt="" className="w-full h-full object-cover" /> : (champion.name || "F")[0].toUpperCase()}</div>
               <span className="flex-1 min-w-0 truncate text-[13px] font-bold">{tri("Campione scorsa settimana:", "Champion letzte Woche:", "Last week's champion:", "Campeón semana pasada:")} {champion.name}{champion.me ? tri(" (tu!)", " (du!)", " (you!)", " (tú!)") : ""}</span>
