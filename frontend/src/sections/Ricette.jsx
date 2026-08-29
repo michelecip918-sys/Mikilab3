@@ -54,7 +54,7 @@ export default function Ricette() {
     <div data-testid="ricette-page">
       <SectionHero testid="ricette-title" image="hero-ricette.jpg" position="50% 30%"
         title={mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
-        subtitle={mkTri(lang)("Le ricette e i sapori di MikiLab", "Die Rezepte und Aromen von MikiLab", "MikiLab recipes and flavours", "Las recetas y sabores de MikiLab", "Les recettes et saveurs de MikiLab", "دستورها و طعم‌های میکی‌لب")} />
+        subtitle={mkTri(lang)("Ricette artigianali spiegate passo dopo passo, con il mio metodo", "Handwerkliche Rezepte, Schritt für Schritt nach meiner Methode", "Artisan recipes explained step by step, with my method", "Recetas artesanales explicadas paso a paso, con mi método", "Recettes artisanales expliquées pas à pas, avec ma méthode", "دستورهای دست‌ساز، گام‌به‌گام با روش من")} />
       <div className="mb-4"><SaporeDelGiorno /></div>
       {coll === "mikilab" && (
         <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}

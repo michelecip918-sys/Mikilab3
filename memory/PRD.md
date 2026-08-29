@@ -2353,3 +2353,10 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - Allineata anche la descrizione "Pane Lucano di Grano Duro": "arma segreta" → "la mia firma" (5 lingue).
 - Verificato: DB `recipes` NON contiene più frasi overclaim ("senza di lui...") nei procedimenti (0 su 121); erano solo chiavi stale in triTranslations, non renderizzate. Nessuna modifica DB/seed necessaria.
 - IN CORSO (richiesta ampia utente): revisione/miglioria progressiva di TUTTI i testi (ricette, spiegazioni, titoli, sottotitoli) mantenendo metodo e ricette di Michele — da proseguire sezione per sezione, senza cancellare nulla.
+
+## v-fork.80 (2026-06) — Sfida condivisibile + foto tatuaggio + titoli/sottotitoli
+- **Sfida Condivisibile** (LabWizard `lab-wizard-challenge-share`): pulsante "Sfida i colleghi" che condivide (share nativo/clipboard) il testo della sfida della settimana da incollare in Community (6 lingue).
+- **Foto tatuaggio** (Beginners/Impara `impara-tattoo-card`): card con `/bio-dough.jpg` (braccio tatuato con impasto) + didascalia "Farina, mani e un po' di storia sulla pelle / Il mio tatuaggio mi accompagna a ogni impasto" (6 lingue). Verificato a schermo.
+- **Titoli/Sottotitoli**: sottotitolo Ricette → "Ricette artigianali spiegate passo dopo passo, con il mio metodo"; sottotitolo Community → "Confronto, consigli e ricette tra fornai veri" (6 lingue). Tono più curato/professionale.
+- SCOPERTA: le ricette del DB hanno `description` VUOTA (le schede mostrano procedure+note). Un audit testi ricette = riscrivere procedure/note su 121 ricette × 6 lingue → grande, da fare in batch sicuri per categoria.
+- DA PROSEGUIRE (approvati, ampi): audit testi ricette (batch), dedup contenuti in tutte le sezioni (servono esempi specifici o scansione dedicata), refinement di uno strumento (Piano Settimanale/Produzione Oggi — attende scelta).

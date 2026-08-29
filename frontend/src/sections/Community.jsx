@@ -172,7 +172,7 @@ export default function Community({ onNavigate }) {
     <div className="pb-40" data-testid="community">
       <SectionHero testid="community-title" image="hero-social.jpg" position="50% 30%"
         title={tri("Social", "Social", "Social", "Social")}
-        subtitle={mkTri(lang)("La community dei fornai MikiLab", "Die MikiLab Bäcker-Community", "The MikiLab bakers community", "La comunidad de panaderos MikiLab", "La communauté des boulangers MikiLab", "جامعهٔ نانوایان میکی‌لب")} />
+        subtitle={mkTri(lang)("Confronto, consigli e ricette tra fornai veri", "Austausch, Tipps und Rezepte unter echten Bäckern", "Sharing, tips and recipes among real bakers", "Intercambio, consejos y recetas entre panaderos de verdad", "Échanges, conseils et recettes entre vrais boulangers", "گفت‌وگو، نکته‌ها و دستورها میان نانوایان واقعی")} />
       {/* Header social — compatto (navigazione via menù globale) */}
       <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
         style={{ background: "linear-gradient(135deg,#1c1c1c 0%,#1f5a68 60%,#ff6b00 100%)" }}>

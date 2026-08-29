@@ -142,6 +142,14 @@ export default function LabWizard({ onOpenTool }) {
     try { localStorage.setItem(CHAL_KEY, JSON.stringify({ week: isoWeekKey(), done: nd })); } catch { /* */ }
     if (nd) toast.success(tri("Sfida completata! 🏆", "Challenge geschafft! 🏆", "Challenge done! 🏆", "¡Reto completado! 🏆", "Défi réussi ! 🏆", "چالش انجام شد! 🏆"));
   };
+  const shareChallenge = async () => {
+    if (!challenge) return;
+    const text = `🏆 MikiLab — ${tri("Sfida della settimana", "Challenge der Woche", "Weekly challenge", "Reto de la semana", "Défi de la semaine", "چالش هفته")}: ${recipeTitle(challenge, lang)}. ${tri("La provi anche tu?", "Machst du mit?", "Will you try it too?", "¿Te animas?", "Tu tentes aussi ?", "تو هم امتحان می‌کنی؟")}`;
+    try {
+      if (navigator.share) { await navigator.share({ title: "MikiLab", text }); }
+      else { await navigator.clipboard.writeText(text); toast.success(tri("Copiato! Incollalo nella Community 🍞", "Kopiert! Poste es in der Community 🍞", "Copied! Paste it in the Community 🍞", "¡Copiado! Pégalo en la Comunidad 🍞", "Copié ! Colle-le dans la Communauté 🍞", "کپی شد! در انجمن بگذار 🍞")); }
+    } catch { /* */ }
+  };
 
   const c1 = auto1 || !!manual["1"];
   const c2 = auto2 || !!manual["2"];
@@ -406,6 +414,11 @@ export default function LabWizard({ onOpenTool }) {
                     {chalDone
                       ? tri("Provata! 🏆", "Geschafft! 🏆", "Tried! 🏆", "¡Probada! 🏆", "Essayée ! 🏆", "امتحان شد! 🏆")
                       : tri("L'ho provata", "Ausprobiert", "I tried it", "La probé", "Je l'ai essayée", "امتحانش کردم")}
+                  </button>
+                  <button data-testid="lab-wizard-challenge-share" onClick={shareChallenge}
+                    className="mt-2 ms-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-semibold text-sm bg-[#ff6b00] text-white shadow-[0_3px_10px_rgba(255,107,0,0.35)] active:scale-95 hover:bg-[#ff8226] transition-all">
+                    <Share2 className="w-4 h-4" />
+                    {tri("Sfida i colleghi", "Kollegen fordern", "Challenge colleagues", "Reta a colegas", "Défie tes collègues", "چالش با همکاران")}
                   </button>
                 </div>
               </div>

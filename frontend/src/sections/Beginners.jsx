@@ -409,6 +409,21 @@ export default function Beginners({ onNavigate }) {
         ]} />
       <AvatarBubbles variant="impara" />
 
+      {/* Tocco personale: le mani (e il tatuaggio) di Michele */}
+      <div data-testid="impara-tattoo-card" className="relative overflow-hidden rounded-2xl border border-[#2e2e2e] bg-[#181818]">
+        <img src="/bio-dough.jpg" alt={mkTri(lang)("Le mani di Michele", "Micheles Hände", "Michele's hands", "Las manos de Michele", "Les mains de Michele", "دستان میکله")}
+          className="w-full h-44 object-cover object-center" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-3.5">
+          <p className="text-white font-display text-base font-bold leading-tight drop-shadow">
+            {mkTri(lang)("Farina, mani e un po' di storia sulla pelle", "Mehl, Hände und etwas Geschichte auf der Haut", "Flour, hands and a bit of history on the skin", "Harina, manos y algo de historia en la piel", "Farine, mains et un peu d'histoire sur la peau", "آرد، دست‌ها و کمی تاریخ روی پوست")}
+          </p>
+          <p className="text-white/80 text-[12px] leading-snug mt-0.5">
+            {mkTri(lang)("Il mio tatuaggio mi accompagna a ogni impasto: fare il pane è artigianato, non fretta.", "Mein Tattoo begleitet jeden Teig: Brot backen ist Handwerk, keine Eile.", "My tattoo joins every dough: baking is craft, not haste.", "Mi tatuaje me acompaña en cada masa: hacer pan es artesanía, no prisa.", "Mon tatouage accompagne chaque pâte : faire le pain est un artisanat, pas de la hâte.", "خالکوبی‌ام همراه هر خمیر است: نان‌پزی صنعت است، نه شتاب.")}
+          </p>
+        </div>
+      </div>
+
       <button data-testid="impara-livelli-btn" onClick={() => setImparaLiv(true)}
         className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#F0B429] to-[#ff6b00] text-white shadow-md active:scale-98 transition-all text-left hover:shadow-lg">
         <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0"><Trophy className="w-6 h-6 text-[#f0dcb4]" /></div>
