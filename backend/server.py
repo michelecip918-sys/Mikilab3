@@ -5029,18 +5029,32 @@ class NewsletterSend(BaseModel):
     title: str = Field(..., max_length=200)
     body: str = Field(..., max_length=8000)
     lang: Optional[str] = None  # None/"" = tutti gli iscritti
+    image_url: Optional[str] = None
+    test_email: Optional[str] = None  # se presente → invio di prova solo a questo indirizzo
 
 
-def _newsletter_campaign_html(title: str, body: str) -> str:
+def _md_lite(text: str) -> str:
+    import html as _h, re as _re
+    t = _h.escape(text)
+    t = _re.sub(r"\[([^\]]+)\]\((https?://[^\s)]+)\)", r'<a href="\2" style="color:#B45309">\1</a>', t)
+    t = _re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", t)
+    t = _re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<em>\1</em>", t)
+    return t.replace("\n", "<br>")
+
+
+def _newsletter_campaign_html(title: str, body: str, image_url: str = None) -> str:
     import html as _h
-    safe_body = _h.escape(body).replace("\n", "<br>")
     safe_title = _h.escape(title)
+    safe_body = _md_lite(body)
+    img = ""
+    if image_url and image_url.startswith("http"):
+        img = f"<img src='{_h.escape(image_url)}' alt='' style='width:100%;border-radius:12px;margin-bottom:16px' />"
     return (
         "<div style='font-family:Arial,sans-serif;max-width:560px;margin:auto;background:#f7efe0;border-radius:16px;overflow:hidden'>"
         "<div style='background:linear-gradient(135deg,#2C1E16,#6E371C);padding:20px;text-align:center'>"
         "<img src='https://mikilab.de/logo.png' alt='MikiLab' width='72' height='72' style='border-radius:16px' />"
         "<h1 style='color:#f0dcb4;font-size:22px;margin:10px 0 0'>MikiLab</h1></div>"
-        f"<div style='padding:24px;color:#3F4A54'>"
+        f"<div style='padding:24px;color:#3F4A54'>{img}"
         f"<h2 style='color:#B45309;margin-top:0'>{safe_title}</h2>"
         f"<p style='line-height:1.7;font-size:15px'>{safe_body}</p></div>"
         "<div style='padding:16px;text-align:center;background:#efe2cb;color:#8a5a1a;font-size:12px;font-weight:bold'>"
@@ -5052,21 +5066,46 @@ def _newsletter_campaign_html(title: str, body: str) -> str:
 async def admin_newsletter_send(body: NewsletterSend, admin: dict = Depends(require_admin)):
     if not RESEND_API_KEY:
         raise HTTPException(400, "Resend non configurato (RESEND_API_KEY mancante)")
+    html = _newsletter_campaign_html(body.title, body.body, body.image_url)
+
+    async def _send_to(email):
+        await asyncio.to_thread(_resend.Emails.send, {
+            "from": f"MikiLab <{SENDER_EMAIL}>", "to": [email], "subject": body.subject, "html": html})
+
+    # Invio di prova: solo all'indirizzo indicato, non salva nello storico
+    if body.test_email:
+        try:
+            await _send_to(body.test_email.strip())
+            return {"ok": True, "test": True, "sent": 1, "failed": 0, "total": 1}
+        except Exception:
+            logger.exception("newsletter test send error")
+            raise HTTPException(500, "Invio di prova fallito")
+
     q = {}
     if body.lang:
         q["lang"] = body.lang
     subs = await db.newsletter_subscribers.find(q, {"_id": 0, "email": 1}).to_list(5000)
-    html = _newsletter_campaign_html(body.title, body.body)
     sent, failed = 0, 0
     for s in subs:
         try:
-            await asyncio.to_thread(_resend.Emails.send, {
-                "from": f"MikiLab <{SENDER_EMAIL}>", "to": [s["email"]], "subject": body.subject, "html": html})
+            await _send_to(s["email"])
             sent += 1
         except Exception:
             failed += 1
             logger.exception("newsletter campaign send error")
+    # Storico invii
+    await db.newsletter_campaigns.insert_one({
+        "id": str(uuid.uuid4()), "subject": body.subject, "title": body.title,
+        "lang": body.lang or "all", "sent": sent, "failed": failed, "total": len(subs),
+        "by": admin.get("email"), "created_at": now_iso(),
+    })
     return {"ok": True, "sent": sent, "failed": failed, "total": len(subs)}
+
+
+@api_router.get("/admin/newsletter/history")
+async def admin_newsletter_history(admin: dict = Depends(require_admin)):
+    rows = await db.newsletter_campaigns.find({}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    return {"campaigns": rows}
 
 
 # ---------------------------------------------------------------------------

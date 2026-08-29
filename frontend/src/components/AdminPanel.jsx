@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const BUBBLE_SECTIONS = [
@@ -15,6 +16,7 @@ const BUBBLE_SECTIONS = [
 
 export default function AdminPanel({ open, onOpenChange }) {
   const { lang, t } = useLang();
+  const { user } = useAuth();
   const de = lang === "de";
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -43,8 +45,10 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
   const [subs, setSubs] = useState([]);
-  const [nl, setNl] = useState({ subject: "", title: "", body: "", lang: "" });
+  const [nl, setNl] = useState({ subject: "", title: "", body: "", lang: "", image_url: "" });
   const [nlSending, setNlSending] = useState(false);
+  const [nlTesting, setNlTesting] = useState(false);
+  const [nlHistory, setNlHistory] = useState([]);
 
   const downloadCsv = () => {
     const rows = [["email", "lang", "source", "created_at"], ...subs.map((s) => [s.email, s.lang || "", s.source || "", s.created_at || ""])];
@@ -55,13 +59,34 @@ export default function AdminPanel({ open, onOpenChange }) {
     a.click(); URL.revokeObjectURL(url);
   };
 
+  const nlPayload = (extra = {}) => ({ subject: nl.subject, title: nl.title, body: nl.body, lang: nl.lang || null, image_url: nl.image_url || null, ...extra });
+
+  const validNl = () => {
+    if (!nl.subject.trim() || !nl.title.trim() || !nl.body.trim()) { toast.error(de ? "Betreff, Titel und Text ausfüllen" : "Compila oggetto, titolo e testo"); return false; }
+    return true;
+  };
+
+  const sendTest = async () => {
+    if (!validNl()) return;
+    if (!user?.email) { toast.error(de ? "Keine Admin-E-Mail" : "Nessuna email admin"); return; }
+    setNlTesting(true);
+    try {
+      await adminApi.newsletterSend(nlPayload({ test_email: user.email }));
+      toast.success((de ? "Testmail an " : "Prova inviata a ") + user.email);
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || (de ? "Fehler" : "Errore"));
+    } finally { setNlTesting(false); }
+  };
+
   const sendNewsletter = async () => {
-    if (!nl.subject.trim() || !nl.title.trim() || !nl.body.trim()) { toast.error(de ? "Betreff, Titel und Text ausfüllen" : "Compila oggetto, titolo e testo"); return; }
+    if (!validNl()) return;
+    if (!window.confirm(de ? "An alle Abonnenten senden?" : "Inviare a tutti gli iscritti?")) return;
     setNlSending(true);
     try {
-      const r = await adminApi.newsletterSend(nl.subject, nl.title, nl.body, nl.lang);
+      const r = await adminApi.newsletterSend(nlPayload());
       toast.success((de ? "Gesendet an " : "Inviata a ") + (r.sent ?? 0) + (de ? " Abonnenten" : " iscritti") + (r.failed ? ` (${r.failed} ${de ? "Fehler" : "errori"})` : ""));
-      setNl({ subject: "", title: "", body: "", lang: "" });
+      setNl({ subject: "", title: "", body: "", lang: "", image_url: "" });
+      try { const h = await adminApi.newsletterHistory(); setNlHistory(h.campaigns || []); } catch { /* */ }
     } catch (err) {
       toast.error(err?.response?.data?.detail || (de ? "Fehler" : "Errore"));
     } finally { setNlSending(false); }
@@ -73,6 +98,7 @@ export default function AdminPanel({ open, onOpenChange }) {
       setList(await adminApi.entitlements());
       try { setShop(await adminApi.shopSettings()); } catch { /* */ }
       try { const n = await adminApi.newsletter(); setSubs(n.subscribers || []); } catch { /* */ }
+      try { const h = await adminApi.newsletterHistory(); setNlHistory(h.campaigns || []); } catch { /* */ }
       try {
         const s = await siteSettingsApi.get();
         setSettings({ whatsapp_number: s.whatsapp_number || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
@@ -269,8 +295,12 @@ export default function AdminPanel({ open, onOpenChange }) {
               placeholder={de ? "Titel (im Inhalt)" : "Titolo (nel contenuto)"}
               className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <textarea data-testid="nl-send-body" value={nl.body} onChange={(e) => setNl((n) => ({ ...n, body: e.target.value }))} rows={4}
-              placeholder={de ? "Text der Wochenrezept-Nachricht…" : "Testo della ricetta della settimana…"}
+              placeholder={de ? "Text… **fett**, *kursiv*, [Link](https://…)" : "Testo… **grassetto**, *corsivo*, [link](https://…)"}
               className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+            <input data-testid="nl-send-image" value={nl.image_url} onChange={(e) => setNl((n) => ({ ...n, image_url: e.target.value }))}
+              placeholder={de ? "Bild-URL (optional)" : "URL immagine (opzionale)"}
+              className="w-full bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+            <p className="text-[10px] text-[#7E8A93] mb-2">{de ? "Formatierung: **fett**, *kursiv*, [Text](URL)" : "Formattazione: **grassetto**, *corsivo*, [testo](URL)"}</p>
             <div className="flex items-center gap-2">
               <select data-testid="nl-send-lang" value={nl.lang} onChange={(e) => setNl((n) => ({ ...n, lang: e.target.value }))}
                 className="bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-xl px-2 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]">
@@ -278,11 +308,29 @@ export default function AdminPanel({ open, onOpenChange }) {
                 <option value="it">IT</option><option value="de">DE</option><option value="en">EN</option>
                 <option value="es">ES</option><option value="fr">FR</option><option value="fa">FA</option>
               </select>
+              <button data-testid="nl-test-btn" onClick={sendTest} disabled={nlTesting}
+                className="flex items-center justify-center gap-1.5 bg-white dark:bg-[#1F252B] border border-[#3a6b3a]/50 text-[#2f5a2f] dark:text-[#9cd6a0] disabled:opacity-50 font-semibold px-3 py-2 rounded-xl active:scale-98 transition-all text-sm">
+                {nlTesting ? "…" : (de ? "An mich" : "A me")}
+              </button>
               <button data-testid="nl-send-btn" onClick={sendNewsletter} disabled={nlSending}
                 className="flex-1 flex items-center justify-center gap-2 bg-[#3a6b3a] disabled:opacity-50 text-white font-semibold py-2 rounded-xl active:scale-98 transition-all">
-                <Send className="w-4 h-4" /> {nlSending ? (de ? "Sende…" : "Invio…") : (de ? "An alle senden" : "Invia a tutti")}
+                <Send className="w-4 h-4" /> {nlSending ? (de ? "Sende…" : "Invio…") : (de ? "An alle" : "A tutti")}
               </button>
             </div>
+
+            {nlHistory.length > 0 && (
+              <div data-testid="nl-history" className="mt-3">
+                <p className="text-[11px] font-bold text-[#2f5a2f] dark:text-[#9cd6a0] mb-1.5">{de ? "Verlauf" : "Storico invii"}</p>
+                <div className="space-y-1 max-h-32 overflow-y-auto">
+                  {nlHistory.map((c) => (
+                    <div key={c.id} className="flex items-center justify-between gap-2 text-[11px] bg-white dark:bg-[#1F252B] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2 py-1.5">
+                      <span className="truncate text-[#2B303B] dark:text-[#e4eff8]">{c.subject}</span>
+                      <span className="shrink-0 text-[#7E8A93]">{(c.created_at || "").slice(0, 10)} · {c.sent}/{c.total} · {(c.lang || "all").toUpperCase()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

@@ -2179,3 +2179,13 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Rinomina wording**: titolo AdminPanel "Admin · Accessi VIP" → "Pannello Admin" (de "Admin-Panel"), descrizione aggiornata ("Gestisci contenuti, iscritti e accessi speciali"). Coerente col modello 100% gratis.
 - Backend riavviato OK; frontend compila senza errori (smoke test). Dato demo ripulito.
 - NB: invio email dipende dal dominio Resend verificato (`noreply@mikilab.de`). Servirà Redeploy per la produzione.
+
+## v-fork.55 (2026-06) — Sistema didascalia Miglioratore Naturale + Newsletter (prova/storico/editor)
+### Miglioratore Naturale (RicetteCustodite.jsx)
+- Box "arma segreta" trasformato in SISTEMA DIDASCALIA: claim principale + **frase rotante** (ogni 4.5s) su salute/naturalezza (4 frasi, 5 lingue) + **chip** benefici (🌿 100% Naturale, ❤️ Più salutare, ✨ Alta digeribilità, 🚫 Zero additivi chimici). testid `custodite-improver-rotating`, `migl-chip-*`. Verificato visivamente (IT).
+### Newsletter admin (Next Action Items)
+- **Invio di prova**: `nl-test-btn` "A me" → invia solo all'email admin (`test_email`), non salva nello storico. Verificato via curl (test:true, sent:1).
+- **Storico invii**: collezione `newsletter_campaigns` + `GET /api/admin/newsletter/history`; lista ultime campagne in AdminPanel (`nl-history`) con data, inviati/totali, lingua. Salva solo gli invii reali.
+- **Editor formattazione**: markdown-lite nel corpo (`**grassetto**`, `*corsivo*`, `[testo](url)`) via `_md_lite()` + campo **URL immagine** (`nl-send-image`) inserita in cima all'email.
+- API `adminApi.newsletterSend(payload)` (unificata), `newsletterHistory()`.
+- Backend riavviato OK; endpoint testati. NB: serve Redeploy per la produzione.

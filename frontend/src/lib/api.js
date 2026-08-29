@@ -145,7 +145,8 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   bakeAlongNotify: () => api.post(`/admin/bakealong/notify`).then((r) => r.data),
   bakeAlongAward: (week) => api.post(`/admin/bakealong/award`, {}, { params: week ? { week } : {} }).then((r) => r.data),
   newsletter: () => api.get(`/admin/newsletter`).then((r) => r.data),
-  newsletterSend: (subject, title, body, lang) => api.post(`/admin/newsletter/send`, { subject, title, body, lang: lang || null }).then((r) => r.data),
+  newsletterSend: (payload) => api.post(`/admin/newsletter/send`, payload).then((r) => r.data),
+  newsletterHistory: () => api.get(`/admin/newsletter/history`).then((r) => r.data),
 };
 
 export const siteSettingsApi = {

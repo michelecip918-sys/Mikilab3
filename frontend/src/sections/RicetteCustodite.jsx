@@ -613,6 +613,19 @@ export default function RicetteCustodite({ initialId = null }) {
   const [cat, setCat] = useState("all");
   const [flour, setFlour] = useState(1000);
   const [qr, setQr] = useState("");
+  const [miglIdx, setMiglIdx] = useState(0);
+
+  // Sistema didascalia Miglioratore Naturale: frasi su salute e naturalezza (ruotano).
+  const MIGL_PHRASES = [
+    { it: "Solo ingredienti naturali: niente additivi chimici, niente conservanti artificiali.", de: "Nur natürliche Zutaten: keine chemischen Zusätze, keine künstlichen Konservierungsstoffe.", en: "Only natural ingredients: no chemical additives, no artificial preservatives.", es: "Solo ingredientes naturales: sin aditivos químicos ni conservantes artificiales.", fr: "Uniquement des ingrédients naturels : sans additifs chimiques ni conservateurs artificiels." },
+    { it: "Un pane più sano e digeribile, che rispetta il tuo intestino e i tempi della vera lievitazione.", de: "Ein gesünderes, bekömmlicheres Brot, das deinen Darm und die Zeiten echter Gärung respektiert.", en: "A healthier, more digestible bread that respects your gut and the times of real fermentation.", es: "Un pan más sano y digerible, que respeta tu intestino y los tiempos de la verdadera fermentación.", fr: "Un pain plus sain et digeste, qui respecte ton intestin et les temps d'une vraie fermentation." },
+    { it: "Sai sempre cosa mangi: trasparenza totale, come una volta.", de: "Du weißt immer, was du isst: völlige Transparenz, wie früher.", en: "You always know what you eat: total transparency, like the old days.", es: "Siempre sabes lo que comes: transparencia total, como antes.", fr: "Tu sais toujours ce que tu manges : transparence totale, comme autrefois." },
+    { it: "La forza della natura al posto della chimica: struttura, profumo e conservazione autentici.", de: "Die Kraft der Natur statt Chemie: authentische Struktur, Duft und Haltbarkeit.", en: "The power of nature instead of chemistry: authentic structure, aroma and shelf life.", es: "La fuerza de la naturaleza en lugar de la química: estructura, aroma y conservación auténticos.", fr: "La force de la nature au lieu de la chimie : structure, arôme et conservation authentiques." },
+  ];
+  useEffect(() => {
+    const id = setInterval(() => setMiglIdx((i) => (i + 1) % MIGL_PHRASES.length), 4500);
+    return () => clearInterval(id);
+  }, []);
 
   const recipe = RECIPES.find((r) => r.id === openId);
   const list = useMemo(() => (cat === "all" ? RECIPES : RECIPES.filter((r) => r.region === cat)), [cat]);
@@ -693,18 +706,33 @@ export default function RicetteCustodite({ initialId = null }) {
             </div>
           </div>
 
-          {/* Arma segreta: Miglioratore Naturale */}
-          <div className="mt-4 bg-[#8C4A27] rounded-2xl p-4 text-white flex items-start gap-3" data-testid="custodite-improver-note">
-            <ShieldCheck className="w-6 h-6 shrink-0 mt-0.5 text-[#f0c9a3]" />
-            <p className="text-sm leading-relaxed">
-              {L({
-                it: "La mia arma segreta è il Miglioratore Naturale MikiLab: senza di lui questa ricetta non riesce. Con questo sistema controllo meglio ciò che mangio.",
-                de: "Meine Geheimwaffe ist der natürliche MikiLab-Verbesserer: ohne ihn gelingt dieses Rezept nicht. So kontrolliere ich besser, was ich esse.",
-                en: "My secret weapon is the MikiLab Natural Improver: without it this recipe won't work. With this method I control better what I eat.",
-                es: "Mi arma secreta es el Mejorador Natural MikiLab: sin él esta receta no sale. Así controlo mejor lo que como.",
-                fr: "Mon arme secrète est l'Améliorant Naturel MikiLab : sans lui cette recette ne réussit pas. Ainsi je contrôle mieux ce que je mange.",
-              })}
+          {/* Arma segreta: Miglioratore Naturale — sistema didascalia (salute & naturalezza) */}
+          <div className="mt-4 bg-[#8C4A27] rounded-2xl p-4 text-white" data-testid="custodite-improver-note">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="w-6 h-6 shrink-0 mt-0.5 text-[#f0c9a3]" />
+              <p className="text-sm leading-relaxed">
+                {L({
+                  it: "La mia arma segreta è il Miglioratore Naturale MikiLab: senza di lui questa ricetta non riesce. Con questo sistema controllo meglio ciò che mangio.",
+                  de: "Meine Geheimwaffe ist der natürliche MikiLab-Verbesserer: ohne ihn gelingt dieses Rezept nicht. So kontrolliere ich besser, was ich esse.",
+                  en: "My secret weapon is the MikiLab Natural Improver: without it this recipe won't work. With this method I control better what I eat.",
+                  es: "Mi arma secreta es el Mejorador Natural MikiLab: sin él esta receta no sale. Así controlo mejor lo que como.",
+                  fr: "Mon arme secrète est l'Améliorant Naturel MikiLab : sans lui cette recette ne réussit pas. Ainsi je contrôle mieux ce que je mange.",
+                })}
+              </p>
+            </div>
+            <p key={miglIdx} data-testid="custodite-improver-rotating" className="text-[13px] leading-snug text-[#f7e6d3] italic mt-3 pl-9 animate-in fade-in duration-500">
+              “{L(MIGL_PHRASES[miglIdx])}”
             </p>
+            <div className="flex flex-wrap gap-1.5 mt-3 pl-9">
+              {[
+                { it: "🌿 100% Naturale", de: "🌿 100% Natürlich", en: "🌿 100% Natural", es: "🌿 100% Natural", fr: "🌿 100% Naturel" },
+                { it: "❤️ Più salutare", de: "❤️ Gesünder", en: "❤️ Healthier", es: "❤️ Más saludable", fr: "❤️ Plus sain" },
+                { it: "✨ Alta digeribilità", de: "✨ Gut bekömmlich", en: "✨ Highly digestible", es: "✨ Alta digestibilidad", fr: "✨ Haute digestibilité" },
+                { it: "🚫 Zero additivi chimici", de: "🚫 Keine Chemie", en: "🚫 No chemical additives", es: "🚫 Sin aditivos químicos", fr: "🚫 Sans additifs chimiques" },
+              ].map((chip, i) => (
+                <span key={i} data-testid={`migl-chip-${i}`} className="text-[11px] font-semibold bg-white/15 border border-white/25 rounded-full px-2.5 py-1">{L(chip)}</span>
+              ))}
+            </div>
           </div>
 
           {/* Adatta alle mie dosi */}
