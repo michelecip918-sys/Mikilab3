@@ -2195,3 +2195,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Piano giornaliero "solo per oggi"** (`capo-today-note`): nota sotto il toggle quando in modalità "Ordine di oggi" — spiega che è valido solo per oggi e non tocca il Piano Settimanale. 4 lingue.
 - **Box "Parti con impasto a tua scelta"** (`capo-weekly-start-box`): evidenziato (gradiente marrone + ring dorato), etichetta rinominata + nota esplicativa; opzioni raggruppate per categoria.
 - Verificato via screenshot/DOM; nessun errore compilazione. NB: serve Redeploy per la produzione.
+
+## v-fork.57 (2026-06) — Piano Settimanale: reset settimanale + reuse + promemoria; box extra evidenziato
+- **Reset settimanale** (`WeeklyPlan.jsx`): tag settimana ISO (`isoWeekKey`) in localStorage. Se il piano salvato è di una settimana precedente → lista riparte VUOTA + banner `weekly-newweek-banner` con "Usa il piano della scorsa settimana" (`weekly-use-lastweek`, da template salvato) o "Inizia da zero". Salvataggio aggiorna week + template.
+- **Promemoria salvataggio** (`weekly-save-reminder`): banner sempre visibile "salva prima di sabato"; più insistente Gio–Sab (nearWeekend).
+- **Box "Ordine extra di oggi" evidenziato** (`capo-extra-today`): cornice/gradiente forte, badge "ALL'ULTIMO MINUTO", descrizione più chiara. Verificato a schermo.
+- Compilazione OK. NB: i banner WeeklyPlan verificati via codice (non a schermo, richiede tool settimana/login); serve Redeploy per produzione.
+- IN SOSPESO (approvati "Next Action ok" ma non ancora costruiti per budget): Categoria in salvataggio ricetta, Icone categoria nelle liste, Filtro rapido categorie nel piano.

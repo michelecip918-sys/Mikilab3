@@ -1119,13 +1119,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         )}
         {/* Ordine EXTRA solo per oggi: si somma al piano di oggi senza modificare il Piano settimanale salvato */}
-        <div data-testid="capo-extra-today" className="mb-3 rounded-xl border border-[#C88A2B]/40 bg-[#C88A2B]/8 overflow-hidden">
+        <div data-testid="capo-extra-today" className="mb-3 rounded-xl border-2 border-[#C88A2B]/70 bg-gradient-to-br from-[#C88A2B]/15 to-[#B45309]/10 overflow-hidden shadow-sm ring-1 ring-[#C88A2B]/30">
           <button type="button" data-testid="capo-extra-toggle" onClick={() => { setExtraOpen((s) => !s); if (!extraOpen && extraToday.length === 0) setExtraToday([{ recipe_id: "", name: "", qty: "", unit: "pezzi" }]); }}
-            className="w-full flex items-center gap-2 px-3 py-2.5 text-left active:scale-[0.99] transition-transform">
-            <span className="w-7 h-7 rounded-lg bg-[#C88A2B] text-white flex items-center justify-center shrink-0"><Plus className="w-4 h-4" /></span>
+            className="w-full flex items-center gap-2 px-3 py-3 text-left active:scale-[0.99] transition-transform">
+            <span className="w-8 h-8 rounded-lg bg-[#C88A2B] text-white flex items-center justify-center shrink-0 shadow"><Plus className="w-4 h-4" /></span>
             <span className="min-w-0">
-              <span className="block text-[13px] font-bold text-[#7a4e12] dark:text-[#E4C98B] leading-tight">{tri3(lang, "Ordine extra di oggi", "Extra-Bestellung heute", "Extra order for today")}</span>
-              <span className="block text-[10.5px] text-[#7a4e12]/80 dark:text-[#E4C98B]/80 leading-snug">{tri3(lang, "Solo per oggi · si somma al piano, senza modificarlo", "Nur heute · wird addiert, ohne Änderung", "Today only · added on top, plan unchanged")}</span>
+              <span className="flex items-center gap-1.5 text-[13.5px] font-extrabold text-[#7a4e12] dark:text-[#E4C98B] leading-tight">
+                {tri3(lang, "Ordine extra di oggi", "Extra-Bestellung heute", "Extra order for today")}
+                <span className="text-[9px] font-extrabold text-white bg-[#B45309] px-1.5 py-0.5 rounded-full uppercase tracking-wide">{tri3(lang, "all'ultimo minuto", "last minute", "last minute")}</span>
+              </span>
+              <span className="block text-[10.5px] text-[#7a4e12]/80 dark:text-[#E4C98B]/80 leading-snug">{tri3(lang, "Ordini improvvisi? Aggiungili qui: si sommano al piano di oggi, senza modificare il Piano Settimanale.", "Spontane Bestellungen? Hier hinzufügen: wird addiert, ohne den Wochenplan zu ändern.", "Sudden orders? Add them here: added on top of today, without changing the Weekly Plan.")}</span>
             </span>
             {extraToday.filter((x) => x.recipe_id || x.name).length > 0 && (
               <span className="ml-auto text-[10px] font-extrabold text-white bg-[#C88A2B] px-2 py-0.5 rounded-full shrink-0">{extraToday.filter((x) => x.recipe_id || x.name).length}</span>

@@ -48,11 +48,23 @@ function recipeShelfDays(r) {
   return Math.max(1, Math.round(base * (1 + Math.min(h, 48) / 48 * 0.6)));
 }
 
+// Chiave settimana ISO (es. "2026-W35") per il reset settimanale del piano.
+function isoWeekKey(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(((date - yearStart) / 86400000 + 1) / 7);
+  return `${date.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
+}
+
 export default function WeeklyPlan() {
   const [recipes, setRecipes] = useState([]);
   const [items, setItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [salesPoints, setSalesPoints] = useState([]);
+  const [newWeek, setNewWeek] = useState(false);
+  const [lastTemplate, setLastTemplate] = useState([]);
   const { t, lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
 
@@ -72,7 +84,20 @@ export default function WeeklyPlan() {
           weeklyApi.get(),
         ]);
         setRecipes([...miki, ...personal]);
-        if (saved && saved.items) setItems(saved.items);
+        // Reset settimanale: se il piano salvato è di una settimana precedente,
+        // riparti da lista VUOTA e offri "Usa il piano della scorsa settimana".
+        const savedItems = (saved && saved.items) || [];
+        let storedWeek = "";
+        try { storedWeek = localStorage.getItem("mikilab_weekly_week") || ""; } catch { /* */ }
+        const cur = isoWeekKey(new Date());
+        if (savedItems.length && storedWeek && storedWeek !== cur) {
+          setLastTemplate(savedItems);
+          setItems([]);
+          setNewWeek(true);
+        } else {
+          setItems(savedItems);
+          if (savedItems.length && !storedWeek) { try { localStorage.setItem("mikilab_weekly_week", cur); } catch { /* */ } }
+        }
       } catch {
         toast.error(t("toast_load_error"));
       } finally {
@@ -125,12 +150,30 @@ export default function WeeklyPlan() {
   const save = async () => {
     try {
       await weeklyApi.save({ items: cleanItems() });
+      try {
+        localStorage.setItem("mikilab_weekly_week", isoWeekKey(new Date()));
+        localStorage.setItem("mikilab_weekly_template", JSON.stringify(cleanItems()));
+      } catch { /* */ }
+      setNewWeek(false);
       toast.success(t("toast_weekly_saved"));
       fireHighFive(t("toast_weekly_saved"));
     } catch {
       toast.error(t("toast_save_error"));
     }
   };
+
+  const useLastWeek = () => {
+    let tpl = lastTemplate;
+    if (!tpl.length) { try { tpl = JSON.parse(localStorage.getItem("mikilab_weekly_template") || "[]"); } catch { tpl = []; } }
+    if (!tpl.length) { toast.error(tri("Nessun piano salvato", "Kein gespeicherter Plan", "No saved plan")); return; }
+    setItems(tpl.map((it) => ({ ...it, id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}` })));
+    setNewWeek(false);
+    toast.success(tri("Piano della scorsa settimana caricato", "Plan der letzten Woche geladen", "Last week's plan loaded"));
+  };
+
+  // Giorni Gio–Sab: promemoria salvataggio più insistente prima del weekend.
+  const dow = new Date().getDay();
+  const nearWeekend = dow === 4 || dow === 5 || dow === 6;
 
   // Build the plan summary (days -> items with computed, up-to-date doses)
   const buildSummary = () => {
@@ -513,6 +556,28 @@ export default function WeeklyPlan() {
         <div className="mt-5 flex items-start gap-3 bg-[#B45309]/15 border border-[#B45309]/30 rounded-2xl p-4">
           <AlertTriangle className="w-5 h-5 text-[#8C4A27] shrink-0 mt-0.5" />
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{t("weekly_no_recipes")}</p>
+        </div>
+      )}
+
+      {loaded && newWeek && (
+        <div data-testid="weekly-newweek-banner" className="mt-4 rounded-2xl bg-gradient-to-br from-[#2f6a97] to-[#24303c] text-white p-4 shadow-md">
+          <p className="font-display text-base font-bold flex items-center gap-2"><CalendarDays className="w-5 h-5 text-[#9fd0ee]" /> {tri("Nuova settimana!", "Neue Woche!", "New week!")}</p>
+          <p className="text-[13px] text-white/85 mt-1 leading-snug">{tri("La lista riparte da zero. Vuoi ripartire dal piano che avevi salvato la scorsa settimana?", "Die Liste startet leer. Möchtest du den letzten gespeicherten Wochenplan wiederverwenden?", "The list starts empty. Do you want to reuse the plan you saved last week?")}</p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <button data-testid="weekly-use-lastweek" onClick={useLastWeek} className="bg-white text-[#24303c] font-bold text-sm px-4 py-2 rounded-xl active:scale-95 transition-all">{tri("Usa il piano della scorsa settimana", "Letzten Plan verwenden", "Use last week's plan")}</button>
+            <button data-testid="weekly-startfresh" onClick={() => setNewWeek(false)} className="bg-white/15 border border-white/30 text-white font-semibold text-sm px-4 py-2 rounded-xl active:scale-95 transition-all">{tri("Inizia da zero", "Leer beginnen", "Start fresh")}</button>
+          </div>
+        </div>
+      )}
+
+      {loaded && recipes.length > 0 && (
+        <div data-testid="weekly-save-reminder" className={`mt-4 flex items-start gap-2.5 rounded-2xl p-3.5 border ${nearWeekend ? "bg-[#B45309]/18 border-[#B45309]/50" : "bg-[#C88A2B]/12 border-[#C88A2B]/35"}`}>
+          <span className="text-lg leading-none">{nearWeekend ? "⏰" : "💾"}</span>
+          <p className="text-[13px] text-[#6E371C] dark:text-[#E4C98B] leading-snug font-semibold">
+            {nearWeekend
+              ? tri("Il weekend è vicino: ricordati di SALVARE il piano prima di sabato, così sarà pronto per la prossima settimana.", "Das Wochenende naht: SPEICHERE den Plan vor Samstag, damit er für nächste Woche bereit ist.", "Weekend is near: remember to SAVE the plan before Saturday so it's ready for next week.")
+              : tri("Ricordati di salvare il piano prima di sabato: potrai riusarlo la settimana prossima.", "Denk daran, den Plan vor Samstag zu speichern: nächste Woche wiederverwendbar.", "Remember to save the plan before Saturday: you can reuse it next week.")}
+          </p>
         </div>
       )}
 
