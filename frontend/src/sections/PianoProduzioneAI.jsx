@@ -899,7 +899,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {onOpenTool && (
           <div data-testid="capo-quicklinks" className="mb-4">
             <div className="flex items-center justify-between">
-              <p className="text-[10.5px] text-[#7E8A93]">{tri3(lang, "Passi base per generare il piano", "Basisschritte für den Plan", "Base steps to generate the plan")}</p>
+              <p className="text-[10.5px] text-[#7E8A93]">{tri3(lang, "Altri accessi rapidi", "Weitere Schnellzugriffe", "More quick links")}</p>
               <button data-testid="lab-tour-replay" onClick={() => setTourForce((n) => n + 1)}
                 className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] px-2.5 py-1 rounded-full border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] active:scale-95 transition-all">
                 <HelpCircle className="w-3.5 h-3.5" /> {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
@@ -907,9 +907,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
             <div className="grid grid-cols-2 gap-2 mt-2">
               {[
-                { id: "aggiungi", Icon: BookOpen, label: tri3(lang, "Inserisci Ricette", "Rezepte hinzufügen", "Add Recipes") },
                 { id: "lavoro", Icon: ChefHat, label: tri3(lang, "Piano Giornaliero", "Tagesplan", "Daily Plan") },
-                { id: "settimana", Icon: CalendarDays, label: tri3(lang, "Produzione Settimanale", "Wochenproduktion", "Weekly Production") },
                 { id: "metodo", Icon: Calculator, label: tri3(lang, "Calcolatore Idratazione", "Hydratation & Basis", "Hydration Calc") },
               ].map(({ id, Icon, label }) => (
                 <button key={id} data-testid={`capo-quickstart-${id}`} onClick={() => onOpenTool(id)}

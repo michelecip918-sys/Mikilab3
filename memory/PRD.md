@@ -2312,3 +2312,8 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
   - NESSUNA perdita dati/funzioni: tutti gli strumenti del laboratorio restano sotto il wizard. Dark theme, accenti arancio #FF6B00.
 - **Dark mode**: già forzata app-wide (classe `dark` in index.js); form/dialog usano varianti `dark:`. Community invariata (dark-compatibile).
 - Verificato a schermo (viewport 430px): wizard con Passo1=DONE, Passo2 sbloccato, Passo3 LOCKED; form ricetta senza "Pane".
+
+## v-fork.74 (2026-06) — Wizard arricchito + de-duplicazione Laboratorio
+- **LabWizard arricchito** (`components/LabWizard.jsx`): aggiunto conferma manuale "Segna come fatto" per step (utile soprattutto per il Passo 3 che non ha segnale automatico), badge "Fatto ✓", collapse/expand del percorso, e link "Ricomincia il percorso" (reset flag manuali in localStorage `mikilab_wizard_manual`). Completamento = segnale automatico (weekly items / ricette personali) OPPURE conferma manuale. Barra avanzamento mostra lo step attivo corretto.
+- **De-duplicazione** (richiesta utente "no doppioni"): rimossi da `capo-quicklinks` in `PianoProduzioneAI.jsx` i pulsanti "Inserisci Ricette" (aggiungi) e "Produzione Settimanale" (settimana) perché ora presenti nel wizard. Restano gli accessi unici "Piano Giornaliero" (lavoro) e "Calcolatore Idratazione" (metodo) + "Come si fa?". Nessuno strumento perso (tutti raggiungibili da wizard + menu strumenti). Caption → "Altri accessi rapidi".
+- Verificato a schermo: quickstart = solo [lavoro, metodo]; wizard con reset/collapse OK; nessun doppione visibile.
