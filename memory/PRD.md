@@ -2206,3 +2206,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v-fork.58 (2026-06) — Laboratorio: sezioni "INIZIA" + "SCEGLI ANCHE" unite
 - Le due sezioni ora sono UNA sola `<Section>` titolata "INIZIA — passi base e interruttori" (PianoProduzioneAI.jsx): in alto i 4 pulsanti (Inserisci Ricette, Piano Giornaliero, Produzione Settimanale, Calcolatore Metodo) + "Come si fa?", poi divisore, poi hint ON/OFF + griglia interruttori. Rimosso il blocco `capo-quicklinks` standalone. Verificato a schermo (IT), nessun errore compilazione.
 - DA COSTRUIRE (approvati "fai tutto", batch grande - prossimo turno): 1) Categoria+nome reale nel form di salvataggio ricetta; 2) Icone categoria nelle liste; 3) Filtro rapido categorie nel piano; 4) Piano settimanale suggerito dall'IA dai prodotti più frequenti.
+
+## v-fork.59 (2026-06) — Home: un solo ingresso al laboratorio (no doppioni)
+- Rimossa la ridondanza "due voci verso il laboratorio": per utenti LOGGATI il pulsante hero "Vai al tuo Laboratorio" è sostituito da un rimando al selettore "Scegli il tuo laboratorio" (Panetteria/Pizzeria/Pasticceria) = unico ingresso. Per OSPITI resta "Crea il tuo account gratis". (Home.jsx). Verificato a schermo, nessun errore.
+- BACKLOG APPROVATO (prossimo turno dedicato): 1) Categoria+nome reale nel salvataggio ricetta; 2) Filtro rapido categorie nel piano; 3) Icone categoria nelle liste; 4) Piano settimanale suggerito dall'IA.

@@ -310,11 +310,10 @@ export default function Home({ onNavigate }) {
                 <ChevronRight className="w-5 h-5" />
               </button>
             ) : (
-              <button data-testid="home-hero-cta" onClick={() => go("maestro")}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#8C4A27] text-white font-bold text-sm sm:text-base px-6 py-3.5 shadow-lg active:scale-97 transition-all">
-                {L("Vai al tuo Laboratorio", "Zu deiner Backstube", "Go to your Lab", "Ir a tu Laboratorio", "Aller à ton Laboratoire", "به آزمایشگاه خود بروید")}
-                <ChevronRight className="w-5 h-5" />
-              </button>
+              <p className="text-[13px] font-semibold text-[#8C4A27] flex items-center gap-1.5">
+                <ChevronDown className="w-4 h-4" />
+                {L("Scegli qui sotto il laboratorio con cui iniziare 👇", "Wähle unten dein Labor 👇", "Choose your lab below 👇", "Elige abajo tu laboratorio 👇", "Choisis ton laboratoire ci-dessous 👇", "آزمایشگاه خود را در زیر انتخاب کنید 👇")}
+              </p>
             )}
           </div>
         </div>
