@@ -2392,3 +2392,6 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **Sfida dal fumetto**: quando il suggerimento è "Prova la sfida della settimana" (home/impara) diventa un pulsante che apre il Motore Sfide (`mikilab-go-challenges`).
 - **Quiz polish** (`EvolvingQuiz.jsx`): sistemati i due gradienti piatti (diploma badge → oro→arancio; champion → arancio→arancio scuro). Verificato che il quiz funziona anche da OSPITE (le domande si generano via IA; solo la classifica richiede login) — nessun blocco reale.
 - Nota: utente ha detto "dopo pubblichiamo" → pronti al deploy quando confermi (primo deploy = 50 ECU, richiede tua conferma).
+
+## v-fork.86 (2026-06) — Puntino notifica sull'assistente
+- **Notifica sul fumetto** (`AvatarBubbles.jsx`): puntino arancione lampeggiante (`assistant-dot`, animate-pulse, ring sul fondo) sull'avatar di Mohammadreza quando c'è un suggerimento attivo (`hint`): piano settimanale non salvato (lab) o sfida della settimana da provare (home/impara). Verificato a schermo, 0 errori JS.
