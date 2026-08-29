@@ -202,7 +202,7 @@ export default function FermentazionePredittiva() {
       </div>
 
       <div data-testid="ferment-note" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 mb-4 flex items-start gap-2">
-        <Sparkles className="w-4 h-4 text-[#ffc700] shrink-0 mt-0.5" />
+        <Sparkles className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
           {est.Tf > 45 && <b className="text-[#E4572E]">{tri("Attenzione: oltre i 45°C il lievito muore. ", "Achtung: über 45°C stirbt die Hefe. ", "Warning: above 45°C the yeast dies. ", "Atención: por encima de 45°C la levadura muere. ")}</b>}
           {warm
@@ -220,7 +220,7 @@ export default function FermentazionePredittiva() {
         </button>
       ) : (
         <button data-testid="ferment-remind" onClick={startReminder}
-          className="w-full flex items-center justify-center gap-2 bg-[#ffc700] hover:bg-[#a66f20] text-white font-bold py-4 rounded-2xl active:scale-98 transition-all">
+          className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#a66f20] text-white font-bold py-4 rounded-2xl active:scale-98 transition-all">
           <Bell className="w-5 h-5" /> {tri("Avvisami quando è pronto", "Erinnere mich, wenn fertig", "Alert me when ready", "Avísame cuando esté lista")}
         </button>
       )}

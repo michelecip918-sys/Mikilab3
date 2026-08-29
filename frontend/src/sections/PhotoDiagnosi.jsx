@@ -200,7 +200,7 @@ export default function PhotoDiagnosi() {
         <HeroAvatar />
         <Camera className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("photo_title")}</h1>
-        <div className="h-1 w-12 rounded-full bg-[#ffc700] mt-1.5" />
+        <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("photo_subtitle")}</p>
         <button data-testid="diag-tour-replay" onClick={() => setTourForce((n) => n + 1)}
           className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold bg-white/15 hover:bg-white/25 backdrop-blur px-3 py-1.5 rounded-lg active:scale-95 transition-all">

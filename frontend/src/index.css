@@ -224,15 +224,15 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* Base: sfondo nero, testo chiaro */
 body { background:#121212; color:#E0E0E0; }
 /* Il testo statico che era diventato arancio/giallo torna BIANCO (leggibilità) */
-.text-\[\#ff6b00\], .text-\[\#FF6B00\], .text-\[\#ffc700\], .text-\[\#FFC700\],
+.text-\[\#ff6b00\], .text-\[\#FF6B00\], .text-\[\#ff6b00\], .text-\[\#ff6b00\],
 .text-\[\#ff8a33\], .text-\[\#FF8A33\], .text-\[\#c94f00\] { color:#FFFFFF !important; }
 /* ...ma se è DENTRO un elemento cliccabile (button/link) resta arancio/giallo come indicatore */
 button .text-\[\#ff6b00\], a .text-\[\#ff6b00\], button.text-\[\#ff6b00\], a.text-\[\#ff6b00\],
 button .text-\[\#FF6B00\], a .text-\[\#FF6B00\], button.text-\[\#FF6B00\], a.text-\[\#FF6B00\] { color:#FF6B00 !important; }
-button .text-\[\#ffc700\], a .text-\[\#ffc700\], button.text-\[\#ffc700\], a.text-\[\#ffc700\],
-button .text-\[\#FFC700\], a .text-\[\#FFC700\], button.text-\[\#FFC700\], a.text-\[\#FFC700\] { color:#FFC700 !important; }
+button .text-\[\#ff6b00\], a .text-\[\#ff6b00\], button.text-\[\#ff6b00\], a.text-\[\#ff6b00\],
+button .text-\[\#ff6b00\], a .text-\[\#ff6b00\], button.text-\[\#ff6b00\], a.text-\[\#ff6b00\] { color:#ff6b00 !important; }
 /* Affordance: ogni pulsante/link con sfondo arancione o giallo ha ombra netta */
 button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#FF6B00]"], a[class*="bg-[#FF6B00]"],
-button[class*="bg-[#ffc700]"], a[class*="bg-[#ffc700]"], button[class*="bg-[#FFC700]"], a[class*="bg-[#FFC700]"] {
+button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"] {
   box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 14px rgba(255,107,0,.28) !important;
 }

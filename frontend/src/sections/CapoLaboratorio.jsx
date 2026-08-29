@@ -52,7 +52,7 @@ export default function CapoLaboratorio() {
       <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
           <div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#ff6b00]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ffc700]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ff6b00]" />
         </div>
         <Cog className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{mkTri(lang)("Impostazione Macchine", "Maschinen einrichten", "Machine Setup")}</h1>

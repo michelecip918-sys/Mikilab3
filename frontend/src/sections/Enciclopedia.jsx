@@ -186,7 +186,7 @@ export default function Enciclopedia({ embedded = false }) {
         <div className="w-11 h-11 rounded-2xl bg-[#2f6a97] flex items-center justify-center"><BookOpen className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("enc_title")}</h1>
-          <div className="h-1 w-10 rounded-full bg-[#ffc700] my-1" />
+          <div className="h-1 w-10 rounded-full bg-[#ff6b00] my-1" />
           <p className="text-sm text-[#7E8A93]">{t("enc_sub")}</p>
         </div>
       </div>

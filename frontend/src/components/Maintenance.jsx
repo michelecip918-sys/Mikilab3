@@ -8,7 +8,7 @@ export default function Maintenance() {
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-full h-full object-cover" />
         </div>
         <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-white mt-6 tracking-tight">MikiLab</h1>
-        <div className="h-1.5 w-40 mx-auto my-5 rounded-full" style={{ background: "linear-gradient(90deg,#D4AF37,#ffc700)" }} />
+        <div className="h-1.5 w-40 mx-auto my-5 rounded-full" style={{ background: "linear-gradient(90deg,#D4AF37,#ff6b00)" }} />
         <p className="text-xl sm:text-2xl font-semibold text-[#EAF0EC]">Mikilab sta arrivando.</p>
         <p className="text-base text-white/75 mt-2">Sito in manutenzione.</p>
         <p className="text-sm text-white/50 mt-8">© {new Date().getFullYear()} MikiLab · mikilab.de</p>

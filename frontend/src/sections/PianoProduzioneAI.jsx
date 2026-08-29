@@ -351,7 +351,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               </button>
               <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onClick={(e) => { e.stopPropagation(); togglePinTool(id); }}
-                className={`w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#ffc700] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ffc700]"}`}>
+                className={`w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00]"}`}>
                 <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
               </button>
             </div>
@@ -364,7 +364,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <>
             <button type="button" data-testid={`tool-fav-${id}`} aria-label="favorite"
               onClick={(e) => { e.stopPropagation(); const was = (toolPrefs.pinned || []).includes(id); togglePinTool(id); toast.success(was ? tri3(lang, "Rimosso dai preferiti", "Aus Favoriten entfernt", "Removed from favorites") : tri3(lang, "Aggiunto ai preferiti ⭐", "Zu Favoriten hinzugefügt ⭐", "Added to favorites ⭐")); }}
-              className={`absolute top-1 left-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#ffc700] text-white" : "bg-[#ffc700]/12 text-[#ffc700]"}`}>
+              className={`absolute top-1 left-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#ff6b00] text-white" : "bg-[#ff6b00]/12 text-[#ff6b00]"}`}>
               <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
               {id === "generatore" && !toolUsage[id] && (
                 <span data-testid={`tool-new-${id}`} className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff6b00] border border-white animate-pulse" title={tri3(lang, "Nuovo", "Neu", "New")} />
@@ -373,7 +373,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             {guideFor(id, lang) && (
               <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
                 onClick={(e) => { e.stopPropagation(); openGuide(id); }}
-                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#ffc700] flex items-center justify-center text-white shadow-sm ring-2 ring-white dark:ring-[#1e1e1e] active:scale-90">
+                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-[#ff6b00] flex items-center justify-center text-white shadow-sm ring-2 ring-white dark:ring-[#1e1e1e] active:scale-90">
                 <Info className="w-3.5 h-3.5" />
               </button>
             )}
@@ -403,7 +403,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
         </button>
         <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onPointerDown={stop} onClick={(e) => { stop(e); togglePinTool(id); }}
-          className={`w-7 h-7 rounded-full flex items-center justify-center active:scale-90 shrink-0 ${isPinned ? "bg-[#ffc700] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ffc700]"}`}>
+          className={`w-7 h-7 rounded-full flex items-center justify-center active:scale-90 shrink-0 ${isPinned ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00]"}`}>
           <Star className={`w-3.5 h-3.5 ${isPinned ? "fill-white" : ""}`} />
         </button>
         <div className="flex flex-col shrink-0">
@@ -850,7 +850,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       )}
 
       {(mixers.length === 0 || cells.length === 0) && modules.celle && (
-        <div data-testid="capo-setup-hint" className="mb-4 rounded-2xl bg-[#ffc700]/12 border border-[#ffc700]/35 p-3.5">
+        <div data-testid="capo-setup-hint" className="mb-4 rounded-2xl bg-[#ff6b00]/12 border border-[#ff6b00]/35 p-3.5">
           <p className="text-sm text-[#ff6b00] dark:text-[#8FB0C2] leading-snug">
             {(() => {
               const miss = [];
@@ -868,7 +868,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </p>
           {onOpenTool && (
             <button data-testid="capo-setup-hint-btn" onClick={() => onOpenTool("capo")}
-              className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#ffc700] hover:bg-[#b3781f] px-3 py-1.5 rounded-lg active:scale-95 transition-all">
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#ff6b00] hover:bg-[#b3781f] px-3 py-1.5 rounded-lg active:scale-95 transition-all">
               <Snowflake className="w-3.5 h-3.5" /> {tri3(lang, "Configura ora", "Jetzt einrichten", "Set up now")}
             </button>
           )}
@@ -926,9 +926,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <Settings2 className="w-4 h-4 text-[#ff6b00]" />
           <h3 className="font-display text-lg font-bold text-[#ff6b00]">{tri3(lang, "Impostazioni Avanzate IA", "Erweiterte KI-Einstellungen", "Advanced AI Settings", "Ajustes avanzados IA")}</h3>
         </div>
-        <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#ffc700]/15 border border-[#ffc700]/45 px-3 py-2.5">
+        <div data-testid="capo-modules-hint" className="mb-3 flex items-center gap-2 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/45 px-3 py-2.5">
           <SlidersHorizontal className="w-4 h-4 text-[#ff6b00] shrink-0" />
-          <p className="text-[12px] font-bold text-[#ffc700] dark:text-[#ffc700] leading-snug">
+          <p className="text-[12px] font-bold text-[#ff6b00] dark:text-[#ff6b00] leading-snug">
             {tri3(lang,
               "👆 Filtri di calcolo: accendi solo ciò che vuoi che l'IA consideri nel piano (turni, macchine, forni, pause notturne…). Tocca la «i» per la spiegazione. Il piano base (ricette + quantità) si genera comunque.",
               "👆 Berechnungsfilter: aktiviere nur, was die KI im Plan berücksichtigen soll (Schichten, Maschinen, Öfen, Nachtpausen…). Tippe auf „i“ für die Erklärung. Der Basisplan wird trotzdem erstellt.",
@@ -950,7 +950,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <span className={`absolute top-1.5 left-1.5 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
                 <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
                   onClick={(e) => { e.stopPropagation(); openGuide(id); }}
-                  className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 shadow-sm ring-2 ${on ? "bg-white text-[#ff6b00] ring-[#ff6b00]" : "bg-[#ffc700] text-white ring-white dark:ring-[#1e1e1e]"}`}>
+                  className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 shadow-sm ring-2 ${on ? "bg-white text-[#ff6b00] ring-[#ff6b00]" : "bg-[#ff6b00] text-white ring-white dark:ring-[#1e1e1e]"}`}>
                   <Info className="w-3.5 h-3.5" />
                 </button>
                 <Icon className={`w-5 h-5 ${on ? "text-white" : "text-[#9aa4ac]"}`} />
@@ -970,7 +970,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
       <Section order={3} icon={<Wrench className="w-4 h-4" />} title={tri3(lang, "Apri anche altri strumenti", "Weitere Werkzeuge öffnen", "Open other tools")}>
         <div className="mb-3 rounded-xl bg-[#f7efe0] dark:bg-[#2a2418] border border-[#e5d4b0] dark:border-[#4a3f28] p-2.5 flex items-start gap-2">
-          <span className="w-5 h-5 rounded-full bg-[#ffc700] flex items-center justify-center text-white shrink-0 mt-0.5"><Info className="w-3 h-3" /></span>
+          <span className="w-5 h-5 rounded-full bg-[#ff6b00] flex items-center justify-center text-white shrink-0 mt-0.5"><Info className="w-3 h-3" /></span>
           <p className="text-[11px] text-[#7a5a1f] dark:text-[#d3ab6b] leading-snug">{tri3(lang, "Tocca la «i» dorata su ogni strumento: Mohammadreza ti spiega a cosa serve (con un suono). Poi tocca lo strumento per aprirlo.", "Tippe auf das goldene „i“ auf jedem Werkzeug: Mohammadreza erklärt es dir (mit Ton). Dann tippe auf das Werkzeug, um es zu öffnen.", "Tap the golden 'i' on each tool: Mohammadreza explains what it's for (with a sound). Then tap the tool to open it.")}</p>
         </div>
         {onOpenTool && (
@@ -982,7 +982,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               const pct = Math.round((discovered / total) * 100);
               const done = discovered >= total;
               return (
-                <div data-testid="tools-discovery" className={`mb-3 rounded-2xl border p-3 ${done ? "bg-[#ff6b00]/10 border-[#ff6b00]/40" : "bg-[#ffc700]/10 border-[#ffc700]/40"}`}>
+                <div data-testid="tools-discovery" className={`mb-3 rounded-2xl border p-3 ${done ? "bg-[#ff6b00]/10 border-[#ff6b00]/40" : "bg-[#ff6b00]/10 border-[#ff6b00]/40"}`}>
                   <div className="flex items-center justify-between mb-1.5">
                     <p className="text-[12px] font-bold text-[#2B303B] dark:text-[#e4eff8]">
                       {done
@@ -992,7 +992,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     <span data-testid="tools-discovery-pct" className={`text-[12px] font-extrabold ${done ? "text-[#336a94]" : "text-[#ff6b00]"}`}>{pct}%</span>
                   </div>
                   <div className="h-2 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
-                    <div className={`h-full rounded-full transition-all duration-500 ${done ? "bg-[#ff6b00]" : "bg-[#ffc700]"}`} style={{ width: `${pct}%` }} />
+                    <div className={`h-full rounded-full transition-all duration-500 ${done ? "bg-[#ff6b00]" : "bg-[#ff6b00]"}`} style={{ width: `${pct}%` }} />
                   </div>
                   {!done && (
                     <p className="text-[10.5px] text-[#7E8A93] mt-1.5">{tri3(lang, `Apri quelli con il pallino «NUOVO»: ne restano ${total - discovered}.`, `Öffne die mit „NEU“: noch ${total - discovered} übrig.`, `Open the ones marked 'NEW': ${total - discovered} left.`)}</p>
@@ -1007,7 +1007,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               const unpin = (id) => { togglePinTool(id); toast.success(tri3(lang, "Rimosso dai preferiti", "Aus Favoriten entfernt", "Removed from favorites")); };
               return (
                 <div data-testid="tools-favorites" className="mb-3">
-                  <p className="mb-1.5"><span className="font-display text-lg font-bold text-[#ffc700]">⭐ {tri3(lang, "I tuoi preferiti", "Deine Favoriten", "Your favorites", "Tus favoritos")}</span><span className="text-[11px] font-semibold text-[#7E8A93]">{pinnedFavs.length > 1 ? ` · ${tri3(lang, "trascina per ordinare · tocca la stella per togliere", "ziehen zum Sortieren · Stern zum Entfernen", "drag to reorder · tap star to remove")}` : ` · ${tri3(lang, "tocca la stella per togliere", "Stern zum Entfernen", "tap star to remove")}`}</span></p>
+                  <p className="mb-1.5"><span className="font-display text-lg font-bold text-[#ff6b00]">⭐ {tri3(lang, "I tuoi preferiti", "Deine Favoriten", "Your favorites", "Tus favoritos")}</span><span className="text-[11px] font-semibold text-[#7E8A93]">{pinnedFavs.length > 1 ? ` · ${tri3(lang, "trascina per ordinare · tocca la stella per togliere", "ziehen zum Sortieren · Stern zum Entfernen", "drag to reorder · tap star to remove")}` : ` · ${tri3(lang, "tocca la stella per togliere", "Stern zum Entfernen", "tap star to remove")}`}</span></p>
                   <Reorder.Group as="div" axis="x" values={pinnedIds} onReorder={(ids) => savePrefs({ ...toolPrefs, pinned: ids })}
                     className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
                     {pinnedFavs.map(({ id, Icon, it, de, en }) => (
@@ -1016,13 +1016,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                         onDragStart={() => { favDragMoved.current = true; }}
                         onContextMenu={(e) => { e.preventDefault(); unpin(id); }}
                         onClick={() => { if (favDragMoved.current) { favDragMoved.current = false; return; } openToolTracked(id); }}
-                        className="relative shrink-0 w-[104px] flex flex-col items-center justify-center gap-1.5 bg-[#ffc700]/12 border border-[#ffc700]/50 rounded-2xl p-3 pt-6 min-h-[70px] cursor-grab active:cursor-grabbing select-none">
+                        className="relative shrink-0 w-[104px] flex flex-col items-center justify-center gap-1.5 bg-[#ff6b00]/12 border border-[#ff6b00]/50 rounded-2xl p-3 pt-6 min-h-[70px] cursor-grab active:cursor-grabbing select-none">
                         <button type="button" data-testid={`fav-remove-${id}`} aria-label="remove favorite"
                           onClick={(e) => { e.stopPropagation(); unpin(id); }} onPointerDown={(e) => e.stopPropagation()}
-                          className="absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center bg-[#ffc700] active:scale-90">
+                          className="absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center bg-[#ff6b00] active:scale-90">
                           <Star className="w-3.5 h-3.5 text-white fill-white" />
                         </button>
-                        <Icon className="w-5 h-5 text-[#ffc700]" />
+                        <Icon className="w-5 h-5 text-[#ff6b00]" />
                         <span className="text-[11px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] text-center">{tri3(lang, it, de, en)}</span>
                       </Reorder.Item>
                     ))}
@@ -1056,7 +1056,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
             {!editTools && !toolQuery.trim() && suggestedTools.length > 0 && (
               <div data-testid="tools-suggested" className="mb-4">
-                <p className="font-display text-lg font-bold text-[#ffc700] mb-2">{tri3(lang, "Suggeriti per te", "Für dich empfohlen", "Suggested for you", "Sugeridos para ti")}</p>
+                <p className="font-display text-lg font-bold text-[#ff6b00] mb-2">{tri3(lang, "Suggeriti per te", "Für dich empfohlen", "Suggested for you", "Sugeridos para ti")}</p>
                 <div className="grid grid-cols-3 gap-2">
                   {suggestedTools.map((tl) => renderToolCard(tl))}
                 </div>
@@ -1178,19 +1178,19 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         )}
         {/* Ordine EXTRA solo per oggi: si somma al piano di oggi senza modificare il Piano settimanale salvato */}
-        <div data-testid="capo-extra-today" className="mb-3 rounded-xl border-2 border-[#ffc700]/70 bg-gradient-to-br from-[#ffc700]/15 to-[#ff6b00]/10 overflow-hidden shadow-sm ring-1 ring-[#ffc700]/30">
+        <div data-testid="capo-extra-today" className="mb-3 rounded-xl border-2 border-[#ff6b00]/70 bg-gradient-to-br from-[#ff6b00]/15 to-[#ff6b00]/10 overflow-hidden shadow-sm ring-1 ring-[#ff6b00]/30">
           <button type="button" data-testid="capo-extra-toggle" onClick={() => { setExtraOpen((s) => !s); if (!extraOpen && extraToday.length === 0) setExtraToday([{ recipe_id: "", name: "", qty: "", unit: "pezzi" }]); }}
             className="w-full flex items-center gap-2 px-3 py-3 text-left active:scale-[0.99] transition-transform">
-            <span className="w-8 h-8 rounded-lg bg-[#ffc700] text-white flex items-center justify-center shrink-0 shadow"><Plus className="w-4 h-4" /></span>
+            <span className="w-8 h-8 rounded-lg bg-[#ff6b00] text-white flex items-center justify-center shrink-0 shadow"><Plus className="w-4 h-4" /></span>
             <span className="min-w-0">
-              <span className="flex items-center gap-1.5 text-[13.5px] font-extrabold text-[#ffc700] dark:text-[#ffc700] leading-tight">
+              <span className="flex items-center gap-1.5 text-[13.5px] font-extrabold text-[#ff6b00] dark:text-[#ff6b00] leading-tight">
                 {tri3(lang, "Ordine extra di oggi", "Extra-Bestellung heute", "Extra order for today")}
                 <span className="text-[9px] font-extrabold text-white bg-[#ff6b00] px-1.5 py-0.5 rounded-full uppercase tracking-wide">{tri3(lang, "all'ultimo minuto", "last minute", "last minute")}</span>
               </span>
-              <span className="block text-[10.5px] text-[#ffc700]/80 dark:text-[#ffc700]/80 leading-snug">{tri3(lang, "Ordini improvvisi? Aggiungili qui: si sommano al piano di oggi, senza modificare il Piano Settimanale.", "Spontane Bestellungen? Hier hinzufügen: wird addiert, ohne den Wochenplan zu ändern.", "Sudden orders? Add them here: added on top of today, without changing the Weekly Plan.")}</span>
+              <span className="block text-[10.5px] text-[#ff6b00]/80 dark:text-[#ff6b00]/80 leading-snug">{tri3(lang, "Ordini improvvisi? Aggiungili qui: si sommano al piano di oggi, senza modificare il Piano Settimanale.", "Spontane Bestellungen? Hier hinzufügen: wird addiert, ohne den Wochenplan zu ändern.", "Sudden orders? Add them here: added on top of today, without changing the Weekly Plan.")}</span>
             </span>
             {extraToday.filter((x) => x.recipe_id || x.name).length > 0 && (
-              <span className="ml-auto text-[10px] font-extrabold text-white bg-[#ffc700] px-2 py-0.5 rounded-full shrink-0">{extraToday.filter((x) => x.recipe_id || x.name).length}</span>
+              <span className="ml-auto text-[10px] font-extrabold text-white bg-[#ff6b00] px-2 py-0.5 rounded-full shrink-0">{extraToday.filter((x) => x.recipe_id || x.name).length}</span>
             )}
           </button>
           {extraOpen && (
@@ -1199,22 +1199,22 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <div key={i} className="flex items-center gap-2">
                   <select data-testid={`capo-extra-recipe-${i}`} value={p.recipe_id || ""}
                     onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                    className="flex-1 min-w-0 bg-white dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ffc700]">
+                    className="flex-1 min-w-0 bg-white dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
                     <option value="">{t("capo_pick_recipe")}</option>
                     {renderAllOptions(recipes)}
                   </select>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
                       onChange={(e) => setExtraToday((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-                      className="w-full bg-white dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 pr-9 text-sm outline-none focus:border-[#ffc700]" />
+                      className="w-full bg-white dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 pr-9 text-sm outline-none focus:border-[#ff6b00]" />
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
                   </div>
                   <button type="button" data-testid={`capo-extra-remove-${i}`} onClick={() => setExtraToday((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>
                 </div>
               ))}
               <button type="button" data-testid="capo-extra-add" onClick={() => setExtraToday((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi" }])}
-                className="text-sm font-medium text-[#ffc700] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
-              <p className="text-[11px] text-[#ffc700]/80 dark:text-[#ffc700]/80 leading-snug">
+                className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+              <p className="text-[11px] text-[#ff6b00]/80 dark:text-[#ff6b00]/80 leading-snug">
                 {tri3(lang, "L'IA aggiungerà una sezione «⭐ Solo per oggi» con impasti e infornate extra, senza toccare il tuo Piano settimanale.",
                   "Die KI fügt einen Abschnitt «⭐ Nur heute» hinzu, ohne den Wochenplan zu ändern.",
                   "The AI will add a '⭐ Today only' section with the extra work, without changing your Weekly Plan.")}
@@ -1223,8 +1223,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           )}
         </div>
         {useWeekly && weeklyItems.length === 0 && (
-          <div data-testid="capo-weekly-empty" className="mb-3 rounded-xl bg-[#ffc700]/12 border border-[#ffc700]/40 px-3 py-2.5">
-            <p className="text-[12px] text-[#ffc700] dark:text-[#ffc700] leading-snug mb-2">
+          <div data-testid="capo-weekly-empty" className="mb-3 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/40 px-3 py-2.5">
+            <p className="text-[12px] text-[#ff6b00] dark:text-[#ff6b00] leading-snug mb-2">
               {tri3(lang,
                 "Non hai ancora un Piano Settimanale. Creane uno per generare da lì (potrai modificarlo quando vuoi).",
                 "Du hast noch keinen Wochenplan. Erstelle einen, um daraus zu generieren (jederzeit änderbar).",
@@ -1232,7 +1232,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </p>
             {onOpenTool && (
               <button data-testid="capo-weekly-create" onClick={() => onOpenTool("settimana")}
-                className="w-full flex items-center justify-center gap-2 bg-[#ffc700] text-white font-bold py-2 rounded-xl active:scale-98 transition-all text-sm">
+                className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-bold py-2 rounded-xl active:scale-98 transition-all text-sm">
                 <CalendarDays className="w-4 h-4" /> {tri3(lang, "Apri Produzione Settimanale", "Wochenproduktion öffnen", "Open Weekly Production")}
               </button>
             )}
@@ -1341,7 +1341,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             {savedProducts.length > 0 && (
               <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec] bg-[#ff6b00]/12 border border-[#ff6b00]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
             )}
-            <button data-testid="capo-suggest-frequent" onClick={suggestFromFrequent} className="text-sm font-semibold text-white bg-gradient-to-br from-[#ffc700] to-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Suggerisci dai più usati", "Aus meistgenutzten vorschlagen", "Suggest from most-used", "Sugerir de los más usados")}</button>
+            <button data-testid="capo-suggest-frequent" onClick={suggestFromFrequent} className="text-sm font-semibold text-white bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Suggerisci dai più usati", "Aus meistgenutzten vorschlagen", "Suggest from most-used", "Sugerir de los más usados")}</button>
           </div>
           <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
             <Flag className="w-3.5 h-3.5 text-[#1c1c1c] shrink-0 mt-0.5" />
@@ -1350,9 +1350,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               "Choose the dough to start from: tap 'Start here'. The AI will sequence the work starting from it.")}
           </p>
           {!isAdmin && !recipes.some((r) => !r._own) && (
-            <div data-testid="capo-mikilab-buy-hint" className="mt-2 rounded-xl border border-[#ffc700]/40 bg-[#ffc700]/10 p-3 flex items-start gap-2">
-              <BookOpen className="w-4 h-4 text-[#ffc700] shrink-0 mt-0.5" />
-              <p className="text-xs text-[#5b4a2a] dark:text-[#ffc700] leading-snug">
+            <div data-testid="capo-mikilab-buy-hint" className="mt-2 rounded-xl border border-[#ff6b00]/40 bg-[#ff6b00]/10 p-3 flex items-start gap-2">
+              <BookOpen className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
+              <p className="text-xs text-[#5b4a2a] dark:text-[#ff6b00] leading-snug">
                 {tri3(lang,
                   "Qui usi le TUE ricette (scansionate o scritte a mano). Vuoi usare anche le ricette di MikiLab nel piano? Acquistale nella sezione «Ricette» e compariranno qui.",
                   "Hier verwendest du DEINE Rezepte (gescannt oder handschriftlich). Möchtest du auch MikiLab-Rezepte im Plan nutzen? Kaufe sie im Bereich „Rezepte“, dann erscheinen sie hier.",
@@ -1394,7 +1394,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                       className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#ff6b00]/12 border border-[#ff6b00]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#242424] border border-transparent"}`}>
                       {sel ? <CheckCircle2 className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#2b2b2b] dark:border-[#4a5560] shrink-0" />}
                       <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{recipeTitle(r, lang)}</span>
-                      {r._own && <span className="text-[10px] text-[#ffc700]">★</span>}
+                      {r._own && <span className="text-[10px] text-[#ff6b00]">★</span>}
                     </button>
                   );
                 })}
@@ -1457,7 +1457,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 "Ciao Mohammadreza, l'impasto di oggi non è venuto come volevo (dimmi tu quali difetti controllare: struttura, idratazione, lievitazione, cottura). Analizza le possibili cause e correggi la ricetta e i tempi per la prossima volta: idratazione, temperatura dell'acqua, dosi di prefermento, durata di puntata e appretto. Dammi la versione corretta pronta da usare.",
                 "Hallo Mohammadreza, der heutige Teig ist nicht wie gewünscht geworden (sag mir, welche Fehler ich prüfen soll: Struktur, Hydratation, Gare, Backen). Analysiere die möglichen Ursachen und korrigiere Rezept und Zeiten für das nächste Mal: Hydratation, Wassertemperatur, Vorteigmengen, Stock- und Stückgare. Gib mir die korrigierte, einsatzbereite Version.",
                 "Hi Mohammadreza, today's dough didn't turn out as I wanted (tell me which faults to check: structure, hydration, proofing, baking). Analyse the possible causes and correct the recipe and timings for next time: hydration, water temperature, preferment amounts, bulk and final proof. Give me the corrected version ready to use."))}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#ffc700] bg-[#ffc700]/10 border border-[#ffc700]/30 px-2.5 py-1 rounded-full active:scale-95">
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#ff6b00] bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2.5 py-1 rounded-full active:scale-95">
               <Sparkles className="w-3 h-3" /> {tri3(lang, "Correggi la ricetta", "Rezept korrigieren", "Fix the recipe")}
             </button>
             <button type="button" data-testid="capo-cmd-domani"
@@ -1594,7 +1594,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </button>
             {!generating && (
               <button data-testid="capo-voice" onClick={() => setPlanHF(true)}
-                className="no-print mt-2 w-full bg-[#ffc700] hover:bg-[#a66f20] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+                className="no-print mt-2 w-full bg-[#ff6b00] hover:bg-[#a66f20] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
                 <ChefHat className="w-5 h-5" /> {tri3(lang, "Leggi il piano a voce (mani libere)", "Plan vorlesen (Hände frei)", "Read the plan aloud (hands-free)", "Leer el plan en voz alta (manos libres)")}
               </button>
             )}
@@ -1606,7 +1606,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <div className="print-area mt-4 space-y-4">
               <PrintHeader title={tri3(lang, "Piano di Produzione", "Produktionsplan", "Production Plan", "Plan de Producción")} lang={lang} />
               {bakerNote.trim() && (
-                <div data-testid="capo-baker-note-print" className="print-table rounded-xl border border-[#ffc700]/40 bg-[#ffc700]/8 px-3 py-2.5">
+                <div data-testid="capo-baker-note-print" className="print-table rounded-xl border border-[#ff6b00]/40 bg-[#ff6b00]/8 px-3 py-2.5">
                   <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1">{tri3(lang, "Note del fornaio", "Notizen des Bäckers", "Baker's notes", "Notas del panadero")}</p>
                   <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-wrap leading-relaxed">{bakerNote}</p>
                 </div>
@@ -1752,18 +1752,18 @@ function RecipePrint({ r, lang }) {
 }
 
 function Section({ icon, title, children, highlight, badge, order }) {
-  const ACCENTS = { 1: "#ff6b00", 2: "#ffc700", 3: "#2e8b6f", 4: "#ff6b00", 5: "#ff6b00" };
+  const ACCENTS = { 1: "#ff6b00", 2: "#ff6b00", 3: "#2e8b6f", 4: "#ff6b00", 5: "#ff6b00" };
   const accent = ACCENTS[order] || "#ff6b00";
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} style={order ? { order } : undefined}
       className={`relative mb-4 rounded-2xl p-4 pl-5 overflow-hidden ${highlight
-        ? "bg-white dark:bg-[#1e1e1e] border-2 border-[#ffc700] shadow-lg shadow-[#ffc700]/20 ring-1 ring-[#ffc700]/30"
+        ? "bg-white dark:bg-[#1e1e1e] border-2 border-[#ff6b00] shadow-lg shadow-[#ff6b00]/20 ring-1 ring-[#ff6b00]/30"
         : "bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
       <span className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: accent }} />
       <div className="flex items-center gap-2.5 mb-3">
         <span className="w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0" style={{ background: accent }}>{icon}</span>
         <h2 className="font-display text-[17px] font-bold leading-tight" style={{ color: accent }}>{title}</h2>
-        {badge && <span className="ml-auto text-[10px] font-extrabold uppercase tracking-wide text-white bg-[#ffc700] px-2 py-0.5 rounded-full shadow">{badge}</span>}
+        {badge && <span className="ml-auto text-[10px] font-extrabold uppercase tracking-wide text-white bg-[#ff6b00] px-2 py-0.5 rounded-full shadow">{badge}</span>}
       </div>
       {children}
     </motion.div>

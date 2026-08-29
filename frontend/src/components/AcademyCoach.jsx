@@ -126,7 +126,7 @@ export default function AcademyCoach() {
 
   return (
     <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e]">
-      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 55%,#ffc700)" }}>
+      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 55%,#ff6b00)" }}>
         <div className="w-11 h-11 rounded-xl bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
           <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
@@ -172,7 +172,7 @@ export default function AcademyCoach() {
                   ) : <p className="whitespace-pre-line">{m.content}</p>}
                   {m.role === "assistant" && m.content && !busy && hasTimeline(m.content) && (
                     <button data-testid={`academy-save-timeline-${i}`} data-sfx="save" onClick={() => saveTimeline(m.content)}
-                      className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-[#ffc700] hover:bg-[#ff6b00] px-3 py-1.5 rounded-full active:scale-95">
+                      className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-[#ff6b00] hover:bg-[#ff6b00] px-3 py-1.5 rounded-full active:scale-95">
                       <BellRing className="w-3.5 h-3.5" /> {tri("Salva nei promemoria", "In Erinnerungen speichern", "Save to reminders", "Guardar en recordatorios")}
                     </button>
                   )}
@@ -190,7 +190,7 @@ export default function AcademyCoach() {
           {speechSupported && (
             <button data-testid="academy-coach-mic" onClick={startListening} disabled={busy}
               title={tri("Parla con Mohammadreza", "Mit Mohammadreza sprechen", "Talk to Mohammadreza", "Habla con Mohammadreza")}
-              className={`w-11 h-11 rounded-full flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0 transition-all ${listening ? "bg-[#ff6b00] animate-pulse text-white" : "bg-[#ffc700] hover:bg-[#ff6b00] text-white"}`}>
+              className={`w-11 h-11 rounded-full flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0 transition-all ${listening ? "bg-[#ff6b00] animate-pulse text-white" : "bg-[#ff6b00] hover:bg-[#ff6b00] text-white"}`}>
               <Mic className="w-5 h-5" />
             </button>
           )}

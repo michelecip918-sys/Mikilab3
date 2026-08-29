@@ -182,7 +182,7 @@ const FEATURES = [
     de: ["Gärungs-Prognose", "Sagt dir, wie lange die Gare heute dauert (mit Wetter) und meldet sich, wenn der Teig fertig ist."],
     en: ["Fermentation Forecast", "Tells you how long proofing takes today (using the weather) and alerts you when the dough is ready."],
     es: ["Fermentación Predictiva", "Te dice cuánto leudará hoy (con el clima) y te avisa cuando la masa está lista."] },
-  { icon: Hand, color: "#ffc700",
+  { icon: Hand, color: "#ff6b00",
     it: ["Mani in Pasta & Timeline", "Leggi le ricette a voce con le mani libere e vedi la linea del tempo con gli orari a ritroso dallo sforno."],
     de: ["Hände im Teig & Zeitplan", "Rezepte freihändig vorlesen lassen und den Zeitplan rückwärts ab dem Ausbacken sehen."],
     en: ["Hands-free & Timeline", "Have recipes read aloud hands-free and see the timeline with times counted back from baking."],
@@ -293,7 +293,7 @@ export default function Home({ onNavigate }) {
 
       {/* HERO — 100% gratis (lead magnet: account gratuito) */}
       <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#e4d6bd]"
-        style={{ background: "linear-gradient(135deg,#f7efe0 0%,#efe2cb 55%,#ffc700 100%)" }}>
+        style={{ background: "linear-gradient(135deg,#f7efe0 0%,#efe2cb 55%,#ff6b00 100%)" }}>
         <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
         <div className="relative">
           <span data-testid="home-hero-badge" className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#3a6b3a] bg-[#dff0dd] border border-[#8fbf8f] rounded-full px-3 py-1 mb-3">
@@ -371,7 +371,7 @@ export default function Home({ onNavigate }) {
 
       {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
       {isChampion && (
-        <div data-testid="home-champion-banner" className="rounded-2xl p-4 text-white shadow-md flex items-center gap-3" style={{ background: "linear-gradient(135deg,#ffc700,#7a531d)" }}>
+        <div data-testid="home-champion-banner" className="rounded-2xl p-4 text-white shadow-md flex items-center gap-3" style={{ background: "linear-gradient(135deg,#ff6b00,#7a531d)" }}>
           <span className="text-3xl">🏆</span>
           <div className="min-w-0">
             <p className="font-display text-lg font-bold leading-tight">{L("Sei il Fornaio della Settimana!", "Du bist Bäcker der Woche!", "You're the Baker of the Week!", "¡Eres el Panadero de la Semana!")}</p>
@@ -463,7 +463,7 @@ export default function Home({ onNavigate }) {
                   </div>
                 </div>
                 {false && (<>
-                <div data-testid="home-lab-photo" className="rounded-3xl overflow-hidden shadow-xl ring-2 ring-[#ffc700]/40 relative">
+                <div data-testid="home-lab-photo" className="rounded-3xl overflow-hidden shadow-xl ring-2 ring-[#ff6b00]/40 relative">
                   <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt={L("Michele, mani in pasta", "Michele, mittendrin im Teig", "Michele, hands in the dough", "Michele, con las manos en la masa")}
                     className="w-full h-56 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
@@ -474,7 +474,7 @@ export default function Home({ onNavigate }) {
 
                 <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white shadow-xl p-7 text-center">
                   <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
-                    className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ffc700]/70 shadow-lg mx-auto mb-4" />
+                    className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ff6b00]/70 shadow-lg mx-auto mb-4" />
                   <h1 className="font-display text-3xl font-bold">Mikilab</h1>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
                 </div>
@@ -527,7 +527,7 @@ export default function Home({ onNavigate }) {
                       { src: "michele-real2.jpg", cap: L("Tra le teglie", "Zwischen den Blechen", "Among the trays") },
                       { src: "bio-dough.jpg", cap: L("Impasto in mano", "Teig in der Hand", "Dough in hand") },
                     ].map((p, i) => (
-                      <div key={i} data-testid={`lab-gallery-${i}`} className="shrink-0 w-60 rounded-2xl overflow-hidden bg-[#2B303B] ring-1 ring-[#ffc700]/30">
+                      <div key={i} data-testid={`lab-gallery-${i}`} className="shrink-0 w-60 rounded-2xl overflow-hidden bg-[#2B303B] ring-1 ring-[#ff6b00]/30">
                         <img src={`${process.env.PUBLIC_URL}/${p.src}`} alt={p.cap} loading="lazy"
                           className="w-full h-56 object-contain" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                         <p className="text-white/85 text-xs font-medium text-center py-2">{p.cap}</p>
@@ -593,15 +593,15 @@ export default function Home({ onNavigate }) {
       <div data-testid="home-core">
         <div className="flex items-center gap-2 mb-1 px-1">
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Il cuore di MikiLab", "Das Herz von MikiLab", "The heart of MikiLab")}</h2>
-          <span className="text-[10px] font-bold uppercase tracking-wide text-[#ffc700] bg-[#ffc700]/15 border border-[#ffc700]/40 px-2 py-0.5 rounded-full">{L("L'anima del sito", "Die Seele", "The soul")}</span>
+          <span className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] bg-[#ff6b00]/15 border border-[#ff6b00]/40 px-2 py-0.5 rounded-full">{L("L'anima del sito", "Die Seele", "The soul")}</span>
         </div>
-        <div className="h-1 w-12 rounded-full bg-[#ffc700] mb-3 ml-1" />
+        <div className="h-1 w-12 rounded-full bg-[#ff6b00] mb-3 ml-1" />
 
         {/* 1) Le Mie Ricette + I Miei Corsi */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <button data-testid="home-core-ricette" onClick={() => go("ricette")}
-            className="relative text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#1c1c1c] to-[#16202b] min-h-[112px] flex flex-col gap-2 ring-2 ring-[#ffc700]/70 overflow-hidden">
-            <span className="absolute top-2.5 right-2.5 text-[9px] font-bold uppercase tracking-wide bg-[#ffc700] text-white px-2 py-0.5 rounded-full">{L("Inizia qui", "Hier starten", "Start here", "Empieza aquí", "Commence ici", "از اینجا شروع کن")}</span>
+            className="relative text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#1c1c1c] to-[#16202b] min-h-[112px] flex flex-col gap-2 ring-2 ring-[#ff6b00]/70 overflow-hidden">
+            <span className="absolute top-2.5 right-2.5 text-[9px] font-bold uppercase tracking-wide bg-[#ff6b00] text-white px-2 py-0.5 rounded-full">{L("Inizia qui", "Hier starten", "Start here", "Empieza aquí", "Commence ici", "از اینجا شروع کن")}</span>
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
             <p className="font-display text-base font-bold leading-tight">{L("Le Mie Ricette", "Meine Rezepte", "My Recipes")}</p>
             <p className="text-[11px] text-white/85 leading-snug">{L("Le ricette col mio metodo", "Rezepte mit meiner Methode", "Recipes with my method")}</p>
@@ -616,7 +616,7 @@ export default function Home({ onNavigate }) {
 
         {/* 2) Il Tuo Laboratorio — grande e in evidenza, subito dopo le ricette */}
         <button data-testid="home-core-maestro" onClick={() => go("maestro")}
-          className="relative w-full text-left rounded-3xl p-5 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] ring-2 ring-[#ffc700]/70 overflow-hidden">
+          className="relative w-full text-left rounded-3xl p-5 text-white shadow-xl active:scale-98 transition-all bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] ring-2 ring-[#ff6b00]/70 overflow-hidden">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-3 mt-1">
             <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Wrench className="w-7 h-7" /></div>

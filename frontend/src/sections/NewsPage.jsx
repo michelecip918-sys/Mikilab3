@@ -14,7 +14,7 @@ export default function NewsPage() {
         <HeroAvatar />
         <Newspaper className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("news_page_title")}</h1>
-        <div className="h-1 w-12 rounded-full bg-[#ffc700] mt-1.5" />
+        <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("news_page_sub")}</p>
       </div>
 

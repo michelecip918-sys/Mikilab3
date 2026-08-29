@@ -228,7 +228,7 @@ export default function WeeklyPlan() {
     w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${t("weekly_print_title")}</title>
       <style>
         body{font-family:Georgia,serif;color:#2B303B;max-width:720px;margin:32px auto;padding:0 20px}
-        h1{color:#ff6b00} h2{color:#ff6b00;border-bottom:2px solid #ffc700;padding-bottom:4px;margin-top:28px}
+        h1{color:#ff6b00} h2{color:#ff6b00;border-bottom:2px solid #ff6b00;padding-bottom:4px;margin-top:28px}
         ul{list-style:none;padding:0} li{padding:10px 0;border-bottom:1px solid #EEE}
         .doses{font-family:monospace;color:#ff6b00;font-size:13px;margin-top:4px}
         .warn{color:#ff6b00;font-size:13px}
@@ -377,7 +377,7 @@ export default function WeeklyPlan() {
         .head .sub{font-size:12px;color:#666}
         .shop{display:inline-block;margin:0 0 6px;background:#ff6b00;color:#fff;font-weight:800;font-size:15px;padding:4px 14px;border-radius:20px}
         h1{color:#ff6b00;font-size:20px;margin:18px 0 8px}
-        h2{color:#ff6b00;border-bottom:2px solid #ffc700;padding-bottom:4px;margin-top:26px;font-size:18px}
+        h2{color:#ff6b00;border-bottom:2px solid #ff6b00;padding-bottom:4px;margin-top:26px;font-size:18px}
         .sum-day{margin-bottom:6px} .sum-day h3{margin:8px 0 2px;font-size:14px;color:#ff6b00}
         .sum-day ul{margin:0;padding-left:18px} .sum-day li{font-size:13px;margin:2px 0}
         .doses{color:#ff6b00;font-size:12px}
@@ -393,7 +393,7 @@ export default function WeeklyPlan() {
         .warn{color:#ff6b00;font-size:13px}
         @media print{.recipe{page-break-inside:avoid}}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ffc700 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${subtitle ? `<div class="shop">🏪 ${esc(subtitle)}</div>` : ""}
       <h1>${L.summary}</h1>${summaryHtml}
@@ -468,7 +468,7 @@ export default function WeeklyPlan() {
         .shop{font-size:10px;font-weight:700;color:#ff6b00;border-top:1px solid #e4eff8;padding-top:2px}
         @media print{ @page{margin:8mm} .label{border-color:#c9c9c9} }
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ffc700 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="grid">${cards}</div>
       </body></html>`);
     w.document.close();
@@ -531,7 +531,7 @@ export default function WeeklyPlan() {
         .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #2b2b2b;padding:3px 0;font-size:14px}
         .grp li b{font-family:monospace;color:#ff6b00}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ffc700 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${sections}
       </body></html>`);
@@ -571,9 +571,9 @@ export default function WeeklyPlan() {
       )}
 
       {loaded && recipes.length > 0 && (
-        <div data-testid="weekly-save-reminder" className={`mt-4 flex items-start gap-2.5 rounded-2xl p-3.5 border ${nearWeekend ? "bg-[#ff6b00]/18 border-[#ff6b00]/50" : "bg-[#ffc700]/12 border-[#ffc700]/35"}`}>
+        <div data-testid="weekly-save-reminder" className={`mt-4 flex items-start gap-2.5 rounded-2xl p-3.5 border ${nearWeekend ? "bg-[#ff6b00]/18 border-[#ff6b00]/50" : "bg-[#ff6b00]/12 border-[#ff6b00]/35"}`}>
           <span className="text-lg leading-none">{nearWeekend ? "⏰" : "💾"}</span>
-          <p className="text-[13px] text-[#ff6b00] dark:text-[#ffc700] leading-snug font-semibold">
+          <p className="text-[13px] text-[#ff6b00] dark:text-[#ff6b00] leading-snug font-semibold">
             {nearWeekend
               ? tri("Il weekend è vicino: ricordati di SALVARE il piano prima di sabato, così sarà pronto per la prossima settimana.", "Das Wochenende naht: SPEICHERE den Plan vor Samstag, damit er für nächste Woche bereit ist.", "Weekend is near: remember to SAVE the plan before Saturday so it's ready for next week.")
               : tri("Ricordati di salvare il piano prima di sabato: potrai riusarlo la settimana prossima.", "Denk daran, den Plan vor Samstag zu speichern: nächste Woche wiederverwendbar.", "Remember to save the plan before Saturday: you can reuse it next week.")}

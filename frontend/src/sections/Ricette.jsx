@@ -33,7 +33,7 @@ export default function Ricette() {
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#2f6a97] to-[#ff6b00] p-6 text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")}</h1></div>
-          <div className="h-1 w-12 rounded-full bg-[#ffc700] mb-3" />
+          <div className="h-1 w-12 rounded-full bg-[#ff6b00] mb-3" />
           <p className="text-sm text-white/90 leading-relaxed italic">
             {tri(
               "«La farina è la mia lingua madre. In Italia ho imparato che ogni grano racconta una storia: la forza (W), l'assorbimento, i tempi. Qui trovi le sigle e le tabelle che uso ogni giorno per scegliere la farina giusta per ogni impasto. Rispetta il grano e il grano ti ripagherà.» — Michele",
@@ -56,11 +56,11 @@ export default function Ricette() {
         subtitle={mkTri(lang)("Le ricette e i sapori di MikiLab", "Die Rezepte und Aromen von MikiLab", "MikiLab recipes and flavours", "Las recetas y sabores de MikiLab", "Les recettes et saveurs de MikiLab", "دستورها و طعم‌های میکی‌لب")} />
       {coll === "mikilab" && (
         <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}
-          className="relative w-full h-32 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left ring-2 ring-[#ffc700]/60">
+          className="relative w-full h-32 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left ring-2 ring-[#ff6b00]/60">
           <img src="https://images.unsplash.com/photo-1549413468-cd78edb7e75c?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 15%,#ff6b00aa 60%,#ff6b0022)" }} />
           <div className="relative h-full flex flex-col justify-center px-4 text-white">
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#ffc700] px-2 py-0.5 rounded-full w-fit mb-1">★ {tri("In vetrina", "Im Schaufenster", "Featured", "En vitrina", "À la une")}</span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#ff6b00] px-2 py-0.5 rounded-full w-fit mb-1">★ {tri("In vetrina", "Im Schaufenster", "Featured", "En vitrina", "À la une")}</span>
             <h3 className="font-display text-xl font-bold leading-tight">{tri("Pane di Matera IGP", "Materaner Brot", "Bread of Matera", "Pan de Matera", "Pain de Matera")}</h3>
             <p className="text-[12px] text-white/90">{tri("La ricetta della tradizione, adattata alle tue dosi", "Das Traditionsrezept, an deine Mengen angepasst", "The traditional recipe, adapted to your amounts", "La receta tradicional, adaptada a tus dosis", "La recette de tradition, adaptée à tes quantités")}</p>
           </div>

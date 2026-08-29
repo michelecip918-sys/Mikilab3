@@ -48,7 +48,7 @@ export default function AcademyHome({ onNavigate }) {
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <GraduationCap className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}</h1>
-        <div className="h-1 w-12 rounded-full bg-[#ffc700] mt-1.5" />
+        <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-1.5" />
         <p className="text-white/85 text-sm mt-1 max-w-md">{tri("La tua Academy: ricettario dinamico, database farine, diagnosi delle cotture e corsi passo-passo.", "Deine Academy: dynamisches Rezeptbuch, Mehl-Datenbank, Back-Diagnose und Schritt-für-Schritt-Kurse.", "Your Academy: dynamic recipe book, flour database, bake diagnosis and step-by-step courses.")}</p>
         {typeof diagLimit === "number" && (
           <div data-testid="academy-diag-usage" className="mt-3 inline-flex items-center gap-2 rounded-xl bg-white/15 border border-white/25 px-3 py-1.5 text-sm font-semibold">
@@ -105,9 +105,9 @@ export default function AcademyHome({ onNavigate }) {
           const isQuiz = id === "corsi";
           return (
             <button key={id} data-testid={`academy-tab-${id}`} onClick={() => setSub(id)}
-              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#ff6b00] text-white shadow-md" : isQuiz ? "text-[#ff6b00] dark:text-[#ffc700] bg-[#ffc700]/15 ring-2 ring-[#ffc700]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#242424]"}`}>
+              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#ff6b00] text-white shadow-md" : isQuiz ? "text-[#ff6b00] dark:text-[#ff6b00] bg-[#ff6b00]/15 ring-2 ring-[#ff6b00]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#242424]"}`}>
               <Icon className="w-4 h-4 shrink-0" /><span className="truncate">{label}</span>
-              {isQuiz && !on && <span className="absolute -top-1.5 -right-1 text-[9px] font-black bg-[#ffc700] text-white px-1.5 py-0.5 rounded-full leading-none">🎯</span>}
+              {isQuiz && !on && <span className="absolute -top-1.5 -right-1 text-[9px] font-black bg-[#ff6b00] text-white px-1.5 py-0.5 rounded-full leading-none">🎯</span>}
             </button>
           );
         })}

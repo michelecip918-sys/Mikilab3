@@ -108,7 +108,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           </button>
         )}
         <div className="text-center mb-6">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#ffc700]/70 shadow-lg mx-auto mb-3" />
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#ff6b00]/70 shadow-lg mx-auto mb-3" />
           <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{T.title}</h1>
           <p className="text-sm text-[#7E8A93] mt-1">{T.sub} 🇮🇹 🇩🇪</p>
         </div>
@@ -183,7 +183,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           )}
           {mode === "register" && (
             <>
-              <p className={`text-xs -mt-1 ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#ffc700]") : "text-[#7E8A93]"}`}>
+              <p className={`text-xs -mt-1 ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#ff6b00]") : "text-[#7E8A93]"}`}>
                 {tri("Min 8 caratteri, con lettere e numeri.", "Min. 8 Zeichen, Buchstaben und Zahlen.", "Min 8 characters, letters and numbers.", "Mín. 8 caracteres, con letras y números.")}
               </p>
               <Field icon={<Lock className="w-4 h-4" />}>

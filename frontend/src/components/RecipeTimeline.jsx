@@ -20,7 +20,7 @@ const parseDuration = (s) => {
   return Math.round(total);
 };
 
-const COLORS = ["#ff6b00", "#ff6b00", "#2e8b6f", "#ffc700", "#a05eb5", "#ff6b00", "#ff6b00"];
+const COLORS = ["#ff6b00", "#ff6b00", "#2e8b6f", "#ff6b00", "#a05eb5", "#ff6b00", "#ff6b00"];
 
 export default function RecipeTimeline({ recipe, lang: langProp }) {
   const { lang: ctxLang } = useLang();

@@ -2290,3 +2290,6 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - Regola CSS in `index.css`: testo statico (titoli/label) reso BIANCO anche dove era diventato arancio/giallo; arancio/giallo ri-applicato SOLO dentro `button`/`a` (indicatore cliccabile).
 - Affordance: ogni button/link con bg arancio o giallo ha ombra netta (box-shadow) per distinguerlo a colpo d'occhio.
 - body: sfondo #121212, testo #E0E0E0. Distinzione netta "cosa si legge (bianco su nero)" vs "cosa si clicca (arancio/giallo)". Verificato su Home e Laboratorio.
+
+## v-fork.70 — Giallo sostituito con arancione
+- #FFC700 (giallo) → #FF6B00 (arancione) su 50 file. Nav: pala attiva arancio chiaro #FFB27A per distinzione. Palette finale: nero #121212 + arancio #FF6B00 (+ #FF8A33/#FFB27A per stati), testo bianco/grigio.

@@ -103,13 +103,13 @@ export default function NewsletterSignup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={L("La tua email", "Deine E-Mail", "Your email", "Tu email", "Ton e-mail", "ایمیل شما")}
-              className="flex-1 rounded-2xl bg-white/95 text-[#ff6b00] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ffc700] placeholder:text-[#8a7a63]"
+              className="flex-1 rounded-2xl bg-white/95 text-[#ff6b00] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ff6b00] placeholder:text-[#8a7a63]"
             />
             <button
               data-testid="newsletter-submit-btn"
               type="submit"
               disabled={!valid || busy}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ffc700] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ff6b00] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
               {busy

@@ -240,14 +240,14 @@ export default function AdminPanel({ open, onOpenChange }) {
           </div>
         </div>
 
-        <div data-testid="admin-bakealong" className="rounded-2xl bg-[#ffc700]/10 border border-[#ffc700]/30 p-4 mt-2">
+        <div data-testid="admin-bakealong" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-2">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#e0b877]">Bake-Along</p>
               <p className="text-[11px] text-[#7E8A93]">{de ? "Alle Abonnenten über die Wochen-Challenge benachrichtigen" : "Avvisa tutti gli iscritti della sfida della settimana"}</p>
             </div>
             <button data-testid="admin-bakealong-notify" onClick={notifyBakeAlong} disabled={baBusy}
-              className="px-3 py-2 rounded-xl text-sm font-semibold bg-[#ffc700] text-white active:scale-97 disabled:opacity-60 shrink-0">
+              className="px-3 py-2 rounded-xl text-sm font-semibold bg-[#ff6b00] text-white active:scale-97 disabled:opacity-60 shrink-0">
               {baBusy ? (de ? "Sende…" : "Invio…") : (de ? "Senden" : "Invia ora")}
             </button>
           </div>
@@ -459,8 +459,8 @@ export default function AdminPanel({ open, onOpenChange }) {
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-2 rounded-xl bg-[#ffc700]/12 border border-[#ffc700]/40 px-3 py-2.5 mb-2">
-                <AlertTriangle className="w-5 h-5 text-[#ffc700] shrink-0" />
+              <div className="flex items-center gap-2 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/40 px-3 py-2.5 mb-2">
+                <AlertTriangle className="w-5 h-5 text-[#ff6b00] shrink-0" />
                 <p data-testid="admin-translation-count" className="text-sm font-semibold text-[#8a5a1a] dark:text-[#e0b877]">
                   {de ? `${trCoverage.incomplete.length} von ${trCoverage.total} Rezepten unvollständig` : `${trCoverage.incomplete.length} ricette su ${trCoverage.total} da completare`}
                 </p>

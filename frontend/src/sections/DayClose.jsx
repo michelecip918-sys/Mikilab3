@@ -228,7 +228,7 @@ export default function DayClose() {
                   <Tooltip cursor={{ fill: "rgba(63,124,172,0.08)" }} formatter={(v, n) => [`${v} kg`, n]} labelFormatter={(l) => tri("Settimana del ", "Woche vom ") + l} />
                   <Legend wrapperStyle={{ fontSize: 12 }} iconType="circle" />
                   <Bar dataKey="flour" name={tri("Farina", "Mehl")} fill="#ff6b00" radius={[4, 4, 0, 0]} maxBarSize={26} />
-                  <Bar dataKey="yeast" name={tri("Lievito", "Hefe")} fill="#ffc700" radius={[4, 4, 0, 0]} maxBarSize={26} />
+                  <Bar dataKey="yeast" name={tri("Lievito", "Hefe")} fill="#ff6b00" radius={[4, 4, 0, 0]} maxBarSize={26} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -327,7 +327,7 @@ export default function DayClose() {
                     </select>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 text-[11px] font-semibold text-[#ffc700] shrink-0"><AlertTriangle className="w-3.5 h-3.5" /> {tri("Soglia avviso", "Warnschwelle")}</span>
+                    <span className="flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] shrink-0"><AlertTriangle className="w-3.5 h-3.5" /> {tri("Soglia avviso", "Warnschwelle")}</span>
                     <input data-testid={`inv-threshold-${i}`} type="number" value={it.threshold ?? ""} placeholder={tri("es. 10", "z. B. 10")}
                       onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, threshold: e.target.value === "" ? null : Number(e.target.value) } : x))} className={inp + " flex-1 min-w-0"} />
                   </div>
@@ -337,7 +337,7 @@ export default function DayClose() {
                 <button data-testid="inv-add" onClick={() => setInventory((l) => [...l, { name: "", category: "farina", qty: 0, unit: "kg", threshold: null }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi materia", "Rohstoff")}</button>
                 <button data-testid="inv-save" onClick={saveInventory} className="text-sm font-semibold text-white bg-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1"><Save className="w-3.5 h-3.5" /> {tri("Salva magazzino", "Lager speichern")}</button>
               </div>
-              <p className="text-[11px] text-[#7E8A93] flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 text-[#ffc700] shrink-0 mt-0.5" /> {tri("Imposta una soglia: ricevi un'email quando la materia scende sotto quel livello.", "Lege eine Schwelle fest: du erhältst eine E-Mail, wenn der Rohstoff darunter fällt.")}</p>
+              <p className="text-[11px] text-[#7E8A93] flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 text-[#ff6b00] shrink-0 mt-0.5" /> {tri("Imposta una soglia: ricevi un'email quando la materia scende sotto quel livello.", "Lege eine Schwelle fest: du erhältst eine E-Mail, wenn der Rohstoff darunter fällt.")}</p>
               <div className="pt-2 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
                 <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-[#ff6b00] mb-1"><Send className="w-3.5 h-3.5" /> {tri("Email fornitore (per ordine rapido)", "Lieferanten-E-Mail (Schnellbestellung)")}</label>
                 <input data-testid="supplier-email" type="email" value={supplierEmail}

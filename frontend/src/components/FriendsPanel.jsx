@@ -117,7 +117,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
 
                   {!q.trim() && sugg.length > 0 && (
                     <div data-testid="friends-suggestions" className="mb-2">
-                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#ffc700] px-1 py-1.5 flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />{tri("Suggeriti per te", "Für dich vorgeschlagen", "Suggested for you")}</p>
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] px-1 py-1.5 flex items-center gap-1"><Sparkles className="w-3.5 h-3.5" />{tri("Suggeriti per te", "Für dich vorgeschlagen", "Suggested for you")}</p>
                       {sugg.map((c) => {
                         const reason = c.reason === "mutual"
                           ? (c.mutuals > 0 ? tri(`${c.mutuals} amici in comune`, `${c.mutuals} gemeinsame Freunde`, `${c.mutuals} mutual friends`) : tri("Amico di un amico", "Freund eines Freundes", "Friend of a friend"))

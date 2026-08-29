@@ -235,7 +235,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             {heroTitle}
             {collectionName === "mikilab" && <span className="text-xl leading-none">🇮🇹🇩🇪</span>}
           </h1>
-          <div className="h-1 w-12 rounded-full bg-[#ffc700] mt-1.5 mb-0.5" />
+          <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-1.5 mb-0.5" />
           {heroSubtitle ? <p className="text-white/85 text-sm mt-1">{heroSubtitle}</p> : null}
         </div>
       </div>
@@ -454,7 +454,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     toast.error(e?.response?.status === 403 ? triM("Funzione PRO", "PRO-Funktion", "PRO feature") : triM("Traduzione non riuscita", "Übersetzung fehlgeschlagen", "Translation failed"));
                   } finally { setTranslating(false); }
                 }}
-                className="mr-auto text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#ffc700] text-white disabled:opacity-60 active:scale-95 transition-all">
+                className="mr-auto text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#ff6b00] text-white disabled:opacity-60 active:scale-95 transition-all">
                 {translating ? "…" : triM(`Traduci in ${lang.toUpperCase()}`, `Auf ${lang.toUpperCase()} übersetzen`, `Translate to ${lang.toUpperCase()}`)}
               </button>
             )}
@@ -719,7 +719,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             <ActionBtn testid={`listen-recipe-${r.id}`} onClick={() => playTTS(`${rLoc(r, "name", lang)}. ${rLoc(r, "procedure", lang)}`, { who: "momy", lang }).catch(() => {})} color="#ff6b00" label={tri("Ascolta", "Anhören", "Listen")}><Volume2 className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && rLoc(r, "procedure", lang) && (
-            <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => setHandsFree(true)} color="#ffc700" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>
+            <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => setHandsFree(true)} color="#ff6b00" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && (
             <ActionBtn testid={`timeline-recipe-${r.id}`} onClick={() => setShowTimeline((v) => !v)} color="#2e8b6f" label={tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}><Clock className="w-4 h-4" /></ActionBtn>

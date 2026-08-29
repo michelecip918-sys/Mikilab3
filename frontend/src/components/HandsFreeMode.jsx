@@ -164,7 +164,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
           <button data-testid="handsfree-timer" onClick={() => doTimer(20)}
             className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-white/12 font-semibold text-sm active:scale-95"><TimerIcon className="w-5 h-5" />+20m</button>
           <button data-testid="handsfree-mic" onClick={toggleMic}
-            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-[#ffc700] text-white animate-pulse" : "bg-white/12"}`}>{micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}{tri("Comandi", "Befehle", "Commands", "Comandos")}</button>
+            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-[#ff6b00] text-white animate-pulse" : "bg-white/12"}`}>{micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}{tri("Comandi", "Befehle", "Commands", "Comandos")}</button>
         </div>
       </div>
     </div>

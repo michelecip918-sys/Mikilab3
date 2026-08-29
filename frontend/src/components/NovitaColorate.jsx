@@ -30,11 +30,11 @@ export const NovitaColorate = () => {
   return (
     <div data-testid="ricette-novita">
       <div className="flex items-center gap-2 mb-1">
-        <Sparkles className="w-5 h-5 text-[#ffc700]" />
+        <Sparkles className="w-5 h-5 text-[#ff6b00]" />
         <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">
           {tri("Novità dal MikiLab", "Neu bei MikiLab", "New at MikiLab", "Novedades de MikiLab")}
         </h2>
-        <span className="text-[10px] font-bold uppercase tracking-wide text-[#ffc700] bg-[#ffc700]/15 border border-[#ffc700]/40 px-2 py-0.5 rounded-full">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] bg-[#ff6b00]/15 border border-[#ff6b00]/40 px-2 py-0.5 rounded-full">
           {tri("Colori naturali", "Natürliche Farben", "Natural colours", "Colores naturales")}
         </span>
       </div>

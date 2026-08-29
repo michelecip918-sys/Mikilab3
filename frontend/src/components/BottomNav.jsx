@@ -54,7 +54,7 @@ export default function BottomNav({ active, onChange }) {
               <span
                 className={`relative flex items-center justify-center rounded-[13px] rounded-b-md wood-surface border border-[#2a2a2a] transition-all duration-300 ${
                   on
-                    ? "w-11 h-11 -translate-y-1.5 wood-emboss ring-2 ring-[#FFC700] shadow-[0_0_16px_rgba(255,199,0,.55)] overflow-hidden peel-shine"
+                    ? "w-11 h-11 -translate-y-1.5 wood-emboss ring-2 ring-[#FF8A33] shadow-[0_0_16px_rgba(255,107,0,.6)] overflow-hidden peel-shine"
                     : "w-10 h-10 opacity-90 shadow-[0_3px_6px_rgba(44,30,16,.4)] group-hover:opacity-100 group-hover:-translate-y-0.5"
                 }`}
                 style={{ transform: `rotate(var(--rot))` }}
@@ -68,7 +68,7 @@ export default function BottomNav({ active, onChange }) {
                   <Icon
                     className="relative w-[22px] h-[22px] drop-shadow-[0_1px_0_rgba(255,240,210,.4)]"
                     strokeWidth={on ? 2.6 : 2.2}
-                    style={{ color: on ? "#FFC700" : "#FF6B00" }}
+                    style={{ color: on ? "#FFB27A" : "#FF6B00" }}
                   />
                 )}
                 {id === "community" && unread > 0 && (
@@ -76,7 +76,7 @@ export default function BottomNav({ active, onChange }) {
                 )}
                 <span aria-hidden className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 rounded-b-full wood-surface border-x border-b border-[#2a2a2a] ${on ? "h-2.5" : "h-2"}`} />
               </span>
-              <span className={`mt-1.5 text-[10px] font-bold leading-none text-center transition-colors ${on ? "text-[#FFC700]" : "text-[#FF6B00]/90"}`}
+              <span className={`mt-1.5 text-[10px] font-bold leading-none text-center transition-colors ${on ? "text-[#FFB27A]" : "text-[#FF6B00]/90"}`}
                 style={{ textShadow: "0 1px 1px rgba(0,0,0,.5)" }}>
                 {label}
               </span>

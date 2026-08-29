@@ -35,7 +35,7 @@ export default function CosaPosso() {
         : <div className="w-14 h-14 rounded-xl bg-[#e4eff8] dark:bg-[#242424] shrink-0" />}
       <div className="min-w-0 flex-1">
         <p className="font-semibold text-[15px] text-[#2B303B] dark:text-[#e4eff8] leading-tight">{item.name}</p>
-        <p className={`text-[12px] leading-snug mt-0.5 ${kind === "makable" ? "text-[#2e8b6f]" : "text-[#ffc700]"}`}>
+        <p className={`text-[12px] leading-snug mt-0.5 ${kind === "makable" ? "text-[#2e8b6f]" : "text-[#ff6b00]"}`}>
           {kind === "makable" ? item.note : `${tri("Manca", "Fehlt", "Missing", "Falta")}: ${item.missing}`}
         </p>
       </div>
@@ -80,7 +80,7 @@ export default function CosaPosso() {
       )}
       {res && res.almost && res.almost.length > 0 && (
         <div data-testid="cosa-almost">
-          <p className="text-[13px] font-bold text-[#ffc700] flex items-center gap-1.5 mb-2"><AlertCircle className="w-4 h-4" /> {tri("Ti manca poco", "Fast fertig", "Almost there", "Casi listas")} ({res.almost.length})</p>
+          <p className="text-[13px] font-bold text-[#ff6b00] flex items-center gap-1.5 mb-2"><AlertCircle className="w-4 h-4" /> {tri("Ti manca poco", "Fast fertig", "Almost there", "Casi listas")} ({res.almost.length})</p>
           <div className="space-y-2">{res.almost.map((it) => <Card key={it.id} item={it} kind="almost" />)}</div>
         </div>
       )}

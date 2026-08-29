@@ -32,7 +32,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
       const el = document.querySelector(`[data-testid="${tgt}"]`);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
-        el.style.outline = "3px solid #ffc700";
+        el.style.outline = "3px solid #ff6b00";
         el.style.outlineOffset = "3px";
         el.style.borderRadius = "18px";
         el.setAttribute("data-tour-highlight", "1");

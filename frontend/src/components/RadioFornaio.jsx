@@ -220,7 +220,7 @@ export default function RadioFornaio() {
                 onClick={(e) => { e.stopPropagation(); toggleFav(st.id); }}
                 className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 active:scale-90"
               >
-                <Star className={`w-4 h-4 ${isFav ? "fill-[#ffc700] text-[#ffc700]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
+                <Star className={`w-4 h-4 ${isFav ? "fill-[#ff6b00] text-[#ff6b00]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
               </button>
             </div>
           );
@@ -294,10 +294,10 @@ export default function RadioFornaio() {
               data-testid="sfx-toggle"
               onClick={toggleSfx}
               className={`w-full mb-3 flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left transition-all active:scale-98 ${
-                sfxEnabled ? "bg-[#ffc700] text-white border-[#ffc700]" : "bg-[#ffc700]/10 text-[#ff6b00] dark:text-[#d3ab6b] border-[#ffc700]/40"
+                sfxEnabled ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#ff6b00]/10 text-[#ff6b00] dark:text-[#d3ab6b] border-[#ff6b00]/40"
               }`}
             >
-              <Volume2 className={`w-5 h-5 shrink-0 ${sfxEnabled ? "text-white" : "text-[#ffc700]"}`} />
+              <Volume2 className={`w-5 h-5 shrink-0 ${sfxEnabled ? "text-white" : "text-[#ff6b00]"}`} />
               <span className="flex-1 min-w-0">
                 <span className="block text-sm font-semibold">{tri("Suoni dell'app (click)", "App-Klänge (Klick)", "App sounds (click)", "Sonidos de la app (clic)")}</span>
                 <span className={`block text-[11px] ${sfxEnabled ? "text-white/80" : "text-[#7E8A93]"}`}>{sfxEnabled ? tri("Attivi · crosta, forno, farina", "Aktiv · Kruste, Ofen, Mehl", "On · crust, oven, flour", "Activos · corteza, horno, harina") : tri("Disattivati", "Aus", "Off", "Desactivados")}</span>
@@ -305,9 +305,9 @@ export default function RadioFornaio() {
             </button>
             {sfxEnabled && (
               <div className="-mt-1 mb-3 flex items-center gap-2 px-1">
-                <Volume2 className="w-4 h-4 text-[#ffc700] shrink-0" />
+                <Volume2 className="w-4 h-4 text-[#ff6b00] shrink-0" />
                 <input data-testid="sfx-volume" type="range" min="0" max="1" step="0.05" value={sfxVolume}
-                  onChange={(e) => setSfxVol(Number(e.target.value))} className="flex-1 accent-[#ffc700]" />
+                  onChange={(e) => setSfxVol(Number(e.target.value))} className="flex-1 accent-[#ff6b00]" />
               </div>
             )}
 
@@ -349,7 +349,7 @@ export default function RadioFornaio() {
             <>
             {lastStation && current !== lastStation.id && (
               <button data-testid="radio-resume" onClick={() => playStation(lastStation)}
-                className="w-full flex items-center gap-2 mb-3 px-3 py-2.5 rounded-xl bg-[#ffc700]/12 border border-[#ffc700]/40 text-[#8a5e17] dark:text-[#e0b566] text-sm font-semibold active:scale-98">
+                className="w-full flex items-center gap-2 mb-3 px-3 py-2.5 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/40 text-[#8a5e17] dark:text-[#e0b566] text-sm font-semibold active:scale-98">
                 <RotateCcw className="w-4 h-4 shrink-0" />
                 <span className="truncate">{tri("Riprendi", "Weiter", "Resume", "Reanudar")}: {lastStation.name}</span>
               </button>
@@ -368,7 +368,7 @@ export default function RadioFornaio() {
                         <span className="truncate">{st.name}</span>
                         <button type="button" data-testid={`radio-fav-${st.id}`} aria-label="favorite" onClick={(e) => { e.stopPropagation(); toggleFav(st.id); }}
                           className="absolute right-7 top-1/2 -translate-y-1/2 p-1 active:scale-90">
-                          <Star className={`w-4 h-4 ${isFav ? "fill-[#ffc700] text-[#ffc700]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
+                          <Star className={`w-4 h-4 ${isFav ? "fill-[#ff6b00] text-[#ff6b00]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
                         </button>
                         <button type="button" data-testid={`radio-custom-remove-${st.id}`} aria-label="remove" onClick={(e) => { e.stopPropagation(); removeCustom(st.id); }}
                           className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 active:scale-90">

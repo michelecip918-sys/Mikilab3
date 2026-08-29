@@ -72,7 +72,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
   return (
     <div data-testid="profile-panel" className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center" onClick={onClose}>
       <div className="bg-white dark:bg-[#121212] w-full sm:max-w-lg sm:rounded-3xl rounded-t-3xl max-h-[88vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="relative p-6 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 45%,#1f5a68 72%,#ffc700)" }}>
+        <div className="relative p-6 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 45%,#1f5a68 72%,#ff6b00)" }}>
           <button data-testid="profile-close" onClick={onClose} className="absolute top-3 right-3 bg-white/20 rounded-full p-1.5"><X className="w-5 h-5" /></button>
           {!data ? (
             <div className="py-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin" /></div>
@@ -96,17 +96,17 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                   <span className="flex items-center gap-1"><UserPlus className="w-3.5 h-3.5" /> {tri("seguito da", "Follower:", "followed by", "seguido por")} {data.followers_count ?? 0}</span>
                 </div>
                 {(data.badges || []).includes("diplomato") && (
-                  <span data-testid="profile-badge-diplomato" className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-[#ffc700] text-white px-2.5 py-1 rounded-full">
+                  <span data-testid="profile-badge-diplomato" className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-[#ff6b00] text-white px-2.5 py-1 rounded-full">
                     🎓 {tri("Fornaio Diplomato", "Diplom-Bäcker", "Certified Baker", "Panadero Diplomado")}
                   </span>
                 )}
                 {(data.badges || []).includes("fornaio_settimana") && (
-                  <span data-testid="profile-badge-champion" className="mt-1.5 ml-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r from-[#ffc700] to-[#7a531d] text-white px-2.5 py-1 rounded-full">
+                  <span data-testid="profile-badge-champion" className="mt-1.5 ml-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r from-[#ff6b00] to-[#7a531d] text-white px-2.5 py-1 rounded-full">
                     🏆 {tri("Fornaio della Settimana", "Bäcker der Woche", "Baker of the Week", "Panadero de la Semana")}
                   </span>
                 )}
                 {((data.badges || []).includes("bakealong_champion") || (data.bakealong_wins || 0) > 0) && (
-                  <span data-testid="profile-badge-bakealong" className="mt-1.5 ml-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r from-[#ff6b00] to-[#ffc700] text-white px-2.5 py-1 rounded-full">
+                  <span data-testid="profile-badge-bakealong" className="mt-1.5 ml-1.5 inline-flex items-center gap-1 text-[11px] font-bold bg-gradient-to-r from-[#ff6b00] to-[#ff6b00] text-white px-2.5 py-1 rounded-full">
                     🥇 {tri("Campione Bake-Along", "Bake-Along-Champion", "Bake-Along Champion", "Campeón Bake-Along")}{(data.bakealong_wins || 0) > 1 ? ` ×${data.bakealong_wins}` : ""}
                   </span>
                 )}
@@ -138,7 +138,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                   <div className="grid grid-cols-4 gap-2">
                     {PRESET_AVATARS.map((a) => (
                       <button key={a.id} data-testid={`avatar-preset-${a.id}`} onClick={() => setPic(a.url)}
-                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#ffc700] ring-2 ring-[#ffc700]/40" : "border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#ff6b00] ring-2 ring-[#ff6b00]/40" : "border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
                         <img src={a.url} alt={a[lang] || a.it} className="w-full aspect-square object-cover" />
                         <span className="block text-[9px] font-semibold text-[#3F4A54] dark:text-[#AEB8BF] py-0.5">{a[lang] || a.it}</span>
                       </button>

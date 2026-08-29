@@ -47,7 +47,7 @@ export default function ResetPassword({ token, onDone }) {
               placeholder={tri("Nuova password", "Neues Passwort", "New password", "Nueva contraseña")}
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
-          <p className={`text-xs ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#ffc700]") : "text-[#7E8A93]"}`}>
+          <p className={`text-xs ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#ff6b00]") : "text-[#7E8A93]"}`}>
             {tri("Min 8 caratteri, con lettere e numeri.", "Min. 8 Zeichen, Buchstaben und Zahlen.", "Min 8 characters, letters and numbers.", "Mín. 8 caracteres, con letras y números.")}
           </p>
           <Field icon={<Lock className="w-4 h-4" />}>

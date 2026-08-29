@@ -222,7 +222,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             );
           })}
         </div>
-        <p className="text-center text-sm font-semibold text-[#ffc700] mt-4">
+        <p className="text-center text-sm font-semibold text-[#ff6b00] mt-4">
           {tri("Sbloccalo completando le sfide 👇", "Schalte es mit Challenges frei 👇", "Unlock it by completing challenges 👇")}
         </p>
       </div>
@@ -239,7 +239,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
         </div>
       ) : (
         <div className="mt-5 space-y-3">
-          <div className="rounded-2xl bg-[#ffc700]/10 border border-[#ffc700]/30 p-4 text-center">
+          <div className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 text-center">
             <p className="flex items-center justify-center gap-2 text-sm font-bold text-[#ff6b00] dark:text-[#e0b877]">
               <Sparkles className="w-4 h-4" /> {tri("Sbloccalo con le Sfide", "Mit Challenges freischalten", "Unlock with Challenges")}
             </p>
@@ -250,7 +250,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             </p>
           </div>
           <button data-testid="paywall-challenge" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } }}
-            className="w-full bg-[#ffc700] hover:bg-[#ff6b00] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="w-full bg-[#ff6b00] hover:bg-[#ff6b00] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Sparkles className="w-5 h-5" /> {tri("Completa la Sfida per Accedere", "Challenge abschließen, um zuzugreifen", "Complete the challenge to unlock")}
           </button>
         </div>

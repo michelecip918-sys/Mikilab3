@@ -39,7 +39,7 @@ export default function PanettoneLabels() {
       <div className="no-print relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
           <div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#ff6b00]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ffc700]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ff6b00]" />
         </div>
         <Tag className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("labels_title")}</h1>
@@ -70,9 +70,9 @@ export default function PanettoneLabels() {
             <div className="relative bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-5 text-center">
               <div className="absolute top-0 left-0 right-0 flex h-1.5">
                 <div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#ff6b00]" />
-                <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ffc700]" />
+                <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ff6b00]" />
               </div>
-              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#ffc700]/70 mx-auto mb-1.5 mt-1" />
+              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#ff6b00]/70 mx-auto mb-1.5 mt-1" />
               <h2 className="font-display text-2xl font-extrabold">Panettoni Mikilab</h2>
               <p className="text-white/85 text-xs mt-0.5">{t("listino_subtitle")}</p>
             </div>
@@ -118,12 +118,12 @@ export default function PanettoneLabels() {
                 className="rounded-2xl border-2 border-[#ff6b00] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
                 style={{ pageBreakInside: "avoid" }}>
                 {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#2b2b2b]" />}
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#ffc700]/70 mb-1.5 -mt-6 bg-white" />
+                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#ff6b00]/70 mb-1.5 -mt-6 bg-white" />
                 <p className="font-display text-lg font-bold leading-tight">Panettone Artigianale MikiLab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
                   <span className="inline-block w-3 h-2 bg-[#ff6b00]" /><span className="inline-block w-3 h-2 bg-[#ff6b00]" />
                   <span className="px-1">•</span>
-                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#ffc700]" />
+                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#ff6b00]" />
                 </div>
                 <p className="font-display text-xl font-extrabold text-[#ff6b00]">{flavor(r.name)}</p>
                 {susp.length > 0 && (

@@ -58,7 +58,7 @@ export default function NewsletterPopup() {
             initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 22, stiffness: 260 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl border border-[#ffc700]/40"
+            className="relative w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl border border-[#ff6b00]/40"
             style={{ background: "linear-gradient(160deg,#ff6b00 0%,#ff6b00 55%,#ff6b00 100%)" }}
           >
             <button data-testid="newsletter-popup-close" onClick={dismiss}
@@ -97,10 +97,10 @@ export default function NewsletterPopup() {
                     data-testid="newsletter-popup-input"
                     type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                     placeholder={L("La tua email", "Deine E-Mail", "Your email", "Tu email", "Ton e-mail", "ایمیل شما")}
-                    className="rounded-2xl bg-white/95 text-[#ff6b00] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ffc700] placeholder:text-[#8a7a63]"
+                    className="rounded-2xl bg-white/95 text-[#ff6b00] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ff6b00] placeholder:text-[#8a7a63]"
                   />
                   <button data-testid="newsletter-popup-submit" type="submit" disabled={!valid || busy}
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ffc700] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50">
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ff6b00] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50">
                     <Send className="w-4 h-4" />
                     {busy ? L("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "در حال ارسال…") : L("Iscrivimi gratis", "Kostenlos anmelden", "Subscribe free", "Suscribirme gratis", "S'inscrire gratuitement", "عضویت رایگان")}
                   </button>

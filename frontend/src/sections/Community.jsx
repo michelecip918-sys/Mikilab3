@@ -175,7 +175,7 @@ export default function Community({ onNavigate }) {
         subtitle={mkTri(lang)("La community dei fornai MikiLab", "Die MikiLab Bäcker-Community", "The MikiLab bakers community", "La comunidad de panaderos MikiLab", "La communauté des boulangers MikiLab", "جامعهٔ نانوایان میکی‌لب")} />
       {/* Header social — compatto (navigazione via menù globale) */}
       <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
-        style={{ background: "linear-gradient(135deg,#123c4a 0%,#1f5a68 60%,#ffc700 100%)" }}>
+        style={{ background: "linear-gradient(135deg,#123c4a 0%,#1f5a68 60%,#ff6b00 100%)" }}>
         <div className="flex items-center gap-3">
           <div className="relative shrink-0">
             <div className="w-12 h-12 rounded-xl bg-white/25 border-2 border-white/70 overflow-hidden shadow">
@@ -200,7 +200,7 @@ export default function Community({ onNavigate }) {
         <button data-testid="community-marketplace-top-btn"
           onClick={() => { markMarketSeen(); setMarketNew(0); const el = document.querySelector("[data-testid='community-marketplace']"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
           className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
-          <div className="relative w-9 h-9 rounded-xl bg-[#ffc700]/15 flex items-center justify-center">
+          <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
             <Store className="w-5 h-5 text-[#ff6b00]" />
             {marketNew > 0 && <span data-testid="market-new-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff6b00] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{marketNew}</span>}
           </div>

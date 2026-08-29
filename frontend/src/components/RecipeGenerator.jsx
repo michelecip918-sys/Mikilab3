@@ -195,7 +195,7 @@ export default function RecipeGenerator() {
           {(result.warnings || []).length > 0 && (
             <div data-testid="gen-warnings" className="mb-4 space-y-1.5">
               {result.warnings.map((w, i) => (
-                <div key={i} className={`flex items-start gap-2 text-xs rounded-xl px-3 py-2 border ${w.level === "danger" ? "bg-[#E7513A]/10 border-[#E7513A]/40 text-[#b23a28]" : w.level === "warn" ? "bg-[#ffc700]/10 border-[#ffc700]/40 text-[#8a5e15]" : "bg-[#ff6b00]/10 border-[#ff6b00]/30 text-[#2e5f86]"}`}>
+                <div key={i} className={`flex items-start gap-2 text-xs rounded-xl px-3 py-2 border ${w.level === "danger" ? "bg-[#E7513A]/10 border-[#E7513A]/40 text-[#b23a28]" : w.level === "warn" ? "bg-[#ff6b00]/10 border-[#ff6b00]/40 text-[#8a5e15]" : "bg-[#ff6b00]/10 border-[#ff6b00]/30 text-[#2e5f86]"}`}>
                   {w.level === "info" ? <Info className="w-4 h-4 shrink-0 mt-0.5" /> : <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />}
                   <span>{w.text}</span>
                 </div>
@@ -205,7 +205,7 @@ export default function RecipeGenerator() {
 
           <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1"><Wheat className="w-4 h-4" /> {T("Ingredienti (dosi calcolate)", "Zutaten (berechnet)", "Ingredients (calculated)", "Ingredientes (calculados)")}</p>
           {ing.preferment && (
-            <div className="mb-2 rounded-xl bg-[#ffc700]/10 border border-[#ffc700]/30 p-2.5 text-sm">
+            <div className="mb-2 rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-2.5 text-sm">
               <b>{ing.preferment.type}</b> ({ing.preferment.hours}): {ing.preferment.flour_g}g {T("farina","Mehl","flour","harina")} · {ing.preferment.water_g}g {T("acqua","Wasser","water","agua")}{ing.preferment.yeast_g ? ` · ${ing.preferment.yeast_g}g ${T("lievito","Hefe","yeast","levadura")}` : ""}
             </div>
           )}
@@ -227,7 +227,7 @@ export default function RecipeGenerator() {
                 <p className="text-2xl font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{result.water_temp.water_c}°C</p>
                 <p className="text-[10px] text-[#7E8A93]">{T("per impasto a", "für Teig bei", "for dough at", "para masa a")} {result.water_temp.target_dough_c}°C</p>
                 {result.water_temp.status !== "ok" && (
-                  <p className="text-[10px] font-semibold text-[#ffc700] mt-0.5">{result.water_temp.status === "hot" ? T("ambiente caldo: usa acqua fredda/ghiaccio", "warm: kaltes Wasser/Eis", "hot room: use cold water/ice", "ambiente cálido: agua fría/hielo") : T("ambiente freddo: acqua tiepida", "kalt: lauwarmes Wasser", "cold room: warm water", "ambiente frío: agua tibia")}</p>
+                  <p className="text-[10px] font-semibold text-[#ff6b00] mt-0.5">{result.water_temp.status === "hot" ? T("ambiente caldo: usa acqua fredda/ghiaccio", "warm: kaltes Wasser/Eis", "hot room: use cold water/ice", "ambiente cálido: agua fría/hielo") : T("ambiente freddo: acqua tiepida", "kalt: lauwarmes Wasser", "cold room: warm water", "ambiente frío: agua tibia")}</p>
                 )}
               </div>
             )}

@@ -143,7 +143,7 @@ export default function ScanRecipe({ embedded = false }) {
         <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] p-6 text-white">
           <div className="absolute top-0 left-0 right-0 flex h-1.5">
             <div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#ff6b00]" />
-            <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ffc700]" />
+            <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ff6b00]" />
           </div>
           <ScanLine className="w-7 h-7 mb-2" />
           <h1 className="font-display text-2xl font-bold">{t("scan_title")}</h1>
@@ -211,7 +211,7 @@ export default function ScanRecipe({ embedded = false }) {
                     <span className="flex-1 min-w-0">
                       <span className="block font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name || tri("Ricetta senza nome", "Rezept ohne Namen", "Untitled recipe")}</span>
                       {r.flour_type && <span className="block text-[11px] text-[#7E8A93] truncate">{r.flour_type}</span>}
-                      {r.page && <span className="block text-[10px] text-[#ffc700] font-semibold">{tri(`Pag. ${r.page}`, `S. ${r.page}`, `Page ${r.page}`, `Pág. ${r.page}`)}</span>}
+                      {r.page && <span className="block text-[10px] text-[#ff6b00] font-semibold">{tri(`Pag. ${r.page}`, `S. ${r.page}`, `Page ${r.page}`, `Pág. ${r.page}`)}</span>}
                     </span>
                     {done ? <span className="text-[11px] font-bold text-[#2e8b6f] shrink-0">{tri("Salvata", "Gespeichert", "Saved")}</span> : <ChevronRight className="w-4 h-4 text-[#7E8A93] shrink-0" />}
                   </button>
@@ -233,7 +233,7 @@ export default function ScanRecipe({ embedded = false }) {
             <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Import via Email", "Import per E-Mail", "Email import", "Importar por email")}</h3>
             {inbound.enabled
               ? <span className="ml-auto text-[10px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 px-2 py-0.5 rounded-full">{tri("Attivo", "Aktiv", "Active", "Activo")}</span>
-              : <span className="ml-auto text-[10px] font-bold text-[#ffc700] bg-[#ffc700]/10 px-2 py-0.5 rounded-full">{tri("In arrivo", "Bald", "Coming soon", "Próximamente")}</span>}
+              : <span className="ml-auto text-[10px] font-bold text-[#ff6b00] bg-[#ff6b00]/10 px-2 py-0.5 rounded-full">{tri("In arrivo", "Bald", "Coming soon", "Próximamente")}</span>}
           </div>
           <p className="text-[12px] text-[#7E8A93] mb-3">
             {inbound.enabled

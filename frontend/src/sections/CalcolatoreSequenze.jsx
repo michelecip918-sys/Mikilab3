@@ -103,7 +103,7 @@ export default function CalcolatoreSequenze({ onBack }) {
       </div>
 
       {machines.length > 0 && (
-        <div data-testid="seq-machines" className="mb-4 rounded-xl bg-[#ffc700]/12 border border-[#ffc700]/40 p-3 text-[12px] text-[#ffc700] dark:text-[#ffc700]">
+        <div data-testid="seq-machines" className="mb-4 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/40 p-3 text-[12px] text-[#ff6b00] dark:text-[#ff6b00]">
           🛠️ {L("Parco Macchine attivo", "Maschinenpark aktiv", "Machine Park active", "Maquinaria activa")}: {machines.join(", ")}. {L("Con spezzatrici/linee automatiche i ritmi si accorciano.", "Mit Teilern/Automatiklinien verkürzen sich die Rhythmen.", "With dividers/automatic lines the rhythm shortens.", "Con divisoras/líneas los ritmos se acortan.")}
         </div>
       )}

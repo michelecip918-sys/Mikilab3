@@ -64,7 +64,7 @@ export default function Header() {
           aria-label={t("lang_label")}
         >
           <div aria-hidden className="wood-surface h-2 rounded-t-md border border-b-0 border-[#2e2e2e] mx-1 shadow-sm" />
-          <div className="relative flex items-center rounded-b-lg rounded-t-[3px] border border-[#c9962e]/70 bg-gradient-to-b from-[#1a1a1a] to-[#ffc700] dark:from-[#3a2f1c] dark:to-[#2a2213] shadow-[inset_0_1px_3px_rgba(255,255,255,.5)]">
+          <div className="relative flex items-center rounded-b-lg rounded-t-[3px] border border-[#c9962e]/70 bg-gradient-to-b from-[#1a1a1a] to-[#ff6b00] dark:from-[#3a2f1c] dark:to-[#2a2213] shadow-[inset_0_1px_3px_rgba(255,255,255,.5)]">
             <select
               data-testid="lang-select"
               value={lang}

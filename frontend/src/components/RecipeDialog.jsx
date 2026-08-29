@@ -261,7 +261,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               <div data-testid="recipe-flour-pantry" className="mt-2 flex flex-wrap gap-1.5">
                 {pantry.slice(0, 12).map((f) => (
                   <button key={f.id} type="button" data-testid={`recipe-flour-pick-${f.id}`} onClick={() => pickFlour(f)}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] bg-[#ffc700]/10 border border-[#ffc700]/30 px-2.5 py-1 rounded-full active:scale-95">
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2.5 py-1 rounded-full active:scale-95">
                     {(f.flour_type || f.product_name || f.brand || "Farina")}{f.w_index != null ? ` · W${f.w_index}` : ""}
                   </button>
                 ))}

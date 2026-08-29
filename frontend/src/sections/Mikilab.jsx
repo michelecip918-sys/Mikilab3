@@ -63,7 +63,7 @@ export default function Mikilab() {
               src={`${process.env.PUBLIC_URL}/logo.png`}
               alt="Mikilab"
               data-testid="bio-logo"
-              className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ffc700]/70 shadow-lg"
+              className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ff6b00]/70 shadow-lg"
             />
           </div>
           <p data-testid="bio-welcome-sub" className="text-center text-[11px] uppercase tracking-wider text-white/70 mb-3">{t("bio_welcome_sub")} <span>🇮🇹</span> <span>🇩🇪</span></p>
@@ -73,7 +73,7 @@ export default function Mikilab() {
               src={`${process.env.PUBLIC_URL}/bio-dough.jpg`}
               alt="Michele — impasto in mano"
               data-testid="bio-dough-photo"
-              className="w-full rounded-2xl object-contain bg-[#121212] ring-2 ring-[#ffc700]/60 shadow-xl"
+              className="w-full rounded-2xl object-contain bg-[#121212] ring-2 ring-[#ff6b00]/60 shadow-xl"
             />
             <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
           </figure>
@@ -89,13 +89,13 @@ export default function Mikilab() {
               )}
             </div>
             <div className="flex items-center gap-2">
-              <Heart className="w-5 h-5 text-[#ffc700]" />
+              <Heart className="w-5 h-5 text-[#ff6b00]" />
               <h3 className="font-display text-lg font-bold">{t("bio_about_title")}</h3>
             </div>
           </div>
           <figure className="mb-4">
             <img data-testid="bio-cartoon" src={`${process.env.PUBLIC_URL}/michele-cartoon.jpg`} alt="Michele — Mikilab"
-              className="w-40 h-40 mx-auto rounded-3xl object-cover border-2 border-[#ffc700]/50 shadow-lg" />
+              className="w-40 h-40 mx-auto rounded-3xl object-cover border-2 border-[#ff6b00]/50 shadow-lg" />
             <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
           </figure>
           <p className="text-sm text-white/90 leading-relaxed whitespace-pre-line">{t("bio_about_body")}</p>
