@@ -285,6 +285,27 @@ export default function Home({ onNavigate }) {
 
   return (
     <div className="pb-2 space-y-6">
+      {/* Guida rapida: come iniziare (breve, non invasiva) */}
+      <div data-testid="home-quickstart" className="rounded-2xl border border-[#ff6b00]/40 bg-[#1a1a1a] p-3.5">
+        <p className="text-[13px] text-[#E0E0E0] leading-snug">
+          <span className="font-bold text-white">{mkTri(lang)("Come iniziare:", "So startest du:", "How to start:", "Cómo empezar:", "Comment commencer:", "از کجا شروع کنی:")} </span>
+          {mkTri(lang)("parti dalle Ricette di MikiLab. Sei esperto? Vai ne Il Tuo Laboratorio (anche pizza e pasticceria). Alle prime armi? Impara da casa. E ci troviamo sul Social per conoscerci.", "Beginne mit den MikiLab-Rezepten. Profi? Geh in Dein Labor (auch Pizza & Konditorei). Anfänger? Lerne von zu Hause. Und wir treffen uns im Social.", "Start with MikiLab Recipes. Expert? Go to Your Lab (also pizza & pastry). Beginner? Learn from home. And let's meet on Social.", "Empieza por las Recetas de MikiLab. ¿Experto? Ve a Tu Laboratorio (también pizza y pastelería). ¿Principiante? Aprende en casa. Y nos vemos en el Social.", "Commence par les Recettes MikiLab. Expert ? Va dans Ton Atelier (aussi pizza & pâtisserie). Débutant ? Apprends à la maison. Et on se retrouve sur le Social.", "با دستورهای میکی‌لب شروع کن. حرفه‌ای؟ به کارگاهت برو (پیتزا و شیرینی هم). تازه‌کار؟ از خانه یاد بگیر. و در سوشیال هم را می‌بینیم.")}
+        </p>
+        <div className="flex flex-wrap gap-2 mt-2.5">
+          {[
+            { t: mkTri(lang)("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها"), tab: "ricette", Icon: BookOpen },
+            { t: mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو"), tab: "maestro", Icon: Wrench },
+            { t: mkTri(lang)("Impara", "Lernen", "Learn", "Aprende", "Apprendre", "بیاموز"), tab: "impara", Icon: GraduationCap },
+            { t: "Social", tab: "community", Icon: Users },
+          ].map(({ t, tab, Icon }) => (
+            <button key={tab} data-testid={`home-quickstart-${tab}`} onClick={() => go(tab)}
+              className="text-[12px] font-bold px-3 py-1.5 rounded-full border border-[#ff6b00] text-[#ff6b00] flex items-center gap-1.5 active:scale-95 transition-transform">
+              <Icon className="w-3.5 h-3.5" /> {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
@@ -348,16 +369,17 @@ export default function Home({ onNavigate }) {
       {/* Selettore rapido dei laboratori: Panetteria · Pizzeria · Pasticceria */}
       <div data-testid="home-lab-switch">
         <div className="flex items-center gap-2 mb-2 px-1">
-          <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Scegli il tuo laboratorio", "Wähle dein Labor", "Choose your lab", "Elige tu laboratorio", "Choisis ton laboratoire", "آزمایشگاه خود را انتخاب کنید")}</h2>
+          <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Scegli il tuo spazio", "Wähle deinen Bereich", "Choose your space", "Elige tu espacio", "Choisis ton espace", "فضای خود را انتخاب کنید")}</h2>
         </div>
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-2 gap-2.5">
           {[
-            { id: "pianoai", Icon: Wrench, label: L("Panetteria", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی"), grad: "from-[#ff6b00] to-[#ff6b00]" },
-            { id: "labpizzeria", Icon: Pizza, label: L("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزریا"), grad: "from-[#ff6b00] to-[#ff6b00]" },
-            { id: "labpasticceria", Icon: Croissant, label: L("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی‌پزی"), grad: "from-[#ff6b00] to-[#ff6b00]" },
-          ].map(({ id, Icon, label, grad }) => (
-            <button key={id} data-testid={`home-lab-${id}`} onClick={() => openLabTool(id)}
-              className={`flex flex-col items-center justify-center gap-2 rounded-2xl p-4 text-white shadow-md active:scale-95 transition-all bg-gradient-to-br ${grad} min-h-[104px]`}>
+            { id: "pianoai", Icon: Wrench, label: L("Panetteria", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی") },
+            { id: "labpizzeria", Icon: Pizza, label: L("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزریا") },
+            { id: "labpasticceria", Icon: Croissant, label: L("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی‌پزی") },
+            { tab: "impara", Icon: GraduationCap, label: L("Impara da casa", "Zu Hause lernen", "Learn from home", "Aprende en casa", "Apprends à la maison", "از خانه یاد بگیر") },
+          ].map(({ id, tab, Icon, label }) => (
+            <button key={id || tab} data-testid={`home-lab-${id || tab}`} onClick={() => tab ? go(tab) : openLabTool(id)}
+              className="flex flex-col items-center justify-center gap-2 rounded-2xl p-4 text-white shadow-md active:scale-95 transition-all bg-gradient-to-br from-[#ff6b00] to-[#c94f00] border border-[#ff8a33] min-h-[104px]">
               <div className="w-11 h-11 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center"><Icon className="w-6 h-6" /></div>
               <span className="font-display text-[13px] font-bold text-center leading-tight">{label}</span>
             </button>
