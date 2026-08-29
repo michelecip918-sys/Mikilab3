@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed, Compass } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
+import SectionHero from "@/components/SectionHero";
 import { NovitaColorate } from "@/components/NovitaColorate";
 import PanettoneLabels from "@/sections/PanettoneLabels";
 import GuidaMetodi from "@/sections/Enciclopedia";
@@ -50,13 +51,9 @@ export default function Ricette() {
 
   return (
     <div data-testid="ricette-page">
-      <div className="flex items-center gap-3 mb-3" data-testid="ricette-title">
-        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-10 h-10 rounded-xl object-cover ring-1 ring-[#B45309]/40" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <div className="min-w-0">
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}</h1>
-          <p className="text-sm text-[#7E8A93] leading-snug">{mkTri(lang)("Le ricette e i sapori di MikiLab", "Die Rezepte und Aromen von MikiLab", "MikiLab recipes and flavours", "Las recetas y sabores de MikiLab", "Les recettes et saveurs de MikiLab", "دستورها و طعم‌های میکی‌لب")}</p>
-        </div>
-      </div>
+      <SectionHero testid="ricette-title" image="hero-ricette.jpg" position="50% 30%"
+        title={mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
+        subtitle={mkTri(lang)("Le ricette e i sapori di MikiLab", "Die Rezepte und Aromen von MikiLab", "MikiLab recipes and flavours", "Las recetas y sabores de MikiLab", "Les recettes et saveurs de MikiLab", "دستورها و طعم‌های میکی‌لب")} />
       {coll === "mikilab" && (
         <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}
           className="relative w-full h-32 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left ring-2 ring-[#C88A2B]/60">

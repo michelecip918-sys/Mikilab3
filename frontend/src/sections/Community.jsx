@@ -5,6 +5,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
 import { toast } from "sonner";
 import AvatarBubbles from "@/components/AvatarBubbles";
+import SectionHero from "@/components/SectionHero";
 import Marketplace from "@/sections/Marketplace";
 import { marketNewCount, markMarketSeen } from "@/lib/market";
 import FriendsPanel from "@/components/FriendsPanel";
@@ -169,13 +170,9 @@ export default function Community({ onNavigate }) {
 
   return (
     <div className="pb-40" data-testid="community">
-      <div className="flex items-center gap-3 mb-3" data-testid="community-title">
-        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-10 h-10 rounded-xl object-cover ring-1 ring-[#B45309]/40" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <div className="min-w-0">
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{tri("Social", "Social", "Social", "Social")}</h1>
-          <p className="text-sm text-[#7E8A93] leading-snug">{tri("La community dei fornai MikiLab", "Die MikiLab Bäcker-Community", "The MikiLab bakers community", "La comunidad de panaderos MikiLab", "La communauté des boulangers MikiLab", "جامعهٔ نانوایان میکی‌لب")}</p>
-        </div>
-      </div>
+      <SectionHero testid="community-title" image="hero-social.jpg" position="50% 30%"
+        title={tri("Social", "Social", "Social", "Social")}
+        subtitle={mkTri(lang)("La community dei fornai MikiLab", "Die MikiLab Bäcker-Community", "The MikiLab bakers community", "La comunidad de panaderos MikiLab", "La communauté des boulangers MikiLab", "جامعهٔ نانوایان میکی‌لب")} />
       {/* Header social — compatto (navigazione via menù globale) */}
       <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
         style={{ background: "linear-gradient(135deg,#123c4a 0%,#1f5a68 60%,#a9772f 100%)" }}>

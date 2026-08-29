@@ -181,10 +181,13 @@ function App() {
     <AmbientProvider>
     <TimerProvider>
     <SoundFXProvider>
-    <div className="App min-h-screen bg-[#FDFBF7] dark:bg-[#1B2127]">
+    <div className="App min-h-screen app-warm-bg">
       {/* Sfondo tematico: filigrana grano/farina elegante su ogni pagina (contrasto garantito dalle card) */}
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-repeat opacity-[0.55] dark:opacity-[0.05]"
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px" }} />
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-repeat opacity-[0.35] dark:opacity-[0.05]"
+        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px", mixBlendMode: "multiply" }} />
+      {/* Alone caldo tipo luce del forno */}
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none dark:opacity-0"
+        style={{ background: "radial-gradient(80% 40% at 50% -5%, rgba(216,150,70,.22), transparent 60%)" }} />
       <div className="relative z-10">
       <Header />
       <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />

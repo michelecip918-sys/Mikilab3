@@ -2261,3 +2261,14 @@ Richiesta utente (ordine D-A-B-C-E + lista tassativa a 6 punti). TUTTO testato (
 ## v-fork.65 (2026-06) — Rifinitura RTL Persiano
 - `RicetteCustodite.jsx`: filtri categoria da `overflow-x-auto` → `flex-wrap` (niente più chip tagliati a sinistra in RTL/FA); card lista con classi logiche `text-start` + `pe-3`; quick-buttons dosi `ml-auto` → `ms-auto`.
 - Verificato a schermo in FA: Home, Ricette, Laboratorio, Custodite (lista + dettaglio + tabella ingredienti) tutti allineati RTL correttamente, numeri/percentuali LTR.
+
+## v-fork.66 (2026-06) — Redesign "Panificio Digitale" (3D simulato)
+Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a pale globale, avatar SEMPRE quello del brand (Michele, con orecchino).
+- **Home**: portale ad arco in mattoni con l'avatar Michele nel laboratorio; targa di legno "Aperto"; pulsante Accedi come targa; "Il Sapore del Giorno" come lavagnetta su mensola; pulviscolo di farina.
+- **Nav a pale da forno** (`BottomNav`, globale): 5 palette di legno con icone incise, pala attiva sollevata e illuminata; testid invariati.
+- **Banner tematici sezioni** (`components/SectionHero.jsx`) con scene generate (editing dall'avatar, orecchino incluso): Ricette=bancone pane (`hero-ricette.jpg`), Il Tuo Laboratorio=chimico (`hero-laboratorio.jpg`), Impara=maestro in biblioteca (`hero-impara.jpg`), Social=mercato dei fornai (`hero-social.jpg`). Sostituite le vecchie intestazioni.
+- **Sfondo caldo** app-wide (`.app-warm-bg` + alone luce forno) in `index.css`; dark mode invariato.
+- CSS tema in `index.css`: `.wood-surface` (legno in gradienti), `.wood-emboss`, `.chalkboard`, `.grain-overlay`, `.peel-shadow`.
+- Fix regressione: reintegrato import `WhatsAppHelp` in Maestro.jsx (rimosso per errore durante lo swap import).
+- Asset in `/app/frontend/public/`: hero-bakery.jpg (non usato ora), hero-ricette/laboratorio/impara/social.jpg. Avatar sorgente: michele-avatar-full.jpg.
+- Verificato a schermo IT: Home, Ricette, Laboratorio, Impara OK; Social mostra banner da loggato (gate se ospite). Nessun errore runtime.

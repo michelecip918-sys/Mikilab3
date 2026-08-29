@@ -6,6 +6,7 @@ import {
   Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
+import SectionHero from "@/components/SectionHero";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
 import MyData from "@/sections/MyData";
 import MachinePark from "@/components/MachinePark";
@@ -179,13 +180,9 @@ export default function Maestro() {
     <div className="pb-28">
       <HighFive />
 
-      <div className="flex items-center gap-3 mb-3" data-testid="maestro-title">
-        <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-10 h-10 rounded-xl object-cover ring-1 ring-[#B45309]/40" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <div className="min-w-0">
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}</h1>
-          <p className="text-sm text-[#7E8A93] leading-snug">{mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")}</p>
-        </div>
-      </div>
+      <SectionHero testid="maestro-title" image="hero-laboratorio.jpg" position="50% 30%"
+        title={mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}
+        subtitle={mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")} />
 
       {/* Snellito: si arriva SUBITO al Piano di Produzione IA (hero + scegli ricette + genera) */}
       <PianoProduzioneAI onOpenTool={openTool} />
