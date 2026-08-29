@@ -288,8 +288,16 @@ export default function Home({ onNavigate }) {
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
-      {/* Banner dinamico: Il Sapore del Giorno */}
-      <SaporeDelGiorno onOpen={() => onNavigate && onNavigate("ricette")} />
+      {/* Promo Social: unisciti alla community MikiLab */}
+      <button data-testid="home-social-promo" onClick={() => go("community")}
+        className="w-full text-left rounded-3xl p-5 border-2 border-[#ff6b00] bg-gradient-to-br from-[#ff6b00] to-[#c94f00] shadow-[0_4px_0_rgba(0,0,0,.35),0_6px_14px_rgba(255,107,0,.3)] active:scale-98 transition-all flex items-center gap-4">
+        <Users className="w-9 h-9 text-white shrink-0" />
+        <div className="min-w-0 flex-1">
+          <p className="font-display text-lg font-bold text-white leading-tight">{mkTri(lang)("Unisciti alla community", "Tritt der Community bei", "Join the community", "Únete a la comunidad", "Rejoins la communauté", "به جامعه بپیوند")}</p>
+          <p className="text-white/90 text-[13px] leading-snug">{mkTri(lang)("Condividi i tuoi pani, sfida altri fornai e scopri il Social di MikiLab", "Teile deine Brote und entdecke das MikiLab Social", "Share your breads, challenge bakers and explore MikiLab Social", "Comparte tus panes y descubre el Social de MikiLab", "Partage tes pains et découvre le Social MikiLab", "نان‌هایت را به اشتراک بگذار و سوشیال میکی‌لب را کشف کن")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-white shrink-0" />
+      </button>
 
       {/* HERO — 100% gratis (lead magnet: account gratuito) */}
       <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#ff6b00]/40"

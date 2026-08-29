@@ -20,7 +20,7 @@ export const getVoiceId = (who) =>
 export default function VoiceSettings({ open, onClose }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const [momy, setMomy] = useState(getVoiceId("momy"));
+  const [momy, setMohammadreza] = useState(getVoiceId("momy"));
   const [michele, setMichele] = useState(getVoiceId("michele"));
   const [previewing, setPreviewing] = useState(null);
   const audioRef = useRef(null);
@@ -31,7 +31,7 @@ export default function VoiceSettings({ open, onClose }) {
       setPreviewing(voiceId + who);
       const sample = who === "michele"
         ? tri("Ciao, sono Michele, benvenuto in MikiLab.", "Hallo, ich bin Michele, willkommen bei MikiLab.", "Hi, I'm Michele, welcome to MikiLab.")
-        : tri("Ciao, sono Momy, il tuo assistente in laboratorio.", "Hallo, ich bin Momy, dein Assistent.", "Hi, I'm Momy, your lab assistant.");
+        : tri("Ciao, sono Mohammadreza, il tuo assistente in laboratorio.", "Hallo, ich bin Mohammadreza, dein Assistent.", "Hi, I'm Mohammadreza, your lab assistant.");
       const res = await fetch(`${API}/tts`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
         body: JSON.stringify({ text: sample, lang, voice_id: voiceId }),
@@ -86,7 +86,7 @@ export default function VoiceSettings({ open, onClose }) {
               <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Scegli le voci 🎙️", "Stimmen wählen 🎙️", "Choose the voices 🎙️")}</h2>
               <button data-testid="voice-settings-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center"><X className="w-4 h-4" /></button>
             </div>
-            <Group title={tri("Voce di Momy (assistente)", "Momy-Stimme (Assistent)", "Momy's voice (assistant)")} sel={momy} setSel={setMomy} who="momy" />
+            <Group title={tri("Voce di Mohammadreza (assistente)", "Mohammadreza-Stimme (Assistent)", "Mohammadreza's voice (assistant)")} sel={momy} setSel={setMohammadreza} who="momy" />
             <Group title={tri("Voce di Michele (fondatore)", "Michele-Stimme (Gründer)", "Michele's voice (founder)")} sel={michele} setSel={setMichele} who="michele" />
             <button data-testid="voice-settings-save" onClick={save}
               className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">

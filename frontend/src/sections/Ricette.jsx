@@ -9,6 +9,7 @@ import Glossario from "@/sections/Glossario";
 import FlourTable from "@/components/FlourTable";
 import SaporiCasa from "@/sections/SaporiCasa";
 import ScopriMikiLab from "@/sections/ScopriMikiLab";
+import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
@@ -54,6 +55,7 @@ export default function Ricette() {
       <SectionHero testid="ricette-title" image="hero-ricette.jpg" position="50% 30%"
         title={mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
         subtitle={mkTri(lang)("Le ricette e i sapori di MikiLab", "Die Rezepte und Aromen von MikiLab", "MikiLab recipes and flavours", "Las recetas y sabores de MikiLab", "Les recettes et saveurs de MikiLab", "دستورها و طعم‌های میکی‌لب")} />
+      <div className="mb-4"><SaporeDelGiorno /></div>
       {coll === "mikilab" && (
         <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}
           className="relative w-full h-32 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left ring-2 ring-[#ff6b00]/60">

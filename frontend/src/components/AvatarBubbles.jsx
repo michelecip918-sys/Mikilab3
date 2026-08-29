@@ -30,7 +30,7 @@ const SCRIPTS = {
   ],
 };
 
-const NAME = { michele: "Michele", momy: "Momy" };
+const NAME = { michele: "Michele", momy: "Mohammadreza" };
 
 export default function AvatarBubbles({ variant = "impara" }) {
   const { lang } = useLang();
