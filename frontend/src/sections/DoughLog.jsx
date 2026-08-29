@@ -99,7 +99,7 @@ export default function DoughLog() {
   const VERDICT = {
     on_target: { color: "#ff6b00", Icon: CheckCircle2, label: tri("Nel target 👌", "Im Ziel 👌", "On target 👌") },
     too_warm: { color: "#ff6b00", Icon: Flame, label: tri("Troppo caldo", "Zu warm", "Too warm") },
-    too_cold: { color: "#3F7CAC", Icon: Snowflake, label: tri("Troppo freddo", "Zu kalt", "Too cold") },
+    too_cold: { color: "#ff6b00", Icon: Snowflake, label: tri("Troppo freddo", "Zu kalt", "Too cold") },
     unknown: { color: "#7E8A93", Icon: Thermometer, label: tri("Dati incompleti", "Unvollständig", "Incomplete data") },
   };
 
@@ -114,7 +114,7 @@ export default function DoughLog() {
       </div>
 
       {!user && (
-        <button data-testid="doughlog-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#3F7CAC] text-white font-semibold py-3 rounded-2xl mb-4">
+        <button data-testid="doughlog-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl mb-4">
           <LogIn className="w-5 h-5" /> {tri("Accedi per salvare le sessioni", "Anmelden, um Sitzungen zu speichern", "Sign in to save sessions")}
         </button>
       )}
@@ -135,7 +135,7 @@ export default function DoughLog() {
           <label className="text-[11px] text-[#7E8A93]">{tri("Temp. acqua °C", "Wassertemp. °C", "Water temp °C")}<input data-testid="doughlog-water" type="number" step="0.1" value={form.water_temp_c} onChange={(e) => setForm((f) => ({ ...f, water_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
         </div>
         <input data-testid="doughlog-note" value={form.note} onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))} placeholder={tri("Note (facoltative)", "Notiz (optional)", "Note (optional)")} className={inp} />
-        <button data-testid="doughlog-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva sessione", "Sitzung speichern", "Save session")}</button>
+        <button data-testid="doughlog-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva sessione", "Sitzung speichern", "Save session")}</button>
       </div>
 
       {/* Giorno Dopo */}
@@ -147,9 +147,9 @@ export default function DoughLog() {
             <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] mt-2" data-testid="doughlog-verdict">{v.label}{a.delta !== null && a.verdict !== "on_target" && ` · ${a.delta > 0 ? "+" : ""}${a.delta}°C`}</p>
             <p className="text-[12px] text-[#7E8A93]">{tri("Ieri", "Gestern", "Yesterday")}: {dayAfter.last.dough_temp_c}°C (target {dayAfter.last.target_temp_c ?? "?"}°C), {tri("acqua", "Wasser", "water")} {dayAfter.last.water_temp_c ?? "?"}°C</p>
             {a.suggested_water_c !== null && (
-              <div className="flex items-center gap-2 mt-2 bg-[#3F7CAC]/10 border border-[#3F7CAC]/30 rounded-xl px-3 py-2">
-                <Droplet className="w-4 h-4 text-[#3F7CAC]" />
-                <p className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{tri("Oggi usa acqua a", "Heute Wasser mit", "Today use water at")} <b data-testid="doughlog-suggest-water" className="font-mono-data text-[#3F7CAC]">{a.suggested_water_c}°C</b></p>
+              <div className="flex items-center gap-2 mt-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-xl px-3 py-2">
+                <Droplet className="w-4 h-4 text-[#ff6b00]" />
+                <p className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{tri("Oggi usa acqua a", "Heute Wasser mit", "Today use water at")} <b data-testid="doughlog-suggest-water" className="font-mono-data text-[#ff6b00]">{a.suggested_water_c}°C</b></p>
               </div>
             )}
             <button data-testid="doughlog-ai" onClick={getAdvice} disabled={loadingAdvice} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-2.5 rounded-xl disabled:opacity-50 active:scale-98"><Sparkles className="w-4 h-4" /> {loadingAdvice ? tri("Chiedo al Maestro…", "Frage den Meister…", "Asking the Master…") : tri("Consiglio IA del Maestro", "KI-Rat des Meisters", "Master's AI advice")}</button>

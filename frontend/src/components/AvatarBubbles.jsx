@@ -61,7 +61,7 @@ export default function AvatarBubbles({ variant = "impara" }) {
                 isMichele
                   ? "bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-bl-sm"
                   : "bg-[#ff6b00]/5 border-[#ff6b00]/20 rounded-br-sm"}`}>
-              <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#3a5233]" : "text-[#274038]"}`}>{NAME[m.who]}</p>
+              <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#9cd6a0]" : "text-[#f0b76b]"}`}>{NAME[m.who]}</p>
               <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{bubbleText(m)}</p>
             </div>
           </motion.div>

@@ -276,7 +276,7 @@ export default function DoughTwin() {
         </div>
         <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
           <p className="text-[11px] font-bold uppercase text-[#7E8A93] flex items-center gap-1"><Droplets className="w-3.5 h-3.5" />{tri("Idratazione ideale", "Ideale Hydratation", "Ideal hydration")}</p>
-          <p data-testid="twin-rechyd" className="font-mono-data text-2xl font-bold text-[#3F7CAC] mt-1">~{sim.recHyd}%</p>
+          <p data-testid="twin-rechyd" className="font-mono-data text-2xl font-bold text-[#ff6b00] mt-1">~{sim.recHyd}%</p>
           <p className="text-[11px] text-[#7E8A93]">{sim.hydDelta > 8 ? tri("sei sopra", "du bist drüber", "you're above") : sim.hydDelta < -10 ? tri("sei sotto", "du bist drunter", "you're below") : tri("in equilibrio", "im Gleichgewicht", "balanced")}</p>
         </div>
         <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">

@@ -100,7 +100,7 @@ export default function BatchTraceability() {
       </div>
 
       <button data-testid="batch-add" onClick={() => setShowForm((s) => !s)}
-        className="no-print w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
+        className="no-print w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
         <Plus className="w-5 h-5" /> {tri("Nuovo lotto", "Neue Charge", "New batch")}
       </button>
 
@@ -134,7 +134,7 @@ export default function BatchTraceability() {
           </div>
           <div><label className={lbl}>{tri("Note (HACCP, temperature…)", "Notizen (HACCP, Temperaturen…)", "Notes (HACCP, temps…)")}</label>
             <textarea data-testid="batch-note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={2} className={inp + " mt-1"} /></div>
-          <button data-testid="batch-save" onClick={add} className="w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{tri("Crea lotto", "Charge erstellen", "Create batch")}</button>
+          <button data-testid="batch-save" onClick={add} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{tri("Crea lotto", "Charge erstellen", "Create batch")}</button>
         </div>
       )}
 
@@ -179,7 +179,7 @@ export default function BatchTraceability() {
                 </div>
               ) : (
                 <button data-testid={`batch-publish-${b.id}`} onClick={() => publish(b)} disabled={publishing === b.id}
-                  className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#336a94] text-white text-xs font-semibold py-2.5 rounded-lg active:scale-98 disabled:opacity-50">
+                  className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-xs font-semibold py-2.5 rounded-lg active:scale-98 disabled:opacity-50">
                   {publishing === b.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />} {tri("Genera QR pubblico", "Öffentlichen QR erstellen", "Generate public QR")}
                 </button>
               )}

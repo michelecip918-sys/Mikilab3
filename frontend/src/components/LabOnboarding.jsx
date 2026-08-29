@@ -176,12 +176,12 @@ export default function LabOnboarding() {
                 </button>
                 {i < slides.length - 1 ? (
                   <button data-testid="lab-onboarding-next" onClick={next}
-                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold active:scale-97 transition-all">
                     {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
                   </button>
                 ) : (
                   <button data-testid="lab-onboarding-done" onClick={close}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold active:scale-97 transition-all">
                     <Check className="w-5 h-5" /> {tri("Ho capito, iniziamo!", "Verstanden, los geht's!", "Got it, let's start!")}
                   </button>
                 )}

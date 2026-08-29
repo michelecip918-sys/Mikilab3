@@ -35,7 +35,7 @@ export default function WaterTempCalc() {
   return (
     <div className="pb-24">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#3F7CAC] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center">
           <Droplets className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -54,7 +54,7 @@ export default function WaterTempCalc() {
           hint={tri("Impastatrice: spirale ~3, tuffante ~1-2, planetaria ~4-6", "Kneter: Spirale ~3, Tauchkneter ~1-2, Planeten ~4-6", "Mixer: spiral ~3, plunger ~1-2, planetary ~4-6")} />
       </div>
 
-      <div data-testid="wtc-result" className="mt-5 bg-gradient-to-br from-[#3F7CAC] to-[#2E5E82] rounded-3xl p-6 text-white shadow-lg text-center">
+      <div data-testid="wtc-result" className="mt-5 bg-gradient-to-br from-[#ff6b00] to-[#ff8a33] rounded-3xl p-6 text-white shadow-lg text-center">
         <p className="text-white/80 text-sm uppercase tracking-wider font-semibold flex items-center justify-center gap-1">
           <Thermometer className="w-4 h-4" /> {tri("Acqua da usare", "Wasser verwenden", "Use water at")}
         </p>

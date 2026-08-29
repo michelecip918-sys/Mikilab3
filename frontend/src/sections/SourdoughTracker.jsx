@@ -122,13 +122,13 @@ export default function SourdoughTracker() {
       </div>
 
       <button data-testid="ph-add-btn" onClick={() => add(ph, temp)}
-        className="w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2 mb-2">
+        className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2 mb-2">
         <Plus className="w-5 h-5" /> {tri("Registra misura", "Messung speichern", "Save reading")}
       </button>
 
       <button data-testid="ph-bt-btn" onClick={connectBt} disabled={btBusy}
         className="w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
-        <Bluetooth className="w-5 h-5 text-[#3F7CAC]" /> {tri("Collega pH-metro (Bluetooth)", "pH-Meter verbinden (Bluetooth)", "Connect pH meter (Bluetooth)")}
+        <Bluetooth className="w-5 h-5 text-[#ff6b00]" /> {tri("Collega pH-metro (Bluetooth)", "pH-Meter verbinden (Bluetooth)", "Connect pH meter (Bluetooth)")}
       </button>
       <button data-testid="ph-notif-btn" onClick={askNotif} className="w-full mt-2 text-xs text-[#7E8A93] flex items-center justify-center gap-1">
         <Bell className="w-3.5 h-3.5" /> {tri("Attiva le notifiche del picco", "Peak-Benachrichtigungen aktivieren", "Enable peak notifications")}

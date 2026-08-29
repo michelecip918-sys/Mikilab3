@@ -118,7 +118,7 @@ export default function EvolvingQuiz() {
 
       {/* Sfida a Tema settimanale */}
       {theme && (
-        <div data-testid="weekly-theme-card" className="mb-3 rounded-xl p-3 text-white shadow-sm" style={{ background: themeMode ? "linear-gradient(135deg,#ff6b00,#7a1f1f)" : "linear-gradient(135deg,#ff6b00,#4a2e78)" }}>
+        <div data-testid="weekly-theme-card" className="mb-3 rounded-xl p-3 text-white shadow-sm" style={{ background: themeMode ? "linear-gradient(135deg,#ff6b00,#7a1f1f)" : "linear-gradient(135deg,#ff6b00,#c94f00)" }}>
           <div className="flex items-center gap-2">
             <Flame className="w-5 h-5 shrink-0" />
             <div className="flex-1 min-w-0">
@@ -128,7 +128,7 @@ export default function EvolvingQuiz() {
             {themeMode ? (
               <button data-testid="weekly-theme-exit" onClick={exitTheme} className="text-xs font-bold bg-white/20 px-2.5 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><X className="w-3.5 h-3.5" /> {tri("Esci", "Beenden", "Exit", "Salir")}</button>
             ) : (
-              <button data-testid="weekly-theme-start" onClick={startThemeChallenge} className="text-xs font-bold bg-white text-[#4a2e78] px-3 py-1.5 rounded-full active:scale-95">{tri("Gioca", "Spielen", "Play", "Jugar")}</button>
+              <button data-testid="weekly-theme-start" onClick={startThemeChallenge} className="text-xs font-bold bg-white text-[#c94f00] px-3 py-1.5 rounded-full active:scale-95">{tri("Gioca", "Spielen", "Play", "Jugar")}</button>
             )}
           </div>
           {themeMode && <p className="text-[11px] text-white/85 mt-1">{tri("Domande a tema attive: rispondi bene per scalare la classifica!", "Themenfragen aktiv: richtig antworten und aufsteigen!", "Themed questions on: answer well to climb the leaderboard!", "Preguntas temáticas activas: ¡responde bien para subir!")}</p>}
@@ -175,7 +175,7 @@ export default function EvolvingQuiz() {
           ) : board.map((r, idx) => (
             <div key={r.user_id} data-testid={`leaderboard-row-${r.user_id}`} className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 ${r.me ? "bg-[#ff6b00]/10" : ""} ${idx === 0 && r.points > 0 ? "ring-1 ring-[#ff6b00]/40" : ""}`}>
               <span className={`w-5 text-center text-sm font-extrabold ${idx === 0 ? "text-[#ff6b00]" : "text-[#7E8A93]"}`}>{idx === 0 && r.points > 0 ? "👑" : idx + 1}</span>
-              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white text-xs font-bold shrink-0">{r.picture ? <img src={r.picture} alt={r.name} className="w-full h-full object-cover" /> : (r.name || "F")[0].toUpperCase()}</div>
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#1c1c1c] flex items-center justify-center text-white text-xs font-bold shrink-0">{r.picture ? <img src={r.picture} alt={r.name} className="w-full h-full object-cover" /> : (r.name || "F")[0].toUpperCase()}</div>
               <span className="flex-1 min-w-0 truncate text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{r.name}{r.me ? tri(" (tu)", " (du)", " (you)", " (tú)") : ""}</span>
               {r.champion && <span title="Fornaio della Settimana" className="text-sm">🏆</span>}
               {r.diplomato && <span title="Fornaio Diplomato" className="text-sm">🎓</span>}

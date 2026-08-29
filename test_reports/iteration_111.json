@@ -1,0 +1,93 @@
+{
+  "summary": "Full frontend audit of MikiLab (guest + admin login) at desktop 1440x900 and mobile 430x900, IT/EN/DE/FA. Verified: bottom-nav peels (all 5 route correctly, aria-pressed=true), Home lab cards (Panetteria/Pizzeria/Pasticceria -> correct hubs), Motore Sfide overlay, weekly challenge, auth dialog + login as admin@mikilab.de (works, session persists, all tabs work after login), language switch + persistence (localStorage mikilab_lang, dir=rtl for FA), SiteMenu, Radio panel, AdminPanel, Ricette (category folders -> 59 recipe rows -> recipe dialog), Ricette Custodite (+ QR detail), Il Tuo Laboratorio tools (Calcolatore Idratazione, Calcolatore Metodo & Sequenze IA), Impara, Community. Programmatic palette scan (computed backgroundColor + gradients) and overflow/clipping scan on every section. NAVIGATION IS SOLID (no broken route found), but there are real palette violations (cream promo card, purple weekly-challenge, blue lab hero, invisible orange-on-orange and dark-on-dark text), 5 typos and several clipping/contrast issues.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/auth/me (guest)", "issue": "Guest home fires repeated 401s (12+ per load) -> noisy console; gate the call or treat 401 as normal without logging"}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AuthScreen tabs", "issue": "COLOR BUG: active login tab has color #FF6B00 on background #FF6B00 -> the label 'Accedi' is completely invisible (register tab is readable)", "selector": "[data-testid=\"auth-tab-login\"]", "priority": "HIGH"},
+      {"component": "RecipeDialog", "issue": "No close/X button in the dialog (only share/listen/handsfree/timer/print/scale icons). On mobile the dialog covers the whole screen and blocks the bottom nav -> user has no visible way out (only Esc / backdrop)", "selector": "[role=\"dialog\"] (recipe detail)", "priority": "HIGH"},
+      {"component": "PianoProduzioneAI / Il Tuo Laboratorio", "issue": "Validation text '⚠️ Obbligatorio: scegli almeno una ricetta e ...' rendered in rgb(36,36,36) on #121212 -> invisible error message", "selector": "main p (capo form warning)", "priority": "HIGH"},
+      {"component": "Impara / Beginners", "issue": "Labels 'MICHELE' rgb(58,82,51) and 'MOMY' rgb(39,64,56) are dark-on-dark, effectively unreadable", "selector": "main p (avatar labels)", "priority": "MEDIUM"},
+      {"component": "Header admin", "issue": "Crown admin button is NOT rendered for admin@mikilab.de (docs say data-testid=admin-btn in header). Admin panel is reachable only via ☰ -> site-menu-admin", "selector": "[data-testid=\"admin-btn\"]", "priority": "MEDIUM"},
+      {"component": "LabOnboarding", "issue": "Onboarding popup 'Ciao, sono Mohammadreza' still appears in Il Tuo Laboratorio although localStorage mikilab_lab_tour_done='1' was set -> flag key mismatch; popup overlays the tools grid", "selector": "lab onboarding overlay", "priority": "LOW"},
+      {"component": "Header lang-select", "issue": "React console error 'In HTML, <span> cannot be a child of <option>' (hydration error). Also lang-select is a native <select>, so the dropdown is OS-rendered and cannot follow the dark/orange palette", "selector": "[data-testid=\"lang-select\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Newsletter subscribe (home)", "issue": "Works (inline confirmation 'Iscrizione confermata!'), but no toast is shown at all - could not audit toast palette because no toast component renders on success", "affected_selectors": ["[data-testid=\"newsletter-email-input\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "COLOR - Home promo card (data-testid home-hero)", "issues": [
+        "OLD PALETTE: whole card uses a cream gradient rgb(247,239,224) with border #e4d6bd",
+        "H1 'Il tuo laboratorio di panificazione, 100% gratis' (EN 'Your bakery lab, 100% free') is dark brown rgb(74,50,18)",
+        "Decorative circles rgb(216,184,119) beige; one overflows off-screen right at 430px (right=445px)",
+        "Card scrollWidth 428 > clientWidth 396 at 430px -> content overflows its padding"
+      ]},
+      {"screen": "COLOR - Home weekly challenge (data-testid home-weekly-challenge) and Impara (data-testid weekly-theme-card)", "issues": ["PURPLE gradient rgb(74,46,120) - explicitly forbidden by the palette rules"]},
+      {"screen": "COLOR - Il Tuo Laboratorio hero ('Che si sforna oggi? 🔥')", "issues": ["BLUE gradient rgb(47,106,151) - not in the black/white/orange palette"]},
+      {"screen": "COLOR - Static text that is orange/gold (should be white/light-grey)", "issues": [
+        "Maestro H2 'INIZIA — passi base e interruttori' #FF6B00",
+        "Maestro H2 'Compila per generare' #FF6B00",
+        "Maestro group labels 'Laboratorio Panificazione', 'Laboratorio Pizzeria', 'Strumenti Mani in Pasta' #FF6B00",
+        "Maestro paragraph 'Tocca la «i» dorata su ogni strumento…' rgb(211,171,107) (old gold/beige)",
+        "Footer paragraph '🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · 100% gratis' rgba(255,107,0,.9)"
+      ]},
+      {"screen": "COLOR - Header / Footer", "issues": [
+        "login-btn 'Accedi' and the 'Aperto' badge (home-open-sign) use wood-surface brown rgb(122,74,36) instead of the orange clickable affordance",
+        "Footer is one large SOLID ORANGE block containing only static text/logo - contradicts 'orange = clickable only'",
+        "newsletter-email-input has bg white/95 with orange text -> only white block left in the content area"
+      ]},
+      {"screen": "TEXT/READABILITY - Hero portal + SectionHero", "issues": [
+        "Home hero portal: 'MikiLab' title + 'Entra nel panificio digitale 🇮🇹…' sit on the founder photo at the card's bottom edge, clipped and very low contrast (desktop AND mobile)",
+        "Ricette hero 'Ricette del MikiLab' + subtitle and Custodite hero 'Le Ricette Custodite' + subtitle are white text over a bright photo -> subtitle almost unreadable"
+      ]},
+      {"screen": "RESPONSIVENESS - mobile 430x900", "issues": [
+        "No document-level horizontal overflow (scrollWidth 430 == clientWidth 430) - good",
+        "Radio FAB (fixed left-3 bottom-24) overlaps content: on Ricette it covers the 'Etichette Panettoni' card label; the FAB container itself clips its 'Radio' label (scrollWidth 70 vs clientWidth 48)",
+        "Ricette base-filter chips extend to right=954px (base-filter-segale/licoli/kochstuck/quark/indiretto/diretto/colorati) - presumably a horizontal scroller; confirm it scrolls and add a fade/affordance",
+        "Bottom-nav peel label 'Il Tuo Laboratorio' wraps to 2 lines (not clipped) - acceptable"
+      ]},
+      {"screen": "TYPOS", "issues": [
+        "AuthScreen title renders 'Mikilab' (should be 'MikiLab') - components/AuthScreen.jsx:25 (title) and :111 (img alt)",
+        "Home share block heading 'Condividi Mikilab' / EN 'Share Mikilab' -> 'MikiLab' (components/ShareInstall.jsx:36,41; also SupplierOrder.jsx:34,43; Maintenance.jsx:12 'Mikilab sta arrivando.'; i18n/translations.js nav_mikilab + many bio_* strings use 'Mikilab')",
+        "Footer links are German in IT and EN: 'Impressum' / 'Datenschutz' shown next to 'Contatti'/'Contact' -> localize to 'Note legali'/'Privacy' (IT) and 'Legal notice'/'Privacy' (EN)",
+        "Recipe ingredient 'Malto d orzo' missing apostrophe -> 'Malto d'orzo' (lib/loc.js:108,197,273 keys + recipe data)",
+        "Recipe ingredient 'Prefermento (Lievito Madre (di Segale))' - nested double parentheses"
+      ]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/iteration_111.json"],
+  "action_items": [
+    "Fix auth-tab-login invisible label (orange text on orange background)",
+    "Repaint home-hero promo card: replace cream gradient #F7EFE0 + dark-brown H1 with #121212 bg / white title; remove beige #D8B877 decorative circles (one overflows on mobile)",
+    "Replace purple gradient rgb(74,46,120) on home-weekly-challenge and weekly-theme-card with orange",
+    "Replace blue gradient rgb(47,106,151) on the Il Tuo Laboratorio hero with the dark/orange palette",
+    "Fix invisible dark-on-dark texts: Maestro '⚠️ Obbligatorio…' rgb(36,36,36); Impara 'MICHELE' / 'MOMY'",
+    "Turn static orange headings white/grey: 'INIZIA — passi base e interruttori', 'Compila per generare', 'Laboratorio Panificazione/Pizzeria', 'Strumenti Mani in Pasta', gold paragraph rgb(211,171,107), footer '100% gratis' line",
+    "Add a visible close (X) button to RecipeDialog (blocks bottom nav on mobile)",
+    "Make header login-btn / 'Aperto' badge orange (currently wood brown) and rethink the fully-orange footer with static text",
+    "Fix typos: 'Mikilab' -> 'MikiLab' (AuthScreen, ShareInstall, SupplierOrder, Maintenance, translations), localize footer 'Impressum/Datenschutz', 'Malto d orzo' -> \"Malto d'orzo\", remove nested parentheses in 'Prefermento (Lievito Madre (di Segale))'",
+    "Fix hero/SectionHero text clipping + contrast (add a dark scrim behind titles over photos)",
+    "Move/shrink the Radio FAB so it does not overlap Ricette card labels on mobile",
+    "Render admin crown (admin-btn) in the header for admin users, or update docs",
+    "Fix invalid <span> inside <option> in lang-select (React hydration error); consider a custom dark dropdown",
+    "Fix LabOnboarding flag key so mikilab_lab_tour_done suppresses the popup"
+  ],
+  "critical_code_review_comments": [
+    "sections/Home.jsx:343 heading uses text-[#2B303B] dark:text-[#e4eff8] - the light variant is a dark navy that becomes dark-on-dark whenever dark class is absent; audit remaining dark:*-only color pairs across sections",
+    "sections/Home.jsx home-hero and home-weekly-challenge still carry pre-redesign gradient utilities (cream / purple) - the index.css .text-[#ff6b00] override cannot fix background gradients, they must be edited in the component",
+    "sections/Maestro.jsx:156 renders <CalcolatoreSequenze /> and <CalcolatoreMetodo /> without the onBack prop they accept (back nav relies on the wrapper link only)",
+    "components/AuthScreen.jsx hardcodes title 'Mikilab' instead of the brand 'MikiLab' - move brand string to a single constant to avoid casing drift (14+ occurrences found)"
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "navigation/links 100% (0 broken routes); palette compliance ~70% (5 violating blocks); typos 5 found; responsiveness ~85%"},
+  "seed_data_creation": "Newsletter test subscription with TEST_qa_toast@example.com (home newsletter form). No other data created.",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login verified OK; note the crown admin-btn is missing in the header, admin panel via ☰ site-menu-admin)",
+  "context_for_next_testing_agent": "Login: click [data-testid=login-btn], then scope the fields to [data-testid=auth-modal] (a bare input[type=email] selector hits the newsletter input behind the modal), then click the 'Accedi' submit (.last). Recipes: nav-tab-ricette -> click [data-testid=cat-folder-pane] to reveal recipe-row-* (59 rows), then recipe dialog opens (no X button, use Escape). Lab tools: nav-tab-maestro -> capo-quicklink-<id>; 'Calcolatore Metodo & Sequenze IA' is capo-quicklink-sequenze (capo-quicklink-metodo is the Hydration calculator - naming is confusing but both work). Custodite: text link 'Ricette Custodite' -> custodite-hero -> custodite-open-*. Palette scan approach: evaluate computed backgroundColor AND backgroundImage gradients (violations were only in gradients), and check text color for orange-static / dark-on-dark.",
+  "rca_of_the_issue": "The theme overhaul was applied mainly through index.css overrides (body #121212 and a .text-[#ff6b00] -> white rule), which cannot reach Tailwind gradient utilities (bg-gradient-to-br from-... to-...) nor inline dark hex text colors. Consequently every remaining violation lives inside component gradients/hex classes: home-hero (cream #F7EFE0 + brown text), home-weekly-challenge & weekly-theme-card (purple #4A2E78), Maestro hero (blue #2F6A97), plus auth-tab-login where the same orange token was used for both text and background."
+}

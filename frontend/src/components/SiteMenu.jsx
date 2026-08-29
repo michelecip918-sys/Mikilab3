@@ -55,7 +55,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
     { id: "community", Icon: Users, label: tri("Community & Mercatino", "Community & Markt", "Community & Market", "Comunidad y Mercado"), color: "#ff6b00" },
   ];
   const SOCIAL = [
-    { v: "feed", Icon: Rss, label: tri("Bacheca (Feed)", "Pinnwand (Feed)", "Feed", "Muro (Feed)"), color: "#123c4a" },
+    { v: "feed", Icon: Rss, label: tri("Bacheca (Feed)", "Pinnwand (Feed)", "Feed", "Muro (Feed)"), color: "#1c1c1c" },
     { v: "friends", Icon: UserPlus, label: tri("Amici & Colleghi", "Freunde & Kollegen", "Friends & Colleagues", "Amigos y Colegas"), color: "#ff6b00" },
     { v: "messages", Icon: MessageCircle, label: tri("Messaggi", "Nachrichten", "Messages", "Mensajes"), color: "#ff6b00" },
     { v: "market", Icon: Store, label: tri("Mercatino dell'Usato", "Gebraucht-Markt", "Used Market", "Mercadillo"), color: "#ff6b00" },

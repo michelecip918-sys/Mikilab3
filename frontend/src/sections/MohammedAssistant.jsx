@@ -140,7 +140,7 @@ export default function MohammedAssistant() {
               placeholder={tri("Scrivi a Mohammadreza…", "Schreibe an Mohammadreza…", "Message Mohammadreza…", "Escribe a Mohammadreza…")}
               className="flex-1 bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
             <button data-testid="mohammed-send" onClick={() => send()} disabled={busy || !input.trim()}
-              className="w-11 h-11 rounded-xl bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
+              className="w-11 h-11 rounded-xl bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
               {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
             </button>
           </div>

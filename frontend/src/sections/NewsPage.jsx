@@ -9,7 +9,7 @@ export default function NewsPage() {
   const news = content[lang].news || [];
   return (
     <div data-testid="news-page" className="pb-4">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#2f6a97] to-[#325046] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#c94f00] to-[#325046] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <HeroAvatar />
         <Newspaper className="w-7 h-7 mb-2" />

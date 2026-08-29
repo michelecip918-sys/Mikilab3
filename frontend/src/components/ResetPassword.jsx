@@ -56,7 +56,7 @@ export default function ResetPassword({ token, onDone }) {
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
           <button data-testid="reset-submit" type="submit" disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
             {tri("Cambia password", "Passwort ändern", "Change password", "Cambiar contraseña")}
           </button>
         </form>

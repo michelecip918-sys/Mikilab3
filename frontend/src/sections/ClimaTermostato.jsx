@@ -171,7 +171,7 @@ export default function ClimaTermostato() {
               </div>
             </div>
             <button data-testid="termo-save" onClick={saveTemp} disabled={measured === ""}
-              className="w-full bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+              className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
               <Save className="w-4 h-4" /> {t("termo_save")}
             </button>
           </div>

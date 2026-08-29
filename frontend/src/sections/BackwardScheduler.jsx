@@ -63,7 +63,7 @@ export default function BackwardScheduler() {
         timers.current.push(setTimeout(() => {
           speak(label, lang);
           toast(label, { icon: "⏰", duration: 9000 });
-          try { if ("Notification" in window && Notification.permission === "granted") new Notification("Mikilab", { body: label }); } catch { /* */ }
+          try { if ("Notification" in window && Notification.permission === "granted") new Notification("MikiLab", { body: label }); } catch { /* */ }
         }, delay));
       }
     });

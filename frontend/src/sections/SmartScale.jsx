@@ -101,7 +101,7 @@ export default function SmartScale() {
 
       <button data-testid="scale-bt-btn" onClick={connectBt} disabled={btBusy}
         className="w-full mb-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-4 py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-60">
-        <Bluetooth className={`w-5 h-5 ${connected ? "text-[#ff6b00]" : "text-[#3F7CAC]"}`} />
+        <Bluetooth className={`w-5 h-5 ${connected ? "text-[#ff6b00]" : "text-[#ff6b00]"}`} />
         {connected ? tri("Bilancia collegata ✓", "Waage verbunden ✓", "Scale connected ✓") : tri("Collega bilancia (Bluetooth)", "Waage verbinden (Bluetooth)", "Connect scale (Bluetooth)")}
       </button>
       {connected && (

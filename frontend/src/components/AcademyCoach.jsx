@@ -126,7 +126,7 @@ export default function AcademyCoach() {
 
   return (
     <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e]">
-      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 55%,#ff6b00)" }}>
+      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1c1c1c 55%,#ff6b00)" }}>
         <div className="w-11 h-11 rounded-xl bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
           <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
@@ -156,7 +156,7 @@ export default function AcademyCoach() {
         <div className="flex flex-wrap gap-1.5">
           {CHIPS.map((c, i) => (
             <button key={i} data-testid={`academy-chip-${i}`} onClick={() => ask(c.text)} disabled={busy}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#123c4a] dark:text-[#8FB0C2] bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1c1c1c] dark:text-[#8FB0C2] bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
               <c.Icon className="w-3.5 h-3.5" /> {c.label}
             </button>
           ))}

@@ -254,7 +254,7 @@ function App() {
       {legalOpen && (
         <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#121212] overflow-auto">
           <div className="max-w-xl mx-auto px-4 py-5">
-            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#3f7cac]">← {tri("Chiudi", "Schließen", "Close")}</button>
+            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#ff6b00]">← {tri("Chiudi", "Schließen", "Close")}</button>
             <LegalPage />
           </div>
         </div>

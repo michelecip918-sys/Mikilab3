@@ -80,7 +80,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
           <div className="flex items-center gap-2">
             {!last && <button data-testid="lab-tour-skip-2" onClick={finish} className="text-xs font-semibold text-[#7E8A93] px-2 py-2">{L.skip}</button>}
             <button data-testid="lab-tour-next" onClick={() => (last ? finish() : setStep(step + 1))}
-              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#ff6b00] hover:bg-[#336a94] text-white px-4 py-2 rounded-xl active:scale-95 transition-all">
+              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#ff6b00] hover:bg-[#ff8a33] text-white px-4 py-2 rounded-xl active:scale-95 transition-all">
               {last ? L.done : L.next}
               {!last && <ArrowRight className="w-4 h-4" />}
             </button>

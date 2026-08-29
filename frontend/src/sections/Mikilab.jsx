@@ -6,7 +6,7 @@ import { content } from "@/data/content";
 import { Heart, ChefHat, Wheat, Sparkles, BookHeart, BookOpen, Tag, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-export default function Mikilab() {
+export default function MikiLab() {
   const { t, lang } = useLang();
   const [imgOk, setImgOk] = useState(true);
   const [view, setView] = useState("main");
@@ -61,7 +61,7 @@ export default function Mikilab() {
           <div className="flex justify-center mb-3">
             <img
               src={`${process.env.PUBLIC_URL}/logo.png`}
-              alt="Mikilab"
+              alt="MikiLab"
               data-testid="bio-logo"
               className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ff6b00]/70 shadow-lg"
             />
@@ -94,7 +94,7 @@ export default function Mikilab() {
             </div>
           </div>
           <figure className="mb-4">
-            <img data-testid="bio-cartoon" src={`${process.env.PUBLIC_URL}/michele-cartoon.jpg`} alt="Michele — Mikilab"
+            <img data-testid="bio-cartoon" src={`${process.env.PUBLIC_URL}/michele-cartoon.jpg`} alt="Michele — MikiLab"
               className="w-40 h-40 mx-auto rounded-3xl object-cover border-2 border-[#ff6b00]/50 shadow-lg" />
             <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
           </figure>
@@ -151,7 +151,7 @@ export default function Mikilab() {
 function BackBtn({ onClick }) {
   return (
     <button data-testid="mikilab-back-btn" onClick={onClick} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4">
-      <ChevronLeft className="w-5 h-5" /> Mikilab
+      <ChevronLeft className="w-5 h-5" /> MikiLab
     </button>
   );
 }

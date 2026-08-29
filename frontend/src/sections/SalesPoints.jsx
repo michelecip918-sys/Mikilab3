@@ -49,7 +49,7 @@ export default function SalesPoints() {
           <Clock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" />
           <input data-testid="salespoint-hours" value={form.hours} onChange={(e) => setForm((f) => ({ ...f, hours: e.target.value }))} placeholder={tri("Orari (es. 7:00–13:00 / 16:00–19:30)", "Zeiten (z. B. 7:00–13:00)", "Hours (e.g. 7:00–13:00)")} className={inp + " pl-9"} />
         </div>
-        <button data-testid="salespoint-add" onClick={add} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-bold py-3 rounded-2xl active:scale-98"><Plus className="w-5 h-5" /> {tri("Aggiungi punto vendita", "Verkaufspunkt hinzufügen", "Add sales point")}</button>
+        <button data-testid="salespoint-add" onClick={add} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-bold py-3 rounded-2xl active:scale-98"><Plus className="w-5 h-5" /> {tri("Aggiungi punto vendita", "Verkaufspunkt hinzufügen", "Add sales point")}</button>
       </div>
 
       {points.length === 0 ? (

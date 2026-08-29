@@ -192,7 +192,7 @@ export default function DayClose() {
     return (
       <div className="pb-40" data-testid="dayclose">
         <Header tri={tri} />
-        <button data-testid="dayclose-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#3F7CAC] text-white font-semibold py-3 rounded-2xl">
+        <button data-testid="dayclose-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl">
           <LogIn className="w-5 h-5" /> {tri("Accedi per la chiusura turno", "Zum Abschließen anmelden")}
         </button>
       </div>
@@ -439,7 +439,7 @@ export default function DayClose() {
           </Card>
 
           <button data-testid="dayclose-confirm" onClick={doClose} disabled={saving}
-            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
+            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
             <CheckSquare className="w-5 h-5" /> {saving ? tri("Chiusura…", "Abschluss…") : tri("Concludi turno & archivia", "Schicht abschließen & archivieren")}
           </button>
         </div>

@@ -452,7 +452,7 @@ export default function AdminPanel({ open, onOpenChange }) {
           </p>
           {trCoverage.incomplete.length === 0 ? (
             <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/35 px-3 py-2.5">
-              <CheckCircle2 className="w-5 h-5 text-[#336a94] shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-[#ff8a33] shrink-0" />
               <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">
                 {de ? `Alle ${trCoverage.total} Rezepte verifiziert ✓ (IT/DE/EN)` : `Tutte le ${trCoverage.total} ricette verificate ✓ (IT/DE/EN)`}
               </p>

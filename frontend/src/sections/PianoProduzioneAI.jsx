@@ -494,13 +494,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         const hasFullAccess = !!(st && st.unlock_all);
         const unlockPan = !!(st && st.unlock_panettoni);
         const unlockedIds = new Set((st && st.unlocked_recipes) || []);
-        const canUseMikilab = (r) => {
+        const canUseMikiLab = (r) => {
           if (isAdmin) return true;
           if (hasFullAccess) return true;
           if (unlockPan && isPanettoneRecipe(r)) return true;
           return unlockedIds.has(r.id) && r.locked !== true;
         };
-        const lib = (mk || []).filter(canUseMikilab).sort(sortFn);
+        const lib = (mk || []).filter(canUseMikiLab).sort(sortFn);
         setRecipes([...own, ...lib]);  // le più usate in cima, ricette del panettiere prima
         if (wp && wp.items) setWeeklyItems(wp.items);
       } catch { /* */ }
@@ -798,7 +798,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           { target: null, title: tri3(lang, "🔥 Sfida della Settimana", "🔥 Challenge der Woche", "🔥 Weekly Challenge"),
             body: tri3(lang, "Nella sezione «Impara» c'è ogni settimana una sfida a tema del Quiz del Fornaio: gareggia con gli amici e diventa «Fornaio della Settimana» 🏆!", "Im Bereich „Lernen“ gibt es jede Woche eine Themen-Challenge im Bäcker-Quiz: tritt gegen Freunde an und werde „Bäcker der Woche“ 🏆!", "In the 'Learn' section there's a weekly themed Baker Quiz challenge: compete with friends and become 'Baker of the Week' 🏆!") },
         ]} />}
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#2f6a97] to-[#ff6b00] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#c94f00] to-[#ff6b00] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         {onOpenTool && (
           <button data-testid="lab-menu-open" onClick={() => setMenuOpen(true)} aria-label="Menu strumenti"
@@ -969,7 +969,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       </Section>
 
       <Section order={3} icon={<Wrench className="w-4 h-4" />} title={tri3(lang, "Apri anche altri strumenti", "Weitere Werkzeuge öffnen", "Open other tools")}>
-        <div className="mb-3 rounded-xl bg-[#f7efe0] dark:bg-[#2a2418] border border-[#e5d4b0] dark:border-[#4a3f28] p-2.5 flex items-start gap-2">
+        <div className="mb-3 rounded-xl bg-[#1e1e1e] dark:bg-[#2a2418] border border-[#e5d4b0] dark:border-[#4a3f28] p-2.5 flex items-start gap-2">
           <span className="w-5 h-5 rounded-full bg-[#ff6b00] flex items-center justify-center text-white shrink-0 mt-0.5"><Info className="w-3 h-3" /></span>
           <p className="text-[11px] text-[#7a5a1f] dark:text-[#d3ab6b] leading-snug">{tri3(lang, "Tocca la «i» dorata su ogni strumento: Mohammadreza ti spiega a cosa serve (con un suono). Poi tocca lo strumento per aprirlo.", "Tippe auf das goldene „i“ auf jedem Werkzeug: Mohammadreza erklärt es dir (mit Ton). Dann tippe auf das Werkzeug, um es zu öffnen.", "Tap the golden 'i' on each tool: Mohammadreza explains what it's for (with a sound). Then tap the tool to open it.")}</p>
         </div>
@@ -989,7 +989,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                         ? tri3(lang, "🎉 Hai scoperto tutti gli strumenti!", "🎉 Du hast alle Werkzeuge entdeckt!", "🎉 You've discovered every tool!")
                         : tri3(lang, `Hai scoperto ${discovered}/${total} strumenti`, `Du hast ${discovered}/${total} Werkzeuge entdeckt`, `You've discovered ${discovered}/${total} tools`)}
                     </p>
-                    <span data-testid="tools-discovery-pct" className={`text-[12px] font-extrabold ${done ? "text-[#336a94]" : "text-[#ff6b00]"}`}>{pct}%</span>
+                    <span data-testid="tools-discovery-pct" className={`text-[12px] font-extrabold ${done ? "text-[#ff8a33]" : "text-[#ff6b00]"}`}>{pct}%</span>
                   </div>
                   <div className="h-2 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
                     <div className={`h-full rounded-full transition-all duration-500 ${done ? "bg-[#ff6b00]" : "bg-[#ff6b00]"}`} style={{ width: `${pct}%` }} />
@@ -1525,11 +1525,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         })()}
 
         <button data-testid="capo-generate" onClick={generate} disabled={generating || !canGenerate}
-          className="mt-3 w-full bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("capo_generate")}
         </button>
         {!canGenerate && (
-          <p data-testid="capo-generate-hint" className="text-[11px] text-[#242424] mt-1.5 text-center">
+          <p data-testid="capo-generate-hint" className="text-[11px] text-[#FFB27A] mt-1.5 text-center">
             {tri3(lang, "⚠️ Obbligatorio: scegli almeno una ricetta e la quantità per generare il piano.",
               "⚠️ Pflicht: Wähle mindestens ein Rezept und die Menge, um den Plan zu erstellen.",
               "⚠️ Required: choose at least one recipe and quantity to generate the plan.")}
@@ -1540,7 +1540,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <>
             <div data-testid="capo-saved-banner" className="no-print mt-4 rounded-2xl bg-[#ff6b00]/12 border border-[#ff6b00]/35 p-3.5 flex items-center justify-between gap-3">
               <div className="flex items-start gap-2 min-w-0">
-                <CheckCircle2 className="w-5 h-5 text-[#336a94] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-[#ff8a33] shrink-0 mt-0.5" />
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec] leading-tight">
                     {savedAt
@@ -1589,7 +1589,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-3 py-2 text-sm outline-none focus:border-[#ff6b00] resize-y" />
             </div>
             <button data-testid="capo-print" onClick={() => window.print()}
-              className="no-print mt-3 w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+              className="no-print mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
             </button>
             {!generating && (

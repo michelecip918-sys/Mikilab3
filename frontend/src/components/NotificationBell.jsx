@@ -83,7 +83,7 @@ export default function NotificationBell() {
             <div>
               {items.map((n) => (
                 <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] last:border-0 ${!n.read ? "bg-[#ff6b00]/5" : ""}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type === "email_import" ? "bg-[#ff6b00]/15 text-[#ff6b00]" : (n.type === "bakealong" || n.type === "bakealong_win") ? "bg-[#ff6b00]/15 text-[#ff6b00]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#3F7CAC]/15 text-[#3F7CAC]"}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type === "email_import" ? "bg-[#ff6b00]/15 text-[#ff6b00]" : (n.type === "bakealong" || n.type === "bakealong_win") ? "bg-[#ff6b00]/15 text-[#ff6b00]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#ff6b00]/15 text-[#ff6b00]"}`}>
                     {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type === "email_import" ? <Mail className="w-4 h-4" /> : (n.type === "bakealong" || n.type === "bakealong_win") ? <Flame className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
                   </div>
                   <div className="min-w-0 flex-1">

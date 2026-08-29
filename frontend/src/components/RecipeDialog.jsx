@@ -468,7 +468,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("field_photo")}</label>
             <div className="mt-1 flex items-center gap-2 flex-wrap">
               {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#2b2b2b] dark:border-[#2e2e2e]" /> : null}
-              <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#ff6b00] hover:bg-[#336a94] text-white rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#ff6b00] hover:bg-[#ff8a33] text-white rounded-xl px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
                 {uploading ? t("photo_uploading") : (mkTri(lang)("Scatta ora", "Jetzt aufnehmen", "Take photo", "Hacer foto"))}
                 <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
@@ -675,7 +675,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             data-testid="recipe-save-btn"
             onClick={submit}
             disabled={saving}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
+            className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-60 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
           >
             {saving && <Loader2 className="w-4 h-4 animate-spin" />}
             {saving ? t("saving") : t("save")}

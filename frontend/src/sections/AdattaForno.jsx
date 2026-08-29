@@ -210,7 +210,7 @@ export default function AdattaForno() {
           </div>
         )}
         <button data-testid="adatta-analyze-btn" onClick={analyze} disabled={!preview || analyzing}
-          className="w-full bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           {analyzing ? t("adatta_analyzing") : t("adatta_analyze")} {!analyzing && <ArrowRight className="w-4 h-4" />}
         </button>
         {result && (

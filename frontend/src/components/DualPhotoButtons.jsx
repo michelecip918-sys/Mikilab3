@@ -16,7 +16,7 @@ export default function DualPhotoButtons({ onFile, allowVideo = false, testid = 
       <input ref={camRef} data-testid={`${testid}-cam-input`} type="file" accept={acc} capture="environment" onChange={pick} className="hidden" />
       <input ref={galRef} data-testid={`${testid}-gallery-input`} type="file" accept={acc} onChange={pick} className="hidden" />
       <button type="button" data-testid={`${testid}-take`} onClick={() => camRef.current && camRef.current.click()}
-        className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+        className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
         <Camera className="w-5 h-5" /> {tri("Scatta ora", "Jetzt aufnehmen", "Take photo")}
       </button>
       <button type="button" data-testid={`${testid}-attach`} onClick={() => galRef.current && galRef.current.click()}

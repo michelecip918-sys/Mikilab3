@@ -7,7 +7,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { rLoc } from "@/lib/loc";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 
-// Vetrina delle ricette Mikilab in Home: griglia 2 per riga con foto grandi.
+// Vetrina delle ricette MikiLab in Home: griglia 2 per riga con foto grandi.
 // Il tap porta al tab Ricette (dettagli completi lì).
 export default function RecipeShowcase({ onOpen }) {
   const { t, lang } = useLang();

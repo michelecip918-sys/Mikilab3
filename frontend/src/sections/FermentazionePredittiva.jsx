@@ -130,7 +130,7 @@ export default function FermentazionePredittiva() {
   return (
     <div className="pb-40" data-testid="fermentazione-tool">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#3F7CAC] flex items-center justify-center"><Activity className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><Activity className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Fermentazione Predittiva", "Gärungs-Prognose", "Fermentation Forecast", "Fermentación Predictiva")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Quanto lieviterà oggi e a che ora è pronto", "Wie lange die Gare heute dauert und wann fertig", "How long proofing takes today and when it's ready", "Cuánto leudará hoy y a qué hora está lista")}</p>
@@ -139,7 +139,7 @@ export default function FermentazionePredittiva() {
 
       {/* Meteo automatico */}
       <button data-testid="ferment-geo" onClick={useGeo} disabled={loading}
-        className="w-full flex items-center justify-center gap-2 bg-[#3F7CAC] hover:bg-[#2E5E82] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-2">
+        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-2">
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
         {tri("Usa il meteo della mia zona", "Wetter meiner Gegend", "Use my local weather", "Usar el clima de mi zona")}
       </button>
@@ -176,7 +176,7 @@ export default function FermentazionePredittiva() {
       </div>
 
       {/* Risultato + curva */}
-      <div className="rounded-3xl bg-gradient-to-br from-[#3F7CAC] to-[#2E5E82] text-white p-5 shadow-lg mb-4">
+      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff8a33] text-white p-5 shadow-lg mb-4">
         <p className="text-white/85 text-xs font-semibold uppercase tracking-wide">{tri("Tempo stimato di lievitazione", "Geschätzte Gärzeit", "Estimated proofing time", "Tiempo estimado")}</p>
         <div className="flex items-end justify-between mt-1">
           <p data-testid="ferment-time" className="font-mono-data text-4xl font-bold leading-none">{timeStr}</p>

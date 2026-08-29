@@ -393,7 +393,7 @@ export default function WeeklyPlan() {
         .warn{color:#ff6b00;font-size:13px}
         @media print{.recipe{page-break-inside:avoid}}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${subtitle ? `<div class="shop">🏪 ${esc(subtitle)}</div>` : ""}
       <h1>${L.summary}</h1>${summaryHtml}
@@ -468,7 +468,7 @@ export default function WeeklyPlan() {
         .shop{font-size:10px;font-weight:700;color:#ff6b00;border-top:1px solid #e4eff8;padding-top:2px}
         @media print{ @page{margin:8mm} .label{border-color:#c9c9c9} }
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="grid">${cards}</div>
       </body></html>`);
     w.document.close();
@@ -531,7 +531,7 @@ export default function WeeklyPlan() {
         .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #2b2b2b;padding:3px 0;font-size:14px}
         .grp li b{font-family:monospace;color:#ff6b00}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#2f6a97 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${sections}
       </body></html>`);
@@ -560,7 +560,7 @@ export default function WeeklyPlan() {
       )}
 
       {loaded && newWeek && (
-        <div data-testid="weekly-newweek-banner" className="mt-4 rounded-2xl bg-gradient-to-br from-[#2f6a97] to-[#1c1c1c] text-white p-4 shadow-md">
+        <div data-testid="weekly-newweek-banner" className="mt-4 rounded-2xl bg-gradient-to-br from-[#c94f00] to-[#1c1c1c] text-white p-4 shadow-md">
           <p className="font-display text-base font-bold flex items-center gap-2"><CalendarDays className="w-5 h-5 text-[#9fd0ee]" /> {tri("Nuova settimana!", "Neue Woche!", "New week!")}</p>
           <p className="text-[13px] text-white/85 mt-1 leading-snug">{tri("La lista riparte da zero. Vuoi ripartire dal piano che avevi salvato la scorsa settimana?", "Die Liste startet leer. Möchtest du den letzten gespeicherten Wochenplan wiederverwenden?", "The list starts empty. Do you want to reuse the plan you saved last week?")}</p>
           <div className="flex flex-wrap gap-2 mt-3">
@@ -625,7 +625,7 @@ export default function WeeklyPlan() {
       <button
         data-testid="weekly-save-btn"
         onClick={save}
-        className="w-full mt-5 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <Save className="w-5 h-5" /> {t("weekly_save")}
       </button>
@@ -657,7 +657,7 @@ export default function WeeklyPlan() {
       <button
         data-testid="weekly-pdf-multi-btn"
         onClick={pdfMultiRicetta}
-        className="w-full mt-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <FileText className="w-5 h-5" /> {tri("PDF Multi-Ricetta", "PDF Mehr-Rezepte", "Multi-Recipe PDF")}
       </button>
@@ -701,7 +701,7 @@ export default function WeeklyPlan() {
                   <button
                     data-testid={`weekly-salepoint-pdf-${name}`}
                     onClick={() => pdfPerSalePoint(name)}
-                    className="flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#336a94] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
+                    className="flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
                   >
                     <FileText className="w-4 h-4" /> {tri("Ricette PDF", "Rezepte PDF", "Recipes PDF")}
                   </button>

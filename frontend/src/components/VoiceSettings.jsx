@@ -89,7 +89,7 @@ export default function VoiceSettings({ open, onClose }) {
             <Group title={tri("Voce di Momy (assistente)", "Momy-Stimme (Assistent)", "Momy's voice (assistant)")} sel={momy} setSel={setMomy} who="momy" />
             <Group title={tri("Voce di Michele (fondatore)", "Michele-Stimme (Gründer)", "Michele's voice (founder)")} sel={michele} setSel={setMichele} who="michele" />
             <button data-testid="voice-settings-save" onClick={save}
-              className="w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+              className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
               {tri("Salva le voci", "Stimmen speichern", "Save voices")}
             </button>
           </motion.div>

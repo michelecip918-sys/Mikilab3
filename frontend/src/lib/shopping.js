@@ -49,7 +49,7 @@ export function otherLabel(f, lang) {
 }
 
 export function buildShoppingText(totals, lang) {
-  let out = mkTri(lang)("Lista della spesa Mikilab\n\n", "Einkaufsliste Mikilab\n\n", "Mikilab shopping list\n\n");
+  let out = mkTri(lang)("Lista della spesa MikiLab\n\n", "Einkaufsliste MikiLab\n\n", "MikiLab shopping list\n\n");
   out += mkTri(lang)("FARINE:\n", "MEHL:\n", "FLOURS:\n");
   Object.entries(totals.flourByType).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => { out += `  • ${k}: ${fmtQty(v)}\n`; });
   Object.entries(totals.others).forEach(([f, v]) => { out += `  • ${otherLabel(f, lang)}: ${fmtQty(v)}\n`; });

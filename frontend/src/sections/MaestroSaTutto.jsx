@@ -165,7 +165,7 @@ function ChatPanel() {
           data-testid="ai-chat-submit"
           onClick={() => send()}
           disabled={streaming}
-          className="w-12 h-12 rounded-2xl bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white flex items-center justify-center shrink-0 active:scale-95 transition-all"
+          className="w-12 h-12 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white flex items-center justify-center shrink-0 active:scale-95 transition-all"
         >
           <Send className="w-5 h-5" />
         </button>
@@ -301,7 +301,7 @@ function StoccardaPanel() {
               {t("cancel")}
             </button>
             <button data-testid="announcement-save-btn" onClick={save}
-              className="flex-1 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-4 py-3 rounded-xl">
+              className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-3 rounded-xl">
               {t("save")}
             </button>
           </div>
@@ -364,7 +364,7 @@ function StoccardaPanel() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="announcement-delete-cancel">{t("cancel")}</AlertDialogCancel>
-            <AlertDialogAction data-testid="announcement-delete-confirm" onClick={remove} className="bg-[#ff6b00] hover:bg-[#336a94]">{t("delete")}</AlertDialogAction>
+            <AlertDialogAction data-testid="announcement-delete-confirm" onClick={remove} className="bg-[#ff6b00] hover:bg-[#ff8a33]">{t("delete")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

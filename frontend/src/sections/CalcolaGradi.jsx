@@ -66,7 +66,7 @@ export default function CalcolaGradi() {
       <button
         data-testid="btn-calculate-temp"
         onClick={calc}
-        className="w-full mt-5 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <Droplets className="w-5 h-5" /> {t("clima_calc")}
       </button>

@@ -44,7 +44,7 @@ export default function AcademyHome({ onNavigate }) {
   return (
     <div className="pb-4" data-testid="academy-home">
       {/* Hero */}
-      <div className="relative rounded-3xl overflow-hidden mb-4 bg-gradient-to-br from-[#2f6a97] to-[#325046] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-4 bg-gradient-to-br from-[#c94f00] to-[#325046] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <GraduationCap className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}</h1>
@@ -137,7 +137,7 @@ export default function AcademyHome({ onNavigate }) {
               </div>
             ) : (
               <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
-                className="mt-4 inline-flex items-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+                className="mt-4 inline-flex items-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
                 <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis")}
               </button>
             )}
@@ -265,7 +265,7 @@ function DynamicRecipes() {
       </div>
 
       <button data-testid="calc-print" onClick={downloadPdf}
-        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
         <Printer className="w-5 h-5" /> {tri("Scarica scheda PDF (IT · DE · EN)", "PDF-Karte herunterladen (IT · DE · EN)", "Download recipe card PDF (IT · DE · EN)")}
       </button>
     </div>

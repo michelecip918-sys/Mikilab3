@@ -56,7 +56,7 @@ export default function PanettoneLabels() {
       </div>
 
       <button data-testid="labels-print-btn" onClick={() => window.print()}
-        className="no-print w-full mb-5 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="no-print w-full mb-5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <Printer className="w-5 h-5" /> {view === "labels" ? t("labels_print") : t("listino_print")}
       </button>
 
@@ -72,8 +72,8 @@ export default function PanettoneLabels() {
                 <div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#ff6b00]" />
                 <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ff6b00]" />
               </div>
-              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#ff6b00]/70 mx-auto mb-1.5 mt-1" />
-              <h2 className="font-display text-2xl font-extrabold">Panettoni Mikilab</h2>
+              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#ff6b00]/70 mx-auto mb-1.5 mt-1" />
+              <h2 className="font-display text-2xl font-extrabold">Panettoni MikiLab</h2>
               <p className="text-white/85 text-xs mt-0.5">{t("listino_subtitle")}</p>
             </div>
             <table className="w-full text-sm">
@@ -118,7 +118,7 @@ export default function PanettoneLabels() {
                 className="rounded-2xl border-2 border-[#ff6b00] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
                 style={{ pageBreakInside: "avoid" }}>
                 {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#2b2b2b]" />}
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#ff6b00]/70 mb-1.5 -mt-6 bg-white" />
+                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#ff6b00]/70 mb-1.5 -mt-6 bg-white" />
                 <p className="font-display text-lg font-bold leading-tight">Panettone Artigianale MikiLab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
                   <span className="inline-block w-3 h-2 bg-[#ff6b00]" /><span className="inline-block w-3 h-2 bg-[#ff6b00]" />

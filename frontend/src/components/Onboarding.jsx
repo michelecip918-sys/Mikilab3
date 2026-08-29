@@ -104,12 +104,12 @@ export default function Onboarding({ onDone }) {
           <button data-testid="ob-skip" onClick={finish} className="text-sm text-[#7E8A93]">{tri("Salta", "Überspringen", "Skip")}</button>
           {step < 2 ? (
             <button data-testid="ob-next" onClick={() => setStep((x) => x + 1)}
-              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold">
+              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold">
               {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
             </button>
           ) : (
             <button data-testid="ob-finish" onClick={finish}
-              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold">
+              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold">
               <Check className="w-5 h-5" /> {tri("Inizia!", "Los geht's!", "Start!")}
             </button>
           )}

@@ -49,7 +49,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   useBackClose(!!scaling, () => setScaling(null));
   const triM = (i_, d_, e_) => mkTri(lang)(i_, d_, e_);
   const { user, setAuthOpen } = useAuth();
-  // Mikilab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
+  // MikiLab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
   const canEdit = collectionName === "mikilab" ? user?.role === "admin" : true;
 
   const load = async () => {
@@ -253,7 +253,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <button
           data-testid="add-recipe-btn"
           onClick={() => { setEditing(null); setDialogOpen(true); }}
-          className="w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
+          className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
         >
           <Plus className="w-5 h-5" /> {t("add_recipe")}
         </button>
@@ -558,7 +558,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             <AlertDialogAction
               data-testid="delete-confirm-btn"
               onClick={handleDelete}
-              className="bg-[#ff6b00] hover:bg-[#336a94]"
+              className="bg-[#ff6b00] hover:bg-[#ff8a33]"
             >
               {t("delete")}
             </AlertDialogAction>
@@ -941,8 +941,8 @@ const BADGE_STYLE = {
   LDB: "bg-[#ff6b00]/12 text-[#ff6b00] border-[#ff6b00]/35",
   Rg: "bg-[#ff6b00]/12 text-[#ff6b00] border-[#ff6b00]/35",
   Vk: "bg-[#ff6b00]/12 text-[#ff6b00] border-[#ff6b00]/35",
-  Poolish: "bg-[#3F7CAC]/12 text-[#2E5E82] border-[#3F7CAC]/35",
-  Biga: "bg-[#3F7CAC]/12 text-[#2E5E82] border-[#3F7CAC]/35",
+  Poolish: "bg-[#ff6b00]/12 text-[#ff8a33] border-[#ff6b00]/35",
+  Biga: "bg-[#ff6b00]/12 text-[#ff8a33] border-[#ff6b00]/35",
 };
 function badgeClass(b) {
   return BADGE_STYLE[b] || "bg-[#ff6b00]/15 text-[#ff6b00] border-[#ff6b00]/35";

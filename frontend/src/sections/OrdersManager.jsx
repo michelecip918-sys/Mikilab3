@@ -17,7 +17,7 @@ export default function OrdersManager({ store, stores }) {
 
   const STATUS = {
     bozza: { label: tri("Bozza", "Entwurf", "Draft"), color: "#7E8A93" },
-    inviato: { label: tri("Inviato", "Gesendet", "Sent"), color: "#3F7CAC" },
+    inviato: { label: tri("Inviato", "Gesendet", "Sent"), color: "#ff6b00" },
     ricevuto: { label: tri("Ricevuto", "Erhalten", "Received"), color: "#ff6b00" },
   };
 
@@ -98,7 +98,7 @@ export default function OrdersManager({ store, stores }) {
       <p className="text-xs text-[#7E8A93] mb-3">{tri("Ordini del negozio", "Bestellungen der Filiale", "Orders for store")}: <b className="text-[#ff6b00]">{store ? storeName(store) : tri("tutti", "alle", "all")}</b></p>
 
       <button data-testid="order-add" onClick={() => setShowForm((s) => !s)}
-        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
+        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
         <Plus className="w-5 h-5" /> {tri("Nuovo ordine", "Neue Bestellung", "New order")}
       </button>
 
@@ -127,7 +127,7 @@ export default function OrdersManager({ store, stores }) {
           </div>
 
           <textarea data-testid="order-note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={2} placeholder={tri("Note per il fornitore…", "Notizen für den Lieferanten…", "Notes for the supplier…")} className={inp} />
-          <button data-testid="order-create" onClick={create} disabled={busy} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold py-3 rounded-xl active:scale-98 disabled:opacity-50">
+          <button data-testid="order-create" onClick={create} disabled={busy} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-xl active:scale-98 disabled:opacity-50">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Crea ordine", "Bestellung erstellen", "Create order")}
           </button>
         </div>
@@ -159,14 +159,14 @@ export default function OrdersManager({ store, stores }) {
 
                 {/* Invio */}
                 <div className="grid grid-cols-3 gap-2 mt-3">
-                  <button data-testid={`order-send-email-${o.id}`} onClick={() => sendEmail(o)} className="flex items-center justify-center gap-1 bg-[#3F7CAC] text-white text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Mail className="w-4 h-4" /> Email</button>
+                  <button data-testid={`order-send-email-${o.id}`} onClick={() => sendEmail(o)} className="flex items-center justify-center gap-1 bg-[#ff6b00] text-white text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Mail className="w-4 h-4" /> Email</button>
                   <button data-testid={`order-send-wa-${o.id}`} onClick={() => sendWhatsApp(o)} className="flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2.5 rounded-xl active:scale-95"><MessageCircle className="w-4 h-4" /> WhatsApp</button>
                   <button data-testid={`order-print-${o.id}`} onClick={() => printOrder(o)} className="flex items-center justify-center gap-1 bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Printer className="w-4 h-4 text-[#ff6b00]" /> {tri("Stampa", "Druck", "Print")}</button>
                 </div>
 
                 {/* Stato + elimina */}
                 <div className="flex items-center gap-2 mt-2">
-                  {o.status !== "inviato" && <button data-testid={`order-mark-sent-${o.id}`} onClick={() => setStatus(o, "inviato")} className="flex items-center gap-1 text-xs font-semibold text-[#3F7CAC]"><Send className="w-3.5 h-3.5" /> {tri("Segna inviato", "Als gesendet", "Mark sent")}</button>}
+                  {o.status !== "inviato" && <button data-testid={`order-mark-sent-${o.id}`} onClick={() => setStatus(o, "inviato")} className="flex items-center gap-1 text-xs font-semibold text-[#ff6b00]"><Send className="w-3.5 h-3.5" /> {tri("Segna inviato", "Als gesendet", "Mark sent")}</button>}
                   {o.status !== "ricevuto" && <button data-testid={`order-mark-received-${o.id}`} onClick={() => setStatus(o, "ricevuto")} className="flex items-center gap-1 text-xs font-semibold text-[#ff6b00]"><PackageCheck className="w-3.5 h-3.5" /> {tri("Segna ricevuto", "Als erhalten", "Mark received")}</button>}
                   <button data-testid={`order-remove-${o.id}`} onClick={() => remove(o.id)} className="ml-auto text-xs text-[#7E8A93] hover:text-[#E4572E] flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Elimina", "Löschen", "Delete")}</button>
                 </div>

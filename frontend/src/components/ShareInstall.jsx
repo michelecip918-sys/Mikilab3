@@ -33,12 +33,12 @@ export default function ShareInstall() {
     { id: "telegram", label: "Telegram", Icon: Send, color: "#0088cc", href: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}` },
     { id: "facebook", label: "Facebook", Icon: Facebook, color: "#1877F2", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
     { id: "x", label: "X", Icon: Twitter, color: "#111827", href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}` },
-    { id: "email", label: "Email", Icon: Mail, color: "#ff6b00", href: `mailto:?subject=${enc("Mikilab")}&body=${enc(text + "\n\n" + url)}` },
+    { id: "email", label: "Email", Icon: Mail, color: "#ff6b00", href: `mailto:?subject=${enc("MikiLab")}&body=${enc(text + "\n\n" + url)}` },
   ];
 
   const nativeShare = async () => {
     try {
-      if (navigator.share) await navigator.share({ title: "Mikilab", text, url });
+      if (navigator.share) await navigator.share({ title: "MikiLab", text, url });
       else { await navigator.clipboard.writeText(url); toast.success(t("toast_copied_link")); }
     } catch { /* annullato */ }
   };
@@ -84,13 +84,13 @@ export default function ShareInstall() {
       </div>
 
       <button data-testid="share-native" onClick={nativeShare}
-        className="mt-3 w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
         <Share2 className="w-5 h-5" /> {t("share_more")}
       </button>
 
       {!installed && (
         <button data-testid="install-app" onClick={install}
-          className="mt-2 w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="mt-2 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           <Download className="w-5 h-5" /> {t("install_app")}
         </button>
       )}

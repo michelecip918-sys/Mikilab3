@@ -146,7 +146,7 @@ export default function Marketplace() {
 
       <div className="flex gap-2 mb-4">
         <button data-testid="market-add" onClick={() => setShowForm((s) => !s)}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all">
+          className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all">
           <Plus className="w-5 h-5" /> {tri("Pubblica un annuncio", "Anzeige aufgeben", "Post a listing")}
         </button>
         <button data-testid="market-geo" onClick={requestGeo}
@@ -177,7 +177,7 @@ export default function Marketplace() {
           {form.photo
             ? <div className="relative"><img src={form.photo} alt="" className="w-full h-40 object-cover rounded-xl" /><button data-testid="market-photo-clear" onClick={() => setForm({ ...form, photo: "" })} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1"><X className="w-4 h-4" /></button></div>
             : <DualPhotoButtons testid="market-photo" onFile={(f) => compress(f, (d) => setForm((s) => ({ ...s, photo: d })))} />}
-          <button data-testid="market-publish" onClick={publish} disabled={publishing} className="w-full bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{publishing ? tri("Pubblico…", "Wird veröffentlicht…", "Publishing…") : tri("Pubblica", "Veröffentlichen", "Publish")}</button>
+          <button data-testid="market-publish" onClick={publish} disabled={publishing} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-60 text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{publishing ? tri("Pubblico…", "Wird veröffentlicht…", "Publishing…") : tri("Pubblica", "Veröffentlichen", "Publish")}</button>
           {err && <p data-testid="market-error" className="text-sm text-[#E4572E]">{err}</p>}
         </div>
       )}

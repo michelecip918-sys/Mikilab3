@@ -20,7 +20,7 @@ const CATS = [
   { id: "idea", Icon: Sparkles, color: "#ff6b00" },
   { id: "foto", Icon: Camera, color: "#ff6b00" },
   { id: "ricetta", Icon: BookOpen, color: "#ff6b00" },
-  { id: "domanda", Icon: HelpCircle, color: "#3F7CAC" },
+  { id: "domanda", Icon: HelpCircle, color: "#ff6b00" },
   { id: "evento", Icon: CalendarDays, color: "#2e8b6f" },
 ];
 
@@ -175,7 +175,7 @@ export default function Community({ onNavigate }) {
         subtitle={mkTri(lang)("La community dei fornai MikiLab", "Die MikiLab Bäcker-Community", "The MikiLab bakers community", "La comunidad de panaderos MikiLab", "La communauté des boulangers MikiLab", "جامعهٔ نانوایان میکی‌لب")} />
       {/* Header social — compatto (navigazione via menù globale) */}
       <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
-        style={{ background: "linear-gradient(135deg,#123c4a 0%,#1f5a68 60%,#ff6b00 100%)" }}>
+        style={{ background: "linear-gradient(135deg,#1c1c1c 0%,#1f5a68 60%,#ff6b00 100%)" }}>
         <div className="flex items-center gap-3">
           <div className="relative shrink-0">
             <div className="w-12 h-12 rounded-xl bg-white/25 border-2 border-white/70 overflow-hidden shadow">
@@ -276,7 +276,7 @@ export default function Community({ onNavigate }) {
             <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
           <button data-testid="community-submit" data-sfx="save" onClick={submit} disabled={posting}
-            className="ml-auto flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-xl active:scale-98 transition-all">
+            className="ml-auto flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-xl active:scale-98 transition-all">
             {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Pubblica", "Posten", "Post", "Publicar")}
           </button>
         </div>
@@ -294,7 +294,7 @@ export default function Community({ onNavigate }) {
       <div data-testid="feed-toggle" className="flex gap-2 mb-3">
         {[["all", tri("Recenti", "Neueste", "Recent", "Recientes")], ["popular", tri("Popolari", "Beliebt", "Popular", "Populares")], ["friends", tri("Amici", "Freunde", "Friends", "Amigos")]].map(([id, lbl]) => (
           <button key={id} data-testid={`feed-tab-${id}`} onClick={() => { if (id === "friends" && needLogin()) return; setFeed(id); }}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${feed === id ? "bg-[#123c4a] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93]"}`}>{lbl}</button>
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${feed === id ? "bg-[#1c1c1c] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93]"}`}>{lbl}</button>
         ))}
       </div>
       {loading ? (

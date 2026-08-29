@@ -8,7 +8,7 @@ import { useLang } from "@/i18n/LanguageContext";
 const T = {
   it: {
     title: "Note legali & Privacy",
-    intro: "Mikilab è uno strumento personale di organizzazione del lavoro in panificazione. Il sito ha scopo puramente organizzativo e didattico, senza finalità di lucro: raccoglie ricette, appunti e strumenti di lavoro per uso personale e formativo.",
+    intro: "MikiLab è uno strumento personale di organizzazione del lavoro in panificazione. Il sito ha scopo puramente organizzativo e didattico, senza finalità di lucro: raccoglie ricette, appunti e strumenti di lavoro per uso personale e formativo.",
     sections: [
       { h: "Scopo del sito", b: "Questo sito è un'applicazione di supporto al lavoro artigianale (organizzazione della produzione, ricette, promemoria). Non è un negozio online e non vende prodotti né servizi." },
       { h: "Dati personali (Datenschutz)", b: "Vengono trattati solo i dati minimi necessari all'accesso: email e nome forniti al momento della registrazione, usati esclusivamente per identificare l'utente e salvare le sue ricette personali. Non vendiamo né cediamo i dati a terzi. Al login viene usato un cookie tecnico di sessione (necessario per restare connessi)." },
@@ -20,7 +20,7 @@ const T = {
   },
   de: {
     title: "Impressum & Datenschutz",
-    intro: "Mikilab ist ein persönliches Werkzeug zur Arbeitsorganisation in der Backstube. Die Seite dient ausschließlich organisatorischen und didaktischen Zwecken, ohne Gewinnabsicht: sie sammelt Rezepte, Notizen und Arbeitshilfen für den persönlichen und lernenden Gebrauch.",
+    intro: "MikiLab ist ein persönliches Werkzeug zur Arbeitsorganisation in der Backstube. Die Seite dient ausschließlich organisatorischen und didaktischen Zwecken, ohne Gewinnabsicht: sie sammelt Rezepte, Notizen und Arbeitshilfen für den persönlichen und lernenden Gebrauch.",
     sections: [
       { h: "Zweck der Seite", b: "Diese Seite ist eine Anwendung zur Unterstützung der handwerklichen Arbeit (Produktionsplanung, Rezepte, Erinnerungen). Es ist kein Online-Shop und verkauft weder Produkte noch Dienstleistungen." },
       { h: "Datenschutz", b: "Es werden nur die für den Zugang nötigen Mindestdaten verarbeitet: bei der Registrierung angegebene E-Mail und Name, ausschließlich zur Identifizierung und zum Speichern der persönlichen Rezepte. Wir verkaufen oder geben keine Daten an Dritte weiter. Beim Login wird ein technisches Session-Cookie verwendet (erforderlich, um angemeldet zu bleiben)." },
@@ -32,7 +32,7 @@ const T = {
   },
   en: {
     title: "Legal notice & Privacy",
-    intro: "Mikilab is a personal tool for organising bakery work. The site is purely organisational and educational, with no commercial purpose: it collects recipes, notes and work tools for personal and training use.",
+    intro: "MikiLab is a personal tool for organising bakery work. The site is purely organisational and educational, with no commercial purpose: it collects recipes, notes and work tools for personal and training use.",
     sections: [
       { h: "Purpose of the site", b: "This site is an application that supports artisan work (production planning, recipes, reminders). It is not an online shop and does not sell products or services." },
       { h: "Personal data (privacy)", b: "Only the minimum data needed to log in is processed: the email and name provided at registration, used solely to identify the user and save their personal recipes. We do not sell or share data with third parties. A technical session cookie is used at login (required to stay signed in)." },

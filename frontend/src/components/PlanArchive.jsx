@@ -152,7 +152,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
             data-testid={`plan-archive-confirm-btn-${kind}`}
             onClick={doSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all disabled:opacity-50"
+            className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {tri("Salva", "Speichern", "Save")}
@@ -220,7 +220,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
                   <button
                     data-testid={`plan-archive-repeat-btn-${p.id}`}
                     onClick={() => doRepeat(p)}
-                    className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#336a94] text-white text-xs font-semibold px-3 py-2 rounded-lg active:scale-98 transition-all"
+                    className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-xs font-semibold px-3 py-2 rounded-lg active:scale-98 transition-all"
                   >
                     <RotateCcw className="w-3.5 h-3.5" /> {repeatLabel || tri("Ripeti", "Wiederholen", "Repeat")}
                   </button>

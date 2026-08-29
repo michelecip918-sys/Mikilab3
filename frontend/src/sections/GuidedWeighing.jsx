@@ -240,7 +240,7 @@ export default function GuidedWeighing() {
         )}
 
         <div className="grid grid-cols-2 gap-2 mt-4">
-          <button data-testid="gw-next" onClick={next} disabled={state === "over" || state === "under"} className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-97">{tri("Avanti", "Weiter", "Next")} <ArrowRight className="w-5 h-5" /></button>
+          <button data-testid="gw-next" onClick={next} disabled={state === "over" || state === "under"} className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-97">{tri("Avanti", "Weiter", "Next")} <ArrowRight className="w-5 h-5" /></button>
           <button data-testid="gw-voicecmd" onClick={startVoiceCmd} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold py-4 rounded-2xl active:scale-97"><Volume2 className="w-5 h-5 text-[#ff6b00]" /> {tri("Voce", "Sprache", "Voice")}</button>
         </div>
         <button data-testid="gw-stop" onClick={() => { setStarted(false); logRef.current = []; window.speechSynthesis?.cancel(); }} className="w-full mt-2 text-sm text-[#7E8A93]">{tri("Interrompi", "Abbrechen", "Stop")}</button>
@@ -258,8 +258,8 @@ export default function GuidedWeighing() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="rounded-2xl bg-[#3F7CAC]/10 border border-[#3F7CAC]/30 p-4">
-            <div className="flex items-center gap-2 text-[#3F7CAC] text-xs font-bold uppercase"><Droplet className="w-4 h-4" /> {tri("Idratazione reale", "Reale Hydration", "Real hydration")}</div>
+          <div className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4">
+            <div className="flex items-center gap-2 text-[#ff6b00] text-xs font-bold uppercase"><Droplet className="w-4 h-4" /> {tri("Idratazione reale", "Reale Hydration", "Real hydration")}</div>
             <p data-testid="gw-real-hyd" className="font-mono-data text-3xl font-extrabold text-[#2B303B] dark:text-[#e4eff8] mt-1">{summary.realHyd.toFixed(1)}%</p>
             <p className="text-[11px] text-[#7E8A93]">{tri("Prevista", "Geplant", "Planned")}: {summary.plannedHyd.toFixed(1)}%</p>
           </div>
@@ -275,7 +275,7 @@ export default function GuidedWeighing() {
           {summary.rows.map((r, i) => (
             <div key={i} className="flex items-center justify-between text-sm py-1 border-b border-[#2b2b2b]/50 dark:border-[#2e2e2e]/50 last:border-0">
               <span className="flex items-center gap-1.5 text-[#2B303B] dark:text-[#e4eff8]">
-                {r.role === "flour" ? <Wheat className="w-3.5 h-3.5 text-[#B07A28]" /> : r.role === "water" ? <Droplet className="w-3.5 h-3.5 text-[#3F7CAC]" /> : <span className="w-3.5" />}
+                {r.role === "flour" ? <Wheat className="w-3.5 h-3.5 text-[#B07A28]" /> : r.role === "water" ? <Droplet className="w-3.5 h-3.5 text-[#ff6b00]" /> : <span className="w-3.5" />}
                 {r.name}
               </span>
               <span className="font-mono-data font-semibold">{r.grams} g</span>
@@ -288,7 +288,7 @@ export default function GuidedWeighing() {
             <div className="flex items-center gap-2 text-[#ff6b00] text-xs font-bold uppercase"><AlertTriangle className="w-4 h-4" /> {tri("Aggiunte extra rilevate", "Extra-Zugaben erkannt", "Extra additions detected")}</div>
             {summary.extras.map((e, i) => (
               <p key={i} className="text-sm text-[#2B303B] dark:text-[#e4eff8] mt-1">
-                {e.name}: <b className={e.diff > 0 ? "text-[#ff6b00]" : "text-[#3F7CAC]"}>{e.diff > 0 ? "+" : ""}{e.diff} g</b> {tri("rispetto al target", "vs. Ziel", "vs target")} ({e.planned} g)
+                {e.name}: <b className={e.diff > 0 ? "text-[#ff6b00]" : "text-[#ff6b00]"}>{e.diff > 0 ? "+" : ""}{e.diff} g</b> {tri("rispetto al target", "vs. Ziel", "vs target")} ({e.planned} g)
               </p>
             ))}
             <p className="text-[11px] text-[#7E8A93] mt-2">{tri("Idratazione e food cost sono ricalcolati sui pesi reali.", "Hydration und Kosten wurden auf die realen Gewichte neu berechnet.", "Hydration and food cost are recomputed on the real weights.")}</p>
@@ -313,17 +313,17 @@ export default function GuidedWeighing() {
                 <label className="text-[11px] text-[#7E8A93]">{tri("Ambiente °C", "Raum °C", "Room °C")}<input data-testid="gw-sess-room" type="number" step="0.1" value={sess.room_temp_c} onChange={(e) => setSess((s) => ({ ...s, room_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
                 <label className="text-[11px] text-[#7E8A93]">{tri("Acqua °C", "Wasser °C", "Water °C")}<input data-testid="gw-sess-water" type="number" step="0.1" value={sess.water_temp_c} onChange={(e) => setSess((s) => ({ ...s, water_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
               </div>
-              <button data-testid="gw-sess-save" onClick={saveAsSession} disabled={sessSaving} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {sessSaving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva nel Diario", "Ins Tagebuch", "Save to log")}</button>
+              <button data-testid="gw-sess-save" onClick={saveAsSession} disabled={sessSaving} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {sessSaving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva nel Diario", "Ins Tagebuch", "Save to log")}</button>
             </div>
           )}
         </div>
 
         {/* Crea lotto tracciabilità dai pesi reali */}
-        <button data-testid="gw-create-batch" onClick={createBatch} disabled={batchSaved} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-60 text-white font-semibold py-3 rounded-2xl mb-4 active:scale-98">
+        <button data-testid="gw-create-batch" onClick={createBatch} disabled={batchSaved} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-60 text-white font-semibold py-3 rounded-2xl mb-4 active:scale-98">
           {batchSaved ? <><CheckCircle2 className="w-5 h-5" /> {tri("Lotto creato ✓", "Charge erstellt ✓", "Batch created ✓")}</> : <><QrCode className="w-5 h-5" /> {tri("Crea lotto in Tracciabilità", "Charge in Rückverfolgung", "Create batch in Traceability")}</>}
         </button>
 
-        <button data-testid="gw-summary-reset" onClick={reset} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-bold py-4 rounded-2xl active:scale-98"><RotateCcw className="w-5 h-5" /> {tri("Nuova pesata", "Neu wiegen", "New weighing")}</button>
+        <button data-testid="gw-summary-reset" onClick={reset} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-bold py-4 rounded-2xl active:scale-98"><RotateCcw className="w-5 h-5" /> {tri("Nuova pesata", "Neu wiegen", "New weighing")}</button>
       </div>
     );
   }
@@ -346,7 +346,7 @@ export default function GuidedWeighing() {
         </div>
       </div>
 
-      <button data-testid="gw-ble" onClick={connectBle} className={`w-full flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl mb-4 active:scale-98 ${bleOn ? "bg-[#ff6b00] text-white" : "bg-[#3F7CAC] text-white hover:bg-[#2E5E82]"}`}>
+      <button data-testid="gw-ble" onClick={connectBle} className={`w-full flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl mb-4 active:scale-98 ${bleOn ? "bg-[#ff6b00] text-white" : "bg-[#ff6b00] text-white hover:bg-[#ff8a33]"}`}>
         <Bluetooth className="w-5 h-5" /> {bleOn ? tri("Bilancia connessa", "Waage verbunden", "Scale connected") : tri("Connetti Bluetooth", "Bluetooth verbinden", "Connect Bluetooth")}
       </button>
 
@@ -384,7 +384,7 @@ export default function GuidedWeighing() {
       </div>
 
       <button data-testid="gw-start" onClick={startRun} disabled={ingredients.filter((i) => i.name && i.base > 0).length === 0}
-        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-98"><Scale className="w-5 h-5" /> {tri("Inizia pesata guidata", "Wiegen starten", "Start guided weighing")}</button>
+        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-98"><Scale className="w-5 h-5" /> {tri("Inizia pesata guidata", "Wiegen starten", "Start guided weighing")}</button>
     </div>
   );
 }

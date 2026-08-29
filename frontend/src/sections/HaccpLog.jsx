@@ -122,7 +122,7 @@ export default function HaccpLog() {
       </div>
 
       {!user && (
-        <button data-testid="haccp-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#3F7CAC] text-white font-semibold py-3 rounded-2xl mb-4">
+        <button data-testid="haccp-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl mb-4">
           <LogIn className="w-5 h-5" /> {tri("Accedi per registrare l'HACCP", "Anmelden für HACCP", "Sign in to log HACCP")}
         </button>
       )}
@@ -137,7 +137,7 @@ export default function HaccpLog() {
       )}
 
       <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4 space-y-3">
-        <button data-testid="haccp-scan-btn" onClick={scanning ? stopScan : startScan} className="w-full flex items-center justify-center gap-2 bg-[#3F7CAC] hover:bg-[#2E5E82] text-white font-semibold py-3 rounded-2xl active:scale-98">
+        <button data-testid="haccp-scan-btn" onClick={scanning ? stopScan : startScan} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98">
           {scanning ? <><X className="w-5 h-5" /> {tri("Chiudi scanner", "Scanner schließen", "Close scanner")}</> : <><Camera className="w-5 h-5" /> {tri("Scansiona codice", "Code scannen", "Scan code")}</>}
         </button>
         <input data-testid="haccp-material" value={form.material} onChange={(e) => setForm((f) => ({ ...f, material: e.target.value }))} placeholder={tri("Materia prima (es. Farina Tipo 0)", "Rohstoff (z. B. Mehl Type 550)", "Raw material (e.g. Flour T0)")} className={inp} />
@@ -154,7 +154,7 @@ export default function HaccpLog() {
             <input data-testid="haccp-temp" type="number" step="0.1" value={form.temp_c} onChange={(e) => setForm((f) => ({ ...f, temp_c: e.target.value }))} placeholder={tri("Temp. °C", "Temp. °C", "Temp °C")} className="w-full bg-transparent outline-none font-mono-data text-[#2B303B] dark:text-[#e4eff8]" />
           </label>
         </div>
-        <button data-testid="haccp-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Registra nel log HACCP", "Im HACCP-Log erfassen", "Add to HACCP log")}</button>
+        <button data-testid="haccp-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Registra nel log HACCP", "Im HACCP-Log erfassen", "Add to HACCP log")}</button>
       </div>
 
       {logs.length > 0 && (

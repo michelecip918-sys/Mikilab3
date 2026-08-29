@@ -39,7 +39,7 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
   return (
     <div className="pb-40" data-testid="stores-manager">
       <button data-testid="store-add" onClick={() => setEditing(editing === "new" ? null : "new")}
-        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
+        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
         <Plus className="w-5 h-5" /> {tri("Aggiungi negozio", "Filiale hinzufügen", "Add store")}
       </button>
 

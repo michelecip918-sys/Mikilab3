@@ -143,7 +143,7 @@ export default function VoiceAssistant({ onNavigate }) {
           onClick={state === "listening" ? stop : start}
           aria-label={t("voice_tap")}
           className={`relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
-            state === "listening" ? "bg-[#ff6b00] animate-pulse" : "bg-[#ff6b00] hover:bg-[#336a94]"
+            state === "listening" ? "bg-[#ff6b00] animate-pulse" : "bg-[#ff6b00] hover:bg-[#ff8a33]"
           }`}
         >
           {state === "idle" && <span aria-hidden className="absolute inset-0 rounded-full bg-[#ff6b00] opacity-60 animate-ping" />}

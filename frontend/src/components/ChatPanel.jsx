@@ -14,7 +14,7 @@ function timeShort(iso, lang) {
 }
 
 const AvatarImg = ({ pic, name, size = "w-10 h-10" }) => (
-  <div className={`${size} rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white font-bold shrink-0`}>
+  <div className={`${size} rounded-full overflow-hidden bg-[#1c1c1c] flex items-center justify-center text-white font-bold shrink-0`}>
     {pic ? <img src={pic} alt={name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} /> : (name || "F")[0].toUpperCase()}
   </div>
 );
@@ -126,7 +126,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="relative w-full sm:max-w-md bg-white dark:bg-[#121212] rounded-t-3xl sm:rounded-3xl shadow-2xl h-[85vh] sm:h-[75vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 text-white shrink-0" style={{ background: "linear-gradient(135deg,#0f2231,#123c4a 50%,#1f5a68)" }}>
+        <div className="flex items-center gap-3 p-4 text-white shrink-0" style={{ background: "linear-gradient(135deg,#0f2231,#1c1c1c 50%,#1f5a68)" }}>
           {active ? (
             <>
               <button data-testid="chat-back" onClick={() => { setActive(null); loadConvos(); }} className="p-1 -ml-1 active:scale-90"><ArrowLeft className="w-5 h-5" /></button>
@@ -243,7 +243,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               ))}
             </div>
             <div className="p-3 border-t border-[#2b2b2b] dark:border-[#2e2e2e] shrink-0">
-              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">
+              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">
                 <Send className="w-4 h-4" /> {tri("Nuovo messaggio", "Neue Nachricht", "New message", "Nuevo mensaje")}
               </button>
             </div>

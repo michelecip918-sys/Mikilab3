@@ -31,7 +31,7 @@ export default function SupplierOrder({ totals }) {
 
   const sendEmail = () => {
     const to = (email || supplier.email || "").trim();
-    const subject = mkTri(lang)("Ordine Mikilab", "Bestellung Mikilab", "Mikilab order");
+    const subject = mkTri(lang)("Ordine MikiLab", "Bestellung MikiLab", "MikiLab order");
     const body = orderText() + (mkTri(lang)("\n\nGrazie!", "\n\nDanke!", "\n\nThanks!"));
     if (to) localStorage.setItem(EMAIL_KEY, to);
     window.location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -40,7 +40,7 @@ export default function SupplierOrder({ totals }) {
   const share = async () => {
     const text = orderText();
     try {
-      if (navigator.share) await navigator.share({ title: "Mikilab", text });
+      if (navigator.share) await navigator.share({ title: "MikiLab", text });
       else { await navigator.clipboard.writeText(text); toast.success(t("toast_copied")); }
     } catch { /* annullato */ }
   };
@@ -92,11 +92,11 @@ export default function SupplierOrder({ totals }) {
         </a>
         <div className="grid grid-cols-2 gap-2 mt-3">
           <button data-testid="supplier-mail-btn" onClick={sendEmail} disabled={!data}
-            className="bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Mail className="w-4 h-4" /> {t("shop_send_email")}
           </button>
           <button data-testid="supplier-share-btn" onClick={share} disabled={!data}
-            className="bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Share2 className="w-4 h-4" /> {t("shop_share")}
           </button>
         </div>

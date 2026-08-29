@@ -143,7 +143,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             data-testid="scale-save-btn"
             onClick={submit}
             disabled={!factor}
-            className="flex-1 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
+            className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
           >
             {t("save_as_new")}
           </button>

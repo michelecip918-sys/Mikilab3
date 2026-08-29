@@ -26,7 +26,7 @@ const CONCEPTS = {
     { id: "cosa", title: "Cos'è MikiLab", icon: Info, grad: "from-[#ff6b00] to-[#ff6b00]",
       body: "MikiLab è il mio laboratorio creativo e scientifico digitale dedicato all'arte bianca. Nasce per fondere la passione artigianale con lo studio metodico delle farine e dei processi fermentativi. Qui la panificazione non è una semplice sequenza di gesti, ma una costante ricerca dell'eccellenza, dove ogni ingrediente è calibrato al milligrammo per ottenere strutture perfette, digeribilità estrema e sapori autentici. È il luogo in cui la tradizione dell'arte panificatoria incontra l'innovazione e la precisione." },
     { id: "chi", title: "Chi sono io", icon: ChefHat, grad: "from-[#ff6b00] to-[#ff6b00]",
-      body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato Mikilab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
+      body: "Sono Michele, panettiere per passione prima ancora che per mestiere. Amo il farro, il lievito madre e il profumo del pane appena sfornato. Ho creato MikiLab per mettere in tasca a ogni fornaio le mie ricette e il mio modo di lavorare, con la stessa cura che metto ogni giorno in laboratorio." },
     { id: "metodo", title: "Il mio Metodo", icon: FlaskConical, grad: "from-[#ff6b00] to-[#ff6b00]",
       body: "Il mio metodo unisce la grande tradizione italiana alla precisione tecnica tedesca. Lavoro quotidianamente sia con metodi diretti sia con metodi indiretti, anche se prediligo nettamente questi ultimi: prefermenti come lievito madre, poolish, biga e precotture come il kochstück sono la vera anima delle mie ricette. Prediligere l'indiretto significa dare tempo al tempo, permettendo agli enzimi di trasformare la materia prima per ottenere una complessità aromatica unica, una crosta fragrante e un'alveolatura sviluppata. Tuttavia, amo ogni sfumatura della panificazione: la farina giusta al momento giusto e il rispetto rigoroso dei tempi sono la chiave per dominare ogni tipo di impasto." },
     { id: "serenita", title: "Lavorare in Serenità", icon: Smile, grad: "from-[#ff6b00] to-[#ff6b00]",
@@ -36,7 +36,7 @@ const CONCEPTS = {
     { id: "cosa", title: "Was ist MikiLab", icon: Info, grad: "from-[#ff6b00] to-[#ff6b00]",
       body: "MikiLab ist mein kreatives und wissenschaftliches digitales Labor für die Backkunst. Es verbindet handwerkliche Leidenschaft mit dem methodischen Studium von Mehlen und Fermentationsprozessen. Hier ist Backen keine bloße Abfolge von Handgriffen, sondern eine ständige Suche nach Exzellenz, bei der jede Zutat auf das Milligramm genau kalibriert wird – für perfekte Strukturen, höchste Bekömmlichkeit und authentische Aromen. Hier trifft die Tradition der Backkunst auf Innovation und Präzision." },
     { id: "chi", title: "Wer ich bin", icon: ChefHat, grad: "from-[#ff6b00] to-[#ff6b00]",
-      body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. Mikilab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
+      body: "Ich bin Michele, Bäcker aus Leidenschaft, noch bevor es mein Beruf wurde. Ich liebe Dinkel, Lievito Madre und den Duft von frisch gebackenem Brot. MikiLab habe ich geschaffen, um jedem Bäcker meine Rezepte und meine Arbeitsweise in die Tasche zu geben – mit der gleichen Sorgfalt, die ich täglich in die Backstube stecke." },
     { id: "metodo", title: "Meine Methode", icon: FlaskConical, grad: "from-[#ff6b00] to-[#ff6b00]",
       body: "Meine Methode verbindet die große italienische Tradition mit deutscher technischer Präzision. Ich arbeite täglich sowohl mit direkten als auch mit indirekten Methoden, bevorzuge aber klar Letztere: Vorteige wie Lievito Madre, Poolish, Biga und Kochstücke sind die wahre Seele meiner Rezepte. Indirekt zu arbeiten heißt, der Zeit Zeit zu geben, damit die Enzyme den Rohstoff verwandeln – für einzigartige Aromatik, knusprige Kruste und offene Porung. Dennoch liebe ich jede Nuance des Backens: das richtige Mehl zum richtigen Zeitpunkt und die strikte Einhaltung der Zeiten sind der Schlüssel, um jeden Teig zu beherrschen." },
     { id: "serenita", title: "Entspannt arbeiten", icon: Smile, grad: "from-[#ff6b00] to-[#ff6b00]",
@@ -46,7 +46,7 @@ const CONCEPTS = {
     { id: "cosa", title: "What is MikiLab", icon: Info, grad: "from-[#ff6b00] to-[#ff6b00]",
       body: "MikiLab is my creative, scientific digital lab dedicated to the baking art. It was born to blend artisan passion with the methodical study of flours and fermentation. Here baking is not a mere sequence of gestures but a constant pursuit of excellence, where every ingredient is calibrated to the milligram for perfect structures, extreme digestibility and authentic flavours. It's where the tradition of baking meets innovation and precision." },
     { id: "chi", title: "About me", icon: ChefHat, grad: "from-[#ff6b00] to-[#ff6b00]",
-      body: "I'm Michele, a baker by passion even before by trade. I love spelt, sourdough and the scent of freshly baked bread. I created Mikilab to put my recipes and my way of working into every baker's pocket, with the same care I bring to the bakery every day." },
+      body: "I'm Michele, a baker by passion even before by trade. I love spelt, sourdough and the scent of freshly baked bread. I created MikiLab to put my recipes and my way of working into every baker's pocket, with the same care I bring to the bakery every day." },
     { id: "metodo", title: "My method", icon: FlaskConical, grad: "from-[#ff6b00] to-[#ff6b00]",
       body: "My method blends the great Italian tradition with German technical precision. I work daily with both direct and indirect methods, though I clearly prefer the latter: preferments such as sourdough, poolish, biga and pre-cooks like kochstück are the true soul of my recipes. Choosing indirect means giving time to time, letting enzymes transform the raw material for unique aromatic complexity, a fragrant crust and an open crumb. Yet I love every nuance of baking: the right flour at the right moment and strict respect for timings are the key to mastering any dough." },
     { id: "serenita", title: "Working with peace of mind", icon: Smile, grad: "from-[#ff6b00] to-[#ff6b00]",
@@ -292,9 +292,9 @@ export default function Home({ onNavigate }) {
       <SaporeDelGiorno onOpen={() => onNavigate && onNavigate("ricette")} />
 
       {/* HERO — 100% gratis (lead magnet: account gratuito) */}
-      <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#e4d6bd]"
-        style={{ background: "linear-gradient(135deg,#f7efe0 0%,#efe2cb 55%,#ff6b00 100%)" }}>
-        <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
+      <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#ff6b00]/40"
+        style={{ background: "linear-gradient(135deg,#1a1a1a 0%,#241206 55%,#3a1a00 100%)" }}>
+        <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#ff8a33,transparent 70%)" }} />
         <div className="relative">
           <span data-testid="home-hero-badge" className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#3a6b3a] bg-[#dff0dd] border border-[#8fbf8f] rounded-full px-3 py-1 mb-3">
             {L("✅ 100% Gratuito · Nessun pagamento · Nessuna carta",
@@ -304,7 +304,7 @@ export default function Home({ onNavigate }) {
                "✅ 100% Gratuit · Aucun paiement · Aucune carte",
                "✅ ۱۰۰٪ رایگان · بدون پرداخت · بدون کارت")}
           </span>
-          <h1 className="font-display text-2xl sm:text-4xl font-extrabold leading-[1.1] text-[#4a3212] break-words">
+          <h1 className="font-display text-2xl sm:text-4xl font-extrabold leading-[1.1] text-white break-words">
             {L("Il tuo laboratorio di panificazione, 100% gratis",
                "Deine Backstube, 100% kostenlos",
                "Your bakery lab, 100% free",
@@ -312,7 +312,7 @@ export default function Home({ onNavigate }) {
                "Ton laboratoire de boulangerie, 100% gratuit",
                "آزمایشگاه نان‌پزی شما، ۱۰۰٪ رایگان")}
           </h1>
-          <p className="text-sm sm:text-base text-[#6b563a] leading-relaxed mt-3 max-w-xl">
+          <p className="text-sm sm:text-base text-[#E0E0E0] leading-relaxed mt-3 max-w-xl">
             {L("Ricette testate col mio metodo, piani di produzione con l'IA, timer e calcolo costi. Tutto sbloccato, per sempre. Crea il tuo account gratis e inizia subito.",
                "Erprobte Rezepte nach meiner Methode, KI-Produktionspläne, Timer und Kostenrechnung. Alles freigeschaltet, für immer. Erstelle dein kostenloses Konto und leg sofort los.",
                "Tested recipes with my method, AI production plans, timers and cost calculation. Everything unlocked, forever. Create your free account and start now.",
@@ -383,7 +383,7 @@ export default function Home({ onNavigate }) {
       {/* Annuncio della Sfida: tema quiz della settimana */}
       {weekTheme && (
         <button data-testid="home-weekly-challenge" onClick={() => onNavigate && onNavigate("impara")}
-          className="w-full flex items-center gap-3 rounded-2xl p-4 text-left text-white shadow-md active:scale-98 transition-all" style={{ background: "linear-gradient(135deg,#ff6b00,#4a2e78)" }}>
+          className="w-full flex items-center gap-3 rounded-2xl p-4 text-left text-white shadow-md active:scale-98 transition-all" style={{ background: "linear-gradient(135deg,#ff6b00,#c94f00)" }}>
           <span className="text-2xl shrink-0">🔥</span>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-wide text-white/80">{L("Sfida della settimana", "Challenge der Woche", "Weekly challenge", "Desafío de la semana")}</p>
@@ -407,7 +407,7 @@ export default function Home({ onNavigate }) {
             {convos.slice(0, 4).map((c) => (
               <button key={c.other_id} data-testid={`home-chat-${c.other_id}`} onClick={() => { setChatUser({ user_id: c.other_id, name: c.name, picture: c.picture }); setChatOpen(true); }}
                 className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-[#121212] dark:hover:bg-[#242424] active:scale-98 transition-all text-left">
-                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#123c4a] flex items-center justify-center text-white text-sm font-bold shrink-0">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#1c1c1c] flex items-center justify-center text-white text-sm font-bold shrink-0">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
                   <p className="text-[12px] text-[#7E8A93] truncate">{c.last}</p>
@@ -473,9 +473,9 @@ export default function Home({ onNavigate }) {
                 </div>
 
                 <div data-testid="bio-card" className="rounded-3xl overflow-hidden bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white shadow-xl p-7 text-center">
-                  <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Mikilab" data-testid="bio-logo"
+                  <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" data-testid="bio-logo"
                     className="w-24 h-24 rounded-2xl object-cover ring-2 ring-[#ff6b00]/70 shadow-lg mx-auto mb-4" />
-                  <h1 className="font-display text-3xl font-bold">Mikilab</h1>
+                  <h1 className="font-display text-3xl font-bold">MikiLab</h1>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-white/75 mt-2">{t("brand_subtitle")} <span>🇮🇹</span> <span>🇩🇪</span></p>
                 </div>
 

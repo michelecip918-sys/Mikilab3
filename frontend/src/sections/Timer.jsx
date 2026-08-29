@@ -94,7 +94,7 @@ export default function Timer() {
               <p className={`font-mono-data text-5xl font-bold text-center ${done ? "text-[#E4572E]" : "text-[#2B303B] dark:text-[#e4eff8]"}`} data-testid={`timer-time-${t.id}`}>{fmt(rem)}</p>
               <div className="grid grid-cols-2 gap-2 mt-4">
                 <button data-testid={`timer-toggle-${t.id}`} onClick={() => toggle(t.id)} disabled={done}
-                  className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
+                  className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
                   {t.running ? <><Pause className="w-6 h-6" /> {tri("Pausa", "Pause", "Pause")}</> : <><Play className="w-6 h-6" /> {tri("Vai", "Start", "Go")}</>}
                 </button>
                 <button data-testid={`timer-reset-${t.id}`} onClick={() => reset(t.id)}

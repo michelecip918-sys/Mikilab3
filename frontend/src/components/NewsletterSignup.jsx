@@ -41,9 +41,9 @@ export default function NewsletterSignup() {
   };
 
   return (
-    <div data-testid="home-newsletter" className="relative overflow-hidden rounded-3xl p-6 border border-[#e4d6bd] shadow-md"
+    <div data-testid="home-newsletter" className="relative overflow-hidden rounded-3xl p-6 border border-[#2a2a2a] shadow-md"
       style={{ background: "linear-gradient(135deg,#ff6b00 0%,#ff6b00 60%,#ff6b00 100%)" }}>
-      <div aria-hidden className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full opacity-20" style={{ background: "radial-gradient(circle,#d8b877,transparent 70%)" }} />
+      <div aria-hidden className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full opacity-20" style={{ background: "radial-gradient(circle,#ff8a33,transparent 70%)" }} />
       <div className="relative">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-11 h-11 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0">

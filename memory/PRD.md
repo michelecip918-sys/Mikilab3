@@ -2296,3 +2296,9 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 
 ## v-fork.71 — Nav a pale ripristinata in legno
 - Ripristinato `.wood-surface` (gradiente legno bruno) e la nav a pale di legno originale (icone incise, manico, etichette crema, anello oro attivo, targa Aperto/barattolo spezie in legno). Resto del sito invariato: tema nero + accenti arancioni.
+
+## v-fork.72 — Audit completo sito + fix palette/leggibilita
+- Testing agent (iteration_111): navigazione 100% funzionante (nessun link rotto).
+- Fix: tab Accedi invisibile (regola CSS ora colpisce solo titoli/paragrafi statici, non i pulsanti); card promo Home crema->scura+titolo bianco; warning "Obbligatorio" visibile; etichette AvatarBubbles chiare; residui blu #336a94/#3f7cac, viola #4a2e78, blu lab hero #2f6a97 -> arancione; refuso Mikilab->MikiLab (75+ file).
+- Palette nero/arancione uniforme; nessun residuo marrone/crema/viola (verificato grep).
+- Minori residui (polish): X su dialog vista ricetta, FAB radio sovrapposto su hero, lieve clip titolo hero.

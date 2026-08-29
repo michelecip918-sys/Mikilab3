@@ -110,14 +110,14 @@ function HomePlanner() {
         className="mt-1 w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
 
       <button data-testid="home-generate" onClick={generate} disabled={generating}
-        className="mt-3 w-full bg-[#ff6b00] hover:bg-[#336a94] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("home_generate")}
       </button>
 
       {plan && (
         <>
           <button data-testid="home-print" onClick={() => window.print()}
-            className="no-print mt-3 w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="no-print mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Printer className="w-5 h-5" /> {t("capo_print")}
           </button>
           <div className="print-area mt-4 space-y-4">
@@ -266,7 +266,7 @@ function BakerQuiz() {
     return (
       <div>
         {record}
-        <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#ff6b00] hover:bg-[#336a94] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
           <Trophy className="w-5 h-5" /> {t("quiz_start")}
         </button>
       </div>
