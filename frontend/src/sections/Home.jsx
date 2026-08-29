@@ -15,7 +15,6 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
-import Glossario from "@/sections/Glossario";
 import ImparaLivelli from "@/sections/ImparaLivelli";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
@@ -203,7 +202,6 @@ export default function Home({ onNavigate }) {
   const [legal, setLegal] = useState(false);
   const [sapori, setSapori] = useState(false);
   const [calc, setCalc] = useState(false);
-  const [glossario, setGlossario] = useState(false);
   const [imparaLiv, setImparaLiv] = useState(false);
   const [open, setOpen] = useState(null);
   const [storyOpen, setStoryOpen] = useState(() => {
@@ -262,7 +260,6 @@ export default function Home({ onNavigate }) {
 
   if (sapori) return <SaporiCasa onBack={() => setSapori(false)} />;
   if (calc) return <CalcolatoreMetodo onBack={() => setCalc(false)} />;
-  if (glossario) return <Glossario onBack={() => setGlossario(false)} />;
   if (imparaLiv) return <ImparaLivelli onBack={() => setImparaLiv(false)} />;
 
   return (
@@ -349,17 +346,6 @@ export default function Home({ onNavigate }) {
           <p className="text-[#FFFDF9]/85 text-sm leading-snug">{L("Sblocca ricette e schede completando le sfide. Nessun pagamento.", "Inhalte durch Challenges freischalten. Keine Zahlung.", "Unlock recipes by completing challenges. No payment.", "Desbloquea recetas con retos. Sin pago.")}</p>
         </div>
         <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
-      </button>
-
-      {/* Glossario Interattivo dell'Arte Bianca */}
-      <button data-testid="home-glossario-btn" onClick={() => setGlossario(true)}
-        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-98 transition-all text-left">
-        <div className="w-12 h-12 rounded-2xl bg-[#8C4A27]/12 flex items-center justify-center shrink-0"><BookOpen className="w-6 h-6 text-[#8C4A27]" /></div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8] leading-tight">{L("Glossario dell'Arte Bianca", "Glossar der Backkunst", "Baking Craft Glossary", "Glosario del Arte Blanco")}</h3>
-          <p className="text-[#6B5546] dark:text-[#AEB8BF] text-[13px] leading-snug">{L("Autolisi, incordatura, poolish… i termini spiegati semplice", "Fachbegriffe einfach erklärt", "Technical terms in plain words", "Términos técnicos explicados")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-[#8C4A27]/70 shrink-0" />
       </button>
 
       {/* Impara a Livelli — quiz che conta come sfida */}

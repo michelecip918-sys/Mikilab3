@@ -4,6 +4,7 @@ import RecipeList from "@/components/RecipeList";
 import { NovitaColorate } from "@/components/NovitaColorate";
 import PanettoneLabels from "@/sections/PanettoneLabels";
 import GuidaMetodi from "@/sections/Enciclopedia";
+import Glossario from "@/sections/Glossario";
 import FlourTable from "@/components/FlourTable";
 import SaporiCasa from "@/sections/SaporiCasa";
 import ScopriMikiLab from "@/sections/ScopriMikiLab";
@@ -21,7 +22,7 @@ export default function Ricette() {
   useBackClose(view !== "main", () => setView("main"));
 
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
-  if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /></Sub>;
+  if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#E6D8C3] dark:border-[#38424B]"><Glossario /></div></Sub>;
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
@@ -52,7 +53,7 @@ export default function Ricette() {
       <div className="flex items-center gap-3 mb-3" data-testid="ricette-title">
         <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-10 h-10 rounded-xl object-cover ring-1 ring-[#B45309]/40" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{mkTri(lang)("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها")}</h1>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}</h1>
           <p className="text-sm text-[#7E8A93] leading-snug">{mkTri(lang)("Le ricette e i sapori di MikiLab", "Die Rezepte und Aromen von MikiLab", "MikiLab recipes and flavours", "Las recetas y sabores de MikiLab", "Les recettes et saveurs de MikiLab", "دستورها و طعم‌های میکی‌لب")}</p>
         </div>
       </div>
@@ -98,7 +99,7 @@ export default function Ricette() {
       {coll === "mikilab" && (
         <div className="grid grid-cols-3 gap-2.5 mb-4">
           <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab", "Découvre MikiLab")} onClick={() => setView("scopri")} />
-          <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia", "Lexikon", "Encyclopedia", "Enciclopedia", "Encyclopédie")} onClick={() => setView("guida")} />
+          <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
           <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
         </div>

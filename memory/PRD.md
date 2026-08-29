@@ -2210,3 +2210,10 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 ## v-fork.59 (2026-06) — Home: un solo ingresso al laboratorio (no doppioni)
 - Rimossa la ridondanza "due voci verso il laboratorio": per utenti LOGGATI il pulsante hero "Vai al tuo Laboratorio" è sostituito da un rimando al selettore "Scegli il tuo laboratorio" (Panetteria/Pizzeria/Pasticceria) = unico ingresso. Per OSPITI resta "Crea il tuo account gratis". (Home.jsx). Verificato a schermo, nessun errore.
 - BACKLOG APPROVATO (prossimo turno dedicato): 1) Categoria+nome reale nel salvataggio ricetta; 2) Filtro rapido categorie nel piano; 3) Icone categoria nelle liste; 4) Piano settimanale suggerito dall'IA.
+
+## v-fork.60 (2026-06) — Glossario unito all'Enciclopedia + rinomina titolo Ricette
+- **Glossario rimosso dalla Home** (tolto `home-glossario-btn`, stato/import puliti in Home.jsx).
+- **Glossario unito nelle ricette**: la vista "guida" di Ricette.jsx ora renderizza `<GuidaMetodi/>` (Enciclopedia) + `<Glossario/>` sotto un divisore. Pulsante rinominato "Enciclopedia del Pane".
+- **Titolo sezione** "Ricette" → "Ricette del MikiLab" (6 lingue).
+- Verificato a schermo: Home senza glossario, titolo aggiornato, Enciclopedia del Pane mostra enciclopedia + termini glossario. Nessun errore.
+- BACKLOG APPROVATO (ancora da fare, turno dedicato): Categoria+nome reale nel salvataggio ricetta, Filtro rapido categorie, Icone categoria nelle liste, Piano settimanale suggerito dall'IA.
