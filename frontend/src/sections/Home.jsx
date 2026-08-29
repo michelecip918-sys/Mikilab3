@@ -387,18 +387,6 @@ export default function Home({ onNavigate }) {
         </div>
       </div>
 
-      {/* Motore Sfide — sblocca contenuti completando le sfide (no pagamenti) */}
-      <button data-testid="home-sfide-btn" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-go-challenges")); } catch { /* */ } }}
-        className="w-full flex items-center gap-4 rounded-3xl p-5 text-[#161616] shadow-lg active:scale-98 transition-all"
-        style={{ background: "linear-gradient(135deg,#ff6b00 0%,#ff6b00 60%,#ff6b00 100%)" }}>
-        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><Trophy className="w-6 h-6" /></div>
-        <div className="flex-1 min-w-0 text-left">
-          <h3 className="font-display text-lg font-bold">{L("Motore Sfide", "Challenges", "Challenge Engine", "Motor de Retos")}</h3>
-          <p className="text-[#161616]/85 text-sm leading-snug">{L("Sblocca ricette e schede completando le sfide. Nessun pagamento.", "Inhalte durch Challenges freischalten. Keine Zahlung.", "Unlock recipes by completing challenges. No payment.", "Desbloquea recetas con retos. Sin pago.")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
-      </button>
-
       {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
       {isChampion && (
         <div data-testid="home-champion-banner" className="rounded-2xl p-4 text-white shadow-md flex items-center gap-3" style={{ background: "linear-gradient(135deg,#ff6b00,#7a531d)" }}>
@@ -409,21 +397,6 @@ export default function Home({ onNavigate }) {
           </div>
         </div>
       )}
-
-      {/* Annuncio della Sfida: tema quiz della settimana */}
-      {weekTheme && (
-        <button data-testid="home-weekly-challenge" onClick={() => onNavigate && onNavigate("impara")}
-          className="w-full flex items-center gap-3 rounded-2xl p-4 text-left text-white shadow-md active:scale-98 transition-all" style={{ background: "linear-gradient(135deg,#ff6b00,#c94f00)" }}>
-          <span className="text-2xl shrink-0">🔥</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-white/80">{L("Sfida della settimana", "Challenge der Woche", "Weekly challenge", "Desafío de la semana")}</p>
-            <p className="font-display text-base font-bold leading-tight truncate">{weekTheme.title}</p>
-            <p className="text-[12px] text-white/90 leading-snug">{L("Metti alla prova te e i tuoi amici nel quiz a tema!", "Fordere dich und deine Freunde im Themen-Quiz heraus!", "Challenge yourself and your friends in the themed quiz!", "¡Rétate a ti y a tus amigos en el quiz temático!")}</p>
-          </div>
-          <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{L("Gioca", "Spielen", "Play", "Jugar")}</span>
-        </button>
-      )}
-
 
       {/* Messaggi non letti dagli amici */}
       {convos.length > 0 && (

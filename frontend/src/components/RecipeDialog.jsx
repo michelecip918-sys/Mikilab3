@@ -238,9 +238,8 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               onChange={(e) => set("menu_category", e.target.value)}
               className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-base outline-none"
             >
-              <option value="">{mkTri(lang)("Automatica (dal nome)", "Automatisch (aus Name)", "Automatic (from name)", "Automática (del nombre)", "Automatique (du nom)")}</option>
+              <option value="">{mkTri(lang)("Seleziona categoria…", "Kategorie wählen…", "Select category…", "Selecciona categoría…", "Choisir une catégorie…")}</option>
               <option value="basi">✨ {mkTri(lang)("Basi & Lieviti", "Basis & Hefen", "Bases & Starters", "Bases y Levaduras", "Bases & Levains")}</option>
-              <option value="pane">🍞 {mkTri(lang)("Pane & Panificati", "Brot & Backwaren", "Bread & Bakes", "Pan y Panificados", "Pain & Panifiés")}</option>
               <option value="panini">🥖 {mkTri(lang)("Panini & Baguette", "Brötchen & Baguette", "Rolls & Baguette", "Panecillos y Baguette", "Petits pains & Baguette")}</option>
               <option value="viennoiserie">🥐 {mkTri(lang)("Cornetti & Viennoiserie", "Croissants & Viennoiserie", "Croissants & Viennoiserie", "Cruasanes y Viennoiserie", "Croissants & Viennoiserie")}</option>
               <option value="focacce">🫓 {mkTri(lang)("Focacce & Lievitati salati", "Focaccia & Herzhaftes", "Focaccia & Savoury", "Focaccias y Salados", "Focaccias & Salés")}</option>

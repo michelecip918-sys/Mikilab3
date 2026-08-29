@@ -15,6 +15,7 @@ import BakeAlong from "@/components/BakeAlong";
 import SosImpasto from "@/components/SosImpasto";
 import LabTour from "@/components/LabTour";
 import SectionHero from "@/components/SectionHero";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import ImparaLivelli from "@/sections/ImparaLivelli";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { mkTri, pick } from "@/i18n/triMaps";
@@ -393,6 +394,7 @@ export default function Beginners({ onNavigate }) {
       <SectionHero testid="impara-title" image="hero-impara.jpg" position="50% 25%"
         title={mkTri(lang)("Impara", "Lernen", "Learn", "Aprende", "Apprendre", "بیاموز")}
         subtitle={mkTri(lang)("Fai il pane a casa, passo dopo passo", "Backe Brot zu Hause, Schritt für Schritt", "Bake bread at home, step by step", "Haz pan en casa, paso a paso", "Fais ton pain à la maison, pas à pas", "نان خانگی، گام‌به‌گام")} />
+      <div className="mb-4" data-testid="impara-newsletter"><NewsletterSignup /></div>
       <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_impara_tour_v1"
         labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip", "Saltar"), next: tri3(lang, "Avanti", "Weiter", "Next", "Siguiente"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!", "¡Entendido!") }}
         steps={[

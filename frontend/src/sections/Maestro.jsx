@@ -41,6 +41,7 @@ import HaccpLog from "@/sections/HaccpLog";
 import SalesPoints from "@/sections/SalesPoints";
 import DayClose from "@/sections/DayClose";
 import HighFive from "@/components/HighFive";
+import LabWizard from "@/components/LabWizard";
 import FlourTable from "@/components/FlourTable";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import SoundDiagnosi from "@/sections/SoundDiagnosi";
@@ -183,6 +184,9 @@ export default function Maestro() {
       <SectionHero testid="maestro-title" image="hero-laboratorio.jpg" position="50% 30%"
         title={mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}
         subtitle={mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")} />
+
+      {/* Percorso guidato a 3 step (Produzione Settimanale → Ricetta → Extra) */}
+      <LabWizard onOpenTool={openTool} />
 
       {/* Snellito: si arriva SUBITO al Piano di Produzione IA (hero + scegli ricette + genera) */}
       <PianoProduzioneAI onOpenTool={openTool} />

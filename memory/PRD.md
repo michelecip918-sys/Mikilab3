@@ -2302,3 +2302,13 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - Fix: tab Accedi invisibile (regola CSS ora colpisce solo titoli/paragrafi statici, non i pulsanti); card promo Home crema->scura+titolo bianco; warning "Obbligatorio" visibile; etichette AvatarBubbles chiare; residui blu #336a94/#3f7cac, viola #4a2e78, blu lab hero #2f6a97 -> arancione; refuso Mikilab->MikiLab (75+ file).
 - Palette nero/arancione uniforme; nessun residuo marrone/crema/viola (verificato grep).
 - Minori residui (polish): X su dialog vista ricetta, FAB radio sovrapposto su hero, lieve clip titolo hero.
+
+## v-fork.73 (2026-06) — Master prompt: categoria Pane rimossa + Laboratorio a 3 step guidati
+- **Categoria "Pane" RIMOSSA dal form ricetta** (`RecipeDialog.jsx`): tolto `<option value="pane">`; il selettore ora parte da "Seleziona categoria…" (placeholder, empty→null, nessun default "pane" persistito). Opzioni rimaste: Basi, Panini, Viennoiserie, Focacce, Snack. Verificato a schermo (6 lingue).
+- **"Il Tuo Laboratorio" — Percorso Guidato a 3 step sbloccabili** (`components/LabWizard.jsx`, montato in cima a `Maestro.jsx` sopra `PianoProduzioneAI`): barra di avanzamento "Passo X di 3" + %, con locking progressivo.
+  - Passo 1: Produzione Settimanale (apre tool `settimana`; completo se `weeklyApi.get().items` non vuoto).
+  - Passo 2: Inserimento Ricetta (bloccato finché Passo 1 non fatto; apre `aggiungi`; completo se esistono ricette personali).
+  - Passo 3: Extra per Oggi (bloccato finché Passo 2 non fatto; scrolla+apre `capo-extra-today`).
+  - NESSUNA perdita dati/funzioni: tutti gli strumenti del laboratorio restano sotto il wizard. Dark theme, accenti arancio #FF6B00.
+- **Dark mode**: già forzata app-wide (classe `dark` in index.js); form/dialog usano varianti `dark:`. Community invariata (dark-compatibile).
+- Verificato a schermo (viewport 430px): wizard con Passo1=DONE, Passo2 sbloccato, Passo3 LOCKED; form ricetta senza "Pane".
