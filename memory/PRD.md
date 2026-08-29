@@ -2223,3 +2223,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **PianoProduzioneAI**: filtro rapido categorie nel picker "Aggiungi ricette" (`capo-picker-filters`, chip `capo-filter-<key>`) + stato `pickCat`. Filtra la lista per `recipeCategory(r).key`. Verificato: 121 → 32 con filtro Viennoiserie.
 - Nota: la categoria "panini" nel form mappa comunque al gruppo Pane in recipeCats (macro-categoria) salvo estensione futura.
 - BACKLOG APPROVATO rimanente: Icone categoria nelle liste; Piano settimanale suggerito dall'IA.
+
+## v-fork.62 (2026-06) — Spostati "Impara a Livelli" e "Chiedi al Maestro" da Home a Impara
+- Rimossi da Home i pulsanti `home-impara-livelli-btn` e `home-chat-btn` (+ import/stati inutilizzati puliti).
+- Aggiunti nella sezione Impara (Beginners.jsx): `impara-livelli-btn` → ImparaLivelli (early return), `impara-askmaster-btn` → MaestroSaTutto (early return con back). Verificato a schermo, compila.
+- IN SOSPESO (da chiarire con utente): spostare "Inizia qui" (sezione INIZIA del laboratorio?) nella vetrina "Ricette del MikiLab" in Home (titolo dorato?).

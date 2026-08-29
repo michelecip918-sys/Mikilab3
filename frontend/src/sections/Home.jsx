@@ -15,7 +15,6 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
-import ImparaLivelli from "@/sections/ImparaLivelli";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
 import { getProfile } from "@/components/Onboarding";
@@ -202,7 +201,6 @@ export default function Home({ onNavigate }) {
   const [legal, setLegal] = useState(false);
   const [sapori, setSapori] = useState(false);
   const [calc, setCalc] = useState(false);
-  const [imparaLiv, setImparaLiv] = useState(false);
   const [open, setOpen] = useState(null);
   const [storyOpen, setStoryOpen] = useState(() => {
     try { return !localStorage.getItem("mikilab_home_story_seen"); } catch { return true; }
@@ -260,7 +258,6 @@ export default function Home({ onNavigate }) {
 
   if (sapori) return <SaporiCasa onBack={() => setSapori(false)} />;
   if (calc) return <CalcolatoreMetodo onBack={() => setCalc(false)} />;
-  if (imparaLiv) return <ImparaLivelli onBack={() => setImparaLiv(false)} />;
 
   return (
     <div className="pb-2 space-y-6">
@@ -347,18 +344,6 @@ export default function Home({ onNavigate }) {
         </div>
         <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
       </button>
-
-      {/* Impara a Livelli — quiz che conta come sfida */}
-      <button data-testid="home-impara-livelli-btn" onClick={() => setImparaLiv(true)}
-        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-[#FAF5EC] dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] shadow-sm active:scale-98 transition-all text-left">
-        <div className="w-12 h-12 rounded-2xl bg-[#D97706]/15 flex items-center justify-center shrink-0"><GraduationCap className="w-6 h-6 text-[#B45309]" /></div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display text-lg font-bold text-[#2C1E16] dark:text-[#e4eff8] leading-tight">{L("Impara a Livelli", "Lernen nach Stufen", "Learn by Levels", "Aprende por Niveles")}</h3>
-          <p className="text-[#6B5546] dark:text-[#AEB8BF] text-[13px] leading-snug">{L("Supera i quiz: ogni livello conta come una sfida verso i Panettoni", "Quiz bestehen: jede Stufe zählt als Challenge", "Pass the quizzes: each level counts as a challenge", "Supera los cuestionarios: cada nivel cuenta como reto")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-[#8C4A27]/70 shrink-0" />
-      </button>
-
 
       {/* Premio del Campione: banner speciale per il Fornaio della Settimana */}
       {isChampion && (
@@ -622,19 +607,6 @@ export default function Home({ onNavigate }) {
           </div>
         </button>
       </div>
-
-      {/* ===== CHIEDI AL MAESTRO ===== */}
-      <button data-testid="home-chat-btn" onClick={() => setChat(true)}
-        className="w-full flex items-center gap-4 rounded-3xl p-5 bg-gradient-to-br from-[#B45309] to-[#8C4A27] text-white shadow-lg active:scale-98 transition-all">
-        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0">
-          <MessageCircle className="w-6 h-6" />
-        </div>
-        <div className="flex-1 min-w-0 text-left">
-          <h3 className="font-display text-lg font-bold">{t("home_chat_btn")}</h3>
-          <p className="text-white/85 text-sm">{t("home_chat_sub")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
-      </button>
 
       {/* Newsletter — lead magnet 100% gratis */}
       <NewsletterSignup />

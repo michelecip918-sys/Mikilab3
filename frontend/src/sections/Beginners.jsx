@@ -1,7 +1,7 @@
 import { useLang } from "@/i18n/LanguageContext";
 import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
-import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame } from "lucide-react";
+import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame, ChevronRight, MessageCircle } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -14,6 +14,8 @@ import EvolvingQuiz from "@/components/EvolvingQuiz";
 import BakeAlong from "@/components/BakeAlong";
 import SosImpasto from "@/components/SosImpasto";
 import LabTour from "@/components/LabTour";
+import ImparaLivelli from "@/sections/ImparaLivelli";
+import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { mkTri, pick } from "@/i18n/triMaps";
 
 const HOME_DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -349,6 +351,8 @@ export default function Beginners({ onNavigate }) {
   const { t, lang } = useLang();
   const tri3 = (l, i, d, e, s) => mkTri(l)(i, d, e, s);
   const [sosOpen, setSosOpen] = useState(false);
+  const [imparaLiv, setImparaLiv] = useState(false);
+  const [askMaster, setAskMaster] = useState(false);
   const beginners = pick(BEGINNERS, lang);
   const courses = content[lang].freeCourses || [];
   const daily = pick(DAILY_RECIPES, lang);
@@ -373,6 +377,16 @@ export default function Beginners({ onNavigate }) {
   const doneCount = PATH.filter((_, i) => pathDone[i]).length;
   const [tourForce, setTourForce] = useState(0);
 
+  if (imparaLiv) return <ImparaLivelli onBack={() => setImparaLiv(false)} />;
+  if (askMaster) return (
+    <div className="pb-4">
+      <button data-testid="impara-askmaster-back" onClick={() => setAskMaster(false)} className="flex items-center gap-1 text-[#8C4A27] font-medium mb-4">
+        <ChevronRight className="w-5 h-5 rotate-180" /> {mkTri(lang)("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}
+      </button>
+      <MaestroSaTutto />
+    </div>
+  );
+
   return (
     <div data-testid="beginners-page" className="space-y-4 pb-4">
       <div className="flex items-center gap-3" data-testid="impara-title">
@@ -395,6 +409,26 @@ export default function Beginners({ onNavigate }) {
             body: tri3(lang, "Fai il Quiz del Fornaio e sblocca i livelli. Impari divertendoti!", "Mach das Bäcker-Quiz und schalte Level frei. Lernen mit Spaß!", "Take the Baker's Quiz and unlock levels. Learn while having fun!", "Haz el Quiz del Panadero y desbloquea niveles. ¡Aprende divirtiéndote!") },
         ]} />
       <AvatarBubbles variant="impara" />
+
+      <button data-testid="impara-livelli-btn" onClick={() => setImparaLiv(true)}
+        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#8C4A27] to-[#6E371C] text-white shadow-md active:scale-98 transition-all text-left">
+        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0"><Trophy className="w-6 h-6 text-[#f0dcb4]" /></div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Impara a Livelli", "Lernen nach Stufen", "Learn by Levels", "Aprende por Niveles", "Apprendre par Niveaux", "یادگیری مرحله‌ای")}</h3>
+          <p className="text-white/85 text-[13px] leading-snug">{mkTri(lang)("Quiz a livelli che contano come sfida: sblocca badge e sali di grado", "Level-Quiz als Challenge: schalte Abzeichen frei und steige auf", "Level quizzes that count as a challenge: unlock badges and rank up", "Cuestionarios por niveles que cuentan como desafío: desbloquea insignias", "Des quiz par niveaux qui comptent comme défi : débloque des badges", "آزمون‌های مرحله‌ای به‌عنوان چالش: نشان‌ها را باز کنید")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-white/70 shrink-0" />
+      </button>
+
+      <button data-testid="impara-askmaster-btn" onClick={() => setAskMaster(true)}
+        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#B45309] to-[#8C4A27] text-white shadow-md active:scale-98 transition-all text-left">
+        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><MessageCircle className="w-6 h-6" /></div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Chiedi al Maestro", "Frag den Meister", "Ask the Master", "Pregunta al Maestro", "Demande au Maître", "از استاد بپرس")}</h3>
+          <p className="text-white/85 text-[13px] leading-snug">{mkTri(lang)("Dubbi sull'impasto? Chiedi a Michele e ricevi consigli su misura", "Fragen zum Teig? Frag Michele für persönliche Tipps", "Dough doubts? Ask Michele for tailored advice", "¿Dudas con la masa? Pregunta a Michele", "Des doutes sur la pâte ? Demande à Michele", "سوال درباره خمیر؟ از میکله بپرس")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-white/70 shrink-0" />
+      </button>
       <div className="rounded-2xl p-5 bg-[#B45309]/12 border border-[#B45309]/30">
         <div className="flex items-center gap-2 mb-2">
           <Sprout className="w-5 h-5 text-[#8C4A27] dark:text-[#a9d2ec]" />
