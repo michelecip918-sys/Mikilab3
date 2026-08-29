@@ -158,7 +158,7 @@ export default function DayClose() {
     setSaving(false);
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // Consumi settimanali (farina vs lievito) dagli scarichi delle chiusure archiviate
   const consumption = useMemo(() => {
@@ -204,7 +204,7 @@ export default function DayClose() {
       <Header tri={tri} />
 
       {/* Toggle Nuova chiusura / Storico */}
-      <div data-testid="dayclose-modeswitch" className="grid grid-cols-2 gap-2 mb-4 bg-[#e4eff8] dark:bg-[#242424] rounded-2xl p-1">
+      <div data-testid="dayclose-modeswitch" className="grid grid-cols-2 gap-2 mb-4 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl p-1">
         <button data-testid="dayclose-mode-wizard" onClick={() => setMode("wizard")}
           className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "wizard" ? "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
           <CheckSquare className="w-4 h-4" /> {tri("Nuova chiusura", "Neuer Abschluss")}
@@ -217,7 +217,7 @@ export default function DayClose() {
 
       {mode === "storico" ? (
         <div data-testid="dayclose-storico" className="space-y-3">
-          <div data-testid="consumption-chart" className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4">
+          <div data-testid="consumption-chart" className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4">
             <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#ff6b00] mb-3"><BarChart3 className="w-4 h-4" /> {tri("Consumi settimanali (farina e lieviti)", "Wochenverbrauch (Mehl & Hefen)")}</p>
             {hasConsumption ? (
               <ResponsiveContainer width="100%" height={220}>
@@ -245,7 +245,7 @@ export default function DayClose() {
             const list = closures.filter((c) => !q || (c.date || "").toLowerCase().includes(q) || (c.production_lot || "").toLowerCase().includes(q));
             if (!list.length) return <p data-testid="storico-empty" className="text-sm text-[#7E8A93] text-center py-8">{tri("Nessuna chiusura archiviata.", "Keine archivierten Abschlüsse.")}</p>;
             return list.map((c) => (
-              <div key={c.id} data-testid={`storico-item-${c.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-3.5 flex items-center justify-between gap-3">
+              <div key={c.id} data-testid={`storico-item-${c.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-3.5 flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{c.date} · <span className="font-mono-data text-[#ff6b00] dark:text-[#8FB0C2]">{c.production_lot || tri("senza lotto", "ohne Charge")}</span></p>
                   <p className="text-[11px] text-[#7E8A93] mt-0.5">{tri("Operatore", "Bediener")}: {c.operator || "—"} · {(c.produced || []).length} {tri("prodotti", "Produkte")} · {(c.temps || []).filter((t) => t.temp_c != null && t.temp_c !== "").length} {tri("temp.", "Temp.")} · {Object.values(c.cleaning || {}).filter(Boolean).length} {tri("pulizie", "Reinigungen")}</p>
@@ -264,8 +264,8 @@ export default function DayClose() {
       <div data-testid="dayclose-stepper" className="flex items-center gap-1 mb-5">
         {[1, 2, 3].map((n) => (
           <div key={n} className="flex items-center flex-1">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${step >= n ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93]"}`}>{n}</div>
-            {n < 3 && <div className={`h-1 flex-1 rounded ${step > n ? "bg-[#ff6b00]" : "bg-[#e4eff8] dark:bg-[#242424]"}`} />}
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${step >= n ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>{n}</div>
+            {n < 3 && <div className={`h-1 flex-1 rounded ${step > n ? "bg-[#ff6b00]" : "bg-[#e4eff8] dark:bg-[#1e1e1e]"}`} />}
           </div>
         ))}
       </div>
@@ -281,7 +281,7 @@ export default function DayClose() {
           <Card icon={<QrCode className="w-4 h-4" />} title={tri("Lotto di produzione", "Produktionscharge")}>
             <div className="flex gap-2">
               <input data-testid="dayclose-lot" value={lot} onChange={(e) => setLot(e.target.value)} className={inp + " font-mono-data"} />
-              <button data-testid="dayclose-lot-regen" onClick={() => setLot(genLot())} className="shrink-0 px-3 rounded-xl bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00] text-xs font-semibold">{tri("Nuovo", "Neu")}</button>
+              <button data-testid="dayclose-lot-regen" onClick={() => setLot(genLot())} className="shrink-0 px-3 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] text-xs font-semibold">{tri("Nuovo", "Neu")}</button>
             </div>
             <p className="text-[11px] text-[#7E8A93] mt-1.5">{tri("Assegnato ai prodotti pronti alla vendita.", "Wird den verkaufsfertigen Produkten zugewiesen.")}</p>
           </Card>
@@ -313,7 +313,7 @@ export default function DayClose() {
             )}
             <div className="space-y-2">
               {inventory.map((it, i) => (
-                <div key={it.id || i} className="rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] p-2 space-y-1.5">
+                <div key={it.id || i} className="rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] p-2 space-y-1.5">
                   <div className="flex items-center gap-2">
                     <input data-testid={`inv-name-${i}`} value={it.name} placeholder={tri("Materia prima", "Rohstoff")}
                       onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
@@ -338,7 +338,7 @@ export default function DayClose() {
                 <button data-testid="inv-save" onClick={saveInventory} className="text-sm font-semibold text-white bg-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1"><Save className="w-3.5 h-3.5" /> {tri("Salva magazzino", "Lager speichern")}</button>
               </div>
               <p className="text-[11px] text-[#7E8A93] flex items-start gap-1"><AlertTriangle className="w-3.5 h-3.5 text-[#ff6b00] shrink-0 mt-0.5" /> {tri("Imposta una soglia: ricevi un'email quando la materia scende sotto quel livello.", "Lege eine Schwelle fest: du erhältst eine E-Mail, wenn der Rohstoff darunter fällt.")}</p>
-              <div className="pt-2 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
+              <div className="pt-2 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
                 <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase text-[#ff6b00] mb-1"><Send className="w-3.5 h-3.5" /> {tri("Email fornitore (per ordine rapido)", "Lieferanten-E-Mail (Schnellbestellung)")}</label>
                 <input data-testid="supplier-email" type="email" value={supplierEmail}
                   onChange={(e) => { setSupplierEmail(e.target.value); try { localStorage.setItem("mikilab_supplier_email", e.target.value); } catch { /* */ } }}
@@ -392,7 +392,7 @@ export default function DayClose() {
                 const on = !!cleaning[tri(it, de)] || !!cleaning[it];
                 return (
                   <button key={key} data-testid={`clean-${key}`} onClick={() => setCleaning((c) => ({ ...c, [tri(it, de)]: !on }))}
-                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left border transition-all active:scale-97 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left border transition-all active:scale-97 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                     <CheckSquare className={`w-4 h-4 shrink-0 ${on ? "text-white" : "text-[#7E8A93]"}`} />
                     <span className="text-xs font-semibold leading-tight">{tri(it, de)}</span>
                   </button>
@@ -448,7 +448,7 @@ export default function DayClose() {
       {/* Nav */}
       <div className="flex items-center justify-between mt-5">
         <button data-testid="dayclose-prev" onClick={() => setStep((s) => Math.max(1, s - 1))} disabled={step === 1}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold text-sm disabled:opacity-40 active:scale-95">
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold text-sm disabled:opacity-40 active:scale-95">
           <ChevronLeft className="w-4 h-4" /> {tri("Indietro", "Zurück")}
         </button>
         {step < 3 && (
@@ -518,7 +518,7 @@ function Header({ tri }) {
 
 function Card({ icon, title, children }) {
   return (
-    <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4">
+    <div className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4">
       <p className="flex items-center gap-1.5 text-xs font-bold uppercase text-[#ff6b00] mb-2.5">{icon} {title}</p>
       {children}
     </div>

@@ -242,7 +242,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       </div>
 
       {extraHeader ? (
-        <div className="mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
+        <div className="mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
           {extraHeader}
         </div>
       ) : null}
@@ -276,7 +276,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       {loading ? (
         <p className="text-center text-[#7E8A93] py-8">{t("loading")}</p>
       ) : recipes.length === 0 ? (
-        <div className="text-center py-12 px-6 border-2 border-dashed border-[#2b2b2b] dark:border-[#2e2e2e] rounded-3xl">
+        <div className="text-center py-12 px-6 border-2 border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] rounded-3xl">
           <Wheat className="w-10 h-10 text-[#ff6b00] mx-auto mb-3" />
           <p className="text-[#6B7680] dark:text-[#9AA6AE]">{emptyText}</p>
         </div>
@@ -301,7 +301,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             transition={{ delay: Math.min(i * 0.015, 0.2) }}
             onClick={() => setViewing(r)}
             data-testid={`recipe-row-${r.id}`}
-            className="relative overflow-hidden text-left bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl shadow-sm active:scale-[0.98] hover:border-[#ff6b00]/60 transition-all flex flex-col"
+            className="relative overflow-hidden text-left bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-sm active:scale-[0.98] hover:border-[#ff6b00]/60 transition-all flex flex-col"
           >
             {/* strisciolina tricolore del Paese d'origine */}
             {countryColors(r.origin) && (
@@ -311,7 +311,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             )}
             {/* foto vetrina */}
             <div className="relative w-full aspect-[4/3] bg-[#e4eff8] dark:bg-[#181818]">
-              <div className="absolute inset-0 flex items-center justify-center"><ChefHat className="w-9 h-9 text-[#242424]/40" /></div>
+              <div className="absolute inset-0 flex items-center justify-center"><ChefHat className="w-9 h-9 text-[#1e1e1e]/40" /></div>
               {r.image_url && (
                 <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="relative z-[1] w-full h-full object-cover" />
               )}
@@ -354,7 +354,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={triM("Cerca ricetta, farina, badge…", "Rezept, Mehl, Badge suchen…", "Search recipe, flour, badge…")}
-                className="w-full pl-9 pr-9 py-2.5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#ff6b00]"
+                className="w-full pl-9 pr-9 py-2.5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#ff6b00]"
               />
               {query && (
                 <button data-testid="recipe-search-clear" onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" aria-label="clear">
@@ -371,7 +371,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${
                       baseFilter === b
                         ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm"
-                        : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2b2b2b] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                        : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
                     {baseLabel(b, lang)}
                   </button>
                 ))}
@@ -390,7 +390,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             {/* Filtro rapido per categoria (chip colorate) */}
             <div data-testid="recipe-cat-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 px-0.5 scrollbar-none max-w-full">
               <button data-testid="cat-filter-all" onClick={() => setCatFilter("all")}
-                className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${catFilter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2b2b2b] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${catFilter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
                 {triM("Tutte", "Alle", "All")}
               </button>
               {CATS.map((c) => {
@@ -427,7 +427,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   })();
                   return (
                     <div key={cat.key} data-testid={`cat-section-${cat.key}`}
-                      className="rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden bg-white/40 dark:bg-[#1e1e1e]/40">
+                      className="rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden bg-white/40 dark:bg-[#1e1e1e]/40">
                       <button data-testid={`cat-folder-${cat.key}`}
                         onClick={() => setOpenCats((o) => ({ ...o, [cat.key]: !open }))}
                         className="relative w-full h-24 flex items-end active:scale-[0.99] transition-all overflow-hidden">
@@ -466,7 +466,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
       {/* Finestra ricetta */}
       <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
-        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e] p-0">
+        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#121212] dark:bg-[#121212] border-[#2e2e2e] dark:border-[#2e2e2e] p-0">
           <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
           <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
           <div className="sticky top-0 z-10 flex justify-end items-center gap-1 px-4 pt-3 pb-2 bg-[#121212]/95 dark:bg-[#121212]/95 backdrop-blur">
@@ -488,7 +488,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             )}
             {["it", "de", "en", "es", "fr", "fa"].map((lc) => (
               <button key={lc} data-testid={`recipe-lang-${lc}`} onClick={() => setLang(lc)}
-                className={`text-[11px] font-bold uppercase px-2.5 py-1 rounded-lg border transition-all ${lang === lc ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                className={`text-[11px] font-bold uppercase px-2.5 py-1 rounded-lg border transition-all ${lang === lc ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                 {lc}
               </button>
             ))}
@@ -521,7 +521,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
       {/* Acquisto singolo ricette (pay-per-item) */}
       <Dialog open={!!unlockRecipe} onOpenChange={(o) => !o && setUnlockRecipe(null)}>
-        <DialogContent className="bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e] max-w-md">
+        <DialogContent className="bg-[#121212] dark:bg-[#121212] border-[#2e2e2e] dark:border-[#2e2e2e] max-w-md">
           <DialogTitle className="font-display text-xl">{triM("Sblocca la ricetta", "Rezept freischalten", "Unlock the recipe")}</DialogTitle>
           <DialogDescription className="text-[#7E8A93]">
             {triM("Scegli come sbloccare la ricetta completa (procedimento, dosi e fasi).", "Wähle, wie du das vollständige Rezept freischaltest.", "Choose how to unlock the full recipe.")}
@@ -574,7 +574,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       />
 
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
-        <AlertDialogContent className="bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e]">
+        <AlertDialogContent className="bg-[#121212] dark:bg-[#121212] border-[#2e2e2e] dark:border-[#2e2e2e]">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-display">{t("delete_recipe_q")}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -670,30 +670,30 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-between pt-2 border-t border-[#2b2b2b]/60 dark:border-[#2e2e2e]">
+          <div className="flex items-center justify-between pt-2 border-t border-[#2e2e2e]/60 dark:border-[#2e2e2e]">
             <span className="text-xs font-semibold text-[#3F4A54] dark:text-[#AEB8BF]">{t("cost_total")}</span>
             <span className="font-mono-data text-sm font-bold text-[#ff6b00] dark:text-[#8FB0C2]">€ {total.toFixed(2)}</span>
           </div>
           <div className="flex items-center justify-between mt-2">
             <span className="text-xs text-[#7E8A93]">{t("cost_pieces")}</span>
             <div className="flex items-center gap-1.5">
-              <button data-testid={`pieces-minus-${r.id}`} onClick={() => setPieces((p) => String(Math.max(1, (n(p) || 1) - 1)))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00] font-bold">−</button>
+              <button data-testid={`pieces-minus-${r.id}`} onClick={() => setPieces((p) => String(Math.max(1, (n(p) || 1) - 1)))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00] font-bold">−</button>
               <input
                 data-testid={`pieces-input-${r.id}`} type="number" value={pieces}
                 onChange={(e) => setPieces(e.target.value)}
-                className="w-14 text-center font-mono-data text-sm font-bold bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg py-1 outline-none"
+                className="w-14 text-center font-mono-data text-sm font-bold bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg py-1 outline-none"
               />
-              <button data-testid={`pieces-plus-${r.id}`} onClick={() => setPieces((p) => String((n(p) || 0) + 1))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00] font-bold">+</button>
+              <button data-testid={`pieces-plus-${r.id}`} onClick={() => setPieces((p) => String((n(p) || 0) + 1))} className="w-7 h-7 rounded-lg bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00] font-bold">+</button>
             </div>
           </div>
           {perPiece != null && (
-            <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#2b2b2b]/60 dark:border-[#2e2e2e]">
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#2e2e2e]/60 dark:border-[#2e2e2e]">
               <span className="text-xs font-semibold text-[#3F4A54] dark:text-[#AEB8BF]">{t("cost_per_piece")}</span>
               <span className="font-mono-data text-sm font-bold text-[#ff6b00]">€ {perPiece.toFixed(2)}</span>
             </div>
           )}
           {(cst.b2b_500g || cst.b2b_100g) && (
-            <div className="mt-2 pt-2 border-t border-[#2b2b2b]/60 dark:border-[#2e2e2e]" data-testid={`b2b-${r.id}`}>
+            <div className="mt-2 pt-2 border-t border-[#2e2e2e]/60 dark:border-[#2e2e2e]" data-testid={`b2b-${r.id}`}>
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1">{t("labels_b2b_hint")}</p>
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-lg bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2 py-1.5 text-center">
@@ -820,7 +820,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             </div>
           )}
           {biga && <div className="border-t border-dashed border-[#ff6b00]/50 my-1" aria-hidden />}
-          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#e4eff8] dark:bg-[#242424] p-3 print-table">
+          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 print-table">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">{biga ? tri("Fase 2 · Impasto principale", "Phase 2 · Hauptteig", "Phase 2 · Main dough") : t("recipe_ingredients")}</p>
               {flourG > 0 && (
@@ -829,7 +829,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
                   <input
                     data-testid={`recipe-scale-${r.id}`} type="number" value={scaleVal ?? flourG}
                     onChange={(e) => onScaleChange(e.target.value)}
-                    className="w-20 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none"
+                    className="w-20 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none"
                   />
                   <span className="text-[10px] text-[#7E8A93]">g</span>
                 </div>
@@ -923,7 +923,7 @@ function ActionBtn({ testid, onClick, color, label, children }) {
       data-testid={testid}
       onClick={onClick}
       aria-label={label}
-      className="w-9 h-9 rounded-lg bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center active:scale-95"
+      className="w-9 h-9 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center active:scale-95"
       style={{ color }}
     >
       {children}
@@ -1193,7 +1193,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
           <span className="text-[10px] text-[#7E8A93]">{t("recipe_scale")}</span>
           <input data-testid={`recipe-scale-${r.id}`} type="number" value={scaleVal ?? flourG}
             onChange={(e) => onScaleChange(e.target.value)}
-            className="w-20 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none" />
+            className="w-20 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none" />
           <span className="text-[10px] text-[#7E8A93]">g</span>
         </div>
       )}
@@ -1210,7 +1210,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
         </div>
       </div>
 
-      <div className="rounded-xl bg-[#e4eff8] dark:bg-[#242424] p-3 overflow-x-auto">
+      <div className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 overflow-x-auto">
         <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{tri("Ingredienti: 1° e 2° Impasto · Totale", "Zutaten: 1./2. Teig · Gesamt", "Ingredients: 1st/2nd dough · Total")}</p>
         <table className="w-full text-sm border-collapse">
           <thead>
@@ -1227,7 +1227,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
               const first = Math.round(it.tot * it.first);
               const second = it.tot - first;
               return (
-                <tr key={i} className="border-t border-[#2b2b2b]/60 dark:border-[#2e2e2e]">
+                <tr key={i} className="border-t border-[#2e2e2e]/60 dark:border-[#2e2e2e]">
                   <td className="py-1 text-[#3F4A54] dark:text-[#AEB8BF] pr-2">{it.name}</td>
                   <td className="py-1 text-right font-mono-data text-[#7E8A93] pl-4 whitespace-nowrap">{first > 0 ? first : "—"}</td>
                   <td className="py-1 text-right font-mono-data text-[#7E8A93] pl-4 whitespace-nowrap">{second > 0 ? second : "—"}</td>
@@ -1248,7 +1248,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
             <span className="text-[10px] text-[#7E8A93]">{tri("Totale", "Gesamt", "Total")}</span>
             <input data-testid={`glaze-total-${r.id}`} type="number" value={glazeTot}
               onChange={(e) => setGlazeTot(e.target.value)}
-              className="w-16 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none" />
+              className="w-16 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none" />
             <span className="text-[10px] text-[#7E8A93]">g</span>
           </div>
         </div>

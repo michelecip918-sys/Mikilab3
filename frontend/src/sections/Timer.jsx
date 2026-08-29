@@ -37,7 +37,7 @@ export default function Timer() {
   const [repeat, setRepeat] = useState(false);
   void nowTs; // forza il re-render al tick del provider
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40">
@@ -53,7 +53,7 @@ export default function Timer() {
       <div className="grid grid-cols-3 gap-2 mb-5">
         {PRESETS.map((p) => (
           <button key={p.key} data-testid={`timer-preset-${p.key}`} onClick={() => addTimer(p.label, p.min, p.repeat)}
-            className="relative flex flex-col items-center gap-0.5 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl py-3 active:scale-95 hover:border-[#E4572E]/50 transition-all">
+            className="relative flex flex-col items-center gap-0.5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl py-3 active:scale-95 hover:border-[#E4572E]/50 transition-all">
             {p.repeat && <span className="absolute top-1.5 right-1.5"><RefreshCw className="w-3.5 h-3.5 text-[#ff6b00]" /></span>}
             <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
             <span className="font-mono-data text-xs text-[#7E8A93]">{p.min}′</span>
@@ -86,7 +86,7 @@ export default function Timer() {
           const done = rem <= 0;
           return (
             <div key={t.id} data-testid={`timer-card-${t.id}`}
-              className={`rounded-3xl p-5 shadow-sm border ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+              className={`rounded-3xl p-5 shadow-sm border ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <div className="flex items-center justify-between mb-2">
                 <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#ff6b00] shrink-0" />}</span>
                 <button data-testid={`timer-remove-${t.id}`} onClick={() => remove(t.id)} className="text-[#7E8A93] hover:text-[#E4572E] p-1"><Trash2 className="w-5 h-5" /></button>
@@ -98,7 +98,7 @@ export default function Timer() {
                   {t.running ? <><Pause className="w-6 h-6" /> {tri("Pausa", "Pause", "Pause")}</> : <><Play className="w-6 h-6" /> {tri("Vai", "Start", "Go")}</>}
                 </button>
                 <button data-testid={`timer-reset-${t.id}`} onClick={() => reset(t.id)}
-                  className="flex items-center justify-center gap-2 bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
+                  className="flex items-center justify-center gap-2 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
                   <RotateCcw className="w-6 h-6" /> {tri("Reset", "Reset", "Reset")}
                 </button>
               </div>

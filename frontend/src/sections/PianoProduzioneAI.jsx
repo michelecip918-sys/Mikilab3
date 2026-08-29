@@ -344,16 +344,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         onDragOver={editTools ? (e) => e.preventDefault() : undefined}
         onDrop={editTools ? (e) => { e.preventDefault(); reorderTool(dragId, id); setDragId(null); } : undefined}
         onDragEnd={editTools ? () => setDragId(null) : undefined}
-        className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#1e1e1e] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-move border-dashed border-[#ff6b00]/50" : "cursor-pointer border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00]/60"} ${isHidden ? "opacity-40" : ""} ${dragId === id ? "opacity-50 scale-95 ring-2 ring-[#ff6b00]" : ""}`}>
+        className={`relative flex flex-col items-center justify-center gap-1.5 bg-white dark:bg-[#1e1e1e] border rounded-2xl p-3 pt-4 text-center transition-all min-h-[70px] ${editTools ? "cursor-move border-dashed border-[#ff6b00]/50" : "cursor-pointer border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00]/60"} ${isHidden ? "opacity-40" : ""} ${dragId === id ? "opacity-50 scale-95 ring-2 ring-[#ff6b00]" : ""}`}>
         {editTools ? (
           <>
             <div className="absolute top-1 left-1 flex gap-0.5">
               <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onClick={(e) => { e.stopPropagation(); toggleHideTool(id); }}
-                className="w-6 h-6 rounded-full bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center text-[#ff6b00] active:scale-90">
+                className="w-6 h-6 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#ff6b00] active:scale-90">
                 {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               </button>
               <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onClick={(e) => { e.stopPropagation(); togglePinTool(id); }}
-                className={`w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00]"}`}>
+                className={`w-6 h-6 rounded-full flex items-center justify-center active:scale-90 ${(toolPrefs.pinned || []).includes(id) ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00]"}`}>
                 <Star className={`w-3.5 h-3.5 ${(toolPrefs.pinned || []).includes(id) ? "fill-white" : ""}`} />
               </button>
             </div>
@@ -401,11 +401,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         <Icon className="w-5 h-5 text-[#ff6b00] shrink-0" />
         <span className="text-[12px] font-semibold leading-tight text-[#2B303B] dark:text-[#e4eff8] flex-1 min-w-0 truncate">{label}</span>
         <button type="button" data-testid={`tool-hide-${id}`} aria-label="hide" onPointerDown={stop} onClick={(e) => { stop(e); toggleHideTool(id); }}
-          className="w-7 h-7 rounded-full bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center text-[#ff6b00] active:scale-90 shrink-0">
+          className="w-7 h-7 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#ff6b00] active:scale-90 shrink-0">
           {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
         </button>
         <button type="button" data-testid={`tool-pin-${id}`} aria-label="pin" onPointerDown={stop} onClick={(e) => { stop(e); togglePinTool(id); }}
-          className={`w-7 h-7 rounded-full flex items-center justify-center active:scale-90 shrink-0 ${isPinned ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00]"}`}>
+          className={`w-7 h-7 rounded-full flex items-center justify-center active:scale-90 shrink-0 ${isPinned ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00]"}`}>
           <Star className={`w-3.5 h-3.5 ${isPinned ? "fill-white" : ""}`} />
         </button>
         <div className="flex flex-col shrink-0">
@@ -880,7 +880,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     <div className="grid grid-cols-1 gap-1">
                       {items.map((tl) => (
                         <button key={tl.id} data-testid={`lab-menu-tool-${tl.id}`} onClick={() => { setMenuOpen(false); onOpenTool(tl.id); window.scrollTo(0, 0); }}
-                          className="flex items-center gap-2.5 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-98 hover:border-[#ff6b00]/60 transition-all">
+                          className="flex items-center gap-2.5 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 hover:border-[#ff6b00]/60 transition-all">
                           <tl.Icon className="w-4 h-4 shrink-0" style={{ color: c.color }} />
                           <span className="text-sm font-medium text-[#2B303B] dark:text-[#e4eff8] truncate">{tri3(lang, tl.it, tl.de, tl.en, tl.es)}</span>
                         </button>
@@ -946,7 +946,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <div className="flex items-center justify-between">
               <p className="text-[10.5px] text-[#7E8A93]">{tri3(lang, "Altri accessi rapidi", "Weitere Schnellzugriffe", "More quick links")}</p>
               <button data-testid="lab-tour-replay" onClick={() => setTourForce((n) => n + 1)}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] px-2.5 py-1 rounded-full border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] active:scale-95 transition-all">
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] px-2.5 py-1 rounded-full border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] active:scale-95 transition-all">
                 <HelpCircle className="w-3.5 h-3.5" /> {tri3(lang, "Come si fa?", "Wie geht's?", "How to?")}
               </button>
             </div>
@@ -962,7 +962,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 </button>
               ))}
             </div>
-            <div className="h-px bg-[#2b2b2b] dark:bg-[#2e2e2e] my-4" />
+            <div className="h-px bg-[#2e2e2e] dark:bg-[#2e2e2e] my-4" />
           </div>
         )}
         <div data-testid="capo-advanced-title" className="mb-2 mt-1 flex items-center gap-2">
@@ -989,8 +989,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 className={`relative flex flex-col items-center justify-center gap-1 rounded-2xl p-3 pt-5 text-center transition-all active:scale-95 border min-h-[82px] cursor-pointer ${
                   on
                     ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm"
-                    : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
-                <span className={`absolute top-1.5 left-1.5 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
+                    : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                <span className={`absolute top-1.5 left-1.5 text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
                 <button type="button" data-testid={`tool-info-${id}`} aria-label="info"
                   onClick={(e) => { e.stopPropagation(); openGuide(id); }}
                   className={`absolute top-1 right-1 w-6 h-6 rounded-full flex items-center justify-center active:scale-90 shadow-sm ring-2 ${on ? "bg-white text-[#ff6b00] ring-[#ff6b00]" : "bg-[#ff6b00] text-white ring-white dark:ring-[#1e1e1e]"}`}>
@@ -1018,7 +1018,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
         {onOpenTool && (
           <>
-            <div className="mt-4 mb-2 h-px bg-[#2b2b2b] dark:bg-[#2e2e2e]" />
+            <div className="mt-4 mb-2 h-px bg-[#2e2e2e] dark:bg-[#2e2e2e]" />
             {!editTools && (() => {
               const discovered = TOOLS.filter((t) => toolUsage[t.id]).length;
               const total = TOOLS.length;
@@ -1078,7 +1078,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 {tri3(lang, "Apri uno strumento", "Werkzeug öffnen", "Open a tool", "Abrir una herramienta")}
               </p>
               <button data-testid="tools-edit-toggle" onClick={() => setEditTools((v) => !v)}
-                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${editTools ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${editTools ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                 <Settings2 className="w-3.5 h-3.5" /> {editTools ? tri3(lang, "Fatto", "Fertig", "Done") : tri3(lang, "Personalizza", "Anpassen", "Customize")}
               </button>
             </div>
@@ -1093,7 +1093,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <Search className="w-4 h-4 text-[#7E8A93] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input data-testid="tools-search" value={toolQuery} onChange={(e) => setToolQuery(e.target.value)}
                   placeholder={tri3(lang, "Cerca uno strumento…", "Werkzeug suchen…", "Search a tool…", "Buscar herramienta…")}
-                  className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] pl-9 pr-3 py-2 text-sm outline-none focus:border-[#ff6b00]" />
+                  className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] pl-9 pr-3 py-2 text-sm outline-none focus:border-[#ff6b00]" />
               </div>
             )}
 
@@ -1150,7 +1150,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       </Section>
 
       <Section order={2} highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
-        <div data-testid="capo-plan-switch" className="flex items-center gap-1 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] mb-2">
+        <div data-testid="capo-plan-switch" className="flex items-center gap-1 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] mb-2">
           <button data-testid="capo-switch-weekly" onClick={() => setUseWeekly(true)}
             className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${useWeekly ? "bg-[#ff6b00] text-white shadow-sm" : "text-[#7E8A93]"}`}>{tri3(lang, "Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal")}</button>
           <button data-testid="capo-switch-today" onClick={() => setUseWeekly(false)}
@@ -1168,13 +1168,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         )}
         <div data-testid="capo-source-choice" className="grid grid-cols-2 gap-2 mb-3">
             <button data-testid="capo-source-weekly" onClick={() => setUseWeekly(true)}
-              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#a9d2ec] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${useWeekly ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#a9d2ec] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <CalendarDays className="w-5 h-5 mb-1" />
               <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Piano Settimanale", "Wochenplan", "Weekly Plan")}</p>
               <p className={`text-[10.5px] leading-snug ${useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "Usa quello inserito (modificabile)", "Bereits erfasst (änderbar)", "Use what you entered (editable)")}</p>
             </button>
             <button data-testid="capo-source-manual" onClick={() => setUseWeekly(false)}
-              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${!useWeekly ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#a9d2ec] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+              className={`rounded-2xl p-3 text-left border-2 transition-all active:scale-97 ${!useWeekly ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#a9d2ec] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <ChefHat className="w-5 h-5 mb-1" />
               <p className="text-[13px] font-bold leading-tight">{tri3(lang, "Aggiungi al piano settimanale", "Zum Wochenplan hinzufügen", "Add to weekly plan")}</p>
               <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "es. per oggi · a mano", "z. B. für heute · manuell", "e.g. for today · manually")}</p>
@@ -1185,7 +1185,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <div className="flex items-center justify-between mb-1.5">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00]">{tri3(lang, "Strumenti rapidi", "Schnellzugriff", "Quick tools", "Herramientas rápidas")}</p>
               <button data-testid="capo-quicktools-edit" onClick={() => setEditQuick((s) => !s)}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] px-2.5 py-1 rounded-full border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] active:scale-95 transition-all">
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] px-2.5 py-1 rounded-full border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] active:scale-95 transition-all">
                 {editQuick ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Settings2 className="w-3.5 h-3.5" />}
                 {editQuick ? tri3(lang, "Fatto", "Fertig", "Done", "Listo") : tri3(lang, "Personalizza", "Anpassen", "Customize", "Personalizar")}
               </button>
@@ -1198,7 +1198,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     const on = quickTools.includes(q.id);
                     return (
                       <button key={q.id} data-testid={`capo-quicktoggle-${q.id}`} onClick={() => toggleQuick(q.id)}
-                        className={`flex items-center gap-2 py-2 px-2.5 rounded-xl border text-left active:scale-95 transition-all ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                        className={`flex items-center gap-2 py-2 px-2.5 rounded-xl border text-left active:scale-95 transition-all ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                         <q.Icon className={`w-4 h-4 shrink-0 ${on ? "text-white" : "text-[#ff6b00]"}`} />
                         <span className="text-[11px] font-semibold leading-tight flex-1 min-w-0">{tri3(lang, q.t[0], q.t[1], q.t[2], q.t[3])}</span>
                         {on ? <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> : <Plus className="w-3.5 h-3.5 shrink-0 text-[#7E8A93]" />}
@@ -1211,7 +1211,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <div className="grid grid-cols-3 gap-2">
                 {quickTools.map((id) => QUICK_CATALOG.find((c) => c.id === id)).filter(Boolean).map((q) => (
                   <button key={q.id} data-testid={`capo-quicktool-${q.id}`} onClick={() => onOpenTool(q.id)}
-                    className="flex flex-col items-center gap-1 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
+                    className="flex flex-col items-center gap-1 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
                     <q.Icon className="w-4 h-4 text-[#ff6b00]" />
                     <span className="text-[11px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri3(lang, q.t[0], q.t[1], q.t[2], q.t[3])}</span>
                   </button>
@@ -1242,14 +1242,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <div key={i} className="flex items-center gap-2">
                   <select data-testid={`capo-extra-recipe-${i}`} value={p.recipe_id || ""}
                     onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                    className="flex-1 min-w-0 bg-white dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                    className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
                     <option value="">{t("capo_pick_recipe")}</option>
                     {renderAllOptions(recipes)}
                   </select>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
                       onChange={(e) => setExtraToday((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-                      className="w-full bg-white dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 pr-9 text-sm outline-none focus:border-[#ff6b00]" />
+                      className="w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 pr-9 text-sm outline-none focus:border-[#ff6b00]" />
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
                   </div>
                   <button type="button" data-testid={`capo-extra-remove-${i}`} onClick={() => setExtraToday((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>
@@ -1298,7 +1298,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               </label>
               <select data-testid="capo-weekly-start" value={weeklyStartId}
                 onChange={(e) => setWeeklyStartId(e.target.value)}
-                className="w-full bg-white dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2.5 text-sm outline-none focus:border-[#D4AF37]">
+                className="w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2.5 text-sm outline-none focus:border-[#D4AF37]">
                 <option value="">{tri3(lang, "Lascia decidere all'IA", "KI entscheiden lassen", "Let the AI decide")}</option>
                 {(() => {
                   const uniq = [...new Map(weeklyItems.map((w) => [w.recipe_id, w])).values()];
@@ -1317,11 +1317,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         )}
         <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">
           {products.map((p, i) => (
-            <div key={i} className="bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 space-y-2">
+            <div key={i} className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 space-y-2">
               <div className="flex items-center gap-2">
                 <select data-testid={`capo-product-recipe-${i}`} value={p.recipe_id || ""}
                   onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
                   <option value="">{t("capo_pick_recipe")}</option>
                   {renderAllOptions(recipes)}
                 </select>
@@ -1332,8 +1332,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   onClick={() => setProducts((l) => l.map((x, k) => ({ ...x, start: k === i ? !x.start : false })))}
                   className={`w-full flex items-center justify-center gap-1.5 text-xs font-semibold py-1.5 rounded-lg border transition-all active:scale-97 ${
                     p.start
-                      ? "bg-[#1c1c1c] text-white border-[#1c1c1c]"
-                      : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                      ? "bg-[#1e1e1e] text-white border-[#1e1e1e]"
+                      : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                   <Flag className="w-3.5 h-3.5" />
                   {p.start
                     ? tri3(lang, "Impasto di partenza", "Start-Teig", "Starting dough")
@@ -1344,12 +1344,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <div className="relative flex-1">
                   <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Quantità", "Menge", "Quantity")}
                     onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-                    className="w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 pr-12 text-sm outline-none focus:border-[#ff6b00]" />
+                    className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 pr-12 text-sm outline-none focus:border-[#ff6b00]" />
                   <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
                 </div>
                 <button type="button" data-testid={`capo-product-opts-${i}`}
                   onClick={() => setProducts((l) => l.map((x, k) => k === i ? { ...x, _opts: !x._opts } : x))}
-                  className="shrink-0 text-xs font-semibold text-[#ff6b00] px-2.5 py-2 rounded-lg border border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-95 transition-all">
+                  className="shrink-0 text-xs font-semibold text-[#ff6b00] px-2.5 py-2 rounded-lg border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 transition-all">
                   {p._opts ? tri3(lang, "Meno", "Weniger", "Less") : tri3(lang, "Opzioni", "Optionen", "Options")}
                 </button>
               </div>
@@ -1357,7 +1357,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 <div className="flex items-center gap-2 flex-wrap">
                   <select data-testid={`capo-product-unit-${i}`} value={p.unit}
                     onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, unit: e.target.value } : x))}
-                    className="w-[80px] shrink-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                    className="w-[80px] shrink-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
                     <option value="pezzi">{t("capo_unit_pieces")}</option>
                     <option value="kg">{t("capo_unit_kg")}</option>
                   </select>
@@ -1365,13 +1365,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                     <div className="relative w-[80px] shrink-0">
                       <input data-testid={`capo-product-gpp-${i}`} type="number" value={p.gpp ?? ""} placeholder="g/pz"
                         onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, gpp: e.target.value } : x))}
-                        className="w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#ff6b00]" />
+                        className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#ff6b00]" />
                       <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">g</span>
                     </div>
                   )}
                   <select data-testid={`capo-product-day-${i}`} value={p.day || ""}
                     onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-                    className="flex-1 min-w-[110px] bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                    className="flex-1 min-w-[110px] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
                     {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
                   </select>
                 </div>
@@ -1387,7 +1387,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <button data-testid="capo-suggest-frequent" onClick={suggestFromFrequent} className="text-sm font-semibold text-white bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Suggerisci dai più usati", "Aus meistgenutzten vorschlagen", "Suggest from most-used", "Sugerir de los más usados")}</button>
           </div>
           <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
-            <Flag className="w-3.5 h-3.5 text-[#1c1c1c] shrink-0 mt-0.5" />
+            <Flag className="w-3.5 h-3.5 text-[#1e1e1e] shrink-0 mt-0.5" />
             {tri3(lang, "Scegli tu l'impasto da cui partire: tocca «Parti da qui». L'IA organizzerà la sequenza iniziando da quello.",
               "Wähle den Start-Teig: tippe auf „Hier starten“. Die KI ordnet die Reihenfolge ab diesem Teig.",
               "Choose the dough to start from: tap 'Start here'. The AI will sequence the work starting from it.")}
@@ -1408,22 +1408,22 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         {pickerOpen && (
           <div className="fixed inset-0 z-[70] bg-black/50 flex items-end sm:items-center justify-center" onClick={() => setPickerOpen(false)}>
             <div className="bg-white dark:bg-[#121212] w-full sm:max-w-md max-h-[82vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <div className="p-4 border-b border-[#2b2b2b] dark:border-[#2e2e2e]">
+              <div className="p-4 border-b border-[#2e2e2e] dark:border-[#2e2e2e]">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</h3>
                   <button data-testid="capo-picker-close" onClick={() => setPickerOpen(false)} className="text-[#7E8A93] p-1"><X className="w-5 h-5" /></button>
                 </div>
                 <input data-testid="capo-picker-search" value={pickSearch} onChange={(e) => setPickSearch(e.target.value)} autoFocus
                   placeholder={tri3(lang, "Cerca ricetta…", "Rezept suchen…", "Search recipe…")}
-                  className="w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+                  className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
                 <div data-testid="capo-picker-filters" className="flex gap-1.5 mt-2 overflow-x-auto pb-1">
                   <button data-testid="capo-filter-all" onClick={() => setPickCat("")}
-                    className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === "" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#242424] text-[#ff6b00] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                    className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === "" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                     {tri3(lang, "Tutte", "Alle", "All")}
                   </button>
                   {CATS.map((c) => (
                     <button key={c.key} data-testid={`capo-filter-${c.key}`} onClick={() => setPickCat(c.key === pickCat ? "" : c.key)}
-                      className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === c.key ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#242424] text-[#ff6b00] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                      className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === c.key ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                       {c.icon} {t(c.label)}
                     </button>
                   ))}
@@ -1434,15 +1434,15 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   const sel = products.some((p) => p.recipe_id === r.id);
                   return (
                     <button key={r.id} data-testid={`capo-pick-${r.id}`} onClick={() => (sel ? removeByRecipe(r.id) : addRecipes([r.id]))}
-                      className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#ff6b00]/12 border border-[#ff6b00]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#242424] border border-transparent"}`}>
-                      {sel ? <CheckCircle2 className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#2b2b2b] dark:border-[#4a5560] shrink-0" />}
+                      className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#ff6b00]/12 border border-[#ff6b00]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#1e1e1e] border border-transparent"}`}>
+                      {sel ? <CheckCircle2 className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#2e2e2e] dark:border-[#4a5560] shrink-0" />}
                       <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{recipeTitle(r, lang)}</span>
                       {r._own && <span className="text-[10px] text-[#ff6b00]">★</span>}
                     </button>
                   );
                 })}
               </div>
-              <div className="p-3 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
+              <div className="p-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
                 <button data-testid="capo-picker-done" onClick={() => setPickerOpen(false)} className="w-full bg-[#ff6b00] text-white font-semibold py-2.5 rounded-xl active:scale-98">
                   {tri3(lang, "Fatto", "Fertig", "Done")} ({products.filter((p) => p.recipe_id).length})
                 </button>
@@ -1465,7 +1465,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         <div className="mt-3">
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Obiettivo del piano", "Ziel des Plans", "Plan goal", "Objetivo del plan")}</label>
           <select data-testid="capo-plan-goal" value={planGoal} onChange={(e) => setPlanGoal(e.target.value)}
-            className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-3 text-sm outline-none focus:border-[#ff6b00]">
+            className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 text-sm outline-none focus:border-[#ff6b00]">
             <option value="qualita">{mkTri(lang)("🥖 Priorità Qualità (Lievitazioni lente e controllo rigoroso)", "🥖 Qualität zuerst (langsame Gare, strenge Kontrolle)", "🥖 Quality first (slow proofing, strict control)", "🥖 Prioridad Calidad (fermentaciones lentas, control riguroso)")}</option>
             <option value="tempo">{mkTri(lang)("⚡ Produzione Rapida (Sequenze veloci e ritmi serrati)", "⚡ Schnelle Produktion (schnelle Abläufe, straffe Rhythmen)", "⚡ Fast Production (quick sequences, tight rhythm)", "⚡ Producción Rápida (secuencias veloces, ritmos ajustados)")}</option>
             <option value="resa">{mkTri(lang)("🔥 Massima Resa Forni/Celle (Gestione carichi simultanei)", "🔥 Max. Auslastung Öfen/Kammern (gleichzeitige Ladungen)", "🔥 Max Oven/Cell Output (simultaneous loads)", "🔥 Máx. Rendimiento Hornos/Cámaras (cargas simultáneas)")}</option>
@@ -1513,7 +1513,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </button>
           </div>
           <textarea data-testid="capo-notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2}
-            className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-3 text-sm outline-none focus:border-[#ff6b00] resize-none" />
+            className="mt-1 w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 text-sm outline-none focus:border-[#ff6b00] resize-none" />
         </div>
 
         {modules.foodcost && (() => {
@@ -1552,7 +1552,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 ))}
               </div>
               <div className="mt-3 pt-3 border-t border-[#ff6b00]/20 grid grid-cols-3 gap-2 text-center">
-                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Costo", "Kosten", "Cost")}</p><p className="font-mono-data font-bold text-[#242424]">{eur(totCost)}</p></div>
+                <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Costo", "Kosten", "Cost")}</p><p className="font-mono-data font-bold text-[#1e1e1e]">{eur(totCost)}</p></div>
                 <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Ricavo", "Umsatz", "Revenue")}</p><p className="font-mono-data font-bold text-[#ff6b00] dark:text-[#a9d2ec]">{eur(totRev)}</p></div>
                 <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Margine", "Marge", "Margin")}</p><p className="font-mono-data font-bold text-[#ff6b00]">{eur(margin)}{marginPct != null ? ` · ${marginPct.toFixed(0)}%` : ""}</p></div>
               </div>
@@ -1598,11 +1598,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 </div>
               </div>
               <button data-testid="capo-new-plan" onClick={clearPlan}
-                className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#e4eff8] bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] px-3 py-2 rounded-xl active:scale-95 transition-all">
+                className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#e4eff8] bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3 py-2 rounded-xl active:scale-95 transition-all">
                 <RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Nuovo piano", "Neuer Plan", "New plan")}
               </button>
             </div>
-            <div data-testid="capo-phase-timers" className="no-print mt-2 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3">
+            <div data-testid="capo-phase-timers" className="no-print mt-2 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1.5"><TimerIcon className="w-4 h-4" /> {tri3(lang, "Timer di fase (Smart Timer)", "Phasen-Timer (Smart Timer)", "Phase timers (Smart Timer)", "Temporizadores de fase")}</p>
               <div className="grid grid-cols-4 gap-2">
                 {[
@@ -1612,7 +1612,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   { k: "cottura", label: tri3(lang, "Cottura", "Backen", "Bake", "Cocción"), min: 40 },
                 ].map((p) => (
                   <button key={p.k} data-testid={`capo-phase-timer-${p.k}`} onClick={() => startPhaseTimer(p.label, p.min, p.repeat)}
-                    className="relative flex flex-col items-center gap-0.5 py-2.5 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
+                    className="relative flex flex-col items-center gap-0.5 py-2.5 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
                     {p.repeat && <RefreshCw className="absolute top-1.5 right-1.5 w-3 h-3 text-[#ff6b00]" />}
                     <span className="text-[12px] font-bold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
                     <span className="font-mono-data text-[10px] text-[#7E8A93]">{p.min}′</span>
@@ -1622,14 +1622,14 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <p className="text-[10px] text-[#7E8A93] mt-1.5">{tri3(lang, "I timer suonano anche mentre usi altri strumenti.", "Timer klingeln auch bei anderen Werkzeugen.", "Timers ring even while using other tools.", "Suenan aunque uses otras herramientas.")}</p>
             </div>
             <button data-testid="capo-quick-archive" onClick={() => capoArchiveRef.current?.openSave()}
-              className="no-print mt-2 w-full inline-flex items-center justify-center gap-2 text-sm font-semibold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] px-4 py-2.5 rounded-2xl active:scale-98 transition-all">
+              className="no-print mt-2 w-full inline-flex items-center justify-center gap-2 text-sm font-semibold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] px-4 py-2.5 rounded-2xl active:scale-98 transition-all">
               <Archive className="w-4 h-4" /> {tri3(lang, "Salva questo piano nell'archivio", "Diesen Plan im Archiv speichern", "Save this plan to the archive")}
             </button>
             <div className="no-print mt-3">
               <label className="block text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1.5">{tri3(lang, "Note del fornaio (finiscono nel PDF)", "Notizen des Bäckers (kommen ins PDF)", "Baker's notes (added to the PDF)", "Notas del panadero (van al PDF)")}</label>
               <textarea data-testid="capo-baker-note" value={bakerNote} onChange={(e) => setBakerNote(e.target.value)} rows={2}
                 placeholder={tri3(lang, "Es. attaccare la biga alle 22:00, controllare il forno n.2…", "z. B. Biga um 22:00 ansetzen, Ofen Nr. 2 prüfen…", "e.g. start the biga at 22:00, check oven no. 2…", "Ej. iniciar la biga a las 22:00, revisar el horno n.º 2…")}
-                className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-3 py-2 text-sm outline-none focus:border-[#ff6b00] resize-y" />
+                className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-3 py-2 text-sm outline-none focus:border-[#ff6b00] resize-y" />
             </div>
             <button data-testid="capo-print" onClick={() => window.print()}
               className="no-print mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
@@ -1642,7 +1642,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               </button>
             )}
             <button data-testid="capo-share" onClick={() => shareContent(mkTri(lang)("Piano di Produzione — MikiLab", "Produktionsplan — MikiLab", "Production plan — MikiLab", "Plan de producción — MikiLab"), plan, lang)}
-              className="no-print mt-2 w-full bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-98 transition-all flex items-center justify-center gap-2">
+              className="no-print mt-2 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 transition-all flex items-center justify-center gap-2">
               <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share", "Compartir")}
             </button>
 
@@ -1654,7 +1654,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-wrap leading-relaxed">{bakerNote}</p>
                 </div>
               )}
-              <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
+              <div data-testid="capo-plan" className="markdown-body bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{t("capo_plan_title")}</p>
                 {planTruncated && (
                   <div data-testid="capo-plan-truncated" className="no-print mb-3 flex items-start gap-2 rounded-xl border border-[#ff6b00]/40 bg-[#ff6b00]/10 px-3 py-2.5">
@@ -1682,10 +1682,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                               <Plus className="w-3.5 h-3.5" /> {tri3(lang, "Riga", "Zeile", "Row", "Fila")}
                             </button>
                           </div>
-                          <div className="overflow-x-auto print-table rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e]">
+                          <div className="overflow-x-auto print-table rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e]">
                             <table className="w-full text-[12px] border-collapse">
                               <thead>
-                                <tr className="bg-[#e4eff8] dark:bg-[#242424]">
+                                <tr className="bg-[#e4eff8] dark:bg-[#1e1e1e]">
                                   {infEdit.headers.map((h, ci) => (
                                     <th key={ci} className="text-left font-bold text-[#ff6b00] dark:text-[#a9d2ec] px-2 py-1.5 whitespace-nowrap">{h}</th>
                                   ))}
@@ -1694,7 +1694,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                               </thead>
                               <tbody>
                                 {infEdit.rows.map((r, ri) => (
-                                  <tr key={ri} data-testid={`capo-inf-row-${ri}`} className="border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
+                                  <tr key={ri} data-testid={`capo-inf-row-${ri}`} className="border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
                                     {infEdit.headers.map((_, ci) => (
                                       <td key={ci} className="px-1 py-1 align-top">
                                         <input data-testid={`capo-inf-cell-${ri}-${ci}`} value={r[ci] ?? ""} onChange={(e) => infSetCell(ri, ci, e.target.value)}
@@ -1776,7 +1776,7 @@ function RecipePrint({ r, lang }) {
   ].filter(([, g]) => Number(g) > 0);
   const proc = rLoc(r, "procedure", lang);
   return (
-    <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4">
+    <div className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4">
       <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{recipeTitle(r, lang)}</h3>
       <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-0.5">
         {ing.map(([label, g]) => (
@@ -1801,7 +1801,7 @@ function Section({ icon, title, children, highlight, badge, order }) {
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} style={order ? { order } : undefined}
       className={`relative mb-4 rounded-2xl p-4 pl-5 overflow-hidden ${highlight
         ? "bg-white dark:bg-[#1e1e1e] border-2 border-[#ff6b00] shadow-lg shadow-[#ff6b00]/20 ring-1 ring-[#ff6b00]/30"
-        : "bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+        : "bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
       <span className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: accent }} />
       <div className="flex items-center gap-2.5 mb-3">
         <span className="w-8 h-8 rounded-xl flex items-center justify-center text-white shrink-0" style={{ background: accent }}>{icon}</span>
@@ -1819,7 +1819,7 @@ function LabelInput({ testid, label, type, value, onChange, unit }) {
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type={type} value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+          className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
         {unit && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93] pointer-events-none">{unit}</span>}
       </div>
     </div>

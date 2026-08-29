@@ -89,7 +89,7 @@ export default function HaccpLog() {
     catch { toast.error(tri("Errore", "Fehler", "Error")); }
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // parsing scadenza (YYYY-MM-DD, DD/MM/YYYY, DD.MM.YYYY) → giorni residui (null se non parsabile)
   const daysToExpiry = (raw) => {
@@ -136,7 +136,7 @@ export default function HaccpLog() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4 space-y-3">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4 space-y-3">
         <button data-testid="haccp-scan-btn" onClick={scanning ? stopScan : startScan} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98">
           {scanning ? <><X className="w-5 h-5" /> {tri("Chiudi scanner", "Scanner schließen", "Close scanner")}</> : <><Camera className="w-5 h-5" /> {tri("Scansiona codice", "Code scannen", "Scan code")}</>}
         </button>
@@ -149,7 +149,7 @@ export default function HaccpLog() {
           <input data-testid="haccp-lot" value={form.lot} onChange={(e) => setForm((f) => ({ ...f, lot: e.target.value }))} placeholder={tri("Lotto fornitore", "Lieferanten-Charge", "Supplier lot")} className={inp} />
           <input data-testid="haccp-expiry" type="date" value={form.expiry} onChange={(e) => setForm((f) => ({ ...f, expiry: e.target.value }))} title={tri("Scadenza", "Ablauf", "Expiry")} className={inp} />
           <input data-testid="haccp-supplier" value={form.supplier} onChange={(e) => setForm((f) => ({ ...f, supplier: e.target.value }))} placeholder={tri("Fornitore", "Lieferant", "Supplier")} className={inp} />
-          <label className="flex items-center gap-1 bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3">
+          <label className="flex items-center gap-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3">
             <Thermometer className="w-4 h-4 text-[#7E8A93]" />
             <input data-testid="haccp-temp" type="number" step="0.1" value={form.temp_c} onChange={(e) => setForm((f) => ({ ...f, temp_c: e.target.value }))} placeholder={tri("Temp. °C", "Temp. °C", "Temp °C")} className="w-full bg-transparent outline-none font-mono-data text-[#2B303B] dark:text-[#e4eff8]" />
           </label>

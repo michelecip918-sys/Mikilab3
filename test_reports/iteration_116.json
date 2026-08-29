@@ -1,0 +1,38 @@
+{
+  "summary": "Frontend-only test (mobile 390x844) of: (1) color revert to black #121212 + orange #ff6b00, (2) Home giant CTAs, (3) Laboratorio 'generator on top' Fase 3 ordering, (4) BottomNav peel tabs navigation. Admin login (admin@mikilab.de) works. 3 of 4 requested features fully PASS; color revert is 99% done with 1 concrete leftover. Two extra issues found: BottomNav wood-brown background and missing PaywallGate on the Laboratorio for anonymous users.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Home.jsx:328 home-hero-laboratorio-giant-cta", "issue": "COLOR REVERT MISS: giant CTA 'ENTRA NEL LABORATORIO' still uses the cancelled warm palette gradient #d9822b -> #f29a38 (computed rgb(217,130,43) -> rgb(242,154,56)). Only leftover of the warm palette found in the whole src tree (grep for 3E2723/C85A32/D9822B matches this single line). Should be #ff6b00/#c94f00 like the sibling ricette CTA.", "selector": "[data-testid='home-hero-laboratorio-giant-cta']", "priority": "HIGH"},
+      {"component": "index.css:161 (.wood bar behind bottom-nav)", "issue": "BottomNav container background is computed rgb(122,74,36) = #7a4a24 (wood brown) plus wood-stripe repeating gradient. If the user asked to remove ALL brown/wood tones this is a leftover; if the wooden shelf behind the peels is intentional, confirm with user. Contrast of the active tab label on the brown wood is acceptable but low-ish.", "selector": "[data-testid='bottom-nav']", "priority": "MEDIUM"},
+      {"component": "Home hero avatar card", "issue": "Text overlap/legibility: 'I plan production in the bakery' + 'MikiLab' + 'Step into the digital bakery' are drawn directly over the avatar photo; the subtitle is clipped/overlapped by the floating Radio button and the flag row. Also the floating 'Radio' pill label is cut off by the bottom nav.", "selector": "[data-testid='home-avatar-full']", "priority": "MEDIUM"},
+      {"component": "Ricette SectionHero", "issue": "Hero subtitle 'Artisan recipes explained step by step, with my method' sits on a busy bread photo without a dark scrim -> poor contrast/illegible on mobile.", "selector": "[data-testid='ricette-page']", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Laboratorio access control (PaywallGate feature=lab)", "issue": "With cookies cleared and NO login (login-btn visible), nav-tab-maestro renders the FULL Laboratorio: maestro-top-tools, PianoProduzioneAI, lab-wizard, and maestro-top-settimana opens the complete Weekly Plan tool. No paywall/upgrade element found at all (searched testids matching paywall|upgrade|subscribe -> []). Premium lab content is free for anonymous users.", "affected_selectors": ["[data-testid='nav-tab-maestro']", "[data-testid='maestro-top-settimana']"]}
+    ],
+    "design_issues": [
+      {"screen": "Global", "issues": ["body background rgb(18,18,18) and text rgb(224,213,207) = correct black theme", "maestro-top-* buttons use correct linear-gradient(#ff6b00 -> #c94f00) with white text", "No #3E2723 / #C85A32 computed anywhere; only the Home lab CTA carries #d9822b"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Home.jsx line 328: replace from-[#d9822b] to-[#f29a38] (and hover pair) with the black/orange palette (#ff6b00 -> #c94f00) to complete the color revert.",
+    "Decide/confirm the BottomNav wood-brown bar (#7a4a24 in index.css:161) — remove if brown tones must be gone.",
+    "Restore PaywallGate feature='lab' on the Maestro/Laboratorio section: anonymous users currently get full access to the generator and all tools.",
+    "Add a dark scrim (or move text below the image) on the Home avatar card and the Ricette hero to fix text-over-photo legibility; fix the floating Radio button overlapping/being clipped by the bottom nav.",
+    "Give the PianoProduzioneAI root a data-testid (e.g. maestro-pianoai-root) — it currently has none, ordering could only be verified indirectly via capo-* children."
+  ],
+  "critical_code_review_comments": [
+    "Maestro.jsx renders a single ~5.1k px tall PianoProduzioneAI block between maestro-top-tools (y=281) and avatar-bubbles (y=5443); avatar/wizard are effectively unreachable without heavy scrolling on mobile. Consider collapsing PianoProduzioneAI by default.",
+    "Palette values are hardcoded per-component (149 files touched for the revert). Extract #121212/#ff6b00/#c94f00 into CSS variables / tailwind theme tokens to avoid future misses like Home.jsx:328."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "85%"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! — login via login-btn -> auth-email/auth-password/auth-submit works, 'Welcome!' toast shown, login-btn replaced by logout icon.",
+  "context_for_next_testing_agent": "VERIFIED PASSING: (a) Home giant CTAs — home-hero-ricette-giant-cta navigates to [data-testid='ricette-page'], home-hero-laboratorio-giant-cta navigates to the Laboratorio; (b) Fase 3 ordering in Maestro measured by scrollY: maestro-title 81 -> maestro-top-tools 281 -> PianoProduzioneAI (capo-setup-hint 664 / capo-quicklinks 884) -> avatar-bubbles 5443 -> lab-wizard 5737 = required order OK; all 4 XL buttons (maestro-top-settimana/metodo/sequenze/convlievito) present; clicking maestro-top-settimana opens the Weekly plan view and maestro-back-btn returns to the tools list; (c) all 5 bottom-nav peel tabs (home/ricette/maestro/impara/community) clickable and navigate. Popups to dismiss: lab-tour-skip, newsletter-popup-dismiss. Note ~4 console 401 errors on anonymous load (expected: /api/auth/me style calls).",
+  "rca_of_the_issue": "The warm->black palette revert was done by a bulk find/replace across 149 files; Home.jsx:328 used the warm hexes inside a Tailwind gradient with hover variants (from-[#d9822b] hover:from-[#f29a38]) and was missed. The BottomNav brown comes from a separate CSS class in index.css (#7a4a24), not from component classnames, so the bulk replace never touched it."
+}

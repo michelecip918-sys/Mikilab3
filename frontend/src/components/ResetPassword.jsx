@@ -29,7 +29,7 @@ export default function ResetPassword({ token, onDone }) {
     <div data-testid="reset-screen" className="fixed inset-0 z-[80] bg-[#121212] dark:bg-[#121212] overflow-auto flex items-center justify-center px-4">
       <div className="w-full max-w-sm relative">
         <button data-testid="reset-close" onClick={onDone} aria-label="Chiudi"
-          className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93] z-10">
+          className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93] z-10">
           <X className="w-5 h-5" />
         </button>
         <div className="text-center mb-6">
@@ -67,7 +67,7 @@ export default function ResetPassword({ token, onDone }) {
 
 function Field({ icon, children }) {
   return (
-    <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
+    <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
       <span className="text-[#ff6b00]">{icon}</span>
       {children}
     </div>

@@ -97,7 +97,7 @@ export default function EvolvingQuiz() {
   const curLevel = LEVELS.find((l) => l.id === level) || LEVELS[0];
 
   return (
-    <div data-testid="evolving-quiz" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+    <div data-testid="evolving-quiz" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
       <div className="flex items-center gap-2 mb-1">
         <GraduationCap className="w-5 h-5 text-[#ff6b00]" />
         <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Quiz del Fornaio Casalingo", "Heim-Bäcker-Quiz", "Home Baker Quiz", "Quiz del Panadero Casero")}</h3>
@@ -140,7 +140,7 @@ export default function EvolvingQuiz() {
         {LEVELS.map((l) => (
           <button key={l.id} data-testid={`quiz-level-${l.id}`}
             onClick={() => { setLevel(l.id); setQ(null); setPicked(null); setStreak(0); setMasterStreak(0); }}
-            className={`py-2 rounded-xl text-[11px] font-bold transition-all leading-tight ${level === l.id ? "text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93]"}`}
+            className={`py-2 rounded-xl text-[11px] font-bold transition-all leading-tight ${level === l.id ? "text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}
             style={level === l.id ? { background: l.color } : {}}>
             {l.label}
           </button>
@@ -159,7 +159,7 @@ export default function EvolvingQuiz() {
         </button>
       )}
       {user && showBoard && (
-        <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3 space-y-1.5">
+        <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3 space-y-1.5">
           <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Sfida «Fornaio della Settimana» — punti Master tra amici", "Challenge «Bäcker der Woche» — Master-Punkte unter Freunden", "«Baker of the Week» challenge — Master points among friends", "Desafío «Panadero de la Semana» — puntos Master entre amigos")}</p>
           {champion && (
             <div data-testid="quiz-champion" className="flex items-center gap-2.5 rounded-lg bg-gradient-to-r from-[#ff6b00] to-[#c94f00] text-white px-2.5 py-2 mb-1">
@@ -175,7 +175,7 @@ export default function EvolvingQuiz() {
           ) : board.map((r, idx) => (
             <div key={r.user_id} data-testid={`leaderboard-row-${r.user_id}`} className={`flex items-center gap-2.5 rounded-lg px-2 py-1.5 ${r.me ? "bg-[#ff6b00]/10" : ""} ${idx === 0 && r.points > 0 ? "ring-1 ring-[#ff6b00]/40" : ""}`}>
               <span className={`w-5 text-center text-sm font-extrabold ${idx === 0 ? "text-[#ff6b00]" : "text-[#7E8A93]"}`}>{idx === 0 && r.points > 0 ? "👑" : idx + 1}</span>
-              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#1c1c1c] flex items-center justify-center text-white text-xs font-bold shrink-0">{r.picture ? <img src={r.picture} alt={r.name} className="w-full h-full object-cover" /> : (r.name || "F")[0].toUpperCase()}</div>
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#1e1e1e] flex items-center justify-center text-white text-xs font-bold shrink-0">{r.picture ? <img src={r.picture} alt={r.name} className="w-full h-full object-cover" /> : (r.name || "F")[0].toUpperCase()}</div>
               <span className="flex-1 min-w-0 truncate text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{r.name}{r.me ? tri(" (tu)", " (du)", " (you)", " (tú)") : ""}</span>
               {r.champion && <span title="Fornaio della Settimana" className="text-sm">🏆</span>}
               {r.diplomato && <span title="Fornaio Diplomato" className="text-sm">🎓</span>}
@@ -201,7 +201,7 @@ export default function EvolvingQuiz() {
             {q.options.map((opt, i) => {
               const isCorrect = i === q.correct;
               const chosen = picked === i;
-              let cls = "bg-[#e4eff8] dark:bg-[#242424] border-[#2b2b2b] dark:border-[#2e2e2e]";
+              let cls = "bg-[#e4eff8] dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]";
               if (picked != null && isCorrect) cls = "bg-[#2e8b6f]/15 border-[#2e8b6f]";
               else if (picked != null && chosen && !isCorrect) cls = "bg-[#ff6b00]/15 border-[#ff6b00]";
               return (
@@ -216,7 +216,7 @@ export default function EvolvingQuiz() {
           </div>
 
           {picked != null && (
-            <div data-testid="quiz-explanation" className="mt-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3">
+            <div data-testid="quiz-explanation" className="mt-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
               <p className={`text-sm font-bold mb-1 ${picked === q.correct ? "text-[#2e8b6f]" : "text-[#ff6b00]"}`}>
                 {picked === q.correct ? tri("✅ Corretto!", "✅ Richtig!", "✅ Correct!", "✅ ¡Correcto!") : tri("❌ Sbagliato", "❌ Falsch", "❌ Wrong", "❌ Incorrecto")}
               </p>

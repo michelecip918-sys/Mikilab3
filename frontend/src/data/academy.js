@@ -7,7 +7,7 @@ export const MENTORS = [
     name: "Martesana Milano",
     role: { it: "Grandi Lievitati & Pasticceria", de: "Große Hefegebäcke & Konditorei", en: "Big Leavened & Pastry" },
     field: "pasticceria",
-    color: "#242424",
+    color: "#1e1e1e",
     bio: {
       it: "Maestri del panettone e dei grandi lievitati: metodo professionale, cura del lievito madre e delle glasse.",
       de: "Meister von Panettone und großen Hefegebäcken: professionelle Methode, Sauerteig- und Glasurpflege.",

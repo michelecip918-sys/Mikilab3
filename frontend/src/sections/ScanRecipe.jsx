@@ -151,7 +151,7 @@ export default function ScanRecipe({ embedded = false }) {
         </div>
       )}
 
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-6 text-center">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-6 text-center">
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{t("scan_hint")}</p>
         {loading ? (
           <div data-testid="scan-loading" className="inline-flex items-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
@@ -161,7 +161,7 @@ export default function ScanRecipe({ embedded = false }) {
           <DualPhotoButtons onFile={onPhoto} testid="scan" />
         )}
         {!loading && (
-          <div className="mt-4 pt-4 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
+          <div className="mt-4 pt-4 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
             {/* Carica da file dal PC (o dall'allegato ricevuto via email): immagini/scansioni delle ricette */}
             <input ref={fileRef} type="file" accept="image/*,application/pdf,.pdf" className="hidden"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
@@ -180,7 +180,7 @@ export default function ScanRecipe({ embedded = false }) {
       </div>
 
       {pdfRecipes.length > 1 && (
-        <div data-testid="pdf-recipes-list" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
+        <div data-testid="pdf-recipes-list" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
           <div className="flex items-center gap-2 mb-3 text-[#2e8b6f]">
             <FileText className="w-5 h-5" />
             <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">
@@ -201,10 +201,10 @@ export default function ScanRecipe({ embedded = false }) {
               return (
                 <li key={i}>
                   <button data-testid={`pdf-recipe-${i}`} onClick={() => openPdfRecipe(i)}
-                    className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-xl border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#121212] dark:bg-[#181818] border-[#2b2b2b] dark:border-[#2e2e2e] hover:border-[#ff6b00]"}`}>
+                    className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-xl border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#121212] dark:bg-[#181818] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]"}`}>
                     {pageThumbs[String(r.page)] ? (
                       <img data-testid={`pdf-recipe-thumb-${i}`} src={pageThumbs[String(r.page)]} alt=""
-                        className="w-12 h-16 object-cover rounded-md border border-[#2b2b2b] dark:border-[#2e2e2e] shrink-0 bg-white" />
+                        className="w-12 h-16 object-cover rounded-md border border-[#2e2e2e] dark:border-[#2e2e2e] shrink-0 bg-white" />
                     ) : (
                       done ? <CheckCircle2 className="w-5 h-5 text-[#2e8b6f] shrink-0" /> : <ScanLine className="w-5 h-5 text-[#ff6b00] shrink-0" />
                     )}
@@ -227,7 +227,7 @@ export default function ScanRecipe({ embedded = false }) {
       )}
 
       {inbound && inbound.your_email && (
-        <div data-testid="inbound-email-panel" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+        <div data-testid="inbound-email-panel" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
           <div className="flex items-center gap-2 mb-2 text-[#ff6b00]">
             <Mail className="w-5 h-5" />
             <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Import via Email", "Import per E-Mail", "Email import", "Importar por email")}</h3>

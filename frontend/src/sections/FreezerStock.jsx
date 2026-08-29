@@ -51,22 +51,22 @@ export default function FreezerStock() {
 
       <div className="space-y-2">
         {items.map((it, i) => (
-          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5">
+          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5">
             <input value={it.name} onChange={(e) => set(i, { name: e.target.value })} placeholder={de ? "Produkt" : lang === "en" ? "Product" : "Prodotto"}
               className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
             <div className="flex items-center gap-1">
               <input type="number" value={it.qty} onChange={(e) => set(i, { qty: e.target.value })} title={de ? "Bestand" : lang === "en" ? "Stock" : "Scorta"}
-                className="w-16 text-center font-mono-data text-sm bg-[#e4eff8] dark:bg-[#242424] rounded-lg py-1.5 outline-none" />
+                className="w-16 text-center font-mono-data text-sm bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-lg py-1.5 outline-none" />
               <span className="text-[10px] text-[#7E8A93]">/</span>
               <input type="number" value={it.min_qty} onChange={(e) => set(i, { min_qty: e.target.value })} title={de ? "Min." : "Min."}
                 className="w-16 text-center font-mono-data text-sm bg-[#ff6b00]/15 rounded-lg py-1.5 outline-none" />
             </div>
-            <button onClick={() => remove(i)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center text-[#ff6b00] shrink-0"><Trash2 className="w-4 h-4" /></button>
+            <button onClick={() => remove(i)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#ff6b00] shrink-0"><Trash2 className="w-4 h-4" /></button>
           </div>
         ))}
       </div>
 
-      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#2b2b2b] dark:border-[#2e2e2e] text-[#7E8A93] rounded-xl py-2.5 active:scale-98">
+      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] rounded-xl py-2.5 active:scale-98">
         <Plus className="w-4 h-4" /> {de ? "Produkt hinzufügen" : lang === "en" ? "Add product" : "Aggiungi prodotto"}
       </button>
       <button data-testid="freezer-save" onClick={save} disabled={saving} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#ff6b00] disabled:opacity-50 text-white font-semibold rounded-2xl py-3 active:scale-98">

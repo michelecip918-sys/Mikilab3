@@ -42,7 +42,7 @@ export default function RecipeShowcase({ onOpen }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.03, 0.3) }}
-              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-[0.98] hover:border-[#ff6b00]/60 transition-all text-left"
+              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-[0.98] hover:border-[#ff6b00]/60 transition-all text-left"
             >
               <div className="relative h-36 w-full overflow-hidden bg-[#e4eff8] dark:bg-[#181818]">
                 {r.image_url ? (

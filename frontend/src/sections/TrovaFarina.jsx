@@ -29,15 +29,15 @@ export default function TrovaFarina({ onBack }) {
   return (
     <div className="pb-8" data-testid="trova-farina">
       {onBack && <button data-testid="farina-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Search className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Trova-Farina Europeo", "Mehl-Finder Europa", "European Flour Finder", "Buscador de Harinas")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Quale farina comprare al supermercato (in Germania, Italia, Francia o Spagna) per replicare la ricetta giusta.", "Welches Supermarkt-Mehl du kaufen sollst, um das Rezept zu treffen.", "Which supermarket flour to buy to match the recipe.", "Qué harina comprar en el supermercado para replicar la receta.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Quale farina comprare al supermercato (in Germania, Italia, Francia o Spagna) per replicare la ricetta giusta.", "Welches Supermarkt-Mehl du kaufen sollst, um das Rezept zu treffen.", "Which supermarket flour to buy to match the recipe.", "Qué harina comprar en el supermercado para replicar la receta.")}</p>
       </div>
 
       <div className="space-y-3">
         {ROWS.map((r, i) => (
-          <div key={i} data-testid={`farina-row-${i}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm">
+          <div key={i} data-testid={`farina-row-${i}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
               <Wheat className="w-4.5 h-4.5 text-[#ff6b00]" />
               <p className="font-display text-[15px] font-bold text-[#ff6b00] dark:text-[#e4eff8] flex-1 leading-tight">{uL(r.use)}</p>

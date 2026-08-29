@@ -96,13 +96,13 @@ export default function SvegliaLievito() {
         <p className="text-white/85 text-sm mt-2">{due ? "🌾 " + t("sv_due") : fmt(next, lang)}</p>
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 mb-3">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 mb-3">
         <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("sv_interval")}</label>
         <div className="flex items-center gap-2 mt-2">
           <input
             data-testid="sv-interval" type="number" min="1" value={interval}
             onChange={(e) => setIntervalH(Math.max(1, Number(e.target.value) || 1))}
-            className="w-20 text-center font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-2 outline-none"
+            className="w-20 text-center font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-2 outline-none"
           />
           <span className="text-sm text-[#7E8A93]">h</span>
           <span className="text-xs text-[#7E8A93] ml-auto">{t("sv_last")}: {fmt(last, lang)}</span>
@@ -116,7 +116,7 @@ export default function SvegliaLievito() {
         <Check className="w-5 h-5" /> {t("sv_done")}
       </button>
 
-      <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
+      <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
         <Bell className="w-4 h-4 text-[#ff6b00]" />
         <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] flex-1">{remind ? t("sv_remind_on") : t("sv_remind_off")}</span>
         <button

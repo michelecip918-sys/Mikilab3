@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 export default function FoodCostBox() {
   const { lang } = useLang();
   const L = (i, e, s, f) => mkTri(lang)(i, e, e, s || e, f || e);
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   const [rows, setRows] = useState([
@@ -35,7 +35,7 @@ export default function FoodCostBox() {
   }, [rows, pieces, price, overhead]);
 
   const eur = (v) => (Number(v) || 0).toLocaleString(lang === "it" ? "it" : "en", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
 
   return (
     <div className={card} data-testid="foodcost-box">
@@ -63,7 +63,7 @@ export default function FoodCostBox() {
         <div><p className={lbl}>{L("Spese % ", "Overhead %", "Gastos %", "Frais %")}</p><input data-testid="fc-overhead" type="number" value={overhead} onChange={(e) => setOverhead(e.target.value)} className={inp} /></div>
       </div>
 
-      <div data-testid="fc-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2b2b2b]">
+      <div data-testid="fc-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
         {[
           [L("Costo ingredienti", "Ingredient cost", "Coste ingredientes", "Coût ingrédients"), `€ ${eur(calc.ingCost)}`],
           [L("Spese generali", "Overhead", "Gastos generales", "Frais généraux"), `€ ${eur(calc.oh)}`],

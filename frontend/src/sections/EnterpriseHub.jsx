@@ -53,7 +53,7 @@ export default function EnterpriseHub() {
         <div className="relative mb-4" data-testid="enterprise-store-picker">
           <Store className="w-4 h-4 text-[#ff6b00] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <select value={current || ""} onChange={(e) => setCurrent(e.target.value)}
-            className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl pl-9 pr-9 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#ff6b00]">
+            className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl pl-9 pr-9 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#ff6b00]">
             {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <ChevronDown className="w-4 h-4 text-[#7E8A93] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -61,7 +61,7 @@ export default function EnterpriseHub() {
       )}
 
       {/* Sotto-schede */}
-      <div className="grid grid-cols-3 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-5 border border-[#2b2b2b] dark:border-[#2e2e2e]">
+      <div className="grid grid-cols-3 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e] dark:border-[#2e2e2e]">
         {TABS.map(({ id, label, Icon }) => (
           <button key={id} data-testid={`enterprise-tab-${id}`} onClick={() => setSub(id)}
             className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${sub === id ? "bg-[#ff6b00] text-white shadow" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>

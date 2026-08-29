@@ -10,7 +10,7 @@ export default function ConvertitoreLieviti({ onBack }) {
   const { lang } = useLang();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   // 1) Lievito di birra fresco <-> secco
@@ -30,15 +30,15 @@ export default function ConvertitoreLieviti({ onBack }) {
     return { flour: f, waterFrom: f * (HYD[from] || 0), waterTo: f * (HYD[to] || 0), totFrom: f * (1 + (HYD[from] || 0)), totTo: f * (1 + (HYD[to] || 0)) };
   }, [prefFlour, from, to]);
 
-  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
 
   return (
     <div className="pb-8" data-testid="conv-lieviti">
       {onBack && <button data-testid="conv-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><RefreshCw className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Convertitore Lieviti", "Hefe-Umrechner", "Leavening Converter", "Conversor de Levaduras")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Passa da un tipo di lievito all'altro senza sbagliare le dosi: birra, Lievito Madre, Li.Co.Li., biga e poolish.", "Wechsle zwischen Hefearten ohne Dosierfehler.", "Switch between leavening types without dose errors.", "Cambia entre tipos de levadura sin errores.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Passa da un tipo di lievito all'altro senza sbagliare le dosi: birra, Lievito Madre, Li.Co.Li., biga e poolish.", "Wechsle zwischen Hefearten ohne Dosierfehler.", "Switch between leavening types without dose errors.", "Cambia entre tipos de levadura sin errores.")}</p>
       </div>
 
       {/* 1 */}

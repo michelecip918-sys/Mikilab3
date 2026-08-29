@@ -31,12 +31,12 @@ export default function Header() {
   return (
     <header
       data-testid="app-header"
-      className="sticky top-0 z-40 bg-[#121212]/95 dark:bg-[#121212]/95 backdrop-blur-md border-b border-[#2b2b2b] dark:border-[#2e2e2e]"
+      className="sticky top-0 z-40 bg-[#121212]/95 dark:bg-[#121212]/95 backdrop-blur-md border-b border-[#2e2e2e] dark:border-[#2e2e2e]"
     >
       <div className="px-4 py-3 flex items-center justify-between gap-2">
       <div className="flex items-center gap-2 min-w-0 flex-1">
         <button data-testid="site-menu-open" onClick={() => window.dispatchEvent(new Event("mikilab-open-menu"))} aria-label="Menu"
-          className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
+          className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
           <Menu className="w-5 h-5" />
         </button>
         <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#1e1e1e] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
@@ -50,7 +50,7 @@ export default function Header() {
 
       <div className="flex items-center gap-1 shrink-0">
         {/* Orologio (nascosto su schermi stretti per non coprire il titolo) */}
-        <div data-testid="header-clock" className="hidden min-[560px]:flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#242424] rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] px-2.5 py-1.5">
+        <div data-testid="header-clock" className="hidden min-[560px]:flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] px-2.5 py-1.5">
           <Clock className="w-3.5 h-3.5 text-[#ff6b00]" />
           <span className="font-mono-data text-xs font-bold text-[#2B303B] dark:text-[#e4eff8]">
             {now.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}
@@ -64,7 +64,7 @@ export default function Header() {
           aria-label={t("lang_label")}
         >
           <div aria-hidden className="wood-surface h-2 rounded-t-md border border-b-0 border-[#2e2e2e] mx-1 shadow-sm" />
-          <div className="relative flex items-center rounded-b-lg rounded-t-[3px] border border-[#c9962e]/70 bg-gradient-to-b from-[#1a1a1a] to-[#ff6b00] dark:from-[#3a2f1c] dark:to-[#2a2213] shadow-[inset_0_1px_3px_rgba(255,255,255,.5)]">
+          <div className="relative flex items-center rounded-b-lg rounded-t-[3px] border border-[#c9962e]/70 bg-gradient-to-b from-[#1e1e1e] to-[#ff6b00] dark:from-[#3a2f1c] dark:to-[#2a2213] shadow-[inset_0_1px_3px_rgba(255,255,255,.5)]">
             <select
               data-testid="lang-select"
               value={lang}
@@ -98,7 +98,7 @@ export default function Header() {
           <button
             data-testid="logout-btn"
             onClick={logout}
-            className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
+            className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
             aria-label="Logout"
             title={user.email}
           >

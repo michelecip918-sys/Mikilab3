@@ -182,6 +182,12 @@ function App() {
 
   useEffect(() => { ambient.setSection(tab); }, [tab]);
 
+  // Scroll iniziale in cima ad ogni cambio sezione (fix richiesto: la pagina si apre sempre dall'alto).
+  useEffect(() => {
+    try { window.scrollTo({ top: 0, left: 0, behavior: "auto" }); }
+    catch { window.scrollTo(0, 0); }
+  }, [tab]);
+
   // Pagina pubblica del lotto (QR): nessun login, nessuna navigazione.
   if (publicBatch) return <PublicBatch id={publicBatch} />;
 

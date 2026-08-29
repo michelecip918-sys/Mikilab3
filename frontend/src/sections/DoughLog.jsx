@@ -95,7 +95,7 @@ export default function DoughLog() {
     setLoadingAdvice(false);
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
   const VERDICT = {
     on_target: { color: "#ff6b00", Icon: CheckCircle2, label: tri("Nel target 👌", "Im Ziel 👌", "On target 👌") },
     too_warm: { color: "#ff6b00", Icon: Flame, label: tri("Troppo caldo", "Zu warm", "Too warm") },
@@ -120,7 +120,7 @@ export default function DoughLog() {
       )}
 
       {/* Form nuova sessione */}
-      <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4 space-y-3">
+      <div className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4 space-y-3">
         <p className="text-xs font-bold uppercase text-[#ff6b00]">{tri("Nuova sessione impasto", "Neue Teig-Sitzung", "New dough session")}</p>
         <select data-testid="doughlog-recipe" value={form.recipe_id} onChange={(e) => pickRecipe(e.target.value)} className={inp}>
           <option value="">{tri("— Scegli ricetta (o scrivi sotto) —", "— Rezept wählen (oder unten tippen) —", "— Pick recipe (or type below) —")}</option>
@@ -168,11 +168,11 @@ export default function DoughLog() {
           target: s.target_temp_c != null ? s.target_temp_c : null,
         }));
         return (
-          <div className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4" data-testid="doughlog-chart">
+          <div className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4" data-testid="doughlog-chart">
             <p className="text-xs font-bold uppercase text-[#ff6b00] mb-2 flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5" /> {tri("Andamento temperatura impasto", "Verlauf Teigtemperatur", "Dough temperature trend")}</p>
             <ResponsiveContainer width="100%" height={180}>
               <LineChart data={data} margin={{ top: 6, right: 8, left: -18, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2b2b2b" strokeOpacity={0.4} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#2e2e2e" strokeOpacity={0.4} />
                 <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#7E8A93" }} />
                 <YAxis tick={{ fontSize: 10, fill: "#7E8A93" }} domain={["dataMin - 1", "dataMax + 1"]} />
                 <Tooltip contentStyle={{ fontSize: 12, borderRadius: 12 }} formatter={(v) => `${v}°C`} />
@@ -191,7 +191,7 @@ export default function DoughLog() {
           <p className="text-xs font-bold uppercase text-[#7E8A93] mb-2 flex items-center gap-1"><History className="w-3.5 h-3.5" /> {tri("Storico sessioni", "Verlauf", "History")}</p>
           <div className="space-y-2">
             {sessions.map((s) => (
-              <div key={s.id} data-testid={`doughlog-item-${s.id}`} className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2">
+              <div key={s.id} data-testid={`doughlog-item-${s.id}`} className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1.5">
                     {s.recipe_name}

@@ -34,20 +34,20 @@ export default function ShiftRoles() {
       <div className="space-y-3" data-testid="shift-list">
         {people.length === 0 && <p className="text-sm text-[#9AA6AE] text-center py-6">{mkTri(lang)("Nessuno in turno.", "Noch niemand im Einsatz.", "No one on shift yet.")}</p>}
         {people.map((p) => (
-          <div key={p.id} data-testid={`shift-${p.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3 space-y-2">
+          <div key={p.id} data-testid={`shift-${p.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3 space-y-2">
             <div className="flex items-center gap-2">
               <input data-testid={`shift-name-${p.id}`} value={p.name} placeholder={mkTri(lang)("Nome", "Name", "Name")}
                 onChange={(e) => upd(p.id, { name: e.target.value })}
-                className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
+                className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
               <button onClick={() => del(p.id)} className="text-[#ff6b00] p-1"><X className="w-4 h-4" /></button>
             </div>
             <select data-testid={`shift-role-${p.id}`} value={p.role} onChange={(e) => upd(p.id, { role: e.target.value })}
-              className="w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+              className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
               {roles.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
             <input data-testid={`shift-task-${p.id}`} value={p.task} placeholder={mkTri(lang)("Compito / nota (opzionale)", "Aufgabe / Notiz (optional)", "Task / note (optional)")}
               onChange={(e) => upd(p.id, { task: e.target.value })}
-              className="w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
+              className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
           </div>
         ))}
       </div>

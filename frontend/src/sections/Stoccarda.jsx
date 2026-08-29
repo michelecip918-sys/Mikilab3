@@ -40,7 +40,7 @@ export default function Stoccarda() {
       <div className="flex gap-2 overflow-x-auto pb-1">
         {REGIONS.map((r) => (
           <button key={r} data-testid={`news-filter-${r}`} onClick={() => setFilter(r)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${filter === r ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${filter === r ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
             {regionLabel(r)}
           </button>
         ))}
@@ -57,7 +57,7 @@ export default function Stoccarda() {
           {shown.map((a, i) => (
             <a key={i} href={a.link || "#"} target="_blank" rel="noopener noreferrer"
               data-testid={`news-item-${i}`}
-              className="block bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 hover:border-[#ff6b00]/50 transition-colors">
+              className="block bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 hover:border-[#ff6b00]/50 transition-colors">
               <div className="flex items-start gap-2">
                 <span className="mt-1 shrink-0 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-[#ff6b00]/12 text-[#ff6b00] dark:text-[#a9d2ec] border border-[#ff6b00]/25">{t(`region_${a.region || "stoccarda"}`)}</span>
                 <div className="min-w-0">

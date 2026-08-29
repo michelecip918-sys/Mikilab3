@@ -2416,3 +2416,30 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - **P2 foto reale laboratorio**: card `custodite-lab-photo` (/michele-real-lab.jpg + didascalia "Dal mio laboratorio" 6 lingue) nel dettaglio ricetta di RicetteCustodite. La foto reale è già ampiamente presente in Home. Utente: "Non ho foto" → usate le esistenti.
 - Test: iteration_114 → P1a 100%, P2 100%, P1b 100% IT/EN (DE/ES/FR/FA risolti dopo fix). Compilazione pulita.
 - Backlog (design, pre-esistente, fuori scope): header "MikiLab" troncato in DE/FR a 390px con label login lunghe; NewsletterPopup copre l'header dopo ~10s (fastidio navigazione).
+
+## v-fork.90 (2026-06) — REDESIGN GLOBALE: Fase 1 (fix tecnici) + Fase 2 (palette calda + Home)
+Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO (legno #3E2723 + terracotta #C85A32 + ambra #D9822B, testo chiaro), avatar "effetto film" (fumetto, NIENTE audio), Laboratorio+Ricette come sistema operativo unico con Generatore in cima, Home ad alto impatto con CTA giganti, fix routing avatar + scroll in cima. Blueprint in /app/design_guidelines.json. NESSUN dato toccato.
+### FASE 1 (fix tecnici) — FATTO
+- **Scroll in cima** ad ogni cambio tab (App.js useEffect [tab] → window.scrollTo(0,0)). Edge case noto: al primo ingresso nel Laboratorio il tour fa scrollIntoView (minore).
+- **Routing avatar semantico** (AvatarBubbles.jsx): niente più "tutti al laboratorio". Michele/Momy agiscono nella sezione di cui parlano (home→ricette/maestro; ricette→lista/filtri; impara→livelli/quiz(evolving-quiz); community→compositore/feed; lab→aggiungi/wizard). Helper scrollOrGoto(sel, fallbackTab). Test iteration_115: 92% poi fix HIGH quiz target.
+### FASE 2 (palette + Home) — FATTO
+- **Palette calda globale**: migrazione hex su 148+ file JS/JSX + index.css. Mappa: ff6b00→c85a32 (terracotta accent, 2235 occorrenze), ff8a33→e39a4b, c94f00→9c4a24, 121212→2b1a17, 1e1e1e/1c1c1c/1a1a1a/242424→33201d, 181818→3e2723, 161616→2b1a17, 2e2e2e/2b2b2b/343434→5e3b33 (bordi caldi), e4eff8→fffdf9 (testo), aeb8bf→e0d5cf, 7E8A93→a8958e (muted caldo), 8fb0c2→e5a83b, a9d2ec→f3d9b8. index.css .app-warm-bg → toni legno + glow ambra; body #2b1a17.
+- **Home ad alto impatto**: aggiunte 2 CTA GIGANTI sopra la piega (`home-hero-ricette-giant-cta` terracotta + `home-hero-laboratorio-giant-cta` ambra) subito sotto la scena avatar. Scena avatar già cinematografica (portale ad arco mattoni, pulviscolo farina, targa "Aperto", fumetti animati a rotazione = "effetto film" senza audio, come richiesto).
+- Font già allineati al blueprint: Playfair Display (display) + Manrope (body) + JetBrains Mono (dati).
+### FASE 3 (DA FARE, dopo conferma utente) — Laboratorio (Generatore in cima) + Ricette (griglia/filtri) + Impara + Social; rifinitura leggibilità per-sezione.
+### Backlog design (pre-esistente): NewsletterPopup copre header dopo ~10s (throttle a 1/sessione); header "MikiLab" troncato DE/FR a 390px.
+
+## v-fork.91 (2026-06) — REVERT palette (richiesta utente) + Pale BottomNav più evidenti
+- **Palette calda ANNULLATA su richiesta utente** ("i colori mi piacevano più prima"): invertita la migrazione hex su 149 file JS/JSX + index.css → ripristinati NERO #121212 + ARANCIONE #FF6B00 (e neutri originali 1e1e1e/181818/2e2e2e, testo e4eff8/AEB8BF/7E8A93). Ripristinati esattamente i blocchi .app-warm-bg (glow arancione originale) e body #121212.
+- **MANTENUTO dalla Fase 1/2**: scroll-in-cima al cambio tab, routing avatar semantico, e le 2 CTA GIGANTI nella Home (ora arancioni: `home-hero-ricette-giant-cta` + `home-hero-laboratorio-giant-cta`).
+- **Pale BottomNav più riconoscibili** (BottomNav.jsx): lama con top arrotondato a cupola (rounded-t-full) + MANICO lungo e visibile (7px, h 12-15px, con venatura centrale) sotto la lama. Prima sembrava un quadrato; ora si legge come pala da forno. min-h tab 68px, label mt-3.
+- Il blueprint palette calda resta in /app/design_guidelines.json ma NON applicato (scelta utente: si tiene nero/arancione).
+
+## v-fork.92 (2026-06) — Pale definitive + Fase 3 (Generatore in cima) + revert colori 100%
+- **Pale BottomNav (definitivo)**: manico allungato/ispessito (w-9, h 21-26px, venatura centrale, rounded-b-full) sotto lama a cupola → chiaramente riconoscibili come pale del fornaio. Nav resta su "scaffale" di legno (wood-surface #7a4a24) VOLUTO (identità pale).
+- **Fase 3 — Generatore in cima al Laboratorio** (Maestro.jsx): nuovo blocco `maestro-top-tools` (4 pulsanti XL: `maestro-top-settimana/metodo/sequenze/convlievito`) SUBITO sotto l'hero + `PianoProduzioneAI` spostato SOPRA avatar e wizard. Ordine verificato (iteration_116): hero → maestro-top-tools → PianoProduzioneAI → avatar-bubbles → lab-wizard. CTA giganti Home + navigazione pale = PASS.
+- **Revert colori COMPLETATO al 100%**: corretto l'ultimo residuo caldo (CTA `home-hero-laboratorio-giant-cta` da ambra #d9822b → arancione #ff6b00/#c94f00). grep di d9822b/f29a38/c85a32/3e2723/... = 0 in tutto src.
+- Test iteration_116: frontend 85% → dopo fix CTA lab, palette 100% nero/arancione.
+### OSSERVAZIONE (pre-esistente, NON introdotta ora, da confermare con utente)
+- PaywallGate `feature="lab"`: utenti anonimi accedono al Laboratorio completo (nessun blocco PRO). Se il Laboratorio deve essere PRO, va ripristinato il gating (concerne la monetizzazione, fuori dallo scope redesign).
+### Backlog design (minore, pre-esistente): testo hero Home sovrapposto alla foto + FAB Radio tagliato dalla bottom-nav; sottotitolo hero Ricette poco leggibile su foto (aggiungere scrim scuro).

@@ -91,7 +91,7 @@ export default function OrdersManager({ store, stores }) {
     if (o.status === "bozza") setStatus(o, "inviato");
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40" data-testid="orders-manager">
@@ -141,7 +141,7 @@ export default function OrdersManager({ store, stores }) {
           {orders.map((o) => {
             const st = STATUS[o.status] || STATUS.bozza;
             return (
-              <div key={o.id} data-testid={`order-card-${o.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-sm">
+              <div key={o.id} data-testid={`order-card-${o.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-sm">
                 <div className="flex items-start gap-2">
                   <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><Truck className="w-5 h-5 text-[#ff6b00]" /></div>
                   <div className="min-w-0 flex-1">
@@ -161,7 +161,7 @@ export default function OrdersManager({ store, stores }) {
                 <div className="grid grid-cols-3 gap-2 mt-3">
                   <button data-testid={`order-send-email-${o.id}`} onClick={() => sendEmail(o)} className="flex items-center justify-center gap-1 bg-[#ff6b00] text-white text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Mail className="w-4 h-4" /> Email</button>
                   <button data-testid={`order-send-wa-${o.id}`} onClick={() => sendWhatsApp(o)} className="flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2.5 rounded-xl active:scale-95"><MessageCircle className="w-4 h-4" /> WhatsApp</button>
-                  <button data-testid={`order-print-${o.id}`} onClick={() => printOrder(o)} className="flex items-center justify-center gap-1 bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Printer className="w-4 h-4 text-[#ff6b00]" /> {tri("Stampa", "Druck", "Print")}</button>
+                  <button data-testid={`order-print-${o.id}`} onClick={() => printOrder(o)} className="flex items-center justify-center gap-1 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Printer className="w-4 h-4 text-[#ff6b00]" /> {tri("Stampa", "Druck", "Print")}</button>
                 </div>
 
                 {/* Stato + elimina */}

@@ -60,7 +60,7 @@ export default function PublicBatch({ id }) {
               <p data-testid="public-batch-code" className="font-mono-data text-sm text-white/80 mt-1">{batch.code}</p>
             </div>
 
-            <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm">
+            <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm">
               <Row Icon={Calendar} label={tri("Data di produzione", "Produktionsdatum", "Production date")} value={batch.prod_date} />
               <Row Icon={Calendar} label={tri("Da consumarsi entro", "Mindestens haltbar bis", "Best before")} value={batch.expiry} />
               <Row Icon={Wheat} label={tri("Farina", "Mehl", "Flour")} value={batch.flour} />

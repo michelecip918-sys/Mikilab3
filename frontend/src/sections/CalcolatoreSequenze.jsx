@@ -68,8 +68,8 @@ export default function CalcolatoreSequenze({ onBack }) {
     return { v1, v2, puntata, appretto, seq, pauses, speedLabel: rhythm };
   }, [dough, mixer, rhythm, lang]);
 
-  const card = "rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4";
-  const inp = "w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] text-sm";
+  const card = "rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4";
+  const inp = "w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] text-sm";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   return (
@@ -78,11 +78,11 @@ export default function CalcolatoreSequenze({ onBack }) {
         <ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}
       </button>}
 
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5"
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5"
         style={{ background: "linear-gradient(135deg,#ff6b00 0%,#ff6b00 60%,#ff6b00 100%)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><SlidersHorizontal className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Metodo & Sequenze IA", "Methode & Abläufe (KI)", "Method & Sequences (AI)", "Método y Secuencias (IA)")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Calcola velocità d'impasto, ritmi (veloce/lento), pause e la sequenza delle lavorazioni in base al tipo d'impasto e all'impastatrice.", "Berechnet Knetgeschwindigkeiten, Rhythmen, Pausen und Arbeitsabfolge je nach Teig und Kneter.", "Computes mixing speeds, rhythms, pauses and the work sequence based on dough type and mixer.", "Calcula velocidades de amasado, ritmos, pausas y la secuencia de trabajo.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Calcola velocità d'impasto, ritmi (veloce/lento), pause e la sequenza delle lavorazioni in base al tipo d'impasto e all'impastatrice.", "Berechnet Knetgeschwindigkeiten, Rhythmen, Pausen und Arbeitsabfolge je nach Teig und Kneter.", "Computes mixing speeds, rhythms, pauses and the work sequence based on dough type and mixer.", "Calcula velocidades de amasado, ritmos, pausas y la secuencia de trabajo.")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 mb-4">
@@ -125,7 +125,7 @@ export default function CalcolatoreSequenze({ onBack }) {
             </li>
           ))}
         </ol>
-        <div className="mt-4 pt-3 border-t border-[#2b2b2b] dark:border-[#2e2e2e] space-y-1.5">
+        <div className="mt-4 pt-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e] space-y-1.5">
           {plan.pauses.map((p, i) => (
             <div key={i} className="flex items-center justify-between text-[13px]">
               <span className="text-[#ff6b00] dark:text-[#AEB8BF]">{p.label}</span>

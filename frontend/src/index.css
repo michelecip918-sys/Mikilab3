@@ -222,13 +222,13 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 
 /* ===== REGOLA UX: cosa si legge (bianco/grigio) vs cosa si clicca (arancio/giallo) ===== */
 /* Base: sfondo nero, testo chiaro */
-body { background:#121212; color:#E0E0E0; }
+body { background:#121212; color:#E0D5CF; }
 /* Titoli/paragrafi STATICI che erano arancioni tornano bianchi. I pulsanti mantengono i loro colori. */
 h1.text-\[\#ff6b00\], h2.text-\[\#ff6b00\], h3.text-\[\#ff6b00\], h4.text-\[\#ff6b00\], p.text-\[\#ff6b00\],
 h1.text-\[\#ff8a33\], h2.text-\[\#ff8a33\], h3.text-\[\#ff8a33\], p.text-\[\#ff8a33\],
 h1.text-\[\#c94f00\], h2.text-\[\#c94f00\], h3.text-\[\#c94f00\] { color:#FFFFFF !important; }
 /* Affordance: ogni pulsante/link con sfondo arancione o giallo ha ombra netta */
-button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#FF6B00]"], a[class*="bg-[#FF6B00]"],
+button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"],
 button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"] {
   box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 14px rgba(255,107,0,.28) !important;
 }

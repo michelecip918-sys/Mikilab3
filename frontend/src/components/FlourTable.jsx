@@ -37,8 +37,8 @@ export default function FlourTable({ embedded = false }) {
   const body = (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-[#242424] mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
-        <div className="overflow-x-auto rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e]">
+        <p className="text-xs font-bold uppercase text-[#1e1e1e] mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
+        <div className="overflow-x-auto rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e]">
           <table className="w-full border-collapse">
             <thead className="bg-[#121212] dark:bg-[#181818]">
               <tr><th className={th}>{tri("Tipo (DE · IT)", "Typ (DE · IT)", "Type (DE · IT)")}</th><th className={th}>W {tri("(forza)", "(Stärke)", "(strength)")}</th><th className={th}>{tri("Proteine", "Protein", "Protein")}</th><th className={th}>{tri("Metodo", "Methode", "Method")}</th></tr>
@@ -58,8 +58,8 @@ export default function FlourTable({ embedded = false }) {
       </div>
 
       <div>
-        <p className="text-xs font-bold uppercase text-[#242424] mb-1.5">{tri("Abbreviazioni d'impasto", "Teig-Abkürzungen", "Dough abbreviations")}</p>
-        <div className="overflow-x-auto rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e]">
+        <p className="text-xs font-bold uppercase text-[#1e1e1e] mb-1.5">{tri("Abbreviazioni d'impasto", "Teig-Abkürzungen", "Dough abbreviations")}</p>
+        <div className="overflow-x-auto rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e]">
           <table className="w-full border-collapse">
             <thead className="bg-[#121212] dark:bg-[#181818]">
               <tr><th className={th}>{tri("Sigla", "Kürzel", "Code")}</th><th className={th}>🇮🇹 IT</th><th className={th}>🇩🇪 DE</th><th className={th}>🌍 EN</th></tr>
@@ -98,7 +98,7 @@ export default function FlourTable({ embedded = false }) {
   }
 
   return (
-    <div data-testid="flour-table" className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden">
+    <div data-testid="flour-table" className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
       <button data-testid="flour-table-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 text-left">
         <Table2 className="w-5 h-5 text-[#ff6b00]" />
         <span className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex-1">{tri("Tabella Farine & Sigle (DE / IT / EN)", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</span>

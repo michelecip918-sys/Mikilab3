@@ -100,7 +100,7 @@ export default function SmartScale() {
       </div>
 
       <button data-testid="scale-bt-btn" onClick={connectBt} disabled={btBusy}
-        className="w-full mb-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-4 py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-60">
+        className="w-full mb-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-4 py-3 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-60">
         <Bluetooth className={`w-5 h-5 ${connected ? "text-[#ff6b00]" : "text-[#ff6b00]"}`} />
         {connected ? tri("Bilancia collegata ✓", "Waage verbunden ✓", "Scale connected ✓") : tri("Collega bilancia (Bluetooth)", "Waage verbinden (Bluetooth)", "Connect scale (Bluetooth)")}
       </button>
@@ -112,8 +112,8 @@ export default function SmartScale() {
       )}
 
       {/* Tabella ingredienti */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden">
-        <div className="grid grid-cols-[1fr_72px_72px_28px] gap-1 px-3 py-2 bg-[#e4eff8] dark:bg-[#242424] text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
+        <div className="grid grid-cols-[1fr_72px_72px_28px] gap-1 px-3 py-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">
           <span>{tri("Ingrediente", "Zutat", "Ingredient")}</span>
           <span className="text-right">{tri("Target g", "Ziel g", "Target g")}</span>
           <span className="text-right">{tri("Reale g", "Ist g", "Actual g")}</span>
@@ -124,7 +124,7 @@ export default function SmartScale() {
           const dev = t > 0 && a > 0 ? a / t - 1 : 0;
           const off = Math.abs(dev) > TOL && a > 0;
           return (
-            <div key={r.id} data-testid={`scale-row-${r.id}`} className="grid grid-cols-[1fr_72px_72px_28px] gap-1 px-3 py-1.5 border-t border-[#2b2b2b] dark:border-[#2e2e2e] items-center">
+            <div key={r.id} data-testid={`scale-row-${r.id}`} className="grid grid-cols-[1fr_72px_72px_28px] gap-1 px-3 py-1.5 border-t border-[#2e2e2e] dark:border-[#2e2e2e] items-center">
               <input value={r.name} onChange={(e) => setRow(r.id, { name: e.target.value })} placeholder={tri("nome", "Name", "name")}
                 className="bg-transparent text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none" />
               <input type="number" value={r.target} onChange={(e) => setRow(r.id, { target: e.target.value })}
@@ -136,7 +136,7 @@ export default function SmartScale() {
             </div>
           );
         })}
-        <div className="flex items-center justify-between px-3 py-2 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
+        <div className="flex items-center justify-between px-3 py-2 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
           <button data-testid="scale-add-row" onClick={addRow} className="text-xs font-semibold text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {tri("Aggiungi", "Hinzufügen", "Add")}</button>
           <button data-testid="scale-reset" onClick={resetActual} className="text-xs text-[#7E8A93] flex items-center gap-1"><RotateCcw className="w-3.5 h-3.5" /> {tri("Azzera pesate", "Wiegungen zurücksetzen", "Reset weights")}</button>
         </div>

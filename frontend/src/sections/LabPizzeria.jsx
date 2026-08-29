@@ -15,9 +15,9 @@ export default function LabPizzeria({ onBack }) {
   const { lang } = useLang();
   const L = (i, e) => mkTri(lang)(i, e, e, e);
   const num = (v) => Math.round(v).toLocaleString(lang === "it" ? "it" : "en");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
-  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
   const [tab, setTab] = useState("prefermenti");
 
   // Biga & Poolish
@@ -106,15 +106,15 @@ export default function LabPizzeria({ onBack }) {
   return (
     <div className="pb-8" data-testid="lab-pizzeria">
       {onBack && <button data-testid="pizzeria-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Pizza className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Laboratorio Pizzeria", "Pizzeria Lab")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Prefermenti, maturazione e organizzazione del servizio per Napoletana, Teglia e Pala.", "Preferments, maturation and service planning for Neapolitan, Pan and Pala.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Prefermenti, maturazione e organizzazione del servizio per Napoletana, Teglia e Pala.", "Preferments, maturation and service planning for Neapolitan, Pan and Pala.")}</p>
       </div>
 
-      <div className="flex flex-wrap gap-1.5 bg-[#1a1a1a] p-1.5 rounded-2xl mb-5 border border-[#2b2b2b]">
+      <div className="flex flex-wrap gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
         {TABS.map(({ id, Icon, label }) => (
-          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-bold transition-all ${tab === id ? "bg-[#ff6b00] text-[#161616] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-bold transition-all ${tab === id ? "bg-[#ff6b00] text-[#121212] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
@@ -156,7 +156,7 @@ export default function LabPizzeria({ onBack }) {
             <div><p className={lbl}>{L("Numero di pizze", "Number of pizzas")}</p><input data-testid="pz-pizzas" type="number" value={pizzas} onChange={(e) => setPizzas(Number(e.target.value))} className={inp} /></div>
             <div><p className={lbl}>{L("Tipo", "Type")}</p><select data-testid="pz-sptype" value={sptype} onChange={(e) => setSptype(e.target.value)} className={inp}>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v.it}</option>)}</select></div>
           </div>
-          <div data-testid="pz-planner-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2b2b2b]">
+          <div data-testid="pz-planner-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
             {[[L("Impasto totale", "Total dough"), `${num(sp.doughTot)} g`], [L("Farina", "Flour"), `${sp.flourKg.toFixed(1)} kg`], [L("Acqua", "Water"), `${sp.waterKg.toFixed(1)} kg`], [L("Lievito (diretto ~0,3%)", "Yeast (~0.3%)"), `${num(sp.yeastG)} g`], [L("Cassette necessarie", "Boxes needed"), `${sp.boxes}`]].map(([k, v], i) => (
               <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#ff6b00]">{k}</span><span className="font-mono-data font-bold text-[#ff6b00]">{v}</span></div>
             ))}
@@ -192,7 +192,7 @@ export default function LabPizzeria({ onBack }) {
               </div>
             ))}
           </div>
-          <div data-testid="pz-week-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2b2b2b]">
+          <div data-testid="pz-week-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
             {[[L("Palline totali", "Total balls"), `${num(weekTot.balls)}`], [L("Impasto totale", "Total dough"), `${num(weekTot.dough)} g`], [L("Farina totale", "Total flour"), `${weekTot.flourKg.toFixed(1)} kg`]].map(([k, v], i) => (
               <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#ff6b00]">{k}</span><span className="font-mono-data font-bold text-[#ff6b00]">{v}</span></div>
             ))}

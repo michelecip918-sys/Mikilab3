@@ -208,7 +208,7 @@ export default function PaywallGate({ children, sectionName, feature = "lab" }) 
             const desc = mkTri(lang)(itDesc, deRow[2], enRow[2]);
             return (
             <div key={i} data-testid={`paywall-feature-${i}`}
-              className="flex items-start gap-3 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-3.5 shadow-sm">
+              className="flex items-start gap-3 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-3.5 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
                 <Icon className="w-5 h-5 text-[#ff6b00]" />
               </div>

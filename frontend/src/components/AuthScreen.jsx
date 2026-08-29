@@ -103,7 +103,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
       <div className="w-full max-w-sm relative" data-testid="auth-screen">
         {onClose && (
           <button data-testid="auth-close" onClick={onClose} aria-label="Chiudi"
-            className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93] z-10">
+            className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93] z-10">
             <X className="w-5 h-5" />
           </button>
         )}
@@ -114,7 +114,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
         </div>
 
         {mode !== "forgot" && (
-          <div data-testid="auth-tabs" className="flex gap-1 mb-4 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#242424]">
+          <div data-testid="auth-tabs" className="flex gap-1 mb-4 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#1e1e1e]">
             <button type="button" data-testid="auth-tab-login" onClick={() => { setMode("login"); setNeedVerify(false); setInfo(""); }}
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "login" ? "bg-white dark:bg-[#ff6b00] text-[#ff6b00] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
               {T.login}
@@ -142,15 +142,15 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
         {mode !== "forgot" && (
           <>
             <button data-testid="google-login-btn" onClick={google}
-              className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-4 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] shadow-sm active:scale-98 transition-all mb-4">
+              className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] shadow-sm active:scale-98 transition-all mb-4">
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5 h-5" />
               {T.google}
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <span className="flex-1 h-px bg-[#2b2b2b] dark:bg-[#2e2e2e]" />
+              <span className="flex-1 h-px bg-[#2e2e2e] dark:bg-[#2e2e2e]" />
               <span className="text-xs text-[#7E8A93]">{T.or}</span>
-              <span className="flex-1 h-px bg-[#2b2b2b] dark:bg-[#2e2e2e]" />
+              <span className="flex-1 h-px bg-[#2e2e2e] dark:bg-[#2e2e2e]" />
             </div>
           </>
         )}
@@ -226,7 +226,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
 
 function Field({ icon, children }) {
   return (
-    <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
+    <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
       <span className="text-[#ff6b00]">{icon}</span>
       {children}
     </div>

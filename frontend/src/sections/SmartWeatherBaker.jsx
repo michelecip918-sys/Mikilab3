@@ -9,7 +9,7 @@ export default function SmartWeatherBaker({ onBack }) {
   const [city, setCity] = useState("");
   const [temp, setTemp] = useState(22);
   const [humidity, setHumidity] = useState(55);
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   const r = useMemo(() => {
@@ -30,13 +30,13 @@ export default function SmartWeatherBaker({ onBack }) {
   return (
     <div className="pb-8" data-testid="weather-baker">
       {onBack && <button data-testid="weather-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 55%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 55%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><CloudSun className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Smart Weather-Baker", "Smart Weather-Baker", "Smart Weather-Baker", "Smart Weather-Baker")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Adatta acqua e lievitazione al clima di casa tua: una giornata fredda in Germania non è come il caldo del Sud Italia.", "Passe Wasser & Gare an dein Klima an.", "Adapt water & proofing to your local climate.", "Adapta agua y fermentación a tu clima.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Adatta acqua e lievitazione al clima di casa tua: una giornata fredda in Germania non è come il caldo del Sud Italia.", "Passe Wasser & Gare an dein Klima an.", "Adapt water & proofing to your local climate.", "Adapta agua y fermentación a tu clima.")}</p>
       </div>
 
-      <div className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm mb-4">
+      <div className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm mb-4">
         <div className="mb-3"><p className={lbl}><MapPin className="w-3.5 h-3.5 inline mr-1" />{L("Città (facoltativo)", "Stadt (optional)", "City (optional)", "Ciudad (opcional)")}</p>
           <input data-testid="weather-city" value={city} onChange={(e) => setCity(e.target.value)} placeholder={L("es. Stoccarda / Matera", "z.B. Stuttgart", "e.g. Stuttgart / Matera", "p.ej. Stuttgart")} className={inp} /></div>
         <div className="grid grid-cols-2 gap-3">
@@ -45,7 +45,7 @@ export default function SmartWeatherBaker({ onBack }) {
         </div>
       </div>
 
-      <div data-testid="weather-result" className="rounded-2xl bg-[#ffffff] border border-[#2b2b2b] p-4 space-y-3">
+      <div data-testid="weather-result" className="rounded-2xl bg-[#ffffff] border border-[#2e2e2e] p-4 space-y-3">
         <div className="flex items-center gap-2">
           <Droplets className="w-5 h-5 text-[#ff6b00]" />
           <p className="text-[13.5px] text-[#ff6b00]"><span className="font-bold text-[#ff6b00]">{L("Acqua:", "Wasser:", "Water:", "Agua:")} </span>

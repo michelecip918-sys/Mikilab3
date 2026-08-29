@@ -13,7 +13,7 @@ const OVENS = {
 export default function SimulatoreForno({ onBack }) {
   const { lang } = useLang();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   const [oven, setOven] = useState("statico");
@@ -30,15 +30,15 @@ export default function SimulatoreForno({ onBack }) {
     return { setTempC, preheat, steamMin, dryHint };
   }, [oven, temp, stone, prod]);
 
-  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
 
   return (
     <div className="pb-8" data-testid="sim-forno">
       {onBack && <button data-testid="simforno-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Flame className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Gestione Vapore & Forno", "Dampf & Ofen", "Steam & Oven", "Vapor y Horno")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Tempistiche esatte per vapore, pietra refrattaria e spiffero: cuoci come un pro anche col forno di casa.", "Genaue Zeiten für Dampf, Stein und Ofen.", "Exact timing for steam, stone and oven quirks.", "Tiempos exactos para vapor, piedra y horno.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Tempistiche esatte per vapore, pietra refrattaria e spiffero: cuoci come un pro anche col forno di casa.", "Genaue Zeiten für Dampf, Stein und Ofen.", "Exact timing for steam, stone and oven quirks.", "Tiempos exactos para vapor, piedra y horno.")}</p>
       </div>
 
       <div className={card + " mb-4 space-y-3"}>
@@ -61,7 +61,7 @@ export default function SimulatoreForno({ onBack }) {
         </label>
       </div>
 
-      <div data-testid="simforno-result" className="rounded-2xl bg-[#ffffff] border border-[#2b2b2b] p-4 space-y-2.5 text-[13.5px] text-[#ff6b00]">
+      <div data-testid="simforno-result" className="rounded-2xl bg-[#ffffff] border border-[#2e2e2e] p-4 space-y-2.5 text-[13.5px] text-[#ff6b00]">
         <p className="flex items-center gap-2"><Flame className="w-4.5 h-4.5 text-[#ff6b00]" /><span className="font-bold text-[#ff6b00]">{L("Imposta il forno a:", "Ofen einstellen auf:", "Set the oven to:", "Ajusta el horno a:")} </span><span className="font-mono-data font-bold">{r.setTempC}°C</span>{r.dryHint && ` (${L("ventilato: -10°C perché asciuga di più", "Umluft: -10°C", "fan: -10°C, it dries more", "ventilado: -10°C")})`}</p>
         <p className="flex items-center gap-2"><Clock className="w-4.5 h-4.5 text-[#ff6b00]" /><span className="font-bold text-[#ff6b00]">{L("Preriscalda:", "Vorheizen:", "Preheat:", "Precalienta:")} </span><span className="font-mono-data font-bold">{r.preheat} min</span> {stone ? L("(pietra ben calda)", "(Stein heiß)", "(stone hot)", "(piedra caliente)") : ""}</p>
         <p className="flex items-center gap-2"><Droplets className="w-4.5 h-4.5 text-[#ff6b00]" /><span className="font-bold text-[#ff6b00]">{L("Vapore:", "Dampf:", "Steam:", "Vapor:")} </span>{r.steamMin > 0 ? <><span className="font-mono-data font-bold">{r.steamMin} min</span> {L("all'inizio (teglia con acqua bollente), poi apri e fai uscire il vapore.", "am Anfang, dann Dampf ablassen.", "at the start, then open to release steam.", "al inicio, luego libera el vapor.")}</> : L("niente vapore (crosta sottile).", "kein Dampf.", "no steam.", "sin vapor.")}</p>

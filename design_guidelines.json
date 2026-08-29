@@ -1,168 +1,179 @@
 {
   "project_info": {
     "app_name": "MikiLab",
-    "main_h1": "MikiLab — Ricette Esclusive & Consulenza Operativa per Pasticceria, Panificazione e Pizzeria",
-    "subtitle": "Accedi a ricette testate, schede tecniche e strategie pratiche per l'organizzazione del laboratorio guadagnando crediti nella nostra community.",
-    "theme_archetype": "Arte Bianca & Artisan Craft (Warm Flour, Terracotta & Raw Timber)",
-    "primary_language": "it",
-    "supported_languages": ["it", "de", "en", "es"]
+    "owner": "Michele Bordin (Maestro Panificatore)",
+    "archetype": "Warm Dark Artisan Bakery & Operating System",
+    "primary_languages": ["it", "de", "en", "es", "fr", "fa"],
+    "tech_stack": {
+      "frontend": "React, Tailwind CSS, Framer Motion, Lucide-React / Heroicons",
+      "backend": "FastAPI",
+      "i18n": "6-language dynamic switcher (IT/DE/EN/ES/FR/FA with RTL support)"
+    }
   },
-  "design_rules": {
-    "zero_payment_policy": {
-      "forbidden_words": ["Gratis", "Free", "Acquista", "Paga", "Prezzo", "Compra", "Stripe"],
-      "dynamic_button_labels": [
-        "Sblocca Contenuto",
-        "Completa la Sfida per Accedere",
-        "Guadagna la Scheda"
+  "design_vision_and_palette": {
+    "theme_type": "Warm Dark (#3E2723 Dark Wood base + Terracotta & Amber/Copper accents + High-contrast crisp light text)",
+    "color_tokens": {
+      "css_variables": {
+        "--bg-main": "#2B1A17",
+        "--bg-wood-dark": "#3E2723",
+        "--bg-wood-surface": "#4A322C",
+        "--bg-wood-card": "#33201D",
+        "--bg-wood-hover": "#543730",
+        "--terracotta-primary": "#C85A32",
+        "--terracotta-hover": "#D96B43",
+        "--amber-copper": "#D9822B",
+        "--amber-glow": "#F29A38",
+        "--warm-gold": "#E5A83B",
+        "--text-primary": "#FFFDF9",
+        "--text-secondary": "#E0D5CF",
+        "--text-muted": "#A8958E",
+        "--border-warm": "#5E3B33",
+        "--border-accent": "#8C4A32",
+        "--overlay-modal": "rgba(30, 18, 16, 0.85)"
+      },
+      "tailwind_classes": {
+        "bg_main": "bg-[#2B1A17]",
+        "bg_wood_dark": "bg-[#3E2723]",
+        "bg_wood_card": "bg-[#33201D]",
+        "bg_wood_surface": "bg-[#4A322C]",
+        "text_primary": "text-[#FFFDF9]",
+        "text_secondary": "text-[#E0D5CF]",
+        "text_muted": "text-[#A8958E]",
+        "border_warm": "border-[#5E3B33]",
+        "cta_terracotta": "bg-[#C85A32] hover:bg-[#D96B43] text-[#FFFDF9] shadow-lg shadow-[#C85A32]/25 active:scale-95 transition-all",
+        "cta_amber": "bg-gradient-to-r from-[#D9822B] to-[#F29A38] hover:from-[#F29A38] hover:to-[#D9822B] text-[#2B1A17] font-bold shadow-md shadow-[#D9822B]/30 transition-all",
+        "badge_amber": "bg-[#D9822B]/20 text-[#F29A38] border border-[#D9822B]/40 font-semibold"
+      },
+      "contrast_rules": [
+        "Headings & primary content MUST be crisp #FFFDF9 or #E0D5CF over #3E2723 / #33201D.",
+        "Interactive buttons MUST have high-contrast text: Terracotta buttons use white text (#FFFDF9), Amber buttons use deep espresso text (#2B1A17).",
+        "Never use unreadable dark brown text on dark wood backgrounds.",
+        "Ensure all interactive hover states explicitly set readable text color."
+      ]
+    }
+  },
+  "typography_and_hierarchy": {
+    "heading_font": "Playfair Display, Cinzel, serif (Artisan craftsmanship & authority)",
+    "body_font": "Manrope, Plus Jakarta Sans, sans-serif (Clean legibility for bakers with floured hands)",
+    "mono_font": "JetBrains Mono, monospace (Dough calculations, weights, Baker's %)",
+    "scale": {
+      "h1_hero": "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight font-display text-[#FFFDF9]",
+      "h2_section": "text-2xl sm:text-3xl font-bold tracking-tight font-display text-[#FFFDF9]",
+      "h3_card": "text-xl sm:text-2xl font-semibold font-display text-[#E0D5CF]",
+      "body_text": "text-base sm:text-lg leading-relaxed text-[#E0D5CF]",
+      "mono_data": "font-mono text-sm sm:text-base font-medium text-[#F29A38]"
+    }
+  },
+  "home_page_blueprint": {
+    "above_the_fold": {
+      "impact_target": "Instant conversion & orientation within first 3 seconds",
+      "interactive_avatar_scene": {
+        "title": "Interactive Welcome Avatar Scene ('Film Effect')",
+        "concept": "Michele (Maestro Panificatore) acts as a cinematic protagonist inside a warm illuminated artisan lab background.",
+        "audio_integration": "Includes brief 10-15 sec welcome audio explainer (IT/DE/EN/ES/FR/FA). Plays on tap with visual sound wave animation and speech bubble.",
+        "avatar_image": "/michele-avatar-full.jpg",
+        "interactive_states": ["Listening / Idle pulse", "Talking with live waveform", "Quick audio replay button", "Direct jump to section recommendations"]
+      },
+      "giant_ctas": [
+        {
+          "label": "LE MIE RICETTE",
+          "subtitle": "Accedi al ricettario completo e calcolatore pesi",
+          "target": "/ricette",
+          "style": "cta_terracotta",
+          "data_testid": "home-hero-ricette-giant-cta"
+        },
+        {
+          "label": "ENTRA NEL LABORATORIO",
+          "subtitle": "Sistema Operativo: Piano Settimanale & Calcolatori",
+          "target": "/laboratorio",
+          "style": "cta_amber",
+          "data_testid": "home-hero-laboratorio-giant-cta"
+        }
       ]
     },
-    "background_treatment": {
-      "strategy": "Eliminate dark blue/gold and full-screen mixer stock images. Use warm organic flour & wood texture overlays (#FDFBF7 base), subtle vector wheat oat line art, linen card fills, and micro-embossed grain textures.",
-      "hero_overlay_max_opacity": "bg-amber-950/40"
-    }
-  },
-  "color_palette": {
-    "css_variables": {
-      "--bg-primary": "#FDFBF7",
-      "--bg-card": "#FAF5EC",
-      "--bg-card-hover": "#F5EFE2",
-      "--bg-accent-subtle": "#F2E8D5",
-      "--text-main": "#2C1E16",
-      "--text-muted": "#6B5546",
-      "--text-light": "#8C7362",
-      "--border-warm": "#E6D8C3",
-      "--border-focus": "#D97706",
-      "--brand-primary": "#8C4A27",
-      "--brand-primary-hover": "#6E371C",
-      "--brand-accent": "#D97706",
-      "--brand-amber": "#B45309",
-      "--brand-wood": "#4A3222",
-      "--badge-bg": "#FEF3C7",
-      "--badge-text": "#92400E"
-    },
-    "tailwind_equivalents": {
-      "bg_main": "bg-[#FDFBF7]",
-      "card_bg": "bg-[#FAF5EC]",
-      "border": "border-[#E6D8C3]",
-      "text_main": "text-[#2C1E16]",
-      "text_muted": "text-[#6B5546]",
-      "cta_primary": "bg-[#8C4A27] hover:bg-[#6E371C] text-[#FFFDF9]",
-      "cta_challenge": "bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 text-amber-50 shadow-md hover:from-amber-800 hover:to-amber-950"
-    }
-  },
-  "typography": {
-    "font_family_heading": "Cinzel, Cormorant Garamond, serif",
-    "font_family_body": "Plus Jakarta Sans, system-ui, sans-serif",
-    "font_family_mono": "JetBrains Mono, monospace",
-    "heading_hierarchy": {
-      "h1": "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#2C1E16]",
-      "h2": "text-2xl sm:text-3xl font-bold tracking-tight text-[#2C1E16]",
-      "h3": "text-xl sm:text-2xl font-semibold text-[#4A3222]",
-      "h4": "text-lg font-semibold text-[#6B5546]",
-      "body": "text-base leading-relaxed text-[#2C1E16]",
-      "caption": "text-xs tracking-wider uppercase text-[#8C7362]"
-    }
-  },
-  "home_sections_blueprint": [
-    {
-      "step": 1,
-      "id": "hero-novita",
-      "title": "Hero / Novità in Evidenza",
-      "heading": "Nuove Ricette & Aggiornamenti",
-      "description": "Presentazione H1 + Novità settimanali, ultime ricette e sfide attive con carosello o griglia ad alto impatto visivo."
-    },
-    {
-      "step": 2,
-      "id": "catalogo-ricette",
-      "title": "Ricette & Schede Tecniche",
-      "heading": "Catalogo sbloccabile a Sfide",
-      "description": "Filtri per categoria (Panificazione, Pizzeria, Pasticceria, Basi) + badge di difficoltà + pulsante 'Sblocca Contenuto' o 'Completa la Sfida per Accedere'."
-    },
-    {
-      "step": 3,
-      "id": "impara-da-casa",
-      "title": "Impara da Casa",
-      "heading": "Guide passo-passo per Amatori & Mamme",
-      "description": "Sezione tutorial semplificati per impasti casalinghi con pasta madre, teglia, pizza in pala e dolci tradizionali con step visuali sbloccabili."
-    },
-    {
-      "step": 4,
-      "id": "consulenza-b2b",
-      "title": "Consulenza Laboratorio B2B",
-      "heading": "Ottimizzazione e Strategia Operativa",
-      "layout": "Struttura pulita sintetica a 3 punti cardine: 1) Ottimizzazione Spazi & Layout, 2) Gestione Tempi & Flussi di Lavoro, 3) Riduzione Sprechi & Food Cost.",
-      "single_cta": {
-        "text": "Genera Piano di Lavoro e Avvia Sblocco",
-        "action_test_id": "b2b-consultancy-generate-plan-btn"
-      }
-    },
-    {
-      "step": 5,
-      "id": "social-community",
-      "title": "Social & Community",
-      "heading": "Bacheca, Amicizie & Mercatino Usato",
-      "description": "Area riservata con feed di foto impasti, commenti, reazioni, richiesta amicizie, chat privata e mercatino attrezzature da laboratorio usate."
-    },
-    {
-      "step": 6,
-      "id": "chi-sono-avatar",
-      "title": "Chi Sono & Guide Avatar",
-      "heading": "La Storia di Michele & Guida al Sito",
-      "description": "Presentazione di Michele Bordin e della sua esperienza + Sezione Avatar interattiva 'Guida al Sito' con Michele e Mohamed che spiegano come funziona il sistema di sblocco ricette."
-    }
-  ],
-  "avatar_guide_section": {
-    "avatars": [
+    "sections_sequence": [
       {
-        "name": "Michele Bordin",
-        "role": "Maestro Panificatore & Fondatore MikiLab",
-        "image": "/michele-avatar.jpg",
-        "topics": ["Storia di MikiLab", "Filosofia Arte Bianca", "Consulenza B2B e Organizzazione"]
+        "step": 1,
+        "id": "hero-scene",
+        "title": "Hero Film Scene + Interactive Avatar + Giant CTAs"
       },
       {
-        "name": "Mohamed",
-        "role": "Assistente Tecnico & Guida Sfide",
-        "image": "/mohammed-avatar.jpg",
-        "topics": ["Come funzionano i Crediti", "Guida alle Sfide della Community", "Sblocco Ricette & Panettone 17"]
+        "step": 2,
+        "id": "quick-tools",
+        "title": "Accesso Rapido Calcolatori (Acqua, Gradi, Convertitore Lievito)"
+      },
+      {
+        "step": 3,
+        "id": "ricette-evidenza",
+        "title": "Ricette MikiLab in Evidenza (Con badge Basi/Pane/Pizza/Pasticceria)"
+      },
+      {
+        "step": 4,
+        "id": "impara-da-casa",
+        "title": "Impara da Casa (Corsi & Step-by-step per amatori e professionisti)"
+      },
+      {
+        "step": 5,
+        "id": "social-community",
+        "title": "Community Fornai & SOS Impasto"
       }
-    ],
-    "interactive_features": [
-      "Dialoghi step-by-step con bolle interattive",
-      "Riproduzione vocale / audio se abilitato",
-      "Selettore argomenti e pillole di saggezza per laboratori"
     ]
   },
-  "image_urls": {
-    "sourdough_hero": "https://images.unsplash.com/photo-1613396874083-2d5fbe59ae79?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwxfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBmbG91ciUyMHdvb2QlMjB0YWJsZXxlbnwwfHx8fDE3ODc5MDQwODN8MA&ixlib=rb-4.1.0&q=85",
-    "flour_duster": "https://images.unsplash.com/photo-1635341814289-55cf1490024c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHw0fHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBmbG91ciUyMHdvb2QlMjB0YWJsZXxlbnwwfHx8fDE3ODc5MDQwODN8MA&ixlib=rb-4.1.0&q=85",
-    "artisan_loaf": "https://images.unsplash.com/photo-1686154596696-d6f594a98af9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwyfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBmbG91ciUyMHdvb2QlMjB0YWJsZXxlbnwwfHx8fDE3ODc5MDQwODN8MA&ixlib=rb-4.1.0&q=85",
-    "michele_avatar_local": "/michele-avatar.jpg",
-    "mohammed_avatar_local": "/mohammed-avatar.jpg"
+  "laboratorio_operating_system": {
+    "concept": "Unified operating system for busy bakers in the oven with floured hands and tight schedules.",
+    "layout_rule": "Generator (Piano Settimanale / Calcolatori) placed SUBITO IN CIMA (right at the top of /laboratorio) ready with 1 click.",
+    "top_generator_banner": {
+      "components": [
+        "Calcolatore Rapido Produzione (Biga, Poolish, Licoli, Impasto Diretto)",
+        "Piano Settimanale Infornate & Generatore AI",
+        "Sveglia Lievito & Tracker Fermentazione Predittiva",
+        "Pulsanti XL touch-friendly per utilizzo con mani in pasta"
+      ]
+    },
+    "integrated_tools": [
+      "Piano Produzione Settimanale",
+      "Calcolatore Sequenze & Tempistiche",
+      "Gestione Cella e Forno",
+      "Gestore Freezer e Giacenze",
+      "Turni e Ruoli del Personale",
+      "HACCP & Tracciabilità Lotti"
+    ]
   },
-  "testing_and_accessibility": {
-    "mandatory_data_testid": true,
-    "apca_contrast_target": "75+ Lc",
-    "data_testid_examples": {
-      "hero_title": "mikilab-hero-h1",
-      "unlock_recipe_btn": "unlock-recipe-button-id",
-      "b2b_consultancy_btn": "b2b-consultancy-generate-plan-btn",
-      "avatar_michele_dialog": "avatar-michele-speech-bubble",
-      "avatar_mohamed_dialog": "avatar-mohamed-speech-bubble",
-      "challenge_start_btn": "start-challenge-button"
+  "internal_sections_reorganization": {
+    "le_mie_ricette": {
+      "filters": ["Tutte", "Basi & Miglioratori", "Pane & Lievitati", "Pizza & Focaccia", "Viennoiserie & Dolci", "Speciali & Colorate"],
+      "card_anatomy": [
+        "High-contrast image header with category pill",
+        "Key Baker's % metrics (Idratazione %, Lievito %, Sale %)",
+        "Procedimento step-by-step con modal dedicato",
+        "Sezione Dettaglio Miglioratore (Cosa fa, Dosi, Alternativa naturale)",
+        "Pulsante Adatta Dosi (in base alla farina / kg impasto desiderati)"
+      ]
+    },
+    "impara_da_casa": {
+      "mobile_first_design": "Horizontal scrollable card boards + vertical course accordion",
+      "features": ["Video lezioni brevi", "Evolving Quiz", "Schede scaricabili"]
+    },
+    "social_community": {
+      "board_design": "Clean stream with post card, photo attachments, reactions, SOS Impasto badge, and user leaderboards"
     }
   },
-  "instructions_to_main_agent": [
-    "Strictly follow the 'Arte Bianca' warm flour & wood color scheme (#FDFBF7, #FAF5EC, #8C4A27, #D97706). Remove all generic blue/gold or white mixer backgrounds.",
-    "Do NOT mention any prices or the word 'Gratis'. Use dynamic challenge CTAs: 'Sblocca Contenuto', 'Completa la Sfida per Accedere', 'Guadagna la Scheda'.",
-    "Ensure the Home page displays the 6 sections in the exact requested order.",
-    "B2B section must be clean with 3 key pillars (Spazi, Tempi/Flussi, Riduzione Sprechi) and ONE single CTA 'Genera Piano di Lavoro e Avvia Sblocco'.",
-    "Keep interactive Michele & Mohamed Avatar Guide clean, step-by-step, and fully functional in Italian with multi-language fallback.",
-    "Ensure all interactive elements have explicit data-testid attributes."
-  ],
-  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
-    "Maintain high contrast APCA standards across all flour-toned containers.",
-    "Do not use transparent backgrounds under header, dropdowns, or modals.",
-    "Use subtle spring animations and micro-interactions on challenge unlock cards.",
-    "Always test interface in Italian as primary language."
-  ]
+  "technical_fixes_and_routing": {
+    "routing_avatar": "Each avatar dialog option redirects specifically to its corresponding target page (e.g., Recipe avatar -> /ricette, Lab avatar -> /laboratorio).",
+    "initial_scroll": "Global window.scrollTo(0,0) executed on route change / section transition."
+  },
+  "image_urls": {
+    "artisan_shelves": "https://images.unsplash.com/photo-1760822600352-818bc6907f14?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "sourdough_crust": "https://images.unsplash.com/photo-1705680827676-ea4a49bc6ecb?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "loaf_wood_plate": "https://images.unsplash.com/photo-1775591648306-9d1889c0b019?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "michele_avatar": "/michele-avatar-full.jpg"
+  },
+  "general_ui_ux_design_guidelines": {
+    "universal_rules": [
+      "All interactive elements MUST contain data-testid attributes for automated testing.",
+      "Touch targets must be at least 48px height on mobile views.",
+      "Header and modals MUST NOT have transparent backgrounds. Use backdrop-blur with warm dark opacity (#3E2723 with blur).",
+      "Avoid Inter/Roboto for display text; use Playfair Display for headers and Manrope for body text."
+    ]
+  }
 }

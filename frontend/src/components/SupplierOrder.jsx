@@ -48,7 +48,7 @@ export default function SupplierOrder({ totals }) {
   return (
     <div data-testid="supplier-order" className="space-y-3">
       {/* Lista spesa */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
         <div className="flex items-center gap-2 mb-2 text-[#ff6b00]">
           <ShoppingCart className="w-4 h-4" />
           <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("shop_list_title")}</h2>
@@ -71,7 +71,7 @@ export default function SupplierOrder({ totals }) {
       </div>
 
       {/* Ordine al fornitore */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 no-print">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 no-print">
         <div className="flex items-center gap-2 mb-2 text-[#ff6b00]">
           <Store className="w-4 h-4" />
           <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("shop_order_title")}</h2>
@@ -79,13 +79,13 @@ export default function SupplierOrder({ totals }) {
         <p className="text-sm text-[#7E8A93] mb-3">{t("shop_order_hint")}</p>
         <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("shop_supplier")}</label>
         <select data-testid="supplier-select" value={supplierId} onChange={(e) => pickSupplier(e.target.value)}
-          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]">
+          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]">
           {SUPPLIERS.map((s) => <option key={s.id} value={s.id}>{s.flag} {s.name}</option>)}
         </select>
         <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93] mt-3 block">{t("shop_email")}</label>
         <input data-testid="supplier-email" type="email" value={email} placeholder={supplier.email || t("shop_email_ph")}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
         <a href={supplier.web} target="_blank" rel="noopener noreferrer"
           className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[#ff6b00]">
           <ExternalLink className="w-3 h-3" /> {supplier.web.replace(/^https?:\/\//, "")}
@@ -103,7 +103,7 @@ export default function SupplierOrder({ totals }) {
       </div>
 
       {/* Directory fornitori */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden no-print">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden no-print">
         <button data-testid="supplier-dir-toggle" onClick={() => setShowDir((v) => !v)}
           className="w-full flex items-center justify-between p-4 text-left">
           <div className="flex items-center gap-2 text-[#ff6b00]">
@@ -116,7 +116,7 @@ export default function SupplierOrder({ totals }) {
           <div className="px-4 pb-4 space-y-2" data-testid="supplier-directory">
             <p className="text-sm text-[#7E8A93]">{t("shop_dir_hint")}</p>
             {SUPPLIERS.map((s) => (
-              <div key={s.id} className="rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3">
+              <div key={s.id} className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{s.flag}</span>
                   <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] flex-1 min-w-0 truncate">{s.name}</span>

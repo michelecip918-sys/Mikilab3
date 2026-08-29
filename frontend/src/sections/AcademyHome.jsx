@@ -77,7 +77,7 @@ export default function AcademyHome({ onNavigate }) {
             const done = pathDone.includes(id);
             return (
               <button key={id} data-testid={`academy-path-${id}`} onClick={() => setSub(id)}
-                className={`group relative rounded-2xl border p-3 text-left active:scale-97 transition-all ${done ? "bg-[#ff6b00]/12 border-[#ff6b00]/50" : "bg-white dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                className={`group relative rounded-2xl border p-3 text-left active:scale-97 transition-all ${done ? "bg-[#ff6b00]/12 border-[#ff6b00]/50" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
                 {done && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-[#ff6b00]" data-testid={`academy-path-done-${id}`} />}
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <span className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${done ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#181818] text-[#ff6b00]"}`}>{done ? "✓" : n}</span>
@@ -99,13 +99,13 @@ export default function AcademyHome({ onNavigate }) {
       </div>
 
       {/* Sub-nav */}
-      <div data-testid="academy-subnav" className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-5 border border-[#2b2b2b] dark:border-[#2e2e2e]">
+      <div data-testid="academy-subnav" className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e] dark:border-[#2e2e2e]">
         {TABS.map(({ id, label, Icon }) => {
           const on = sub === id;
           const isQuiz = id === "corsi";
           return (
             <button key={id} data-testid={`academy-tab-${id}`} onClick={() => setSub(id)}
-              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#ff6b00] text-white shadow-md" : isQuiz ? "text-[#ff6b00] dark:text-[#ff6b00] bg-[#ff6b00]/15 ring-2 ring-[#ff6b00]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#242424]"}`}>
+              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#ff6b00] text-white shadow-md" : isQuiz ? "text-[#ff6b00] dark:text-[#ff6b00] bg-[#ff6b00]/15 ring-2 ring-[#ff6b00]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#1e1e1e]"}`}>
               <Icon className="w-4 h-4 shrink-0" /><span className="truncate">{label}</span>
               {isQuiz && !on && <span className="absolute -top-1.5 -right-1 text-[9px] font-black bg-[#ff6b00] text-white px-1.5 py-0.5 rounded-full leading-none">🎯</span>}
             </button>
@@ -117,7 +117,7 @@ export default function AcademyHome({ onNavigate }) {
       {sub === "farine" && <FlourDB />}
       {sub === "diagnosi" && (
         <div className="space-y-4" data-testid="academy-diagnosi">
-          <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5 text-center">
+          <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5 text-center">
             <div className="w-14 h-14 rounded-full bg-[#ff6b00]/15 flex items-center justify-center mx-auto mb-3">
               <Camera className="w-7 h-7 text-[#ff6b00]" />
             </div>
@@ -127,11 +127,11 @@ export default function AcademyHome({ onNavigate }) {
               <p className="text-xs font-semibold text-[#ff6b00] mt-2">{tri("Hai usato", "Du hast", "You've used")} {diagUsed}/{diagLimit} {tri("Diagnosi questo mese", "Diagnosen diesen Monat", "diagnoses this month")}</p>
             )}
             {typeof diagLimit === "number" && diagLimit > 0 && diagUsed >= diagLimit ? (
-              <div data-testid="diagnosi-limit-upsell" className="mt-4 rounded-2xl bg-[#242424]/10 border border-[#242424]/30 p-4">
-                <p className="text-sm font-semibold text-[#242424]">{tri("Hai finito le Diagnosi del mese!", "Deine Diagnosen sind aufgebraucht!", "You've used all your diagnoses this month!")}</p>
+              <div data-testid="diagnosi-limit-upsell" className="mt-4 rounded-2xl bg-[#1e1e1e]/10 border border-[#1e1e1e]/30 p-4">
+                <p className="text-sm font-semibold text-[#1e1e1e]">{tri("Hai finito le Diagnosi del mese!", "Deine Diagnosen sind aufgebraucht!", "You've used all your diagnoses this month!")}</p>
                 <p className="text-xs text-[#7E8A93] mt-1">{tri("Passa a PRO per Diagnosi illimitate e tutti gli strumenti del laboratorio.", "Wechsle zu PRO für unbegrenzte Diagnosen und alle Labor-Tools.", "Go PRO for unlimited diagnoses and all lab tools.")}</p>
                 <button data-testid="diagnosi-upgrade-pro" onClick={upgradePro}
-                  className="mt-3 inline-flex items-center gap-2 bg-[#242424] hover:bg-[#963c1f] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all">
+                  className="mt-3 inline-flex items-center gap-2 bg-[#1e1e1e] hover:bg-[#963c1f] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all">
                   <Crown className="w-4 h-4" /> {tri("Passa a PRO · €29,99/mese", "PRO · €29,99/Monat", "Go PRO · €29.99/month")}
                 </button>
               </div>
@@ -194,7 +194,7 @@ function DynamicRecipes() {
         .head{text-align:center;border-bottom:3px solid #ff6b00;padding-bottom:10px;margin-bottom:18px}
         .head h1{margin:0;color:#ff6b00}
         .head p{margin:2px 0 0;color:#7E8A93;font-size:13px}
-        .card{border:1px solid #2b2b2b;border-radius:12px;padding:14px 18px;margin-bottom:14px;page-break-inside:avoid}
+        .card{border:1px solid #2e2e2e;border-radius:12px;padding:14px 18px;margin-bottom:14px;page-break-inside:avoid}
         .card h2{margin:0 0 2px;font-size:18px}
         .sub{margin:0 0 8px;color:#7E8A93;font-size:12px}
         table{width:100%;border-collapse:collapse}
@@ -218,13 +218,13 @@ function DynamicRecipes() {
 
   return (
     <div className="space-y-4" data-testid="dynamic-recipes">
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 space-y-3">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 space-y-3">
         <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Calcola le dosi", "Mengen berechnen", "Calculate the doses")}</p>
         <div className="grid grid-cols-1 gap-3">
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Ricetta", "Rezept", "Recipe")}</span>
             <select data-testid="calc-recipe" value={recipe} onChange={(e) => setRecipe(e.target.value)}
-              className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
+              className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
               {CALC_RECIPES.map((c) => <option key={c.id} value={c.id}>{L(c.name)}</option>)}
             </select>
           </label>
@@ -232,18 +232,18 @@ function DynamicRecipes() {
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Larghezza teglia (cm)", "Blechbreite (cm)", "Tin width (cm)")}</span>
               <input data-testid="calc-width" type="number" value={width} onChange={(e) => setWidth(e.target.value)}
-                className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
+                className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
             </label>
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Lunghezza teglia (cm)", "Blechlänge (cm)", "Tin length (cm)")}</span>
               <input data-testid="calc-length" type="number" value={length} onChange={(e) => setLength(e.target.value)}
-                className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
+                className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
             </label>
           </div>
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Farina", "Mehl", "Flour")}</span>
             <select data-testid="calc-flour" value={flour} onChange={(e) => setFlour(e.target.value)}
-              className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
+              className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
               {FLOURS.map((f) => <option key={f.name} value={f.name}>{f.name} · {f.type_de}</option>)}
             </select>
           </label>
@@ -291,13 +291,13 @@ function FlourDB() {
     <div className="space-y-3" data-testid="flour-db">
       <input data-testid="flour-search" value={q} onChange={(e) => setQ(e.target.value)}
         placeholder={tri("Cerca farina (es. 00, Dinkel, Manitoba)", "Mehl suchen (z.B. 00, Dinkel, Manitoba)", "Search flour (e.g. 00, Dinkel, Manitoba)")}
-        className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5 text-sm" />
-      <div className="rounded-2xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e]">
+        className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5 text-sm" />
+      <div className="rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e]">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 bg-[#e4eff8] dark:bg-[#181818] px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">
           <span>IT</span><span>DE (Type)</span><span>W</span>
         </div>
         {rows.map((f, i) => (
-          <div key={f.name} data-testid={`flour-row-${i}`} className="grid grid-cols-[1fr_1fr_auto] gap-2 px-3 py-2.5 text-sm border-t border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e]">
+          <div key={f.name} data-testid={`flour-row-${i}`} className="grid grid-cols-[1fr_1fr_auto] gap-2 px-3 py-2.5 text-sm border-t border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e]">
             <div>
               <p className="font-semibold text-[#2B303B] dark:text-[#e4eff8]">{f.name}</p>
               <p className="text-xs text-[#7E8A93]">{f.use[lang] || f.use.it}</p>

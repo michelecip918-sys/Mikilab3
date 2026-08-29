@@ -382,19 +382,19 @@ export default function WeeklyPlan() {
         .sum-day{margin-bottom:6px} .sum-day h3{margin:8px 0 2px;font-size:14px;color:#ff6b00}
         .sum-day ul{margin:0;padding-left:18px} .sum-day li{font-size:13px;margin:2px 0}
         .doses{color:#ff6b00;font-size:12px}
-        .recipe{border:1px solid #2b2b2b;border-radius:10px;padding:14px 16px;margin:12px 0;page-break-inside:avoid}
+        .recipe{border:1px solid #2e2e2e;border-radius:10px;padding:14px 16px;margin:12px 0;page-break-inside:avoid}
         .recipe h3{margin:0 0 2px;font-size:16px;color:#2B303B}
         .recipe h3 .meta{font-size:12px;color:#ff6b00;font-weight:normal}
         .flour{margin:0 0 8px;font-size:12px;color:#7E8A93}
         .block{margin-top:10px} .block h4{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#ff6b00}
         .block ul{margin:0;padding-left:18px} .block li{font-size:13px;margin:2px 0}
-        .ings li{list-style:none;display:inline-block;background:#e4eff8;border:1px solid #2b2b2b;border-radius:20px;padding:2px 10px;margin:2px 4px 2px 0;font-size:12px}
+        .ings li{list-style:none;display:inline-block;background:#e4eff8;border:1px solid #2e2e2e;border-radius:20px;padding:2px 10px;margin:2px 4px 2px 0;font-size:12px}
         .proc{font-size:13px;line-height:1.5;margin:0}
         .bake p{font-size:13px;margin:0;color:#ff6b00}
         .warn{color:#ff6b00;font-size:13px}
         @media print{.recipe{page-break-inside:avoid}}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1e1e1e 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(t("weekly_print_title"))} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${subtitle ? `<div class="shop">🏪 ${esc(subtitle)}</div>` : ""}
       <h1>${L.summary}</h1>${summaryHtml}
@@ -465,11 +465,11 @@ export default function WeeklyPlan() {
         .meta{display:flex;justify-content:space-between;align-items:flex-end;font-size:11px}
         .meta .w{font-weight:800;color:#ff6b00}
         .meta .d{color:#7E8A93}
-        .exp{font-size:10px;color:#242424}
+        .exp{font-size:10px;color:#1e1e1e}
         .shop{font-size:10px;font-weight:700;color:#ff6b00;border-top:1px solid #e4eff8;padding-top:2px}
         @media print{ @page{margin:8mm} .label{border-color:#c9c9c9} }
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1e1e1e 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="grid">${cards}</div>
       </body></html>`);
     w.document.close();
@@ -529,10 +529,10 @@ export default function WeeklyPlan() {
         h2{color:#fff;background:#ff6b00;display:inline-block;padding:4px 14px;border-radius:20px;font-size:16px;margin:0 0 8px}
         .grp{margin:6px 0 10px} .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#ff6b00;margin:0 0 4px}
         .grp ul{list-style:none;margin:0;padding:0}
-        .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #2b2b2b;padding:3px 0;font-size:14px}
+        .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #2e2e2e;padding:3px 0;font-size:14px}
         .grp li b{font-family:monospace;color:#ff6b00}
       </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1c1c1c 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
+      <div style="height:4px;width:100%;background:linear-gradient(90deg,#c94f00 0%,#F6F4EE 30%,#1e1e1e 60%,#ff6b00 82%,#1E1B18 100%);margin-bottom:10px"></div>
       <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
       ${sections}
       </body></html>`);
@@ -561,11 +561,11 @@ export default function WeeklyPlan() {
       )}
 
       {loaded && newWeek && (
-        <div data-testid="weekly-newweek-banner" className="mt-4 rounded-2xl bg-gradient-to-br from-[#c94f00] to-[#1c1c1c] text-white p-4 shadow-md">
+        <div data-testid="weekly-newweek-banner" className="mt-4 rounded-2xl bg-gradient-to-br from-[#c94f00] to-[#1e1e1e] text-white p-4 shadow-md">
           <p className="font-display text-base font-bold flex items-center gap-2"><CalendarDays className="w-5 h-5 text-[#9fd0ee]" /> {tri("Nuova settimana!", "Neue Woche!", "New week!")}</p>
           <p className="text-[13px] text-white/85 mt-1 leading-snug">{tri("La lista riparte da zero. Vuoi ripartire dal piano che avevi salvato la scorsa settimana?", "Die Liste startet leer. Möchtest du den letzten gespeicherten Wochenplan wiederverwenden?", "The list starts empty. Do you want to reuse the plan you saved last week?")}</p>
           <div className="flex flex-wrap gap-2 mt-3">
-            <button data-testid="weekly-use-lastweek" onClick={useLastWeek} className="bg-white text-[#1c1c1c] font-bold text-sm px-4 py-2 rounded-xl active:scale-95 transition-all">{tri("Usa il piano della scorsa settimana", "Letzten Plan verwenden", "Use last week's plan")}</button>
+            <button data-testid="weekly-use-lastweek" onClick={useLastWeek} className="bg-white text-[#1e1e1e] font-bold text-sm px-4 py-2 rounded-xl active:scale-95 transition-all">{tri("Usa il piano della scorsa settimana", "Letzten Plan verwenden", "Use last week's plan")}</button>
             <button data-testid="weekly-startfresh" onClick={() => setNewWeek(false)} className="bg-white/15 border border-white/30 text-white font-semibold text-sm px-4 py-2 rounded-xl active:scale-95 transition-all">{tri("Inizia da zero", "Leer beginnen", "Start fresh")}</button>
           </div>
         </div>
@@ -587,7 +587,7 @@ export default function WeeklyPlan() {
           const dayItems = items.filter((x) => x.day === d.id);
           const dayPieces = dayItems.reduce((s, x) => s + Number(x.pieces || 0), 0);
           return (
-            <div key={d.id} data-testid={`weekly-day-${d.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 transition-colors hover:border-[#ff6b00]/40" style={{ borderLeft: `3px solid ${dayItems.length ? "#ff6b00" : "#3a3a3a"}` }}>
+            <div key={d.id} data-testid={`weekly-day-${d.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 transition-colors hover:border-[#ff6b00]/40" style={{ borderLeft: `3px solid ${dayItems.length ? "#ff6b00" : "#3a3a3a"}` }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t(`day_${d.id}`)}</h3>
@@ -641,21 +641,21 @@ export default function WeeklyPlan() {
         <button
           data-testid="weekly-print-btn"
           onClick={printPlan}
-          className="bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
+          className="bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <Printer className="w-5 h-5" /> {t("weekly_print")}
         </button>
         <button
           data-testid="weekly-pdf-btn"
           onClick={pdfPlan}
-          className="bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
+          className="bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <FileText className="w-5 h-5" /> {t("weekly_pdf")}
         </button>
         <button
           data-testid="weekly-share-btn"
           onClick={sharePlan}
-          className="bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
+          className="bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-3 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-1.5 active:scale-98 transition-all"
         >
           <Share2 className="w-5 h-5" /> {t("weekly_share")}
         </button>
@@ -686,7 +686,7 @@ export default function WeeklyPlan() {
       </button>
 
       {assignedPoints.length > 0 && (
-        <div data-testid="weekly-salepoint-pdf" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
+        <div data-testid="weekly-salepoint-pdf" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
           <div className="flex items-center gap-2 mb-1">
             <Store className="w-5 h-5 text-[#ff6b00]" />
             <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">
@@ -700,7 +700,7 @@ export default function WeeklyPlan() {
           </p>
           <div className="grid grid-cols-1 gap-2.5">
             {assignedPoints.map((name) => (
-              <div key={name} className="rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3">
+              <div key={name} className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
                 <p className="flex items-center gap-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 min-w-0">
                   <Store className="w-4 h-4 text-[#ff6b00] shrink-0" /><span className="truncate">{name}</span>
                 </p>
@@ -758,18 +758,18 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
   }));
 
   return (
-    <div className="bg-[#e4eff8] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-3">
+    <div className="bg-[#e4eff8] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3">
       <div className="flex items-center gap-2">
         <select
           data-testid={`weekly-recipe-select-${item.id}`}
           value={item.recipe_id}
           onChange={(e) => onRecipeChange(e.target.value)}
-          className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#ff6b00]"
+          className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#ff6b00]"
         >
           <option value="">{t("capo_pick_recipe")}</option>
           <RecipeOptions recipes={recipes} />
         </select>
-        <button onClick={onRemove} data-testid={`weekly-remove-${item.id}`} className="w-8 h-8 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] shrink-0">
+        <button onClick={onRemove} data-testid={`weekly-remove-${item.id}`} className="w-8 h-8 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] shrink-0">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
@@ -780,14 +780,14 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
             data-testid={`weekly-pieces-${item.id}`}
             type="number" value={item.pieces}
             onChange={(e) => onChange({ pieces: e.target.value })}
-            className="w-20 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none"
+            className="w-20 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none"
           />
           <span className="text-xs text-[#7E8A93]">{t("weekly_pieces")}</span>
           <input
             data-testid={`weekly-gpp-${item.id}`}
             type="number" value={item.grams_per_piece}
             onChange={(e) => onChange({ grams_per_piece: e.target.value })}
-            className="w-16 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none"
+            className="w-16 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none"
           />
           <span className="text-xs text-[#7E8A93]">{t("weekly_gpp")}</span>
         </div>
@@ -807,7 +807,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
       ) : null}
 
       {/* Destinazione pezzi: lievitazione (oggi) / frigo (domani) / freezer (resto) */}
-      <div className="mt-3 pt-2 border-t border-dashed border-[#2b2b2b] dark:border-[#2e2e2e]">
+      <div className="mt-3 pt-2 border-t border-dashed border-[#2e2e2e] dark:border-[#2e2e2e]">
         <p className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("weekly_dest_title")}</p>
         <div className="grid grid-cols-3 gap-2 mt-1.5">
           {[
@@ -821,7 +821,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
                 data-testid={`weekly-${key}-${item.id}`}
                 type="number" value={item[key] ?? ""} placeholder="—"
                 onChange={(e) => onChange({ [key]: e.target.value })}
-                className="mt-0.5 w-full text-center font-mono-data font-bold text-[#ff6b00] bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-1 py-1.5 outline-none focus:border-[#ff6b00]"
+                className="mt-0.5 w-full text-center font-mono-data font-bold text-[#ff6b00] bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-1 py-1.5 outline-none focus:border-[#ff6b00]"
               />
             </div>
           ))}
@@ -837,7 +837,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
             data-testid={`weekly-salepoint-${item.id}`}
             value={item.sale_point || ""}
             onChange={(e) => onChange({ sale_point: e.target.value })}
-            className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none focus:border-[#ff6b00] text-[#2B303B] dark:text-[#e4eff8]"
+            className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none focus:border-[#ff6b00] text-[#2B303B] dark:text-[#e4eff8]"
           >
             <option value="">{t("weekly_salepoint_none")}</option>
             {salesPoints.map((p) => (

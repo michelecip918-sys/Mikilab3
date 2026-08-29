@@ -72,7 +72,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
   return (
     <div data-testid="profile-panel" className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center" onClick={onClose}>
       <div className="bg-white dark:bg-[#121212] w-full sm:max-w-lg sm:rounded-3xl rounded-t-3xl max-h-[88vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="relative p-6 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1c1c1c 45%,#1f5a68 72%,#ff6b00)" }}>
+        <div className="relative p-6 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1e1e1e 45%,#1f5a68 72%,#ff6b00)" }}>
           <button data-testid="profile-close" onClick={onClose} className="absolute top-3 right-3 bg-white/20 rounded-full p-1.5"><X className="w-5 h-5" /></button>
           {!data ? (
             <div className="py-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin" /></div>
@@ -82,7 +82,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                 <div className="w-20 h-20 rounded-2xl bg-white/20 border-2 border-white/60 overflow-hidden flex items-center justify-center">
                   {(editing ? pic : data.picture) ? <img src={editing ? pic : data.picture} alt={data.name} className="w-full h-full object-cover" /> : <span className="font-display text-3xl font-bold">{(data.name || "F")[0].toUpperCase()}</span>}
                 </div>
-                {editing && <label className="absolute -bottom-1 -right-1 bg-white text-[#1c1c1c] rounded-full p-1.5 cursor-pointer shadow"><ImagePlus className="w-4 h-4" /><input type="file" accept="image/*" className="hidden" onChange={onPhoto} /></label>}
+                {editing && <label className="absolute -bottom-1 -right-1 bg-white text-[#1e1e1e] rounded-full p-1.5 cursor-pointer shadow"><ImagePlus className="w-4 h-4" /><input type="file" accept="image/*" className="hidden" onChange={onPhoto} /></label>}
               </div>
               <div className="min-w-0 flex-1">
                 {editing ? (
@@ -113,7 +113,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                 {user && !isMe && (
                   <div className="flex items-center gap-2 mt-2">
                     <button data-testid="profile-follow" onClick={follow} disabled={followed}
-                      className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-white text-[#1c1c1c] px-3 py-1.5 rounded-full active:scale-95 disabled:opacity-70">
+                      className="inline-flex items-center gap-1.5 text-[12px] font-bold bg-white text-[#1e1e1e] px-3 py-1.5 rounded-full active:scale-95 disabled:opacity-70">
                       <UserPlus className="w-3.5 h-3.5" /> {followed ? tri("Richiesta inviata", "Gesendet", "Requested", "Enviada") : tri("Segui", "Folgen", "Follow", "Seguir")}
                     </button>
                     {onMessage && (
@@ -138,26 +138,26 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                   <div className="grid grid-cols-4 gap-2">
                     {PRESET_AVATARS.map((a) => (
                       <button key={a.id} data-testid={`avatar-preset-${a.id}`} onClick={() => setPic(a.url)}
-                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#ff6b00] ring-2 ring-[#ff6b00]/40" : "border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#ff6b00] ring-2 ring-[#ff6b00]/40" : "border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                         <img src={a.url} alt={a[lang] || a.it} className="w-full aspect-square object-cover" />
                         <span className="block text-[9px] font-semibold text-[#3F4A54] dark:text-[#AEB8BF] py-0.5">{a[lang] || a.it}</span>
                       </button>
                     ))}
                   </div>
-                  <label data-testid="avatar-upload" className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-[#1c1c1c] dark:text-[#8FB0C2] cursor-pointer"><ImagePlus className="w-4 h-4" /> {tri("oppure carica una foto", "oder Foto hochladen", "or upload a photo", "o sube una foto")}<input type="file" accept="image/*" className="hidden" onChange={onPhoto} /></label>
+                  <label data-testid="avatar-upload" className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-[#1e1e1e] dark:text-[#8FB0C2] cursor-pointer"><ImagePlus className="w-4 h-4" /> {tri("oppure carica una foto", "oder Foto hochladen", "or upload a photo", "o sube una foto")}<input type="file" accept="image/*" className="hidden" onChange={onPhoto} /></label>
                 </div>
                 <textarea data-testid="profile-bio-input" value={bio} onChange={(e) => setBio(e.target.value)} rows={3} maxLength={300}
                   placeholder={tri("Scrivi una breve bio: chi sei, il tuo forno, la tua specialità…", "Kurze Bio: wer du bist, deine Bäckerei, deine Spezialität…", "Short bio: who you are, your bakery, your specialty…", "Bio breve: quién eres, tu horno, tu especialidad…")}
-                  className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-3 text-sm outline-none" />
+                  className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 text-sm outline-none" />
                 <div className="flex gap-2">
-                  <button data-testid="profile-save" onClick={save} disabled={saving} className="flex-1 bg-[#1c1c1c] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-60">{saving ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
-                  <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
+                  <button data-testid="profile-save" onClick={save} disabled={saving} className="flex-1 bg-[#1e1e1e] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-60">{saving ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
+                  <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{data.bio || tri("Nessuna bio ancora.", "Noch keine Bio.", "No bio yet.", "Sin bio todavía.")}</p>
-                {isMe && <button data-testid="profile-edit" onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-sm font-semibold text-[#1c1c1c] dark:text-[#8FB0C2]"><Pencil className="w-4 h-4" /> {tri("Modifica profilo", "Profil bearbeiten", "Edit profile", "Editar perfil")}</button>}
+                {isMe && <button data-testid="profile-edit" onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-sm font-semibold text-[#1e1e1e] dark:text-[#8FB0C2]"><Pencil className="w-4 h-4" /> {tri("Modifica profilo", "Profil bearbeiten", "Edit profile", "Editar perfil")}</button>}
               </>
             )}
 
@@ -167,7 +167,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                 <div className="flex gap-3 overflow-x-auto pb-1">
                   {data.contacts.map((c) => (
                     <button key={c.user_id} data-testid={`contact-${c.user_id}`} onClick={() => setViewId(c.user_id)} className="shrink-0 flex flex-col items-center gap-1 w-14 active:scale-95">
-                      <div className="w-11 h-11 rounded-full overflow-hidden bg-[#1c1c1c] flex items-center justify-center text-white font-bold">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
+                      <div className="w-11 h-11 rounded-full overflow-hidden bg-[#1e1e1e] flex items-center justify-center text-white font-bold">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
                       <span className="text-[10px] text-[#3F4A54] dark:text-[#AEB8BF] truncate w-full text-center">{c.name}</span>
                     </button>
                   ))}
@@ -203,8 +203,8 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
               ) : (
                 <div className="space-y-2">
                   {data.posts.map((p) => (
-                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3">
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-[#1c1c1c] dark:text-[#8FB0C2]">{p.category}</span>
+                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-[#1e1e1e] dark:text-[#8FB0C2]">{p.category}</span>
                       <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] mt-0.5 line-clamp-3">{p.text}</p>
                       {p.photo && <img src={p.photo} alt="" className="w-full h-32 object-cover rounded-lg mt-2" />}
                     </div>

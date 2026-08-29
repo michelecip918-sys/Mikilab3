@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 const LS = "mikilab_energia";
 const load = () => { try { return JSON.parse(localStorage.getItem(LS) || "null"); } catch { return null; } };
 
-const INP = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+const INP = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 const Field = ({ label, tid, val, set, step, suffix }) => (
   <label className="text-[11px] font-semibold uppercase text-[#7E8A93] flex flex-col gap-1">
     <span>{label}</span>

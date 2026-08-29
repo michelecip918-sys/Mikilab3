@@ -47,19 +47,19 @@ export default function BottomNav({ active, onChange }) {
               data-testid={`nav-tab-${id}`}
               onClick={() => onChange(id)}
               aria-pressed={on}
-              className="group relative flex flex-col items-center justify-end min-h-[58px] pb-0.5 active:scale-95 transition-transform"
+              className="group relative flex flex-col items-center justify-end min-h-[82px] pb-0.5 active:scale-95 transition-transform"
               style={{ ["--rot"]: `${ROT[i]}deg` }}
             >
-              {/* PALA da forno in legno con icona incisa */}
+              {/* PALA da forno in legno: lama tonda in alto + manico lungo ben visibile */}
               <span
-                className={`relative flex items-center justify-center rounded-[13px] rounded-b-md wood-surface border border-[#3e2510] transition-all duration-300 ${
+                className={`relative flex items-center justify-center wood-surface border border-[#3e2510] rounded-t-full rounded-b-[7px] transition-all duration-300 ${
                   on
-                    ? "w-11 h-11 -translate-y-1.5 wood-emboss ring-2 ring-[#ffcf7a] shadow-[0_0_16px_rgba(255,180,80,.55)] overflow-hidden peel-shine"
+                    ? "w-11 h-11 -translate-y-1 wood-emboss ring-2 ring-[#ffcf7a] shadow-[0_0_16px_rgba(255,180,80,.55)] overflow-hidden peel-shine"
                     : "w-10 h-10 opacity-90 shadow-[0_3px_6px_rgba(30,15,4,.5)] group-hover:opacity-100 group-hover:-translate-y-0.5"
                 }`}
                 style={{ transform: `rotate(var(--rot))` }}
               >
-                <span aria-hidden className="absolute inset-0 rounded-[13px] rounded-b-md bg-gradient-to-b from-white/15 to-black/25" />
+                <span aria-hidden className="absolute inset-0 rounded-t-full rounded-b-[7px] bg-gradient-to-b from-white/15 to-black/25" />
                 {logo ? (
                   <span className="relative w-6 h-6 rounded-md overflow-hidden ring-1 ring-[#3e2510]">
                     <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Social" className="w-full h-full object-cover" />
@@ -74,10 +74,12 @@ export default function BottomNav({ active, onChange }) {
                 {id === "community" && unread > 0 && (
                   <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#2b190c]">{unread > 9 ? "9+" : unread}</span>
                 )}
-                {/* manico della pala */}
-                <span aria-hidden className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 rounded-b-full wood-surface border-x border-b border-[#3e2510] ${on ? "h-2.5" : "h-2"}`} />
+                {/* manico della pala: lungo e spesso come una vera pala del fornaio */}
+                <span aria-hidden className={`absolute left-1/2 -translate-x-1/2 top-full w-[9px] rounded-b-full wood-surface border-x border-b border-[#3e2510] shadow-[0_2px_4px_rgba(30,15,4,.5)] ${on ? "h-[26px]" : "h-[21px]"}`}>
+                  <span className="absolute inset-y-1.5 left-1/2 -translate-x-1/2 w-px bg-[#3e2510]/50" />
+                </span>
               </span>
-              <span className={`mt-1.5 text-[10px] font-bold leading-none text-center transition-colors ${on ? "text-[#ffe6bf]" : "text-[#e7c79a]/85"}`}
+              <span className={`mt-[28px] text-[10px] font-bold leading-none text-center transition-colors ${on ? "text-[#ffe6bf]" : "text-[#e7c79a]/85"}`}
                 style={{ textShadow: "0 1px 1px rgba(0,0,0,.6)" }}>
                 {label}
               </span>

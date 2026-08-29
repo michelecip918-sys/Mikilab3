@@ -145,11 +145,11 @@ export default function SoundDiagnosi() {
 
       {result && (
         <div className="mt-5">
-          <div data-testid="sound-result" className="markdown-body bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
+          <div data-testid="sound-result" className="markdown-body bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
             <ReactMarkdown>{result}</ReactMarkdown>
           </div>
           <button data-testid="sound-share-btn" onClick={() => shareContent(tri("Diagnosi Sonora — MikiLab", "Klang-Diagnose — MikiLab", "Sound Diagnosis — MikiLab"), result, lang)}
-            className="mt-2 w-full bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
+            className="mt-2 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
           </button>
           <ListenButton text={result} who="momy" testid="sound-listen-btn"

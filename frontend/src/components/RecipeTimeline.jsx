@@ -66,11 +66,11 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
   }, [phases, target, totalMins, lang]);
 
   const durStr = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? " " + (m % 60) + "m" : ""}` : `${m}m`);
-  const inp = "bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   if (phases.length < 2) {
     return (
-      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
+      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
         <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] flex items-center gap-1 mb-2"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
         <p className="text-sm text-[#7E8A93]">{tri("Questa ricetta non ha una sequenza di lievitazione/cottura con tempi (es. una base, un lievito o un miglioratore).", "Dieses Rezept hat keine Gär-/Backsequenz mit Zeiten (z. B. eine Basis, ein Sauerteig oder ein Verbesserer).", "This recipe has no proof/bake sequence with times (e.g. a base, a starter or an improver).", "Esta receta no tiene una secuencia de fermentación/horneado con tiempos (p. ej. una base, una masa madre o un mejorante).")}</p>
       </div>
@@ -78,7 +78,7 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
   }
 
   return (
-    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
+    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
       <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
         <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
         <label className="text-[11px] font-semibold text-[#7E8A93] flex items-center gap-1.5 no-print">
@@ -88,7 +88,7 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
       </div>
       <p className="text-xs text-[#7E8A93] mb-3">{tri("Inizia a impastare alle", "Beginne zu kneten um", "Start mixing at", "Empieza a amasar a las")} <b data-testid={`timeline-start-${recipe.id}`} className="text-[#ff6b00] dark:text-[#a9d2ec] font-mono-data">{rows.startClock}</b> · {tri("durata totale", "Gesamtdauer", "total", "duración total")} {durStr(totalMins)}</p>
       <div className="relative pl-4">
-        <div className="absolute left-[6px] top-1 bottom-1 w-0.5 bg-[#2b2b2b] dark:bg-[#2e2e2e]" />
+        <div className="absolute left-[6px] top-1 bottom-1 w-0.5 bg-[#2e2e2e] dark:bg-[#2e2e2e]" />
         {rows.out.map((p) => (
           <div key={p.i} data-testid={`timeline-phase-${recipe.id}-${p.i}`} className="relative mb-3 last:mb-0">
             <span className="absolute -left-4 top-1 w-3 h-3 rounded-full border-2 border-white dark:border-[#1e1e1e]" style={{ background: COLORS[p.i % COLORS.length] }} />

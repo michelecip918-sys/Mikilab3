@@ -47,7 +47,7 @@ export default function CalcolaGradi() {
 
       <div className="space-y-3 mt-5">
         {inputs.map(({ key, label, testid }) => (
-          <div key={key} className="flex items-center justify-between gap-3 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
+          <div key={key} className="flex items-center justify-between gap-3 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
             <label className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] flex-1">{label}</label>
             <div className="flex items-center gap-1">
               <input
@@ -55,7 +55,7 @@ export default function CalcolaGradi() {
                 type="number"
                 value={vals[key]}
                 onChange={(e) => set(key, e.target.value)}
-                className="w-20 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none focus:border-[#ff6b00]"
+                className="w-20 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none focus:border-[#ff6b00]"
               />
               <span className="text-[#7E8A93] text-sm">°C</span>
             </div>

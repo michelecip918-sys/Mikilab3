@@ -124,14 +124,14 @@ export default function PianificaProduzione() {
         </div>
       )}
 
-      <div className="mt-5 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
+      <div className="mt-5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
         <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("plan_bake_time")}</label>
         <input
           data-testid="bake-time-input"
           type="datetime-local"
           value={bakeTime}
           onChange={(e) => setBakeTime(e.target.value)}
-          className="mt-1 w-full font-mono-data bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-3 py-2 outline-none focus:border-[#ff6b00]"
+          className="mt-1 w-full font-mono-data bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-3 py-2 outline-none focus:border-[#ff6b00]"
         />
       </div>
 
@@ -141,7 +141,7 @@ export default function PianificaProduzione() {
           data-testid="inf-load-day"
           onChange={(e) => loadDay(e.target.value)}
           defaultValue=""
-          className="mt-1 w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00]"
+          className="mt-1 w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00]"
         >
           <option value="">{t("sd_choose_day")}</option>
           {DAY_IDS.filter((d) => weekly.some((w) => w.day === d)).map((d) => (
@@ -155,7 +155,7 @@ export default function PianificaProduzione() {
         <select
           data-testid="inf-oven-select"
           value={ovenId} onChange={(e) => setOvenId(e.target.value)}
-          className="mt-1 w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00]"
+          className="mt-1 w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00]"
         >
           <option value="">{t("inf_oven_none")}</option>
           {ovens.map((o) => (
@@ -168,12 +168,12 @@ export default function PianificaProduzione() {
 
       <div className="space-y-2 mt-4">
         {rows.map((r) => (
-          <div key={r.id} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-3 py-2.5">
+          <div key={r.id} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-3 py-2.5">
             <select
               data-testid={`inf-recipe-${r.id}`}
               value={r.recipe_id}
               onChange={(e) => onRecipe(r.id, e.target.value)}
-              className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#ff6b00]"
+              className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#ff6b00]"
             >
               {recipes.map((rec) => <option key={rec.id} value={rec.id}>{rec.name}</option>)}
             </select>
@@ -181,7 +181,7 @@ export default function PianificaProduzione() {
               data-testid={`inf-rest-${r.id}`}
               type="number" value={r.rest_min}
               onChange={(e) => updateRow(r.id, { rest_min: e.target.value })}
-              className="w-16 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none"
+              className="w-16 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none"
             />
             <span className="text-[10px] text-[#7E8A93] w-10">{t("sd_rest_min")}</span>
             <button onClick={() => removeRow(r.id)} className="text-[#ff6b00] p-1" aria-label={t("delete")}>
@@ -195,7 +195,7 @@ export default function PianificaProduzione() {
         data-testid="inf-add-btn"
         onClick={addRow}
         disabled={recipes.length === 0}
-        className="w-full mt-2 bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-2.5 rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-2 disabled:opacity-40"
+        className="w-full mt-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2 disabled:opacity-40"
       >
         <Plus className="w-4 h-4" /> {t("sd_add")}
       </button>
@@ -215,7 +215,7 @@ export default function PianificaProduzione() {
             const ovenType = selectedOven?.oven_type || "statico";
             const bs = bakeSuggest(it.name, ovenType);
             return (
-            <div key={i} className="flex items-center gap-3 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
+            <div key={i} className="flex items-center gap-3 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
               <div className="w-8 h-8 rounded-full bg-[#ff6b00]/20 text-[#ff6b00] dark:text-[#8FB0C2] font-mono-data font-bold text-sm flex items-center justify-center shrink-0">{i + 1}</div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-[#2B303B] dark:text-[#e4eff8] truncate">{it.name}</p>
@@ -236,7 +236,7 @@ export default function PianificaProduzione() {
           </div>
 
           {selectedOven && (
-            <div data-testid="inf-oven-suggestion" className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4">
+            <div data-testid="inf-oven-suggestion" className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Flame className="w-4 h-4 text-[#ff6b00]" />
                 <span className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#8FB0C2]">

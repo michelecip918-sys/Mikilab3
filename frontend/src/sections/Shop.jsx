@@ -58,7 +58,7 @@ export default function Shop({ hideCourses = false }) {
   const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : lang === "es" ? (p[`${base}_es`] || p[`${base}_en`] || p[base]) : (lang === "en" || lang === "fr" || lang === "fa") ? (p[`${base}_en`] || p[base]) : p[base];
 
   const Card = ({ p }) => (
-    <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm">
+    <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm">
       {p.image_url && <img src={p.image_url.startsWith("http") ? p.image_url : `${process.env.PUBLIC_URL}${p.image_url}`} alt={pick(p, "name")} loading="lazy" className="w-full h-40 object-cover"
         onError={(e) => { e.currentTarget.style.display = "none"; }} />}
       <div className="p-4">

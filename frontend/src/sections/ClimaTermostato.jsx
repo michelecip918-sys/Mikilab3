@@ -106,7 +106,7 @@ export default function ClimaTermostato() {
       </div>
 
       {/* Orologio */}
-      <div data-testid="termo-clock" className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5 flex items-center gap-3">
+      <div data-testid="termo-clock" className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5 flex items-center gap-3">
         <Clock className="w-6 h-6 text-[#ff6b00]" />
         <div>
           <p className="text-[10px] uppercase tracking-wide text-[#7E8A93]">{t("termo_clock")}</p>
@@ -115,12 +115,12 @@ export default function ClimaTermostato() {
       </div>
 
       {/* Clima */}
-      <div className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+      <div className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
         <div className="flex items-end gap-3">
           <div className="flex-1">
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("termo_lab_now")}</label>
             <input data-testid="termo-lab-now" type="number" value={labNow} onChange={(e) => setLabNow(e.target.value)}
-              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-3 text-base outline-none focus:border-[#ff6b00]" />
+              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 text-base outline-none focus:border-[#ff6b00]" />
           </div>
           <div className="text-center shrink-0 pb-1">
             <p className="text-[10px] uppercase tracking-wide text-[#7E8A93]">{t("termo_std")}</p>
@@ -139,13 +139,13 @@ export default function ClimaTermostato() {
       </div>
 
       {/* Memoria temperatura impasto per ricetta */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
         <div className="flex items-center gap-2 mb-3 text-[#ff6b00]">
           <History className="w-4 h-4" />
           <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("termo_recipe_mem")}</h2>
         </div>
         <select data-testid="termo-recipe-select" value={sel} onChange={(e) => pickRecipe(e.target.value)}
-          className="w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-3 text-base outline-none focus:border-[#ff6b00]">
+          className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 text-base outline-none focus:border-[#ff6b00]">
           <option value="">{t("termo_pick_recipe")}</option>
           {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
         </select>
@@ -162,12 +162,12 @@ export default function ClimaTermostato() {
               <div>
                 <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("termo_target")}</label>
                 <input data-testid="termo-target" type="number" value={target} onChange={(e) => setTarget(e.target.value)}
-                  className="mt-1 w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+                  className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
               </div>
               <div>
                 <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("termo_measured")}</label>
                 <input data-testid="termo-measured" type="number" value={measured} onChange={(e) => setMeasured(e.target.value)}
-                  className="mt-1 w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+                  className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
               </div>
             </div>
             <button data-testid="termo-save" onClick={saveTemp} disabled={measured === ""}

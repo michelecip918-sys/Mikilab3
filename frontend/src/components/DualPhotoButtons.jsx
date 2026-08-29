@@ -20,7 +20,7 @@ export default function DualPhotoButtons({ onFile, allowVideo = false, testid = 
         <Camera className="w-5 h-5" /> {tri("Scatta ora", "Jetzt aufnehmen", "Take photo")}
       </button>
       <button type="button" data-testid={`${testid}-attach`} onClick={() => galRef.current && galRef.current.click()}
-        className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+        className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
         <ImagePlus className="w-5 h-5 text-[#ff6b00]" /> {tri("Allega", "Anhängen", "Attach")}
       </button>
     </div>

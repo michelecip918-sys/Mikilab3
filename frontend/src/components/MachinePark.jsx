@@ -53,7 +53,7 @@ export default function MachinePark() {
         <div className="flex items-center justify-between mb-2">
           <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#a9d2ec] flex items-center gap-1.5"><Bookmark className="w-4 h-4" />{tri("Preset laboratorio", "Labor-Presets", "Lab presets")}</p>
           <button data-testid="machine-save-preset" onClick={savePreset}
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-2.5 py-1 rounded-full active:scale-95">
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-2.5 py-1 rounded-full active:scale-95">
             <Plus className="w-3.5 h-3.5" />{tri("Salva attuali", "Aktuelle speichern", "Save current")}
           </button>
         </div>
@@ -76,12 +76,12 @@ export default function MachinePark() {
                 const on = active.has(m.id);
                 return (
                   <button key={m.id} data-testid={`machine-${m.id}`} onClick={() => toggle(m.id)}
-                    className={`w-full flex items-center gap-3 rounded-2xl p-3.5 text-left border transition-all active:scale-98 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#EAF0EC] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
-                    <span className={`w-10 h-6 rounded-full flex items-center px-0.5 shrink-0 transition-colors ${on ? "bg-white/30 justify-end" : "bg-[#2b2b2b] dark:bg-[#2e2e2e] justify-start"}`}>
+                    className={`w-full flex items-center gap-3 rounded-2xl p-3.5 text-left border transition-all active:scale-98 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#EAF0EC] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                    <span className={`w-10 h-6 rounded-full flex items-center px-0.5 shrink-0 transition-colors ${on ? "bg-white/30 justify-end" : "bg-[#2e2e2e] dark:bg-[#2e2e2e] justify-start"}`}>
                       <span className={`w-5 h-5 rounded-full bg-white flex items-center justify-center ${on ? "text-[#ff6b00]" : "text-transparent"}`}>{on && <Check className="w-3.5 h-3.5" />}</span>
                     </span>
                     <span className="flex-1 min-w-0 text-sm font-semibold leading-tight">{tri(m.it, m.de, m.en)}</span>
-                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
+                    <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>
                   </button>
                 );
               })}

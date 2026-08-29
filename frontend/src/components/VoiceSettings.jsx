@@ -58,12 +58,12 @@ export default function VoiceSettings({ open, onClose }) {
         {VOICE_OPTIONS.map((v) => {
           const on = sel === v.id;
           return (
-            <div key={v.id} className={`flex items-center gap-2 rounded-2xl border p-2.5 ${on ? "border-[#ff6b00] bg-[#ff6b00]/8" : "border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+            <div key={v.id} className={`flex items-center gap-2 rounded-2xl border p-2.5 ${on ? "border-[#ff6b00] bg-[#ff6b00]/8" : "border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <button data-testid={`voice-${who}-${v.name}`} onClick={() => setSel(v.id)} className="flex-1 text-left min-w-0">
                 <span className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8]">{v.name}</span>
                 <span className="text-xs text-[#7E8A93] block truncate">{v.desc[lang] || v.desc.it}</span>
               </button>
-              <button data-testid={`voice-preview-${who}-${v.name}`} onClick={() => preview(v.id, who)} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center shrink-0 active:scale-90 transition-transform">
+              <button data-testid={`voice-preview-${who}-${v.name}`} onClick={() => preview(v.id, who)} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center shrink-0 active:scale-90 transition-transform">
                 {previewing === v.id + who ? <Loader2 className="w-4 h-4 animate-spin text-[#ff6b00]" /> : <Volume2 className="w-4 h-4 text-[#ff6b00]" />}
               </button>
               {on && <Check className="w-5 h-5 text-[#ff6b00] shrink-0" />}
@@ -81,10 +81,10 @@ export default function VoiceSettings({ open, onClose }) {
           className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-3" onClick={onClose}>
           <motion.div data-testid="voice-settings" initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 24, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-3xl bg-[#121212] dark:bg-[#121212] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-2xl p-5 max-h-[85vh] overflow-y-auto">
+            className="w-full max-w-md rounded-3xl bg-[#121212] dark:bg-[#121212] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-2xl p-5 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Scegli le voci 🎙️", "Stimmen wählen 🎙️", "Choose the voices 🎙️")}</h2>
-              <button data-testid="voice-settings-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center"><X className="w-4 h-4" /></button>
+              <button data-testid="voice-settings-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center"><X className="w-4 h-4" /></button>
             </div>
             <Group title={tri("Voce di Mohammadreza (assistente)", "Mohammadreza-Stimme (Assistent)", "Mohammadreza's voice (assistant)")} sel={momy} setSel={setMohammadreza} who="momy" />
             <Group title={tri("Voce di Michele (fondatore)", "Michele-Stimme (Gründer)", "Michele's voice (founder)")} sel={michele} setSel={setMichele} who="michele" />

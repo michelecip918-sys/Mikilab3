@@ -140,7 +140,7 @@ export default function LabOnboarding() {
         <motion.div data-testid="lab-onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           className="fixed inset-0 z-[9998] flex items-end sm:items-center justify-center bg-[#1A1412]/85 backdrop-blur-sm p-3">
           <motion.div key={i} initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28 }}
-            className="w-full max-w-md rounded-3xl bg-[#121212] dark:bg-[#121212] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-2xl overflow-hidden">
+            className="w-full max-w-md rounded-3xl bg-[#121212] dark:bg-[#121212] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-2xl overflow-hidden">
             {/* header */}
             <div className={`p-5 ${cur.who === "michele" ? "bg-gradient-to-br from-[#3F4A54] to-[#5E6B62]" : "bg-gradient-to-br from-[#ff6b00] to-[#ff6b00]"} text-white`}>
               <div className="flex items-center justify-between mb-3">
@@ -165,13 +165,13 @@ export default function LabOnboarding() {
               {/* dots */}
               <div className="flex items-center justify-center gap-1.5 mt-5">
                 {slides.map((_, k) => (
-                  <span key={k} className={`h-1.5 rounded-full transition-all ${k === i ? "w-5 bg-[#ff6b00]" : "w-1.5 bg-[#2b2b2b] dark:bg-[#2e2e2e]"}`} />
+                  <span key={k} className={`h-1.5 rounded-full transition-all ${k === i ? "w-5 bg-[#ff6b00]" : "w-1.5 bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />
                 ))}
               </div>
               {/* nav */}
               <div className="flex items-center justify-between gap-3 mt-4">
                 <button data-testid="lab-onboarding-prev" onClick={prev} disabled={i === 0}
-                  className="flex items-center gap-1 px-4 py-2.5 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-medium disabled:opacity-40">
+                  className="flex items-center gap-1 px-4 py-2.5 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-medium disabled:opacity-40">
                   <ChevronLeft className="w-5 h-5" /> {tri("Indietro", "Zurück", "Back")}
                 </button>
                 {i < slides.length - 1 ? (

@@ -207,7 +207,7 @@ export default function LabWizard({ onOpenTool }) {
           </h2>
         </div>
         <button data-testid="lab-wizard-collapse" onClick={() => setOpen((o) => !o)}
-          className="w-8 h-8 rounded-lg bg-[#242424] text-[#ff6b00] flex items-center justify-center shrink-0 active:scale-95">
+          className="w-8 h-8 rounded-lg bg-[#1e1e1e] text-[#ff6b00] flex items-center justify-center shrink-0 active:scale-95">
           {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
@@ -238,7 +238,7 @@ export default function LabWizard({ onOpenTool }) {
                   <div key={s.n} data-testid={`lab-wizard-step-${s.n}`}
                     className={`rounded-2xl border p-3.5 transition-all ${s.complete ? "border-[#ff6b00]/60 bg-[#ff6b00]/10" : locked ? "border-[#2a2a2a] bg-[#141414] opacity-60" : "border-[#3a3a3a] bg-[#1e1e1e]"}`}>
                     <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${s.complete ? "bg-[#ff6b00] text-white" : locked ? "bg-[#242424] text-[#6b7379]" : "bg-[#2a2a2a] text-[#ff6b00]"}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${s.complete ? "bg-[#ff6b00] text-white" : locked ? "bg-[#1e1e1e] text-[#6b7379]" : "bg-[#2a2a2a] text-[#ff6b00]"}`}>
                         {s.complete ? <Check className="w-5 h-5" /> : locked ? <Lock className="w-5 h-5" /> : <s.Icon className="w-5 h-5" />}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -252,7 +252,7 @@ export default function LabWizard({ onOpenTool }) {
                             </span>
                           )}
                           {locked && (
-                            <span data-testid={`lab-wizard-badge-locked-${s.n}`} className="text-[10px] font-bold uppercase text-[#6b7379] bg-[#242424] px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                            <span data-testid={`lab-wizard-badge-locked-${s.n}`} className="text-[10px] font-bold uppercase text-[#6b7379] bg-[#1e1e1e] px-2 py-0.5 rounded-full inline-flex items-center gap-1">
                               <Lock className="w-3 h-3" /> {tri("Bloccato", "Gesperrt", "Locked", "Bloqueado", "Verrouillé", "قفل")}
                             </span>
                           )}
@@ -264,7 +264,7 @@ export default function LabWizard({ onOpenTool }) {
                             data-testid={`lab-wizard-cta-${s.n}`}
                             disabled={locked}
                             onClick={s.action}
-                            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold text-sm transition-all ${locked ? "bg-[#242424] text-[#6b7379] cursor-not-allowed" : "bg-[#ff6b00] text-white shadow-[0_4px_14px_rgba(255,107,0,0.35)] active:scale-95 hover:bg-[#ff8226]"}`}>
+                            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold text-sm transition-all ${locked ? "bg-[#1e1e1e] text-[#6b7379] cursor-not-allowed" : "bg-[#ff6b00] text-white shadow-[0_4px_14px_rgba(255,107,0,0.35)] active:scale-95 hover:bg-[#ff8226]"}`}>
                             {locked ? (
                               <>{tri("Completa prima il passo precedente", "Erst vorherigen Schritt abschließen", "Complete the previous step first", "Completa antes el paso anterior", "Termine d'abord l'étape précédente", "ابتدا مرحلهٔ قبل را کامل کن")}</>
                             ) : (

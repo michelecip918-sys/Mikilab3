@@ -151,7 +151,7 @@ export default function Enciclopedia({ embedded = false }) {
       {list.map((e, i) => {
         const isOpen = open === i;
         return (
-          <div key={e.t} data-testid={`enc-entry-${i}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden">
+          <div key={e.t} data-testid={`enc-entry-${i}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
             <button onClick={() => setOpen(isOpen ? -1 : i)} className="w-full flex items-center justify-between p-4 text-left">
               <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{e.t}</span>
               <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -165,7 +165,7 @@ export default function Enciclopedia({ embedded = false }) {
 
   if (embedded) {
     return (
-      <div data-testid="enciclopedia-embedded" className="mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden">
+      <div data-testid="enciclopedia-embedded" className="mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
         <button data-testid="enc-panel-toggle" onClick={() => setPanelOpen((o) => !o)} className="w-full flex items-center gap-3 p-4 text-left">
           <div className="w-10 h-10 rounded-xl bg-[#c94f00] flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-white" /></div>
           <div className="min-w-0 flex-1">

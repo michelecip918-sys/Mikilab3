@@ -64,7 +64,7 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={panelRef}>
       <button data-testid="notif-bell" onClick={toggle}
-        className="relative w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
+        className="relative w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
         aria-label={tri("Notifiche", "Benachrichtigungen", "Notifications")}>
         <Bell className="w-4.5 h-4.5" />
         {unread > 0 && (
@@ -73,7 +73,7 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div data-testid="notif-panel" className="absolute right-0 mt-2 w-80 max-w-[90vw] max-h-[70vh] overflow-auto rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-2xl z-50">
+        <div data-testid="notif-panel" className="absolute right-0 mt-2 w-80 max-w-[90vw] max-h-[70vh] overflow-auto rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-2xl z-50">
           <div className="px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] sticky top-0 bg-white dark:bg-[#1e1e1e]">
             <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Notifiche", "Benachrichtigungen", "Notifications")}</p>
           </div>

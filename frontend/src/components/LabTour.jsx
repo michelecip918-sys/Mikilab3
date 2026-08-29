@@ -64,7 +64,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
   return (
     <div data-testid="lab-tour" className="fixed inset-0 z-[60] pointer-events-none">
       <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-      <div ref={cardRef} className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-24 w-[92%] max-w-md rounded-2xl bg-white dark:bg-[#121212] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-2xl p-4">
+      <div ref={cardRef} className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-24 w-[92%] max-w-md rounded-2xl bg-white dark:bg-[#121212] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-2xl p-4">
         <button data-testid="lab-tour-skip" onClick={finish} className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center text-[#7E8A93]"><X className="w-4 h-4" /></button>
         <div className="flex items-start gap-3">
           <img src={AVATAR} alt="Mohammadreza" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#ff6b00]/50 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
@@ -75,7 +75,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
         </div>
         <div className="flex items-center justify-between mt-3">
           <div className="flex gap-1.5">
-            {steps.map((_, i) => (<span key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? "bg-[#ff6b00]" : "bg-[#2b2b2b] dark:bg-[#2e2e2e]"}`} />))}
+            {steps.map((_, i) => (<span key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? "bg-[#ff6b00]" : "bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />))}
           </div>
           <div className="flex items-center gap-2">
             {!last && <button data-testid="lab-tour-skip-2" onClick={finish} className="text-xs font-semibold text-[#7E8A93] px-2 py-2">{L.skip}</button>}

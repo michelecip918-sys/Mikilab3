@@ -85,18 +85,18 @@ export default function RecipeGenerator() {
         <p className="text-white/85 text-sm">{T("Crea una ricetta su misura col metodo Mickey Lab: dosi precise e procedimento personalizzato.", "Erstelle ein maßgeschneidertes Rezept nach der Mickey-Lab-Methode.", "Create a custom recipe with the Mickey Lab method: precise weights and a tailored process.", "Crea una receta a medida con el método Mickey Lab: cantidades precisas y procedimiento personalizado.")}</p>
       </div>
 
-      <div className="space-y-4 bg-white dark:bg-[#1e1e1e] rounded-2xl p-4 border border-[#2b2b2b] dark:border-[#2e2e2e]">
+      <div className="space-y-4 bg-white dark:bg-[#1e1e1e] rounded-2xl p-4 border border-[#2e2e2e] dark:border-[#2e2e2e]">
         <div>
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{T("Prodotto", "Produkt", "Product", "Producto")}</label>
           <input data-testid="gen-product" value={product} onChange={(e) => setProduct(e.target.value)}
             placeholder={T("es. Focaccia al basilico, Ciabatta, Panini alla canapa…", "z. B. Focaccia mit Basilikum, Ciabatta…", "e.g. Basil focaccia, Ciabatta, Hemp rolls…", "p. ej. Focaccia de albahaca, Chapata, Bollos de cáñamo…")}
-            className="mt-1 w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" />
+            className="mt-1 w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" />
         </div>
 
         <div>
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{T("Pre-fermento / Lievitazione", "Vorteig / Triebmittel", "Preferment / Leavening", "Prefermento / Fermentación")}</label>
           <select data-testid="gen-preferment" value={preferment} onChange={(e) => setPreferment(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm">
+            className="mt-1 w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm">
             {PREFERMENTS.map((p) => <option key={p.id} value={p.id}>{T(p.it, p.de, p.en, p.es)}</option>)}
           </select>
         </div>
@@ -114,30 +114,30 @@ export default function RecipeGenerator() {
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93] flex items-center gap-1"><Package className="w-3.5 h-3.5" /> {T("Quantità", "Menge", "Quantity", "Cantidad")}</label>
           <div className="mt-1.5 flex gap-1.5">
             <button data-testid="gen-mode-weight" onClick={() => setMode("weight")}
-              className={`flex-1 text-xs font-semibold py-2 rounded-xl border transition-all active:scale-95 ${mode === "weight" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+              className={`flex-1 text-xs font-semibold py-2 rounded-xl border transition-all active:scale-95 ${mode === "weight" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               {T("Peso totale", "Gesamtgewicht", "Total weight", "Peso total")}
             </button>
             <button data-testid="gen-mode-pieces" onClick={() => setMode("pieces")}
-              className={`flex-1 text-xs font-semibold py-2 rounded-xl border transition-all active:scale-95 ${mode === "pieces" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+              className={`flex-1 text-xs font-semibold py-2 rounded-xl border transition-all active:scale-95 ${mode === "pieces" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               {T("Per pezzatura", "Nach Stückzahl", "By pieces", "Por piezas")}
             </button>
           </div>
           {mode === "weight" ? (
             <input data-testid="gen-weight" type="number" min={200} step={100} value={weight} onChange={(e) => setWeight(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" placeholder={T("Peso impasto totale (g)", "Gesamtteig (g)", "Total dough (g)", "Peso total (g)")} />
+              className="mt-2 w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" placeholder={T("Peso impasto totale (g)", "Gesamtteig (g)", "Total dough (g)", "Peso total (g)")} />
           ) : (
             <div className="mt-2 grid grid-cols-3 gap-1.5">
               <div>
                 <span className="text-[10px] text-[#7E8A93]">{T("N° pezzi", "Stückzahl", "Pieces", "Piezas")}</span>
-                <input data-testid="gen-pieces" type="number" min={1} value={pieces} onChange={(e) => setPieces(e.target.value)} className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
+                <input data-testid="gen-pieces" type="number" min={1} value={pieces} onChange={(e) => setPieces(e.target.value)} className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
               </div>
               <div>
                 <span className="text-[10px] text-[#7E8A93]">{T("g a pezzo", "g/Stück", "g/piece", "g/pieza")}</span>
-                <input data-testid="gen-piece-weight" type="number" min={10} value={pieceWeight} onChange={(e) => setPieceWeight(e.target.value)} className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
+                <input data-testid="gen-piece-weight" type="number" min={10} value={pieceWeight} onChange={(e) => setPieceWeight(e.target.value)} className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
               </div>
               <div>
                 <span className="text-[10px] text-[#7E8A93]">{T("Sfrido %", "Verschnitt %", "Waste %", "Merma %")}</span>
-                <input data-testid="gen-waste" type="number" min={0} max={30} value={waste} onChange={(e) => setWaste(e.target.value)} className="w-full rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
+                <input data-testid="gen-waste" type="number" min={0} max={30} value={waste} onChange={(e) => setWaste(e.target.value)} className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
               </div>
             </div>
           )}
@@ -162,7 +162,7 @@ export default function RecipeGenerator() {
                 <div key={k}>
                   <span className="text-[10px] text-[#7E8A93]">{lbl}</span>
                   <input data-testid={`gen-adv-${k}`} type="number" step="0.1" value={val} onChange={(e) => setter(e.target.value)}
-                    className="w-full rounded-lg border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-2 py-1.5 text-sm" />
+                    className="w-full rounded-lg border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-2 py-1.5 text-sm" />
                 </div>
               ))}
             </div>
@@ -174,7 +174,7 @@ export default function RecipeGenerator() {
           <div className="mt-2 flex flex-wrap gap-1.5">
             {EXTRAS.map((x) => (
               <button key={x.id} data-testid={`gen-extra-${x.id}`} onClick={() => toggleExtra(x.id)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all active:scale-95 ${extras.includes(x.id) ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all active:scale-95 ${extras.includes(x.id) ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                 {T(x.it, x.de, x.en, x.es)}
               </button>
             ))}
@@ -189,7 +189,7 @@ export default function RecipeGenerator() {
       </div>
 
       {result && ing && (
-        <div data-testid="gen-result" className="mt-5 bg-white dark:bg-[#1e1e1e] rounded-2xl p-4 border border-[#2b2b2b] dark:border-[#2e2e2e]">
+        <div data-testid="gen-result" className="mt-5 bg-white dark:bg-[#1e1e1e] rounded-2xl p-4 border border-[#2e2e2e] dark:border-[#2e2e2e]">
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] mb-3">{result.title}</h2>
 
           {(result.warnings || []).length > 0 && (

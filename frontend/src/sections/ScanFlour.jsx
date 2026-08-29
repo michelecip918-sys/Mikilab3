@@ -89,7 +89,7 @@ export default function ScanFlour() {
         <p className="text-white/85 text-sm mt-1">{tri("Fotografa il sacco: leggo forza W, proteine e tipo.", "Fotografiere den Sack: ich lese W-Kraft, Protein und Typ.", "Photograph the bag: I read W strength, protein and type.", "Fotografía el saco: leo fuerza W, proteína y tipo.")}</p>
       </div>
 
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-6 text-center">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-6 text-center">
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{tri("Inquadra l'etichetta o la scheda tecnica della farina.", "Richte die Kamera auf das Etikett oder das Datenblatt.", "Frame the label or the flour's technical sheet.", "Enfoca la etiqueta o la ficha técnica.")}</p>
         {loading ? (
           <div data-testid="flour-loading" className="inline-flex items-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
@@ -101,7 +101,7 @@ export default function ScanFlour() {
       </div>
 
       {result && (
-        <div data-testid="flour-result" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+        <div data-testid="flour-result" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
           <div className="flex items-center gap-2 mb-3 text-[#ff6b00]">
             <Sparkles className="w-5 h-5" />
             <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">
@@ -134,7 +134,7 @@ export default function ScanFlour() {
       )}
 
       {pantry.length > 0 && (
-        <div data-testid="flour-pantry" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+        <div data-testid="flour-pantry" className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
           <div className="flex items-center gap-2 mb-3 text-[#ff6b00]">
             <Archive className="w-5 h-5" />
             <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("La mia dispensa farine", "Mein Mehlvorrat", "My flour pantry", "Mi despensa de harinas")}</h3>
@@ -142,7 +142,7 @@ export default function ScanFlour() {
           <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Le tue farine salvate: usale come riferimento (forza W e proteine) quando crei una ricetta.", "Deine gespeicherten Mehle: nutze sie als Referenz (W-Kraft und Protein) beim Erstellen eines Rezepts.", "Your saved flours: use them as reference (W strength and protein) when creating a recipe.", "Tus harinas guardadas: úsalas como referencia (fuerza W y proteína) al crear una receta.")}</p>
           <ul className="space-y-2">
             {pantry.map((f) => (
-              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] px-3.5 py-2.5">
+              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3.5 py-2.5">
                 <Wheat className="w-5 h-5 text-[#ff6b00] shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{f.product_name || f.brand || f.flour_type || tri("Farina", "Mehl", "Flour", "Harina")}</p>

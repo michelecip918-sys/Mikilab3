@@ -41,26 +41,26 @@ export default function GuidaAvatar() {
   ];
 
   return (
-    <div data-testid="guida-avatar" className="rounded-3xl border border-[#2b2b2b] overflow-hidden" style={{ background: "#121212" }}>
+    <div data-testid="guida-avatar" className="rounded-3xl border border-[#2e2e2e] overflow-hidden" style={{ background: "#121212" }}>
       <div className="p-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00)" }}>
-        <div className="flex items-center gap-2 text-[#161616]">
+        <div className="flex items-center gap-2 text-[#121212]">
           <Sparkles className="w-5 h-5" />
           <h2 className="font-display text-xl font-bold">{L("Guida al Sito", "Website-Guide", "Site Guide", "Guía del Sitio")}</h2>
         </div>
-        <p className="text-[#161616]/85 text-sm mt-1">{L("Michele & Mohammadreza ti spiegano come funziona MikiLab.", "Michele & Mohammadreza erklären dir MikiLab.", "Michele & Mohammadreza explain how MikiLab works.", "Michele & Mohammadreza te explican MikiLab.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-1">{L("Michele & Mohammadreza ti spiegano come funziona MikiLab.", "Michele & Mohammadreza erklären dir MikiLab.", "Michele & Mohammadreza explain how MikiLab works.", "Michele & Mohammadreza te explican MikiLab.")}</p>
       </div>
 
       <div className="p-4">
         <div className="flex gap-2 mb-3">
           {["michele", "mohamed"].map((k) => (
             <button key={k} data-testid={`guida-tab-${k}`} onClick={() => setWho(k)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${who === k ? "bg-[#ff6b00] text-[#161616]" : "bg-[#1a1a1a] text-[#ff6b00]"}`}>
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${who === k ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#ff6b00]"}`}>
               <ChefHat className="w-4 h-4" /> {k === "michele" ? "Michele" : "Mohammadreza"}
             </button>
           ))}
         </div>
 
-        <div data-testid="guida-avatar-intro" className="flex items-start gap-3 rounded-2xl bg-white p-3.5 border border-[#2b2b2b]">
+        <div data-testid="guida-avatar-intro" className="flex items-start gap-3 rounded-2xl bg-white p-3.5 border border-[#2e2e2e]">
           <div className="w-20 h-20 rounded-full shrink-0 overflow-hidden border-4 shadow-md" style={{ borderColor: who === "michele" ? "#ff6b00" : "#ff6b00" }}>
             <img src={who === "michele" ? `${process.env.PUBLIC_URL}/michele-avatar-real.jpg` : `${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt={active.name} className="w-full h-full object-cover" />
           </div>
@@ -71,7 +71,7 @@ export default function GuidaAvatar() {
         </div>
 
         {who === "mohamed" && active.story && (
-          <div data-testid="guida-mohamed-story" className="mt-3 rounded-2xl bg-[#ffffff] border border-[#2b2b2b] p-4">
+          <div data-testid="guida-mohamed-story" className="mt-3 rounded-2xl bg-[#ffffff] border border-[#2e2e2e] p-4">
             <p className="font-display text-base font-bold text-[#ff6b00] mb-1">{L("La nostra storia", "Unsere Geschichte", "Our story", "Nuestra historia")}</p>
             <p className="text-[13.5px] text-[#ff6b00] leading-relaxed">{active.story}</p>
           </div>
@@ -79,7 +79,7 @@ export default function GuidaAvatar() {
 
         <div className="mt-3 space-y-2">
           {steps.map((s, i) => (
-            <div key={i} className="flex items-start gap-3 rounded-xl bg-[#1a1a1a]/60 p-3">
+            <div key={i} className="flex items-start gap-3 rounded-xl bg-[#1e1e1e]/60 p-3">
               <s.Icon className="w-5 h-5 text-[#ff6b00] mt-0.5 shrink-0" />
               <div>
                 <p className="font-semibold text-sm text-[#ff6b00]">{s.t}</p>

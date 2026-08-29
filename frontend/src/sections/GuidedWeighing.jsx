@@ -209,7 +209,7 @@ export default function GuidedWeighing() {
     } catch { toast.error(tri("Errore", "Fehler", "Error")); }
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // ---- RUN VIEW ----
   if (started && cur) {
@@ -217,7 +217,7 @@ export default function GuidedWeighing() {
       <div className="pb-40" data-testid="gw-run">
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs font-bold uppercase text-[#7E8A93]">{tri("Ingrediente", "Zutat", "Ingredient")} {idx + 1}/{ingredients.length}{batches > 1 ? ` · ${tri("Impastata", "Teig", "Batch")} ${batch + 1}/${batches}` : ""}</p>
-          <button data-testid="gw-voice-toggle" onClick={() => setVoiceOn((v) => !v)} className="p-2 rounded-lg border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00]">{voiceOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}</button>
+          <button data-testid="gw-voice-toggle" onClick={() => setVoiceOn((v) => !v)} className="p-2 rounded-lg border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00]">{voiceOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}</button>
         </div>
         <div data-testid="gw-panel" className="rounded-3xl p-6 text-center text-white shadow-xl transition-colors" style={{ background: COLORS[state] }}>
           <p className="font-display text-2xl font-bold">{cur.name}</p>
@@ -241,7 +241,7 @@ export default function GuidedWeighing() {
 
         <div className="grid grid-cols-2 gap-2 mt-4">
           <button data-testid="gw-next" onClick={next} disabled={state === "over" || state === "under"} className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-97">{tri("Avanti", "Weiter", "Next")} <ArrowRight className="w-5 h-5" /></button>
-          <button data-testid="gw-voicecmd" onClick={startVoiceCmd} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold py-4 rounded-2xl active:scale-97"><Volume2 className="w-5 h-5 text-[#ff6b00]" /> {tri("Voce", "Sprache", "Voice")}</button>
+          <button data-testid="gw-voicecmd" onClick={startVoiceCmd} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold py-4 rounded-2xl active:scale-97"><Volume2 className="w-5 h-5 text-[#ff6b00]" /> {tri("Voce", "Sprache", "Voice")}</button>
         </div>
         <button data-testid="gw-stop" onClick={() => { setStarted(false); logRef.current = []; window.speechSynthesis?.cancel(); }} className="w-full mt-2 text-sm text-[#7E8A93]">{tri("Interrompi", "Abbrechen", "Stop")}</button>
       </div>
@@ -273,7 +273,7 @@ export default function GuidedWeighing() {
         <div className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mb-4" data-testid="gw-weighed-list">
           <p className="text-xs font-bold uppercase text-[#ff6b00] mb-2">{tri("Pesato realmente", "Tatsächlich gewogen", "Actually weighed")}</p>
           {summary.rows.map((r, i) => (
-            <div key={i} className="flex items-center justify-between text-sm py-1 border-b border-[#2b2b2b]/50 dark:border-[#2e2e2e]/50 last:border-0">
+            <div key={i} className="flex items-center justify-between text-sm py-1 border-b border-[#2e2e2e]/50 dark:border-[#2e2e2e]/50 last:border-0">
               <span className="flex items-center gap-1.5 text-[#2B303B] dark:text-[#e4eff8]">
                 {r.role === "flour" ? <Wheat className="w-3.5 h-3.5 text-[#B07A28]" /> : r.role === "water" ? <Droplet className="w-3.5 h-3.5 text-[#ff6b00]" /> : <span className="w-3.5" />}
                 {r.name}
@@ -331,7 +331,7 @@ export default function GuidedWeighing() {
   // ---- SETUP VIEW ----
   const roleBtn = (ing, role, Icon, label) => (
     <button onClick={() => setIngredients((l) => l.map((x) => x.id === ing.id ? { ...x, role } : x))}
-      className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-semibold ${ing.role === role ? "bg-[#ff6b00] text-white" : "bg-[#121212] dark:bg-[#181818] text-[#7E8A93] border border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+      className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-semibold ${ing.role === role ? "bg-[#ff6b00] text-white" : "bg-[#121212] dark:bg-[#181818] text-[#7E8A93] border border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
       <Icon className="w-3 h-3" /> {label}
     </button>
   );
@@ -363,7 +363,7 @@ export default function GuidedWeighing() {
       {/* Ingredienti con ruolo + prezzo */}
       <div className="space-y-3 mb-4" data-testid="gw-ingredients">
         {ingredients.map((ing) => (
-          <div key={ing.id} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3 space-y-2">
+          <div key={ing.id} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3 space-y-2">
             <div className="grid grid-cols-[1fr_84px_34px] gap-2 items-center">
               <input value={ing.name} onChange={(e) => setIngredients((l) => l.map((x) => x.id === ing.id ? { ...x, name: e.target.value } : x))} className={inp + " py-2"} placeholder={tri("Nome", "Name", "Name")} />
               <input type="number" value={ing.base} onChange={(e) => setIngredients((l) => l.map((x) => x.id === ing.id ? { ...x, base: Number(e.target.value) || 0 } : x))} className={inp + " py-2 text-center font-mono-data"} placeholder="g" />
@@ -373,7 +373,7 @@ export default function GuidedWeighing() {
               {roleBtn(ing, "flour", Wheat, tri("Farina", "Mehl", "Flour"))}
               {roleBtn(ing, "water", Droplet, tri("Acqua", "Wasser", "Water"))}
               {roleBtn(ing, "other", Plus, tri("Altro", "Andere", "Other"))}
-              <label className="flex items-center gap-1 bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 text-[11px] text-[#7E8A93]">
+              <label className="flex items-center gap-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 text-[11px] text-[#7E8A93]">
                 <Euro className="w-3 h-3" />
                 <input type="number" step="0.1" value={ing.price || ""} onChange={(e) => setIngredients((l) => l.map((x) => x.id === ing.id ? { ...x, price: Number(e.target.value) || 0 } : x))} className="w-14 bg-transparent outline-none font-mono-data text-[#2B303B] dark:text-[#e4eff8]" placeholder="€/kg" data-testid={`gw-price-${ing.id}`} />
               </label>

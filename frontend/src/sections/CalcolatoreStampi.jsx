@@ -12,9 +12,9 @@ export default function CalcolatoreStampi({ onBack }) {
   const { lang } = useLang();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
-  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
 
   const [mode, setMode] = useState("pirottini");
   // Pirottini
@@ -34,15 +34,15 @@ export default function CalcolatoreStampi({ onBack }) {
   return (
     <div className="pb-8" data-testid="calc-stampi">
       {onBack && <button data-testid="stampi-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Cookie className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Stampi & Pirottini", "Formen-Rechner", "Pan & Mould Calculator", "Calculadora de Moldes")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Quanto impasto serve per i pirottini del panettone o per la tua teglia.", "Wie viel Teig für Panettone-Formen oder dein Blech.", "How much dough for panettone moulds or your pan.", "Cuánta masa para moldes de panettone o tu bandeja.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Quanto impasto serve per i pirottini del panettone o per la tua teglia.", "Wie viel Teig für Panettone-Formen oder dein Blech.", "How much dough for panettone moulds or your pan.", "Cuánta masa para moldes de panettone o tu bandeja.")}</p>
       </div>
 
-      <div className="flex gap-1.5 bg-[#1a1a1a] p-1.5 rounded-2xl mb-5 border border-[#2b2b2b]">
+      <div className="flex gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
         {[["pirottini", L("Pirottini", "Formen", "Moulds", "Moldes"), Cookie], ["teglia", L("Teglia / Tortiera", "Blech / Form", "Pan / Tin", "Bandeja")], ].map(([id, label]) => (
-          <button key={id} data-testid={`stampi-tab-${id}`} onClick={() => setMode(id)} className={`flex-1 py-2 rounded-xl text-[13px] font-bold transition-all ${mode === id ? "bg-[#ff6b00] text-[#161616] shadow" : "text-[#ff6b00]"}`}>{label}</button>
+          <button key={id} data-testid={`stampi-tab-${id}`} onClick={() => setMode(id)} className={`flex-1 py-2 rounded-xl text-[13px] font-bold transition-all ${mode === id ? "bg-[#ff6b00] text-[#121212] shadow" : "text-[#ff6b00]"}`}>{label}</button>
         ))}
       </div>
 
@@ -65,7 +65,7 @@ export default function CalcolatoreStampi({ onBack }) {
         <div className={card}>
           <div className="flex gap-1.5 mb-3">
             {[["rect", L("Rettangolare", "Rechteckig", "Rectangular", "Rectangular"), Square], ["round", L("Tonda", "Rund", "Round", "Redonda"), Circle]].map(([id, label, Icon]) => (
-              <button key={id} data-testid={`stampi-shape-${id}`} onClick={() => setShape(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[13px] font-bold border transition-all ${shape === id ? "bg-[#ff6b00] text-[#161616] border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2b2b2b]"}`}><Icon className="w-4 h-4" /> {label}</button>
+              <button key={id} data-testid={`stampi-shape-${id}`} onClick={() => setShape(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[13px] font-bold border transition-all ${shape === id ? "bg-[#ff6b00] text-[#121212] border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e]"}`}><Icon className="w-4 h-4" /> {label}</button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">

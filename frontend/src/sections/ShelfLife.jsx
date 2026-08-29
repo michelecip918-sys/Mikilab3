@@ -26,7 +26,7 @@ export default function ShelfLife() {
   const days = Math.round(base * (1 + Math.min(h, 48) / 48 * 0.6));
   const highDigest = p >= 4.0 && p <= 4.6 && h >= 12;
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">
@@ -44,7 +44,7 @@ export default function ShelfLife() {
         <div className="grid grid-cols-2 gap-2">
           {PRODUCTS.map((x) => (
             <button key={x.id} data-testid={`sl-prod-${x.id}`} onClick={() => setProd(x.id)}
-              className={`px-3 py-2.5 rounded-xl text-sm font-semibold border ${prod === x.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>{PLABEL[x.id]}</button>
+              className={`px-3 py-2.5 rounded-xl text-sm font-semibold border ${prod === x.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{PLABEL[x.id]}</button>
           ))}
         </div>
         )}
@@ -63,7 +63,7 @@ export default function ShelfLife() {
         <p className="text-white/80 text-xs mt-2">{tri("Fermentazioni lunghe = pane che resta fresco più a lungo.", "Lange Gärung = länger frisches Brot.", "Long fermentation = bread that stays fresh longer.")}</p>
       </div>
 
-      <div data-testid="sl-badge" className={`mt-4 rounded-2xl p-4 flex items-center gap-3 border ${highDigest ? "bg-[#ff6b00]/12 border-[#ff6b00]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+      <div data-testid="sl-badge" className={`mt-4 rounded-2xl p-4 flex items-center gap-3 border ${highDigest ? "bg-[#ff6b00]/12 border-[#ff6b00]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
         {highDigest ? <BadgeCheck className="w-9 h-9 text-[#ff6b00] shrink-0" /> : <FlaskConical className="w-8 h-8 text-[#7E8A93] shrink-0" />}
         <div>
           {highDigest ? (

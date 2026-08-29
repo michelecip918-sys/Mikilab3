@@ -217,7 +217,7 @@ export default function PhotoDiagnosi() {
             className={`flex flex-col items-start gap-1 p-3.5 rounded-2xl border text-left transition-all ${
               mode === id
                 ? "bg-[#ff6b00] text-white border-[#ff6b00]"
-                : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2b2b2b] dark:border-[#2e2e2e]"
+                : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"
             }`}
           >
             <Icon className="w-5 h-5" />
@@ -234,7 +234,7 @@ export default function PhotoDiagnosi() {
       </div>
 
       {preview && (
-        <div className="rounded-3xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e] mb-4">
+        <div className="rounded-3xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] mb-4">
           <img src={preview} alt="anteprima" className="w-full max-h-80 object-cover" />
         </div>
       )}
@@ -258,7 +258,7 @@ export default function PhotoDiagnosi() {
       {result && (
         <div className="print-area">
           <PrintHeader title={modeLabel(mode)} lang={lang} />
-          <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
+          <div data-testid="photo-result" className="markdown-body mt-5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
             <ReactMarkdown>{result}</ReactMarkdown>
           </div>
         </div>
@@ -269,7 +269,7 @@ export default function PhotoDiagnosi() {
       )}
       {result && (
         <button data-testid="photo-share-btn" onClick={() => shareContent(`${modeLabel(mode)} — MikiLab`, result, lang)}
-          className="mt-2 w-full bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
+          className="mt-2 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
           <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share")}
         </button>
       )}
@@ -295,7 +295,7 @@ export default function PhotoDiagnosi() {
             {recent.map((d) => {
               const isOpen = openRec === d.id;
               return (
-                <div key={d.id} data-testid={`diagnosi-item-${d.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden">
+                <div key={d.id} data-testid={`diagnosi-item-${d.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
                   <div className="flex items-center gap-3 p-3">
                     <div className="w-12 h-12 rounded-xl bg-[#e4eff8] dark:bg-[#181818] flex items-center justify-center shrink-0 overflow-hidden relative">
                       <Camera className="w-5 h-5 text-[#7E8A93]" />

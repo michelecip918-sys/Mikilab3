@@ -29,21 +29,21 @@ export default function AngoloRecupero({ onBack }) {
   return (
     <div className="pb-8" data-testid="angolo-recupero">
       {onBack && <button data-testid="recupero-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#2e8b6f,#1c5c49 70%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#2e8b6f,#1c5c49 70%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Recycle className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("L'Angolo del Recupero", "Die Resteverwertung", "The Recovery Corner", "El Rincón del Aprovechamiento")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Niente si butta: idee per il pane raffermo e per l'esubero del lievito madre.", "Nichts wird weggeworfen: Ideen für altes Brot und Sauerteig-Reste.", "Nothing is wasted: ideas for stale bread and sourdough discard.", "Nada se tira: ideas para pan duro y descarte de masa madre.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Niente si butta: idee per il pane raffermo e per l'esubero del lievito madre.", "Nichts wird weggeworfen: Ideen für altes Brot und Sauerteig-Reste.", "Nothing is wasted: ideas for stale bread and sourdough discard.", "Nada se tira: ideas para pan duro y descarte de masa madre.")}</p>
       </div>
 
-      <div className="flex gap-1.5 bg-[#1a1a1a] p-1.5 rounded-2xl mb-5 border border-[#2b2b2b]">
+      <div className="flex gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
         {[["raffermo", L("Pane raffermo", "Altes Brot", "Stale bread", "Pan duro"), Croissant], ["esubero", L("Esubero LM", "Sauerteig-Rest", "Sourdough discard", "Descarte MM"), Sparkles]].map(([id, label, Icon]) => (
-          <button key={id} data-testid={`recupero-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[13px] font-bold transition-all ${tab === id ? "bg-[#2e8b6f] text-[#161616] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`recupero-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[13px] font-bold transition-all ${tab === id ? "bg-[#2e8b6f] text-[#121212] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
       <div className="space-y-3" data-testid="recupero-list">
         {list.map((r, i) => (
-          <div key={i} data-testid={`recupero-item-${i}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm">
+          <div key={i} data-testid={`recupero-item-${i}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-2xl">{r.emoji}</span>
               <p className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8] leading-tight">{r.name}</p>

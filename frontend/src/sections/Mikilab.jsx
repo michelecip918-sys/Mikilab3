@@ -25,7 +25,7 @@ export default function MikiLab() {
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{lm.intro}</p>
           </div>
           {lm.sections.map((s, i) => (
-            <div key={i} data-testid={`lm-section-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5">
+            <div key={i} data-testid={`lm-section-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
               <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{s.title}</h3>
               <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.body}</p>
             </div>
@@ -108,7 +108,7 @@ export default function MikiLab() {
       <AccessBtn testid="labels-open-btn" Icon={Tag} title={t("tool_labels")} sub={t("mikilab_labels_sub")} onClick={() => setView("labels")} />
 
       {/* Metodo dell'impasto — diretto vs indiretto (prima delle ricette) */}
-      <div data-testid="method-section" className="mt-2 mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+      <div data-testid="method-section" className="mt-2 mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="w-5 h-5 text-[#ff6b00]" />
           <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("method_section_title")}</h2>
@@ -116,7 +116,7 @@ export default function MikiLab() {
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("method_section_body")}</p>
         <div className="grid gap-3 mt-4 sm:grid-cols-2">
           {[["_606t-4KXT4", "method_video1_title"], ["HpOycYo1Cvc", "method_video2_title"]].map(([vid, tk]) => (
-            <div key={vid} data-testid={`method-video-${vid}`} className="rounded-xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e]">
+            <div key={vid} data-testid={`method-video-${vid}`} className="rounded-xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e]">
               <div className="aspect-video bg-black">
                 <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${vid}`} title={t(tk)}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
@@ -158,7 +158,7 @@ function BackBtn({ onClick }) {
 
 function AccessBtn({ testid, Icon, title, sub, onClick }) {
   return (
-    <button data-testid={testid} onClick={onClick} className="w-full mb-3 flex items-center gap-4 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
+    <button data-testid={testid} onClick={onClick} className="w-full mb-3 flex items-center gap-4 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-sm active:scale-98 transition-all text-left">
       <div className="w-12 h-12 rounded-2xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
         <Icon className="w-6 h-6 text-[#ff6b00]" />
       </div>

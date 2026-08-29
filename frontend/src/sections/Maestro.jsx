@@ -108,7 +108,7 @@ export default function Maestro() {
       <div>
         <HighFive />
         <button data-testid="maestro-back-btn" onClick={back}
-          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
+          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
           <ChevronLeft className="w-4.5 h-4.5" /> {tri("Torna agli strumenti", "Zurück zu den Werkzeugen", "Back to tools", "Volver a las herramientas")}
         </button>
         {tool === "aggiungi" && (
@@ -184,14 +184,35 @@ export default function Maestro() {
         title={mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}
         subtitle={mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")} />
 
+      {/* GENERATORE SUBITO IN CIMA: calcolatori rapidi XL (mani in pasta, un tap) */}
+      <div data-testid="maestro-top-tools" className="mb-4">
+        <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2 flex items-center gap-1.5">
+          <Sparkles className="w-4 h-4" /> {mkTri(lang)("Genera & Calcola", "Erstellen & Rechnen", "Generate & Calculate", "Genera y Calcula", "Génère & Calcule", "بساز و حساب کن")}
+        </p>
+        <div className="grid grid-cols-2 gap-2.5">
+          {[
+            { id: "settimana", Icon: CalendarDays, label: mkTri(lang)("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdo", "برنامهٔ هفتگی") },
+            { id: "metodo", Icon: Droplets, label: mkTri(lang)("Calcolatore Idratazione", "Hydratations-Rechner", "Hydration Calculator", "Calc. Hidratación", "Calc. Hydratation", "ماشین‌حساب آب") },
+            { id: "sequenze", Icon: ListChecks, label: mkTri(lang)("Sequenze & Orari", "Reihenfolge & Zeiten", "Sequences & Timing", "Secuencias y Horarios", "Séquences & Horaires", "توالی و زمان‌ها") },
+            { id: "convlievito", Icon: FlaskConical, label: mkTri(lang)("Convertitore Lieviti", "Hefe-Umrechner", "Yeast Converter", "Convertidor Levaduras", "Convertisseur Levures", "مبدل خمیرمایه") },
+          ].map(({ id, Icon, label }) => (
+            <button key={id} data-testid={`maestro-top-${id}`} onClick={() => openTool(id)}
+              className="flex items-center gap-3 min-h-[60px] rounded-2xl px-4 bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white shadow-[0_4px_0_rgba(0,0,0,.35),0_6px_14px_rgba(255,107,0,.3)] active:translate-y-0.5 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all text-left">
+              <Icon className="w-6 h-6 shrink-0" />
+              <span className="font-display text-sm font-extrabold leading-tight">{label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Il GENERATORE del piano IA (scegli ricette → genera) subito visibile */}
+      <PianoProduzioneAI onOpenTool={openTool} />
+
       {/* Avatar del Laboratorio: Michele operativo + Mohammadreza pronto ad aiutare */}
       <AvatarBubbles variant="lab" />
 
       {/* Percorso guidato a 3 step (Produzione Settimanale → Ricetta → Extra) */}
       <LabWizard onOpenTool={openTool} />
-
-      {/* Snellito: si arriva SUBITO al Piano di Produzione IA (hero + scegli ricette + genera) */}
-      <PianoProduzioneAI onOpenTool={openTool} />
 
       {/* Firma personale: Michele al lavoro (identità del laboratorio) */}
       <div data-testid="maestro-signature" className="mt-5 relative overflow-hidden rounded-2xl border border-[#2e2e2e]">

@@ -78,7 +78,7 @@ function HomePlanner() {
   };
 
   return (
-    <div data-testid="home-planner" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+    <div data-testid="home-planner" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
       <div className="flex items-center gap-2 mb-1 text-[#ff6b00]">
         <ChefHat className="w-5 h-5" />
         <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("home_plan_title")}</h3>
@@ -90,16 +90,16 @@ function HomePlanner() {
           <div key={i} className="flex items-center gap-2">
             <select data-testid={`home-product-recipe-${i}`} value={p.recipe_id || ""}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value } : x))}
-              className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+              className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
               <option value="">{t("capo_pick_recipe")}</option>
               <RecipeOptions recipes={recipes} />
             </select>
             <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-              className="w-16 shrink-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
+              className="w-16 shrink-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
             <select data-testid={`home-product-day-${i}`} value={p.day || ""}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-              className="w-24 shrink-0 bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+              className="w-24 shrink-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
               {HOME_DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
             </select>
             {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>}
@@ -110,7 +110,7 @@ function HomePlanner() {
 
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93] mt-3 block">{t("home_when")}</label>
       <input data-testid="home-when" value={when} placeholder={t("home_when_ph")} onChange={(e) => setWhen(e.target.value)}
-        className="mt-1 w-full bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+        className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
 
       <button data-testid="home-generate" onClick={generate} disabled={generating}
         className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
@@ -124,7 +124,7 @@ function HomePlanner() {
             <Printer className="w-5 h-5" /> {t("capo_print")}
           </button>
           <div className="print-area mt-4 space-y-4">
-            <div data-testid="home-plan" className="markdown-body bg-[#e4eff8] dark:bg-[#242424] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
+            <div data-testid="home-plan" className="markdown-body bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{t("home_plan_result")}</p>
               <ReactMarkdown>{plan}</ReactMarkdown>
             </div>
@@ -294,14 +294,14 @@ function BakerQuiz() {
 
   const cur = questions[idx];
   return (
-    <div data-testid="quiz-panel" className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5">
+    <div data-testid="quiz-panel" className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
       <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1">{t("quiz_question")} {idx + 1} / {questions.length}</p>
       <h4 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-3">{cur.q}</h4>
       <div className="space-y-2">
         {cur.options.map((opt, i) => {
           const isCorrect = i === cur.correct;
           const chosen = picked === i;
-          let cls = "bg-[#e4eff8] dark:bg-[#242424] border-[#2b2b2b] dark:border-[#2e2e2e]";
+          let cls = "bg-[#e4eff8] dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]";
           if (picked != null && isCorrect) cls = "bg-[#ff6b00]/20 border-[#ff6b00]";
           else if (picked != null && chosen && !isCorrect) cls = "bg-[#ff6b00]/15 border-[#ff6b00]";
           return (
@@ -463,7 +463,7 @@ export default function Beginners({ onNavigate }) {
                 {lvl.icon} {tri3(lang, "Livello", "Level", "Level", "Nivel")}: {lvl.name}
               </span>
               {!lvl.isMax && (
-                <div className="mt-1.5 h-2 w-full max-w-[240px] rounded-full bg-[#2b2b2b] dark:bg-[#2e2e2e] overflow-hidden">
+                <div className="mt-1.5 h-2 w-full max-w-[240px] rounded-full bg-[#2e2e2e] dark:bg-[#2e2e2e] overflow-hidden">
                   <div className="h-full rounded-full bg-[#C9A24B] transition-all" style={{ width: `${lvl.pct}%` }} />
                 </div>
               )}
@@ -473,12 +473,12 @@ export default function Beginners({ onNavigate }) {
       </div>
 
       {/* Percorso guidato principianti */}
-      <div data-testid="beginner-path" className="rounded-2xl p-5 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e]">
+      <div data-testid="beginner-path" className="rounded-2xl p-5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e]">
         <div className="flex items-center justify-between mb-1">
           <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, "Il tuo percorso", "Dein Weg", "Your path", "Tu recorrido")}</h3>
           <span className="text-xs font-bold text-[#ff6b00]">{doneCount}/{PATH.length}</span>
         </div>
-        <div className="h-2 rounded-full bg-[#e4eff8] dark:bg-[#242424] overflow-hidden mb-3">
+        <div className="h-2 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] overflow-hidden mb-3">
           <div className="h-full bg-[#ff6b00] transition-all" style={{ width: `${(doneCount / PATH.length) * 100}%` }} />
         </div>
         <div className="space-y-2">
@@ -489,7 +489,7 @@ export default function Beginners({ onNavigate }) {
                 className="w-full flex items-center gap-3 text-left active:scale-99 transition-all">
                 {ok
                   ? <CheckCircle2 className="w-6 h-6 text-[#ff6b00] shrink-0" />
-                  : <span className="w-6 h-6 rounded-full border-2 border-[#2b2b2b] dark:border-[#4a5560] flex items-center justify-center text-[11px] font-bold text-[#7E8A93] shrink-0">{i + 1}</span>}
+                  : <span className="w-6 h-6 rounded-full border-2 border-[#2e2e2e] dark:border-[#4a5560] flex items-center justify-center text-[11px] font-bold text-[#7E8A93] shrink-0">{i + 1}</span>}
                 <span className={`text-sm ${ok ? "line-through text-[#7E8A93]" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>{label}</span>
               </button>
             );
@@ -499,7 +499,7 @@ export default function Beginners({ onNavigate }) {
       </div>
 
       {/* Ricetta del giorno gratis — cambia ogni giorno */}
-      <div data-testid="recipe-of-day" className="rounded-2xl p-5 text-white bg-gradient-to-br from-[#1c1c1c] to-[#16202b] shadow-md">
+      <div data-testid="recipe-of-day" className="rounded-2xl p-5 text-white bg-gradient-to-br from-[#1e1e1e] to-[#16202b] shadow-md">
         <div className="flex items-center gap-2 mb-1">
           <Star className="w-4 h-4" />
           <span className="text-[11px] font-bold uppercase tracking-wide text-white/85">{mkTri(lang)("Ricetta del giorno","Rezept des Tages","Recipe of the day","Receta del día")}</span>
@@ -535,7 +535,7 @@ export default function Beginners({ onNavigate }) {
 
 
       {beginners.map((s, i) => (
-        <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5">
+        <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
           <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{s.title}</h3>
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{s.body}</p>
         </div>

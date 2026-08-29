@@ -141,7 +141,7 @@ export default function Community({ onNavigate }) {
   };
 
   const visible = filter === "all" ? posts : posts.filter((p) => p.category === filter);
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // Registrazione OBBLIGATORIA per accedere al Social
   if (!user) {
@@ -175,7 +175,7 @@ export default function Community({ onNavigate }) {
         subtitle={mkTri(lang)("Confronto, consigli e ricette tra fornai veri", "Austausch, Tipps und Rezepte unter echten Bäckern", "Sharing, tips and recipes among real bakers", "Intercambio, consejos y recetas entre panaderos de verdad", "Échanges, conseils et recettes entre vrais boulangers", "گفت‌وگو، نکته‌ها و دستورها میان نانوایان واقعی")} />
       {/* Header social — compatto (navigazione via menù globale) */}
       <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
-        style={{ background: "linear-gradient(135deg,#1c1c1c 0%,#1f5a68 60%,#ff6b00 100%)" }}>
+        style={{ background: "linear-gradient(135deg,#1e1e1e 0%,#1f5a68 60%,#ff6b00 100%)" }}>
         <div className="flex items-center gap-3">
           <div className="relative shrink-0">
             <div className="w-12 h-12 rounded-xl bg-white/25 border-2 border-white/70 overflow-hidden shadow">
@@ -198,7 +198,7 @@ export default function Community({ onNavigate }) {
       {/* Azioni Social compatte (le stesse sono anche nel menu ☰) */}
       <div className="grid grid-cols-3 gap-2 mb-4" data-testid="community-quick-actions">
         <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
-          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
           <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
             <UserPlus className="w-5 h-5 text-[#ff6b00]" />
             {friendReqCount > 0 && <span data-testid="friends-req-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff6b00] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{friendReqCount}</span>}
@@ -207,7 +207,7 @@ export default function Community({ onNavigate }) {
         </button>
 
         <button data-testid="community-messages-btn" onClick={() => { if (needLogin()) return; setChatUser(null); setChatOpen(true); }}
-          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
           <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
             <MessageCircle className="w-5 h-5 text-[#ff6b00]" />
             {msgUnread > 0 && <span data-testid="messages-unread-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff6b00] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{msgUnread > 9 ? "9+" : msgUnread}</span>}
@@ -216,7 +216,7 @@ export default function Community({ onNavigate }) {
         </button>
 
         <button data-testid="community-map-btn" onClick={() => setMapOpen(true)}
-          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
           <div className="relative w-9 h-9 rounded-xl bg-[#2e8b6f]/15 flex items-center justify-center">
             <MapPin className="w-5 h-5 text-[#2e8b6f]" />
           </div>
@@ -250,7 +250,7 @@ export default function Community({ onNavigate }) {
         <div className="grid grid-cols-3 gap-1.5 mb-2">
           {CATS.map(({ id, Icon, color }) => (
             <button key={id} data-testid={`community-cat-${id}`} onClick={() => setCat(id)}
-              className={`flex flex-col items-center gap-1 py-2 rounded-xl border text-[11px] font-semibold transition-all ${cat === id ? "text-white border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}
+              className={`flex flex-col items-center gap-1 py-2 rounded-xl border text-[11px] font-semibold transition-all ${cat === id ? "text-white border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}
               style={cat === id ? { background: color } : {}}>
               <Icon className="w-4 h-4" /> {catLabel(id)}
             </button>
@@ -261,7 +261,7 @@ export default function Community({ onNavigate }) {
           className={inp} />
         {photo && <div className="relative mt-2"><img src={photo} alt="" className="w-full h-40 object-cover rounded-xl" /><button data-testid="community-photo-clear" onClick={() => setPhoto("")} className="absolute top-2 right-2 bg-black/60 text-white rounded-full px-2 py-0.5 text-xs">✕</button></div>}
         <div className="flex items-center gap-2 mt-2">
-          <label data-testid="community-photo-btn" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-sm font-semibold text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">
+          <label data-testid="community-photo-btn" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-sm font-semibold text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">
             {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4 text-[#ff6b00]" />} {tri("Foto", "Foto", "Photo", "Foto")}
             <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
@@ -274,9 +274,9 @@ export default function Community({ onNavigate }) {
 
       {/* Filtri */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="community-filters">
-        <button data-testid="community-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>{tri("Tutti", "Alle", "All", "Todos")}</button>
+        <button data-testid="community-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tri("Tutti", "Alle", "All", "Todos")}</button>
         {CATS.map((c) => (
-          <button key={c.id} data-testid={`community-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>{catLabel(c.id)}</button>
+          <button key={c.id} data-testid={`community-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{catLabel(c.id)}</button>
         ))}
       </div>
 
@@ -290,7 +290,7 @@ export default function Community({ onNavigate }) {
       <div data-testid="feed-toggle" className="flex gap-2 mb-3">
         {[["all", tri("Recenti", "Neueste", "Recent", "Recientes")], ["popular", tri("Popolari", "Beliebt", "Popular", "Populares")], ["friends", tri("Amici", "Freunde", "Friends", "Amigos")]].map(([id, lbl]) => (
           <button key={id} data-testid={`feed-tab-${id}`} onClick={() => { if (id === "friends" && needLogin()) return; setFeed(id); }}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${feed === id ? "bg-[#1c1c1c] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93]"}`}>{lbl}</button>
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${feed === id ? "bg-[#1e1e1e] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>{lbl}</button>
         ))}
       </div>
       {loading ? (
@@ -301,7 +301,7 @@ export default function Community({ onNavigate }) {
           {visible.map((p) => {
             const C = CATS.find((c) => c.id === p.category) || CATS[0];
             return (
-              <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#1c1c1c] border border-[#2b2b2b] dark:border-[#343434] rounded-2xl p-4 shadow-md hover:border-[#ff6b00]/40 transition-colors" style={{ borderLeft: `3px solid ${C.color}` }}>
+              <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-md hover:border-[#ff6b00]/40 transition-colors" style={{ borderLeft: `3px solid ${C.color}` }}>
                 <div className="flex items-center gap-2 mb-2">
                   <button data-testid={`post-author-${p.id}`} onClick={() => p.author_id && setProfileUser(p.author_id)} className="flex items-center gap-2 min-w-0 active:scale-98 transition-transform">
                     <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-display font-bold overflow-hidden" style={{ background: C.color }}>{p.author_avatar ? <img src={p.author_avatar} alt="" className="w-full h-full object-cover" /> : (p.author_name || "F")[0].toUpperCase()}</div>
@@ -316,7 +316,7 @@ export default function Community({ onNavigate }) {
                 {p.text && <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-line leading-relaxed">{lang === "de" ? (p.text_de || p.text) : lang === "es" ? (p.text_es || p.text_en || p.text) : lang === "en" ? (p.text_en || p.text) : p.text}</p>}
                 {p.image_url && <img src={p.image_url} alt="" className="w-full rounded-xl mt-2 max-h-80 object-cover" />}
 
-                <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#2b2b2b] dark:border-[#2e2e2e]">
+                <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
                   <button data-testid={`community-like-${p.id}`} onClick={() => like(p.id)} className={`flex items-center gap-1.5 text-sm font-semibold ${p.liked_by_me ? "text-[#E4572E]" : "text-[#7E8A93]"}`}>
                     <Heart className={`w-4 h-4 ${p.liked_by_me ? "fill-[#E4572E]" : ""}`} /> {p.like_count || 0}
                   </button>

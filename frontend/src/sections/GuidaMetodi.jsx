@@ -58,7 +58,7 @@ export default function GuidaMetodi() {
           const c = pick(s, lang);
           const isOpen = open === s.id;
           return (
-            <div key={s.id} data-testid={`guida-${s.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden">
+            <div key={s.id} data-testid={`guida-${s.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
               <button data-testid={`guida-toggle-${s.id}`} onClick={() => setOpen(isOpen ? "" : s.id)}
                 className="w-full flex items-center gap-3 p-4 text-left">
                 <span className="text-2xl">{s.icon}</span>

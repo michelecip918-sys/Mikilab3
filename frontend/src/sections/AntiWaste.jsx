@@ -24,7 +24,7 @@ export default function AntiWaste() {
   const recovered = Math.round(outKg * r.sell * 100) / 100;
   const wasted = Math.round(q * (Number(cost) || 0) * 100) / 100;
   const gain = Math.round((recovered - wasted) * 100) / 100;
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">
@@ -51,7 +51,7 @@ export default function AntiWaste() {
       <div className="grid grid-cols-2 gap-2 mb-4">
         {RECIPES.map((x) => (
           <button key={x.id} data-testid={`aw-rec-${x.id}`} onClick={() => setRec(x.id)}
-            className={`px-3 py-2.5 rounded-xl text-sm font-semibold border text-left ${rec === x.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+            className={`px-3 py-2.5 rounded-xl text-sm font-semibold border text-left ${rec === x.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
             {x.label}
           </button>
         ))}

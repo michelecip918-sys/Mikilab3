@@ -1,0 +1,36 @@
+{
+  "summary": "FASE 1 frontend-only retest (mobile 390x844) on preview URL: (A) scroll-to-top on bottom-nav tab change and (B) avatar-bubble routing per section (no more forced jump to Laboratorio). Tested as guest and as admin (admin@mikilab.de). Scroll-to-top PASSES for ricette->impara, impara->home, home->community, ricette->maestro, home->maestro (all scrollY=0). Avatar routing: Ricette michele->recipe-search (element lands exactly at viewport top 0, stays on ricette-page), Ricette momy->recipe-cat-filters (top 0, stays on ricette-page), Home michele->ricette-page OK, Home momy->Your Lab/maestro OK (intended, lab content rendered, no paywall block observed), Impara michele->scrolls to impara-livelli-btn and stays in Impara, Community (admin) michele->community-submit scroll and momy->feed scroll, both stay in community, maestro-page never appeared. ONE REAL DEFECT: Impara momy targets [data-testid=quiz-panel]/[quiz-start-btn] which are NEVER rendered (BakerQuiz component in Beginners.jsx is dead code; the section actually renders EvolvingQuiz with data-testid='evolving-quiz'), so the click falls back to goto('impara') and produces a meaningless/partial scroll (~368px) instead of reaching the Quiz.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AvatarBubbles (variant=impara, momy)", "issue": "Target selectors '[data-testid=\"quiz-panel\"],[data-testid=\"quiz-start-btn\"]' never exist in the Impara page (guest AND admin): Beginners.jsx renders EvolvingQuiz (data-testid='evolving-quiz'); BakerQuiz (which owns quiz-panel/quiz-start-btn) is defined but never mounted. Click therefore does not scroll to the Quiz (falls back to goto('impara'), ~368px arbitrary scroll).", "selector": "[data-testid=\"bubble-momy\"]", "priority": "HIGH"},
+      {"component": "Beginners.jsx", "issue": "Dead component BakerQuiz (lines ~236-330) unused; remove it or wire the avatar action to '[data-testid=\"evolving-quiz\"]'.", "selector": "n/a", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Scroll-to-top on first open of Laboratorio (Your Lab)", "issue": "On the FIRST visit the Lab onboarding tour (LabOnboarding/LabTour) scrollIntoView overrides window.scrollTo(0,0): scrollY was 2822-2854 right after the tab change. After the tour is skipped, subsequent switches to maestro give scrollY=0. Minor, but the page does not start from the top for first-time users.", "affected_selectors": ["[data-testid=\"nav-tab-maestro\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Global overlays", "issues": ["Newsletter popup (data-testid=newsletter-popup) reappears ~10s and fully blocks clicks on bubbles/header with a fixed backdrop; blocked automated clicks repeatedly. Consider showing it only once per session/localStorage flag."]},
+      {"screen": "Community (guest)", "issues": ["As guest only community-auth-gate is shown: AvatarBubbles are NOT rendered, so community avatar routing is unverifiable for guests (verified logged-in as admin instead) - informational."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "AvatarBubbles.jsx line 100: change momy/impara target to '[data-testid=\"evolving-quiz\"]' (or add quiz-panel/quiz-start-btn testids to EvolvingQuiz) so the Quiz scroll actually works.",
+    "Remove the unused BakerQuiz block in Beginners.jsx to avoid dead-code/testid confusion.",
+    "Optional: suppress the Lab tour's auto scrollIntoView (or delay it) so the Lab also starts from the top on first open.",
+    "Optional: throttle the newsletter popup (blocks interactions across the app)."
+  ],
+  "critical_code_review_comments": [
+    "scrollOrGoto() silently degrades when the selector is missing and fallbackTab equals the current tab (no-op) - add a console/telemetry or a secondary selector so broken targets are visible.",
+    "AvatarBubbles variant='shop' has no ACTIONS entry, so those bubbles are non-clickable (no arrow shown) - intentional? worth confirming for UI consistency."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "92% (11/12 checks passed; 1 avatar action broken, 1 minor scroll-to-top edge case)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login OK, session established, header shows logout icon)",
+  "context_for_next_testing_agent": "Dismiss intro ('Start') and [data-testid=newsletter-popup-dismiss] (reappears ~10s) plus section tours via the 'Skip' button before clicking bubbles; otherwise clicks are intercepted by fixed overlays. Verify scroll targets by measuring getBoundingClientRect().top of the target (should be ~0) rather than only scrollY. Impara quiz target is broken (evolving-quiz vs quiz-panel).",
+  "rca_of_the_issue": "Impara momy action was mapped to testids belonging to the legacy BakerQuiz component that Beginners.jsx no longer renders (it renders EvolvingQuiz, testid 'evolving-quiz'); document.querySelector returns null, scrollOrGoto falls back to goto('impara') which is the current tab, so no scroll-to-quiz occurs. The first-open Lab scroll offset is caused by the Lab tour's scrollIntoView firing after App's window.scrollTo(0,0) effect."
+}

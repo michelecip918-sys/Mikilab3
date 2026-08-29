@@ -119,7 +119,7 @@ export default function VoiceAssistant({ onNavigate }) {
     <>
       {open && (
         <div className="fixed inset-x-0 bottom-24 z-40 px-4 flex justify-center pointer-events-none">
-          <div data-testid="voice-panel" className="pointer-events-auto w-full max-w-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl shadow-xl p-4">
+          <div data-testid="voice-panel" className="pointer-events-auto w-full max-w-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-xl p-4">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] flex-1">
                 {state === "listening" ? t("voice_listening") : state === "thinking" ? t("voice_thinking") : t("voice_tap")}

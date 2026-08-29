@@ -34,7 +34,7 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
     catch { toast.error(tri("Eliminazione non riuscita", "Löschen fehlgeschlagen", "Delete failed")); }
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40" data-testid="stores-manager">
@@ -52,7 +52,7 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
           <p className="text-center text-sm text-[#7E8A93] py-8">{tri("Nessun negozio. Aggiungi il tuo primo punto vendita.", "Keine Filiale. Füge deinen ersten Standort hinzu.", "No store yet. Add your first location.")}</p>
         )}
         {stores.map((s) => (
-          <div key={s.id} data-testid={`store-card-${s.id}`} className={`rounded-2xl p-4 border shadow-sm ${current === s.id ? "bg-[#ff6b00]/10 border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+          <div key={s.id} data-testid={`store-card-${s.id}`} className={`rounded-2xl p-4 border shadow-sm ${current === s.id ? "bg-[#ff6b00]/10 border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
             {editing === s.id ? (
               <StoreForm form={form} setForm={setForm} inp={inp} onSave={save} onCancel={() => setEditing(null)} busy={busy} tri={tri} testidPrefix={`store-edit-${s.id}`} />
             ) : (
@@ -70,10 +70,10 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
                   {current === s.id ? (
                     <span data-testid={`store-active-${s.id}`} className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold text-[#ff6b00] bg-[#ff6b00]/10 rounded-xl py-2"><Check className="w-4 h-4" /> {tri("Attivo", "Aktiv", "Active")}</span>
                   ) : (
-                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
+                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
                   )}
-                  <button data-testid={`store-edit-${s.id}`} onClick={() => setEditing(s.id)} className="p-2 rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00]"><Pencil className="w-4 h-4" /></button>
-                  <button data-testid={`store-remove-${s.id}`} onClick={() => remove(s.id)} className="p-2 rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>
+                  <button data-testid={`store-edit-${s.id}`} onClick={() => setEditing(s.id)} className="p-2 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00]"><Pencil className="w-4 h-4" /></button>
+                  <button data-testid={`store-remove-${s.id}`} onClick={() => remove(s.id)} className="p-2 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>
                 </div>
               </>
             )}
@@ -95,7 +95,7 @@ function StoreForm({ form, setForm, inp, onSave, onCancel, busy, tri, testidPref
         <button data-testid={`${testidPrefix}-save`} onClick={onSave} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#ff6b00] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva", "Speichern", "Save")}
         </button>
-        <button data-testid={`${testidPrefix}-cancel`} onClick={onCancel} className="px-4 rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-4 h-4" /></button>
+        <button data-testid={`${testidPrefix}-cancel`} onClick={onCancel} className="px-4 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-4 h-4" /></button>
       </div>
     </div>
   );

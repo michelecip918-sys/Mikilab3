@@ -49,7 +49,7 @@ export default function PanettoneLabels() {
       <div className="no-print flex gap-2 mb-3">
         {["labels", "listino"].map((v) => (
           <button key={v} data-testid={`view-${v}`} onClick={() => setView(v)}
-            className={`flex-1 px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${view === v ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+            className={`flex-1 px-3 py-2 rounded-xl text-sm font-semibold border transition-colors ${view === v ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
             {t(v === "labels" ? "view_labels" : "view_listino")}
           </button>
         ))}
@@ -88,7 +88,7 @@ export default function PanettoneLabels() {
                 {items.map((r) => {
                   const c = r.costing || {};
                   return (
-                    <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#2b2b2b]">
+                    <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#2e2e2e]">
                       <td className="p-2.5 font-semibold">{flavor(r.name)}</td>
                       <td className="p-2.5 text-right font-mono-data">{c.b2b_500g != null ? `€ ${Number(c.b2b_500g).toFixed(2)}` : "—"}</td>
                       <td className="p-2.5 text-right font-mono-data">{c.b2b_100g != null ? `€ ${Number(c.b2b_100g).toFixed(2)}` : "—"}</td>
@@ -117,7 +117,7 @@ export default function PanettoneLabels() {
               <div key={r.id} data-testid={`label-${r.id}`}
                 className="rounded-2xl border-2 border-[#ff6b00] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
                 style={{ pageBreakInside: "avoid" }}>
-                {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#2b2b2b]" />}
+                {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-xl mb-2 border border-[#2e2e2e]" />}
                 <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#ff6b00]/70 mb-1.5 -mt-6 bg-white" />
                 <p className="font-display text-lg font-bold leading-tight">Panettone Artigianale MikiLab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
@@ -138,7 +138,7 @@ export default function PanettoneLabels() {
                   {". "}
                   {tri("Può contenere tracce di soia.", "Kann Spuren von Soja enthalten.", "May contain traces of soy.")}
                 </p>
-                <table data-testid={`label-nutrition-${r.id}`} className="w-full text-[9px] text-[#2B303B] mt-2 border border-[#2b2b2b]">
+                <table data-testid={`label-nutrition-${r.id}`} className="w-full text-[9px] text-[#2B303B] mt-2 border border-[#2e2e2e]">
                   <thead>
                     <tr className="bg-[#e4eff8]">
                       <th className="text-left px-1.5 py-0.5 font-bold uppercase" colSpan={2}>
@@ -156,7 +156,7 @@ export default function PanettoneLabels() {
                       [tri("Proteine", "Eiweiß", "Protein"), gf(nv.prot), true],
                       [tri("Sale", "Salz", "Salt"), gf(nv.salt), true],
                     ]; })().map(([k, v, bold], i) => (
-                      <tr key={i} className="border-t border-[#2b2b2b]">
+                      <tr key={i} className="border-t border-[#2e2e2e]">
                         <td className={`text-left px-1.5 py-0.5 ${bold ? "font-semibold" : "pl-3 text-[#3F4A54]"}`}>{k}</td>
                         <td className="text-right px-1.5 py-0.5 font-mono-data">{v}</td>
                       </tr>

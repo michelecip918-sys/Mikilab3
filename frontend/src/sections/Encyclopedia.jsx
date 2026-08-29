@@ -12,7 +12,7 @@ export default function Encyclopedia() {
         <span className="text-xs font-semibold uppercase tracking-wide">{t("enc_label")}</span>
       </div>
       {encyclopedia.map((e, i) => (
-        <div key={i} data-testid={`encyclopedia-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-5">
+        <div key={i} data-testid={`encyclopedia-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
           <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{e.title}</h3>
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{e.body}</p>
         </div>

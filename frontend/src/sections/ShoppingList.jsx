@@ -57,7 +57,7 @@ export default function ShoppingList() {
             <SupplierOrder totals={totals} />
           </div>
           <button data-testid="spesa-share" onClick={() => shareContent(mkTri(lang)("Lista della spesa — MikiLab", "Einkaufsliste — MikiLab", "Shopping list — MikiLab"), buildShoppingText(totals, lang), lang)}
-            className="mt-3 w-full bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
+            className="mt-3 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share")}
           </button>
           <button data-testid="spesa-pdf" onClick={() => window.print()}

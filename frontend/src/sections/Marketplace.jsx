@@ -132,7 +132,7 @@ export default function Marketplace() {
       .sort((a, b) => (a._km ?? 1e9) - (b._km ?? 1e9));
   }
   const priceFmt = (v) => { try { return new Intl.NumberFormat(lang === "en" ? "en-GB" : lang === "de" ? "de-DE" : "it-IT").format(Number(v)); } catch { return String(v); } };
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40">
@@ -184,9 +184,9 @@ export default function Marketplace() {
 
       {/* Filtri categoria */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="market-filters">
-        <button data-testid="market-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>{tri("Tutti", "Alle", "All")}</button>
+        <button data-testid="market-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tri("Tutti", "Alle", "All")}</button>
         {CATS.map((c) => (
-          <button key={c.id} data-testid={`market-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>{c.label}</button>
+          <button key={c.id} data-testid={`market-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{c.label}</button>
         ))}
       </div>
 
@@ -194,7 +194,7 @@ export default function Marketplace() {
       <div className="grid grid-cols-2 gap-3" data-testid="market-list">
         {visible.length === 0 && <p className="col-span-2 text-center text-sm text-[#7E8A93] py-8">{tri("Nessun annuncio. Pubblica il primo!", "Keine Anzeigen. Gib die erste auf!", "No listings yet. Post the first!")}</p>}
         {visible.map((it) => (
-          <div key={it.id} data-testid={`market-card-${it.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl overflow-hidden shadow-sm flex flex-col">
+          <div key={it.id} data-testid={`market-card-${it.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl overflow-hidden shadow-sm flex flex-col">
             {it.photo
               ? <img src={it.photo} alt={it.title} className="w-full h-28 object-cover" />
               : <div className="w-full h-28 bg-[#ff6b00]/15 flex items-center justify-center"><Store className="w-8 h-8 text-[#ff6b00]" /></div>}
@@ -215,9 +215,9 @@ export default function Marketplace() {
                       {(it.contact || "").includes("@") ? <Mail className="w-3.5 h-3.5" /> : <MessageCircle className="w-3.5 h-3.5" />} {tri("Contatta", "Kontakt", "Contact")}
                     </a>
                   ) : (
-                    <span data-testid={`market-nocontact-${it.id}`} className="flex-1 text-center text-[11px] text-[#7E8A93] py-2 border border-dashed border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg">{tri("Nessun contatto indicato", "Kein Kontakt angegeben", "No contact provided")}</span>
+                    <span data-testid={`market-nocontact-${it.id}`} className="flex-1 text-center text-[11px] text-[#7E8A93] py-2 border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg">{tri("Nessun contatto indicato", "Kein Kontakt angegeben", "No contact provided")}</span>
                   )}
-                  {!it.sample && user && (it.owner_id === user.user_id || user.role === "admin") && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
+                  {!it.sample && user && (it.owner_id === user.user_id || user.role === "admin") && <button data-testid={`market-remove-${it.id}`} onClick={() => remove(it.id)} className="p-2 rounded-lg border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>}
                 </div>
               </div>
             </div>

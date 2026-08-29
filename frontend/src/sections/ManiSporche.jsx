@@ -98,7 +98,7 @@ export default function ManiSporche() {
       <div className="grid grid-cols-2 gap-3 mb-4">
         {PRESETS.map((p) => (
           <button key={p.key} data-testid={`manisporche-preset-${p.key}`} onClick={() => startPreset(p)}
-            className="relative flex flex-col items-center justify-center gap-1 py-7 rounded-3xl bg-white dark:bg-[#1e1e1e] border-2 border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
+            className="relative flex flex-col items-center justify-center gap-1 py-7 rounded-3xl bg-white dark:bg-[#1e1e1e] border-2 border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
             {p.repeat && <RefreshCw className="absolute top-3 right-3 w-4 h-4 text-[#ff6b00]" />}
             <span className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
             <span className="font-mono-data text-base text-[#7E8A93]">{p.min}′</span>
@@ -126,7 +126,7 @@ export default function ManiSporche() {
         {timers.map((t) => {
           const rem = remainingOf(t); const done = rem <= 0;
           return (
-            <div key={t.id} className={`rounded-3xl p-5 border-2 ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+            <div key={t.id} className={`rounded-3xl p-5 border-2 ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <div className="flex items-center justify-between mb-1">
                 <span className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#ff6b00]" />}</span>
                 <button onClick={() => remove(t.id)} className="text-[#7E8A93] p-1"><Trash2 className="w-6 h-6" /></button>
@@ -134,7 +134,7 @@ export default function ManiSporche() {
               <p className={`font-mono-data text-6xl font-bold text-center ${done ? "text-[#E4572E]" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{fmt(rem)}</p>
               <div className="grid grid-cols-2 gap-2 mt-3">
                 <button onClick={() => toggle(t.id)} disabled={done} className="bg-[#ff6b00] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97">{t.running ? tri("Pausa", "Pause", "Pause", "Pausa") : tri("Vai", "Start", "Go", "Va")}</button>
-                <button onClick={() => reset(t.id)} className="bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97">{tri("Reset", "Reset", "Reset", "Reset")}</button>
+                <button onClick={() => reset(t.id)} className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97">{tri("Reset", "Reset", "Reset", "Reset")}</button>
               </div>
             </div>
           );

@@ -125,8 +125,8 @@ export default function AcademyCoach() {
   const hasTimeline = (txt) => parseTimeline(txt).length > 0;
 
   return (
-    <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e]">
-      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1c1c1c 55%,#ff6b00)" }}>
+    <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e]">
+      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1e1e1e 55%,#ff6b00)" }}>
         <div className="w-11 h-11 rounded-xl bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
           <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
@@ -156,7 +156,7 @@ export default function AcademyCoach() {
         <div className="flex flex-wrap gap-1.5">
           {CHIPS.map((c, i) => (
             <button key={i} data-testid={`academy-chip-${i}`} onClick={() => ask(c.text)} disabled={busy}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1c1c1c] dark:text-[#8FB0C2] bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1e1e1e] dark:text-[#8FB0C2] bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
               <c.Icon className="w-3.5 h-3.5" /> {c.label}
             </button>
           ))}
@@ -166,7 +166,7 @@ export default function AcademyCoach() {
           <div className="space-y-3 max-h-[420px] overflow-y-auto" data-testid="academy-coach-thread">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#ff6b00] text-white rounded-br-sm" : "bg-[#121212] dark:bg-[#181818] text-[#2B303B] dark:text-[#e4eff8] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-bl-sm"}`}>
+                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#ff6b00] text-white rounded-br-sm" : "bg-[#121212] dark:bg-[#181818] text-[#2B303B] dark:text-[#e4eff8] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-bl-sm"}`}>
                   {m.role === "assistant" ? (
                     m.content ? <div className="markdown-body leading-relaxed"><ReactMarkdown>{m.content}</ReactMarkdown></div> : <Loader2 className="w-4 h-4 animate-spin text-[#ff6b00]" />
                   ) : <p className="whitespace-pre-line">{m.content}</p>}
@@ -186,7 +186,7 @@ export default function AcademyCoach() {
         <div className="flex items-center gap-2 pt-1">
           <input data-testid="academy-coach-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()}
             placeholder={tri("Scrivi o parla a Mohammadreza…", "Schreib oder sprich mit Mohammadreza…", "Type or talk to Mohammadreza…", "Escribe o habla con Mohammadreza…")}
-            className="flex-1 bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
+            className="flex-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
           {speechSupported && (
             <button data-testid="academy-coach-mic" onClick={startListening} disabled={busy}
               title={tri("Parla con Mohammadreza", "Mit Mohammadreza sprechen", "Talk to Mohammadreza", "Habla con Mohammadreza")}

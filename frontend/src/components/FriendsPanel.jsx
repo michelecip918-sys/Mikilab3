@@ -62,7 +62,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
     <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center" data-testid="friends-panel">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="relative w-full sm:max-w-md bg-white dark:bg-[#121212] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[85vh] flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-[#2b2b2b] dark:border-[#2e2e2e]">
+        <div className="flex items-center justify-between p-4 border-b border-[#2e2e2e] dark:border-[#2e2e2e]">
           <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2"><Users2 className="w-5 h-5 text-[#ff6b00]" />{tri("Amici", "Freunde", "Friends")}</h3>
           <button data-testid="friends-close" onClick={onClose} className="w-9 h-9 rounded-full flex items-center justify-center text-[#7E8A93]"><X className="w-5 h-5" /></button>
         </div>
@@ -90,7 +90,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
                     <button data-testid={`friend-accept-${c.user_id}`} onClick={() => act(() => friendsApi.respond(c.user_id, "accept"), tri("Ora siete amici!", "Ihr seid jetzt Freunde!", "You are now friends!"))}
                       className="px-3 py-1.5 rounded-lg bg-[#ff6b00] text-white text-xs font-bold flex items-center gap-1"><Check className="w-3.5 h-3.5" />{tri("Accetta", "Annehmen", "Accept")}</button>
                     <button data-testid={`friend-decline-${c.user_id}`} onClick={() => act(() => friendsApi.respond(c.user_id, "decline"))}
-                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93] text-xs font-semibold">{tri("Rifiuta", "Ablehnen", "Decline")}</button>
+                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93] text-xs font-semibold">{tri("Rifiuta", "Ablehnen", "Decline")}</button>
                   </Row>
                 )))}
 
@@ -103,7 +103,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
                         className="px-3 py-1.5 rounded-lg bg-[#ff6b00] text-white text-xs font-bold flex items-center gap-1"><Send className="w-3.5 h-3.5" />{tri("Scrivi", "Schreiben", "Message")}</button>
                     )}
                     <button data-testid={`friend-remove-${c.user_id}`} onClick={() => act(() => friendsApi.remove(c.user_id))}
-                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00] text-xs font-semibold flex items-center gap-1"><UserMinus className="w-3.5 h-3.5" />{tri("Rimuovi", "Entfernen", "Remove")}</button>
+                      className="px-3 py-1.5 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] text-xs font-semibold flex items-center gap-1"><UserMinus className="w-3.5 h-3.5" />{tri("Rimuovi", "Entfernen", "Remove")}</button>
                   </Row>
                 )))}
 
@@ -157,7 +157,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
 
 function Row({ c, children, testid, sub }) {
   return (
-    <div data-testid={testid} className="flex items-center gap-3 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-2.5">
+    <div data-testid={testid} className="flex items-center gap-3 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5">
       <Avatar c={c} />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{c.name}</p>
@@ -169,5 +169,5 @@ function Row({ c, children, testid, sub }) {
 }
 
 function Empty({ text }) {
-  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#242424] border border-dashed border-[#2b2b2b] dark:border-[#2e2e2e] p-4 text-sm text-[#7E8A93]">{text}</div>;
+  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] p-4 text-sm text-[#7E8A93]">{text}</div>;
 }

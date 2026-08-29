@@ -76,23 +76,30 @@ export default function AvatarBubbles({ variant = "impara" }) {
     return () => { alive = false; };
   }, [variant, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Assistente cliccabile: porta nella sezione/strumento giusto (Michele + Mohammadreza)
+  // Assistente cliccabile: porta nella sezione/strumento di cui PARLA l'avatar (non più tutti nel Laboratorio).
   const goto = (tab) => window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab } }));
   const openLabTool = (id) => window.dispatchEvent(new CustomEvent("mikilab-open-lab-tool", { detail: { id } }));
   const openChallenges = () => window.dispatchEvent(new CustomEvent("mikilab-go-challenges"));
-  const scrollTo = (sel) => document.querySelector(sel)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Scorri all'elemento se presente nella pagina corrente, altrimenti naviga al tab indicato.
+  const scrollOrGoto = (selector, fallbackTab) => {
+    const el = document.querySelector(selector);
+    if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    else if (fallbackTab) { goto(fallbackTab); }
+  };
   const ACTIONS = {
     michele: {
-      home: () => goto("ricette"),
-      ricette: () => goto("maestro"),
-      impara: () => goto("maestro"),
-      lab: () => openLabTool("aggiungi"),
+      home: () => goto("ricette"),                                                   // parla delle Ricette → Ricette
+      ricette: () => scrollOrGoto('[data-testid="recipe-search"]', "ricette"),        // "apri una ricetta" → lista ricette
+      impara: () => scrollOrGoto('[data-testid="impara-livelli-btn"]', "impara"),     // video/percorso → Impara
+      community: () => scrollOrGoto('[data-testid="community-submit"]', "community"),  // "pubblica il tuo pane" → compositore
+      lab: () => openLabTool("aggiungi"),                                             // le tue ricette → Aggiungi
     },
     momy: {
-      home: () => goto("ricette"),
-      ricette: () => goto("maestro"),
-      impara: () => goto("maestro"),
-      lab: () => scrollTo('[data-testid="lab-wizard"]'),
+      home: () => goto("maestro"),                                                    // helper → Il Tuo Laboratorio
+      ricette: () => scrollOrGoto('[data-testid="recipe-cat-filters"]', "ricette"),   // filtri categoria
+      impara: () => scrollOrGoto('[data-testid="evolving-quiz"]', "impara"), // Quiz
+      community: () => scrollOrGoto('[data-testid="community-feed"],[data-testid="feed-toggle"]', "community"), // feed
+      lab: () => scrollOrGoto('[data-testid="lab-wizard"]', "maestro"),               // Percorso Guidato
     },
   };
   const actFor = (who) => (ACTIONS[who] && ACTIONS[who][variant]) || null;

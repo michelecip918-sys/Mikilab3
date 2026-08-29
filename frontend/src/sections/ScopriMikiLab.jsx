@@ -34,7 +34,7 @@ export default function ScopriMikiLab() {
       <GuidaAvatar />
 
       {/* Racconto in viaggio — timeline */}
-      <div data-testid="scopri-timeline" className="rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
+      <div data-testid="scopri-timeline" className="rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
         <p className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8] mb-3">{L("Il racconto in viaggio", "Die Reise-Geschichte", "The journey story", "El relato del viaje")}</p>
         <div className="relative pl-6">
           <div className="absolute left-[7px] top-1 bottom-1 w-0.5 bg-[#ff6b00]/30" />

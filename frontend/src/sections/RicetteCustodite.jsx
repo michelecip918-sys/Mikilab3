@@ -689,18 +689,18 @@ export default function RicetteCustodite({ initialId = null }) {
     }
   };
 
-  const inp = "bg-[#121212] dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data text-center w-28";
+  const inp = "bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data text-center w-28";
 
   if (recipe) {
     return (
       <div className="pb-40" data-testid="custodite-detail">
         <button data-testid="custodite-back" onClick={() => setOpenId(null)}
-          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
+          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
           <ChevronLeft className="w-4 h-4" /> {L({ it: "Tutte le ricette", de: "Alle Rezepte", en: "All recipes", es: "Todas", fr: "Toutes les recettes" })}
         </button>
 
         <div className="print-area">
-          <div className="rounded-3xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm">
+          <div className="rounded-3xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm">
             <div className="relative h-40">
               <img src={recipe.img} onError={onImgErr} alt="" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#3a2415]/80 to-transparent" />
@@ -715,7 +715,7 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Dal mio laboratorio — foto reale di Michele al lavoro */}
-          <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e] relative">
+          <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] relative">
             <img src={`${process.env.PUBLIC_URL || ""}/michele-real-lab.jpg`} alt="Michele" className="w-full h-44 object-cover object-top" loading="lazy" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
             <div className="absolute bottom-3 left-4 right-4 text-white">
@@ -764,15 +764,15 @@ export default function RicetteCustodite({ initialId = null }) {
               <div className="flex gap-1.5 ms-auto">
                 {[500, 1000, 2000].map((v) => (
                   <button key={v} data-testid={`custodite-quick-${v}`} onClick={() => setFlour(v)}
-                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] active:scale-95">{v >= 1000 ? `${v / 1000}kg` : `${v}g`}</button>
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95">{v >= 1000 ? `${v / 1000}kg` : `${v}g`}</button>
                 ))}
               </div>
             </div>
           </div>
 
           {/* Ingredienti ricalcolati */}
-          <div className="mt-4 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] overflow-hidden">
-            <div className="px-4 py-2.5 bg-[#121212] dark:bg-[#181818] flex items-center gap-2 border-b border-[#2b2b2b] dark:border-[#2e2e2e]">
+          <div className="mt-4 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] overflow-hidden">
+            <div className="px-4 py-2.5 bg-[#121212] dark:bg-[#181818] flex items-center gap-2 border-b border-[#2e2e2e] dark:border-[#2e2e2e]">
               <Wheat className="w-4 h-4 text-[#ff6b00]" />
               <span className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8]">{L({ it: "Ingredienti", de: "Zutaten", en: "Ingredients", es: "Ingredientes", fr: "Ingrédients" })}</span>
             </div>
@@ -790,7 +790,7 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Procedimento */}
-          <div className="mt-4 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
+          <div className="mt-4 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
             <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#ff6b00]" /> {L({ it: "Procedimento", de: "Zubereitung", en: "Method", es: "Procedimiento", fr: "Préparation" })}</p>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line leading-relaxed">{renderProcWithImprover(L(recipe.proc))}</p>
           </div>
@@ -807,8 +807,8 @@ export default function RicetteCustodite({ initialId = null }) {
 
         <div className="grid grid-cols-3 gap-2 mt-4 no-print">
           <button data-testid="custodite-share" onClick={doShare} className="flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-3 rounded-xl active:scale-97"><Share2 className="w-5 h-5" /> {L({ it: "Condividi", de: "Teilen", en: "Share", es: "Compartir", fr: "Partager" })}</button>
-          <button data-testid="custodite-copy" onClick={copyText} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-xl active:scale-97">{L({ it: "Copia", de: "Kopieren", en: "Copy", es: "Copiar", fr: "Copier" })}</button>
-          <button data-testid="custodite-print" onClick={() => window.print()} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-xl active:scale-97"><Printer className="w-5 h-5" /> {L({ it: "Stampa", de: "Druck", en: "Print", es: "Imprimir", fr: "Imprimer" })}</button>
+          <button data-testid="custodite-copy" onClick={copyText} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-xl active:scale-97">{L({ it: "Copia", de: "Kopieren", en: "Copy", es: "Copiar", fr: "Copier" })}</button>
+          <button data-testid="custodite-print" onClick={() => window.print()} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-xl active:scale-97"><Printer className="w-5 h-5" /> {L({ it: "Stampa", de: "Druck", en: "Print", es: "Imprimir", fr: "Imprimer" })}</button>
         </div>
       </div>
     );
@@ -824,7 +824,7 @@ export default function RicetteCustodite({ initialId = null }) {
       <div className="flex flex-wrap gap-2 mt-4 pb-1" data-testid="custodite-filters">
         {CATS.map((c) => (
           <button key={c.id} data-testid={`custodite-cat-${c.id}`} onClick={() => setCat(c.id)}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all active:scale-95 ${cat === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#a9d2ec] border-[#2b2b2b] dark:border-[#2e2e2e]"}`}>
+            className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all active:scale-95 ${cat === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#a9d2ec] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
             {L(c.label)}
           </button>
         ))}
@@ -833,7 +833,7 @@ export default function RicetteCustodite({ initialId = null }) {
       <div className="grid gap-3 mt-4">
         {list.map((r) => (
           <button key={r.id} data-testid={`custodite-open-${r.id}`} onClick={() => setOpenId(r.id)}
-            className="flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm active:scale-98 transition-all hover:border-[#ff6b00]/50">
+            className="flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm active:scale-98 transition-all hover:border-[#ff6b00]/50">
             <img src={r.img} onError={onImgErr} alt="" className="w-24 h-24 object-cover shrink-0" />
             <div className="py-2 pe-3 min-w-0">
               <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{r.flag} {L(r.name)}</p>

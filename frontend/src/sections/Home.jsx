@@ -287,7 +287,7 @@ export default function Home({ onNavigate }) {
   return (
     <div className="pb-2 space-y-6">
       {/* Guida rapida: come iniziare (breve, non invasiva) */}
-      <div data-testid="home-quickstart" className="rounded-2xl border border-[#ff6b00]/40 bg-[#1a1a1a] p-3.5">
+      <div data-testid="home-quickstart" className="rounded-2xl border border-[#ff6b00]/40 bg-[#1e1e1e] p-3.5">
         <p className="text-[13px] text-[#E0E0E0] leading-snug">
           <span className="font-bold text-white">{mkTri(lang)("Come iniziare:", "So startest du:", "How to start:", "Cómo empezar:", "Comment commencer:", "از کجا شروع کنی:")} </span>
           {mkTri(lang)("parti dalle Ricette di MikiLab. Sei esperto? Vai ne Il Tuo Laboratorio (anche pizza e pasticceria). Alle prime armi? Impara da casa. E ci troviamo sul Social per conoscerci.", "Beginne mit den MikiLab-Rezepten. Profi? Geh in Dein Labor (auch Pizza & Konditorei). Anfänger? Lerne von zu Hause. Und wir treffen uns im Social.", "Start with MikiLab Recipes. Expert? Go to Your Lab (also pizza & pastry). Beginner? Learn from home. And let's meet on Social.", "Empieza por las Recetas de MikiLab. ¿Experto? Ve a Tu Laboratorio (también pizza y pastelería). ¿Principiante? Aprende en casa. Y nos vemos en el Social.", "Commence par les Recettes MikiLab. Expert ? Va dans Ton Atelier (aussi pizza & pâtisserie). Débutant ? Apprends à la maison. Et on se retrouve sur le Social.", "با دستورهای میکی‌لب شروع کن. حرفه‌ای؟ به کارگاهت برو (پیتزا و شیرینی هم). تازه‌کار؟ از خانه یاد بگیر. و در سوشیال هم را می‌بینیم.")}
@@ -310,6 +310,33 @@ export default function Home({ onNavigate }) {
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />
 
+      {/* CTA GIGANTI: le due destinazioni chiave, sopra la linea di scroll */}
+      <div data-testid="home-giant-ctas" className="grid gap-3">
+        <button data-testid="home-hero-ricette-giant-cta" onClick={() => go("ricette")}
+          className="group w-full text-left rounded-3xl px-5 py-5 flex items-center gap-4 bg-[#ff6b00] hover:bg-[#d96b43] text-white shadow-[0_6px_0_rgba(0,0,0,.35),0_10px_22px_rgba(200,90,50,.35)] active:translate-y-0.5 active:shadow-[0_3px_0_rgba(0,0,0,.35)] transition-all min-h-[76px]">
+          <div className="w-12 h-12 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
+            <BookOpen className="w-6 h-6" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-xl font-extrabold leading-tight tracking-tight">{L("LE MIE RICETTE", "MEINE REZEPTE", "MY RECIPES", "MIS RECETAS", "MES RECETTES", "دستورهای من")}</p>
+            <p className="text-[12.5px] text-white/90 leading-snug mt-0.5">{L("Ricettario completo + calcolo dosi e idratazione", "Komplettes Rezeptbuch + Mengen & Hydratation", "Full recipe book + dose & hydration calculator", "Recetario completo + cálculo de dosis e hidratación", "Recettier complet + calcul des doses et hydratation", "کتاب کامل دستورها + محاسبهٔ مقادیر و آب")}</p>
+          </div>
+          <ChevronRight className="w-6 h-6 shrink-0 group-hover:translate-x-1 transition-transform" />
+        </button>
+
+        <button data-testid="home-hero-laboratorio-giant-cta" onClick={() => go("maestro")}
+          className="group w-full text-left rounded-3xl px-5 py-5 flex items-center gap-4 bg-gradient-to-r from-[#ff8a33] to-[#ff6b00] hover:from-[#ff6b00] hover:to-[#c94f00] text-white shadow-[0_6px_0_rgba(0,0,0,.3),0_10px_22px_rgba(255,107,0,.35)] active:translate-y-0.5 active:shadow-[0_3px_0_rgba(0,0,0,.3)] transition-all min-h-[76px]">
+          <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0">
+            <Wrench className="w-6 h-6" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-xl font-extrabold leading-tight tracking-tight">{L("ENTRA NEL LABORATORIO", "ZUM LABOR", "ENTER THE LAB", "ENTRA AL LABORATORIO", "ENTRE DANS L'ATELIER", "ورود به کارگاه")}</p>
+            <p className="text-[12.5px] text-white/85 font-semibold leading-snug mt-0.5">{L("Sistema del panificio: piano settimanale e calcolatori", "Backstuben-System: Wochenplan & Rechner", "Bakery system: weekly plan & calculators", "Sistema del obrador: plan semanal y calculadoras", "Système du fournil : plan hebdo & calculateurs", "سیستم نانوایی: برنامهٔ هفتگی و ماشین‌حساب‌ها")}</p>
+          </div>
+          <ChevronRight className="w-6 h-6 shrink-0 group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
+
       {/* Avatar: Michele operativo + Mohammadreza pronto ad aiutare */}
       <AvatarBubbles variant="home" />
 
@@ -326,7 +353,7 @@ export default function Home({ onNavigate }) {
 
       {/* HERO — 100% gratis (lead magnet: account gratuito) */}
       <div data-testid="home-hero" className="relative overflow-hidden rounded-3xl p-6 sm:p-7 border border-[#ff6b00]/40"
-        style={{ background: "linear-gradient(135deg,#1a1a1a 0%,#241206 55%,#3a1a00 100%)" }}>
+        style={{ background: "linear-gradient(135deg,#1e1e1e 0%,#241206 55%,#3a1a00 100%)" }}>
         <div aria-hidden className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-30" style={{ background: "radial-gradient(circle,#ff8a33,transparent 70%)" }} />
         <div className="relative">
           <span data-testid="home-hero-badge" className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#3a6b3a] bg-[#dff0dd] border border-[#8fbf8f] rounded-full px-3 py-1 mb-3">
@@ -415,7 +442,7 @@ export default function Home({ onNavigate }) {
 
       {/* Messaggi non letti dagli amici */}
       {convos.length > 0 && (
-        <div data-testid="home-unread-chats" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4">
+        <div data-testid="home-unread-chats" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
           <div className="flex items-center gap-2 mb-2">
             <MessageCircle className="w-4 h-4 text-[#ff6b00]" />
             <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{L("Messaggi non letti", "Ungelesene Nachrichten", "Unread messages", "Mensajes no leídos")}</p>
@@ -424,8 +451,8 @@ export default function Home({ onNavigate }) {
           <div className="space-y-1.5">
             {convos.slice(0, 4).map((c) => (
               <button key={c.other_id} data-testid={`home-chat-${c.other_id}`} onClick={() => { setChatUser({ user_id: c.other_id, name: c.name, picture: c.picture }); setChatOpen(true); }}
-                className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-[#121212] dark:hover:bg-[#242424] active:scale-98 transition-all text-left">
-                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#1c1c1c] flex items-center justify-center text-white text-sm font-bold shrink-0">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
+                className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-[#121212] dark:hover:bg-[#1e1e1e] active:scale-98 transition-all text-left">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-[#1e1e1e] flex items-center justify-center text-white text-sm font-bold shrink-0">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
                   <p className="text-[12px] text-[#7E8A93] truncate">{c.last}</p>
@@ -510,12 +537,12 @@ export default function Home({ onNavigate }) {
                   </p>
                 </div>
 
-                <div data-testid="home-features" className="rounded-3xl bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] shadow-md overflow-hidden">
+                <div data-testid="home-features" className="rounded-3xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-md overflow-hidden">
                   <div className="bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white px-5 py-4 flex items-center gap-2">
                     <Sparkles className="w-5 h-5" />
                     <h3 className="font-display text-lg font-bold">{L("Cosa puoi fare con MikiLab", "Was du mit MikiLab machen kannst", "What you can do with MikiLab", "Qué puedes hacer con MikiLab")}</h3>
                   </div>
-                  <div className="divide-y divide-[#2b2b2b] dark:divide-[#2e2e2e]">
+                  <div className="divide-y divide-[#2e2e2e] dark:divide-[#2e2e2e]">
                     {FEATURES.map((f, i) => {
                       const Icon = f.icon;
                       const txt = f[lang] || f.it;
@@ -575,7 +602,7 @@ export default function Home({ onNavigate }) {
                           {isOpen && (
                             <motion.div key="content" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
-                              <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#181818] border border-t-0 border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden">
+                              <div data-testid={`concept-content-${c.id}`} className="rounded-b-3xl bg-white dark:bg-[#181818] border border-t-0 border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
                                 {CONCEPT_PHOTOS[c.id] && (
                                   <img src={CONCEPT_PHOTOS[c.id]} alt={c.title}
                                     data-testid={`concept-photo-${c.id}`} className="w-full h-52 object-cover" loading="lazy"
@@ -618,7 +645,7 @@ export default function Home({ onNavigate }) {
         {/* 1) Le Mie Ricette + I Miei Corsi */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <button data-testid="home-core-ricette" onClick={() => go("ricette")}
-            className="relative text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#1c1c1c] to-[#16202b] min-h-[112px] flex flex-col gap-2 ring-2 ring-[#ff6b00]/70 overflow-hidden">
+            className="relative text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#1e1e1e] to-[#16202b] min-h-[112px] flex flex-col gap-2 ring-2 ring-[#ff6b00]/70 overflow-hidden">
             <span className="absolute top-2.5 right-2.5 text-[9px] font-bold uppercase tracking-wide bg-[#ff6b00] text-white px-2 py-0.5 rounded-full">{L("Inizia qui", "Hier starten", "Start here", "Empieza aquí", "Commence ici", "از اینجا شروع کن")}</span>
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><BookOpen className="w-6 h-6" /></div>
             <p className="font-display text-base font-bold leading-tight">{L("Le Mie Ricette", "Meine Rezepte", "My Recipes")}</p>

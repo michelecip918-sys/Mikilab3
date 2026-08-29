@@ -16,14 +16,14 @@ export default function BancaLievito({ onBack }) {
   return (
     <div className="pb-8" data-testid="banca-lievito">
       {onBack && <button data-testid="banca-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#2e8b6f,#1c5c49 70%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#2e8b6f,#1c5c49 70%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Sprout className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Banca del Lievito & Sauerteig", "Sauerteig-Bank", "Sourdough & Starter Bank", "Banco de Masa Madre")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("La mappa della community per scambiare starter (lievito madre / Sauerteig) e consigli con i fornai vicino a te.", "Community-Karte zum Tauschen von Sauerteig-Starter.", "Community map to exchange sourdough starter and tips nearby.", "Mapa de la comunidad para intercambiar masa madre.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("La mappa della community per scambiare starter (lievito madre / Sauerteig) e consigli con i fornai vicino a te.", "Community-Karte zum Tauschen von Sauerteig-Starter.", "Community map to exchange sourdough starter and tips nearby.", "Mapa de la comunidad para intercambiar masa madre.")}</p>
       </div>
 
       <button data-testid="banca-open-map" onClick={() => setMapOpen(true)}
-        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#2e8b6f] hover:bg-[#1c5c49] text-[#161616] font-semibold px-5 py-3.5 mb-4 active:scale-98 transition-all">
+        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#2e8b6f] hover:bg-[#1c5c49] text-[#121212] font-semibold px-5 py-3.5 mb-4 active:scale-98 transition-all">
         <MapPin className="w-5 h-5" /> {L("Apri la mappa & mettiti sulla mappa", "Karte öffnen & eintragen", "Open the map & put yourself on it", "Abre el mapa y aparece en él")}
       </button>
 
@@ -35,7 +35,7 @@ export default function BancaLievito({ onBack }) {
       ) : (
         <div className="space-y-2.5" data-testid="banca-list">
           {list.slice(0, 30).map((b, i) => (
-            <div key={i} data-testid={`banca-baker-${i}`} className="flex items-start gap-3 rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-3.5 shadow-sm">
+            <div key={i} data-testid={`banca-baker-${i}`} className="flex items-start gap-3 rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3.5 shadow-sm">
               <div className="w-10 h-10 rounded-full bg-[#2e8b6f] text-white flex items-center justify-center font-bold shrink-0">{(b.name || "F")[0].toUpperCase()}</div>
               <div className="min-w-0 flex-1">
                 <p className="font-display text-[15px] font-bold text-[#ff6b00] dark:text-[#e4eff8] leading-tight">{b.name}</p>

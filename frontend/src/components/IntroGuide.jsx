@@ -26,7 +26,7 @@ export default function IntroGuide() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && setOpen(false)}>
-      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e] p-0 overflow-hidden">
+      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#121212] dark:bg-[#121212] border-[#2e2e2e] dark:border-[#2e2e2e] p-0 overflow-hidden">
         <DialogTitle className="sr-only">{c.title}</DialogTitle>
         <DialogDescription className="sr-only">{c.desc}</DialogDescription>
         <div className="bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-6 text-center">
@@ -44,7 +44,7 @@ export default function IntroGuide() {
             {LANGS.map((l) => (
               <button key={l.id} data-testid={`intro-lang-${l.id}`} onClick={() => setLang(l.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
-                  lang === l.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#e4eff8] dark:bg-[#242424] text-[#7E8A93] border-[#2b2b2b] dark:border-[#2e2e2e]"
+                  lang === l.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"
                 }`}>
                 <span>{l.flag}</span> {l.label}
               </button>

@@ -13,7 +13,7 @@ export default function CoursesPanel() {
       </div>
       <p className="text-xs text-[#7E8A93] -mt-1 leading-relaxed">{t("courses_note")}</p>
       {courses.map((c, i) => (
-        <div key={i} data-testid={`course-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl overflow-hidden">
+        <div key={i} data-testid={`course-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl overflow-hidden">
           <div className="aspect-video bg-black">
             <iframe
               className="w-full h-full"

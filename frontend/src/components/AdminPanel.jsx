@@ -196,7 +196,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#121212] dark:bg-[#121212] border-[#2b2b2b] dark:border-[#2e2e2e]">
+      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#121212] dark:bg-[#121212] border-[#2e2e2e] dark:border-[#2e2e2e]">
         <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
           <Crown className="w-5 h-5 text-[#ff6b00]" /> {de ? "Admin-Panel" : "Pannello Admin"}
         </DialogTitle>
@@ -211,11 +211,11 @@ export default function AdminPanel({ open, onOpenChange }) {
           <input
             data-testid="admin-grant-email" type="email" value={email}
             onChange={(e) => setEmail(e.target.value)} placeholder="email@esempio.it"
-            className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
+            className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
           />
           <select
             data-testid="admin-grant-days" value={days} onChange={(e) => setDays(e.target.value)}
-            className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
+            className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
           >
             {dayOpts.map((o) => <option key={o.v} value={o.v}>{de ? o.de : o.it}</option>)}
           </select>
@@ -234,7 +234,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               <p className="text-[11px] text-[#7E8A93]">{de ? "Warteliste" : "Lista d'attesa"}: <b>{shop.waitlist_count}</b> · {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}</p>
             </div>
             <button data-testid="admin-shop-toggle" onClick={toggleShop}
-              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#242424] text-[#ff6b00] dark:text-[#8FB0C2] border border-[#ff6b00]/30"}`}>
+              className={`px-3 py-2 rounded-xl text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] border border-[#ff6b00]/30"}`}>
               {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}
             </button>
           </div>
@@ -280,7 +280,7 @@ export default function AdminPanel({ open, onOpenChange }) {
           ) : (
             <div className="space-y-1.5 max-h-44 overflow-y-auto">
               {subs.map((s) => (
-                <div key={s.email} data-testid={`nl-row-${s.email}`} className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2.5 py-2">
+                <div key={s.email} data-testid={`nl-row-${s.email}`} className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2.5 py-2">
                   <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{s.email}</span>
                   <span className="shrink-0 flex items-center gap-1.5">
                     <span className="text-[10px] font-bold uppercase text-[#ff6b00] bg-[#ff6b00]/10 rounded px-1.5 py-0.5">{s.lang || "it"}</span>
@@ -298,23 +298,23 @@ export default function AdminPanel({ open, onOpenChange }) {
             </p>
             <input data-testid="nl-send-subject" value={nl.subject} onChange={(e) => setNl((n) => ({ ...n, subject: e.target.value }))}
               placeholder={de ? "Betreff der E-Mail" : "Oggetto dell'email"}
-              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <input data-testid="nl-send-title" value={nl.title} onChange={(e) => setNl((n) => ({ ...n, title: e.target.value }))}
               placeholder={de ? "Titel (im Inhalt)" : "Titolo (nel contenuto)"}
-              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <textarea data-testid="nl-send-body" value={nl.body} onChange={(e) => setNl((n) => ({ ...n, body: e.target.value }))} rows={4}
               placeholder={de ? "Text… **fett**, *kursiv*, [Link](https://…)" : "Testo… **grassetto**, *corsivo*, [link](https://…)"}
-              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <input data-testid="nl-send-image" value={nl.image_url} onChange={(e) => setNl((n) => ({ ...n, image_url: e.target.value }))}
               placeholder={de ? "Bild-URL (optional)" : "URL immagine (opzionale)"}
-              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1.5" />
             <p className="text-[10px] text-[#7E8A93] mb-2">{de ? "Formatierung: **fett**, *kursiv*, [Text](URL)" : "Formattazione: **grassetto**, *corsivo*, [testo](URL)"}</p>
 
             {/* Anteprima live: come apparirà l'email agli iscritti */}
             {(nl.title.trim() || nl.body.trim() || nl.image_url.trim()) && (
               <div className="mb-2">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#2f5a2f] dark:text-[#9cd6a0] mb-1">{de ? "Vorschau" : "Anteprima"}</p>
-                <div data-testid="nl-preview" className="rounded-xl border border-[#2b2b2b] dark:border-[#2e2e2e] overflow-hidden bg-white">
+                <div data-testid="nl-preview" className="rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden bg-white">
                   <div className="bg-[#ff6b00] px-4 py-3 flex items-center gap-2">
                     <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-8 h-8 rounded-lg object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                     <span className="font-display text-white font-bold text-base">MikiLab</span>
@@ -332,7 +332,7 @@ export default function AdminPanel({ open, onOpenChange }) {
             )}
             <div className="flex items-center gap-2">
               <select data-testid="nl-send-lang" value={nl.lang} onChange={(e) => setNl((n) => ({ ...n, lang: e.target.value }))}
-                className="bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-2 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]">
+                className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-2 py-2 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]">
                 <option value="">{de ? "Alle Sprachen" : "Tutte le lingue"}</option>
                 <option value="it">IT</option><option value="de">DE</option><option value="en">EN</option>
                 <option value="es">ES</option><option value="fr">FR</option><option value="fa">FA</option>
@@ -352,7 +352,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                 <p className="text-[11px] font-bold text-[#2f5a2f] dark:text-[#9cd6a0] mb-1.5">{de ? "Verlauf" : "Storico invii"}</p>
                 <div className="space-y-1 max-h-32 overflow-y-auto">
                   {nlHistory.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between gap-2 text-[11px] bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5">
+                    <div key={c.id} className="flex items-center justify-between gap-2 text-[11px] bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5">
                       <span className="truncate text-[#2B303B] dark:text-[#e4eff8]">{c.subject}</span>
                       <span className="shrink-0 text-[#7E8A93]">{(c.created_at || "").slice(0, 10)} · {c.sent}/{c.total} · {(c.lang || "all").toUpperCase()}</span>
                     </div>
@@ -374,7 +374,7 @@ export default function AdminPanel({ open, onOpenChange }) {
             <input data-testid="admin-wa-number" value={settings.whatsapp_number}
               onChange={(e) => setSettings((s) => ({ ...s, whatsapp_number: e.target.value }))}
               placeholder="491601253378"
-              className="w-full bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+              className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
           </div>
 
           {/* Fumetti avatar */}
@@ -384,7 +384,7 @@ export default function AdminPanel({ open, onOpenChange }) {
             </p>
             <div className="space-y-3">
               {BUBBLE_SECTIONS.map((sec) => (
-                <div key={sec.variant} className="rounded-xl bg-white dark:bg-[#181818] border border-[#2b2b2b] dark:border-[#2e2e2e] p-2.5">
+                <div key={sec.variant} className="rounded-xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5">
                   <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1.5">{de ? sec.de : sec.it}</p>
                   {["michele", "momy"].map((who) => (
                     <div key={who} className="mb-1.5">
@@ -393,12 +393,12 @@ export default function AdminPanel({ open, onOpenChange }) {
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.it) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "it", e.target.value)}
                         placeholder={de ? "Text IT" : "Testo IT"}
-                        className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
+                        className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
                       <input data-testid={`admin-bubble-${sec.variant}-${who}-de`}
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.de) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "de", e.target.value)}
                         placeholder="Text DE"
-                        className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                        className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
                     </div>
                   ))}
                 </div>
@@ -472,7 +472,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               <div className="space-y-1.5 max-h-44 overflow-y-auto">
                 {trCoverage.incomplete.map((r) => (
                   <div key={r.id} data-testid={`admin-translation-missing-${r.id}`}
-                    className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-lg px-2.5 py-2">
+                    className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2.5 py-2">
                     <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</span>
                     <span className="shrink-0 flex gap-1">
                       {r.miss.map((l) => (
@@ -498,7 +498,7 @@ export default function AdminPanel({ open, onOpenChange }) {
             <p className="text-sm text-[#7E8A93] text-center py-4">{de ? "Noch keine Zugänge." : "Nessun accesso ancora."}</p>
           ) : list.map((e) => (
             <div key={e.email} data-testid={`ent-row-${e.email}`}
-              className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5">
+              className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5">
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{e.email}</p>
                 <p className="text-[11px] text-[#7E8A93]">
@@ -510,7 +510,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               </div>
               {e.active && (
                 <button data-testid={`ent-revoke-${e.email}`} onClick={() => revoke(e.email)}
-                  className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#242424] flex items-center justify-center text-[#ff6b00] shrink-0 active:scale-95">
+                  className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#ff6b00] shrink-0 active:scale-95">
                   <Trash2 className="w-4 h-4" />
                 </button>
               )}

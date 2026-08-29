@@ -25,7 +25,7 @@ export default function Ricette() {
   useBackClose(view !== "main", () => setView("main"));
 
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
-  if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2b2b2b] dark:border-[#2e2e2e]"><Glossario /></div></Sub>;
+  if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2e2e2e] dark:border-[#2e2e2e]"><Glossario /></div></Sub>;
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
@@ -122,7 +122,7 @@ export default function Ricette() {
 function UtilBtn({ testid, Icon, label, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick}
-      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#ff6b00]/60 transition-all min-w-0">
+      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#ff6b00]/60 transition-all min-w-0">
       <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
         <Icon className="w-5 h-5 text-[#ff6b00]" />
       </div>

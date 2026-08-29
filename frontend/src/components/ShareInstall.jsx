@@ -59,7 +59,7 @@ export default function ShareInstall() {
   };
 
   return (
-    <div data-testid="share-install" className="rounded-3xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-5">
+    <div data-testid="share-install" className="rounded-3xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
       <div className="flex items-center gap-2 mb-1 text-[#ff6b00]">
         <Share2 className="w-5 h-5" />
         <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("share_title")}</h3>
@@ -69,7 +69,7 @@ export default function ShareInstall() {
       <div className="grid grid-cols-3 gap-2.5" data-testid="share-networks">
         {NETS.map(({ id, label, Icon, color, href }) => (
           <a key={id} data-testid={`share-${id}`} href={href} target="_blank" rel="noopener noreferrer"
-            className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-[#e4eff8] dark:bg-[#242424] py-3 active:scale-95 transition-transform">
+            className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#e4eff8] dark:bg-[#1e1e1e] py-3 active:scale-95 transition-transform">
             <span className="w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: color }}>
               <Icon className="w-5 h-5 text-white" />
             </span>
@@ -77,7 +77,7 @@ export default function ShareInstall() {
           </a>
         ))}
         <button data-testid="share-copy" onClick={copyLink}
-          className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-[#e4eff8] dark:bg-[#242424] py-3 active:scale-95 transition-transform">
+          className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#e4eff8] dark:bg-[#1e1e1e] py-3 active:scale-95 transition-transform">
           <span className="w-9 h-9 rounded-full flex items-center justify-center bg-[#7E8A93]"><Copy className="w-5 h-5 text-white" /></span>
           <span className="text-[11px] font-medium text-[#3F4A54] dark:text-[#AEB8BF]">{t("share_copy")}</span>
         </button>

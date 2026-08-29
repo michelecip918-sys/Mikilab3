@@ -70,7 +70,7 @@ export default function FoodCost() {
 
       {/* Materie prime */}
       <h2 className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{tri("Materie prime", "Rohstoffe", "Ingredients")}</h2>
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-2 mb-4">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2 mb-4">
         <div className="grid grid-cols-[1fr_64px_72px_28px] gap-1 px-1 pb-1 text-[10px] font-bold uppercase text-[#7E8A93]">
           <span>{tri("Ingrediente", "Zutat", "Ingredient")}</span><span className="text-right">kg</span><span className="text-right">€/kg</span><span />
         </div>
@@ -87,7 +87,7 @@ export default function FoodCost() {
 
       {/* Energia */}
       <h2 className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1"><Zap className="w-3.5 h-3.5" /> {tri("Energia", "Energie", "Energy")}</h2>
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-2 mb-2">
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2 mb-2">
         <div className="grid grid-cols-[1fr_64px_64px_28px] gap-1 px-1 pb-1 text-[10px] font-bold uppercase text-[#7E8A93]">
           <span>{tri("Macchina", "Maschine", "Machine")}</span><span className="text-right">kW</span><span className="text-right">{tri("ore", "Std.", "hrs")}</span><span />
         </div>
@@ -147,7 +147,7 @@ export default function FoodCost() {
         ].filter(Boolean).join("\n");
         shareContent(L, txt, lang);
       }}
-        className="mt-3 w-full bg-[#e4eff8] dark:bg-[#242424] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
+        className="mt-3 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-5 py-3 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2 active:scale-98 transition-all">
         <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
       </button>
     </div>

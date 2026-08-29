@@ -38,16 +38,16 @@ export default function TimeLapseTracker({ onBack }) {
   return (
     <div className="pb-8" data-testid="timelapse">
       {onBack && <button data-testid="timelapse-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#161616] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><TrendingUp className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Time-Lapse Raddoppio", "Time-Lapse Verdopplung", "Doubling Time-Lapse", "Time-Lapse Duplicado")}</h1>
-        <p className="text-[#161616]/85 text-sm mt-2 leading-snug">{L("Fotografa l'impasto all'inizio e adesso, segna quanto è cresciuto: ti dico se ha raddoppiato ed è pronto.", "Fotografiere Start & Jetzt, markiere den Anstieg.", "Photograph start & now, mark the rise: I'll tell you when it's doubled.", "Fotografía inicio y ahora, marca el crecimiento.")}</p>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Fotografa l'impasto all'inizio e adesso, segna quanto è cresciuto: ti dico se ha raddoppiato ed è pronto.", "Fotografiere Start & Jetzt, markiere den Anstieg.", "Photograph start & now, mark the rise: I'll tell you when it's doubled.", "Fotografía inicio y ahora, marca el crecimiento.")}</p>
       </div>
 
       {/* Progress ring */}
       <div className="flex flex-col items-center mb-5">
         <svg width="140" height="140" viewBox="0 0 140 140" data-testid="timelapse-ring">
-          <circle cx="70" cy="70" r={R} fill="none" stroke="#2b2b2b" strokeWidth="12" />
+          <circle cx="70" cy="70" r={R} fill="none" stroke="#2e2e2e" strokeWidth="12" />
           <circle cx="70" cy="70" r={R} fill="none" stroke={ready ? "#2e8b6f" : "#ff6b00"} strokeWidth="12" strokeLinecap="round"
             strokeDasharray={C} strokeDashoffset={C - (pct / 100) * C} transform="rotate(-90 70 70)" style={{ transition: "stroke-dashoffset .5s" }} />
           <text x="70" y="66" textAnchor="middle" className="font-display" fontSize="26" fontWeight="bold" fill="#ff6b00">+{rise}%</text>
@@ -57,7 +57,7 @@ export default function TimeLapseTracker({ onBack }) {
       </div>
 
       {/* Slider rise */}
-      <div className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] p-4 shadow-sm mb-4">
+      <div className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm mb-4">
         <p className="text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-2">{L("Quanto è cresciuto? (0 = uguale, 100 = raddoppiato)", "Wie stark gewachsen? (100 = verdoppelt)", "How much did it grow? (100 = doubled)", "¿Cuánto creció? (100 = duplicado)")}</p>
         <input data-testid="timelapse-rise" type="range" min="0" max="150" value={rise} onChange={(e) => setRiseVal(Number(e.target.value))} className="w-full accent-[#ff6b00]" />
       </div>
@@ -65,7 +65,7 @@ export default function TimeLapseTracker({ onBack }) {
       {/* Photos */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         {[["startPhoto", L("Inizio", "Start", "Start", "Inicio")], ["nowPhoto", L("Adesso", "Jetzt", "Now", "Ahora")]].map(([k, label]) => (
-          <label key={k} data-testid={`timelapse-photo-${k}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-dashed border-[#2b2b2b] dark:border-[#2e2e2e] p-3 flex flex-col items-center gap-2 cursor-pointer min-h-[120px] justify-center">
+          <label key={k} data-testid={`timelapse-photo-${k}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] p-3 flex flex-col items-center gap-2 cursor-pointer min-h-[120px] justify-center">
             {data?.[k] ? <img src={data[k]} alt={label} className="w-full h-24 object-cover rounded-xl" /> : (uploading === k ? <Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /> : <Camera className="w-7 h-7 text-[#ff6b00]" />)}
             <span className="text-[12px] font-bold text-[#ff6b00]">{label}</span>
             <input type="file" accept="image/*" capture="environment" onChange={(e) => onPhoto(e, k)} className="hidden" />
@@ -74,8 +74,8 @@ export default function TimeLapseTracker({ onBack }) {
       </div>
 
       <div className="flex gap-2">
-        <button data-testid="timelapse-start" onClick={start} className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff6b00] text-[#161616] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><Play className="w-4 h-4" /> {L("Avvia timer", "Timer starten", "Start timer", "Iniciar")}</button>
-        <button data-testid="timelapse-reset" onClick={reset} className="px-4 flex items-center justify-center bg-[#1a1a1a] text-[#ff6b00] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><RotateCcw className="w-4 h-4" /></button>
+        <button data-testid="timelapse-start" onClick={start} className="flex-1 flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff6b00] text-[#121212] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><Play className="w-4 h-4" /> {L("Avvia timer", "Timer starten", "Start timer", "Iniciar")}</button>
+        <button data-testid="timelapse-reset" onClick={reset} className="px-4 flex items-center justify-center bg-[#1e1e1e] text-[#ff6b00] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><RotateCcw className="w-4 h-4" /></button>
       </div>
     </div>
   );
