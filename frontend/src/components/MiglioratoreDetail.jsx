@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FlaskConical, ChevronDown, ChevronUp } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
@@ -8,6 +8,20 @@ export default function MiglioratoreDetail() {
   const { lang } = useLang();
   const L = (o) => o[lang] || o.it;
   const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+
+  // Apertura da un asterisco cliccato nel procedimento ("Miglioratore*").
+  useEffect(() => {
+    const onOpen = () => {
+      setOpen(true);
+      // Aspetta l'animazione di espansione prima di calcolare lo scroll.
+      setTimeout(() => {
+        rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 380);
+    };
+    window.addEventListener("mikilab-open-improver", onOpen);
+    return () => window.removeEventListener("mikilab-open-improver", onOpen);
+  }, []);
 
   const ING = [
     {
@@ -38,7 +52,7 @@ export default function MiglioratoreDetail() {
   ];
 
   return (
-    <div data-testid="miglioratore-detail" className="mt-3 pl-9">
+    <div ref={rootRef} data-testid="miglioratore-detail" className="mt-3 pl-9 scroll-mt-24">
       <button data-testid="miglioratore-detail-toggle" onClick={() => setOpen((v) => !v)}
         className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-white/15 border border-white/25 rounded-full px-3 py-1.5 active:scale-95 hover:bg-white/25 transition-all">
         <FlaskConical className="w-3.5 h-3.5" />

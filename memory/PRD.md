@@ -2406,3 +2406,13 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - Rimossi tutti i punti d'ingresso/render del Mercatino: Home (`home-market-promo`), Community (sezione `community-marketplace` + tile `community-marketplace-top-btn`, grid quick-actions → grid-cols-3), menu Social in SiteMenu (voce "market" + rinominato "Community & Mercatino" → "Community"), Laboratorio (`tool === "market"` render).
 - Componente `Marketplace.jsx` conservato (non referenziato) — nessuna cancellazione file. Branch `v==="market"` in Community lasciato come no-op innocuo.
 - Verificato a schermo: home-market-promo/community-marketplace/tile = assenti; 0 errori JS; compilazione pulita.
+
+## v-fork.89 (2026-06) — Auto-traduzione verificata + Asterisco Miglioratore + Foto lab
+- **P0 auto-traduzione (VERIFICATO)**: `POST /api/recipes` e `PUT /api/recipes/{id}` traducono in parallelo (asyncio.gather) in DE/EN/ES/FR/FA via Emergent LLM. Testato con curl admin: ricetta creata → name_de/en/es/fr/fa + procedure_* tutti popolati correttamente. Ricetta di test eliminata.
+- **P1 asterisco "Miglioratore" nel procedimento**: nuovo helper condiviso `lib/improverText.jsx` (`renderProcedureWithImprover`) con match multi-sinonimo case-insensitive (Miglioratore|Improver|Verbesserer|Backmittel|Mejorador|Améliorant|بهبوددهنده). Usato in:
+  - `RicetteCustodite.jsx`: l'asterisco (`proc-improver-asterisk`) dispatcha `mikilab-open-improver` → `MiglioratoreDetail` ascolta l'evento, si espande e scrolla (block:'start', delay 380ms post-animazione).
+  - `RecipeList.jsx`: l'asterisco chiama `onImprover` → apre la ricetta "Miglioratore Naturale Pro" nel viewer.
+  - Fix gap multilingua (iteration_114 MEDIUM): DE usa "Backmittel", ES/FR mantengono "Miglioratore Naturale Pro" → ora tutti matchano. Verificato via regex su campioni DB.
+- **P2 foto reale laboratorio**: card `custodite-lab-photo` (/michele-real-lab.jpg + didascalia "Dal mio laboratorio" 6 lingue) nel dettaglio ricetta di RicetteCustodite. La foto reale è già ampiamente presente in Home. Utente: "Non ho foto" → usate le esistenti.
+- Test: iteration_114 → P1a 100%, P2 100%, P1b 100% IT/EN (DE/ES/FR/FA risolti dopo fix). Compilazione pulita.
+- Backlog (design, pre-esistente, fuori scope): header "MikiLab" troncato in DE/FR a 390px con label login lunghe; NewsletterPopup copre l'header dopo ~10s (fastidio navigazione).

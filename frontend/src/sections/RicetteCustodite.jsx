@@ -6,10 +6,16 @@ import { triFR, triFA } from "@/i18n/triMaps";
 import { toast } from "sonner";
 import SectionHero from "@/components/SectionHero";
 import MiglioratoreDetail from "@/components/MiglioratoreDetail";
+import { renderProcedureWithImprover } from "@/lib/improverText";
 
 // "Le Ricette Custodite" — pani del Sud d'Italia + Germania, con il metodo di Michele.
 // Ogni ingrediente è in % sul peso della farina → "Adatta alle mie dosi" ricalcola tutto.
 // Tutto è multilingua (it/de/en/es/fr) così anche in francese si legge in francese.
+
+// Parola "Miglioratore" (localizzata) nel procedimento → asterisco cliccabile che apre la scheda.
+function renderProcWithImprover(text) {
+  return renderProcedureWithImprover(text, () => window.dispatchEvent(new CustomEvent("mikilab-open-improver")));
+}
 
 // ── Immagini ──────────────────────────────────────────────
 const IMG = {
@@ -708,6 +714,16 @@ export default function RicetteCustodite({ initialId = null }) {
             </div>
           </div>
 
+          {/* Dal mio laboratorio — foto reale di Michele al lavoro */}
+          <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-[#2b2b2b] dark:border-[#2e2e2e] relative">
+            <img src={`${process.env.PUBLIC_URL || ""}/michele-real-lab.jpg`} alt="Michele" className="w-full h-44 object-cover object-top" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+            <div className="absolute bottom-3 left-4 right-4 text-white">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff8c3a]">{L({ it: "Dal mio laboratorio", de: "Aus meiner Backstube", en: "From my bakery", es: "Desde mi laboratorio", fr: "De mon laboratoire", fa: "از کارگاه من" })}</p>
+              <p className="text-[13px] font-semibold leading-snug drop-shadow">{L({ it: "Ogni ricetta nasce qui, tra le mie mani e i miei impasti.", de: "Jedes Rezept entsteht hier, in meinen Händen und Teigen.", en: "Every recipe is born here, in my hands and my dough.", es: "Cada receta nace aquí, entre mis manos y mis masas.", fr: "Chaque recette naît ici, entre mes mains et mes pâtes.", fa: "هر دستور اینجا متولد می‌شود، میان دستان و خمیرهای من." })}</p>
+            </div>
+          </div>
+
           {/* Arma segreta: Miglioratore Naturale — sistema didascalia (salute & naturalezza) */}
           <div className="mt-4 bg-[#ff6b00] rounded-2xl p-4 text-white" data-testid="custodite-improver-note">
             <div className="flex items-start gap-3">
@@ -776,7 +792,7 @@ export default function RicetteCustodite({ initialId = null }) {
           {/* Procedimento */}
           <div className="mt-4 rounded-2xl border border-[#2b2b2b] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
             <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#ff6b00]" /> {L({ it: "Procedimento", de: "Zubereitung", en: "Method", es: "Procedimiento", fr: "Préparation" })}</p>
-            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line leading-relaxed">{L(recipe.proc)}</p>
+            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line leading-relaxed">{renderProcWithImprover(L(recipe.proc))}</p>
           </div>
 
           {/* Scheda condivisibile con QR */}

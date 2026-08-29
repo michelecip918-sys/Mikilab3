@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend-only testing (P1a, P1b, P2) su preview URL, viewport mobile 390x844. P1a (asterisco Miglioratore in Ricette Custodite) PASS in IT/EN/DE/FR/FA: asterisco arancione #ff6b00 presente nel Procedimento, il click apre/espande 'Il mio Miglioratore' con i 5 ingredienti (miglioratore-ing-0..4 visibili) e fa scroll verso la scheda. P2 (foto reale laboratorio) PASS: custodite-lab-photo presente, /michele-real-lab.jpg carica correttamente (naturalWidth 1024x1024, render 356x176, object-cover object-top, volto visibile, non tagliata male), didascalia tradotta correttamente (IT 'DAL MIO LABORATORIO', DE 'AUS MEINER BACKSTUBE', FR 'DE MON LABORATOIRE', FA 'از کارگاه من'). P1b (asterisco in RecipeList su ricette MikiLab dal DB) PASS in IT/EN dopo login admin: su 'Brezel' l'asterisco compare accanto a 'Natural Improver'/'Miglioratore' e il click apre nel viewer la ricetta 'Miglioratore Naturale Pro'. TROVATO GAP MULTILINGUA su P1b: in DE/ES/FR (e parte di FA) l'asterisco NON compare pur essendo il miglioratore citato nel procedimento.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList.procWithImprover", "issue": "L'asterisco non compare nei procedimenti tradotti perche il match usa una sola parola per lingua (IMPROVER_WORD_PROC). Dati reali (120 ricette, 29 con miglioratore nel procedimento IT): IT 29/29, EN 26/29, DE 0/29 (la traduzione usa 'Backmittel'), ES 1/29, FR 1/29 (mantengono il nome prodotto italiano 'Miglioratore Naturale Pro'), FA 12/29. Verificato live su 'Brezel' con i chip recipe-lang-it/de/es/fr/en: asterisco presente solo in IT ed EN.", "selector": "[data-testid=proc-improver-asterisk]", "priority": "MEDIUM"},
+      {"component": "MiglioratoreDetail (RicetteCustodite)", "issue": "Dopo il click sull'asterisco la scheda si espande ma lo scrollIntoView({block:'center'}) viene calcolato prima dell'animazione di apertura: il bordo superiore della card finisce a top=-230px (fuori viewport in alto), il contenuto e comunque visibile (bottom=214px). Cosmetico: ricalcolare lo scroll dopo l'animazione o usare block:'start'.", "selector": "[data-testid=miglioratore-detail]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Header (DE/FR)", "issues": ["Il titolo 'MikiLab' viene troncato ('Miki...') quando le etichette dei pulsanti sono piu lunghe (Anmelden / Se connecter) su 390px"]},
+      {"screen": "Home/Ricette", "issues": ["Il popup newsletter (newsletter-popup) compare dopo ~10s e copre l'header bloccando il click su login-btn: rende fragile qualsiasi test/automazione e puo dare fastidio all'utente durante la navigazione"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "RecipeList: sostituire l'indexOf su singola parola con un match multi-sinonimo case-insensitive (Miglioratore|Improver|Verbesserer|Backmittel|Mejorador|Am\u00e9liorant|بهبوددهنده) per far comparire l'asterisco anche in DE/ES/FR/FA (attualmente 0/29 in DE)",
+    "Opzionale: rendere l'asterisco cliccabile su TUTTE le occorrenze della parola, non solo la prima (oggi solo la prima occorrenza diventa link)",
+    "MiglioratoreDetail: ricalcolare lo scrollIntoView dopo l'espansione (o usare block:'start') per evitare che la testata della card resti sopra il viewport"
+  ],
+  "critical_code_review_comments": [
+    "renderProcWithImprover / procWithImprover sono codice duplicato in due file (RicetteCustodite.jsx e RecipeList.jsx) con mappe di parole diverse: estrarre in un helper condiviso (es. src/lib/improverText.js) per evitare divergenze come quella riscontrata in DE/ES/FR",
+    "openImprover in RecipeList cerca la ricetta con /migliorator|backmittel/i su r.name (nome base IT): funziona oggi ('Miglioratore Naturale Pro'), ma si rompe se il nome viene rinominato/localizzato; meglio un id/flag dedicato",
+    "RicetteCustodite.jsx e un file monolitico > 900 righe con tutti i dati ricetta hardcoded: valutare split dati/UI"
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per richiesta)", "frontend": "P1a 100%, P2 100%, P1b 100% IT/EN - 0% DE/ES/FR"},
+  "seed_data_creation": "nessuno; usato account esistente admin@mikilab.de",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login via data-testid login-btn -> auth-email/auth-password/auth-submit) funzionante",
+  "context_for_next_testing_agent": "Per testare: chiudere l'intro (pulsante 'Start'/'Inizia') e il popup newsletter con [data-testid=newsletter-popup-dismiss] (compare dopo ~10s, blocca il click su login-btn). Il pulsante di login in header e [data-testid=login-btn] (get_by_role('button', name='Sign in') NON funziona). Lingua app cambiabile con select_option su [data-testid=lang-select] (it/de/en/es/fr/fa). Ricette Custodite: nav-tab-ricette -> ricette-vetrina (apre direttamente Matera). Per RecipeList usare recipe-search (es. 'Brezel') -> recipe-row-<id>; il chip lingua dentro il viewer e recipe-lang-<lc>. Ricette DB con miglioratore nel procedimento: 29/120 (Brezel, Anima Integrale, Cornetti Bicolore, ecc.).",
+  "rca_of_the_issue": "Il gap DE/ES/FR di P1b deriva dal fatto che le auto-traduzioni salvate nel DB non usano la parola prevista da IMPROVER_WORD_PROC: il DE traduce con 'Backmittel' mentre ES/FR lasciano il nome commerciale italiano 'Miglioratore Naturale Pro'. Poiche il codice fa un semplice text.indexOf(word) con la parola della lingua corrente, non trova nulla e non renderizza l'asterisco. In RicetteCustodite il problema non si presenta perche i testi sono hardcoded e contengono sempre la parola localizzata attesa."
+}

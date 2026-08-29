@@ -18,6 +18,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { useBackClose } from "@/lib/backNav";
+import { renderProcedureWithImprover } from "@/lib/improverText";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 import { isColored } from "@/lib/coloredRecipes";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -596,6 +597,12 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   );
 }
 
+// "Miglioratore" (localizzato) nel procedimento → asterisco cliccabile che apre la scheda del Miglioratore.
+function procWithImprover(text, onImprover) {
+  return renderProcedureWithImprover(text, onImprover);
+}
+
+
 function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onUnlock, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
   const de = lang === "de";
@@ -851,7 +858,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         {r.procedure ? (
           <div data-testid={`recipe-procedure-${r.id}`} className="rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">{t("recipe_procedure")}</p>
-            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{rLoc(r, "procedure", lang)}</p>
+            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{procWithImprover(rLoc(r, "procedure", lang), onImprover)}</p>
           </div>
         ) : null}
 

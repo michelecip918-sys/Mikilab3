@@ -1400,10 +1400,13 @@ async def create_recipe(payload: RecipeCreate, user: dict = Depends(current_user
     doc = recipe.model_dump()
     if payload.collection_name != "mikilab":
         doc["owner_id"] = user["user_id"]
-    tr = await _translate_recipe_de(doc)
-    for k in ("name_de", "flour_type_de", "notes_de", "procedure_de"):
-        if tr.get(k):
-            doc[k] = tr[k]
+    _targets = ["de", "en", "es", "fr", "fa"]
+    _results = await asyncio.gather(*[_translate_recipe_lang(doc, _t) for _t in _targets], return_exceptions=True)
+    for _res in _results:
+        if isinstance(_res, dict):
+            for _k, _v in _res.items():
+                if _v:
+                    doc[_k] = _v
     await db.recipes.insert_one(doc)
     return Recipe(**{k: v for k, v in doc.items() if k != "owner_id"})
 
@@ -1466,10 +1469,13 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depe
     changed = [k for k in translatable if k in updates and (updates.get(k) or "") != (existing.get(k) or "")]
     if changed:
         base = {**existing, **updates}
-        tr = await _translate_recipe_de(base)
-        for k in ("name_de", "flour_type_de", "notes_de", "procedure_de"):
-            if tr.get(k):
-                updates[k] = tr[k]
+        _targets = ["de", "en", "es", "fr", "fa"]
+        _results = await asyncio.gather(*[_translate_recipe_lang(base, _t) for _t in _targets], return_exceptions=True)
+        for _res in _results:
+            if isinstance(_res, dict):
+                for _k, _v in _res.items():
+                    if _v:
+                        updates[_k] = _v
     await db.recipes.update_one({"id": recipe_id}, {"$set": updates})
     merged = {**existing, **updates}
     return merged
