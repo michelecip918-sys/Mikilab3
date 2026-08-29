@@ -290,6 +290,12 @@ export default function Community({ onNavigate }) {
         ))}
       </div>
 
+      {/* Intestazione tematica bacheca */}
+      <div className="flex items-center gap-2 mb-2 mt-1" data-testid="community-board-heading">
+        <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[#ff6b00]/15" style={{ boxShadow: "inset 0 0 0 1px #ff6b00" }}><Users className="w-4 h-4 text-[#ff6b00]" /></span>
+        <h2 className="font-display text-base font-bold text-white">{tri("Bacheca della community", "Community-Pinnwand", "Community board", "Tablón de la comunidad")}</h2>
+      </div>
+
       {/* Feed — ordinamento */}
       <div data-testid="feed-toggle" className="flex gap-2 mb-3">
         {[["all", tri("Recenti", "Neueste", "Recent", "Recientes")], ["popular", tri("Popolari", "Beliebt", "Popular", "Populares")], ["friends", tri("Amici", "Freunde", "Friends", "Amigos")]].map(([id, lbl]) => (
@@ -305,7 +311,7 @@ export default function Community({ onNavigate }) {
           {visible.map((p) => {
             const C = CATS.find((c) => c.id === p.category) || CATS[0];
             return (
-              <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2b2b2b] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-sm">
+              <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#1c1c1c] border border-[#2b2b2b] dark:border-[#343434] rounded-2xl p-4 shadow-md hover:border-[#ff6b00]/40 transition-colors" style={{ borderLeft: `3px solid ${C.color}` }}>
                 <div className="flex items-center gap-2 mb-2">
                   <button data-testid={`post-author-${p.id}`} onClick={() => p.author_id && setProfileUser(p.author_id)} className="flex items-center gap-2 min-w-0 active:scale-98 transition-transform">
                     <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-display font-bold overflow-hidden" style={{ background: C.color }}>{p.author_avatar ? <img src={p.author_avatar} alt="" className="w-full h-full object-cover" /> : (p.author_name || "F")[0].toUpperCase()}</div>

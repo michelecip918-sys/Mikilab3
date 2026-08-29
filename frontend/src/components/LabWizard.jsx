@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CalendarDays, BookOpen, PlusCircle, Lock, Check, ArrowRight, Route, RotateCcw, ChevronDown, ChevronUp } from "lucide-react";
+import { CalendarDays, BookOpen, PlusCircle, Lock, Check, ArrowRight, Route, RotateCcw, ChevronDown, ChevronUp, Sparkles, ListChecks } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -16,6 +16,7 @@ export default function LabWizard({ onOpenTool }) {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [auto1, setAuto1] = useState(false);
   const [auto2, setAuto2] = useState(false);
+  const [weeklyItems, setWeeklyItems] = useState([]);
   const [manual, setManual] = useState(readManual);
   const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(true);
@@ -26,13 +27,33 @@ export default function LabWizard({ onOpenTool }) {
         weeklyApi.get().catch(() => null),
         recipesApi.list("personal").catch(() => []),
       ]);
-      setAuto1(!!(weekly && Array.isArray(weekly.items) && weekly.items.length > 0));
+      const items = (weekly && Array.isArray(weekly.items)) ? weekly.items : [];
+      setWeeklyItems(items);
+      setAuto1(items.length > 0);
       setAuto2(Array.isArray(personal) && personal.length > 0);
     } catch { /* */ }
     finally { setLoaded(true); }
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  // Riepilogo settimana: ricette scelte + totale pezzi (aggregato su tutti i giorni)
+  const summary = useMemo(() => {
+    const map = {};
+    weeklyItems.forEach((w) => {
+      const key = w.recipe_id || w.recipe_name || Math.random();
+      if (!map[key]) map[key] = { name: w.recipe_name || "—", pieces: 0 };
+      map[key].pieces += Number(w.pieces || 0);
+    });
+    return Object.values(map).sort((a, b) => b.pieces - a.pieces);
+  }, [weeklyItems]);
+  const totalPieces = summary.reduce((s, x) => s + x.pieces, 0);
+
+  const generateToday = () => {
+    window.dispatchEvent(new CustomEvent("mikilab-generate-today"));
+    const el = document.querySelector('[data-testid="capo-generate"]');
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
+  };
 
   const c1 = auto1 || !!manual["1"];
   const c2 = auto2 || !!manual["2"];
@@ -174,10 +195,43 @@ export default function LabWizard({ onOpenTool }) {
               })}
             </div>
 
+            {/* Riepilogo settimana: ricette scelte + quantità, senza aprire i tool */}
+            {summary.length > 0 && (
+              <div data-testid="lab-wizard-summary" className="mt-4 rounded-2xl border border-[#2e2e2e] bg-[#141414] p-3.5">
+                <div className="flex items-center gap-2 mb-2">
+                  <ListChecks className="w-4 h-4 text-[#ff6b00]" />
+                  <h3 className="font-display text-sm font-bold text-white">
+                    {tri("Riepilogo settimana", "Wochen-Übersicht", "Week summary", "Resumen de la semana", "Résumé de la semaine", "خلاصهٔ هفته")}
+                  </h3>
+                  <span className="ms-auto text-[11px] font-bold text-[#ff6b00] bg-[#ff6b00]/15 px-2 py-0.5 rounded-full">
+                    {totalPieces} {tri("pz", "St.", "pcs", "uds", "pcs", "عدد")}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  {summary.slice(0, 8).map((s, i) => (
+                    <div key={i} data-testid={`lab-wizard-summary-row-${i}`} className="flex items-center justify-between gap-2 text-[13px]">
+                      <span className="text-[#cfd6da] truncate">{s.name}</span>
+                      <span className="font-mono-data font-bold text-white shrink-0">{s.pieces} {tri("pz", "St.", "pcs", "uds", "pcs", "عدد")}</span>
+                    </div>
+                  ))}
+                  {summary.length > 8 && (
+                    <p className="text-[11px] text-[#7E8A93] pt-0.5">+{summary.length - 8} {tri("altre ricette", "weitere Rezepte", "more recipes", "más recetas", "autres recettes", "دستور دیگر")}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
             {loaded && done === 3 && (
-              <p data-testid="lab-wizard-complete" className="mt-3 text-sm text-[#ff6b00] font-semibold text-center">
-                {tri("🎉 Percorso completato! Continua qui sotto con gli strumenti del laboratorio.", "🎉 Ablauf abgeschlossen! Mach unten mit den Labor-Werkzeugen weiter.", "🎉 Path complete! Continue below with the lab tools.", "🎉 ¡Ruta completada! Continúa abajo con las herramientas del laboratorio.", "🎉 Parcours terminé ! Continue en dessous avec les outils du laboratoire.", "🎉 مسیر کامل شد! در پایین با ابزارهای کارگاه ادامه بده.")}
-              </p>
+              <div data-testid="lab-wizard-complete" className="mt-4 rounded-2xl border border-[#ff6b00]/50 bg-[#ff6b00]/10 p-3.5 text-center">
+                <p className="text-sm text-[#ff6b00] font-semibold mb-2.5">
+                  {tri("🎉 Percorso completato! Genera il piano di produzione di oggi, pronto da stampare.", "🎉 Ablauf abgeschlossen! Erstelle den heutigen Produktionsplan, druckfertig.", "🎉 Path complete! Generate today's production plan, ready to print.", "🎉 ¡Ruta completada! Genera el plan de producción de hoy, listo para imprimir.", "🎉 Parcours terminé ! Génère le plan de production du jour, prêt à imprimer.", "🎉 مسیر کامل شد! برنامهٔ تولید امروز را بساز، آمادهٔ چاپ.")}
+                </p>
+                <button data-testid="lab-wizard-generate-today" onClick={generateToday}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm bg-[#ff6b00] text-white shadow-[0_4px_14px_rgba(255,107,0,0.4)] active:scale-95 hover:bg-[#ff8226] transition-all">
+                  <Sparkles className="w-4 h-4" />
+                  {tri("Genera il piano di oggi", "Heutigen Plan erstellen", "Generate today's plan", "Generar el plan de hoy", "Générer le plan du jour", "ساخت برنامهٔ امروز")}
+                </button>
+              </div>
             )}
 
             <button data-testid="lab-wizard-reset" onClick={resetPath}

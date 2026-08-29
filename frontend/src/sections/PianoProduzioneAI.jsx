@@ -231,6 +231,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [recipes, setRecipes] = useState([]);
   const [weeklyItems, setWeeklyItems] = useState([]);
   const [useWeekly, setUseWeekly] = useState(false);
+  const [pendingGenerate, setPendingGenerate] = useState(false);
   const [weeklyStartId, setWeeklyStartId] = useState("");
   const [extraToday, setExtraToday] = useState([]);
   const [extraOpen, setExtraOpen] = useState(false);
@@ -779,6 +780,40 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     } catch { toast.error(t("chat_error")); }
     finally { setGenerating(false); }
   };
+
+  // Genera automaticamente il piano di oggi dal Piano Settimanale (evento dal Percorso Guidato).
+  useEffect(() => {
+    const onGen = () => {
+      const map = {};
+      weeklyItems.forEach((w) => {
+        if (!w.recipe_id) return;
+        if (!map[w.recipe_id]) map[w.recipe_id] = { recipe_id: w.recipe_id, name: w.recipe_name || "", qty: 0, unit: "pezzi", gpp: w.grams_per_piece || "", day: "", start: false };
+        map[w.recipe_id].qty += Number(w.pieces || 0);
+      });
+      const prods = Object.values(map).filter((p) => p.qty > 0);
+      if (prods.length === 0) {
+        toast.info(mkTri(lang)("Aggiungi almeno una ricetta al Piano Settimanale per generare il piano di oggi.", "Füge mind. ein Rezept zum Wochenplan hinzu, um den Tagesplan zu erstellen.", "Add at least one recipe to the Weekly Plan to generate today's plan.", "Añade al menos una receta al Plan Semanal para generar el plan de hoy."));
+        const el = document.querySelector('[data-testid="capo-source-choice"]') || document.querySelector('[data-testid="capo-generate"]');
+        el && el.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      setUseWeekly(false);
+      setProducts(prods);
+      setPendingGenerate(true);
+    };
+    window.addEventListener("mikilab-generate-today", onGen);
+    return () => window.removeEventListener("mikilab-generate-today", onGen);
+  }, [weeklyItems, lang]);
+
+  useEffect(() => {
+    if (pendingGenerate && canGenerate && !generating) {
+      setPendingGenerate(false);
+      const el = document.querySelector('[data-testid="capo-generate"]');
+      el && el.scrollIntoView({ behavior: "smooth", block: "center" });
+      generate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingGenerate, canGenerate, generating]);
 
   return (
     <div className="pb-40">

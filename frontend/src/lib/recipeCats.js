@@ -11,6 +11,15 @@ export const CATS = [
   { key: "snack", label: "cat_snack", icon: "🥨" },
 ];
 
+// Colore identificativo per categoria (badge/icone nelle liste ricette). Toni caldi distinti su fondo nero.
+export const CAT_COLORS = {
+  basi: "#F0B429",
+  viennoiserie: "#E8823A",
+  pane: "#C77D48",
+  focacce: "#7FA650",
+  snack: "#D06A4A",
+};
+
 // Parole chiave che identificano un prodotto di pasticceria lievitata / viennoiserie / grande lievitato dolce.
 const VIENNOISERIE_RE = /croissant|cornett|panettone|colomba|pandoro|veneziana|stollen|danish|plunder|brioche|sfogliat|pain au|kranz|zopf|treccia dolce|babka|maritozz|girella|saccottino|kipferl/i;
 

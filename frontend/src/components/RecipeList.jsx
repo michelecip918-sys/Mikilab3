@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand } from "lucide-react";
 import { recipesApi, subscriptionApi, recipePurchaseApi, siteSettingsApi } from "@/lib/api";
-import { CATS, recipeCategory } from "@/lib/recipeCats";
+import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
 import EULabel from "@/components/EULabel";
 import ScaleDialog from "@/components/ScaleDialog";
@@ -331,7 +331,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             {/* testo */}
             <div className="p-3 min-w-0 flex-1">
               <h3 className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight line-clamp-2">
-                <span className="mr-1" aria-hidden>{recipeCategory(r).icon}</span>{rLoc(r, "name", lang)}
+                {(() => { const c = recipeCategory(r); const col = CAT_COLORS[c.key] || "#ff6b00"; return (
+                  <span data-testid={`recipe-cat-icon-${r.id}`} title={t(c.label)}
+                    className="inline-flex items-center justify-center w-5 h-5 rounded-md mr-1.5 text-[11px] align-middle shrink-0"
+                    style={{ background: col + "26", boxShadow: `inset 0 0 0 1px ${col}` }} aria-hidden>{c.icon}</span>
+                ); })()}{rLoc(r, "name", lang)}
               </h3>
               {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-medium text-[#ff6b00] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
               {rLoc(r, "flour_type", lang) ? <p className="text-[10px] text-[#7E8A93] truncate mt-0.5">{(mkTri(lang)("Farina: ", "Mehl: ", "Flour: ", "Harina: "))}{rLoc(r, "flour_type", lang)}</p> : null}
@@ -411,9 +415,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                         )}
                         <div className={`absolute inset-0 ${coverSrc ? "bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/30 to-[#1A1412]/10" : "bg-[#ff6b00]/12"}`} />
                         <div className="relative z-10 w-full flex items-center gap-2 px-3.5 py-3">
-                          <span className="text-2xl drop-shadow">{cat.icon}</span>
+                          <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl text-xl shrink-0 drop-shadow"
+                            style={{ background: (CAT_COLORS[cat.key] || "#ff6b00") + (coverSrc ? "55" : "33"), boxShadow: `inset 0 0 0 1.5px ${CAT_COLORS[cat.key] || "#ff6b00"}` }}>{cat.icon}</span>
                           <h2 className={`font-display text-xl font-bold flex-1 text-left ${coverSrc ? "text-white drop-shadow" : "text-[#ff6b00]"}`}>{t(cat.label)}</h2>
-                          <span className={`text-xs font-mono-data font-bold px-2 py-0.5 rounded-full ${coverSrc ? "bg-white/25 text-white" : "bg-[#ff6b00]/15 text-[#ff6b00]"}`}>{items.length}</span>
+                          <span className="text-xs font-mono-data font-bold px-2 py-0.5 rounded-full text-white"
+                            style={{ background: (CAT_COLORS[cat.key] || "#ff6b00") + (coverSrc ? "cc" : "aa") }}>{items.length}</span>
                           <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${coverSrc ? "text-white" : "text-[#7E8A93]"} ${open ? "rotate-180" : ""}`} />
                         </div>
                       </button>
