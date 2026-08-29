@@ -104,9 +104,11 @@ export default function Header() {
           <button
             data-testid="login-btn"
             onClick={() => setAuthOpen(true)}
-            className="h-10 px-3 rounded-xl bg-[#8C4A27] text-white text-sm font-semibold flex items-center gap-1.5 active:scale-95 transition-all"
+            className="relative h-10 px-3.5 rounded-lg wood-surface wood-emboss border-2 border-[#3e2510] text-[#fdf1df] text-sm font-extrabold flex items-center gap-1.5 active:scale-95 transition-all"
             aria-label="Accedi"
+            style={{ textShadow: "0 1px 1px rgba(0,0,0,.5)" }}
           >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#7bd67b] shadow-[0_0_6px_#4caf50]" />
             <LogIn className="w-4 h-4" /> {t("login_cta")}
           </button>
         )}

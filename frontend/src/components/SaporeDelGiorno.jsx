@@ -27,16 +27,19 @@ export default function SaporeDelGiorno({ onOpen }) {
 
   return (
     <button type="button" data-testid="home-sapore-giorno" onClick={onOpen} disabled={!onOpen}
-      className="w-full text-left relative overflow-hidden rounded-3xl p-5 text-[#FFFDF9] shadow-lg flex items-center gap-4 active:scale-98 transition-all"
-      style={{ background: "linear-gradient(135deg,#D97706 0%,#B45309 55%,#8C4A27 100%)" }}>
-      <div aria-hidden className="absolute -right-6 -bottom-8 w-36 h-36 rounded-full opacity-25" style={{ background: "radial-gradient(circle,#FEF3C7,transparent 70%)" }} />
-      <div className="text-5xl leading-none shrink-0">{f.emoji}</div>
-      <div className="min-w-0 flex-1 relative">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-[#FEF3C7] flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5" /> {label}</p>
-        <p className="font-display text-xl font-bold leading-tight mt-0.5">{txt[0]}</p>
-        <p className="text-[#FFFDF9]/85 text-[13px] leading-snug mt-1">{txt[1]}</p>
+      className="w-full text-left relative active:scale-98 transition-all">
+      {/* Lavagnetta del panificio appoggiata su una mensola di legno */}
+      <div className="chalkboard relative p-4 pr-14 flex items-center gap-3">
+        <div className="text-5xl leading-none shrink-0 drop-shadow">{f.emoji}</div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#e9c98f] flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5" /> {label}</p>
+          <p className="font-display text-xl font-bold leading-tight mt-0.5 text-[#fdf6e9]" style={{ textShadow: "0 1px 2px rgba(0,0,0,.4)" }}>{txt[0]}</p>
+          <p className="text-[#efe3cf]/85 text-[13px] leading-snug mt-1">{txt[1]}</p>
+        </div>
+        {onOpen && <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 text-[#e9c98f]/80" />}
       </div>
-      {onOpen && <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />}
+      {/* mensola / ledge */}
+      <div aria-hidden className="wood-surface h-3 rounded-b-xl border-x-2 border-b-2 border-[#5a3a1e] shadow-[0_6px_10px_rgba(44,30,16,.35)] mx-2" />
     </button>
   );
 }

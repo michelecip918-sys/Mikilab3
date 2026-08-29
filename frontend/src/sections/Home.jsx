@@ -110,7 +110,7 @@ const SCENE_PHRASES = {
 };
 
 function HomeAvatarScene({ lang }) {
-  const de = lang === "de";
+  const L = (...a) => mkTri(lang)(...a);
   const phrases = SCENE_PHRASES[lang] || (lang === "fr" ? SCENE_PHRASES.it.map((s) => triFR(s) || s) : lang === "fa" ? SCENE_PHRASES.it.map((s) => triFA(s) || s) : SCENE_PHRASES.it);
   const [idx, setIdx] = useState(0);
   const BASE = process.env.PUBLIC_URL || "";
@@ -120,27 +120,41 @@ function HomeAvatarScene({ lang }) {
   }, [phrases.length]);
 
   return (
-    <div data-testid="home-founder-photo" className="relative rounded-3xl overflow-hidden shadow-xl h-80 bg-[#2B303B]">
-      {/* Solo FOTO: nessun audio/video, l'avatar comunica per iscritto (fumetto) */}
-      <img src={`${BASE}/michele-avatar-full.jpg`} alt="Michele" data-testid="home-avatar-full"
-        className="absolute inset-0 w-full h-full object-contain" loading="lazy" />
-      <div aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-20 pointer-events-none bg-gradient-to-r from-[#D97706] via-[#B45309] to-[#e7d5b4]" />
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#2B303B]/85 via-[#2B303B]/15 to-transparent" />
+    <div data-testid="home-founder-photo" className="relative pt-3">
+      {/* Targa di legno "Aperto" appesa nell'angolo */}
+      <div data-testid="home-open-sign" className="absolute -top-1 right-3 z-30 rotate-[-4deg] peel-shadow">
+        <div className="w-px h-3 bg-[#5a3a1e] mx-auto" />
+        <div className="wood-surface wood-emboss rounded-lg px-3 py-1.5 border-2 border-[#5a3a1e] flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-[#3a7a3a] shadow-[0_0_6px_#4caf50]" />
+          <span className="font-display text-sm font-extrabold text-[#eaf6ea] drop-shadow">{L("Aperto", "Geöffnet", "Open", "Abierto", "Ouvert", "باز")}</span>
+        </div>
+      </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-5 z-30 flex flex-col items-start gap-3">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={idx} data-testid="home-scene-bubble"
-            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.4 }}
-            className="inline-block max-w-[90%] bg-[#1B2127]/85 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-bl-md shadow-xl ring-1 ring-white/20"
-          >
-            {phrases[idx]}
-          </motion.div>
-        </AnimatePresence>
-        <div className="pointer-events-none">
-          <p className="font-display text-3xl font-bold text-white">MikiLab Avatar</p>
-          <p className="text-white/85 text-sm mt-0.5">{mkTri(lang)("Il tuo compagno digitale", "Dein digitaler Begleiter", "Your digital companion", "Tu compañero digital")} 🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 🇮🇷</p>
+      {/* Portale ad arco in mattoni che si affaccia sul laboratorio */}
+      <div className="relative rounded-t-[110px] rounded-b-[28px] p-2.5 shadow-2xl" style={{ background: "linear-gradient(160deg,#a5533a,#7c3a26 55%,#5a2b1c)" }}>
+        <div aria-hidden className="absolute inset-2.5 rounded-t-[100px] rounded-b-[22px] pointer-events-none ring-2 ring-[#c98a5e]/30 z-20" />
+        <div className="relative rounded-t-[100px] rounded-b-[22px] overflow-hidden bg-[#2B303B] grain-overlay">
+          <img src={`${BASE}/michele-avatar-full.jpg`} alt="MikiLab · Michele" data-testid="home-avatar-full"
+            className="w-full h-[440px] object-cover object-top" loading="eager" />
+          {/* pulviscolo di farina sospeso nella luce calda */}
+          <div aria-hidden className="absolute inset-0 pointer-events-none opacity-60"
+            style={{ background: "radial-gradient(120% 60% at 50% 12%, rgba(255,226,170,.35), transparent 60%)" }} />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1B1410]/92 via-[#1B1410]/25 to-transparent pt-16 pb-4 px-4 z-10">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={idx} data-testid="home-scene-bubble"
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4 }}
+                className="inline-block max-w-[92%] bg-[#1B2127]/88 backdrop-blur-sm text-white text-[15px] font-bold leading-snug px-4 py-2.5 rounded-2xl rounded-bl-md shadow-xl ring-1 ring-white/20"
+              >
+                {phrases[idx]}
+              </motion.div>
+            </AnimatePresence>
+            <div className="pointer-events-none mt-2">
+              <p className="font-display text-3xl font-bold text-white drop-shadow-lg">MikiLab</p>
+              <p className="text-white/85 text-xs mt-0.5">{L("Entra nel panificio digitale", "Tritt in die digitale Backstube", "Step into the digital bakery", "Entra en el obrador digital", "Entre dans la boulangerie digitale", "به نانوایی دیجیتال وارد شوید")} 🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 🇮🇷</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
