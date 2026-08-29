@@ -144,6 +144,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   setSiteSettings: (data) => api.put(`/admin/site-settings`, data).then((r) => r.data),
   bakeAlongNotify: () => api.post(`/admin/bakealong/notify`).then((r) => r.data),
   bakeAlongAward: (week) => api.post(`/admin/bakealong/award`, {}, { params: week ? { week } : {} }).then((r) => r.data),
+  newsletter: () => api.get(`/admin/newsletter`).then((r) => r.data),
 };
 
 export const siteSettingsApi = {

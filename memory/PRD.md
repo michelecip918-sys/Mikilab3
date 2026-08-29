@@ -2167,3 +2167,8 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 - **Tasto "VIP"/corona rimosso dall'header**: era il Pannello Admin (solo admin). Spostato nel menu ☰ come voce "Pannello Admin" (icona Shield, `site-menu-admin`, solo `user.role==="admin"`), che apre l'AdminPanel via evento `mikilab-open-admin` (listener in Header). Meno affollamento nell'header e coerente col modello 100% gratis (niente più "VIP").
 - Verificato via screenshot @412px: "MikiLab" + sottotitolo pienamente leggibili, nessuna sovrapposizione.
 - NB: queste modifiche NON sono nel deploy già avviato → servirà un nuovo Redeploy per portarle in produzione.
+
+## v-fork.53 (2026-06) — Action Items: lista iscritti Newsletter nel Pannello Admin
+- **AdminPanel** (`admin-newsletter`): nuova sezione "Iscritti Newsletter" con conteggio, lista email (badge lingua + source) e pulsante "Copia tutte" (copia tutte le email separate da virgola negli appunti). Carica da `GET /api/admin/newsletter` via `adminApi.newsletter()`.
+- Verificato: login admin → menu ☰ → Pannello Admin → sezione mostra l'iscritto con lingua/sorgente; endpoint testato via curl (count/subscribers). Dato demo ripulito.
+- Nota: campanella notifiche ha GIÀ il badge non-letti (`notif-badge`) e l'header desktop mostra già orologio (≥560px) e sottotitolo (≥440px) — quei due Action Items risultavano già soddisfatti.

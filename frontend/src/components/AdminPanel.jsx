@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
@@ -42,12 +42,14 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [settings, setSettings] = useState({ whatsapp_number: "", avatar_bubbles: {}, folder_covers: {} });
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
+  const [subs, setSubs] = useState([]);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
       setList(await adminApi.entitlements());
       try { setShop(await adminApi.shopSettings()); } catch { /* */ }
+      try { const n = await adminApi.newsletter(); setSubs(n.subscribers || []); } catch { /* */ }
       try {
         const s = await siteSettingsApi.get();
         setSettings({ whatsapp_number: s.whatsapp_number || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
@@ -197,6 +199,36 @@ export default function AdminPanel({ open, onOpenChange }) {
             🥇 {de ? "Wochensieger krönen" : "Proclama il vincitore della settimana"}
           </button>
         </div>
+        <div data-testid="admin-newsletter" className="rounded-2xl bg-[#3a6b3a]/10 border border-[#3a6b3a]/30 p-4 mt-2">
+          <div className="flex items-center justify-between gap-3 mb-2">
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-[#2f5a2f] dark:text-[#9cd6a0]">
+              <Mail className="w-4 h-4" /> {de ? "Newsletter-Abonnenten" : "Iscritti Newsletter"}
+              <span className="text-[11px] font-bold bg-[#3a6b3a]/20 text-[#2f5a2f] dark:text-[#9cd6a0] rounded-full px-2 py-0.5">{subs.length}</span>
+            </p>
+            {subs.length > 0 && (
+              <button data-testid="admin-newsletter-copy" onClick={() => { navigator.clipboard.writeText(subs.map((s) => s.email).join(", ")); toast.success(de ? "E-Mails kopiert" : "Email copiate"); }}
+                className="text-[11px] font-semibold text-[#2f5a2f] dark:text-[#9cd6a0] bg-white dark:bg-[#232A31] border border-[#3a6b3a]/40 rounded-lg px-2 py-1 active:scale-95 shrink-0">
+                {de ? "Alle kopieren" : "Copia tutte"}
+              </button>
+            )}
+          </div>
+          {subs.length === 0 ? (
+            <p className="text-[12px] text-[#7E8A93]">{de ? "Noch keine Abonnenten." : "Nessun iscritto ancora."}</p>
+          ) : (
+            <div className="space-y-1.5 max-h-44 overflow-y-auto">
+              {subs.map((s) => (
+                <div key={s.email} data-testid={`nl-row-${s.email}`} className="flex items-center justify-between gap-2 bg-white dark:bg-[#232A31] border border-[#E6D8C3] dark:border-[#38424B] rounded-lg px-2.5 py-2">
+                  <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{s.email}</span>
+                  <span className="shrink-0 flex items-center gap-1.5">
+                    <span className="text-[10px] font-bold uppercase text-[#8C4A27] bg-[#8C4A27]/10 rounded px-1.5 py-0.5">{s.lang || "it"}</span>
+                    <span className="text-[10px] text-[#7E8A93]">{s.source || "home"}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div data-testid="admin-site-settings" className="rounded-2xl bg-[#B45309]/10 border border-[#B45309]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
           <p className="text-sm font-bold text-[#6E371C] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
 
