@@ -2285,3 +2285,8 @@ Scelte utente: 3D simulato (illustrazioni + CSS), redesign completo home + nav a
 - Tema scuro FORZATO come unico tema: `index.js` aggiunge classe `dark`; Header default dark; toggle nascosto (evita "light" incoerente).
 - Chrome tema panificio ricolorata: `.wood-surface` → carboncino scuro; portale/cornici SectionHero → gradiente arancio; nav a pale → icone arancio, pala attiva giallo + anello giallo; barra superiore scura con accenti arancio.
 - Cards Panetteria/Pizzeria/Pasticceria arancioni; CTA gialle/arancio; nessun marrone/crema/viola residuo (verificato via grep). Verificato a schermo: Home, Ricette, Laboratorio, Impara, Sfide.
+
+## v-fork.69 (2026-06) — Regola UX cliccabile vs statico
+- Regola CSS in `index.css`: testo statico (titoli/label) reso BIANCO anche dove era diventato arancio/giallo; arancio/giallo ri-applicato SOLO dentro `button`/`a` (indicatore cliccabile).
+- Affordance: ogni button/link con bg arancio o giallo ha ombra netta (box-shadow) per distinguerlo a colpo d'occhio.
+- body: sfondo #121212, testo #E0E0E0. Distinzione netta "cosa si legge (bianco su nero)" vs "cosa si clicca (arancio/giallo)". Verificato su Home e Laboratorio.
