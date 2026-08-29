@@ -204,16 +204,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     { it: "Grembiule allacciato, Chef? 💪", de: "Schürze umgebunden, Chef? 💪", en: "Apron on, Chef? 💪", es: "¿Delantal puesto, Chef? 💪" },
   ];
   const [labSlogan] = useState(() => LAB_SLOGANS[Math.floor(Math.random() * LAB_SLOGANS.length)]);
-  // Snellimento: alla prima apertura del laboratorio, porta subito alla scelta ricette / generazione.
-  useEffect(() => {
-    if (!onOpenTool) return;
-    try { if (sessionStorage.getItem("mikilab_lab_scrolled")) return; } catch { /* */ }
-    const id = setTimeout(() => {
-      const el = document.querySelector('[data-testid="capo-source-choice"]');
-      if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); try { sessionStorage.setItem("mikilab_lab_scrolled", "1"); } catch { /* */ } }
-    }, 500);
-    return () => clearTimeout(id);
-  }, [onOpenTool]);
   const startPhaseTimer = (label, min, repeat) => {
     addTimer(label, min, repeat);
     toast.success(tri3(lang, `Timer «${label}» avviato (${min}′)`, `Timer „${label}" gestartet (${min}′)`, `Timer "${label}" started (${min}′)`, `Temporizador "${label}" iniciado (${min}′)`));
@@ -831,14 +821,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip"), next: tri3(lang, "Avanti", "Weiter", "Next"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!") }}
         steps={[
           { target: null, title: tri3(lang, "Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋"),
-            body: tri3(lang, "Ti mostro in pochi passi come muoverti nel tuo laboratorio. Meno di un minuto!", "Ich zeige dir in wenigen Schritten dein Labor. Weniger als eine Minute!", "I'll show you in a few steps how to move around your lab. Under a minute!") },
-          { target: "capo-source-choice", title: tri3(lang, "1 · Scegli le ricette", "1 · Rezepte wählen", "1 · Pick the recipes"),
+            body: tri3(lang, "Ti mostro in pochi passi, dall'alto verso il basso, come muoverti nel tuo laboratorio. Meno di un minuto!", "Ich zeige dir Schritt für Schritt, von oben nach unten, dein Labor. Weniger als eine Minute!", "I'll show you step by step, top to bottom, how to move around your lab. Under a minute!") },
+          { target: "maestro-top-aggiungi", title: tri3(lang, "1 · Inserisci le tue ricette", "1 · Rezepte einfügen", "1 · Add your recipes"),
+            body: tri3(lang, "Si parte da qui: tocca «Inserisci una Ricetta» per aggiungerle o scansionarle. Sono la base di tutto il resto.", "Hier geht's los: Tippe auf „Rezept einfügen“, um sie hinzuzufügen oder zu scannen. Sie sind die Basis für alles.", "Start here: tap 'Add a Recipe' to add or scan them. They're the base for everything else.") },
+          { target: "lab-wizard", title: tri3(lang, "2 · Segui il Percorso Guidato", "2 · Folge dem geführten Pfad", "2 · Follow the Guided Path"),
+            body: tri3(lang, "Il percorso a step ti porta in ordine: Produzione Settimanale → Ricetta → Extra. Segui i numeri e non sbagli.", "Der Schritt-für-Schritt-Pfad führt dich der Reihe nach: Wochenproduktion → Rezept → Extras. Folge den Zahlen.", "The step path guides you in order: Weekly Production → Recipe → Extra. Follow the numbers and you can't go wrong.") },
+          { target: "capo-source-choice", title: tri3(lang, "3 · Scegli le ricette del piano", "3 · Rezepte für den Plan wählen", "3 · Pick the plan's recipes"),
             body: tri3(lang, "Tocca «Scegli ricette ora» e aggiungi almeno una ricetta con la quantità. È l'unica cosa davvero obbligatoria.", "Tippe auf „Rezepte jetzt wählen“ und füge mind. ein Rezept mit Menge hinzu. Das ist das Einzige, was Pflicht ist.", "Tap 'Pick recipes now' and add at least one recipe with a quantity. That's the only required thing.") },
-          { target: "capo-modules", title: tri3(lang, "2 · Accendi gli extra (facoltativo)", "2 · Extras aktivieren (optional)", "2 · Turn on extras (optional)"),
+          { target: "capo-modules", title: tri3(lang, "4 · Accendi gli extra (facoltativo)", "4 · Extras aktivieren (optional)", "4 · Turn on extras (optional)"),
             body: tri3(lang, "Con gli interruttori ON/OFF aggiungi solo ciò che ti serve: orari, freezer, costi…", "Mit den ON/OFF-Schaltern fügst du nur hinzu, was du brauchst.", "With the ON/OFF switches add only what you need.") },
-          { target: "tool-info-celle", title: tri3(lang, "3 · La «i» dorata ti spiega tutto", "3 · Das goldene „i“ erklärt alles", "3 · The golden 'i' explains everything"),
-            body: tri3(lang, "Su ogni strumento c'è una «i» DORATA: toccala e io ti spiego a cosa serve (con un suono). Non resterai mai bloccato!", "Auf jedem Werkzeug gibt es ein GOLDENES „i“: tippe darauf und ich erkläre es dir (mit Ton). Du bleibst nie stecken!", "Every tool has a GOLDEN 'i': tap it and I'll explain what it does (with a sound). You'll never get stuck!") },
-          { target: "capo-generate", title: tri3(lang, "4 · Genera il piano", "4 · Plan erstellen", "4 · Generate the plan"),
+          { target: "capo-generate", title: tri3(lang, "5 · Genera il piano", "5 · Plan erstellen", "5 · Generate the plan"),
             body: tri3(lang, "Premi «Genera il piano»: creo la sequenza degli impasti, gli orari e la lista. Poi puoi stamparlo o salvarlo.", "Drücke „Plan erstellen“: ich erstelle Teig-Reihenfolge, Zeiten und Liste. Danach drucken oder speichern.", "Press 'Generate the plan': I build the dough sequence, times and list. Then print or save it.") },
           { target: null, title: tri3(lang, "🔥 Sfida della Settimana", "🔥 Challenge der Woche", "🔥 Weekly Challenge"),
             body: tri3(lang, "Nella sezione «Impara» c'è ogni settimana una sfida a tema del Quiz del Fornaio: gareggia con gli amici e diventa «Fornaio della Settimana» 🏆!", "Im Bereich „Lernen“ gibt es jede Woche eine Themen-Challenge im Bäcker-Quiz: tritt gegen Freunde an und werde „Bäcker der Woche“ 🏆!", "In the 'Learn' section there's a weekly themed Baker Quiz challenge: compete with friends and become 'Baker of the Week' 🏆!") },

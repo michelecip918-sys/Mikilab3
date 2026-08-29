@@ -99,6 +99,13 @@ export default function Maestro() {
     if (!tool) requestAnimationFrame(() => window.scrollTo(0, scrollRef.current || 0));
     else window.scrollTo(0, 0);
   }, [tool]);
+  // All'ingresso nel Laboratorio: sempre in cima, così si vede subito "Inserisci Ricetta" e il Percorso.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const r = requestAnimationFrame(() => window.scrollTo(0, 0));
+    const t = setTimeout(() => window.scrollTo(0, 0), 80);
+    return () => { cancelAnimationFrame(r); clearTimeout(t); };
+  }, []);
   const { t, lang } = useLang();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   useBackClose(!!tool, back);
@@ -184,11 +191,24 @@ export default function Maestro() {
         title={mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}
         subtitle={mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")} />
 
-      {/* GENERATORE SUBITO IN CIMA: calcolatori rapidi XL (mani in pasta, un tap) */}
+      {/* DA DOVE INIZIARE: inserisci ricetta + calcolatori, poi il percorso guidato */}
       <div data-testid="maestro-top-tools" className="mb-4">
         <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2 flex items-center gap-1.5">
-          <Sparkles className="w-4 h-4" /> {mkTri(lang)("Genera & Calcola", "Erstellen & Rechnen", "Generate & Calculate", "Genera y Calcula", "Génère & Calcule", "بساز و حساب کن")}
+          <Sparkles className="w-4 h-4" /> {mkTri(lang)("Da dove iniziare", "Wo anfangen", "Where to start", "Por dónde empezar", "Par où commencer", "از کجا شروع کنی")}
         </p>
+        {/* Azione principale ben visibile: inserire una ricetta */}
+        <button data-testid="maestro-top-aggiungi" onClick={() => openTool("aggiungi")}
+          className="w-full flex items-center gap-3.5 min-h-[68px] rounded-2xl px-4 mb-2.5 bg-gradient-to-r from-[#ff6b00] to-[#c94f00] text-white shadow-[0_5px_0_rgba(0,0,0,.35),0_8px_16px_rgba(255,107,0,.32)] active:translate-y-0.5 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all text-left">
+          <div className="w-11 h-11 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
+            <PlusCircle className="w-6 h-6" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-lg font-extrabold leading-tight">{mkTri(lang)("Inserisci una Ricetta", "Rezept einfügen", "Add a Recipe", "Añadir una Receta", "Ajouter une Recette", "افزودن دستور")}</p>
+            <p className="text-[12px] text-white/85 leading-snug">{mkTri(lang)("Aggiungi o scansiona le tue ricette", "Füge deine Rezepte hinzu oder scanne sie", "Add or scan your recipes", "Añade o escanea tus recetas", "Ajoute ou scanne tes recettes", "دستورهایت را اضافه یا اسکن کن")}</p>
+          </div>
+          <ChevronRight className="w-5 h-5 shrink-0" />
+        </button>
+        <p className="text-[10.5px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 mt-1">{mkTri(lang)("Calcolatori rapidi", "Schnellrechner", "Quick calculators", "Calculadoras rápidas", "Calculateurs rapides", "ماشین‌حساب‌های سریع")}</p>
         <div className="grid grid-cols-2 gap-2.5">
           {[
             { id: "settimana", Icon: CalendarDays, label: mkTri(lang)("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdo", "برنامهٔ هفتگی") },
@@ -197,22 +217,22 @@ export default function Maestro() {
             { id: "convlievito", Icon: FlaskConical, label: mkTri(lang)("Convertitore Lieviti", "Hefe-Umrechner", "Yeast Converter", "Convertidor Levaduras", "Convertisseur Levures", "مبدل خمیرمایه") },
           ].map(({ id, Icon, label }) => (
             <button key={id} data-testid={`maestro-top-${id}`} onClick={() => openTool(id)}
-              className="flex items-center gap-3 min-h-[60px] rounded-2xl px-4 bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white shadow-[0_4px_0_rgba(0,0,0,.35),0_6px_14px_rgba(255,107,0,.3)] active:translate-y-0.5 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all text-left">
-              <Icon className="w-6 h-6 shrink-0" />
-              <span className="font-display text-sm font-extrabold leading-tight">{label}</span>
+              className="flex items-center gap-3 min-h-[60px] rounded-2xl px-4 bg-[#1e1e1e] border border-[#ff6b00]/40 text-white shadow-sm active:scale-97 hover:border-[#ff6b00] transition-all text-left">
+              <span className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Icon className="w-5 h-5 text-[#ff6b00]" /></span>
+              <span className="font-display text-sm font-bold leading-tight">{label}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Il GENERATORE del piano IA (scegli ricette → genera) subito visibile */}
+      {/* PERCORSO GUIDATO: la sequenza logica passo-passo (Settimana → Ricetta → Extra) */}
+      <LabWizard onOpenTool={openTool} />
+
+      {/* Il GENERATORE del piano IA (scegli ricette → genera) */}
       <PianoProduzioneAI onOpenTool={openTool} />
 
       {/* Avatar del Laboratorio: Michele operativo + Mohammadreza pronto ad aiutare */}
       <AvatarBubbles variant="lab" />
-
-      {/* Percorso guidato a 3 step (Produzione Settimanale → Ricetta → Extra) */}
-      <LabWizard onOpenTool={openTool} />
 
       {/* Firma personale: Michele al lavoro (identità del laboratorio) */}
       <div data-testid="maestro-signature" className="mt-5 relative overflow-hidden rounded-2xl border border-[#2e2e2e]">

@@ -2443,3 +2443,13 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 ### OSSERVAZIONE (pre-esistente, NON introdotta ora, da confermare con utente)
 - PaywallGate `feature="lab"`: utenti anonimi accedono al Laboratorio completo (nessun blocco PRO). Se il Laboratorio deve essere PRO, va ripristinato il gating (concerne la monetizzazione, fuori dallo scope redesign).
 ### Backlog design (minore, pre-esistente): testo hero Home sovrapposto alla foto + FAB Radio tagliato dalla bottom-nav; sottotitolo hero Ricette poco leggibile su foto (aggiungere scrim scuro).
+
+## v-fork.93 (2026-06) — Laboratorio: "Inserisci Ricetta" visibile + sequenza logica + fix scroll primo ingresso
+- **Problema utente**: nel Laboratorio non si vedeva come inserire una ricetta né una sequenza logica d'uso degli strumenti.
+- **Soluzioni**:
+  - Aggiunto pulsante primario grande `maestro-top-aggiungi` ("Inserisci una Ricetta") in cima + 4 calcolatori rapidi; Percorso Guidato (`lab-wizard`, la sequenza a step) spostato subito sotto, PRIMA del generatore.
+  - Tour Mohammadreza (`LabTour` in PianoProduzioneAI) RIORDINATO in sequenza logica top→down: intro → 1·Inserisci Ricetta (maestro-top-aggiungi) → 2·Percorso Guidato (lab-wizard) → 3·Scegli ricette (capo-source-choice) → 4·Extra (capo-modules) → 5·Genera (capo-generate) → challenge. LabTour: intro scrolla in cima, target alti usano block:'start'.
+  - **FIX CRITICAL scroll primo ingresso**: RIMOSSO il useEffect legacy in PianoProduzioneAI (setTimeout 500ms → capo-source-choice.scrollIntoView, guardato da sessionStorage mikilab_lab_scrolled) che, col generatore ora in basso, buttava la pagina a scrollY~2810 nascondendo le voci in cima. Aggiunto reset scroll robusto su mount di Maestro (immediato + rAF + timeout 80ms).
+- **Verifica (iteration_119)**: scrollY=0 a 400/1000/1500/2500/3500ms su desktop+mobile, primo e secondo ingresso; maestro-top-aggiungi visibile; ordine e flusso OK. Nessun ui_bug.
+- **Warning noto (non funzionale)**: console React "<span> cannot be a child of <option>" nel sottoalbero PianoProduzioneAI — non individuato nel sorgente (nessun span-in-option letterale); non impatta funzionalità. Da indagare a parte.
+- **Backlog design (pre-esistente)**: hero "Your Lab"/Ricette poco leggibile su foto (scrim più forte).

@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only retest of the Laboratorio (tab maestro) discoverability fix as admin (admin@mikilab.de) on mobile viewport 390x844. Verified: (1) scroll reset on entering Laboratorio, (2) vertical landing order, (3) LabTour step sequence. RESULT: the new mount scroll-reset in Maestro.jsx works (scrollY=0 at ~400ms), BUT on the FIRST entry of each browser session a legacy auto-scroll in PianoProduzioneAI.jsx (setTimeout 500ms -> capo-source-choice.scrollIntoView) fires AFTER the reset and throws the page back to scrollY=2810, hiding 'Inserisci una Ricetta'. This is exactly the scrollY~2810 symptom reported in iteration_117 — NOT fixed for the first entry. Second and later entries (sessionStorage flag mikilab_lab_scrolled='1') land correctly at scrollY=0 with the CTA visible. Landing order PASS. Tour titles/targets order PASS with two minor scroll deviations.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PianoProduzioneAI.jsx (lines 207-216)", "issue": "Legacy 'snellimento' useEffect scrolls to capo-source-choice 500ms after mount (once per session, guarded by sessionStorage mikilab_lab_scrolled). It overrides the new Maestro mount reset: measured scrollY 0 @400ms -> 2779 @800ms -> 2810 @1000ms, maestro-top-aggiungi rect.top = -2504 (off-screen). First-time users therefore still land mid-page and never see 'Inserisci una Ricetta' / Percorso Guidato.", "selector": "[data-testid='maestro-top-aggiungi'] / [data-testid='capo-source-choice']", "priority": "CRITICAL"},
+      {"component": "LabTour step 0 (intro)", "issue": "When restarted from lab-tour-replay the intro step does not scroll to top (scrollY stayed 1815), so the 'top to bottom' promise in the intro copy starts mid-page. Intro step has target:null so no scroll is performed.", "selector": "[data-testid='lab-tour']", "priority": "LOW"},
+      {"component": "LabTour step 2 (lab-wizard)", "issue": "lab-wizard is 1253px tall; scrollIntoView({block:'center'}) puts its header off-screen (rect.top = -205), so the highlighted 'Percorso Guidato' title is not visible during its own step. Consider block:'start' for tall targets.", "selector": "[data-testid='lab-wizard']", "priority": "LOW"},
+      {"component": "LabTour steps 3->4", "issue": "Scroll is not strictly monotonic top->down: step 3 (capo-source-choice) scrolls to y=2778 then step 4 (capo-modules) scrolls back UP to y=2303, because capo-modules sits ABOVE capo-source-choice in the DOM. Either swap steps 4/3 or reorder the panels.", "selector": "[data-testid='capo-modules']", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Laboratorio landing", "issues": ["Layout/order itself is correct: hero(absTop 81) -> maestro-top-tools(281) -> maestro-top-aggiungi(306) -> lab-wizard(551) -> PianoProduzioneAI. CTA is large and high-contrast."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Remove (or gate behind 'only when no landing reset happened') the useEffect at PianoProduzioneAI.jsx:207-216 that auto-scrolls to capo-source-choice after 500ms — it is the sole cause of the residual scrollY 2810 on first entry per session.",
+    "Optionally: scroll to top on LabTour intro step (target null), use block:'start' for tall targets like lab-wizard, and reorder tour steps so capo-modules comes after/below capo-source-choice to keep the top->down progression."
+  ],
+  "critical_code_review_comments": [
+    "Two competing scroll controllers (Maestro mount reset with rAF+80ms timeout vs PianoProduzioneAI 500ms scrollIntoView) create a race; the later timer always wins. Centralize scroll intent in one place.",
+    "React hydration console error observed on the Laboratorio page: 'In HTML, <span> cannot be a child of <option>' originating from the PianoProduzioneAI subtree — invalid markup inside a <select>/<option>."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "2/3 scenarios pass (first-entry scroll FAIL, later-entry scroll PASS, landing order PASS, tour order PASS with 3 minor deviations)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked via login-btn -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "Repro requires a FRESH browser session (sessionStorage empty): login, scroll Home to bottom (scrollY ~2759), click nav-tab-maestro, then measure window.scrollY at 400ms AND at 1000ms — the regression only appears after ~700ms. Correct bottom-nav testids: nav-tab-home, nav-tab-ricette, nav-tab-maestro, nav-tab-impara, nav-tab-community (there is NO nav-tab-recipes). Tour can be forced with [data-testid='lab-tour-replay'] inside PianoProduzioneAI (Mohammadreza box).",
+  "rca_of_the_issue": "Maestro.jsx:103-108 correctly forces window.scrollTo(0,0) on mount (immediate + rAF + 80ms). However PianoProduzioneAI.jsx:208-216 registers a 500ms setTimeout that calls document.querySelector('[data-testid=\"capo-source-choice\"]').scrollIntoView({behavior:'smooth',block:'center'}) unless sessionStorage 'mikilab_lab_scrolled' is set. On the first Laboratorio visit of a session this fires after the reset, scrolling to y~2810 and pushing maestro-top-aggiungi 2500px above the viewport. Fix: delete that effect (or make it run only for an explicit user intent)."
+}

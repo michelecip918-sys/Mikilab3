@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only test (mobile 390x844) of the reorganized 'Your Lab' (maestro) landing as admin (admin@mikilab.de). All 3 requested features PASS: (1) [data-testid='maestro-top-aggiungi'] is present, visible, large, labelled 'Add a Recipe / Inserisci una Ricetta' and opens the add-recipe view (RecipeList personal + ScanRecipe: scan-dual, scan-take, scan-attach, add-recipe-btn, personal-lab-hint), with maestro-back-btn returning to the tools landing. (2) Vertical order verified via getBoundingClientRect().top+scrollY: maestro-title@81 -> maestro-top-tools@281 (aggiungi@306, 4 calculators@405-475) -> lab-wizard@551 (3 steps present, progress 2/3) -> PianoProduzioneAI block (capo-* elements from ~1840/2004, capo-generate@4123) -> avatar-bubbles@6783 -> maestro-signature@7077. (3) All 4 quick calculators clickable and open the right tools (Weekly plan, Hydration & Base Parameters, Method & Sequences (AI), Leavening Converter), each returning correctly via maestro-back-btn. One UX issue found: switching to the Lab tab does not reset scroll, so the user lands mid-page (~scrollY 2810) and the new 'Add a Recipe' block is off-screen (top: -2504px) - this directly reproduces the user's original 'I cannot find how to insert a recipe' complaint.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Maestro (Your Lab tab)", "issue": "No scroll reset on tab switch: after clicking nav-tab-maestro from Home, window.scrollY stays at 2810 so hero + maestro-top-tools (Add a Recipe) are far above the viewport (rect.top = -2504). The new landing is only discoverable after scrolling up. Fix: scroll to top on section/tab change (the existing useEffect only handles the `tool` state).", "selector": "[data-testid=\"nav-tab-maestro\"] / [data-testid=\"maestro-top-aggiungi\"]", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Your Lab landing", "issues": ["React hydration/DOM validity console error originating from PianoProduzioneAI (Maestro.jsx:225): '<span> cannot be a child of <option>' - invalid markup inside a native <select>, should be plain text in <option>.", "Guided Path (lab-wizard) shows 'STEP 3 OF 3 / 67%' with steps 1-2 already marked DONE for the admin account; verify the progress label/percent consistency (cosmetic)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Scroll to top (window.scrollTo(0,0)) when the Lab/maestro section is opened, otherwise the new 'Inserisci una Ricetta' block and Percorso Guidato remain invisible to the user landing from another tab.",
+    "Remove the <span> inside <option> in PianoProduzioneAI to clear the React DOM nesting/hydration console error."
+  ],
+  "critical_code_review_comments": [
+    "Maestro.jsx useEffect only restores/resets scroll on `tool` change; add a reset when the section becomes active (or lift scroll reset into the tab router) to guarantee the user sees the hero + maestro-top-tools.",
+    "Maestro.jsx renders 60+ tool components in one file (252 lines but huge import surface); consider a lazy-loaded tool registry map to avoid loading every tool bundle on the landing."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% of the 3 requested features pass (1 HIGH UX scroll issue found)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked, paywall bypassed)",
+  "context_for_next_testing_agent": "Login flow: dismiss newsletter-popup-dismiss, click login-btn, fill auth-email/auth-password, auth-submit (~5s). In the Lab tab a lab-tour-skip overlay appears. Order measurement helper: page.evaluate on getBoundingClientRect().top + window.scrollY. Remember the Lab tab opens at the previous scroll position, so always scroll_into_view_if_needed before clicking maestro-top-* buttons.",
+  "rca_of_the_issue": "The layout reorganization itself is correct and verified by DOM ordering. The residual discoverability risk is the missing scroll reset on tab switch: App keeps the window scroll position from the previous tab, so the Lab opens mid-page below the new top tools block."
+}

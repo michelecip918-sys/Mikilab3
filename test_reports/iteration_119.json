@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only retest of the Laboratorio (Your Lab) first-entry scroll regression after removal of the legacy 500ms scrollIntoView('capo-source-choice') useEffect in PianoProduzioneAI.jsx. Tested on Desktop (1920x1080) and Mobile (390x844) with FRESH sessions (empty sessionStorage): admin login, Home scrolled to ~2700, then nav-tab-maestro. scrollY measured at 400/1000/1500/2500/3500ms. REGRESSION RESOLVED: all measurements = 0 on both viewports (previous iteration_118 showed jump to 2810 @1000ms). maestro-top-aggiungi visible in viewport (rect.top=305.5, bottom=373.5) on both. Second entry also stays at scrollY 0. Vertical order and CTA flow verified.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Your Lab hero", "issues": ["Hero title 'Your Lab' / subtitle overlaps the busy background image (low contrast on the lighter shelf area) - readability could be improved with a stronger gradient overlay"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "React console error present on the Your Lab route: 'In HTML, <span> cannot be a child of <option> ... will cause a hydration error' (traced to PianoProduzioneAI / Maestro line ~232 subtree). Non-blocking but should be cleaned: <option> children must be plain text (e.g. flag emoji as text, not wrapped in <span>)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100% (3/3 scenarios passed)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked via login-btn -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "Scroll regression fix verified on desktop and mobile with fresh sessions. Measurements: FIRST ENTRY scrollY {400:0,1000:0,1500:0,2500:0,3500:0} desktop and mobile; SECOND ENTRY identical. Vertical doc order: maestro-top-tools@281 < lab-wizard@551 < first capo-* (PianoProduzioneAI)@1783 -> correct. CTA 'Add a Recipe' (maestro-top-aggiungi) opens add-recipe view with maestro-back-btn visible and scrollY 0; back returns to tools with maestro-top-aggiungi visible and scrollY 0. No error elements on the page. Only remaining noise: React nesting/hydration warning for <span> inside <option>.",
+  "rca_of_the_issue": "Previous jump to ~2810 was caused by the setTimeout(500ms) useEffect in PianoProduzioneAI.jsx calling capo-source-choice.scrollIntoView on first lab entry (guarded by sessionStorage 'mikilab_lab_scrolled'). That effect is now removed (only event-driven scrollIntoView handlers remain, for 'mikilab-generate-today' and pendingGenerate), and Maestro.jsx mount effect forces window.scrollTo(0,0) immediately + rAF + 80ms. Verified no delayed scroll occurs up to 3.5s."
+}

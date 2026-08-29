@@ -31,12 +31,16 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
     if (tgt) {
       const el = document.querySelector(`[data-testid="${tgt}"]`);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        const tall = el.getBoundingClientRect().height > window.innerHeight * 0.6;
+        el.scrollIntoView({ behavior: "smooth", block: tall ? "start" : "center" });
         el.style.outline = "3px solid #ff6b00";
         el.style.outlineOffset = "3px";
         el.style.borderRadius = "18px";
         el.setAttribute("data-tour-highlight", "1");
       }
+    } else {
+      // Step senza target (intro/chiusura): riporta in cima così il racconto parte dall'alto.
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
     return () => clearHighlights();
     // eslint-disable-next-line react-hooks/exhaustive-deps
