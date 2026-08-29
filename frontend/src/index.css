@@ -193,7 +193,13 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
     linear-gradient(180deg, #fbf3e4 0%, #f3e7d0 100%);
   background-attachment: fixed;
 }
-.dark .app-warm-bg { background: #1B2127; }
+.dark .app-warm-bg {
+  background:
+    radial-gradient(85% 42% at 50% -4%, rgba(200,120,50,.16) 0%, transparent 58%),
+    radial-gradient(120% 70% at 50% 105%, rgba(120,70,30,.12) 0%, transparent 60%),
+    linear-gradient(180deg, #201a17 0%, #1B2127 45%, #171b20 100%);
+  background-attachment: fixed;
+}
 
 /* Pulviscolo di farina che fluttua nel portale */
 @keyframes floatDust {
