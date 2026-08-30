@@ -6,12 +6,26 @@ import { mkTri } from "@/i18n/triMaps";
 import { SOCIAL, SITE_URL } from "@/config/social";
 
 const CAPTIONS = {
-  it: "🥖 Ho scoperto MikiLab: il laboratorio del fornaio 100% GRATIS! Ricette col metodo di Michele, piani di produzione con l'IA, food cost e diagnosi dell'impasto. Pane, pizza e pasticceria in un'unica app 👉 " + SITE_URL + " #MikiLab #panefattoincasa #lievitomadre #panificazione #homebaking",
-  en: "🥖 Just found MikiLab — the baker's lab, 100% FREE! Recipes, AI production plans, food cost & dough diagnosis. Bread, pizza & pastry in one app 👉 " + SITE_URL + " #MikiLab #homebaking #sourdough #breadmaking",
-  de: "🥖 MikiLab entdeckt — die Bäcker-Werkstatt, 100% KOSTENLOS! Rezepte, KI-Produktionspläne, Food-Cost & Teig-Diagnose. Brot, Pizza & Gebäck in einer App 👉 " + SITE_URL + " #MikiLab #Brotbacken #Sauerteig",
-  es: "🥖 Descubrí MikiLab — el laboratorio del panadero, ¡100% GRATIS! Recetas, planes de producción con IA, food cost y diagnóstico de la masa. Pan, pizza y pastelería en una app 👉 " + SITE_URL + " #MikiLab #pancasero #masamadre",
-  fr: "🥖 J'ai découvert MikiLab — l'atelier du boulanger, 100% GRATUIT ! Recettes, plans de production IA, food cost et diagnostic de la pâte 👉 " + SITE_URL + " #MikiLab #painmaison #levain",
-  fa: "🥖 میکی‌لب را کشف کردم — کارگاه نانوا، ۱۰۰٪ رایگان! دستورها، برنامهٔ تولید با هوش مصنوعی و تشخیص خمیر 👉 " + SITE_URL + " #MikiLab",
+  it: {
+    bacheca: "🥖 Ho scoperto MikiLab: il laboratorio del fornaio 100% GRATIS! Ricette col metodo di Michele, piani di produzione con l'IA, food cost e diagnosi dell'impasto. Pane, pizza e pasticceria in un'unica app 👉 " + SITE_URL + "\n#MikiLab #panefattoincasa #lievitomadre #panificazione #homebaking",
+    storia: "🥖 Panifica come un pro, GRATIS.\nRicette + piani IA + diagnosi impasto.\n👉 Swipe up / link: " + SITE_URL + "\n#MikiLab #lievitomadre",
+    reel: "POV: hai trovato l'app che ti organizza tutto il forno 🥖🔥\nRicette, food cost, piani con l'IA e diagnosi dell'impasto. E costa ZERO.\nProva MikiLab 👉 " + SITE_URL + "\n#MikiLab #panetok #lievitomadre #fyp #homebaking",
+  },
+  en: {
+    bacheca: "🥖 Just found MikiLab — the baker's lab, 100% FREE! Recipes, AI production plans, food cost & dough diagnosis. Bread, pizza & pastry in one app 👉 " + SITE_URL + "\n#MikiLab #homebaking #sourdough #breadmaking",
+    storia: "🥖 Bake like a pro, for FREE.\nRecipes + AI plans + dough diagnosis.\n👉 Link: " + SITE_URL + "\n#MikiLab #sourdough",
+    reel: "POV: you found the app that runs your whole bakery 🥖🔥\nRecipes, food cost, AI plans & dough diagnosis. And it's FREE.\nTry MikiLab 👉 " + SITE_URL + "\n#MikiLab #breadtok #sourdough #fyp #homebaking",
+  },
+  de: {
+    bacheca: "🥖 MikiLab entdeckt — die Bäcker-Werkstatt, 100% KOSTENLOS! Rezepte, KI-Produktionspläne, Food-Cost & Teig-Diagnose. Brot, Pizza & Gebäck in einer App 👉 " + SITE_URL + "\n#MikiLab #Brotbacken #Sauerteig",
+    storia: "🥖 Backe wie ein Profi, GRATIS.\nRezepte + KI-Pläne + Teig-Diagnose.\n👉 Link: " + SITE_URL + "\n#MikiLab #Sauerteig",
+    reel: "POV: du hast die App gefunden, die deine ganze Backstube organisiert 🥖🔥\nRezepte, Food-Cost, KI-Pläne & Teig-Diagnose. Und alles GRATIS.\nProbier MikiLab 👉 " + SITE_URL + "\n#MikiLab #Brotbacken #Sauerteig #fyp",
+  },
+  es: {
+    bacheca: "🥖 Descubrí MikiLab — el laboratorio del panadero, ¡100% GRATIS! Recetas, planes con IA, food cost y diagnóstico de la masa. Pan, pizza y pastelería en una app 👉 " + SITE_URL + "\n#MikiLab #pancasero #masamadre",
+    storia: "🥖 Hornea como un pro, GRATIS.\nRecetas + planes IA + diagnóstico de masa.\n👉 Link: " + SITE_URL + "\n#MikiLab #masamadre",
+    reel: "POV: encontraste la app que organiza todo tu obrador 🥖🔥\nRecetas, food cost, planes con IA y diagnóstico de masa. Y es GRATIS.\nPrueba MikiLab 👉 " + SITE_URL + "\n#MikiLab #pantok #masamadre #fyp",
+  },
 };
 
 const SOCIALS = [
@@ -27,8 +41,15 @@ export default function PromuoviMikiLab() {
   const { lang } = useLang();
   const L = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [copied, setCopied] = useState(false);
-  const caption = CAPTIONS[lang] || CAPTIONS.it;
+  const [variant, setVariant] = useState("bacheca");
+  const caps = CAPTIONS[lang] || CAPTIONS.en;
+  const caption = caps[variant];
   const activeSocials = SOCIALS.filter((s) => SOCIAL[s.key]);
+  const VARIANTS = [
+    { id: "bacheca", label: L("Post", "Beitrag", "Post", "Post", "Post", "پست") },
+    { id: "storia", label: L("Storia", "Story", "Story", "Historia", "Story", "استوری") },
+    { id: "reel", label: "Reel / TikTok" },
+  ];
 
   const invite = async () => {
     const data = { title: "MikiLab", text: L("Prova MikiLab, il laboratorio del fornaio 100% gratis!", "Probier MikiLab, die kostenlose Bäcker-Werkstatt!", "Try MikiLab, the free baker's lab!", "¡Prueba MikiLab, el laboratorio del panadero gratis!", "Essaie MikiLab, l'atelier du boulanger gratuit !", "میکی‌لب رایگان را امتحان کن!"), url: SITE_URL };
@@ -60,6 +81,14 @@ export default function PromuoviMikiLab() {
         {/* Post pronto */}
         <div className="rounded-2xl bg-[#121212] border border-[#2e2e2e] p-3.5">
           <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-1.5">{L("Post pronto da copiare", "Fertiger Beitrag zum Kopieren", "Ready-to-post caption", "Publicación lista", "Légende prête", "کپشن آماده")}</p>
+          <div className="flex gap-1.5 mb-2" data-testid="promuovi-variants">
+            {VARIANTS.map((v) => (
+              <button key={v.id} data-testid={`promuovi-variant-${v.id}`} onClick={() => setVariant(v.id)}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${variant === v.id ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#AEB8BF] border border-[#2e2e2e]"}`}>
+                {v.label}
+              </button>
+            ))}
+          </div>
           <p data-testid="promuovi-caption" className="text-[12.5px] text-[#E0D5CF] leading-snug whitespace-pre-line mb-2.5">{caption}</p>
           <button data-testid="promuovi-copy-caption" onClick={copyCaption}
             className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
@@ -76,6 +105,10 @@ export default function PromuoviMikiLab() {
             <a data-testid="promuovi-qr-download" href={`${process.env.PUBLIC_URL}/qr-mikilab.png`} download="qr-mikilab.png"
               className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95">
               <Download className="w-3.5 h-3.5" /> {L("Scarica QR", "QR laden", "Download QR", "Descargar QR", "Télécharger QR", "دانلود QR")}
+            </a>
+            <a data-testid="promuovi-flyer-download" href={`${process.env.PUBLIC_URL}/locandina-mikilab.png`} download="locandina-mikilab.png"
+              className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#ff6b00] rounded-full px-3 py-1.5 active:scale-95 ml-2">
+              <Download className="w-3.5 h-3.5" /> {L("Locandina A5", "A5-Flyer", "A5 flyer", "Folleto A5", "Flyer A5", "پوستر A5")}
             </a>
           </div>
         </div>
