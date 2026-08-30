@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only regression test after the refactor (combos extracted to /app/frontend/src/components/CapoCombos.jsx + deletion of the dead flat 'capo-open-picker' modal). Desktop 1920x800, logged in as admin@mikilab.de, planner reached via localStorage 'mikilab_pending_tool'='pianoai' + nav-tab-maestro (capo-products rendered). RESULTS — ALL PASS. DEAD CODE: 'capo-open-picker', 'capo-picker-search', 'capo-picker-done' and any 'capo-pick-*' testid = 0 occurrences in the DOM (also confirmed absent in source). NEW MULTI PICKER: capo-add-picker-trigger opens capo-add-picker-modal with search input, 6 category cards with 'Favorites' FIRST (capo-add-picker-cat-favs), item selection + quick qty/day (set qty=25, day=mer) produced a row with qty 25 and day chip 'Wednesday'; capo-add-picker-done confirms; bulk add of 2 items created 2 rows. SAVED COMBOS (extracted component): capo-combos panel appears once a row has a recipe; capo-combo-save-open -> capo-combo-name; capo-combo-save is DISABLED when the name is blank (new fix verified) and enabled after typing; saving shows toast 'Combo saved.', input closes and chip 'TEST_Lunedi · 2' appears; localStorage 'mikilab_combos' holds id/name/items{recipe_id,name,qty,unit,gpp,day,start}. APPLY: after deleting all rows (0), tapping capo-combo-apply-<id> restored exactly 2 rows (toast 'Added: TEST_Lunedi'); re-tapping did NOT duplicate (still 2 rows). PERSISTENCE: full page reload + re-entering the planner -> chip still present (count 1). DELETE: capo-combo-del-<id> removes the chip and localStorage becomes []. DAY CHIP: setting capo-product-day-0='lun' shows capo-product-daychip-0 with label 'Monday'; after collapsing Options the day <select> is gone (count 0) while the chip stays visible; clicking the chip re-expands Options with value 'lun'; setting day back to 'any' removes the chip. REGRESSION: capo-product-add adds a row (2->3), capo-suggest-frequent clickable with no error. THEME: body background rgb(18,18,18) (#121212) with #FF6B00 accents intact. No JS page errors; only expected pre-login 401 network logs from guest API calls.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "CapoCombos.jsx is clean and self-contained (70 lines); getCombos/saveCombo/deleteCombo correctly delegated to lib/combos with try/catch on localStorage. No issues found.",
+    "Minor (non-blocking): lib/combos.saveCombo still falls back to the hardcoded Italian name 'Combinazione' when name is blank — now unreachable from the UI since capo-combo-save is disabled on blank name, so only relevant if the helper is reused elsewhere.",
+    "Minor: no duplicate-name guard for combos (two chips can share the same label, distinguished only by id) — cosmetic, unchanged from before the refactor."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100%"},
+  "seed_data_creation": "Created and then deleted a localStorage-only combo 'TEST_Lunedi' (mikilab_combos). No server-side data created.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked)",
+  "context_for_next_testing_agent": "Planner entry: localStorage 'mikilab_newsletter_seen'='1', close intro-close-btn, login via login-btn + auth-email/auth-password/auth-submit, then localStorage 'mikilab_pending_tool'='pianoai' and click nav-tab-maestro. Note: picker category cards render slightly after the modal opens — add a ~1s wait before counting 'capo-add-picker-cat-*'. Product rows are deleted with the orange X button inside each row of [data-testid=capo-products]. The picker 'recent chips' row (capo-add-picker-recent-row) does not render on a fresh browser profile (no recents yet) — expected, not a bug.",
+  "rca_of_the_issue": "N/A — pure refactor confirmed non-regressive; combos + day chip behave exactly as in iteration_129, plus the blank-name save is now properly disabled."
+}

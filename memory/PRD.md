@@ -2542,3 +2542,9 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Testo Sapori di Casa**: riscritte con tono più curato/evocativo le schede prodotto in `sections/SaporiCasa.jsx` (Pane di Matera casalingo, Focaccia Barese, Focaccia Materana, Taralli al Finocchietto, Strazzate Materane).
 - Test iteration_129: frontend 100% sulle 2 feature interattive (chip giorno visibile/collassato, save/apply/delete/persist combos, nessun duplicato, regressione toolbar). Fix applicato: salvataggio combo bloccato con nome vuoto. Tema nero/arancione intatto.
 - NB: richiede REDEPLOY per riflettersi su mikilab.de.
+
+## v-fork.106 (2026-06) — Cleanup backlog
+- **Dead code rimosso**: eliminato il vecchio modale piatto `capo-open-picker` in PianoProduzioneAI (irraggiungibile dopo l'introduzione di CategoryRecipePicker multi) + relativi state (pickerOpen/pickSearch/pickCat) e funzione removeByRecipe. Testid non più esistenti: capo-open-picker, capo-picker-search, capo-picker-done, capo-pick-*.
+- **Estrazione componente**: il pannello "Le mie combinazioni" spostato da PianoProduzioneAI.jsx a `components/CapoCombos.jsx` (props: products, setProducts, lang; state/handler combos incapsulati). PianoProduzioneAI.jsx ridotto da ~1888 a ~1784 righe.
+- Regressione iteration_130: frontend 100%, nessun bug (combos save/apply/delete/persist, chip giorno, dead code assente, multi-picker OK). Comportamento invariato.
+- NB: richiede REDEPLOY per riflettersi su mikilab.de.

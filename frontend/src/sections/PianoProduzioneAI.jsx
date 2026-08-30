@@ -22,7 +22,7 @@ import { recipeCategory, CATS } from "@/lib/recipeCats";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
 import CategoryRecipePicker from "@/components/CategoryRecipePicker";
-import { getCombos, saveCombo, deleteCombo } from "@/lib/combos";
+import CapoCombos from "@/components/CapoCombos";
 import { mkTri, triFR, triFA } from "@/i18n/triMaps";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -249,17 +249,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const favDragMoved = useRef(false);
   const [guideId, setGuideId] = useState(null); // strumento spiegato da Mohammadreza
   const [generating, setGenerating] = useState(false);
-  const [savedAt, setSavedAt] = useState(null);  const [pickerOpen, setPickerOpen] = useState(false);
+  const [savedAt, setSavedAt] = useState(null);
   const [bakerNote, setBakerNote] = useState("");
   const [planTruncated, setPlanTruncated] = useState(false);
   const [infEdit, setInfEdit] = useState(null); // tabella infornate modificabile {headers, rows}
   const [planHF, setPlanHF] = useState(false); // lettura vocale del piano
-  const [pickSearch, setPickSearch] = useState("");
-  const [pickCat, setPickCat] = useState("");
   const [savedProducts, setSavedProducts] = useState([]);
-  const [combos, setCombos] = useState(() => getCombos());
-  const [comboName, setComboName] = useState("");
-  const [comboSaveOpen, setComboSaveOpen] = useState(false);
   const [modules, setModules] = useState(DEFAULT_MODULES);
   const toggleMod = (id) => setModules((m) => ({ ...m, [id]: !m[id] }));
   const [bump, setBump] = useState(0);
@@ -428,26 +423,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     });
     return [...base, ...toAdd];
   });
-  const removeByRecipe = (id) => setProducts((l) => { const n = l.filter((p) => p.recipe_id !== id); return n.length ? n : [{ recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }]; });
   const restorePrevPlan = () => { if (savedProducts.length) { setProducts(savedProducts); toast.success(tri3(lang, "Ricette dell'ultimo piano ricaricate: cambia solo le quantità.", "Rezepte des letzten Plans geladen: nur Mengen anpassen.", "Last plan's recipes loaded: just adjust quantities.")); } };
-
-  const doSaveCombo = () => {
-    if (!comboName.trim()) return;
-    const list = saveCombo(comboName, products);
-    setCombos(list); setComboName(""); setComboSaveOpen(false);
-    toast.success(tri3(lang, "Combinazione salvata.", "Kombination gespeichert.", "Combo saved.", "Combinación guardada."));
-  };
-  const applyCombo = (combo) => {
-    setProducts((l) => {
-      const base = l.filter((p) => p.recipe_id);
-      const existing = new Set(base.map((p) => p.recipe_id));
-      const toAdd = combo.items.filter((it) => !existing.has(it.recipe_id)).map((it) => ({ ...it, _opts: false }));
-      const next = [...base, ...toAdd];
-      return next.length ? next : l;
-    });
-    toast.success(tri3(lang, `Aggiunta: ${combo.name}`, `Hinzugefügt: ${combo.name}`, `Added: ${combo.name}`, `Añadido: ${combo.name}`));
-  };
-  const removeCombo = (id) => setCombos(deleteCombo(id));
   // Piano suggerito dall'IA: pre-compila i prodotti con le ricette usate più spesso.
   const suggestFromFrequent = () => {
     let usage = {}; try { usage = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); } catch { /* */ }
@@ -1412,40 +1388,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <button data-testid="capo-suggest-frequent" onClick={suggestFromFrequent} className="text-sm font-semibold text-white bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Suggerisci dai più usati", "Aus meistgenutzten vorschlagen", "Suggest from most-used", "Sugerir de los más usados")}</button>
           </div>
 
-          {(combos.length > 0 || products.some((p) => p.recipe_id)) && (
-            <div className="mt-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#181818] p-2.5" data-testid="capo-combos">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 flex items-center gap-1"><Star className="w-3.5 h-3.5" /> {tri3(lang, "Le mie combinazioni", "Meine Kombinationen", "My combos", "Mis combinaciones")}</p>
-              <div className="flex flex-wrap items-center gap-1.5">
-                {combos.map((c) => (
-                  <span key={c.id} className="inline-flex items-center rounded-full bg-[#ff6b00]/12 border border-[#ff6b00]/30 overflow-hidden">
-                    <button type="button" data-testid={`capo-combo-apply-${c.id}`} onClick={() => applyCombo(c)}
-                      className="text-xs font-semibold text-[#ff6b00] dark:text-[#ffd9b8] pl-3 pr-2 py-1.5 active:scale-95 transition-all max-w-[200px] truncate">
-                      {c.name} <span className="opacity-70">· {c.items.length}</span>
-                    </button>
-                    <button type="button" data-testid={`capo-combo-del-${c.id}`} onClick={() => removeCombo(c.id)}
-                      className="text-[#ff6b00]/70 hover:text-[#ff6b00] pr-2 pl-0.5 py-1.5"><X className="w-3 h-3" /></button>
-                  </span>
-                ))}
-                {products.some((p) => p.recipe_id) && !comboSaveOpen && (
-                  <button type="button" data-testid="capo-combo-save-open" onClick={() => setComboSaveOpen(true)}
-                    className="text-xs font-semibold text-white bg-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95">
-                    <Plus className="w-3.5 h-3.5" /> {tri3(lang, "Salva combinazione", "Kombination speichern", "Save combo", "Guardar combinación")}
-                  </button>
-                )}
-              </div>
-              {comboSaveOpen && (
-                <div className="flex items-center gap-2 mt-2">
-                  <input data-testid="capo-combo-name" value={comboName} onChange={(e) => setComboName(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") doSaveCombo(); }} autoFocus
-                    placeholder={tri3(lang, "es. Produzione del lunedì", "z.B. Montagsproduktion", "e.g. Monday production", "ej. Producción del lunes")}
-                    className="flex-1 min-w-0 bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg py-1.5 px-2.5 text-sm text-white outline-none focus:border-[#ff6b00]" />
-                  <button type="button" data-testid="capo-combo-save" onClick={doSaveCombo} disabled={!comboName.trim()}
-                    className="text-xs font-semibold text-white bg-[#ff6b00] disabled:opacity-40 px-3 py-1.5 rounded-lg active:scale-95 shrink-0">{tri3(lang, "Salva", "Speichern", "Save", "Guardar")}</button>
-                  <button type="button" onClick={() => { setComboSaveOpen(false); setComboName(""); }} className="text-[#7E8A93] p-1 shrink-0"><X className="w-4 h-4" /></button>
-                </div>
-              )}
-            </div>
-          )}
+          {<CapoCombos products={products} setProducts={setProducts} lang={lang} />}
           <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
             <Flag className="w-3.5 h-3.5 text-[#1e1e1e] shrink-0 mt-0.5" />
             {tri3(lang, "Scegli tu l'impasto da cui partire: tocca «Parti da qui». L'IA organizzerà la sequenza iniziando da quello.",
@@ -1464,52 +1407,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
           )}
         </div>
-
-        {pickerOpen && (
-          <div className="fixed inset-0 z-[70] bg-black/50 flex items-end sm:items-center justify-center" onClick={() => setPickerOpen(false)}>
-            <div className="bg-white dark:bg-[#121212] w-full sm:max-w-md max-h-[82vh] rounded-t-3xl sm:rounded-3xl flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <div className="p-4 border-b border-[#2e2e2e] dark:border-[#2e2e2e]">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</h3>
-                  <button data-testid="capo-picker-close" onClick={() => setPickerOpen(false)} className="text-[#7E8A93] p-1"><X className="w-5 h-5" /></button>
-                </div>
-                <input data-testid="capo-picker-search" value={pickSearch} onChange={(e) => setPickSearch(e.target.value)} autoFocus
-                  placeholder={tri3(lang, "Cerca ricetta…", "Rezept suchen…", "Search recipe…")}
-                  className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
-                <div data-testid="capo-picker-filters" className="flex gap-1.5 mt-2 overflow-x-auto pb-1">
-                  <button data-testid="capo-filter-all" onClick={() => setPickCat("")}
-                    className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === "" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
-                    {tri3(lang, "Tutte", "Alle", "All")}
-                  </button>
-                  {CATS.map((c) => (
-                    <button key={c.key} data-testid={`capo-filter-${c.key}`} onClick={() => setPickCat(c.key === pickCat ? "" : c.key)}
-                      className={`shrink-0 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${pickCat === c.key ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
-                      {c.icon} {t(c.label)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="overflow-y-auto p-2 flex-1">
-                {recipes.filter((r) => (r.name || "").toLowerCase().includes(pickSearch.toLowerCase())).filter((r) => !pickCat || recipeCategory(r).key === pickCat).map((r) => {
-                  const sel = products.some((p) => p.recipe_id === r.id);
-                  return (
-                    <button key={r.id} data-testid={`capo-pick-${r.id}`} onClick={() => (sel ? removeByRecipe(r.id) : addRecipes([r.id]))}
-                      className={`w-full flex items-center gap-2 p-2.5 rounded-xl text-left mb-1 transition-all ${sel ? "bg-[#ff6b00]/12 border border-[#ff6b00]/40" : "hover:bg-[#e4eff8] dark:hover:bg-[#1e1e1e] border border-transparent"}`}>
-                      {sel ? <CheckCircle2 className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <span className="w-5 h-5 rounded-full border-2 border-[#2e2e2e] dark:border-[#4a5560] shrink-0" />}
-                      <span className="flex-1 min-w-0 text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{recipeTitle(r, lang)}</span>
-                      {r._own && <span className="text-[10px] text-[#ff6b00]">★</span>}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="p-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
-                <button data-testid="capo-picker-done" onClick={() => setPickerOpen(false)} className="w-full bg-[#ff6b00] text-white font-semibold py-2.5 rounded-xl active:scale-98">
-                  {tri3(lang, "Fatto", "Fertig", "Done")} ({products.filter((p) => p.recipe_id).length})
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="grid grid-cols-2 gap-3 mt-4">
           {modules.orari && <LabelInput testid="capo-start-time" label={t("capo_start_time")} type="time" value={startTime} onChange={setStartTime} />}
