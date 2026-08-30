@@ -72,6 +72,7 @@ import LabPizzeria from "@/sections/LabPizzeria";
 import LabPasticceria from "@/sections/LabPasticceria";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import ManiSporche from "@/sections/ManiSporche";
+import ToolsDirectory from "@/components/ToolsDirectory";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -230,6 +231,9 @@ export default function Maestro() {
 
       {/* Il GENERATORE del piano IA (scegli ricette → genera) */}
       <PianoProduzioneAI onOpenTool={openTool} />
+
+      {/* Direttorio strumenti diviso per funzione: Genera / Gestione / Registri / Info */}
+      <ToolsDirectory onOpenTool={openTool} />
 
       {/* Avatar del Laboratorio: Michele operativo + Mohammadreza pronto ad aiutare */}
       <AvatarBubbles variant="lab" />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Star, Plus, X } from "lucide-react";
+import { Star, Plus, X, Cloud } from "lucide-react";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { getCombos, saveCombo, deleteCombo, COMBOS_EVENT } from "@/lib/combos";
@@ -45,8 +45,9 @@ export default function CapoCombos({ products, setProducts, lang }) {
         {combos.map((c) => (
           <span key={c.id} className="inline-flex items-center rounded-full bg-[#ff6b00]/12 border border-[#ff6b00]/30 overflow-hidden">
             <button type="button" data-testid={`capo-combo-apply-${c.id}`} onClick={() => apply(c)}
-              className="text-xs font-semibold text-[#ff6b00] dark:text-[#ffd9b8] pl-3 pr-2 py-1.5 active:scale-95 transition-all max-w-[200px] truncate">
-              {c.name} <span className="opacity-70">· {c.items.length}</span>
+              className="text-xs font-semibold text-[#ff6b00] dark:text-[#ffd9b8] pl-3 pr-2 py-1.5 active:scale-95 transition-all max-w-[220px] truncate flex items-center gap-1">
+              {c.synced && <Cloud data-testid={`capo-combo-synced-${c.id}`} className="w-3.5 h-3.5 text-[#AEB8BF] shrink-0" aria-label={tri3("Sincronizzata sull'account", "Mit Konto synchronisiert", "Synced to account", "Sincronizada en la cuenta")} />}
+              <span className="truncate">{c.name}</span> <span className="opacity-70 shrink-0">· {c.items.length}</span>
             </button>
             <button type="button" data-testid={`capo-combo-del-${c.id}`} onClick={() => remove(c.id)}
               className="text-[#ff6b00]/70 hover:text-[#ff6b00] pr-2 pl-0.5 py-1.5"><X className="w-3 h-3" /></button>

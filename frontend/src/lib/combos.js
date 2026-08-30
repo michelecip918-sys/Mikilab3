@@ -21,9 +21,9 @@ export function saveCombo(name, items) {
     recipe_id: p.recipe_id, name: p.name || "", qty: p.qty ?? "", unit: p.unit || "pezzi", gpp: p.gpp ?? "", day: p.day || "", start: !!p.start,
   }));
   if (!clean.length) return getCombos();
-  const combo = { id: `c_${Date.now()}`, name: (name || "").trim() || "Combinazione", items: clean };
+  const combo = { id: `c_${Date.now()}`, name: (name || "").trim() || "Combinazione", items: clean, synced: false };
   const list = write([combo, ...getCombos()].slice(0, 20));
-  comboApi.sync([combo]).then((server) => { if (Array.isArray(server)) write(server); }).catch(() => {}); // ospite (401) → resta locale
+  comboApi.sync([combo]).then((server) => { if (Array.isArray(server)) write(server.map((c) => ({ ...c, synced: true }))); }).catch(() => {}); // ospite (401) → resta locale
   return list;
 }
 
@@ -36,7 +36,7 @@ export function deleteCombo(id) {
 // Unisce le combinazioni locali con quelle dell'account (da chiamare al bootstrap/login).
 export function hydrateCombos() {
   return comboApi.sync(getCombos())
-    .then((server) => { if (Array.isArray(server)) write(server); })
+    .then((server) => { if (Array.isArray(server)) write(server.map((c) => ({ ...c, synced: true }))); })
     .catch(() => {});
 }
 
