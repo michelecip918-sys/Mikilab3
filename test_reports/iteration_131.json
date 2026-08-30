@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only regression test after extracting the per-product row into /app/frontend/src/components/CapoProductRow.jsx. Desktop 1920x800, admin@mikilab.de login, planner reached via localStorage 'mikilab_pending_tool'='pianoai' + nav-tab-maestro. RESULT: ALL PASS, no regression. (1) RECIPE PICKER (single): capo-product-recipe-0-trigger opens the category modal (6 category cards, Favorites first), no checkboxes and no '-done' button (single-select confirmed); clicking a recipe item CLOSES the modal and the trigger label updates to the exact recipe name ('Cooked Flour (Kochstueck)...'). (2) QUANTITY: capo-product-qty-0 = 42 persists; suffix 'pieces' (EN) and switches to 'kg' when unit=kg. (3) OPTIONS: capo-product-opts-0 reveals unit/gpp/day selects; unit=kg removes capo-product-gpp-0 (count 0) and changes qty suffix to 'kg'; back to pezzi restores gpp (value 80 persists); day select works (value 'mar'). (4) DAY CHIP: capo-product-daychip-0 shows 'Tuesday'; after collapsing Options (button label 'Less') the day <select> is gone but the chip remains; clicking the chip re-expands Options with day='mar'; setting day back to 'Any day' removes the chip. (5) START HERE: capo-product-start-<i> only renders when a recipe is selected (absent on the empty row); clicking row0 sets 'Starting dough', clicking row1 moves it (row0 reverts to 'Start here') => single-start rule intact; re-click toggles off. (6) PER-ROW ISOLATION: qty row0=10 / row1=55 independent, distinct recipe labels, expanding Options on row1 does not expand row0, unit=kg on row1 leaves row0 suffix 'pieces'. (7) REMOVE/ADD: removing row0 (X) leaves 1 row that correctly carries row1's recipe + qty 55 (index shift correct); capo-product-add appends an empty row. (8) COMBOS REGRESSION: capo-combos panel visible, save-open/name/save stores combo in localStorage mikilab_combos with full item payload, chip 'TEST_Refactor . 1' appears, apply after clearing all rows restores the row (recipe + qty 55), capo-combo-del-<id> removes chip and storage becomes []. (9) BULK PICKER: capo-add-picker-trigger + 2 distinct items + capo-add-picker-done adds 2 rows with default qty 10 (when a selected recipe already exists in the list it is deduped -> only new rows added; pre-existing behavior). No pageerror/JS crash; body background rgb(18,18,18) with #FF6B00 accents intact.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "CapoProductRow.jsx (82 lines) is clean: patch(fn) maps only index i, remove/start use full-list maps as required. Verified no cross-row state leakage.",
+    "Testability gap FIXED by me: the row remove (X) button had no data-testid; added data-testid={`capo-product-del-${i}`} in CapoProductRow.jsx (no behavior change). Please keep it.",
+    "Minor: DAYS const is duplicated between CapoProductRow.jsx and PianoProduzioneAI/other callers - consider a shared constant."
+  ],
+  "updated_files": ["/app/frontend/src/components/CapoProductRow.jsx"],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100%"},
+  "seed_data_creation": "localStorage-only combo 'TEST_Refactor' created and deleted; no server-side data created.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked)",
+  "context_for_next_testing_agent": "Planner entry unchanged (newsletter_seen=1, intro-close-btn, login-btn + auth-email/auth-password/auth-submit, localStorage mikilab_pending_tool=pianoai, nav-tab-maestro). Row X button now has data-testid capo-product-del-<i> - use it instead of nth(0) button (the first button in the row header is the recipe picker trigger). Number of initial rows varies (1 or 2) between sessions - always ensure rows count via capo-product-add before addressing row 1. Count rows with [data-testid^=capo-product-qty-].",
+  "rca_of_the_issue": "N/A - pure refactor confirmed non-regressive. One earlier apparent 'remove' failure was a test-selector mistake (clicked the picker trigger instead of the X); re-tested with the new capo-product-del-<i> testid and it passes."
+}

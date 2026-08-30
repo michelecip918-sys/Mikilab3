@@ -2548,3 +2548,8 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Estrazione componente**: il pannello "Le mie combinazioni" spostato da PianoProduzioneAI.jsx a `components/CapoCombos.jsx` (props: products, setProducts, lang; state/handler combos incapsulati). PianoProduzioneAI.jsx ridotto da ~1888 a ~1784 righe.
 - Regressione iteration_130: frontend 100%, nessun bug (combos save/apply/delete/persist, chip giorno, dead code assente, multi-picker OK). Comportamento invariato.
 - NB: richiede REDEPLOY per riflettersi su mikilab.de.
+
+## v-fork.107 (2026-06) — Split riga-prodotto Laboratorio
+- Estratta la riga prodotto in `components/CapoProductRow.jsx` (props: p, i, recipes, setProducts; useLang+mkTri interni; helper patch() aggiorna solo l'indice i). PianoProduzioneAI.jsx ridotto da ~1785 a ~1720 righe.
+- Regressione iteration_131: frontend 100%, nessun bug (picker per-riga singolo, quantità, opzioni unit/gpp/giorno, chip giorno, "Parti da qui" mutuamente esclusivo, isolamento per-riga, rimozione/aggiunta, combos). Testid invariati.
+- Backlog cleanup completato (dead code + estrazioni CapoCombos/CapoProductRow). NB: richiede REDEPLOY per mikilab.de.
