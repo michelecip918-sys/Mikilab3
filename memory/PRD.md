@@ -2676,6 +2676,6 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 ---
 ## v-fork.23 (2026-06, fork) — Kit promozione social (QR + post pronto + Invita + Seguici)
 - **`components/PromuoviMikiLab.jsx`** in Home (dopo le giant CTA): pulsante "Invita un amico" (Web Share / copia link), **post di lancio pronto** multilingua con copia (CAPTIONS it/de/en/es/fr/fa + hashtag), **QR code** del sito (`public/qr-mikilab.png`, generato con lib qrcode) con Scarica, e sezione **"Seguici"** che mostra i pulsanti social solo se configurati.
-- **`config/social.js`**: SOCIAL = { instagram, facebook, tiktok, youtube, whatsapp } (vuoti finché l'utente non fornisce gli URL) + SITE_URL. Da compilare con i profili reali dell'utente per attivare i pulsanti "Seguici".
-- TODO (attesa utente): inserire gli URL dei profili social in config/social.js.
+- **`config/social.js`**: collegati Instagram (michelucano), TikTok (@michele.signorell — da verificare l'handle esatto), WhatsApp (+49 160 1253378), Threads (michelucano). Facebook e YouTube vuoti (in attesa link esatto Facebook). Aggiunto supporto Threads (icona AtSign) in PromuoviMikiLab.
+- TODO (attesa utente): link esatto del profilo Facebook; conferma handle TikTok.
 

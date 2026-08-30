@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Megaphone, Share2, Copy, Download, Instagram, Facebook, Youtube, MessageCircle, Music2, Check } from "lucide-react";
+import { Megaphone, Share2, Copy, Download, Instagram, Facebook, Youtube, MessageCircle, Music2, AtSign, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -18,6 +18,7 @@ const SOCIALS = [
   { key: "instagram", Icon: Instagram, label: "Instagram", color: "#E1306C" },
   { key: "facebook", Icon: Facebook, label: "Facebook", color: "#1877F2" },
   { key: "tiktok", Icon: Music2, label: "TikTok", color: "#ffffff" },
+  { key: "threads", Icon: AtSign, label: "Threads", color: "#ffffff" },
   { key: "youtube", Icon: Youtube, label: "YouTube", color: "#FF0000" },
   { key: "whatsapp", Icon: MessageCircle, label: "WhatsApp", color: "#25D366" },
 ];
