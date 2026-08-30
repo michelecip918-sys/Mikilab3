@@ -2604,3 +2604,9 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - Test iter138: backend 100% + frontend 100% (registrazione→Social visibile, persistenza sessione, SiteMenu ok, admin login ok). Nota: rate-limit 5 reg/ora per IP (non è un bug prodotto).
 - **Item 3 RICETTE (in corso)**: FATTO Miglioratore su 59 ricette (v113) + farina colorate (v111). ANCORA DA FARE: +20 focacce di vari gusti; audit/fix TRADUZIONI (specie colorate); polish presentazione/impaginazione ricette (incluse MikiLab).
 - ⚠️ Dati ricette (improver/farina/note/nuove focacce) vivono nel DB anteprima + seed → in produzione servono via RI-SEED dal seed aggiornato.
+
+## v-fork.115 (2026-06) — +20 focacce
+- Aggiunte 20 focacce (script idempotente /app/backend/migrations/2026_06_add_20_focacce.py) su DB + seed. Ognuna: farina 1000g, acqua da idratazione, lievito madre, sale, condimenti specifici tradotti in 6 lingue + olio + Miglioratore Naturale (3%), procedimento multilingua templato (IT/DE/EN/ES/FR/FA), notes tradotte, menu_category 'focacce', image_url '/recipes/r_focaccia.jpg', locked/hidden False. Nomi del piatto in italiano (specialità), name_fa translitterato.
+- Verificato via API /api/recipes?collection_name=mikilab: 141 ricette totali, 32 focacce, le nuove presenti e non bloccate, con Miglioratore e procedimenti tradotti.
+- Gusti: Zucca e Rosmarino, Patate e Rosmarino, Cipolla di Tropea, Zucchine e Stracchino, Melanzane e Pomodorini, Peperoni, Pesto e Pomodorini, Gorgonzola e Noci, Mortadella e Pistacchio, Prosciutto e Stracchino, Friarielli, Funghi Porcini, Acciughe e Capperi, Fichi e Miele, Uvetta e Noci, Multi-Semi, Curcuma, Olive Verdi e Origano, Pere e Gorgonzola, Cipollotto e Speck.
+- Item 3 RIMANE: audit/fix TRADUZIONI ricette colorate; polish presentazione/impaginazione ricette. ⚠️ In produzione: serve RI-SEED per far comparire le nuove focacce e le modifiche dati.
