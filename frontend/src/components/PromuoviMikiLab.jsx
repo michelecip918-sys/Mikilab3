@@ -211,6 +211,15 @@ export default function PromuoviMikiLab() {
                 <a data-testid="promuovi-cover-halloween" href={`${process.env.PUBLIC_URL}/reel-cover-halloween.png`} download="mikilab-halloween.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
                   <Download className="w-4 h-4 text-[#ff6b00]" /> Halloween
                 </a>
+                <a data-testid="promuovi-cover-ferragosto" href={`${process.env.PUBLIC_URL}/reel-cover-ferragosto.png`} download="mikilab-ferragosto.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> Ferragosto
+                </a>
+                <a data-testid="promuovi-cover-carnevale" href={`${process.env.PUBLIC_URL}/reel-cover-carnevale.png`} download="mikilab-carnevale.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Carnevale", "Karneval", "Carnival", "Carnaval", "Carnaval", "کارناوال")}
+                </a>
+                <a data-testid="promuovi-cover-mamma" href={`${process.env.PUBLIC_URL}/reel-cover-mamma.png`} download="mikilab-festa-mamma.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Festa Mamma", "Muttertag", "Mother's Day", "Día de la Madre", "Fête des Mères", "روز مادر")}
+                </a>
               </div>
             </div>
           )}
