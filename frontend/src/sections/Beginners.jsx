@@ -43,6 +43,15 @@ function HomePlanner() {
   }, []);
 
   const recipeById = useMemo(() => Object.fromEntries(recipes.map((r) => [r.id, r])), [recipes]);
+
+  const addRecipesHome = (ids) => setProducts((l) => {
+    const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
+    const base = l.filter((p) => p.recipe_id);
+    const toAdd = ids.filter((id) => !existing.has(id)).map((id) => ({ recipe_id: id, qty: "2", gpp: "500", day: "" }));
+    const next = [...base, ...toAdd];
+    return next.length ? next : [{ recipe_id: "", qty: "2", gpp: "500", day: "" }];
+  });
+
   const shopTotals = useMemo(() => computeShopping(
     products.filter((p) => p.recipe_id).map((p) => ({ recipe_id: p.recipe_id, grams: Number(p.qty || 0) * Number(p.gpp || 500) })),
     recipeById, lang,
@@ -108,7 +117,13 @@ function HomePlanner() {
             {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>}
           </div>
         ))}
-        <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+        <div className="flex flex-wrap items-center gap-3 mt-1">
+          <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+          <div className="w-full sm:w-auto sm:min-w-[190px]">
+            <CategoryRecipePicker recipes={recipes} multi onAddMany={addRecipesHome}
+              selectedIds={products.map((p) => p.recipe_id).filter(Boolean)} testid="home-add-picker" />
+          </div>
+        </div>
       </div>
 
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93] mt-3 block">{t("home_when")}</label>

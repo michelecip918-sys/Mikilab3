@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only verification of the upgraded CategoryRecipePicker (multi-select + category photos) across PianoProduzioneAI (capo-add-picker), WeeklyPlan (weekly-add-<day>) and HomePlanner/Beginners (home-add-picker), plus single-mode regression. Tested on desktop 1920x900 and mobile 430x844 with admin login (admin@mikilab.de). All 5 category cards render with real photos (/cats/*.jpg, naturalWidth 1024 => loaded, HTTP 200). Multi-select toggles multiple checkmarks without closing the modal, 'Add (N)' live count works and is disabled at 0, bulk add creates multiple rows, no duplicates, 'in plan' hint shown, search filters + toggles, back/close buttons work, selection resets on reopen. Single-mode pickers still select-and-close and update the row label in all three sections. NOTE: the review request claim 'no login required (Lab is free/public)' is WRONG - see backend/gating issue below.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "CategoryRecipePicker (multi mode)", "issue": "EMPTY STATE MISSING: for an anonymous user (and any user with no personal recipes and no unlocked MikiLab recipes) the modal opens completely blank - 0 category cards, no message, only a disabled 'Add (0)' bar. Reproduced anonymously on Your Lab > capo-add-picker-trigger (category cards count = 0, imgs = []). Add an empty-state message (e.g. 'Nessuna ricetta disponibile - acquista le ricette MikiLab o aggiungi le tue') and/or hide the multi trigger when recipes.length === 0.", "selector": "[data-testid=\"capo-add-picker-modal\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Picker modal (desktop + mobile)", "issues": ["Dark theme respected (#161616 sheet, #FF6B00 accents), photos with dark gradient overlay readable, mobile bottom-sheet layout and 44px tall CTA are fine - no contrast/spacing defects found"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Add an empty-state (or hide the 'Aggiungi ricette' multi trigger) when the recipe list is empty - currently anonymous/non-entitled users see a blank picker modal.",
+    "Note for future test requests: PianoProduzioneAI/Weekly/Home recipe lists require admin or purchased entitlements; testing these flows anonymously shows 0 recipes."
+  ],
+  "critical_code_review_comments": [
+    "CategoryRecipePicker: the category grid branch has no fallback when CATS.filter(...length>0) is empty -> blank modal body.",
+    "PianoProduzioneAI.jsx is ~1822 lines; consider splitting (guideline: >700 lines)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "95%"},
+  "seed_data_creation": "None persisted (products/weekly rows added in UI were not saved/generated; weekly day 'lun' rows were added in the UI session but weekly plan was not explicitly saved).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Multi picker verified end-to-end in all 3 sections. To reach WeeklyPlan quickly: after login run localStorage.setItem('mikilab_pending_tool','settimana') then click nav-tab-maestro; weekly day cards weekly-day-lun..dom each expose weekly-add-<day>-trigger (compact 'Add' link). capo-weekly-create only renders when useWeekly && weeklyItems empty. Home planner is on nav-tab-impara (scroll to 'Plan your Production').",
+  "rca_of_the_issue": "Blank picker for anonymous users: PianoProduzioneAI setRecipes([...own, ...lib]) filters MikiLab recipes by entitlements (isAdmin/unlock_all/unlock_panettoni/unlocked_recipes), so an anonymous or non-entitled account gets recipes = [] and the picker renders no category cards and no empty-state text."
+}

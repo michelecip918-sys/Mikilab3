@@ -1371,7 +1371,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           ))}
           <div className="flex flex-wrap items-center gap-2 mt-1">
             <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
-            <button data-testid="capo-open-picker" onClick={() => { setPickSearch(""); setPickerOpen(true); }} className="text-sm font-semibold text-white bg-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><ChefHat className="w-4 h-4" /> {tri3(lang, "Aggiungi ricette", "Rezepte hinzufügen", "Add recipes")}</button>
+            <div className="w-full sm:w-auto sm:min-w-[190px]">
+              <CategoryRecipePicker recipes={recipes} multi onAddMany={addRecipes}
+                selectedIds={products.map((p) => p.recipe_id).filter(Boolean)} testid="capo-add-picker" />
+            </div>
             {savedProducts.length > 0 && (
               <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec] bg-[#ff6b00]/12 border border-[#ff6b00]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
             )}

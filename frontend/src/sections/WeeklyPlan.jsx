@@ -6,6 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
 import { rLoc, ingLoc, recipeTitle } from "@/lib/loc";
 import RecipeOptions from "@/components/RecipeOptions";
+import CategoryRecipePicker from "@/components/CategoryRecipePicker";
 import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
@@ -116,12 +117,14 @@ export default function WeeklyPlan() {
     return m;
   }, [recipes]);
 
-  const addItem = (day) => {
-    if (recipes.length === 0) return;
-    const r = recipes[0];
+  const addRecipesToDay = (day, ids) => {
+    if (!ids || !ids.length) return;
     setItems((it) => [
       ...it,
-      { id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, day, recipe_id: r.id, recipe_name: r.name, pieces: 10, grams_per_piece: defaultGrams(r.name) },
+      ...ids.map((id, k) => {
+        const r = recipes.find((x) => x.id === id);
+        return { id: `${Date.now()}-${k}-${Math.random().toString(36).slice(2, 6)}`, day, recipe_id: id, recipe_name: r ? r.name : "", pieces: 10, grams_per_piece: defaultGrams(r ? r.name : "") };
+      }),
     ]);
   };
 
@@ -598,14 +601,12 @@ export default function WeeklyPlan() {
                     <span data-testid={`weekly-day-total-${d.id}`} className="text-[11px] font-bold text-[#ff6b00] bg-[#ff6b00]/15 px-2 py-0.5 rounded-full">{dayPieces} {tri("pz", "St.", "pcs")}</span>
                   )}
                 </div>
-                <button
-                  data-testid={`weekly-add-${d.id}`}
-                  onClick={() => addItem(d.id)}
-                  disabled={recipes.length === 0}
-                  className="flex items-center gap-1 text-sm font-medium text-[#ff6b00] disabled:opacity-40"
-                >
-                  <Plus className="w-4 h-4" /> {t("weekly_add")}
-                </button>
+                <div className={recipes.length === 0 ? "opacity-40 pointer-events-none" : ""}>
+                  <CategoryRecipePicker recipes={recipes} multi compact
+                    onAddMany={(ids) => addRecipesToDay(d.id, ids)}
+                    selectedIds={dayItems.map((x) => x.recipe_id).filter(Boolean)}
+                    testid={`weekly-add-${d.id}`} />
+                </div>
               </div>
 
               {dayItems.length === 0 ? (
@@ -770,15 +771,10 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
   return (
     <div className="bg-[#e4eff8] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3">
       <div className="flex items-center gap-2">
-        <select
-          data-testid={`weekly-recipe-select-${item.id}`}
-          value={item.recipe_id}
-          onChange={(e) => onRecipeChange(e.target.value)}
-          className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#ff6b00]"
-        >
-          <option value="">{t("capo_pick_recipe")}</option>
-          <RecipeOptions recipes={recipes} />
-        </select>
+        <div className="flex-1 min-w-0">
+          <CategoryRecipePicker recipes={recipes} value={item.recipe_id}
+            onChange={(e) => onRecipeChange(e.target.value)} testid={`weekly-recipe-select-${item.id}`} />
+        </div>
         <button onClick={onRemove} data-testid={`weekly-remove-${item.id}`} className="w-8 h-8 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] shrink-0">
           <Trash2 className="w-4 h-4" />
         </button>
