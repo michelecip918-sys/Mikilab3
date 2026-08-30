@@ -13,6 +13,7 @@ import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import Shop from "@/sections/Shop";
 import EnterpriseHub from "@/sections/EnterpriseHub";
 import PaywallGate from "@/components/PaywallGate";
+import MikilaWisdom from "@/components/MikilaWisdom";
 import RadioFornaio from "@/components/RadioFornaio";
 import IntroGuide from "@/components/IntroGuide";
 import SiteMenu from "@/components/SiteMenu";
@@ -224,6 +225,7 @@ function App() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
+            <MikilaWisdom section={tab} />
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
             {tab === "maestro" && <PaywallGate feature="lab" sectionName={tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}><Maestro /></PaywallGate>}
