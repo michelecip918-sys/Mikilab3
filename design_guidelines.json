@@ -1,179 +1,136 @@
 {
-  "project_info": {
-    "app_name": "MikiLab",
-    "owner": "Michele Bordin (Maestro Panificatore)",
-    "archetype": "Warm Dark Artisan Bakery & Operating System",
-    "primary_languages": ["it", "de", "en", "es", "fr", "fa"],
-    "tech_stack": {
-      "frontend": "React, Tailwind CSS, Framer Motion, Lucide-React / Heroicons",
-      "backend": "FastAPI",
-      "i18n": "6-language dynamic switcher (IT/DE/EN/ES/FR/FA with RTL support)"
-    }
+  "project_name": "MikiLab - Impara Redesign",
+  "theme": {
+    "mode": "dark_strict",
+    "primary_background": "#121212",
+    "secondary_background": "#181818",
+    "card_background": "#1e1e1e",
+    "accent_primary": "#FF6B00",
+    "accent_hover": "#FF8A33",
+    "accent_active": "#C94F00",
+    "border_color": "#2e2e2e",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#E0D5CF",
+    "text_muted": "#AEB8BF",
+    "text_dark_contrast": "#121212",
+    "forbidden_colors": [
+      "#1B93A4",
+      "#7351B7",
+      "#3B82F6",
+      "#8B5CF6",
+      "#06B6D4"
+    ],
+    "rules": "RIGOROUS Dark Theme (#121212 background, #FF6B00 primary accent). Strictly NO blue or purple accents anywhere in the UI."
   },
-  "design_vision_and_palette": {
-    "theme_type": "Warm Dark (#3E2723 Dark Wood base + Terracotta & Amber/Copper accents + High-contrast crisp light text)",
-    "color_tokens": {
-      "css_variables": {
-        "--bg-main": "#2B1A17",
-        "--bg-wood-dark": "#3E2723",
-        "--bg-wood-surface": "#4A322C",
-        "--bg-wood-card": "#33201D",
-        "--bg-wood-hover": "#543730",
-        "--terracotta-primary": "#C85A32",
-        "--terracotta-hover": "#D96B43",
-        "--amber-copper": "#D9822B",
-        "--amber-glow": "#F29A38",
-        "--warm-gold": "#E5A83B",
-        "--text-primary": "#FFFDF9",
-        "--text-secondary": "#E0D5CF",
-        "--text-muted": "#A8958E",
-        "--border-warm": "#5E3B33",
-        "--border-accent": "#8C4A32",
-        "--overlay-modal": "rgba(30, 18, 16, 0.85)"
-      },
-      "tailwind_classes": {
-        "bg_main": "bg-[#2B1A17]",
-        "bg_wood_dark": "bg-[#3E2723]",
-        "bg_wood_card": "bg-[#33201D]",
-        "bg_wood_surface": "bg-[#4A322C]",
-        "text_primary": "text-[#FFFDF9]",
-        "text_secondary": "text-[#E0D5CF]",
-        "text_muted": "text-[#A8958E]",
-        "border_warm": "border-[#5E3B33]",
-        "cta_terracotta": "bg-[#C85A32] hover:bg-[#D96B43] text-[#FFFDF9] shadow-lg shadow-[#C85A32]/25 active:scale-95 transition-all",
-        "cta_amber": "bg-gradient-to-r from-[#D9822B] to-[#F29A38] hover:from-[#F29A38] hover:to-[#D9822B] text-[#2B1A17] font-bold shadow-md shadow-[#D9822B]/30 transition-all",
-        "badge_amber": "bg-[#D9822B]/20 text-[#F29A38] border border-[#D9822B]/40 font-semibold"
-      },
-      "contrast_rules": [
-        "Headings & primary content MUST be crisp #FFFDF9 or #E0D5CF over #3E2723 / #33201D.",
-        "Interactive buttons MUST have high-contrast text: Terracotta buttons use white text (#FFFDF9), Amber buttons use deep espresso text (#2B1A17).",
-        "Never use unreadable dark brown text on dark wood backgrounds.",
-        "Ensure all interactive hover states explicitly set readable text color."
-      ]
-    }
-  },
-  "typography_and_hierarchy": {
-    "heading_font": "Playfair Display, Cinzel, serif (Artisan craftsmanship & authority)",
-    "body_font": "Manrope, Plus Jakarta Sans, sans-serif (Clean legibility for bakers with floured hands)",
-    "mono_font": "JetBrains Mono, monospace (Dough calculations, weights, Baker's %)",
+  "typography": {
+    "font_heading": "'Playfair Display', serif",
+    "font_body": "'Manrope', sans-serif",
+    "font_mono": "'JetBrains Mono', monospace",
+    "font_rtl_farsi": "'Vazirmatn', sans-serif",
+    "forbidden_heading_fonts": [
+      "Inter",
+      "Roboto",
+      "Space Grotesk",
+      "Open Sans"
+    ],
     "scale": {
-      "h1_hero": "text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight font-display text-[#FFFDF9]",
-      "h2_section": "text-2xl sm:text-3xl font-bold tracking-tight font-display text-[#FFFDF9]",
-      "h3_card": "text-xl sm:text-2xl font-semibold font-display text-[#E0D5CF]",
-      "body_text": "text-base sm:text-lg leading-relaxed text-[#E0D5CF]",
-      "mono_data": "font-mono text-sm sm:text-base font-medium text-[#F29A38]"
+      "hero_h1": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight",
+      "section_h2": "text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight",
+      "card_h3": "text-lg sm:text-xl font-bold",
+      "sub_h4": "text-base sm:text-lg font-semibold",
+      "body_lg": "text-base leading-relaxed",
+      "body_md": "text-sm leading-normal",
+      "label_sm": "text-xs font-bold uppercase tracking-wider"
+    },
+    "alignment_rules": "Headings and subheadings left-aligned by default. Center alignment used only for modal heroes and badge completion callouts."
+  },
+  "visual_enhancers": {
+    "card_style": "Dark surface #1e1e1e with 1px border #2e2e2e, rounded-2xl (16px) or rounded-3xl (24px) corner radii.",
+    "button_style": "Pill or rounded-2xl buttons with #FF6B00 fill, #121212 high-contrast text, 0 4px 0 rgba(0,0,0,0.35) tactile shadow, active:scale-98 transition.",
+    "avatar_guide_bubbles": "Card with subtle #FF6B00/10 tint, #FF6B00/30 border, 44px circular avatar of Mikila (the baker) or Mohammadreza with pulsed status dot.",
+    "progress_indicators": "Sleek #FF6B00 filled bars over #2e2e2e track, with clear step count labels (e.g. 3/5 completati).",
+    "modal_overlays": "bg-black/80 backdrop-blur-md overlay. DO NOT use fully transparent overlays."
+  },
+  "component_paths": {
+    "learn_hub": "/app/frontend/src/sections/LearnHub.jsx",
+    "beginners_page": "/app/frontend/src/sections/Beginners.jsx",
+    "bake_along": "/app/frontend/src/components/BakeAlong.jsx",
+    "impara_livelli": "/app/frontend/src/sections/ImparaLivelli.jsx",
+    "avatar_bubbles": "/app/frontend/src/components/AvatarBubbles.jsx",
+    "academy_coach": "/app/frontend/src/components/AcademyCoach.jsx",
+    "evolving_quiz": "/app/frontend/src/components/EvolvingQuiz.jsx",
+    "sos_impasto": "/app/frontend/src/sections/SosImpastoGuida.jsx",
+    "shopping_lib": "/app/frontend/src/lib/shopping.js"
+  },
+  "media": {
+    "image_urls": {
+      "focaccia": "https://images.unsplash.com/photo-1784822109223-20ceba260902?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
+      "artisan_bread": "https://images.unsplash.com/photo-1772864463642-42c789ab5dbd?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
+      "kneading_dough": "https://images.unsplash.com/photo-1649675602217-416a4fafcecb?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
+      "hand_flour": "https://images.unsplash.com/photo-1595801105145-795f1927c0fc?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
+      "baking_flour": "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
+      "hero_impara": "/hero-impara.jpg",
+      "mikila_avatar": "/michele-avatar.jpg",
+      "assistant_avatar": "/mohammed-avatar.jpg",
+      "dough_bio": "/bio-dough.jpg"
     }
   },
-  "home_page_blueprint": {
-    "above_the_fold": {
-      "impact_target": "Instant conversion & orientation within first 3 seconds",
-      "interactive_avatar_scene": {
-        "title": "Interactive Welcome Avatar Scene ('Film Effect')",
-        "concept": "Michele (Maestro Panificatore) acts as a cinematic protagonist inside a warm illuminated artisan lab background.",
-        "audio_integration": "Includes brief 10-15 sec welcome audio explainer (IT/DE/EN/ES/FR/FA). Plays on tap with visual sound wave animation and speech bubble.",
-        "avatar_image": "/michele-avatar-full.jpg",
-        "interactive_states": ["Listening / Idle pulse", "Talking with live waveform", "Quick audio replay button", "Direct jump to section recommendations"]
-      },
-      "giant_ctas": [
-        {
-          "label": "LE MIE RICETTE",
-          "subtitle": "Accedi al ricettario completo e calcolatore pesi",
-          "target": "/ricette",
-          "style": "cta_terracotta",
-          "data_testid": "home-hero-ricette-giant-cta"
-        },
-        {
-          "label": "ENTRA NEL LABORATORIO",
-          "subtitle": "Sistema Operativo: Piano Settimanale & Calcolatori",
-          "target": "/laboratorio",
-          "style": "cta_amber",
-          "data_testid": "home-hero-laboratorio-giant-cta"
-        }
+  "key_functionalities_implementation": {
+    "1_bake_along_step_by_step": {
+      "title": "Modalità Riproduci Passo-Passo con Avatar Mikila",
+      "description": "Interactive recipe execution mode guided by Mikila avatar.",
+      "features": [
+        "Step header with current step index (e.g., Passo 2 di 6) and progress bar",
+        "Clear instruction card with large typography and encouragement tip from Mikila avatar",
+        "Timer and temperature badges (e.g. ⏱️ 20 min | 🌡️ 230°C in forno)",
+        "Previous / Next navigation buttons with active:scale-95 and data-testid attributes",
+        "Direct toggle to open the 'Shopping List & Equipment Guide' for this recipe"
       ]
     },
-    "sections_sequence": [
-      {
-        "step": 1,
-        "id": "hero-scene",
-        "title": "Hero Film Scene + Interactive Avatar + Giant CTAs"
-      },
-      {
-        "step": 2,
-        "id": "quick-tools",
-        "title": "Accesso Rapido Calcolatori (Acqua, Gradi, Convertitore Lievito)"
-      },
-      {
-        "step": 3,
-        "id": "ricette-evidenza",
-        "title": "Ricette MikiLab in Evidenza (Con badge Basi/Pane/Pizza/Pasticceria)"
-      },
-      {
-        "step": 4,
-        "id": "impara-da-casa",
-        "title": "Impara da Casa (Corsi & Step-by-step per amatori e professionisti)"
-      },
-      {
-        "step": 5,
-        "id": "social-community",
-        "title": "Community Fornai & SOS Impasto"
-      }
-    ]
-  },
-  "laboratorio_operating_system": {
-    "concept": "Unified operating system for busy bakers in the oven with floured hands and tight schedules.",
-    "layout_rule": "Generator (Piano Settimanale / Calcolatori) placed SUBITO IN CIMA (right at the top of /laboratorio) ready with 1 click.",
-    "top_generator_banner": {
+    "2_shopping_and_where_to_buy": {
+      "title": "Lista della Spesa & Suggerimenti DOVE Comprare",
+      "description": "Comprehensive ingredient and tool breakdown with purchase recommendations.",
+      "features": [
+        "Auto-calculated quantities for ingredients based on target dough weight or recipe portions",
+        "Categorized items: Farine speciali, Lievito/Prefermenti, Liquidi/Grassi, Attrezzi & Teglie",
+        "WHERE TO BUY ('Dove comprare'): Suggestions for local mills (Mulino di zona), supermarket, organic store (Bio), or specialized online suppliers (es. teglia in ferro blu, raschietto inox, pietra lavica)",
+        "One-click copy or WhatsApp sharing of the shopping list"
+      ]
+    },
+    "3_progressive_educational_paths": {
+      "title": "Percorsi Didattici Progressivi a Modelli",
+      "description": "Clear step-by-step roadmap from beginner to master home baker.",
+      "levels": [
+        "Livello 1: Primi Passi & I 4 Ingredienti (Farina, acqua, sale, lievito)",
+        "Livello 2: Focacce & Teghie Morbide (Alta idratazione, olio EVO e teglie)",
+        "Livello 3: Pani Tradizionali & Prefermenti (Biga, Poolish e crosta croccante)",
+        "Livello 4: Lievito Madre & Fermentazioni Lente (Rinfreschi, gestione e acidità)",
+        "Livello 5: Grandi Lievitati & Panettone (Primo/secondo impasto, pirlatura, raffreddamento capovolto)"
+      ]
+    },
+    "4_rich_learn_landing_page": {
+      "title": "Landing Impara Ricca e Gamificata",
+      "description": "Content-rich educational hub with intuitive navigation.",
       "components": [
-        "Calcolatore Rapido Produzione (Biga, Poolish, Licoli, Impasto Diretto)",
-        "Piano Settimanale Infornate & Generatore AI",
-        "Sveglia Lievito & Tracker Fermentazione Predittiva",
-        "Pulsanti XL touch-friendly per utilizzo con mani in pasta"
+        "Horizontal quick-access pills for fast scrolling (Livelli, Quiz, Chiedi al Maestro, Ricetta del giorno, SOS Impasto)",
+        "Recipe of the day spotlight card with ingredients & steps",
+        "Gamification progress bar showing overall level completion",
+        "AvatarBubbles featuring Mikila & Mohammadreza with actionable 'Take me there' links",
+        "Integrated Baker Quiz and BakeAlong weekly challenge"
       ]
-    },
-    "integrated_tools": [
-      "Piano Produzione Settimanale",
-      "Calcolatore Sequenze & Tempistiche",
-      "Gestione Cella e Forno",
-      "Gestore Freezer e Giacenze",
-      "Turni e Ruoli del Personale",
-      "HACCP & Tracciabilità Lotti"
-    ]
-  },
-  "internal_sections_reorganization": {
-    "le_mie_ricette": {
-      "filters": ["Tutte", "Basi & Miglioratori", "Pane & Lievitati", "Pizza & Focaccia", "Viennoiserie & Dolci", "Speciali & Colorate"],
-      "card_anatomy": [
-        "High-contrast image header with category pill",
-        "Key Baker's % metrics (Idratazione %, Lievito %, Sale %)",
-        "Procedimento step-by-step con modal dedicato",
-        "Sezione Dettaglio Miglioratore (Cosa fa, Dosi, Alternativa naturale)",
-        "Pulsante Adatta Dosi (in base alla farina / kg impasto desiderati)"
-      ]
-    },
-    "impara_da_casa": {
-      "mobile_first_design": "Horizontal scrollable card boards + vertical course accordion",
-      "features": ["Video lezioni brevi", "Evolving Quiz", "Schede scaricabili"]
-    },
-    "social_community": {
-      "board_design": "Clean stream with post card, photo attachments, reactions, SOS Impasto badge, and user leaderboards"
     }
   },
-  "technical_fixes_and_routing": {
-    "routing_avatar": "Each avatar dialog option redirects specifically to its corresponding target page (e.g., Recipe avatar -> /ricette, Lab avatar -> /laboratorio).",
-    "initial_scroll": "Global window.scrollTo(0,0) executed on route change / section transition."
+  "testing_and_accessibility": {
+    "data_testid_rule": "MUST include kebab-case data-testid on all interactive elements (buttons, inputs, links, tabs, modals). Examples: data-testid=\"bakealong-step-next\", data-testid=\"shopping-where-to-buy-btn\", data-testid=\"impara-path-focacce\".",
+    "touch_targets": "Minimum 48px height on all mobile buttons and clickable cards.",
+    "contrast_standards": "Text contrast ratio > 4.5:1 against dark #121212 / #1e1e1e backgrounds."
   },
-  "image_urls": {
-    "artisan_shelves": "https://images.unsplash.com/photo-1760822600352-818bc6907f14?crop=entropy&cs=srgb&fm=jpg&q=85",
-    "sourdough_crust": "https://images.unsplash.com/photo-1705680827676-ea4a49bc6ecb?crop=entropy&cs=srgb&fm=jpg&q=85",
-    "loaf_wood_plate": "https://images.unsplash.com/photo-1775591648306-9d1889c0b019?crop=entropy&cs=srgb&fm=jpg&q=85",
-    "michele_avatar": "/michele-avatar-full.jpg"
-  },
-  "general_ui_ux_design_guidelines": {
-    "universal_rules": [
-      "All interactive elements MUST contain data-testid attributes for automated testing.",
-      "Touch targets must be at least 48px height on mobile views.",
-      "Header and modals MUST NOT have transparent backgrounds. Use backdrop-blur with warm dark opacity (#3E2723 with blur).",
-      "Avoid Inter/Roboto for display text; use Playfair Display for headers and Manrope for body text."
-    ]
-  }
+  "instructions_to_main_agent": [
+    "Enhance the IMPARA section adhering strictly to the Deep Black #121212 + Orange #FF6B00 theme.",
+    "Implement the step-by-step recipe execution mode with Mikila avatar guidance, step progress, timer/temp indicators, and encouraging notes.",
+    "Integrate the 'Cosa e Dove comprare' shopping list component with quantities and buying tips (supermarket, local mill, specialty shop, online).",
+    "Structure the learning levels in a progressive flow (Primi Passi -> Focacce -> Pani -> Lievito Madre -> Grandi Lievitati).",
+    "Ensure all 6 supported languages (IT, DE, EN, ES, FR, FA) render smoothly using mkTri or translation maps.",
+    "Add data-testid to every interactive component for testing validation."
+  ]
 }

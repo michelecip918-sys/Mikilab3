@@ -2619,3 +2619,13 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
   * Nuovi "modelli"/percorsi didattici (livelli/temi), contenuti pieni seguendo una logica progressiva.
   * Da progettare con design_agent + integrare (eventuale TTS avatar). Richiede budget dedicato.
 - ⚠️ Produzione: focacce nuove + arricchimenti sono in DB anteprima + seed → servono via RI-SEED in produzione.
+
+## v-fork.117 (2026-06) — Design nuova sezione IMPARA (blueprint)
+- Creato blueprint in /app/design_guidelines.json per la nuova Impara (tema nero/arancione obbligatorio):
+  1) Passo-passo guidato dall'avatar Mikila (timer, temperature, commenti incoraggianti).
+  2) Lista spesa "Cosa comprare" + "Dove comprare" (mulino locale, supermercato, bio, attrezzi online).
+  3) Percorsi progressivi: Primi Passi → Focacce → Pani → Lievito Madre → Grandi Lievitati.
+  4) Landing Impara ricca: card percorsi, ricetta del giorno, progresso/gamification, quiz, BakeAlong.
+- Riuso previsto: BakeAlong (passo-passo), computeShopping (lista spesa), ImparaLivelli, AcademyCoach, EvolvingQuiz, AvatarBubbles.
+- STATO: design PRONTO. Build+test da fare come blocco dedicato (Beginners.jsx è il file principale della sezione Impara; costruire GuidedBake + ShoppingWhere + percorsi, poi testing_agent).
+- ⚠️ Produzione: dati ricette (focacce, improver, ecc.) richiedono RI-SEED.
