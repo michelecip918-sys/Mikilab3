@@ -1,12 +1,13 @@
 import { useState, useMemo, useEffect } from "react";
 import QRCode from "qrcode";
-import { Landmark, Wheat, Share2, Printer, ChevronLeft, Scale, MapPin, Clock, Sparkles, ShieldCheck } from "lucide-react";
+import { Landmark, Wheat, Share2, Printer, ChevronLeft, Scale, MapPin, Clock, Sparkles, ShieldCheck, Heart } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { triFR, triFA } from "@/i18n/triMaps";
 import { toast } from "sonner";
 import SectionHero from "@/components/SectionHero";
 import MiglioratoreDetail from "@/components/MiglioratoreDetail";
 import { renderProcedureWithImprover } from "@/lib/improverText";
+import { useFavRecipes } from "@/lib/favorites";
 
 // "Le Ricette Custodite" — pani del Sud d'Italia + Germania, con il metodo di Michele.
 // Ogni ingrediente è in % sul peso della farina → "Adatta alle mie dosi" ricalcola tutto.
@@ -610,6 +611,7 @@ const onImgErr = (e) => { if (e.currentTarget.src !== FALLBACK_IMG) e.currentTar
 
 export default function RicetteCustodite({ initialId = null }) {
   const { lang } = useLang();
+  const { isFav, toggle: toggleFav } = useFavRecipes();
   const L = (o) => {
     if (!o) return "";
     if (o[lang]) return o[lang];
@@ -704,6 +706,11 @@ export default function RicetteCustodite({ initialId = null }) {
             <div className="relative h-40">
               <img src={recipe.img} onError={onImgErr} alt="" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#3a2415]/80 to-transparent" />
+              <button type="button" data-testid={`custodite-fav-detail-${recipe.id}`} aria-pressed={isFav(`custodite:${recipe.id}`)}
+                onClick={() => toggleFav(`custodite:${recipe.id}`)}
+                className="no-print absolute top-3 right-3 z-10 bg-white/90 dark:bg-[#121212]/80 rounded-full p-2 shadow active:scale-90 transition-transform">
+                <Heart className={`w-5 h-5 ${isFav(`custodite:${recipe.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
+              </button>
               <div className="absolute bottom-3 left-4 right-4 text-white">
                 <h1 className="font-display text-2xl font-bold drop-shadow">{recipe.flag} {L(recipe.name)}</h1>
                 <p className="text-xs opacity-90 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {L(recipe.place)}</p>
@@ -832,15 +839,22 @@ export default function RicetteCustodite({ initialId = null }) {
 
       <div className="grid gap-3 mt-4">
         {list.map((r) => (
-          <button key={r.id} data-testid={`custodite-open-${r.id}`} onClick={() => setOpenId(r.id)}
-            className="flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm active:scale-98 transition-all hover:border-[#ff6b00]/50">
-            <img src={r.img} onError={onImgErr} alt="" className="w-24 h-24 object-cover shrink-0" />
-            <div className="py-2 pe-3 min-w-0">
-              <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{r.flag} {L(r.name)}</p>
-              <p className="text-xs text-[#7E8A93] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {L(r.place)}</p>
-              <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1 line-clamp-2">{L(r.story)}</p>
-            </div>
-          </button>
+          <div key={r.id} className="relative">
+            <button data-testid={`custodite-open-${r.id}`} onClick={() => setOpenId(r.id)}
+              className="w-full flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm active:scale-98 transition-all hover:border-[#ff6b00]/50">
+              <img src={r.img} onError={onImgErr} alt="" className="w-24 h-24 object-cover shrink-0" />
+              <div className="py-2 pe-3 min-w-0">
+                <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{r.flag} {L(r.name)}</p>
+                <p className="text-xs text-[#7E8A93] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {L(r.place)}</p>
+                <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1 line-clamp-2">{L(r.story)}</p>
+              </div>
+            </button>
+            <button type="button" data-testid={`custodite-fav-${r.id}`} aria-pressed={isFav(`custodite:${r.id}`)}
+              onClick={() => toggleFav(`custodite:${r.id}`)}
+              className="absolute top-2 right-2 z-10 bg-white/90 dark:bg-[#121212]/80 rounded-full p-1.5 shadow active:scale-90 transition-transform">
+              <Heart className={`w-4 h-4 ${isFav(`custodite:${r.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
+            </button>
+          </div>
         ))}
       </div>
     </div>

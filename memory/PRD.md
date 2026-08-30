@@ -2494,3 +2494,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
   - FIX HIGH (iteration_123): la condizione `searching` di auto-apertura delle cartelle categoria ora include `favFilter` e `catFilter` → i preferiti sono subito visibili col filtro attivo.
 - Verifica iteration_123: entrambe le funzioni PASS (toggle, persistenza, filtro, stopPropagation, ultimo salvataggio persistente); regressione apertura dettaglio OK.
 - **Warning dev `<option>`**: 3 tentativi di localizzazione → nessuno `<span>` reale in alcun `<option>`, mkTri/recipeTitle ritornano stringhe → avviso benigno dev-only, ZERO impatto. Chiuso come non-actionable.
+
+## v-fork.99 (2026-06) — Cuore preferiti esteso a Ricette Custodite (vetrina + dettaglio) e dettaglio MikiLab
+- **Hook condiviso** `lib/favorites.jsx` (useFavRecipes): Set da localStorage 'mikilab_fav_recipes' + evento 'mikilab-favs-changed' → tutte le viste sincronizzate senza reload. RecipeList ora usa questo hook (non più stato locale).
+- **Ricette Custodite**: cuore su ogni card vetrina (`custodite-fav-<id>`, fuori dal button per HTML valido) e nel dettaglio (`custodite-fav-detail-<id>`), sincronizzati. Chiave preferiti prefissata `custodite:${id}` (namespace separato dalle ricette DB).
+- **Dettaglio ricetta MikiLab**: cuore `fav-recipe-<id>` come primo pulsante azione nel viewer, sincronizzato con la card in lista.
+- Contatore chip 'Preferite (N)' e messaggio empty-state escludono le chiavi 'custodite:' (contano solo ricette MikiLab).
+- Verifica iteration_124: tutti e 4 gli scenari PASS, 0 bug (ui/integration/design). Sincronizzazione bidirezionale confermata.
+- MINOR noto (benigno): utenti anonimi generano alcuni 401 in console (chiamate auth-gated come /weekly-plan per-utente) — atteso, catchato, nessun impatto.

@@ -19,6 +19,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { useBackClose } from "@/lib/backNav";
 import { renderProcedureWithImprover } from "@/lib/improverText";
+import { useFavRecipes } from "@/lib/favorites";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 import { isColored } from "@/lib/coloredRecipes";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -42,15 +43,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [catFilter, setCatFilter] = useState("all");
   const [baseFilter, setBaseFilter] = useState("all");
   const [favFilter, setFavFilter] = useState(false);
-  const [favs, setFavs] = useState(() => {
-    try { return new Set(JSON.parse(localStorage.getItem("mikilab_fav_recipes") || "[]")); } catch { return new Set(); }
-  });
-  const toggleFav = (id) => setFavs((prev) => {
-    const n = new Set(prev);
-    if (n.has(id)) n.delete(id); else n.add(id);
-    try { localStorage.setItem("mikilab_fav_recipes", JSON.stringify([...n])); } catch { /* */ }
-    return n;
-  });
+  const { favs, toggle: toggleFav } = useFavRecipes();
   const [openCats, setOpenCats] = useState({});
   const [folderCovers, setFolderCovers] = useState({});
   const [translating, setTranslating] = useState(false);
@@ -413,7 +406,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <button data-testid="cat-filter-favs" onClick={() => setFavFilter((v) => !v)}
                 className={`shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${favFilter ? "bg-[#ff3b5c] text-white border-[#ff3b5c] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff3b5c] border-[#ff3b5c]/40 hover:border-[#ff3b5c]"}`}>
                 <Heart className={`w-3.5 h-3.5 ${favFilter ? "fill-white" : "fill-[#ff3b5c]"}`} />
-                {triM("Preferite", "Favoriten", "Favourites")}{favs.size > 0 ? ` (${favs.size})` : ""}
+                {triM("Preferite", "Favoriten", "Favourites")}{(() => { const n = [...favs].filter((id) => !String(id).startsWith("custodite:")).length; return n > 0 ? ` (${n})` : ""; })()}
               </button>
               <button data-testid="cat-filter-all" onClick={() => setCatFilter("all")}
                 className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${catFilter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
@@ -449,7 +442,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
             {filtered.length === 0 ? (
               <p className="text-center text-[#7E8A93] py-8 text-sm" data-testid="recipe-no-results">
-                {favFilter && favs.size === 0
+                {favFilter && [...favs].filter((id) => !String(id).startsWith("custodite:")).length === 0
                   ? triM("Nessuna preferita ancora. Tocca il ❤ su una ricetta per salvarla qui.", "Noch keine Favoriten. Tippe auf das ❤ einer Rezept, um es hier zu speichern.", "No favourites yet. Tap the ❤ on a recipe to save it here.")
                   : triM("Nessuna ricetta trovata.", "Kein Rezept gefunden.", "No recipe found.")}
               </p>
@@ -647,6 +640,7 @@ function procWithImprover(text, onImprover) {
 function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onUnlock, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
   const de = lang === "de";
+  const { isFav, toggle: toggleFav } = useFavRecipes();
   const tri = (i_, d_, e_) => mkTri(lang)(i_, d_, e_);
   const isPanettone = /panettone|colomba|pandoro/i.test(r.name || "");
   const [farro, setFarro] = useState(false);
@@ -789,6 +783,9 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         </div>
 
         <div className="flex gap-1.5 no-print flex-wrap">
+          <ActionBtn testid={`fav-recipe-${r.id}`} onClick={() => toggleFav(r.id)} color={isFav(r.id) ? "#ff3b5c" : "#7E8A93"} label={isFav(r.id) ? tri("Nei preferiti", "In Favoriten", "In favourites") : tri("Aggiungi ai preferiti", "Zu Favoriten", "Add to favourites")}>
+            <Heart className={`w-4 h-4 ${isFav(r.id) ? "fill-[#ff3b5c]" : ""}`} />
+          </ActionBtn>
           <ActionBtn testid={`share-recipe-${r.id}`} onClick={shareRecipe} color="#ff6b00" label={tri("Condividi", "Teilen", "Share")}><Share2 className="w-4 h-4" /></ActionBtn>
           {!r.locked && rLoc(r, "procedure", lang) && (
             <ActionBtn testid={`listen-recipe-${r.id}`} onClick={() => playTTS(`${rLoc(r, "name", lang)}. ${rLoc(r, "procedure", lang)}`, { who: "momy", lang }).catch(() => {})} color="#ff6b00" label={tri("Ascolta", "Anhören", "Listen")}><Volume2 className="w-4 h-4" /></ActionBtn>

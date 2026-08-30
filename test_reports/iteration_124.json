@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only test of shared favourites hook (lib/favorites). Verified: Ricette Custodite showcase heart (custodite-fav-<id>) toggles without opening the recipe, turns red with aria-pressed=true, persists after reload; Custodite detail heart (custodite-fav-detail-<id>) synced both directions with the showcase card; MikiLab recipe detail heart (fav-recipe-<id>) syncs with the list card heart (recipe-fav-<id>) without reload; 'Favourites' chip (cat-filter-favs) filters correctly and its counter excludes 'custodite:' keys. All 4 requested scenarios PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "MINOR (optional): RecipeList.jsx (~line 445) empty-state uses favs.size === 0, which also counts 'custodite:' keys. If a user has only Custodite favourites, activating 'Preferite' shows the generic no-results text instead of the 'Nessuna preferita ancora...' hint. Use the same non-custodite predicate as the chip counter.",
+    "MINOR: multiple 401 responses appear in the browser console while browsing anonymously (before login) on Home/Ricette; auth-gated calls fire for guests."
+  ],
+  "critical_code_review_comments": [
+    "lib/favorites.jsx is correct: single localStorage key + custom event, listeners cleaned up; namespacing custodite ids with the 'custodite:' prefix avoids collisions with recipe UUIDs.",
+    "Custodite heart is a sibling absolute button outside the card <button> (no nested-button issue) and the MikiLab card heart uses e.stopPropagation() - both correctly avoid opening the recipe."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "100% (4/4 scenarios)"},
+  "seed_data_creation": "none; favourited existing recipe 'Natural Pro Improver' and custodite 'matera' in localStorage only",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (used for MikiLab recipe list/detail)",
+  "context_for_next_testing_agent": "MikiLab recipe cards live inside collapsed accordions: click [data-testid^='cat-folder-'] first, otherwise recipe-row-<id>/recipe-fav-<id> are not in the DOM. Recipe detail is a Dialog - close with Escape. 'Le Ricette Custodite' via nav-tab-ricette -> ricette-vetrina opens the 'matera' detail directly; press custodite-back to reach custodite-list. Favourites stored in localStorage key 'mikilab_fav_recipes'.",
+  "rca_of_the_issue": "n/a - no defects reproduced in the tested scope"
+}
