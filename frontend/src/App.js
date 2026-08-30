@@ -11,7 +11,6 @@ import LearnHub from "@/sections/LearnHub";
 import Community from "@/sections/Community";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import Shop from "@/sections/Shop";
-import Academy from "@/sections/Academy";
 import EnterpriseHub from "@/sections/EnterpriseHub";
 import PaywallGate from "@/components/PaywallGate";
 import RadioFornaio from "@/components/RadioFornaio";
@@ -232,7 +231,7 @@ function App() {
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
             {tab === "community" && <Community onNavigate={navigate} />}
             {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
-            {tab === "shop" && <><Academy /><Shop hideCourses /></>}
+            {tab === "shop" && <Shop />}
           </motion.div>
         </AnimatePresence>
         </ErrorBoundary>

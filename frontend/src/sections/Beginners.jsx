@@ -20,6 +20,7 @@ import LabTour from "@/components/LabTour";
 import SectionHero from "@/components/SectionHero";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import ImparaLivelli from "@/sections/ImparaLivelli";
+import RiproduciRicetta from "@/sections/RiproduciRicetta";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { mkTri, pick } from "@/i18n/triMaps";
 
@@ -376,6 +377,7 @@ export default function Beginners({ onNavigate }) {
   const tri3 = (l, i, d, e, s) => mkTri(l)(i, d, e, s);
   const [sosOpen, setSosOpen] = useState(false);
   const [imparaLiv, setImparaLiv] = useState(false);
+  const [riproduci, setRiproduci] = useState(false);
   const [askMaster, setAskMaster] = useState(false);
   const beginners = pick(BEGINNERS, lang);
   const courses = content[lang].freeCourses || [];
@@ -402,6 +404,7 @@ export default function Beginners({ onNavigate }) {
   const [tourForce, setTourForce] = useState(0);
 
   if (imparaLiv) return <ImparaLivelli onBack={() => setImparaLiv(false)} />;
+  if (riproduci) return <RiproduciRicetta onBack={() => setRiproduci(false)} onNavigate={onNavigate} />;
   if (askMaster) return (
     <div className="pb-4">
       <button data-testid="impara-askmaster-back" onClick={() => setAskMaster(false)} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4">
@@ -421,6 +424,7 @@ export default function Beginners({ onNavigate }) {
       <div data-testid="impara-quick-access" className="flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1 snap-x snap-mandatory">
         {[
           { id: "livelli", Icon: Trophy, label: mkTri(lang)("Livelli", "Level", "Levels", "Niveles", "Niveaux", "سطح‌ها"), act: () => setImparaLiv(true) },
+          { id: "passo", Icon: PlayCircle, label: mkTri(lang)("Passo-Passo", "Schritt für Schritt", "Step by Step", "Paso a Paso", "Pas à Pas", "گام‌به‌گام"), act: () => setRiproduci(true) },
           { id: "quiz", Icon: ChefHat, label: mkTri(lang)("Quiz", "Quiz", "Quiz", "Quiz", "Quiz", "کوئیز"), act: () => document.querySelector('[data-testid="evolving-quiz"],[data-testid="quiz-panel"]')?.scrollIntoView({ behavior: "smooth", block: "center" }) },
           { id: "maestro", Icon: MessageCircle, label: mkTri(lang)("Chiedi al Maestro", "Frag den Meister", "Ask the Master", "Pregunta al Maestro", "Demande au Maître", "از استاد بپرس"), act: () => setAskMaster(true) },
           { id: "ricetta", Icon: Sprout, label: mkTri(lang)("Ricetta del giorno", "Rezept des Tages", "Recipe of the day", "Receta del día", "Recette du jour", "دستور روز"), act: () => document.querySelector('[data-testid="recipe-of-day"]')?.scrollIntoView({ behavior: "smooth", block: "center" }) },
@@ -463,6 +467,17 @@ export default function Beginners({ onNavigate }) {
           </p>
         </div>
       </div>
+
+      <button data-testid="impara-riproduci-btn" onClick={() => setRiproduci(true)}
+        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#ff8a33] to-[#ff6b00] text-[#121212] shadow-md active:scale-98 transition-all text-left hover:shadow-lg">
+        <div className="w-12 h-12 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0"><PlayCircle className="w-6 h-6" /></div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Riproduci Passo-Passo", "Schritt-für-Schritt nachbacken", "Bake Step by Step", "Reproduce Paso a Paso", "Reproduis Pas à Pas", "پخت گام‌به‌گام")}</h3>
+          <p className="text-[#121212]/80 text-[13px] leading-snug">{mkTri(lang)("Ti guido su ogni passaggio con timer, temperature e la lista della spesa (dove comprare)", "Ich führe dich durch jeden Schritt mit Timer, Temperatur und Einkaufsliste", "I guide you through every step with timers, temperatures and the shopping list", "Te guío en cada paso con temporizadores, temperaturas y la lista de la compra", "Je te guide à chaque étape avec minuteurs, températures et liste de courses", "با تایمر، دما و لیست خرید در هر مرحله راهنمایی‌ات می‌کنم")}</p>
+        </div>
+        <ChevronRight className="w-6 h-6 text-[#121212]/60 shrink-0" />
+      </button>
+
 
       <button data-testid="impara-livelli-btn" onClick={() => setImparaLiv(true)}
         className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#F0B429] to-[#ff6b00] text-white shadow-md active:scale-98 transition-all text-left hover:shadow-lg">

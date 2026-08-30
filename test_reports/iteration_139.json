@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only E2E testing (430px mobile viewport, preview URL) of the 3 new Impara features + paywall removal. Verified: (1) 'Riproduci Passo-Passo' opens from BOTH impara-riproduci-btn and impara-quick-passo pill; picker lists 140 unlocked recipes with search; step guide shows step count, progress bar (13%->25%), avatar tip, step text, badges (temp/time on last step), prev disabled on step 1, next/prev update state correctly, bake-finish on last step. (2) Finish flow logged in as fornaio@mikilab.de: POST /api/recipe/complete fired, success toast 'Well done! Your achievement is on the community feed', bake-finished screen with all 3 buttons working (community/again/exit); Social feed shows the NEW post with 'Achievement' badge and localized text '🎉 I just completed the «Whole Soul» recipe step-by-step on MikiLab!'; 6h anti-spam re-post guard works (2nd finish -> generic toast, no duplicate). Guest (logged out) clicking bake-finish correctly opens the auth modal. (3) Shopping list toggle shows/hides shopping-where-to-buy; target input (default 2100 g), presets 500/1000/2000 and manual input all recompute quantities (1.00 kg -> 952 g -> 357 g); categories farine/liquidi/lievito/sale/attrezzi each with 'Where:' tip; copy + WhatsApp buttons present with valid wa.me href. (4) Paywall removal: Impara, Your Lab, Diagnosi (Photo diagnosis via capo-quicklink-diagnosi), Recipes list and recipe detail (Panettone 'Veneziana': full INGREDIENTS + PROCEDURE, no lock icon), and shop tab (shop-page + shop-free-block 'It's all free', no academy-page/consult form) all render with ZERO paywall elements, no € prices and no Sblocca/Subscribe/Go PRO CTAs. Backend not retested (per request) apart from confirming /api/subscription/status returns pro/unlock_all true, diagnosi_limit null, and the traguardo post exists in /api/community/posts.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AvatarBubbles.jsx (line 38, shown on Shop page)", "issue": "Stale monetization copy still shown to users: 'Buy the recipe book or subscribe PRO: recipes appear right away in the AI Plan' — contradicts the now-free app and sits directly above the 'It's all free' block.", "selector": "[data-testid=\"shop-page\"] avatar bubble", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Bake step-by-step / Shop", "issues": ["No contrast or spacing problems found; dark theme + orange accent consistent. Floating Radio button overlaps bottom content slightly (pre-existing)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Update/remove the PRO-upsell avatar bubble text in /app/frontend/src/components/AvatarBubbles.jsx:38 (visible on the Shop page) — app is free now.",
+    "Dead paywall code cleanup: RecipeList.jsx unlock dialog still contains €4,99 / €29,99 / €149 / 'abbonati PRO' UI (unreachable because recipes are never locked), AcademyHome.jsx diagnosi-limit-upsell 'Passa a PRO · €29,99/mese' (unreachable since diagnosi_limit=null), and Academy.jsx (paid courses + 'Book & pay' consultation) is imported in App.js but never rendered (unused import).",
+    "Optional: recipe picker search only matches the current UI language name (searching 'Anima' with EN UI returns 0 while the recipe shows as 'Whole Soul') — consider searching all locale name fields.",
+    "Data (low): shopping list flour label comes raw from recipe.flour_type ('Whole Wheat Flour 900 + 630 100 (Spelt)') and reads badly; Panettone 'Veneziana' ingredient list only has Preferment + Salt (no flour/water) — seed data gaps, not code."
+  ],
+  "critical_code_review_comments": [
+    "PaywallGate is now a transparent pass-through — good, but the surrounding dead checkout UI (RecipeList buy-single/buy-panettoni/buy-all/buy-subscribe-pro, Academy.jsx consult checkout) is still shipped in the bundle and could be reached by a regression; remove it.",
+    "BakeStepByStep.parseSteps splits the procedure on newlines only; recipes whose procedure is a single line with inline '1. 2. 3.' numbering collapse into one step (observed: Veneziana procedure is 1 paragraph). Consider also splitting on ' N. ' patterns.",
+    "recipesApi.complete does not pass the UI language; backend composes the Italian base text and relies on stored translations — worked fine in EN, but keep in mind for new languages."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (spot-checked 3 endpoints OK)", "frontend": "100% of requested flows passed (1 stale-copy content bug)"},
+  "seed_data_creation": "One community 'traguardo' post created by fornaio@mikilab.de for recipe 'Anima Integrale/Whole Soul' (visible in the Social feed).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "fornaio@mikilab.de / Mikilab2026! (login worked); admin not needed",
+  "context_for_next_testing_agent": "All 4 requested feature areas verified working on mobile 430px. Newsletter popup (newsletter-popup-close/dismiss) and IntroGuide (intro-close-btn) plus a LabTour 'Skip' button can block clicks — dismiss them after each tab switch. Recipe list rows use data-testid recipe-row-<id> (not recipe-card-) and are grouped in collapsible category folders, so use recipe-search first. Diagnosi is reached from Your Lab via capo-quicklink-diagnosi. Only open item: stale PRO-upsell avatar bubble copy on Shop page + dead paywall code in RecipeList/AcademyHome/Academy.jsx.",
+  "rca_of_the_issue": "The only user-visible regression is hardcoded monetization copy in AvatarBubbles.jsx that was not updated when the paywall was removed; the remaining € strings are in components that are no longer reachable (locked recipes never returned by the API, diagnosi_limit null, Academy tab replaced by Shop)."
+}

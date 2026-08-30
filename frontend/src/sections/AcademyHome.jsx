@@ -123,24 +123,10 @@ export default function AcademyHome({ onNavigate }) {
             </div>
             <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Diagnosi Foto IA", "Foto-Diagnose KI", "AI Photo Diagnosis")}</p>
             <p className="text-sm text-[#7E8A93] mt-1 max-w-sm mx-auto">{tri("Scatta o carica una foto del tuo impasto o della crosta: l'IA ti dice cosa correggere in cottura e lievitazione.", "Mach oder lade ein Foto von Teig oder Kruste hoch: die KI sagt dir, was du bei Backen und Gärung korrigieren sollst.", "Take or upload a photo of your dough or crust: the AI tells you what to fix in baking and proofing.")}</p>
-            {typeof diagLimit === "number" && (
-              <p className="text-xs font-semibold text-[#ff6b00] mt-2">{tri("Hai usato", "Du hast", "You've used")} {diagUsed}/{diagLimit} {tri("Diagnosi questo mese", "Diagnosen diesen Monat", "diagnoses this month")}</p>
-            )}
-            {typeof diagLimit === "number" && diagLimit > 0 && diagUsed >= diagLimit ? (
-              <div data-testid="diagnosi-limit-upsell" className="mt-4 rounded-2xl bg-[#1e1e1e]/10 border border-[#1e1e1e]/30 p-4">
-                <p className="text-sm font-semibold text-[#1e1e1e]">{tri("Hai finito le Diagnosi del mese!", "Deine Diagnosen sind aufgebraucht!", "You've used all your diagnoses this month!")}</p>
-                <p className="text-xs text-[#7E8A93] mt-1">{tri("Passa a PRO per Diagnosi illimitate e tutti gli strumenti del laboratorio.", "Wechsle zu PRO für unbegrenzte Diagnosen und alle Labor-Tools.", "Go PRO for unlimited diagnoses and all lab tools.")}</p>
-                <button data-testid="diagnosi-upgrade-pro" onClick={upgradePro}
-                  className="mt-3 inline-flex items-center gap-2 bg-[#1e1e1e] hover:bg-[#963c1f] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all">
-                  <Crown className="w-4 h-4" /> {tri("Passa a PRO · €29,99/mese", "PRO · €29,99/Monat", "Go PRO · €29.99/month")}
-                </button>
-              </div>
-            ) : (
-              <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
-                className="mt-4 inline-flex items-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
-                <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis")}
-              </button>
-            )}
+            <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
+              className="mt-4 inline-flex items-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+              <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis")}
+            </button>
           </div>
         </div>
       )}

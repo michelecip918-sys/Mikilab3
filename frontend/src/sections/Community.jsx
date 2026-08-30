@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -23,6 +23,8 @@ const CATS = [
   { id: "domanda", Icon: HelpCircle, color: "#ff6b00" },
   { id: "evento", Icon: CalendarDays, color: "#2e8b6f" },
 ];
+// Categorie mostrate nel feed ma non selezionabili dall'utente (es. traguardi automatici).
+const FEED_CATS = [...CATS, { id: "traguardo", Icon: Trophy, color: "#ff6b00" }];
 
 function timeAgo(iso, lang) {
   try {
@@ -47,6 +49,7 @@ export default function Community({ onNavigate }) {
     ricetta: tri("Ricetta", "Rezept", "Recipe", "Receta"),
     domanda: tri("Domanda", "Frage", "Question", "Pregunta"),
     evento: tri("Evento", "Event", "Event", "Evento"),
+    traguardo: tri("Traguardo", "Erfolg", "Achievement", "Logro"),
   }[id] || id);
 
   const [posts, setPosts] = useState([]);
@@ -299,7 +302,7 @@ export default function Community({ onNavigate }) {
         <div className="space-y-3" data-testid="community-feed">
           {visible.length === 0 && <p className="text-center text-sm text-[#7E8A93] py-8">{tri("Ancora nessun post. Inizia tu la conversazione!", "Noch keine Beiträge. Starte du das Gespräch!", "No posts yet. Start the conversation!", "Aún no hay publicaciones. ¡Empieza tú la conversación!")}</p>}
           {visible.map((p) => {
-            const C = CATS.find((c) => c.id === p.category) || CATS[0];
+            const C = FEED_CATS.find((c) => c.id === p.category) || FEED_CATS[0];
             return (
               <div key={p.id} data-testid={`community-post-${p.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-md hover:border-[#ff6b00]/40 transition-colors" style={{ borderLeft: `3px solid ${C.color}` }}>
                 <div className="flex items-center gap-2 mb-2">

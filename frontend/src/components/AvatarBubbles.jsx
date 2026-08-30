@@ -35,7 +35,7 @@ const SCRIPTS = {
   ],
   shop: [
     { who: "michele", it: "Qui puoi avere le MIE ricette complete: dosi, procedimento e fasi, col mio metodo.", de: "Hier bekommst du MEINE vollständigen Rezepte: Mengen, Ablauf und Phasen, nach meiner Methode.", en: "Here you can get MY complete recipes: quantities, procedure and phases, with my method.", es: "Aquí puedes tener MIS recetas completas: cantidades, procedimiento y fases, con mi método." },
-    { who: "momy", it: "Acquista il ricettario o abbonati PRO: le ricette compaiono subito nel Piano IA. Ti configuro tutto io.", de: "Kaufe das Rezeptbuch oder abonniere PRO: die Rezepte erscheinen sofort im KI-Plan. Ich richte alles ein.", en: "Buy the recipe book or subscribe PRO: recipes appear right away in the AI Plan. I'll set it all up.", es: "Compra el recetario o suscríbete a PRO: las recetas aparecen enseguida en el Plan IA. Yo te lo configuro." },
+    { who: "momy", it: "Tutto è gratis: le ricette compaiono subito nel Piano IA. Ti configuro tutto io.", de: "Alles ist gratis: die Rezepte erscheinen sofort im KI-Plan. Ich richte alles ein.", en: "Everything is free: recipes appear right away in the AI Plan. I'll set it all up.", es: "Todo es gratis: las recetas aparecen enseguida en el Plan IA. Yo te lo configuro." },
   ],
 };
 

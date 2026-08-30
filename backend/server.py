@@ -370,7 +370,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v64-i18n-fa-ingredients"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v65-focacce-impara"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -5340,7 +5340,7 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
 # ---------------------------------------------------------------------------
 # Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri
 # ---------------------------------------------------------------------------
-COMMUNITY_CATEGORIES = {"consiglio", "foto", "ricetta", "domanda", "idea", "evento"}
+COMMUNITY_CATEGORIES = {"consiglio", "foto", "ricetta", "domanda", "idea", "evento", "traguardo"}
 
 
 class CommunityPostReq(BaseModel):
@@ -5584,6 +5584,47 @@ async def learn_complete(body: LearnReq, user: dict = Depends(current_user)):
     unlocks = await _apply_challenge_unlocks(user["email"], len(done))
     return {"ok": True, "completed": done, "count": len(done),
             "need_panettoni": CHALLENGE_UNLOCK_PANETTONI, "need_all": CHALLENGE_UNLOCK_ALL, **unlocks}
+
+
+class RecipeCompleteReq(BaseModel):
+    recipe_id: Optional[str] = None
+    recipe_name: str
+    image_url: Optional[str] = None
+
+
+@api_router.post("/recipe/complete")
+async def recipe_complete(body: RecipeCompleteReq, user: dict = Depends(current_user)):
+    """L'utente ha finito una ricetta passo-passo: pubblica un traguardo sul feed social."""
+    name = (body.recipe_name or "").strip()
+    if not name:
+        raise HTTPException(400, "Ricetta mancante")
+    # Anti-spam: un solo post traguardo per (utente, ricetta) ogni 6 ore.
+    since = (datetime.now(timezone.utc) - timedelta(hours=6)).isoformat()
+    dup = await db.community_posts.find_one(
+        {"author_id": user["user_id"], "category": "traguardo", "recipe_name": name,
+         "created_at": {"$gt": since}}, {"_id": 1})
+    if dup:
+        return {"ok": True, "posted": False}
+    text = f"🎉 Ho appena completato la ricetta «{name}» passo-passo su MikiLab! 🥖"
+    tr = await _translate_text_multi(text)
+    doc = {
+        "id": str(uuid.uuid4()),
+        "author_id": user["user_id"],
+        "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
+        "author_avatar": user.get("picture", ""),
+        "category": "traguardo",
+        "recipe_name": name,
+        "text": text,
+        "text_de": tr.get("text_de"),
+        "text_en": tr.get("text_en"),
+        "text_es": tr.get("text_es"),
+        "image_url": body.image_url,
+        "created_at": now_iso(),
+        "likes": [],
+        "comments": [],
+    }
+    await db.community_posts.insert_one(doc)
+    return {"ok": True, "posted": True, "post": _post_public(doc, user)}
 
 
 def _panettone_required(index: int) -> int:
