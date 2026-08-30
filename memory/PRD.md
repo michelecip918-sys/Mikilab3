@@ -2576,3 +2576,18 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Ricerca strumenti**: barra `tools-dir-search` in cima alla directory; risultati flat (`tools-dir-results`) filtrati per nome nella lingua corrente, con clear e stato "nessun risultato".
 - **Combo nel Piano Settimanale**: `CapoCombos.jsx` generalizzato con props opzionali `getSaveItems` + `onApply` (default = comportamento Capo). `WeeklyPlan.jsx` mostra il pannello combo: salva la settimana corrente come combo e applica una combo raggruppando gli item per giorno (fallback 'lun') via addRecipesToDay.
 - Test iter 134 (92%→fix) + iter 135 (100%): tutti i flussi verificati. NB: richiede REDEPLOY per mikilab.de.
+
+## v-fork.111 (2026-06) — Farina colorate, Miglioratore sostituibile, Pizzeria/Pasticceria collegate
+- **Farina ricette colorate (#2 utente)**: 12 ricette colorate avevano flour_grams/water_grams=null → riga farina non renderizzata (RecipeList L684). Aggiornato DB `recipes` + `mikilab_seed_data.json`: flour_grams=1000, water_grams da idratazione. Ora farina+acqua compaiono.
+- **Miglioratore Naturale (#3)**: testo in MiglioratoreDetail aggiornato (IT/DE/EN/ES/FR/FA): "metodo personale, negli anni ho imparato a usarlo a modo mio, ma NON obbligatorio — sostituibile con un semplice malto o altro ingrediente naturale".
+- **Pizzeria/Pasticceria collegate (#1a)**: nuovo export `CAT_RELATED`. SiteMenu mostra "Strumenti collegati" (site-menu-related-<cat>, testid unici site-menu-related-tool-<cat>-<id>). Nuovo `RelatedToolsRow.jsx` con scorciatoie in cima a LabPizzeria/LabPasticceria (related-tools-<cat>); Maestro passa onOpenTool.
+- **Fix da test iter136**: contrasto illeggibile in CalcolatoreStampi `stampi-pirottini-out` (sfondo bianco+testo chiaro) → ora `bg-[#e4eff8] dark:bg-[#1e1e1e]` + bordo, testo arancione. Testid duplicati SiteMenu risolti.
+- Test iter136: 100% scenari (A farina, B1 SiteMenu, B2 pagine lab, C testo). Warning benigni pre-esistenti (span in option / button annidato in ricette-page) non risolti (noti, non bloccanti).
+- **DEFERRED (richiesti, prossimi step)**: 1b strumenti NUOVI specifici pizza/gelato; 1c ampliare contenuti pagine LabPizzeria/LabPasticceria; 2a includere pizza/pasticceria nel Piano Produzione IA; REVISIONE ricette (specie panettoni: acqua in entrambi gli impasti, spiegare i motivi nei procedimenti).
+- NB: richiede REDEPLOY per mikilab.de.
+
+## v-fork.112 (2026-06) — Revisione ricette: panettoni (nota "acqua solo nel 1° impasto")
+- Verificato: le 17 ricette Panettone MikiLab NON avevano errore di "acqua in entrambi gli impasti" (acqua correttamente solo nel 1° impasto). Come richiesto, aggiunta una NOTA DEL FORNAIO in fondo al procedimento che spiega PERCHÉ l'acqua va solo nel 1° impasto (nel 2° i liquidi vengono da tuorli/burro/miele; aggiungere acqua scioglierebbe la maglia glutinica) + nota temperatura <26°C. In tutte le lingue (it/de/en/es/fr/fa), su DB `recipes` (preview) e `mikilab_seed_data.json`. Script idempotente in /app/backend/migrations/2026_06_panettone_notes.py.
+- Render: RecipeList usa rLoc(r,'procedure',lang) con whitespace-pre-line → nota mostrata nella lingua corretta.
+- ⚠️ ATTENZIONE DATI PRODUZIONE: le modifiche a contenuti/ricette (nota panettoni + farina ricette colorate) sono nel DB di PREVIEW e nel seed. In produzione il DB è separato: appariranno solo se la produzione viene ri-seedata dal seed aggiornato (o via migration). Da coordinare col deploy.
+- DEFERRED ancora aperti: revisione estesa di TUTTE le ricette; 1b strumenti nuovi pizza/gelato; 1c contenuti pagine Lab; 2a pizza/pasticceria nel Piano Produzione IA.

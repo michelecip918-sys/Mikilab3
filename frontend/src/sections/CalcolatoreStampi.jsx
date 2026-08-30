@@ -55,7 +55,7 @@ export default function CalcolatoreStampi({ onBack }) {
               </select></div>
             <div><p className={lbl}>{L("Numero di pezzi", "Stückzahl", "Number of pieces", "Nº de piezas")}</p><input data-testid="stampi-pezzi" type="number" value={pezzi} onChange={(e) => setPezzi(e.target.value)} className={inp} /></div>
           </div>
-          <div data-testid="stampi-pirottini-out" className="rounded-xl bg-[#ffffff] p-4 text-center">
+          <div data-testid="stampi-pirottini-out" className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] p-4 text-center">
             <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Impasto totale necessario", "Benötigter Teig gesamt", "Total dough needed", "Masa total necesaria")}</p>
             <p className="font-display text-3xl font-bold text-[#ff6b00] mt-1">{num(totImpasto)} g</p>
             <p className="text-[12px] text-[#ff6b00] mt-1">{num(PIROTTINI[size])} g {L("per pirottino", "pro Form", "per mould", "por molde")} ({L("include la testa che lievita oltre il bordo", "inkl. Überstand", "includes rise over the rim", "incluye la cúpula")})</p>

@@ -80,11 +80,11 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
     : ctx === "ricette" ? tri("Le Ricette", "Rezepte", "Recipes", "Recetas")
     : tri("MikiLab", "MikiLab", "MikiLab", "MikiLab");
 
-  const ToolRow = ({ tl }) => {
+  const ToolRow = ({ tl, testid }) => {
     const c = catOf(tl.cat); const isFav = favs.includes(tl.id);
     return (
       <div className="flex items-center gap-1">
-        <button data-testid={`site-menu-tool-${tl.id}`} onClick={() => goTool(tl.id)}
+        <button data-testid={testid || `site-menu-tool-${tl.id}`} onClick={() => goTool(tl.id)}
           className="flex-1 flex items-center gap-2.5 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 hover:border-[#ff6b00]/60 transition-all min-w-0">
           <tl.Icon className="w-4 h-4 shrink-0" style={{ color: c.color }} />
           <span className="text-sm font-medium text-[#2B303B] dark:text-[#e4eff8] truncate">{toolLabel(tl)}</span>
@@ -159,7 +159,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                         {related.length > 0 && (
                           <div className="mt-1.5" data-testid={`site-menu-related-${c.key}`}>
                             <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1 pl-1">{tri("Strumenti collegati", "Verknüpfte Werkzeuge", "Related tools", "Herramientas vinculadas")}</p>
-                            <div className="grid grid-cols-1 gap-1.5">{related.map((tl) => <ToolRow key={`${c.key}-${tl.id}`} tl={tl} />)}</div>
+                            <div className="grid grid-cols-1 gap-1.5">{related.map((tl) => <ToolRow key={`${c.key}-${tl.id}`} tl={tl} testid={`site-menu-related-tool-${c.key}-${tl.id}`} />)}</div>
                           </div>
                         )}
                       </div>
