@@ -192,6 +192,9 @@ export default function Maestro() {
         title={mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}
         subtitle={mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")} />
 
+      {/* PERCORSO GUIDATO in CIMA: la sequenza logica passo-passo (Settimana → Ricetta → Extra) */}
+      <LabWizard onOpenTool={openTool} />
+
       {/* DA DOVE INIZIARE: inserisci ricetta + calcolatori, poi il percorso guidato */}
       <div data-testid="maestro-top-tools" className="mb-4">
         <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2 flex items-center gap-1.5">
@@ -225,9 +228,6 @@ export default function Maestro() {
           ))}
         </div>
       </div>
-
-      {/* PERCORSO GUIDATO: la sequenza logica passo-passo (Settimana → Ricetta → Extra) */}
-      <LabWizard onOpenTool={openTool} />
 
       {/* Il GENERATORE del piano IA (scegli ricette → genera) */}
       <PianoProduzioneAI onOpenTool={openTool} />

@@ -2591,3 +2591,9 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - Render: RecipeList usa rLoc(r,'procedure',lang) con whitespace-pre-line → nota mostrata nella lingua corretta.
 - ⚠️ ATTENZIONE DATI PRODUZIONE: le modifiche a contenuti/ricette (nota panettoni + farina ricette colorate) sono nel DB di PREVIEW e nel seed. In produzione il DB è separato: appariranno solo se la produzione viene ri-seedata dal seed aggiornato (o via migration). Da coordinare col deploy.
 - DEFERRED ancora aperti: revisione estesa di TUTTE le ricette; 1b strumenti nuovi pizza/gelato; 1c contenuti pagine Lab; 2a pizza/pasticceria nel Piano Produzione IA.
+
+## v-fork.113 (2026-06) — Percorso guidato in cima + Miglioratore in tutte le ricette
+- **Laboratorio**: LabWizard (percorso guidato) spostato IN CIMA (subito sotto il titolo), poi "Da dove iniziare" → Generatore IA → Directory strumenti. (Maestro.jsx)
+- **Miglioratore Naturale su tutte le ricette (tranne panettoni)**: migration `/app/backend/migrations/2026_06_add_improver_all.py` (idempotente). Aggiunge a 59 ricette con farina l'ingrediente extra "Miglioratore Naturale" (3%) + una riga nel procedimento in IT/DE/EN/ES/FR/FA che attiva la scheda cliccabile (parola-trigger). Scopo utente: rendere le ricette gratuite difficili da riprodurre. DB preview + seed aggiornati.
+- ⚠️ Dati in PRODUZIONE separati: improver + farina colorate + note panettoni compaiono in prod solo dopo ri-seed dal seed aggiornato.
+- APERTI (confermati dall'utente, da fare): (a) completare ENTRAMBI i menù strumenti (hamburger globale SiteMenu + drawer generatore) — l'utente li vuole completi/coerenti; (b) SOCIAL: dopo la REGISTRAZIONE serve conferma email → l'utente vuole AUTO-LOGIN immediato senza verifica email (⚠️ modifica AUTH: usare integration_expert prima); (c) RICETTE: presentazione + dati su tutte le categorie, AGGIUNGERE 20 focacce di vari gusti, curare le TRADUZIONI (specie colorate).
