@@ -1,7 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RefreshCw, Sparkles } from "lucide-react";
+import { RefreshCw, Sparkles, Heart, Share2, Plus, ShieldCheck, Check, X, Loader2, Gift, PartyPopper } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
+import { wisdomApi, profileApi } from "@/lib/api";
+import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 
 // "Il Pizzico di Sapienza di Mikila" — un consiglio da fornaio, diverso per sezione,
@@ -46,40 +49,220 @@ const WISDOM = {
 
 const SECTION_MAP = { news: "impara", enciclopedia: "impara", shop: "default", enterprise: "maestro" };
 
+function mmdd(dateStr) {
+  if (!dateStr) return "";
+  const s = String(dateStr);
+  if (/^\d{2}-\d{2}$/.test(s)) return s;
+  const d = new Date(s);
+  if (isNaN(d)) return "";
+  return `${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export default function MikilaWisdom({ section = "home" }) {
   const { lang } = useLang();
+  const { user } = useAuth();
+  const L = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const key = WISDOM[section] ? section : (SECTION_MAP[section] && WISDOM[SECTION_MAP[section]] ? SECTION_MAP[section] : "default");
-  const pool = WISDOM[key] || WISDOM.default;
+  const base = WISDOM[key] || WISDOM.default;
+
+  const [community, setCommunity] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const [celebrate, setCelebrate] = useState(false);
+  const [proposeOpen, setProposeOpen] = useState(false);
+  const [modOpen, setModOpen] = useState(false);
+
+  const loadCommunity = useCallback(() => { wisdomApi.approved().then((r) => setCommunity(Array.isArray(r) ? r : [])).catch(() => {}); }, []);
+  useEffect(() => { loadCommunity(); }, [loadCommunity]);
+
+  // Celebrazione: quando l'utente completa una ricetta o una sfida (dura ~20s, anche cambiando sezione).
+  useEffect(() => {
+    const CELEB_MS = 20000;
+    const startWindow = () => {
+      const at = Number(sessionStorage.getItem("mikilab-celebrate-at") || 0);
+      const remaining = at ? CELEB_MS - (Date.now() - at) : 0;
+      if (remaining > 0) { setCelebrate(true); return setTimeout(() => setCelebrate(false), remaining); }
+      setCelebrate(false); return null;
+    };
+    let timer = startWindow();
+    const h = () => { sessionStorage.setItem("mikilab-celebrate-at", String(Date.now())); if (timer) clearTimeout(timer); timer = startWindow(); };
+    window.addEventListener("mikilab-celebrate", h);
+    return () => { window.removeEventListener("mikilab-celebrate", h); if (timer) clearTimeout(timer); };
+  }, []);
+
+  // Consiglio speciale personalizzato (compleanno reale o anniversario iscrizione).
+  const todayMMDD = mmdd(new Date().toISOString());
+  const isBirthday = user?.birthday && mmdd(user.birthday) === todayMMDD;
+  const isAnniversary = user?.created_at && mmdd(user.created_at) === todayMMDD && (new Date(user.created_at).getFullYear() < new Date().getFullYear());
+  const firstName = (user?.name || (user?.email || "").split("@")[0] || "").split(" ")[0];
+
+  // Pool combinato: sezione + proverbi approvati (i più votati già in cima).
+  const pool = useMemo(() => {
+    const own = base.map((t) => ({ text: mkTri(lang)(t[0], t[1], t[2], t[3], t[4], t[5]), author: null, id: null }));
+    const com = community.map((c) => ({
+      text: (lang === "de" ? (c.text_de || c.text) : lang === "en" ? (c.text_en || c.text) : lang === "es" ? (c.text_es || c.text) : c.text),
+      author: c.author_name, id: c.id, likeCount: c.like_count, likedByMe: c.liked_by_me,
+    }));
+    return [...com, ...own]; // i proverbi della community (più votati) compaiono per primi
+  }, [base, community, lang]);
+
   const dayIdx = useMemo(() => {
     const d = new Date();
-    return (Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000)) % pool.length;
+    return (Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000)) % Math.max(1, pool.length);
   }, [pool.length]);
-  const [offset, setOffset] = useState(0);
-  const i = (dayIdx + offset) % pool.length;
-  const tip = pool[i];
-  const text = mkTri(lang)(tip[0], tip[1], tip[2], tip[3], tip[4], tip[5]);
+  const i = pool.length ? (dayIdx + offset) % pool.length : 0;
+  const cur = pool[i] || { text: "", author: null, id: null };
+
+  // Contenuto speciale ha priorità sul proverbio del giorno.
+  let special = null;
+  if (celebrate) special = { kind: "celebrate", Icon: PartyPopper, text: L(`Bravo${firstName ? " " + firstName : ""}! Ogni pane sfornato è una piccola vittoria 🎉`, `Bravo${firstName ? " " + firstName : ""}! Jedes gebackene Brot ist ein kleiner Sieg 🎉`, `Well done${firstName ? " " + firstName : ""}! Every loaf baked is a little victory 🎉`, `¡Bravo${firstName ? " " + firstName : ""}! Cada pan horneado es una pequeña victoria 🎉`, `Bravo${firstName ? " " + firstName : ""} ! Chaque pain cuit est une petite victoire 🎉`, `آفرین${firstName ? " " + firstName : ""}! هر نان یک پیروزی کوچک است 🎉`) };
+  else if (isBirthday) special = { kind: "bday", Icon: Gift, text: L(`Buon compleanno, ${firstName || "fornaio"}! 🎂 Oggi impasta qualcosa che ami: te lo sei meritato.`, `Alles Gute zum Geburtstag, ${firstName || "Bäcker"}! 🎂 Back heute etwas, das du liebst.`, `Happy birthday, ${firstName || "baker"}! 🎂 Bake something you love today — you've earned it.`, `¡Feliz cumpleaños, ${firstName || "panadero"}! 🎂 Hornea hoy algo que ames.`, `Joyeux anniversaire, ${firstName || "boulanger"} ! 🎂 Fais aujourd'hui un pain que tu aimes.`, `تولدت مبارک، ${firstName || "نانوا"}! 🎂 امروز چیزی بپز که دوست داری.`) };
+  else if (isAnniversary) special = { kind: "anniv", Icon: PartyPopper, text: L(`Oggi festeggiamo il tuo anniversario in MikiLab, ${firstName || "fornaio"}! 🥳 Grazie di far parte del nostro forno.`, `Heute feiern wir dein MikiLab-Jubiläum, ${firstName || "Bäcker"}! 🥳`, `Today we celebrate your MikiLab anniversary, ${firstName || "baker"}! 🥳 Thanks for being part of our bakery.`, `¡Hoy celebramos tu aniversario en MikiLab, ${firstName || "panadero"}! 🥳`, `Aujourd'hui, on fête ton anniversaire MikiLab, ${firstName || "boulanger"} ! 🥳`, `امروز سالگرد عضویتت در میکیلب را جشن می‌گیریم، ${firstName || "نانوا"}! 🥳`) };
+
+  const text = special ? special.text : cur.text;
+  const HeadIcon = special ? special.Icon : Sparkles;
+
+  const likeCur = async () => {
+    if (!user) { toast.message(L("Accedi per votare", "Zum Voten anmelden", "Sign in to vote", "Inicia sesión para votar", "Connecte-toi pour voter", "برای رأی وارد شو")); return; }
+    if (!cur.id) return;
+    setCommunity((cs) => cs.map((c) => c.id === cur.id ? { ...c, liked_by_me: !c.liked_by_me, like_count: c.like_count + (c.liked_by_me ? -1 : 1) } : c));
+    try { await wisdomApi.like(cur.id); } catch { loadCommunity(); }
+  };
+  const shareCur = async () => {
+    const msg = `"${text}" — MikiLab 🥖`;
+    try { if (navigator.share) { await navigator.share({ text: msg }); return; } } catch { return; }
+    try { await navigator.clipboard.writeText(msg); toast.success(L("Copiato!", "Kopiert!", "Copied!", "¡Copiado!", "Copié !", "کپی شد!")); } catch { /* */ }
+  };
 
   return (
-    <div data-testid="mikila-wisdom" className="mb-4 flex items-center gap-3 rounded-2xl border border-[#ff6b00]/25 bg-[#181818] px-3.5 py-3 shadow-sm">
-      <img src="/michele-avatar.jpg" alt="Mikila" loading="lazy"
-        className="w-10 h-10 rounded-full object-cover border-2 border-[#ff6b00]/40 shrink-0"
-        onError={(e) => { e.currentTarget.style.display = "none"; }} />
-      <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00] flex items-center gap-1">
-          <Sparkles className="w-3 h-3" /> {mkTri(lang)("Il pizzico di sapienza di Mikila", "Mikilas Prise Weisheit", "Mikila's pinch of wisdom", "El pellizco de sabiduría de Mikila", "Le pincée de sagesse de Mikila", "چکه‌ای از خرد میکیلا")}
-        </p>
-        <AnimatePresence mode="wait">
-          <motion.p key={i} data-testid="mikila-wisdom-text"
-            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.2 }}
-            className="text-[13px] text-[#E0D5CF] leading-snug mt-0.5 italic">
-            "{text}"
-          </motion.p>
-        </AnimatePresence>
+    <>
+      <div data-testid="mikila-wisdom" className={`mb-4 rounded-2xl border px-3.5 py-3 shadow-sm ${special ? "border-[#ff6b00]/50 bg-[#ff6b00]/12" : "border-[#ff6b00]/25 bg-[#181818]"}`}>
+        <div className="flex items-center gap-3">
+          <img src="/michele-avatar.jpg" alt="Mikila" loading="lazy"
+            className="w-10 h-10 rounded-full object-cover border-2 border-[#ff6b00]/40 shrink-0"
+            onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00] flex items-center gap-1">
+              <HeadIcon className="w-3 h-3" /> {special ? L("Mikila per te", "Mikila für dich", "Mikila for you", "Mikila para ti", "Mikila pour toi", "میکیلا برای تو") : L("Il pizzico di sapienza di Mikila", "Mikilas Prise Weisheit", "Mikila's pinch of wisdom", "El pellizco de sabiduría de Mikila", "Le pincée de sagesse de Mikila", "چکه‌ای از خرد میکیلا")}
+            </p>
+            <AnimatePresence mode="wait">
+              <motion.p key={text} data-testid="mikila-wisdom-text"
+                initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.2 }}
+                className="text-[13px] text-[#E0D5CF] leading-snug mt-0.5 italic">"{text}"</motion.p>
+            </AnimatePresence>
+            {!special && cur.author && (
+              <p className="text-[11px] text-[#ff8a33] mt-0.5 font-semibold">— {cur.author}</p>
+            )}
+          </div>
+          {!special && (
+            <button data-testid="mikila-wisdom-next" onClick={() => setOffset((o) => o + 1)} aria-label="next tip"
+              className="shrink-0 w-8 h-8 rounded-full bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center text-[#ff6b00] active:scale-90 transition-transform">
+              <RefreshCw className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+        {!special && (
+          <div className="flex items-center gap-2 mt-2 pl-[52px]">
+            {cur.id != null && (
+              <button data-testid="mikila-wisdom-like" onClick={likeCur}
+                className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-full border transition-all active:scale-90 ${cur.likedByMe ? "bg-[#ff3b5c] text-white border-[#ff3b5c]" : "text-[#ff3b5c] border-[#ff3b5c]/40"}`}>
+                <Heart className={`w-3 h-3 ${cur.likedByMe ? "fill-current" : ""}`} /> {cur.likeCount || 0}
+              </button>
+            )}
+            <button data-testid="mikila-wisdom-share" onClick={shareCur} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
+              <Share2 className="w-3 h-3" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
+            </button>
+            <button data-testid="mikila-wisdom-propose" onClick={() => setProposeOpen(true)} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
+              <Plus className="w-3 h-3" /> {L("Proponi il tuo", "Deins vorschlagen", "Propose yours", "Propón el tuyo", "Propose le tien", "پیشنهاد بده")}
+            </button>
+            {user?.role === "admin" && (
+              <button data-testid="mikila-wisdom-moderate" onClick={() => setModOpen(true)} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#2e8b6f] px-2 py-1 rounded-full border border-[#2e8b6f]/40 active:scale-90 transition-all">
+                <ShieldCheck className="w-3 h-3" /> {L("Modera", "Moderieren", "Moderate", "Moderar", "Modérer", "بررسی")}
+              </button>
+            )}
+          </div>
+        )}
       </div>
-      <button data-testid="mikila-wisdom-next" onClick={() => setOffset((o) => o + 1)} aria-label="next tip"
-        className="shrink-0 w-8 h-8 rounded-full bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center text-[#ff6b00] active:scale-90 transition-transform">
-        <RefreshCw className="w-4 h-4" />
-      </button>
+      {proposeOpen && <ProposeModal lang={lang} user={user} onClose={() => setProposeOpen(false)} />}
+      {modOpen && <ModerateModal lang={lang} onClose={() => { setModOpen(false); loadCommunity(); }} />}
+    </>
+  );
+}
+
+function ProposeModal({ lang, user, onClose }) {
+  const L = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const [text, setText] = useState("");
+  const [bday, setBday] = useState(user?.birthday ? String(user.birthday).slice(0, 10) : "");
+  const [busy, setBusy] = useState(false);
+  const submit = async () => {
+    if (!user) { toast.message(L("Accedi per proporre un proverbio", "Zum Vorschlagen anmelden", "Sign in to propose", "Inicia sesión para proponer", "Connecte-toi pour proposer", "برای پیشنهاد وارد شو")); return; }
+    if (text.trim().length < 8) { toast.error(L("Scrivi un proverbio un po' più lungo", "Etwas länger bitte", "Write a bit more", "Escribe un poco más", "Écris un peu plus", "کمی بلندتر بنویس")); return; }
+    setBusy(true);
+    try {
+      await wisdomApi.submit(text.trim());
+      if (bday && bday !== (user?.birthday || "")) { try { await profileApi.update({ birthday: bday }); } catch { /* */ } }
+      toast.success(L("Grazie! Il tuo proverbio è in revisione 🙌", "Danke! Dein Spruch wird geprüft 🙌", "Thanks! Your proverb is under review 🙌", "¡Gracias! Tu proverbio está en revisión 🙌", "Merci ! Ton proverbe est en révision 🙌", "ممنون! ضرب‌المثل شما در حال بررسی است 🙌"));
+      onClose();
+    } catch { toast.error(L("Errore, riprova", "Fehler", "Error, try again", "Error", "Erreur", "خطا")); }
+    finally { setBusy(false); }
+  };
+  return (
+    <div data-testid="wisdom-propose-modal" className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md p-3" onClick={onClose}>
+      <div className="w-full max-w-md rounded-3xl bg-[#181818] border border-[#2e2e2e] p-5" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="w-5 h-5 text-[#ff6b00]" />
+          <h3 className="font-display text-lg font-bold text-white">{L("Proponi un proverbio da fornaio", "Bäcker-Spruch vorschlagen", "Propose a baker's proverb", "Propón un proverbio panadero", "Propose un proverbe de boulanger", "یک ضرب‌المثل نانوایی پیشنهاد بده")}</h3>
+        </div>
+        <p className="text-[12px] text-[#AEB8BF] mb-2">{L("I migliori (più votati) entrano nella rotazione di Mikila dopo l'ok dell'admin.", "Die beliebtesten kommen nach Admin-OK in Mikilas Rotation.", "The most-voted enter Mikila's rotation after admin approval.", "Los más votados entran en la rotación de Mikila tras el OK del admin.", "Les plus votés entrent après validation admin.", "پس از تأیید ادمین، پرطرفدارها به چرخش میکیلا می‌آیند.")}</p>
+        <textarea data-testid="wisdom-propose-text" value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={240}
+          placeholder={L("Es. «Poco lievito e tanto tempo: pane più buono e leggero.»", "z.B. «Wenig Hefe, viel Zeit: besseres Brot.»", "e.g. 'Little yeast and lots of time: better bread.'", "Ej. «Poca levadura y mucho tiempo.»", "Ex. « Peu de levure, beaucoup de temps. »", "مثلاً «کم مخمر، زمان زیاد.»")}
+          className="w-full bg-[#121212] border border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#ff6b00]" />
+        <label className="block text-[11px] font-bold uppercase tracking-wider text-[#AEB8BF] mt-3 mb-1">{L("Il tuo compleanno (facoltativo)", "Dein Geburtstag (optional)", "Your birthday (optional)", "Tu cumpleaños (opcional)", "Ton anniversaire (facultatif)", "تولد تو (اختیاری)")}</label>
+        <input data-testid="wisdom-birthday-input" type="date" value={bday} onChange={(e) => setBday(e.target.value)}
+          className="w-full bg-[#121212] border border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#ff6b00]" />
+        <div className="grid grid-cols-2 gap-2 mt-4">
+          <button onClick={onClose} className="rounded-xl border border-[#2e2e2e] text-white font-semibold py-2.5 active:scale-95">{L("Annulla", "Abbrechen", "Cancel", "Cancelar", "Annuler", "لغو")}</button>
+          <button data-testid="wisdom-propose-submit" disabled={busy} onClick={submit} className="rounded-xl bg-[#ff6b00] text-[#121212] font-bold py-2.5 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
+            {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {L("Invia", "Senden", "Send", "Enviar", "Envoyer", "ارسال")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ModerateModal({ lang, onClose }) {
+  const L = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const [items, setItems] = useState(null);
+  const load = useCallback(() => { wisdomApi.pending().then((r) => setItems(Array.isArray(r) ? r : [])).catch(() => setItems([])); }, []);
+  useEffect(() => { load(); }, [load]);
+  const act = async (id, approve) => {
+    try { await (approve ? wisdomApi.approve(id) : wisdomApi.reject(id)); setItems((it) => it.filter((x) => x.id !== id)); toast.success(approve ? L("Approvato ✓", "Freigegeben ✓", "Approved ✓", "Aprobado ✓", "Approuvé ✓", "تأیید شد ✓") : L("Rifiutato", "Abgelehnt", "Rejected", "Rechazado", "Rejeté", "رد شد")); }
+    catch { toast.error(L("Errore", "Fehler", "Error", "Error", "Erreur", "خطا")); }
+  };
+  return (
+    <div data-testid="wisdom-moderate-modal" className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md p-3" onClick={onClose}>
+      <div className="w-full max-w-md max-h-[80vh] overflow-y-auto rounded-3xl bg-[#181818] border border-[#2e2e2e] p-5" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-display text-lg font-bold text-white flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-[#2e8b6f]" /> {L("Proverbi in revisione", "Sprüche in Prüfung", "Proverbs under review", "Proverbios en revisión", "Proverbes en révision", "ضرب‌المثل‌های در انتظار")}</h3>
+          <button onClick={onClose} className="text-[#AEB8BF]"><X className="w-5 h-5" /></button>
+        </div>
+        {items === null ? <div className="py-10 text-center text-[#AEB8BF]"><Loader2 className="w-5 h-5 animate-spin mx-auto" /></div>
+          : items.length === 0 ? <p className="py-8 text-center text-[#AEB8BF] text-sm">{L("Niente da moderare 🎉", "Nichts zu moderieren 🎉", "Nothing to moderate 🎉", "Nada que moderar 🎉", "Rien à modérer 🎉", "چیزی برای بررسی نیست 🎉")}</p>
+          : (
+            <div className="space-y-2.5">
+              {items.map((it) => (
+                <div key={it.id} data-testid={`wisdom-pending-${it.id}`} className="rounded-xl bg-[#121212] border border-[#2e2e2e] p-3">
+                  <p className="text-[13px] text-white italic">"{it.text}"</p>
+                  <p className="text-[11px] text-[#AEB8BF] mt-1">— {it.author_name}</p>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    <button data-testid={`wisdom-approve-${it.id}`} onClick={() => act(it.id, true)} className="rounded-lg bg-[#2e8b6f] text-white font-semibold py-2 text-sm active:scale-95 flex items-center justify-center gap-1"><Check className="w-4 h-4" /> {L("Approva", "OK", "Approve", "Aprobar", "Approuver", "تأیید")}</button>
+                    <button data-testid={`wisdom-reject-${it.id}`} onClick={() => act(it.id, false)} className="rounded-lg border border-[#2e2e2e] text-[#ff3b5c] font-semibold py-2 text-sm active:scale-95 flex items-center justify-center gap-1"><X className="w-4 h-4" /> {L("Rifiuta", "Ablehnen", "Reject", "Rechazar", "Rejeter", "رد")}</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+      </div>
     </div>
   );
 }

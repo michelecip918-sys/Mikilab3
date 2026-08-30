@@ -168,6 +168,15 @@ export const siteSettingsApi = {
   get: () => api.get(`/site-settings`).then((r) => r.data).catch(() => ({})),
 };
 
+export const wisdomApi = {
+  approved: () => api.get(`/wisdom/approved`).then((r) => r.data).catch(() => []),
+  submit: (text) => api.post(`/wisdom`, { text }).then((r) => r.data),
+  like: (id) => api.post(`/wisdom/${id}/like`).then((r) => r.data),
+  pending: () => api.get(`/wisdom/pending`).then((r) => r.data).catch(() => []),
+  approve: (id) => api.post(`/wisdom/${id}/approve`).then((r) => r.data),
+  reject: (id) => api.post(`/wisdom/${id}/reject`).then((r) => r.data),
+};
+
 export const communityApi = {
   list: (scope) => api.get(`/community/posts${scope && scope !== "all" ? `?scope=${scope}` : ""}`).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/community/posts`, data).then((r) => r.data),

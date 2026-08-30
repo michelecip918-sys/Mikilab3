@@ -1,0 +1,27 @@
+{
+  "summary": "Frontend-only test of the new 'Il Pizzico di Sapienza di Mikila' wisdom strip (430px mobile, preview URL). Verified: strip present at top of all 5 bottom-nav sections with avatar + label + italic quote + refresh/share/propose; refresh rotates quotes (5/5 unique); share copies with 'Copied!' toast; propose modal (textarea + optional birthday date input) submits -> 'Thanks! Your proverb is under review' toast + modal closes; admin-only 'Modera' button visible for admin@mikilab.de and hidden for fornaio; moderation modal listed the pending proverb, Approve removed it with 'Approved' toast and the proverb then appeared in the public rotation with author line '— Fornaio', like pill and correct EN translation; like toggle increments/decrements correctly and persists; regression OK (bake-step-by-step, progress, next/back, bake-shopping-toggle -> shopping-where-to-buy, finish screen + community post toast); NO paywall/price UI on home. ONE BUG: the post-recipe celebration tip does not survive a section switch.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Celebration tip after finishing a recipe", "issue": "After 'bake-finish' the strip correctly switches to label 'Mikila for you' + highlighted background on the SAME tab, but as soon as the user navigates to any other section (nav-tab-home etc.) the celebration is lost and the normal 'Mikila's pinch of wisdom' quote is shown, even though it should last ~20s across sections as specified.", "affected_selectors": ["mikila-wisdom", "mikila-wisdom-text", "nav-tab-home"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix celebration persistence across sections: App.js line ~222 wraps the section content (including <MikilaWisdom section={tab}/>) in an element with key={tab}, so MikilaWisdom is UNMOUNTED/REMOUNTED on every tab change and its local `celebrate` state is discarded. Either render <MikilaWisdom> outside the keyed wrapper, or persist the celebration (e.g. sessionStorage timestamp 'mikilab-celebrate-at' checked on mount with the remaining 20s window)."
+  ],
+  "critical_code_review_comments": [
+    "MikilaWisdom local `celebrate` state is not durable — any remount (tab switch, keyed wrapper, route change) cancels the personalized celebration; store the trigger timestamp outside component state.",
+    "shareCur(): the `catch { return; }` around navigator.share swallows a user-cancelled share AND prevents the clipboard fallback; acceptable but silent."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "6/7 flows passed (~86%)"},
+  "seed_data_creation": "Submitted + admin-approved community proverb 'La crosta croccante premia chi aspetta il forno caldo giusto.' (author Fornaio). Completed recipe 'Whole Soul' twice as fornaio (achievement posts created).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "fornaio@mikilab.de / Mikilab2026! ; admin@mikilab.de / Mikilab2026! (both work; login via header data-testid='login-btn')",
+  "context_for_next_testing_agent": "First load shows a newsletter popup — dismiss with data-testid='newsletter-popup-close' before interacting. App opens as guest; click 'login-btn' to open AuthScreen. Community proverbs are NOT first visually in practice: with the deterministic daily index they appeared at refresh clicks 5-6 (2 community entries currently approved). Like state persists per user (fornaio already liked 'A patient dough...'), so assert relative +1/-1, not absolute.",
+  "rca_of_the_issue": "Celebration loss RCA: BakeStepByStep dispatches window event 'mikilab-celebrate' on finish; MikilaWisdom sets local state celebrate=true for 20s (verified working in-place: label 'Mikila for you', highlighted border/bg). App.js renders the section container with key={tab} and MikilaWisdom inside it, so switching tabs remounts the component and resets celebrate=false. Reproduce: login as fornaio -> Learn -> impara-riproduci-btn -> first riproduci-recipe -> bake-next x7 -> bake-finish (celebration visible) -> click nav-tab-home within 20s -> celebration gone."
+}

@@ -555,7 +555,7 @@ def _set_cookie(resp, token):
 
 
 def _public_user(u):
-    return {"user_id": u["user_id"], "email": u["email"], "name": u.get("name", ""), "picture": u.get("picture", ""), "role": u.get("role", "user")}
+    return {"user_id": u["user_id"], "email": u["email"], "name": u.get("name", ""), "picture": u.get("picture", ""), "role": u.get("role", "user"), "created_at": u.get("created_at", ""), "birthday": u.get("birthday", "")}
 
 
 async def _role_for_new_user():
@@ -6144,6 +6144,7 @@ class ProfileUpdateReq(BaseModel):
     name: Optional[str] = None
     bio: Optional[str] = None
     picture: Optional[str] = None
+    birthday: Optional[str] = None  # "MM-DD" oppure "YYYY-MM-DD" (facoltativo)
 
 
 @api_router.get("/community/profile/{user_id}")
@@ -6165,6 +6166,7 @@ async def community_profile(user_id: str):
         "name": u.get("name") or (u.get("email") or "Fornaio").split("@")[0],
         "picture": u.get("picture", ""), "bio": u.get("bio", ""),
         "joined": u.get("created_at"), "followers_count": len(other_ids),
+        "birthday": u.get("birthday", ""),
         "contacts": contacts, "badges": u.get("badges", []),
         "bakealong_wins": ba_wins,
         "posts": posts, "posts_count": len(posts), "listings_count": listings,
@@ -6177,10 +6179,82 @@ async def community_profile_update(body: ProfileUpdateReq, user: dict = Depends(
     if body.name is not None: upd["name"] = body.name.strip()[:60]
     if body.bio is not None: upd["bio"] = body.bio.strip()[:300]
     if body.picture is not None: upd["picture"] = body.picture.strip()[:600]
+    if body.birthday is not None: upd["birthday"] = body.birthday.strip()[:10]
     if upd:
         await db.users.update_one({"user_id": user["user_id"]}, {"$set": upd})
     u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
-    return {"name": u.get("name"), "picture": u.get("picture", ""), "bio": u.get("bio", "")}
+    return {"name": u.get("name"), "picture": u.get("picture", ""), "bio": u.get("bio", ""), "birthday": u.get("birthday", "")}
+
+
+# ---------------------------------------------------------------------------
+# Sapienza dell'Utente — proverbi proposti dai fornai (moderati) + voti
+# ---------------------------------------------------------------------------
+class WisdomReq(BaseModel):
+    text: str
+
+
+@api_router.post("/wisdom")
+async def wisdom_create(body: WisdomReq, user: dict = Depends(current_user)):
+    text = (body.text or "").strip()
+    if len(text) < 8:
+        raise HTTPException(400, "Scrivi un proverbio un po' più lungo")
+    if len(text) > 240:
+        text = text[:240]
+    tr = await _translate_text_multi(text)
+    doc = {
+        "id": str(uuid.uuid4()), "author_id": user["user_id"],
+        "author_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
+        "text": text, "text_de": tr.get("text_de"), "text_en": tr.get("text_en"), "text_es": tr.get("text_es"),
+        "status": "pending", "likes": [], "created_at": now_iso(),
+    }
+    await db.wisdom_proverbs.insert_one(doc)
+    return {"ok": True, "status": "pending"}
+
+
+def _wisdom_public(d, user):
+    return {"id": d["id"], "author_name": d.get("author_name", "Fornaio"),
+            "text": d.get("text", ""), "text_de": d.get("text_de"), "text_en": d.get("text_en"), "text_es": d.get("text_es"),
+            "like_count": len(d.get("likes") or []),
+            "liked_by_me": bool(user and user["user_id"] in (d.get("likes") or [])),
+            "status": d.get("status")}
+
+
+@api_router.get("/wisdom/approved")
+async def wisdom_approved(request: Request):
+    user = await optional_user(request)
+    docs = await db.wisdom_proverbs.find({"status": "approved"}, {"_id": 0}).to_list(200)
+    docs.sort(key=lambda d: (len(d.get("likes") or []), d.get("created_at") or ""), reverse=True)
+    return [_wisdom_public(d, user) for d in docs]
+
+
+@api_router.post("/wisdom/{pid}/like")
+async def wisdom_like(pid: str, user: dict = Depends(current_user)):
+    d = await db.wisdom_proverbs.find_one({"id": pid}, {"_id": 0})
+    if not d:
+        raise HTTPException(404, "Proverbio non trovato")
+    likes = set(d.get("likes") or [])
+    uid = user["user_id"]
+    likes.discard(uid) if uid in likes else likes.add(uid)
+    await db.wisdom_proverbs.update_one({"id": pid}, {"$set": {"likes": list(likes)}})
+    return {"ok": True, "like_count": len(likes), "liked_by_me": uid in likes}
+
+
+@api_router.get("/wisdom/pending")
+async def wisdom_pending(user: dict = Depends(require_admin)):
+    docs = await db.wisdom_proverbs.find({"status": "pending"}, {"_id": 0}).sort("created_at", 1).to_list(200)
+    return [_wisdom_public(d, user) for d in docs]
+
+
+@api_router.post("/wisdom/{pid}/approve")
+async def wisdom_approve(pid: str, user: dict = Depends(require_admin)):
+    await db.wisdom_proverbs.update_one({"id": pid}, {"$set": {"status": "approved", "approved_at": now_iso()}})
+    return {"ok": True}
+
+
+@api_router.post("/wisdom/{pid}/reject")
+async def wisdom_reject(pid: str, user: dict = Depends(require_admin)):
+    await db.wisdom_proverbs.delete_one({"id": pid})
+    return {"ok": True}
 
 
 class DMReq(BaseModel):

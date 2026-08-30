@@ -65,6 +65,7 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
     try {
       const r = await recipesApi.complete(name, recipe.id);
       setFinished(true);
+      try { window.dispatchEvent(new CustomEvent("mikilab-celebrate")); } catch { /* */ }
       if (r?.posted) toast.success(L("Bravo! Il tuo traguardo è sul feed della community 🎉", "Bravo! Dein Erfolg ist im Community-Feed 🎉", "Well done! Your achievement is on the community feed 🎉", "¡Bien hecho! Tu logro está en el feed 🎉", "Bravo ! Ton succès est sur le fil de la communauté 🎉", "آفرین! دستاوردت در فید انجمن است 🎉"));
       else toast.success(L("Complimenti, ricetta completata! 🥖", "Glückwunsch, Rezept fertig! 🥖", "Congrats, recipe completed! 🥖", "¡Enhorabuena, receta completada! 🥖", "Bravo, recette terminée ! 🥖", "تبریک، دستور کامل شد! 🥖"));
     } catch {
