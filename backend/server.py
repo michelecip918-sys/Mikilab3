@@ -5559,6 +5559,7 @@ async def challenges_complete(body: ChallengeReq, user: dict = Depends(current_u
     doc = await db.user_challenges.find_one({"user_id": user["user_id"]}, {"_id": 0})
     done = doc.get("completed", [])
     unlocks = await _apply_challenge_unlocks(user["email"], len(done))
+    await _touch_streak(user["user_id"])
     return {"ok": True, "completed": done, "count": len(done),
             "need_panettoni": CHALLENGE_UNLOCK_PANETTONI, "need_all": CHALLENGE_UNLOCK_ALL, **unlocks}
 
@@ -5582,6 +5583,7 @@ async def learn_complete(body: LearnReq, user: dict = Depends(current_user)):
     doc = await db.user_challenges.find_one({"user_id": user["user_id"]}, {"_id": 0})
     done = doc.get("completed", [])
     unlocks = await _apply_challenge_unlocks(user["email"], len(done))
+    await _touch_streak(user["user_id"])
     return {"ok": True, "completed": done, "count": len(done),
             "need_panettoni": CHALLENGE_UNLOCK_PANETTONI, "need_all": CHALLENGE_UNLOCK_ALL, **unlocks}
 
@@ -5624,6 +5626,7 @@ async def recipe_complete(body: RecipeCompleteReq, user: dict = Depends(current_
         "comments": [],
     }
     await db.community_posts.insert_one(doc)
+    await _touch_streak(user["user_id"])
     return {"ok": True, "posted": True, "post": _post_public(doc, user)}
 
 
@@ -5767,6 +5770,7 @@ async def bakealong_submit(body: BakeAlongSubmitReq, user: dict = Depends(curren
         "likes": [], "comments": [],
     }
     await db.community_posts.insert_one(doc)
+    await _touch_streak(user["user_id"])
     return _post_public(doc, user)
 
 
@@ -6255,6 +6259,109 @@ async def wisdom_approve(pid: str, user: dict = Depends(require_admin)):
 async def wisdom_reject(pid: str, user: dict = Depends(require_admin)):
     await db.wisdom_proverbs.delete_one({"id": pid})
     return {"ok": True}
+
+
+# ---------------------------------------------------------------------------
+# Streak del Fornaio — giorni consecutivi in cui l'utente cuoce o impara
+# ---------------------------------------------------------------------------
+async def _touch_streak(user_id: str):
+    """Registra un'attività (cuoce/impara) di oggi e aggiorna lo streak. Idempotente per giorno."""
+    from datetime import date, timedelta
+    today = date.today().isoformat()
+    yest = (date.today() - timedelta(days=1)).isoformat()
+    u = await db.users.find_one({"user_id": user_id}, {"_id": 0, "activity_last": 1, "streak_current": 1, "streak_best": 1})
+    if u is None:
+        return
+    last = u.get("activity_last")
+    if last == today:
+        return
+    cur = int(u.get("streak_current") or 0)
+    cur = cur + 1 if last == yest else 1
+    best = max(int(u.get("streak_best") or 0), cur)
+    await db.users.update_one({"user_id": user_id}, {"$set": {"activity_last": today, "streak_current": cur, "streak_best": best}})
+
+
+@api_router.get("/streak")
+async def get_streak(user: dict = Depends(current_user)):
+    from datetime import date, timedelta
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "activity_last": 1, "streak_current": 1, "streak_best": 1})
+    today = date.today().isoformat()
+    yest = (date.today() - timedelta(days=1)).isoformat()
+    last = (u or {}).get("activity_last")
+    cur = int((u or {}).get("streak_current") or 0)
+    # Se l'ultima attività non è oggi né ieri, lo streak è interrotto (mostra 0 finché non riprende).
+    if last not in (today, yest):
+        cur = 0
+    return {"current": cur, "best": int((u or {}).get("streak_best") or 0), "active_today": last == today}
+
+
+@api_router.post("/activity/ping")
+async def activity_ping(user: dict = Depends(current_user)):
+    await _touch_streak(user["user_id"])
+    return await get_streak(user)
+
+
+# ---------------------------------------------------------------------------
+# Auguri Automatici — Mikila pubblica un post pubblico per compleanno/anniversario
+# ---------------------------------------------------------------------------
+@api_router.post("/greetings/check")
+async def greetings_check(user: dict = Depends(current_user)):
+    from datetime import date, datetime as _dt
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
+    if not u:
+        return {"posted": False}
+    today = date.today()
+    tkey = today.isoformat()
+    if u.get("last_greeting_date") == tkey:
+        return {"posted": False, "reason": "already"}
+
+    def _mmdd(s):
+        if not s:
+            return None
+        s = str(s)
+        if len(s) == 5 and s[2] == "-":
+            return s
+        try:
+            d = _dt.fromisoformat(s.replace("Z", "+00:00"))
+            return f"{d.month:02d}-{d.day:02d}"
+        except Exception:
+            return None
+
+    tmd = f"{today.month:02d}-{today.day:02d}"
+    name = u.get("name") or (u.get("email") or "Fornaio").split("@")[0]
+    kind = None
+    if _mmdd(u.get("birthday")) == tmd:
+        kind = "compleanno"
+        text = f"🎂 Tanti auguri di buon compleanno a {name} da tutta la famiglia MikiLab! Oggi si impasta con il sorriso. 🥖"
+    else:
+        ca = _mmdd(u.get("created_at"))
+        joined_year = None
+        try:
+            joined_year = _dt.fromisoformat(str(u.get("created_at")).replace("Z", "+00:00")).year
+        except Exception:
+            joined_year = None
+        if ca == tmd and joined_year and joined_year < today.year:
+            kind = "anniversario"
+            yrs = today.year - joined_year
+            text = f"🥳 Oggi {name} festeggia {yrs} anno/i con MikiLab! Grazie di far parte del nostro forno. 🎉"
+    if not kind:
+        return {"posted": False}
+
+    tr = await _translate_text_multi(text)
+    doc = {
+        "id": str(uuid.uuid4()),
+        "author_id": "mikila",
+        "author_name": "Mikila",
+        "author_avatar": "/michele-avatar.jpg",
+        "category": "auguri",
+        "greeting_for": user["user_id"],
+        "text": text,
+        "text_de": tr.get("text_de"), "text_en": tr.get("text_en"), "text_es": tr.get("text_es"),
+        "created_at": now_iso(), "likes": [], "comments": [],
+    }
+    await db.community_posts.insert_one(doc)
+    await db.users.update_one({"user_id": user["user_id"]}, {"$set": {"last_greeting_date": tkey}})
+    return {"posted": True, "kind": kind}
 
 
 class DMReq(BaseModel):

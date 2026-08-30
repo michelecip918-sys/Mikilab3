@@ -177,6 +177,15 @@ export const wisdomApi = {
   reject: (id) => api.post(`/wisdom/${id}/reject`).then((r) => r.data),
 };
 
+export const streakApi = {
+  get: () => api.get(`/streak`).then((r) => r.data).catch(() => null),
+  ping: () => api.post(`/activity/ping`).then((r) => r.data).catch(() => null),
+};
+
+export const greetingsApi = {
+  check: () => api.post(`/greetings/check`).then((r) => r.data).catch(() => ({ posted: false })),
+};
+
 export const communityApi = {
   list: (scope) => api.get(`/community/posts${scope && scope !== "all" ? `?scope=${scope}` : ""}`).then((r) => r.data).catch(() => []),
   create: (data) => api.post(`/community/posts`, data).then((r) => r.data),

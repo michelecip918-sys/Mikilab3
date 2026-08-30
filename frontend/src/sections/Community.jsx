@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy, Cake } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -24,7 +24,7 @@ const CATS = [
   { id: "evento", Icon: CalendarDays, color: "#2e8b6f" },
 ];
 // Categorie mostrate nel feed ma non selezionabili dall'utente (es. traguardi automatici).
-const FEED_CATS = [...CATS, { id: "traguardo", Icon: Trophy, color: "#ff6b00" }];
+const FEED_CATS = [...CATS, { id: "traguardo", Icon: Trophy, color: "#ff6b00" }, { id: "auguri", Icon: Cake, color: "#ff6b00" }];
 
 function timeAgo(iso, lang) {
   try {
@@ -50,6 +50,7 @@ export default function Community({ onNavigate }) {
     domanda: tri("Domanda", "Frage", "Question", "Pregunta"),
     evento: tri("Evento", "Event", "Event", "Evento"),
     traguardo: tri("Traguardo", "Erfolg", "Achievement", "Logro"),
+    auguri: tri("Auguri", "Glückwunsch", "Greetings", "Felicidades"),
   }[id] || id);
 
   const [posts, setPosts] = useState([]);

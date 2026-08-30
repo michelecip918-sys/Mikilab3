@@ -1,0 +1,39 @@
+{
+  "summary": "Frontend-only E2E test (430px mobile) of the 4 new features + regression on the MikiLab preview URL. Sfida Lampo (logged out + logged in, incl. leaderboard with seeded entries), Streak del Fornaio (logged out/in + after completing a step-by-step bake), Card Proverbio Condivisibile (logged out + logged in), Auguri Automatici (Mikila 'auguri' feed post + idempotency verified via API), plus regression on wisdom strip (rotate/share/card/propose/admin moderate), Impara step-by-step + shopping list, and a paywall/price scan across all 5 tabs. All tested flows PASSED; only 2 minor design observations.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Mikila wisdom strip (special/birthday & celebrate mode)",
+        "issues": [
+          "When a 'special' message is active (birthday / anniversary / post-bake celebrate), MikilaWisdom.jsx hides the whole action row: mikila-wisdom-next / share / card ('Make card') / propose / admin moderate are not rendered. Consequence: on their birthday (and during the celebrate window after a bake) a user cannot create/share a proverb card at all. Verified with fornaio@mikilab.de (birthday = today): only the text was visible; the card modal was unreachable from the strip. Consider keeping Share/Make card/Propose visible in special mode - MikilaWisdom.jsx lines 157-187."
+        ]
+      },
+      {
+        "screen": "Social / Community filters",
+        "issues": [
+          "Category filter chips are built from CATS only, so there is no community-filter-auguri (nor -traguardo) chip; the auto categories appear in the feed but cannot be filtered. Intentional per code comment, but the 'Greetings' badge implies filterability. Minor."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "OPTIONAL (design): keep 'Make card' / Share / Propose buttons visible in the wisdom strip when a special (birthday/anniversary/celebrate) message is shown, otherwise the shareable-proverb feature is inaccessible for that user that day.",
+    "OPTIONAL (minor): expose 'auguri'/'traguardo' as feed filter chips if filtering by those categories is desired."
+  ],
+  "critical_code_review_comments": [
+    "SfidaLampo.jsx countdown uses local-time week end (Sunday 23:59) while the backend uses an ISO week key - the two can disagree across timezones near the rollover (observed '0g 6h').",
+    "SfidaLampo.jsx swallows errors from bakeAlongApi.current/entries (catch(() => {})) - no error state in the UI if the API fails; the theme would remain '...' with no feedback."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "100% of tested flows (0 failures)" },
+  "seed_data_creation": "Temporarily seeded 2 bake-along entries via API (amico1/amico2) to verify the Sfida Lampo leaderboard renders ranked rows (medals, author names, vote counts) - both posts were DELETED after the test (entries back to 0). No other data created; the Mikila 'auguri' post for fornaio was pre-existing.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "fornaio@mikilab.de / Mikilab2026! ; admin@mikilab.de / Mikilab2026! ; amico1@mikilab.de & amico2@mikilab.de / Test1234!",
+  "context_for_next_testing_agent": "Detailed results: (1) SFIDA LAMPO - Your Lab tab renders 'sfida-lampo' with theme 'Cinnamon Rolls', countdown chip, participants count ('2 bakers competing' when entries existed), 'sfida-lampo-join' enabled, hidden file input sfida-lampo-file (type=file) present, leaderboard rendered ranked rows sfida-lampo-entry-<id> with medals, author name and '0 votes'; empty state text shows when no entries. Logged OUT, clicking join correctly opened the auth modal (auth-modal/auth-tabs/auth-email). (2) STREAK - streak-badge absent when logged out; logged in as fornaio shows '1-day streak' + 'You baked or learned today. Nice!' with active highlight class (border-[#ff6b00]/50 bg-[#ff6b00]/12). Full Impara flow with amico1 (impara-riproduci-btn -> 140 recipes -> bake-next x8 -> bake-finish -> bake-finished) then Home still shows active streak. (3) CARD PROVERBIO - mikila-wisdom-card opens wisdom-card-modal, wisdom-card-image src is data:image/png;base64 (~827KB), download href is the same data URL, wisdom-card-share click threw nothing; works logged out and logged in (non-special mode only - see design issue). (4) AUGURI - Social feed shows post by 'Mikila' with 'Greetings' badge and cake icon: 'Happy birthday to Fornaio from the whole MikiLab family!'; POST /api/greetings/check returned {posted:false, reason:'already'} and GET /api/community/posts shows exactly 1 'auguri' post -> idempotent. (5) REGRESSION - wisdom rotate/share/propose OK, admin (admin@mikilab.de) sees mikila-wisdom-moderate and wisdom-moderate-modal opens; bake shopping list panel (shopping-where-to-buy) renders; no price/paywall/buy-* testids on any of the 5 tabs (only a Newsletter 'Subscribe' string). Console showed only expected 401s for auth-gated endpoints while logged out.",
+  "rca_of_the_issue": "N/A - no functional defects found. The only notable behavior is by design in MikilaWisdom.jsx: `special` (birthday/anniversary/celebrate) short-circuits rendering of the action button row, hiding the new 'Make card' button for that user."
+}

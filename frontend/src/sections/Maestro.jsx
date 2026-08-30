@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import SectionHero from "@/components/SectionHero";
+import SfidaLampo from "@/sections/SfidaLampo";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
 import MyData from "@/sections/MyData";
 import MachinePark from "@/components/MachinePark";
@@ -194,6 +195,9 @@ export default function Maestro() {
 
       {/* PERCORSO GUIDATO in CIMA: la sequenza logica passo-passo (Settimana → Ricetta → Extra) */}
       <LabWizard onOpenTool={openTool} />
+
+      {/* SFIDA LAMPO settimanale con classifica dei fornai */}
+      <SfidaLampo />
 
       {/* DA DOVE INIZIARE: inserisci ricetta + calcolatori, poi il percorso guidato */}
       <div data-testid="maestro-top-tools" className="mb-4">

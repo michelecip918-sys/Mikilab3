@@ -34,7 +34,7 @@ import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
 import { SoundFXProvider } from "@/audio/SoundFXContext";
 import ambient from "@/lib/ambientMusic";
-import { recipePurchaseApi, subscriptionApi, api } from "@/lib/api";
+import { recipePurchaseApi, subscriptionApi, api, greetingsApi } from "@/lib/api";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { hydrateFavs } from "@/lib/favorites";
@@ -121,6 +121,7 @@ function App() {
 
   // Idrata le combinazioni salvate dell'account al bootstrap/login.
   useEffect(() => { hydrateCombos(); }, [user]);
+  useEffect(() => { if (user) greetingsApi.check().catch(() => {}); }, [user]);
 
   // Ritorno da Stripe: conferma acquisto ricetta / abbonamento e pulisce l'URL.
   useEffect(() => {

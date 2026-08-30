@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RefreshCw, Sparkles, Heart, Share2, Plus, ShieldCheck, Check, X, Loader2, Gift, PartyPopper } from "lucide-react";
+import { RefreshCw, Sparkles, Heart, Share2, Plus, ShieldCheck, Check, X, Loader2, Gift, PartyPopper, Image as ImageIcon, Download } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { wisdomApi, profileApi } from "@/lib/api";
@@ -70,6 +70,7 @@ export default function MikilaWisdom({ section = "home" }) {
   const [celebrate, setCelebrate] = useState(false);
   const [proposeOpen, setProposeOpen] = useState(false);
   const [modOpen, setModOpen] = useState(false);
+  const [cardText, setCardText] = useState(null);
 
   const loadCommunity = useCallback(() => { wisdomApi.approved().then((r) => setCommunity(Array.isArray(r) ? r : [])).catch(() => {}); }, []);
   useEffect(() => { loadCommunity(); }, [loadCommunity]);
@@ -160,9 +161,8 @@ export default function MikilaWisdom({ section = "home" }) {
             </button>
           )}
         </div>
-        {!special && (
-          <div className="flex items-center gap-2 mt-2 pl-[52px]">
-            {cur.id != null && (
+        <div className="flex items-center gap-2 mt-2 pl-[52px] flex-wrap">
+            {!special && cur.id != null && (
               <button data-testid="mikila-wisdom-like" onClick={likeCur}
                 className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-1 rounded-full border transition-all active:scale-90 ${cur.likedByMe ? "bg-[#ff3b5c] text-white border-[#ff3b5c]" : "text-[#ff3b5c] border-[#ff3b5c]/40"}`}>
                 <Heart className={`w-3 h-3 ${cur.likedByMe ? "fill-current" : ""}`} /> {cur.likeCount || 0}
@@ -170,6 +170,9 @@ export default function MikilaWisdom({ section = "home" }) {
             )}
             <button data-testid="mikila-wisdom-share" onClick={shareCur} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
               <Share2 className="w-3 h-3" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
+            </button>
+            <button data-testid="mikila-wisdom-card" onClick={() => setCardText({ text, author: special ? null : cur.author })} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
+              <ImageIcon className="w-3 h-3" /> {L("Crea card", "Karte erstellen", "Make card", "Crear tarjeta", "Créer carte", "ساخت کارت")}
             </button>
             <button data-testid="mikila-wisdom-propose" onClick={() => setProposeOpen(true)} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
               <Plus className="w-3 h-3" /> {L("Proponi il tuo", "Deins vorschlagen", "Propose yours", "Propón el tuyo", "Propose le tien", "پیشنهاد بده")}
@@ -180,10 +183,10 @@ export default function MikilaWisdom({ section = "home" }) {
               </button>
             )}
           </div>
-        )}
       </div>
       {proposeOpen && <ProposeModal lang={lang} user={user} onClose={() => setProposeOpen(false)} />}
       {modOpen && <ModerateModal lang={lang} onClose={() => { setModOpen(false); loadCommunity(); }} />}
+      {cardText && <CardModal lang={lang} text={cardText.text} author={cardText.author} onClose={() => setCardText(null)} />}
     </>
   );
 }
@@ -266,3 +269,98 @@ function ModerateModal({ lang, onClose }) {
     </div>
   );
 }
+
+function drawWrapped(ctx, text, x, y, maxW, lh) {
+  const words = String(text).split(/\s+/);
+  let line = "";
+  const lines = [];
+  for (const w of words) {
+    const test = line ? line + " " + w : w;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  const startY = y - ((lines.length - 1) * lh) / 2;
+  lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
+  return lines.length;
+}
+
+function CardModal({ lang, text, author, onClose }) {
+  const L = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const [url, setUrl] = useState(null);
+
+  useEffect(() => {
+    let alive = true;
+    const S = 1080;
+    const canvas = document.createElement("canvas");
+    canvas.width = S; canvas.height = S;
+    const ctx = canvas.getContext("2d");
+    // Sfondo
+    ctx.fillStyle = "#121212"; ctx.fillRect(0, 0, S, S);
+    // Bordo arancio
+    ctx.strokeStyle = "#ff6b00"; ctx.lineWidth = 14; ctx.strokeRect(28, 28, S - 56, S - 56);
+    // Glow decorativo
+    const g = ctx.createRadialGradient(S / 2, 200, 50, S / 2, 200, 520);
+    g.addColorStop(0, "rgba(255,107,0,0.18)"); g.addColorStop(1, "rgba(255,107,0,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
+    // Testo virgolette
+    ctx.fillStyle = "#ff6b00"; ctx.font = "bold 160px Georgia, serif"; ctx.textAlign = "center"; ctx.fillText("“", S / 2, 330);
+    // Proverbio
+    ctx.fillStyle = "#f2ede8"; ctx.font = "italic 600 52px Georgia, serif"; ctx.textAlign = "center";
+    drawWrapped(ctx, text, S / 2, S / 2 + 20, S - 220, 74);
+    // Autore
+    ctx.fillStyle = "#ff8a33"; ctx.font = "bold 34px Arial, sans-serif";
+    ctx.fillText(author ? `— ${author}` : "— Mikila", S / 2, S - 260);
+
+    const finish = () => {
+      // Logo
+      ctx.fillStyle = "#ffffff"; ctx.font = "bold 46px Arial, sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("MikiLab 🥖", S / 2, S - 90);
+      try { if (alive) setUrl(canvas.toDataURL("image/png")); } catch { if (alive) setUrl(canvas.toDataURL()); }
+    };
+    // Avatar cerchio
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const r = 78, cx = S / 2, cy = 150;
+      ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
+      ctx.drawImage(img, cx - r, cy - r, r * 2, r * 2); ctx.restore();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.strokeStyle = "#ff6b00"; ctx.lineWidth = 8; ctx.stroke();
+      finish();
+    };
+    img.onerror = finish;
+    img.src = "/michele-avatar.jpg";
+    return () => { alive = false; };
+  }, [text, author]);
+
+  const shareImg = async () => {
+    try {
+      const blob = await (await fetch(url)).blob();
+      const file = new File([blob], "mikilab-proverbio.png", { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text: "MikiLab 🥖" }); return; }
+    } catch { /* fallback download */ }
+    const a = document.createElement("a"); a.href = url; a.download = "mikilab-proverbio.png"; a.click();
+  };
+
+  return (
+    <div data-testid="wisdom-card-modal" className="fixed inset-0 z-[70] flex items-center justify-center bg-black/85 backdrop-blur-md p-4" onClick={onClose}>
+      <div className="w-full max-w-sm rounded-3xl bg-[#181818] border border-[#2e2e2e] p-4" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-display text-base font-bold text-white flex items-center gap-2"><ImageIcon className="w-5 h-5 text-[#ff6b00]" /> {L("Card condivisibile", "Teilbare Karte", "Shareable card", "Tarjeta para compartir", "Carte à partager", "کارت اشتراکی")}</h3>
+          <button onClick={onClose} className="text-[#AEB8BF]"><X className="w-5 h-5" /></button>
+        </div>
+        {url ? <img data-testid="wisdom-card-image" src={url} alt="proverbio" className="w-full rounded-2xl" />
+          : <div className="aspect-square rounded-2xl bg-[#121212] flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /></div>}
+        <div className="grid grid-cols-2 gap-2 mt-3">
+          <a data-testid="wisdom-card-download" href={url || "#"} download="mikilab-proverbio.png" className={`flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 ${!url ? "opacity-50 pointer-events-none" : ""}`}>
+            <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Scarica", "Download", "Download", "Descargar", "Télécharger", "دانلود")}
+          </a>
+          <button data-testid="wisdom-card-share" disabled={!url} onClick={shareImg} className="flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] text-[#121212] font-bold py-2.5 text-sm active:scale-95 disabled:opacity-50">
+            <Share2 className="w-4 h-4" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+

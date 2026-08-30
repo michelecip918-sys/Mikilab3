@@ -16,6 +16,7 @@ import HomeNews from "@/components/HomeNews";
 import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import AvatarBubbles from "@/components/AvatarBubbles";
+import StreakFlame from "@/components/StreakFlame";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
 import { getProfile } from "@/components/Onboarding";
@@ -286,6 +287,7 @@ export default function Home({ onNavigate }) {
 
   return (
     <div className="pb-2 space-y-6">
+      <StreakFlame />
       {/* Guida rapida: come iniziare (breve, non invasiva) */}
       <div data-testid="home-quickstart" className="rounded-2xl border border-[#ff6b00]/40 bg-[#1e1e1e] p-3.5">
         <p className="text-[13px] text-[#E0E0E0] leading-snug">
