@@ -2610,3 +2610,12 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - Verificato via API /api/recipes?collection_name=mikilab: 141 ricette totali, 32 focacce, le nuove presenti e non bloccate, con Miglioratore e procedimenti tradotti.
 - Gusti: Zucca e Rosmarino, Patate e Rosmarino, Cipolla di Tropea, Zucchine e Stracchino, Melanzane e Pomodorini, Peperoni, Pesto e Pomodorini, Gorgonzola e Noci, Mortadella e Pistacchio, Prosciutto e Stracchino, Friarielli, Funghi Porcini, Acciughe e Capperi, Fichi e Miele, Uvetta e Noci, Multi-Semi, Curcuma, Olive Verdi e Origano, Pere e Gorgonzola, Cipollotto e Speck.
 - Item 3 RIMANE: audit/fix TRADUZIONI ricette colorate; polish presentazione/impaginazione ricette. ⚠️ In produzione: serve RI-SEED per far comparire le nuove focacce e le modifiche dati.
+
+## v-fork.116 (2026-06) — Focacce arricchite + piano sezione Impara
+- Tutte le 32 focacce arricchite (script /app/backend/migrations/2026_06_enrich_focacce.py, idempotente): aggiunti "Olio extravergine (nell'impasto)" 4% + "Malto d'orzo" 1% (tradotti 6 lingue) + nota nel procedimento ("un filo d'olio nell'impasto per mollica più soffice, malto per crosta dorata"). Verificato via API.
+- PROSSIMO BLOCCO (richiesto): rifare la sezione IMPARA più ricca e con logica:
+  * Modalità "riproduci passo-passo" le ricette di Mikila con l'AVATAR di Mikila che guida (voce/testo), pensata anche per una mamma/principiante (tono semplice, divertente).
+  * Per ogni step: cosa serve, COSA COMPRARE e DOVE (lista spesa + suggerimenti), attrezzi.
+  * Nuovi "modelli"/percorsi didattici (livelli/temi), contenuti pieni seguendo una logica progressiva.
+  * Da progettare con design_agent + integrare (eventuale TTS avatar). Richiede budget dedicato.
+- ⚠️ Produzione: focacce nuove + arricchimenti sono in DB anteprima + seed → servono via RI-SEED in produzione.
