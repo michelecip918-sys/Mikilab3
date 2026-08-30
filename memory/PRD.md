@@ -2569,3 +2569,10 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
   - Colori gruppi on-brand (arancio/ambra/marrone), nessun accent blu.
 - Test iteration_133: frontend 100% (directory 4 gruppi, accordion, apertura tool + back, drawer per kind, icona ☁ immediata e dopo reload, regressione SiteMenu/quick-tiles, tema). Nota design pre-esistente: fumetto onboarding Mohammadreza riappare a ogni reload (dismissibile, non blocca).
 - NB: richiede REDEPLOY per mikilab.de.
+
+## v-fork.110 (2026-06) — Coach once-only, Preferiti strumenti, Ricerca, Combo nel Piano Settimana
+- **Coach una sola volta**: `LabTour.jsx` non segna più "visto" al mount (bruciava il tour sui mount transitori da deep-link) ma tramite timer 500ms dopo che il tour è a schermo (cleared on unmount) + su finish(). Fix del reappear a ogni reload. (LabOnboarding.jsx risulta non montato/legacy.)
+- **Preferiti strumenti**: `lib/pinnedTools.js` (localStorage 'mikilab_pinned_tools', cap 12). In `ToolsDirectory` ogni tile ha pin (⭐ `tools-dir-pin-<id>`); sezione "I tuoi preferiti" in cima (`tools-dir-pinned`), persistente.
+- **Ricerca strumenti**: barra `tools-dir-search` in cima alla directory; risultati flat (`tools-dir-results`) filtrati per nome nella lingua corrente, con clear e stato "nessun risultato".
+- **Combo nel Piano Settimanale**: `CapoCombos.jsx` generalizzato con props opzionali `getSaveItems` + `onApply` (default = comportamento Capo). `WeeklyPlan.jsx` mostra il pannello combo: salva la settimana corrente come combo e applica una combo raggruppando gli item per giorno (fallback 'lun') via addRecipesToDay.
+- Test iter 134 (92%→fix) + iter 135 (100%): tutti i flussi verificati. NB: richiede REDEPLOY per mikilab.de.
