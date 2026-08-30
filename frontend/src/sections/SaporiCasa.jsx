@@ -5,19 +5,19 @@ import { useLang } from "@/i18n/LanguageContext";
 
 const BREADS = [
   { emoji: "🥖", name: "Pane di Matera IGP (casalingo)",
-    body: "Semola rimacinata di grano duro, lievito madre, alta idratazione (~80%) e la classica forma a cornetto. Crosta spessa e mollica gialla e alveolata. In casa: cottura su pietra refrattaria molto calda con vapore nei primi 10 minuti.",
+    body: "Solo semola rimacinata di grano duro, lievito madre e un'idratazione generosa (~80%): la classica forma a cornetto, crosta spessa e croccante, mollica gialla e ben alveolata. A casa dà il meglio su pietra refrattaria rovente, con un colpo di vapore nei primi 10 minuti.",
     tag: "Lievito Madre · Semola" },
   { emoji: "🫓", name: "Focaccia Barese (Pugliese)",
-    body: "Impasto con patata lessa (rende la mollica soffice e umida a lungo), semola e farina 0. Sopra: pomodorini schiacciati, olive baresane, origano e olio extravergine. Teglia unta e ben calda dal basso.",
+    body: "Il segreto è la patata lessa nell'impasto, che tiene la mollica soffice e umida per ore, insieme a semola e farina 0. In superficie pomodorini schiacciati a mano, olive baresane, origano e un filo generoso di extravergine. Teglia unta e ben calda dal basso per una base dorata.",
     tag: "Diretto · Patata" },
   { emoji: "🌾", name: "Focaccia Materana alla Semola",
-    body: "100% semola rimacinata, alta idratazione e lunga maturazione. Croccante fuori, alveolata dentro. Filo d'olio, sale grosso e rosmarino.",
+    body: "100% semola rimacinata, alta idratazione e lunga maturazione per un profumo intenso di grano. Croccante fuori, alveolata e leggera dentro. La rifinisco con extravergine, sale grosso e rosmarino appena colto.",
     tag: "Semola · Alta idratazione" },
   { emoji: "🥨", name: "Taralli al Finocchietto",
-    body: "Farina, vino bianco, olio extravergine e semi di finocchietto. Si formano ad anello, si sbollentano in acqua e poi si cuociono in forno fino a doratura: fragranti e leggeri.",
+    body: "Farina, vino bianco, extravergine e semi di finocchietto: si formano ad anello, si sbollentano un istante in acqua e poi si dorano in forno. Fragranti, leggeri e irresistibili, perfetti con un bicchiere di vino.",
     tag: "Sbollentati · Croccanti" },
   { emoji: "🍪", name: "Strazzate Materane",
-    body: "Dolcetti tipici di Matera con mandorle tostate, cacao, caffè e un goccio di liquore. Rustici e irregolari (da qui il nome «strazzate»). Perfetti con il caffè.",
+    body: "Dolcetti rustici di Matera con mandorle tostate, cacao, caffè e un goccio di liquore. Volutamente irregolari — da qui il nome «strazzate» — croccanti fuori e morbidi nel cuore. Nati per accompagnare il caffè.",
     tag: "Dolce · Mandorle" },
 ];
 

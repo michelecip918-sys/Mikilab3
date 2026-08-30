@@ -1,0 +1,28 @@
+{
+  "summary": "Frontend-only testing of the 2 new PianoProduzioneAI features: (1) DAY TAG chip on product rows, (2) SAVED COMBOS 'Le mie combinazioni'. Tested on desktop 1920x900 and mobile 430x900, logged in as admin@mikilab.de, planner reached via localStorage 'mikilab_pending_tool'='pianoai' + nav-tab-maestro. RESULTS — DAY TAG: no chip when day is empty (count 0); after setting capo-product-day-0='lun' via Options and COLLAPSING Options, capo-product-daychip-0 stays VISIBLE with label 'Monday' while the day <select> is not rendered (count 0); clicking the chip re-expands Options and capo-product-day-0 shows value 'lun'; resetting day to 'Qualsiasi/any' removes the chip immediately. Bulk add via capo-add-picker with quick qty/day produced exactly the expected chips (row0 lun -> chip, row1 day='' -> no chip; qty 15/7 correct). On mobile both rows got chips (Wednesday/Saturday), correctly sized (101x26 / 86x26), orange-on-dark, no overflow. COMBOS: capo-combos panel ('MY COMBOS') visible once a row has a recipe; capo-combo-save-open -> capo-combo-name + capo-combo-save; saving shows toast 'Combo saved.', input auto-closes and chip 'Produzione del lunedì · 2' appears; localStorage 'mikilab_combos' contains id/name/items with recipe_id, qty, unit, day, start. Enter key in the name input also saves. APPLY: after removing all rows (0 rows) tapping capo-combo-apply-<id> restored 2 rows with correct recipe labels, qty 15/7 and the day chip; toast 'Added: Produzione del lunedì'; re-applying does NOT duplicate (rows stayed 2); partial apply (1 of 2 rows removed) re-added only the missing recipe (back to 2 rows, 2 chips). DELETE: capo-combo-del-<id> removes the chip and updates localStorage to []; panel disappears when no combos and no recipe rows. PERSISTENCE: after full page reload + re-entering the planner the chip 'Produzione del lunedì · 2' is still present. REGRESSION: capo-product-add adds a row, capo-add-picker bulk add + quick qty/day works, capo-suggest-frequent shows the info toast (no usage history in a fresh browser profile — expected), capo-restore-prev not rendered (no saved previous plan in this session). No JS console errors (only pre-login 401s from guest API calls, expected). Dark #121212/#FF6B00 theme intact.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "PianoProduzioneAI — combos panel", "issues": ["Saving with an EMPTY name is allowed and produces a hardcoded Italian fallback name 'Combinazione' even when the UI language is EN/DE/ES (lib/combos.js line: name || 'Combinazione'). Repeated empty saves create several identical 'Combinazione' chips. Suggest: disable capo-combo-save when the name is blank, or localise the fallback.", "Minor: no duplicate-name guard — saving twice with the same name creates two chips with identical labels (only the internal id differs)."]},
+      {"screen": "Mobile 430px planner (pre-existing)", "issues": ["The floating radio widget (bottom-left) overlaps the 'Suggest from most-used' button text when it sits near the bottom of the viewport — cosmetic, button still clickable after scroll."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: block/validate empty combo names (disable capo-combo-save when input is blank) and localise the 'Combinazione' fallback name in /app/frontend/src/lib/combos.js."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is now ~1887 lines — well over the 700-line guideline; extract the products/combos block into a subcomponent.",
+    "combos.js caps at 20 entries and filters items without recipe_id — good; consider localising the default combo name and de-duplicating by name."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% of the 2 new features (day tag + combos) passed; only 2 cosmetic/i18n nits found"},
+  "seed_data_creation": "Only localStorage 'mikilab_combos' entries created during the run; all were deleted at the end (localStorage = []). No server data changed.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Login via header 'login-btn' then auth-email/auth-password/auth-submit. Set localStorage 'mikilab_newsletter_seen'='1' after load; close intro with intro-close-btn. Planner: localStorage 'mikilab_pending_tool'='pianoai' then click nav-tab-maestro, wait for capo-products. Multi-picker confirm button testid is 'capo-add-picker-done' (NOT -add); quick fields are capo-add-picker-qty-<recipeId> / -day-<recipeId>; the Favorites pseudo-category is the first card. Row remove X: '[data-testid=\"capo-products\"] > div > div:first-child > button'. capo-product-day-<i> only renders when Options is expanded; the new day chip capo-product-daychip-<i> renders only when p.day is non-empty.",
+  "rca_of_the_issue": "No functional defect found. The only real (minor) issue is in /app/frontend/src/lib/combos.js where the fallback combo name is the hardcoded Italian string 'Combinazione' and there is no empty-name validation in the UI."
+}

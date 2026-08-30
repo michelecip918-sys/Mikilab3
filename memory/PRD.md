@@ -2535,3 +2535,10 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - Riscritto il paragrafo introduttivo del **Miglioratore Naturale** in `components/MiglioratoreDetail.jsx` (scheda aperta dall'asterisco `*` in Ricette Custodite e RecipeList): da commento personale a testo professionale/evocativo, in IT/DE/EN/ES/FR/FA. Ingredienti e dosaggio invariati.
 - Rivista la **story del Pane di Matera IGP** in `sections/RicetteCustodite.jsx` (id "matera") con tono più curato, in tutte le lingue.
 - Solo modifiche di testo; compila senza errori. NB: richiede REDEPLOY per riflettersi su mikilab.de.
+
+## v-fork.105 (2026-06) — Giorno visibile + Combinazioni salvate + testo Sapori di Casa
+- **Giorno visibile (Laboratorio)**: ogni riga prodotto con un giorno assegnato mostra un chip arancione cliccabile (`capo-product-daychip-<i>`) sempre visibile, senza aprire "Opzioni"; il tap espande le Opzioni. Nessun chip se il giorno è "Qualsiasi".
+- **Combinazioni salvate**: nuovo pannello "Le mie combinazioni" (`capo-combos`) in PianoProduzioneAI. L'utente salva il set corrente di ricette+quantità con un nome (`capo-combo-name`/`capo-combo-save`, salvataggio con Enter, disabilitato se nome vuoto) e lo riaggiunge con un tap (`capo-combo-apply-<id>`, senza duplicati) o lo elimina (`capo-combo-del-<id>`). Persistono in localStorage `mikilab_combos` (cap 20). Lib: `lib/combos.js`.
+- **Testo Sapori di Casa**: riscritte con tono più curato/evocativo le schede prodotto in `sections/SaporiCasa.jsx` (Pane di Matera casalingo, Focaccia Barese, Focaccia Materana, Taralli al Finocchietto, Strazzate Materane).
+- Test iteration_129: frontend 100% sulle 2 feature interattive (chip giorno visibile/collassato, save/apply/delete/persist combos, nessun duplicato, regressione toolbar). Fix applicato: salvataggio combo bloccato con nome vuoto. Tema nero/arancione intatto.
+- NB: richiede REDEPLOY per riflettersi su mikilab.de.
