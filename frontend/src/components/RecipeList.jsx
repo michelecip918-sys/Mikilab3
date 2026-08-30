@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Crown, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart } from "lucide-react";
 import { recipesApi, siteSettingsApi } from "@/lib/api";
 import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -197,9 +197,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     const target = recipes.find((x) => /migliorator|backmittel/i.test(x.name || ""));
     if (target) setViewing(target);
   };
-
-  // "Assaggio": apre le opzioni di acquisto (singola / panettoni / tutte) o abbonamento.
-  const handleUnlock = () => {};
 
   return (
     <div className="pb-28">
@@ -537,7 +534,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               scaleVal={scale[viewing.id]}
               onScaleChange={(v) => setScale((s) => ({ ...s, [viewing.id]: v }))}
               onImprover={openImprover}
-              onUnlock={handleUnlock}
               onEdit={() => { setEditing(viewing); setDialogOpen(true); setViewing(null); }}
               onDuplicate={() => handleDuplicate(viewing)}
               onScaleAction={() => setScaling(viewing)}
@@ -592,7 +588,7 @@ function procWithImprover(text, onImprover) {
 }
 
 
-function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onUnlock, onEdit, onDuplicate, onScaleAction, onDelete }) {
+function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
   const { lang } = useLang();
   const de = lang === "de";
   const { isFav, toggle: toggleFav } = useFavRecipes();

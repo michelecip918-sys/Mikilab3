@@ -20,10 +20,12 @@ export default function StreakFlame() {
       // Celebrazione al superamento di un traguardo (confronto con l'ultimo visto).
       try {
         const key = `mikilab-streak-seen-${user.user_id || user.email}`;
-        const prev = Number(localStorage.getItem(key) || 0);
+        const raw = localStorage.getItem(key);
+        const prev = raw === null ? null : Number(raw);
         const reached = (r.milestones || []).filter((m) => m.reached).map((m) => m.days);
         const top = reached.length ? Math.max(...reached) : 0;
-        if (top > prev && top > 0) {
+        // Festeggia solo un traguardo appena superato (non al primo caricamento / nuovo dispositivo).
+        if (prev !== null && top > prev && top > 0) {
           toast.success(mkTri(lang)(`🔥 Traguardo: ${top} giorni di fila! Sei un vero fornaio.`, `🔥 Meilenstein: ${top} Tage in Folge!`, `🔥 Milestone: ${top}-day streak! You're a real baker.`, `🔥 ¡Hito: ${top} días seguidos!`, `🔥 Palier : ${top} jours d'affilée !`, `🔥 نقطه‌عطف: ${top} روز پیاپی!`));
         }
         localStorage.setItem(key, String(top));

@@ -6397,10 +6397,17 @@ async def greetings_check(user: dict = Depends(current_user)):
     if not kind:
         return {"posted": False}
 
+    # Guardia atomica: rivendica il giorno prima di pubblicare (evita doppioni sotto chiamate concorrenti).
+    claim = await db.users.update_one(
+        {"user_id": user["user_id"], "last_greeting_date": {"$ne": tkey}},
+        {"$set": {"last_greeting_date": tkey}})
+    if claim.modified_count == 0:
+        return {"posted": False, "reason": "already"}
+
     tr = await _translate_text_multi(text)
     doc = {
         "id": str(uuid.uuid4()),
-        "author_id": "mikila",
+        "author_id": "mikilab",
         "author_name": "MikiLab",
         "author_avatar": "/michele-avatar.jpg",
         "category": "auguri",
@@ -6410,7 +6417,6 @@ async def greetings_check(user: dict = Depends(current_user)):
         "created_at": now_iso(), "likes": [], "comments": [],
     }
     await db.community_posts.insert_one(doc)
-    await db.users.update_one({"user_id": user["user_id"]}, {"$set": {"last_greeting_date": tkey}})
     return {"posted": True, "kind": kind}
 
 
