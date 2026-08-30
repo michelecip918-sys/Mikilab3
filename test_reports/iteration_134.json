@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only testing (desktop 1920x900 + mobile 390x844) of the 4 Lab additions: (1) coach tour once-only, (2) pinned tools, (3) tools-directory search, (4) Saved Combos inside the Weekly Plan, plus regressions (4-group accordion, drawer lab-menu-*, CAPO planner combos). Logged in as admin@mikilab.de. RESULTS: pinned tools, search, weekly-plan combos and all regressions PASS with zero console errors. Coach once-only PASSES on the normal Lab landing entry, but a real edge case was found: when the Lab is opened via a deep link (localStorage 'mikilab_pending_tool', i.e. every Home/SiteMenu quick-link such as 'Weekly Plan'), the LabTour instance on the landing mounts and immediately writes 'mikilab_lab_tour_v2'='1' but is unmounted before painting, so a brand-new user silently loses the Mohammadreza tour forever (verified with a MutationObserver: the [data-testid=lab-tour] node NEVER enters the DOM while the key becomes '1' at ~500ms).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "LabTour / PianoProduzioneAI", "issue": "Tour is marked as seen on mount (storageKey set in the first effect) even when the component unmounts before painting. Entering the Lab with 'mikilab_pending_tool' set (Home quick-links / SiteMenu deep links) burns the tour: card never renders, key becomes '1' -> tour never shown again. Suggested fix: set the key when the card actually paints (e.g. in the step>=0 effect / after first frame) or only after the landing instance survives, so the deep-link mount does not consume it.", "selector": "[data-testid=\"lab-tour\"], localStorage mikilab_lab_tour_v2", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Weekly Plan / CAPO rows (code review)", "issues": ["Residual bluish accents in code deviate from the strict black/orange palette: dark:text-[#8FB0C2] and dark:text-[#a9d2ec] on dose chips/inputs, hover:bg-[#5c788b] on weekly-shopping-shop-btn, text-[#9fd0ee] in the new-week banner. Not bright blue, low visual impact, but not strictly theme-compliant."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix the once-only coach so the tour is not consumed when the Lab landing is mounted only for a frame (deep-link via mikilab_pending_tool): mark the key on first paint/interaction instead of on mount."
+  ],
+  "critical_code_review_comments": [
+    "LabTour.jsx line ~24: localStorage is written in the same effect that sets step=0; if the parent unmounts in the same commit (Maestro reads mikilab_pending_tool on mount and switches view) the card never paints yet is flagged as seen.",
+    "ToolsDirectory.jsx: search filters only the localized name (name(tl)) - querying 'costi' with UI language EN returns 'No tool found'. Consider matching all 4 locale names/aliases.",
+    "pinnedTools.js: fine (cap 12, safe JSON parse). Pins are device-local only (not account-synced) - acceptable but worth noting vs combos which sync."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "92% (11/12 checks pass; 1 coach edge case)"},
+  "seed_data_creation": "Created and deleted combos 'TEST_Settimana Tipo' (Weekly Plan) and 'TEST_Capo Combo' (CAPO planner). Pinned tools (metodo/foodcost/haccp) pinned then unpinned; localStorage mikilab_pinned_tools left empty. Weekly plan was never saved to the backend (no weekly-save-btn click), so the stored plan is untouched.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Verified this iteration: (a) coach tour appears once on Lab landing (nav-tab-maestro without pending tool), key mikilab_lab_tour_v2 set to '1' immediately, no reappearance after reload; stepping through lab-tour-next closes it. (b) tools-dir-search filters ('hac' -> Day Close (HACCP) + HACCP Log), no-match message OK, tools-dir-search-clear restores the 4-group accordion. (c) tools-dir-pin-<id> pins metodo/foodcost/haccp -> tools-dir-pinned section on top, star filled orange (fill-[#ff6b00]), persists in localStorage across reload, tapping a pinned tile opens the tool, re-click unpins. Works on desktop and 390px mobile. (d) Weekly Plan: capo-combos panel renders, save 'TEST_Settimana Tipo' -> chip + capo-combo-synced icon; clearing the week and tapping the chip re-adds both rows on Monday/Tuesday with 10 pcs and day totals; capo-combo-del removes it. (e) Regressions OK: 4 accordion groups, drawer lab-menu-kind-* with 44 tools opening correctly, CAPO planner combos save/apply/delete. capo-product-daychip only renders when the product has a day set (expected). No console errors in any run.",
+  "rca_of_the_issue": "Maestro.jsx reads localStorage 'mikilab_pending_tool' in a mount effect and calls setTool(id) synchronously, so the landing tree (which renders <PianoProduzioneAI onOpenTool> -> <LabTour>) is unmounted in the same commit cycle. LabTour's mount effect has already executed localStorage.setItem(storageKey,'1') together with setStep(0), so the tour is flagged as seen without ever being painted. Reproduce: clear mikilab_lab_tour_v2, set mikilab_pending_tool='pianoai' (or use any Home quick-link), click nav-tab-maestro -> MutationObserver shows lab-tour never inserted, key = '1'."
+}

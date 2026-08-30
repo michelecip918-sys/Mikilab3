@@ -5,7 +5,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { getCombos, saveCombo, deleteCombo, COMBOS_EVENT } from "@/lib/combos";
 
 // Pannello "Le mie combinazioni": salva un set di ricette+quantità e lo riaggiunge con un tap.
-export default function CapoCombos({ products, setProducts, lang }) {
+export default function CapoCombos({ products, setProducts, lang, getSaveItems, onApply }) {
   const tri3 = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [combos, setCombos] = useState(() => getCombos());
   const [name, setName] = useState("");
@@ -17,17 +17,19 @@ export default function CapoCombos({ products, setProducts, lang }) {
     return () => window.removeEventListener(COMBOS_EVENT, on);
   }, []);
 
-  const hasRecipes = products.some((p) => p.recipe_id);
+  const saveSource = getSaveItems ? getSaveItems() : (products || []);
+  const hasRecipes = saveSource.some((p) => p.recipe_id);
   if (combos.length === 0 && !hasRecipes) return null;
 
   const doSave = () => {
     if (!name.trim()) return;
-    setCombos(saveCombo(name, products));
+    setCombos(saveCombo(name, saveSource));
     setName(""); setSaveOpen(false);
     toast.success(tri3("Combinazione salvata.", "Kombination gespeichert.", "Combo saved.", "Combinación guardada."));
   };
   const apply = (combo) => {
-    setProducts((l) => {
+    if (onApply) { onApply(combo.items); }
+    else setProducts((l) => {
       const base = l.filter((p) => p.recipe_id);
       const existing = new Set(base.map((p) => p.recipe_id));
       const toAdd = combo.items.filter((it) => !existing.has(it.recipe_id)).map((it) => ({ ...it, _opts: false }));

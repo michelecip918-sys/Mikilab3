@@ -114,7 +114,8 @@ export default function LabOnboarding() {
 
   // Apri automaticamente al primo ingresso, o su richiesta via evento.
   useEffect(() => {
-    if (!localStorage.getItem(DONE_KEY)) { setShow(true); setI(0); }
+    // Apri SOLO al primo ingresso: segna subito come visto (un reload non lo ripropone).
+    if (!localStorage.getItem(DONE_KEY)) { setShow(true); setI(0); try { localStorage.setItem(DONE_KEY, "1"); } catch { /* */ } }
     const onOpen = () => { setShow(true); setI(0); };
     window.addEventListener("mikilab-lab-tour", onOpen);
     return () => window.removeEventListener("mikilab-lab-tour", onOpen);

@@ -1,0 +1,23 @@
+{
+  "summary": "Frontend-only re-test (desktop 1920x800) of the once-only Lab coach fix (LabTour storageKey 'mikilab_lab_tour_v2'), run both as guest and logged in as admin@mikilab.de. ALL 4 scenarios PASS. (1) Deep-link no longer burns the tour: with mikilab_lab_tour_v2 removed and mikilab_pending_tool='pianoai', clicking nav-tab-maestro paints [data-testid=lab-tour] (MutationObserver: node inserted at ~840ms) with the Mohammadreza card + Skip/Next, and the key becomes '1' only ~560ms AFTER the card was on screen (~1400ms), i.e. on the post-paint timer, not on mount. (2) Once-only on reload: with key='1', reload + return to the Lab/planner -> tour count 0. (3) Fresh landing entry (key removed, no pending_tool) -> tour appears once; reload -> does not reappear. (4) Regressions: stepping lab-tour-next then lab-tour-skip-2 closes the tour cleanly; tools-dir-tool-generatore opens the Recipe Generator with 'Back to tools'; theme (black/orange) intact; zero console/page errors (only expected 401s for auth-gated endpoints while browsing as guest).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "LabTour.jsx: separate effect writes storageKey via a 500ms timeout cleared on unmount - correct fix; note the tour is marked seen after 500ms even if the user never interacts (acceptable, matches 'shown once' intent).",
+    "Residual note from iteration_134 (unfixed, low prio): ToolsDirectory search matches only the localized name, so cross-language queries return 'No tool found'."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% (7/7 checks)"},
+  "seed_data_creation": "None. Only localStorage keys touched (mikilab_newsletter_seen='1', mikilab_lab_tour_v2, mikilab_pending_tool).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Once-only Lab coach fix verified fixed (iteration_134 bug closed). Measurement technique that works: inject a MutationObserver for [data-testid=lab-tour] plus a 25ms interval polling localStorage before clicking nav-tab-maestro; compare insert time vs key-set time (expect key ~500ms later). Login flow: header 'Sign in' button opens the auth screen; fill email+password and press Enter.",
+  "rca_of_the_issue": "Previously the storageKey was written in the same effect that set step=0, so a transient mount (Maestro reading mikilab_pending_tool and switching view in the same commit) consumed the tour. The fix defers the write to a 500ms timeout in a dedicated effect (cleared on unmount), confirmed by the observed 840ms paint / 1400ms key-set gap."
+}

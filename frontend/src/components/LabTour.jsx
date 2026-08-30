@@ -24,6 +24,14 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [force]);
 
+  // Segna "già visto" solo quando il tour resta davvero a schermo per un attimo:
+  // i mount transitori (deep-link con pending_tool) si smontano prima e NON lo consumano.
+  useEffect(() => {
+    if (step < 0 || !storageKey) return;
+    const t = setTimeout(() => { try { localStorage.setItem(storageKey, "1"); } catch { /* */ } }, 500);
+    return () => clearTimeout(t);
+  }, [step, storageKey]);
+
   useEffect(() => {
     if (step < 0) return;
     clearHighlights();

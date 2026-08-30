@@ -7,6 +7,7 @@ import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
 import { rLoc, ingLoc, recipeTitle } from "@/lib/loc";
 import RecipeOptions from "@/components/RecipeOptions";
 import CategoryRecipePicker from "@/components/CategoryRecipePicker";
+import CapoCombos from "@/components/CapoCombos";
 import { getSalesPoints } from "@/lib/salesPoints";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
@@ -131,6 +132,18 @@ export default function WeeklyPlan() {
 
   const updateItem = (id, patch) => setItems((it) => it.map((x) => x.id === id ? { ...x, ...patch } : x));
   const removeItem = (id) => setItems((it) => it.filter((x) => x.id !== id));
+
+  // Combinazioni salvate → Piano Settimanale.
+  const weeklyComboItems = () => items.map((it) => ({ recipe_id: it.recipe_id, name: it.recipe_name, qty: String(it.pieces || ""), unit: "pezzi", gpp: "", day: it.day || "", start: false }));
+  const applyComboToWeek = (comboItems) => {
+    const groups = {};
+    (comboItems || []).forEach((it) => {
+      if (!it.recipe_id) return;
+      const day = DAYS.some((d) => d.id === it.day) ? it.day : "lun";
+      (groups[day] = groups[day] || []).push({ id: it.recipe_id, qty: it.qty });
+    });
+    Object.entries(groups).forEach(([day, entries]) => addRecipesToDay(day, entries));
+  };
 
   // Items "puliti" per il salvataggio (piano corrente e archivio).
   const cleanItems = () => items.map(({ id, day, recipe_id, recipe_name, pieces, grams_per_piece, to_proof, to_fridge, to_freezer, sale_point }) => ({
@@ -587,6 +600,10 @@ export default function WeeklyPlan() {
               : tri("Ricordati di salvare il piano prima di sabato: potrai riusarlo la settimana prossima.", "Denk daran, den Plan vor Samstag zu speichern: nächste Woche wiederverwendbar.", "Remember to save the plan before Saturday: you can reuse it next week.")}
           </p>
         </div>
+      )}
+
+      {loaded && recipes.length > 0 && (
+        <CapoCombos lang={lang} getSaveItems={weeklyComboItems} onApply={applyComboToWeek} />
       )}
 
       <div className="mt-5 space-y-4">
