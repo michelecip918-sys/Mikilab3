@@ -4,7 +4,7 @@ import { X, Home as HomeIcon, BookOpen, Wrench, GraduationCap, Users, Trophy, Me
   Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
-import { TOOLS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
+import { TOOLS, TOOL_CATS, CAT_RELATED } from "@/sections/PianoProduzioneAI";
 import { mkTri } from "@/i18n/triMaps";
 
 const FAV_KEY = "mikilab_menu_favs";
@@ -148,6 +148,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                   {TOOL_CATS.map((c) => {
                     const items = TOOLS.filter((tl) => tl.cat === c.key);
                     if (items.length === 0) return null;
+                    const related = (CAT_RELATED[c.key] || []).map((id) => byId[id]).filter((tl) => tl && tl.cat !== c.key);
                     return (
                       <div key={c.key} data-testid={`site-menu-cat-${c.key}`}>
                         <div className="flex items-center gap-2 mb-1 pb-1 border-b" style={{ borderColor: `${c.color}40` }}>
@@ -155,6 +156,12 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                           <span className="font-display text-sm font-bold" style={{ color: c.color }}>{tri(c.it, c.de, c.en, c.es)}</span>
                         </div>
                         <div className="grid grid-cols-1 gap-1.5">{items.map((tl) => <ToolRow key={tl.id} tl={tl} />)}</div>
+                        {related.length > 0 && (
+                          <div className="mt-1.5" data-testid={`site-menu-related-${c.key}`}>
+                            <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1 pl-1">{tri("Strumenti collegati", "Verknüpfte Werkzeuge", "Related tools", "Herramientas vinculadas")}</p>
+                            <div className="grid grid-cols-1 gap-1.5">{related.map((tl) => <ToolRow key={`${c.key}-${tl.id}`} tl={tl} />)}</div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}

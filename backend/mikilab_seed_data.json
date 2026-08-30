@@ -1426,7 +1426,7 @@
         "name_fa": "مخمر آبجو (Hefe)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina W330 + 00 + uova",
     "flour_type_de": "Mehl W330 + 00 + Eier",
     "flour_type_en": "Flour W330 + 00 + eggs",
@@ -1462,7 +1462,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:29.016332+00:00",
-    "water_grams": null,
+    "water_grams": 540.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine W330 + 00 + œufs",
@@ -1552,7 +1552,7 @@
         "name_fa": "مخمر آبجو (Hefe)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina W330 + 00 + uova",
     "flour_type_de": "Mehl W330 + 00 + Eier",
     "flour_type_en": "Flour W330 + 00 + eggs",
@@ -1588,7 +1588,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:29.017223+00:00",
-    "water_grams": null,
+    "water_grams": 540.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine W330 + 00 + œufs",
@@ -1678,7 +1678,7 @@
         "name_fa": "مخمر آبجو (Hefe)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina W330 + 00 + uova",
     "flour_type_de": "Mehl W330 + 00 + Eier",
     "flour_type_en": "Flour W330 + 00 + eggs",
@@ -1714,7 +1714,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:29.018479+00:00",
-    "water_grams": null,
+    "water_grams": 530.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine W330 + 00 + œufs",
@@ -1813,7 +1813,7 @@
         "name_fa": "مخمر آبجو (Hefe)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina W330 + 00 + uova",
     "flour_type_de": "Mehl W330 + 00 + Eier",
     "flour_type_en": "Flour W330 + 00 + eggs",
@@ -1849,7 +1849,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:29.019605+00:00",
-    "water_grams": null,
+    "water_grams": 530.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine W330 + 00 + œufs",
@@ -5939,7 +5939,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina tipo 1 W280",
     "flour_type_de": "Mehl Type 1 W280",
     "flour_type_en": "Type 1 flour W280",
@@ -5975,7 +5975,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.951701+00:00",
-    "water_grams": null,
+    "water_grams": 740.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine type 1 W280",
@@ -6151,7 +6151,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina tipo 1 W280",
     "flour_type_de": "Mehl Type 1 W280",
     "flour_type_en": "Type 1 flour W280",
@@ -6187,7 +6187,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.954651+00:00",
-    "water_grams": null,
+    "water_grams": 680.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine type 1 W280",
@@ -6250,7 +6250,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina tipo 1 W280",
     "flour_type_de": "Mehl Type 1 W280",
     "flour_type_en": "Type 1 flour W280",
@@ -6286,7 +6286,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.955541+00:00",
-    "water_grams": null,
+    "water_grams": 750.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine type 1 W280",
@@ -6349,7 +6349,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina tipo 1 W280",
     "flour_type_de": "Mehl Type 1 W280",
     "flour_type_en": "Type 1 flour W280",
@@ -6385,7 +6385,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.956842+00:00",
-    "water_grams": null,
+    "water_grams": 700.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine type 1 W280",
@@ -6448,7 +6448,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina tipo 1 W280",
     "flour_type_de": "Mehl Type 1 W280",
     "flour_type_en": "Type 1 flour W280",
@@ -6484,7 +6484,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.957985+00:00",
-    "water_grams": null,
+    "water_grams": 720.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine type 1 W280",
@@ -6538,7 +6538,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina tipo 1 W280",
     "flour_type_de": "Mehl Type 1 W280",
     "flour_type_en": "Type 1 flour W280",
@@ -6574,7 +6574,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.959404+00:00",
-    "water_grams": null,
+    "water_grams": 700.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine type 1 W280",
@@ -6698,7 +6698,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina tipo 1 W280",
     "flour_type_de": "Mehl Type 1 W280",
     "flour_type_en": "Type 1 flour W280",
@@ -6734,7 +6734,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.962084+00:00",
-    "water_grams": null,
+    "water_grams": 700.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine type 1 W280",
@@ -9957,7 +9957,7 @@
         "name_fa": "Miglioratore Naturale Pro (۲٪ از وزن آرد)"
       }
     ],
-    "flour_grams": null,
+    "flour_grams": 1000.0,
     "flour_type": "Farina 00 W260",
     "flour_type_de": "Mehl 00 W260",
     "flour_type_en": "00 flour W260",
@@ -9993,7 +9993,7 @@
     "salt_grams": null,
     "sourdough_grams": null,
     "updated_at": "2026-08-28T17:51:28.988237+00:00",
-    "water_grams": null,
+    "water_grams": 680.0,
     "water_temp_c": null,
     "work_phases": null,
     "flour_type_fr": "Farine 00 W260",

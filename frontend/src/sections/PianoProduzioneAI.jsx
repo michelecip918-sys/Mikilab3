@@ -197,6 +197,12 @@ export const TOOL_CATS = [
   { key: "coldchain", Icon: Building2, color: "#8C6B4A", it: "Gestione Attività & Cold Chain", de: "Betrieb & Kühlkette", en: "Business & Cold Chain", es: "Gestión y Cadena de Frío" },
 ];
 
+// Strumenti ESISTENTI collegati alle aree Pizzeria/Pasticceria (non isolate).
+export const CAT_RELATED = {
+  pizzeria: ["metodo", "sequenze", "acqua", "stampi", "convlievito", "twin", "foodcost", "energia"],
+  pasticceria: ["metodo", "sequenze", "stampi", "convlievito", "bilancia", "foodcost"],
+};
+
 // Taglio FUNZIONALE (semplice): cosa GENERA vs GESTIONE vs REGISTRI vs solo INFO.
 export const TOOL_KINDS = [
   { key: "genera", Icon: Sparkles, color: "#ff6b00", it: "Genera & Calcola", de: "Erzeugen & Rechnen", en: "Generate & Calculate", es: "Genera y Calcula", sub_it: "Ti danno un risultato pronto", sub_de: "Liefern ein fertiges Ergebnis", sub_en: "Give you a ready result", sub_es: "Te dan un resultado listo" },

@@ -174,8 +174,8 @@ export default function Maestro() {
         {tool === "timelapse" && <TimeLapseTracker />}
         {tool === "bancalievito" && <BancaLievito />}
         {tool === "cantiere" && <CantiereRicetta />}
-        {tool === "labpizzeria" && <LabPizzeria />}
-        {tool === "labpasticceria" && <LabPasticceria />}
+        {tool === "labpizzeria" && <LabPizzeria onOpenTool={openTool} />}
+        {tool === "labpasticceria" && <LabPasticceria onOpenTool={openTool} />}
         {tool === "custodite" && <RicetteCustodite />}
         {tool === "manisporche" && <ManiSporche />}
         {tool === "suono" && <SoundDiagnosi />}

@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { ChevronRight, Pizza, FlaskConical, ClipboardList, Grid3x3, Thermometer, CalendarDays, Euro } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import FoodCostBox from "@/components/FoodCostBox";
+import RelatedToolsRow from "@/components/RelatedToolsRow";
 
 const TYPES = {
   napoletana: { it: "Napoletana", hyd: 62, panetto: 260, box: 20 },
@@ -11,7 +12,7 @@ const TYPES = {
 };
 const PREF = { biga: { hyd: 0.45, name: "Biga (45%)" }, poolish: { hyd: 1.0, name: "Poolish (100%)" } };
 
-export default function LabPizzeria({ onBack }) {
+export default function LabPizzeria({ onBack, onOpenTool }) {
   const { lang } = useLang();
   const L = (i, e) => mkTri(lang)(i, e, e, e);
   const num = (v) => Math.round(v).toLocaleString(lang === "it" ? "it" : "en");
@@ -106,6 +107,7 @@ export default function LabPizzeria({ onBack }) {
   return (
     <div className="pb-8" data-testid="lab-pizzeria">
       {onBack && <button data-testid="pizzeria-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
+      <RelatedToolsRow cat="pizzeria" onOpenTool={onOpenTool} />
       <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Pizza className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Laboratorio Pizzeria", "Pizzeria Lab")}</h1>
