@@ -2559,3 +2559,13 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Frontend**: `lib/combos.js` ora ottimistico in locale + sync sull'account (comboApi.list/sync/remove in `lib/api.js`); `hydrateCombos()` chiamato al bootstrap/login in `App.js` (merge locale↔account); `CapoCombos.jsx` ascolta `COMBOS_EVENT` per re-render. saveCombo/deleteCombo propagano al server; ospite (401) resta solo locale e viene unito al login.
 - Test iteration_132: backend 100% (11/11), frontend 100% — persistenza cross-sessione provata (svuotato localStorage['mikilab_combos'] + reload da loggato → la combo ritorna dal server), delete propagato, fallback ospite, nessun duplicato. Tema nero/arancione intatto.
 - Backlog pulizia Laboratorio: COMPLETATO. NB: richiede REDEPLOY per mikilab.de.
+
+## v-fork.109 (2026-06) — Indicatore ☁ sincronizzata + Laboratorio riorganizzato per funzione
+- **☁ Combinazioni sincronizzate**: il chip mostra un'icona Cloud (grigio neutro #AEB8BF) quando la combinazione è salvata sull'account. `lib/combos.js` marca `synced:true` dopo il sync riuscito col server; `CapoCombos.jsx` mostra `capo-combo-synced-<id>`.
+- **Laboratorio per funzione (4 gruppi)**: aggiunto campo `kind` a ogni TOOL + export `TOOL_KINDS` (genera / gestione / registri / info). NON tocca routing/openTool né `cat`/`TOOL_CATS` (che restano per SiteMenu).
+  - Menù "Tutti gli strumenti" ora raggruppa per `kind` (`lab-menu-kind-*`).
+  - Nuovo componente `components/ToolsDirectory.jsx`: directory in-pagina ad accordion (4 sezioni apribili, `maestro-tools-directory`, `tools-dir-kind-*`, `tools-dir-toggle-*`, `tools-dir-tool-*`), inserito in Maestro dopo il generatore.
+  - Aggiunto tool `haccp` a TOOLS (era instradato ma non elencato).
+  - Colori gruppi on-brand (arancio/ambra/marrone), nessun accent blu.
+- Test iteration_133: frontend 100% (directory 4 gruppi, accordion, apertura tool + back, drawer per kind, icona ☁ immediata e dopo reload, regressione SiteMenu/quick-tiles, tema). Nota design pre-esistente: fumetto onboarding Mohammadreza riappare a ogni reload (dismissibile, non blocca).
+- NB: richiede REDEPLOY per mikilab.de.
