@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy, Cake } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy, Cake, Wheat, Pizza, Cookie, LifeBuoy } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -23,6 +23,10 @@ const CATS = [
   { id: "ricetta", Icon: BookOpen, color: "#ff6b00" },
   { id: "domanda", Icon: HelpCircle, color: "#ff6b00" },
   { id: "evento", Icon: CalendarDays, color: "#2e8b6f" },
+  { id: "pane", Icon: Wheat, color: "#E0A458" },
+  { id: "pizza", Icon: Pizza, color: "#ff6b00" },
+  { id: "dolci", Icon: Cookie, color: "#ff6b00" },
+  { id: "sos", Icon: LifeBuoy, color: "#ff3b5c" },
 ];
 // Categorie mostrate nel feed ma non selezionabili dall'utente (es. traguardi automatici).
 const FEED_CATS = [...CATS, { id: "traguardo", Icon: Trophy, color: "#ff6b00" }, { id: "auguri", Icon: Cake, color: "#ff6b00" }];
@@ -52,6 +56,10 @@ export default function Community({ onNavigate }) {
     evento: tri("Evento", "Event", "Event", "Evento"),
     traguardo: tri("Traguardo", "Erfolg", "Achievement", "Logro"),
     auguri: tri("Auguri", "Glückwunsch", "Greetings", "Felicidades"),
+    pane: tri("Pane", "Brot", "Bread", "Pan"),
+    pizza: tri("Pizza", "Pizza", "Pizza", "Pizza"),
+    dolci: tri("Dolci", "Süßes", "Sweets", "Dulces"),
+    sos: tri("SOS / Aiuto", "SOS / Hilfe", "SOS / Help", "SOS / Ayuda"),
   }[id] || id);
 
   const [posts, setPosts] = useState([]);

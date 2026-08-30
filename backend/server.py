@@ -5340,7 +5340,7 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
 # ---------------------------------------------------------------------------
 # Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri
 # ---------------------------------------------------------------------------
-COMMUNITY_CATEGORIES = {"consiglio", "foto", "ricetta", "domanda", "idea", "evento", "traguardo"}
+COMMUNITY_CATEGORIES = {"consiglio", "foto", "ricetta", "domanda", "idea", "evento", "traguardo", "auguri", "pane", "pizza", "dolci", "sos"}
 
 
 class CommunityPostReq(BaseModel):

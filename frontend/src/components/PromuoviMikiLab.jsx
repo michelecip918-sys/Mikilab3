@@ -100,6 +100,14 @@ Text: "100% GRATIS 👉 mikilab.de — Folge @michelucano"
 #MikiLab #Brotbacken #Sauerteig #fyp`,
 };
 
+const SEASONAL = [
+  { id: "natale", label: "🎄 Natale", text: "🎄 Quest'anno il panettone lo fai TU! Ricetta passo-passo, lievito madre e la lista «cosa e dove comprare». Tutto gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #lievitomadre #Natale #panetok" },
+  { id: "pasqua", label: "🕊️ Pasqua", text: "🕊️ Colomba di Pasqua fatta in casa, senza paura! Ti guido in ogni passaggio su MikiLab, 100% gratis 👉 " + SITE_URL + "\n#MikiLab #colomba #Pasqua #lievitomadre" },
+  { id: "estate", label: "☀️ Estate", text: "☀️ Estate = focaccia! 20 ricette con olio buono + lista spesa, gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #panetok #estate #homebaking" },
+  { id: "valentino", label: "❤️ S.Valentino", text: "❤️ Conquista chi ami con un dolce fatto a mano. Ricette passo-passo gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentino #dolcidamore #fattoincasa" },
+  { id: "halloween", label: "🎃 Halloween", text: "🎃 Pane alla zucca da paura per Halloween! Ricetta + food cost gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween #panetok #autunno" },
+];
+
 const SOCIALS = [
   { key: "instagram", Icon: Instagram, label: "Instagram", color: "#E1306C" },
   { key: "facebook", Icon: Facebook, label: "Facebook", color: "#1877F2" },
@@ -115,6 +123,8 @@ export default function PromuoviMikiLab() {
   const [copied, setCopied] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
   const [reelCopied, setReelCopied] = useState(false);
+  const [season, setSeason] = useState(SEASONAL[0].id);
+  const [seasonCopied, setSeasonCopied] = useState(false);
   const [variant, setVariant] = useState("bacheca");
   const caps = CAPTIONS[lang] || CAPTIONS.en;
   const caption = caps[variant];
@@ -132,6 +142,11 @@ export default function PromuoviMikiLab() {
   };
   const copyCaption = async () => {
     try { await navigator.clipboard.writeText(caption); setCopied(true); setTimeout(() => setCopied(false), 2000); toast.success(L("Post copiato! Incollalo su Instagram/Facebook", "Beitrag kopiert!", "Post copied! Paste it on Instagram/Facebook", "¡Publicación copiada!", "Post copié !", "پست کپی شد!")); }
+    catch { toast.error("Copy failed"); }
+  };
+  const seasonText = (SEASONAL.find((s) => s.id === season) || SEASONAL[0]).text;
+  const copySeason = async () => {
+    try { await navigator.clipboard.writeText(seasonText); setSeasonCopied(true); setTimeout(() => setSeasonCopied(false), 2000); toast.success(L("Post stagionale copiato!", "Saisonaler Beitrag kopiert!", "Seasonal post copied!", "¡Copiado!", "Copié !", "کپی شد!")); }
     catch { toast.error("Copy failed"); }
   };
   const reelScript = REEL_SCRIPT[lang] || REEL_SCRIPT.en;
@@ -172,6 +187,23 @@ export default function PromuoviMikiLab() {
           <button data-testid="promuovi-copy-caption" onClick={copyCaption}
             className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
             {copied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#ff6b00]" />} {L("Copia il post", "Beitrag kopieren", "Copy caption", "Copiar", "Copier", "کپی کپشن")}
+          </button>
+        </div>
+
+        {/* Post stagionali */}
+        <div className="rounded-2xl bg-[#121212] border border-[#2e2e2e] p-3.5">
+          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2">{L("Post stagionali pronti", "Saisonale Beiträge", "Seasonal posts", "Publicaciones de temporada", "Posts saisonniers", "پست‌های فصلی")}</p>
+          <div className="flex flex-wrap gap-1.5 mb-2" data-testid="promuovi-seasons">
+            {SEASONAL.map((s) => (
+              <button key={s.id} data-testid={`promuovi-season-${s.id}`} onClick={() => setSeason(s.id)}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${season === s.id ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#AEB8BF] border border-[#2e2e2e]"}`}>
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <p data-testid="promuovi-season-text" className="text-[12.5px] text-[#E0D5CF] leading-snug whitespace-pre-line mb-2.5">{seasonText}</p>
+          <button data-testid="promuovi-season-copy" onClick={copySeason} className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+            {seasonCopied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#ff6b00]" />} {L("Copia il post", "Kopieren", "Copy", "Copiar", "Copier", "کپی")}
           </button>
         </div>
 
