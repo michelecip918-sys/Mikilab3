@@ -202,6 +202,15 @@ export default function PromuoviMikiLab() {
                 <a data-testid="promuovi-cover-colomba" href={`${process.env.PUBLIC_URL}/reel-cover-colomba.png`} download="mikilab-colomba.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
                   <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Pasqua · Colomba", "Ostern", "Easter", "Pascua", "Pâques", "عید پاک")}
                 </a>
+                <a data-testid="promuovi-cover-estate" href={`${process.env.PUBLIC_URL}/reel-cover-estate.png`} download="mikilab-estate.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Estate · Focacce", "Sommer", "Summer", "Verano", "Été", "تابستان")}
+                </a>
+                <a data-testid="promuovi-cover-valentino" href={`${process.env.PUBLIC_URL}/reel-cover-valentino.png`} download="mikilab-valentino.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("San Valentino", "Valentinstag", "Valentine's", "San Valentín", "Saint-Valentin", "ولنتاین")}
+                </a>
+                <a data-testid="promuovi-cover-halloween" href={`${process.env.PUBLIC_URL}/reel-cover-halloween.png`} download="mikilab-halloween.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> Halloween
+                </a>
               </div>
             </div>
           )}
