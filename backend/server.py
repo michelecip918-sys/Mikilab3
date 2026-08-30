@@ -6264,6 +6264,9 @@ async def wisdom_reject(pid: str, user: dict = Depends(require_admin)):
 # ---------------------------------------------------------------------------
 # Streak del Fornaio — giorni consecutivi in cui l'utente cuoce o impara
 # ---------------------------------------------------------------------------
+STREAK_MILESTONES = [3, 7, 14, 30, 60, 100]
+
+
 async def _touch_streak(user_id: str):
     """Registra un'attività (cuoce/impara) di oggi e aggiorna lo streak. Idempotente per giorno."""
     from datetime import date, timedelta
@@ -6278,7 +6281,11 @@ async def _touch_streak(user_id: str):
     cur = int(u.get("streak_current") or 0)
     cur = cur + 1 if last == yest else 1
     best = max(int(u.get("streak_best") or 0), cur)
-    await db.users.update_one({"user_id": user_id}, {"$set": {"activity_last": today, "streak_current": cur, "streak_best": best}})
+    upd = {"$set": {"activity_last": today, "streak_current": cur, "streak_best": best}}
+    earned = [f"streak_{m}" for m in STREAK_MILESTONES if cur >= m]
+    if earned:
+        upd["$addToSet"] = {"badges": {"$each": earned}}
+    await db.users.update_one({"user_id": user_id}, upd)
 
 
 @api_router.get("/streak")
@@ -6292,7 +6299,50 @@ async def get_streak(user: dict = Depends(current_user)):
     # Se l'ultima attività non è oggi né ieri, lo streak è interrotto (mostra 0 finché non riprende).
     if last not in (today, yest):
         cur = 0
-    return {"current": cur, "best": int((u or {}).get("streak_best") or 0), "active_today": last == today}
+    best = int((u or {}).get("streak_best") or 0)
+    nxt = next((m for m in STREAK_MILESTONES if m > cur), None)
+    return {"current": cur, "best": best, "active_today": last == today,
+            "milestones": [{"days": m, "reached": cur >= m} for m in STREAK_MILESTONES],
+            "next": nxt}
+
+
+@api_router.get("/hall-of-fame")
+async def hall_of_fame():
+    """Classifica mensile dei fornai: punteggio = voti ricevuti sui post del mese + n° post."""
+    from datetime import date
+    today = date.today()
+    prefix = f"{today.year:04d}-{today.month:02d}"  # ISO created_at inizia con YYYY-MM
+    docs = await db.community_posts.find(
+        {"is_deleted": {"$ne": True}, "created_at": {"$regex": f"^{prefix}"}},
+        {"_id": 0, "author_id": 1, "author_name": 1, "author_avatar": 1, "likes": 1}).to_list(3000)
+    agg = {}
+    for d in docs:
+        aid = d.get("author_id")
+        if not aid or aid == "mikila":
+            continue
+        a = agg.setdefault(aid, {"user_id": aid, "name": d.get("author_name") or "Fornaio",
+                                 "picture": d.get("author_avatar", ""), "likes": 0, "posts": 0})
+        a["likes"] += len(d.get("likes") or [])
+        a["posts"] += 1
+    rows = list(agg.values())
+    for r in rows:
+        r["score"] = r["likes"] * 2 + r["posts"]
+    rows.sort(key=lambda r: (-r["score"], r["name"].lower()))
+    rows = rows[:10]
+    ids = [r["user_id"] for r in rows]
+    if ids:
+        us = await db.users.find({"user_id": {"$in": ids}}, {"_id": 0, "user_id": 1, "picture": 1, "badges": 1, "streak_best": 1}).to_list(100)
+        umap = {u["user_id"]: u for u in us}
+        for r in rows:
+            uu = umap.get(r["user_id"], {})
+            if uu.get("picture"):
+                r["picture"] = uu["picture"]
+            r["streak_best"] = int(uu.get("streak_best") or 0)
+            r["champion"] = "bakealong_champion" in (uu.get("badges") or [])
+    for i, r in enumerate(rows):
+        r["rank"] = i + 1
+    label = today.strftime("%Y-%m")
+    return {"month": label, "leaders": rows}
 
 
 @api_router.post("/activity/ping")

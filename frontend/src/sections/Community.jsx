@@ -5,6 +5,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
 import { toast } from "sonner";
 import AvatarBubbles from "@/components/AvatarBubbles";
+import HallOfFame from "@/components/HallOfFame";
 import SectionHero from "@/components/SectionHero";
 import Marketplace from "@/sections/Marketplace";
 import { marketNewCount, markMarketSeen } from "@/lib/market";
@@ -275,6 +276,8 @@ export default function Community({ onNavigate }) {
           </button>
         </div>
       </div>
+
+      <HallOfFame />
 
       {/* Filtri */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="community-filters">

@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend-only testing of the 3 new gamification pieces (streak milestones on Home, Sfida Lampo voting in Lab, monthly Hall of Fame on Social) at 430px mobile viewport on the preview URL, plus regressions. All three features work end-to-end. NOTE: the Sfida Lampo leaderboard was EMPTY in the DB (0 community_posts with category=bakealong for week 2026-W35), so I had to create 2 temporary entries via POST /api/bakealong/submit (amico1/amico2) to exercise the vote flow; they were deleted after testing, so the leaderboard is empty again in the app.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "SfidaLampo leaderboard", "issue": "Vote count label is not pluralized: shows '1 votes' (EN) instead of '1 vote'. Same for other langs (voti/Stimmen).", "selector": "[data-testid^=\"sfida-lampo-entry-\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Sfida Lampo leaderboard data", "issue": "No seeded bakealong entries exist for the current ISO week (GET /api/bakealong/entries -> {\"week\":\"2026-W35\",\"entries\":[]}), so the leaderboard shows the empty state and the new vote UI is invisible to real users until someone submits. Consider seeding demo entries.", "affected_selectors": ["[data-testid=\"sfida-lampo-leaderboard\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Home / streak badge", "issues": ["No issues: reached chips are orange with dark text (good contrast), locked chips use lock icon + grey #7E8A93 on #181818 (acceptable)"]},
+      {"screen": "Social / Hall of Fame", "issues": ["No issues: gold gradient header with #121212 text, medals and pts legible"]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/iteration_142.json"],
+  "action_items": [
+    "(Optional/LOW) Fix vote-count pluralization in SfidaLampo.jsx ('1 vote' vs 'N votes').",
+    "(Optional) Seed 2-3 demo bakealong entries for the current week so the new voting leaderboard is visible/testable in the live app."
+  ],
+  "critical_code_review_comments": [
+    "StreakFlame celebration uses localStorage per user; on a fresh browser/incognito the toast re-fires for an already-earned milestone (expected trade-off, no server state). Acceptable but worth noting.",
+    "GET /api/hall-of-fame counts likes on ALL monthly posts including bakealong entries, so Sfida Lampo votes feed the monthly score — consistent with the stated score formula (likes*2 + posts)."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "100% (3 endpoints curl-verified: /api/streak milestones+next, /api/hall-of-fame ranked leaders, /api/bakealong/entries)", "frontend": "100% of tested flows passed (1 cosmetic pluralization nit)" },
+  "seed_data_creation": "Temporarily created 2 bakealong entries (amico1/amico2, text 'TEST_entry') and temporarily set fornaio streak_current=7/best=9 to verify reached-milestone styling + celebration toast. ALL restored: entries deleted, fornaio streak back to current=1/best=1, streak_3/streak_7 badges pulled.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "fornaio@mikilab.de / Mikilab2026! (used); amico1/amico2@mikilab.de / Test1234! (used for seed entries)",
+  "context_for_next_testing_agent": "Login entry point is header [data-testid=\"login-btn\"] -> auth modal (auth-tab-login, auth-email, auth-password, auth-submit); there is NO always-on login screen. A NewsletterPopup ([data-testid=\"newsletter-popup\"]) overlays the app on first load and blocks all clicks — dismiss via newsletter-popup-close/newsletter-popup-dismiss before/after login and after tab switches. Verified this iteration: streak-milestones chips 3/7/14/30/60/100 render with correct reached (orange+🔥) vs locked (lock icon) state, streak-count text, and the milestone celebration toast ('🔥 Milestone: 7-day streak!') fires once per new top milestone; sfida-lampo-vote-<id> opens auth modal when logged out and toggles like (+1 filled heart / -1 unfilled) when logged in with server persistence; hall-of-fame renders 4 ranked leaders with medals, avatars, likes/posts and pts and the toggle collapses/expands hall-of-fame-list. Regressions OK: streak badge hidden logged out, sfida theme 'Cinnamon Rolls' + countdown + '2 bakers competing' + join button, Learn tab loads, Auguri 'Mikila' post on feed, no €/price/paywall text on any of the 5 tabs. NOTE bakealong entries collection is empty again (test data cleaned) so the leaderboard shows the empty state.",
+  "rca_of_the_issue": "Not applicable — no functional defects found. The only blocker during testing was the NewsletterPopup overlay intercepting pointer events (fixed in the test script by dismissing it), and the empty bakealong collection which required temporary seed data."
+}

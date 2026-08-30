@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Flame, Trophy, Camera, Loader2, CheckCircle2, Clock, Users, Heart } from "lucide-react";
-import { bakeAlongApi, uploadApi } from "@/lib/api";
+import { bakeAlongApi, uploadApi, communityApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -52,6 +52,13 @@ export default function SfidaLampo() {
 
   const theme = data?.theme;
 
+  const vote = async (id) => {
+    if (!user) { setAuthOpen && setAuthOpen(true); return; }
+    setEntries((es) => es.map((e) => e.id === id ? { ...e, liked_by_me: !e.liked_by_me, like_count: e.like_count + (e.liked_by_me ? -1 : 1) } : e));
+    try { await communityApi.like(id); bakeAlongApi.entries().then((r) => setEntries((r?.entries || []).slice(0, 5))).catch(() => {}); }
+    catch { load(); }
+  };
+
   return (
     <div data-testid="sfida-lampo" className="mb-5 rounded-3xl overflow-hidden border border-[#ff6b00]/40 bg-[#181818] shadow-lg">
       <div className="p-5 text-[#121212]" style={{ background: "linear-gradient(135deg,#ff8a33,#ff6b00 75%)" }}>
@@ -96,8 +103,12 @@ export default function SfidaLampo() {
                   {e.image_url ? <img src={e.image_url} alt="" loading="lazy" className="w-12 h-12 rounded-lg object-cover shrink-0" /> : <div className="w-12 h-12 rounded-lg bg-[#ff6b00]/15 shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-white truncate">{e.author_name}</p>
-                    <p className="text-[11px] text-[#AEB8BF] inline-flex items-center gap-1"><Heart className="w-3 h-3 text-[#ff3b5c]" /> {e.like_count} {L("voti", "Stimmen", "votes", "votos", "votes", "رأی")}</p>
+                    <p className="text-[11px] text-[#AEB8BF] inline-flex items-center gap-1"><Heart className="w-3 h-3 text-[#ff3b5c]" /> {e.like_count} {e.like_count === 1 ? L("voto", "Stimme", "vote", "voto", "vote", "رأی") : L("voti", "Stimmen", "votes", "votos", "votes", "رأی")}</p>
                   </div>
+                  <button data-testid={`sfida-lampo-vote-${e.id}`} onClick={() => vote(e.id)} aria-label="vote"
+                    className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-[12px] font-bold border transition-all active:scale-90 ${e.liked_by_me ? "bg-[#ff3b5c] text-white border-[#ff3b5c]" : "text-[#ff3b5c] border-[#ff3b5c]/40"}`}>
+                    <Heart className={`w-3.5 h-3.5 ${e.liked_by_me ? "fill-current" : ""}`} /> {L("Vota", "Voten", "Vote", "Votar", "Voter", "رأی")}
+                  </button>
                 </div>
               ))}
             </div>

@@ -2657,3 +2657,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Auguri Automatici (feed)**: `POST /api/greetings/check` chiamato al login (App.js). Se oggi = compleanno reale (campo birthday) o anniversario iscrizione, Mikila pubblica un post pubblico sul feed (autore "Mikila", avatar michele, categoria `auguri`), idempotente 1/giorno. `Community.jsx`: categoria `auguri` in FEED_CATS con icona Cake + label.
 - Test: iteration_141.json → frontend 100% (0 failure) su tutte e 4 le feature + regressione (striscia, Impara passo-passo, zero paywall). Backend curl-verificato (streak, greetings idempotente, leaderboard). Fix design: azioni Share/Card/Propose ora visibili anche in modalità speciale.
 
+
+---
+## v-fork.21 (2026-06, fork) — Premi allo Streak + Voto in Classifica + Hall of Fame mensile
+- **Premi allo Streak (coccarde)**: milestone 3/7/14/30/60/100 giorni. `_touch_streak` assegna badge `streak_N` (users.badges); `GET /api/streak` ora ritorna `milestones[]` + `next`. `StreakFlame.jsx` mostra le coccarde (raggiunte 🔥 / bloccate 🔒) + toast di celebrazione al superamento (confronto localStorage).
+- **Voto in Classifica (Sfida Lampo)**: `SfidaLampo.jsx` ogni voce della classifica ha `sfida-lampo-vote-<id>` che riusa `POST /api/community/posts/{id}/like` (le voci sono post bakealong). Toggle voto + re-rank. Fix pluralizzazione "voto/voti".
+- **Hall of Fame mensile**: `GET /api/hall-of-fame` aggrega i post community del mese corrente per autore (score = like*2 + post), top 10 con avatar/like/post/streak_best/champion. `components/HallOfFame.jsx` (card oro comprimibile) in cima al feed Social (Community.jsx). `hallOfFameApi` in lib/api.js.
+- Test: iteration_142.json → frontend 100% (solo 1 nit pluralizzazione, corretto). Backend curl-verificato (streak milestones+next, hall-of-fame ranked). Nota: la classifica Sfida Lampo parte vuota (nessuna partecipazione reale) → mostra stato "sii il primo".
+

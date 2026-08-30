@@ -182,6 +182,10 @@ export const streakApi = {
   ping: () => api.post(`/activity/ping`).then((r) => r.data).catch(() => null),
 };
 
+export const hallOfFameApi = {
+  get: () => api.get(`/hall-of-fame`).then((r) => r.data).catch(() => ({ leaders: [] })),
+};
+
 export const greetingsApi = {
   check: () => api.post(`/greetings/check`).then((r) => r.data).catch(() => ({ posted: false })),
 };
