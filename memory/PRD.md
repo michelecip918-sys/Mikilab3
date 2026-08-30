@@ -2553,3 +2553,9 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - Estratta la riga prodotto in `components/CapoProductRow.jsx` (props: p, i, recipes, setProducts; useLang+mkTri interni; helper patch() aggiorna solo l'indice i). PianoProduzioneAI.jsx ridotto da ~1785 a ~1720 righe.
 - Regressione iteration_131: frontend 100%, nessun bug (picker per-riga singolo, quantità, opzioni unit/gpp/giorno, chip giorno, "Parti da qui" mutuamente esclusivo, isolamento per-riga, rimozione/aggiunta, combos). Testid invariati.
 - Backlog cleanup completato (dead code + estrazioni CapoCombos/CapoProductRow). NB: richiede REDEPLOY per mikilab.de.
+
+## v-fork.108 (2026-06) — Combinazioni sincronizzate sull'account
+- **Backend** (`server.py`, dopo favorites/counts): `GET /api/combos`, `POST /api/combos/sync` (upsert per {user_id,id}, modello ComboSync/Combo, items List[Dict[str,Any]]), `DELETE /api/combos/{id}`. Collezione `db.capo_combos`. Tutti auth-gated (401 se anonimo).
+- **Frontend**: `lib/combos.js` ora ottimistico in locale + sync sull'account (comboApi.list/sync/remove in `lib/api.js`); `hydrateCombos()` chiamato al bootstrap/login in `App.js` (merge locale↔account); `CapoCombos.jsx` ascolta `COMBOS_EVENT` per re-render. saveCombo/deleteCombo propagano al server; ospite (401) resta solo locale e viene unito al login.
+- Test iteration_132: backend 100% (11/11), frontend 100% — persistenza cross-sessione provata (svuotato localStorage['mikilab_combos'] + reload da loggato → la combo ritorna dal server), delete propagato, fallback ospite, nessun duplicato. Tema nero/arancione intatto.
+- Backlog pulizia Laboratorio: COMPLETATO. NB: richiede REDEPLOY per mikilab.de.
