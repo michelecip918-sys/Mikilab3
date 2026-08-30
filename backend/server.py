@@ -6401,7 +6401,7 @@ async def greetings_check(user: dict = Depends(current_user)):
     doc = {
         "id": str(uuid.uuid4()),
         "author_id": "mikila",
-        "author_name": "Mikila",
+        "author_name": "MikiLab",
         "author_avatar": "/michele-avatar.jpg",
         "category": "auguri",
         "greeting_for": user["user_id"],

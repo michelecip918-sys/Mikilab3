@@ -737,11 +737,11 @@ export default function RicetteCustodite({ initialId = null }) {
               <ShieldCheck className="w-6 h-6 shrink-0 mt-0.5 text-[#f0c9a3]" />
               <p className="text-sm leading-relaxed">
                 {L({
-                  it: "Il Miglioratore Naturale MikiLab è la mia firma. Il pane riesce anche con altri miglioratori: io uso il mio perché l'ho creato io e amo controllare ogni ingrediente di ciò che mangio. Le percentuali nascono dal mio metodo e dalle mie prove.",
-                  de: "Der natürliche MikiLab-Verbesserer ist meine Handschrift. Das Brot gelingt auch mit anderen Verbesserern: ich nehme meinen, weil ich ihn selbst entwickelt habe und gern jede Zutat kontrolliere. Die Prozente stammen aus meiner Methode und meinen Versuchen.",
-                  en: "The MikiLab Natural Improver is my signature. The bread works with other improvers too: I use mine because I created it and I love controlling every ingredient I eat. The percentages come from my own method and testing.",
-                  es: "El Mejorador Natural MikiLab es mi firma. El pan también sale con otros mejoradores: uso el mío porque lo creé yo y me gusta controlar cada ingrediente de lo que como. Los porcentajes nacen de mi método y mis pruebas.",
-                  fr: "L'Améliorant Naturel MikiLab est ma signature. Le pain réussit aussi avec d'autres améliorants : j'utilise le mien parce que je l'ai créé et j'aime contrôler chaque ingrédient de ce que je mange. Les pourcentages viennent de ma méthode et de mes essais.",
+                  it: "Il Miglioratore Naturale MikiLab lo trovi già pronto nelle basi (prefermenti e impasti): usalo così com'è, senza pensarci. 100% naturale e senza additivi chimici.",
+                  de: "Den natürlichen MikiLab-Verbesserer findest du bereits fertig in den Basen (Vorteige und Teige): einfach so verwenden. 100% natürlich, ohne chemische Zusätze.",
+                  en: "You'll find the MikiLab Natural Improver already prepared in the bases (preferments and doughs): just use it as it is. 100% natural, with no chemical additives.",
+                  es: "El Mejorador Natural MikiLab ya está listo en las bases (prefermentos y masas): úsalo tal cual. 100% natural y sin aditivos químicos.",
+                  fr: "L'Améliorant Naturel MikiLab est déjà prêt dans les bases (préférements et pâtes) : utilise-le tel quel. 100% naturel, sans additifs chimiques.",
                 })}
               </p>
             </div>

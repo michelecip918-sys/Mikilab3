@@ -2665,3 +2665,10 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Hall of Fame mensile**: `GET /api/hall-of-fame` aggrega i post community del mese corrente per autore (score = like*2 + post), top 10 con avatar/like/post/streak_best/champion. `components/HallOfFame.jsx` (card oro comprimibile) in cima al feed Social (Community.jsx). `hallOfFameApi` in lib/api.js.
 - Test: iteration_142.json → frontend 100% (solo 1 nit pluralizzazione, corretto). Backend curl-verificato (streak milestones+next, hall-of-fame ranked). Nota: la classifica Sfida Lampo parte vuota (nessuna partecipazione reale) → mostra stato "sii il primo".
 
+
+---
+## v-fork.22 (2026-06, fork) — Rebrand "Mikila"→"MikiLab", copy Miglioratore semplificata, og-image social
+- **Rebrand**: tutte le stringhe visibili "Mikila" → "MikiLab" (MikilaWisdom label "MIKILAB'S PINCH OF WISDOM", RiproduciRicetta, BakeStepByStep alt, card default "— MikiLab", backend greetings author_name "MikiLab"; aggiornato anche il post auguri esistente nel DB). Restano solo nomi interni non visibili (componente `MikilaWisdom`, 1 commento).
+- **Miglioratore Naturale — copy semplificata** (richiesta utente "dici solo che lo trovano nelle basi"): `RicetteCustodite.jsx` card ("lo trovi già pronto nelle basi (prefermenti e impasti): usalo così com'è, 100% naturale, senza additivi chimici") e `MiglioratoreDetail.jsx` ("già dosato nelle basi delle ricette, pronto all'uso…"). Rimosso il racconto personale / "puoi sostituirlo". Button → "Il Miglioratore MikiLab: scopri di più". Mantenuti lista ingredienti + dosaggio.
+- **Social/OG**: creato `frontend/public/og-image.jpg` (1200×630, ritaglio di hero-social.jpg) — prima mancava benché referenziato in index.html → anteprima link ora corretta su WhatsApp/FB/IG/Telegram. SEO/OG/Twitter/manifest/icone già presenti e completi.
+

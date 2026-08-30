@@ -118,7 +118,7 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
       {/* Avatar Mikila + incoraggiamento */}
       <div className="mt-4 flex items-start gap-3 rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3.5">
         <div className="relative shrink-0">
-          <img src="/michele-avatar.jpg" alt="Mikila" className="w-11 h-11 rounded-full object-cover border-2 border-[#ff6b00]/40"
+          <img src="/michele-avatar.jpg" alt="MikiLab" className="w-11 h-11 rounded-full object-cover border-2 border-[#ff6b00]/40"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#2e8b6f] border-2 border-[#1e1e1e]" />
         </div>

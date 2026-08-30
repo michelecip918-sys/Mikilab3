@@ -56,7 +56,7 @@ export default function MiglioratoreDetail() {
       <button data-testid="miglioratore-detail-toggle" onClick={() => setOpen((v) => !v)}
         className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-white/15 border border-white/25 rounded-full px-3 py-1.5 active:scale-95 hover:bg-white/25 transition-all">
         <FlaskConical className="w-3.5 h-3.5" />
-        {L({ it: "Il mio Miglioratore: scopri di più", de: "Mein Verbesserer: mehr erfahren", en: "My Improver: learn more", es: "Mi Mejorador: saber más", fr: "Mon Améliorant : en savoir plus", fa: "بهبوددهندهٔ من: بیشتر بدانید" })}
+        {L({ it: "Il Miglioratore MikiLab: scopri di più", de: "Der MikiLab-Verbesserer: mehr erfahren", en: "The MikiLab Improver: learn more", es: "El Mejorador MikiLab: saber más", fr: "L'Améliorant MikiLab : en savoir plus", fa: "بهبوددهندهٔ MikiLab: بیشتر بدانید" })}
         {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
       </button>
 
@@ -66,12 +66,12 @@ export default function MiglioratoreDetail() {
             <div className="mt-2.5 rounded-xl bg-black/20 border border-white/20 p-3">
               <p className="text-[12.5px] text-white/90 leading-snug mb-2.5">
                 {L({
-                  it: "Il Miglioratore Naturale MikiLab nasce nel mio laboratorio: 5 ingredienti 100% naturali, dosati con precisione per dare al pane forza, profumo e una morbidezza che dura nel tempo. Negli anni ho studiato e imparato a usarlo a modo mio: è la mia firma, ma non è obbligatorio — puoi sostituirlo con un semplice malto o con l'ingrediente naturale che conosci e preferisci.",
-                  de: "Der Natürliche Verbesserer von MikiLab entsteht in meinem Labor: 5 zu 100% natürliche Zutaten, präzise dosiert, um dem Brot Kraft, Aroma und eine lang anhaltende Weichheit zu geben. Über die Jahre habe ich gelernt, ihn auf meine Art zu verwenden: er ist meine Handschrift, aber nicht Pflicht — du kannst ihn durch ein einfaches Malz oder eine natürliche Zutat ersetzen, die du kennst und bevorzugst.",
-                  en: "The MikiLab Natural Improver is born in my lab: 5 fully natural ingredients, precisely dosed to give bread strength, aroma and a softness that lasts. Over the years I studied and learned to use it my own way: it's my signature, but it's not mandatory — you can replace it with a simple malt or any natural ingredient you know and prefer.",
-                  es: "El Mejorador Natural MikiLab nace en mi laboratorio: 5 ingredientes 100% naturales, dosificados con precisión para dar al pan fuerza, aroma y una ternura duradera. Con los años aprendí a usarlo a mi manera: es mi firma, pero no es obligatorio — puedes sustituirlo por una simple malta o por el ingrediente natural que conozcas y prefieras.",
-                  fr: "L'Améliorant Naturel MikiLab naît dans mon laboratoire : 5 ingrédients 100% naturels, dosés avec précision pour donner au pain force, arôme et un moelleux durable. Au fil des ans j'ai appris à l'utiliser à ma façon : c'est ma signature, mais ce n'est pas obligatoire — tu peux le remplacer par un simple malt ou par l'ingrédient naturel que tu connais et préfères.",
-                  fa: "بهبوددهندهٔ طبیعی MikiLab در آزمایشگاه من متولد می‌شود: ۵ مادهٔ کاملاً طبیعی برای قدرت، عطر و نرمی ماندگار نان. در طول سال‌ها یاد گرفتم به روش خودم از آن استفاده کنم: امضای من است، اما اجباری نیست — می‌توانی آن را با یک مالت ساده یا هر مادهٔ طبیعی که می‌شناسی جایگزین کنی.",
+                  it: "Trovi il Miglioratore Naturale MikiLab già dosato nelle basi delle ricette: è pronto all'uso. 5 ingredienti 100% naturali che danno al pane forza, profumo e una morbidezza che dura — senza additivi chimici.",
+                  de: "Den Natürlichen MikiLab-Verbesserer findest du bereits dosiert in den Rezept-Basen: einsatzbereit. 5 zu 100% natürliche Zutaten für Kraft, Aroma und lang anhaltende Weichheit — ohne chemische Zusätze.",
+                  en: "You'll find the MikiLab Natural Improver already dosed in the recipe bases: ready to use. 5 fully natural ingredients that give bread strength, aroma and lasting softness — with no chemical additives.",
+                  es: "El Mejorador Natural MikiLab ya viene dosificado en las bases de las recetas: listo para usar. 5 ingredientes 100% naturales que dan al pan fuerza, aroma y una ternura duradera — sin aditivos químicos.",
+                  fr: "L'Améliorant Naturel MikiLab est déjà dosé dans les bases des recettes : prêt à l'emploi. 5 ingrédients 100% naturels qui donnent au pain force, arôme et un moelleux durable — sans additifs chimiques.",
+                  fa: "بهبوددهندهٔ طبیعی MikiLab از قبل در پایه‌های دستورها اندازه‌گیری شده و آمادهٔ استفاده است: ۵ مادهٔ کاملاً طبیعی برای قدرت، عطر و نرمی ماندگار نان — بدون افزودنی شیمیایی.",
                 })}
               </p>
               <div className="space-y-1.5">

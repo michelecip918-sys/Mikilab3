@@ -138,12 +138,12 @@ export default function MikilaWisdom({ section = "home" }) {
     <>
       <div data-testid="mikila-wisdom" className={`mb-4 rounded-2xl border px-3.5 py-3 shadow-sm ${special ? "border-[#ff6b00]/50 bg-[#ff6b00]/12" : "border-[#ff6b00]/25 bg-[#181818]"}`}>
         <div className="flex items-center gap-3">
-          <img src="/michele-avatar.jpg" alt="Mikila" loading="lazy"
+          <img src="/michele-avatar.jpg" alt="MikiLab" loading="lazy"
             className="w-10 h-10 rounded-full object-cover border-2 border-[#ff6b00]/40 shrink-0"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00] flex items-center gap-1">
-              <HeadIcon className="w-3 h-3" /> {special ? L("Mikila per te", "Mikila für dich", "Mikila for you", "Mikila para ti", "Mikila pour toi", "میکیلا برای تو") : L("Il pizzico di sapienza di Mikila", "Mikilas Prise Weisheit", "Mikila's pinch of wisdom", "El pellizco de sabiduría de Mikila", "Le pincée de sagesse de Mikila", "چکه‌ای از خرد میکیلا")}
+              <HeadIcon className="w-3 h-3" /> {special ? L("MikiLab per te", "MikiLab für dich", "MikiLab for you", "MikiLab para ti", "MikiLab pour toi", "میکی‌لب برای تو") : L("Il pizzico di sapienza di MikiLab", "MikiLabs Prise Weisheit", "MikiLab's pinch of wisdom", "El pellizco de sabiduría de MikiLab", "La pincée de sagesse de MikiLab", "چکه‌ای از خرد میکی‌لب")}
             </p>
             <AnimatePresence mode="wait">
               <motion.p key={text} data-testid="mikila-wisdom-text"
@@ -215,7 +215,7 @@ function ProposeModal({ lang, user, onClose }) {
           <Sparkles className="w-5 h-5 text-[#ff6b00]" />
           <h3 className="font-display text-lg font-bold text-white">{L("Proponi un proverbio da fornaio", "Bäcker-Spruch vorschlagen", "Propose a baker's proverb", "Propón un proverbio panadero", "Propose un proverbe de boulanger", "یک ضرب‌المثل نانوایی پیشنهاد بده")}</h3>
         </div>
-        <p className="text-[12px] text-[#AEB8BF] mb-2">{L("I migliori (più votati) entrano nella rotazione di Mikila dopo l'ok dell'admin.", "Die beliebtesten kommen nach Admin-OK in Mikilas Rotation.", "The most-voted enter Mikila's rotation after admin approval.", "Los más votados entran en la rotación de Mikila tras el OK del admin.", "Les plus votés entrent après validation admin.", "پس از تأیید ادمین، پرطرفدارها به چرخش میکیلا می‌آیند.")}</p>
+        <p className="text-[12px] text-[#AEB8BF] mb-2">{L("I migliori (più votati) entrano nella rotazione di MikiLab dopo l'ok dell'admin.", "Die beliebtesten kommen nach Admin-OK in MikiLabs Rotation.", "The most-voted enter MikiLab's rotation after admin approval.", "Los más votados entran en la rotación de MikiLab tras el OK del admin.", "Les plus votés entrent dans la rotation de MikiLab après validation admin.", "پس از تأیید ادمین، پرطرفدارها به چرخش میکی‌لب می‌آیند.")}</p>
         <textarea data-testid="wisdom-propose-text" value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={240}
           placeholder={L("Es. «Poco lievito e tanto tempo: pane più buono e leggero.»", "z.B. «Wenig Hefe, viel Zeit: besseres Brot.»", "e.g. 'Little yeast and lots of time: better bread.'", "Ej. «Poca levadura y mucho tiempo.»", "Ex. « Peu de levure, beaucoup de temps. »", "مثلاً «کم مخمر، زمان زیاد.»")}
           className="w-full bg-[#121212] border border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#ff6b00]" />
@@ -310,7 +310,7 @@ function CardModal({ lang, text, author, onClose }) {
     drawWrapped(ctx, text, S / 2, S / 2 + 20, S - 220, 74);
     // Autore
     ctx.fillStyle = "#ff8a33"; ctx.font = "bold 34px Arial, sans-serif";
-    ctx.fillText(author ? `— ${author}` : "— Mikila", S / 2, S - 260);
+    ctx.fillText(author ? `— ${author}` : "— MikiLab", S / 2, S - 260);
 
     const finish = () => {
       // Logo
