@@ -100,7 +100,7 @@ export default function MikilaWisdom({ section = "home" }) {
   const pool = useMemo(() => {
     const own = base.map((t) => ({ text: mkTri(lang)(t[0], t[1], t[2], t[3], t[4], t[5]), author: null, id: null }));
     const com = community.map((c) => ({
-      text: (lang === "de" ? (c.text_de || c.text) : lang === "en" ? (c.text_en || c.text) : lang === "es" ? (c.text_es || c.text) : c.text),
+      text: (lang === "de" ? (c.text_de || c.text) : lang === "en" ? (c.text_en || c.text) : lang === "es" ? (c.text_es || c.text) : lang === "it" ? c.text : (c.text_en || c.text)),
       author: c.author_name, id: c.id, likeCount: c.like_count, likedByMe: c.liked_by_me,
     }));
     return [...com, ...own]; // i proverbi della community (più votati) compaiono per primi

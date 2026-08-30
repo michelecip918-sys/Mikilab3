@@ -194,6 +194,15 @@ export default function PromuoviMikiLab() {
                   <Download className="w-4 h-4" /> {L("Cover 9:16", "Cover 9:16", "9:16 cover", "Portada 9:16", "Cover 9:16", "کاور ۹:۱۶")}
                 </a>
               </div>
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mt-3 mb-1.5">{L("Cover stagionali", "Saisonale Cover", "Seasonal covers", "Portadas de temporada", "Covers saisonnières", "کاورهای فصلی")}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <a data-testid="promuovi-cover-panettone" href={`${process.env.PUBLIC_URL}/reel-cover-panettone.png`} download="mikilab-panettone.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Natale · Panettone", "Weihnachten", "Christmas", "Navidad", "Noël", "کریسمس")}
+                </a>
+                <a data-testid="promuovi-cover-colomba" href={`${process.env.PUBLIC_URL}/reel-cover-colomba.png`} download="mikilab-colomba.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Pasqua · Colomba", "Ostern", "Easter", "Pascua", "Pâques", "عید پاک")}
+                </a>
+              </div>
             </div>
           )}
         </div>
