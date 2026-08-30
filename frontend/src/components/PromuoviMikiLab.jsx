@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Megaphone, Share2, Copy, Download, Instagram, Facebook, Youtube, MessageCircle, Music2, AtSign, Check } from "lucide-react";
+import { Megaphone, Share2, Copy, Download, Instagram, Facebook, Youtube, MessageCircle, Music2, AtSign, Film, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -28,6 +28,78 @@ const CAPTIONS = {
   },
 };
 
+const REEL_SCRIPT = {
+  it: `🎬 REEL / TIKTOK — Script 15-17s "MikiLab"
+
+HOOK (0-2s) — Primo piano mani che aprono l'impasto, farina in controluce.
+Testo a schermo: "Fai il pane come un professionista 🥖"
+Voce: "Ti insegno a panificare come in laboratorio. Gratis."
+
+(2-5s) — Screen recording app, schermata Ricette.
+Testo: "Ricette col metodo di Michele"
+
+(5-8s) — App: Piano di produzione con l'IA + Food cost.
+Testo: "Piani con l'IA + costo reale"
+
+(8-11s) — App: Diagnosi impasto con foto.
+Testo: "Fotografi l'impasto → ti dico cosa manca"
+
+(11-14s) — Pane appena sfornato, taglio della fetta.
+Testo: "Pane, pizza e pasticceria"
+
+CTA (14-17s) — Logo MikiLab + schermo arancione.
+Testo: "100% GRATIS 👉 mikilab.de — Seguimi @michelucano"
+
+🎵 Audio: un trending sound caldo/acustico.
+#MikiLab #panetok #lievitomadre #fyp #homebaking #panefattoincasa`,
+  en: `🎬 REEL / TIKTOK — 15-17s script "MikiLab"
+
+HOOK (0-2s) — Close-up hands opening the dough, flour backlit.
+On-screen: "Bake bread like a pro 🥖"
+VO: "I'll teach you to bake like in a real lab. For free."
+
+(2-5s) — App screen recording: Recipes.
+Text: "Recipes with Michele's method"
+
+(5-8s) — App: AI production plan + Food cost.
+Text: "AI plans + real cost"
+
+(8-11s) — App: Dough photo diagnosis.
+Text: "Snap your dough → I tell you what's missing"
+
+(11-14s) — Fresh bread, slice cut.
+Text: "Bread, pizza & pastry"
+
+CTA (14-17s) — MikiLab logo + orange screen.
+Text: "100% FREE 👉 mikilab.de — Follow @michelucano"
+
+🎵 Audio: a warm trending sound.
+#MikiLab #breadtok #sourdough #fyp #homebaking`,
+  de: `🎬 REEL / TIKTOK — 15-17s Skript "MikiLab"
+
+HOOK (0-2s) — Nahaufnahme: Hände öffnen den Teig, Mehl im Gegenlicht.
+Text: "Backe Brot wie ein Profi 🥖"
+VO: "Ich zeige dir das Backen wie in der Backstube. Kostenlos."
+
+(2-5s) — App-Screen: Rezepte.
+Text: "Rezepte nach Micheles Methode"
+
+(5-8s) — App: KI-Produktionsplan + Food-Cost.
+Text: "KI-Pläne + echte Kosten"
+
+(8-11s) — App: Teig-Diagnose per Foto.
+Text: "Foto vom Teig → ich sage, was fehlt"
+
+(11-14s) — Frisches Brot, Anschnitt.
+Text: "Brot, Pizza & Gebäck"
+
+CTA (14-17s) — MikiLab-Logo + oranger Screen.
+Text: "100% GRATIS 👉 mikilab.de — Folge @michelucano"
+
+🎵 Audio: ein warmer Trending-Sound.
+#MikiLab #Brotbacken #Sauerteig #fyp`,
+};
+
 const SOCIALS = [
   { key: "instagram", Icon: Instagram, label: "Instagram", color: "#E1306C" },
   { key: "facebook", Icon: Facebook, label: "Facebook", color: "#1877F2" },
@@ -41,6 +113,8 @@ export default function PromuoviMikiLab() {
   const { lang } = useLang();
   const L = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [copied, setCopied] = useState(false);
+  const [reelOpen, setReelOpen] = useState(false);
+  const [reelCopied, setReelCopied] = useState(false);
   const [variant, setVariant] = useState("bacheca");
   const caps = CAPTIONS[lang] || CAPTIONS.en;
   const caption = caps[variant];
@@ -58,6 +132,11 @@ export default function PromuoviMikiLab() {
   };
   const copyCaption = async () => {
     try { await navigator.clipboard.writeText(caption); setCopied(true); setTimeout(() => setCopied(false), 2000); toast.success(L("Post copiato! Incollalo su Instagram/Facebook", "Beitrag kopiert!", "Post copied! Paste it on Instagram/Facebook", "¡Publicación copiada!", "Post copié !", "پست کپی شد!")); }
+    catch { toast.error("Copy failed"); }
+  };
+  const reelScript = REEL_SCRIPT[lang] || REEL_SCRIPT.en;
+  const copyReel = async () => {
+    try { await navigator.clipboard.writeText(reelScript); setReelCopied(true); setTimeout(() => setReelCopied(false), 2000); toast.success(L("Script del Reel copiato!", "Reel-Skript kopiert!", "Reel script copied!", "¡Guion del Reel copiado!", "Script du Reel copié !", "اسکریپت ریل کپی شد!")); }
     catch { toast.error("Copy failed"); }
   };
 
@@ -94,6 +173,29 @@ export default function PromuoviMikiLab() {
             className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
             {copied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#ff6b00]" />} {L("Copia il post", "Beitrag kopieren", "Copy caption", "Copiar", "Copier", "کپی کپشن")}
           </button>
+        </div>
+
+        {/* Kit Reel di lancio */}
+        <div className="rounded-2xl bg-[#121212] border border-[#2e2e2e] overflow-hidden">
+          <button data-testid="promuovi-reel-toggle" onClick={() => setReelOpen((v) => !v)} className="w-full flex items-center gap-2 p-3.5 text-left">
+            <Film className="w-5 h-5 text-[#ff6b00] shrink-0" />
+            <span className="flex-1 font-display text-sm font-bold text-white">{L("Kit Reel di lancio (script 15s)", "Reel-Kit (15s-Skript)", "Launch Reel kit (15s script)", "Kit Reel de lanzamiento (guion 15s)", "Kit Reel de lancement (script 15s)", "کیت ریل (اسکریپت ۱۵ ثانیه)")}</span>
+            {reelOpen ? <ChevronUp className="w-4 h-4 text-[#AEB8BF]" /> : <ChevronDown className="w-4 h-4 text-[#AEB8BF]" />}
+          </button>
+          {reelOpen && (
+            <div className="px-3.5 pb-3.5">
+              <img src={`${process.env.PUBLIC_URL}/reel-cover.png`} alt="Reel cover" className="w-28 h-auto rounded-lg border border-[#2e2e2e] float-right ml-3 mb-2" />
+              <pre data-testid="promuovi-reel-script" className="text-[11.5px] text-[#E0D5CF] leading-snug whitespace-pre-wrap font-sans">{reelScript}</pre>
+              <div className="grid grid-cols-2 gap-2 mt-3 clear-both">
+                <button data-testid="promuovi-reel-copy" onClick={copyReel} className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  {reelCopied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#ff6b00]" />} {L("Copia script", "Skript kopieren", "Copy script", "Copiar guion", "Copier script", "کپی اسکریپت")}
+                </button>
+                <a data-testid="promuovi-reel-cover" href={`${process.env.PUBLIC_URL}/reel-cover.png`} download="mikilab-reel-cover.png" className="flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] text-[#121212] font-bold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4" /> {L("Cover 9:16", "Cover 9:16", "9:16 cover", "Portada 9:16", "Cover 9:16", "کاور ۹:۱۶")}
+                </a>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* QR */}
