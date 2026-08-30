@@ -2530,3 +2530,8 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Usate di recente**: fila orizzontale di chip in cima al pannello (`lib/recentRecipes.js`, localStorage `mikilab_recent_recipes`, cap 8). Registrata sia da selezione singola (pickSingle) che da bulk add. testid `${testid}-recent-row` / `${testid}-recent-<id>`.
 - **Fix MEDIUM (idratazione preferiti)**: `hydrateFavs()` esportato da `lib/favorites.jsx` e chiamato in `App.js` al bootstrap/login → la categoria Preferite è ora disponibile ovunque (Laboratorio, Piano Settimanale) senza dover prima aprire la tab Ricette. Verificato: `POST /api/favorites/sync` restituisce i preferiti dell'account.
 - Test iteration_128: frontend 97% PASS (quick qty/day nei 3 consumer, Preferite prima card con conteggio corretto, chip recenti, nessun duplicato, regressione single-mode OK, tema nero/arancione). Fix idratazione + spinner qty applicati dopo il test.
+
+## v-fork.104 (2026-06) — Riscrittura testo "Miglioratore Naturale" + story Pane di Matera
+- Riscritto il paragrafo introduttivo del **Miglioratore Naturale** in `components/MiglioratoreDetail.jsx` (scheda aperta dall'asterisco `*` in Ricette Custodite e RecipeList): da commento personale a testo professionale/evocativo, in IT/DE/EN/ES/FR/FA. Ingredienti e dosaggio invariati.
+- Rivista la **story del Pane di Matera IGP** in `sections/RicetteCustodite.jsx` (id "matera") con tono più curato, in tutte le lingue.
+- Solo modifiche di testo; compila senza errori. NB: richiede REDEPLOY per riflettersi su mikilab.de.

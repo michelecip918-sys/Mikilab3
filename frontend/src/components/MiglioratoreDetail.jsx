@@ -66,12 +66,12 @@ export default function MiglioratoreDetail() {
             <div className="mt-2.5 rounded-xl bg-black/20 border border-white/20 p-3">
               <p className="text-[12.5px] text-white/90 leading-snug mb-2.5">
                 {L({
-                  it: "L'ho creato io, con 5 ingredienti 100% naturali, per controllare ogni dettaglio del pane. Non è obbligatorio — è la mia scelta.",
-                  de: "Ich habe ihn selbst entwickelt, mit 5 zu 100% natürlichen Zutaten, um jedes Detail des Brotes zu kontrollieren. Er ist nicht Pflicht — es ist meine Wahl.",
-                  en: "I created it myself, with 5 fully natural ingredients, to control every detail of the bread. It's not mandatory — it's my choice.",
-                  es: "Lo creé yo, con 5 ingredientes 100% naturales, para controlar cada detalle del pan. No es obligatorio — es mi elección.",
-                  fr: "Je l'ai créé moi-même, avec 5 ingrédients 100% naturels, pour contrôler chaque détail du pain. Ce n'est pas obligatoire — c'est mon choix.",
-                  fa: "خودم آن را با ۵ مادهٔ کاملاً طبیعی ساختم تا هر جزئیات نان را کنترل کنم. اجباری نیست — انتخاب من است.",
+                  it: "Il Miglioratore Naturale MikiLab nasce nel mio laboratorio: 5 ingredienti 100% naturali, dosati con precisione per dare al pane forza, profumo e una morbidezza che dura nel tempo. Nessun additivo chimico — solo natura e tecnica. Usarlo resta una scelta, non un obbligo.",
+                  de: "Der Natürliche Verbesserer von MikiLab entsteht in meinem Labor: 5 zu 100% natürliche Zutaten, präzise dosiert, um dem Brot Kraft, Aroma und eine lang anhaltende Weichheit zu geben. Keine chemischen Zusätze — nur Natur und Technik. Ihn zu verwenden bleibt eine Wahl, keine Pflicht.",
+                  en: "The MikiLab Natural Improver is born in my lab: 5 fully natural ingredients, precisely dosed to give bread strength, aroma and a softness that lasts for days. No chemical additives — just nature and craft. Using it stays a choice, not an obligation.",
+                  es: "El Mejorador Natural MikiLab nace en mi laboratorio: 5 ingredientes 100% naturales, dosificados con precisión para dar al pan fuerza, aroma y una ternura que dura en el tiempo. Sin aditivos químicos — solo naturaleza y técnica. Usarlo sigue siendo una elección, no una obligación.",
+                  fr: "L'Améliorant Naturel MikiLab naît dans mon laboratoire : 5 ingrédients 100% naturels, dosés avec précision pour donner au pain force, arôme et un moelleux qui dure dans le temps. Aucun additif chimique — juste la nature et le savoir-faire. L'utiliser reste un choix, pas une obligation.",
+                  fa: "بهبوددهندهٔ طبیعی MikiLab در آزمایشگاه من متولد می‌شود: ۵ مادهٔ کاملاً طبیعی که با دقت اندازه‌گیری شده‌اند تا به نان قدرت، عطر و نرمی‌ای ماندگار ببخشند. بدون هیچ افزودنی شیمیایی — فقط طبیعت و مهارت. استفاده از آن یک انتخاب است، نه اجبار.",
                 })}
               </p>
               <div className="space-y-1.5">

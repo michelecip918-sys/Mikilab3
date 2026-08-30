@@ -106,11 +106,11 @@ const RECIPES = [
     id: "matera", region: "basilicata", flag: "🇮🇹", img: IMG.matera, place: PLACE.matera,
     name: { it: "Pane di Matera IGP", de: "Materaner Brot", en: "Bread of Matera", es: "Pan de Matera", fr: "Pain de Matera" },
     story: {
-      it: "Forma a cornetto, mollica gialla e alveolata di semola. Custodito da secoli, con Lievito Madre e il mio Miglioratore Naturale.",
-      de: "Hörnchenform, gelbe Krume aus Grieß. Seit Jahrhunderten, mit Sauerteig und meinem Verbesserer.",
-      en: "Croissant shape, yellow open crumb of semolina. Sourdough and my Natural Improver.",
-      es: "Forma de cuerno, miga amarilla de sémola. Con masa madre y mi Mejorador Natural.",
-      fr: "Forme de croissant, mie jaune de semoule. Levain et mon Améliorant Naturel.",
+      it: "Forma a cornetto, crosta spessa e mollica gialla e alveolata di sola semola rimacinata. Un pane che Matera custodisce da secoli: lo porto avanti con Lievito Madre e il mio Miglioratore Naturale.",
+      de: "Hörnchenform, dicke Kruste und gelbe, offene Krume aus reinem Hartweizengrieß. Ein Brot, das Matera seit Jahrhunderten bewahrt: mit Sauerteig und meinem Natürlichen Verbesserer.",
+      en: "Croissant shape, thick crust and a yellow, open crumb of pure durum semolina. A bread Matera has guarded for centuries — carried on with sourdough and my Natural Improver.",
+      es: "Forma de cuerno, corteza gruesa y miga amarilla y alveolada de pura sémola. Un pan que Matera custodia desde hace siglos: con masa madre y mi Mejorador Natural.",
+      fr: "Forme de croissant, croûte épaisse et mie jaune et alvéolée de pure semoule. Un pain que Matera préserve depuis des siècles : avec levain et mon Améliorant Naturel.",
     },
     ing: [g(ING.semola, 100), g(ING.acqua, 78), g(ING.lm, 25), g(ING.migl, 2), g(ING.sale, 2.2), g(ING.malto, 0.5)],
     proc: {
