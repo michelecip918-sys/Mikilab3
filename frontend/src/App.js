@@ -38,6 +38,7 @@ import { recipePurchaseApi, subscriptionApi, api } from "@/lib/api";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { hydrateFavs } from "@/lib/favorites";
+import { hydrateCombos } from "@/lib/combos";
 
 function App() {
   const { lang, t } = useLang();
@@ -117,6 +118,9 @@ function App() {
 
   // Idrata i preferiti dell'account al bootstrap/login → categoria "Preferite" disponibile ovunque.
   useEffect(() => { hydrateFavs(); }, [user]);
+
+  // Idrata le combinazioni salvate dell'account al bootstrap/login.
+  useEffect(() => { hydrateCombos(); }, [user]);
 
   // Ritorno da Stripe: conferma acquisto ricetta / abbonamento e pulisce l'URL.
   useEffect(() => {

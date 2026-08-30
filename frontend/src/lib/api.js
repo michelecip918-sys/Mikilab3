@@ -57,6 +57,12 @@ export const capoPlanApi = {
   clear: () => api.delete(`/capo/last-plan`).then((r) => r.data),
 };
 
+export const comboApi = {
+  list: () => api.get(`/combos`).then((r) => r.data),
+  sync: (combos) => api.post(`/combos/sync`, { combos }).then((r) => r.data),
+  remove: (id) => api.delete(`/combos/${id}`).then((r) => r.data),
+};
+
 export const plansArchiveApi = {
   list: (kind) => api.get(`/plans/archive`, { params: kind ? { kind } : {} }).then((r) => r.data),
   save: (data) => api.post(`/plans/archive`, data).then((r) => r.data),

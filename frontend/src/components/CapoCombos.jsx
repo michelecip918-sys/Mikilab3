@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
-import { getCombos, saveCombo, deleteCombo } from "@/lib/combos";
+import { getCombos, saveCombo, deleteCombo, COMBOS_EVENT } from "@/lib/combos";
 
 // Pannello "Le mie combinazioni": salva un set di ricette+quantità e lo riaggiunge con un tap.
 export default function CapoCombos({ products, setProducts, lang }) {
@@ -10,6 +10,12 @@ export default function CapoCombos({ products, setProducts, lang }) {
   const [combos, setCombos] = useState(() => getCombos());
   const [name, setName] = useState("");
   const [saveOpen, setSaveOpen] = useState(false);
+
+  useEffect(() => {
+    const on = () => setCombos(getCombos());
+    window.addEventListener(COMBOS_EVENT, on);
+    return () => window.removeEventListener(COMBOS_EVENT, on);
+  }, []);
 
   const hasRecipes = products.some((p) => p.recipe_id);
   if (combos.length === 0 && !hasRecipes) return null;

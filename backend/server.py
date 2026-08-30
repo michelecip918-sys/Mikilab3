@@ -11,7 +11,7 @@ import asyncio
 import requests
 from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import uuid
 import bcrypt
 import secrets
@@ -1668,6 +1668,50 @@ async def sync_favorites(payload: FavSync, user: dict = Depends(current_user)):
 async def favorites_counts():
     rows = await db.favorites.aggregate([{"$group": {"_id": "$recipe_id", "count": {"$sum": 1}}}]).to_list(5000)
     return {r["_id"]: r["count"] for r in rows if r["_id"]}
+
+
+# ---------------------------------------------------------------------------
+# Combinazioni salvate del Laboratorio — set di ricette+quantità per-account
+# ---------------------------------------------------------------------------
+class Combo(BaseModel):
+    id: str
+    name: str
+    items: List[Dict[str, Any]] = []
+
+
+class ComboSync(BaseModel):
+    combos: List[Combo] = []
+
+
+@api_router.get("/combos")
+async def get_combos(user: dict = Depends(current_user)):
+    docs = await db.capo_combos.find(
+        {"user_id": user["user_id"]}, {"_id": 0, "id": 1, "name": 1, "items": 1, "created_at": 1}
+    ).sort("created_at", -1).to_list(200)
+    return [{"id": d["id"], "name": d.get("name", ""), "items": d.get("items", [])} for d in docs]
+
+
+@api_router.post("/combos/sync")
+async def sync_combos(payload: ComboSync, user: dict = Depends(current_user)):
+    for c in payload.combos[:50]:
+        await db.capo_combos.update_one(
+            {"user_id": user["user_id"], "id": c.id},
+            {
+                "$set": {"name": c.name, "items": c.items},
+                "$setOnInsert": {"user_id": user["user_id"], "id": c.id, "created_at": now_iso()},
+            },
+            upsert=True,
+        )
+    docs = await db.capo_combos.find(
+        {"user_id": user["user_id"]}, {"_id": 0, "id": 1, "name": 1, "items": 1, "created_at": 1}
+    ).sort("created_at", -1).to_list(200)
+    return [{"id": d["id"], "name": d.get("name", ""), "items": d.get("items", [])} for d in docs]
+
+
+@api_router.delete("/combos/{combo_id}")
+async def delete_combo(combo_id: str, user: dict = Depends(current_user)):
+    await db.capo_combos.delete_one({"user_id": user["user_id"], "id": combo_id})
+    return {"success": True}
 
 
 
