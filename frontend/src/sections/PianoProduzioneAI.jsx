@@ -21,6 +21,7 @@ import { rLoc, recipeTitle } from "@/lib/loc";
 import { recipeCategory, CATS } from "@/lib/recipeCats";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
+import CategoryRecipePicker from "@/components/CategoryRecipePicker";
 import { mkTri, triFR, triFA } from "@/i18n/triMaps";
 
 const DAYS = ["", "lun", "mar", "mer", "gio", "ven", "sab", "dom"];
@@ -1232,12 +1233,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <div className="px-3 pb-3 space-y-2">
               {extraToday.map((p, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <select data-testid={`capo-extra-recipe-${i}`} value={p.recipe_id || ""}
-                    onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                    className="flex-1 min-w-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
-                    <option value="">{t("capo_pick_recipe")}</option>
-                    {renderAllOptions(recipes)}
-                  </select>
+                  <div className="flex-1 min-w-0">
+                    <CategoryRecipePicker recipes={recipes} value={p.recipe_id || ""}
+                      onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setExtraToday((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
+                      testid={`capo-extra-recipe-${i}`} />
+                  </div>
                   <div className="relative w-[92px] shrink-0">
                     <input data-testid={`capo-extra-qty-${i}`} type="number" value={p.qty} placeholder={tri3(lang, "Qtà", "Menge", "Qty")}
                       onChange={(e) => setExtraToday((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
@@ -1311,12 +1311,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           {products.map((p, i) => (
             <div key={i} className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 space-y-2">
               <div className="flex items-center gap-2">
-                <select data-testid={`capo-product-recipe-${i}`} value={p.recipe_id || ""}
-                  onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
-                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
-                  <option value="">{t("capo_pick_recipe")}</option>
-                  {renderAllOptions(recipes)}
-                </select>
+                <div className="flex-1 min-w-0">
+                  <CategoryRecipePicker recipes={recipes} value={p.recipe_id || ""}
+                    onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value, name: r ? r.name : x.name } : x)); }}
+                    testid={`capo-product-recipe-${i}`} />
+                </div>
                 <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
               {p.recipe_id && (

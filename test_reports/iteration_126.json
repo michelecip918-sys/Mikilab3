@@ -1,0 +1,36 @@
+{
+  "summary": "Iteration 126 — frontend-only test of the new CategoryRecipePicker (category panels replacing the long native <select>) in Impara (Beginners) and in the Lab plan generator (PianoProduzioneAI). Logged in as admin@mikilab.de (mobile 390x844 + desktop 1920x1080). IMPARA: home-product-recipe-0-trigger is a button; it opens the portal modal home-product-recipe-0-modal showing 5 clickable category panels (cat-basi 6, cat-viennoiserie 32, cat-pane 58, cat-focacce 12, cat-snack 12) each with icon, large bold title and count. Drill-down cat-pane → 58 items (home-product-recipe-0-item-<id>); clicking an item closes the modal and the trigger shows the recipe name; back button returns to the category grid (search input correctly hidden in item view); X closes. SEARCH: typing 'bag' → 3 filtered items, selecting one set the recipe correctly; 'zzzqqq' → 0 items + no-results message. REGRESSION: after picking via the new picker, home-generate created the plan successfully (plan text rendered). LABORATORIO (nav-tab-maestro): capo-product-recipe-0-trigger opens the same modal (5 cats, pane 59 items), selection populates the product (trigger shows name); capo-extra-recipe-0-trigger (after capo-extra-toggle) works identically (focacce → 12 items, selection OK); with qty filled capo-generate became enabled and generated the plan ('Plan generated' + Ciabatta/Step content). No JS console errors from the picker (only pre-login 401s on session endpoints, expected).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "CategoryRecipePicker trigger (Impara + Lab)", "issues": [
+        "The selected recipe name is not clamped: with long names (e.g. 'Artisan Panettone MikiLab — Apricot and Chocolate (Apricot and Chocolate Panettone (sourdough starter, 2 doughs))') the trigger grows from 42px to 82px on desktop and to ~10 wrapped lines on mobile 390px, stretching the product row and pushing qty/day controls out of alignment. Suggest line-clamp-2 / truncate on the span in components/CategoryRecipePicker.jsx line 44."
+      ]},
+      {"screen": "CategoryRecipePicker category grid", "issues": [
+        "Recipe count label is hardcoded Italian ('N ricette' / 'ricetta') even with UI language EN/DE (verified in EN: 'Bread & Baked Goods 58 ricette'). Use t()/tri3 like the rest of the component (line 86).",
+        "Minor: with 5 categories the 2-column grid leaves one empty cell (cosmetic only)."
+      ]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "i18n: translate the 'N ricette' counter in CategoryRecipePicker (currently Italian in EN/DE).",
+    "Clamp/truncate the selected recipe name on the picker trigger to avoid the row stretching on mobile."
+  ],
+  "critical_code_review_comments": [
+    "CategoryRecipePicker: search results are limited to slice(0,40) with no 'showing first 40' hint — a user searching a common term may believe results are missing.",
+    "Modal has no Escape-key handler and no focus trap / body scroll lock; on mobile the underlying page still scrolls behind the fixed overlay.",
+    "byCat is computed for all CATS on every recipes/lang change (fine at ~120 recipes) but recipeCategory() runs 5x per recipe; a single-pass groupBy would be cheaper.",
+    "The trigger button has no aria-haspopup/aria-expanded; the modal has no role=\"dialog\"/aria-modal for screen readers."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "100% of requested flows passed (4/4)" },
+  "seed_data_creation": "None. Generated 2 throwaway AI plans (Impara + Lab) that were not saved to the archive.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Picker flow: dismiss lab-tour-skip after login. Impara: nav-tab-impara, trigger is immediately in DOM. Lab: nav-tab-maestro — capo-product-recipe-0-trigger is on the Your Lab page after scrolling (maestro-tool-pianoai does not exist as a testid); capo-generate stays disabled until capo-product-qty-0 is filled (hint capo-generate-hint). 'Extra di oggi' pickers only render after clicking capo-extra-toggle. Modal is a portal on document.body with z-[9999]; normal (non-forced) clicks work everywhere.",
+  "rca_of_the_issue": "No functional defects found; only i18n of the recipe counter and missing text truncation on the trigger."
+}

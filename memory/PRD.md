@@ -2510,3 +2510,9 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Conteggio pubblico ❤N**: badge sul cuore delle card (recipe-fav-count-<id> e custodite-fav-count-<id>) quando count>0, dai dati reali di /api/favorites/counts.
 - Verifica iteration_125: TUTTO PASS (backend 6/6, frontend inclusa persistenza account dopo logout/login+clear localStorage, sync fra viste, conteggio, fila). 0 bug ui/integration/design. Dati di test puliti.
 - **Note non-blocking (code review)**: (a) sync unisce i preferiti locali dell'ospite nell'account che fa login sul device (scelta di design; per reconciliation avanzata servirebbe timestamp); (b) /favorites/counts aggrega tutta la collection ad ogni chiamata → con crescita aggiungere indice su recipe_id o cache.
+
+## v-fork.101 (2026-06) — Selettore ricetta a CATEGORIE (pannelli cliccabili) al posto del lungo <select>
+- **Nuovo componente** `components/CategoryRecipePicker.jsx`: pulsante trigger + modale (portal, z-9999) con GRIGLIA di categorie cliccabili (icona + titolo grande leggibile + conteggio) → drill-down alle ricette della categoria + ricerca. onChange({target:{value:id}}) compatibile con i vecchi select. Usa CATS/recipeCategory da lib/recipeCats.
+- **Wiring**: Impara 'Organizza la produzione' (home-product-recipe-<i>) e Laboratorio/PianoProduzioneAI (capo-product-recipe-<i>, capo-extra-recipe-<i>). testid: <base>-trigger/-modal/-cat-<key>/-item-<id>/-search/-back/-close.
+- **Verifica iteration_126**: TUTTO PASS (Impara + Lab, mobile+desktop): categorie (basi/viennoiserie/pane/focacce/snack) con conteggi, drill-down, ricerca, selezione che popola il piano, generazione OK. 0 ui/integration bug.
+- **Rifiniti 2 design issue**: (a) nome ricetta selezionato ora `truncate` (nomi lunghi non allungano più la riga); (b) etichetta conteggio categoria ora IT/DE/EN (non più solo 'ricette').

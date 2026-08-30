@@ -1,6 +1,7 @@
 import { useLang } from "@/i18n/LanguageContext";
 import { recipeTitle } from "@/lib/loc";
 import RecipeOptions from "@/components/RecipeOptions";
+import CategoryRecipePicker from "@/components/CategoryRecipePicker";
 import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
 import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame, ChevronRight, ChevronDown, MessageCircle } from "lucide-react";
@@ -88,14 +89,10 @@ function HomePlanner() {
       <div className="space-y-2" data-testid="home-products">
         {products.map((p, i) => (
           <div key={i} className="flex items-center gap-2">
-            <div className="relative flex-1 min-w-0">
-              <select data-testid={`home-product-recipe-${i}`} value={p.recipe_id || ""}
+            <div className="flex-1 min-w-0">
+              <CategoryRecipePicker recipes={recipes} value={p.recipe_id || ""}
                 onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, recipe_id: e.target.value } : x))}
-                className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2.5 pl-3 pr-9 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all cursor-pointer">
-                <option value="">{t("capo_pick_recipe")}</option>
-                <RecipeOptions recipes={recipes} />
-              </select>
-              <ChevronDown className="w-4 h-4 text-[#ff6b00] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                testid={`home-product-recipe-${i}`} />
             </div>
             <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
