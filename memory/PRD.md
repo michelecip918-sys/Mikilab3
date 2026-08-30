@@ -2672,3 +2672,10 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Miglioratore Naturale — copy semplificata** (richiesta utente "dici solo che lo trovano nelle basi"): `RicetteCustodite.jsx` card ("lo trovi già pronto nelle basi (prefermenti e impasti): usalo così com'è, 100% naturale, senza additivi chimici") e `MiglioratoreDetail.jsx` ("già dosato nelle basi delle ricette, pronto all'uso…"). Rimosso il racconto personale / "puoi sostituirlo". Button → "Il Miglioratore MikiLab: scopri di più". Mantenuti lista ingredienti + dosaggio.
 - **Social/OG**: creato `frontend/public/og-image.jpg` (1200×630, ritaglio di hero-social.jpg) — prima mancava benché referenziato in index.html → anteprima link ora corretta su WhatsApp/FB/IG/Telegram. SEO/OG/Twitter/manifest/icone già presenti e completi.
 
+
+---
+## v-fork.23 (2026-06, fork) — Kit promozione social (QR + post pronto + Invita + Seguici)
+- **`components/PromuoviMikiLab.jsx`** in Home (dopo le giant CTA): pulsante "Invita un amico" (Web Share / copia link), **post di lancio pronto** multilingua con copia (CAPTIONS it/de/en/es/fr/fa + hashtag), **QR code** del sito (`public/qr-mikilab.png`, generato con lib qrcode) con Scarica, e sezione **"Seguici"** che mostra i pulsanti social solo se configurati.
+- **`config/social.js`**: SOCIAL = { instagram, facebook, tiktok, youtube, whatsapp } (vuoti finché l'utente non fornisce gli URL) + SITE_URL. Da compilare con i profili reali dell'utente per attivare i pulsanti "Seguici".
+- TODO (attesa utente): inserire gli URL dei profili social in config/social.js.
+

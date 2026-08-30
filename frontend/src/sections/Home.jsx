@@ -17,6 +17,7 @@ import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import StreakFlame from "@/components/StreakFlame";
+import PromuoviMikiLab from "@/components/PromuoviMikiLab";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
 import { getProfile } from "@/components/Onboarding";
@@ -338,6 +339,9 @@ export default function Home({ onNavigate }) {
           <ChevronRight className="w-6 h-6 shrink-0 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
+
+      <PromuoviMikiLab />
+
 
       {/* Prova sociale: rassicura al primo colpo d'occhio, sotto le CTA */}
       <div data-testid="home-social-proof" className="flex items-center justify-center gap-3 -mt-1">
