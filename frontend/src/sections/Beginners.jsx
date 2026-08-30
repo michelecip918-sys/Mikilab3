@@ -44,10 +44,11 @@ function HomePlanner() {
 
   const recipeById = useMemo(() => Object.fromEntries(recipes.map((r) => [r.id, r])), [recipes]);
 
-  const addRecipesHome = (ids) => setProducts((l) => {
+  const addRecipesHome = (entries) => setProducts((l) => {
+    const items = (entries || []).map((e) => (typeof e === "string" ? { id: e } : e));
     const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
     const base = l.filter((p) => p.recipe_id);
-    const toAdd = ids.filter((id) => !existing.has(id)).map((id) => ({ recipe_id: id, qty: "2", gpp: "500", day: "" }));
+    const toAdd = items.filter((it) => it.id && !existing.has(it.id)).map((it) => ({ recipe_id: it.id, qty: it.qty || "2", gpp: "500", day: it.day || "" }));
     const next = [...base, ...toAdd];
     return next.length ? next : [{ recipe_id: "", qty: "2", gpp: "500", day: "" }];
   });
@@ -121,6 +122,7 @@ function HomePlanner() {
           <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
           <div className="w-full sm:w-auto sm:min-w-[190px]">
             <CategoryRecipePicker recipes={recipes} multi onAddMany={addRecipesHome}
+              quickAdd={{ qty: true, day: true, defaultQty: "2" }}
               selectedIds={products.map((p) => p.recipe_id).filter(Boolean)} testid="home-add-picker" />
           </div>
         </div>

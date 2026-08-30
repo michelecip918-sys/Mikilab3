@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend-only testing of the 3 new CategoryRecipePicker features (QUICK QUANTITIES, FAVORITES pseudo-category, RECENTLY USED chips) + regressions, on desktop 1920x900 and mobile 430x900, logged in as admin@mikilab.de. RESULTS: (1) QUICK QUANTITIES work in all 3 consumers: capo-add-picker quick row (default qty 10 + day select) -> capo-product-qty-0/1 = 25/7 and capo-product-day-0/1 = mar/gio (verified after expanding 'Options'); weekly-add-lun quick row shows ONLY qty (no day select, confirmed count 0) -> weekly-pieces rows = 33/44 and weekly-day-total-lun updated to 99 pcs; home-add-picker quick row (default qty 2 + day) -> home-product-qty-0/1 = 5/9, home-product-day-0/1 = mer/ven. Typing in the number input and choosing a day never unchecks the recipe nor closes the modal. (2) FAVORITES: after hearting 2 recipes in Ricette (recipe-fav-<id>), capo-add-picker-cat-favs is rendered FIRST in the grid with heart icon and count '2 recipes'; drilling in lists exactly the 2 favorited ids; the fav pseudo-cat also appears in single-mode pickers. (3) RECENTLY USED: after a bulk add, reopening the picker shows capo-add-picker-recent-row with exactly the chips of the just-used recipes; clicking a chip toggles the check and updates 'Add (N)'; re-adding an already-planned recipe creates NO duplicate (rows stayed 2); localStorage 'mikilab_recent_recipes' persists and is also written by single-mode selection. (4) REGRESSION: single picker (capo-product-recipe-0-trigger) opens the same modal WITHOUT checkboxes/quick inputs/'Add' footer, selects and CLOSES, updates the trigger label, and records the recipe in recents; category photos load; 'in plan' hint shown on already-added recipes; 'No results' empty state on a non-matching search; empty-state text for zero-recipe lists is now present in code (iteration_127 issue fixed).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "CategoryRecipePicker / favorites source", "issue": "The Favorites pseudo-category depends on getFavs() reading localStorage ONLY. Account favourites are hydrated from the server (favApi.sync) only when useFavRecipes mounts, i.e. when the Recipes list is opened. In a fresh browser session that logs in and goes straight to Your Lab / Weekly Plan, localStorage is empty so capo-add-picker-cat-favs / weekly-add-<day>-cat-favs are NOT shown even though the account has favourites (reproduced: weekly-add-lun-cat-favs count = 0 in a session where the Recipes tab was never visited).", "selector": "[data-testid=\"capo-add-picker-cat-favs\"]", "priority": "MEDIUM"},
+      {"component": "Quick qty input (mobile 430px)", "issue": "The 'pcs/pz' suffix label sits on top of the native number-input spinner arrows inside the 96px wide input, so at focus the spinner overlaps the unit text (cosmetic crowding, still readable/usable).", "selector": "[data-testid^=\"capo-add-picker-qty-\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "PianoProduzioneAI product rows", "issues": ["The day picked inline in the quick-add row is applied to the product but the capo-product-day-<i> select is hidden behind the 'Options' toggle, so the user gets no visible confirmation that the day was set (weekly/home show it directly). Consider auto-expanding _opts (or showing a small day chip) for rows created with a day."]},
+      {"screen": "Picker modal desktop + mobile", "issues": ["Dark theme respected (#161616 sheet, #FF6B00 accents), favourites card gradient + heart readable, recent chips scroll horizontally without overflow, no contrast/spacing defects found"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Hydrate account favourites globally (e.g. call favApi.sync on app/auth bootstrap or make CategoryRecipePicker fetch favourites) so the Favorites pseudo-category appears in Your Lab / Weekly Plan without first visiting the Recipes tab.",
+    "Optional: surface the day chosen in the quick-add row on the capo product row (auto-open 'Options' or show a day chip).",
+    "Optional: widen the quick qty input / move the pcs unit label so it does not overlap the number spinner on mobile."
+  ],
+  "critical_code_review_comments": [
+    "CategoryRecipePicker: consumers (PianoProduzioneAI.addRecipes, WeeklyPlan.addRecipesToDay, Beginners.addRecipesHome) all accept both string ids and {id,qty,day} objects - backwards compatible, good.",
+    "PianoProduzioneAI.jsx is ~1824 lines and RecipeList.jsx ~1327 lines; both exceed the 700-line guideline and should be split.",
+    "Testing note: RecipeList category folders are COLLAPSED by default, so recipe-fav-<id> buttons only exist after clicking cat-folder-<key>; also '[data-testid^=\"recipe-fav-\"]' matches the recipe-fav-row div and recipe-fav-count-* spans - use 'button[data-testid^=\"recipe-fav-\"]'."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "97%"},
+  "seed_data_creation": "Favourited 2 MikiLab 'basi' recipes on the admin account (a052ba40-..., a72f2b01-...) via the heart buttons; these persist server-side. UI-only product/weekly/home rows were added but no plan was generated or saved.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Login is via header data-testid 'login-btn' (auth screen is NOT auto-shown); newsletter popup blocks clicks after ~14s for guests - set localStorage 'mikilab_newsletter_seen'='1' right after load. Reach tools with localStorage.setItem('mikilab_pending_tool','pianoai'|'settimana') then click nav-tab-maestro; home planner is on nav-tab-impara. capo-product-day-<i> only renders after clicking capo-product-opts-<i>. Recipes tab: expand cat-folder-<key> before looking for recipe cards/hearts.",
+  "rca_of_the_issue": "Favorites pseudo-category missing outside the Recipes tab: getFavs() in lib/favorites.jsx reads localStorage 'mikilab_fav_recipes'; the server merge (favApi.sync) runs only inside useFavRecipes, which is mounted by RecipeList. Therefore a session that never opens the Recipes list has an empty local favourites set and CategoryRecipePicker hides the '__fav__' card."
+}

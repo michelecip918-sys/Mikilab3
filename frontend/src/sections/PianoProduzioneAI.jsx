@@ -414,12 +414,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     return (toolPrefs.pinned || []).map((id) => byId[id]).filter(Boolean).map((tl) => ({ ...tl, pinned: true }));
   }, [toolPrefs]);
 
-  const addRecipes = (ids) => setProducts((l) => {
+  const addRecipes = (entries) => setProducts((l) => {
+    const items = (entries || []).map((e) => (typeof e === "string" ? { id: e } : e));
     const existing = new Set(l.map((p) => p.recipe_id).filter(Boolean));
     const base = l.filter((p) => p.recipe_id || p.name || p.qty);
-    const toAdd = ids.filter((id) => !existing.has(id)).map((id) => {
-      const r = recipes.find((x) => x.id === id);
-      return { recipe_id: id, name: r ? r.name : "", qty: "", unit: "pezzi", gpp: "", day: "", start: false };
+    const toAdd = items.filter((it) => it.id && !existing.has(it.id)).map((it) => {
+      const r = recipes.find((x) => x.id === it.id);
+      return { recipe_id: it.id, name: r ? r.name : "", qty: it.qty || "", unit: "pezzi", gpp: "", day: it.day || "", start: false };
     });
     return [...base, ...toAdd];
   });
@@ -1373,6 +1374,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
             <div className="w-full sm:w-auto sm:min-w-[190px]">
               <CategoryRecipePicker recipes={recipes} multi onAddMany={addRecipes}
+                quickAdd={{ qty: true, day: true, defaultQty: "10" }}
                 selectedIds={products.map((p) => p.recipe_id).filter(Boolean)} testid="capo-add-picker" />
             </div>
             {savedProducts.length > 0 && (

@@ -117,13 +117,14 @@ export default function WeeklyPlan() {
     return m;
   }, [recipes]);
 
-  const addRecipesToDay = (day, ids) => {
-    if (!ids || !ids.length) return;
+  const addRecipesToDay = (day, entries) => {
+    const items = (entries || []).map((e) => (typeof e === "string" ? { id: e } : e));
+    if (!items.length) return;
     setItems((it) => [
       ...it,
-      ...ids.map((id, k) => {
-        const r = recipes.find((x) => x.id === id);
-        return { id: `${Date.now()}-${k}-${Math.random().toString(36).slice(2, 6)}`, day, recipe_id: id, recipe_name: r ? r.name : "", pieces: 10, grams_per_piece: defaultGrams(r ? r.name : "") };
+      ...items.filter((x) => x.id).map((x, k) => {
+        const r = recipes.find((y) => y.id === x.id);
+        return { id: `${Date.now()}-${k}-${Math.random().toString(36).slice(2, 6)}`, day, recipe_id: x.id, recipe_name: r ? r.name : "", pieces: Number(x.qty) > 0 ? Number(x.qty) : 10, grams_per_piece: defaultGrams(r ? r.name : "") };
       }),
     ]);
   };
@@ -603,7 +604,8 @@ export default function WeeklyPlan() {
                 </div>
                 <div className={recipes.length === 0 ? "opacity-40 pointer-events-none" : ""}>
                   <CategoryRecipePicker recipes={recipes} multi compact
-                    onAddMany={(ids) => addRecipesToDay(d.id, ids)}
+                    onAddMany={(entries) => addRecipesToDay(d.id, entries)}
+                    quickAdd={{ qty: true, day: false, defaultQty: "10" }}
                     selectedIds={dayItems.map((x) => x.recipe_id).filter(Boolean)}
                     testid={`weekly-add-${d.id}`} />
                 </div>

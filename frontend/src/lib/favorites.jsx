@@ -25,6 +25,14 @@ export function toggleFavId(id) {
 
 let countsCache = null;
 
+// Idrata i preferiti dell'account nel localStorage (da chiamare al bootstrap/login,
+// così la categoria "Preferite" è disponibile ovunque, non solo nella tab Ricette).
+export function hydrateFavs() {
+  return favApi.sync([...getFavs()])
+    .then((serverIds) => { if (Array.isArray(serverIds)) writeLocal(new Set(serverIds)); })
+    .catch(() => {});
+}
+
 export function useFavRecipes() {
   const [favs, setFavs] = useState(getFavs);
   const [counts, setCounts] = useState(() => countsCache || {});
