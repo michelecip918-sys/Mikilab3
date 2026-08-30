@@ -823,7 +823,7 @@ async def auth_register(payload: RegisterReq, request: Request, response: Respon
         raise HTTPException(status_code=400, detail="Email già registrata")
     from pymongo.errors import DuplicateKeyError
     user_id = f"user_{uuid.uuid4().hex[:12]}"
-    verify_enabled = bool(RESEND_API_KEY)
+    verify_enabled = False  # auto-login subito dopo la registrazione (nessuna conferma email obbligatoria)
     try:
         await db.users.insert_one({
             "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],

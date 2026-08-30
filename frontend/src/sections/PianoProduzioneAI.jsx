@@ -172,6 +172,8 @@ export const TOOLS = [
   { id: "aggiungi", Icon: BookOpen, cat: "manisporche", kind: "info", it: "Le Mie Ricette", de: "Meine Rezepte", en: "My Recipes", es: "Mis Recetas" },
   { id: "cantiere", Icon: FileText, cat: "manisporche", kind: "genera", it: "Ricetta di Cantiere (PDF)", de: "Baustellen-Rezept (PDF)", en: "Worksite Recipe (PDF)", es: "Receta de Obra (PDF)" },
   { id: "bancalievito", Icon: Sprout, cat: "manisporche", kind: "registri", it: "Banca del Lievito", de: "Sauerteig-Bank", en: "Starter Bank", es: "Banco de Masa Madre" },
+  { id: "custodite", Icon: BookOpen, cat: "manisporche", kind: "info", it: "Ricette Custodite", de: "Bewahrte Rezepte", en: "Guarded Recipes", es: "Recetas Guardadas" },
+  { id: "saporicasa", Icon: Cookie, cat: "manisporche", kind: "info", it: "Sapori di Casa", de: "Hausgemachte Spezialitäten", en: "Home Flavours", es: "Sabores de Casa" },
   // 🏬 Gestione Attività & Cold Chain
   { id: "capo", Icon: Building2, cat: "coldchain", kind: "gestione", it: "Controllo Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers", es: "Cámaras y Amasadoras" },
   { id: "freezer", Icon: Snowflake, cat: "coldchain", kind: "gestione", it: "Giacenze Freezer", de: "Gefrier-Bestand", en: "Freezer Stock", es: "Stock Congelador" },

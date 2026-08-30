@@ -4,7 +4,7 @@ import { X, Home as HomeIcon, BookOpen, Wrench, GraduationCap, Users, Trophy, Me
   Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
-import { TOOLS, TOOL_CATS, CAT_RELATED } from "@/sections/PianoProduzioneAI";
+import { TOOLS, TOOL_KINDS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
 import { mkTri } from "@/i18n/triMaps";
 
 const FAV_KEY = "mikilab_menu_favs";
@@ -145,23 +145,16 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                   </div>
                 )}
                 <div className="space-y-3">
-                  {TOOL_CATS.map((c) => {
-                    const items = TOOLS.filter((tl) => tl.cat === c.key);
+                  {TOOL_KINDS.map((c) => {
+                    const items = TOOLS.filter((tl) => tl.kind === c.key);
                     if (items.length === 0) return null;
-                    const related = (CAT_RELATED[c.key] || []).map((id) => byId[id]).filter((tl) => tl && tl.cat !== c.key);
                     return (
-                      <div key={c.key} data-testid={`site-menu-cat-${c.key}`}>
+                      <div key={c.key} data-testid={`site-menu-kind-${c.key}`}>
                         <div className="flex items-center gap-2 mb-1 pb-1 border-b" style={{ borderColor: `${c.color}40` }}>
                           <span className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: `${c.color}1a` }}><c.Icon className="w-3.5 h-3.5" style={{ color: c.color }} /></span>
                           <span className="font-display text-sm font-bold" style={{ color: c.color }}>{tri(c.it, c.de, c.en, c.es)}</span>
                         </div>
                         <div className="grid grid-cols-1 gap-1.5">{items.map((tl) => <ToolRow key={tl.id} tl={tl} />)}</div>
-                        {related.length > 0 && (
-                          <div className="mt-1.5" data-testid={`site-menu-related-${c.key}`}>
-                            <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1 pl-1">{tri("Strumenti collegati", "Verknüpfte Werkzeuge", "Related tools", "Herramientas vinculadas")}</p>
-                            <div className="grid grid-cols-1 gap-1.5">{related.map((tl) => <ToolRow key={`${c.key}-${tl.id}`} tl={tl} testid={`site-menu-related-tool-${c.key}-${tl.id}`} />)}</div>
-                          </div>
-                        )}
                       </div>
                     );
                   })}

@@ -1,0 +1,30 @@
+{
+  "summary": "Iteration 138: verified (1) registration auto-login (backend + UI), (2) session persistence after reload, (3) SiteMenu no longer crashes on the Lab tab (TOOL_CATS ReferenceError fixed) and shows the 4 functional groups, (4) admin login regression. Backend: 5/5 pytest passed. Frontend: all 4 flows passed, no page errors.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/auth/register", "issue": "Rate limit 5/hour per IP is shared across all preview traffic; repeated automated registration tests get 429. Not a product bug, but test runs must clear the `rate_limits` doc _id 'register:<ip>' first (script /app/backend/tests/_clear_ratelimit.py)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "SiteMenu (Lab) search", "issues": ["Tool search matches only the label in the CURRENT UI language (searching 'forno' with EN UI returns 'No results.'). Consider matching all 4 translations."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter138_autologin.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py /auth/register: verify_enabled is a hardcoded local flag; the whole verification branch (_send_verification, needs_verification) is now dead code. Consider driving it from an env var so it can be re-enabled without code change.",
+    "SiteMenu.jsx tool search: use all language variants of the label in the norm() filter."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter138_autologin.py", "/app/backend/tests/_clear_ratelimit.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Created throwaway users qa_<epoch>@mikilab.de / Mikilab2026! (registration tests). Not deleted (no delete-user endpoint).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (works). New registrations: qa_<epoch>@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Register auto-login confirmed: POST /api/auth/register returns {user, session_token} (no needs_verification); /auth/me and /community/posts work with that Bearer token. UI: header login-btn -> auth-tab-register -> auth-name/email/password/confirm -> auth-submit; auth screen closes and login-btn disappears; nav-tab-community shows data-testid=community with no community-auth-gate; survives reload. SiteMenu: site-menu-open in header, groups site-menu-kind-genera/gestione/registri/info all render, 46 site-menu-tool-* rows, clicking site-menu-tool-generatore opens the tool. site-menu-admin shown for admin. Note: registration is rate-limited 5/h per IP — run /app/backend/tests/_clear_ratelimit.py before register tests. The 401s in console (/auth/me, /combos/sync, /favorites/sync, /notifications) occur only in the pre-login guest state and are expected.",
+  "rca_of_the_issue": "N/A — both reported fixes verified working. Only observation: register rate limiting (429) can mask register test failures; clear rate_limits before testing."
+}

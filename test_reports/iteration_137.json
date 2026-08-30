@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend-only test of the tools-menu coherence pass (MikiLab). Logged in as admin@mikilab.de on desktop 1920x800 and mobile 390px. Verified: on-page ToolsDirectory, generator 'Tutti gli strumenti' drawer and global hamburger SiteMenu all group tools by the same 4 functional groups (genera/gestione/registri/info) with identical membership; new tools 'Ricette Custodite' (custodite) and 'Sapori di Casa' (saporicasa) appear in the Info group of all 3 surfaces and open correctly; LabWizard is rendered at the top of the Lab landing (y=281) above 'Da dove iniziare' (y=1444). FOUND AND FIXED one app-crashing bug: SiteMenu used TOOL_CATS without importing it -> opening the hamburger in the Lab context threw 'ReferenceError: TOOL_CATS is not defined' and white-screened the app (reproduced with screenshot + pageerror). After adding the missing import, all hamburger flows pass with zero console errors.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "SiteMenu.jsx", "issue": "CRASH (reproduced, then fixed by adding the missing import): catOf() referenced TOOL_CATS which was not imported (only TOOLS, TOOL_KINDS were). Opening the top-left hamburger while on 'Il Tuo Laboratorio' raised ReferenceError: TOOL_CATS is not defined and the whole app went to the CRA runtime-error overlay. Fix applied = import TOOL_CATS; main agent should decide if the tool icon color should instead come from TOOL_KINDS (tl.kind) for full visual coherence with the new functional grouping.", "selector": "site-menu / site-menu-tool-*", "priority": "CRITICAL"}
+    ],
+    "integration_issues": [
+      {"flow": "Coherence of tool menus", "issue": "A FOURTH surface is still grouped by the OLD thematic categories: the tools grid inside PianoProduzioneAI (PianoProduzioneAI.jsx:1134 TOOL_CATS.map) renders tools-cat-panificazione / pizzeria / pasticceria / manisporche / coldchain on the SAME Lab page that also shows the new functional ToolsDirectory. So the user sees two different groupings of the same tools one below the other, which contradicts the coherence goal.", "affected_selectors": ["tools-cat-panificazione", "tools-cat-coldchain", "maestro-tools-directory"]}
+    ],
+    "design_issues": [
+      {"screen": "Tool search (SiteMenu + ToolsDirectory)", "issues": ["Search matches only the label in the CURRENT UI language: with UI=EN, searching the Italian name ('Sapori', 'Custodite') returns 'No tool found' / 'Nessuno strumento trovato'. Recommend matching across it/de/en/es names + tool id."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Review my minimal fix in SiteMenu.jsx (added TOOL_CATS to the import) - optionally switch ToolRow icon color to TOOL_KINDS colour so the hamburger colours match the functional grouping; also add ESLint no-undef to the pre-commit check since this crash was statically detectable.",
+    "Decide about the legacy thematic tools grid inside PianoProduzioneAI (tools-cat-*): either regroup it by TOOL_KINDS or remove it, otherwise the Lab page shows two conflicting groupings.",
+    "Make tool search language-agnostic (match all locales + id)."
+  ],
+  "critical_code_review_comments": [
+    "SiteMenu.jsx: ReferenceError shipped to the preview - lint (no-undef) already flagged it; run lint before handing off.",
+    "SiteMenu.jsx:83 ToolRow is defined inside the component (react/no-unstable-nested-components) - remounts every render, loses focus/state on the search field.",
+    "PianoProduzioneAI.jsx is 1738 lines and exports the tool registry consumed by 3 components; extract TOOLS/TOOL_KINDS/TOOL_CATS into src/lib/tools.js to avoid circular/heavy imports."
+  ],
+  "updated_files": ["/app/frontend/src/components/SiteMenu.jsx"],
+  "success_rate": {"backend": "not tested", "frontend": "90% (all requested flows pass after the 1 import fix; 1 coherence gap remains)"},
+  "seed_data_creation": "none (only toggled a menu favourite for saporicasa, reverted at the end)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Verified maps (identical in drawer and hamburger): genera=[generatore,fermentazione,weatherbaker,simforno,adatta,acqua,metodo,sequenze,twin,cosafare,stampi,bilancia,pesata,termo,labpizzeria,labpasticceria,convlievito,cantiere]; gestione=[energia,capo,freezer,salespoints,foodcost,spreco,mydata,macchine]; registri=[timelapse,ph,bancalievito,dayclose,sessioni,check,shelf,haccp]; info=[trovafarina,scanflour,esuberozero,recupero,manisporche,timer,sosimpasto,aggiungi,custodite,saporicasa,diagnosi,suono]. Hamburger has no data-testid: use \"header button:has(svg.lucide-menu)\". Site-menu search matches only the current-language label. Preferiti group (site-menu-cat-preferiti) still renders above the kind groups - by design.",
+  "rca_of_the_issue": "SiteMenu was refactored from TOOL_CATS-based grouping to TOOL_KINDS, but the helper catOf(tl.cat) (used for the tool icon colour inside ToolRow) was left behind while the TOOL_CATS import was dropped. Every ToolRow render therefore threw a ReferenceError, crashing the whole React tree the moment the hamburger was opened in the Lab context. Reproduction: login -> nav-tab-maestro -> click hamburger -> runtime-error overlay 'TOOL_CATS is not defined'. Mitigation applied: re-import TOOL_CATS in /app/frontend/src/components/SiteMenu.jsx; re-tested - menu, search, favourites and tool opening all work with no console errors."
+}
