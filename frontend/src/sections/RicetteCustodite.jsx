@@ -611,7 +611,7 @@ const onImgErr = (e) => { if (e.currentTarget.src !== FALLBACK_IMG) e.currentTar
 
 export default function RicetteCustodite({ initialId = null }) {
   const { lang } = useLang();
-  const { isFav, toggle: toggleFav } = useFavRecipes();
+  const { isFav, toggle: toggleFav, countOf } = useFavRecipes();
   const L = (o) => {
     if (!o) return "";
     if (o[lang]) return o[lang];
@@ -851,8 +851,9 @@ export default function RicetteCustodite({ initialId = null }) {
             </button>
             <button type="button" data-testid={`custodite-fav-${r.id}`} aria-pressed={isFav(`custodite:${r.id}`)}
               onClick={() => toggleFav(`custodite:${r.id}`)}
-              className="absolute top-2 right-2 z-10 bg-white/90 dark:bg-[#121212]/80 rounded-full p-1.5 shadow active:scale-90 transition-transform">
+              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 bg-white/90 dark:bg-[#121212]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform">
               <Heart className={`w-4 h-4 ${isFav(`custodite:${r.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
+              {countOf(`custodite:${r.id}`) > 0 && <span data-testid={`custodite-fav-count-${r.id}`} className="text-[11px] font-bold text-[#ff3b5c] leading-none">{countOf(`custodite:${r.id}`)}</span>}
             </button>
           </div>
         ))}

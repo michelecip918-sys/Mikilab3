@@ -1,0 +1,24 @@
+{
+  "summary": "Iteration 125 — tested the 3 favourites features (account persistence, 'Le tue preferite' row, public ❤N count) on backend + frontend. Backend: 6/6 pytest passed (GET /api/favorites, POST toggle, POST sync, public GET /api/favorites/counts, auth guard, invalid payload, custodite:<id> keys). Frontend (mobile 390x844, admin@mikilab.de): favourited 2 MikiLab recipes from the expanded 'Bread' folder → hearts turned aria-pressed=true, public count badge recipe-fav-count-<id> appeared with value 1 within ~1s; recipe-fav-row appeared above the filters with title 'Your favourites' and mini-cards fav-row-item-<id>; clicking a mini-card opened the detail with fav-recipe-<id> heart already filled (views in sync). F5 reload kept the favourites; logout + clearing localStorage 'mikilab_fav_recipes' + re-login restored both favourites FROM THE SERVER (sync repopulated localStorage) → account persistence confirmed. Row correctly hidden when cat-filter-favs is active and absent when there are 0 favourites (chip shows 'Favourites' with no counter, empty-state message shown). Custodite showcase heart (custodite-fav-matera) toggles and shows count 1 using the custodite:<id> key. All test favourites cleaned up (GET /api/favorites → []).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_iter125_favorites.py", "/app/backend/tests/_cleanup_iter125.py", "/app/test_reports/pytest/iter125.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "lib/favorites.jsx: useFavRecipes mount does sync(local -> server) and takes the server union as truth. Consequence: a guest's localStorage favourites are merged into whichever account logs in on that device, and an un-favourite done on another device can be re-added by this device's stale localStorage. Consider sending only additions made while logged out, or timestamp-based reconciliation (design decision, not blocking).",
+    "GET /api/favorites/counts aggregates the whole favorites collection on every call (no index/cache). With growth, add an index on recipe_id or a short server-side cache.",
+    "Added missing data-testid custodite-fav-count-<id> in sections/RicetteCustodite.jsx (the count span had none, unlike recipe-fav-count-<id>)."
+  ],
+  "updated_files": ["/app/frontend/src/sections/RicetteCustodite.jsx", "/app/backend/tests/test_iter125_favorites.py", "/app/backend/tests/_cleanup_iter125.py"],
+  "success_rate": { "backend": "100%", "frontend": "100%" },
+  "seed_data_creation": "Temporary favourites TEST_fav_r1/r2, custodite:TEST_fav_c1 (backend tests) and 2 real recipe favourites + custodite:matera (UI) — all removed; admin favourites list is empty.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Recipes list is inside collapsed category folders: click [data-testid='cat-folder-pane'] (or cat-folder-basi etc.) before recipe-fav-<id> hearts exist in DOM. Coming back from the Custodite section via nav-tab-ricette can leave the list unmounted (cat-filter-favs not in DOM) — reload the page instead. Toggle count refresh takes ~400-1000ms. Cleanup script: python /app/backend/tests/_cleanup_iter125.py.",
+  "rca_of_the_issue": "No defects found for the three requested features."
+}

@@ -1625,6 +1625,53 @@ async def save_weekly_plan(payload: WeeklyPlan, user: dict = Depends(current_use
 
 
 # ---------------------------------------------------------------------------
+# Preferiti ricette — per-account + conteggio pubblico ("❤ N")
+# ---------------------------------------------------------------------------
+class FavToggle(BaseModel):
+    recipe_id: str
+
+
+class FavSync(BaseModel):
+    ids: List[str] = []
+
+
+@api_router.get("/favorites")
+async def get_favorites(user: dict = Depends(current_user)):
+    docs = await db.favorites.find({"user_id": user["user_id"]}, {"_id": 0, "recipe_id": 1}).to_list(3000)
+    return [d["recipe_id"] for d in docs]
+
+
+@api_router.post("/favorites/toggle")
+async def toggle_favorite(payload: FavToggle, user: dict = Depends(current_user)):
+    q = {"user_id": user["user_id"], "recipe_id": payload.recipe_id}
+    existing = await db.favorites.find_one(q)
+    if existing:
+        await db.favorites.delete_one(q)
+        return {"recipe_id": payload.recipe_id, "favorite": False}
+    await db.favorites.insert_one({**q, "created_at": now_iso()})
+    return {"recipe_id": payload.recipe_id, "favorite": True}
+
+
+@api_router.post("/favorites/sync")
+async def sync_favorites(payload: FavSync, user: dict = Depends(current_user)):
+    for rid in payload.ids:
+        await db.favorites.update_one(
+            {"user_id": user["user_id"], "recipe_id": rid},
+            {"$setOnInsert": {"user_id": user["user_id"], "recipe_id": rid, "created_at": now_iso()}},
+            upsert=True,
+        )
+    docs = await db.favorites.find({"user_id": user["user_id"]}, {"_id": 0, "recipe_id": 1}).to_list(3000)
+    return [d["recipe_id"] for d in docs]
+
+
+@api_router.get("/favorites/counts")
+async def favorites_counts():
+    rows = await db.favorites.aggregate([{"$group": {"_id": "$recipe_id", "count": {"$sum": 1}}}]).to_list(5000)
+    return {r["_id"]: r["count"] for r in rows if r["_id"]}
+
+
+
+# ---------------------------------------------------------------------------
 # Piano di Produzione IA — ultimo piano generato (per utente)
 # ---------------------------------------------------------------------------
 @api_router.get("/capo/last-plan")

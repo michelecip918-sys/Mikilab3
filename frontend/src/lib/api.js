@@ -43,6 +43,14 @@ export const weeklyApi = {
   save: (data) => api.put(`/weekly-plan`, data).then((r) => r.data),
 };
 
+export const favApi = {
+  list: () => api.get(`/favorites`).then((r) => r.data),
+  toggle: (recipe_id) => api.post(`/favorites/toggle`, { recipe_id }).then((r) => r.data),
+  sync: (ids) => api.post(`/favorites/sync`, { ids }).then((r) => r.data),
+  counts: () => api.get(`/favorites/counts`).then((r) => r.data),
+};
+
+
 export const capoPlanApi = {
   get: () => api.get(`/capo/last-plan`).then((r) => r.data),
   save: (data) => api.put(`/capo/last-plan`, data).then((r) => r.data),

@@ -2502,3 +2502,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - Contatore chip 'Preferite (N)' e messaggio empty-state escludono le chiavi 'custodite:' (contano solo ricette MikiLab).
 - Verifica iteration_124: tutti e 4 gli scenari PASS, 0 bug (ui/integration/design). Sincronizzazione bidirezionale confermata.
 - MINOR noto (benigno): utenti anonimi generano alcuni 401 in console (chiamate auth-gated come /weekly-plan per-utente) — atteso, catchato, nessun impatto.
+
+## v-fork.100 (2026-06) — Preferiti su ACCOUNT + fila "Le tue preferite" + conteggio pubblico ❤N
+- **Backend preferiti per-account** (server.py ~1626): GET /api/favorites, POST /api/favorites/toggle, POST /api/favorites/sync (merge locale→account), GET /api/favorites/counts (pubblico, aggregato). Collection `favorites` {user_id, recipe_id, created_at}. Verificato pytest 6/6 + curl.
+- **Hook condiviso** (lib/favorites.jsx): al mount fa sync(local→server) e prende l'unione come verità; toggle ottimistico locale + POST server (401 ospite catchato) + refetch counts; espone countOf(id). favApi in lib/api.js.
+- **Fila "Le tue preferite"** (RecipeList `recipe-fav-row`): riga orizzontale in cima alle Ricette con mini-card (fav-row-item-<id>) che aprono il dettaglio; nascosta se 0 preferiti o se filtro Preferite attivo.
+- **Conteggio pubblico ❤N**: badge sul cuore delle card (recipe-fav-count-<id> e custodite-fav-count-<id>) quando count>0, dai dati reali di /api/favorites/counts.
+- Verifica iteration_125: TUTTO PASS (backend 6/6, frontend inclusa persistenza account dopo logout/login+clear localStorage, sync fra viste, conteggio, fila). 0 bug ui/integration/design. Dati di test puliti.
+- **Note non-blocking (code review)**: (a) sync unisce i preferiti locali dell'ospite nell'account che fa login sul device (scelta di design; per reconciliation avanzata servirebbe timestamp); (b) /favorites/counts aggrega tutta la collection ad ogni chiamata → con crescita aggiungere indice su recipe_id o cache.

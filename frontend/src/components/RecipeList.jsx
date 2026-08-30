@@ -43,7 +43,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [catFilter, setCatFilter] = useState("all");
   const [baseFilter, setBaseFilter] = useState("all");
   const [favFilter, setFavFilter] = useState(false);
-  const { favs, toggle: toggleFav } = useFavRecipes();
+  const { favs, toggle: toggleFav, countOf } = useFavRecipes();
   const [openCats, setOpenCats] = useState({});
   const [folderCovers, setFolderCovers] = useState({});
   const [translating, setTranslating] = useState(false);
@@ -337,10 +337,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 data-testid={`recipe-fav-${r.id}`}
                 aria-pressed={favs.has(r.id)}
                 onClick={(e) => { e.stopPropagation(); toggleFav(r.id); }}
-                className="absolute bottom-2 left-2 z-20 bg-white/90 dark:bg-[#121212]/80 rounded-full p-1.5 shadow active:scale-90 transition-transform"
+                className="absolute bottom-2 left-2 z-20 inline-flex items-center gap-1 bg-white/90 dark:bg-[#121212]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform"
                 title={favs.has(r.id) ? triM("Rimuovi dai preferiti", "Aus Favoriten entfernen", "Remove from favourites") : triM("Aggiungi ai preferiti", "Zu Favoriten", "Add to favourites")}
               >
                 <Heart className={`w-4 h-4 transition-colors ${favs.has(r.id) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
+                {countOf(r.id) > 0 && <span data-testid={`recipe-fav-count-${r.id}`} className="text-[11px] font-bold text-[#ff3b5c] leading-none">{countOf(r.id)}</span>}
               </button>
             </div>
             {/* testo */}
@@ -402,6 +403,27 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             )}
 
             {/* Filtro rapido per categoria (chip colorate) */}
+            {(() => {
+              const favRecipes = recipes.filter((r) => favs.has(r.id));
+              if (favRecipes.length === 0 || favFilter) return null;
+              return (
+                <div data-testid="recipe-fav-row" className="mb-3">
+                  <p className="text-xs font-extrabold uppercase tracking-wide text-[#ff3b5c] mb-1.5 flex items-center gap-1.5">
+                    <Heart className="w-3.5 h-3.5 fill-[#ff3b5c]" /> {triM("Le tue preferite", "Deine Favoriten", "Your favourites")}
+                  </p>
+                  <div className="flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1 snap-x">
+                    {favRecipes.map((r) => (
+                      <button key={r.id} data-testid={`fav-row-item-${r.id}`} onClick={() => setViewing(r)}
+                        className="snap-start shrink-0 w-32 text-left rounded-2xl overflow-hidden border border-[#ff3b5c]/40 bg-white dark:bg-[#1e1e1e] active:scale-97 hover:border-[#ff3b5c] transition-all">
+                        <img src={r.image_url || "/logo.png"} onError={(e) => { e.currentTarget.src = "/logo.png"; }} alt="" className="w-full h-16 object-cover bg-[#1e1e1e]" loading="lazy" />
+                        <p className="text-[12px] font-bold text-[#2B303B] dark:text-white px-2 py-1.5 line-clamp-2 leading-tight">{rLoc(r, "name", lang)}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
             <div data-testid="recipe-cat-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 px-0.5 scrollbar-none max-w-full">
               <button data-testid="cat-filter-favs" onClick={() => setFavFilter((v) => !v)}
                 className={`shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${favFilter ? "bg-[#ff3b5c] text-white border-[#ff3b5c] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff3b5c] border-[#ff3b5c]/40 hover:border-[#ff3b5c]"}`}>
