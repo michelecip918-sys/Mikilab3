@@ -50,7 +50,19 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
     const img = (r.image_url || "").startsWith("http") ? r.image_url : `${window.location.origin}${r.image_url}`;
     const title = rLoc(r, "name", lang);
     const text = `${title} — MikiLab 🥖`;
+    // 1) prova a condividere il FILE immagine vero (dove il telefono lo permette)
+    try {
+      const resp = await fetch(img);
+      const blob = await resp.blob();
+      const file = new File([blob], `${(title || "mikilab").replace(/[^a-z0-9]+/gi, "_").toLowerCase()}.jpg`, { type: blob.type || "image/jpeg" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title, text });
+        return;
+      }
+    } catch { /* fall through */ }
+    // 2) fallback: condividi il link della foto
     try { if (navigator.share) { await navigator.share({ title, text, url: img }); return; } } catch { return; }
+    // 3) ultimo fallback: WhatsApp web
     window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + img)}`, "_blank");
   };
 

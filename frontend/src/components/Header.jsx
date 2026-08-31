@@ -1,10 +1,11 @@
 import { mkTri } from "@/i18n/triMaps";
-import { Moon, Sun, Clock, LogOut, LogIn, Menu } from "lucide-react";
+import { Moon, Sun, Clock, LogOut, LogIn, Menu, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import AdminPanel from "@/components/AdminPanel";
 import NotificationBell from "@/components/NotificationBell";
+import GlobalSearch from "@/components/GlobalSearch";
 
 export default function Header() {
   const [dark, setDark] = useState(true);
@@ -49,6 +50,10 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-1 shrink-0">
+        <button data-testid="header-search-btn" onClick={() => window.dispatchEvent(new Event("mikilab-open-search"))} aria-label={mkTri(lang)("Cerca", "Suche", "Search", "Buscar", "Chercher", "جستجو")}
+          className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 hover:bg-[#d9e8f4] transition-all">
+          <Search className="w-4.5 h-4.5" />
+        </button>
         {/* Orologio (nascosto su schermi stretti per non coprire il titolo) */}
         <div data-testid="header-clock" className="hidden min-[560px]:flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] px-2.5 py-1.5">
           <Clock className="w-3.5 h-3.5 text-[#ff6b00]" />
@@ -119,6 +124,7 @@ export default function Header() {
       </div>
       </div>
       <AdminPanel open={adminOpen} onOpenChange={setAdminOpen} />
+      <GlobalSearch />
     </header>
   );
 }

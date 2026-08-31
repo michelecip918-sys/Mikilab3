@@ -82,6 +82,7 @@ export default function Community({ onNavigate }) {
   const [chatUser, setChatUser] = useState(null);
   const [msgUnread, setMsgUnread] = useState(0);
   const [feed, setFeed] = useState("all");
+  const [chSeen, setChSeen] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_channel_seen") || "{}"); } catch { return {}; } });
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => {
     const loadReq = () => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); };
@@ -155,6 +156,13 @@ export default function Community({ onNavigate }) {
   };
 
   const visible = filter === "all" ? posts : posts.filter((p) => p.category === filter);
+  const latestByCat = {};
+  for (const p of posts) { const c = p.category; if (c && (!latestByCat[c] || p.created_at > latestByCat[c])) latestByCat[c] = p.created_at; }
+  const hasNew = (id) => !!latestByCat[id] && (!chSeen[id] || latestByCat[id] > chSeen[id]);
+  const selectFilter = (id) => {
+    setFilter(id);
+    if (id !== "all") setChSeen((s) => { const n = { ...s, [id]: new Date().toISOString() }; try { localStorage.setItem("mikilab_channel_seen", JSON.stringify(n)); } catch { /* */ } return n; });
+  };
   const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // Registrazione OBBLIGATORIA per accedere al Social
@@ -299,7 +307,10 @@ export default function Community({ onNavigate }) {
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="community-filters">
         <button data-testid="community-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tri("Tutti", "Alle", "All", "Todos")}</button>
         {CATS.map((c) => (
-          <button key={c.id} data-testid={`community-filter-${c.id}`} onClick={() => setFilter(c.id)} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{catLabel(c.id)}</button>
+          <button key={c.id} data-testid={`community-filter-${c.id}`} onClick={() => selectFilter(c.id)} className={`relative px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+            {catLabel(c.id)}
+            {hasNew(c.id) && <span data-testid={`community-new-dot-${c.id}`} className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#ff3b5c] border border-[#121212] shadow" />}
+          </button>
         ))}
       </div>
 

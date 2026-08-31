@@ -2737,3 +2737,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Barra-indice nel Social**: `SectionJumpBar` in `Community.jsx` (`community-jump`, 4 chip: Scrivi→`community-composer`, Canali→`community-filters`, Bacheca→`community-feed`, Mercatino→`community-marketplace`). Aggiunto testid `community-composer`. Verificato (loggato).
 - **Condividi dalla Vetrina**: pulsante `vetrina-share` nel lightbox di `VetrinaFocacce.jsx` → `navigator.share` (sheet nativo: WhatsApp/Instagram/…) con fallback `wa.me`. Condivide nome + URL foto assoluto.
 - Tutto verificato via screenshot/DOM, 0 crash console. Solo frontend.
+
+
+---
+## v-fork.31 (2026-06, fork) — Condivisione file immagine, Ricerca globale, Badge novità canali
+- **Condividi come immagine VERA**: `shareItem` in `VetrinaFocacce.jsx` ora fa `fetch` della foto → `File` → `navigator.share({files})` se `navigator.canShare({files})` (allega il file su WhatsApp/Instagram/…); fallback su share del link e poi `wa.me`.
+- **Ricerca globale (NEW)**: `components/GlobalSearch.jsx` — overlay lanciato dal pulsante `header-search-btn` nell'Header (evento `mikilab-open-search`). Cerca in Ricette (recipesApi mikilab), Strumenti (`TOOLS` di PianoProduzioneAI, label localizzata) e Guide. Click: ricetta→goto ricette + `mikilab-open-recipe`; strumento→`mikilab_pending_tool` + goto maestro + `mikilab-open-lab-tool`; guida→goto tab. Verificato: cerca "pizza" → 4 ricette, click apre la scheda completa.
+- **Badge novità sui canali forum**: in `Community.jsx` traccio `chSeen` per canale in localStorage `mikilab_channel_seen`; pallino rosso (`community-new-dot-<id>`) sul chip quando l'ultimo post del canale è più recente dell'ultima visita; `selectFilter` marca il canale come visto all'apertura.
+- Tutto verificato via screenshot/DOM (ricerca + navigazione), 0 crash console (il timeout nel test era il modale ricetta aperto). Solo frontend.
