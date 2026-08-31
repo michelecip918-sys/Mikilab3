@@ -166,6 +166,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   emailReport: (days = 7) => api.get(`/admin/email-report`, { params: { days } }).then((r) => r.data),
   emailLogs: (days = 30) => api.get(`/admin/email-logs`, { params: { days } }).then((r) => r.data),
   socialReport: () => api.get(`/admin/social-report`).then((r) => r.data),
+  socialReset: () => api.post(`/admin/social-report/reset`).then((r) => r.data),
 };
 
 export const siteSettingsApi = {

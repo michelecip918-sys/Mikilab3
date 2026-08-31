@@ -145,6 +145,22 @@ export default function PromuoviMikiLab() {
   const caps = CAPTIONS[lang] || CAPTIONS.en;
   const caption = caps[variant];
   const activeSocials = SOCIALS.filter((s) => s.key !== "tiktok" && socialUrls[s.key]);
+  const shareFlyer = async () => {
+    const fileUrl = `${window.location.origin}${process.env.PUBLIC_URL || ""}/${flyerFile}`;
+    try {
+      const res = await fetch(fileUrl);
+      const blob = await res.blob();
+      const file = new File([blob], flyerFile, { type: blob.type || "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: "MikiLab", text: `MikiLab — ${SITE_URL}` });
+        return;
+      }
+    } catch { /* fallthrough */ }
+    if (navigator.share) {
+      try { await navigator.share({ title: "MikiLab", text: L("La locandina di MikiLab", "Der MikiLab-Flyer", "The MikiLab flyer", "El folleto de MikiLab", "Le flyer MikiLab", "پوستر MikiLab"), url: SITE_URL }); return; } catch { /* */ }
+    }
+    window.open(`https://wa.me/?text=${encodeURIComponent(`MikiLab — ${SITE_URL}`)}`, "_blank");
+  };
   const VARIANTS = [
     { id: "bacheca", label: L("Post", "Beitrag", "Post", "Post", "Post", "پست") },
     { id: "storia", label: L("Storia", "Story", "Story", "Historia", "Story", "استوری") },
@@ -309,6 +325,10 @@ export default function PromuoviMikiLab() {
                 className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#ff6b00] rounded-full px-3 py-1.5 active:scale-95">
                 <Download className="w-3.5 h-3.5" /> {L("Scarica locandina", "Flyer laden", "Download flyer", "Descargar folleto", "Télécharger le flyer", "دانلود پوستر")}
               </a>
+              <button data-testid="promuovi-flyer-share" onClick={shareFlyer}
+                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95 ml-2">
+                <Share2 className="w-3.5 h-3.5" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
+              </button>
               <p className="text-[11px] text-[#7E8A93] mt-1.5">{L("Formato A5 · pronta da stampare", "Format A5 · druckfertig", "A5 format · ready to print", "Formato A5 · lista para imprimir", "Format A5 · prête à imprimer", "قطع A5 · آمادهٔ چاپ")}</p>
             </div>
           </div>

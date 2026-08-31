@@ -2845,3 +2845,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Campi Instagram/Facebook in Admin** (predisposizione): `site_settings.instagram_url` / `facebook_url` (default ""). Input `admin-instagram-url` / `admin-facebook-url`. In `PromuoviMikiLab` i social secondari usano `socialUrls` (settings override): incollando l'URL da Admin il pulsante compare nel 'Seguici'; vuoto = nascosto.
 - Test iteration_146: backend 100% + frontend 100%. Stato finale pulito: tiktok_handle=mikilab.de, instagram_url="", facebook_url="", whatsapp attivo. Locandine ES/FR servite HTTP 200.
 
+
+## v-fork.44 (2026-08, fork) — Reset statistiche + estrazione username IG/FB + condivisione locandina
+- **Reset click social**: `POST /api/admin/social-report/reset` (svuota `db.social_clicks`). UI AdminPanel: pulsante `admin-social-reset` nella card `admin-social-report` (compare se ci sono click), con conferma + ricarica.
+- **Normalizzazione IG/FB** (`_normalize_social_url`): input accetta URL completo, `@username` o `username` → salva URL completo (`https://instagram.com/<u>` / `https://facebook.com/<u>`); vuoto = "".
+- **Condividi locandina**: pulsante `promuovi-flyer-share` in `PromuoviMikiLab` → Web Share API con file (`navigator.share({files})`), fallback share link, fallback finale wa.me.
+- Test iteration_147: backend 100% + frontend 100%. Stato finale: tiktok_handle=mikilab.de, instagram_url="", facebook_url="", social_clicks azzerato.
+

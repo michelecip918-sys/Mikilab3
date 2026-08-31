@@ -5310,6 +5310,17 @@ def _merge_site_settings(doc):
     return s
 
 
+def _normalize_social_url(val, base):
+    """Accetta URL completo, @username o username → ritorna URL completo (o '' se vuoto)."""
+    v = (val or "").strip()
+    if not v:
+        return ""
+    if v.startswith("http://") or v.startswith("https://"):
+        return v
+    v = v.lstrip("@").strip().strip("/")
+    return base + v if v else ""
+
+
 @api_router.get("/site-settings")
 async def get_site_settings():
     doc = await db.app_meta.find_one({"_key": "site_settings"}, {"_id": 0, "_key": 0})
@@ -5340,9 +5351,9 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
             h = h.split("tiktok.com/@", 1)[1].split("/")[0].split("?")[0]
         update["tiktok_handle"] = h
     if body.instagram_url is not None:
-        update["instagram_url"] = body.instagram_url.strip()
+        update["instagram_url"] = _normalize_social_url(body.instagram_url, "https://instagram.com/")
     if body.facebook_url is not None:
-        update["facebook_url"] = body.facebook_url.strip()
+        update["facebook_url"] = _normalize_social_url(body.facebook_url, "https://facebook.com/")
     if body.avatar_bubbles is not None:
         update["avatar_bubbles"] = body.avatar_bubbles
     if body.folder_covers is not None:
@@ -5571,6 +5582,13 @@ async def admin_social_report(admin: dict = Depends(require_admin)):
         if ch == "tiktok" and x.get("day") in daily_tt:
             daily_tt[x["day"]] += c
     return {"totals": by_ch, "tiktok_daily": [{"date": d, "count": daily_tt[d]} for d in sorted(days)]}
+
+
+@api_router.post("/admin/social-report/reset")
+async def admin_social_report_reset(admin: dict = Depends(require_admin)):
+    """Azzera il contatore dei click social."""
+    res = await db.social_clicks.delete_many({})
+    return {"ok": True, "deleted": res.deleted_count}
 
 
 _stats_cache = {"data": None, "ts": 0.0}

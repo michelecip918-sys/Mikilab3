@@ -1,0 +1,19 @@
+{
+  "summary": "Iteration 147: tested the 3 new features (reset statistiche social, normalizzazione IG/FB handle->URL, pulsante Condividi locandina) plus regression on the Promuovi/Seguici block. Backend: new pytest suite /app/backend/tests/test_iter147_reset_social_ig_fb.py (17 tests) — 17/17 PASS (social click tracking, admin social-report shape, reset auth-gating, reset clears + idempotent, 9 normalization parametrizations for instagram_url/facebook_url incl. @handle, bare username, full http/https URL, spaces, empty). Frontend (mobile 390x844, admin@mikilab.de): login -> SiteMenu -> admin-panel; admin-social-report showed TikTok=4 with 7-day chart, admin-social-reset visible, confirm dialog accepted, counter went to 0, reset button correctly disappeared, toast 'Azzerato'. admin-instagram-url '@mikilab.de' + admin-facebook-url 'mikilab.official' after admin-save-settings showed https://instagram.com/mikilab.de and https://facebook.com/mikilab.official. promuovi-flyer-share exists, visible, clickable; navigator.share/canShare undefined in headless, fallback opened api.whatsapp.com/send?text=MikiLab… in a new tab with ZERO JS console errors. Regression OK: flyer-lang-it/de/en chips switch the download href, flyer-lightbox opens/closes, promuovi-social-tiktok (https://www.tiktok.com/@mikilab.de) and promuovi-social-whatsapp (wa.me/491601253378) hrefs correct and TikTok click opens a new tab. No console errors in the whole authenticated run.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": { "ui_bugs": [], "integration_issues": [], "design_issues": [] },
+  "test_report_links": ["/app/backend/tests/test_iter147_reset_social_ig_fb.py", "/app/test_reports/pytest/iter147.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "AdminPanel: the admin-social-reset button only renders when totals.tiktok > 0; if only other channels (instagram/whatsapp) have clicks the counter cannot be reset from the UI. Consider showing it when any total > 0.",
+    "PromuoviMikiLab.shareFlyer: the fetch/canShare failure path silently swallows errors (empty catch); fine for UX but no user feedback if both share and wa.me popup are blocked by the browser."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter147_reset_social_ig_fb.py"],
+  "success_rate": { "backend": "100%", "frontend": "100%" },
+  "seed_data_creation": "Created 1 transient tiktok social click via POST /api/social/click (removed by the reset test / UI reset). No other data created.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Final state verified: GET /api/site-settings -> instagram_url='', facebook_url='', tiktok_handle='mikilab.de', whatsapp_number='491601253378'; db.social_clicks emptied via UI reset. NOTE for UI tests: the Admin panel is NOT opened by a header 'admin-btn' (that testid does not exist) — use data-testid='site-menu-open' then 'site-menu-admin'. Guest login entry is header data-testid='login-btn' (the auth-screen is not shown automatically); a NewsletterPopup ('No thanks') may cover the viewport on first load. PromuoviMikiLab is rendered inline in Home (no toggle). The iter147 pytest file must be run serially (-n 0) or the cleanup test (test_zz_*) races with the parametrized normalization tests under xdist.",
+  "rca_of_the_issue": "No product defects found. The single pytest failure observed initially was a test-infra race: pytest-xdist ran the final cleanup test in parallel with the normalization tests; re-running with -n 0 (functional tests first, cleanup last) gave 17/17 pass."
+}

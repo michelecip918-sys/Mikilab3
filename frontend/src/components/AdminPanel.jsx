@@ -156,6 +156,12 @@ export default function AdminPanel({ open, onOpenChange }) {
   };
   const setCover = (catKey, url) => setSettings((s) => ({ ...s, folder_covers: { ...(s.folder_covers || {}), [catKey]: url } }));
 
+  const resetSocial = async () => {
+    if (!window.confirm(de ? "Klick-Zähler wirklich zurücksetzen?" : "Azzerare davvero il contatore dei click?")) return;
+    try { await adminApi.socialReset(); setSocialRep(await adminApi.socialReport()); toast.success(de ? "Zurückgesetzt" : "Azzerato"); }
+    catch { toast.error(de ? "Fehler" : "Errore"); }
+  };
+
   const saveSettings = async () => {
     setSavingSet(true);
     try {
@@ -481,6 +487,12 @@ export default function AdminPanel({ open, onOpenChange }) {
         <div data-testid="admin-social-report" className="rounded-2xl bg-[#8C6B4A]/12 border border-[#8C6B4A]/35 p-4 mt-2">
           <p className="flex items-center gap-1.5 text-sm font-bold text-[#a37b52] dark:text-[#d8b48a] mb-2">
             <Music2 className="w-4 h-4" /> {de ? "Social-Klicks" : "Click social (Seguici)"}
+            {socialRep && (socialRep.totals?.tiktok || 0) > 0 && (
+              <button data-testid="admin-social-reset" onClick={resetSocial}
+                className="ml-auto inline-flex items-center gap-1 text-[11px] font-bold text-[#a37b52] dark:text-[#d8b48a] border border-[#8C6B4A]/40 rounded-lg px-2 py-1 active:scale-95">
+                <RefreshCw className="w-3 h-3" /> {de ? "Zurücksetzen" : "Azzera"}
+              </button>
+            )}
           </p>
           {!socialRep ? (
             <p className="text-[12px] text-[#7E8A93]">{de ? "Wird geladen…" : "Caricamento…"}</p>
