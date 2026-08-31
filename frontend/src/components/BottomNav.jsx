@@ -42,9 +42,9 @@ export default function BottomNav({ active, onChange }) {
     { id: "impara", label: t("nav_impara"), Icon: GraduationCap },
     { id: "community", label: triNav("Social", "Social", "Social", "Social"), Icon: Users, logo: true },
   ];
-  // PRO (B2B): solo strumenti di lavoro. PASSION (B2C): niente Laboratorio pro.
+  // PRO (B2B): solo strumenti di lavoro. PASSION (B2C): Laboratorio SEMPRE visibile + Impara/Social.
   if (profile === "pro") TABS = TABS.filter((x) => ["home", "ricette", "maestro"].includes(x.id));
-  else if (profile === "passion") TABS = TABS.filter((x) => ["home", "ricette", "impara", "community"].includes(x.id));
+  else if (profile === "passion") TABS = TABS.filter((x) => ["home", "ricette", "maestro", "impara", "community"].includes(x.id));
   const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
 
   return (

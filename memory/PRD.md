@@ -3008,3 +3008,13 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Verificato end-to-end in preview: toast "Ricetta adattata al Metodo Mikilab ✓" + dialog precompilato (Focaccia Genovese → farina W260-280, acqua 18°C, poolish, 44 campi editabili).
 - i18n: nessun dizionario esistente modificato; le nuove stringhe sono inline con fallback nativo. NB: preview ≠ produzione → serve REDEPLOY per mikilab.de.
 
+
+
+## v-fork (2026-06) — Fix nav Laboratorio + Next Action Items
+- **FIX barra inferiore (P0)**: nel profilo PASSION il tasto "Il Tuo Laboratorio" (tab `maestro`) era filtrato via e spariva. `BottomNav.jsx`: aggiunto `maestro` anche a Passion → tab ora: Home · Ricette · Il Tuo Laboratorio · Impara · Social. Pro invariato (Home · Ricette · Il Tuo Laboratorio). Verificato: 44 strumenti visibili in entrambi i profili.
+- **#3 "Più Metodi" (FATTO)**: `POST /api/maestro/web-recipe` ora accetta `method` ∈ {mikilab, veloce, qualita, diretto, indiretto, poolish, autolisi} (WEB_RECIPE_METHODS). Il Miglioratore Naturale Pro 2% è forzato SOLO per method=mikilab. Frontend `WebRecipe.jsx`: selettore a 7 chip (`web-recipe-method-<id>`). Testato: veloce→diretto/none/no-miglioratore; poolish→indiretto/poolish.
+- **#2 "Salva & Traduci" (GIÀ COPERTO)**: `create_recipe` traduce già la ricetta salvata in de/en/es/fr/fa (`_translate_recipe_lang`), quindi le ricette trovate col tool sono già multilingua al salvataggio.
+- **#4 Timetable (VERIFICATO)**: `TimetableLievitazione.jsx` rende 4 fasi concatenate con orari (start→end) e riepilogo durata/pronto alle.
+- **#1 "Ricerca web reale" (PENDENTE)**: richiede un provider di ricerca web esterno (search API / scraper) + chiave → da decidere con l'utente. Oggi la ricostruzione è basata sulla conoscenza dell'LLM.
+- NB: preview ≠ produzione → REDEPLOY per mikilab.de.
+

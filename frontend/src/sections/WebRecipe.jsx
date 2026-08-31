@@ -11,9 +11,20 @@ export default function WebRecipe() {
   const { t, lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [query, setQuery] = useState("");
+  const [method, setMethod] = useState("mikilab");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const METHODS = [
+    { id: "mikilab", label: tri("Metodo Mikilab", "Mikilab-Methode", "Mikilab Method", "Método Mikilab", "Méthode Mikilab", "روش میکی‌لب") },
+    { id: "qualita", label: tri("Qualità massima", "Höchste Qualität", "Top quality", "Máxima calidad", "Qualité max", "بالاترین کیفیت") },
+    { id: "veloce", label: tri("Veloce", "Schnell", "Fast", "Rápido", "Rapide", "سریع") },
+    { id: "diretto", label: tri("Diretto", "Direkt", "Direct", "Directo", "Direct", "مستقیم") },
+    { id: "indiretto", label: tri("Indiretto", "Indirekt", "Indirect", "Indirecto", "Indirect", "غیرمستقیم") },
+    { id: "poolish", label: "Poolish" },
+    { id: "autolisi", label: tri("Autolisi", "Autolyse", "Autolyse", "Autólisis", "Autolyse", "اتولیز") },
+  ];
 
   const search = async () => {
     const q = query.trim();
@@ -25,7 +36,7 @@ export default function WebRecipe() {
     try {
       const res = await fetch(`${API}/maestro/web-recipe`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
-        body: JSON.stringify({ query: q, lang }),
+        body: JSON.stringify({ query: q, lang, method }),
       });
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) throw new Error(tri("Serve l'abbonamento PRO", "PRO erforderlich", "PRO required", "Se requiere PRO", "PRO requis", "نیاز به PRO"));
@@ -81,6 +92,17 @@ export default function WebRecipe() {
             placeholder={tri("Es. Pane di segale, Brioche, Focaccia genovese…", "z. B. Roggenbrot, Brioche, Focaccia…", "e.g. Rye bread, Brioche, Focaccia…", "Ej. Pan de centeno, Brioche…", "Ex. Pain de seigle, Brioche…", "مثلاً نان چاودار، بریوش…")}
             className="w-full pl-9 pr-3 py-3 rounded-2xl bg-[#f6f8fb] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#ff6b00]"
           />
+        </div>
+        <div className="mb-3" data-testid="web-recipe-methods">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1.5">{tri("Adatta con il metodo", "Mit Methode anpassen", "Adapt with method", "Adaptar con el método", "Adapter avec la méthode", "تطبیق با روش")}</p>
+          <div className="flex flex-wrap gap-2">
+            {METHODS.map((m) => (
+              <button key={m.id} data-testid={`web-recipe-method-${m.id}`} onClick={() => setMethod(m.id)}
+                className={`text-[12px] font-semibold px-3 py-1.5 rounded-full border transition-all active:scale-95 ${method === m.id ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                {m.label}
+              </button>
+            ))}
+          </div>
         </div>
         <button
           data-testid="web-recipe-search-btn"

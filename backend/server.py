@@ -3549,11 +3549,10 @@ async def scan_recipe(payload: ScanRecipeRequest, user: dict = Depends(require_p
 class WebRecipeRequest(BaseModel):
     query: str
     lang: str = "it"
+    method: str = "mikilab"
 
 
-# Cerca una ricetta (per nome/descrizione/URL) e la RICOSTRUISCE adattata al "Metodo Mikilab".
-# Metodo Mikilab = indiretto con prefermento (lievito madre o poolish), Miglioratore Naturale Pro 2%
-# sul peso farina, riposo in cella a 16°C, adatto al farro. Restituisce lo stesso schema di scan-recipe.
+# Cerca una ricetta (per nome/descrizione/URL) e la RICOSTRUISCE adattandola al metodo scelto.
 WEB_RECIPE_LANG = {
     "it": "Scrivi name, procedure e notes in ITALIANO.",
     "de": "Schreibe name, procedure und notes auf DEUTSCH.",
@@ -3563,12 +3562,42 @@ WEB_RECIPE_LANG = {
     "fa": "name، procedure و notes را به زبان فارسی بنویس.",
 }
 
+# Guida per ogni metodo di adattamento selezionabile dall'utente ("Più Metodi").
+WEB_RECIPE_METHODS = {
+    "mikilab": (
+        "METODO MIKILAB (firma di Michele): metodo INDIRETTO con prefermento (lievito madre preferment_type='lm' se adatto, "
+        "altrimenti poolish). Aggiungi SEMPRE agli extra_ingredients {\"name\": \"Miglioratore Naturale Pro\", \"percent\": 2, \"grams\": null}. "
+        "Riposo/maturazione in CELLA a 16°C (indicalo nel procedimento)."
+    ),
+    "veloce": (
+        "METODO VELOCE: metodo DIRETTO (preferment_type='none', method_type='diretto') con lievito di birra, tempi brevi, "
+        "una sola lievitazione a temperatura ambiente. Punta alla rapidità mantenendo un buon risultato."
+    ),
+    "qualita": (
+        "METODO QUALITÀ MASSIMA: lunga maturazione in frigo (24-48h), alta idratazione, poche pieghe, "
+        "massima struttura, alveolatura e sapore. Prefermento consigliato (lievito madre o poolish)."
+    ),
+    "diretto": (
+        "METODO DIRETTO: nessun prefermento (preferment_type='none', method_type='diretto'), tutti gli ingredienti "
+        "insieme in un solo impasto."
+    ),
+    "indiretto": (
+        "METODO INDIRETTO: usa un prefermento (method_type='indiretto'; preferment_type='lm' o 'poolish' o 'biga' secondo il prodotto)."
+    ),
+    "poolish": (
+        "METODO CON POOLISH: prefermento liquido 100% idratazione (preferment_type='poolish', method_type='indiretto'); "
+        "indica dosi del poolish e ore di maturazione nel procedimento."
+    ),
+    "autolisi": (
+        "METODO CON AUTOLISI: prevedi una fase di AUTOLISI (farina + acqua, riposo 30-60 min) prima di aggiungere sale e lievito; "
+        "descrivila come primo passo del procedimento."
+    ),
+}
+
 WEB_RECIPE_PROMPT = (
     "Sei un mastro fornaio. L'utente ti dà il NOME (o una breve descrizione, o un link) di una ricetta di panificazione. "
-    "Ricostruisci la ricetta classica basandoti sulla tua conoscenza e RIADATTALA al «METODO MIKILAB», che è così definito:\n"
-    "- Metodo INDIRETTO con prefermento: usa lievito madre (preferment_type='lm') se adatto, altrimenti poolish (preferment_type='poolish').\n"
-    "- Aggiungi SEMPRE agli extra_ingredients una voce {\"name\": \"Miglioratore Naturale Pro\", \"percent\": 2, \"grams\": null}.\n"
-    "- Riposo/maturazione in CELLA a 16°C (indicalo nel procedimento). Idratazione realistica per il prodotto.\n"
+    "Ricostruisci la ricetta classica basandoti sulla tua conoscenza e RIADATTALA seguendo questo metodo:\n"
+    "{method_line}\n"
     "- Base di calcolo: flour_grams = 1000 g; calcola water_grams dall'idratazione; salt_grams tipico ~2%.\n"
     "- Se ha senso, aggiungi in 'notes' una breve variante al FARRO (Dinkel): -4% acqua, impasto più delicato.\n"
     "Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, con ESATTAMENTE queste chiavi "
@@ -3586,12 +3615,16 @@ async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro
     q = (payload.query or "").strip()
     if len(q) < 2:
         raise HTTPException(status_code=422, detail="Scrivi il nome di una ricetta da cercare")
+    method = payload.method if payload.method in WEB_RECIPE_METHODS else "mikilab"
     lang_line = WEB_RECIPE_LANG.get(payload.lang, WEB_RECIPE_LANG["it"])
-    prompt = WEB_RECIPE_PROMPT.replace("{schema}", SCAN_FIELDS_SCHEMA).replace("{lang_line}", lang_line)
+    prompt = (WEB_RECIPE_PROMPT
+              .replace("{method_line}", WEB_RECIPE_METHODS[method])
+              .replace("{schema}", SCAN_FIELDS_SCHEMA)
+              .replace("{lang_line}", lang_line))
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=f"webrec-{uuid.uuid4()}",
-        system_message="Ricostruisci ricette di panificazione adattate al Metodo Mikilab e restituisci solo JSON valido.",
+        system_message="Ricostruisci ricette di panificazione adattate al metodo richiesto e restituisci solo JSON valido.",
     ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2200)
     user_msg = UserMessage(text=f"{prompt}\n\nRICETTA RICHIESTA: {q}")
     text = ""
@@ -3615,13 +3648,12 @@ async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro
         data = json.loads(raw[s:e + 1])
     except Exception:
         raise HTTPException(status_code=422, detail="Impossibile ricostruire la ricetta")
-    # Sicurezza: garantisci la presenza del Miglioratore Naturale Pro al 2% negli extra.
-    exs = data.get("extra_ingredients") or []
-    if not any(isinstance(x, dict) and "miglioratore" in (x.get("name") or "").lower() for x in exs):
-        exs.append({"name": "Miglioratore Naturale Pro", "percent": 2, "grams": None})
-        data["extra_ingredients"] = exs
-    if not data.get("method_type"):
-        data["method_type"] = "indiretto"
+    # Solo per il Metodo Mikilab: garantisci la presenza del Miglioratore Naturale Pro al 2%.
+    if method == "mikilab":
+        exs = data.get("extra_ingredients") or []
+        if not any(isinstance(x, dict) and "miglioratore" in (x.get("name") or "").lower() for x in exs):
+            exs.append({"name": "Miglioratore Naturale Pro", "percent": 2, "grams": None})
+            data["extra_ingredients"] = exs
     return data
 
 
