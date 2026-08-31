@@ -2943,3 +2943,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - `scripts/build_inventory_video.py` (Pillow + ffmpeg): 9 slide brandizzate 1080p (logo, tema nero/arancione, badge numerati) montate con dissolvenze xfade -> `frontend/public/mikilab-video.mp4` (H.264, 37.6s, ~2MB, silenzioso, IT).
 - Link: `/mikilab-video.mp4`. Verificato HTTP 200 e ffprobe (1920x1080, h264, 37.6s). Consegna privata a Michele.
 - ffmpeg installato via apt in questo ambiente.
+
+## v-fork.60 (2026-06, fork) — Mini video narrato (voce italiana)
+- `scripts/build_inventory_video_narrated.py`: OpenAI TTS (emergentintegrations, tts-1-hd voce onyx) genera narrazione IT per 9 slide; ffmpeg costruisce clip per-slide (fade + audio adelay/apad) e le concatena -> `frontend/public/mikilab-video-narrato.mp4` (h264+aac, ~61s, ~1.5MB).
+- Link: `/mikilab-video-narrato.mp4`. Verificato HTTP 200, stream audio+video, durata 61.4s.
+- Caveat: voci OpenAI TTS in IT hanno accento inglese leggero; upgrade nativo = ElevenLabs multilingual (richiede API key utente).
+- EMERGENT_LLM_KEY gia presente in backend/.env.
