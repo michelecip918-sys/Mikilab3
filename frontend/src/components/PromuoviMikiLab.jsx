@@ -130,6 +130,7 @@ export default function PromuoviMikiLab() {
   const [settings, setSettings] = useState(null);
   const [flyerLang, setFlyerLang] = useState(lang);
   const [flyerBig, setFlyerBig] = useState(false);
+  const [postBig, setPostBig] = useState(null);
   const [flyerOrient, setFlyerOrient] = useState("v");
   useEffect(() => { siteSettingsApi.get().then(setSettings).catch(() => {}); }, []);
   useEffect(() => { setFlyerLang(lang); }, [lang]);
@@ -213,6 +214,9 @@ export default function PromuoviMikiLab() {
     { file: "launch-1-presentazione.png", label: L("Presentazione", "Vorstellung", "Intro", "Presentación", "Présentation", "معرفی") },
     { file: "launch-2-ricetta.png", label: L("Ricetta gratis", "Gratis-Rezept", "Free recipe", "Receta gratis", "Recette gratuite", "دستور رایگان") },
     { file: "launch-3-community.png", label: L("Community", "Community", "Community", "Comunidad", "Communauté", "انجمن") },
+    { file: "w2-dietro.png", label: L("Dietro le quinte", "Hinter den Kulissen", "Behind the scenes", "Detrás de escena", "Coulisses", "پشت صحنه") },
+    { file: "w2-primadopo.png", label: L("Prima & Dopo", "Vorher & Nachher", "Before & After", "Antes y después", "Avant/Après", "قبل و بعد") },
+    { file: "w2-sondaggio.png", label: L("Sondaggio", "Umfrage", "Poll", "Encuesta", "Sondage", "نظرسنجی") },
   ];
   const sharePoster = async (file) => {
     const url = `${window.location.origin}${process.env.PUBLIC_URL || ""}/${file}`;
@@ -422,7 +426,7 @@ export default function PromuoviMikiLab() {
           <div className="flex gap-3 overflow-x-auto pb-1">
             {POSTS.map((p, i) => (
               <div key={p.file} data-testid={`promuovi-post-${i}`} className="shrink-0 w-[112px]">
-                <button onClick={() => window.open(`${process.env.PUBLIC_URL}/${p.file}`, "_blank")}
+                <button onClick={() => setPostBig(`${process.env.PUBLIC_URL}/${p.file}`)}
                   className="block rounded-xl overflow-hidden border border-[#2e2e2e] hover:border-[#ff6b00] transition-all active:scale-95">
                   <img src={`${process.env.PUBLIC_URL}/${p.file}`} alt={p.label} className="w-[112px] h-[160px] object-cover" loading="lazy" />
                 </button>
@@ -441,6 +445,16 @@ export default function PromuoviMikiLab() {
             ))}
           </div>
         </div>
+
+        {postBig && (
+          <div data-testid="post-lightbox" onClick={() => setPostBig(null)}
+            className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+            <button data-testid="post-lightbox-close" onClick={() => setPostBig(null)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1c1c1c] border border-[#2e2e2e] flex items-center justify-center text-white active:scale-90">✕</button>
+            <img src={postBig} alt="Post MikiLab" onClick={(e) => e.stopPropagation()}
+              className="max-h-[86vh] max-w-full rounded-xl shadow-2xl object-contain" />
+          </div>
+        )}
 
         {flyerBig && (
           <div data-testid="flyer-lightbox" onClick={() => setFlyerBig(false)}

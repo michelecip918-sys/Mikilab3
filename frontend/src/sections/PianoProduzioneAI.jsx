@@ -1231,6 +1231,53 @@ export default function PianoProduzioneAI({ onOpenTool }) {
               <p className={`text-[10.5px] leading-snug ${!useWeekly ? "text-white/85" : "text-[#7E8A93]"}`}>{tri3(lang, "es. per oggi · a mano", "z. B. für heute · manuell", "e.g. for today · manually")}</p>
             </button>
         </div>
+        <div data-testid="capo-products-heading" className={`mt-4 mb-2 flex items-start gap-2 ${useWeekly ? "hidden" : ""}`}>
+          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#ff6b00] text-white text-[13px] font-extrabold shrink-0">1</span>
+          <div>
+            <p className="text-sm font-bold text-white leading-tight">{tri3(lang, "Cosa produci oggi?", "Was produzierst du heute?", "What are you making today?")} <span className="text-[#ff6b00]">*</span></p>
+            <p className="text-[11px] text-[#AEB8BF] leading-snug">{tri3(lang, "Scegli una ricetta e scrivi la quantità: è l'unico dato obbligatorio per generare.", "Wähle ein Rezept und die Menge: das ist das einzige Pflichtfeld.", "Pick a recipe and enter the quantity: it's the only required field to generate.")}</p>
+            <button type="button" data-testid="capo-fill-example" onClick={fillExample}
+              className="mt-1.5 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/50 rounded-full px-3 py-1 active:scale-95">
+              <Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Prova con un esempio", "Mit Beispiel testen", "Try an example", "Prueba con un ejemplo")}
+            </button>
+          </div>
+        </div>
+        <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">
+          {products.map((p, i) => (
+            <CapoProductRow key={i} p={p} i={i} recipes={recipes} setProducts={setProducts} />
+          ))}
+          <div className="flex flex-wrap items-center gap-2 mt-1">
+            <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+            <div className="w-full sm:w-auto sm:min-w-[190px]">
+              <CategoryRecipePicker recipes={recipes} multi onAddMany={addRecipes}
+                quickAdd={{ qty: true, day: true, defaultQty: "10" }}
+                selectedIds={products.map((p) => p.recipe_id).filter(Boolean)} testid="capo-add-picker" />
+            </div>
+            {savedProducts.length > 0 && (
+              <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec] bg-[#ff6b00]/12 border border-[#ff6b00]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
+            )}
+            <button data-testid="capo-suggest-frequent" onClick={suggestFromFrequent} className="text-sm font-semibold text-white bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Suggerisci dai più usati", "Aus meistgenutzten vorschlagen", "Suggest from most-used", "Sugerir de los más usados")}</button>
+          </div>
+
+          {<CapoCombos products={products} setProducts={setProducts} lang={lang} />}
+          <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
+            <Flag className="w-3.5 h-3.5 text-[#1e1e1e] shrink-0 mt-0.5" />
+            {tri3(lang, "Scegli tu l'impasto da cui partire: tocca «Parti da qui». L'IA organizzerà la sequenza iniziando da quello.",
+              "Wähle den Start-Teig: tippe auf „Hier starten“. Die KI ordnet die Reihenfolge ab diesem Teig.",
+              "Choose the dough to start from: tap 'Start here'. The AI will sequence the work starting from it.")}
+          </p>
+          {!isAdmin && !recipes.some((r) => !r._own) && (
+            <div data-testid="capo-mikilab-buy-hint" className="mt-2 rounded-xl border border-[#ff6b00]/40 bg-[#ff6b00]/10 p-3 flex items-start gap-2">
+              <BookOpen className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
+              <p className="text-xs text-[#5b4a2a] dark:text-[#ff6b00] leading-snug">
+                {tri3(lang,
+                  "Qui usi le TUE ricette (scansionate o scritte a mano). Vuoi usare anche le ricette di MikiLab nel piano? Acquistale nella sezione «Ricette» e compariranno qui.",
+                  "Hier verwendest du DEINE Rezepte (gescannt oder handschriftlich). Möchtest du auch MikiLab-Rezepte im Plan nutzen? Kaufe sie im Bereich „Rezepte“, dann erscheinen sie hier.",
+                  "Here you use YOUR recipes (scanned or handwritten). Want to use MikiLab recipes in the plan too? Buy them in the 'Recipes' section and they'll appear here.")}
+              </p>
+            </div>
+          )}
+        </div>
         {onOpenTool && (
           <div data-testid="capo-quick-tools" className="mb-3">
             <div className="flex items-center justify-between mb-1.5">
@@ -1365,54 +1412,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
           </div>
         )}
-        <div data-testid="capo-products-heading" className={`mt-4 mb-2 flex items-start gap-2 ${useWeekly ? "hidden" : ""}`}>
-          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#ff6b00] text-white text-[13px] font-extrabold shrink-0">1</span>
-          <div>
-            <p className="text-sm font-bold text-white leading-tight">{tri3(lang, "Cosa produci oggi?", "Was produzierst du heute?", "What are you making today?")} <span className="text-[#ff6b00]">*</span></p>
-            <p className="text-[11px] text-[#AEB8BF] leading-snug">{tri3(lang, "Scegli una ricetta e scrivi la quantità: è l'unico dato obbligatorio per generare.", "Wähle ein Rezept und die Menge: das ist das einzige Pflichtfeld.", "Pick a recipe and enter the quantity: it's the only required field to generate.")}</p>
-            <button type="button" data-testid="capo-fill-example" onClick={fillExample}
-              className="mt-1.5 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/50 rounded-full px-3 py-1 active:scale-95">
-              <Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Prova con un esempio", "Mit Beispiel testen", "Try an example", "Prueba con un ejemplo")}
-            </button>
-          </div>
-        </div>
-        <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">
-          {products.map((p, i) => (
-            <CapoProductRow key={i} p={p} i={i} recipes={recipes} setProducts={setProducts} />
-          ))}
-          <div className="flex flex-wrap items-center gap-2 mt-1">
-            <button data-testid="capo-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", name: "", qty: "", unit: "pezzi", gpp: "", day: "", start: false }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
-            <div className="w-full sm:w-auto sm:min-w-[190px]">
-              <CategoryRecipePicker recipes={recipes} multi onAddMany={addRecipes}
-                quickAdd={{ qty: true, day: true, defaultQty: "10" }}
-                selectedIds={products.map((p) => p.recipe_id).filter(Boolean)} testid="capo-add-picker" />
-            </div>
-            {savedProducts.length > 0 && (
-              <button data-testid="capo-restore-prev" onClick={restorePrevPlan} className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec] bg-[#ff6b00]/12 border border-[#ff6b00]/30 px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><RotateCcw className="w-3.5 h-3.5" /> {tri3(lang, "Riparti dall'ultimo piano", "Vom letzten Plan starten", "Reuse last plan")}</button>
-            )}
-            <button data-testid="capo-suggest-frequent" onClick={suggestFromFrequent} className="text-sm font-semibold text-white bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95"><Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Suggerisci dai più usati", "Aus meistgenutzten vorschlagen", "Suggest from most-used", "Sugerir de los más usados")}</button>
-          </div>
-
-          {<CapoCombos products={products} setProducts={setProducts} lang={lang} />}
-          <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 flex items-start gap-1">
-            <Flag className="w-3.5 h-3.5 text-[#1e1e1e] shrink-0 mt-0.5" />
-            {tri3(lang, "Scegli tu l'impasto da cui partire: tocca «Parti da qui». L'IA organizzerà la sequenza iniziando da quello.",
-              "Wähle den Start-Teig: tippe auf „Hier starten“. Die KI ordnet die Reihenfolge ab diesem Teig.",
-              "Choose the dough to start from: tap 'Start here'. The AI will sequence the work starting from it.")}
-          </p>
-          {!isAdmin && !recipes.some((r) => !r._own) && (
-            <div data-testid="capo-mikilab-buy-hint" className="mt-2 rounded-xl border border-[#ff6b00]/40 bg-[#ff6b00]/10 p-3 flex items-start gap-2">
-              <BookOpen className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
-              <p className="text-xs text-[#5b4a2a] dark:text-[#ff6b00] leading-snug">
-                {tri3(lang,
-                  "Qui usi le TUE ricette (scansionate o scritte a mano). Vuoi usare anche le ricette di MikiLab nel piano? Acquistale nella sezione «Ricette» e compariranno qui.",
-                  "Hier verwendest du DEINE Rezepte (gescannt oder handschriftlich). Möchtest du auch MikiLab-Rezepte im Plan nutzen? Kaufe sie im Bereich „Rezepte“, dann erscheinen sie hier.",
-                  "Here you use YOUR recipes (scanned or handwritten). Want to use MikiLab recipes in the plan too? Buy them in the 'Recipes' section and they'll appear here.")}
-              </p>
-            </div>
-          )}
-        </div>
-
         <div className="grid grid-cols-2 gap-3 mt-4">
           {modules.orari && <LabelInput testid="capo-start-time" label={t("capo_start_time")} type="time" value={startTime} onChange={setStartTime} />}
           {modules.clima && <LabelInput testid="capo-lab-temp" label={t("capo_lab_temp")} type="number" value={labTemp} onChange={setLabTemp} unit="°C" />}

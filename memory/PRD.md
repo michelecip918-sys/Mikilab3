@@ -2894,3 +2894,14 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ## v-fork.52 (2026-08, fork) — Esempio rapido nel generatore Piano
 - PianoProduzioneAI.jsx: aggiunto fillExample + pulsante capo-fill-example ("Prova con un esempio") in cima al riquadro prodotti (capo-products-heading): precompila 1-2 ricette (pref. pane/pizza/focaccia) con quantita, sblocca la generazione. Test iteration_151: frontend 100%.
 - NB: riquadro prodotti reso prominente (heading numerato + esempio + auto-scroll dal bottone Genera). Spostamento fisico in cima al form NON eseguito (reorder rischioso): da valutare come step dedicato.
+
+## v-fork.53 (2026-08, fork) — Serie Settimana 2 + lightbox post
+- Creati public/w2-dietro.png, w2-primadopo.png, w2-sondaggio.png (verticali 9:16, QR reale + handle). Aggiunti a POSTS in PromuoviMikiLab (ora 7 post). Asset 200.
+- Blocco promuovi-posts: le miniature ora aprono un lightbox a schermo intero (post-lightbox / post-lightbox-close) invece di nuova scheda.
+- #2 "Prodotti in cima (vero)": NON eseguito. Sopra i prodotti c'e il selettore modalita (settimanale/oggi) con logica condizionale; reorder fisico ritenuto troppo rischioso col budget rimasto. Da fare come pass dedicato.
+
+
+## v-fork.54 (2026-06, fork) — Riordino form Piano di Produzione (P0 FATTO)
+- PianoProduzioneAI.jsx: spostato il blocco prodotti (capo-products-heading "Cosa produci oggi?" + capo-products, con pulsante capo-fill-example) SUBITO SOTTO il selettore fonte (capo-source-choice), sopra Strumenti rapidi (capo-quick-tools) e Ordine extra (capo-extra-today). Scelta utente: opzione B (selettore modalita resta in cima, poi input ricette immediato).
+- Logica condizionale useWeekly preservata (blocco prodotti resta nascosto in modalita "Piano Settimanale"; blocchi weekly-empty/weekly-note invariati sotto, come prima → nessuna regressione in modalita settimanale).
+- Verifica: compilazione OK; bounding-box order confermato plan-switch(517) → source-choice(611) → products(710/784) → quick-tools(1073) → extra-today(1237). Screenshot di conferma OK. Nessun duplicato.
