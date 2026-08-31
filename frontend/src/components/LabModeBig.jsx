@@ -11,6 +11,7 @@ export default function LabModeBig({ onOpenTool, onExit, onOpenPlan }) {
   const TILES = [
     { id: "manisporche", Icon: Hand, primary: true, label: tri("Voce · Mani Sporche", "Stimme · Schmutzige Hände", "Voice · Dirty Hands", "Voz · Manos Sucias") },
     { id: "timer", Icon: TimerIcon, label: tri("Timer", "Timer", "Timer", "Temporizador") },
+    { id: "timetable", Icon: TimerIcon, label: tri("Timetable Lievitazione", "Gär-Timetable", "Ferment. Timetable", "Cronograma") },
     { id: "pesata", Icon: Scale, label: tri("Pesata a Voce", "Wiegen per Stimme", "Voice Weighing", "Pesada por Voz") },
     { id: "metodo", Icon: Droplets, label: tri("Idratazione", "Hydratation", "Hydration", "Hidratación") },
     { id: "convlievito", Icon: RefreshCw, label: tri("Lieviti", "Hefe", "Yeast", "Levaduras") },

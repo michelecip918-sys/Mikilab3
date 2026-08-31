@@ -1,4 +1,5 @@
 import axios from "axios";
+import { cacheSet, cacheGet, isNetworkError } from "@/lib/offlineCache";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
@@ -16,9 +17,14 @@ export const uploadApi = {
 };
 
 export const recipesApi = {
-  // Resiliente: se una collezione è protetta (es. 'personal' per utenti anonimi → 401),
-  // ritorna [] invece di far fallire l'intero Promise.all e svuotare anche le ricette pubbliche.
-  list: (collection) => api.get(`/recipes`, { params: { collection_name: collection } }).then((r) => r.data).catch(() => []),
+  // Resiliente + OFFLINE-READY: online salva una copia locale; offline (errore di rete)
+  // restituisce l'ultima copia salvata così le ricette restano consultabili senza Wi-Fi.
+  list: (collection) => api.get(`/recipes`, { params: { collection_name: collection } })
+    .then((r) => { cacheSet(`recipes_${collection}`, r.data); return r.data; })
+    .catch((e) => {
+      if (isNetworkError(e)) { const c = cacheGet(`recipes_${collection}`); if (c) return c; }
+      return [];
+    }),
   create: (data) => api.post(`/recipes`, data).then((r) => r.data),
   update: (id, data) => api.put(`/recipes/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/recipes/${id}`).then((r) => r.data),
@@ -53,9 +59,15 @@ export const favApi = {
 
 
 export const capoPlanApi = {
-  get: () => api.get(`/capo/last-plan`).then((r) => r.data),
-  save: (data) => api.put(`/capo/last-plan`, data).then((r) => r.data),
-  clear: () => api.delete(`/capo/last-plan`).then((r) => r.data),
+  // OFFLINE-READY: l'ultimo piano di produzione resta consultabile senza rete.
+  get: () => api.get(`/capo/last-plan`)
+    .then((r) => { if (r.data) cacheSet("capo_last_plan", r.data); return r.data; })
+    .catch((e) => { if (isNetworkError(e)) { const c = cacheGet("capo_last_plan"); if (c) return c; } throw e; }),
+  save: (data) => {
+    cacheSet("capo_last_plan", { ...data, saved_at: new Date().toISOString() });
+    return api.put(`/capo/last-plan`, data).then((r) => r.data);
+  },
+  clear: () => { cacheSet("capo_last_plan", null); return api.delete(`/capo/last-plan`).then((r) => r.data); },
 };
 
 export const comboApi = {

@@ -21,6 +21,7 @@ import IntroGuide from "@/components/IntroGuide";
 import SiteMenu from "@/components/SiteMenu";
 import { getProfile } from "@/components/Onboarding";
 import InstallBanner from "@/components/InstallBanner";
+import OfflineBanner from "@/components/OfflineBanner";
 import NewsletterPopup from "@/components/NewsletterPopup";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
@@ -228,6 +229,7 @@ function App() {
       <div className="relative z-10">
       <Header />
       <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />
+      <OfflineBanner />
       <InstallBanner />
       <NewsletterPopup />
       <main className="max-w-xl mx-auto px-4 pt-4 pb-64">

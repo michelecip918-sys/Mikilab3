@@ -2986,3 +2986,16 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - RecipeList.jsx RecipeDetail: aggiunto blocco Pro baker-scale con input baker-kg (kg farina) e baker-sacks (sacchi 25kg) -> onScaleChange(grammi) ricalcola tutte le dosi. Gated isPro && flourG>0 (useProfile). Attivo sulla scheda ricetta PERSONALE (archivio Pro). Le ricette MikiLab usano un renderer diverso (gia con scaling e percentuali).
 - Archivio privato vuoto: empty-state personal-empty-archive con nota 100% riservato + pulsante empty-add-recipe-btn "Aggiungi nuova ricetta privata".
 - Compila OK (1 warning innocuo). Prossimo: #3 timetable lievitazione concatenata.
+
+## v-fork.66 (2026-06) — #3 Timetable di lievitazione concatenata
+- Nuovo sections/TimetableLievitazione.jsx: fasi sequenziali (Autolisi, Puntata, Appretto, Infornata) con orari a catena calcolati da orario di inizio; durate editabili, add/reset, persist localStorage; riepilogo durata totale + "Pronto alle". testids: timetable-lievitazione, timetable-start, timetable-min-i, timetable-summary, ecc.
+- Wiring: route in Maestro.jsx (tool "timetable") + tile in LabModeBig (Modalita Laboratorio Pro). Non aggiunto al direttorio TOOLS (accesso via Modalita Laboratorio).
+- Verificato E2E: concatenazione corretta (start 06:00 -> 09:20, tot 3h20) al variare di inizio/durate.
+- Nota: standalone (orario inizio manuale). Sync automatico bidirezionale col Piano di Produzione NON cablato (hook piu profondo) -> resta come sotto-parte da completare.
+
+
+
+## v-fork (2026-06) — Rifiniture Pro #4 Resa/Calo Peso + #5 Cache Offline (PWA)
+- **#4 Resa & Calo Peso** (`RecipeList.jsx` → componente `ResaCaloPeso`, solo profilo PRO, ricette non-panettone/non-locked con farina): dal peso impasto crudo calcola peso netto (scomputo % scarto impastatrice), peso finale cotto totale (scomputo % calo di cottura) e peso crudo/finale per pezzo. Campi persistiti in localStorage per ricetta (`mikilab_resa_<id>`), default scarto 1% · calo 12%. testid: `resa-calo-<id>`, `resa-scarto-<id>`, `resa-calo-input-<id>`, `resa-pezzi-<id>`, `resa-netto/cotto-tot/crudo-pz/cotto-pz-<id>`. Verificato a schermo (2217g crudo → 88g/pz crudo, 77g/pz cotto a 25 pezzi).
+- **#5 Cache Offline (PWA)**: (a) `lib/offlineCache.js` helper localStorage; (b) `api.js` — `recipesApi.list` salva copia locale online e la restituisce su errore di rete (offline); `capoPlanApi.get/save/clear` cache-aware → ultimo piano di produzione consultabile offline; (c) `public/sw.js` v10 riscritto in network-first con popolamento cache runtime + precache shell → l'app si apre senza rete (fallback a index.html per la navigazione); (d) `OfflineBanner.jsx` (montato in App.js) mostra un avviso arancione quando manca la rete. Verificato: con rete OFF, banner mostrato + Ricette rendono 149 voci dalla cache.
+- Nota: modifiche in PREVIEW → serve REDEPLOY per applicare il nuovo service worker in produzione (mikilab.de).

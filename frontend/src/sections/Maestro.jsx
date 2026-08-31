@@ -70,6 +70,7 @@ import ToolsDirectory from "@/components/ToolsDirectory";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import LabModeBig from "@/components/LabModeBig";
+import TimetableLievitazione from "@/sections/TimetableLievitazione";
 
 
 export default function Maestro() {
@@ -156,6 +157,7 @@ export default function Maestro() {
         {tool === "check" && <Checklists />}
         {tool === "sveglia" && <SvegliaLievito />}
         {tool === "salespoints" && <SalesPoints />}
+        {tool === "timetable" && <TimetableLievitazione />}
         {tool === "diagnosi" && <PhotoDiagnosi />}
         {tool === "scanflour" && <ScanFlour />}
         {tool === "metodo" && <CalcolatoreMetodo />}

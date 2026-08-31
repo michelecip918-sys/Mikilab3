@@ -877,6 +877,18 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           </>
         ) : null}
 
+        {isPro && !isPanettone && !r.locked && flourG > 0 && (() => {
+          let raw = 0;
+          raw += Number(g(r.flour_grams)) || 0;
+          raw += Number(gWater(r.water_grams)) || 0;
+          raw += Number(g(r.sourdough_grams)) || 0;
+          raw += Number(g(r.salt_grams)) || 0;
+          (r.extra_ingredients || []).forEach((e) => {
+            if (e && e.percent != null && e.percent !== "" && flourG > 0) raw += Math.round(target * (Number(e.percent) / 100));
+          });
+          return raw > 0 ? <ResaCaloPeso recipeId={r.id} rawDoughG={raw} tri={tri} /> : null;
+        })()}
+
         {r.procedure ? (
           <div data-testid={`recipe-procedure-${r.id}`} className="rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">{t("recipe_procedure")}</p>
@@ -919,8 +931,72 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   );
 }
 
-function ActionBtn({ testid, onClick, color, label, children }) {
+// Resa e Calo Peso (solo profilo Pro): dal peso impasto crudo calcola il peso finale reale
+// per pezzo, scomputando lo scarto in impastatrice e il calo di cottura (perdita d'acqua).
+function ResaCaloPeso({ recipeId, rawDoughG, tri }) {
+  const KEY = `mikilab_resa_${recipeId}`;
+  const [cfg, setCfg] = useState(() => {
+    try { const s = JSON.parse(localStorage.getItem(KEY)); if (s) return s; } catch { /* */ }
+    return { scarto: 1, calo: 12, pezzi: "" };
+  });
+  useEffect(() => { setCfg((c) => { try { const s = JSON.parse(localStorage.getItem(`mikilab_resa_${recipeId}`)); return s || { scarto: 1, calo: 12, pezzi: "" }; } catch { return { scarto: 1, calo: 12, pezzi: "" }; } }); }, [recipeId]);
+  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(cfg)); } catch { /* */ } /* eslint-disable-next-line */ }, [cfg]);
+  const n = (v) => (Number(v) || 0);
+  const set = (patch) => setCfg((c) => ({ ...c, ...patch }));
+  const netto = rawDoughG * (1 - n(cfg.scarto) / 100);           // dopo scarto impastatrice
+  const cottoTot = netto * (1 - n(cfg.calo) / 100);              // dopo calo di cottura
+  const pezzi = n(cfg.pezzi);
+  const crudoPz = pezzi > 0 ? netto / pezzi : null;
+  const cottoPz = pezzi > 0 ? cottoTot / pezzi : null;
+  const fmt = (v) => (v == null ? "—" : `${Math.round(v)} g`);
+  const field = (label, testid, key, suffix, step = "0.5") => (
+    <label className="flex items-center justify-between gap-2 text-[13px] text-[#3F4A54] dark:text-[#AEB8BF]">
+      <span>{label}</span>
+      <span className="flex items-center gap-1">
+        <input data-testid={testid} type="number" min="0" step={step} value={cfg[key]}
+          onChange={(e) => set({ [key]: e.target.value })}
+          className="w-16 text-right font-mono-data text-sm font-bold text-[#ff6b00] bg-white dark:bg-[#181818] border border-[#2e2e2e] rounded-lg px-2 py-1 outline-none focus:border-[#ff6b00]" />
+        <span className="text-[11px] text-[#7E8A93]">{suffix}</span>
+      </span>
+    </label>
+  );
   return (
+    <div data-testid={`resa-calo-${recipeId}`} className="rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 p-3">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1.5">
+        <Scale className="w-3.5 h-3.5" /> {tri("Resa & Calo Peso", "Ausbeute & Backverlust", "Yield & Weight Loss", "Rendimiento y Merma")}
+      </p>
+      <p className="text-[11px] text-[#7E8A93] leading-snug mb-2.5">
+        {tri("Peso impasto crudo", "Rohteig-Gewicht", "Raw dough weight", "Peso masa cruda")}: <span className="font-mono-data font-bold text-[#ff6b00]">{fmt(rawDoughG)}</span>
+      </p>
+      <div className="space-y-2 mb-3">
+        {field(tri("Scarto impastatrice", "Kneter-Verlust", "Mixer waste", "Merma amasadora"), `resa-scarto-${recipeId}`, "scarto", "%")}
+        {field(tri("Calo di cottura", "Backverlust", "Baking loss", "Merma de cocción"), `resa-calo-input-${recipeId}`, "calo", "%")}
+        {field(tri("Numero pezzi", "Stückzahl", "Pieces", "Piezas"), `resa-pezzi-${recipeId}`, "pezzi", tri("pz", "St", "pcs", "pz"), "1")}
+      </div>
+      <div className="space-y-1.5 rounded-lg bg-white dark:bg-[#181818] border border-[#2e2e2e] p-2.5">
+        <Row testid={`resa-netto-${recipeId}`} label={tri("Impasto netto (dopo scarto)", "Nettoteig (nach Verlust)", "Net dough (after waste)", "Masa neta (tras merma)")} value={fmt(netto)} />
+        <Row testid={`resa-cotto-tot-${recipeId}`} label={tri("Peso finale cotto (totale)", "Endgewicht gebacken (gesamt)", "Final baked weight (total)", "Peso final cocido (total)")} value={fmt(cottoTot)} />
+        {crudoPz != null && <Row testid={`resa-crudo-pz-${recipeId}`} label={tri("Peso crudo per pezzo", "Rohgewicht pro Stück", "Raw weight per piece", "Peso crudo por pieza")} value={fmt(crudoPz)} />}
+        {cottoPz != null && <Row testid={`resa-cotto-pz-${recipeId}`} label={tri("Peso finale per pezzo", "Endgewicht pro Stück", "Final weight per piece", "Peso final por pieza")} value={fmt(cottoPz)} highlight />}
+      </div>
+      {pezzi <= 0 && (
+        <p className="text-[11px] text-[#7E8A93] mt-2">{tri("Inserisci il numero di pezzi per vedere il peso per pezzo.", "Gib die Stückzahl ein, um das Gewicht pro Stück zu sehen.", "Enter the number of pieces to see the per-piece weight.", "Introduce las piezas para ver el peso por pieza.")}</p>
+      )}
+    </div>
+  );
+}
+
+function Row({ testid, label, value, highlight }) {
+  return (
+    <div data-testid={testid} className="flex items-center justify-between text-sm">
+      <span className={`${highlight ? "font-semibold text-[#2B303B] dark:text-[#e4eff8]" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>{label}</span>
+      <span className={`font-mono-data font-bold ${highlight ? "text-base text-[#ff6b00]" : "text-[#ff6b00] dark:text-[#8FB0C2]"}`}>{value}</span>
+    </div>
+  );
+}
+
+
+function ActionBtn({ testid, onClick, color, label, children }) {  return (
     <button
       data-testid={testid}
       onClick={onClick}
