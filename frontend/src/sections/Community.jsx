@@ -83,6 +83,14 @@ export default function Community({ onNavigate }) {
   const [msgUnread, setMsgUnread] = useState(0);
   const [feed, setFeed] = useState("all");
   const [chSeen, setChSeen] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_channel_seen") || "{}"); } catch { return {}; } });
+  const [chLatest, setChLatest] = useState({});
+  useEffect(() => {
+    communityApi.list("all").then((all) => {
+      const m = {};
+      for (const p of all || []) { const c = p.category; if (c && (!m[c] || p.created_at > m[c])) m[c] = p.created_at; }
+      setChLatest(m);
+    }).catch(() => {});
+  }, []);
   useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => {
     const loadReq = () => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); };
@@ -158,7 +166,7 @@ export default function Community({ onNavigate }) {
   const visible = filter === "all" ? posts : posts.filter((p) => p.category === filter);
   const latestByCat = {};
   for (const p of posts) { const c = p.category; if (c && (!latestByCat[c] || p.created_at > latestByCat[c])) latestByCat[c] = p.created_at; }
-  const hasNew = (id) => !!latestByCat[id] && (!chSeen[id] || latestByCat[id] > chSeen[id]);
+  const hasNew = (id) => { const latest = chLatest[id] || latestByCat[id]; return !!latest && (!chSeen[id] || latest > chSeen[id]); };
   const selectFilter = (id) => {
     setFilter(id);
     if (id !== "all") setChSeen((s) => { const n = { ...s, [id]: new Date().toISOString() }; try { localStorage.setItem("mikilab_channel_seen", JSON.stringify(n)); } catch { /* */ } return n; });

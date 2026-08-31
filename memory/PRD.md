@@ -2753,3 +2753,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Guide deep-link**: le guide hanno un campo `view`; al click `openGuide` fa goto ricette + dispatch `mikilab-ricette-view {view}`. `Ricette.jsx` ora ascolta l'evento e apre la sotto-vista esatta (guida/farine/focacce). Verificato: "flour" → apre direttamente "Tabelle & Farine" (`ricette-farine`).
 - **Pallino novità sul tab Social**: `BottomNav.jsx` polla `communityApi.list("all")` (mount + ogni 45s + focus + evento `mikilab-social-refresh`), confronta l'ultimo post con `mikilab_social_seen` (localStorage) e mostra `nav-community-newdot` quando ci sono post nuovi; si azzera aprendo il tab Social (`markSocialSeen`). Convive col badge numerico notifiche (mostrato solo se non c'è il conteggio). Verificato a schermo.
 - Tutto verificato via screenshot/DOM, 0 crash console. Solo frontend.
+
+
+---
+## v-fork.33 (2026-06, fork) — Ricerca: icone strumenti colorate + ricerche recenti; pallini per-canale robusti
+- **Strumenti con icona categoria colorata**: in `GlobalSearch.jsx` i risultati Strumenti usano il colore della macro-funzione (`TOOL_KINDS` color per `kind`: crea #ff6b00, calcola #ff8a33, gestisci #8C6B4A, controlla #A16207) come sfondo/bordo/icona. Verificato.
+- **Ricerche recenti**: stato `recent` in localStorage `mikilab_recent_searches` (max 6, dedupe). Salvate quando si apre un risultato (`pushRecent(q)`); a query vuota si mostrano come chip (`global-search-recent`, `gs-recent-<term>`) che ricompilano la ricerca; pulsante "Cancella". Verificato.
+- **Pallini per-canale robusti**: in `Community.jsx` aggiunto `chLatest` caricato una volta da `communityApi.list("all")` (indipendente dal filtro attivo) → `hasNew` usa `chLatest[id] || latestByCat[id]`. Prima i pallini sparivano cambiando canale (posts filtrati). Verificato: 4 pallini sui canali con post nuovi.
+- Tutto verificato via screenshot/DOM, 0 crash. Solo frontend.
