@@ -37,7 +37,7 @@ export default function Header() {
       <div className="px-4 py-3 flex items-center justify-between gap-2">
       <div className="flex items-center gap-2 min-w-0 flex-1">
         <button data-testid="site-menu-open" onClick={() => window.dispatchEvent(new Event("mikilab-open-menu"))} aria-label="Menu"
-          className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
+          className="menu-attn w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
           <Menu className="w-5 h-5" />
         </button>
         <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#1e1e1e] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">

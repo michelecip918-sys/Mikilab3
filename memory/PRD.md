@@ -2852,3 +2852,13 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Condividi locandina**: pulsante `promuovi-flyer-share` in `PromuoviMikiLab` → Web Share API con file (`navigator.share({files})`), fallback share link, fallback finale wa.me.
 - Test iteration_147: backend 100% + frontend 100%. Stato finale: tiktok_handle=mikilab.de, instagram_url="", facebook_url="", social_clicks azzerato.
 
+
+## v-fork.45 (2026-08, fork) — QR tracciato + locandina personalizzata + TikTok publish + CSV social + menu glow
+- **QR tracciato**: `public/qr-mikilab.png` rigenerato (libreria `qrcode`) con URL `https://mikilab.de/?ref=flyer`; re-inserito in TUTTE le 5 locandine (IT via PIL su backup, DE/EN/ES/FR via pipeline). `App.js`: useEffect legge `?ref`/`?utm_source` e chiama `POST /api/social/click {channel}` una volta per sessione → visite tracciate nel report Admin (canale 'flyer').
+- **Locandina personalizzata** (`PromuoviMikiLab.jsx`): input `flyer-bakery-name`; via canvas client-side il nome del forno viene sovraimpresso (arancione, con contorno) sopra il QR (~46.3% H). `displayFlyer` = data URL personalizzato o file statico; usato in anteprima/lightbox/download/share.
+- **Pubblica su TikTok**: pulsante `promuovi-flyer-tiktok` → scarica la locandina, traccia il click e apre `tiktok.com/upload`.
+- **Export CSV click social**: `GET /api/admin/social-logs` + pulsante `admin-social-csv` (accanto a 'Azzera').
+- **Menu hamburger glow**: classe `menu-attn` (keyframe `menuAttnGlow` in index.css) sul bottone `site-menu-open` → glow arancione pulsante visibile in tutte le sezioni (rispetta prefers-reduced-motion).
+- Dipendenza: aggiunto `qrcode` a requirements.txt (usato per generare il QR tracciato).
+- Test iteration_148: backend 100% + frontend 100%. Stato finale: tiktok_handle=mikilab.de, ig/fb="", social_clicks azzerato, 5 locandine+QR HTTP 200.
+

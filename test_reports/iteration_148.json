@@ -1,0 +1,49 @@
+{
+  "summary": "Iteration 148: verified all 5 new features (QR tracking ?ref, social CSV export, hamburger menu glow, personalized flyer via canvas, Publish-on-TikTok) + regressions. Backend: 12/12 pytest passed (social/click, admin/social-logs with admin gating, QR+5 locandine assets 200, QR decoded = https://mikilab.de/?ref=flyer). Frontend Playwright: ?ref=flyer fires POST /api/social/click {channel:'flyer'} exactly once per session (second reload does NOT re-fire); menu-attn class present+visible on hamburger in Home/Ricette/Maestro/Impara/Community; flyer lang chips it/de/en/es/fr switch files; bakery-name input generates data:image/png;base64 preview + download href, clearing restores static file; lightbox open/close OK; Publish-on-TikTok downloads flyer, posts {channel:'tiktok'} and opens tiktok.com/upload with zero JS errors; Share falls back to wa.me; admin panel social card shows counters + 7-day chart and CSV button downloads mikilab-social-clicks-2026-08-31.csv with correct day/channel/count rows. Final state restored: social_clicks reset (deleted 3), tiktok_handle='mikilab.de', instagram_url='', facebook_url=''.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Locandina personalizzata (canvas overlay)",
+        "issues": [
+          "The bakery name is drawn at y = H*0.463 which visually collides/overlaps with the last bullet line ('Bread, Pizza & Pastry' / 'Pane, Pizza e Pasticceria') on all 5 flyers. Recommend lowering to ~H*0.478-0.485 (or adding a dark padded band behind the text) so the name sits cleanly in the gap between the bullet list and the QR."
+        ]
+      },
+      {
+        "screen": "Console (pre-existing, non-blocking)",
+        "issues": [
+          "Logged-out Home triggers ~8 x HTTP 401 'Failed to load resource' console errors (authenticated endpoints called before auth state resolves).",
+          "React hydration warning in RecipeList: <button data-testid=recipe-fav-*> nested inside <button data-testid=recipe-row-*> (invalid HTML nesting)."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter148_flyer_tiktok_csv.py",
+    "/app/test_reports/pytest/iter148.xml"
+  ],
+  "action_items": [
+    "OPTIONAL/POLISH: shift the canvas bakery-name baseline down (~H*0.48) in PromuoviMikiLab.jsx so it no longer overlaps the last bullet line of the flyer.",
+    "OPTIONAL: suppress the 401 console noise on logged-out Home by gating authenticated API calls on user presence.",
+    "OPTIONAL: fix nested <button> in RecipeList (recipe-fav inside recipe-row) to remove the hydration warning."
+  ],
+  "critical_code_review_comments": [
+    "PromuoviMikiLab.jsx canvas effect correctly guards toDataURL with try/catch and same-origin image, no taint risk observed.",
+    "GET /api/admin/social-logs correctly projects out _id and enforces require_admin (401 unauthenticated verified)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter148_flyer_tiktok_csv.py"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Temporary social_clicks rows (test1/flyer/tiktok) created during testing; all removed via POST /api/admin/social-report/reset. Counters now empty.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "All iteration-148 features verified end-to-end. Backend regression file: /app/backend/tests/test_iter148_flyer_tiktok_csv.py (needs opencv-python-headless for the QR-decode test; already installed in this container, else it skips). PromuoviMikiLab is rendered directly in sections/Home.jsx (no toggle needed) - just scroll_into_view on [data-testid=promuovi-flyer]. Note the browser tool navigates to page_url before the script runs, so the ?ref session-once tracking already fired: clear sessionStorage then re-goto to observe the POST. social_clicks was reset at the end of this iteration.",
+  "rca_of_the_issue": "No functional defects found. The only real observation is a cosmetic canvas text-placement overlap on the personalized flyer (y factor 0.463 too high)."
+}

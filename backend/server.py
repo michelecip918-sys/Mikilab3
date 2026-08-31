@@ -5591,6 +5591,14 @@ async def admin_social_report_reset(admin: dict = Depends(require_admin)):
     return {"ok": True, "deleted": res.deleted_count}
 
 
+@api_router.get("/admin/social-logs")
+async def admin_social_logs(admin: dict = Depends(require_admin)):
+    """Righe grezze dei click social per l'export CSV."""
+    rows = await db.social_clicks.find({}, {"_id": 0}).sort("day", -1).to_list(20000)
+    out = [{"day": r.get("day"), "channel": r.get("channel"), "count": int(r.get("count") or 0)} for r in rows]
+    return {"rows": out}
+
+
 _stats_cache = {"data": None, "ts": 0.0}
 LANG_COUNTRY = {"it": "IT", "de": "DE", "en": "GB", "es": "ES", "fr": "FR", "fa": "IR"}
 

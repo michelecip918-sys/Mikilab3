@@ -145,10 +145,38 @@ export default function PromuoviMikiLab() {
   const caps = CAPTIONS[lang] || CAPTIONS.en;
   const caption = caps[variant];
   const activeSocials = SOCIALS.filter((s) => s.key !== "tiktok" && socialUrls[s.key]);
+  const [bakeryName, setBakeryName] = useState("");
+  const [personalUrl, setPersonalUrl] = useState(null);
+  useEffect(() => {
+    const name = bakeryName.trim();
+    if (!name) { setPersonalUrl(null); return; }
+    let cancelled = false;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      if (cancelled) return;
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const ctx = c.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+      const W = c.width, H = c.height;
+      const txt = (name.length > 26 ? name.slice(0, 26) : name);
+      const fs = Math.round(H * 0.034);
+      ctx.font = `800 ${fs}px Manrope, Arial, sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      const y = Math.round(H * 0.463);
+      ctx.lineWidth = Math.max(4, fs * 0.18); ctx.strokeStyle = "#121212"; ctx.strokeText(txt, W / 2, y);
+      ctx.fillStyle = "#ff6b00"; ctx.fillText(txt, W / 2, y);
+      try { setPersonalUrl(c.toDataURL("image/png")); } catch { setPersonalUrl(null); }
+    };
+    img.onerror = () => setPersonalUrl(null);
+    img.src = `${process.env.PUBLIC_URL || ""}/${flyerFile}`;
+    return () => { cancelled = true; };
+  }, [bakeryName, flyerFile]);
+  const displayFlyer = personalUrl || `${process.env.PUBLIC_URL}/${flyerFile}`;
   const shareFlyer = async () => {
-    const fileUrl = `${window.location.origin}${process.env.PUBLIC_URL || ""}/${flyerFile}`;
     try {
-      const res = await fetch(fileUrl);
+      const res = await fetch(displayFlyer);
       const blob = await res.blob();
       const file = new File([blob], flyerFile, { type: blob.type || "image/png" });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -160,6 +188,12 @@ export default function PromuoviMikiLab() {
       try { await navigator.share({ title: "MikiLab", text: L("La locandina di MikiLab", "Der MikiLab-Flyer", "The MikiLab flyer", "El folleto de MikiLab", "Le flyer MikiLab", "پوستر MikiLab"), url: SITE_URL }); return; } catch { /* */ }
     }
     window.open(`https://wa.me/?text=${encodeURIComponent(`MikiLab — ${SITE_URL}`)}`, "_blank");
+  };
+  const publishTikTok = () => {
+    const a = document.createElement("a"); a.href = displayFlyer; a.download = flyerFile; a.click();
+    communityApi.socialClick("tiktok");
+    window.open("https://www.tiktok.com/upload", "_blank");
+    toast.success(L("Locandina scaricata: ora caricala su TikTok!", "Flyer geladen: jetzt auf TikTok hochladen!", "Flyer downloaded: now upload it on TikTok!", "Folleto descargado: ¡súbelo ahora a TikTok!", "Flyer téléchargé : télécharge-le sur TikTok !", "پوستر دانلود شد: حالا در تیک‌تاک بارگذاری کن!"));
   };
   const VARIANTS = [
     { id: "bacheca", label: L("Post", "Beitrag", "Post", "Post", "Post", "پست") },
@@ -315,21 +349,29 @@ export default function PromuoviMikiLab() {
               </button>
             ))}
           </div>
+          {/* Personalizza con il nome del forno (sopra il QR) */}
+          <input data-testid="flyer-bakery-name" value={bakeryName} onChange={(e) => setBakeryName(e.target.value)}
+            maxLength={26} placeholder={L("Nome del tuo forno (facoltativo)", "Name deiner Bäckerei (optional)", "Your bakery name (optional)", "Nombre de tu horno (opcional)", "Nom de ta boulangerie (facultatif)", "نام نانوایی تو (اختیاری)")}
+            className="w-full bg-[#181818] border border-[#2e2e2e] rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-[#ff6b00] mb-2.5" />
           <div className="flex items-center gap-3">
             <button data-testid="promuovi-flyer-preview" onClick={() => setFlyerBig(true)}
               className="shrink-0 rounded-xl overflow-hidden border border-[#2e2e2e] hover:border-[#ff6b00] transition-all active:scale-95">
-              <img src={`${process.env.PUBLIC_URL}/${flyerFile}`} alt="Locandina MikiLab" className="w-[72px] h-[102px] object-cover" loading="lazy" />
+              <img src={displayFlyer} alt="Locandina MikiLab" className="w-[72px] h-[102px] object-cover" loading="lazy" />
             </button>
-            <div className="flex-1 min-w-0">
-              <a data-testid="promuovi-flyer-download" href={`${process.env.PUBLIC_URL}/${flyerFile}`} download={flyerFile}
+            <div className="flex-1 min-w-0 flex flex-wrap gap-2">
+              <a data-testid="promuovi-flyer-download" href={displayFlyer} download={flyerFile}
                 className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#ff6b00] rounded-full px-3 py-1.5 active:scale-95">
-                <Download className="w-3.5 h-3.5" /> {L("Scarica locandina", "Flyer laden", "Download flyer", "Descargar folleto", "Télécharger le flyer", "دانلود پوستر")}
+                <Download className="w-3.5 h-3.5" /> {L("Scarica", "Laden", "Download", "Descargar", "Télécharger", "دانلود")}
               </a>
               <button data-testid="promuovi-flyer-share" onClick={shareFlyer}
-                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95 ml-2">
+                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95">
                 <Share2 className="w-3.5 h-3.5" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
               </button>
-              <p className="text-[11px] text-[#7E8A93] mt-1.5">{L("Formato A5 · pronta da stampare", "Format A5 · druckfertig", "A5 format · ready to print", "Formato A5 · lista para imprimir", "Format A5 · prête à imprimer", "قطع A5 · آمادهٔ چاپ")}</p>
+              <button data-testid="promuovi-flyer-tiktok" onClick={publishTikTok}
+                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-[#010101] border border-[#2e2e2e] rounded-full px-3 py-1.5 active:scale-95">
+                <Music2 className="w-3.5 h-3.5 text-[#ff6b00]" /> {L("Pubblica su TikTok", "Auf TikTok posten", "Post on TikTok", "Publicar en TikTok", "Publier sur TikTok", "انتشار در تیک‌تاک")}
+              </button>
+              <p className="w-full text-[11px] text-[#7E8A93]">{L("Formato A5 · pronta da stampare", "Format A5 · druckfertig", "A5 format · ready to print", "Formato A5 · lista para imprimir", "Format A5 · prête à imprimer", "قطع A5 · آمادهٔ چاپ")}</p>
             </div>
           </div>
         </div>
@@ -339,7 +381,7 @@ export default function PromuoviMikiLab() {
             className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
             <button data-testid="flyer-lightbox-close" onClick={() => setFlyerBig(false)}
               className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1c1c1c] border border-[#2e2e2e] flex items-center justify-center text-white active:scale-90">✕</button>
-            <img src={`${process.env.PUBLIC_URL}/${flyerFile}`} alt="Locandina MikiLab" onClick={(e) => e.stopPropagation()}
+            <img src={displayFlyer} alt="Locandina MikiLab" onClick={(e) => e.stopPropagation()}
               className="max-h-[86vh] max-w-full rounded-xl shadow-2xl object-contain" />
           </div>
         )}

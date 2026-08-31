@@ -161,6 +161,17 @@ export default function AdminPanel({ open, onOpenChange }) {
     try { await adminApi.socialReset(); setSocialRep(await adminApi.socialReport()); toast.success(de ? "Zurückgesetzt" : "Azzerato"); }
     catch { toast.error(de ? "Fehler" : "Errore"); }
   };
+  const downloadSocialCsv = async () => {
+    try {
+      const r = await adminApi.socialLogs();
+      const rows = [["day", "channel", "count"], ...(r.rows || []).map((x) => [x.day, x.channel, x.count])];
+      const csv = rows.map((rr) => rr.map((c) => `"${String(c ?? "").replace(/"/g, '""')}"`).join(",")).join("\n");
+      const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+      const a = document.createElement("a");
+      a.href = url; a.download = `mikilab-social-clicks-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click(); URL.revokeObjectURL(url);
+    } catch { toast.error(de ? "Fehler" : "Errore"); }
+  };
 
   const saveSettings = async () => {
     setSavingSet(true);
@@ -491,6 +502,12 @@ export default function AdminPanel({ open, onOpenChange }) {
               <button data-testid="admin-social-reset" onClick={resetSocial}
                 className="ml-auto inline-flex items-center gap-1 text-[11px] font-bold text-[#a37b52] dark:text-[#d8b48a] border border-[#8C6B4A]/40 rounded-lg px-2 py-1 active:scale-95">
                 <RefreshCw className="w-3 h-3" /> {de ? "Zurücksetzen" : "Azzera"}
+              </button>
+            )}
+            {socialRep && Object.keys(socialRep.totals || {}).length > 0 && (
+              <button data-testid="admin-social-csv" onClick={downloadSocialCsv}
+                className={`inline-flex items-center gap-1 text-[11px] font-bold text-[#a37b52] dark:text-[#d8b48a] border border-[#8C6B4A]/40 rounded-lg px-2 py-1 active:scale-95 ${(socialRep.totals?.tiktok || 0) > 0 ? "" : "ml-auto"}`}>
+                CSV
               </button>
             )}
           </p>

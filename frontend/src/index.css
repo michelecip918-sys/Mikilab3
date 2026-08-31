@@ -10,6 +10,14 @@ body { -webkit-user-select: none; -ms-user-select: none; user-select: none; -web
 input, textarea, [contenteditable="true"] { -webkit-user-select: text; -ms-user-select: text; user-select: text; }
 img { -webkit-user-drag: none; user-drag: none; }
 
+/* Menu hamburger: glow arancione pulsante per farlo notare in ogni sezione */
+@keyframes menuAttnGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,0,0.55), 0 0 0 0 rgba(255,107,0,0.0); border-color: rgba(255,107,0,0.35); }
+  50% { box-shadow: 0 0 14px 3px rgba(255,107,0,0.85), 0 0 0 4px rgba(255,107,0,0.18); border-color: rgba(255,107,0,0.95); }
+}
+.menu-attn { animation: menuAttnGlow 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .menu-attn { animation: none; box-shadow: 0 0 10px 2px rgba(255,107,0,0.6); } }
+
 
 body {
     margin: 0;

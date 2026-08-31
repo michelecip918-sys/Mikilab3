@@ -112,6 +112,17 @@ function App() {
     return () => window.removeEventListener("mikilab-goto", h);
   }, [navigate]);
 
+  // Tracking arrivi da locandina/QR (?ref=flyer o ?utm_source=flyer): conta una volta per sessione.
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const ref = (p.get("ref") || p.get("utm_source") || "").trim().toLowerCase().slice(0, 20);
+    if (!ref) return;
+    const key = `mikilab_ref_${ref}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+    api.post("/social/click", { channel: ref }).catch(() => {});
+  }, []);
+
 
   // chiudi il modale login appena l'utente è autenticato
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
