@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send } from "lucide-react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3 } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
@@ -54,6 +54,7 @@ export default function AdminPanel({ open, onOpenChange }) {
     try {
       const r = await adminApi.sendDailyDigest();
       toast.success((de ? "Zusammenfassungen gesendet: " : "Riepiloghi inviati: ") + (r.users_notified ?? 0) + ` (${r.queued_items ?? 0})`);
+      try { setEmailRep(await adminApi.emailReport()); } catch { /* */ }
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setBaBusy(false); }
   };
@@ -65,6 +66,7 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [nlSending, setNlSending] = useState(false);
   const [nlTesting, setNlTesting] = useState(false);
   const [nlHistory, setNlHistory] = useState([]);
+  const [emailRep, setEmailRep] = useState(null);
 
   const downloadCsv = () => {
     const rows = [["email", "lang", "source", "created_at"], ...subs.map((s) => [s.email, s.lang || "", s.source || "", s.created_at || ""])];
@@ -115,6 +117,7 @@ export default function AdminPanel({ open, onOpenChange }) {
       try { setShop(await adminApi.shopSettings()); } catch { /* */ }
       try { const n = await adminApi.newsletter(); setSubs(n.subscribers || []); } catch { /* */ }
       try { const h = await adminApi.newsletterHistory(); setNlHistory(h.campaigns || []); } catch { /* */ }
+      try { setEmailRep(await adminApi.emailReport()); } catch { /* */ }
       try {
         const s = await siteSettingsApi.get();
         setSettings({ whatsapp_number: s.whatsapp_number || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
@@ -267,6 +270,55 @@ export default function AdminPanel({ open, onOpenChange }) {
             className="mt-2 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[#8C6B4A] text-white active:scale-97 disabled:opacity-60">
             📧 {de ? "Kanal-Zusammenfassungen jetzt senden" : "Invia i riepiloghi dei canali ora"}
           </button>
+        </div>
+
+        {/* Report invii email (digest + istantanei) ultimi 7 giorni */}
+        <div data-testid="admin-email-report" className="rounded-2xl bg-[#8C6B4A]/12 border border-[#8C6B4A]/35 p-4 mt-2">
+          <p className="flex items-center gap-1.5 text-sm font-bold text-[#a37b52] dark:text-[#d8b48a] mb-2">
+            <BarChart3 className="w-4 h-4" /> {de ? "E-Mail-Bericht (7 Tage)" : "Report invii email (7 giorni)"}
+          </p>
+          {!emailRep ? (
+            <p className="text-[12px] text-[#7E8A93]">{de ? "Wird geladen…" : "Caricamento…"}</p>
+          ) : (
+            <>
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="rounded-xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5 text-center">
+                  <p data-testid="email-report-total" className="font-display text-xl font-extrabold text-[#ff6b00]">{emailRep.total}</p>
+                  <p className="text-[10px] text-[#7E8A93] leading-tight">{de ? "Gesendet" : "Inviate"}</p>
+                </div>
+                <div className="rounded-xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5 text-center">
+                  <p data-testid="email-report-users" className="font-display text-xl font-extrabold text-[#ff6b00]">{emailRep.users}</p>
+                  <p className="text-[10px] text-[#7E8A93] leading-tight">{de ? "Nutzer" : "Utenti"}</p>
+                </div>
+                <div className="rounded-xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5 text-center">
+                  <p data-testid="email-report-queue" className="font-display text-xl font-extrabold text-[#8C6B4A]">{emailRep.queue_items}</p>
+                  <p className="text-[10px] text-[#7E8A93] leading-tight">{de ? "In Warteschlange" : "In coda"}</p>
+                </div>
+              </div>
+              <div className="flex items-end justify-between gap-1.5 h-20 mb-1">
+                {emailRep.daily.map((d) => {
+                  const max = Math.max(1, ...emailRep.daily.map((x) => x.count));
+                  const h = Math.round((d.count / max) * 100);
+                  return (
+                    <div key={d.date} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                      <span className="text-[9px] font-bold text-[#a37b52] dark:text-[#d8b48a]">{d.count || ""}</span>
+                      <div className="w-full rounded-t bg-[#8C6B4A]" style={{ height: `${Math.max(4, h)}%` }} />
+                      <span className="text-[8px] text-[#7E8A93]">{d.date.slice(5)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              {Object.keys(emailRep.by_type || {}).length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {Object.entries(emailRep.by_type).map(([k, v]) => (
+                    <span key={k} className="text-[10px] font-bold text-[#a37b52] dark:text-[#d8b48a] bg-[#8C6B4A]/15 border border-[#8C6B4A]/30 rounded-full px-2 py-0.5">
+                      {k === "digest" ? (de ? "Zusammenfassung" : "Riepilogo") : k === "instant" ? (de ? "Sofort" : "Istantaneo") : k}: {v}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
         <div data-testid="admin-newsletter" className="rounded-2xl bg-[#3a6b3a]/10 border border-[#3a6b3a]/30 p-4 mt-2">
           <div className="flex items-center justify-between gap-3 mb-2">

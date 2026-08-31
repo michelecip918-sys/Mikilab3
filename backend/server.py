@@ -5441,6 +5441,7 @@ async def community_create(body: CommunityPostReq, user: dict = Depends(current_
                                 "<p><a href='https://mikilab.de' style='color:#ff6b00'>Apri MikiLab →</a></p></div>"
                             )
                             await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [u["email"]], "subject": f"MikiLab · nuovo post in #{cat}", "html": _html})
+                            await _log_email("instant", u["email"], count=1, meta={"channel": cat})
                 except Exception:
                     logger.exception("channel follow email failed")
     except Exception:
@@ -5482,6 +5483,38 @@ async def set_channel_email_pref(body: dict, user: dict = Depends(current_user))
 @api_router.post("/admin/send-daily-digest")
 async def admin_send_daily_digest(admin: dict = Depends(require_admin)):
     return await _run_daily_digest()
+
+
+@api_router.get("/admin/email-report")
+async def admin_email_report(admin: dict = Depends(require_admin)):
+    """Report invii email (digest/istantanei) degli ultimi 7 giorni + coda in attesa."""
+    from datetime import date, timedelta
+    queued = await db.email_digest_queue.find({}, {"_id": 0, "user_id": 1}).to_list(5000)
+    queue_users = len({q.get("user_id") for q in queued if q.get("user_id")})
+    days = [(date.today() - timedelta(days=i)).isoformat() for i in range(7)]
+    since = min(days)
+    logs = await db.email_logs.find({"day": {"$gte": since}}, {"_id": 0}).to_list(20000)
+    by_day, by_type, users, total = {}, {}, set(), 0
+    for l in logs:
+        cnt = int(l.get("count") or 1)
+        total += cnt
+        by_day[l.get("day")] = by_day.get(l.get("day"), 0) + cnt
+        k = l.get("kind") or "other"
+        by_type[k] = by_type.get(k, 0) + cnt
+        if l.get("to"):
+            users.add(l["to"])
+    daily = [{"date": d, "count": by_day.get(d, 0)} for d in sorted(days)]
+    return {"queue_items": len(queued), "queue_users": queue_users,
+            "total": total, "users": len(users), "by_type": by_type, "daily": daily}
+
+
+@api_router.get("/community/stats")
+async def community_stats():
+    """Statistiche pubbliche per la riprova sociale in Home (contatore iscritti)."""
+    bakers = await db.users.count_documents({})
+    recipes = await db.recipes.count_documents({"collection_name": "mikilab", "hidden": {"$ne": True}})
+    posts = await db.community_posts.count_documents({"is_deleted": {"$ne": True}})
+    return {"bakers": bakers, "recipes": recipes, "posts": posts}
 
 
 @api_router.post("/community/posts/{post_id}/like")
@@ -7607,6 +7640,18 @@ async def _followup_loop():
         await asyncio.sleep(6 * 3600)  # ogni 6 ore
 
 
+async def _log_email(kind: str, to: str, count: int = 1, meta: Optional[dict] = None):
+    """Registra un invio email per il report del pannello admin. Best-effort."""
+    try:
+        from datetime import date
+        await db.email_logs.insert_one({
+            "id": str(uuid.uuid4()), "kind": kind, "to": to, "count": int(count or 1),
+            "meta": meta or {}, "day": date.today().isoformat(), "created_at": now_iso(),
+        })
+    except Exception:
+        logging.getLogger(__name__).warning("email log insert failed")
+
+
 async def _run_daily_digest():
     """Raggruppa la coda digest per utente, invia UN riepilogo e svuota. Idempotente sulla coda."""
     queued = await db.email_digest_queue.find({}, {"_id": 0}).to_list(5000)
@@ -7622,6 +7667,7 @@ async def _run_daily_digest():
         try:
             await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [data["email"]], "subject": "MikiLab · il tuo riepilogo giornaliero", "html": _html})
             sent += 1
+            await _log_email("digest", data["email"], count=1, meta={"items": len(data["items"])})
         except Exception:
             logger.exception("digest send failed")
     await db.email_digest_queue.delete_many({})

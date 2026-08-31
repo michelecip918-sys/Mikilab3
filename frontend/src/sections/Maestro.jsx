@@ -6,7 +6,6 @@ import {
   Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
-import SectionHero from "@/components/SectionHero";
 import SfidaLampo from "@/sections/SfidaLampo";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
 import MyData from "@/sections/MyData";
@@ -49,8 +48,6 @@ import SoundDiagnosi from "@/sections/SoundDiagnosi";
 import EnterpriseHub from "@/sections/EnterpriseHub";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
-import MohammedAssistant from "@/sections/MohammedAssistant";
-import AvatarBubbles from "@/components/AvatarBubbles";
 import RecipeGenerator from "@/components/RecipeGenerator";
 import FermentazionePredittiva from "@/sections/FermentazionePredittiva";
 import CosaPosso from "@/components/CosaPosso";
@@ -76,6 +73,7 @@ import ManiSporche from "@/sections/ManiSporche";
 import ToolsDirectory from "@/components/ToolsDirectory";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
+
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
@@ -191,9 +189,11 @@ export default function Maestro() {
     <div className="pb-28">
       <HighFive />
 
-      <SectionHero testid="maestro-title" image="hero-laboratorio.jpg" position="50% 30%"
-        title={mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}
-        subtitle={mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")} />
+      {/* Header pulito e professionale: solo titolo, nessuna immagine decorativa (lab = lavoro veloce). */}
+      <div data-testid="maestro-title" className="mb-4">
+        <h1 className="font-display text-2xl font-extrabold text-white leading-tight">{mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}</h1>
+        <p className="text-[13px] text-[#AEB8BF] leading-snug mt-0.5">{mkTri(lang)("Solo strumenti di lavoro, per produrre più in fretta.", "Nur Arbeitswerkzeuge, um schneller zu produzieren.", "Only work tools, to produce faster.", "Solo herramientas de trabajo, para producir más rápido.", "Uniquement des outils de travail, pour produire plus vite.", "فقط ابزارهای کار، برای تولید سریع‌تر.")}</p>
+      </div>
 
       {/* IN CIMA: il generatore del Piano IA + CTA diretta al calcolo generato */}
       <div data-testid="maestro-generate-cta" className="mb-3 rounded-2xl border border-[#ff6b00]/45 bg-gradient-to-br from-[#2a1a0d] to-[#161616] p-4">
@@ -269,22 +269,8 @@ export default function Maestro() {
       )}
 
       {/* Avatar del Laboratorio: Michele operativo + Mohammadreza pronto ad aiutare */}
-      <AvatarBubbles variant="lab" />
-
       {/* Firma personale: Michele al lavoro (identità del laboratorio) */}
-      <div data-testid="maestro-signature" className="mt-5 relative overflow-hidden rounded-2xl border border-[#2e2e2e]">
-        <img src="/bio-dough-2.jpg" alt={mkTri(lang)("Michele al lavoro", "Michele bei der Arbeit", "Michele at work", "Michele trabajando", "Michele au travail", "میکله در حال کار")}
-          className="w-full h-28 object-cover object-center" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0d0d0d] via-[#0d0d0d]/50 to-transparent" />
-        <p className="absolute inset-y-0 left-0 flex items-center px-4 max-w-[70%] text-white font-display text-sm font-bold leading-tight drop-shadow">
-          {mkTri(lang)("Ogni impasto passa dalle mie mani, prima che dalle tue.", "Jeder Teig geht durch meine Hände, bevor er zu deinen kommt.", "Every dough passes through my hands, before yours.", "Cada masa pasa por mis manos, antes que por las tuyas.", "Chaque pâte passe par mes mains, avant les tiennes.", "هر خمیر پیش از دستان تو، از دستان من می‌گذرد.")}
-        </p>
-      </div>
-
       {/* Assistente e aiuto: sotto il piano, per chi vuole approfondire */}
-      <div className="mt-5">
-        <MohammedAssistant />
-      </div>
 
       {/* WhatsApp SOLO qui (Laboratorio) e nei Corsi */}
       <div className="mt-4">

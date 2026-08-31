@@ -1,0 +1,37 @@
+{
+  "summary": "Iteration 143 — full test of the 4 new features + Lab cleanup. Backend: 11/11 pytest checks passed (GET /api/community/stats public, GET /api/admin/email-report admin-only with 403 for normal user + 401 unauth, GET/PUT /api/me/channel-email incl. persistence and 400 on invalid mode, GET /api/streak). Frontend (mobile 390x844, preview URL): Home social-proof counter renders '10+'; Your Lab header is clean (maestro-title, no hero image/maestro-signature/AvatarBubbles/MohammedAssistant, Piano IA + LabWizard + All-tools toggle all work); streak-badge + 6 milestone chips render, and after temporarily forcing streak=7 the streak-reward badge showed 'Steady Baker · 7 days' (restored to 0 afterwards); ProfilePanel profile-email-pref shows 3 buttons, clicking Daily fires PUT /api/me/channel-email, shows 'Preference saved' toast and persists after closing/reopening the panel; Admin email report card renders with the 3 counters (0/0/0, no recent sends) and the 7-day bar chart (08-25..08-31). No blocking issues found.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AdminPanel / email report", "issue": "Card labels are IT/DE only ('Report invii email (7 giorni)', 'Inviate/Utenti/In coda') — they stay Italian when the app language is EN/ES/FR/FA (AdminPanel uses only the `de` boolean). Admin-only, cosmetic.", "selector": "[data-testid=\"admin-email-report\"]", "priority": "LOW"},
+      {"component": "ProfilePanel", "issue": "Panel does not close on Escape key (only via profile-close / backdrop click). Minor a11y/UX nit.", "selector": "[data-testid=\"profile-panel\"]", "priority": "LOW"},
+      {"component": "Maestro.jsx", "issue": "Dead imports left after cleanup: `MohammedAssistant` (line 52) and `AvatarBubbles` (line 53) are imported but never rendered — remove to avoid bundling removed decorative components.", "selector": "n/a", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home / streak badge", "issues": ["No issues: reward badge uses orange gradient + white bold text on dark, good contrast; milestone chips readable"]},
+      {"screen": "Home / social proof", "issues": ["No issues: '10+' in orange #ff6b00 on dark, legible"]},
+      {"screen": "Your Lab header", "issues": ["Clean as requested: title + subtitle only, no imagery; subtitle #AEB8BF on #121212 has adequate contrast"]},
+      {"screen": "Admin email report", "issues": ["With all counters at 0 the 7-day bar chart shows only date labels and flat bars — acceptable but consider an 'no sends in last 7 days' empty-state hint"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter143_email_report.py", "/app/test_reports/pytest/iter143.xml"],
+  "action_items": [
+    "(LOW) Remove unused MohammedAssistant / AvatarBubbles imports from /app/frontend/src/sections/Maestro.jsx.",
+    "(LOW) Localise AdminPanel email-report labels beyond IT/DE (or accept IT-only for admin).",
+    "(INFO) Review naming in the request: the admin panel is opened via [data-testid=\"site-menu-admin\"] inside the burger SiteMenu, NOT a header [data-testid=\"admin-btn\"] (that testid does not exist)."
+  ],
+  "critical_code_review_comments": [
+    "GET /api/admin/email-report loads up to 5000 queue docs and 20000 email_logs into memory and aggregates in Python; fine at current scale but should become a Mongo aggregation if email volume grows.",
+    "GET /api/community/stats is fully public and does a count_documents on users/recipes/community_posts on every Home load — consider caching (e.g. 60s) to avoid unnecessary DB load.",
+    "StreakFlame reward tiers (7/30/100) are derived client-side from `current`; no server-side badge record, so the reward is not persisted/awardable elsewhere (acceptable for display-only)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter143_email_report.py", "/app/backend/tests/_iter143_streak_set.py"],
+  "success_rate": { "backend": "100% (11/11)", "frontend": "100% of tested flows (3 LOW cosmetic nits)" },
+  "seed_data_creation": "Temporarily set admin@mikilab.de streak_current=7/best=9/activity_last=today to verify streak-reward rendering; RESTORED to streak_current=0/best=0 and activity_last unset. fornaio@mikilab.de channel_email was cycled daily/off/instant by the pytest suite (final value 'instant'); admin channel_email left at 'instant' after UI test.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin), fornaio@mikilab.de / Mikilab2026! (user)",
+  "context_for_next_testing_agent": "Login: header [data-testid=\"login-btn\"] -> auth-tab-login/auth-email/auth-password/auth-submit. NewsletterPopup overlays and intercepts clicks on first load — dismiss via newsletter-popup-close/dismiss. Own profile: nav-tab-community -> [data-testid=\"open-my-profile\"] -> profile-panel (close via profile-close; Escape does NOT close it, and while open it blocks header clicks). Admin panel: [data-testid=\"site-menu-open\"] -> [data-testid=\"site-menu-admin\"] -> admin-panel (scroll to admin-email-report). Sonner toasts sit over the header and can intercept clicks — wait ~4s after a toast before clicking header buttons. Console shows several harmless 401s for auth-gated endpoints while logged out.",
+  "rca_of_the_issue": "No functional defect. The only test-run failures were environmental: sonner toast container and the open ProfilePanel overlay intercepting pointer events on the header (resolved by closing the panel via profile-close and waiting for toasts)."
+}

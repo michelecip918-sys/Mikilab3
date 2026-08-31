@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Flame, Lock } from "lucide-react";
+import { Flame, Lock, Award } from "lucide-react";
 import { streakApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
@@ -45,6 +45,13 @@ export default function StreakFlame() {
   const n = s.current || 0;
   const active = s.active_today;
   const milestones = s.milestones || [];
+  // Badge-ricompensa nominali ai traguardi chiave (7/30/100 giorni)
+  const REWARDS = {
+    7: L("Fornaio Costante", "Beständiger Bäcker", "Steady Baker", "Panadero Constante", "Boulanger Assidu", "نانوای پیگیر"),
+    30: L("Maestro dell'Abitudine", "Meister der Gewohnheit", "Habit Master", "Maestro del Hábito", "Maître de l'Habitude", "استاد عادت"),
+    100: L("Leggenda del Forno", "Ofen-Legende", "Oven Legend", "Leyenda del Horno", "Légende du Four", "افسانهٔ تنور"),
+  };
+  const topRewardDays = [100, 30, 7].find((d) => n >= d);
 
   return (
     <div data-testid="streak-badge" className={`mb-4 rounded-2xl border px-4 py-3 ${active ? "border-[#ff6b00]/50 bg-[#ff6b00]/12" : "border-[#2e2e2e] bg-[#181818]"}`}>
@@ -75,6 +82,16 @@ export default function StreakFlame() {
           </span>
         ))}
       </div>
+      {/* Badge-ricompensa al traguardo raggiunto */}
+      {topRewardDays && (
+        <div data-testid="streak-reward" className="mt-2.5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#ff6b00]/20 to-[#7a531d]/20 border border-[#ff6b00]/40 px-3 py-2">
+          <Award className="w-4 h-4 text-[#ff6b00] shrink-0" />
+          <p className="text-[12px] font-bold text-white leading-tight">
+            {REWARDS[topRewardDays]}
+            <span className="ml-1 font-semibold text-[#AEB8BF]">· {topRewardDays} {L("giorni", "Tage", "days", "días", "jours", "روز")}</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }

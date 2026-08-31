@@ -2804,3 +2804,14 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Pulsante admin "Invia i riepiloghi dei canali ora"**: `AdminPanel.jsx` bottone `admin-send-digest` → `adminApi.sendDailyDigest()` → `POST /api/admin/send-daily-digest`. Verificato endpoint (admin): `{users_notified, queued_items}`.
 - **#Verifica dominio Resend**: azione ESTERNA utente (dashboard Resend, verificare mikilab.de) — non codificabile; senza verifica le email non partono ma la coda/logica funziona.
 - Verificato: backend startup (loop avviato, 0 errori) + curl admin endpoint + frontend build ok.
+
+## v-fork.39 (2026-08, fork) — Lab pulito + Report email admin + Pref email profilo + Streak reward + Contatore iscritti
+Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (niente decorazioni/"cose da vedere"); poi fare tutto (a→d).
+- **Lab pulito** (`Maestro.jsx`): rimossa la grande immagine hero (SectionHero) → header compatto `maestro-title` (titolo + sottotitolo "Solo strumenti di lavoro, per produrre più in fretta"). Rimossi gli elementi decorativi `AvatarBubbles variant="lab"`, la foto firma `maestro-signature` (bio-dough-2) e l'assistente `MohammedAssistant`. Restano tutti gli strumenti (Piano IA, LabWizard, toggle "Tutti gli strumenti", calcolatori, WhatsAppHelp). Import morti rimossi.
+- **(a) Report invii email (Admin)**: backend `GET /api/admin/email-report` (solo admin) → {queue_items, queue_users, total, users, by_type, daily[7]}. Nuova collezione `email_logs` + helper `_log_email(kind,to,count,meta)`; logging in `_run_daily_digest` (kind="digest") e nelle email istantanee dei canali (kind="instant"). UI `AdminPanel.jsx`: card `admin-email-report` con 3 contatori (`email-report-total/users/queue`) + grafico a barre 7 giorni + chip per tipo. `adminApi.emailReport()`.
+- **(b) Preferenza email nel Profilo**: `ProfilePanel.jsx` mostra (solo profilo proprio) `profile-email-pref` con 3 pulsanti `email-pref-daily/instant/off` → `communityApi.emailMode/setEmailMode` (GET/PUT `/api/me/channel-email`, già esistenti). Persistenza verificata.
+- **(c) Streak reward**: `StreakFlame.jsx` badge nominale `streak-reward` ai traguardi 7 ("Fornaio Costante") / 30 ("Maestro dell'Abitudine") / 100 ("Leggenda del Forno"). Display-only (deriva da `current`; i badge `streak_N` erano già salvati lato server in `_touch_streak`).
+- **(d) Contatore iscritti in Home**: backend pubblico `GET /api/community/stats` → {bakers, recipes, posts}. Home `home-social-proof` mostra `home-subscribers-count` (es. "10+"). `communityApi.stats()`.
+- NOTA utente: quiz/gamification NON vanno nel Laboratorio (restano in Home/Impara/Profilo).
+- Test iteration_143: backend 11/11 pytest, frontend 100% flussi (3 nit LOW cosmetici). AdminPanel resta IT/DE (admin-only) — accettato.
+

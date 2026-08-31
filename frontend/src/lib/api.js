@@ -163,6 +163,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   newsletter: () => api.get(`/admin/newsletter`).then((r) => r.data),
   newsletterSend: (payload) => api.post(`/admin/newsletter/send`, payload).then((r) => r.data),
   newsletterHistory: () => api.get(`/admin/newsletter/history`).then((r) => r.data),
+  emailReport: () => api.get(`/admin/email-report`).then((r) => r.data),
 };
 
 export const siteSettingsApi = {
@@ -201,6 +202,7 @@ export const communityApi = {
   toggleFollow: (channel) => api.post(`/community/follows/${channel}`).then((r) => r.data),
   emailMode: () => api.get(`/me/channel-email`).then((r) => r.data.mode).catch(() => "instant"),
   setEmailMode: (mode) => api.put(`/me/channel-email`, { mode }).then((r) => r.data),
+  stats: () => api.get(`/community/stats`).then((r) => r.data).catch(() => null),
 };
 
 export const bakeAlongApi = {

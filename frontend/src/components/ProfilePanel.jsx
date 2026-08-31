@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare, UserPlus, Send, Stethoscope, Trash2 } from "lucide-react";
-import { profileApi, uploadApi, friendsApi, academyApi } from "@/lib/api";
+import { X, Loader2, ImagePlus, Pencil, Store, MessageSquare, UserPlus, Send, Stethoscope, Trash2, Mail } from "lucide-react";
+import { profileApi, uploadApi, friendsApi, academyApi, communityApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { toast } from "sonner";
@@ -34,6 +34,18 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
   const [viewId, setViewId] = useState(userId);
   const isMe = user && user.user_id === viewId;
   const [sosItems, setSosItems] = useState([]);
+  const [emailMode, setEmailMode] = useState(null);
+
+  useEffect(() => {
+    if (isMe) communityApi.emailMode().then(setEmailMode).catch(() => setEmailMode("instant"));
+    else setEmailMode(null);
+  }, [isMe, viewId]);
+
+  const changeEmailMode = async (mode) => {
+    setEmailMode(mode);
+    try { await communityApi.setEmailMode(mode); toast.success(tri("Preferenza salvata", "Einstellung gespeichert", "Preference saved", "Preferencia guardada")); }
+    catch { toast.error(tri("Errore", "Fehler", "Error", "Error")); }
+  };
 
   useEffect(() => {
     if (isMe) academyApi.sosHistory().then(setSosItems).catch(() => setSosItems([]));
@@ -169,6 +181,24 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                     <button key={c.user_id} data-testid={`contact-${c.user_id}`} onClick={() => setViewId(c.user_id)} className="shrink-0 flex flex-col items-center gap-1 w-14 active:scale-95">
                       <div className="w-11 h-11 rounded-full overflow-hidden bg-[#1e1e1e] flex items-center justify-center text-white font-bold">{c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" /> : (c.name || "F")[0].toUpperCase()}</div>
                       <span className="text-[10px] text-[#3F4A54] dark:text-[#AEB8BF] truncate w-full text-center">{c.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isMe && (
+              <div data-testid="profile-email-pref">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-[#ff6b00]" /> {tri("Notifiche email dai canali seguiti", "E-Mail-Benachrichtigungen der gefolgten Kanäle", "Email notifications from followed channels", "Notificaciones por email de los canales seguidos")}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { v: "daily", it: "Giornaliero", de: "Täglich", en: "Daily", es: "Diario" },
+                    { v: "instant", it: "Istantaneo", de: "Sofort", en: "Instant", es: "Instantáneo" },
+                    { v: "off", it: "Disattivato", de: "Aus", en: "Off", es: "Apagado" },
+                  ].map((o) => (
+                    <button key={o.v} data-testid={`email-pref-${o.v}`} onClick={() => changeEmailMode(o.v)}
+                      className={`rounded-xl px-2 py-2.5 text-[12px] font-bold border transition-all active:scale-95 ${emailMode === o.v ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#121212] dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                      {tri(o.it, o.de, o.en, o.es)}
                     </button>
                   ))}
                 </div>

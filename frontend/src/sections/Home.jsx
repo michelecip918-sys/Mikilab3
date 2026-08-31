@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
 import { recipesApi } from "@/lib/api";
-import { dmApi, academyApi, profileApi } from "@/lib/api";
+import { dmApi, academyApi, profileApi, communityApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import ChatPanel from "@/components/ChatPanel";
 import LegalPage from "@/sections/LegalPage";
@@ -248,6 +248,8 @@ export default function Home({ onNavigate }) {
   const profile = getProfile();
 
   const [panettoni, setPanettoni] = useState([]);
+  const [stats, setStats] = useState(null);
+  useEffect(() => { communityApi.stats().then(setStats).catch(() => {}); }, []);
   useEffect(() => {
     recipesApi.list("mikilab").then((rs) => {
       const p = (rs || []).filter((r) => (r.menu_category === "panettoni") || /panettone/i.test(r.name || "")).slice(0, 8);
@@ -358,6 +360,9 @@ export default function Home({ onNavigate }) {
           ))}
         </div>
         <p className="text-[12.5px] text-[#9aa4ab] leading-snug">
+          {stats && stats.bakers > 0 && (
+            <span data-testid="home-subscribers-count" className="text-[#ff6b00] font-extrabold">{stats.bakers}+ </span>
+          )}
           <span className="text-white font-bold">{L("Fornai da Italia e Germania", "Bäcker aus Italien und Deutschland", "Bakers from Italy and Germany", "Panaderos de Italia y Alemania", "Boulangers d'Italie et d'Allemagne", "نانواها از ایتالیا و آلمان")}</span> {L("organizzano qui la produzione", "organisieren hier die Produktion", "organise production here", "organizan aquí la producción", "organisent ici la production", "تولید را اینجا سازماندهی می‌کنند")}
         </p>
       </div>
