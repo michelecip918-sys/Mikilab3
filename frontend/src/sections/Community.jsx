@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy, Cake, Wheat, Pizza, Cookie, LifeBuoy, X } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy, Cake, Wheat, Pizza, Cookie, LifeBuoy, X, Mail } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -86,6 +86,9 @@ export default function Community({ onNavigate }) {
   const [chLatest, setChLatest] = useState({});
   const [follows, setFollows] = useState([]);
   const [manageOpen, setManageOpen] = useState(false);
+  const [emailMode, setEmailMode] = useState("instant");
+  useEffect(() => { if (user) communityApi.emailMode().then(setEmailMode).catch(() => {}); }, [user]);
+  const changeEmailMode = async (m) => { setEmailMode(m); try { await communityApi.setEmailMode(m); } catch { /* */ } };
   useEffect(() => { if (user) communityApi.follows().then(setFollows).catch(() => {}); }, [user]);
   useEffect(() => {
     communityApi.list("all").then((all) => {
@@ -342,6 +345,21 @@ export default function Community({ onNavigate }) {
               <button data-testid="follows-manager-close" onClick={() => setManageOpen(false)} className="w-8 h-8 rounded-full bg-[#1e1e1e] flex items-center justify-center text-[#7E8A93] active:scale-95"><X className="w-4 h-4" /></button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto p-2">
+              <div data-testid="channel-email-pref" className="mb-2 p-3 rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25">
+                <p className="text-[12px] font-bold text-[#e4eff8] mb-2 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-[#ff6b00]" />{tri("Email dei canali seguiti", "E-Mails der abonnierten Kanäle", "Followed-channel emails", "Emails de canales seguidos", "E-mails des canaux suivis")}</p>
+                <div className="flex gap-1.5">
+                  {[
+                    { k: "off", l: tri("Nessuna", "Keine", "None", "Ninguna", "Aucune") },
+                    { k: "daily", l: tri("1 al giorno", "1 pro Tag", "1 a day", "1 al día", "1 par jour") },
+                    { k: "instant", l: tri("Ogni post", "Jeder Beitrag", "Every post", "Cada post", "Chaque post") },
+                  ].map((o) => (
+                    <button key={o.k} data-testid={`email-mode-${o.k}`} onClick={() => changeEmailMode(o.k)}
+                      className={`flex-1 px-2 py-1.5 rounded-lg text-[11.5px] font-bold border transition-all ${emailMode === o.k ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
+                      {o.l}
+                    </button>
+                  ))}
+                </div>
+              </div>
               {CATS.map((c) => {
                 const on = follows.includes(c.id);
                 return (

@@ -198,6 +198,8 @@ export const communityApi = {
   remove: (id) => api.delete(`/community/posts/${id}`).then((r) => r.data),
   follows: () => api.get(`/community/follows`).then((r) => r.data.channels || []).catch(() => []),
   toggleFollow: (channel) => api.post(`/community/follows/${channel}`).then((r) => r.data),
+  emailMode: () => api.get(`/me/channel-email`).then((r) => r.data.mode).catch(() => "instant"),
+  setEmailMode: (mode) => api.put(`/me/channel-email`, { mode }).then((r) => r.data),
 };
 
 export const bakeAlongApi = {

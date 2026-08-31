@@ -15,6 +15,7 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([]);
   const [unread, setUnread] = useState(0);
+  const [nfilter, setNfilter] = useState("all");
   const panelRef = useRef(null);
 
   const load = useCallback(async () => {
@@ -91,8 +92,10 @@ export default function NotificationBell() {
     </div>
   );
 
-  const otherItems = items.filter((n) => n.type !== "channel_post");
-  const chanItems = items.filter((n) => n.type === "channel_post");
+  const matchNf = (n) => nfilter === "all" ? true : nfilter === "channels" ? n.type === "channel_post" : nfilter === "friends" ? (n.type && n.type.startsWith("friend")) : nfilter === "likes" ? n.type === "like" : true;
+  const fitems = items.filter(matchNf);
+  const otherItems = fitems.filter((n) => n.type !== "channel_post");
+  const chanItems = fitems.filter((n) => n.type === "channel_post");
   const chanByCat = {};
   chanItems.forEach((n) => { (chanByCat[n.category || "—"] = chanByCat[n.category || "—"] || []).push(n); });
 
@@ -109,10 +112,23 @@ export default function NotificationBell() {
 
       {open && (
         <div data-testid="notif-panel" className="absolute right-0 mt-2 w-80 max-w-[90vw] max-h-[70vh] overflow-auto rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-2xl z-50">
-          <div className="px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] sticky top-0 bg-white dark:bg-[#1e1e1e]">
-            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Notifiche", "Benachrichtigungen", "Notifications")}</p>
+          <div className="px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] sticky top-0 bg-white dark:bg-[#1e1e1e] z-10">
+            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2">{tri("Notifiche", "Benachrichtigungen", "Notifications")}</p>
+            <div className="flex gap-1.5 overflow-x-auto no-scrollbar" data-testid="notif-filters">
+              {[
+                { k: "all", l: tri("Tutte", "Alle", "All", "Todas", "Toutes") },
+                { k: "channels", l: tri("Canali", "Kanäle", "Channels", "Canales", "Canaux") },
+                { k: "friends", l: tri("Amici", "Freunde", "Friends", "Amigos", "Amis") },
+                { k: "likes", l: tri("Like", "Likes", "Likes", "Me gusta", "J'aime") },
+              ].map((o) => (
+                <button key={o.k} data-testid={`notif-filter-${o.k}`} onClick={() => setNfilter(o.k)}
+                  className={`shrink-0 px-2.5 py-1 rounded-full text-[11.5px] font-bold border transition-all ${nfilter === o.k ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-transparent text-[#7E8A93] border-[#2e2e2e]"}`}>
+                  {o.l}
+                </button>
+              ))}
+            </div>
           </div>
-          {items.length === 0 ? (
+          {fitems.length === 0 ? (
             <p data-testid="notif-empty" className="text-center text-sm text-[#7E8A93] py-8 px-4">{tri("Nessuna notifica per ora. Pubblica nella Community!", "Noch keine. Poste in der Community!", "Nothing yet. Post in the Community!")}</p>
           ) : (
             <div>

@@ -5425,11 +5425,14 @@ async def community_create(body: CommunityPostReq, user: dict = Depends(current_
                     "snippet": (f"#{cat}: " + (text or "nuova foto"))[:80],
                     "count": 1, "read": False, "created_at": now_iso(), "category": cat,
                 })
-                # Email di avviso (best-effort; dipende da Resend + dominio verificato)
+                # Email/Digest secondo la preferenza del follower (best-effort; dipende da Resend)
                 try:
-                    if RESEND_API_KEY:
-                        u = await db.users.find_one({"user_id": f["user_id"]}, {"_id": 0, "email": 1})
-                        if u and u.get("email"):
+                    u = await db.users.find_one({"user_id": f["user_id"]}, {"_id": 0, "email": 1, "channel_email": 1})
+                    mode = (u or {}).get("channel_email", "instant")
+                    if u and u.get("email") and mode != "off":
+                        if mode == "daily":
+                            await db.email_digest_queue.insert_one({"user_id": f["user_id"], "email": u["email"], "category": cat, "author": doc["author_name"], "text": (text or "Nuova foto")[:200], "created_at": now_iso()})
+                        elif RESEND_API_KEY:
                             _html = (
                                 "<div style='font-family:sans-serif;max-width:520px;margin:auto'>"
                                 "<h2 style='color:#ff6b00'>🥖 MikiLab</h2>"
@@ -5459,6 +5462,43 @@ async def community_follow_toggle(channel: str, user: dict = Depends(current_use
         return {"following": False, "channel": channel}
     await db.channel_follows.insert_one({"user_id": user["user_id"], "channel": channel, "created_at": now_iso()})
     return {"following": True, "channel": channel}
+
+
+@api_router.get("/me/channel-email")
+async def get_channel_email_pref(user: dict = Depends(current_user)):
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "channel_email": 1})
+    return {"mode": (u or {}).get("channel_email", "instant")}
+
+
+@api_router.put("/me/channel-email")
+async def set_channel_email_pref(body: dict, user: dict = Depends(current_user)):
+    mode = body.get("mode", "instant")
+    if mode not in ("off", "instant", "daily"):
+        raise HTTPException(status_code=400, detail="invalid mode")
+    await db.users.update_one({"user_id": user["user_id"]}, {"$set": {"channel_email": mode}})
+    return {"mode": mode}
+
+
+@api_router.post("/admin/send-daily-digest")
+async def admin_send_daily_digest(admin: dict = Depends(require_admin)):
+    # Raggruppa la coda per utente e invia UN riepilogo, poi svuota. (da chiamare via cron 1x/giorno)
+    queued = await db.email_digest_queue.find({}, {"_id": 0}).to_list(5000)
+    by_user = {}
+    for q in queued:
+        by_user.setdefault(q["user_id"], {"email": q.get("email"), "items": []})["items"].append(q)
+    sent = 0
+    for uid, data in by_user.items():
+        if not data["email"] or not RESEND_API_KEY:
+            continue
+        rows = "".join(f"<li><b>#{i['category']}</b> — {i['author']}: {i['text']}</li>" for i in data["items"][:50])
+        _html = f"<div style='font-family:sans-serif;max-width:560px;margin:auto'><h2 style='color:#ff6b00'>🥖 MikiLab · Riepilogo del giorno</h2><p>Novità nei canali che segui:</p><ul>{rows}</ul><p><a href='https://mikilab.de' style='color:#ff6b00'>Apri MikiLab →</a></p></div>"
+        try:
+            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [data["email"]], "subject": "MikiLab · il tuo riepilogo giornaliero", "html": _html})
+            sent += 1
+        except Exception:
+            logger.exception("digest send failed")
+    await db.email_digest_queue.delete_many({})
+    return {"users_notified": sent, "queued_items": len(queued)}
 
 
 @api_router.post("/community/posts/{post_id}/like")

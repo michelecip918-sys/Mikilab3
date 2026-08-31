@@ -2787,3 +2787,12 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Campanella raggruppata**: `NotificationBell.jsx` estratto `renderNotif`; le notifiche `channel_post` sono raggruppate per canale sotto header `notif-group-<cat>` ("Channel: X · n"); aggiunta icona/testo per `channel_post`. Verificato: 1 gruppo.
 - **Email ai follower (best-effort)**: in `community_create` (backend) oltre alla notifica in-app si invia un'email via Resend a ogni follower del canale (lookup `db.users` per email). ⚠️ MOCKED/DIPENDENTE: l'invio reale dipende da `RESEND_API_KEY` e dal dominio `mikilab.de` VERIFICATO su Resend; se non verificato l'email non parte (la notifica in-app funziona comunque). Non è un digest programmato ma un avviso immediato per post.
 - Verificato: screenshot (manager/highlight/campanella) + build ok. Backend reload ok.
+
+
+---
+## v-fork.37 (2026-06, fork) — Digest email giornaliero, preferenza email, filtri campanella
+- **Preferenza email canali**: campo `channel_email` su users (off|instant|daily, default instant). Endpoint `GET/PUT /api/me/channel-email`. UI: blocco `channel-email-pref` in cima al modale "Canali seguiti" con 3 opzioni `email-mode-{off,daily,instant}`. Verificato (set/get daily).
+- **Digest giornaliero**: in `community_create`, per follower con mode=daily si accoda in `email_digest_queue` invece di inviare subito (mode=instant invia subito via Resend; off niente). Endpoint admin `POST /api/admin/send-daily-digest` (require_admin) raggruppa la coda per utente, invia 1 riepilogo e svuota. Verificato E2E: pref=daily → coda +1 → flush `{users_notified:1, queued_items:1}`. ⚠️ Serve un CRON esterno che chiami l'endpoint 1x/giorno; consegna email dipende da Resend + dominio `mikilab.de` VERIFICATO.
+- **Filtri campanella**: `NotificationBell.jsx` chip `notif-filter-{all,channels,friends,likes}` in cima; filtra le notifiche per gruppo prima del rendering/raggruppamento. Verificato: "Channels" mostra solo i post-canale raggruppati.
+- **#3 Verifica dominio Resend**: azione ESTERNA (solo l'utente, dashboard Resend) — non codificabile.
+- Verificato: curl E2E (pref/digest) + screenshot (filtri campanella, blocco email). 0 crash.
