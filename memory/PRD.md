@@ -2704,3 +2704,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Apri ricetta dal lightbox (NEW)**: pulsante `vetrina-open-recipe` "Vedi ricetta completa" → torna alla lista e apre il dettaglio via evento `mikilab-open-recipe`. Verificato: apre `recipe-detail-*`.
 - **Tutte le foto DEDICATE (#4 FATTO)**: sostituite le **45 foto stock Unsplash** con foto MikiLab generate (nano-banana, stile scuro+luce calda, coerenti col nome — pani colorati carbone/barbabietola/spirulina/zafferano/curcuma/spinaci, croissant bicolore, stollen, grissini, panzerotti, ecc.). Scaricate in `public/recipes/`, mappate su DB+seed (`2026_06_regen_stock_photos.py`). Ora **tutte le 148 ricette** hanno foto locale dedicata (0 http, 0 vuote, 0 file mancanti).
 - SEED_VERSION → `2026-06-v68-all-photos`. 0 crash console. ⚠️ In produzione: RI-SEED al REDEPLOY per ricette+foto nuove.
+
+
+---
+## v-fork.27 (2026-06, fork) — Lab riordinato: piano generato in primo piano + strumenti a comparsa
+- **Richiesta utente**: "sistema le pagine più ordinate e facile da arrivare al calcolo generato nel Lab" + (Q3) "2" = nascondere gli strumenti dietro un pulsante.
+- **Maestro.jsx riordinato**: il **generatore del Piano IA** (`PianoProduzioneAI`) è ora subito sotto l'intestazione, preceduto dalla card `maestro-generate-cta` con pulsante `maestro-jump-generate` ("Vai a Genera il Piano") che scrolla direttamente a `capo-generate`. Ordine: Hero → CTA → Generatore → Percorso Guidato (LabWizard).
+- **Strumenti a comparsa**: Sfida Lampo + "Da dove iniziare" (calcolatori rapidi) + Direttorio strumenti (CREA/CALCOLA/GESTISCI/CONTROLLA) ora raccolti dietro il toggle `maestro-toggle-tools` ("Tutti gli strumenti", Wrench + chevron), `maestro-tools-collapsible` chiuso di default. Lab molto più pulito e focalizzato sul piano generato. Verificato: toggle chiuso all'apertura, espande correttamente; CTA scrolla al Generatore. 0 crash console.
+- NB: reorg puramente frontend, nessun impatto dati/deploy.

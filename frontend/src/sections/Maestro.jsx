@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import SectionHero from "@/components/SectionHero";
@@ -79,6 +79,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
+  const [showTools, setShowTools] = useState(false);
   const scrollRef = useRef(0);
   const openTool = (id) => { scrollRef.current = window.scrollY; setTool(id); window.scrollTo(0, 0); };
   const back = () => setTool(null);
@@ -193,9 +194,37 @@ export default function Maestro() {
         title={mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}
         subtitle={mkTri(lang)("Pianifica la produzione e usa gli strumenti del fornaio", "Plane die Produktion und nutze die Bäcker-Werkzeuge", "Plan production and use the baker's tools", "Planifica la producción y usa las herramientas del panadero", "Planifie la production et utilise les outils du boulanger", "برنامه‌ریزی تولید و ابزارهای نانوا")} />
 
-      {/* PERCORSO GUIDATO in CIMA: la sequenza logica passo-passo (Settimana → Ricetta → Extra) */}
+      {/* IN CIMA: il generatore del Piano IA + CTA diretta al calcolo generato */}
+      <div data-testid="maestro-generate-cta" className="mb-3 rounded-2xl border border-[#ff6b00]/45 bg-gradient-to-br from-[#2a1a0d] to-[#161616] p-4">
+        <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-1 flex items-center gap-1.5">
+          <Sparkles className="w-4 h-4" /> {mkTri(lang)("Il tuo piano, in un tocco", "Dein Plan, ein Tipp", "Your plan, one tap", "Tu plan, un toque", "Ton plan, un geste", "برنامه‌ات، با یک لمس")}
+        </p>
+        <p className="text-[12.5px] text-[#AEB8BF] leading-snug mb-2.5">{mkTri(lang)("Scegli le ricette qui sotto e genera il piano di produzione. Oppure salta subito al pulsante Genera.", "Wähle unten die Rezepte und erzeuge den Produktionsplan. Oder springe direkt zum Generieren.", "Pick the recipes below and generate the production plan. Or jump straight to Generate.", "Elige las recetas abajo y genera el plan de producción. O salta directo a Generar.", "Choisis les recettes ci-dessous et génère le plan. Ou saute directement à Générer.", "دستورها را انتخاب کن و برنامه را بساز.")}</p>
+        <button data-testid="maestro-jump-generate" onClick={() => { const el = document.querySelector('[data-testid="capo-generate"]'); if (el) el.scrollIntoView({ behavior: "smooth", block: "center" }); }}
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#c94f00] text-white font-bold py-3 text-sm active:scale-95 transition-all shadow-[0_4px_0_rgba(0,0,0,.3)]">
+          <Sparkles className="w-4.5 h-4.5" /> {mkTri(lang)("Vai a Genera il Piano", "Zum Plan generieren", "Go to Generate Plan", "Ir a Generar Plan", "Aller à Générer", "برو به ساخت برنامه")}
+        </button>
+      </div>
+      <PianoProduzioneAI onOpenTool={openTool} />
+
+      {/* PERCORSO GUIDATO: la sequenza logica passo-passo (Settimana → Ricetta → Extra) */}
       <LabWizard onOpenTool={openTool} />
 
+      {/* Tutto il resto (Sfida Lampo + calcolatori + direttorio strumenti) dietro un toggle, per tenere pulito il Lab */}
+      <button data-testid="maestro-toggle-tools" onClick={() => setShowTools((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 rounded-2xl px-4 py-3.5 mb-3 bg-[#1e1e1e] border border-[#2e2e2e] hover:border-[#ff6b00]/50 text-white active:scale-98 transition-all text-left">
+        <span className="flex items-center gap-2.5">
+          <span className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Wrench className="w-5 h-5 text-[#ff6b00]" /></span>
+          <span className="min-w-0">
+            <span className="block font-display text-sm font-bold leading-tight">{mkTri(lang)("Tutti gli strumenti", "Alle Werkzeuge", "All tools", "Todas las herramientas", "Tous les outils", "همهٔ ابزارها")}</span>
+            <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{mkTri(lang)("Calcolatori, registri, Sfida Lampo e diagnosi", "Rechner, Register, Blitz-Challenge & Diagnose", "Calculators, logs, Flash Challenge & diagnosis", "Calculadoras, registros, Reto Flash y diagnóstico", "Calculateurs, registres, défi éclair & diagnostic", "ماشین‌حساب‌ها، ثبت‌ها، چالش و تشخیص")}</span>
+          </span>
+        </span>
+        {showTools ? <ChevronUp className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#ff6b00] shrink-0" />}
+      </button>
+
+      {showTools && (
+      <div data-testid="maestro-tools-collapsible">
       {/* SFIDA LAMPO settimanale con classifica dei fornai */}
       <SfidaLampo />
 
@@ -233,11 +262,10 @@ export default function Maestro() {
         </div>
       </div>
 
-      {/* Il GENERATORE del piano IA (scegli ricette → genera) */}
-      <PianoProduzioneAI onOpenTool={openTool} />
-
-      {/* Direttorio strumenti diviso per funzione: Genera / Gestione / Registri / Info */}
+      {/* Direttorio strumenti diviso per funzione: CREA / CALCOLA / GESTISCI / CONTROLLA */}
       <ToolsDirectory onOpenTool={openTool} />
+      </div>
+      )}
 
       {/* Avatar del Laboratorio: Michele operativo + Mohammadreza pronto ad aiutare */}
       <AvatarBubbles variant="lab" />
