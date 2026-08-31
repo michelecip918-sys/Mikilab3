@@ -130,6 +130,7 @@ export default function PromuoviMikiLab() {
   const [settings, setSettings] = useState(null);
   const [flyerLang, setFlyerLang] = useState(lang);
   const [flyerBig, setFlyerBig] = useState(false);
+  const [flyerOrient, setFlyerOrient] = useState("v");
   useEffect(() => { siteSettingsApi.get().then(setSettings).catch(() => {}); }, []);
   useEffect(() => { setFlyerLang(lang); }, [lang]);
   const ttHandle = (settings && settings.tiktok_handle) || "mikilab.de";
@@ -139,8 +140,9 @@ export default function PromuoviMikiLab() {
     facebook: (settings && settings.facebook_url) || SOCIAL.facebook,
     whatsapp: SOCIAL.whatsapp, youtube: SOCIAL.youtube, threads: SOCIAL.threads,
   };
-  const FLYERS = { it: "locandina-mikilab.png", de: "locandina-mikilab-de.png", en: "locandina-mikilab-en.png", es: "locandina-mikilab-es.png", fr: "locandina-mikilab-fr.png" };
-  const flyerFile = FLYERS[flyerLang] || "locandina-mikilab-en.png";
+  const FLYER_BASE = { it: "locandina-mikilab", de: "locandina-mikilab-de", en: "locandina-mikilab-en", es: "locandina-mikilab-es", fr: "locandina-mikilab-fr" };
+  const flyerBase = FLYER_BASE[flyerLang] || "locandina-mikilab-en";
+  const flyerFile = `${flyerBase}${flyerOrient === "h" ? "-h" : ""}.png`;
   const FLYER_LANGS = [{ k: "it", f: "🇮🇹" }, { k: "de", f: "🇩🇪" }, { k: "en", f: "🇬🇧" }, { k: "es", f: "🇪🇸" }, { k: "fr", f: "🇫🇷" }];
   const caps = CAPTIONS[lang] || CAPTIONS.en;
   const caption = caps[variant];
@@ -161,12 +163,23 @@ export default function PromuoviMikiLab() {
       ctx.drawImage(img, 0, 0);
       const W = c.width, H = c.height;
       const txt = (name.length > 26 ? name.slice(0, 26) : name);
-      const fs = Math.round(H * 0.034);
-      ctx.font = `800 ${fs}px Manrope, Arial, sans-serif`;
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      const y = Math.round(H * 0.463);
-      ctx.lineWidth = Math.max(4, fs * 0.18); ctx.strokeStyle = "#121212"; ctx.strokeText(txt, W / 2, y);
-      ctx.fillStyle = "#ff6b00"; ctx.fillText(txt, W / 2, y);
+      if (W > H) {
+        // Orizzontale: nome in basso a sinistra (zona libera)
+        const fs = Math.round(H * 0.05);
+        ctx.font = `800 ${fs}px Manrope, Arial, sans-serif`;
+        ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+        const x = Math.round(W * 0.06), y = Math.round(H * 0.93);
+        ctx.lineWidth = Math.max(4, fs * 0.18); ctx.strokeStyle = "#121212"; ctx.strokeText(txt, x, y);
+        ctx.fillStyle = "#ff6b00"; ctx.fillText(txt, x, y);
+      } else {
+        // Verticale: nome centrato sopra il QR
+        const fs = Math.round(H * 0.034);
+        ctx.font = `800 ${fs}px Manrope, Arial, sans-serif`;
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        const y = Math.round(H * 0.463);
+        ctx.lineWidth = Math.max(4, fs * 0.18); ctx.strokeStyle = "#121212"; ctx.strokeText(txt, W / 2, y);
+        ctx.fillStyle = "#ff6b00"; ctx.fillText(txt, W / 2, y);
+      }
       try { setPersonalUrl(c.toDataURL("image/png")); } catch { setPersonalUrl(null); }
     };
     img.onerror = () => setPersonalUrl(null);
@@ -341,7 +354,7 @@ export default function PromuoviMikiLab() {
         <div data-testid="promuovi-flyer" className="rounded-2xl bg-[#121212] border border-[#2e2e2e] p-3.5">
           <p className="text-sm font-bold text-white leading-tight mb-0.5">{L("Locandina A5 stampabile", "A5-Flyer zum Drucken", "Printable A5 flyer", "Folleto A5 imprimible", "Flyer A5 imprimable", "پوستر A5 قابل چاپ")}</p>
           <p className="text-[12px] text-[#AEB8BF] leading-snug mb-2.5">{L("Scegli la lingua, tocca per ingrandire e scarica.", "Sprache wählen, antippen zum Vergrößern und laden.", "Pick a language, tap to enlarge and download.", "Elige el idioma, toca para ampliar y descarga.", "Choisis la langue, touche pour agrandir et télécharge.", "زبان را انتخاب کن، برای بزرگ‌نمایی بزن و دانلود کن.")}</p>
-          <div className="flex items-center gap-1.5 mb-2.5">
+          <div className="flex items-center gap-1.5 mb-2">
             {FLYER_LANGS.map(({ k, f }) => (
               <button key={k} data-testid={`flyer-lang-${k}`} onClick={() => setFlyerLang(k)}
                 className={`text-[13px] rounded-lg px-2 py-1 border transition-all active:scale-95 ${flyerLang === k ? "bg-[#ff6b00] border-[#ff6b00]" : "bg-[#181818] border-[#2e2e2e] opacity-70 hover:opacity-100"}`}>
@@ -349,14 +362,25 @@ export default function PromuoviMikiLab() {
               </button>
             ))}
           </div>
+          <div className="flex items-center gap-1.5 mb-2.5">
+            <button data-testid="flyer-orient-v" onClick={() => setFlyerOrient("v")}
+              className={`text-[12px] font-bold rounded-lg px-2.5 py-1 border transition-all active:scale-95 ${flyerOrient === "v" ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#181818] text-white/80 border-[#2e2e2e]"}`}>
+              {L("Verticale", "Hochformat", "Vertical", "Vertical", "Vertical", "عمودی")}
+            </button>
+            <button data-testid="flyer-orient-h" onClick={() => setFlyerOrient("h")}
+              className={`text-[12px] font-bold rounded-lg px-2.5 py-1 border transition-all active:scale-95 ${flyerOrient === "h" ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#181818] text-white/80 border-[#2e2e2e]"}`}>
+              {L("Orizzontale", "Querformat", "Horizontal", "Horizontal", "Horizontal", "افقی")}
+            </button>
+          </div>
           {/* Personalizza con il nome del forno (sopra il QR) */}
           <input data-testid="flyer-bakery-name" value={bakeryName} onChange={(e) => setBakeryName(e.target.value)}
-            maxLength={26} placeholder={L("Nome del tuo forno (facoltativo)", "Name deiner Bäckerei (optional)", "Your bakery name (optional)", "Nombre de tu horno (opcional)", "Nom de ta boulangerie (facultatif)", "نام نانوایی تو (اختیاری)")}
+            maxLength={26} placeholder={L("Il tuo nome (forno, pizzeria, pasticceria, privato…)", "Dein Name (Bäckerei, Pizzeria, Konditorei, privat…)", "Your name (bakery, pizzeria, pastry, private…)", "Tu nombre (horno, pizzería, pastelería, privado…)", "Ton nom (boulangerie, pizzeria, pâtisserie, privé…)", "نام تو (نانوایی، پیتزریا، قنادی، شخصی…)")}
             className="w-full bg-[#181818] border border-[#2e2e2e] rounded-xl px-3 py-2 text-sm text-white outline-none focus:border-[#ff6b00] mb-2.5" />
           <div className="flex items-center gap-3">
             <button data-testid="promuovi-flyer-preview" onClick={() => setFlyerBig(true)}
               className="shrink-0 rounded-xl overflow-hidden border border-[#2e2e2e] hover:border-[#ff6b00] transition-all active:scale-95">
-              <img src={displayFlyer} alt="Locandina MikiLab" className="w-[72px] h-[102px] object-cover" loading="lazy" />
+              <img src={displayFlyer} alt="Locandina MikiLab" className={`${flyerOrient === "h" ? "w-[130px] h-[86px]" : "w-[72px] h-[102px]"} object-cover`} loading="lazy"
+                onError={(e) => { const fb = `${process.env.PUBLIC_URL}/locandina-mikilab.png`; if (e.currentTarget.src !== fb) e.currentTarget.src = fb; }} />
             </button>
             <div className="flex-1 min-w-0 flex flex-wrap gap-2">
               <a data-testid="promuovi-flyer-download" href={displayFlyer} download={flyerFile}

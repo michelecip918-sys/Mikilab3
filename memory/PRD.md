@@ -2862,3 +2862,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Dipendenza: aggiunto `qrcode` a requirements.txt (usato per generare il QR tracciato).
 - Test iteration_148: backend 100% + frontend 100%. Stato finale: tiktok_handle=mikilab.de, ig/fb="", social_clicks azzerato, 5 locandine+QR HTTP 200.
 
+
+## v-fork.46 (2026-08, fork) — Locandina orizzontale + nome generico + fix IT-h
+- **Nome generico**: input `flyer-bakery-name` placeholder ora generico (forno / pizzeria / pasticceria / privato) in tutte le lingue.
+- **Versione orizzontale**: create 5 locandine landscape `public/locandina-mikilab-{it,de,en,es,fr}-h.png` (1536x1024, generate AI + QR reale tracciato re-incollato via PIL rilevando la card bianca a destra). Toggle Formato `flyer-orient-v`/`flyer-orient-h` in `PromuoviMikiLab`; `flyerFile` aggiunge suffisso `-h`. Overlay nome personalizzato orientation-aware (verticale: centrato sopra il QR; orizzontale: in basso a sinistra).
+- **FIX (iteration_149, HIGH)**: IT+orizzontale chiedeva `/locandina-mikilab-h.png` inesistente (base IT senza `-it`). Creato il file `locandina-mikilab-h.png` (copia di `-it-h`). Aggiunto fallback `onError` sull'anteprima → ripiega su `locandina-mikilab.png`.
+- Tutte le 10 locandine (5 verticali + 5 orizzontali) servono HTTP 200 con QR tracciato scansionabile. Test iteration_149: 5/6 gruppi ok prima del fix; il path IT-h ora risolve deterministicamente al file esistente.
+
