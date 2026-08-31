@@ -6305,57 +6305,6 @@ async def friends_suggestions(user: dict = Depends(current_user), limit: int = 8
 
 
 
-class MarketListingReq(BaseModel):
-    title: str
-    cat: str = "accessori"
-    price: Optional[str] = ""
-    condition: str = "buono"
-    place: Optional[str] = ""
-    lat: Optional[float] = None
-    lng: Optional[float] = None
-    desc: Optional[str] = ""
-    photo: Optional[str] = ""
-    contact: Optional[str] = ""
-
-
-@api_router.get("/community/market")
-async def market_list(limit: int = 300):
-    docs = await db.market_listings.find({"is_deleted": {"$ne": True}}, {"_id": 0}).sort("created_at", -1).to_list(limit)
-    return {"items": docs}
-
-
-@api_router.post("/community/market")
-async def market_create(body: MarketListingReq, user: dict = Depends(current_user)):
-    title = (body.title or "").strip()
-    if not title:
-        raise HTTPException(400, "Titolo richiesto")
-    doc = {
-        "id": str(uuid.uuid4()),
-        "owner_id": user["user_id"],
-        "owner_name": user.get("name") or (user.get("email") or "Fornaio").split("@")[0],
-        "title": title[:120], "cat": body.cat, "price": (body.price or "").strip()[:20],
-        "condition": body.condition, "place": (body.place or "").strip()[:80],
-        "lat": body.lat, "lng": body.lng,
-        "desc": (body.desc or "").strip()[:600], "photo": (body.photo or "").strip()[:600],
-        "contact": (body.contact or "").strip()[:160],
-        "is_deleted": False, "created_at": now_iso(),
-    }
-    await db.market_listings.insert_one(doc)
-    doc.pop("_id", None)
-    return doc
-
-
-@api_router.delete("/community/market/{listing_id}")
-async def market_delete(listing_id: str, user: dict = Depends(current_user)):
-    doc = await db.market_listings.find_one({"id": listing_id}, {"_id": 0})
-    if not doc:
-        raise HTTPException(404, "Annuncio non trovato")
-    if doc.get("owner_id") != user["user_id"] and user.get("role") != "admin":
-        raise HTTPException(403, "Non autorizzato")
-    await db.market_listings.delete_one({"id": listing_id})
-    return {"ok": True}
-
-
 class ProfileUpdateReq(BaseModel):
     name: Optional[str] = None
     bio: Optional[str] = None

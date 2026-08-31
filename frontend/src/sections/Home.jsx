@@ -700,8 +700,8 @@ export default function Home({ onNavigate }) {
           <button data-testid="home-core-corsi" onClick={() => go("shop")}
             className="text-left rounded-2xl p-4 text-white shadow-md active:scale-97 transition-all bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] min-h-[112px] flex flex-col gap-2">
             <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center"><GraduationCap className="w-6 h-6" /></div>
-            <p className="font-display text-base font-bold leading-tight">{L("I Miei Corsi", "Meine Kurse", "My Courses")}</p>
-            <p className="text-[11px] text-white/85 leading-snug">{L("Corsi online di Michele (in arrivo)", "Micheles Online-Kurse (bald)", "Michele's online courses (soon)")}</p>
+            <p className="font-display text-base font-bold leading-tight">{L("Academy & Ricette", "Academy & Rezepte", "Academy & Recipes")}</p>
+            <p className="text-[11px] text-white/85 leading-snug">{L("Ricette e lezioni, tutto gratis", "Rezepte & Lektionen, alles gratis", "Recipes & lessons, all free")}</p>
           </button>
         </div>
 

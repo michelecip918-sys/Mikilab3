@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
 import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download } from "lucide-react";
-import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
+import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
@@ -520,11 +520,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         }
       } catch { /* first run */ }
       try {
-        const [mk, ps, wp, st] = await Promise.all([
+        const [mk, ps, wp] = await Promise.all([
           recipesApi.list("mikilab"),
           recipesApi.list("personal"),
           weeklyApi.get(),
-          subscriptionApi.status().catch(() => ({})),
         ]);
         let usage = {}; try { usage = JSON.parse(localStorage.getItem("mikilab_recipe_usage") || "{}"); } catch { /* */ }
         const sortFn = (a, b) => ((usage[b.id] || 0) - (usage[a.id] || 0)) || (a.name || "").localeCompare(b.name || "");
@@ -532,15 +531,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         // Ricette MikiLab (proprietarie di Michele): visibili nel generatore SOLO all'owner/admin
         // oppure a chi le ha ACQUISTATE (acquisto singolo / panettoni / tutte). L'abbonamento al
         // Laboratorio (PRO) NON dà accesso al ricettario: gli altri usano solo le proprie ricette.
-        const hasFullAccess = !!(st && st.unlock_all);
-        const unlockPan = !!(st && st.unlock_panettoni);
-        const unlockedIds = new Set((st && st.unlocked_recipes) || []);
-        const canUseMikiLab = (r) => {
-          if (isAdmin) return true;
-          if (hasFullAccess) return true;
-          if (unlockPan && isPanettoneRecipe(r)) return true;
-          return unlockedIds.has(r.id) && r.locked !== true;
-        };
+        // MikiLab è 100% gratuito: tutte le ricette del ricettario sono disponibili per tutti.
+        const canUseMikiLab = () => true;
         const lib = (mk || []).filter(canUseMikiLab).sort(sortFn);
         setRecipes([...own, ...lib]);  // le più usate in cima, ricette del panettiere prima
         if (wp && wp.items) setWeeklyItems(wp.items);

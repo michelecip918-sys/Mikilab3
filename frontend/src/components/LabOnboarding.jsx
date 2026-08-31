@@ -29,9 +29,9 @@ function buildSlides(lang) {
       who: "mohammed", avatar: MOHAMMED, step: 1,
       title: tri("Passo 1 · Configurazione Hardware", "Schritt 1 · Hardware-Einrichtung", "Step 1 · Hardware Setup"),
       body: tri(
-        "Qui imposti UNA volta le tue macchine: impastatrici, forni, celle di lievitazione, frigo e giacenze del freezer. Colleghi anche i dispositivi (bilancia smart, termostati) e trovi il Marketplace dell'usato. Tutto configurato una volta = zero stress dopo.",
-        "Hier richtest du EINMAL deine Maschinen ein: Kneter, Öfen, Gärzellen, Kühlschrank und Freezer-Bestände. Du verbindest auch Geräte (smarte Waage, Thermostate) und findest den Gebraucht-Markt. Einmal eingerichtet = danach stressfrei.",
-        "Here you set up your machines ONCE: mixers, ovens, proofing cells, fridge and freezer stock. You also connect devices (smart scale, thermostats) and find the used marketplace. Set up once = stress-free afterwards."),
+        "Qui imposti UNA volta le tue macchine: impastatrici, forni, celle di lievitazione, frigo e giacenze del freezer. Colleghi anche i dispositivi (bilancia smart, termostati). Tutto configurato una volta = zero stress dopo.",
+        "Hier richtest du EINMAL deine Maschinen ein: Kneter, Öfen, Gärzellen, Kühlschrank und Freezer-Bestände. Du verbindest auch Geräte (smarte Waage, Thermostate). Einmal eingerichtet = danach stressfrei.",
+        "Here you set up your machines ONCE: mixers, ovens, proofing cells, fridge and freezer stock. You also connect devices (smart scale, thermostats). Set up once = stress-free afterwards."),
     },
     {
       who: "mohammed", avatar: MOHAMMED, step: 2,
@@ -85,9 +85,9 @@ function buildSlides(lang) {
       who: "mohammed", avatar: MOHAMMED,
       title: tri("Tutti i miei strumenti 🧰", "Alle meine Werkzeuge 🧰", "All my tools 🧰"),
       body: tri(
-        "Ecco tutto quello che trovi qui: Capo Laboratorio (macchine), Giacenze Freezer, Bilancia Smart, Termostato & Clima, Marketplace usato · Le Mie Ricette (aggiungi/scansiona), Tabella Farine, Adatta il Forno · Punti Vendita, Turni & Ruoli · Piano IA, Piano Settimanale, Piano di Lavoro, Tempi a Ritroso, Lista Spesa, Food Cost & Energia · Temperatura Acqua, Pesata Guidata a voce, Timer, Meteo, Tracker pH, Digital Twin dell'impasto · Diario Impasti, Tracciabilità Lotti (QR), Registro HACCP, Checklist, Shelf-Life, Anti-Spreco. Un unico posto per tutto il tuo laboratorio.",
-        "Das findest du hier alles: Werkstattleiter (Maschinen), Freezer-Bestand, Smarte Waage, Thermostat & Klima, Gebraucht-Markt · Meine Rezepte (hinzufügen/scannen), Mehl-Tabelle, Ofen anpassen · Verkaufspunkte, Schichten & Rollen · KI-Plan, Wochenplan, Arbeitsplan, Rückwärtsplanung, Einkaufsliste, Food Cost & Energie · Wassertemperatur, geführtes Wiegen per Stimme, Timer, Wetter, pH-Tracker, Digital Twin des Teigs · Teig-Tagebuch, Chargen-Rückverfolgung (QR), HACCP-Register, Checklisten, Shelf-Life, Anti-Verschwendung. Alles an einem Ort.",
-        "Here's everything you'll find: Lab Manager (machines), Freezer Stock, Smart Scale, Thermostat & Climate, Used Marketplace · My Recipes (add/scan), Flour Table, Adapt the Oven · Sales Points, Shifts & Roles · AI Plan, Weekly Plan, Work Plan, Backward Timing, Shopping List, Food Cost & Energy · Water Temperature, voice Guided Weighing, Timers, Weather, pH Tracker, dough Digital Twin · Dough Log, Batch Traceability (QR), HACCP register, Checklists, Shelf-Life, Anti-Waste. One place for your whole lab."),
+        "Ecco tutto quello che trovi qui: Capo Laboratorio (macchine), Giacenze Freezer, Bilancia Smart, Termostato & Clima · Le Mie Ricette (aggiungi/scansiona), Tabella Farine, Adatta il Forno · Punti Vendita, Turni & Ruoli · Piano IA, Piano Settimanale, Piano di Lavoro, Tempi a Ritroso, Lista Spesa, Food Cost & Energia · Temperatura Acqua, Pesata Guidata a voce, Timer, Meteo, Tracker pH, Digital Twin dell'impasto · Diario Impasti, Tracciabilità Lotti (QR), Registro HACCP, Checklist, Shelf-Life, Anti-Spreco. Un unico posto per tutto il tuo laboratorio.",
+        "Das findest du hier alles: Werkstattleiter (Maschinen), Freezer-Bestand, Smarte Waage, Thermostat & Klima · Meine Rezepte (hinzufügen/scannen), Mehl-Tabelle, Ofen anpassen · Verkaufspunkte, Schichten & Rollen · KI-Plan, Wochenplan, Arbeitsplan, Rückwärtsplanung, Einkaufsliste, Food Cost & Energie · Wassertemperatur, geführtes Wiegen per Stimme, Timer, Wetter, pH-Tracker, Digital Twin des Teigs · Teig-Tagebuch, Chargen-Rückverfolgung (QR), HACCP-Register, Checklisten, Shelf-Life, Anti-Verschwendung. Alles an einem Ort.",
+        "Here's everything you'll find: Lab Manager (machines), Freezer Stock, Smart Scale, Thermostat & Climate · My Recipes (add/scan), Flour Table, Adapt the Oven · Sales Points, Shifts & Roles · AI Plan, Weekly Plan, Work Plan, Backward Timing, Shopping List, Food Cost & Energy · Water Temperature, voice Guided Weighing, Timers, Weather, pH Tracker, dough Digital Twin · Dough Log, Batch Traceability (QR), HACCP register, Checklists, Shelf-Life, Anti-Waste. One place for your whole lab."),
     },
     {
       who: "mohammed", avatar: MOHAMMED,

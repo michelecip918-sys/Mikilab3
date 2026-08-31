@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { GraduationCap, Calculator, Wheat, Camera, Printer, Crown, CheckCircle2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-import { subscriptionApi } from "@/lib/api";
 import { FLOURS, CALC_RECIPES } from "@/data/academy";
 import Beginners from "@/sections/Beginners";
 import { mkTri } from "@/i18n/triMaps";
@@ -14,7 +13,7 @@ export default function AcademyHome({ onNavigate }) {
   const [status, setStatus] = useState(null);
   const [pathDone, setPathDone] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); } catch { return []; } });
 
-  useEffect(() => { subscriptionApi.status().then(setStatus).catch(() => setStatus(null)); }, []);
+  useEffect(() => { setStatus(null); }, []);
   useEffect(() => {
     if (["ricettario", "farine", "corsi"].includes(sub) && !pathDone.includes(sub)) {
       const nx = [...pathDone, sub];
@@ -27,12 +26,7 @@ export default function AcademyHome({ onNavigate }) {
   const diagUsed = status?.diagnosi_used ?? 0;
   const diagLimit = status?.diagnosi_limit;
 
-  const upgradePro = async () => {
-    try {
-      const d = await subscriptionApi.checkout("monthly", "lab");
-      if (d.url) window.location.href = d.url;
-    } catch (e) { /* noop */ }
-  };
+  const upgradePro = async () => { /* MikiLab è gratis: nessun upgrade a pagamento */ };
 
   const TABS = [
     { id: "ricettario", label: tri("Ricettario", "Rezeptbuch", "Recipes"), Icon: Calculator },

@@ -31,7 +31,6 @@ import ShelfLife from "@/sections/ShelfLife";
 import AntiWaste from "@/sections/AntiWaste";
 import Timer from "@/sections/Timer";
 import Meteo from "@/sections/Meteo";
-import Marketplace from "@/sections/Marketplace";
 import BatchTraceability from "@/sections/BatchTraceability";
 import DoughTwin from "@/sections/DoughTwin";
 import GuidedWeighing from "@/sections/GuidedWeighing";

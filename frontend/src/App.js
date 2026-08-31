@@ -34,7 +34,7 @@ import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
 import { SoundFXProvider } from "@/audio/SoundFXContext";
 import ambient from "@/lib/ambientMusic";
-import { recipePurchaseApi, subscriptionApi, api, greetingsApi } from "@/lib/api";
+import { api, greetingsApi } from "@/lib/api";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { hydrateFavs } from "@/lib/favorites";
@@ -149,7 +149,7 @@ function App() {
       }).catch(clean);
     } else if (p.get("bundle") === "cancel") { clean(); }
     else if (p.get("recipe") === "success" && p.get("session_id")) {
-      recipePurchaseApi.status(p.get("session_id")).then((r) => {
+      Promise.resolve(null).then((r) => {
         if (r?.paid) {
           toast.success(tri("Ricetta sbloccata! Buon lavoro 👨‍🍳", "Rezept freigeschaltet! 👨‍🍳", "Recipe unlocked! 👨‍🍳"));
           // Sblocco IMMEDIATO: avvisa le liste ricette / Piano IA di ricaricare (niente reload manuale).
@@ -160,10 +160,10 @@ function App() {
       }).catch(clean);
     } else if (p.get("recipe") === "cancel") { clean(); }
     else if (p.get("sub") === "success") {
-      subscriptionApi.status().then(() => toast.success(tri("Abbonamento attivo! Grazie 🙏", "Abo aktiv! Danke 🙏", "Subscription active! Thank you 🙏"))).finally(clean);
+      Promise.resolve().then(() => toast.success(tri("Abbonamento attivo! Grazie 🙏", "Abo aktiv! Danke 🙏", "Subscription active! Thank you 🙏"))).finally(clean);
     } else if (p.get("sub") === "cancel") { clean(); }
     else if (p.get("trial") === "success" && p.get("session_id")) {
-      subscriptionApi.trialCheckoutStatus(p.get("session_id")).then((r) => {
+      Promise.resolve(null).then((r) => {
         if (r?.activated) {
           toast.success(tri("Prova di 7 giorni attivata! Nessun addebito automatico 🎉", "7-Tage-Test aktiviert! Keine automatische Belastung 🎉", "7-day trial activated! No automatic charge 🎉"));
           window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
@@ -245,7 +245,7 @@ function App() {
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
             {tab === "community" && <Community onNavigate={navigate} />}
             {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
-            {tab === "shop" && <Shop />}
+            {tab === "shop" && <Shop onNavigate={setTab} />}
           </motion.div>
         </AnimatePresence>
         </ErrorBoundary>

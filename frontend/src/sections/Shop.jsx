@@ -1,105 +1,30 @@
-import { useEffect, useState } from "react";
-import { ShoppingBag, GraduationCap, Mail, Clock, Check, BookOpen, Crown } from "lucide-react";
-import { toast } from "sonner";
-import { api, recipePurchaseApi, subscriptionApi } from "@/lib/api";
+import { ShoppingBag, BookOpen, GraduationCap, Sparkles } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-import { useAuth } from "@/auth/AuthContext";
 import AvatarBubbles from "@/components/AvatarBubbles";
 
-export default function Shop({ hideCourses = false }) {
+// MikiLab è 100% gratuito: nessun acquisto, nessun abbonamento, nessuna lista d'attesa a pagamento.
+export default function Shop({ onNavigate }) {
   const { lang, tri } = useLang();
-  const { user, setAuthOpen } = useAuth();
-  const de = lang === "de";
-  const [data, setData] = useState({ enabled: false, products: [] });
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-  const [ent, setEnt] = useState(null);
-
-  useEffect(() => {
-    api.get("/shop/products").then((r) => setData(r.data)).catch(() => {});
-    if (user) api.get("/subscription/status").then((r) => setEnt(r.data)).catch(() => {});
-  }, [user]);
-
-  const buyBundle = async (bundle) => {
-    if (!user) { setAuthOpen(true); return; }
-    try {
-      const d = await api.post("/recipes/bundle-checkout", { bundle, origin_url: window.location.origin, lang }).then((r) => r.data);
-      if (d.url) window.location.href = d.url;
-    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again", "Error, inténtalo de nuevo")); }
-  };
-
-  const buyRecipes = async (kind) => {
-    if (!user) { setAuthOpen(true); return; }
-    try {
-      const d = await recipePurchaseApi.checkout(kind, null);
-      if (d.url) window.location.href = d.url;
-    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again", "Error, inténtalo de nuevo")); }
-  };
-  const subscribePro = async () => {
-    try {
-      const d = await subscriptionApi.checkout("monthly", "lab");
-      if (d.url) window.location.href = d.url;
-    } catch { toast.error(tri("Errore, riprova", "Fehler, versuche erneut", "Error, try again", "Error, inténtalo de nuevo")); }
-  };
-
-  const join = async (product_id = null) => {
-    const e = email.trim().toLowerCase();
-    if (!e || !e.includes("@")) { toast.error(tri("Email non valida","Ungültige E-Mail","Invalid email")); return; }
-    try {
-      await api.post("/shop/waitlist", { email: e, product_id, lang });
-      setSent(true);
-      toast.success(tri("Sei nella lista d'attesa!","Du bist auf der Warteliste!","You are on the waitlist!"));
-    } catch { toast.error(tri("Errore","Fehler","Error")); }
-  };
-
-  const panettoni = data.products.filter((p) => p.kind === "panettone");
-  const corsi = data.products.filter((p) => p.kind === "corso");
-
-  const pick = (p, base) => lang === "de" ? (p[`${base}_de`] || p[base]) : lang === "es" ? (p[`${base}_es`] || p[`${base}_en`] || p[base]) : (lang === "en" || lang === "fr" || lang === "fa") ? (p[`${base}_en`] || p[base]) : p[base];
-
-  const Card = ({ p }) => (
-    <div data-testid={`shop-product-${p.id}`} className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm">
-      {p.image_url && <img src={p.image_url.startsWith("http") ? p.image_url : `${process.env.PUBLIC_URL}${p.image_url}`} alt={pick(p, "name")} loading="lazy" className="w-full h-40 object-cover"
-        onError={(e) => { e.currentTarget.style.display = "none"; }} />}
-      <div className="p-4">
-        <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{pick(p, "name")}</h3>
-        <p className="text-sm text-[#7E8A93] mt-1 leading-snug">{pick(p, "desc")}</p>
-        {p.sizes?.length ? (
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {p.sizes.map((s) => <span key={s} className="text-xs font-mono-data bg-[#ff6b00]/15 text-[#ff6b00] dark:text-[#8FB0C2] px-2 py-0.5 rounded-full border border-[#ff6b00]/30">{s}</span>)}
-          </div>
-        ) : null}
-        {p.allergens ? <p className="text-[11px] text-[#7E8A93] mt-2"><b>{tri("Allergeni","Allergene","Allergens","Alérgenos")}:</b> {pick(p, "allergens")}</p> : null}
-        {data.enabled ? (
-          <button data-testid={`shop-buy-${p.id}`} onClick={() => join(p.id)}
-            className="mt-3 w-full bg-[#ff6b00] text-white font-semibold py-2 rounded-xl active:scale-98 text-sm">
-            {p.kind === "corso" ? tri("Iscriviti","Anmelden","Enrol","Inscríbete") : tri("Prenota","Vorbestellen","Pre-order","Reservar")}
-          </button>
-        ) : (
-          <span className="inline-flex items-center gap-1 mt-3 text-xs font-bold text-[#ff6b00]">
-            <Clock className="w-3.5 h-3.5" /> {tri("In arrivo","Bald verfügbar","Coming soon","Próximamente")}
-          </span>
-        )}
-      </div>
-    </div>
-  );
 
   return (
     <div data-testid="shop-page" className="pb-4 space-y-6">
-      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-7 text-center shadow-xl">
+      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white p-7 text-center shadow-xl">
         <ShoppingBag className="w-12 h-12 mx-auto mb-2" />
-        <h1 className="font-display text-3xl font-bold">{de ? "Shop & Academy" : "Shop & Academy"}</h1>
-        <p className="text-white/85 text-sm mt-2">
-          {data.enabled
-            ? tri("Panettoni artigianali e corsi online. Scegli il tuo prodotto!","Handwerkliche Panettoni und Online-Kurse. Wähle dein Produkt!","Artisan panettoni and online courses. Pick your product!","¡Panettones artesanales y cursos online. Elige tu producto!")
-            : tri("In arrivo: panettoni artigianali e corsi online. Iscriviti alla lista d'attesa!","Bald: handwerkliche Panettoni und Online-Kurse. Trag dich in die Warteliste ein!","Coming soon: artisan panettoni and online courses. Join the waitlist!","Próximamente: panettones artesanales y cursos online. ¡Únete a la lista de espera!")}
+        <h1 className="font-display text-3xl font-bold">{tri("Academy & Ricette", "Academy & Rezepte", "Academy & Recipes", "Academy y Recetas", "Academy & Recettes", "آکادمی و دستورها")}</h1>
+        <p className="text-white/85 text-sm mt-2 max-w-md mx-auto">
+          {tri("Tutto quello che serve per panificare, sempre gratis.",
+            "Alles fürs Backen, immer kostenlos.",
+            "Everything you need to bake, always free.",
+            "Todo lo que necesitas para panificar, siempre gratis.",
+            "Tout pour la panification, toujours gratuit.",
+            "هرچه برای نان‌پزی لازم داری، همیشه رایگان.")}
         </p>
       </div>
 
       <AvatarBubbles variant="shop" />
 
       {/* Tutto gratuito: nessun acquisto, nessun abbonamento */}
-      <div data-testid="shop-free-block" className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white shadow-sm overflow-hidden p-6 text-center">
+      <div data-testid="shop-free-block" className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white shadow-sm overflow-hidden p-6 text-center">
         <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-3">
           <BookOpen className="w-7 h-7 text-white" />
         </div>
@@ -112,6 +37,26 @@ export default function Shop({ hideCourses = false }) {
             "Chaque recette, fiche technique et outil du labo est débloqué pour tous. Aucun paiement, aucun abonnement — bonne panification !",
             "هر دستور، برگهٔ فنی و ابزار کارگاه برای همه باز است. بدون پرداخت، بدون اشتراک — نان‌پزی خوش!")}
         </p>
+      </div>
+
+      {/* Scorciatoie gratuite */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button data-testid="shop-go-recipes" onClick={() => onNavigate && onNavigate("ricette")}
+          className="text-left rounded-2xl p-5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] shadow-sm active:scale-98 transition-all flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><BookOpen className="w-6 h-6 text-[#ff6b00]" /></div>
+          <div className="min-w-0">
+            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Le Mie Ricette", "Meine Rezepte", "My Recipes", "Mis Recetas", "Mes Recettes", "دستورهای من")}</p>
+            <p className="text-[12px] text-[#7E8A93] leading-snug">{tri("Ricettario completo, sbloccato", "Komplettes Rezeptbuch, freigeschaltet", "Full recipe book, unlocked", "Recetario completo, desbloqueado", "Livre de recettes complet", "کتاب کامل دستورها، باز")}</p>
+          </div>
+        </button>
+        <button data-testid="shop-go-academy" onClick={() => onNavigate && onNavigate("impara")}
+          className="text-left rounded-2xl p-5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] shadow-sm active:scale-98 transition-all flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><GraduationCap className="w-6 h-6 text-[#ff6b00]" /></div>
+          <div className="min-w-0">
+            <p className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home", "Aprende en Casa", "Apprends à la maison", "از خانه یاد بگیر")}</p>
+            <p className="text-[12px] text-[#7E8A93] leading-snug">{tri("Lezioni, quiz e diagnosi — gratis", "Lektionen, Quiz & Diagnose — gratis", "Lessons, quiz & diagnosis — free", "Lecciones, quiz y diagnóstico — gratis", "Leçons, quiz & diagnostic — gratuit", "درس‌ها، آزمون و تشخیص — رایگان")}</p>
+          </div>
+        </button>
       </div>
     </div>
   );

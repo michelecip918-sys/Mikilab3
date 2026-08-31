@@ -8,8 +8,6 @@ import AvatarBubbles from "@/components/AvatarBubbles";
 import HallOfFame from "@/components/HallOfFame";
 import SectionHero from "@/components/SectionHero";
 import SectionJumpBar from "@/components/SectionJumpBar";
-import Marketplace from "@/sections/Marketplace";
-import { marketNewCount, markMarketSeen } from "@/lib/market";
 import FriendsPanel from "@/components/FriendsPanel";
 import ProfilePanel from "@/components/ProfilePanel";
 import ChatPanel from "@/components/ChatPanel";
@@ -73,7 +71,6 @@ export default function Community({ onNavigate }) {
   const [posting, setPosting] = useState(false);
   const [commentFor, setCommentFor] = useState(null);
   const [commentText, setCommentText] = useState("");
-  const [marketNew, setMarketNew] = useState(0);
   const [friendsOpen, setFriendsOpen] = useState(false);
   const [profileUser, setProfileUser] = useState(null);
   const [mapOpen, setMapOpen] = useState(false);
@@ -97,7 +94,6 @@ export default function Community({ onNavigate }) {
       setChLatest(m);
     }).catch(() => {});
   }, []);
-  useEffect(() => { setMarketNew(marketNewCount()); }, []);
   useEffect(() => {
     const loadReq = () => { friendsApi.list().then((r) => setFriendReqCount((r?.incoming || []).length)).catch(() => {}); };
     loadReq();
@@ -119,7 +115,7 @@ export default function Community({ onNavigate }) {
       else if (v === "map") setMapOpen(true);
       else if (v === "messages") { if (user) { setChatUser(null); setChatOpen(true); } else setAuthOpen(true); }
       else if (v === "profile") { if (user) setProfileUser(user.user_id); else setAuthOpen(true); }
-      else if (v === "market") { markMarketSeen(); setMarketNew(0); document.querySelector('[data-testid="community-marketplace"]')?.scrollIntoView({ behavior: "smooth", block: "start" }); }
+      else if (v === "market") { /* mercatino rimosso */ }
       else if (v === "feed") document.querySelector('[data-testid="feed-toggle"]')?.scrollIntoView({ behavior: "smooth", block: "center" });
     };
     const onFeed = (e) => { const o = e?.detail?.order; if (o) { if (o === "friends" && !user) { setAuthOpen(true); return; } setFeed(o); document.querySelector('[data-testid="feed-toggle"]')?.scrollIntoView({ behavior: "smooth", block: "center" }); } };
@@ -198,10 +194,10 @@ export default function Community({ onNavigate }) {
           </div>
           <h1 className="font-display text-2xl font-bold text-white">{tri("🌐 Community & Feed Social", "🌐 Community & Social-Feed", "🌐 Community & Social Feed", "🌐 Comunidad y Feed Social")}</h1>
           <p className="text-white/90 text-sm mt-2 leading-snug">
-            {tri("Registrati gratis per vedere la bacheca, i colleghi, il mercatino e partecipare alle sfide.",
-                 "Registriere dich, um Pinnwand, Kollegen, Markt und Challenges zu sehen.",
-                 "Register to see the feed, colleagues, marketplace and join the challenges.",
-                 "Regístrate para ver el muro, colegas, mercadillo y participar en los retos.")}
+            {tri("Registrati gratis per vedere la bacheca, i colleghi e partecipare alle sfide.",
+                 "Registriere dich, um Pinnwand, Kollegen und Challenges zu sehen.",
+                 "Register to see the feed, colleagues and join the challenges.",
+                 "Regístrate para ver el muro, colegas y participar en los retos.")}
           </p>
           <button data-testid="community-register-btn" onClick={() => setAuthOpen(true)}
             className="mt-5 w-full bg-[#ff6b00] text-white font-bold px-5 py-3.5 rounded-2xl shadow-[0_4px_14px_rgba(255,107,0,0.4)] active:scale-98 hover:bg-[#ff8226] transition-all">
@@ -228,7 +224,7 @@ export default function Community({ onNavigate }) {
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-xl font-extrabold leading-none drop-shadow-sm">{lang === "de" ? socialSlogan.de : lang === "en" ? socialSlogan.en : lang === "es" ? socialSlogan.es : socialSlogan.it}</h1>
-            <p className="text-[12px] text-white/90 mt-1 leading-snug">{tri("Stacca dal forno: idee, foto, amici e mercatino tra colleghi", "Pause vom Ofen: Ideen, Fotos, Freunde & Markt", "Off the oven: ideas, photos, friends & market", "Fuera del horno: ideas, fotos, amigos y mercadillo")}</p>
+            <p className="text-[12px] text-white/90 mt-1 leading-snug">{tri("Stacca dal forno: idee, foto e amici tra colleghi", "Pause vom Ofen: Ideen, Fotos & Freunde", "Off the oven: ideas, photos & friends", "Fuera del horno: ideas, fotos y amigos")}</p>
           </div>
           {user && (
             <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
@@ -280,7 +276,6 @@ export default function Community({ onNavigate }) {
         { target: "community-composer", label: tri("Scrivi", "Schreiben", "Post", "Escribe", "Écrire"), Icon: Send },
         { target: "community-filters", label: tri("Canali", "Kanäle", "Channels", "Canales", "Canaux"), Icon: Wheat },
         { target: "community-feed", label: tri("Bacheca", "Pinnwand", "Board", "Tablón", "Tableau"), Icon: Users },
-        { target: "community-marketplace", label: tri("Mercatino", "Markt", "Market", "Mercadillo", "Marché"), Icon: Trophy },
       ]} />
 
       {/* Composer */}

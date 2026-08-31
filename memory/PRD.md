@@ -2911,3 +2911,19 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - `PianoProduzioneAI.jsx`: aggiunto pulsante `capo-pdf` ("Scarica PDF elegante (logo MikiLab)") sotto il pulsante `capo-print` esistente, con stato `pdfBusy` + toast. Import `exportPlanPdf` e icona `Download`.
 - Verifica E2E (browser, admin loggato, piano di test salvato via PUT /api/capo/last-plan): pulsante presente, click → download `piano-produzione-mikilab-YYYY-MM-DD.pdf` (~130KB, logo incluso) + toast "Elegant PDF downloaded". Piano di test poi rimosso (DELETE) dall'account admin.
 
+
+## v-fork.56 (2026-06, fork) — Rimozione monetizzazione + Mercatino (richiesta Michele)
+- Scelte utente: 1b (Shop solo "tutto gratis"), 2a (Mercatino rimosso del tutto), 3a (codice pagamenti rimosso lato UI).
+- Stato preesistente: backend GIÀ gratuito (`user_is_pro`/`_email_has_pro` ritornano True; `PAYMENTS_ENABLED=false`; PaywallGate trasparente). Il componente Marketplace era già un import orfano (mai renderizzato).
+- Frontend:
+  - `lib/api.js`: rimossi `subscriptionApi`, `recipePurchaseApi`, `marketApi`.
+  - `sections/Shop.jsx`: riscritto → solo "Academy & Ricette" + blocco "È tutto gratis" + 2 scorciatoie (Ricette/Impara). Nessun prodotto/lista d'attesa/checkout.
+  - `App.js`: rimossi import pagamenti; handler di ritorno da Stripe (?recipe/?sub/?trial/?bundle) neutralizzati (Promise.resolve). `<Shop onNavigate={setTab} />`.
+  - `lib/pro.js`: `useProStatus` non chiama più il backend → {pro:true} se loggato, altrimenti {pro:false}.
+  - `sections/PianoProduzioneAI.jsx`: rimosso `subscriptionApi`; `canUseMikiLab` ora sempre true (tutte le ricette MikiLab visibili a tutti).
+  - `sections/AcademyHome.jsx`: rimosso `subscriptionApi`, status/upgrade a pagamento neutralizzati.
+  - `sections/Home.jsx`: card "I Miei Corsi (in arrivo)" → "Academy & Ricette · tutto gratis".
+  - Mercatino: rimossi import/stato/effetti/voce jump-bar in `Community.jsx` e import orfano in `Maestro.jsx`; testi che citavano "mercatino/marketplace" riscritti (Community + `LabOnboarding.jsx`). Eliminati file `sections/Marketplace.jsx` e `lib/market.js`.
+- Backend `server.py`: rimossi endpoint `/community/market` (GET/POST/DELETE) + modello `MarketListingReq`. Codice Stripe residuo lasciato INERTE (già spento da `PAYMENTS_ENABLED=false` e non più chiamato dal frontend) per non destabilizzare il deploy.
+- Verifica: frontend compila (1 warning preesistente); backend riparte pulito (148 ricette); Shop mostra "tutto gratis" (0 menzioni abbonamento/lista d'attesa/mercatino); `/api/community/market` → 404; `/api/recipes` → 200.
+

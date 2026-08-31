@@ -137,19 +137,6 @@ export const authApi = {
   resendVerification: (email, lang) => api.post(`/auth/resend-verification`, { email, origin_url: window.location.origin, lang }).then((r) => r.data),
 };
 
-export const subscriptionApi = {
-  status: () => api.get(`/subscription/status`).then((r) => r.data),
-  checkout: (plan, tier = "lab") => api.post(`/subscription/checkout`, { plan, tier, origin_url: window.location.origin }).then((r) => r.data),
-  trial: (hours) => api.post(`/trial/activate`, { hours }).then((r) => r.data),
-  trialCheckout: () => api.post(`/trial/checkout`, { origin_url: window.location.origin }).then((r) => r.data),
-  trialCheckoutStatus: (session_id) => api.get(`/trial/checkout/status/${session_id}`).then((r) => r.data),
-};
-
-export const recipePurchaseApi = {
-  checkout: (kind, recipe_id) => api.post(`/recipe/checkout`, { kind, recipe_id, origin_url: window.location.origin }).then((r) => r.data),
-  status: (session_id) => api.get(`/recipe/checkout/status/${session_id}`).then((r) => r.data),
-};
-
 export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).then((r) => r.data),
   grant: (email, days, tier = "lab") => api.post(`/admin/grant`, { email, days, tier }).then((r) => r.data),
   revoke: (email) => api.post(`/admin/revoke`, { email }).then((r) => r.data),
@@ -258,12 +245,6 @@ export const shiftsApi = {
 
 export const notificationsApi = {  list: () => api.get(`/notifications`).then((r) => r.data).catch(() => ({ items: [], unread: 0 })),
   markRead: () => api.post(`/notifications/read`).then((r) => r.data),
-};
-
-export const marketApi = {
-  list: () => api.get(`/community/market`).then((r) => r.data.items || []).catch(() => []),
-  create: (payload) => api.post(`/community/market`, payload).then((r) => r.data),
-  remove: (id) => api.delete(`/community/market/${id}`).then((r) => r.data),
 };
 
 export const profileApi = {
