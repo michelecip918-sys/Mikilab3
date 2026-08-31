@@ -5481,24 +5481,7 @@ async def set_channel_email_pref(body: dict, user: dict = Depends(current_user))
 
 @api_router.post("/admin/send-daily-digest")
 async def admin_send_daily_digest(admin: dict = Depends(require_admin)):
-    # Raggruppa la coda per utente e invia UN riepilogo, poi svuota. (da chiamare via cron 1x/giorno)
-    queued = await db.email_digest_queue.find({}, {"_id": 0}).to_list(5000)
-    by_user = {}
-    for q in queued:
-        by_user.setdefault(q["user_id"], {"email": q.get("email"), "items": []})["items"].append(q)
-    sent = 0
-    for uid, data in by_user.items():
-        if not data["email"] or not RESEND_API_KEY:
-            continue
-        rows = "".join(f"<li><b>#{i['category']}</b> — {i['author']}: {i['text']}</li>" for i in data["items"][:50])
-        _html = f"<div style='font-family:sans-serif;max-width:560px;margin:auto'><h2 style='color:#ff6b00'>🥖 MikiLab · Riepilogo del giorno</h2><p>Novità nei canali che segui:</p><ul>{rows}</ul><p><a href='https://mikilab.de' style='color:#ff6b00'>Apri MikiLab →</a></p></div>"
-        try:
-            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [data["email"]], "subject": "MikiLab · il tuo riepilogo giornaliero", "html": _html})
-            sent += 1
-        except Exception:
-            logger.exception("digest send failed")
-    await db.email_digest_queue.delete_many({})
-    return {"users_notified": sent, "queued_items": len(queued)}
+    return await _run_daily_digest()
 
 
 @api_router.post("/community/posts/{post_id}/like")
@@ -7624,6 +7607,42 @@ async def _followup_loop():
         await asyncio.sleep(6 * 3600)  # ogni 6 ore
 
 
+async def _run_daily_digest():
+    """Raggruppa la coda digest per utente, invia UN riepilogo e svuota. Idempotente sulla coda."""
+    queued = await db.email_digest_queue.find({}, {"_id": 0}).to_list(5000)
+    by_user = {}
+    for q in queued:
+        by_user.setdefault(q["user_id"], {"email": q.get("email"), "items": []})["items"].append(q)
+    sent = 0
+    for uid, data in by_user.items():
+        if not data["email"] or not RESEND_API_KEY:
+            continue
+        rows = "".join(f"<li><b>#{i['category']}</b> — {i['author']}: {i['text']}</li>" for i in data["items"][:50])
+        _html = f"<div style='font-family:sans-serif;max-width:560px;margin:auto'><h2 style='color:#ff6b00'>🥖 MikiLab · Riepilogo del giorno</h2><p>Novità nei canali che segui:</p><ul>{rows}</ul><p><a href='https://mikilab.de' style='color:#ff6b00'>Apri MikiLab →</a></p></div>"
+        try:
+            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [data["email"]], "subject": "MikiLab · il tuo riepilogo giornaliero", "html": _html})
+            sent += 1
+        except Exception:
+            logger.exception("digest send failed")
+    await db.email_digest_queue.delete_many({})
+    return {"users_notified": sent, "queued_items": len(queued)}
+
+
+async def _daily_digest_loop():
+    """Ogni mattina (~07:00 Europe/Berlin = 05:00 UTC) invia i riepiloghi dei canali seguiti."""
+    last_run_date = None
+    while True:
+        try:
+            now = datetime.now(timezone.utc)
+            if now.hour == 5 and last_run_date != now.date():
+                last_run_date = now.date()
+                res = await _run_daily_digest()
+                logging.getLogger(__name__).info(f"Daily digest inviato: {res}")
+        except Exception as e:
+            logging.getLogger(__name__).error(f"daily digest loop error: {e}")
+        await asyncio.sleep(1800)  # controlla ogni 30 min
+
+
 @app.on_event("startup")
 async def on_startup_seed_mikilab():
     """In produzione (DB vuoto) crea automaticamente il ricettario Mikilab, senza cancellare nulla."""
@@ -7666,6 +7685,11 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Bake-Along notify loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Bake-Along loop start error: {e}")
+    try:
+        asyncio.create_task(_daily_digest_loop())
+        logging.getLogger(__name__).info("Daily digest loop avviato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Daily digest loop start error: {e}")
 
 
 @app.on_event("shutdown")

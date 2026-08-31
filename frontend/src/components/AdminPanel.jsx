@@ -49,6 +49,14 @@ export default function AdminPanel({ open, onOpenChange }) {
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setBaBusy(false); }
   };
+  const sendDigest = async () => {
+    setBaBusy(true);
+    try {
+      const r = await adminApi.sendDailyDigest();
+      toast.success((de ? "Zusammenfassungen gesendet: " : "Riepiloghi inviati: ") + (r.users_notified ?? 0) + ` (${r.queued_items ?? 0})`);
+    } catch { toast.error(de ? "Fehler" : "Errore"); }
+    finally { setBaBusy(false); }
+  };
   const [settings, setSettings] = useState({ whatsapp_number: "", avatar_bubbles: {}, folder_covers: {} });
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
@@ -254,6 +262,10 @@ export default function AdminPanel({ open, onOpenChange }) {
           <button data-testid="admin-bakealong-award" onClick={awardBakeAlong} disabled={baBusy}
             className="mt-2 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[#ff6b00] text-white active:scale-97 disabled:opacity-60">
             🥇 {de ? "Wochensieger krönen" : "Proclama il vincitore della settimana"}
+          </button>
+          <button data-testid="admin-send-digest" onClick={sendDigest} disabled={baBusy}
+            className="mt-2 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-[#8C6B4A] text-white active:scale-97 disabled:opacity-60">
+            📧 {de ? "Kanal-Zusammenfassungen jetzt senden" : "Invia i riepiloghi dei canali ora"}
           </button>
         </div>
         <div data-testid="admin-newsletter" className="rounded-2xl bg-[#3a6b3a]/10 border border-[#3a6b3a]/30 p-4 mt-2">

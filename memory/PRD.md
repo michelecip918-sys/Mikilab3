@@ -2796,3 +2796,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Filtri campanella**: `NotificationBell.jsx` chip `notif-filter-{all,channels,friends,likes}` in cima; filtra le notifiche per gruppo prima del rendering/raggruppamento. Verificato: "Channels" mostra solo i post-canale raggruppati.
 - **#3 Verifica dominio Resend**: azione ESTERNA (solo l'utente, dashboard Resend) — non codificabile.
 - Verificato: curl E2E (pref/digest) + screenshot (filtri campanella, blocco email). 0 crash.
+
+
+---
+## v-fork.38 (2026-06, fork) — Scheduler digest automatico + pulsante admin
+- **Scheduler giornaliero in-app**: estratta `_run_daily_digest()` (condivisa da endpoint e scheduler). Aggiunto `_daily_digest_loop()` (controlla ogni 30 min; alle 05:00 UTC ≈ 07:00 Europe/Berlin, una volta al giorno via `last_run_date`) registrato in `@app.on_event("startup")`. Log confermato: "Daily digest loop avviato". NB: gira nel processo backend (ok in pod sempre attivo; in produzione gira nel backend deployato).
+- **Pulsante admin "Invia i riepiloghi dei canali ora"**: `AdminPanel.jsx` bottone `admin-send-digest` → `adminApi.sendDailyDigest()` → `POST /api/admin/send-daily-digest`. Verificato endpoint (admin): `{users_notified, queued_items}`.
+- **#Verifica dominio Resend**: azione ESTERNA utente (dashboard Resend, verificare mikilab.de) — non codificabile; senza verifica le email non partono ma la coda/logica funziona.
+- Verificato: backend startup (loop avviato, 0 errori) + curl admin endpoint + frontend build ok.
