@@ -208,6 +208,21 @@ export default function PromuoviMikiLab() {
     window.open("https://www.tiktok.com/upload", "_blank");
     toast.success(L("Locandina scaricata: ora caricala su TikTok!", "Flyer geladen: jetzt auf TikTok hochladen!", "Flyer downloaded: now upload it on TikTok!", "Folleto descargado: ¡súbelo ahora a TikTok!", "Flyer téléchargé : télécharge-le sur TikTok !", "پوستر دانلود شد: حالا در تیک‌تاک بارگذاری کن!"));
   };
+  const POSTS = [
+    { file: "welcome-tiktok.png", label: L("Benvenuto", "Willkommen", "Welcome", "Bienvenida", "Bienvenue", "خوش‌آمد") },
+    { file: "launch-1-presentazione.png", label: L("Presentazione", "Vorstellung", "Intro", "Presentación", "Présentation", "معرفی") },
+    { file: "launch-2-ricetta.png", label: L("Ricetta gratis", "Gratis-Rezept", "Free recipe", "Receta gratis", "Recette gratuite", "دستور رایگان") },
+    { file: "launch-3-community.png", label: L("Community", "Community", "Community", "Comunidad", "Communauté", "انجمن") },
+  ];
+  const sharePoster = async (file) => {
+    const url = `${window.location.origin}${process.env.PUBLIC_URL || ""}/${file}`;
+    try {
+      const r = await fetch(url); const b = await r.blob();
+      const f = new File([b], file, { type: b.type || "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: "MikiLab", text: `MikiLab — ${SITE_URL}` }); return; }
+    } catch { /* */ }
+    window.open(`https://wa.me/?text=${encodeURIComponent(`MikiLab — ${SITE_URL}`)}`, "_blank");
+  };
   const VARIANTS = [
     { id: "bacheca", label: L("Post", "Beitrag", "Post", "Post", "Post", "پست") },
     { id: "storia", label: L("Storia", "Story", "Story", "Historia", "Story", "استوری") },
@@ -397,6 +412,33 @@ export default function PromuoviMikiLab() {
               </button>
               <p className="w-full text-[11px] text-[#7E8A93]">{L("Formato A5 · pronta da stampare", "Format A5 · druckfertig", "A5 format · ready to print", "Formato A5 · lista para imprimir", "Format A5 · prête à imprimer", "قطع A5 · آمادهٔ چاپ")}</p>
             </div>
+          </div>
+        </div>
+
+        {/* Post social pronti: benvenuto + serie di lancio (scaricabili con un tap) */}
+        <div data-testid="promuovi-posts" className="rounded-2xl bg-[#121212] border border-[#2e2e2e] p-3.5">
+          <p className="text-sm font-bold text-white leading-tight mb-0.5">{L("Post social pronti", "Fertige Social-Posts", "Ready social posts", "Posts sociales listos", "Posts sociaux prêts", "پست‌های آمادهٔ شبکه‌ها")}</p>
+          <p className="text-[12px] text-[#AEB8BF] leading-snug mb-2.5">{L("Scarica e pubblica su TikTok: benvenuto + serie di lancio.", "Laden & auf TikTok posten: Willkommen + Launch-Serie.", "Download & post on TikTok: welcome + launch series.", "Descarga y publica en TikTok: bienvenida + serie de lanzamiento.", "Télécharge et publie sur TikTok : bienvenue + série de lancement.", "دانلود و انتشار در تیک‌تاک: خوش‌آمد + سری راه‌اندازی.")}</p>
+          <div className="flex gap-3 overflow-x-auto pb-1">
+            {POSTS.map((p, i) => (
+              <div key={p.file} data-testid={`promuovi-post-${i}`} className="shrink-0 w-[112px]">
+                <button onClick={() => window.open(`${process.env.PUBLIC_URL}/${p.file}`, "_blank")}
+                  className="block rounded-xl overflow-hidden border border-[#2e2e2e] hover:border-[#ff6b00] transition-all active:scale-95">
+                  <img src={`${process.env.PUBLIC_URL}/${p.file}`} alt={p.label} className="w-[112px] h-[160px] object-cover" loading="lazy" />
+                </button>
+                <p className="text-[11px] text-white/90 font-semibold text-center mt-1 truncate">{p.label}</p>
+                <div className="flex gap-1 mt-1">
+                  <a data-testid={`post-download-${i}`} href={`${process.env.PUBLIC_URL}/${p.file}`} download={p.file}
+                    className="flex-1 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-[#121212] bg-[#ff6b00] rounded-full py-1 active:scale-95">
+                    <Download className="w-3 h-3" />
+                  </a>
+                  <button data-testid={`post-share-${i}`} onClick={() => sharePoster(p.file)}
+                    className="flex-1 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full py-1 active:scale-95">
+                    <Share2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

@@ -2881,3 +2881,6 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 
 ## v-fork.49 (2026-08, fork) — Serie di lancio TikTok (3 post)
 - Creati public/launch-1-presentazione.png (Ciao sono Michele), launch-2-ricetta.png (Ricetta gratis focaccia), launch-3-community.png (Unisciti alla community). Verticali 9:16, brand, QR reale tracciato + TikTok @mikilab.de + mikilab.de via PIL. Tutti HTTP 200.
+
+## v-fork.50 (2026-08, fork) — Post social scaricabili in-app
+- Aggiunto blocco promuovi-posts in PromuoviMikiLab: 4 post (welcome + serie di lancio) con miniatura, download (post-download-i) e share (post-share-i). Compila ok, asset 200.
