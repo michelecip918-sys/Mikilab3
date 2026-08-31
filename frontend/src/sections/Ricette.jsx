@@ -16,10 +16,28 @@ import SectionJumpBar from "@/components/SectionJumpBar";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import { mkTri, triFA } from "@/i18n/triMaps";
+import { recipesApi } from "@/lib/api";
+import { downloadCsv, downloadRecipesPdf } from "@/lib/recipeExport";
+import { toast } from "sonner";
+import { Download } from "lucide-react";
 
 export default function Ricette() {
   const { t, lang } = useLang();
   const tri = (i, d, e, s, f) => mkTri(lang)(i, d, e, s, f);
+  const [expBusy, setExpBusy] = useState(false);
+  const exportMine = async (kind) => {
+    if (expBusy) return;
+    setExpBusy(true);
+    try {
+      const mine = await recipesApi.list("personal");
+      if (!mine || mine.length === 0) { toast.error(tri("Non hai ancora ricette personali da esportare.", "Noch keine eigenen Rezepte zum Exportieren.", "You have no personal recipes to export yet.", "Aún no tienes recetas personales.")); return; }
+      if (kind === "csv") { downloadCsv(mine); }
+      else { await downloadRecipesPdf(mine, lang); }
+      toast.success(tri("Backup ricette scaricato ✅", "Rezept-Backup heruntergeladen ✅", "Recipe backup downloaded ✅", "Copia de recetas descargada ✅"));
+    } catch {
+      toast.error(tri("Export non riuscito, riprova.", "Export fehlgeschlagen.", "Export failed, try again.", "Error al exportar."));
+    } finally { setExpBusy(false); }
+  };
   const [view, setView] = useState("main");
   const [custoditeInit, setCustoditeInit] = useState(null);
   const coll = "mikilab";
@@ -125,6 +143,8 @@ export default function Ricette() {
           <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab", "Découvre MikiLab")} onClick={() => setView("scopri")} />
           <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
+          <UtilBtn testid="ricette-export-csv-btn" Icon={Download} label={tri("Backup Ricette (CSV)", "Rezept-Backup (CSV)", "Recipe Backup (CSV)", "Copia Recetas (CSV)")} onClick={() => exportMine("csv")} />
+          <UtilBtn testid="ricette-export-pdf-btn" Icon={Download} label={tri("Backup Ricette (PDF)", "Rezept-Backup (PDF)", "Recipe Backup (PDF)", "Copia Recetas (PDF)")} onClick={() => exportMine("pdf")} />
         </div>
       )}
 

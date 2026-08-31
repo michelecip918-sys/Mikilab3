@@ -2971,3 +2971,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Allergeni/HACCP rimossi del tutto (funzioni/voci): rimosso feature Etichette Panettone (PanettoneLabels) da Ricette.jsx e Mikilab.jsx (import+view+bottoni); rimosso `EULabel` da RecipeList (display allergeni/etichetta UE) + import; rimosse route+import HaccpLog e DayClose in Maestro.jsx (gia fuori dal direttorio); rimossa sezione allergeni in LabPasticceria (selettore + display, tab rinominata "Scheda Prodotto"); rewording HACCP in Checklists.jsx, BatchTraceability.jsx, LabOnboarding.jsx.
 - Verificato E2E: PRO nasconde quickstart; menu Cambia profilo riapre il selettore; compila (warning innocui: import lucide/useProfile inutilizzati, ALLERGENS in LabPasticceria).
 - Note: componenti orfani rimasti (PanettoneLabels.jsx, EULabel.jsx, HaccpLog.jsx, DayClose.jsx) non piu referenziati; LegalPage puo ancora citare HACCP/allergeni come disclaimer (testo legale, non funzione).
+
+## v-fork.64 (2026-06) — Backup Ricette Pro (export CSV + PDF)
+- Nuovo `lib/recipeExport.js`: recipesToCsv + downloadCsv + downloadRecipesPdf (riusa exportPlanPdf, no disclaimer).
+- Ricette.jsx: pulsanti `ricette-export-csv-btn` e `ricette-export-pdf-btn` -> scaricano le ricette PERSONALI (recipesApi.list("personal")) in CSV/PDF, con toast.
+- Verificato E2E: click CSV -> download `mie-ricette-mikilab.csv`; compila (warning innocui).
+- NON implementati in questa sessione (funzionalita corpose, rimandate per non consegnare codice fragile): #1 Baker Percentage & scalabilita kg/sacchi; #3 timetable lievitazione concatenata sincronizzata col piano; #4 resa/calo peso nel calcolo costi; #5 cache offline PWA per ricette+piano.
