@@ -1,4 +1,4 @@
-import { Home, BookOpen, Wrench, GraduationCap, Users } from "lucide-react";
+import { BookOpen, Wrench, GraduationCap, Users, Sparkles } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { notificationsApi, communityApi } from "@/lib/api";
@@ -34,17 +34,14 @@ export default function BottomNav({ active, onChange }) {
   const markSocialSeen = () => { try { localStorage.setItem("mikilab_social_seen", new Date().toISOString()); } catch { /* */ } setSocialNew(false); };
 
   const norm = ["news", "enciclopedia"].includes(active) ? "impara" : active;
-  const { profile } = useProfile();
-  let TABS = [
-    { id: "home", label: t("nav_home"), Icon: Home },
-    { id: "ricette", label: t("nav_ricette"), Icon: BookOpen },
-    { id: "maestro", label: t("nav_maestro"), Icon: Wrench },
-    { id: "impara", label: t("nav_impara"), Icon: GraduationCap },
-    { id: "community", label: triNav("Social", "Social", "Social", "Social"), Icon: Users, logo: true },
+  // 5 sezioni fisse (nessun profilo): Ricette · ImparaDaCasa · ImparaConMikiLab · LavoraConMikiLab · ViviMikiLab.
+  const TABS = [
+    { id: "ricette", label: triNav("Ricette", "Rezepte", "Recipes", "Recetas"), Icon: BookOpen },
+    { id: "impara", label: "ImparaDaCasa", Icon: GraduationCap },
+    { id: "imparacon", label: "ImparaConMikiLab", Icon: Sparkles },
+    { id: "maestro", label: "LavoraConMikiLab", Icon: Wrench },
+    { id: "community", label: "ViviMikiLab", Icon: Users, logo: true },
   ];
-  // PRO (B2B): solo strumenti di lavoro. PASSION (B2C): Laboratorio SEMPRE visibile + Impara/Social.
-  if (profile === "pro") TABS = TABS.filter((x) => ["home", "ricette", "maestro"].includes(x.id));
-  else if (profile === "passion") TABS = TABS.filter((x) => ["home", "ricette", "maestro", "impara", "community"].includes(x.id));
   const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
 
   return (
@@ -98,7 +95,7 @@ export default function BottomNav({ active, onChange }) {
                   <span className="absolute inset-y-1.5 left-1/2 -translate-x-1/2 w-px bg-[#3e2510]/50" />
                 </span>
               </span>
-              <span className={`mt-[28px] text-[10px] font-bold leading-none text-center transition-colors ${on ? "text-[#ffe6bf]" : "text-[#e7c79a]/85"}`}
+              <span className={`mt-[28px] text-[9px] font-bold leading-[1.05] text-center break-all line-clamp-2 max-w-[72px] transition-colors ${on ? "text-[#ffe6bf]" : "text-[#e7c79a]/85"}`}
                 style={{ textShadow: "0 1px 1px rgba(0,0,0,.6)" }}>
                 {label}
               </span>

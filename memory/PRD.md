@@ -3053,3 +3053,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Verifica**: UI e wiring confermati a schermo (pulsante presente, handler eseguito). Il riconoscimento vocale reale NON è testabile in headless (niente microfono) → va provato su dispositivo reale (Chrome/Safari). i18n inline 6 lingue, nessun dizionario toccato.
 - NB: cambi in PREVIEW → REDEPLOY per mikilab.de.
 
+
+
+## v-fork (2026-06) — Ristrutturazione: Home minimal + 5 sezioni + Base/Pro come sezioni
+- **Home (`Home.jsx` riscritta minimal)**: SOLO logo+titolo, i **5 blocchi-sezione** (copertina hero + titolo + descrizione) e la condivisione (ShareInstall). Rimossi tutti i banner/locandine. testid `home`, `home-block-<tab>`. Copertine: hero-ricette/impara/bakery/laboratorio/social.jpg.
+- **5 sezioni = menu (BottomNav)** senza tab Home (Home dal logo): `ricette` (Ricette), `impara` (ImparaDaCasa → LearnHub/Beginners), `imparacon` (ImparaConMikiLab → AcademyHome, hub base con quiz/corsi/ricettario/farine), `maestro` (LavoraConMikiLab → Maestro, pro), `community` (ViviMikiLab). Rimosso il filtro per profilo; label a 2 righe (break-all, line-clamp-2).
+- **App.js**: rotta nuova `imparacon` → `AcademyHome`; `MikilaWisdom` nascosto su `home` (`tab !== "home"`); `<ProfileSelect/>` rimosso (D-a: niente scelta profilo); `<NewsletterPopup/>` disattivato (`{false && …}`); `maestro` non più dentro PaywallGate (Lab libero). Logo Header → evento `mikilab-goto {tab:"home"}` (`header-logo-home`).
+- **Verifica**: fresh load → Home diretta senza overlay profilo; 5 blocchi + 5 tab; tutte le sezioni (ricette/impara/imparacon/community/maestro) rendono senza errori; logo→home ok.
+- Note: `useProfile`/`t`/`Home` import ora inutilizzati in alcuni file (solo warning lint). Profilo Pro/Passion di fatto deprecato. NB: PREVIEW → REDEPLOY per mikilab.de.
+

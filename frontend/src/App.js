@@ -10,6 +10,7 @@ import Home from "@/sections/Home";
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import LearnHub from "@/sections/LearnHub";
+import AcademyHome from "@/sections/AcademyHome";
 import Community from "@/sections/Community";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
 import Shop from "@/sections/Shop";
@@ -231,7 +232,7 @@ function App() {
       <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />
       <OfflineBanner />
       <InstallBanner />
-      <NewsletterPopup />
+      {false && <NewsletterPopup />}
       <main className="max-w-xl mx-auto px-4 pt-4 pb-64">
         <ErrorBoundary resetKey={tab} lang={lang}>
         <AnimatePresence mode="wait">
@@ -242,10 +243,11 @@ function App() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
-            <MikilaWisdom section={tab} />
+            {tab !== "home" && <MikilaWisdom section={tab} />}
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
-            {tab === "maestro" && <PaywallGate feature="lab" sectionName={tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab")}><Maestro /></PaywallGate>}
+            {tab === "maestro" && <Maestro />}
+            {tab === "imparacon" && <AcademyHome onNavigate={navigate} />}
             {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} onNavigate={navigate} />}
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
             {tab === "community" && <Community onNavigate={navigate} />}
@@ -301,7 +303,6 @@ function App() {
       )}
 
       <Toaster position="top-center" richColors />
-      <ProfileSelect />
       <Sfide open={sfideOpen} onClose={() => setSfideOpen(false)} />
       {resetToken && (
         <ResetPassword
