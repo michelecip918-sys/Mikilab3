@@ -2679,3 +2679,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **`config/social.js`**: collegati Instagram (michelucano), TikTok (@michele.signorell — da verificare l'handle esatto), WhatsApp (+49 160 1253378), Threads (michelucano). Facebook e YouTube vuoti (in attesa link esatto Facebook). Aggiunto supporto Threads (icona AtSign) in PromuoviMikiLab.
 - TODO (attesa utente): link esatto del profilo Facebook; conferma handle TikTok.
 
+
+
+---
+## v-fork.24 (2026-06, fork) — Laboratorio a 4 macro-funzioni + Audit foto 140 ricette + fix crash Home
+- **Laboratorio riorganizzato in 4 MACRO-FUNZIONI** (confermate dall'utente, senza cancellare NULLA): **CREA · CALCOLA · GESTISCI · CONTROLLA E DIAGNOSI**. Riscritto il campo `kind` di ogni strumento in `PianoProduzioneAI.jsx` (TOOLS) e ridefinito `TOOL_KINDS` (chiavi crea/calcola/gestisci/controlla, icone Sparkles/Calculator/Building2/Stethoscope, colori on-brand arancio/ambra/marrone). I 3 consumatori usano TOOL_KINDS automaticamente: `ToolsDirectory` (default open → "crea"), `SiteMenu` (site-menu-kind-*), drawer generatore (lab-menu-kind-*). Conteggi verificati a schermo: CREA·7, CALCOLA·15, GESTISCI·17, CONTROLLA·7 (EN: Create/Calculate/Manage/Check & Diagnose).
+- **Audit foto TUTTE le 140 ricette MikiLab**: 0 file locali mancanti; **1 ricetta senza foto** (Pane di Cristallo → assegnata foto crystal high-hydration) e **21 focacce condividevano la stessa foto generica** `r_focaccia.jpg`. Generate **21 foto dedicate** (Gemini nano-banana, stile MikiLab: fondo scuro + luce arancione, condimento visibile) scaricate in `/app/frontend/public/recipes/foc_*.jpg` e mappate su DB `recipes` + `mikilab_seed_data.json`. Restano 2 duplicati BENIGNI e coerenti (Pan di Kristall≈Pane di Cristallo; 2 dolci alla crema). SEED_VERSION → `2026-06-v66-focacce-photos`.
+- **FIX CRASH HOME (P0)**: modifica ereditata dal fork aveva reso `SEASONAL[].text` un oggetto `{it,de,en,es}` in `PromuoviMikiLab.jsx` ma il `<p>` lo renderizzava come stringa → «Objects are not valid as a React child» → ErrorBoundary "Oops" su tutta la Home. Corretto localizzando `seasonText` per lingua (fallback IT). Home ora renderizza pulita (0 crash console).
+- ⚠️ Produzione: le nuove foto focacce + fix immagini richiedono RI-SEED (SEED_VERSION bumpato) al prossimo REDEPLOY di mikilab.de.

@@ -3297,7 +3297,7 @@
     ],
     "procedure": "1) Prepara un poolish la sera prima (parti uguali farina/acqua + poco lievito).\n2) Impasta semola, tipo 0, patata lessa schiacciata, poolish e acqua; sale a fine impasto.\n3) Puntata ~2 ore.\n4) Ungi bene una teglia rotonda con olio, stendi l'impasto con le mani unte e lascia lievitare 1,5 ore.\n5) Affonda con le dita, guarnisci con pomodorini schiacciati, olive baresane, origano, sale grosso e un filo d'olio.\n6) Cuoci a 230°C per 25 minuti: bordi croccanti e interno soffice.\n\nMIGLIORATORE NATURALE (facoltativo): aggiungo sempre il mio Miglioratore Naturale (2-4% sulla farina) per dare più forza, profumo e morbidezza che dura; puoi sostituirlo con un semplice malto o ometterlo.\n\nUN FILO D'OLIO NELL'IMPASTO: aggiungo sempre un filo d'olio extravergine direttamente nell'impasto (verso fine impasto) per una mollica più soffice e profumata, e un pizzico di malto d'orzo per crosta dorata.",
     "notes": "La focaccia di Bari: la patata la rende soffice e umida a lungo. Pomodorini, olive baresane e origano sono la firma.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_barese.jpg",
     "rest_minutes": null,
     "work_phases": null,
     "flour_type_de": "Hartweizengries + Tipo 0 + gekochte Kartoffel",
@@ -7539,7 +7539,7 @@
       }
     ],
     "work_phases": [],
-    "image_url": null,
+    "image_url": "https://images.unsplash.com/photo-1559811814-e2c57b5e69df?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
     "notes": "Il 'Pan di Cristal' catalano nel mio stile: 85%+ di idratazione, alveolatura estrema quasi vuota, crosta sottile e vetrosa che scricchiola, olio d'oliva per fragranza. Leggerissimo.",
     "procedure": "INTRODUZIONE MICKEY LAB\nUn pane 'aria e crosta': quasi tutta acqua, pochissimo lievito e tempi lunghi. Serve mano delicata e forni molto caldi. La biga dà forza e profumo, il bassinage porta l'idratazione all'estremo.\n\nATTREZZATURA\nPlanetaria o impastatrice a spirale, ciotole capienti, tarocco bagnato, teglia con carta, pietra refrattaria o teglia rovente, spruzzino/vapore.\n\nPROCEDIMENTO PASSO-PASSO\n1) Biga (12-16 h a 18°C): 500 g di farina, 220 g acqua, 1 g lievito. Grumosa, non impastata liscia.\n2) Impasto: unisci biga, farina restante, malto e circa il 60% dell'acqua. Avvia e incorda bene.\n3) Sale e lievito, poi BASSINAGE: aggiungi l'acqua restante a filo, poca alla volta, sempre reincordando.\n4) Per ultimo l'olio d'oliva a filo. Impasto lucido, elastico, molto morbido (28-30°C max).\n5) Puntata in massa 30 min, poi 3-4 giri di pieghe in ciotola (stretch & fold) ogni 30 min.\n6) Riposo in frigo 12-18 h (matura sapore e struttura).\n7) Rovescia SENZA sgonfiare su tanta semola, allarga delicato in rettangolo.\n8) Taglia strisce/quadrati con il tarocco senza schiacciare gli alveoli.\n9) Appretto breve 30-45 min a TA.\n\nCOTTURA\n250°C con vapore abbondante i primi 8-10 min, poi 230°C valvola aperta per altri 10-12 min. Crosta ambrata e vetrosa, mollica lucida e vuota.\n\nCONSERVAZIONE\nMassima fragranza in giornata. Rinviene benissimo 3-4 min a 200°C; ottimo congelato a fette.\n\nMIGLIORATORE NATURALE (facoltativo): aggiungo sempre il mio Miglioratore Naturale (2-4% sulla farina) per dare più forza, profumo e morbidezza che dura; puoi sostituirlo con un semplice malto o ometterlo.",
     "name": "Pane di Cristallo ad Alta Idratazione col Metodo Mickey Lab",
@@ -14082,7 +14082,7 @@
     "notes_es": "Focaccia suave y alveolada con Calabaza en rodajas, Romero fresco.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Courge en tranches, Romarin frais.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با کدو حلوایی ورقه‌ای, رزماری تازه.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_zucca_rosmarino.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -14199,7 +14199,7 @@
     "notes_es": "Focaccia suave y alveolada con Patatas en rodajas, Romero fresco.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Pommes de terre en tranches, Romarin frais.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با سیب‌زمینی ورقه‌ای, رزماری تازه.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_patate_rosmarino.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -14316,7 +14316,7 @@
     "notes_es": "Focaccia suave y alveolada con Cebolla de Tropea, Romero fresco.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Oignon de Tropea, Romarin frais.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با پیاز تروپه‌آ, رزماری تازه.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_cipolla_tropea.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -14433,7 +14433,7 @@
     "notes_es": "Focaccia suave y alveolada con Calabacín en tiras, Queso stracchino.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Courgette en rubans, Stracchino.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با کدوسبز نواری, پنیر استراکینو.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_zucchine_stracchino.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -14550,7 +14550,7 @@
     "notes_es": "Focaccia suave y alveolada con Berenjena a la parrilla, Tomatitos.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Aubergines grillées, Tomates cerises.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با بادمجان کبابی, گوجه گیلاسی.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_melanzane_pomodorini.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -14667,7 +14667,7 @@
     "notes_es": "Focaccia suave y alveolada con Pimientos asados, Aceitunas taggiasca.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Poivrons rôtis, Olives taggiasca.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با فلفل دلمه‌ای کبابی, زیتون تاجاسکا.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_peperoni.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -14784,7 +14784,7 @@
     "notes_es": "Focaccia suave y alveolada con Pesto genovés, Tomatitos.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Pesto génois, Tomates cerises.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با پستوی جنووا, گوجه گیلاسی.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_pesto_pomodorini.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -14892,7 +14892,7 @@
     "notes_es": "Focaccia suave y alveolada con Gorgonzola y nueces.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Gorgonzola & noix.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با گورگونزولا و گردو.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_gorgonzola_noci.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15000,7 +15000,7 @@
     "notes_es": "Focaccia suave y alveolada con Mortadela y pistacho.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Mortadelle & pistache.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با مورتادلا و پسته.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_mortadella_pistacchio.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15117,7 +15117,7 @@
     "notes_es": "Focaccia suave y alveolada con Jamón curado, Queso stracchino.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Jambon cru, Stracchino.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با ژامبون خشک‌شده, پنیر استراکینو.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_prosciutto_stracchino.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15234,7 +15234,7 @@
     "notes_es": "Focaccia suave y alveolada con Grelos, Aceitunas taggiasca.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Brocoli-rave, Olives taggiasca.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با بروکلی رابه, زیتون تاجاسکا.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_friarielli.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15351,7 +15351,7 @@
     "notes_es": "Focaccia suave y alveolada con Setas porcini, Romero fresco.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Cèpes, Romarin frais.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با قارچ پورچینی, رزماری تازه.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_funghi_porcini.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15468,7 +15468,7 @@
     "notes_es": "Focaccia suave y alveolada con Anchoas y alcaparras, Tomatitos.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Anchois & câpres, Tomates cerises.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با آنچوی و کبر, گوجه گیلاسی.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_acciughe_capperi.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15576,7 +15576,7 @@
     "notes_es": "Focaccia suave y alveolada con Higos y miel.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Figues & miel.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با انجیر و عسل.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_fichi_miele.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15684,7 +15684,7 @@
     "notes_es": "Focaccia suave y alveolada con Pasas y nueces.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Raisins secs & noix.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با کشمش و گردو.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_uvetta_noci.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15792,7 +15792,7 @@
     "notes_es": "Focaccia suave y alveolada con Semillas variadas.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Graines mélangées.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با دانه‌های مخلوط.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_multisemi.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -15909,7 +15909,7 @@
     "notes_es": "Focaccia suave y alveolada con Cúrcuma y pimienta negra, Aceitunas verdes y orégano.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Curcuma & poivre noir, Olives vertes & origan.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با زردچوبه و فلفل سیاه, زیتون سبز و پونه.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_curcuma.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -16017,7 +16017,7 @@
     "notes_es": "Focaccia suave y alveolada con Aceitunas verdes y orégano.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Olives vertes & origan.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با زیتون سبز و پونه.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_olive_origano.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -16125,7 +16125,7 @@
     "notes_es": "Focaccia suave y alveolada con Pera y gorgonzola.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Poire & gorgonzola.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با گلابی و گورگونزولا.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_pere_gorgonzola.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false
@@ -16233,7 +16233,7 @@
     "notes_es": "Focaccia suave y alveolada con Cebolleta y speck.",
     "notes_fr": "Focaccia moelleuse et alvéolée avec Ciboule & speck.",
     "notes_fa": "فوکاچیای نرم و پُرحفره با پیازچه و اشپک.",
-    "image_url": "/recipes/r_focaccia.jpg",
+    "image_url": "/recipes/foc_cipollotto_speck.jpg",
     "work_phases": null,
     "locked": false,
     "hidden": false

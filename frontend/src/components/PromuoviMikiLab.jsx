@@ -101,11 +101,11 @@ Text: "100% GRATIS 👉 mikilab.de — Folge @michelucano"
 };
 
 const SEASONAL = [
-  { id: "natale", label: "🎄 Natale", text: "🎄 Quest'anno il panettone lo fai TU! Ricetta passo-passo, lievito madre e la lista «cosa e dove comprare». Tutto gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #lievitomadre #Natale #panetok" },
-  { id: "pasqua", label: "🕊️ Pasqua", text: "🕊️ Colomba di Pasqua fatta in casa, senza paura! Ti guido in ogni passaggio su MikiLab, 100% gratis 👉 " + SITE_URL + "\n#MikiLab #colomba #Pasqua #lievitomadre" },
-  { id: "estate", label: "☀️ Estate", text: "☀️ Estate = focaccia! 20 ricette con olio buono + lista spesa, gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #panetok #estate #homebaking" },
-  { id: "valentino", label: "❤️ S.Valentino", text: "❤️ Conquista chi ami con un dolce fatto a mano. Ricette passo-passo gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentino #dolcidamore #fattoincasa" },
-  { id: "halloween", label: "🎃 Halloween", text: "🎃 Pane alla zucca da paura per Halloween! Ricetta + food cost gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween #panetok #autunno" },
+  { id: "natale", label: "🎄 Natale", text: { it: "🎄 Quest'anno il panettone lo fai TU! Ricetta passo-passo e lista «cosa e dove comprare». Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #lievitomadre #Natale", de: "🎄 Dieses Jahr backst DU den Panettone! Schritt-für-Schritt-Rezept, gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Panettone #Weihnachten", en: "🎄 This year YOU bake the panettone! Step-by-step recipe, free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #Christmas", es: "🎄 ¡Este año el panettone lo haces TÚ! Receta paso a paso, gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #Navidad" } },
+  { id: "pasqua", label: "🕊️ Pasqua", text: { it: "🕊️ Colomba di Pasqua fatta in casa, senza paura! Ti guido su MikiLab, gratis 👉 " + SITE_URL + "\n#MikiLab #colomba #Pasqua", de: "🕊️ Oster-Colomba selbst gebacken! Ich führe dich, gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Ostern", en: "🕊️ Homemade Easter colomba, no fear! I guide you, free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #Easter", es: "🕊️ ¡Colomba de Pascua casera! Te guío gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #Pascua" } },
+  { id: "estate", label: "☀️ Estate", text: { it: "☀️ Estate = focaccia! Ricette + lista spesa, gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #estate", de: "☀️ Sommer = Focaccia! Rezepte gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Focaccia #Sommer", en: "☀️ Summer = focaccia! Recipes free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #summer", es: "☀️ ¡Verano = focaccia! Recetas gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #verano" } },
+  { id: "valentino", label: "❤️ S.Valentino", text: { it: "❤️ Conquista chi ami con un dolce fatto a mano. Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentino", de: "❤️ Verzaubere mit einem selbstgemachten Dessert. Gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Valentinstag", en: "❤️ Win their heart with a homemade sweet. Free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #ValentinesDay", es: "❤️ Conquista con un dulce casero. Gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentín" } },
+  { id: "halloween", label: "🎃 Halloween", text: { it: "🎃 Pane alla zucca da paura per Halloween! Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween #autunno", de: "🎃 Gruseliges Kürbisbrot für Halloween! Gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween", en: "🎃 Spooky pumpkin bread for Halloween! Free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween", es: "🎃 ¡Pan de calabaza para Halloween! Gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween" } },
 ];
 
 const SOCIALS = [
@@ -144,7 +144,8 @@ export default function PromuoviMikiLab() {
     try { await navigator.clipboard.writeText(caption); setCopied(true); setTimeout(() => setCopied(false), 2000); toast.success(L("Post copiato! Incollalo su Instagram/Facebook", "Beitrag kopiert!", "Post copied! Paste it on Instagram/Facebook", "¡Publicación copiada!", "Post copié !", "پست کپی شد!")); }
     catch { toast.error("Copy failed"); }
   };
-  const seasonText = (SEASONAL.find((s) => s.id === season) || SEASONAL[0]).text;
+  const seasonRaw = (SEASONAL.find((s) => s.id === season) || SEASONAL[0]).text;
+  const seasonText = typeof seasonRaw === "string" ? seasonRaw : (seasonRaw[lang] || seasonRaw.it);
   const copySeason = async () => {
     try { await navigator.clipboard.writeText(seasonText); setSeasonCopied(true); setTimeout(() => setSeasonCopied(false), 2000); toast.success(L("Post stagionale copiato!", "Saisonaler Beitrag kopiert!", "Seasonal post copied!", "¡Copiado!", "Copié !", "کپی شد!")); }
     catch { toast.error("Copy failed"); }

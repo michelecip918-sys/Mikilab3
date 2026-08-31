@@ -10,7 +10,7 @@ import { getPinned, togglePinned } from "@/lib/pinnedTools";
 export default function ToolsDirectory({ onOpenTool }) {
   const { lang } = useLang();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
-  const [open, setOpen] = useState("genera");
+  const [open, setOpen] = useState("crea");
   const [q, setQ] = useState("");
   const [pinned, setPinned] = useState(() => getPinned());
 
