@@ -2927,3 +2927,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Backend `server.py`: rimossi endpoint `/community/market` (GET/POST/DELETE) + modello `MarketListingReq`. Codice Stripe residuo lasciato INERTE (già spento da `PAYMENTS_ENABLED=false` e non più chiamato dal frontend) per non destabilizzare il deploy.
 - Verifica: frontend compila (1 warning preesistente); backend riparte pulito (148 ricette); Shop mostra "tutto gratis" (0 menzioni abbonamento/lista d'attesa/mercatino); `/api/community/market` → 404; `/api/recipes` → 200.
 
+
+## v-fork.57 (2026-06, fork) — Inventario del sito in PDF elegante (Admin)
+- Nuovo `src/data/siteInventory.js` (`siteInventoryMd`, IT+EN) con la lista completa di sezioni/strumenti (senza monetizzazione).
+- `src/lib/planPdf.js`: aggiunto parametro `showDisclaimer` (default true) per omettere il disclaimer dei piani quando si esporta contenuto generico.
+- `components/AdminPanel.jsx`: nuovo blocco `admin-inventory` in cima con pulsante `admin-inventory-pdf` -> genera PDF brandizzato col logo MikiLab riusando `exportPlanPdf`.
+- Verifica E2E (admin): apertura pannello via evento `mikilab-open-admin`, click -> download `mikilab-inventario-YYYY-MM-DD.pdf` (~147KB) + toast OK.

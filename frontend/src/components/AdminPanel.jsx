@@ -1,7 +1,9 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3, Music2, Instagram, Facebook } from "lucide-react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3, Music2, Instagram, Facebook, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
+import { exportPlanPdf } from "@/lib/planPdf";
+import { siteInventoryMd } from "@/data/siteInventory";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -32,6 +34,24 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [days, setDays] = useState("0"); // "0" = illimitato
   const [busy, setBusy] = useState(false);
   const [shop, setShop] = useState({ enabled: false, waitlist_count: 0 });
+  const [invBusy, setInvBusy] = useState(false);
+  const downloadInventory = async () => {
+    if (invBusy) return;
+    setInvBusy(true);
+    try {
+      await exportPlanPdf({
+        title: de ? "Inventar der Website" : "Inventario del sito",
+        plan: siteInventoryMd(lang === "en" ? "en" : "it"),
+        lang, showDisclaimer: false,
+        fileName: `mikilab-inventario-${new Date().toISOString().slice(0, 10)}.pdf`,
+      });
+      toast.success(de ? "PDF heruntergeladen" : "Inventario PDF scaricato");
+    } catch {
+      toast.error(de ? "PDF konnte nicht erstellt werden" : "Non sono riuscito a creare il PDF");
+    } finally {
+      setInvBusy(false);
+    }
+  };
   const [baBusy, setBaBusy] = useState(false);
   const notifyBakeAlong = async () => {
     setBaBusy(true);
@@ -249,6 +269,22 @@ export default function AdminPanel({ open, onOpenChange }) {
         <DialogDescription className="text-sm text-[#7E8A93]">
           {de ? "Verwalte Inhalte, Abonnenten und spezielle Zugänge." : "Gestisci contenuti, iscritti e accessi speciali."}
         </DialogDescription>
+
+        <div data-testid="admin-inventory" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">
+            <FileText className="w-4 h-4" /> {de ? "Website-Inventar" : "Inventario del sito"}
+          </p>
+          <p className="text-[12px] text-[#AEB8BF] leading-snug mt-1">
+            {de ? "Alle Bereiche und Werkzeuge von MikiLab in einem eleganten PDF mit Logo." : "Tutte le sezioni e gli strumenti di MikiLab in un PDF elegante col logo."}
+          </p>
+          <button
+            data-testid="admin-inventory-pdf" onClick={downloadInventory} disabled={invBusy}
+            className="mt-3 w-full bg-[#121212] dark:bg-[#1e1e1e] text-white font-semibold py-2.5 rounded-xl border-2 border-[#ff6b00] disabled:opacity-60 active:scale-98 transition-all flex items-center justify-center gap-2"
+          >
+            <FileText className="w-4 h-4 text-[#ff6b00]" />
+            {invBusy ? (de ? "PDF wird erstellt..." : "Creo il PDF...") : (de ? "Inventar als PDF" : "Scarica inventario PDF")}
+          </button>
+        </div>
 
         <div className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 space-y-3">
           <p className="flex items-center gap-2 text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">

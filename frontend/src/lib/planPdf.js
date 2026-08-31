@@ -46,7 +46,7 @@ const DISCLAIMER = {
 };
 const NOTE_LABEL = { it: "Note del fornaio", de: "Notizen des Bäckers", en: "Baker's notes", es: "Notas del panadero", fr: "Notes du boulanger" };
 
-export async function exportPlanPdf({ title = "Piano di Produzione", plan = "", bakerNote = "", lang = "it", fileName = "piano-produzione-mikilab.pdf", logoUrl } = {}) {
+export async function exportPlanPdf({ title = "Piano di Produzione", plan = "", bakerNote = "", lang = "it", fileName = "piano-produzione-mikilab.pdf", logoUrl, showDisclaimer = true } = {}) {
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
@@ -221,16 +221,18 @@ export async function exportPlanPdf({ title = "Piano di Produzione", plan = "", 
 
   // Disclaimer finale
   const disc = DISCLAIMER[lang] || DISCLAIMER.it;
-  doc.setFontSize(8.5); doc.setFont("helvetica", "italic");
-  const dLines = doc.splitTextToSize(disc, contentW - 20);
-  const dH = 16 + dLines.length * 11;
-  ensure(dH + 8);
-  y += 6;
-  doc.setFillColor(255, 250, 235); doc.setDrawColor(230, 190, 100); doc.setLineWidth(0.8);
-  doc.roundedRect(margin, y, contentW, dH, 6, 6, "FD");
-  doc.setTextColor(150, 110, 30);
-  doc.text(dLines, margin + 10, y + 13);
-  y += dH;
+  if (showDisclaimer) {
+    doc.setFontSize(8.5); doc.setFont("helvetica", "italic");
+    const dLines = doc.splitTextToSize(disc, contentW - 20);
+    const dH = 16 + dLines.length * 11;
+    ensure(dH + 8);
+    y += 6;
+    doc.setFillColor(255, 250, 235); doc.setDrawColor(230, 190, 100); doc.setLineWidth(0.8);
+    doc.roundedRect(margin, y, contentW, dH, 6, 6, "FD");
+    doc.setTextColor(150, 110, 30);
+    doc.text(dLines, margin + 10, y + 13);
+    y += dH;
+  }
 
   drawFooter();
   doc.save(fileName);
