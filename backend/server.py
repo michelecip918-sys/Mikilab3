@@ -3546,6 +3546,86 @@ async def scan_recipe(payload: ScanRecipeRequest, user: dict = Depends(require_p
     return data
 
 
+class WebRecipeRequest(BaseModel):
+    query: str
+    lang: str = "it"
+
+
+# Cerca una ricetta (per nome/descrizione/URL) e la RICOSTRUISCE adattata al "Metodo Mikilab".
+# Metodo Mikilab = indiretto con prefermento (lievito madre o poolish), Miglioratore Naturale Pro 2%
+# sul peso farina, riposo in cella a 16°C, adatto al farro. Restituisce lo stesso schema di scan-recipe.
+WEB_RECIPE_LANG = {
+    "it": "Scrivi name, procedure e notes in ITALIANO.",
+    "de": "Schreibe name, procedure und notes auf DEUTSCH.",
+    "en": "Write name, procedure and notes in ENGLISH.",
+    "es": "Escribe name, procedure y notes en ESPAÑOL.",
+    "fr": "Écris name, procedure et notes en FRANÇAIS.",
+    "fa": "name، procedure و notes را به زبان فارسی بنویس.",
+}
+
+WEB_RECIPE_PROMPT = (
+    "Sei un mastro fornaio. L'utente ti dà il NOME (o una breve descrizione, o un link) di una ricetta di panificazione. "
+    "Ricostruisci la ricetta classica basandoti sulla tua conoscenza e RIADATTALA al «METODO MIKILAB», che è così definito:\n"
+    "- Metodo INDIRETTO con prefermento: usa lievito madre (preferment_type='lm') se adatto, altrimenti poolish (preferment_type='poolish').\n"
+    "- Aggiungi SEMPRE agli extra_ingredients una voce {\"name\": \"Miglioratore Naturale Pro\", \"percent\": 2, \"grams\": null}.\n"
+    "- Riposo/maturazione in CELLA a 16°C (indicalo nel procedimento). Idratazione realistica per il prodotto.\n"
+    "- Base di calcolo: flour_grams = 1000 g; calcola water_grams dall'idratazione; salt_grams tipico ~2%.\n"
+    "- Se ha senso, aggiungi in 'notes' una breve variante al FARRO (Dinkel): -4% acqua, impasto più delicato.\n"
+    "Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, con ESATTAMENTE queste chiavi "
+    "(usa null se un dato non è pertinente, NON lasciare campi fuori schema):\n"
+    "{schema}\n"
+    "Converti tutte le quantità in grammi. Metti il procedimento passo-passo (numerato) in 'procedure'. "
+    "{lang_line} Non aggiungere spiegazioni: SOLO il JSON."
+)
+
+
+@api_router.post("/maestro/web-recipe")
+async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    q = (payload.query or "").strip()
+    if len(q) < 2:
+        raise HTTPException(status_code=422, detail="Scrivi il nome di una ricetta da cercare")
+    lang_line = WEB_RECIPE_LANG.get(payload.lang, WEB_RECIPE_LANG["it"])
+    prompt = WEB_RECIPE_PROMPT.replace("{schema}", SCAN_FIELDS_SCHEMA).replace("{lang_line}", lang_line)
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"webrec-{uuid.uuid4()}",
+        system_message="Ricostruisci ricette di panificazione adattate al Metodo Mikilab e restituisci solo JSON valido.",
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2200)
+    user_msg = UserMessage(text=f"{prompt}\n\nRICETTA RICHIESTA: {q}")
+    text = ""
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("web-recipe error")
+        raise HTTPException(status_code=500, detail="Errore nella ricerca della ricetta")
+    raw = text.strip()
+    if raw.startswith("```"):
+        raw = raw.strip("`")
+        raw = raw[raw.find("{"):]
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Ricetta non trovata")
+    try:
+        data = json.loads(raw[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile ricostruire la ricetta")
+    # Sicurezza: garantisci la presenza del Miglioratore Naturale Pro al 2% negli extra.
+    exs = data.get("extra_ingredients") or []
+    if not any(isinstance(x, dict) and "miglioratore" in (x.get("name") or "").lower() for x in exs):
+        exs.append({"name": "Miglioratore Naturale Pro", "percent": 2, "grams": None})
+        data["extra_ingredients"] = exs
+    if not data.get("method_type"):
+        data["method_type"] = "indiretto"
+    return data
+
+
+
 class ScanPdfRequest(BaseModel):
     pdf_base64: str
     lang: str = "it"

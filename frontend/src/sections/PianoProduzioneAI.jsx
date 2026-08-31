@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download, Globe } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -152,6 +152,7 @@ export const TOOLS = [
   { id: "sequenze", Icon: SlidersHorizontal, cat: "panificazione", kind: "calcola", it: "Calcolatore Metodo & Sequenze IA", de: "Methode & Abläufe (KI)", en: "Method & Sequences (AI)", es: "Método y Secuencias (IA)" },
   { id: "twin", Icon: FlaskConical, cat: "panificazione", kind: "calcola", it: "Digital Twin", de: "Teig-Zwilling", en: "Dough Twin" },
   { id: "cosafare", Icon: Search, cat: "panificazione", kind: "crea", it: "Cosa posso fare?", de: "Was kann ich machen?", en: "What can I make?", es: "¿Qué puedo hacer?" },
+  { id: "webrecipe", Icon: Globe, cat: "panificazione", kind: "crea", it: "Cerca & Adatta Ricetta", de: "Rezept suchen & anpassen", en: "Find & Adapt Recipe", es: "Buscar y Adaptar Receta" },
   { id: "stampi", Icon: Cookie, cat: "panificazione", kind: "calcola", it: "Stampi & Pirottini", de: "Formen-Rechner", en: "Pan Calculator", es: "Calculadora Moldes" },
   { id: "bilancia", Icon: Scale, cat: "panificazione", kind: "calcola", it: "Bilancia Smart", de: "Smarte Waage", en: "Smart Scale" },
   { id: "pesata", Icon: Scale, cat: "panificazione", kind: "calcola", it: "Pesata Guidata", de: "Geführtes Wiegen", en: "Guided Weighing" },
