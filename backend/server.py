@@ -5486,26 +5486,30 @@ async def admin_send_daily_digest(admin: dict = Depends(require_admin)):
 
 
 @api_router.get("/admin/email-report")
-async def admin_email_report(admin: dict = Depends(require_admin)):
-    """Report invii email (digest/istantanei) degli ultimi 7 giorni + coda in attesa."""
+async def admin_email_report(days: int = 7, admin: dict = Depends(require_admin)):
+    """Report invii email (digest/istantanei) + coda in attesa. days = 7 | 30."""
     from datetime import date, timedelta
+    span = 30 if int(days) >= 30 else 7
     queued = await db.email_digest_queue.find({}, {"_id": 0, "user_id": 1}).to_list(5000)
     queue_users = len({q.get("user_id") for q in queued if q.get("user_id")})
-    days = [(date.today() - timedelta(days=i)).isoformat() for i in range(7)]
-    since = min(days)
-    logs = await db.email_logs.find({"day": {"$gte": since}}, {"_id": 0}).to_list(20000)
-    by_day, by_type, users, total = {}, {}, set(), 0
+    day_list = [(date.today() - timedelta(days=i)).isoformat() for i in range(span)]
+    since = min(day_list)
+    logs = await db.email_logs.find({"day": {"$gte": since}}, {"_id": 0}).to_list(50000)
+    by_day, by_type, by_channel, users, total = {}, {}, {}, set(), 0
     for l in logs:
         cnt = int(l.get("count") or 1)
         total += cnt
         by_day[l.get("day")] = by_day.get(l.get("day"), 0) + cnt
         k = l.get("kind") or "other"
         by_type[k] = by_type.get(k, 0) + cnt
+        ch = (l.get("meta") or {}).get("channel")
+        if ch:
+            by_channel[ch] = by_channel.get(ch, 0) + cnt
         if l.get("to"):
             users.add(l["to"])
-    daily = [{"date": d, "count": by_day.get(d, 0)} for d in sorted(days)]
-    return {"queue_items": len(queued), "queue_users": queue_users,
-            "total": total, "users": len(users), "by_type": by_type, "daily": daily}
+    daily = [{"date": d, "count": by_day.get(d, 0)} for d in sorted(day_list)]
+    return {"queue_items": len(queued), "queue_users": queue_users, "days": span,
+            "total": total, "users": len(users), "by_type": by_type, "by_channel": by_channel, "daily": daily}
 
 
 @api_router.get("/community/stats")
@@ -6391,7 +6395,7 @@ async def _touch_streak(user_id: str):
 @api_router.get("/streak")
 async def get_streak(user: dict = Depends(current_user)):
     from datetime import date, timedelta
-    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "activity_last": 1, "streak_current": 1, "streak_best": 1})
+    u = await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0, "activity_last": 1, "streak_current": 1, "streak_best": 1, "badges": 1})
     today = date.today().isoformat()
     yest = (date.today() - timedelta(days=1)).isoformat()
     last = (u or {}).get("activity_last")
@@ -6401,9 +6405,12 @@ async def get_streak(user: dict = Depends(current_user)):
         cur = 0
     best = int((u or {}).get("streak_best") or 0)
     nxt = next((m for m in STREAK_MILESTONES if m > cur), None)
+    # Traguardi già CONQUISTATI (persistiti in badges: "streak_N"), a prescindere dallo streak attuale.
+    badges = set((u or {}).get("badges") or [])
+    earned = [m for m in STREAK_MILESTONES if f"streak_{m}" in badges or best >= m]
     return {"current": cur, "best": best, "active_today": last == today,
             "milestones": [{"days": m, "reached": cur >= m} for m in STREAK_MILESTONES],
-            "next": nxt}
+            "earned": earned, "next": nxt}
 
 
 @api_router.get("/hall-of-fame")

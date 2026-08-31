@@ -54,7 +54,7 @@ export default function AdminPanel({ open, onOpenChange }) {
     try {
       const r = await adminApi.sendDailyDigest();
       toast.success((de ? "Zusammenfassungen gesendet: " : "Riepiloghi inviati: ") + (r.users_notified ?? 0) + ` (${r.queued_items ?? 0})`);
-      try { setEmailRep(await adminApi.emailReport()); } catch { /* */ }
+      try { setEmailRep(await adminApi.emailReport(emailDays)); } catch { /* */ }
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setBaBusy(false); }
   };
@@ -67,6 +67,11 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [nlTesting, setNlTesting] = useState(false);
   const [nlHistory, setNlHistory] = useState([]);
   const [emailRep, setEmailRep] = useState(null);
+  const [emailDays, setEmailDays] = useState(7);
+  const loadEmailReport = useCallback(async (d) => {
+    try { setEmailRep(await adminApi.emailReport(d)); } catch { /* */ }
+  }, []);
+  const changeEmailDays = (d) => { setEmailDays(d); setEmailRep(null); loadEmailReport(d); };
 
   const downloadCsv = () => {
     const rows = [["email", "lang", "source", "created_at"], ...subs.map((s) => [s.email, s.lang || "", s.source || "", s.created_at || ""])];
@@ -117,7 +122,7 @@ export default function AdminPanel({ open, onOpenChange }) {
       try { setShop(await adminApi.shopSettings()); } catch { /* */ }
       try { const n = await adminApi.newsletter(); setSubs(n.subscribers || []); } catch { /* */ }
       try { const h = await adminApi.newsletterHistory(); setNlHistory(h.campaigns || []); } catch { /* */ }
-      try { setEmailRep(await adminApi.emailReport()); } catch { /* */ }
+      try { setEmailRep(await adminApi.emailReport(emailDays)); } catch { /* */ }
       try {
         const s = await siteSettingsApi.get();
         setSettings({ whatsapp_number: s.whatsapp_number || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
@@ -272,11 +277,21 @@ export default function AdminPanel({ open, onOpenChange }) {
           </button>
         </div>
 
-        {/* Report invii email (digest + istantanei) ultimi 7 giorni */}
+        {/* Report invii email (digest + istantanei) */}
         <div data-testid="admin-email-report" className="rounded-2xl bg-[#8C6B4A]/12 border border-[#8C6B4A]/35 p-4 mt-2">
-          <p className="flex items-center gap-1.5 text-sm font-bold text-[#a37b52] dark:text-[#d8b48a] mb-2">
-            <BarChart3 className="w-4 h-4" /> {de ? "E-Mail-Bericht (7 Tage)" : "Report invii email (7 giorni)"}
-          </p>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <p className="flex items-center gap-1.5 text-sm font-bold text-[#a37b52] dark:text-[#d8b48a]">
+              <BarChart3 className="w-4 h-4" /> {de ? "E-Mail-Bericht" : "Report invii email"}
+            </p>
+            <div className="flex items-center gap-1 shrink-0">
+              {[7, 30].map((d) => (
+                <button key={d} data-testid={`email-report-days-${d}`} onClick={() => changeEmailDays(d)}
+                  className={`text-[11px] font-bold rounded-lg px-2 py-1 border transition-all active:scale-95 ${emailDays === d ? "bg-[#8C6B4A] text-white border-[#8C6B4A]" : "bg-white dark:bg-[#181818] text-[#a37b52] dark:text-[#d8b48a] border-[#8C6B4A]/40"}`}>
+                  {d} {de ? "Tage" : "gg"}
+                </button>
+              ))}
+            </div>
+          </div>
           {!emailRep ? (
             <p className="text-[12px] text-[#7E8A93]">{de ? "Wird geladen…" : "Caricamento…"}</p>
           ) : (
@@ -295,27 +310,43 @@ export default function AdminPanel({ open, onOpenChange }) {
                   <p className="text-[10px] text-[#7E8A93] leading-tight">{de ? "In Warteschlange" : "In coda"}</p>
                 </div>
               </div>
-              <div className="flex items-end justify-between gap-1.5 h-20 mb-1">
-                {emailRep.daily.map((d) => {
-                  const max = Math.max(1, ...emailRep.daily.map((x) => x.count));
-                  const h = Math.round((d.count / max) * 100);
-                  return (
-                    <div key={d.date} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
-                      <span className="text-[9px] font-bold text-[#a37b52] dark:text-[#d8b48a]">{d.count || ""}</span>
-                      <div className="w-full rounded-t bg-[#8C6B4A]" style={{ height: `${Math.max(4, h)}%` }} />
-                      <span className="text-[8px] text-[#7E8A93]">{d.date.slice(5)}</span>
+              {emailRep.total === 0 ? (
+                <p data-testid="email-report-empty" className="text-[12px] text-[#7E8A93] italic text-center py-2">
+                  {de ? `Keine Sendungen in den letzten ${emailRep.days} Tagen.` : `Nessun invio negli ultimi ${emailRep.days} giorni.`}
+                </p>
+              ) : (
+                <>
+                  <div className="flex items-end justify-between gap-1 h-20 mb-1">
+                    {emailRep.daily.map((d) => {
+                      const max = Math.max(1, ...emailRep.daily.map((x) => x.count));
+                      const h = Math.round((d.count / max) * 100);
+                      return (
+                        <div key={d.date} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                          <span className="text-[9px] font-bold text-[#a37b52] dark:text-[#d8b48a]">{d.count || ""}</span>
+                          <div className="w-full rounded-t bg-[#8C6B4A]" style={{ height: `${Math.max(4, h)}%` }} />
+                          {emailRep.daily.length <= 10 && <span className="text-[8px] text-[#7E8A93]">{d.date.slice(5)}</span>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {Object.entries(emailRep.by_type || {}).map(([k, v]) => (
+                      <span key={k} className="text-[10px] font-bold text-[#a37b52] dark:text-[#d8b48a] bg-[#8C6B4A]/15 border border-[#8C6B4A]/30 rounded-full px-2 py-0.5">
+                        {k === "digest" ? (de ? "Zusammenfassung" : "Riepilogo") : k === "instant" ? (de ? "Sofort" : "Istantaneo") : k}: {v}
+                      </span>
+                    ))}
+                  </div>
+                  {Object.keys(emailRep.by_channel || {}).length > 0 && (
+                    <div data-testid="email-report-channels" className="mt-2">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{de ? "Nach Kanal" : "Per canale"}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(emailRep.by_channel).sort((a, b) => b[1] - a[1]).map(([ch, v]) => (
+                          <span key={ch} className="text-[10px] font-bold text-[#2f5a2f] dark:text-[#9cd6a0] bg-[#3a6b3a]/15 border border-[#3a6b3a]/30 rounded-full px-2 py-0.5">#{ch}: {v}</span>
+                        ))}
+                      </div>
                     </div>
-                  );
-                })}
-              </div>
-              {Object.keys(emailRep.by_type || {}).length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {Object.entries(emailRep.by_type).map(([k, v]) => (
-                    <span key={k} className="text-[10px] font-bold text-[#a37b52] dark:text-[#d8b48a] bg-[#8C6B4A]/15 border border-[#8C6B4A]/30 rounded-full px-2 py-0.5">
-                      {k === "digest" ? (de ? "Zusammenfassung" : "Riepilogo") : k === "instant" ? (de ? "Sofort" : "Istantaneo") : k}: {v}
-                    </span>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </>
           )}

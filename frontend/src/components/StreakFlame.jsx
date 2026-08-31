@@ -51,7 +51,7 @@ export default function StreakFlame() {
     30: L("Maestro dell'Abitudine", "Meister der Gewohnheit", "Habit Master", "Maestro del Hábito", "Maître de l'Habitude", "استاد عادت"),
     100: L("Leggenda del Forno", "Ofen-Legende", "Oven Legend", "Leyenda del Horno", "Légende du Four", "افسانهٔ تنور"),
   };
-  const topRewardDays = [100, 30, 7].find((d) => n >= d);
+  const topRewardDays = [100, 30, 7].find((d) => (s.earned || []).includes(d) || n >= d);
 
   return (
     <div data-testid="streak-badge" className={`mb-4 rounded-2xl border px-4 py-3 ${active ? "border-[#ff6b00]/50 bg-[#ff6b00]/12" : "border-[#2e2e2e] bg-[#181818]"}`}>

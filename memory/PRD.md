@@ -2815,3 +2815,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - NOTA utente: quiz/gamification NON vanno nel Laboratorio (restano in Home/Impara/Profilo).
 - Test iteration_143: backend 11/11 pytest, frontend 100% flussi (3 nit LOW cosmetici). AdminPanel resta IT/DE (admin-only) — accettato.
 
+
+## v-fork.40 (2026-08, fork) — Rifiniture report email + Streak badge persistenti
+- **Report email esteso** (`GET /api/admin/email-report?days=7|30`): parametro `days` (7 o 30), nuovo aggregato `by_channel` (dettaglio per canale dalle email istantanee). UI `AdminPanel.jsx`: toggle `email-report-days-7/30`, dettaglio "Per canale" (`email-report-channels`), e **stato vuoto** (`email-report-empty`) "Nessun invio negli ultimi N giorni" quando total=0. `adminApi.emailReport(days)`.
+- **Streak badge persistenti**: `GET /api/streak` ora ritorna `earned` (traguardi conquistati da `badges` streak_N o da `best`), a prescindere dallo streak corrente. `StreakFlame.jsx` mostra il badge-ricompensa (7/30/100) anche se la serie si è interrotta (usa `s.earned`).
+- Verificato: backend syntax + curl (days=30 → daily[30], by_channel; streak → earned[]) + build frontend ok.
+
