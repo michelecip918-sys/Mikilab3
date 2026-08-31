@@ -2878,3 +2878,6 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 
 ## v-fork.48 (2026-08, fork) — Post di benvenuto TikTok
 - Creata locandina di lancio verticale 9:16 public/welcome-tiktok.png (BENVENUTI multilingue IT/DE/EN/ES/FR, baker che saluta, 100% gratis, QR reale tracciato + TikTok @mikilab.de + mikilab.de). Servita HTTP 200.
+
+## v-fork.49 (2026-08, fork) — Serie di lancio TikTok (3 post)
+- Creati public/launch-1-presentazione.png (Ciao sono Michele), launch-2-ricetta.png (Ricetta gratis focaccia), launch-3-community.png (Unisciti alla community). Verticali 9:16, brand, QR reale tracciato + TikTok @mikilab.de + mikilab.de via PIL. Tutti HTTP 200.
