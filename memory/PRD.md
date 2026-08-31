@@ -3045,3 +3045,11 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Non implementato (futuro): drag-and-drop per riordinare gli strumenti (le "tre linee") — al momento c'è solo on/off. i18n: nuove stringhe inline in 6 lingue, nessun dizionario toccato.
 - NB: cambi in PREVIEW → REDEPLOY per mikilab.de.
 
+
+
+## v-fork (2026-06) — Comandi vocali nel Laboratorio (VoiceCommand)
+- **`components/VoiceCommand.jsx`** (Web Speech API, `webkitSpeechRecognition`, nessuna chiave): il pulsante Voce fisso ora ASCOLTA e apre gli strumenti a voce. Riconosce: (1) alias curati parola-chiave → id strumento (es. "apri timer"→timer, "temperatura acqua"→acqua, "le mie ricette"→custodite, "costi"→foodcost, "convertitore lieviti"→convlievito); (2) navigazione tab via evento `mikilab-goto` ("vai alle ricette", "impara", "social", "home"); (3) match generico sul nome dello strumento nella lingua attiva. Verbi filtrati (apri/vai a/mostra/open/go to/...). Feedback via toast ("Apro: …" / "Vado a: …" / "Non ho capito: …"). `rec.lang` mappato per it/de/en/es/fr/fa.
+- Cablato in `Maestro.jsx` (sostituisce il vecchio pulsante statico che apriva "manisporche"): `<VoiceCommand onOpenTool={openTool} />`, testid `voice-command-btn`.
+- **Verifica**: UI e wiring confermati a schermo (pulsante presente, handler eseguito). Il riconoscimento vocale reale NON è testabile in headless (niente microfono) → va provato su dispositivo reale (Chrome/Safari). i18n inline 6 lingue, nessun dizionario toccato.
+- NB: cambi in PREVIEW → REDEPLOY per mikilab.de.
+

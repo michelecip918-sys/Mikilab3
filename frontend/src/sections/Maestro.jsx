@@ -71,6 +71,7 @@ import ToolsDirectory from "@/components/ToolsDirectory";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import LabModeBig from "@/components/LabModeBig";
+import VoiceCommand from "@/components/VoiceCommand";
 import TimetableLievitazione from "@/sections/TimetableLievitazione";
 
 
@@ -290,11 +291,8 @@ export default function Maestro() {
         <WhatsAppHelp context="laboratorio" />
       </div>
 
-      {/* Comandi vocali sempre raggiungibili: lavorare a mani libere/infarinate */}
-      <button data-testid="voice-command-btn" onClick={() => openTool("manisporche")}
-        className="fixed bottom-24 right-4 z-50 h-16 px-5 rounded-full bg-[#ff6b00] hover:bg-[#e05e00] text-white font-extrabold text-base shadow-2xl flex items-center gap-2.5 ring-4 ring-[#ff6b00]/25 active:scale-95 transition-all">
-        <Mic className="w-6 h-6" /> {tri("Voce", "Stimme", "Voice", "Voz")}
-      </button>
+      {/* Comandi vocali sempre raggiungibili: apri qualsiasi strumento a mani libere */}
+      <VoiceCommand onOpenTool={openTool} />
     </div>
   );
 }
