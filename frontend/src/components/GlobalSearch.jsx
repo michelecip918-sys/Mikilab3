@@ -31,10 +31,10 @@ export default function GlobalSearch() {
 
   const tools = useMemo(() => TOOLS.map((tl) => ({ id: tl.id, Icon: tl.Icon, label: tl[lang] || tl.it })), [lang]);
   const guides = useMemo(() => [
-    { id: "g-enciclopedia", tab: "ricette", label: tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain") },
-    { id: "g-farine", tab: "ricette", label: tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines") },
+    { id: "g-enciclopedia", tab: "ricette", view: "guida", label: tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain") },
+    { id: "g-farine", tab: "ricette", view: "farine", label: tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines") },
     { id: "g-impara", tab: "impara", label: tri("Impara a fare il pane", "Brot backen lernen", "Learn to bake bread", "Aprende a hacer pan", "Apprendre à faire le pain") },
-    { id: "g-vetrina", tab: "ricette", label: tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes") },
+    { id: "g-vetrina", tab: "ricette", view: "focacce", label: tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes") },
   ], [lang]); // eslint-disable-line
 
   const nq = norm(q.trim());
@@ -47,14 +47,16 @@ export default function GlobalSearch() {
   const goto = (tab) => window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab } }));
   const openRecipe = (id) => { goto("ricette"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 260); close(); };
   const openTool = (id) => { try { localStorage.setItem("mikilab_pending_tool", id); } catch { /* */ } goto("maestro"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-lab-tool", { detail: { id } })), 260); close(); };
-  const openGuide = (g) => { goto(g.tab); close(); };
+  const openGuide = (g) => { goto(g.tab); if (g.view) setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: g.view } })), 280); close(); };
 
   if (!open) return null;
 
-  const Row = ({ testid, Icon, label, onClick }) => (
+  const Row = ({ testid, Icon, img, label, onClick }) => (
     <button data-testid={testid} onClick={onClick}
       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#ff6b00]/10 active:scale-98 transition-all text-left">
-      <span className="w-8 h-8 rounded-lg bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Icon className="w-4 h-4 text-[#ff6b00]" /></span>
+      {img
+        ? <img src={img} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0 bg-[#1e1e1e]" onError={(e) => { e.currentTarget.style.visibility = "hidden"; }} />
+        : <span className="w-8 h-8 rounded-lg bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Icon className="w-4 h-4 text-[#ff6b00]" /></span>}
       <span className="text-sm text-[#e4eff8] leading-tight">{label}</span>
     </button>
   );
@@ -76,7 +78,7 @@ export default function GlobalSearch() {
           {recHits.length > 0 && (
             <div className="mb-1">
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00] px-3 pt-2 pb-1">{tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها")}</p>
-              {recHits.map((r) => <Row key={r.id} testid={`gs-recipe-${r.id}`} Icon={BookOpen} label={rLoc(r, "name", lang)} onClick={() => openRecipe(r.id)} />)}
+              {recHits.map((r) => <Row key={r.id} testid={`gs-recipe-${r.id}`} img={r.image_url} Icon={BookOpen} label={rLoc(r, "name", lang)} onClick={() => openRecipe(r.id)} />)}
             </div>
           )}
           {toolHits.length > 0 && (

@@ -2745,3 +2745,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Ricerca globale (NEW)**: `components/GlobalSearch.jsx` — overlay lanciato dal pulsante `header-search-btn` nell'Header (evento `mikilab-open-search`). Cerca in Ricette (recipesApi mikilab), Strumenti (`TOOLS` di PianoProduzioneAI, label localizzata) e Guide. Click: ricetta→goto ricette + `mikilab-open-recipe`; strumento→`mikilab_pending_tool` + goto maestro + `mikilab-open-lab-tool`; guida→goto tab. Verificato: cerca "pizza" → 4 ricette, click apre la scheda completa.
 - **Badge novità sui canali forum**: in `Community.jsx` traccio `chSeen` per canale in localStorage `mikilab_channel_seen`; pallino rosso (`community-new-dot-<id>`) sul chip quando l'ultimo post del canale è più recente dell'ultima visita; `selectFilter` marca il canale come visto all'apertura.
 - Tutto verificato via screenshot/DOM (ricerca + navigazione), 0 crash console (il timeout nel test era il modale ricetta aperto). Solo frontend.
+
+
+---
+## v-fork.32 (2026-06, fork) — Ricerca con anteprime, guide deep-link, pallino tab Social
+- **Ricerca globale con anteprime**: in `GlobalSearch.jsx` i risultati Ricette mostrano la miniatura foto (`img={r.image_url}`) al posto dell'icona. Verificato: "focaccia" → 8 risultati, 8 con foto.
+- **Guide deep-link**: le guide hanno un campo `view`; al click `openGuide` fa goto ricette + dispatch `mikilab-ricette-view {view}`. `Ricette.jsx` ora ascolta l'evento e apre la sotto-vista esatta (guida/farine/focacce). Verificato: "flour" → apre direttamente "Tabelle & Farine" (`ricette-farine`).
+- **Pallino novità sul tab Social**: `BottomNav.jsx` polla `communityApi.list("all")` (mount + ogni 45s + focus + evento `mikilab-social-refresh`), confronta l'ultimo post con `mikilab_social_seen` (localStorage) e mostra `nav-community-newdot` quando ci sono post nuovi; si azzera aprendo il tab Social (`markSocialSeen`). Convive col badge numerico notifiche (mostrato solo se non c'è il conteggio). Verificato a schermo.
+- Tutto verificato via screenshot/DOM, 0 crash console. Solo frontend.

@@ -1,7 +1,7 @@
 import { Home, BookOpen, Wrench, GraduationCap, Users } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useLang } from "@/i18n/LanguageContext";
-import { notificationsApi } from "@/lib/api";
+import { notificationsApi, communityApi } from "@/lib/api";
 import { mkTri } from "@/i18n/triMaps";
 
 // Navigazione "pale da forno": ogni sezione è una pala di legno con icona incisa.
@@ -9,17 +9,28 @@ export default function BottomNav({ active, onChange }) {
   const { t, lang } = useLang();
   const triNav = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [unread, setUnread] = useState(0);
+  const [socialNew, setSocialNew] = useState(false);
   const loadUnread = useCallback(async () => {
     try { const d = await notificationsApi.list(); setUnread(d.unread || 0); } catch { setUnread(0); }
   }, []);
+  const checkSocial = useCallback(async () => {
+    try {
+      const posts = await communityApi.list("all");
+      const latest = (posts || []).reduce((m, p) => (p.created_at && p.created_at > m ? p.created_at : m), "");
+      let seen = ""; try { seen = localStorage.getItem("mikilab_social_seen") || ""; } catch { /* */ }
+      setSocialNew(!!latest && latest > seen);
+    } catch { setSocialNew(false); }
+  }, []);
   useEffect(() => {
-    loadUnread();
-    const id = setInterval(loadUnread, 45000);
-    const onRefresh = () => loadUnread();
+    loadUnread(); checkSocial();
+    const id = setInterval(() => { loadUnread(); checkSocial(); }, 45000);
+    const onRefresh = () => { loadUnread(); checkSocial(); };
     window.addEventListener("mikilab-notif-refresh", onRefresh);
+    window.addEventListener("mikilab-social-refresh", checkSocial);
     window.addEventListener("focus", onRefresh);
-    return () => { clearInterval(id); window.removeEventListener("mikilab-notif-refresh", onRefresh); window.removeEventListener("focus", onRefresh); };
-  }, [loadUnread]);
+    return () => { clearInterval(id); window.removeEventListener("mikilab-notif-refresh", onRefresh); window.removeEventListener("mikilab-social-refresh", checkSocial); window.removeEventListener("focus", onRefresh); };
+  }, [loadUnread, checkSocial]);
+  const markSocialSeen = () => { try { localStorage.setItem("mikilab_social_seen", new Date().toISOString()); } catch { /* */ } setSocialNew(false); };
 
   const norm = ["news", "enciclopedia"].includes(active) ? "impara" : active;
   const TABS = [
@@ -45,7 +56,7 @@ export default function BottomNav({ active, onChange }) {
             <button
               key={id}
               data-testid={`nav-tab-${id}`}
-              onClick={() => onChange(id)}
+              onClick={() => { if (id === "community") markSocialSeen(); onChange(id); }}
               aria-pressed={on}
               className="group relative flex flex-col items-center justify-end min-h-[82px] pb-0.5 active:scale-95 transition-transform"
               style={{ ["--rot"]: `${ROT[i]}deg` }}
@@ -73,6 +84,9 @@ export default function BottomNav({ active, onChange }) {
                 )}
                 {id === "community" && unread > 0 && (
                   <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#2b190c]">{unread > 9 ? "9+" : unread}</span>
+                )}
+                {id === "community" && socialNew && unread === 0 && (
+                  <span data-testid="nav-community-newdot" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#E4572E] ring-2 ring-[#2b190c]" />
                 )}
                 {/* manico della pala: lungo e spesso come una vera pala del fornaio */}
                 <span aria-hidden className={`absolute left-1/2 -translate-x-1/2 top-full w-[9px] rounded-b-full wood-surface border-x border-b border-[#3e2510] shadow-[0_2px_4px_rgba(30,15,4,.5)] ${on ? "h-[26px]" : "h-[21px]"}`}>

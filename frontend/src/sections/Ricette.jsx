@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed, Compass } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import AvatarBubbles from "@/components/AvatarBubbles";
@@ -25,6 +25,11 @@ export default function Ricette() {
   const [custoditeInit, setCustoditeInit] = useState(null);
   const coll = "mikilab";
   useBackClose(view !== "main", () => setView("main"));
+  useEffect(() => {
+    const h = (e) => { const v = e?.detail?.view; if (v) { setView(v); window.scrollTo(0, 0); } };
+    window.addEventListener("mikilab-ricette-view", h);
+    return () => window.removeEventListener("mikilab-ricette-view", h);
+  }, []);
 
   if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
   if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2e2e2e] dark:border-[#2e2e2e]"><Glossario /></div></Sub>;
