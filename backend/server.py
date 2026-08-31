@@ -5294,6 +5294,8 @@ async def share_preview(request: Request, lang: str = "it"):
 DEFAULT_SITE_SETTINGS = {
     "whatsapp_number": "491601253378",
     "tiktok_handle": "mikilab.de",  # senza @, usato per https://www.tiktok.com/@<handle>
+    "instagram_url": "",            # URL completo, vuoto = pulsante nascosto
+    "facebook_url": "",             # URL completo, vuoto = pulsante nascosto
     "avatar_bubbles": {},   # override keyed "impara.michele" -> {"it": "...", "de": "..."}
     "folder_covers": {},    # {"pane": "<url>", "panettoni": "<url>", ...}
 }
@@ -5302,7 +5304,7 @@ DEFAULT_SITE_SETTINGS = {
 def _merge_site_settings(doc):
     s = dict(DEFAULT_SITE_SETTINGS)
     if doc:
-        for k in ("whatsapp_number", "tiktok_handle", "avatar_bubbles", "folder_covers"):
+        for k in ("whatsapp_number", "tiktok_handle", "instagram_url", "facebook_url", "avatar_bubbles", "folder_covers"):
             if doc.get(k) is not None:
                 s[k] = doc[k]
     return s
@@ -5317,6 +5319,8 @@ async def get_site_settings():
 class SiteSettingsReq(BaseModel):
     whatsapp_number: Optional[str] = None
     tiktok_handle: Optional[str] = None
+    instagram_url: Optional[str] = None
+    facebook_url: Optional[str] = None
     avatar_bubbles: Optional[dict] = None
     folder_covers: Optional[dict] = None
 
@@ -5335,6 +5339,10 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
         if "tiktok.com/@" in h:
             h = h.split("tiktok.com/@", 1)[1].split("/")[0].split("?")[0]
         update["tiktok_handle"] = h
+    if body.instagram_url is not None:
+        update["instagram_url"] = body.instagram_url.strip()
+    if body.facebook_url is not None:
+        update["facebook_url"] = body.facebook_url.strip()
     if body.avatar_bubbles is not None:
         update["avatar_bubbles"] = body.avatar_bubbles
     if body.folder_covers is not None:
@@ -5531,6 +5539,38 @@ async def admin_email_logs(days: int = 30, admin: dict = Depends(require_admin))
             "channel": (r.get("meta") or {}).get("channel", ""), "count": r.get("count", 1),
             "created_at": r.get("created_at")} for r in rows]
     return {"rows": out, "days": span}
+
+
+class SocialClickReq(BaseModel):
+    channel: str
+
+
+@api_router.post("/social/click")
+async def social_click(body: SocialClickReq):
+    """Traccia i click sui link social del 'Seguici' (pubblico, fire-and-forget)."""
+    from datetime import date
+    ch = (body.channel or "").strip().lower()[:20]
+    if not ch:
+        return {"ok": False}
+    await db.social_clicks.update_one(
+        {"channel": ch, "day": date.today().isoformat()},
+        {"$inc": {"count": 1}}, upsert=True)
+    return {"ok": True}
+
+
+@api_router.get("/admin/social-report")
+async def admin_social_report(admin: dict = Depends(require_admin)):
+    """Report click social (totali per canale + andamento TikTok 7 giorni)."""
+    from datetime import date, timedelta
+    days = [(date.today() - timedelta(days=i)).isoformat() for i in range(7)]
+    docs = await db.social_clicks.find({}, {"_id": 0}).to_list(20000)
+    by_ch, daily_tt = {}, {d: 0 for d in days}
+    for x in docs:
+        ch = x.get("channel"); c = int(x.get("count") or 0)
+        by_ch[ch] = by_ch.get(ch, 0) + c
+        if ch == "tiktok" and x.get("day") in daily_tt:
+            daily_tt[x["day"]] += c
+    return {"totals": by_ch, "tiktok_daily": [{"date": d, "count": daily_tt[d]} for d in sorted(days)]}
 
 
 _stats_cache = {"data": None, "ts": 0.0}

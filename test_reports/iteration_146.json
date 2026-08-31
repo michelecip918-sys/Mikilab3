@@ -1,0 +1,28 @@
+{
+  "summary": "Iteration 146: verified (1) A5 flyer preview with 5 language chips + lightbox, (2) ES/FR flyer assets, (3) TikTok click tracking POST /api/social/click, (4) Admin social report card with 7-day chart, (5) Admin Instagram/Facebook URL fields with dynamic 'Seguici' button, (6) regression on TikTok handle + WhatsApp. Backend: 13/13 pytest passed (new file test_iter146_flyer_social.py). Frontend: all Playwright checks passed on mobile (390x844) and desktop (1920x4000). Final state restored: instagram_url='', facebook_url='', tiktok_handle='mikilab.de' (verified via GET /api/site-settings).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home (all sections)", "issues": ["NewsletterPopup (data-testid='newsletter-popup', z-[85], full-screen backdrop) appears a few seconds after load and blocks ALL clicks on the page until dismissed; automated/real users cannot interact with the flyer chips or 'Seguici' buttons while it is open. Not a new regression but it is the single biggest interaction blocker on Home."]},
+      {"screen": "AdminPanel · admin-social-report", "issues": ["Card labels are Italian-only ('Click social (Seguici)', 'TIKTOK · 7 GIORNI') - accepted per spec (AdminPanel IT/DE only).", "Days with 0 clicks render as a 1-2px orange line, hard to read as 'zero'; consider a faint baseline track + numeric labels."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter146_flyer_social.py", "/app/test_reports/pytest/iter146.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PromuoviMikiLab.jsx builds asset URLs with `${process.env.PUBLIC_URL}/...` — PUBLIC_URL is '' in this build so hrefs resolve correctly ('/locandina-mikilab-es.png'), but other places in the repo use `process.env.PUBLIC_URL || ''`; keep it consistent to avoid '/undefined/...' if the build ever sets it.",
+    "POST /api/social/click is unauthenticated and unrate-limited (single $inc per channel/day) — trivially inflatable. Acceptable for vanity metrics; consider IP-based throttling if the number is ever used for decisions.",
+    "GET /api/admin/social-report loads the whole social_clicks collection (to_list(20000)) and aggregates in Python; move to a Mongo aggregation with a {channel, day} filter once data grows.",
+    "AdminPanel.jsx is 710 lines and server.py 7832 lines — both exceed the 700-line guideline; consider splitting into feature modules/routers."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter146_flyer_social.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "One extra tiktok click row increment via POST /api/social/click (counter is cumulative, harmless). No other data created; IG/FB temporarily set then cleared.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Verified details — Flyer: chips flyer-lang-{it,de,en,es,fr} switch both the thumbnail src and promuovi-flyer-download href/download attr to /locandina-mikilab.png, -de, -en, -es, -fr; all 5 assets HTTP 200 image/png >10KB; lightbox flyer-lightbox opens on promuovi-flyer-preview, image loads (natural 848x1264, rendered 358x534 on mobile), closes via flyer-lightbox-close AND via backdrop click. Seguici: promuovi-social-tiktok href https://www.tiktok.com/@mikilab.de (handle from GET /api/site-settings), onClick fires POST /api/social/click {\"channel\":\"tiktok\"} (captured in network), promuovi-social-whatsapp present, instagram/facebook absent when URLs empty and present (href = saved URL) right after admin save. Admin: card admin-social-report shows social-report-tiktok counter (6 at test time) + 7 day bars (08-25..08-31); admin-site-settings has admin-tiktok-handle, admin-wa-number, admin-instagram-url, admin-facebook-url + admin-save-settings; save persists to GET /api/site-settings. TESTING TIPS: (a) NewsletterPopup overlay must be dismissed first via [data-testid=newsletter-popup-close]; (b) Home is public, no login needed for PromuoviMikiLab; admin login via header [data-testid=login-btn] -> auth-email/auth-password/auth-submit, then site-menu-open -> site-menu-admin; (c) in pytest, logging in on a shared requests.Session sets the session_token cookie — use a fresh requests call for negative auth tests.",
+  "rca_of_the_issue": "No product defects found. Two initial pytest failures and one Playwright failure were test-harness issues (shared authenticated session for negative auth tests; NewsletterPopup overlay intercepting clicks; `process` not defined inside page.evaluate) and were fixed in the test code."
+}

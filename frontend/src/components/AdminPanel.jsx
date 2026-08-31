@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3, Music2 } from "lucide-react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3, Music2, Instagram, Facebook } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
@@ -58,7 +58,8 @@ export default function AdminPanel({ open, onOpenChange }) {
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setBaBusy(false); }
   };
-  const [settings, setSettings] = useState({ whatsapp_number: "", tiktok_handle: "", avatar_bubbles: {}, folder_covers: {} });
+  const [settings, setSettings] = useState({ whatsapp_number: "", tiktok_handle: "", instagram_url: "", facebook_url: "", avatar_bubbles: {}, folder_covers: {} });
+  const [socialRep, setSocialRep] = useState(null);
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
   const [subs, setSubs] = useState([]);
@@ -134,9 +135,10 @@ export default function AdminPanel({ open, onOpenChange }) {
       try { const n = await adminApi.newsletter(); setSubs(n.subscribers || []); } catch { /* */ }
       try { const h = await adminApi.newsletterHistory(); setNlHistory(h.campaigns || []); } catch { /* */ }
       try { setEmailRep(await adminApi.emailReport(emailDays)); } catch { /* */ }
+      try { setSocialRep(await adminApi.socialReport()); } catch { /* */ }
       try {
         const s = await siteSettingsApi.get();
-        setSettings({ whatsapp_number: s.whatsapp_number || "", tiktok_handle: s.tiktok_handle || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
+        setSettings({ whatsapp_number: s.whatsapp_number || "", tiktok_handle: s.tiktok_handle || "", instagram_url: s.instagram_url || "", facebook_url: s.facebook_url || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
       } catch { /* */ }
       try { setMkRecipes(await recipesApi.list("mikilab")); } catch { /* */ }
     }
@@ -159,7 +161,7 @@ export default function AdminPanel({ open, onOpenChange }) {
     try {
       const clean = { ...settings, whatsapp_number: (settings.whatsapp_number || "").replace(/\D/g, ""), tiktok_handle: (settings.tiktok_handle || "").trim().replace(/^@/, "") };
       const r = await adminApi.setSiteSettings(clean);
-      setSettings({ whatsapp_number: r.whatsapp_number || "", tiktok_handle: r.tiktok_handle || "", avatar_bubbles: r.avatar_bubbles || {}, folder_covers: r.folder_covers || {} });
+      setSettings({ whatsapp_number: r.whatsapp_number || "", tiktok_handle: r.tiktok_handle || "", instagram_url: r.instagram_url || "", facebook_url: r.facebook_url || "", avatar_bubbles: r.avatar_bubbles || {}, folder_covers: r.folder_covers || {} });
       toast.success(de ? "Einstellungen gespeichert" : "Impostazioni salvate");
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setSavingSet(false); }
@@ -475,6 +477,45 @@ export default function AdminPanel({ open, onOpenChange }) {
           </div>
         </div>
 
+        {/* Statistiche click social (TikTok in evidenza) */}
+        <div data-testid="admin-social-report" className="rounded-2xl bg-[#8C6B4A]/12 border border-[#8C6B4A]/35 p-4 mt-2">
+          <p className="flex items-center gap-1.5 text-sm font-bold text-[#a37b52] dark:text-[#d8b48a] mb-2">
+            <Music2 className="w-4 h-4" /> {de ? "Social-Klicks" : "Click social (Seguici)"}
+          </p>
+          {!socialRep ? (
+            <p className="text-[12px] text-[#7E8A93]">{de ? "Wird geladen…" : "Caricamento…"}</p>
+          ) : (
+            <>
+              <div className="flex flex-wrap gap-2 mb-3">
+                <div className="rounded-xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3 py-2 text-center">
+                  <p data-testid="social-report-tiktok" className="font-display text-xl font-extrabold text-[#ff6b00]">{socialRep.totals?.tiktok || 0}</p>
+                  <p className="text-[10px] text-[#7E8A93] leading-tight">TikTok</p>
+                </div>
+                {Object.entries(socialRep.totals || {}).filter(([k]) => k !== "tiktok").map(([k, v]) => (
+                  <div key={k} className="rounded-xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3 py-2 text-center">
+                    <p className="font-display text-xl font-extrabold text-[#8C6B4A]">{v}</p>
+                    <p className="text-[10px] text-[#7E8A93] leading-tight capitalize">{k}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{de ? "TikTok · 7 Tage" : "TikTok · 7 giorni"}</p>
+              <div className="flex items-end justify-between gap-1 h-16">
+                {(socialRep.tiktok_daily || []).map((d) => {
+                  const max = Math.max(1, ...(socialRep.tiktok_daily || []).map((x) => x.count));
+                  const h = Math.round((d.count / max) * 100);
+                  return (
+                    <div key={d.date} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                      <span className="text-[9px] font-bold text-[#a37b52] dark:text-[#d8b48a]">{d.count || ""}</span>
+                      <div className="w-full rounded-t bg-[#ff6b00]" style={{ height: `${Math.max(4, h)}%` }} />
+                      <span className="text-[8px] text-[#7E8A93]">{d.date.slice(5)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+
         <div data-testid="admin-site-settings" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
           <p className="text-sm font-bold text-[#ff6b00] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
 
@@ -501,6 +542,26 @@ export default function AdminPanel({ open, onOpenChange }) {
                 placeholder="mikilab.de"
                 className="flex-1 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
             </div>
+          </div>
+
+          {/* Instagram / Facebook (predisposti: incolla l'URL quando aprirai i profili ufficiali) */}
+          <div>
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+              <Instagram className="w-4 h-4 text-[#E1306C]" /> {de ? "Instagram-URL (leer = ausgeblendet)" : "URL Instagram (vuoto = nascosto)"}
+            </label>
+            <input data-testid="admin-instagram-url" value={settings.instagram_url}
+              onChange={(e) => setSettings((s) => ({ ...s, instagram_url: e.target.value }))}
+              placeholder="https://instagram.com/mikilab.de"
+              className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+          </div>
+          <div>
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+              <Facebook className="w-4 h-4 text-[#1877F2]" /> {de ? "Facebook-URL (leer = ausgeblendet)" : "URL Facebook (vuoto = nascosto)"}
+            </label>
+            <input data-testid="admin-facebook-url" value={settings.facebook_url}
+              onChange={(e) => setSettings((s) => ({ ...s, facebook_url: e.target.value }))}
+              placeholder="https://facebook.com/mikilab.de"
+              className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
           </div>
 
           {/* Fumetti avatar */}

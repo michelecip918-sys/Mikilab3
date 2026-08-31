@@ -165,6 +165,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   newsletterHistory: () => api.get(`/admin/newsletter/history`).then((r) => r.data),
   emailReport: (days = 7) => api.get(`/admin/email-report`, { params: { days } }).then((r) => r.data),
   emailLogs: (days = 30) => api.get(`/admin/email-logs`, { params: { days } }).then((r) => r.data),
+  socialReport: () => api.get(`/admin/social-report`).then((r) => r.data),
 };
 
 export const siteSettingsApi = {
@@ -204,6 +205,7 @@ export const communityApi = {
   emailMode: () => api.get(`/me/channel-email`).then((r) => r.data.mode).catch(() => "instant"),
   setEmailMode: (mode) => api.put(`/me/channel-email`, { mode }).then((r) => r.data),
   stats: () => api.get(`/community/stats`).then((r) => r.data).catch(() => null),
+  socialClick: (channel) => api.post(`/social/click`, { channel }).catch(() => {}),
 };
 
 export const bakeAlongApi = {

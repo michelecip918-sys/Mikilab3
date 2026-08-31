@@ -2837,3 +2837,11 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Fix precedente (v-fork.41): etichette festività (Natale/Pasqua/S.Valentino/Estate/Halloween) ora multilingua; locandina IT corretta con solo "TikTok @mikilab.de".
 - Test iteration_145: backend 100% + frontend 100%, nessun problema. Handle ripristinato a mikilab.de; 3 locandine servite HTTP 200.
 
+
+## v-fork.43 (2026-08, fork) — Anteprima locandina + ES/FR + statistiche click TikTok + campi IG/FB Admin
+- **Anteprima locandina** (`PromuoviMikiLab.jsx`): nuovo blocco `promuovi-flyer` con 5 chip lingua (`flyer-lang-it/de/en/es/fr`), miniatura cliccabile (`promuovi-flyer-preview`) che apre un lightbox (`flyer-lightbox` + `flyer-lightbox-close`), e download del file per lingua selezionata (`promuovi-flyer-download`).
+- **Locandine ES e FR**: create `public/locandina-mikilab-es.png` e `-fr.png` (AI translate + QR reale re-incollato + riga contatti PIL, come DE/EN). `FLYERS` map ora copre it/de/en/es/fr.
+- **Statistiche click TikTok**: `POST /api/social/click` {channel} incrementa `db.social_clicks` (per giorno). `GET /api/admin/social-report` → {totals, tiktok_daily[7]}. UI: click sul pulsante TikTok grande fa `communityApi.socialClick('tiktok')`; AdminPanel card `admin-social-report` con contatore `social-report-tiktok` + grafico 7 giorni.
+- **Campi Instagram/Facebook in Admin** (predisposizione): `site_settings.instagram_url` / `facebook_url` (default ""). Input `admin-instagram-url` / `admin-facebook-url`. In `PromuoviMikiLab` i social secondari usano `socialUrls` (settings override): incollando l'URL da Admin il pulsante compare nel 'Seguici'; vuoto = nascosto.
+- Test iteration_146: backend 100% + frontend 100%. Stato finale pulito: tiktok_handle=mikilab.de, instagram_url="", facebook_url="", whatsapp attivo. Locandine ES/FR servite HTTP 200.
+

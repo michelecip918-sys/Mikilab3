@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { SOCIAL, SITE_URL } from "@/config/social";
-import { siteSettingsApi } from "@/lib/api";
+import { siteSettingsApi, communityApi } from "@/lib/api";
 
 const CAPTIONS = {
   it: {
@@ -127,13 +127,24 @@ export default function PromuoviMikiLab() {
   const [season, setSeason] = useState(SEASONAL[0].id);
   const [seasonCopied, setSeasonCopied] = useState(false);
   const [variant, setVariant] = useState("bacheca");
-  const [ttHandle, setTtHandle] = useState("mikilab.de");
-  useEffect(() => { siteSettingsApi.get().then((s) => { if (s && s.tiktok_handle) setTtHandle(s.tiktok_handle); }).catch(() => {}); }, []);
+  const [settings, setSettings] = useState(null);
+  const [flyerLang, setFlyerLang] = useState(lang);
+  const [flyerBig, setFlyerBig] = useState(false);
+  useEffect(() => { siteSettingsApi.get().then(setSettings).catch(() => {}); }, []);
+  useEffect(() => { setFlyerLang(lang); }, [lang]);
+  const ttHandle = (settings && settings.tiktok_handle) || "mikilab.de";
   const tiktokUrl = `https://www.tiktok.com/@${ttHandle}`;
-  const flyerFile = ({ it: "locandina-mikilab.png", de: "locandina-mikilab-de.png", en: "locandina-mikilab-en.png" })[lang] || "locandina-mikilab-en.png";
+  const socialUrls = {
+    instagram: (settings && settings.instagram_url) || SOCIAL.instagram,
+    facebook: (settings && settings.facebook_url) || SOCIAL.facebook,
+    whatsapp: SOCIAL.whatsapp, youtube: SOCIAL.youtube, threads: SOCIAL.threads,
+  };
+  const FLYERS = { it: "locandina-mikilab.png", de: "locandina-mikilab-de.png", en: "locandina-mikilab-en.png", es: "locandina-mikilab-es.png", fr: "locandina-mikilab-fr.png" };
+  const flyerFile = FLYERS[flyerLang] || "locandina-mikilab-en.png";
+  const FLYER_LANGS = [{ k: "it", f: "🇮🇹" }, { k: "de", f: "🇩🇪" }, { k: "en", f: "🇬🇧" }, { k: "es", f: "🇪🇸" }, { k: "fr", f: "🇫🇷" }];
   const caps = CAPTIONS[lang] || CAPTIONS.en;
   const caption = caps[variant];
-  const activeSocials = SOCIALS.filter((s) => s.key !== "tiktok" && SOCIAL[s.key]);
+  const activeSocials = SOCIALS.filter((s) => s.key !== "tiktok" && socialUrls[s.key]);
   const VARIANTS = [
     { id: "bacheca", label: L("Post", "Beitrag", "Post", "Post", "Post", "پست") },
     { id: "storia", label: L("Storia", "Story", "Story", "Historia", "Story", "استوری") },
@@ -273,17 +284,51 @@ export default function PromuoviMikiLab() {
               className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95">
               <Download className="w-3.5 h-3.5" /> {L("Scarica QR", "QR laden", "Download QR", "Descargar QR", "Télécharger QR", "دانلود QR")}
             </a>
-            <a data-testid="promuovi-flyer-download" href={`${process.env.PUBLIC_URL}/${flyerFile}`} download={flyerFile}
-              className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#ff6b00] rounded-full px-3 py-1.5 active:scale-95 ml-2">
-              <Download className="w-3.5 h-3.5" /> {L("Locandina A5", "A5-Flyer", "A5 flyer", "Folleto A5", "Flyer A5", "پوستر A5")}
-            </a>
           </div>
         </div>
+
+        {/* Locandina A5 stampabile: anteprima + scelta lingua */}
+        <div data-testid="promuovi-flyer" className="rounded-2xl bg-[#121212] border border-[#2e2e2e] p-3.5">
+          <p className="text-sm font-bold text-white leading-tight mb-0.5">{L("Locandina A5 stampabile", "A5-Flyer zum Drucken", "Printable A5 flyer", "Folleto A5 imprimible", "Flyer A5 imprimable", "پوستر A5 قابل چاپ")}</p>
+          <p className="text-[12px] text-[#AEB8BF] leading-snug mb-2.5">{L("Scegli la lingua, tocca per ingrandire e scarica.", "Sprache wählen, antippen zum Vergrößern und laden.", "Pick a language, tap to enlarge and download.", "Elige el idioma, toca para ampliar y descarga.", "Choisis la langue, touche pour agrandir et télécharge.", "زبان را انتخاب کن، برای بزرگ‌نمایی بزن و دانلود کن.")}</p>
+          <div className="flex items-center gap-1.5 mb-2.5">
+            {FLYER_LANGS.map(({ k, f }) => (
+              <button key={k} data-testid={`flyer-lang-${k}`} onClick={() => setFlyerLang(k)}
+                className={`text-[13px] rounded-lg px-2 py-1 border transition-all active:scale-95 ${flyerLang === k ? "bg-[#ff6b00] border-[#ff6b00]" : "bg-[#181818] border-[#2e2e2e] opacity-70 hover:opacity-100"}`}>
+                {f} <span className="uppercase text-[10px] font-bold text-white/90">{k}</span>
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-3">
+            <button data-testid="promuovi-flyer-preview" onClick={() => setFlyerBig(true)}
+              className="shrink-0 rounded-xl overflow-hidden border border-[#2e2e2e] hover:border-[#ff6b00] transition-all active:scale-95">
+              <img src={`${process.env.PUBLIC_URL}/${flyerFile}`} alt="Locandina MikiLab" className="w-[72px] h-[102px] object-cover" loading="lazy" />
+            </button>
+            <div className="flex-1 min-w-0">
+              <a data-testid="promuovi-flyer-download" href={`${process.env.PUBLIC_URL}/${flyerFile}`} download={flyerFile}
+                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#ff6b00] rounded-full px-3 py-1.5 active:scale-95">
+                <Download className="w-3.5 h-3.5" /> {L("Scarica locandina", "Flyer laden", "Download flyer", "Descargar folleto", "Télécharger le flyer", "دانلود پوستر")}
+              </a>
+              <p className="text-[11px] text-[#7E8A93] mt-1.5">{L("Formato A5 · pronta da stampare", "Format A5 · druckfertig", "A5 format · ready to print", "Formato A5 · lista para imprimir", "Format A5 · prête à imprimer", "قطع A5 · آمادهٔ چاپ")}</p>
+            </div>
+          </div>
+        </div>
+
+        {flyerBig && (
+          <div data-testid="flyer-lightbox" onClick={() => setFlyerBig(false)}
+            className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+            <button data-testid="flyer-lightbox-close" onClick={() => setFlyerBig(false)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1c1c1c] border border-[#2e2e2e] flex items-center justify-center text-white active:scale-90">✕</button>
+            <img src={`${process.env.PUBLIC_URL}/${flyerFile}`} alt="Locandina MikiLab" onClick={(e) => e.stopPropagation()}
+              className="max-h-[86vh] max-w-full rounded-xl shadow-2xl object-contain" />
+          </div>
+        )}
 
         {/* Seguici — TikTok è il canale ufficiale principale (grande e centrale) */}
         <div data-testid="promuovi-follow">
           <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2 text-center">{L("Seguici", "Folge uns", "Follow us", "Síguenos", "Suis-nous", "ما را دنبال کن")}</p>
           <a data-testid="promuovi-social-tiktok" href={tiktokUrl} target="_blank" rel="noreferrer"
+            onClick={() => communityApi.socialClick("tiktok")}
             className="group flex flex-col items-center gap-1.5 rounded-2xl bg-gradient-to-b from-[#1c1c1c] to-[#121212] border border-[#2e2e2e] hover:border-[#ff6b00] px-5 py-5 active:scale-[0.98] transition-all">
             <span className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#ff6b00] group-hover:scale-105 transition-transform">
               <Music2 className="w-7 h-7 text-[#121212]" />
@@ -295,7 +340,8 @@ export default function PromuoviMikiLab() {
           {activeSocials.length > 0 && (
             <div className="flex flex-wrap justify-center gap-2 mt-3">
               {activeSocials.map(({ key, Icon, label, color }) => (
-                <a key={key} data-testid={`promuovi-social-${key}`} href={SOCIAL[key]} target="_blank" rel="noreferrer"
+                <a key={key} data-testid={`promuovi-social-${key}`} href={socialUrls[key]} target="_blank" rel="noreferrer"
+                  onClick={() => communityApi.socialClick(key)}
                   className="inline-flex items-center gap-2 rounded-full bg-[#121212] border border-[#2e2e2e] px-3.5 py-2 text-sm font-semibold text-white active:scale-95 hover:border-[#ff6b00]/60 transition-all">
                   <Icon className="w-4 h-4" style={{ color }} /> {label}
                 </a>
