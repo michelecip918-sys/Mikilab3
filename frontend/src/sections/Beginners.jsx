@@ -4,7 +4,7 @@ import RecipeOptions from "@/components/RecipeOptions";
 import CategoryRecipePicker from "@/components/CategoryRecipePicker";
 import { getLevelProgress } from "@/lib/level";
 import { content } from "@/data/content";
-import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame, ChevronRight, ChevronDown, MessageCircle } from "lucide-react";
+import { Sprout, Youtube, PlayCircle, Trophy, CheckCircle2, XCircle, RotateCcw, ExternalLink, Star, ChefHat, Printer, Plus, X, CalendarDays, Stethoscope, Flame, ChevronRight, ChevronDown, ChevronUp, MessageCircle } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -379,6 +379,7 @@ export default function Beginners({ onNavigate }) {
   const [imparaLiv, setImparaLiv] = useState(false);
   const [riproduci, setRiproduci] = useState(false);
   const [askMaster, setAskMaster] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const beginners = pick(BEGINNERS, lang);
   const courses = content[lang].freeCourses || [];
   const daily = pick(DAILY_RECIPES, lang);
@@ -587,6 +588,21 @@ export default function Beginners({ onNavigate }) {
       <SosImpasto open={sosOpen} onClose={() => setSosOpen(false)} onNavigate={onNavigate} />
 
 
+      {/* Approfondimenti (teoria, quiz, sfida) raccolti dietro un toggle per tenere pulita la pagina */}
+      <button data-testid="impara-toggle-more" onClick={() => setShowMore((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 rounded-2xl px-4 py-3.5 bg-[#1e1e1e] border border-[#2e2e2e] hover:border-[#ff6b00]/50 text-white active:scale-98 transition-all text-left">
+        <span className="flex items-center gap-2.5">
+          <span className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Sprout className="w-5 h-5 text-[#ff6b00]" /></span>
+          <span className="min-w-0">
+            <span className="block font-display text-sm font-bold leading-tight">{tri3(lang, "Approfondimenti", "Mehr lernen", "Learn more", "Más para aprender", "Pour aller plus loin")}</span>
+            <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{tri3(lang, "Consigli base, Quiz del Fornaio e Sfida Bake-Along", "Basis-Tipps, Bäcker-Quiz & Bake-Along", "Basic tips, Baker's Quiz & Bake-Along", "Consejos base, Quiz del Panadero y Bake-Along")}</span>
+          </span>
+        </span>
+        {showMore ? <ChevronUp className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#ff6b00] shrink-0" />}
+      </button>
+
+      {showMore && (
+      <div data-testid="impara-more" className="space-y-4">
       {beginners.map((s, i) => (
         <div key={i} data-testid={`beg-section-${i}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
           <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{s.title}</h3>
@@ -609,6 +625,8 @@ export default function Beginners({ onNavigate }) {
       </div>
       <p className="text-sm text-[#7E8A93] -mt-2">{tri3(lang, "Sforna il tema della settimana, condividi la foto e vota i pani della community.", "Backe das Wochenthema, teile dein Foto und stimme für die Brote der Community ab.", "Bake this week's theme, share your photo and vote for the community's breads.", "Hornea el tema de la semana, comparte tu foto y vota los panes de la comunidad.")}</p>
       <BakeAlong />
+      </div>
+      )}
     </div>
   );
 }

@@ -2712,3 +2712,12 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Maestro.jsx riordinato**: il **generatore del Piano IA** (`PianoProduzioneAI`) è ora subito sotto l'intestazione, preceduto dalla card `maestro-generate-cta` con pulsante `maestro-jump-generate` ("Vai a Genera il Piano") che scrolla direttamente a `capo-generate`. Ordine: Hero → CTA → Generatore → Percorso Guidato (LabWizard).
 - **Strumenti a comparsa**: Sfida Lampo + "Da dove iniziare" (calcolatori rapidi) + Direttorio strumenti (CREA/CALCOLA/GESTISCI/CONTROLLA) ora raccolti dietro il toggle `maestro-toggle-tools` ("Tutti gli strumenti", Wrench + chevron), `maestro-tools-collapsible` chiuso di default. Lab molto più pulito e focalizzato sul piano generato. Verificato: toggle chiuso all'apertura, espande correttamente; CTA scrolla al Generatore. 0 crash console.
 - NB: reorg puramente frontend, nessun impatto dati/deploy.
+
+
+---
+## v-fork.28 (2026-06, fork) — Riordino pagine: barra-indice, declutter Impara, memoria Lab, foto card
+- **Barra-indice riutilizzabile (NEW)**: `components/SectionJumpBar.jsx` — chip sticky in cima che scrollano alla sezione (per data-testid). Aggiunta in **Ricette** (`ricette-jump`, 3 chip: Tradizione→`ricette-tradizione`, Guide→`ricette-utils`, Ricettario→`ricette-list`). Impara ha già la sua barra `impara-quick-access`. Aggiunta util CSS `.no-scrollbar` in index.css.
+- **Impara più ordinata**: teoria (6 card) + Quiz del Fornaio + Sfida Bake-Along ora dietro il toggle `impara-toggle-more` ("Approfondimenti"), `impara-more` chiuso di default. In cima restano percorso, ricetta del giorno, HomePlanner e i 3 CTA principali.
+- **Lab ricorda l'ultima vista**: `showTools` in `Maestro.jsx` persiste in localStorage `mikilab_lab_show_tools` → se avevi aperto "Tutti gli strumenti", il Lab li riapre già espansi. Verificato (persiste dopo cambio tab).
+- **Foto nelle card ricetta**: già presenti — ogni Card in `RecipeList` ha la foto 4:3 dedicata in cima + la vetrina "New at MikiLab" (NovitaColorate) mostra le foto coerenti generate (pani colorati, croissant bicolore, ecc.). Confermato a schermo.
+- Tutto verificato via screenshot/DOM, 0 crash console. Modifiche solo frontend.

@@ -13,6 +13,7 @@ import ScopriMikiLab from "@/sections/ScopriMikiLab";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import VetrinaFocacce from "@/components/VetrinaFocacce";
+import SectionJumpBar from "@/components/SectionJumpBar";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import { mkTri, triFA } from "@/i18n/triMaps";
@@ -59,6 +60,13 @@ export default function Ricette() {
         title={mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
         subtitle={mkTri(lang)("Ricette artigianali spiegate passo dopo passo, con il mio metodo", "Handwerkliche Rezepte, Schritt für Schritt nach meiner Methode", "Artisan recipes explained step by step, with my method", "Recetas artesanales explicadas paso a paso, con mi método", "Recettes artisanales expliquées pas à pas, avec ma méthode", "دستورهای دست‌ساز، گام‌به‌گام با روش من")} />
       <AvatarBubbles variant="ricette" />
+      {coll === "mikilab" && (
+        <SectionJumpBar testid="ricette-jump" sections={[
+          { target: "ricette-tradizione", label: tri("Tradizione", "Tradition", "Tradition", "Tradición", "Tradition"), Icon: UtensilsCrossed },
+          { target: "ricette-utils", label: tri("Guide", "Anleitungen", "Guides", "Guías", "Guides"), Icon: BookOpen },
+          { target: "ricette-list", label: tri("Ricettario", "Rezeptbuch", "Recipe book", "Recetario", "Recettes"), Icon: Wheat },
+        ]} />
+      )}
       <div className="mb-4"><SaporeDelGiorno /></div>
       {coll === "mikilab" && (
         <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}
@@ -110,7 +118,7 @@ export default function Ricette() {
       )}
 
       {coll === "mikilab" && (
-        <div className="grid grid-cols-3 gap-2.5 mb-4">
+        <div data-testid="ricette-utils" className="grid grid-cols-3 gap-2.5 mb-4">
           <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab", "Découvre MikiLab")} onClick={() => setView("scopri")} />
           <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
@@ -118,6 +126,7 @@ export default function Ricette() {
         </div>
       )}
 
+      <div data-testid="ricette-list">
       <RecipeList
         collectionName="mikilab"
         heroImage={`${process.env.PUBLIC_URL}/michele-avatar-full.jpg`}
@@ -127,6 +136,7 @@ export default function Ricette() {
         emptyText={t("mikilab_empty")}
         extraHeader={<NovitaColorate />}
       />
+      </div>
     </div>
   );
 }

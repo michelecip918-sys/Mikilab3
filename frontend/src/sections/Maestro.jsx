@@ -79,7 +79,8 @@ import { mkTri } from "@/i18n/triMaps";
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
-  const [showTools, setShowTools] = useState(false);
+  const [showTools, setShowTools] = useState(() => { try { return localStorage.getItem("mikilab_lab_show_tools") === "1"; } catch { return false; } });
+  useEffect(() => { try { localStorage.setItem("mikilab_lab_show_tools", showTools ? "1" : "0"); } catch { /* */ } }, [showTools]);
   const scrollRef = useRef(0);
   const openTool = (id) => { scrollRef.current = window.scrollY; setTool(id); window.scrollTo(0, 0); };
   const back = () => setTool(null);
