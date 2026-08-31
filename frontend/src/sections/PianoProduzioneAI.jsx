@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi, subscriptionApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -17,6 +17,7 @@ import { getActiveMachineNames } from "@/lib/machines";
 import { guideFor } from "@/lib/toolGuide";
 import { playSfx } from "@/lib/uiSounds";
 import { shareContent } from "@/lib/share";
+import { exportPlanPdf } from "@/lib/planPdf";
 import { rLoc, recipeTitle } from "@/lib/loc";
 import { recipeCategory, CATS } from "@/lib/recipeCats";
 import PrintHeader from "@/components/PrintHeader";
@@ -272,6 +273,23 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [planTruncated, setPlanTruncated] = useState(false);
   const [infEdit, setInfEdit] = useState(null); // tabella infornate modificabile {headers, rows}
   const [planHF, setPlanHF] = useState(false); // lettura vocale del piano
+  const [pdfBusy, setPdfBusy] = useState(false); // export PDF elegante in corso
+  const downloadPlanPdf = async () => {
+    if (!plan || !plan.trim() || pdfBusy) return;
+    setPdfBusy(true);
+    try {
+      await exportPlanPdf({
+        title: tri3(lang, "Piano di Produzione", "Produktionsplan", "Production Plan", "Plan de Producción"),
+        plan, bakerNote, lang,
+        fileName: `piano-produzione-mikilab-${new Date().toISOString().slice(0, 10)}.pdf`,
+      });
+      toast.success(tri3(lang, "PDF elegante scaricato 📄", "Elegantes PDF heruntergeladen 📄", "Elegant PDF downloaded 📄", "PDF elegante descargado 📄"));
+    } catch {
+      toast.error(tri3(lang, "Non sono riuscito a creare il PDF. Riprova.", "PDF konnte nicht erstellt werden. Bitte erneut versuchen.", "Could not create the PDF. Please try again.", "No se pudo crear el PDF. Inténtalo de nuevo."));
+    } finally {
+      setPdfBusy(false);
+    }
+  };
   const [savedProducts, setSavedProducts] = useState([]);
   const [modules, setModules] = useState(DEFAULT_MODULES);
   const toggleMod = (id) => setModules((m) => ({ ...m, [id]: !m[id] }));
@@ -1595,6 +1613,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             <button data-testid="capo-print" onClick={() => window.print()}
               className="no-print mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
+            </button>
+            <button data-testid="capo-pdf" onClick={downloadPlanPdf} disabled={pdfBusy}
+              className="no-print mt-2 w-full bg-[#121212] dark:bg-[#1e1e1e] hover:bg-[#000] text-white font-semibold px-5 py-3 rounded-2xl border-2 border-[#ff6b00] active:scale-98 transition-all disabled:opacity-60 flex items-center justify-center gap-2">
+              <Download className="w-5 h-5 text-[#ff6b00]" /> {pdfBusy
+                ? tri3(lang, "Creo il PDF…", "PDF wird erstellt…", "Creating PDF…", "Creando PDF…")
+                : tri3(lang, "Scarica PDF elegante (logo MikiLab)", "Elegantes PDF herunterladen (MikiLab-Logo)", "Download elegant PDF (MikiLab logo)", "Descargar PDF elegante (logo MikiLab)")}
             </button>
             {!generating && (
               <button data-testid="capo-voice" onClick={() => setPlanHF(true)}
