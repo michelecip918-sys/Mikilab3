@@ -2949,3 +2949,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Link: `/mikilab-video-narrato.mp4`. Verificato HTTP 200, stream audio+video, durata 61.4s.
 - Caveat: voci OpenAI TTS in IT hanno accento inglese leggero; upgrade nativo = ElevenLabs multilingual (richiede API key utente).
 - EMERGENT_LLM_KEY gia presente in backend/.env.
+
+## v-fork.61 (2026-06) — Fase 1: Lab semplificato + Modalità Laboratorio
+- Feedback capo (target/UX): tolti dal direttorio Lab gli strumenti cassa/allergeni -> rimossi da TOOLS (PianoProduzioneAI.jsx): salespoints (Punti Vendita), dayclose (Chiusura Giornata HACCP), haccp (Registro HACCP). Route/componenti restano (raggiungibili da moduli), solo tolti dalla lista.
+- Nuovo `components/LabModeBig.jsx` + wiring in `Maestro.jsx`: "Modalità Laboratorio" (Bakery Mode) con pulsanti giganti/alto contrasto per mani infarinate, voce in evidenza; toggle `maestro-lab-big-toggle`, stato persistito in localStorage `mikilab_lab_big`; tile aprono i tool via openTool, "Production Plan" esce dalla modalità.
+- Verificato E2E (browser): toggle -> lab-mode-big con 10 tile; tap Timer apre "Smart Multi-Dough Timer" (routing OK). Compila (1 warning: import Store/CheckCircle2 ora inutilizzati, innocuo).
+- Target consigliato: fornai professionisti come cliente primario; Impara da casa come porta hobbisti.
+- FASE 2 backlog (dal piano di Michele/capo): export CSV/JSON ricette+costi+allergeni per gestionali; stampa cartellini banco allergeni; testi di posizionamento "affianca il gestionale, non lo sostituisce"; potenziare comandi vocali step-by-step.

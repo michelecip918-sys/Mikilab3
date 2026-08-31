@@ -178,8 +178,6 @@ export const TOOLS = [
   // 🏬 Gestione Attività & Cold Chain
   { id: "capo", Icon: Building2, cat: "coldchain", kind: "gestisci", it: "Controllo Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers", es: "Cámaras y Amasadoras" },
   { id: "freezer", Icon: Snowflake, cat: "coldchain", kind: "gestisci", it: "Giacenze Freezer", de: "Gefrier-Bestand", en: "Freezer Stock", es: "Stock Congelador" },
-  { id: "salespoints", Icon: Store, cat: "coldchain", kind: "gestisci", it: "Punti Vendita", de: "Verkaufsstellen", en: "Sales Points", es: "Puntos de Venta" },
-  { id: "dayclose", Icon: CheckCircle2, cat: "coldchain", kind: "gestisci", it: "Chiusura Giornata (HACCP)", de: "Tagesabschluss (HACCP)", en: "Day Close (HACCP)", es: "Cierre del Día (HACCP)" },
   { id: "foodcost", Icon: Euro, cat: "coldchain", kind: "calcola", it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & Margin", es: "Costes y Margen" },
   { id: "spreco", Icon: Recycle, cat: "coldchain", kind: "gestisci", it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-Waste", es: "Anti-Desperdicio" },
   { id: "mydata", Icon: Archive, cat: "coldchain", kind: "gestisci", it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
@@ -189,7 +187,6 @@ export const TOOLS = [
   { id: "sessioni", Icon: Thermometer, cat: "coldchain", kind: "gestisci", it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
   { id: "check", Icon: ListChecks, cat: "coldchain", kind: "gestisci", it: "Checklist Laboratorio", de: "Checklisten", en: "Checklists" },
   { id: "shelf", Icon: CalendarClock, cat: "coldchain", kind: "gestisci", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
-  { id: "haccp", Icon: ListChecks, cat: "coldchain", kind: "gestisci", it: "Registro HACCP", de: "HACCP-Register", en: "HACCP Log", es: "Registro HACCP" },
 ];
 
 export const TOOL_CATS = [

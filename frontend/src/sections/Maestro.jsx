@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp, Maximize2,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
@@ -71,12 +71,15 @@ import ManiSporche from "@/sections/ManiSporche";
 import ToolsDirectory from "@/components/ToolsDirectory";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
+import LabModeBig from "@/components/LabModeBig";
 
 
 export default function Maestro() {
   const [tool, setTool] = useState(null);
   const [showTools, setShowTools] = useState(() => { try { return localStorage.getItem("mikilab_lab_show_tools") === "1"; } catch { return false; } });
   useEffect(() => { try { localStorage.setItem("mikilab_lab_show_tools", showTools ? "1" : "0"); } catch { /* */ } }, [showTools]);
+  const [bigMode, setBigMode] = useState(() => { try { return localStorage.getItem("mikilab_lab_big") === "1"; } catch { return false; } });
+  const setBig = (v) => { setBigMode(v); try { localStorage.setItem("mikilab_lab_big", v ? "1" : "0"); } catch { /* */ } window.scrollTo(0, 0); };
   const scrollRef = useRef(0);
   const openTool = (id) => { scrollRef.current = window.scrollY; setTool(id); window.scrollTo(0, 0); };
   const back = () => setTool(null);
@@ -183,6 +186,10 @@ export default function Maestro() {
     );
   }
 
+  if (bigMode) {
+    return <LabModeBig onExit={() => setBig(false)} onOpenTool={openTool} onOpenPlan={() => setBig(false)} />;
+  }
+
   return (
     <div className="pb-28">
       <HighFive />
@@ -192,6 +199,17 @@ export default function Maestro() {
         <h1 className="font-display text-2xl font-extrabold text-white leading-tight">{mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}</h1>
         <p className="text-[13px] text-[#AEB8BF] leading-snug mt-0.5">{mkTri(lang)("Solo strumenti di lavoro, per produrre più in fretta.", "Nur Arbeitswerkzeuge, um schneller zu produzieren.", "Only work tools, to produce faster.", "Solo herramientas de trabajo, para producir más rápido.", "Uniquement des outils de travail, pour produire plus vite.", "فقط ابزارهای کار، برای تولید سریع‌تر.")}</p>
       </div>
+
+      {/* Modalità Laboratorio: pulsanti giganti per lavorare con le mani infarinate */}
+      <button data-testid="maestro-lab-big-toggle" onClick={() => setBig(true)}
+        className="w-full flex items-center gap-3 min-h-[64px] rounded-2xl px-4 mb-3 bg-[#1e1e1e] border-2 border-[#ff6b00]/60 hover:border-[#ff6b00] text-white active:scale-98 transition-all text-left">
+        <span className="w-11 h-11 rounded-2xl bg-[#ff6b00]/15 border border-[#ff6b00]/40 flex items-center justify-center shrink-0"><Maximize2 className="w-6 h-6 text-[#ff6b00]" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="block font-display text-[15px] font-extrabold leading-tight">{mkTri(lang)("Modalità Laboratorio", "Labor-Modus", "Bakery Mode", "Modo Laboratorio", "Mode Atelier", "حالت کارگاه")}</span>
+          <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{mkTri(lang)("Pulsanti giganti, per mani infarinate e voce", "Große Tasten, für mehlige Hände & Stimme", "Giant buttons, for floury hands & voice", "Botones gigantes, para manos enharinadas y voz")}</span>
+        </span>
+        <ChevronRight className="w-5 h-5 text-[#ff6b00] shrink-0" />
+      </button>
 
       {/* IN CIMA: il generatore del Piano IA + CTA diretta al calcolo generato */}
       <div data-testid="maestro-generate-cta" className="mb-3 rounded-2xl border border-[#ff6b00]/45 bg-gradient-to-br from-[#2a1a0d] to-[#161616] p-4">
