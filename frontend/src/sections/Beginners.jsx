@@ -379,7 +379,8 @@ export default function Beginners({ onNavigate }) {
   const [imparaLiv, setImparaLiv] = useState(false);
   const [riproduci, setRiproduci] = useState(false);
   const [askMaster, setAskMaster] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(() => { try { return localStorage.getItem("mikilab_impara_show_more") === "1"; } catch { return false; } });
+  useEffect(() => { try { localStorage.setItem("mikilab_impara_show_more", showMore ? "1" : "0"); } catch { /* */ } }, [showMore]);
   const beginners = pick(BEGINNERS, lang);
   const courses = content[lang].freeCourses || [];
   const daily = pick(DAILY_RECIPES, lang);

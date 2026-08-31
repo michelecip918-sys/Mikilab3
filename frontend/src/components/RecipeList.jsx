@@ -446,11 +446,12 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </p>
             ) : (
               <div className="space-y-3">
-                {CATS.map((cat) => {
+                {(() => { const firstCatKey = CATS.find((c) => filtered.some((r) => recipeCategory(r).key === c.key))?.key;
+                return CATS.map((cat) => {
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
                   const searching = (query || "").trim() !== "" || baseFilter !== "all" || favFilter || catFilter !== "all";
-                  const open = searching ? true : (openCats[cat.key] !== undefined ? openCats[cat.key] : false); // ricerca attiva: apri le cartelle; altrimenti TUTTE le categorie chiuse di default
+                  const open = searching ? true : (openCats[cat.key] !== undefined ? openCats[cat.key] : cat.key === firstCatKey); // ricerca attiva: apri tutto; altrimenti solo la PRIMA categoria è aperta di default
                   const coverSrc = (() => {
                     const chosen = folderCovers[cat.key];
                     const raw = chosen || (items.find((r) => r.image_url) || {}).image_url;
@@ -489,7 +490,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                       </AnimatePresence>
                     </div>
                   );
-                })}
+                }); })()}
               </div>
             )}
           </div>

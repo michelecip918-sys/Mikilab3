@@ -17,6 +17,7 @@ import GuidaAvatar from "@/components/GuidaAvatar";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import StreakFlame from "@/components/StreakFlame";
+import SectionJumpBar from "@/components/SectionJumpBar";
 import PromuoviMikiLab from "@/components/PromuoviMikiLab";
 import SaporiCasa from "@/sections/SaporiCasa";
 import CalcolatoreMetodo from "@/sections/CalcolatoreMetodo";
@@ -289,6 +290,11 @@ export default function Home({ onNavigate }) {
   return (
     <div className="pb-2 space-y-6">
       <StreakFlame />
+      <SectionJumpBar testid="home-jump" sections={[
+        { target: "home-giant-ctas", label: mkTri(lang)("Inizia", "Start", "Start", "Empieza", "Commence", "شروع"), Icon: Sparkles },
+        { target: "home-lab-switch", label: mkTri(lang)("Il tuo Lab", "Dein Labor", "Your Lab", "Tu Lab", "Ton Atelier", "کارگاه"), Icon: Wrench },
+        { target: "home-core", label: mkTri(lang)("Il cuore", "Das Herz", "The heart", "El corazón", "Le cœur", "قلب"), Icon: BookOpen },
+      ]} />
       {/* Guida rapida: come iniziare (breve, non invasiva) */}
       <div data-testid="home-quickstart" className="rounded-2xl border border-[#ff6b00]/40 bg-[#1e1e1e] p-3.5">
         <p className="text-[13px] text-[#E0E0E0] leading-snug">

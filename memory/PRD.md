@@ -2721,3 +2721,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Lab ricorda l'ultima vista**: `showTools` in `Maestro.jsx` persiste in localStorage `mikilab_lab_show_tools` → se avevi aperto "Tutti gli strumenti", il Lab li riapre già espansi. Verificato (persiste dopo cambio tab).
 - **Foto nelle card ricetta**: già presenti — ogni Card in `RecipeList` ha la foto 4:3 dedicata in cima + la vetrina "New at MikiLab" (NovitaColorate) mostra le foto coerenti generate (pani colorati, croissant bicolore, ecc.). Confermato a schermo.
 - Tutto verificato via screenshot/DOM, 0 crash console. Modifiche solo frontend.
+
+
+---
+## v-fork.29 (2026-06, fork) — Barra-indice Home, memoria Impara, prima categoria ricettario aperta
+- **Barra-indice in Home**: `SectionJumpBar` (`home-jump`, 3 chip: Inizia→`home-giant-ctas`, Il tuo Lab→`home-lab-switch`, Il cuore→`home-core`) subito sotto lo StreakFlame. Verificato: scroll alle sezioni.
+- **Impara ricorda gli Approfondimenti**: `showMore` in `Beginners.jsx` persiste in localStorage `mikilab_impara_show_more` (come il Lab). Verificato: resta aperto dopo cambio tab.
+- **Ricettario: prima categoria aperta di default**: in `RecipeList.jsx` calcolo `firstCatKey` (prima categoria non vuota in `CATS`) e la apro di default (quando non si sta cercando); le altre restano chiuse. Verificato: 6 card ricetta con foto visibili subito.
+- Tutto verificato via screenshot/DOM, 0 crash console. Modifiche solo frontend.
