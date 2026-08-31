@@ -2938,3 +2938,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - `scripts/build_inventory_pdf.py` (reportlab): genera 5 PDF brandizzati (logo, banda arancione, footer numerato) in IT/DE/EN/ES/FR con accenti/umlaut corretti, salvati in `frontend/public/` come file statici scaricabili.
 - Link: `/mikilab-inventario-{it,de,en,es,fr}.pdf` (+ `/mikilab-inventario.pdf` = IT per retro-compat). Verificati HTTP 200, 2 pagine, accenti OK (pypdf).
 - Contenuto senza monetizzazione (consegna privata a Michele, non feature del sito).
+
+## v-fork.59 (2026-06, fork) — Mini video privato inventario
+- `scripts/build_inventory_video.py` (Pillow + ffmpeg): 9 slide brandizzate 1080p (logo, tema nero/arancione, badge numerati) montate con dissolvenze xfade -> `frontend/public/mikilab-video.mp4` (H.264, 37.6s, ~2MB, silenzioso, IT).
+- Link: `/mikilab-video.mp4`. Verificato HTTP 200 e ffprobe (1920x1080, h264, 37.6s). Consegna privata a Michele.
+- ffmpeg installato via apt in questo ambiente.
