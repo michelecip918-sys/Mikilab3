@@ -2869,3 +2869,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **FIX (iteration_149, HIGH)**: IT+orizzontale chiedeva `/locandina-mikilab-h.png` inesistente (base IT senza `-it`). Creato il file `locandina-mikilab-h.png` (copia di `-it-h`). Aggiunto fallback `onError` sull'anteprima → ripiega su `locandina-mikilab.png`.
 - Tutte le 10 locandine (5 verticali + 5 orizzontali) servono HTTP 200 con QR tracciato scansionabile. Test iteration_149: 5/6 gruppi ok prima del fix; il path IT-h ora risolve deterministicamente al file esistente.
 
+
+## v-fork.47 (2026-08, fork) — Controllo generale & pulizia leggera
+- Code review funzionale (read-only): NESSUN bug funzionale, nessun doppione di endpoint/testid, logica backend gia fattorizzata (_normalize_social_url, _log_email).
+- Pulizia sicura in Home.jsx: rimosse 2 fetch ridondanti (academyApi.weeklyTheme, recipesApi.list panettoni) e valori derivati inutilizzati (weekTheme, panettoni, focusChip, equipChip, profile). Nessun cambiamento di comportamento; Home verificata a video.
+- Lasciati volutamente: import inutilizzati (solo warning) e blocchi {false &&} in Home (innocui) per non rischiare regressioni a ridosso del deploy.
+- Verdetto review: READY WITH FIXES (solo hygiene LOW).

@@ -235,13 +235,11 @@ export default function Home({ onNavigate }) {
   const [convos, setConvos] = useState([]);
   const [chatUser, setChatUser] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
-  const [weekTheme, setWeekTheme] = useState(null);
   const [isChampion, setIsChampion] = useState(false);
   useEffect(() => {
     if (user) dmApi.conversations().then((c) => setConvos((c || []).filter((x) => x.unread > 0))).catch(() => setConvos([]));
     else setConvos([]);
   }, [user, chatOpen]);
-  useEffect(() => { academyApi.weeklyTheme(lang).then((t) => t && setWeekTheme(t)).catch(() => {}); }, [lang]);
   useEffect(() => {
     if (!user) { setIsChampion(false); return; }
     profileApi.get(user.user_id).then((p) => setIsChampion((p?.badges || []).includes("fornaio_settimana"))).catch(() => {});
@@ -265,24 +263,9 @@ export default function Home({ onNavigate }) {
   const [joke] = useState(() => jokes[Math.floor(Math.random() * jokes.length)]);
   const de = lang === "de";
   const L = (...a) => mkTri(lang)(...a);
-  const profile = getProfile();
 
-  const [panettoni, setPanettoni] = useState([]);
   const [stats, setStats] = useState(null);
   useEffect(() => { communityApi.stats().then(setStats).catch(() => {}); }, []);
-  useEffect(() => {
-    recipesApi.list("mikilab").then((rs) => {
-      const p = (rs || []).filter((r) => (r.menu_category === "panettoni") || /panettone/i.test(r.name || "")).slice(0, 8);
-      setPanettoni(p);
-    }).catch(() => {});
-  }, []);
-  const focusChip = ({ panettoni: L("Tracker pH Lievito", "pH-Tracker", "pH Tracker"), pane: L("Avvia impasti", "Teige starten", "Start doughs"), brezel: L("Il mio laboratorio", "Meine Backstube", "My lab"), dolci: L("Il mio laboratorio", "Meine Backstube", "My lab") })[profile && profile.focus] || L("Il mio laboratorio", "Meine Backstube", "My lab");
-  const _eq = (profile && profile.equip) || [];
-  const equipChip = _eq.includes("abbattitore") || _eq.includes("cella")
-    ? L("Shelf-Life & Freschezza", "Shelf-Life & Frische", "Shelf-life & freshness")
-    : (_eq.includes("forno_rotativo") || _eq.includes("forno_statico"))
-      ? L("Adatta il forno", "Ofen anpassen", "Adapt the oven")
-      : null;
 
   if (chat) {
     return (
