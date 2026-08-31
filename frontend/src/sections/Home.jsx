@@ -298,11 +298,11 @@ export default function Home({ onNavigate }) {
   return (
     <div className="pb-2 space-y-6">
       <StreakFlame />
-      <SectionJumpBar testid="home-jump" sections={[
+      {false && (<SectionJumpBar testid="home-jump" sections={[
         { target: "home-giant-ctas", label: mkTri(lang)("Inizia", "Start", "Start", "Empieza", "Commence", "شروع"), Icon: Sparkles },
         { target: "home-lab-switch", label: mkTri(lang)("Il tuo Lab", "Dein Labor", "Your Lab", "Tu Lab", "Ton Atelier", "کارگاه"), Icon: Wrench },
         { target: "home-core", label: mkTri(lang)("Il cuore", "Das Herz", "The heart", "El corazón", "Le cœur", "قلب"), Icon: BookOpen },
-      ]} />
+      ]} />)}
       {/* Guida rapida: come iniziare (breve, non invasiva) — nascosta in profilo Pro */}
       {!isPro && (
       <div data-testid="home-quickstart" className="rounded-2xl border border-[#ff6b00]/40 bg-[#1e1e1e] p-3.5">
@@ -337,7 +337,7 @@ export default function Home({ onNavigate }) {
             <BookOpen className="w-6 h-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-display text-xl font-extrabold leading-tight tracking-tight">{L("LE MIE RICETTE", "MEINE REZEPTE", "MY RECIPES", "MIS RECETAS", "MES RECETTES", "دستورهای من")}</p>
+            <p className="font-display text-2xl sm:text-3xl font-extrabold leading-tight tracking-tight">{L("LE MIE RICETTE", "MEINE REZEPTE", "MY RECIPES", "MIS RECETAS", "MES RECETTES", "دستورهای من")}</p>
             <p className="text-[12.5px] text-white/90 leading-snug mt-0.5">{L("Ricettario completo + calcolo dosi e idratazione", "Komplettes Rezeptbuch + Mengen & Hydratation", "Full recipe book + dose & hydration calculator", "Recetario completo + cálculo de dosis e hidratación", "Recettier complet + calcul des doses et hydratation", "کتاب کامل دستورها + محاسبهٔ مقادیر و آب")}</p>
           </div>
           <ChevronRight className="w-6 h-6 shrink-0 group-hover:translate-x-1 transition-transform" />
@@ -349,13 +349,14 @@ export default function Home({ onNavigate }) {
             <Wrench className="w-6 h-6" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-display text-xl font-extrabold leading-tight tracking-tight">{L("ENTRA NEL LABORATORIO", "ZUM LABOR", "ENTER THE LAB", "ENTRA AL LABORATORIO", "ENTRE DANS L'ATELIER", "ورود به کارگاه")}</p>
+            <p className="font-display text-2xl sm:text-3xl font-extrabold leading-tight tracking-tight">{L("ENTRA NEL LABORATORIO", "ZUM LABOR", "ENTER THE LAB", "ENTRA AL LABORATORIO", "ENTRE DANS L'ATELIER", "ورود به کارگاه")}</p>
             <p className="text-[12.5px] text-white/85 font-semibold leading-snug mt-0.5">{L("Sistema del panificio: piano settimanale e calcolatori", "Backstuben-System: Wochenplan & Rechner", "Bakery system: weekly plan & calculators", "Sistema del obrador: plan semanal y calculadoras", "Système du fournil : plan hebdo & calculateurs", "سیستم نانوایی: برنامهٔ هفتگی و ماشین‌حساب‌ها")}</p>
           </div>
           <ChevronRight className="w-6 h-6 shrink-0 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
 
+      {false && (<>
       <PromuoviMikiLab />
 
 
@@ -458,6 +459,8 @@ export default function Home({ onNavigate }) {
           <p className="text-white/80 text-[12px] leading-snug mt-0.5">{L("Pane vero, tempo giusto, mani in pasta: benvenuto nel mio MikiLab.", "Echtes Brot, richtige Zeit, Hände im Teig: willkommen in meinem MikiLab.", "Real bread, the right time, hands in the dough: welcome to my MikiLab.", "Pan de verdad, el tiempo justo, manos en la masa: bienvenido a mi MikiLab.", "Du vrai pain, le bon temps, les mains dans la pâte : bienvenue dans mon MikiLab.", "نان واقعی، زمان درست، دست در خمیر: به میکی‌لب من خوش آمدی.")}</p>
         </div>
       </div>
+
+      </>)}
 
       {/* Selettore rapido dei laboratori: Panetteria · Pizzeria · Pasticceria */}
       <div data-testid="home-lab-switch">
@@ -685,8 +688,7 @@ export default function Home({ onNavigate }) {
         </AnimatePresence>
       </div>)}
 
-      {/* ===== IL CUORE DI MIKILAB: le 3 sezioni-anima, in evidenza ===== */}
-      <div data-testid="home-core">
+      {false && (<div data-testid="home-core">
         <div className="flex items-center gap-2 mb-1 px-1">
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{L("Il cuore di MikiLab", "Das Herz von MikiLab", "The heart of MikiLab")}</h2>
           <span className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] bg-[#ff6b00]/15 border border-[#ff6b00]/40 px-2 py-0.5 rounded-full">{L("L'anima del sito", "Die Seele", "The soul")}</span>
@@ -726,7 +728,7 @@ export default function Home({ onNavigate }) {
             <ChevronRight className="w-6 h-6 text-white/80 shrink-0" />
           </div>
         </button>
-      </div>
+      </div>)}
 
       {/* Condividi & Installa app */}
       <ShareInstall />

@@ -1,136 +1,198 @@
 {
-  "project_name": "MikiLab - Impara Redesign",
   "theme": {
-    "mode": "dark_strict",
-    "primary_background": "#121212",
-    "secondary_background": "#181818",
-    "card_background": "#1e1e1e",
-    "accent_primary": "#FF6B00",
-    "accent_hover": "#FF8A33",
-    "accent_active": "#C94F00",
-    "border_color": "#2e2e2e",
+    "name": "MikiLab Il Tuo Laboratorio Accessibility Redesign",
+    "background_color": "#121212",
+    "card_background": "#1E1E1E",
+    "card_border": "#2C2C2C",
+    "primary_accent": "#FF6B00",
+    "primary_accent_hover": "#E05E00",
     "text_primary": "#FFFFFF",
-    "text_secondary": "#E0D5CF",
-    "text_muted": "#AEB8BF",
-    "text_dark_contrast": "#121212",
-    "forbidden_colors": [
-      "#1B93A4",
-      "#7351B7",
-      "#3B82F6",
-      "#8B5CF6",
-      "#06B6D4"
-    ],
-    "rules": "RIGOROUS Dark Theme (#121212 background, #FF6B00 primary accent). Strictly NO blue or purple accents anywhere in the UI."
+    "text_secondary": "#A1A1AA",
+    "font_family_heading": "font-display, sans-serif",
+    "font_family_body": "sans-serif",
+    "theme_mode": "dark_only"
   },
-  "typography": {
-    "font_heading": "'Playfair Display', serif",
-    "font_body": "'Manrope', sans-serif",
-    "font_mono": "'JetBrains Mono', monospace",
-    "font_rtl_farsi": "'Vazirmatn', sans-serif",
-    "forbidden_heading_fonts": [
-      "Inter",
-      "Roboto",
-      "Space Grotesk",
-      "Open Sans"
-    ],
-    "scale": {
-      "hero_h1": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight",
-      "section_h2": "text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight",
-      "card_h3": "text-lg sm:text-xl font-bold",
-      "sub_h4": "text-base sm:text-lg font-semibold",
-      "body_lg": "text-base leading-relaxed",
-      "body_md": "text-sm leading-normal",
-      "label_sm": "text-xs font-bold uppercase tracking-wider"
-    },
-    "alignment_rules": "Headings and subheadings left-aligned by default. Center alignment used only for modal heroes and badge completion callouts."
-  },
-  "visual_enhancers": {
-    "card_style": "Dark surface #1e1e1e with 1px border #2e2e2e, rounded-2xl (16px) or rounded-3xl (24px) corner radii.",
-    "button_style": "Pill or rounded-2xl buttons with #FF6B00 fill, #121212 high-contrast text, 0 4px 0 rgba(0,0,0,0.35) tactile shadow, active:scale-98 transition.",
-    "avatar_guide_bubbles": "Card with subtle #FF6B00/10 tint, #FF6B00/30 border, 44px circular avatar of Mikila (the baker) or Mohammadreza with pulsed status dot.",
-    "progress_indicators": "Sleek #FF6B00 filled bars over #2e2e2e track, with clear step count labels (e.g. 3/5 completati).",
-    "modal_overlays": "bg-black/80 backdrop-blur-md overlay. DO NOT use fully transparent overlays."
-  },
-  "component_paths": {
-    "learn_hub": "/app/frontend/src/sections/LearnHub.jsx",
-    "beginners_page": "/app/frontend/src/sections/Beginners.jsx",
-    "bake_along": "/app/frontend/src/components/BakeAlong.jsx",
-    "impara_livelli": "/app/frontend/src/sections/ImparaLivelli.jsx",
-    "avatar_bubbles": "/app/frontend/src/components/AvatarBubbles.jsx",
-    "academy_coach": "/app/frontend/src/components/AcademyCoach.jsx",
-    "evolving_quiz": "/app/frontend/src/components/EvolvingQuiz.jsx",
-    "sos_impasto": "/app/frontend/src/sections/SosImpastoGuida.jsx",
-    "shopping_lib": "/app/frontend/src/lib/shopping.js"
-  },
-  "media": {
-    "image_urls": {
-      "focaccia": "https://images.unsplash.com/photo-1784822109223-20ceba260902?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
-      "artisan_bread": "https://images.unsplash.com/photo-1772864463642-42c789ab5dbd?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
-      "kneading_dough": "https://images.unsplash.com/photo-1649675602217-416a4fafcecb?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
-      "hand_flour": "https://images.unsplash.com/photo-1595801105145-795f1927c0fc?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
-      "baking_flour": "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?crop=entropy&cs=srgb&fm=jpg&q=85&w=1000",
-      "hero_impara": "/hero-impara.jpg",
-      "mikila_avatar": "/michele-avatar.jpg",
-      "assistant_avatar": "/mohammed-avatar.jpg",
-      "dough_bio": "/bio-dough.jpg"
+  "accessibility_standards": {
+    "minimum_touch_target": "56px to 64px for standard tools, 72px for hero/voice actions",
+    "target_user_profile": "Elderly (80-year-old vision/dexterity), impaired users, messy/floury hands in bakery environment",
+    "contrast_ratio": "APCA AAA compliant (high contrast text #FFFFFF on #121212 and #1E1E1E)",
+    "voice_command_accessibility": "Persistent floating hands-free voice trigger button always reachable on screen (z-50)",
+    "typography_scale": {
+      "page_title": "text-2xl sm:text-3xl font-black font-display tracking-tight text-white",
+      "section_header": "text-xl sm:text-2xl font-bold font-display text-white",
+      "tool_title": "text-lg sm:text-xl font-bold text-white",
+      "subtext_description": "text-sm sm:text-base font-medium text-zinc-400",
+      "badge_text": "text-xs sm:text-sm font-semibold tracking-wider text-orange-400"
     }
   },
-  "key_functionalities_implementation": {
-    "1_bake_along_step_by_step": {
-      "title": "Modalità Riproduci Passo-Passo con Avatar Mikila",
-      "description": "Interactive recipe execution mode guided by Mikila avatar.",
-      "features": [
-        "Step header with current step index (e.g., Passo 2 di 6) and progress bar",
-        "Clear instruction card with large typography and encouragement tip from Mikila avatar",
-        "Timer and temperature badges (e.g. ⏱️ 20 min | 🌡️ 230°C in forno)",
-        "Previous / Next navigation buttons with active:scale-95 and data-testid attributes",
-        "Direct toggle to open the 'Shopping List & Equipment Guide' for this recipe"
+  "sections_breakdown": [
+    {
+      "id": "header_intro",
+      "title": "Benvenuto nel Tuo Laboratorio",
+      "type": "intro_banner",
+      "description": "Essential brief description only. All superfluous comments, avatars, and noise removed.",
+      "content": "Hub professionale per panificatori e pizzaioli. Gestisci ricette, calcoli, celle e tempi a mani libere."
+    },
+    {
+      "id": "primary_ai_plan",
+      "title": "Genera il Piano IA",
+      "type": "hero_action_card",
+      "description": "Primary high-priority AI production planning hero card",
+      "button_label": "Avvia Generazione Piano Produzione IA",
+      "target_tool_id": "piano_produzione_ia",
+      "min_height": "80px"
+    },
+    {
+      "id": "accessible_mode_voice",
+      "title": "Modalità Laboratorio & Comandi Vocali",
+      "type": "accessible_hub",
+      "description": "Giant-button accessible mode and hands-free voice control hub",
+      "items": [
+        {
+          "id": "lab_mode_big",
+          "label": "Attiva Modalità Schermo Intero / Tasti Giganti",
+          "icon": "Maximize2",
+          "badge": "Mani Sporche"
+        },
+        {
+          "id": "voice_assistant_toggle",
+          "label": "Attiva Comandi Vocali (Assistente Miki)",
+          "icon": "Mic",
+          "badge": "Voice Active"
+        }
       ]
     },
-    "2_shopping_and_where_to_buy": {
-      "title": "Lista della Spesa & Suggerimenti DOVE Comprare",
-      "description": "Comprehensive ingredient and tool breakdown with purchase recommendations.",
-      "features": [
-        "Auto-calculated quantities for ingredients based on target dough weight or recipe portions",
-        "Categorized items: Farine speciali, Lievito/Prefermenti, Liquidi/Grassi, Attrezzi & Teglie",
-        "WHERE TO BUY ('Dove comprare'): Suggestions for local mills (Mulino di zona), supermarket, organic store (Bio), or specialized online suppliers (es. teglia in ferro blu, raschietto inox, pietra lavica)",
-        "One-click copy or WhatsApp sharing of the shopping list"
+    {
+      "id": "ricette",
+      "title": "Ricette & Sviluppo",
+      "type": "accordion_section",
+      "default_open": true,
+      "tools": [
+        { "id": "ricette_custodite", "name": "Le Mie Ricette", "icon": "BookOpen", "description": "Archivio personalizzato e ricette salvate" },
+        { "id": "cantiere_ricetta", "name": "Cerca & Adatta Ricetta", "icon": "Sliders", "description": "Bilanciamento e adattamento quantità" },
+        { "id": "scopri_ricette", "name": "Catalogo Ricette MikiLab", "icon": "Utensils", "description": "Ricette base e avanzate per professionisti" }
       ]
     },
-    "3_progressive_educational_paths": {
-      "title": "Percorsi Didattici Progressivi a Modelli",
-      "description": "Clear step-by-step roadmap from beginner to master home baker.",
-      "levels": [
-        "Livello 1: Primi Passi & I 4 Ingredienti (Farina, acqua, sale, lievito)",
-        "Livello 2: Focacce & Teghie Morbide (Alta idratazione, olio EVO e teglie)",
-        "Livello 3: Pani Tradizionali & Prefermenti (Biga, Poolish e crosta croccante)",
-        "Livello 4: Lievito Madre & Fermentazioni Lente (Rinfreschi, gestione e acidità)",
-        "Livello 5: Grandi Lievitati & Panettone (Primo/secondo impasto, pirlatura, raffreddamento capovolto)"
+    {
+      "id": "calcolatori",
+      "title": "Calcolatori di Laboratorio",
+      "type": "accordion_section",
+      "default_open": true,
+      "tools": [
+        { "id": "calcola_gradi", "name": "Idratazione & Farine", "icon": "Droplet", "description": "Calcolo idratazione e W farine" },
+        { "id": "water_temp", "name": "Temperatura Acqua", "icon": "Thermometer", "description": "Formula del 60 e temperatura impasto" },
+        { "id": "calcolatore_sequenze", "name": "Sequenze & Orari Impasto", "icon": "Clock", "description": "Orari di puntata, appretto e infornata" },
+        { "id": "convertitore_lieviti", "name": "Convertitore Lieviti", "icon": "RefreshCw", "description": "Conversione LFB, Lievito Madre e Secco" },
+        { "id": "calcolatore_stampi", "name": "Calcolatore Stampi", "icon": "Square", "description": "Dimensionamento teglie e ruoti" },
+        { "id": "adatta_forno", "name": "Adatta Forno", "icon": "Flame", "description": "Rapporto temperatura e tempi di cottura" },
+        { "id": "costo_energia", "name": "Costo Energia", "icon": "Zap", "description": "Calcolo consumo kW/h per cottura" }
       ]
     },
-    "4_rich_learn_landing_page": {
-      "title": "Landing Impara Ricca e Gamificata",
-      "description": "Content-rich educational hub with intuitive navigation.",
-      "components": [
-        "Horizontal quick-access pills for fast scrolling (Livelli, Quiz, Chiedi al Maestro, Ricetta del giorno, SOS Impasto)",
-        "Recipe of the day spotlight card with ingredients & steps",
-        "Gamification progress bar showing overall level completion",
-        "AvatarBubbles featuring Mikila & Mohammadreza with actionable 'Take me there' links",
-        "Integrated Baker Quiz and BakeAlong weekly challenge"
+    {
+      "id": "celle_freddo",
+      "title": "Celle, Freddo & Conservazione",
+      "type": "accordion_section",
+      "default_open": false,
+      "tools": [
+        { "id": "clima_termostato", "name": "Controllo Celle & Impastatrici", "icon": "Cpu", "description": "Monitoraggio temperature e umidità" },
+        { "id": "freezer_stock", "name": "Gestione Freezer", "icon": "Snowflake", "description": "Mappatura prodotti congelati ed etichette" },
+        { "id": "shelf_life", "name": "Shelf-Life Prodotto", "icon": "Calendar", "description": "Scadenze e conservazione in banco" },
+        { "id": "anti_waste", "name": "Anti-Spreco / Esuberi", "icon": "Recycle", "description": "Riutilizzo esuberi impasto e pane raffermo" }
+      ]
+    },
+    {
+      "id": "costi_dati",
+      "title": "Costi, Margini & Dati",
+      "type": "accordion_section",
+      "default_open": false,
+      "tools": [
+        { "id": "food_cost", "name": "Costi & Margine Prodotto", "icon": "DollarSign", "description": "Calcolo costo scheda e ricetta" },
+        { "id": "my_data", "name": "I Miei Dati & Fornitori", "icon": "Database", "description": "Archivio ingredienti e listini" },
+        { "id": "machine_park", "name": "Parco Macchine", "icon": "Wrench", "description": "Schede tecniche impastatrici e forni" }
+      ]
+    },
+    {
+      "id": "diagnosi_registri",
+      "title": "Diagnosi, SOS & Registri",
+      "type": "accordion_section",
+      "default_open": false,
+      "tools": [
+        { "id": "photo_diagnosi", "name": "Diagnosi Foto / Suono", "icon": "Camera", "description": "Analisi alveolatura e rumori macchina" },
+        { "id": "sos_impasto", "name": "SOS Impasto Difficile", "icon": "AlertTriangle", "description": "Rimedio rapido per impasti strappati o caldi" },
+        { "id": "sourdough_tracker", "name": "Registro Lievito Madre", "icon": "Activity", "description": "Diario rinfreschi e pH" },
+        { "id": "dough_log", "name": "Diario Impasti", "icon": "FileText", "description": "Storico lotti e parametri di produzione" },
+        { "id": "checklists", "name": "Checklist Apertura/Chiusura", "icon": "CheckSquare", "description": "Procedure giornaliere di laboratorio" }
+      ]
+    },
+    {
+      "id": "specializzazioni",
+      "title": "Pizzeria & Pasticceria",
+      "type": "accordion_section",
+      "default_open": false,
+      "tools": [
+        { "id": "lab_pizzeria", "name": "Modulo Pizzeria", "icon": "Pizza", "description": "Calcoli dedicati a pala, teglia e tonda" },
+        { "id": "lab_pasticceria", "name": "Modulo Pasticceria", "icon": "Cake", "description": "Grandi lievitati, cremosi e bilanciamento zuccheri" }
+      ]
+    },
+    {
+      "id": "altri_strumenti",
+      "title": "Altri Strumenti & Avanzati",
+      "type": "accordion_section",
+      "default_open": false,
+      "tools": [
+        { "id": "trova_farina", "name": "Trova & Compara Farina", "icon": "Search", "description": "Database tecnico farine commerciali" },
+        { "id": "haccp_log", "name": "Registro HACCP", "icon": "ShieldCheck", "description": "Temperature e autocontrollo" },
+        { "id": "smart_weather", "name": "Meteo & Umidità Laboratorio", "icon": "CloudSun", "description": "Condizioni ambientali locali" }
       ]
     }
+  ],
+  "tool_card_design": {
+    "min_height": "64px",
+    "background": "bg-[#1E1E1E] hover:bg-[#252525] border border-[#2C2C2C] rounded-xl",
+    "drag_handle": {
+      "icon": "GripVertical (three lines/dots)",
+      "color": "text-zinc-500 hover:text-orange-500",
+      "touch_target": "w-10 h-12 flex items-center justify-center cursor-grab"
+    },
+    "icon_tile": {
+      "background": "bg-orange-950/40 border border-orange-500/30 text-[#FF6B00]",
+      "size": "w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
+    },
+    "label_area": {
+      "title_style": "text-base sm:text-lg font-bold text-white tracking-wide leading-snug",
+      "desc_style": "text-xs sm:text-sm text-zinc-400 line-clamp-1"
+    },
+    "toggle_switch": {
+      "component": "Shadcn Switch or Custom Toggle",
+      "active_color": "bg-[#FF6B00]",
+      "label": "Attivo / Nascosto",
+      "touch_target": "p-2 min-h-[48px] flex items-center"
+    }
   },
-  "testing_and_accessibility": {
-    "data_testid_rule": "MUST include kebab-case data-testid on all interactive elements (buttons, inputs, links, tabs, modals). Examples: data-testid=\"bakealong-step-next\", data-testid=\"shopping-where-to-buy-btn\", data-testid=\"impara-path-focacce\".",
-    "touch_targets": "Minimum 48px height on all mobile buttons and clickable cards.",
-    "contrast_standards": "Text contrast ratio > 4.5:1 against dark #121212 / #1e1e1e backgrounds."
+  "persistent_voice_bar": {
+    "position": "fixed bottom-20 right-4 sm:right-6 z-50",
+    "button_style": "h-16 px-6 bg-[#FF6B00] hover:bg-[#E05E00] text-black font-extrabold text-lg rounded-full shadow-2xl flex items-center gap-3 border-2 border-orange-300 ring-4 ring-orange-500/20 active:scale-95 transition-all",
+    "label": "🎤 COMANDI VOCALI",
+    "tooltip": "Parla per aprire qualsiasi strumento senza usare le mani"
+  },
+  "component_guidelines": {
+    "accordion": "Use Shadcn Accordion (single or multiple) with clear section headers, showing badge counter of active tools (e.g., '7 Strumenti').",
+    "drag_and_drop": "Allow bakers to reorder tool cards within section or hide them via switch toggle.",
+    "routing": "Tool cards must open tools by invoking onSelectTool(toolId) maintaining existing routing integrity."
+  },
+  "general_ui_ux_guidelines": {
+    "test_id_convention": "All interactive elements MUST have data-testid. Format: data-testid='lab-tool-[tool_id]', data-testid='lab-section-[section_id]', data-testid='voice-command-btn', data-testid='lab-mode-toggle'.",
+    "no_transparent_overlays": "Never use pure transparent backgrounds for headers, dialogs, or collapsible cards. Always use minimum bg-[#121212] or bg-[#1E1E1E] with border-[#2C2C2C].",
+    "micro_interactions": "Smooth accordion expansion via Framer Motion / standard Shadcn collapsible transitions. Hover states with primary orange highlight (#FF6B00).",
+    "toast_notifications": "Use sonner toast notifications for voice command confirmation and tool customization saving."
   },
   "instructions_to_main_agent": [
-    "Enhance the IMPARA section adhering strictly to the Deep Black #121212 + Orange #FF6B00 theme.",
-    "Implement the step-by-step recipe execution mode with Mikila avatar guidance, step progress, timer/temp indicators, and encouraging notes.",
-    "Integrate the 'Cosa e Dove comprare' shopping list component with quantities and buying tips (supermarket, local mill, specialty shop, online).",
-    "Structure the learning levels in a progressive flow (Primi Passi -> Focacce -> Pani -> Lievito Madre -> Grandi Lievitati).",
-    "Ensure all 6 supported languages (IT, DE, EN, ES, FR, FA) render smoothly using mkTri or translation maps.",
-    "Add data-testid to every interactive component for testing validation."
+    "Refactor tools directory in /frontend/src/components/ToolsDirectory.jsx or relevant section files.",
+    "Implement clear 10-section accordion structure as specified in sections_breakdown.",
+    "Ensure touch targets are strictly >= 56px-64px with clear text sizes suitable for elderly / hands-free users.",
+    "Keep the strict dark color scheme (#121212 background, #1E1E1E card background, #FF6B00 orange primary).",
+    "Add persistent Voice Command floating trigger button with data-testid='voice-command-btn'.",
+    "Include tool enable/disable toggle switch and drag handle icon on each tool item tile.",
+    "Remove all noisy comments, avatars, and superfluous clutter from the main hub top area."
   ]
 }

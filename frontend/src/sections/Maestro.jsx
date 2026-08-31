@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp, Maximize2,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp, Maximize2, Mic,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
@@ -197,7 +197,7 @@ export default function Maestro() {
       {/* Header pulito e professionale: solo titolo, nessuna immagine decorativa (lab = lavoro veloce). */}
       <div data-testid="maestro-title" className="mb-4">
         <h1 className="font-display text-2xl font-extrabold text-white leading-tight">{mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}</h1>
-        <p className="text-[13px] text-[#AEB8BF] leading-snug mt-0.5">{mkTri(lang)("Solo strumenti di lavoro, per produrre più in fretta.", "Nur Arbeitswerkzeuge, um schneller zu produzieren.", "Only work tools, to produce faster.", "Solo herramientas de trabajo, para producir más rápido.", "Uniquement des outils de travail, pour produire plus vite.", "فقط ابزارهای کار، برای تولید سریع‌تر.")}</p>
+        <p className="text-[13px] text-[#AEB8BF] leading-snug mt-0.5">{mkTri(lang)("Tutti i tuoi strumenti in ordine, divisi per sezione. Bottoni grandi e comandi vocali: lavori anche a mani infarinate.", "Alle Werkzeuge geordnet, nach Bereichen. Große Tasten & Sprachbefehle: auch mit mehligen Händen.", "All your tools in order, split by section. Big buttons and voice commands: work even with floury hands.", "Todas tus herramientas en orden, por secciones. Botones grandes y comandos de voz: trabaja incluso con las manos enharinadas.", "Tous tes outils en ordre, par sections. Gros boutons et commandes vocales.", "همهٔ ابزارها مرتب، بخش‌بندی‌شده. دکمه‌های بزرگ و فرمان صوتی.")}</p>
       </div>
 
       {/* Modalità Laboratorio: pulsanti giganti per lavorare con le mani infarinate */}
@@ -289,6 +289,12 @@ export default function Maestro() {
       <div className="mt-4">
         <WhatsAppHelp context="laboratorio" />
       </div>
+
+      {/* Comandi vocali sempre raggiungibili: lavorare a mani libere/infarinate */}
+      <button data-testid="voice-command-btn" onClick={() => openTool("manisporche")}
+        className="fixed bottom-24 right-4 z-50 h-16 px-5 rounded-full bg-[#ff6b00] hover:bg-[#e05e00] text-white font-extrabold text-base shadow-2xl flex items-center gap-2.5 ring-4 ring-[#ff6b00]/25 active:scale-95 transition-all">
+        <Mic className="w-6 h-6" /> {tri("Voce", "Stimme", "Voice", "Voz")}
+      </button>
     </div>
   );
 }

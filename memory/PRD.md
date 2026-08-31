@@ -3036,3 +3036,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - La chiave Tavily è SOLO backend, mai esposta al browser. i18n: tutte le nuove stringhe inline in 6 lingue, nessun dizionario modificato.
 - NB: preview ≠ produzione → REDEPLOY per mikilab.de (ricordare di impostare TAVILY_API_KEY anche nei secret di produzione).
 
+
+
+## v-fork (2026-06) — Home semplificata + Il Tuo Laboratorio accessibile (ordine + voce)
+- **Home (`Home.jsx`)**: gate `{false && ...}` su blocchi dispersivi/doppioni: SectionJumpBar, PromuoviMikiLab, home-social-proof, AvatarBubbles, home-social-promo, home-hero (100% gratis), home-personal-photo, home-core. TENUTI: HomeAvatarScene (saluto), 2 CTA giganti, home-lab-switch ("Scegli il tuo spazio"), champion/unread (condizionali), ShareInstall, legal. Titoli delle 2 CTA giganti ingranditi: `text-xl` → `text-2xl sm:text-3xl`.
+- **Laboratorio — `ToolsDirectory.jsx` riscritto** (blueprint in `design_guidelines.json`): 7 sezioni tematiche ad ACCORDION con badge conteggio, che mappano gli id REALI dei 44 strumenti (routing invariato via onOpenTool). Bottoni grandi accessibili: riga min-h 64px, icon tile 48px, label text-base/lg. Ricerca full-width. Modalità **"Personalizza"** = toggle on/off per strumento (nascondi/mostra) persistito in localStorage `mikilab_lab_hidden_tools`. testid: `lab-section-<id>`, `lab-section-toggle-<id>`, `lab-tool-<id>`, `lab-tool-toggle-<id>`, `tools-dir-customize`.
+- **`Maestro.jsx`**: sottotitolo header aggiornato (ordine + voce + mani infarinate); pulsante **Voce fisso** `voice-command-btn` (fixed bottom-24 right-4, apre `manisporche`) sempre raggiungibile nella hub del Laboratorio.
+- Non implementato (futuro): drag-and-drop per riordinare gli strumenti (le "tre linee") — al momento c'è solo on/off. i18n: nuove stringhe inline in 6 lingue, nessun dizionario toccato.
+- NB: cambi in PREVIEW → REDEPLOY per mikilab.de.
+
