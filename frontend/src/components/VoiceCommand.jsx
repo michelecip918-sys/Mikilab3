@@ -75,9 +75,37 @@ export default function VoiceCommand({ onOpenTool }) {
     .replace(/\b(aprimi|apri|apre|vai alle|vai alla|vai al|vai ai|vai a|portami|mostrami|mostra|voglio|open|go to|show me|show|abre|ir a|offne|öffne|zeige|zeig mir|zeig)\b/g, " ")
     .replace(/\s+/g, " ").trim();
 
+  const speak = (text) => { try { const u = new SpeechSynthesisUtterance(text); u.lang = SR_LANG[lang] || "it-IT"; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch { /* */ } };
+
+  // Calcolo vocale: "500 g farina 70% idratazione" → acqua+sale a voce. Ritorna true se gestito.
+  const tryCalc = (t, raw) => {
+    if (!/(farina|flour|mehl|harina)/.test(t)) return false;
+    const pct = t.match(/(\d{1,3})\s*(?:%|per ?cento|percent|prozent|por ?ciento)/) || t.match(/(?:idrataz\w*|hydrat\w*)\D{0,6}(\d{1,3})/);
+    const hyd = pct ? parseInt(pct[1], 10) : null;
+    if (!hyd) return false;
+    const kg = /(kg|chil|kilo)/.test(t);
+    let flour = null;
+    const fm = t.match(/(\d+(?:[.,]\d+)?)\s*(?:kg|chil\w*|kilo\w*|g|gr|grammi|gramm|grams)?\s*(?:di\s+)?(?:farina|flour|mehl|harina)/);
+    if (fm) flour = parseFloat(fm[1].replace(",", "."));
+    else { const nums = (t.match(/\d+(?:[.,]\d+)?/g) || []).map((x) => parseFloat(x.replace(",", "."))); flour = nums.find((n) => n !== hyd) ?? null; }
+    if (!flour) return false;
+    if (kg && flour < 100) flour *= 1000;
+    const water = Math.round(flour * hyd / 100);
+    const salt = Math.round(flour * 0.02);
+    const msg = tri(
+      `Con ${flour} g di farina al ${hyd}% servono ${water} g di acqua e circa ${salt} g di sale.`,
+      `Bei ${flour} g Mehl mit ${hyd}%: ${water} g Wasser und ca. ${salt} g Salz.`,
+      `With ${flour} g flour at ${hyd}%: ${water} g water and about ${salt} g salt.`,
+      `Con ${flour} g de harina al ${hyd}%: ${water} g de agua y unos ${salt} g de sal.`,
+      `Avec ${flour} g de farine à ${hyd}% : ${water} g d'eau et environ ${salt} g de sel.`,
+      `با ${flour} گرم آرد و ${hyd}٪: ${water} گرم آب و حدود ${salt} گرم نمک.`);
+    toast.success(msg); speak(msg); return true;
+  };
+
   const handle = (raw) => {
     const t = norm(raw);
     const c = stripVerbs(t);
+    if (tryCalc(t, raw)) return;
     // 1) alias curati
     for (const [id, kws] of Object.entries(TOOL_ALIASES)) {
       if (kws.some((k) => t.includes(k) || c.includes(k))) { open(id); return; }
