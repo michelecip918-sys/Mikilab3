@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { notificationsApi, communityApi } from "@/lib/api";
 import { mkTri } from "@/i18n/triMaps";
+import { useProfile } from "@/profile/ProfileContext";
 
 // Navigazione "pale da forno": ogni sezione è una pala di legno con icona incisa.
 export default function BottomNav({ active, onChange }) {
@@ -33,13 +34,17 @@ export default function BottomNav({ active, onChange }) {
   const markSocialSeen = () => { try { localStorage.setItem("mikilab_social_seen", new Date().toISOString()); } catch { /* */ } setSocialNew(false); };
 
   const norm = ["news", "enciclopedia"].includes(active) ? "impara" : active;
-  const TABS = [
+  const { profile } = useProfile();
+  let TABS = [
     { id: "home", label: t("nav_home"), Icon: Home },
     { id: "ricette", label: t("nav_ricette"), Icon: BookOpen },
     { id: "maestro", label: t("nav_maestro"), Icon: Wrench },
     { id: "impara", label: t("nav_impara"), Icon: GraduationCap },
     { id: "community", label: triNav("Social", "Social", "Social", "Social"), Icon: Users, logo: true },
   ];
+  // PRO (B2B): solo strumenti di lavoro. PASSION (B2C): niente Laboratorio pro.
+  if (profile === "pro") TABS = TABS.filter((x) => ["home", "ricette", "maestro"].includes(x.id));
+  else if (profile === "passion") TABS = TABS.filter((x) => ["home", "ricette", "impara", "community"].includes(x.id));
   const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
 
   return (

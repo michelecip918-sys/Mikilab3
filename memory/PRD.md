@@ -2956,3 +2956,11 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Verificato E2E (browser): toggle -> lab-mode-big con 10 tile; tap Timer apre "Smart Multi-Dough Timer" (routing OK). Compila (1 warning: import Store/CheckCircle2 ora inutilizzati, innocuo).
 - Target consigliato: fornai professionisti come cliente primario; Impara da casa come porta hobbisti.
 - FASE 2 backlog (dal piano di Michele/capo): export CSV/JSON ricette+costi+allergeni per gestionali; stampa cartellini banco allergeni; testi di posizionamento "affianca il gestionale, non lo sostituisce"; potenziare comandi vocali step-by-step.
+
+## v-fork.62 (2026-06) — Selezione profilo Pro/Passion (Punto 1)
+- Nuovo `profile/ProfileContext.jsx` (ProfileProvider + useProfile), profilo in localStorage `mikilab_profile`; scelta persistente per sessione; evento `mikilab-open-profile` per ri-aprire il selettore.
+- Nuovo `profile/ProfileSelect.jsx`: schermata primo accesso con schede Pro (B2B) e Passion (B2C) + benefici, multilingua.
+- App.js: wrap `ProfileProvider`, render `<ProfileSelect/>`. Scelta PRO imposta `mikilab_lab_big=1` (Modalita Farina di default), PASSION=0.
+- BottomNav.jsx: tab filtrate per profilo -> PRO: home/ricette/maestro; PASSION: home/ricette/impara/community.
+- Verificato E2E: selettore al primo accesso; PRO -> nav [home,ricette,maestro] + lab_big=1. Compila (1 warning innocuo import lucide inutilizzati).
+- Backlog raffinamenti: nascondere a livello contenuto Radio del Fornaio per Pro; voce menu "Cambia profilo"; tono di voce Pro/Passion negli assistenti; Fase 2 (export CSV, cartellini allergeni, posizionamento).

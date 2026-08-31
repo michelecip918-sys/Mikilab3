@@ -4,6 +4,8 @@ import "@/App.css";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
+import { ProfileProvider } from "@/profile/ProfileContext";
+import ProfileSelect from "@/profile/ProfileSelect";
 import Home from "@/sections/Home";
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
@@ -212,6 +214,7 @@ function App() {
   if (publicBatch) return <PublicBatch id={publicBatch} />;
 
   return (
+    <ProfileProvider>
     <AmbientProvider>
     <TimerProvider>
     <SoundFXProvider>
@@ -296,6 +299,7 @@ function App() {
       )}
 
       <Toaster position="top-center" richColors />
+      <ProfileSelect />
       <Sfide open={sfideOpen} onClose={() => setSfideOpen(false)} />
       {resetToken && (
         <ResetPassword
@@ -314,6 +318,7 @@ function App() {
     </SoundFXProvider>
     </TimerProvider>
     </AmbientProvider>
+    </ProfileProvider>
   );
 }
 
