@@ -77,17 +77,17 @@ function buildSlides(lang) {
       who: "mohammed", avatar: MOHAMMED, step: 6,
       title: tri("Passo 6 · Chiusura & Tracciabilità", "Schritt 6 · Abschluss & Rückverfolgung", "Step 6 · Closing & Traceability"),
       body: tri(
-        "A fine giornata: Diario Impasti, Tracciabilità Lotti (QR), Registro HACCP e controlli finali. Con «Concludi Giornata» archivio tutto in automatico: sei sempre in regola, senza scartoffie.",
-        "Am Tagesende: Teig-Tagebuch, Chargen-Rückverfolgung (QR), HACCP-Register und Endkontrollen. Mit «Tag abschließen» archiviere ich alles automatisch: immer regelkonform, ohne Papierkram.",
-        "At the end of the day: Dough Log, Batch Traceability (QR), HACCP register and final checks. With «Close the Day» I archive everything automatically: always compliant, no paperwork."),
+        "A fine giornata: Diario Impasti, Tracciabilità Lotti (QR) e controlli finali. Archivio tutto in automatico: sei sempre in ordine, senza scartoffie.",
+        "Am Tagesende: Teig-Tagebuch, Chargen-Rückverfolgung (QR) und Endkontrollen. Ich archiviere alles automatisch: immer geordnet, ohne Papierkram.",
+        "At the end of the day: Dough Log, Batch Traceability (QR) and final checks. I archive everything automatically: always tidy, no paperwork."),
     },
     {
       who: "mohammed", avatar: MOHAMMED,
       title: tri("Tutti i miei strumenti 🧰", "Alle meine Werkzeuge 🧰", "All my tools 🧰"),
       body: tri(
-        "Ecco tutto quello che trovi qui: Capo Laboratorio (macchine), Giacenze Freezer, Bilancia Smart, Termostato & Clima · Le Mie Ricette (aggiungi/scansiona), Tabella Farine, Adatta il Forno · Punti Vendita, Turni & Ruoli · Piano IA, Piano Settimanale, Piano di Lavoro, Tempi a Ritroso, Lista Spesa, Food Cost & Energia · Temperatura Acqua, Pesata Guidata a voce, Timer, Meteo, Tracker pH, Digital Twin dell'impasto · Diario Impasti, Tracciabilità Lotti (QR), Registro HACCP, Checklist, Shelf-Life, Anti-Spreco. Un unico posto per tutto il tuo laboratorio.",
-        "Das findest du hier alles: Werkstattleiter (Maschinen), Freezer-Bestand, Smarte Waage, Thermostat & Klima · Meine Rezepte (hinzufügen/scannen), Mehl-Tabelle, Ofen anpassen · Verkaufspunkte, Schichten & Rollen · KI-Plan, Wochenplan, Arbeitsplan, Rückwärtsplanung, Einkaufsliste, Food Cost & Energie · Wassertemperatur, geführtes Wiegen per Stimme, Timer, Wetter, pH-Tracker, Digital Twin des Teigs · Teig-Tagebuch, Chargen-Rückverfolgung (QR), HACCP-Register, Checklisten, Shelf-Life, Anti-Verschwendung. Alles an einem Ort.",
-        "Here's everything you'll find: Lab Manager (machines), Freezer Stock, Smart Scale, Thermostat & Climate · My Recipes (add/scan), Flour Table, Adapt the Oven · Sales Points, Shifts & Roles · AI Plan, Weekly Plan, Work Plan, Backward Timing, Shopping List, Food Cost & Energy · Water Temperature, voice Guided Weighing, Timers, Weather, pH Tracker, dough Digital Twin · Dough Log, Batch Traceability (QR), HACCP register, Checklists, Shelf-Life, Anti-Waste. One place for your whole lab."),
+        "Ecco tutto quello che trovi qui: Capo Laboratorio (macchine), Giacenze Freezer, Bilancia Smart, Termostato & Clima · Le Mie Ricette (aggiungi/scansiona), Tabella Farine, Adatta il Forno · Punti Vendita, Turni & Ruoli · Piano IA, Piano Settimanale, Piano di Lavoro, Tempi a Ritroso, Lista Spesa, Food Cost & Energia · Temperatura Acqua, Pesata Guidata a voce, Timer, Meteo, Tracker pH, Digital Twin dell'impasto · Diario Impasti, Tracciabilità Lotti (QR), Checklist, Shelf-Life, Anti-Spreco. Un unico posto per tutto il tuo laboratorio.",
+        "Das findest du hier alles: Werkstattleiter (Maschinen), Freezer-Bestand, Smarte Waage, Thermostat & Klima · Meine Rezepte (hinzufügen/scannen), Mehl-Tabelle, Ofen anpassen · Verkaufspunkte, Schichten & Rollen · KI-Plan, Wochenplan, Arbeitsplan, Rückwärtsplanung, Einkaufsliste, Food Cost & Energie · Wassertemperatur, geführtes Wiegen per Stimme, Timer, Wetter, pH-Tracker, Digital Twin des Teigs · Teig-Tagebuch, Chargen-Rückverfolgung (QR), Checklisten, Shelf-Life, Anti-Verschwendung. Alles an einem Ort.",
+        "Here's everything you'll find: Lab Manager (machines), Freezer Stock, Smart Scale, Thermostat & Climate · My Recipes (add/scan), Flour Table, Adapt the Oven · Sales Points, Shifts & Roles · AI Plan, Weekly Plan, Work Plan, Backward Timing, Shopping List, Food Cost & Energy · Water Temperature, voice Guided Weighing, Timers, Weather, pH Tracker, dough Digital Twin · Dough Log, Batch Traceability (QR), Checklists, Shelf-Life, Anti-Waste. One place for your whole lab."),
     },
     {
       who: "mohammed", avatar: MOHAMMED,

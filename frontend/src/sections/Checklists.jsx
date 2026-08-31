@@ -23,9 +23,9 @@ const TEMPLATES = [
   {
     id: "celle", Icon: Snowflake, it: "Controllo Celle & Frigoriferi", de: "Kontrolle Zellen & Kühlschränke", en: "Cells & Fridges Check",
     items: {
-      it: ["Temperatura cella frigo (0–4°C)", "Temperatura freezer (-18°C)", "Temperatura/umidità cella lievitazione", "Pulizia guarnizioni e ripiani", "Verifica assenza brina/ghiaccio", "Registrare le temperature (HACCP)"],
-      de: ["Temperatur Kühlzelle (0–4°C)", "Temperatur Gefrierzelle (-18°C)", "Temperatur/Feuchte Gärzelle", "Dichtungen und Regale reinigen", "Auf Reif/Eis prüfen", "Temperaturen dokumentieren (HACCP)"],
-      en: ["Fridge cell temperature (0–4°C)", "Freezer temperature (-18°C)", "Proofing cell temperature/humidity", "Clean seals and shelves", "Check for frost/ice", "Record temperatures (HACCP)"],
+      it: ["Temperatura cella frigo (0–4°C)", "Temperatura freezer (-18°C)", "Temperatura/umidità cella lievitazione", "Pulizia guarnizioni e ripiani", "Verifica assenza brina/ghiaccio", "Registrare le temperature"],
+      de: ["Temperatur Kühlzelle (0–4°C)", "Temperatur Gefrierzelle (-18°C)", "Temperatur/Feuchte Gärzelle", "Dichtungen und Regale reinigen", "Auf Reif/Eis prüfen", "Temperaturen dokumentieren"],
+      en: ["Fridge cell temperature (0–4°C)", "Freezer temperature (-18°C)", "Proofing cell temperature/humidity", "Clean seals and shelves", "Check for frost/ice", "Record temperatures"],
     },
   },
   {

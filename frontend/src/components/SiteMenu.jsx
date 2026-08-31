@@ -6,6 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { TOOLS, TOOL_KINDS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
 import { mkTri } from "@/i18n/triMaps";
+import { useProfile } from "@/profile/ProfileContext";
 
 const FAV_KEY = "mikilab_menu_favs";
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -203,6 +204,11 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white active:scale-98 transition-all">
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-white/20"><Trophy className="w-4 h-4" /></span>
               <span className="font-display text-sm font-semibold">{tri("Motore Sfide", "Challenges", "Challenges", "Desafíos")}</span>
+            </button>
+            <button data-testid="site-menu-change-profile" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-profile")); }}
+              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
+              <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#ff6b00]/15"><User className="w-4 h-4 text-[#ff6b00]" /></span>
+              <span className="font-display text-sm font-semibold text-[#ff6b00]">{tri("Cambia profilo (Pro / Passione)", "Profil wechseln (Pro / Passion)", "Change profile (Pro / Passion)", "Cambiar perfil (Pro / Pasión)")}</span>
             </button>
             {user?.role === "admin" && (
               <button data-testid="site-menu-admin" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-admin")); }}

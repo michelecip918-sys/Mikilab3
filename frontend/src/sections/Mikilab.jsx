@@ -1,6 +1,5 @@
 import RecipeList from "@/components/RecipeList";
 import GuidaMetodi from "@/sections/Enciclopedia";
-import PanettoneLabels from "@/sections/PanettoneLabels";
 import { useLang } from "@/i18n/LanguageContext";
 import { content } from "@/data/content";
 import { Heart, ChefHat, Wheat, Sparkles, BookHeart, BookOpen, Tag, ChevronLeft, ChevronRight } from "lucide-react";
@@ -48,7 +47,6 @@ export default function MikiLab() {
     return (
       <div className="pb-4">
         <BackBtn onClick={() => setView("main")} />
-        <PanettoneLabels />
       </div>
     );
   }
@@ -105,7 +103,6 @@ export default function MikiLab() {
       {/* Accessi rapidi: Lievito madre · Guida ai metodi · Etichette */}
       <AccessBtn testid="lievito-open-btn" Icon={Wheat} title={t("tab_lievito")} sub={t("lm_page_title")} onClick={() => setView("lievito")} />
       <AccessBtn testid="guida-open-btn" Icon={BookOpen} title={t("tool_guida")} sub={t("mikilab_guida_sub")} onClick={() => setView("guida")} />
-      <AccessBtn testid="labels-open-btn" Icon={Tag} title={t("tool_labels")} sub={t("mikilab_labels_sub")} onClick={() => setView("labels")} />
 
       {/* Metodo dell'impasto — diretto vs indiretto (prima delle ricette) */}
       <div data-testid="method-section" className="mt-2 mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">

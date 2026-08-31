@@ -2964,3 +2964,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - BottomNav.jsx: tab filtrate per profilo -> PRO: home/ricette/maestro; PASSION: home/ricette/impara/community.
 - Verificato E2E: selettore al primo accesso; PRO -> nav [home,ricette,maestro] + lab_big=1. Compila (1 warning innocuo import lucide inutilizzati).
 - Backlog raffinamenti: nascondere a livello contenuto Radio del Fornaio per Pro; voce menu "Cambia profilo"; tono di voce Pro/Passion negli assistenti; Fase 2 (export CSV, cartellini allergeni, posizionamento).
+
+## v-fork.63 (2026-06) — Cambia profilo + Home Pro + rimozione Allergeni/HACCP
+- SiteMenu.jsx: nuova voce `site-menu-change-profile` (dispatch `mikilab-open-profile`) per passare Pro/Passion in ogni momento.
+- Home.jsx: in profilo Pro (`useProfile`) nascosto il blocco `home-quickstart` (chip didattici). Radio del Fornaio: componente `RadioFornaio.jsx` NON renderizzato da nessuna parte (dead) -> niente da nascondere.
+- Allergeni/HACCP rimossi del tutto (funzioni/voci): rimosso feature Etichette Panettone (PanettoneLabels) da Ricette.jsx e Mikilab.jsx (import+view+bottoni); rimosso `EULabel` da RecipeList (display allergeni/etichetta UE) + import; rimosse route+import HaccpLog e DayClose in Maestro.jsx (gia fuori dal direttorio); rimossa sezione allergeni in LabPasticceria (selettore + display, tab rinominata "Scheda Prodotto"); rewording HACCP in Checklists.jsx, BatchTraceability.jsx, LabOnboarding.jsx.
+- Verificato E2E: PRO nasconde quickstart; menu Cambia profilo riapre il selettore; compila (warning innocui: import lucide/useProfile inutilizzati, ALLERGENS in LabPasticceria).
+- Note: componenti orfani rimasti (PanettoneLabels.jsx, EULabel.jsx, HaccpLog.jsx, DayClose.jsx) non piu referenziati; LegalPage puo ancora citare HACCP/allergeni come disclaimer (testo legale, non funzione).

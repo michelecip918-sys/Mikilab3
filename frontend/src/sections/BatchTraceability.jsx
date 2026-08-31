@@ -132,7 +132,7 @@ export default function BatchTraceability() {
             <div><label className={lbl}>{tri("Operatore", "Bediener", "Operator")}</label>
               <input data-testid="batch-operator" value={form.operator} onChange={(e) => setForm({ ...form, operator: e.target.value })} className={inp + " mt-1"} /></div>
           </div>
-          <div><label className={lbl}>{tri("Note (HACCP, temperature…)", "Notizen (HACCP, Temperaturen…)", "Notes (HACCP, temps…)")}</label>
+          <div><label className={lbl}>{tri("Note (temperature…)", "Notizen (Temperaturen…)", "Notes (temps…)")}</label>
             <textarea data-testid="batch-note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={2} className={inp + " mt-1"} /></div>
           <button data-testid="batch-save" onClick={add} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">{tri("Crea lotto", "Charge erstellen", "Create batch")}</button>
         </div>

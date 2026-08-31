@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, ChevronRight, ChevronDown, Info, ChefHat, FlaskConical, Smile, BookOpen, Wrench, GraduationCap, Laugh, ShoppingBag, Smartphone, Monitor, Users, Activity, Hand, Clock, MapPin, Sparkles, Trophy, Calculator, UtensilsCrossed, Landmark, Pizza, Croissant } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useProfile } from "@/profile/ProfileContext";
 import MaestroSaTutto from "@/sections/MaestroSaTutto";
 import { TattooSignature } from "@/components/TattooSignature";
 import { recipesApi } from "@/lib/api";
@@ -229,6 +230,8 @@ const FEATURES = [
 ];
 
 export default function Home({ onNavigate }) {
+  const { profile } = useProfile();
+  const isPro = profile === "pro";
   const { t, lang } = useLang();
   const { user, setAuthOpen } = useAuth();
   const [chat, setChat] = useState(false);
@@ -300,7 +303,8 @@ export default function Home({ onNavigate }) {
         { target: "home-lab-switch", label: mkTri(lang)("Il tuo Lab", "Dein Labor", "Your Lab", "Tu Lab", "Ton Atelier", "کارگاه"), Icon: Wrench },
         { target: "home-core", label: mkTri(lang)("Il cuore", "Das Herz", "The heart", "El corazón", "Le cœur", "قلب"), Icon: BookOpen },
       ]} />
-      {/* Guida rapida: come iniziare (breve, non invasiva) */}
+      {/* Guida rapida: come iniziare (breve, non invasiva) — nascosta in profilo Pro */}
+      {!isPro && (
       <div data-testid="home-quickstart" className="rounded-2xl border border-[#ff6b00]/40 bg-[#1e1e1e] p-3.5">
         <p className="text-[13px] text-[#E0E0E0] leading-snug">
           <span className="font-bold text-white">{mkTri(lang)("Come iniziare:", "So startest du:", "How to start:", "Cómo empezar:", "Comment commencer:", "از کجا شروع کنی:")} </span>
@@ -320,6 +324,7 @@ export default function Home({ onNavigate }) {
           ))}
         </div>
       </div>
+      )}
 
       {/* Card in alto: avatar digitale animato (finto video) */}
       <HomeAvatarScene lang={lang} />

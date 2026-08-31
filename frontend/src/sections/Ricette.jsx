@@ -4,7 +4,6 @@ import RecipeList from "@/components/RecipeList";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import SectionHero from "@/components/SectionHero";
 import { NovitaColorate } from "@/components/NovitaColorate";
-import PanettoneLabels from "@/sections/PanettoneLabels";
 import GuidaMetodi from "@/sections/Enciclopedia";
 import Glossario from "@/sections/Glossario";
 import FlourTable from "@/components/FlourTable";
@@ -31,7 +30,6 @@ export default function Ricette() {
     return () => window.removeEventListener("mikilab-ricette-view", h);
   }, []);
 
-  if (view === "labels") return <Sub onBack={() => setView("main")}><PanettoneLabels /></Sub>;
   if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2e2e2e] dark:border-[#2e2e2e]"><Glossario /></div></Sub>;
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
@@ -127,7 +125,6 @@ export default function Ricette() {
           <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab", "Découvre MikiLab")} onClick={() => setView("scopri")} />
           <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
-          <UtilBtn testid="ricette-labels-btn" Icon={Tag} label={t("tool_labels")} onClick={() => setView("labels")} />
         </div>
       )}
 

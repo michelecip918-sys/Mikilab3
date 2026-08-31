@@ -6,7 +6,6 @@ import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layer
 import { recipesApi, siteSettingsApi } from "@/lib/api";
 import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
-import EULabel from "@/components/EULabel";
 import ScaleDialog from "@/components/ScaleDialog";
 import PrintHeader from "@/components/PrintHeader";
 import MachineScheda from "@/components/MachineScheda";
@@ -858,8 +857,6 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         {r.notes ? <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{rLoc(r, "notes", lang)}</p> : null}
 
         <GlossaryBox text={`${r.procedure || ""} ${r.notes || ""}`} />
-
-        <EULabel recipe={r} lang={lang} />
 
         {Array.isArray(r.work_phases) && r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).length > 0 && (
           <div data-testid={`recipe-phases-${r.id}`} className="rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/20 p-3">

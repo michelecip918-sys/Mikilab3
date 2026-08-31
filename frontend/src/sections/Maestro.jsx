@@ -35,9 +35,7 @@ import BatchTraceability from "@/sections/BatchTraceability";
 import DoughTwin from "@/sections/DoughTwin";
 import GuidedWeighing from "@/sections/GuidedWeighing";
 import DoughLog from "@/sections/DoughLog";
-import HaccpLog from "@/sections/HaccpLog";
 import SalesPoints from "@/sections/SalesPoints";
-import DayClose from "@/sections/DayClose";
 import HighFive from "@/components/HighFive";
 import LabWizard from "@/components/LabWizard";
 import FlourTable from "@/components/FlourTable";
@@ -138,7 +136,6 @@ export default function Maestro() {
         {tool === "bilancia" && <SmartScale />}
         {tool === "pesata" && <GuidedWeighing />}
         {tool === "sessioni" && <DoughLog />}
-        {tool === "haccp" && <HaccpLog />}
         {tool === "foodcost" && <FoodCost />}
         {tool === "shelf" && <ShelfLife />}
         {tool === "spreco" && <AntiWaste />}
@@ -159,7 +156,6 @@ export default function Maestro() {
         {tool === "check" && <Checklists />}
         {tool === "sveglia" && <SvegliaLievito />}
         {tool === "salespoints" && <SalesPoints />}
-        {tool === "dayclose" && <DayClose />}
         {tool === "diagnosi" && <PhotoDiagnosi />}
         {tool === "scanflour" && <ScanFlour />}
         {tool === "metodo" && <CalcolatoreMetodo />}

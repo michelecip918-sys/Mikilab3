@@ -95,7 +95,7 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
     { id: "frolle", Icon: Scale, label: L("Zuccheri & Grassi", "Sugars & Fats") },
     { id: "podpac", Icon: IceCream2, label: L("PAC/POD", "PAC/POD") },
     { id: "creme", Icon: Milk, label: L("Creme & Farciture", "Creams & Fillings") },
-    { id: "schede", Icon: FileText, label: L("Schede & Allergeni", "Sheets & Allergens") },
+    { id: "schede", Icon: FileText, label: L("Scheda Prodotto", "Product Sheet") },
     { id: "foodcost", Icon: Euro, label: L("Food Cost", "Food Cost") },
   ];
 
@@ -194,16 +194,9 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
           <input data-testid="sc-name" value={prodName} onChange={(e) => setProdName(e.target.value)} className={inp + " !font-sans mb-3"} placeholder={L("Es. Cornetto alla crema", "e.g. Cream croissant")} />
           <p className={lbl}>{L("Ingredienti", "Ingredients")}</p>
           <textarea data-testid="sc-ing" value={prodIng} onChange={(e) => setProdIng(e.target.value)} rows={3} className={inp + " !font-sans mb-3"} placeholder={L("Farina, burro, uova, zucchero…", "Flour, butter, eggs, sugar…")} />
-          <p className={lbl}>{L("Allergeni presenti", "Allergens present")}</p>
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {ALLERGENS.map((a) => (
-              <button key={a} data-testid={`sc-allg-${a}`} onClick={() => toggleAllg(a)} className={`text-[12px] font-semibold px-2.5 py-1 rounded-full border transition-all ${allg.includes(a) ? "bg-[#DC2626] text-white border-[#DC2626]" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e]"}`}>{a}</button>
-            ))}
-          </div>
           <div data-testid="sc-preview" className="rounded-xl bg-white dark:bg-[#121212] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
             <p className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8]">{prodName || L("Scheda prodotto", "Product sheet")}</p>
-            {prodIng && <p className="text-[13px] text-[#3F4A54] dark:text-[#AEB8BF] mt-1"><b>{L("Ingredienti", "Ingredients")}:</b> {prodIng.split(/,|\n/).map((w, i) => { const t = w.trim(); const isA = allg.some((a) => t.toLowerCase().includes(a.toLowerCase())); return t ? <span key={i}>{i > 0 ? ", " : ""}<span className={isA ? "font-bold text-[#DC2626]" : ""}>{t}</span></span> : null; })}</p>}
-            <p className="text-[13px] mt-2"><b className="text-[#DC2626]">{L("Allergeni", "Allergens")}:</b> {allg.length ? allg.join(", ") : L("nessuno indicato", "none indicated")}</p>
+            {prodIng && <p className="text-[13px] text-[#3F4A54] dark:text-[#AEB8BF] mt-1"><b>{L("Ingredienti", "Ingredients")}:</b> {prodIng}</p>}
           </div>
         </div>
       )}
