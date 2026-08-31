@@ -5414,7 +5414,36 @@ async def community_create(body: CommunityPostReq, user: dict = Depends(current_
         "comments": [],
     }
     await db.community_posts.insert_one(doc)
+    # Notifica i follower del canale (tranne l'autore)
+    try:
+        followers = await db.channel_follows.find({"channel": cat}, {"_id": 0, "user_id": 1}).to_list(2000)
+        for f in followers:
+            if f.get("user_id") and f["user_id"] != user["user_id"]:
+                await db.notifications.insert_one({
+                    "id": str(uuid.uuid4()), "user_id": f["user_id"], "actor_id": user["user_id"],
+                    "type": "channel_post", "post_id": doc["id"], "actor_name": doc["author_name"],
+                    "snippet": (f"#{cat}: " + (text or "nuova foto"))[:80],
+                    "count": 1, "read": False, "created_at": now_iso(), "category": cat,
+                })
+    except Exception:
+        logger.exception("channel follow notify error")
     return _post_public(doc, user)
+
+
+@api_router.get("/community/follows")
+async def community_follows_list(user: dict = Depends(current_user)):
+    docs = await db.channel_follows.find({"user_id": user["user_id"]}, {"_id": 0, "channel": 1}).to_list(100)
+    return {"channels": [d["channel"] for d in docs]}
+
+
+@api_router.post("/community/follows/{channel}")
+async def community_follow_toggle(channel: str, user: dict = Depends(current_user)):
+    existing = await db.channel_follows.find_one({"user_id": user["user_id"], "channel": channel})
+    if existing:
+        await db.channel_follows.delete_one({"user_id": user["user_id"], "channel": channel})
+        return {"following": False, "channel": channel}
+    await db.channel_follows.insert_one({"user_id": user["user_id"], "channel": channel, "created_at": now_iso()})
+    return {"following": True, "channel": channel}
 
 
 @api_router.post("/community/posts/{post_id}/like")

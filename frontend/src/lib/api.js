@@ -196,6 +196,8 @@ export const communityApi = {
   like: (id) => api.post(`/community/posts/${id}/like`).then((r) => r.data),
   comment: (id, text) => api.post(`/community/posts/${id}/comments`, { text }).then((r) => r.data),
   remove: (id) => api.delete(`/community/posts/${id}`).then((r) => r.data),
+  follows: () => api.get(`/community/follows`).then((r) => r.data.channels || []).catch(() => []),
+  toggleFollow: (channel) => api.post(`/community/follows/${channel}`).then((r) => r.data),
 };
 
 export const bakeAlongApi = {

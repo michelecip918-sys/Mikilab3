@@ -2769,3 +2769,12 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Filtri veloci nella ricerca**: barra scope `global-search-scopes` (Tutto/Ricette/Strumenti/Guide, `gs-scope-<key>`) che restringe i gruppi mostrati. Verificato: "hydration" All=10 ricette+1 strumento → scope Ricette nasconde gli strumenti.
 - **Segna tutto come letto (forum)**: pulsante `community-mark-all-read` (visibile solo se qualche canale ha novità) → imposta `chSeen` di tutti i CATS a ora e azzera tutti i pallini. Verificato: 4 pallini → 0.
 - Tutto verificato via screenshot/DOM, 0 crash. Solo frontend.
+
+
+---
+## v-fork.35 (2026-06, fork) — Match evidenziato, contatori filtri, scorciatoia "/", notifica canali seguiti
+- **Match evidenziato**: `GlobalSearch.jsx` `matchReason(r)` mostra sotto il nome perché una ricetta è stata trovata quando il match NON è nel titolo → "Contiene: <ingrediente>", "Farina: …" o "Trovato nelle note". Row ora ha prop `sub` (2ª riga arancio). Verificato ("olive").
+- **Contatori nei filtri**: calcolo `allRec/allTool/allGuide` (indip. dallo scope) → chip mostrano `label · count` (es. "All · 79", "Tools · 0"). Verificato.
+- **Scorciatoia "/"**: keydown globale in GlobalSearch apre la ricerca quando si preme "/" e non si sta scrivendo in input/textarea. Verificato.
+- **Notifica post in canali seguiti (backend)**: nuovo collection `channel_follows`; endpoint `GET /api/community/follows` e `POST /api/community/follows/{channel}` (toggle). In `community_create` si notificano i follower del canale (escluso l'autore) con notifica `type:"channel_post"`. Frontend: `communityApi.follows/toggleFollow`, pulsante `community-follow-toggle` in Community (visibile quando è selezionato un canale specifico). Verificato E2E via curl: fornaio segue "pane" → amico1 posta → fornaio riceve `channel_post`.
+- Tutto verificato (screenshot + curl E2E), 0 crash. Backend: nuove route + collection channel_follows.

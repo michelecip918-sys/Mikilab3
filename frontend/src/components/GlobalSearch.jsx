@@ -26,7 +26,15 @@ export default function GlobalSearch() {
   useEffect(() => {
     const h = () => setOpen(true);
     window.addEventListener("mikilab-open-search", h);
-    return () => window.removeEventListener("mikilab-open-search", h);
+    const onKey = (e) => {
+      if (e.key === "/" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const el = document.activeElement;
+        const typing = el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+        if (!typing) { e.preventDefault(); setOpen(true); }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => { window.removeEventListener("mikilab-open-search", h); window.removeEventListener("keydown", onKey); };
   }, []);
 
   useEffect(() => {
@@ -46,12 +54,25 @@ export default function GlobalSearch() {
 
   const nq = norm(q.trim());
   const recText = (r) => norm([r.name, r.name_de, r.name_en, r.name_es, r.flour_type, rLoc(r, "name", lang), rLoc(r, "notes", lang), (r.extra_ingredients || []).map((x) => `${x.name || ""} ${x[`name_${lang}`] || ""}`).join(" ")].join(" "));
+  const nameText = (r) => norm([r.name, r.name_de, r.name_en, r.name_es, rLoc(r, "name", lang)].join(" "));
+  const matchReason = (r) => {
+    if (!nq || nameText(r).includes(nq)) return null;
+    const ing = (r.extra_ingredients || []).find((x) => norm(`${x.name || ""} ${x[`name_${lang}`] || ""}`).includes(nq));
+    if (ing) return `${tri("Contiene", "Enthält", "Contains", "Contiene", "Contient", "شامل")}: ${ing[`name_${lang}`] || ing.name}`;
+    if (norm(r.flour_type || "").includes(nq)) return `${tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")}: ${r.flour_type}`;
+    if (norm(rLoc(r, "notes", lang)).includes(nq)) return tri("Trovato nelle note", "In den Notizen gefunden", "Found in notes", "Encontrado en las notas", "Trouvé dans les notes", "در یادداشت‌ها");
+    return null;
+  };
   const showRec = scope === "all" || scope === "recipes";
   const showTool = scope === "all" || scope === "tools";
   const showGuide = scope === "all" || scope === "guides";
-  const recHits = nq && showRec ? recipes.filter((r) => recText(r).includes(nq)).slice(0, 10) : [];
-  const toolHits = nq && showTool ? tools.filter((t) => norm(t.label).includes(nq)).slice(0, 10) : [];
-  const guideHits = nq && showGuide ? guides.filter((g) => norm(g.label).includes(nq)) : [];
+  const allRec = nq ? recipes.filter((r) => recText(r).includes(nq)) : [];
+  const allTool = nq ? tools.filter((t) => norm(t.label).includes(nq)) : [];
+  const allGuide = nq ? guides.filter((g) => norm(g.label).includes(nq)) : [];
+  const recHits = showRec ? allRec.slice(0, 10) : [];
+  const toolHits = showTool ? allTool.slice(0, 10) : [];
+  const guideHits = showGuide ? allGuide : [];
+  const counts = { all: allRec.length + allTool.length + allGuide.length, recipes: allRec.length, tools: allTool.length, guides: allGuide.length };
   const empty = nq && recHits.length === 0 && toolHits.length === 0 && guideHits.length === 0;
 
   const close = () => { setOpen(false); setQ(""); setScope("all"); };
@@ -62,13 +83,16 @@ export default function GlobalSearch() {
 
   if (!open) return null;
 
-  const Row = ({ testid, Icon, img, color, label, onClick }) => (
+  const Row = ({ testid, Icon, img, color, label, sub, onClick }) => (
     <button data-testid={testid} onClick={onClick}
       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#ff6b00]/10 active:scale-98 transition-all text-left">
       {img
         ? <img src={img} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0 bg-[#1e1e1e]" onError={(e) => { e.currentTarget.style.visibility = "hidden"; }} />
         : <span className="w-8 h-8 rounded-lg border flex items-center justify-center shrink-0" style={{ background: (color || "#ff6b00") + "22", borderColor: (color || "#ff6b00") + "55" }}><Icon className="w-4 h-4" style={{ color: color || "#ff6b00" }} /></span>}
-      <span className="text-sm text-[#e4eff8] leading-tight">{label}</span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm text-[#e4eff8] leading-tight">{label}</span>
+        {sub && <span data-testid={`${testid}-reason`} className="block text-[11px] text-[#ff8a33] leading-tight mt-0.5 truncate">{sub}</span>}
+      </span>
     </button>
   );
 
@@ -92,7 +116,7 @@ export default function GlobalSearch() {
           ].map((s) => (
             <button key={s.key} data-testid={`gs-scope-${s.key}`} onClick={() => setScope(s.key)}
               className={`shrink-0 px-3 py-1 rounded-full text-[12.5px] font-bold whitespace-nowrap border transition-all ${scope === s.key ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
-              {s.label}
+              {s.label}{nq ? ` · ${counts[s.key]}` : ""}
             </button>
           ))}
         </div>
@@ -121,7 +145,7 @@ export default function GlobalSearch() {
           {recHits.length > 0 && (
             <div className="mb-1">
               <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00] px-3 pt-2 pb-1">{tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها")}</p>
-              {recHits.map((r) => <Row key={r.id} testid={`gs-recipe-${r.id}`} img={r.image_url} Icon={BookOpen} label={rLoc(r, "name", lang)} onClick={() => openRecipe(r.id)} />)}
+              {recHits.map((r) => <Row key={r.id} testid={`gs-recipe-${r.id}`} img={r.image_url} Icon={BookOpen} label={rLoc(r, "name", lang)} sub={matchReason(r)} onClick={() => openRecipe(r.id)} />)}
             </div>
           )}
           {toolHits.length > 0 && (
