@@ -2761,3 +2761,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Ricerche recenti**: stato `recent` in localStorage `mikilab_recent_searches` (max 6, dedupe). Salvate quando si apre un risultato (`pushRecent(q)`); a query vuota si mostrano come chip (`global-search-recent`, `gs-recent-<term>`) che ricompilano la ricerca; pulsante "Cancella". Verificato.
 - **Pallini per-canale robusti**: in `Community.jsx` aggiunto `chLatest` caricato una volta da `communityApi.list("all")` (indipendente dal filtro attivo) → `hasNew` usa `chLatest[id] || latestByCat[id]`. Prima i pallini sparivano cambiando canale (posts filtrati). Verificato: 4 pallini sui canali con post nuovi.
 - Tutto verificato via screenshot/DOM, 0 crash. Solo frontend.
+
+
+---
+## v-fork.34 (2026-06, fork) — Ricerca per ingrediente + filtri scope; "Segna tutto letto" nel forum
+- **Cerca per ingrediente**: `GlobalSearch.jsx` ora costruisce un testo cercabile per ricetta = nome (it/de/en/es) + `flour_type` + nomi `extra_ingredients` (localizzati) + note. Match su questo → trova ricette anche per ingrediente (verificato: "olive"→10, "zucca"→2).
+- **Filtri veloci nella ricerca**: barra scope `global-search-scopes` (Tutto/Ricette/Strumenti/Guide, `gs-scope-<key>`) che restringe i gruppi mostrati. Verificato: "hydration" All=10 ricette+1 strumento → scope Ricette nasconde gli strumenti.
+- **Segna tutto come letto (forum)**: pulsante `community-mark-all-read` (visibile solo se qualche canale ha novità) → imposta `chSeen` di tutti i CATS a ora e azzera tutti i pallini. Verificato: 4 pallini → 0.
+- Tutto verificato via screenshot/DOM, 0 crash. Solo frontend.

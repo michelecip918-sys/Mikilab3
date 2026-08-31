@@ -171,6 +171,7 @@ export default function Community({ onNavigate }) {
     setFilter(id);
     if (id !== "all") setChSeen((s) => { const n = { ...s, [id]: new Date().toISOString() }; try { localStorage.setItem("mikilab_channel_seen", JSON.stringify(n)); } catch { /* */ } return n; });
   };
+  const markAllSeen = () => { const now = new Date().toISOString(); const n = {}; for (const c of CATS) n[c.id] = now; setChSeen(n); try { localStorage.setItem("mikilab_channel_seen", JSON.stringify(n)); } catch { /* */ } };
   const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // Registrazione OBBLIGATORIA per accedere al Social
@@ -312,6 +313,13 @@ export default function Community({ onNavigate }) {
       <HallOfFame />
 
       {/* Filtri */}
+      {CATS.some((c) => hasNew(c.id)) && (
+        <div className="flex justify-end mb-1.5">
+          <button data-testid="community-mark-all-read" onClick={markAllSeen} className="text-[12px] font-semibold text-[#ff6b00] active:scale-95 flex items-center gap-1">
+            ✓ {tri("Segna tutto come letto", "Alles als gelesen markieren", "Mark all as read", "Marcar todo como leído", "Tout marquer comme lu")}
+          </button>
+        </div>
+      )}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="community-filters">
         <button data-testid="community-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tri("Tutti", "Alle", "All", "Todos")}</button>
         {CATS.map((c) => (

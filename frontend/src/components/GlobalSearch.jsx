@@ -16,6 +16,7 @@ export default function GlobalSearch() {
   const [q, setQ] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [recent, setRecent] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_recent_searches") || "[]"); } catch { return []; } });
+  const [scope, setScope] = useState("all");
   const pushRecent = (term) => {
     const tt = (term || "").trim(); if (!tt) return;
     setRecent((r) => { const n = [tt, ...r.filter((x) => x.toLowerCase() !== tt.toLowerCase())].slice(0, 6); try { localStorage.setItem("mikilab_recent_searches", JSON.stringify(n)); } catch { /* */ } return n; });
@@ -44,12 +45,16 @@ export default function GlobalSearch() {
   ], [lang]); // eslint-disable-line
 
   const nq = norm(q.trim());
-  const recHits = nq ? recipes.filter((r) => norm(rLoc(r, "name", lang)).includes(nq) || norm(r.name).includes(nq)).slice(0, 8) : [];
-  const toolHits = nq ? tools.filter((t) => norm(t.label).includes(nq)).slice(0, 8) : [];
-  const guideHits = nq ? guides.filter((g) => norm(g.label).includes(nq)) : [];
+  const recText = (r) => norm([r.name, r.name_de, r.name_en, r.name_es, r.flour_type, rLoc(r, "name", lang), rLoc(r, "notes", lang), (r.extra_ingredients || []).map((x) => `${x.name || ""} ${x[`name_${lang}`] || ""}`).join(" ")].join(" "));
+  const showRec = scope === "all" || scope === "recipes";
+  const showTool = scope === "all" || scope === "tools";
+  const showGuide = scope === "all" || scope === "guides";
+  const recHits = nq && showRec ? recipes.filter((r) => recText(r).includes(nq)).slice(0, 10) : [];
+  const toolHits = nq && showTool ? tools.filter((t) => norm(t.label).includes(nq)).slice(0, 10) : [];
+  const guideHits = nq && showGuide ? guides.filter((g) => norm(g.label).includes(nq)) : [];
   const empty = nq && recHits.length === 0 && toolHits.length === 0 && guideHits.length === 0;
 
-  const close = () => { setOpen(false); setQ(""); };
+  const close = () => { setOpen(false); setQ(""); setScope("all"); };
   const goto = (tab) => window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab } }));
   const openRecipe = (id) => { pushRecent(q); goto("ricette"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 260); close(); };
   const openTool = (id) => { pushRecent(q); try { localStorage.setItem("mikilab_pending_tool", id); } catch { /* */ } goto("maestro"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-lab-tool", { detail: { id } })), 260); close(); };
@@ -74,9 +79,22 @@ export default function GlobalSearch() {
         <div className="flex items-center gap-2 p-3 border-b border-[#2e2e2e]">
           <Search className="w-5 h-5 text-[#ff6b00] shrink-0" />
           <input ref={inputRef} data-testid="global-search-input" value={q} onChange={(e) => setQ(e.target.value)}
-            placeholder={tri("Cerca ricette, strumenti, guide…", "Suche Rezepte, Werkzeuge, Anleitungen…", "Search recipes, tools, guides…", "Busca recetas, herramientas, guías…", "Cherche recettes, outils, guides…", "جستجوی دستور، ابزار، راهنما…")}
+            placeholder={tri("Cerca ricette (anche per ingrediente), strumenti, guide…", "Suche Rezepte (auch nach Zutat), Werkzeuge, Anleitungen…", "Search recipes (also by ingredient), tools, guides…", "Busca recetas (por ingrediente), herramientas, guías…", "Cherche recettes (par ingrédient), outils, guides…", "جستجوی دستور، ابزار، راهنما…")}
             className="flex-1 bg-transparent outline-none text-[15px] text-white placeholder-[#7E8A93]" />
           <button data-testid="global-search-close" onClick={close} className="w-8 h-8 rounded-full bg-[#1e1e1e] flex items-center justify-center text-[#7E8A93] active:scale-95"><X className="w-4 h-4" /></button>
+        </div>
+        <div className="flex gap-2 px-3 py-2 border-b border-[#2e2e2e] overflow-x-auto no-scrollbar" data-testid="global-search-scopes">
+          {[
+            { key: "all", label: tri("Tutto", "Alles", "All", "Todo", "Tout", "همه") },
+            { key: "recipes", label: tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها") },
+            { key: "tools", label: tri("Strumenti", "Werkzeuge", "Tools", "Herramientas", "Outils", "ابزارها") },
+            { key: "guides", label: tri("Guide", "Anleitungen", "Guides", "Guías", "Guides", "راهنماها") },
+          ].map((s) => (
+            <button key={s.key} data-testid={`gs-scope-${s.key}`} onClick={() => setScope(s.key)}
+              className={`shrink-0 px-3 py-1 rounded-full text-[12.5px] font-bold whitespace-nowrap border transition-all ${scope === s.key ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
+              {s.label}
+            </button>
+          ))}
         </div>
         <div className="max-h-[60vh] overflow-y-auto p-2">
           {!nq && (
