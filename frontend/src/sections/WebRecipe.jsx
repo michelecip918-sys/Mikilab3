@@ -113,7 +113,7 @@ export default function WebRecipe() {
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <Globe className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Cerca & Adatta Ricetta", "Rezept suchen & anpassen", "Find & Adapt Recipe", "Buscar y Adaptar Receta", "Chercher et Adapter", "جست‌وجو و تطبیق دستور")}</h1>
-        <p className="text-white/85 text-sm mt-1">{tri("Scrivi il nome di una ricetta: la ricostruisco e la riadatto al metodo che scegli. Poi puoi convertirla al farro prima di salvarla.", "Gib den Namen eines Rezepts ein: ich baue es nach und passe es an die gewählte Methode an. Danach in Dinkel umwandelbar.", "Type a recipe name: I rebuild it and adapt it to your chosen method. Then convert it to spelt before saving.", "Escribe el nombre de una receta: la reconstruyo y la adapto al método elegido.", "Écris le nom d'une recette : je la reconstruis selon la méthode choisie.", "نام یک دستور را بنویس: بازسازی و تطبیق می‌کنم.")}</p>
+        <p className="text-white/85 text-sm mt-1">{tri("Scrivi il nome di una ricetta OPPURE incolla il link di una pagina: la leggo dal web e la riadatto al metodo che scegli. Poi puoi convertirla al farro prima di salvarla.", "Gib einen Rezeptnamen ein ODER füge einen Link ein: ich lese die Seite und passe sie an die gewählte Methode an. Danach in Dinkel umwandelbar.", "Type a recipe name OR paste a page link: I read it from the web and adapt it to your chosen method. Then convert it to spelt before saving.", "Escribe el nombre de una receta O pega un enlace: la leo de la web y la adapto al método elegido.", "Écris un nom de recette OU colle un lien : je lis la page et l'adapte à la méthode choisie.", "نام دستور را بنویس یا لینک صفحه را بچسبان: از وب می‌خوانم و تطبیق می‌دهم.")}</p>
       </div>
 
       <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
@@ -124,7 +124,7 @@ export default function WebRecipe() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter" && !loading) search(); }}
-            placeholder={tri("Es. Pane di segale, Brioche, Focaccia genovese…", "z. B. Roggenbrot, Brioche, Focaccia…", "e.g. Rye bread, Brioche, Focaccia…", "Ej. Pan de centeno, Brioche…", "Ex. Pain de seigle, Brioche…", "مثلاً نان چاودار، بریوش…")}
+            placeholder={tri("Nome ricetta o incolla un link (es. https://…)", "Rezeptname oder Link einfügen (z. B. https://…)", "Recipe name or paste a link (e.g. https://…)", "Nombre de receta o pega un enlace (https://…)", "Nom de recette ou colle un lien (https://…)", "نام دستور یا یک لینک بچسبان (https://…)")}
             className="w-full pl-9 pr-3 py-3 rounded-2xl bg-[#f6f8fb] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#ff6b00]"
           />
         </div>

@@ -13,6 +13,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import uuid
+import httpx
 import bcrypt
 import secrets
 from datetime import datetime, timezone, timedelta
@@ -3608,6 +3609,31 @@ WEB_RECIPE_PROMPT = (
 )
 
 
+async def _fetch_url_text(url: str) -> str:
+    """Scarica una pagina web e ne estrae il testo (senza script/stili/tag). Best-effort."""
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml",
+            "Accept-Language": "it,en;q=0.8,de;q=0.6",
+        }
+        async with httpx.AsyncClient(follow_redirects=True, timeout=15.0) as client:
+            r = await client.get(url, headers=headers)
+            r.raise_for_status()
+            html = r.text
+    except Exception:
+        logger.exception("web-recipe fetch error")
+        return ""
+    html = re.sub(r"(?is)<(script|style|noscript|svg|head)[^>]*>.*?</\1>", " ", html)
+    text = re.sub(r"(?s)<[^>]+>", " ", html)
+    text = re.sub(r"&nbsp;", " ", text)
+    text = re.sub(r"&amp;", "&", text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n\s*\n+", "\n", text)
+    text = text.strip()
+    return text[:6000]
+
+
 @api_router.post("/maestro/web-recipe")
 async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro)):
     if not EMERGENT_LLM_KEY:
@@ -3621,12 +3647,21 @@ async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro
               .replace("{method_line}", WEB_RECIPE_METHODS[method])
               .replace("{schema}", SCAN_FIELDS_SCHEMA)
               .replace("{lang_line}", lang_line))
+    # Se l'utente incolla un LINK, leggo la pagina reale ed estraggo la ricetta da lì (web scraper).
+    page_text = ""
+    if q.lower().startswith(("http://", "https://")):
+        page_text = await _fetch_url_text(q)
+        if not page_text:
+            raise HTTPException(status_code=422, detail="Non riesco a leggere la pagina: controlla il link o riprova")
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=f"webrec-{uuid.uuid4()}",
         system_message="Ricostruisci ricette di panificazione adattate al metodo richiesto e restituisci solo JSON valido.",
     ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2200)
-    user_msg = UserMessage(text=f"{prompt}\n\nRICETTA RICHIESTA: {q}")
+    if page_text:
+        user_msg = UserMessage(text=f"{prompt}\n\nDalla PAGINA WEB seguente ESTRAI la ricetta reale (ingredienti e procedimento) e riadattala al metodo indicato.\n\nCONTENUTO PAGINA:\n{page_text}")
+    else:
+        user_msg = UserMessage(text=f"{prompt}\n\nRICETTA RICHIESTA: {q}")
     text = ""
     try:
         async for event in chat.stream_message(user_msg):

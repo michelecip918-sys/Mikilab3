@@ -3018,3 +3018,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **#1 "Ricerca web reale" (PENDENTE)**: richiede un provider di ricerca web esterno (search API / scraper) + chiave → da decidere con l'utente. Oggi la ricostruzione è basata sulla conoscenza dell'LLM.
 - NB: preview ≠ produzione → REDEPLOY per mikilab.de.
 
+
+
+## v-fork (2026-06) — Tool "Cerca & Adatta": Farro + Ricerca web (scraper) + Storico
+- **#1 Adatta al Farro (FATTO)**: `WebRecipe.jsx` ora mostra il risultato in un'ANTEPRIMA (nome, farina, idratazione, prefermento, metodo) con tasto **"Converti in Farro"** (`toFarro`: -4% acqua/idratazione, farina→"· Farro (Dinkel)", nota tecnica) prima di aprire il form di salvataggio. Testato UI: Ciabatta 80%→76.8%, farina aggiornata.
+- **#2 Ricerca web VERA — Web Scraper da link (FATTO, senza chiavi)**: se `query` è un URL, `_fetch_url_text()` (httpx + UA browser Chrome, estrazione HTML→testo via regex, cap 6000 char) scarica la pagina reale e l'LLM ESTRAE la ricetta da lì e la riadatta. Testato: Giallozafferano Ciabatta → "Ciabatta con Poolish" (indiretto/poolish/75%). Nota: alcuni siti (es. Wikipedia) bloccano i bot con 403 → messaggio d'errore chiaro. Import `httpx` aggiunto a server.py. Motore di ricerca a keyword (Perplexity/Tavily/SerpAPI) rimandato a quando l'utente fornirà una chiave.
+- **#3 Storico Ricerche (FATTO)**: ultime 8 ricerche salvate in localStorage (`mikilab_webrec_history`) con query+metodo+ricetta; lista "Ricerche recenti" riapribile in un tocco senza nuova chiamata IA + "Svuota". Testato UI.
+- i18n: tutte le nuove stringhe inline in 6 lingue (mkTri a 6 argomenti), nessun dizionario modificato.
+- NB: preview ≠ produzione → REDEPLOY per mikilab.de.
+
