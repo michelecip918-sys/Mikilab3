@@ -3601,16 +3601,19 @@ WEB_RECIPE_PROMPT = (
     "{method_line}\n"
     "- Base di calcolo: flour_grams = 1000 g; calcola water_grams dall'idratazione; salt_grams tipico ~2%.\n"
     "- Se ha senso, aggiungi in 'notes' una breve variante al FARRO (Dinkel): -4% acqua, impasto più delicato.\n"
-    "Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, con ESATTAMENTE queste chiavi "
+    "Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, con queste chiavi "
     "(usa null se un dato non è pertinente, NON lasciare campi fuori schema):\n"
     "{schema}\n"
+    "Aggiungi INOLTRE al JSON una chiave extra \"original\" con la ricetta ORIGINALE/classica "
+    "(PRIMA dell'adattamento), in forma sintetica, con SOLO queste chiavi: "
+    "{\"name\": str, \"hydration_percent\": num|null, \"method_type\": str|null, \"preferment_type\": str|null, \"flour_type\": str|null}.\n"
     "Converti tutte le quantità in grammi. Metti il procedimento passo-passo (numerato) in 'procedure'. "
     "{lang_line} Non aggiungere spiegazioni: SOLO il JSON."
 )
 
 
-async def _fetch_url_text(url: str) -> str:
-    """Scarica una pagina web e ne estrae il testo (senza script/stili/tag). Best-effort."""
+async def _fetch_url_text(url: str):
+    """Scarica una pagina web ed estrae (testo, titolo). Best-effort."""
     try:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
@@ -3623,7 +3626,9 @@ async def _fetch_url_text(url: str) -> str:
             html = r.text
     except Exception:
         logger.exception("web-recipe fetch error")
-        return ""
+        return "", ""
+    m = re.search(r"(?is)<title[^>]*>(.*?)</title>", html)
+    title = re.sub(r"\s+", " ", m.group(1)).strip()[:140] if m else ""
     html = re.sub(r"(?is)<(script|style|noscript|svg|head)[^>]*>.*?</\1>", " ", html)
     text = re.sub(r"(?s)<[^>]+>", " ", html)
     text = re.sub(r"&nbsp;", " ", text)
@@ -3631,7 +3636,7 @@ async def _fetch_url_text(url: str) -> str:
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n\s*\n+", "\n", text)
     text = text.strip()
-    return text[:6000]
+    return text[:6000], title
 
 
 @api_router.post("/maestro/web-recipe")
@@ -3649,15 +3654,19 @@ async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro
               .replace("{lang_line}", lang_line))
     # Se l'utente incolla un LINK, leggo la pagina reale ed estraggo la ricetta da lì (web scraper).
     page_text = ""
+    source = None
     if q.lower().startswith(("http://", "https://")):
-        page_text = await _fetch_url_text(q)
+        page_text, page_title = await _fetch_url_text(q)
         if not page_text:
             raise HTTPException(status_code=422, detail="Non riesco a leggere la pagina: controlla il link o riprova")
+        from urllib.parse import urlparse
+        dom = (urlparse(q).netloc or "").replace("www.", "")
+        source = {"domain": dom, "title": page_title, "url": q}
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=f"webrec-{uuid.uuid4()}",
         system_message="Ricostruisci ricette di panificazione adattate al metodo richiesto e restituisci solo JSON valido.",
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2200)
+    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=3000)
     if page_text:
         user_msg = UserMessage(text=f"{prompt}\n\nDalla PAGINA WEB seguente ESTRAI la ricetta reale (ingredienti e procedimento) e riadattala al metodo indicato.\n\nCONTENUTO PAGINA:\n{page_text}")
     else:
@@ -3689,6 +3698,8 @@ async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro
         if not any(isinstance(x, dict) and "miglioratore" in (x.get("name") or "").lower() for x in exs):
             exs.append({"name": "Miglioratore Naturale Pro", "percent": 2, "grams": None})
             data["extra_ingredients"] = exs
+    if source:
+        data["source"] = source
     return data
 
 

@@ -170,6 +170,13 @@ export default function WebRecipe() {
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-0.5">{tri("Risultato", "Ergebnis", "Result", "Resultado", "Résultat", "نتیجه")}{farro ? " · 🌾 Farro" : ""}</p>
               <h3 data-testid="web-recipe-result-name" className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{displayRecipe.name}</h3>
               {displayRecipe.flour_type && <p className="text-[12px] text-[#7E8A93] mt-0.5 truncate">{displayRecipe.flour_type}</p>}
+              {displayRecipe.source && (
+                <a data-testid="web-recipe-source" href={displayRecipe.source.url} target="_blank" rel="noreferrer"
+                  className="mt-1 inline-flex items-center gap-1 text-[11px] text-[#7E8A93] hover:text-[#ff6b00] truncate max-w-full">
+                  <Globe className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{tri("Fonte", "Quelle", "Source", "Fuente", "Source", "منبع")}: {displayRecipe.source.title || displayRecipe.source.domain} · <b>{displayRecipe.source.domain}</b></span>
+                </a>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
@@ -177,6 +184,34 @@ export default function WebRecipe() {
             {displayRecipe.preferment_type && displayRecipe.preferment_type !== "none" && <span className="inline-flex items-center gap-1 bg-[#ff6b00]/12 text-[#ff6b00] text-[11px] font-bold px-2 py-1 rounded-full"><Layers className="w-3 h-3" />{displayRecipe.preferment_type}</span>}
             {displayRecipe.method_type && <span className="inline-flex items-center gap-1 bg-[#ff6b00]/12 text-[#ff6b00] text-[11px] font-bold px-2 py-1 rounded-full">{displayRecipe.method_type}</span>}
           </div>
+
+          {displayRecipe.original && (() => {
+            const o = displayRecipe.original;
+            const dash = (v) => (v == null || v === "" ? "—" : v);
+            const rows = [
+              [tri("Idratazione", "Hydratation", "Hydration", "Hidratación", "Hydratation", "آب"), o.hydration_percent != null ? `${o.hydration_percent}%` : null, displayRecipe.hydration_percent != null ? `${displayRecipe.hydration_percent}%` : null],
+              [tri("Metodo", "Methode", "Method", "Método", "Méthode", "روش"), o.method_type, displayRecipe.method_type],
+              [tri("Prefermento", "Vorteig", "Preferment", "Prefermento", "Préferment", "پیش‌خمیر"), o.preferment_type, displayRecipe.preferment_type],
+              [tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد"), o.flour_type, displayRecipe.flour_type],
+            ].filter((r) => r[1] || r[2]);
+            return (
+              <div data-testid="web-recipe-compare" className="mt-3 rounded-xl bg-[#f6f8fb] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 items-center mb-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Originale", "Original", "Original", "Original", "Original", "اصلی")}</span>
+                  <span />
+                  <span className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] text-right">{tri("Adattata", "Angepasst", "Adapted", "Adaptada", "Adaptée", "تطبیق‌یافته")}</span>
+                </div>
+                {rows.map((r, i) => (
+                  <div key={i} className="grid grid-cols-[1fr_auto_1fr] gap-x-2 items-center py-1 border-t border-[#2e2e2e]/50 first:border-t-0">
+                    <span className="text-[12px] text-[#3F4A54] dark:text-[#AEB8BF] truncate">{dash(r[1])}</span>
+                    <span className="text-[11px] text-[#7E8A93] px-1 shrink-0">→</span>
+                    <span className={`text-[12px] font-semibold text-right truncate ${String(r[1]) !== String(r[2]) ? "text-[#ff6b00]" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{dash(r[2])}</span>
+                    <span className="col-span-3 text-[9px] uppercase tracking-wide text-[#7E8A93]/70 -mt-1">{r[0]}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
           <div className="grid grid-cols-2 gap-2 mt-3">
             <button data-testid="web-recipe-farro-toggle" onClick={() => setFarro((v) => !v)}
               className={`inline-flex items-center justify-center gap-1.5 font-semibold text-sm px-3 py-2.5 rounded-xl border transition-all active:scale-97 ${farro ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#ff6b00]/10 text-[#ff6b00] border-[#ff6b00]/40"}`}>
