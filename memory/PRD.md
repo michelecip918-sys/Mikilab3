@@ -3062,3 +3062,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Verifica**: fresh load → Home diretta senza overlay profilo; 5 blocchi + 5 tab; tutte le sezioni (ricette/impara/imparacon/community/maestro) rendono senza errori; logo→home ok.
 - Note: `useProfile`/`t`/`Home` import ora inutilizzati in alcuni file (solo warning lint). Profilo Pro/Passion di fatto deprecato. NB: PREVIEW → REDEPLOY per mikilab.de.
 
+
+
+## v-fork (2026-06) — Lab Pro focalizzato + icone menu dedicate
+- **Icone menu dedicate (#3, FATTO)**: 5 icone generate (Gemini) e salvate in /public (nav-ricette/impara/imparacon/maestro/community.jpg). `BottomNav.jsx` ora rende `<img>` incise sulle palette di legno con `mixBlendMode: multiply` (lo sfondo bianco del jpeg sparisce nel legno, restano le linee arancioni). Rimossi campi Icon/logo dai TABS.
+- **LavoraConMikiLab focalizzato (#2, FATTO)**: `ToolsDirectory.jsx` → bottoni XXL (riga min-h 76px, icon tile 64px, label text-lg/xl); `LAB_EXCLUDE` rimuove dal Lab 8 strumenti didattici/secondari (generatore, saporicasa, cosafare, scanflour, trovafarina, weatherbaker, timelapse, twin) — filtrati anche in ricerca. `VoiceCommand.jsx` pulsante Voce ingrandito (h-20, icona 32px) con pulse permanente, in primo piano.
+- **Voce**: apre a comando gli strumenti operativi inclusi Bilancia/Pesata/Calcolatori. NB: la connessione Bluetooth a bilance smart reali e il calcolo vocale "live" (dettatura numeri) sono una feature hardware più ampia, NON ancora implementata: oggi la voce APRE lo strumento giusto.
+- **ImparaConMikiLab (#1, PARZIALE)**: al momento la sezione usa `AcademyHome` (hub con corsi/quiz/ricettario/farine). Il layout dedicato "vera Home dell'apprendimento" con ordine esplicito Lezioni→Esercizi→Quiz→Ricette NON è ancora stato costruito su misura (proposto come prossimo step).
+- NB: PREVIEW → REDEPLOY per mikilab.de.
+

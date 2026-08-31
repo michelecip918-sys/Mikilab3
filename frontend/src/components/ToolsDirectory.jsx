@@ -23,6 +23,8 @@ export default function ToolsDirectory({ onOpenTool }) {
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const name = (tl) => tri(tl.it, tl.de, tl.en, tl.es);
   const byId = (id) => TOOLS.find((t) => t.id === id);
+  // Strumenti didattici/secondari: NON compaiono nel Laboratorio Pro (restano per l'apprendimento).
+  const LAB_EXCLUDE = new Set(["generatore", "saporicasa", "cosafare", "scanflour", "trovafarina", "weatherbaker", "timelapse", "twin"]);
 
   const [open, setOpen] = useState({ ricette: true, calcolatori: true });
   const [q, setQ] = useState("");
@@ -34,7 +36,7 @@ export default function ToolsDirectory({ onOpenTool }) {
   const toggleSection = (id) => setOpen((o) => ({ ...o, [id]: !o[id] }));
 
   const s = q.trim().toLowerCase();
-  const hits = s ? TOOLS.filter((tl) => name(tl).toLowerCase().includes(s)) : [];
+  const hits = s ? TOOLS.filter((tl) => !LAB_EXCLUDE.has(tl.id) && name(tl).toLowerCase().includes(s)) : [];
 
   // Bottone grande e accessibile (min 64px), icona + etichetta. In modalità Personalizza mostra l'interruttore on/off.
   const Row = (id) => {
@@ -43,13 +45,13 @@ export default function ToolsDirectory({ onOpenTool }) {
     const isHidden = hidden.has(id);
     if (!customize && isHidden) return null;
     return (
-      <div key={id} className={`flex items-center rounded-xl bg-[#1e1e1e] border ${isHidden ? "border-[#2C2C2C] opacity-55" : "border-[#2C2C2C] hover:border-[#ff6b00]/60"} min-h-[64px] transition-all`}>
+      <div key={id} className={`flex items-center rounded-2xl bg-[#1e1e1e] border ${isHidden ? "border-[#2C2C2C] opacity-55" : "border-[#2C2C2C] hover:border-[#ff6b00]/60"} min-h-[76px] transition-all`}>
         <button data-testid={`lab-tool-${id}`} onClick={() => onOpenTool && onOpenTool(id)}
-          className="flex items-center gap-3.5 text-left px-3.5 py-3 flex-1 min-w-0 active:scale-[0.98] transition-all">
-          <span className="w-12 h-12 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
-            <tl.Icon className="w-6 h-6 text-[#ff6b00]" />
+          className="flex items-center gap-4 text-left px-4 py-3.5 flex-1 min-w-0 active:scale-[0.98] transition-all">
+          <span className="w-16 h-16 rounded-2xl bg-[#ff6b00]/12 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
+            <tl.Icon className="w-8 h-8 text-[#ff6b00]" />
           </span>
-          <span className="text-base sm:text-lg font-bold text-white leading-snug">{name(tl)}</span>
+          <span className="text-lg sm:text-xl font-bold text-white leading-snug">{name(tl)}</span>
         </button>
         {customize && (
           <button data-testid={`lab-tool-toggle-${id}`} onClick={() => toggleHidden(id)}
@@ -94,7 +96,7 @@ export default function ToolsDirectory({ onOpenTool }) {
       ) : (
         <div className="space-y-2.5">
           {SECTIONS.map((sec) => {
-            const ids = sec.ids.filter((id) => byId(id));
+                const ids = sec.ids.filter((id) => byId(id) && !LAB_EXCLUDE.has(id));
             const visibleCount = customize ? ids.length : ids.filter((id) => !hidden.has(id)).length;
             if (visibleCount === 0 && !customize) return null;
             const isOpen = !!open[sec.id];

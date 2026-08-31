@@ -136,8 +136,8 @@ export default function VoiceCommand({ onOpenTool }) {
 
   return (
     <button data-testid="voice-command-btn" onClick={start}
-      className={`fixed bottom-24 right-4 z-50 h-16 px-5 rounded-full text-white font-extrabold text-base shadow-2xl flex items-center gap-2.5 ring-4 active:scale-95 transition-all ${listening ? "bg-[#e05e00] ring-[#ff6b00]/50 animate-pulse" : "bg-[#ff6b00] hover:bg-[#e05e00] ring-[#ff6b00]/25"}`}>
-      {listening ? <Loader2 className="w-6 h-6 animate-spin" /> : <Mic className="w-6 h-6" />}
+      className={`fixed bottom-24 right-4 z-50 h-20 px-7 rounded-full text-white font-extrabold text-lg shadow-2xl flex items-center gap-3 ring-4 active:scale-95 transition-all ${listening ? "bg-[#e05e00] ring-[#ff6b00]/60 animate-pulse" : "bg-[#ff6b00] hover:bg-[#e05e00] ring-[#ff6b00]/30 animate-[pulse_2.5s_ease-in-out_infinite]"}`}>
+      {listening ? <Loader2 className="w-8 h-8 animate-spin" /> : <Mic className="w-8 h-8" />}
       {listening ? tri("Ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Voce", "Stimme", "Voice", "Voz", "Voix", "صدا")}
     </button>
   );

@@ -34,13 +34,14 @@ export default function BottomNav({ active, onChange }) {
   const markSocialSeen = () => { try { localStorage.setItem("mikilab_social_seen", new Date().toISOString()); } catch { /* */ } setSocialNew(false); };
 
   const norm = ["news", "enciclopedia"].includes(active) ? "impara" : active;
-  // 5 sezioni fisse (nessun profilo): Ricette · ImparaDaCasa · ImparaConMikiLab · LavoraConMikiLab · ViviMikiLab.
+  // 5 sezioni fisse con icone dedicate (immagini su misura).
+  const PUB = process.env.PUBLIC_URL;
   const TABS = [
-    { id: "ricette", label: triNav("Ricette", "Rezepte", "Recipes", "Recetas"), Icon: BookOpen },
-    { id: "impara", label: "ImparaDaCasa", Icon: GraduationCap },
-    { id: "imparacon", label: "ImparaConMikiLab", Icon: Sparkles },
-    { id: "maestro", label: "LavoraConMikiLab", Icon: Wrench },
-    { id: "community", label: "ViviMikiLab", Icon: Users, logo: true },
+    { id: "ricette", label: triNav("Ricette", "Rezepte", "Recipes", "Recetas"), img: "nav-ricette.jpg" },
+    { id: "impara", label: "ImparaDaCasa", img: "nav-impara.jpg" },
+    { id: "imparacon", label: "ImparaConMikiLab", img: "nav-imparacon.jpg" },
+    { id: "maestro", label: "LavoraConMikiLab", img: "nav-maestro.jpg" },
+    { id: "community", label: "ViviMikiLab", img: "nav-community.jpg" },
   ];
   const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
 
@@ -52,7 +53,7 @@ export default function BottomNav({ active, onChange }) {
       <div aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-b from-[#e7c79a]/70 to-transparent" />
       <div aria-hidden className="absolute inset-0 bg-[#2b190c]/25" />
       <div className="relative max-w-xl mx-auto grid grid-cols-5 gap-1 px-2 pt-2" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
-        {TABS.map(({ id, label, Icon, logo }, i) => {
+        {TABS.map(({ id, label, img }, i) => {
           const on = norm === id;
           return (
             <button
@@ -73,17 +74,11 @@ export default function BottomNav({ active, onChange }) {
                 style={{ transform: `rotate(var(--rot))` }}
               >
                 <span aria-hidden className="absolute inset-0 rounded-t-full rounded-b-[7px] bg-gradient-to-b from-white/15 to-black/25" />
-                {logo ? (
-                  <span className="relative w-6 h-6 rounded-md overflow-hidden ring-1 ring-[#3e2510]">
-                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Social" className="w-full h-full object-cover" />
-                  </span>
-                ) : (
-                  <Icon
-                    className="relative w-[22px] h-[22px] drop-shadow-[0_1px_0_rgba(255,240,210,.4)]"
-                    strokeWidth={on ? 2.6 : 2.2}
-                    style={{ color: on ? "#2e1608" : "#4a2b12" }}
-                  />
-                )}
+                {img ? (
+                  <img src={`${PUB}/${img}`} alt={label}
+                    className="relative w-8 h-8 object-contain drop-shadow-[0_1px_0_rgba(255,240,210,.4)]"
+                    style={{ mixBlendMode: "multiply", opacity: on ? 1 : 0.82 }} />
+                ) : null}
                 {id === "community" && unread > 0 && (
                   <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#2b190c]">{unread > 9 ? "9+" : unread}</span>
                 )}
