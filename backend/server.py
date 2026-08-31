@@ -5293,6 +5293,7 @@ async def share_preview(request: Request, lang: str = "it"):
 # ---------------------------------------------------------------------------
 DEFAULT_SITE_SETTINGS = {
     "whatsapp_number": "491601253378",
+    "tiktok_handle": "mikilab.de",  # senza @, usato per https://www.tiktok.com/@<handle>
     "avatar_bubbles": {},   # override keyed "impara.michele" -> {"it": "...", "de": "..."}
     "folder_covers": {},    # {"pane": "<url>", "panettoni": "<url>", ...}
 }
@@ -5301,7 +5302,7 @@ DEFAULT_SITE_SETTINGS = {
 def _merge_site_settings(doc):
     s = dict(DEFAULT_SITE_SETTINGS)
     if doc:
-        for k in ("whatsapp_number", "avatar_bubbles", "folder_covers"):
+        for k in ("whatsapp_number", "tiktok_handle", "avatar_bubbles", "folder_covers"):
             if doc.get(k) is not None:
                 s[k] = doc[k]
     return s
@@ -5315,6 +5316,7 @@ async def get_site_settings():
 
 class SiteSettingsReq(BaseModel):
     whatsapp_number: Optional[str] = None
+    tiktok_handle: Optional[str] = None
     avatar_bubbles: Optional[dict] = None
     folder_covers: Optional[dict] = None
 
@@ -5327,6 +5329,12 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
         if num.startswith("00"):
             num = num[2:]  # 0049... -> 49... (prefisso internazionale per wa.me)
         update["whatsapp_number"] = num
+    if body.tiktok_handle is not None:
+        h = body.tiktok_handle.strip().lstrip("@").strip()
+        # accetta anche URL completo: estrai la parte dopo @
+        if "tiktok.com/@" in h:
+            h = h.split("tiktok.com/@", 1)[1].split("/")[0].split("?")[0]
+        update["tiktok_handle"] = h
     if body.avatar_bubbles is not None:
         update["avatar_bubbles"] = body.avatar_bubbles
     if body.folder_covers is not None:

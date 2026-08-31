@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3 } from "lucide-react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3, Music2 } from "lucide-react";
 import { toast } from "sonner";
 import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
@@ -58,7 +58,7 @@ export default function AdminPanel({ open, onOpenChange }) {
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setBaBusy(false); }
   };
-  const [settings, setSettings] = useState({ whatsapp_number: "", avatar_bubbles: {}, folder_covers: {} });
+  const [settings, setSettings] = useState({ whatsapp_number: "", tiktok_handle: "", avatar_bubbles: {}, folder_covers: {} });
   const [mkRecipes, setMkRecipes] = useState([]);
   const [savingSet, setSavingSet] = useState(false);
   const [subs, setSubs] = useState([]);
@@ -136,7 +136,7 @@ export default function AdminPanel({ open, onOpenChange }) {
       try { setEmailRep(await adminApi.emailReport(emailDays)); } catch { /* */ }
       try {
         const s = await siteSettingsApi.get();
-        setSettings({ whatsapp_number: s.whatsapp_number || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
+        setSettings({ whatsapp_number: s.whatsapp_number || "", tiktok_handle: s.tiktok_handle || "", avatar_bubbles: s.avatar_bubbles || {}, folder_covers: s.folder_covers || {} });
       } catch { /* */ }
       try { setMkRecipes(await recipesApi.list("mikilab")); } catch { /* */ }
     }
@@ -157,9 +157,9 @@ export default function AdminPanel({ open, onOpenChange }) {
   const saveSettings = async () => {
     setSavingSet(true);
     try {
-      const clean = { ...settings, whatsapp_number: (settings.whatsapp_number || "").replace(/\D/g, "") };
+      const clean = { ...settings, whatsapp_number: (settings.whatsapp_number || "").replace(/\D/g, ""), tiktok_handle: (settings.tiktok_handle || "").trim().replace(/^@/, "") };
       const r = await adminApi.setSiteSettings(clean);
-      setSettings({ whatsapp_number: r.whatsapp_number || "", avatar_bubbles: r.avatar_bubbles || {}, folder_covers: r.folder_covers || {} });
+      setSettings({ whatsapp_number: r.whatsapp_number || "", tiktok_handle: r.tiktok_handle || "", avatar_bubbles: r.avatar_bubbles || {}, folder_covers: r.folder_covers || {} });
       toast.success(de ? "Einstellungen gespeichert" : "Impostazioni salvate");
     } catch { toast.error(de ? "Fehler" : "Errore"); }
     finally { setSavingSet(false); }
@@ -487,6 +487,20 @@ export default function AdminPanel({ open, onOpenChange }) {
               onChange={(e) => setSettings((s) => ({ ...s, whatsapp_number: e.target.value }))}
               placeholder="491601253378"
               className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+          </div>
+
+          {/* Handle TikTok (canale ufficiale nel "Seguici") */}
+          <div>
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+              <Music2 className="w-4 h-4 text-white" /> {de ? "TikTok-Handle (ohne @)" : "Handle TikTok (senza @)"}
+            </label>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-[#7E8A93]">@</span>
+              <input data-testid="admin-tiktok-handle" value={settings.tiktok_handle}
+                onChange={(e) => setSettings((s) => ({ ...s, tiktok_handle: e.target.value }))}
+                placeholder="mikilab.de"
+                className="flex-1 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+            </div>
           </div>
 
           {/* Fumetti avatar */}

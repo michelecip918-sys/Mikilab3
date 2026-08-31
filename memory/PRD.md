@@ -2828,3 +2828,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Locandina stampabile** (`public/locandina-mikilab.png`): conteneva "Instagram @michelucano" e "TikTok @michele.signorell". Riga social corretta via PIL (preservando il QR reale) → ora mostra solo "TikTok @mikilab.de". Backup in /tmp/locandina-backup.png. Le cover Reel non contenevano handle (solo mikilab.de) → nessuna modifica.
 - Batch precedente (v-fork.40 → iteration_144): cache stats 60s + paesi, Quiz/Sfide+Classifica in Impara, CSV report email, prova sociale animata Home → testato 100% (backend+frontend).
 
+
+## v-fork.42 (2026-08, fork) — TikTok grande + handle da Admin + locandine DE/EN (WhatsApp ripristinato)
+- **WhatsApp ripristinato** nel "Seguici" (`config/social.js`: `whatsapp` di nuovo attivo). Restano nascosti Instagram/Facebook/Threads.
+- **TikTok grande/centrale** (`PromuoviMikiLab.jsx`): blocco "Seguici" ridisegnato → card TikTok grande con icona 56px, "@handle" e sottotitolo "canale ufficiale"; WhatsApp e altri come pulsanti piccoli secondari sotto. L'handle viene letto da `siteSettingsApi.get()` (`tiktok_handle`), fallback `mikilab.de`.
+- **Handle TikTok da Admin** (backend + AdminPanel): `site_settings.tiktok_handle` (default "mikilab.de"). PUT `/api/admin/site-settings` accetta `tiktok_handle`, rimuove la `@` iniziale e sa estrarre l'handle da un URL tiktok.com completo. UI: input `admin-tiktok-handle` accanto al numero WhatsApp, salvato con `admin-save-settings`.
+- **Locandine multilingua**: create `public/locandina-mikilab-de.png` e `-en.png` (testi tradotti via AI + **QR reale `qr-mikilab.png` re-incollato** per garantire la scansione, e riga contatti "WhatsApp / TikTok @mikilab.de" ridisegnata in modo nitido via PIL). Il download in `PromuoviMikiLab` sceglie il file per lingua (IT/DE/EN, altre lingue → EN).
+- Fix precedente (v-fork.41): etichette festività (Natale/Pasqua/S.Valentino/Estate/Halloween) ora multilingua; locandina IT corretta con solo "TikTok @mikilab.de".
+- Test iteration_145: backend 100% + frontend 100%, nessun problema. Handle ripristinato a mikilab.de; 3 locandine servite HTTP 200.
+

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Megaphone, Share2, Copy, Download, Instagram, Facebook, Youtube, MessageCircle, Music2, AtSign, Film, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { SOCIAL, SITE_URL } from "@/config/social";
+import { siteSettingsApi } from "@/lib/api";
 
 const CAPTIONS = {
   it: {
@@ -126,9 +127,13 @@ export default function PromuoviMikiLab() {
   const [season, setSeason] = useState(SEASONAL[0].id);
   const [seasonCopied, setSeasonCopied] = useState(false);
   const [variant, setVariant] = useState("bacheca");
+  const [ttHandle, setTtHandle] = useState("mikilab.de");
+  useEffect(() => { siteSettingsApi.get().then((s) => { if (s && s.tiktok_handle) setTtHandle(s.tiktok_handle); }).catch(() => {}); }, []);
+  const tiktokUrl = `https://www.tiktok.com/@${ttHandle}`;
+  const flyerFile = ({ it: "locandina-mikilab.png", de: "locandina-mikilab-de.png", en: "locandina-mikilab-en.png" })[lang] || "locandina-mikilab-en.png";
   const caps = CAPTIONS[lang] || CAPTIONS.en;
   const caption = caps[variant];
-  const activeSocials = SOCIALS.filter((s) => SOCIAL[s.key]);
+  const activeSocials = SOCIALS.filter((s) => s.key !== "tiktok" && SOCIAL[s.key]);
   const VARIANTS = [
     { id: "bacheca", label: L("Post", "Beitrag", "Post", "Post", "Post", "پست") },
     { id: "storia", label: L("Storia", "Story", "Story", "Historia", "Story", "استوری") },
@@ -268,18 +273,27 @@ export default function PromuoviMikiLab() {
               className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95">
               <Download className="w-3.5 h-3.5" /> {L("Scarica QR", "QR laden", "Download QR", "Descargar QR", "Télécharger QR", "دانلود QR")}
             </a>
-            <a data-testid="promuovi-flyer-download" href={`${process.env.PUBLIC_URL}/locandina-mikilab.png`} download="locandina-mikilab.png"
+            <a data-testid="promuovi-flyer-download" href={`${process.env.PUBLIC_URL}/${flyerFile}`} download={flyerFile}
               className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#ff6b00] rounded-full px-3 py-1.5 active:scale-95 ml-2">
               <Download className="w-3.5 h-3.5" /> {L("Locandina A5", "A5-Flyer", "A5 flyer", "Folleto A5", "Flyer A5", "پوستر A5")}
             </a>
           </div>
         </div>
 
-        {/* Seguici */}
-        {activeSocials.length > 0 && (
-          <div data-testid="promuovi-follow">
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2">{L("Seguici", "Folge uns", "Follow us", "Síguenos", "Suis-nous", "ما را دنبال کن")}</p>
-            <div className="flex flex-wrap gap-2">
+        {/* Seguici — TikTok è il canale ufficiale principale (grande e centrale) */}
+        <div data-testid="promuovi-follow">
+          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2 text-center">{L("Seguici", "Folge uns", "Follow us", "Síguenos", "Suis-nous", "ما را دنبال کن")}</p>
+          <a data-testid="promuovi-social-tiktok" href={tiktokUrl} target="_blank" rel="noreferrer"
+            className="group flex flex-col items-center gap-1.5 rounded-2xl bg-gradient-to-b from-[#1c1c1c] to-[#121212] border border-[#2e2e2e] hover:border-[#ff6b00] px-5 py-5 active:scale-[0.98] transition-all">
+            <span className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#ff6b00] group-hover:scale-105 transition-transform">
+              <Music2 className="w-7 h-7 text-[#121212]" />
+            </span>
+            <span className="text-lg font-extrabold text-white leading-tight">TikTok</span>
+            <span className="text-[13px] font-semibold text-[#ff6b00]">@{ttHandle}</span>
+            <span className="text-[11px] text-[#AEB8BF]">{L("Il canale ufficiale di MikiLab", "Der offizielle MikiLab-Kanal", "The official MikiLab channel", "El canal oficial de MikiLab", "La chaîne officielle de MikiLab", "کانال رسمی MikiLab")}</span>
+          </a>
+          {activeSocials.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-2 mt-3">
               {activeSocials.map(({ key, Icon, label, color }) => (
                 <a key={key} data-testid={`promuovi-social-${key}`} href={SOCIAL[key]} target="_blank" rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-[#121212] border border-[#2e2e2e] px-3.5 py-2 text-sm font-semibold text-white active:scale-95 hover:border-[#ff6b00]/60 transition-all">
@@ -287,8 +301,8 @@ export default function PromuoviMikiLab() {
                 </a>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,12 +1,11 @@
 // Profili social di MikiLab. Inserisci gli URL completi; lascia "" per nascondere il pulsante.
-// NB: unico canale pubblico nel "Seguici" = TikTok @mikilab.de. Il resto è nascosto.
-// (Il numero WhatsApp di assistenza resta attivo nei pulsanti di aiuto, gestito da WhatsAppHelp/WhatsAppFab.)
+// NB: canale ufficiale principale = TikTok @mikilab.de (handle modificabile da pannello Admin).
 export const SOCIAL = {
   instagram: "",
   facebook: "",
   tiktok: "https://www.tiktok.com/@mikilab.de",
   youtube: "",
-  whatsapp: "",
+  whatsapp: "https://wa.me/491601253378",
   threads: "",
 };
 
