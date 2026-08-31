@@ -1,0 +1,23 @@
+{
+  "summary": "Frontend-only retest of the new 'Prova con un esempio' (data-testid='capo-fill-example') button in PianoProduzioneAI (Laboratorio). Logged in as admin@mikilab.de, dismissed newsletter popup + Lab tour, navigated via nav-tab-maestro to the Piano generator. ALL requested scenarios PASS: (1) capo-products + capo-generate present; (2) capo-fill-example present inside capo-products-heading, visible, label 'Try an example'; (3) clicking it prefilled 2 product rows (row0 'Pane ai Cereali' qty=20, row1 'Spinach Bread' qty=10), showed the success toast \"Example loaded! Now press 'Generate' or change the quantities.\", and capo-generate-hint disappeared (count 1 -> 0); clicking capo-generate then started generation (label 'Generate work plan' -> 'Organising the work…', button disabled) and streamed a real plan (1338 chars incl. supplier order, recipes in plan, save-to-archive). (4) REGRESSION OK: capo-products-heading shows badge '1' + 'What are you making today? *' + required-field subtitle; with no data capo-generate is still enabled (disabled=False) and the specific hint \"Recipe missing: in 'What are you making today?' choose at least one recipe.\" is shown. No console errors.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "fillExample preference sort only guarantees the FIRST match (pane) is on top; second row can be any recipe (here 'Spinach Bread'). Acceptable, but if a deterministic pane+pizza example is desired, pick one recipe per preference keyword.",
+    "PianoProduzioneAI.jsx is ~1790 lines — consider splitting (products panel, modules panel, plan renderer) for maintainability."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100%"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (worked)",
+  "context_for_next_testing_agent": "SPA nav: bottom nav data-testid nav-tab-maestro -> Laboratorio; dismiss newsletter-popup-close then Lab tour via text 'Skip'. Piano generator is inline on the Lab page (capo-products). capo-fill-example instantly unlocks generation (2 rows w/ qty). Plan generation via stream takes ~5-10s; plan output container has a testid (capo-plan / capo-plan-output) and measured 1338 chars after generation.",
+  "rca_of_the_issue": "N/A — feature works as specified."
+}

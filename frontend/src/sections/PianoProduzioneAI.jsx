@@ -457,6 +457,19 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     setUseWeekly(false);
     toast.success(tri3(lang, `Suggeriti ${ranked.length} prodotti dai più usati: regola le quantità e genera.`, `${ranked.length} häufigste Produkte vorgeschlagen: Mengen anpassen und erstellen.`, `Suggested ${ranked.length} of your most-used products: adjust quantities and generate.`, `Sugeridos ${ranked.length} productos más usados: ajusta cantidades y genera.`));
   };
+  const fillExample = () => {
+    const pref = ["pane", "pizza", "focacc"];
+    const sorted = [...(recipes || [])].sort((a, b) => {
+      const ra = pref.findIndex((k) => (a.name || "").toLowerCase().includes(k));
+      const rb = pref.findIndex((k) => (b.name || "").toLowerCase().includes(k));
+      return (ra < 0 ? 9 : ra) - (rb < 0 ? 9 : rb);
+    });
+    const ex = sorted.slice(0, 2);
+    if (ex.length === 0) { toast.info(tri3(lang, "Nessuna ricetta disponibile per l'esempio.", "Keine Rezepte für das Beispiel verfügbar.", "No recipes available for the example.")); return; }
+    setProducts(ex.map((r, i) => ({ recipe_id: r.id, name: r.name, qty: i === 0 ? "20" : "10", unit: "pezzi", gpp: "", day: "", start: false })));
+    setUseWeekly(false);
+    toast.success(tri3(lang, "Esempio caricato! Ora premi «Genera» oppure cambia le quantità.", "Beispiel geladen! Jetzt «Generieren» drücken oder Mengen ändern.", "Example loaded! Now press 'Generate' or change the quantities.", "¡Ejemplo cargado! Pulsa «Generar» o cambia las cantidades."));
+  };
 
   // "Ripeti questo piano" dall'archivio: ricarica impostazioni + prodotti + testo,
   // così Michele può ritoccare e rigenerare per la settimana prossima.
@@ -1357,6 +1370,10 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <div>
             <p className="text-sm font-bold text-white leading-tight">{tri3(lang, "Cosa produci oggi?", "Was produzierst du heute?", "What are you making today?")} <span className="text-[#ff6b00]">*</span></p>
             <p className="text-[11px] text-[#AEB8BF] leading-snug">{tri3(lang, "Scegli una ricetta e scrivi la quantità: è l'unico dato obbligatorio per generare.", "Wähle ein Rezept und die Menge: das ist das einzige Pflichtfeld.", "Pick a recipe and enter the quantity: it's the only required field to generate.")}</p>
+            <button type="button" data-testid="capo-fill-example" onClick={fillExample}
+              className="mt-1.5 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/50 rounded-full px-3 py-1 active:scale-95">
+              <Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Prova con un esempio", "Mit Beispiel testen", "Try an example", "Prueba con un ejemplo")}
+            </button>
           </div>
         </div>
         <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">

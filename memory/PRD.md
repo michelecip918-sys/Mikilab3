@@ -2888,3 +2888,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ## v-fork.51 (2026-08, fork) — Fix UX generatore Piano (Laboratorio)
 - PianoProduzioneAI.jsx: bottone capo-generate ora disabled solo durante generating (non piu morto); su dati mancanti mostra toast + scroll/evidenzia capo-products. Hint dinamico specifico (manca ricetta vs quantita). Aggiunta intestazione numerata capo-products-heading (Cosa produci oggi?).
 - Test iteration_150: frontend 6/6 PASS.
+
+## v-fork.52 (2026-08, fork) — Esempio rapido nel generatore Piano
+- PianoProduzioneAI.jsx: aggiunto fillExample + pulsante capo-fill-example ("Prova con un esempio") in cima al riquadro prodotti (capo-products-heading): precompila 1-2 ricette (pref. pane/pizza/focaccia) con quantita, sblocca la generazione. Test iteration_151: frontend 100
+## v-fork.52 (2026-08, fork) — Esempio rapido nel generatore Piano
+- PianoProduzioneAI.jsx: aggiunto fillExample + pulsante capo-fill-example ("Prova con un esempio") in cima al riquadro prodotti (capo-products-heading): precompila 1-2 ricette (pref. pane/pizza/focaccia) con quantita, sblocca la generazione. Test iteration_151: frontend 100%.
+- NB: riquadro prodotti reso prominente (heading numerato + esempio + auto-scroll dal bottone Genera). Spostamento fisico in cima al form NON eseguito (reorder rischioso): da valutare come step dedicato.
