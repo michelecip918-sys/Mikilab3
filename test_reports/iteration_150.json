@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only retest of the PianoProduzioneAI 'Genera' guidance fixes in the Laboratorio (login admin@mikilab.de). All 6 requested scenarios PASS: (1) with no recipe selected data-testid='capo-generate' is ENABLED (disabled=False) and 'capo-generate-hint' shows 'Recipe missing: in What are you making today? choose at least one recipe.'; (2) clicking it shows the error toast 'To generate the plan, add at least one recipe with a quantity.', scrolls the page toward capo-products (scrollY 2673 -> 2128) with the orange highlight ring visible, and generates NO plan (capo-saved-banner count 0); (3) capo-products-heading visible with badge '1' + 'What are you making today?' + required-field subtitle; (4) after picking a recipe via capo-product-recipe-0 picker (Favorites -> first item) the hint switches to 'Quantity missing: enter how many pieces/kg you want.'; (5) after entering qty=10 the hint disappears (count 0) and clicking Genera starts generation (button becomes disabled with label 'Organising the work...' and the streamed plan rendered 603+ chars of content). No console errors during the flow.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Laboratorio - Piano Produzione IA", "issues": ["When logged OUT the page issues many /api requests that return 401 (console noise, ~14 failed resources). Harmless for the flow but should be gated behind auth state."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is 1772 lines - consider splitting (products section, modules, plan viewer) into sub-components for maintainability.",
+    "generate() manipulates DOM classes directly (classList.add/remove on capo-products); a React state-driven highlight would be safer against re-renders."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% (6/6 scenarios)"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login worked via login-btn -> auth-email/auth-password/auth-submit)",
+  "context_for_next_testing_agent": "SPA nav via bottom nav data-testid nav-tab-maestro; an onboarding tour overlay appears on the Lab (dismiss with text 'Skip'). Recipe picker inside capo-products uses testid prefix capo-product-recipe-{i}-trigger, then -cat-*, then -item-*. Login is needed for recipes to appear in the picker.",
+  "rca_of_the_issue": "Not applicable - the reported UX defect (dead Genera button) is fixed: the button is always enabled unless generating, and missing data triggers a specific toast + scroll/highlight + contextual hint."
+}

@@ -757,6 +757,12 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         "Per generare il piano inserisci almeno una ricetta con la quantità.",
         "Um den Plan zu erstellen, füge mindestens ein Rezept mit Menge hinzu.",
         "To generate the plan, add at least one recipe with a quantity."));
+      const el = document.querySelector('[data-testid="capo-products"]');
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        el.classList.add("ring-2", "ring-[#ff6b00]", "rounded-2xl");
+        setTimeout(() => el.classList.remove("ring-2", "ring-[#ff6b00]", "rounded-2xl"), 2200);
+      }
       return;
     }
     setGenerating(true); setPlan(""); setSavedAt(null); setPlanTruncated(false);
@@ -1346,6 +1352,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
           </div>
         )}
+        <div data-testid="capo-products-heading" className={`mt-4 mb-2 flex items-start gap-2 ${useWeekly ? "hidden" : ""}`}>
+          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#ff6b00] text-white text-[13px] font-extrabold shrink-0">1</span>
+          <div>
+            <p className="text-sm font-bold text-white leading-tight">{tri3(lang, "Cosa produci oggi?", "Was produzierst du heute?", "What are you making today?")} <span className="text-[#ff6b00]">*</span></p>
+            <p className="text-[11px] text-[#AEB8BF] leading-snug">{tri3(lang, "Scegli una ricetta e scrivi la quantità: è l'unico dato obbligatorio per generare.", "Wähle ein Rezept und die Menge: das ist das einzige Pflichtfeld.", "Pick a recipe and enter the quantity: it's the only required field to generate.")}</p>
+          </div>
+        </div>
         <div className={`space-y-2 ${useWeekly ? "hidden" : ""}`} data-testid="capo-products">
           {products.map((p, i) => (
             <CapoProductRow key={i} p={p} i={i} recipes={recipes} setProducts={setProducts} />
@@ -1499,15 +1512,15 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           );
         })()}
 
-        <button data-testid="capo-generate" onClick={generate} disabled={generating || !canGenerate}
-          className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="capo-generate" onClick={generate} disabled={generating}
+          className={`mt-3 w-full ${canGenerate ? "bg-[#ff6b00] hover:bg-[#ff8a33]" : "bg-[#ff6b00]/60"} disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2`}>
           <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("capo_generate")}
         </button>
         {!canGenerate && (
-          <p data-testid="capo-generate-hint" className="text-[11px] text-[#FFB27A] mt-1.5 text-center">
-            {tri3(lang, "⚠️ Obbligatorio: scegli almeno una ricetta e la quantità per generare il piano.",
-              "⚠️ Pflicht: Wähle mindestens ein Rezept und die Menge, um den Plan zu erstellen.",
-              "⚠️ Required: choose at least one recipe and quantity to generate the plan.")}
+          <p data-testid="capo-generate-hint" className="text-[12px] text-[#FFB27A] mt-1.5 text-center leading-snug">
+            {!products.some((p) => p.recipe_id)
+              ? tri3(lang, "👆 Manca la ricetta: nel riquadro «Cosa produci oggi?» scegli almeno una ricetta.", "👆 Rezept fehlt: im Feld „Was produzierst du heute?“ mindestens ein Rezept wählen.", "👆 Recipe missing: in 'What are you making today?' choose at least one recipe.")
+              : tri3(lang, "👆 Manca la quantità: scrivi quanti pezzi/kg vuoi produrre.", "👆 Menge fehlt: schreibe die Stückzahl/kg.", "👆 Quantity missing: enter how many pieces/kg you want.")}
           </p>
         )}
 

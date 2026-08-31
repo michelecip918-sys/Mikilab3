@@ -2884,3 +2884,7 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 
 ## v-fork.50 (2026-08, fork) — Post social scaricabili in-app
 - Aggiunto blocco promuovi-posts in PromuoviMikiLab: 4 post (welcome + serie di lancio) con miniatura, download (post-download-i) e share (post-share-i). Compila ok, asset 200.
+
+## v-fork.51 (2026-08, fork) — Fix UX generatore Piano (Laboratorio)
+- PianoProduzioneAI.jsx: bottone capo-generate ora disabled solo durante generating (non piu morto); su dati mancanti mostra toast + scroll/evidenzia capo-products. Hint dinamico specifico (manca ricetta vs quantita). Aggiunta intestazione numerata capo-products-heading (Cosa produci oggi?).
+- Test iteration_150: frontend 6/6 PASS.
