@@ -2933,3 +2933,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - `src/lib/planPdf.js`: aggiunto parametro `showDisclaimer` (default true) per omettere il disclaimer dei piani quando si esporta contenuto generico.
 - `components/AdminPanel.jsx`: nuovo blocco `admin-inventory` in cima con pulsante `admin-inventory-pdf` -> genera PDF brandizzato col logo MikiLab riusando `exportPlanPdf`.
 - Verifica E2E (admin): apertura pannello via evento `mikilab-open-admin`, click -> download `mikilab-inventario-YYYY-MM-DD.pdf` (~147KB) + toast OK.
+
+## v-fork.58 (2026-06, fork) — Inventario sito PDF privato multilingua
+- `scripts/build_inventory_pdf.py` (reportlab): genera 5 PDF brandizzati (logo, banda arancione, footer numerato) in IT/DE/EN/ES/FR con accenti/umlaut corretti, salvati in `frontend/public/` come file statici scaricabili.
+- Link: `/mikilab-inventario-{it,de,en,es,fr}.pdf` (+ `/mikilab-inventario.pdf` = IT per retro-compat). Verificati HTTP 200, 2 pagine, accenti OK (pypdf).
+- Contenuto senza monetizzazione (consegna privata a Michele, non feature del sito).
