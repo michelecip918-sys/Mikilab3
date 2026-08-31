@@ -8,6 +8,7 @@ import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import PrintHeader from "@/components/PrintHeader";
+import { useProfile } from "@/profile/ProfileContext";
 import MachineScheda from "@/components/MachineScheda";
 import { playTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
 import HandsFreeMode from "@/components/HandsFreeMode";
@@ -255,9 +256,20 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       {loading ? (
         <p className="text-center text-[#7E8A93] py-8">{t("loading")}</p>
       ) : recipes.length === 0 ? (
-        <div className="text-center py-12 px-6 border-2 border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] rounded-3xl">
+        <div data-testid="personal-empty-archive" className="text-center py-12 px-6 border-2 border-dashed border-[#ff6b00]/40 rounded-3xl bg-[#ff6b00]/5">
           <Wheat className="w-10 h-10 text-[#ff6b00] mx-auto mb-3" />
-          <p className="text-[#6B7680] dark:text-[#9AA6AE]">{emptyText}</p>
+          <p className="text-[#3F4A54] dark:text-[#cfe0ec] font-semibold">{collectionName === "personal" ? triM("Il tuo archivio è vuoto", "Dein Archiv ist leer", "Your archive is empty", "Tu archivo está vacío") : emptyText}</p>
+          {collectionName === "personal" && (
+            <>
+              <p className="text-[12.5px] text-[#7E8A93] mt-1.5 max-w-xs mx-auto leading-snug">{triM("Questo archivio è 100% riservato a te: nessuna ricetta di esempio, solo le tue.", "Dieses Archiv gehört zu 100% dir: keine Beispielrezepte, nur deine.", "This archive is 100% yours: no example recipes, only yours.", "Este archivo es 100% tuyo: sin recetas de ejemplo.")}</p>
+              {canEdit && (
+                <button data-testid="empty-add-recipe-btn" onClick={() => { setEditing(null); setDialogOpen(true); }}
+                  className="mt-4 inline-flex items-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+                  <Plus className="w-5 h-5" /> {triM("Aggiungi nuova ricetta privata", "Neues privates Rezept", "Add new private recipe", "Añadir receta privada")}
+                </button>
+              )}
+            </>
+          )}
         </div>
       ) : (() => {
         const q = query.trim().toLowerCase();
@@ -590,6 +602,8 @@ function procWithImprover(text, onImprover) {
 
 
 function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
+  const { profile } = useProfile();
+  const isPro = profile === "pro";
   const { lang } = useLang();
   const de = lang === "de";
   const { isFav, toggle: toggleFav } = useFavRecipes();
@@ -825,6 +839,24 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
                 </div>
               )}
             </div>
+            {isPro && flourG > 0 && (
+              <div data-testid={`baker-scale-${r.id}`} className="no-print mb-2 flex flex-wrap items-center gap-2 rounded-lg bg-[#ff6b00]/10 border border-[#ff6b00]/30 px-2.5 py-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">{tri("% del Fornaio · scala dosi", "Bäcker-% · Mengen skalieren", "Baker's % · scale doses")}</span>
+                <label className="flex items-center gap-1 text-[11px] text-[#3F4A54] dark:text-[#AEB8BF]">
+                  {tri("kg farina", "kg Mehl", "kg flour")}
+                  <input data-testid={`baker-kg-${r.id}`} type="number" step="0.1" min="0" value={Math.round((target / 1000) * 100) / 100}
+                    onChange={(e) => onScaleChange(String(Math.max(0, Math.round((Number(e.target.value) || 0) * 1000))))}
+                    className="w-16 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none" />
+                </label>
+                <label className="flex items-center gap-1 text-[11px] text-[#3F4A54] dark:text-[#AEB8BF]">
+                  {tri("sacchi 25kg", "Säcke 25kg", "25kg sacks")}
+                  <input data-testid={`baker-sacks-${r.id}`} type="number" step="0.5" min="0" value={Math.round((target / 25000) * 100) / 100}
+                    onChange={(e) => onScaleChange(String(Math.max(0, Math.round((Number(e.target.value) || 0) * 25000))))}
+                    className="w-14 text-right font-mono-data text-xs font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2e2e2e] rounded-md px-1.5 py-1 outline-none" />
+                </label>
+                <span className="text-[10px] text-[#7E8A93]">{tri("farina tot.", "Mehl ges.", "total flour")} {Math.round(target)} g</span>
+              </div>
+            )}
             <div className="space-y-1">
               {rows.map(([k, v], idx) => {
                 const isImprover = typeof k === "string" && /migliorator|backmittel/i.test(k);

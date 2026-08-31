@@ -2977,3 +2977,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Ricette.jsx: pulsanti `ricette-export-csv-btn` e `ricette-export-pdf-btn` -> scaricano le ricette PERSONALI (recipesApi.list("personal")) in CSV/PDF, con toast.
 - Verificato E2E: click CSV -> download `mie-ricette-mikilab.csv`; compila (warning innocui).
 - NON implementati in questa sessione (funzionalita corpose, rimandate per non consegnare codice fragile): #1 Baker Percentage & scalabilita kg/sacchi; #3 timetable lievitazione concatenata sincronizzata col piano; #4 resa/calo peso nel calcolo costi; #5 cache offline PWA per ricette+piano.
+
+## v-fork.65 (2026-06) — #1 Baker Percentage & scalabilita + archivio privato
+- Baker Percentage: gia presente (pct% per ingrediente sul totale farina) + scala per grammi/500g/1kg/2kg. Verificato via screenshot su ricetta MikiLab.
+- RecipeList.jsx RecipeDetail: aggiunto blocco Pro (`baker-scale-*`) con input `baker-kg-*` (kg farina) e `baker-sacks-*` (sacchi 25kg) -> onScaleChange(grammi) ricalcola tutte le dosi. Gated `isPro && flourG>0` (useProfile). Attivo sulla scheda ricetta PERSONALE (archivio Pro). Nota: la scheda delle ricette MikiLab usa un renderer diverso (gia con scaling+
+## v-fork.65 (2026-06) — #1 Baker Percentage & scalabilita + archivio privato
+- Baker Percentage gia presente (pct per ingrediente sul totale farina) + scala per grammi/500g/1kg/2kg. Verificato via screenshot su ricetta MikiLab.
+- RecipeList.jsx RecipeDetail: aggiunto blocco Pro baker-scale con input baker-kg (kg farina) e baker-sacks (sacchi 25kg) -> onScaleChange(grammi) ricalcola tutte le dosi. Gated isPro && flourG>0 (useProfile). Attivo sulla scheda ricetta PERSONALE (archivio Pro). Le ricette MikiLab usano un renderer diverso (gia con scaling e percentuali).
+- Archivio privato vuoto: empty-state personal-empty-archive con nota 100% riservato + pulsante empty-add-recipe-btn "Aggiungi nuova ricetta privata".
+- Compila OK (1 warning innocuo). Prossimo: #3 timetable lievitazione concatenata.
