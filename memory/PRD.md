@@ -2875,3 +2875,6 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Pulizia sicura in Home.jsx: rimosse 2 fetch ridondanti (academyApi.weeklyTheme, recipesApi.list panettoni) e valori derivati inutilizzati (weekTheme, panettoni, focusChip, equipChip, profile). Nessun cambiamento di comportamento; Home verificata a video.
 - Lasciati volutamente: import inutilizzati (solo warning) e blocchi {false &&} in Home (innocui) per non rischiare regressioni a ridosso del deploy.
 - Verdetto review: READY WITH FIXES (solo hygiene LOW).
+
+## v-fork.48 (2026-08, fork) — Post di benvenuto TikTok
+- Creata locandina di lancio verticale 9:16 public/welcome-tiktok.png (BENVENUTI multilingue IT/DE/EN/ES/FR, baker che saluta, 100% gratis, QR reale tracciato + TikTok @mikilab.de + mikilab.de). Servita HTTP 200.
