@@ -3027,3 +3027,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - i18n: tutte le nuove stringhe inline in 6 lingue (mkTri a 6 argomenti), nessun dizionario modificato.
 - NB: preview ≠ produzione → REDEPLOY per mikilab.de.
 
+
+
+## v-fork (2026-06) — Confronto Prima/Dopo + Anteprima Fonte + Ricerca web a parole chiave (Tavily)
+- **#1 Confronto Prima → Dopo (FATTO)**: `web-recipe` ora chiede all'LLM anche una chiave extra `original` (name, hydration_percent, method_type, preferment_type, flour_type) = ricetta classica prima dell'adattamento. `WebRecipe.jsx` mostra una tabella "Originale → Adattata" (Idratazione, Metodo, Prefermento, Farina) con le differenze evidenziate in arancione. max_tokens LLM alzato a 3000. testid `web-recipe-compare`.
+- **#2 Anteprima Fonte (FATTO)**: `_fetch_url_text` ora estrae anche il `<title>`; l'endpoint aggiunge `source={domain,title,url}`. UI: riga "Fonte: <titolo> · <dominio>" cliccabile (testid `web-recipe-source`).
+- **#3 Ricerca a parole chiave — Tavily (FATTO, integrato)**: `TAVILY_API_KEY` in backend/.env (chiave `tvly-dev-...` fornita dall'utente, piano free 1000/mese). `_tavily_search()` via httpx REST (POST api.tavily.com/search, Bearer, include_raw_content=markdown, max_results 4). Nell'endpoint: se la query NON è un URL e c'è la chiave → ricerca web reale, unione dei top 3 contenuti (cap 9000 char) passati all'LLM per estrazione+adattamento, `source` dal primo risultato. Fallback alla ricostruzione da conoscenza se Tavily non risponde. Testato end-to-end: "baguette francese classica" → billyparisi.com; "pane di segale tedesco" (Qualità massima) → casapappagallo.it, 61%→78% diretto→indiretto none→lm.
+- La chiave Tavily è SOLO backend, mai esposta al browser. i18n: tutte le nuove stringhe inline in 6 lingue, nessun dizionario modificato.
+- NB: preview ≠ produzione → REDEPLOY per mikilab.de (ricordare di impostare TAVILY_API_KEY anche nei secret di produzione).
+

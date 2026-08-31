@@ -30,6 +30,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
+TAVILY_API_KEY = os.environ.get('TAVILY_API_KEY')
 
 # ---------------------------------------------------------------------------
 # Object Storage (archivio immagini dedicato)
@@ -3639,6 +3640,29 @@ async def _fetch_url_text(url: str):
     return text[:6000], title
 
 
+async def _tavily_search(query: str):
+    """Ricerca web per parole chiave via Tavily. Ritorna la lista di risultati (best-effort)."""
+    if not TAVILY_API_KEY:
+        return []
+    try:
+        async with httpx.AsyncClient(timeout=18.0) as client:
+            r = await client.post(
+                "https://api.tavily.com/search",
+                headers={"Authorization": f"Bearer {TAVILY_API_KEY}", "Content-Type": "application/json"},
+                json={
+                    "query": f"{query} ricetta recipe ingredienti ingredients procedimento",
+                    "max_results": 4,
+                    "search_depth": "basic",
+                    "include_raw_content": "markdown",
+                },
+            )
+            r.raise_for_status()
+            return r.json().get("results", []) or []
+    except Exception:
+        logger.exception("tavily search error")
+        return []
+
+
 @api_router.post("/maestro/web-recipe")
 async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro)):
     if not EMERGENT_LLM_KEY:
@@ -3652,16 +3676,28 @@ async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro
               .replace("{method_line}", WEB_RECIPE_METHODS[method])
               .replace("{schema}", SCAN_FIELDS_SCHEMA)
               .replace("{lang_line}", lang_line))
-    # Se l'utente incolla un LINK, leggo la pagina reale ed estraggo la ricetta da lì (web scraper).
+    # LINK → leggo la pagina reale. PAROLE CHIAVE → ricerca web reale via Tavily.
     page_text = ""
     source = None
+    from urllib.parse import urlparse
     if q.lower().startswith(("http://", "https://")):
         page_text, page_title = await _fetch_url_text(q)
         if not page_text:
             raise HTTPException(status_code=422, detail="Non riesco a leggere la pagina: controlla il link o riprova")
-        from urllib.parse import urlparse
         dom = (urlparse(q).netloc or "").replace("www.", "")
         source = {"domain": dom, "title": page_title, "url": q}
+    elif TAVILY_API_KEY:
+        results = await _tavily_search(q)
+        parts = []
+        for it in results[:3]:
+            c = it.get("raw_content") or it.get("content") or ""
+            if c:
+                parts.append(f"FONTE: {it.get('title')}\nURL: {it.get('url')}\n{c[:4000]}")
+        page_text = "\n\n".join(parts)[:9000]
+        if results:
+            top = results[0]
+            dom = (urlparse(top.get("url") or "").netloc or "").replace("www.", "")
+            source = {"domain": dom, "title": top.get("title") or "", "url": top.get("url") or ""}
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=f"webrec-{uuid.uuid4()}",
