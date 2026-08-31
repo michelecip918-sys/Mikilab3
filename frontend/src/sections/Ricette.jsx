@@ -30,7 +30,7 @@ export default function Ricette() {
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
-  if (view === "focacce") return <Sub onBack={() => setView("main")}><VetrinaFocacce /></Sub>;
+  if (view === "focacce") return <Sub onBack={() => setView("main")}><VetrinaFocacce onOpenRecipe={(id) => { setView("main"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 80); }} /></Sub>;
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">

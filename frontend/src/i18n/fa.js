@@ -522,6 +522,8 @@ const fa = {
 "cat_panini": "نان‌های کوچک",
 "cat_snack": "میان‌وعده و لقمه‌های شور",
 "cat_focacce": "فوکاچا و خمیرهای شور",
+"cat_pizza": "پیتزا",
+"cat_pasticceria": "شیرینی‌پزی و دسر",
 "field_preferment": "نوع پیش‌تخمیر",
 "pf_none": "مستقیم (بدون پیش‌تخمیر)",
 "pf_poolish": "پولیش",

@@ -522,6 +522,8 @@ const fr = {
 "cat_panini": "Petits pains",
 "cat_snack": "En-cas & Bouchées salées",
 "cat_focacce": "Focaccia & Levés salés",
+"cat_pizza": "Pizza",
+"cat_pasticceria": "Pâtisserie & Desserts",
 "field_preferment": "Type de préferment",
 "pf_none": "Direct (sans préferment)",
 "pf_poolish": "Poolish",

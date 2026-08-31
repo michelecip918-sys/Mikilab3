@@ -370,7 +370,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-06-v66-focacce-photos"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-06-v68-all-photos"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",

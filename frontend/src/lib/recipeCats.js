@@ -8,6 +8,8 @@ export const CATS = [
   { key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" },
   { key: "pane", label: "cat_pane", icon: "🍞" },
   { key: "focacce", label: "cat_focacce", icon: "🫓" },
+  { key: "pizza", label: "cat_pizza", icon: "🍕" },
+  { key: "pasticceria", label: "cat_pasticceria", icon: "🧁" },
   { key: "snack", label: "cat_snack", icon: "🥨" },
 ];
 
@@ -17,6 +19,8 @@ export const CAT_COLORS = {
   viennoiserie: "#E8823A",
   pane: "#C77D48",
   focacce: "#7FA650",
+  pizza: "#E4572E",
+  pasticceria: "#D98CB3",
   snack: "#D06A4A",
 };
 
@@ -38,6 +42,8 @@ export function recipeCategory(r) {
     return { rank: 1, sub: /panettone|colomba|pandoro/.test(name) ? 1 : 0, key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" };
   }
   if (cat === "focacce") return { rank: 3, sub: 0, key: "focacce", label: "cat_focacce", icon: "🫓" };
+  if (cat === "pizza") return { rank: 5, sub: 0, key: "pizza", label: "cat_pizza", icon: "🍕" };
+  if (cat === "pasticceria") return { rank: 6, sub: 0, key: "pasticceria", label: "cat_pasticceria", icon: "🧁" };
   if (cat === "snack") return { rank: 4, sub: 0, key: "snack", label: "cat_snack", icon: "🥨" };
   if (cat === "pane" || cat === "panini") {
     const isBaguette = /baguette|filo di francia|ficelle|bacchett/.test(name);

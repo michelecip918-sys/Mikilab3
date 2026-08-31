@@ -1,38 +1,68 @@
-import { useEffect, useState } from "react";
-import { Loader2, X, Wheat } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Loader2, X, Wheat, BookOpen } from "lucide-react";
 import { recipesApi } from "@/lib/api";
 import { rLoc } from "@/lib/loc";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// Vetrina Focacce: galleria a griglia con le foto dedicate di ogni focaccia.
-// Tap → lightbox con foto grande + nome + condimento.
-export default function VetrinaFocacce() {
+// Vetrina delle Ricette: galleria a griglia con le foto di ogni ricetta, per categoria.
+// Tap → lightbox (foto grande + nome + note) con CTA "Vedi ricetta completa".
+const TAB_DEF = [
+  { key: "focacce", it: "Focacce", de: "Focaccia", en: "Focaccia", es: "Focaccias", icon: "🫓" },
+  { key: "pizza", it: "Pizza", de: "Pizza", en: "Pizza", es: "Pizza", icon: "🍕" },
+  { key: "pasticceria", it: "Pasticceria", de: "Konditorei", en: "Pastry", es: "Pastelería", icon: "🧁" },
+  { key: "pane", it: "Pane", de: "Brot", en: "Bread", es: "Pan", icon: "🍞" },
+  { key: "panini", it: "Panini", de: "Brötchen", en: "Buns", es: "Panecillos", icon: "🥪" },
+  { key: "panettoni", it: "Panettoni", de: "Panettone", en: "Panettone", es: "Panettones", icon: "🎄" },
+  { key: "viennoiserie", it: "Dolci & Sfoglie", de: "Süßes & Blätterteig", en: "Sweets & Pastry", es: "Dulces y Hojaldre", icon: "🥐" },
+  { key: "snack", it: "Snack", de: "Snacks", en: "Snacks", es: "Snacks", icon: "🥨" },
+  { key: "basi", it: "Basi & Lieviti", de: "Basen & Hefen", en: "Bases & Leavens", es: "Bases y Levaduras", icon: "✨" },
+];
+
+export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
-  const [items, setItems] = useState([]);
+  const [all, setAll] = useState([]);
   const [loading, setLoading] = useState(true);
   const [zoom, setZoom] = useState(null);
+  const [cat, setCat] = useState(initialCat);
 
   useEffect(() => {
     let alive = true;
-    recipesApi.list("mikilab").then((all) => {
+    recipesApi.list("mikilab").then((rows) => {
       if (!alive) return;
-      const foc = (all || []).filter((r) => r.menu_category === "focacce" && r.image_url);
-      foc.sort((a, b) => rLoc(a, "name", lang).localeCompare(rLoc(b, "name", lang)));
-      setItems(foc);
+      setAll((rows || []).filter((r) => r.image_url));
       setLoading(false);
     }).catch(() => setLoading(false));
     return () => { alive = false; };
-  }, [lang]);
+  }, []);
+
+  const tabs = useMemo(() => TAB_DEF.filter((t) => all.some((r) => r.menu_category === t.key)), [all]);
+  const items = useMemo(() => {
+    const list = all.filter((r) => r.menu_category === cat);
+    list.sort((a, b) => rLoc(a, "name", lang).localeCompare(rLoc(b, "name", lang)));
+    return list;
+  }, [all, cat, lang]);
+
+  const catName = (k) => { const t = TAB_DEF.find((x) => x.key === k); return t ? tri(t.it, t.de, t.en, t.es) : k; };
 
   return (
     <div className="pb-8" data-testid="vetrina-focacce">
       <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#c94f00)" }}>
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Wheat className="w-7 h-7" /></div>
-        <h1 className="font-display text-2xl font-bold">{tri("Vetrina delle Focacce", "Focaccia-Schaufenster", "Focaccia Showcase", "Vitrina de Focaccias", "Vitrine des Focaccias", "ویترین فوکاچا")}</h1>
-        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{tri(`${items.length || ""} focacce, ogni gusto con la sua foto. Tocca per ingrandire.`, `${items.length || ""} Focaccias, jede mit eigenem Foto. Tippen zum Vergrößern.`, `${items.length || ""} focaccias, each with its own photo. Tap to enlarge.`, `${items.length || ""} focaccias, cada una con su foto. Toca para ampliar.`, `${items.length || ""} focaccias, chacune avec sa photo. Touchez pour agrandir.`, "روی هر فوکاچا بزنید")}</p>
+        <h1 className="font-display text-2xl font-bold">{tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes", "ویترین دستورها")}</h1>
+        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>
+      </div>
+
+      {/* Tab categorie */}
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="vetrina-tabs">
+        {tabs.map((t) => (
+          <button key={t.key} data-testid={`vetrina-tab-${t.key}`} onClick={() => setCat(t.key)}
+            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
+            {t.icon} {catName(t.key)}
+          </button>
+        ))}
       </div>
 
       {loading ? (
@@ -50,6 +80,7 @@ export default function VetrinaFocacce() {
               </div>
             </button>
           ))}
+          {items.length === 0 && <p className="col-span-2 text-center text-sm text-[#7E8A93] py-10">{tri("Nessuna foto in questa categoria.", "Keine Fotos in dieser Kategorie.", "No photos in this category.", "Sin fotos en esta categoría.")}</p>}
         </div>
       )}
 
@@ -62,6 +93,12 @@ export default function VetrinaFocacce() {
             <div className="p-4">
               <h3 className="font-display text-lg font-bold text-white leading-tight">{rLoc(zoom, "name", lang)}</h3>
               {rLoc(zoom, "notes", lang) && <p className="text-[12.5px] text-[#AEB8BF] leading-snug mt-1.5 whitespace-pre-line line-clamp-4">{rLoc(zoom, "notes", lang)}</p>}
+              {onOpenRecipe && (
+                <button data-testid="vetrina-open-recipe" onClick={() => onOpenRecipe(zoom.id)}
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                  <BookOpen className="w-4 h-4" /> {tri("Vedi ricetta completa", "Ganzes Rezept ansehen", "See full recipe", "Ver receta completa", "Voir la recette complète", "دیدن دستور کامل")}
+                </button>
+              )}
             </div>
           </div>
         </div>
