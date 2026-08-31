@@ -43,7 +43,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [baseFilter, setBaseFilter] = useState("all");
   const [favFilter, setFavFilter] = useState(false);
   const { favs, toggle: toggleFav, countOf } = useFavRecipes();
-  const [openCats, setOpenCats] = useState({});
+  const [openCats, setOpenCats] = useState(() => { try { return JSON.parse(localStorage.getItem(`mikilab_open_cats_${collectionName}`) || "{}"); } catch { return {}; } });
+  useEffect(() => { try { localStorage.setItem(`mikilab_open_cats_${collectionName}`, JSON.stringify(openCats)); } catch { /* */ } }, [openCats, collectionName]);
   const [folderCovers, setFolderCovers] = useState({});
   const [translating, setTranslating] = useState(false);
   const { t, lang, setLang } = useLang();

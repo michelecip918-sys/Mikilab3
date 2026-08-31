@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, X, Wheat, BookOpen } from "lucide-react";
+import { Loader2, X, Wheat, BookOpen, Share2 } from "lucide-react";
 import { recipesApi } from "@/lib/api";
 import { rLoc } from "@/lib/loc";
 import { useLang } from "@/i18n/LanguageContext";
@@ -45,6 +45,14 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
   }, [all, cat, lang]);
 
   const catName = (k) => { const t = TAB_DEF.find((x) => x.key === k); return t ? tri(t.it, t.de, t.en, t.es) : k; };
+
+  const shareItem = async (r) => {
+    const img = (r.image_url || "").startsWith("http") ? r.image_url : `${window.location.origin}${r.image_url}`;
+    const title = rLoc(r, "name", lang);
+    const text = `${title} — MikiLab 🥖`;
+    try { if (navigator.share) { await navigator.share({ title, text, url: img }); return; } } catch { return; }
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + img)}`, "_blank");
+  };
 
   return (
     <div className="pb-8" data-testid="vetrina-focacce">
@@ -93,6 +101,10 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
             <div className="p-4">
               <h3 className="font-display text-lg font-bold text-white leading-tight">{rLoc(zoom, "name", lang)}</h3>
               {rLoc(zoom, "notes", lang) && <p className="text-[12.5px] text-[#AEB8BF] leading-snug mt-1.5 whitespace-pre-line line-clamp-4">{rLoc(zoom, "notes", lang)}</p>}
+              <button data-testid="vetrina-share" onClick={() => shareItem(zoom)}
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#1e1e1e] border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                <Share2 className="w-4 h-4 text-[#ff6b00]" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
+              </button>
               {onOpenRecipe && (
                 <button data-testid="vetrina-open-recipe" onClick={() => onOpenRecipe(zoom.id)}
                   className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">

@@ -2729,3 +2729,11 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Impara ricorda gli Approfondimenti**: `showMore` in `Beginners.jsx` persiste in localStorage `mikilab_impara_show_more` (come il Lab). Verificato: resta aperto dopo cambio tab.
 - **Ricettario: prima categoria aperta di default**: in `RecipeList.jsx` calcolo `firstCatKey` (prima categoria non vuota in `CATS`) e la apro di default (quando non si sta cercando); le altre restano chiuse. Verificato: 6 card ricetta con foto visibili subito.
 - Tutto verificato via screenshot/DOM, 0 crash console. Modifiche solo frontend.
+
+
+---
+## v-fork.30 (2026-06, fork) — Memoria categorie, barra-indice Social, condivisione dal lightbox
+- **Ricettario ricorda le categorie aperte**: `openCats` in `RecipeList.jsx` persiste in localStorage `mikilab_open_cats_<collection>`. Le categorie toccate mantengono lo stato; quelle mai toccate seguono il default (prima aperta). Verificato: aperta Pizza, uscito e rientrato → resta aperta (4 card).
+- **Barra-indice nel Social**: `SectionJumpBar` in `Community.jsx` (`community-jump`, 4 chip: Scrivi→`community-composer`, Canali→`community-filters`, Bacheca→`community-feed`, Mercatino→`community-marketplace`). Aggiunto testid `community-composer`. Verificato (loggato).
+- **Condividi dalla Vetrina**: pulsante `vetrina-share` nel lightbox di `VetrinaFocacce.jsx` → `navigator.share` (sheet nativo: WhatsApp/Instagram/…) con fallback `wa.me`. Condivide nome + URL foto assoluto.
+- Tutto verificato via screenshot/DOM, 0 crash console. Solo frontend.

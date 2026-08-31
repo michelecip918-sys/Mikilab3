@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import HallOfFame from "@/components/HallOfFame";
 import SectionHero from "@/components/SectionHero";
+import SectionJumpBar from "@/components/SectionJumpBar";
 import Marketplace from "@/sections/Marketplace";
 import { marketNewCount, markMarketSeen } from "@/lib/market";
 import FriendsPanel from "@/components/FriendsPanel";
@@ -245,6 +246,13 @@ export default function Community({ onNavigate }) {
 
       <AvatarBubbles variant="community" />
 
+      <SectionJumpBar testid="community-jump" sections={[
+        { target: "community-composer", label: tri("Scrivi", "Schreiben", "Post", "Escribe", "Écrire"), Icon: Send },
+        { target: "community-filters", label: tri("Canali", "Kanäle", "Channels", "Canales", "Canaux"), Icon: Wheat },
+        { target: "community-feed", label: tri("Bacheca", "Pinnwand", "Board", "Tablón", "Tableau"), Icon: Users },
+        { target: "community-marketplace", label: tri("Mercatino", "Markt", "Market", "Mercadillo", "Marché"), Icon: Trophy },
+      ]} />
+
       {/* Composer */}
       {(() => {
         let done = false;
@@ -258,7 +266,7 @@ export default function Community({ onNavigate }) {
         );
       })()}
 
-      <div className="bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl p-4 mb-5">
+      <div data-testid="community-composer" className="bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl p-4 mb-5">
         <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] mb-2">{tri("Cosa vuoi condividere?", "Was möchtest du teilen?", "What do you want to share?", "¿Qué quieres compartir?")}</p>
         <div className="grid grid-cols-3 gap-1.5 mb-2">
           {CATS.map(({ id, Icon, color }) => (
