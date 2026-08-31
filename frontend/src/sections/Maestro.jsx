@@ -6,7 +6,6 @@ import {
   Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
-import SfidaLampo from "@/sections/SfidaLampo";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
 import MyData from "@/sections/MyData";
 import MachinePark from "@/components/MachinePark";
@@ -218,7 +217,7 @@ export default function Maestro() {
           <span className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Wrench className="w-5 h-5 text-[#ff6b00]" /></span>
           <span className="min-w-0">
             <span className="block font-display text-sm font-bold leading-tight">{mkTri(lang)("Tutti gli strumenti", "Alle Werkzeuge", "All tools", "Todas las herramientas", "Tous les outils", "همهٔ ابزارها")}</span>
-            <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{mkTri(lang)("Calcolatori, registri, Sfida Lampo e diagnosi", "Rechner, Register, Blitz-Challenge & Diagnose", "Calculators, logs, Flash Challenge & diagnosis", "Calculadoras, registros, Reto Flash y diagnóstico", "Calculateurs, registres, défi éclair & diagnostic", "ماشین‌حساب‌ها، ثبت‌ها، چالش و تشخیص")}</span>
+            <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{mkTri(lang)("Calcolatori, registri e diagnosi", "Rechner, Register & Diagnose", "Calculators, logs & diagnosis", "Calculadoras, registros y diagnóstico", "Calculateurs, registres & diagnostic", "ماشین‌حساب‌ها، ثبت‌ها و تشخیص")}</span>
           </span>
         </span>
         {showTools ? <ChevronUp className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#ff6b00] shrink-0" />}
@@ -226,9 +225,6 @@ export default function Maestro() {
 
       {showTools && (
       <div data-testid="maestro-tools-collapsible">
-      {/* SFIDA LAMPO settimanale con classifica dei fornai */}
-      <SfidaLampo />
-
       {/* DA DOVE INIZIARE: inserisci ricetta + calcolatori, poi il percorso guidato */}
       <div data-testid="maestro-top-tools" className="mb-4">
         <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2 flex items-center gap-1.5">

@@ -5512,13 +5512,47 @@ async def admin_email_report(days: int = 7, admin: dict = Depends(require_admin)
             "total": total, "users": len(users), "by_type": by_type, "by_channel": by_channel, "daily": daily}
 
 
+@api_router.get("/admin/email-logs")
+async def admin_email_logs(days: int = 30, admin: dict = Depends(require_admin)):
+    """Righe grezze degli invii email per l'export CSV. days = 7 | 30."""
+    from datetime import date, timedelta
+    span = 30 if int(days) >= 30 else 7
+    since = (date.today() - timedelta(days=span - 1)).isoformat()
+    rows = await db.email_logs.find({"day": {"$gte": since}}, {"_id": 0}).sort("created_at", -1).to_list(20000)
+    out = [{"day": r.get("day"), "kind": r.get("kind"), "to": r.get("to"),
+            "channel": (r.get("meta") or {}).get("channel", ""), "count": r.get("count", 1),
+            "created_at": r.get("created_at")} for r in rows]
+    return {"rows": out, "days": span}
+
+
+_stats_cache = {"data": None, "ts": 0.0}
+LANG_COUNTRY = {"it": "IT", "de": "DE", "en": "GB", "es": "ES", "fr": "FR", "fa": "IR"}
+
+
 @api_router.get("/community/stats")
 async def community_stats():
-    """Statistiche pubbliche per la riprova sociale in Home (contatore iscritti)."""
+    """Statistiche pubbliche per la riprova sociale in Home (contatore iscritti). Cache ~60s."""
+    import time
+    now = time.time()
+    if _stats_cache["data"] and (now - _stats_cache["ts"]) < 60:
+        return _stats_cache["data"]
     bakers = await db.users.count_documents({})
     recipes = await db.recipes.count_documents({"collection_name": "mikilab", "hidden": {"$ne": True}})
     posts = await db.community_posts.count_documents({"is_deleted": {"$ne": True}})
-    return {"bakers": bakers, "recipes": recipes, "posts": posts}
+    # Ultimi paesi collegati: lingue distinte degli iscritti recenti → codici ISO2 (baseline IT/DE).
+    subs = await db.newsletter_subscribers.find({}, {"_id": 0, "lang": 1}).sort("created_at", -1).to_list(60)
+    seen = []
+    for s in subs:
+        c = LANG_COUNTRY.get((s.get("lang") or "").lower())
+        if c and c not in seen:
+            seen.append(c)
+    for c in ["IT", "DE"]:
+        if c not in seen:
+            seen.append(c)
+    data = {"bakers": bakers, "recipes": recipes, "posts": posts, "countries": seen[:6]}
+    _stats_cache["data"] = data
+    _stats_cache["ts"] = now
+    return data
 
 
 @api_router.post("/community/posts/{post_id}/like")

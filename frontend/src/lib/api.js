@@ -164,6 +164,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
   newsletterSend: (payload) => api.post(`/admin/newsletter/send`, payload).then((r) => r.data),
   newsletterHistory: () => api.get(`/admin/newsletter/history`).then((r) => r.data),
   emailReport: (days = 7) => api.get(`/admin/email-report`, { params: { days } }).then((r) => r.data),
+  emailLogs: (days = 30) => api.get(`/admin/email-logs`, { params: { days } }).then((r) => r.data),
 };
 
 export const siteSettingsApi = {

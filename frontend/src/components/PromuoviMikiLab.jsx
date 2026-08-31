@@ -48,7 +48,7 @@ Testo: "Fotografi l'impasto → ti dico cosa manca"
 Testo: "Pane, pizza e pasticceria"
 
 CTA (14-17s) — Logo MikiLab + schermo arancione.
-Testo: "100% GRATIS 👉 mikilab.de — Seguimi @michelucano"
+Testo: "100% GRATIS 👉 mikilab.de — Seguimi @mikilab.de"
 
 🎵 Audio: un trending sound caldo/acustico.
 #MikiLab #panetok #lievitomadre #fyp #homebaking #panefattoincasa`,
@@ -71,7 +71,7 @@ Text: "Snap your dough → I tell you what's missing"
 Text: "Bread, pizza & pastry"
 
 CTA (14-17s) — MikiLab logo + orange screen.
-Text: "100% FREE 👉 mikilab.de — Follow @michelucano"
+Text: "100% FREE 👉 mikilab.de — Follow @mikilab.de"
 
 🎵 Audio: a warm trending sound.
 #MikiLab #breadtok #sourdough #fyp #homebaking`,
@@ -94,18 +94,18 @@ Text: "Foto vom Teig → ich sage, was fehlt"
 Text: "Brot, Pizza & Gebäck"
 
 CTA (14-17s) — MikiLab-Logo + oranger Screen.
-Text: "100% GRATIS 👉 mikilab.de — Folge @michelucano"
+Text: "100% GRATIS 👉 mikilab.de — Folge @mikilab.de"
 
 🎵 Audio: ein warmer Trending-Sound.
 #MikiLab #Brotbacken #Sauerteig #fyp`,
 };
 
 const SEASONAL = [
-  { id: "natale", label: "🎄 Natale", text: { it: "🎄 Quest'anno il panettone lo fai TU! Ricetta passo-passo e lista «cosa e dove comprare». Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #lievitomadre #Natale", de: "🎄 Dieses Jahr backst DU den Panettone! Schritt-für-Schritt-Rezept, gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Panettone #Weihnachten", en: "🎄 This year YOU bake the panettone! Step-by-step recipe, free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #Christmas", es: "🎄 ¡Este año el panettone lo haces TÚ! Receta paso a paso, gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #Navidad" } },
-  { id: "pasqua", label: "🕊️ Pasqua", text: { it: "🕊️ Colomba di Pasqua fatta in casa, senza paura! Ti guido su MikiLab, gratis 👉 " + SITE_URL + "\n#MikiLab #colomba #Pasqua", de: "🕊️ Oster-Colomba selbst gebacken! Ich führe dich, gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Ostern", en: "🕊️ Homemade Easter colomba, no fear! I guide you, free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #Easter", es: "🕊️ ¡Colomba de Pascua casera! Te guío gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #Pascua" } },
-  { id: "estate", label: "☀️ Estate", text: { it: "☀️ Estate = focaccia! Ricette + lista spesa, gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #estate", de: "☀️ Sommer = Focaccia! Rezepte gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Focaccia #Sommer", en: "☀️ Summer = focaccia! Recipes free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #summer", es: "☀️ ¡Verano = focaccia! Recetas gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #verano" } },
-  { id: "valentino", label: "❤️ S.Valentino", text: { it: "❤️ Conquista chi ami con un dolce fatto a mano. Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentino", de: "❤️ Verzaubere mit einem selbstgemachten Dessert. Gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Valentinstag", en: "❤️ Win their heart with a homemade sweet. Free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #ValentinesDay", es: "❤️ Conquista con un dulce casero. Gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentín" } },
-  { id: "halloween", label: "🎃 Halloween", text: { it: "🎃 Pane alla zucca da paura per Halloween! Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween #autunno", de: "🎃 Gruseliges Kürbisbrot für Halloween! Gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween", en: "🎃 Spooky pumpkin bread for Halloween! Free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween", es: "🎃 ¡Pan de calabaza para Halloween! Gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween" } },
+  { id: "natale", label: { it: "🎄 Natale", de: "🎄 Weihnachten", en: "🎄 Christmas", es: "🎄 Navidad", fr: "🎄 Noël", fa: "🎄 کریسمس" }, text: { it: "🎄 Quest'anno il panettone lo fai TU! Ricetta passo-passo e lista «cosa e dove comprare». Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #lievitomadre #Natale", de: "🎄 Dieses Jahr backst DU den Panettone! Schritt-für-Schritt-Rezept, gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Panettone #Weihnachten", en: "🎄 This year YOU bake the panettone! Step-by-step recipe, free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #Christmas", es: "🎄 ¡Este año el panettone lo haces TÚ! Receta paso a paso, gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #panettone #Navidad" } },
+  { id: "pasqua", label: { it: "🕊️ Pasqua", de: "🕊️ Ostern", en: "🕊️ Easter", es: "🕊️ Pascua", fr: "🕊️ Pâques", fa: "🕊️ عید پاک" }, text: { it: "🕊️ Colomba di Pasqua fatta in casa, senza paura! Ti guido su MikiLab, gratis 👉 " + SITE_URL + "\n#MikiLab #colomba #Pasqua", de: "🕊️ Oster-Colomba selbst gebacken! Ich führe dich, gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Ostern", en: "🕊️ Homemade Easter colomba, no fear! I guide you, free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #Easter", es: "🕊️ ¡Colomba de Pascua casera! Te guío gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #Pascua" } },
+  { id: "estate", label: { it: "☀️ Estate", de: "☀️ Sommer", en: "☀️ Summer", es: "☀️ Verano", fr: "☀️ Été", fa: "☀️ تابستان" }, text: { it: "☀️ Estate = focaccia! Ricette + lista spesa, gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #estate", de: "☀️ Sommer = Focaccia! Rezepte gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Focaccia #Sommer", en: "☀️ Summer = focaccia! Recipes free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #summer", es: "☀️ ¡Verano = focaccia! Recetas gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #focaccia #verano" } },
+  { id: "valentino", label: { it: "❤️ S.Valentino", de: "❤️ Valentinstag", en: "❤️ Valentine's", es: "❤️ San Valentín", fr: "❤️ Saint-Valentin", fa: "❤️ ولنتاین" }, text: { it: "❤️ Conquista chi ami con un dolce fatto a mano. Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentino", de: "❤️ Verzaubere mit einem selbstgemachten Dessert. Gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Valentinstag", en: "❤️ Win their heart with a homemade sweet. Free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #ValentinesDay", es: "❤️ Conquista con un dulce casero. Gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #SanValentín" } },
+  { id: "halloween", label: { it: "🎃 Halloween", de: "🎃 Halloween", en: "🎃 Halloween", es: "🎃 Halloween", fr: "🎃 Halloween", fa: "🎃 هالووین" }, text: { it: "🎃 Pane alla zucca da paura per Halloween! Gratis su MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween #autunno", de: "🎃 Gruseliges Kürbisbrot für Halloween! Gratis auf MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween", en: "🎃 Spooky pumpkin bread for Halloween! Free on MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween", es: "🎃 ¡Pan de calabaza para Halloween! Gratis en MikiLab 👉 " + SITE_URL + "\n#MikiLab #Halloween" } },
 ];
 
 const SOCIALS = [
@@ -198,7 +198,7 @@ export default function PromuoviMikiLab() {
             {SEASONAL.map((s) => (
               <button key={s.id} data-testid={`promuovi-season-${s.id}`} onClick={() => setSeason(s.id)}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${season === s.id ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#AEB8BF] border border-[#2e2e2e]"}`}>
-                {s.label}
+                {s.label[lang] || s.label.it}
               </button>
             ))}
           </div>
@@ -245,7 +245,7 @@ export default function PromuoviMikiLab() {
                   <Download className="w-4 h-4 text-[#ff6b00]" /> Halloween
                 </a>
                 <a data-testid="promuovi-cover-ferragosto" href={`${process.env.PUBLIC_URL}/reel-cover-ferragosto.png`} download="mikilab-ferragosto.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> Ferragosto
+                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Ferragosto", "Mariä Himmelfahrt", "Ferragosto (Aug 15)", "Ferragosto (15 ago)", "Ferragosto (15 août)", "فراگوستو")}
                 </a>
                 <a data-testid="promuovi-cover-carnevale" href={`${process.env.PUBLIC_URL}/reel-cover-carnevale.png`} download="mikilab-carnevale.png" className="flex items-center justify-center gap-2 rounded-xl border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
                   <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Carnevale", "Karneval", "Carnival", "Carnaval", "Carnaval", "کارناوال")}

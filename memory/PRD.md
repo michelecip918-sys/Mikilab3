@@ -2821,3 +2821,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Streak badge persistenti**: `GET /api/streak` ora ritorna `earned` (traguardi conquistati da `badges` streak_N o da `best`), a prescindere dallo streak corrente. `StreakFlame.jsx` mostra il badge-ricompensa (7/30/100) anche se la serie si è interrotta (usa `s.earned`).
 - Verificato: backend syntax + curl (days=30 → daily[30], by_channel; streak → earned[]) + build frontend ok.
 
+
+## v-fork.41 (2026-08, fork) — Traduzioni festività + profilo social unico (TikTok @mikilab.de)
+- **Fix traduzioni festività** (`PromuoviMikiLab.jsx`): le etichette dei "Post stagionali" (Natale/Pasqua/Estate/S.Valentino/Halloween) erano stringhe italiane fisse → ora oggetto multilingua `{it,de,en,es,fr,fa}` reso con `s.label[lang]`. Anche il pulsante cover "Ferragosto" ora è tradotto con `L(...)`.
+- **Profilo social unico**: l'utente ha un solo profilo ufficiale = **TikTok @mikilab.de** (gli altri erano profili personali privati). `config/social.js`: `tiktok` → `https://www.tiktok.com/@mikilab.de`; `instagram/facebook/threads/youtube` → "" (nascosti dal "Seguici"); `whatsapp` invariato. Handle nelle caption/script Reel aggiornati (`@michelucano`/`@michele.signorell` → `@mikilab.de`).
+- **Locandina stampabile** (`public/locandina-mikilab.png`): conteneva "Instagram @michelucano" e "TikTok @michele.signorell". Riga social corretta via PIL (preservando il QR reale) → ora mostra solo "TikTok @mikilab.de". Backup in /tmp/locandina-backup.png. Le cover Reel non contenevano handle (solo mikilab.de) → nessuna modifica.
+- Batch precedente (v-fork.40 → iteration_144): cache stats 60s + paesi, Quiz/Sfide+Classifica in Impara, CSV report email, prova sociale animata Home → testato 100% (backend+frontend).
+

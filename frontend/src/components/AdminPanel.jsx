@@ -72,6 +72,17 @@ export default function AdminPanel({ open, onOpenChange }) {
     try { setEmailRep(await adminApi.emailReport(d)); } catch { /* */ }
   }, []);
   const changeEmailDays = (d) => { setEmailDays(d); setEmailRep(null); loadEmailReport(d); };
+  const downloadEmailCsv = async () => {
+    try {
+      const r = await adminApi.emailLogs(emailDays);
+      const rows = [["day", "kind", "to", "channel", "count", "created_at"], ...(r.rows || []).map((x) => [x.day, x.kind, x.to, x.channel, x.count, x.created_at])];
+      const csv = rows.map((rr) => rr.map((c) => `"${String(c ?? "").replace(/"/g, '""')}"`).join(",")).join("\n");
+      const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+      const a = document.createElement("a");
+      a.href = url; a.download = `mikilab-email-logs-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click(); URL.revokeObjectURL(url);
+    } catch { toast.error(de ? "Fehler" : "Errore"); }
+  };
 
   const downloadCsv = () => {
     const rows = [["email", "lang", "source", "created_at"], ...subs.map((s) => [s.email, s.lang || "", s.source || "", s.created_at || ""])];
@@ -290,6 +301,12 @@ export default function AdminPanel({ open, onOpenChange }) {
                   {d} {de ? "Tage" : "gg"}
                 </button>
               ))}
+              {emailRep && emailRep.total > 0 && (
+                <button data-testid="email-report-csv" onClick={downloadEmailCsv}
+                  className="text-[11px] font-bold rounded-lg px-2 py-1 border bg-white dark:bg-[#181818] text-[#a37b52] dark:text-[#d8b48a] border-[#8C6B4A]/40 active:scale-95">
+                  CSV
+                </button>
+              )}
             </div>
           </div>
           {!emailRep ? (
@@ -321,7 +338,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                       const max = Math.max(1, ...emailRep.daily.map((x) => x.count));
                       const h = Math.round((d.count / max) * 100);
                       return (
-                        <div key={d.date} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
+                        <div key={d.date} data-testid={`email-report-bar-${d.date}`} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
                           <span className="text-[9px] font-bold text-[#a37b52] dark:text-[#d8b48a]">{d.count || ""}</span>
                           <div className="w-full rounded-t bg-[#8C6B4A]" style={{ height: `${Math.max(4, h)}%` }} />
                           {emailRep.daily.length <= 10 && <span className="text-[8px] text-[#7E8A93]">{d.date.slice(5)}</span>}

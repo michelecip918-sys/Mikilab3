@@ -113,6 +113,26 @@ const SCENE_PHRASES = {
   ],
 };
 
+function codeToFlag(cc) {
+  if (!cc || cc.length !== 2) return "";
+  return String.fromCodePoint(...[...cc.toUpperCase()].map((c) => 127397 + c.charCodeAt(0)));
+}
+
+function AnimatedCount({ value }) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    let raf; const start = performance.now(); const dur = 900;
+    const step = (tm) => {
+      const p = Math.min(1, (tm - start) / dur);
+      setN(Math.round(value * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+  return <>{n}</>;
+}
+
 function HomeAvatarScene({ lang }) {
   const L = (...a) => mkTri(lang)(...a);
   const phrases = SCENE_PHRASES[lang] || (lang === "fr" ? SCENE_PHRASES.it.map((s) => triFR(s) || s) : lang === "fa" ? SCENE_PHRASES.it.map((s) => triFA(s) || s) : SCENE_PHRASES.it);
@@ -352,19 +372,32 @@ export default function Home({ onNavigate }) {
 
 
       {/* Prova sociale: rassicura al primo colpo d'occhio, sotto le CTA */}
-      <div data-testid="home-social-proof" className="flex items-center justify-center gap-3 -mt-1">
-        <div className="flex -space-x-2.5">
-          {["/michele-avatar.jpg", "/mohammed-avatar.jpg", "/bio-photo.jpg"].map((src, i) => (
-            <img key={i} src={`${process.env.PUBLIC_URL || ""}${src}`} alt="" className="w-8 h-8 rounded-full object-cover ring-2 ring-[#121212]" loading="lazy"
-              onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          ))}
+      <div data-testid="home-social-proof" className="flex flex-col items-center gap-2 -mt-1">
+        <div className="flex items-center justify-center gap-3">
+          <div className="flex -space-x-2.5">
+            {["/michele-avatar.jpg", "/mohammed-avatar.jpg", "/bio-photo.jpg"].map((src, i) => (
+              <img key={i} src={`${process.env.PUBLIC_URL || ""}${src}`} alt="" className="w-8 h-8 rounded-full object-cover ring-2 ring-[#121212]" loading="lazy"
+                onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            ))}
+          </div>
+          <p className="text-[12.5px] text-[#9aa4ab] leading-snug">
+            {stats && stats.bakers > 0 && (
+              <span data-testid="home-subscribers-count" className="text-[#ff6b00] font-extrabold"><AnimatedCount value={stats.bakers} />+ </span>
+            )}
+            <span className="text-white font-bold">{L("Fornai da Italia e Germania", "Bäcker aus Italien und Deutschland", "Bakers from Italy and Germany", "Panaderos de Italia y Alemania", "Boulangers d'Italie et d'Allemagne", "نانواها از ایتالیا و آلمان")}</span> {L("organizzano qui la produzione", "organisieren hier die Produktion", "organise production here", "organizan aquí la producción", "organisent ici la production", "تولید را اینجا سازماندهی می‌کنند")}
+          </p>
         </div>
-        <p className="text-[12.5px] text-[#9aa4ab] leading-snug">
-          {stats && stats.bakers > 0 && (
-            <span data-testid="home-subscribers-count" className="text-[#ff6b00] font-extrabold">{stats.bakers}+ </span>
-          )}
-          <span className="text-white font-bold">{L("Fornai da Italia e Germania", "Bäcker aus Italien und Deutschland", "Bakers from Italy and Germany", "Panaderos de Italia y Alemania", "Boulangers d'Italie et d'Allemagne", "نانواها از ایتالیا و آلمان")}</span> {L("organizzano qui la produzione", "organisieren hier die Produktion", "organise production here", "organizan aquí la producción", "organisent ici la production", "تولید را اینجا سازماندهی می‌کنند")}
-        </p>
+        {stats && (stats.countries || []).length > 0 && (
+          <div data-testid="home-social-countries" className="flex items-center gap-1.5 flex-wrap justify-center">
+            <span className="text-[11px] text-[#7E8A93]">{L("Ultimi collegati:", "Zuletzt verbunden:", "Recently connected:", "Últimos conectados:", "Derniers connectés:", "آخرین اتصال‌ها:")}</span>
+            {stats.countries.map((cc, i) => (
+              <motion.span key={cc} data-testid={`home-country-${cc}`}
+                initial={{ opacity: 0, y: 6, scale: 0.7 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.15 * i, type: "spring", stiffness: 300, damping: 18 }}
+                className="text-base leading-none">{codeToFlag(cc)}</motion.span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Avatar: Michele operativo + Mohammadreza pronto ad aiutare */}

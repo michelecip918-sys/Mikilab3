@@ -1,0 +1,30 @@
+{
+  "summary": "Iteration 144 full test of the 4 new features: (1) 60s in-memory cache of /api/community/stats, (2) Quiz+Sfide+Classifica in Impara, (3) Admin email report 7/30 toggle + CSV export, (4) animated social proof in Home. Backend: 14/14 pytest passed (stats shape+cache identity, admin/email-logs auth+RBAC+days clamping 7/30 and _id exclusion, admin/email-report daily length 7/30 + by_channel + sorted dates, PUT /api/me/channel-email persistence). Frontend (mobile 390x844, public preview URL): Home home-social-proof renders, count-up observed (sampled 9+ then 10+) with final value 10+ matching stats.bakers=10, home-social-countries with home-country-IT / home-country-DE flags rendered. Impara: impara-toggle-more expands and renders evolving-quiz, impara-sfide (Sfida Lampo / Flash Challenge) and impara-classifica (HallOfFame with Bakers of the month list). Lab (maestro-toggle-tools): Sfida Lampo correctly no longer present, calculators/tools still there. Admin panel: admin-email-report with total=0 shows email-report-empty for both 7gg and 30gg and hides the CSV button; after temporarily seeding 3 TEST email_logs rows the chart rendered exactly 7 bars (total 6) for 7gg and 30 bars (total 28) for 30gg, per-channel block appeared and the CSV button downloaded mikilab-email-logs-2026-08-31.csv. Regression: streak-badge loads when logged in; profile-email-pref 3 buttons (daily/instant/off) switch, highlight and show 'Preference saved'. Zero console/page errors across all runs. No blocking issues found.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home social proof", "issues": ["Count-up duration is only 900ms and starts near the target for small totals (bakers=10), so the animation is barely perceptible; consider a longer duration or a lower start floor for small numbers"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter144_stats_cache.py", "/app/test_reports/pytest/iter144.xml", "/app/backend/tests/_seed_iter144_emaillogs.py"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "_stats_cache is a module-level dict shared across workers; with multiple uvicorn workers the 60s cache is per-process (acceptable, but payload can differ between processes for up to 60s).",
+    "AdminPanel.jsx is 636 lines and growing; consider extracting the email-report card into its own component.",
+    "downloadEmailCsv swallows the error detail in catch (only a generic toast); log the error for debuggability."
+  ],
+  "updated_files": [
+    "/app/frontend/src/components/AdminPanel.jsx (added data-testid=\"email-report-bar-<date>\" on daily chart bars for testability)",
+    "/app/backend/tests/test_iter144_stats_cache.py (new)",
+    "/app/backend/tests/_seed_iter144_emaillogs.py (new seed/cleanup helper)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "3 temporary email_logs rows (to=TEST_iter144@example.test, channel=TEST_channel) inserted to verify chart bars + CSV button, then deleted (verified 'deleted 3'). channel_email pref of fornaio@mikilab.de left at 'daily'.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (admin), fornaio@mikilab.de / Mikilab2026! (user)",
+  "context_for_next_testing_agent": "App is publicly browsable without login; login via header data-testid=login-btn then auth-email/auth-password/auth-submit. Admin panel: site-menu-open -> site-menu-admin. Email chart bars now have data-testid email-report-bar-<YYYY-MM-DD>; use /app/backend/tests/_seed_iter144_emaillogs.py seed|clean to populate email_logs for chart/CSV tests. /api/me/channel-email is PUT (not POST). UI language defaults to EN in the test browser, so assert on data-testid, not Italian strings.",
+  "rca_of_the_issue": "No product defects reproduced. Only test-side fixes: initial test used POST instead of PUT for /api/me/channel-email, and the daily chart bars lacked a data-testid (added)."
+}

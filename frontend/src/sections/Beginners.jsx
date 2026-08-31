@@ -15,6 +15,8 @@ import AvatarBubbles from "@/components/AvatarBubbles";
 import AcademyCoach from "@/components/AcademyCoach";
 import EvolvingQuiz from "@/components/EvolvingQuiz";
 import BakeAlong from "@/components/BakeAlong";
+import SfidaLampo from "@/sections/SfidaLampo";
+import HallOfFame from "@/components/HallOfFame";
 import SosImpasto from "@/components/SosImpasto";
 import LabTour from "@/components/LabTour";
 import SectionHero from "@/components/SectionHero";
@@ -626,6 +628,20 @@ export default function Beginners({ onNavigate }) {
       </div>
       <p className="text-sm text-[#7E8A93] -mt-2">{tri3(lang, "Sforna il tema della settimana, condividi la foto e vota i pani della community.", "Backe das Wochenthema, teile dein Foto und stimme für die Brote der Community ab.", "Bake this week's theme, share your photo and vote for the community's breads.", "Hornea el tema de la semana, comparte tu foto y vota los panes de la comunidad.")}</p>
       <BakeAlong />
+
+      {/* Sfida Lampo settimanale (spostata dal Laboratorio: la gamification vive qui in Impara) */}
+      <div data-testid="impara-sfide" className="flex items-center gap-2 text-[#7E8A93] pt-2">
+        <Flame className="w-4 h-4" />
+        <span className="font-display text-lg font-bold">{tri3(lang, "Sfida Lampo", "Blitz-Challenge", "Flash Challenge", "Reto Relámpago")}</span>
+      </div>
+      <SfidaLampo />
+
+      {/* Classifica dei fornai del mese */}
+      <div data-testid="impara-classifica" className="flex items-center gap-2 text-[#7E8A93] pt-2">
+        <Trophy className="w-4 h-4" />
+        <span className="font-display text-lg font-bold">{tri3(lang, "Classifica dei Fornai", "Bäcker-Rangliste", "Bakers Leaderboard", "Clasificación de Panaderos")}</span>
+      </div>
+      <HallOfFame />
       </div>
       )}
     </div>
