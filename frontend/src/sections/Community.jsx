@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy, Cake, Wheat, Pizza, Cookie, LifeBuoy } from "lucide-react";
+import { Users, Heart, MessageCircle, Trash2, Send, ImagePlus, Lightbulb, Camera, BookOpen, HelpCircle, Loader2, Store, UserPlus, MapPin, Sparkles, CalendarDays, Stethoscope, Trophy, Cake, Wheat, Pizza, Cookie, LifeBuoy, X } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { communityApi, uploadApi } from "@/lib/api";
@@ -85,6 +85,7 @@ export default function Community({ onNavigate }) {
   const [chSeen, setChSeen] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_channel_seen") || "{}"); } catch { return {}; } });
   const [chLatest, setChLatest] = useState({});
   const [follows, setFollows] = useState([]);
+  const [manageOpen, setManageOpen] = useState(false);
   useEffect(() => { if (user) communityApi.follows().then(setFollows).catch(() => {}); }, [user]);
   useEffect(() => {
     communityApi.list("all").then((all) => {
@@ -174,12 +175,11 @@ export default function Community({ onNavigate }) {
     if (id !== "all") setChSeen((s) => { const n = { ...s, [id]: new Date().toISOString() }; try { localStorage.setItem("mikilab_channel_seen", JSON.stringify(n)); } catch { /* */ } return n; });
   };
   const markAllSeen = () => { const now = new Date().toISOString(); const n = {}; for (const c of CATS) n[c.id] = now; setChSeen(n); try { localStorage.setItem("mikilab_channel_seen", JSON.stringify(n)); } catch { /* */ } };
-  const toggleFollow = async () => {
+  const toggleFollow = async (ch = filter) => {
     if (needLogin()) return;
     try {
-      const r = await communityApi.toggleFollow(filter);
-      setFollows((f) => (r.following ? [...new Set([...f, filter])] : f.filter((x) => x !== filter)));
-      toast.success(r.following ? tri("Ora segui questo canale 🔔", "Kanal abonniert 🔔", "Following this channel 🔔", "Ahora sigues este canal 🔔") : tri("Non segui più questo canale", "Kanal nicht mehr abonniert", "Unfollowed channel", "Dejaste de seguir el canal"));
+      const r = await communityApi.toggleFollow(ch);
+      setFollows((f) => (r.following ? [...new Set([...f, ch])] : f.filter((x) => x !== ch)));
     } catch { toast.error(tri("Azione non riuscita", "Aktion fehlgeschlagen", "Action failed", "Acción fallida")); }
   };
   const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
@@ -324,21 +324,40 @@ export default function Community({ onNavigate }) {
 
       {/* Filtri */}
       <div className="flex items-center justify-between mb-1.5 min-h-[20px]">
-        <div>
-          {filter !== "all" && CATS.some((c) => c.id === filter) && (
-            <button data-testid="community-follow-toggle" onClick={toggleFollow} className="text-[12px] font-semibold text-[#ff6b00] active:scale-95 flex items-center gap-1">
-              {follows.includes(filter)
-                ? `🔔 ${tri("Segui questo canale ✓", "Abonniert ✓", "Following ✓", "Siguiendo ✓")}`
-                : `🔕 ${tri("Segui questo canale", "Kanal folgen", "Follow channel", "Seguir canal")}`}
-            </button>
-          )}
-        </div>
+        <button data-testid="community-manage-follows" onClick={() => { if (needLogin()) return; setManageOpen(true); }} className="text-[12px] font-semibold text-[#ff6b00] active:scale-95 flex items-center gap-1">
+          🔔 {tri("Canali seguiti", "Abonnierte Kanäle", "Followed channels", "Canales seguidos", "Canaux suivis")}{follows.length ? ` (${follows.length})` : ""}
+        </button>
         {CATS.some((c) => hasNew(c.id)) && (
           <button data-testid="community-mark-all-read" onClick={markAllSeen} className="text-[12px] font-semibold text-[#ff6b00] active:scale-95 flex items-center gap-1">
             ✓ {tri("Segna tutto come letto", "Alles als gelesen markieren", "Mark all as read", "Marcar todo como leído", "Tout marquer comme lu")}
           </button>
         )}
       </div>
+      {manageOpen && (
+        <div data-testid="follows-manager" className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4" onClick={() => setManageOpen(false)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="relative w-full max-w-md bg-[#161616] border border-[#2e2e2e] rounded-3xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-4 border-b border-[#2e2e2e]">
+              <h3 className="font-display text-base font-bold text-white">{tri("Gestisci canali seguiti", "Kanäle verwalten", "Manage followed channels", "Gestionar canales", "Gérer les canaux")}</h3>
+              <button data-testid="follows-manager-close" onClick={() => setManageOpen(false)} className="w-8 h-8 rounded-full bg-[#1e1e1e] flex items-center justify-center text-[#7E8A93] active:scale-95"><X className="w-4 h-4" /></button>
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto p-2">
+              {CATS.map((c) => {
+                const on = follows.includes(c.id);
+                return (
+                  <div key={c.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#ff6b00]/5">
+                    <span className="flex items-center gap-2 text-sm text-[#e4eff8]"><c.Icon className="w-4 h-4" style={{ color: c.color || "#ff6b00" }} />{catLabel(c.id)}</span>
+                    <button data-testid={`follow-manage-${c.id}`} onClick={() => toggleFollow(c.id)}
+                      className={`px-3 py-1 rounded-full text-[12px] font-bold border transition-all ${on ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
+                      {on ? `🔔 ${tri("Seguito", "Abonniert", "Following", "Siguiendo", "Suivi")}` : `🔕 ${tri("Segui", "Folgen", "Follow", "Seguir", "Suivre")}`}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="community-filters">
         <button data-testid="community-filter-all" onClick={() => setFilter("all")} className={`px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === "all" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tri("Tutti", "Alle", "All", "Todos")}</button>
         {CATS.map((c) => (

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Bell, Heart, MessageCircle, UserPlus, Flame, Mail } from "lucide-react";
+import { Bell, Heart, MessageCircle, UserPlus, Flame, Mail, Wheat } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { notificationsApi } from "@/lib/api";
@@ -61,6 +61,41 @@ export default function NotificationBell() {
     } catch { return ""; }
   };
 
+  const renderNotif = (n) => (
+    <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] last:border-0 ${!n.read ? "bg-[#ff6b00]/5" : ""}`}>
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#ff6b00]/15 text-[#ff6b00]"}`}>
+        {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type === "email_import" ? <Mail className="w-4 h-4" /> : n.type === "channel_post" ? <Wheat className="w-4 h-4" /> : (n.type === "bakealong" || n.type === "bakealong_win") ? <Flame className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] leading-snug">
+          <b>{n.actor_name}</b> {n.type === "like"
+            ? tri("ha messo mi piace al tuo post", "gefällt dein Beitrag", "liked your post")
+            : n.type === "email_import"
+            ? tri("🥖 nuove ricette importate via email!", "🥖 neue Rezepte per E-Mail importiert!", "🥖 new recipes imported by email!")
+            : n.type === "channel_post"
+            ? tri("ha pubblicato in un canale che segui", "hat in einem abonnierten Kanal gepostet", "posted in a channel you follow")
+            : n.type === "bakealong_win"
+            ? tri("🏆 hai vinto la sfida Bake-Along!", "🏆 du hast die Bake-Along-Challenge gewonnen!", "🏆 you won the Bake-Along challenge!")
+            : n.type === "bakealong"
+            ? tri("nuova sfida Bake-Along della settimana!", "neue Bake-Along-Challenge der Woche!", "new weekly Bake-Along challenge!")
+            : n.type === "friend_request"
+              ? tri("ti ha inviato una richiesta di amicizia", "hat dir eine Freundschaftsanfrage gesendet", "sent you a friend request")
+              : n.type === "friend_accept"
+                ? tri("ha accettato la tua richiesta di amicizia", "hat deine Freundschaftsanfrage angenommen", "accepted your friend request")
+                : tri("ha commentato il tuo post", "hat deinen Beitrag kommentiert", "commented on your post")}
+        </p>
+        {n.snippet && <p className="text-xs text-[#7E8A93] truncate">“{n.snippet}”</p>}
+        <p className="text-[11px] text-[#7E8A93] mt-0.5">{ago(n.created_at)}</p>
+      </div>
+      {!n.read && <span className="w-2 h-2 rounded-full bg-[#E4572E] shrink-0 mt-1.5" />}
+    </div>
+  );
+
+  const otherItems = items.filter((n) => n.type !== "channel_post");
+  const chanItems = items.filter((n) => n.type === "channel_post");
+  const chanByCat = {};
+  chanItems.forEach((n) => { (chanByCat[n.category || "—"] = chanByCat[n.category || "—"] || []).push(n); });
+
   return (
     <div className="relative" ref={panelRef}>
       <button data-testid="notif-bell" onClick={toggle}
@@ -81,31 +116,13 @@ export default function NotificationBell() {
             <p data-testid="notif-empty" className="text-center text-sm text-[#7E8A93] py-8 px-4">{tri("Nessuna notifica per ora. Pubblica nella Community!", "Noch keine. Poste in der Community!", "Nothing yet. Post in the Community!")}</p>
           ) : (
             <div>
-              {items.map((n) => (
-                <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] last:border-0 ${!n.read ? "bg-[#ff6b00]/5" : ""}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type === "email_import" ? "bg-[#ff6b00]/15 text-[#ff6b00]" : (n.type === "bakealong" || n.type === "bakealong_win") ? "bg-[#ff6b00]/15 text-[#ff6b00]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#ff6b00]/15 text-[#ff6b00]"}`}>
-                    {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type === "email_import" ? <Mail className="w-4 h-4" /> : (n.type === "bakealong" || n.type === "bakealong_win") ? <Flame className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] leading-snug">
-                      <b>{n.actor_name}</b> {n.type === "like"
-                        ? tri("ha messo mi piace al tuo post", "gefällt dein Beitrag", "liked your post")
-                        : n.type === "email_import"
-                        ? tri("🥖 nuove ricette importate via email!", "🥖 neue Rezepte per E-Mail importiert!", "🥖 new recipes imported by email!")
-                        : n.type === "bakealong_win"
-                        ? tri("🏆 hai vinto la sfida Bake-Along!", "🏆 du hast die Bake-Along-Challenge gewonnen!", "🏆 you won the Bake-Along challenge!")
-                        : n.type === "bakealong"
-                        ? tri("nuova sfida Bake-Along della settimana!", "neue Bake-Along-Challenge der Woche!", "new weekly Bake-Along challenge!")
-                        : n.type === "friend_request"
-                          ? tri("ti ha inviato una richiesta di amicizia", "hat dir eine Freundschaftsanfrage gesendet", "sent you a friend request")
-                          : n.type === "friend_accept"
-                            ? tri("ha accettato la tua richiesta di amicizia", "hat deine Freundschaftsanfrage angenommen", "accepted your friend request")
-                            : tri("ha commentato il tuo post", "hat deinen Beitrag kommentiert", "commented on your post")}
-                    </p>
-                    {n.snippet && <p className="text-xs text-[#7E8A93] truncate">“{n.snippet}”</p>}
-                    <p className="text-[11px] text-[#7E8A93] mt-0.5">{ago(n.created_at)}</p>
-                  </div>
-                  {!n.read && <span className="w-2 h-2 rounded-full bg-[#E4572E] shrink-0 mt-1.5" />}
+              {otherItems.map((n) => renderNotif(n))}
+              {Object.entries(chanByCat).map(([cat, list]) => (
+                <div key={cat} data-testid={`notif-group-${cat}`}>
+                  <p className="px-4 pt-3 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00] flex items-center gap-1 bg-[#ff6b00]/5">
+                    <Wheat className="w-3 h-3" /> {tri("Canale", "Kanal", "Channel")}: {cat} · {list.length}
+                  </p>
+                  {list.map((n) => renderNotif(n))}
                 </div>
               ))}
             </div>

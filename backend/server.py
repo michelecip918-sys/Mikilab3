@@ -5425,6 +5425,21 @@ async def community_create(body: CommunityPostReq, user: dict = Depends(current_
                     "snippet": (f"#{cat}: " + (text or "nuova foto"))[:80],
                     "count": 1, "read": False, "created_at": now_iso(), "category": cat,
                 })
+                # Email di avviso (best-effort; dipende da Resend + dominio verificato)
+                try:
+                    if RESEND_API_KEY:
+                        u = await db.users.find_one({"user_id": f["user_id"]}, {"_id": 0, "email": 1})
+                        if u and u.get("email"):
+                            _html = (
+                                "<div style='font-family:sans-serif;max-width:520px;margin:auto'>"
+                                "<h2 style='color:#ff6b00'>🥖 MikiLab</h2>"
+                                f"<p><b>{doc['author_name']}</b> ha pubblicato nel canale <b>#{cat}</b> che segui:</p>"
+                                f"<blockquote style='border-left:3px solid #ff6b00;padding-left:12px;color:#444'>{(text or 'Nuova foto')[:300]}</blockquote>"
+                                "<p><a href='https://mikilab.de' style='color:#ff6b00'>Apri MikiLab →</a></p></div>"
+                            )
+                            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [u["email"]], "subject": f"MikiLab · nuovo post in #{cat}", "html": _html})
+                except Exception:
+                    logger.exception("channel follow email failed")
     except Exception:
         logger.exception("channel follow notify error")
     return _post_public(doc, user)

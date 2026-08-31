@@ -2778,3 +2778,12 @@ Direttiva utente: revisione/riorganizzazione completa del sito, tema SCURO CALDO
 - **Scorciatoia "/"**: keydown globale in GlobalSearch apre la ricerca quando si preme "/" e non si sta scrivendo in input/textarea. Verificato.
 - **Notifica post in canali seguiti (backend)**: nuovo collection `channel_follows`; endpoint `GET /api/community/follows` e `POST /api/community/follows/{channel}` (toggle). In `community_create` si notificano i follower del canale (escluso l'autore) con notifica `type:"channel_post"`. Frontend: `communityApi.follows/toggleFollow`, pulsante `community-follow-toggle` in Community (visibile quando è selezionato un canale specifico). Verificato E2E via curl: fornaio segue "pane" → amico1 posta → fornaio riceve `channel_post`.
 - Tutto verificato (screenshot + curl E2E), 0 crash. Backend: nuove route + collection channel_follows.
+
+
+---
+## v-fork.36 (2026-06, fork) — Gestione canali, email follower, highlight ricerca, campanella raggruppata
+- **Gestisci canali seguiti**: in `Community.jsx` pulsante `community-manage-follows` apre modale `follows-manager` con TUTTI i canali (CATS) e toggle `follow-manage-<id>` (Segui/Seguito). `toggleFollow(ch=filter)` generalizzato. Verificato: 10 toggle.
+- **Highlight termine**: `GlobalSearch.jsx` componente `Highlight` evidenzia (case-insensitive) la query dentro nome e motivo del match. Verificato.
+- **Campanella raggruppata**: `NotificationBell.jsx` estratto `renderNotif`; le notifiche `channel_post` sono raggruppate per canale sotto header `notif-group-<cat>` ("Channel: X · n"); aggiunta icona/testo per `channel_post`. Verificato: 1 gruppo.
+- **Email ai follower (best-effort)**: in `community_create` (backend) oltre alla notifica in-app si invia un'email via Resend a ogni follower del canale (lookup `db.users` per email). ⚠️ MOCKED/DIPENDENTE: l'invio reale dipende da `RESEND_API_KEY` e dal dominio `mikilab.de` VERIFICATO su Resend; se non verificato l'email non parte (la notifica in-app funziona comunque). Non è un digest programmato ma un avviso immediato per post.
+- Verificato: screenshot (manager/highlight/campanella) + build ok. Backend reload ok.
