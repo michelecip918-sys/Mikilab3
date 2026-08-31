@@ -312,6 +312,32 @@ export default function Community({ onNavigate }) {
         <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /></div>
       ) : (
         <div className="space-y-3" data-testid="community-feed">
+          {(() => {
+            const W = {
+              pane: { Icon: Wheat, title: tri("Benvenuto nel canale Pane 🍞", "Willkommen im Brot-Kanal 🍞", "Welcome to the Bread channel 🍞", "Bienvenido al canal Pan 🍞"),
+                body: tri("Qui si parla di pane: lievito madre, idratazione, crosta e mollica. Mostra le tue pagnotte, chiedi consigli e sii gentile con chi inizia. Foto e ricette benvenute!", "Hier dreht sich alles ums Brot: Sauerteig, Hydratation, Kruste und Krume. Zeig deine Laibe, frag nach Tipps und sei nett zu Anfängern. Fotos und Rezepte willkommen!", "This channel is all about bread: sourdough, hydration, crust and crumb. Show your loaves, ask for tips and be kind to beginners. Photos and recipes welcome!", "Aquí se habla de pan: masa madre, hidratación, corteza y miga. Muestra tus panes, pide consejos y sé amable con quien empieza. ¡Fotos y recetas bienvenidas!") },
+              pizza: { Icon: Pizza, title: tri("Benvenuto nel canale Pizza 🍕", "Willkommen im Pizza-Kanal 🍕", "Welcome to the Pizza channel 🍕", "Bienvenido al canal Pizza 🍕"),
+                body: tri("Napoletana, in teglia, alla pala: parliamo di impasti, maturazioni e cotture. Condividi la tua pizza e i tuoi trucchi. Niente spam, solo passione per il forno caldo!", "Neapolitanisch, im Blech, alla pala: Teige, Reifung und Backen. Teile deine Pizza und deine Tricks. Kein Spam, nur Leidenschaft für den heißen Ofen!", "Neapolitan, pan, pala: let's talk doughs, maturation and baking. Share your pizza and your tricks. No spam, just passion for the hot oven!", "Napolitana, en molde, a la pala: hablamos de masas, maduraciones y cocciones. Comparte tu pizza y tus trucos. ¡Sin spam, solo pasión por el horno!") },
+              dolci: { Icon: Cookie, title: tri("Benvenuto nel canale Dolci 🧁", "Willkommen im Süßes-Kanal 🧁", "Welcome to the Sweets channel 🧁", "Bienvenido al canal Dulces 🧁"),
+                body: tri("Panettoni, croissant, creme e grandi lievitati dolci. Mostra le tue farciture, chiedi sul bilanciamento di zuccheri e grassi. Qui si celebra la golosità con misura!", "Panettone, Croissants, Cremes und große süße Hefeteige. Zeig deine Füllungen, frag zum Zucker-Fett-Ausgleich. Hier feiern wir das Naschen mit Maß!", "Panettone, croissants, creams and big sweet leavened cakes. Show your fillings, ask about balancing sugars and fats. We celebrate sweetness with measure!", "Panettones, croissants, cremas y grandes levados dulces. Muestra tus rellenos, pregunta sobre el equilibrio de azúcares y grasas. ¡Aquí celebramos lo goloso con medida!") },
+              sos: { Icon: LifeBuoy, title: tri("Benvenuto nel canale SOS / Aiuto 🆘", "Willkommen im SOS/Hilfe-Kanal 🆘", "Welcome to the SOS / Help channel 🆘", "Bienvenido al canal SOS / Ayuda 🆘"),
+                body: tri("Impasto che non lievita? Crosta pallida? Chiedi qui: descrivi il problema, allega una foto e i tempi/temperature. La community e MikiLab ti aiutano a risolvere.", "Teig geht nicht auf? Blasse Kruste? Frag hier: beschreibe das Problem, füge ein Foto und Zeiten/Temperaturen hinzu. Die Community und MikiLab helfen dir.", "Dough not rising? Pale crust? Ask here: describe the problem, add a photo and your times/temperatures. The community and MikiLab will help you fix it.", "¿La masa no sube? ¿Corteza pálida? Pregunta aquí: describe el problema, adjunta una foto y los tiempos/temperaturas. La comunidad y MikiLab te ayudan.") },
+            }[filter];
+            if (!W) return null;
+            const WI = W.Icon;
+            return (
+              <div data-testid={`forum-welcome-${filter}`} className="rounded-2xl border border-[#ff6b00]/50 bg-gradient-to-br from-[#2a1a0d] to-[#1a1a1a] p-4 shadow-md">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#ff6b00]/20" style={{ boxShadow: "inset 0 0 0 1px #ff6b00" }}><WI className="w-4.5 h-4.5 text-[#ff6b00]" /></span>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00]">📌 {tri("Fissato · MikiLab", "Angepinnt · MikiLab", "Pinned · MikiLab", "Fijado · MikiLab")}</p>
+                    <h3 className="font-display text-[15px] font-bold text-white leading-tight truncate">{W.title}</h3>
+                  </div>
+                </div>
+                <p className="text-[12.5px] text-[#E0D5CF] leading-snug">{W.body}</p>
+              </div>
+            );
+          })()}
           {visible.length === 0 && <p className="text-center text-sm text-[#7E8A93] py-8">{tri("Ancora nessun post. Inizia tu la conversazione!", "Noch keine Beiträge. Starte du das Gespräch!", "No posts yet. Start the conversation!", "Aún no hay publicaciones. ¡Empieza tú la conversación!")}</p>}
           {visible.map((p) => {
             const C = FEED_CATS.find((c) => c.id === p.category) || FEED_CATS[0];

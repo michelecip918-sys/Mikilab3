@@ -930,6 +930,28 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
+      {onOpenTool && (
+        <div data-testid="capo-pizza-pastry" className="mb-4 rounded-2xl border border-[#ff6b00]/40 bg-[#161616] p-3.5">
+          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-1 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Pianifichi pizza o pasticceria?", "Planst du Pizza oder Konditorei?", "Planning pizza or pastry?", "¿Planificas pizza o pastelería?")}
+          </p>
+          <p className="text-[12px] text-[#AEB8BF] leading-snug mb-2.5">{tri3(lang, "Il piano IA è pensato per pane e grandi lievitati. Per impasti pizza e dolci usa i laboratori dedicati con i loro calcoli (idratazione teglia/tonda, bilanciamento zuccheri).", "Der KI-Plan ist für Brot und große Hefeteige. Für Pizza und Süßes nutze die eigenen Labore mit ihren Rechnern (Blech/rund, Zuckerbalance).", "The AI plan is for bread and big leavened cakes. For pizza and sweets use the dedicated labs with their own calculators (pan/round hydration, sugar balancing).", "El plan IA es para pan y grandes levados. Para pizza y dulces usa los laboratorios dedicados con sus cálculos (hidratación molde/redonda, equilibrio de azúcares).")}</p>
+          <div className="grid grid-cols-2 gap-2">
+            <button data-testid="capo-open-pizzeria" onClick={() => onOpenTool("labpizzeria")}
+              className="flex items-center gap-2 bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
+              <Pizza className="w-5 h-5 shrink-0" />
+              <span className="text-[12px] font-bold leading-tight">{tri3(lang, "Laboratorio Pizzeria", "Pizzeria-Labor", "Pizzeria Lab", "Lab Pizzería")}</span>
+            </button>
+            <button data-testid="capo-open-pasticceria" onClick={() => onOpenTool("labpasticceria")}
+              className="flex items-center gap-2 bg-gradient-to-br from-[#A16207] to-[#7a4a05] text-white rounded-2xl p-3 text-left active:scale-95 transition-all shadow-sm">
+              <Cake className="w-5 h-5 shrink-0" />
+              <span className="text-[12px] font-bold leading-tight">{tri3(lang, "Pasticceria & Gelato", "Konditorei & Eis", "Pastry & Gelato", "Pastelería y Helado")}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+
       <div className="flex flex-col">
       {/* Spiegazione Mohammadreza: pannello FISSO in fondo, visibile ovunque (niente scroll in alto) */}
       {guideId && (

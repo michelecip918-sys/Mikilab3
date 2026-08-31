@@ -12,6 +12,7 @@ import SaporiCasa from "@/sections/SaporiCasa";
 import ScopriMikiLab from "@/sections/ScopriMikiLab";
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import RicetteCustodite from "@/sections/RicetteCustodite";
+import VetrinaFocacce from "@/components/VetrinaFocacce";
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import { mkTri, triFA } from "@/i18n/triMaps";
@@ -29,6 +30,7 @@ export default function Ricette() {
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
+  if (view === "focacce") return <Sub onBack={() => setView("main")}><VetrinaFocacce /></Sub>;
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">
@@ -91,6 +93,16 @@ export default function Ricette() {
               <div className="relative h-full flex flex-col justify-end p-3 text-white">
                 <h3 className="font-display text-base font-bold leading-tight">{tri("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas", "Recettes Gardées")}</h3>
                 <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pani del Sud + adatta le dosi + QR", "Süd-Brote + Mengen + QR", "Southern breads + adapt doses + QR", "Panes del Sur + dosis + QR", "Pains du Sud + adapte les doses + QR")}</p>
+              </div>
+            </button>
+            <button data-testid="ricette-focacce-band" onClick={() => setView("focacce")}
+              className="relative h-28 rounded-2xl overflow-hidden shadow-md active:scale-98 transition-all text-left col-span-2">
+              <img src="/recipes/foc_barese.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 10%,#ff6b0099 70%,#ff6b0022)" }} />
+              <div className="relative h-full flex flex-col justify-center p-3 text-white">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#ff6b00] px-2 py-0.5 rounded-full w-fit mb-1">🫓 {tri("Novità", "Neu", "New", "Novedad", "Nouveau")}</span>
+                <h3 className="font-display text-lg font-bold leading-tight">{tri("Vetrina delle Focacce", "Focaccia-Schaufenster", "Focaccia Showcase", "Vitrina de Focaccias", "Vitrine des Focaccias")}</h3>
+                <p className="text-[11px] text-white/90 leading-snug">{tri("Tutti i gusti in foto, sfoglia e scegli", "Alle Sorten in Fotos, blättern und wählen", "Every flavour in photos, browse and choose", "Todos los sabores en fotos, hojea y elige", "Toutes les saveurs en photos, feuillette et choisis")}</p>
               </div>
             </button>
           </div>
