@@ -72,6 +72,7 @@ import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import LabModeBig from "@/components/LabModeBig";
 import VoiceCommand from "@/components/VoiceCommand";
+import BluetoothConnect from "@/components/BluetoothConnect";
 import TimetableLievitazione from "@/sections/TimetableLievitazione";
 
 
@@ -163,6 +164,7 @@ export default function Maestro() {
         {tool === "diagnosi" && <PhotoDiagnosi />}
         {tool === "scanflour" && <ScanFlour />}
         {tool === "webrecipe" && <WebRecipe />}
+        {tool === "bluetooth" && <BluetoothConnect />}
         {tool === "metodo" && <CalcolatoreMetodo />}
         {tool === "sequenze" && <CalcolatoreSequenze />}
         {tool === "convlievito" && <ConvertitoreLieviti />}

@@ -3071,3 +3071,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **ImparaConMikiLab (#1, PARZIALE)**: al momento la sezione usa `AcademyHome` (hub con corsi/quiz/ricettario/farine). Il layout dedicato "vera Home dell'apprendimento" con ordine esplicito Lezioni→Esercizi→Quiz→Ricette NON è ancora stato costruito su misura (proposto come prossimo step).
 - NB: PREVIEW → REDEPLOY per mikilab.de.
 
+
+## v-fork (2026-06) — Voce Calcoli Live + Bluetooth (Web BLE)
+- Voce Calcoli Live: VoiceCommand.tryCalc() parse "N g farina X%" -> acqua (+sale 2%), risposta via SpeechSynthesis (6 lingue). Prima del match strumenti.
+- ViviMikiLab: verificato gia social (feed/follow/post), nessun linguaggio "lavora con noi".
+- Bluetooth: nuovo BluetoothConnect.jsx (Web Bluetooth), tool id "bluetooth" (TOOLS + ToolsDirectory sez. celle + rotta Maestro). Legge standard GATT: Weight Scale 0x2A9D + Temperature 0x2A6E; device custom -> mostra nota "manda modello". Solo Android/Chrome (no iPhone). NON testabile headless (no device).
+- PENDENTE: ImparaConMikiLab layout dedicato (Lezioni->Esercizi->Quiz->Ricette) non ancora costruito; pH-metro custom da mappare per modello.
+- NB: PREVIEW -> REDEPLOY per mikilab.de.

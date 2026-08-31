@@ -9,7 +9,7 @@ import { TOOLS } from "@/sections/PianoProduzioneAI";
 const SECTIONS = [
   { id: "ricette", it: "Ricette & Sviluppo", de: "Rezepte & Entwicklung", en: "Recipes & Development", es: "Recetas y Desarrollo", ids: ["aggiungi", "custodite", "webrecipe", "generatore", "saporicasa", "cantiere", "scanflour", "cosafare"] },
   { id: "calcolatori", it: "Calcolatori", de: "Rechner", en: "Calculators", es: "Calculadoras", ids: ["metodo", "acqua", "sequenze", "convlievito", "stampi", "adatta", "energia", "bilancia", "pesata", "twin", "fermentazione", "weatherbaker", "simforno", "trovafarina", "timelapse"] },
-  { id: "celle", it: "Celle, Freddo & Conservazione", de: "Kühlung & Lagerung", en: "Cells, Cold & Storage", es: "Cámaras y Conservación", ids: ["capo", "termo", "freezer", "shelf", "spreco", "esuberozero", "recupero"] },
+  { id: "celle", it: "Celle, Freddo & Conservazione", de: "Kühlung & Lagerung", en: "Cells, Cold & Storage", es: "Cámaras y Conservación", ids: ["capo", "termo", "freezer", "shelf", "spreco", "esuberozero", "recupero", "bluetooth"] },
   { id: "costi", it: "Costi, Dati & Macchine", de: "Kosten, Daten & Maschinen", en: "Costs, Data & Machines", es: "Costes, Datos y Máquinas", ids: ["foodcost", "mydata", "macchine"] },
   { id: "diagnosi", it: "Diagnosi, SOS & Registri", de: "Diagnose, SOS & Register", en: "Diagnosis, SOS & Logs", es: "Diagnóstico, SOS y Registros", ids: ["diagnosi", "suono", "sosimpasto", "ph", "bancalievito", "sessioni", "check"] },
   { id: "special", it: "Pizzeria & Pasticceria", de: "Pizzeria & Konditorei", en: "Pizzeria & Pastry", es: "Pizzería y Pastelería", ids: ["labpizzeria", "labpasticceria"] },
