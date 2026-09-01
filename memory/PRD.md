@@ -3269,3 +3269,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Alert vocale scorte basse: consumo impastata → se scorte ≤ soglia dispatch mikilab-say (VoiceCommand parla) + toast.
 - Magazzino: scansione etichetta REALE via /api/lab/warehouse/scan-label (LLM vision claude-sonnet-4-6, prefill campi), lista riordino fornitori (mag-reorder, copia), storico consumi (mag-consumption + backend /lab/warehouse/consumption con log su ogni consume).
 - Verificato via curl: consume logga consumo; scan-label 200; carico/scala ok. Redeploy avviato.
+
+---
+## v-fork7 (2026-06) — Scenografia Trinity Gold
+- Header: componente TrinityGold — 3 badge mastro-artefici (Michele 🍞 / BakeMix AI ⚡ / Mohammed 🛠️, trinity-badge-*), status "BakeMix AI" online (bakemix-status), Sigillo Trinity Gold animato (trinity-seal) top-right.
+- Sigillo → modal (trinity-modal): testo Trinity ("Architettura software e logica co-progettate da Michele, BakeMix AI & Mohammed"), scheda "Chi è BakeMix AI" + firma software ("Progetto originale Michele, BakeMix AI & Mohammed").
+- CSS Cinematic Dark & Gold: effetto "Luce Forno" .oven-hover (glow ambrato su hover), applicato ai tasti operativi; glow sigillo.
+- Deploy finale avviato.

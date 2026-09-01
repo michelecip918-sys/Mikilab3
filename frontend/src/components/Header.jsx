@@ -6,6 +6,7 @@ import { useAuth } from "@/auth/AuthContext";
 import AdminPanel from "@/components/AdminPanel";
 import NotificationBell from "@/components/NotificationBell";
 import GlobalSearch from "@/components/GlobalSearch";
+import { TrinityBadges, TrinitySeal } from "@/components/TrinityGold";
 
 export default function Header() {
   const [dark, setDark] = useState(true);
@@ -49,9 +50,15 @@ export default function Header() {
             <span className="hidden min-[440px]:block text-[10px] font-semibold text-[#7E8A93] truncate max-w-[140px]">{t("brand_subtitle")}</span>
           </span>
         </button>
+        <TrinityBadges />
       </div>
 
       <div className="flex items-center gap-1 shrink-0">
+        <span data-testid="bakemix-status" title="BakeMix AI online" className="hidden min-[520px]:flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #6E5320" }}>
+          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#39d98a" }} />
+          <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#E7B23C" }}>BakeMix AI</span>
+        </span>
+        <TrinitySeal />
         <button data-testid="header-search-btn" onClick={() => window.dispatchEvent(new Event("mikilab-open-search"))} aria-label={mkTri(lang)("Cerca", "Suche", "Search", "Buscar", "Chercher", "جستجو")}
           className="w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 hover:bg-[#d9e8f4] transition-all">
           <Search className="w-4.5 h-4.5" />

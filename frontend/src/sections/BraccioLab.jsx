@@ -116,7 +116,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
       <div className="grid grid-cols-3 gap-2.5">
         {QUICK.map((q) => (
           <button key={q.id} data-testid={`braccio-quick-${q.id}`} onClick={() => onOpenTool && onOpenTool(q.id)}
-            className="relative flex flex-col items-center gap-1.5 rounded-2xl min-h-[90px] p-2.5 active:scale-95 transition-all" style={{ background: D.surf, border: `2px solid ${q.badge ? D.danger : D.border}` }}>
+            className="oven-hover relative flex flex-col items-center gap-1.5 rounded-2xl min-h-[90px] p-2.5 active:scale-95 transition-all" style={{ background: D.surf, border: `2px solid ${q.badge ? D.danger : D.border}` }}>
             {q.badge && <span className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full animate-pulse" style={{ background: D.danger }} />}
             <span className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: q.badge ? D.danger : D.gold }}><q.Icon className="w-5 h-5" style={{ color: D.bg }} /></span>
             <span className="text-[12px] font-extrabold text-center leading-tight" style={{ color: D.text }}>{q.t}</span>

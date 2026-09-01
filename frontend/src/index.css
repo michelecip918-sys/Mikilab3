@@ -247,3 +247,9 @@ button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6
 /* Modalità operativa "Braccio": vero zero-scroll (niente footer, niente padding extra) */
 body.braccio-mode [data-testid="page-footer"] { display: none !important; }
 body.braccio-mode main { padding-bottom: 0 !important; }
+
+/* Scenografia Cinematic Dark & Gold — effetto "Luce Forno" su hover carte/pulsanti */
+.oven-hover { transition: box-shadow .28s ease, border-color .28s ease, transform .15s ease; }
+.oven-hover:hover { box-shadow: 0 0 22px rgba(231,178,60,.42), inset 0 0 14px rgba(255,160,50,.16); border-color: #E7B23C !important; }
+.trinity-seal { box-shadow: 0 0 14px rgba(231,178,60,.55); }
+.trinity-seal:hover { box-shadow: 0 0 26px rgba(231,178,60,.9), 0 0 44px rgba(255,140,40,.45); }
