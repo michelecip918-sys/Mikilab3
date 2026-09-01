@@ -5,8 +5,8 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 const Ctx = createContext(null);
 
 export function ProfileProvider({ children }) {
-  const [profile, setProfileState] = useState(() => { try { return localStorage.getItem("mikilab_profile"); } catch { return null; } });
-  const [selecting, setSelecting] = useState(() => { try { return !localStorage.getItem("mikilab_profile"); } catch { return true; } });
+  const [profile, setProfileState] = useState(() => { try { return localStorage.getItem("mikilab_profile") || "pro"; } catch { return "pro"; } });
+  const [selecting, setSelecting] = useState(false);
 
   const chooseProfile = useCallback((p) => {
     try {

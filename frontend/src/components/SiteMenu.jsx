@@ -7,6 +7,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { TOOLS, TOOL_KINDS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
 import { mkTri } from "@/i18n/triMaps";
 import { useProfile } from "@/profile/ProfileContext";
+import { PRO_ONLY_TOOLS, isPassion } from "@/lib/labHubs";
 
 const FAV_KEY = "mikilab_menu_favs";
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -16,6 +17,8 @@ const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u
 export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const { lang } = useLang();
   const { user } = useAuth();
+  const { profile, chooseProfile } = useProfile();
+  const passion = isPassion(profile);
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -72,8 +75,9 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const toolLabel = (tl) => tri(tl.it, tl.de, tl.en, tl.es);
   const byId = Object.fromEntries(TOOLS.map((t) => [t.id, t]));
   const nq = norm(q);
-  const filteredTools = nq ? TOOLS.filter((t) => norm(toolLabel(t)).includes(nq)) : [];
-  const favTools = favs.map((id) => byId[id]).filter(Boolean);
+  const allowed = (t) => (passion ? !PRO_ONLY_TOOLS.has(t.id) : true);
+  const filteredTools = nq ? TOOLS.filter((t) => allowed(t) && norm(toolLabel(t)).includes(nq)) : [];
+  const favTools = favs.map((id) => byId[id]).filter((t) => t && allowed(t));
 
   const ctx = tab === "maestro" ? "lab" : tab === "community" ? "social" : tab === "ricette" ? "ricette" : "generic";
   const ctxTitle = ctx === "lab" ? tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio")
@@ -147,7 +151,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                 )}
                 <div className="space-y-3">
                   {TOOL_KINDS.map((c) => {
-                    const items = TOOLS.filter((tl) => tl.kind === c.key);
+                    const items = TOOLS.filter((tl) => tl.kind === c.key && allowed(tl));
                     if (items.length === 0) return null;
                     return (
                       <div key={c.key} data-testid={`site-menu-kind-${c.key}`}>
@@ -205,11 +209,26 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-white/20"><Trophy className="w-4 h-4" /></span>
               <span className="font-display text-sm font-semibold">{tri("Motore Sfide", "Challenges", "Challenges", "Desafíos")}</span>
             </button>
-            <button data-testid="site-menu-change-profile" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-profile")); }}
-              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
-              <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#ff6b00]/15"><User className="w-4 h-4 text-[#ff6b00]" /></span>
-              <span className="font-display text-sm font-semibold text-[#ff6b00]">{tri("Cambia profilo (Pro / Passione)", "Profil wechseln (Pro / Passion)", "Change profile (Pro / Passion)", "Cambiar perfil (Pro / Pasión)")}</span>
-            </button>
+            {/* Interruttore modalità: Pro (tutto) / Passione (senza HACCP e B2B) */}
+            <div data-testid="site-menu-mode" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5">{tri("Modalità", "Modus", "Mode", "Modo")}</p>
+              <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#121212]">
+                {[
+                  { id: "pro", label: tri("Fornaio Pro", "Bäcker Pro", "Baker Pro", "Panadero Pro") },
+                  { id: "passion", label: tri("Per Passione", "Aus Leidenschaft", "For Passion", "Por Pasión") },
+                ].map((m) => (
+                  <button key={m.id} data-testid={`site-menu-mode-${m.id}`} onClick={() => chooseProfile(m.id)}
+                    className={`py-2 rounded-md text-[13px] font-bold transition-all ${profile === m.id ? "bg-[#ff6b00] text-white shadow" : "text-[#7E8A93] hover:text-[#ff6b00]"}`}>
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 px-0.5">
+                {passion
+                  ? tri("Vedi solo Ricette, calcolatori base e Academy.", "Nur Rezepte, Basisrechner und Academy.", "Only recipes, basic calculators and Academy.", "Solo recetas, calculadoras básicas y Academy.")
+                  : tri("Vedi tutto: HACCP, business e strumenti avanzati.", "Alles sichtbar: HACCP, Business und Profi-Tools.", "Everything visible: HACCP, business and advanced tools.", "Todo visible: HACCP, negocio y herramientas avanzadas.")}
+              </p>
+            </div>
             {user?.role === "admin" && (
               <button data-testid="site-menu-admin" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-admin")); }}
                 className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
