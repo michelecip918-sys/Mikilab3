@@ -26,3 +26,22 @@ export function routeVoice({ text, lang = "it", persona = "michele", operator = 
   // 3) Web: sintesi vocale nativa del dispositivo
   playTTS(text, { lang, voice: persona, onEnded });
 }
+
+// --- Routing cuffie Bluetooth per-operatore (plugin @mikilab/bluetooth-audio) ---
+function btPlugin() {
+  try { const P = window.Capacitor && window.Capacitor.Plugins; return P && P.BluetoothAudio; } catch { return null; }
+}
+export function isHeadsetRoutingAvailable() {
+  try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() && btPlugin()); } catch { return false; }
+}
+export async function listHeadsets() {
+  const P = btPlugin(); if (!P) return [];
+  try { const r = await P.listDevices(); return (r && r.devices) || []; } catch { return []; }
+}
+export async function connectHeadset(operatorId = "", deviceId = "") {
+  const P = btPlugin(); if (!P) return { ok: false, reason: "web" };
+  try { await P.requestPermissions(); const r = await P.connect({ operatorId, deviceId }); return { ok: !!(r && r.ok), device: r && r.device }; }
+  catch (e) { return { ok: false, reason: String(e?.message || e) }; }
+}
+export async function startHeadsetSco() { const P = btPlugin(); if (P) { try { await P.startSco(); } catch { /* */ } } }
+

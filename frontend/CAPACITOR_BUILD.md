@@ -81,3 +81,13 @@ yarn build && npx cap sync   # dopo ogni modifica web
 ## 7) Note
 - La preview web (Emergent) continua a funzionare come demo: voce del dispositivo + indicatore a schermo di chi riceve.
 - La distribuzione avviene tramite Play Store / App Store (o APK interno per il laboratorio).
+
+---
+## Plugin nativo: routing audio Bluetooth per-operatore
+Sorgente: `/app/capacitor-plugins/bluetooth-audio` (`@mikilab/bluetooth-audio`).
+- Android: `BluetoothHeadset` + `AudioManager` (MODE_IN_COMMUNICATION + startBluetoothSco) → instrada TTS+mic sull'auricolare BT dell'operatore.
+- iOS: `AVAudioSession` (.playAndRecord/.voiceChat, allowBluetooth, preferredInput HFP).
+- Bridge web: `frontend/src/lib/nativeAudio.js` (`connectHeadset`, `startHeadsetSco`, `isHeadsetRoutingAvailable`) con fallback web (hands-free "Ehi Lab").
+- UI: tasto "Cuffie hands-free" ad alto contrasto in Schede di Produzione (`braccio-headset`).
+Installazione: `npm i ./capacitor-plugins/bluetooth-audio && npx cap sync`.
+Permessi: Android BLUETOOTH_CONNECT/RECORD_AUDIO/MODIFY_AUDIO_SETTINGS; iOS NSMicrophone/NSBluetoothAlways + background audio.

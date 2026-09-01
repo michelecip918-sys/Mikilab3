@@ -3248,3 +3248,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - ProactiveAssistant NON più random/demo: legge /api/lab/sensors e interviene solo su soglie reali (temp>=26, umidità<=55, batteria<=15, freschezza <2min); silenzioso senza sonde. Badge 'LIVE'. Overlay min 5s.
 - NOTA: routing AUDIO Bluetooth multi-operatore NON fattibile via Web Bluetooth (solo etichetta operatore); richiede build nativa Capacitor. Pairing BLE reale richiede hardware fisico (non verificabile headless).
 - Testato iter165: backend 9/9; fix applicati (overlay flash→5s, lista sensori sempre visibile, pannelli chiari residui→scuro).
+
+---
+## v-fork4 (2026-06) — Deploy + plugin Capacitor audio BT + conferma sezioni
+- Deploy produzione autorizzato (50 ECU) e inoltrato alla pipeline.
+- Plugin Capacitor `@mikilab/bluetooth-audio` (/app/capacitor-plugins/bluetooth-audio): Android (BluetoothHeadset/SCO) + iOS (AVAudioSession HFP) + web fallback. Bridge in lib/nativeAudio.js (connectHeadset/startHeadsetSco/isHeadsetRoutingAvailable). Tasto "Cuffie hands-free" alto contrasto (braccio-headset) in BraccioLab.
+- Sezioni confermate CONGELATE (menu + chiavi traduzione invariati): IMPARA (LearnHub + SOS Impasto/PhotoDiagnosi = pronto intervento 2 passaggi), SOCIAL (Community.jsx collaborativa/bake-along), CORE (HaccpLog, BatchTraceability, allergeni, calcolo ricette/idratazione, 21 moduli proattivi su sensori reali).

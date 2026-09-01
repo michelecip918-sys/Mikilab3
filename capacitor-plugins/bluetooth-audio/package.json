@@ -1,0 +1,24 @@
+{
+  "name": "@mikilab/bluetooth-audio",
+  "version": "0.1.0",
+  "description": "Capacitor plugin: routing audio Bluetooth (HFP/SCO) per-operatore per l'assistente vocale hands-free di MikiLab.",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "capacitor": {
+    "ios": { "src": "ios" },
+    "android": { "src": "android" }
+  },
+  "keywords": ["capacitor", "bluetooth", "audio", "hfp", "sco", "headset", "hands-free"],
+  "author": "MikiLab",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/core": "^6.0.0"
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^6.0.0"
+  }
+}

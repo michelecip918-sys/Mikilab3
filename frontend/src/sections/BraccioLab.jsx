@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock } from "lucide-react";
+import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones } from "lucide-react";
+import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { useShift, setWorkMode, hasActiveAlerts, autonomyDeadline, fmtHM } from "@/lib/shiftState";
+import { isHeadsetRoutingAvailable, connectHeadset, startHeadsetSco } from "@/lib/nativeAudio";
 import Avatar3D from "@/components/Avatar3D";
 
 // VISTA "SCHEDE DI PRODUZIONE" — tema SCURO "Grain Gold" (ebano caldo + oro), zero-scroll.
@@ -25,6 +27,20 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   }, []);
 
   const consegne = () => window.dispatchEvent(new Event("mikilab-consegne"));
+  const [hsBusy, setHsBusy] = useState(false);
+  const onHeadset = async () => {
+    setHsBusy(true);
+    try {
+      if (isHeadsetRoutingAvailable()) {
+        const r = await connectHeadset();
+        if (r.ok) { await startHeadsetSco(); window.dispatchEvent(new Event("mikilab-wake-on")); toast.success(tri("Cuffie collegate. Assistente in cuffia.", "Headset verbunden.", "Headset connected.", "Auriculares conectados.", "Casque connecté.", "هدست وصل شد.")); }
+        else toast.error(tri("Cuffie non collegate.", "Headset nicht verbunden.", "Headset not connected.", "No conectado.", "Non connecté.", "وصل نشد."));
+      } else {
+        window.dispatchEvent(new Event("mikilab-wake-on"));
+        toast.info(tri("Ascolto hands-free attivo. Il routing in cuffia è nell'app installata.", "Hands-free aktiv. Kopfhörer-Routing in der App.", "Hands-free on. Headset routing is in the installed app.", "Manos libres activo. El enrutado va en la app.", "Mains libres actif. Routage casque dans l'app.", "هندزفری فعال شد."));
+      }
+    } finally { setHsBusy(false); }
+  };
 
   const QUICK = [
     { id: "ricettadelgiorno", Icon: ChefHat, t: tri("Ricette del Giorno", "Tagesrezepte", "Today's Recipes", "Recetas del Día", "Recettes du Jour", "دستورهای امروز"), s: tri("Prodotti di oggi", "Heutige Produkte", "Today's products", "Productos de hoy", "Produits du jour", "محصولات امروز") },
@@ -84,6 +100,11 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
         <Avatar3D active speaking={vs.speaking}
           label={vs.speaking ? tri("Sto rispondendo…", "Ich antworte…", "Answering…", "Respondiendo…", "Je réponds…", "در حال پاسخ…") : (vs.listening ? tri("Ti ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Assistente in ascolto", "Assistent hört zu", "Assistant listening", "Asistente escuchando", "Assistant à l'écoute", "دستیار در حال شنیدن"))}
           sub={tri("Parla o di' «Ehi Lab»", "Sprich oder sag «Ehi Lab»", "Speak or say «Ehi Lab»", "Habla o di «Ehi Lab»", "Parle ou dis «Ehi Lab»", "صحبت کن یا بگو «لب»")} />
+        <button data-testid="braccio-headset" onClick={onHeadset} disabled={hsBusy}
+          className="flex items-center gap-2 rounded-full px-6 py-3 font-extrabold text-[15px] shadow-lg active:scale-95 transition-all disabled:opacity-60"
+          style={{ background: "#E7B23C", color: "#17120B", border: "3px solid #F6D27A" }}>
+          <Headphones className="w-5 h-5" strokeWidth={2.6} /> {hsBusy ? tri("Collego…", "Verbinde…", "Connecting…", "Conectando…", "Connexion…", "اتصال…") : tri("Cuffie hands-free", "Headset hands-free", "Hands-free headset", "Auriculares", "Casque mains libres", "هدست")}
+        </button>
         <button data-testid="braccio-consegne" onClick={consegne}
           className="flex items-center gap-2 rounded-full px-4 py-2 font-bold text-[13px] active:scale-95 transition-all" style={{ background: D.surf, border: `2px solid ${D.gold}`, color: D.gold }}>
           <ClipboardList className="w-4 h-4" /> {tri("Consegne del turno", "Schichtübergabe", "Shift handover", "Relevo de turno", "Passation", "تحویل شیفت")}
