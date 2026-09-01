@@ -5,7 +5,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 const Ctx = createContext(null);
 
 export function ProfileProvider({ children }) {
-  const [profile, setProfileState] = useState(() => { try { return localStorage.getItem("mikilab_profile") || "pro"; } catch { return "pro"; } });
+  const [profile, setProfileState] = useState(() => { try { return localStorage.getItem("mikilab_profile") || "passion"; } catch { return "passion"; } });
   const [selecting, setSelecting] = useState(false);
 
   const chooseProfile = useCallback((p) => {

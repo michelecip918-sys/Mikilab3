@@ -71,7 +71,7 @@ import ToolsDirectory from "@/components/ToolsDirectory";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import LabModeBig from "@/components/LabModeBig";
-import VoiceCommand from "@/components/VoiceCommand";
+import VoiceCommand from "@/components/VoiceCommand"; // eslint-disable-line no-unused-vars
 import BluetoothConnect from "@/components/BluetoothConnect";
 import TimetableLievitazione from "@/sections/TimetableLievitazione";
 import { useProfile } from "@/profile/ProfileContext";
@@ -218,7 +218,8 @@ export default function Maestro() {
             { Icon: Zap, t: mkTri(lang)("Energy & Bake Optimizer", "Energie- & Back-Optimizer", "Energy & Bake Optimizer", "Optimizador Energía & Horno", "Optimiseur Énergie & Cuisson", "بهینه‌ساز انرژی و پخت"), sub: null },
             { Icon: TimerIcon, t: mkTri(lang)("Smart Starter Timer", "Smart Starter-Timer", "Smart Starter Timer", "Temporizador Masa Madre", "Minuteur Levain Intelligent", "تایمر هوشمند خمیرمایه"), sub: mkTri(lang)("Offline First", "Offline First", "Offline First", "Sin conexión", "Hors-ligne", "آفلاین") },
           ].map(({ Icon, t, sub }, i) => (
-            <div key={i} data-testid={`tech-feat-${i}`} className="flex items-center gap-2.5 rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 px-2.5 py-2 min-h-[52px]">
+            <button key={i} data-testid={`tech-feat-${i}`} onClick={() => openTool(["bluetooth", "manisporche", "diagnosi", "trovafarina", "energia", "timer"][i])}
+              className="w-full text-start flex items-center gap-2.5 rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 px-2.5 py-2 min-h-[52px] active:scale-97 hover:border-[#ff6b00]/60 transition-all">
               <span className="w-8 h-8 rounded-lg bg-[#ff6b00]/18 border border-[#ff6b00]/35 flex items-center justify-center shrink-0">
                 <Icon className="w-5 h-5 text-[#ff6b00]" />
               </span>
@@ -226,7 +227,7 @@ export default function Maestro() {
                 <span className="block text-[11.5px] font-bold text-[#e4eff8] leading-tight">{t}</span>
                 {sub && <span className="block text-[10px] font-semibold text-[#ff6b00]/85 leading-tight mt-0.5">{sub}</span>}
               </span>
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -275,8 +276,7 @@ export default function Maestro() {
         <WhatsAppHelp context="laboratorio" />
       </div>
 
-      {/* Comandi vocali sempre raggiungibili: apri qualsiasi strumento a mani libere */}
-      <VoiceCommand onOpenTool={openTool} />
+      {/* Comandi vocali: Miki-Voice è globale (montato in App.js) */}
     </div>
   );
 }

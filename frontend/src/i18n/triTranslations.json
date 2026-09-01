@@ -12286,5 +12286,77 @@
 "IA Diagnostica Visiva": {
 "fr": "IA Diagnostic Visuel",
 "fa": "هوش مصنوعی تشخیص بصری"
+},
+"Dimmi.": {
+"fr": "Dis-moi.",
+"fa": "بگو."
+},
+"Non supportato da questo browser.": {
+"fr": "Non supporté par ce navigateur.",
+"fa": "توسط این مرورگر پشتیبانی نمی‌شود."
+},
+"Comanda a voce, mani libere. Prova:": {
+"fr": "Commande vocale, mains libres. Essaie :",
+"fa": "دستور صوتی، دست‌آزاد. امتحان کن:"
+},
+"Vado.": {
+"fr": "C'est parti.",
+"fa": "می‌روم."
+},
+"Passione": {
+"fr": "Passion",
+"fa": "اشتیاق"
+},
+"Errore ricerca.": {
+"fr": "Erreur de recherche.",
+"fa": "خطای جستجو."
+},
+"Riprendo.": {
+"fr": "Je reprends.",
+"fa": "ادامه می‌دهم."
+},
+"Ehi Miki, timer autolisi 45 minuti": {
+"fr": "Ehi Miki, timer autolyse 45 minutes",
+"fa": "Ehi Miki، تایمر اتولیز ۴۵ دقیقه"
+},
+"Timer cancellati.": {
+"fr": "Timers annulés.",
+"fa": "تایمرها لغو شدند."
+},
+"👂 Ehi Miki ON": {
+"fr": "👂 Ehi Miki ON",
+"fa": "👂 Ehi Miki روشن"
+},
+"Attiva «Ehi Miki»": {
+"fr": "Active «Ehi Miki»",
+"fa": "«Ehi Miki» را فعال کن"
+},
+"timer": {
+"fr": "timer",
+"fa": "تایمر"
+},
+"In pausa.": {
+"fr": "En pause.",
+"fa": "در حالت مکث."
+},
+"Pronuncia «Ehi Miki» o premi": {
+"fr": "Prononce «Ehi Miki» ou appuie sur",
+"fa": "«Ehi Miki» بگو یا فشار بده"
+},
+"Comandi vocali non supportati. Usa Chrome/Safari.": {
+"fr": "Commandes vocales non supportées. Utilise Chrome/Safari.",
+"fa": "دستورات صوتی پشتیبانی نمی‌شود. از Chrome/Safari استفاده کن."
+},
+"Non ho capito.": {
+"fr": "Je n'ai pas compris.",
+"fa": "متوجه نشدم."
+},
+"Ascolto «Ehi Miki» attivo.": {
+"fr": "Écoute «Ehi Miki» active.",
+"fa": "گوش دادن به «Ehi Miki» فعال است."
+},
+"Miki, trovami la ricetta delle mie baguette": {
+"fr": "Miki, trouve-moi la recette de mes baguettes",
+"fa": "Miki، دستور پخت باگت‌هایم را برایم پیدا کن"
 }
 }

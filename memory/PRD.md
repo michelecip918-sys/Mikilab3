@@ -3131,3 +3131,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Maestro.jsx**: banner `maestro-tech-banner` "La Tua Tecnologia Unica" IN CIMA al Laboratorio, SOPRA la CTA arancione. 6 feature (grid 2col, tech-feat-0..5, multilingua IT/DE/EN/ES/FR/FA): IoT & Sonde Live (BLE), Miki-Voice Multilingua, IA Diagnostica Visiva, Auto-Tuning Farine (W,P/L), Energy & Bake Optimizer, Smart Starter Timer (Offline First). Icone lucide (Bluetooth, Mic, Camera, Wheat, Zap, Timer) aggiunte allimport.
 - CTA gigante subito sotto il banner; 4 tab in basso confermate; tab vere del generatore OK; Persiano FA -> dir=rtl e layout specchiato.
 - QA iteration_153: tutti e 6 i punti PASSANO. Nessuna regressione.
+
+## v-fork11 (2026-06) — UI/UX + Miki-Voice globale
+- **Banner cliccabile** (Maestro): ogni feature apre lo strumento (IoT->bluetooth, Voce->manisporche, Visiva->diagnosi, Farine->trovafarina, Energy->energia, Timer->timer).
+- **Badge modalita sempre visibile** (`ModeBadge.jsx`, montato in App.js): pill fissa in alto Pro/Passione, tap apre il menu.
+- **Default = Passione** (ProfileContext) al primo avvio.
+- **Miki-Voice GLOBALE** (`VoiceCommand.jsx` riscritto, montato in App.js, rimosso da Maestro): attivo su tutte le schermate. Novita: wake-word opt-in "Ehi Miki"/"Miki" (ascolto continuo, richiede tap iniziale per gesture browser), tasto manuale, micro-copy "Pronuncia «Ehi Miki» o premi", bip alla attivazione, feedback visivo (scala/colore), onboarding popup con esempi, RICERCA RICETTE a voce (fetch /api/recipes mikilab+personal, apre la scheda via mikilab-open-recipe + goto ricette, TTS "Ecco X"), TIMER MULTIPLI vocali (crea/pausa/riprendi/cancella/tempo residuo, pannello fisso, bip+TTS a fine), calcolo idratazione, navigazione, apertura strumenti (mikilab-open-lab-tool gia gestito da Maestro), TTS TELEGRAFICO, vocabolario 6 lingue (IT/DE/EN/ES/FR/FA) + RTL.
+- NON completato: spostare intro planner solo in "Cosa Produci" (tentato, causava errore JSX su componente da 1750 righe -> ripristinato, intro resta sempre visibile). Il mic/wake-word non e testabile in automazione headless (permessi browser).
