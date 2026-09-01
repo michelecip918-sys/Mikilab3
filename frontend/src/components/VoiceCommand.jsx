@@ -8,7 +8,7 @@ import { api } from "@/lib/api";
 
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
-const WAKE = ["ehi miki", "hey miki", "ei miki", "miki", "میکی", "mickey"];
+const WAKE = ["ehi lab", "hey lab", "e lab", "ei lab", "lab", "لب", "ok lab"];
 
 const TOOL_ALIASES = {
   timer: ["timer", "cronometro"], acqua: ["temperatura acqua", "temp acqua", "acqua impasto", "water temp"],
@@ -41,7 +41,7 @@ export default function VoiceCommand({ onOpenTool }) {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const name = (tl) => norm(mkTri(lang)(tl.it, tl.de, tl.en, tl.es));
   const [listening, setListening] = useState(false);
-  const [wake, setWake] = useState(false);
+  const [wake, setWake] = useState(() => { try { return localStorage.getItem("mikilab_voice_wake") === "1"; } catch { return false; } });
   const [timers, setTimers] = useState([]);
   const [onboard, setOnboard] = useState(() => { try { return !localStorage.getItem("mikilab_voice_onboard"); } catch { return true; } });
   const recRef = useRef(null);
@@ -131,9 +131,42 @@ export default function VoiceCommand({ onOpenTool }) {
     toast.success(msg); speak(msg); return true;
   };
 
+  // Lab Sense (Exclusive): correzione temperatura impasto in tempo reale
+  const labSense = (t) => {
+    if (!/impasto|dough|teig|masa|p[aâ]te/.test(t)) return false;
+    const m = t.match(/(\d{1,2})\s*(?:grad|°|degree|deg)/); if (!m) return false;
+    const cur = parseInt(m[1], 10), target = 24, diff = cur - target;
+    let msg;
+    if (diff > 0) { const ice = Math.round(diff * 60); msg = tri(`Impasto a ${cur}°. Riduci la velocità dell'impastatrice e aggiungi circa ${ice} g di ghiaccio per chiudere a ${target}°.`, `Teig ${cur}°. Geschwindigkeit senken, ~${ice} g Eis für ${target}°.`, `Dough ${cur}°. Lower mixer speed, add ~${ice} g ice to close at ${target}°.`, `Masa ${cur}°. Baja la velocidad, ~${ice} g de hielo para ${target}°.`, `Pâte ${cur}°. Réduis la vitesse, ~${ice} g de glace pour ${target}°.`, `خمیر ${cur}°. سرعت را کم کن و حدود ${ice} گرم یخ اضافه کن تا ${target}°.`); }
+    else if (diff < 0) { msg = tri(`Impasto a ${cur}°, sotto ${target}°. Usa acqua tiepida e aumenta un po' la velocità.`, `Teig ${cur}°, unter ${target}°. Lauwarmes Wasser, etwas schneller.`, `Dough ${cur}°, below ${target}°. Use warm water, raise speed a bit.`, `Masa ${cur}°, bajo ${target}°. Agua tibia y más velocidad.`, `Pâte ${cur}°, sous ${target}°. Eau tiède, plus de vitesse.`, `خمیر ${cur}°، زیر ${target}°. آب ولرم و سرعت بیشتر.`); }
+    else msg = tri(`Perfetto: impasto già a ${target}°.`, `Perfekt: Teig bei ${target}°.`, `Perfect: dough at ${target}°.`, `Perfecto: masa a ${target}°.`, `Parfait : pâte à ${target}°.`, `عالی: خمیر روی ${target}°.`);
+    speak(msg); toast.success("⚡ Lab Sense: " + msg); return true;
+  };
+  // Conversione unità (acqua g<->l)
+  const tryConvert = (t) => {
+    if (!/convert/.test(t)) return false;
+    const g = t.match(/(\d+(?:[.,]\d+)?)\s*(?:g|gr|grammi|gramm|grams)/);
+    const l = t.match(/(\d+(?:[.,]\d+)?)\s*(?:l|litr|liter|litre)/);
+    if (g && /litr|liter|litre|\bl\b/.test(t)) { const v = parseFloat(g[1].replace(",", ".")) / 1000; const msg = tri(`${g[1]} g d'acqua = ${v} litri.`, `${g[1]} g = ${v} Liter.`, `${g[1]} g water = ${v} liters.`, `${g[1]} g = ${v} litros.`, `${g[1]} g = ${v} litres.`, `${g[1]} گرم = ${v} لیتر.`); speak(msg); toast.success(msg); return true; }
+    if (l) { const v = parseFloat(l[1].replace(",", ".")) * 1000; const msg = tri(`${l[1]} litri d'acqua = ${v} g.`, `${l[1]} Liter = ${v} g.`, `${l[1]} liters water = ${v} g.`, `${l[1]} litros = ${v} g.`, `${l[1]} litres = ${v} g.`, `${l[1]} لیتر = ${v} گرم.`); speak(msg); toast.success(msg); return true; }
+    return false;
+  };
+  // Creazione ricetta a voce → apre la scheda "Inserisci ricetta"
+  const tryCreateRecipe = (raw, t) => {
+    if (!/\b(crea|creare|nuova|aggiungi|inserisci|dettare|detta)\b.*\b(ricetta|recipe|rezept|receta|recette)\b/.test(t)) return false;
+    const nm = (raw.split(/ricetta|recipe|rezept|receta|recette/i)[1] || "").replace(/^[:\s.,-]+/, "").trim();
+    try { if (nm) localStorage.setItem("mikilab_voice_new_recipe", nm); } catch { /* */ }
+    speak(tri(`Creo la ricetta ${nm}. Apro la scheda.`, `Erstelle Rezept ${nm}.`, `Creating recipe ${nm}.`, `Creo receta ${nm}.`, `Je crée ${nm}.`, `دستور ${nm} را می‌سازم.`));
+    open("aggiungi"); return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
+    if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { try { window.speechSynthesis.cancel(); } catch { /* */ } toast.info("⏹"); return; }
     if (tryTimer(t)) return;
+    if (labSense(t)) return;
+    if (tryConvert(t)) return;
+    if (tryCreateRecipe(raw, t)) return;
     if (tryCalc(t)) return;
     if (await tryRecipe(t)) return;
     for (const [id, kws] of Object.entries(TOOL_ALIASES)) if (kws.some((k) => t.includes(k) || c.includes(k))) { open(id); return; }
@@ -172,9 +205,9 @@ export default function VoiceCommand({ onOpenTool }) {
   const toggleWake = () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { toast.error(tri("Non supportato da questo browser.", "Nicht unterstützt.", "Not supported.", "No soportado.", "Non supporté.", "پشتیبانی نمی‌شود.")); return; }
-    if (wake) { setWake(false); try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } return; }
-    setWake(true); beep();
-    toast.success(tri("Ascolto «Ehi Miki» attivo.", "Höre auf «Ehi Miki».", "Listening for «Ehi Miki».", "Escuchando «Ehi Miki».", "À l'écoute «Ehi Miki».", "در حال شنیدن «میکی»."));
+    if (wake) { setWake(false); try { localStorage.setItem("mikilab_voice_wake", "0"); } catch { /* */ } try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } return; }
+    setWake(true); try { localStorage.setItem("mikilab_voice_wake", "1"); } catch { /* */ } beep();
+    toast.success(tri("Ascolto «Ehi Lab» attivo.", "Höre auf «Ehi Lab».", "Listening for «Ehi Lab».", "Escuchando «Ehi Lab».", "À l'écoute «Ehi Lab».", "در حال شنیدن «لب»."));
     const loop = () => {
       const rec = new SR(); rec.lang = SR_LANG[lang] || "it-IT"; rec.continuous = true; rec.interimResults = true; rec._stop = false;
       rec.onresult = (e) => {
@@ -192,6 +225,22 @@ export default function VoiceCommand({ onOpenTool }) {
     };
     loop();
   };
+  // Persistenza wake-word: se era attiva, prova a riavviare all'apertura (il browser può richiedere un tap)
+  useEffect(() => {
+    if (!wake) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
+    let rec;
+    try {
+      rec = new SR(); rec.lang = SR_LANG[lang] || "it-IT"; rec.continuous = true; rec.interimResults = true; rec._stop = false;
+      rec.onresult = (e) => { const last = e.results[e.results.length - 1]; if (!last || !last.isFinal) return; const tr = norm(last[0].transcript); const w = WAKE.find((k) => tr.includes(k)); if (!w) return; const cmd = tr.slice(tr.indexOf(w) + w.length).trim(); beep(); setListening(true); setTimeout(() => setListening(false), 1200); if (cmd.length > 1) handle(cmd); else speak(tri("Dimmi.", "Sag's.", "Yes?", "Dime.", "Oui ?", "بگو.")); };
+      rec.onend = () => { if (!rec._stop) { try { rec.start(); } catch { /* */ } } };
+      rec.onerror = () => { /* gesture richiesta: riattiva col toggle */ };
+      wakeRef.current = rec; rec.start();
+    } catch { /* */ }
+    return () => { try { rec && (rec._stop = true, rec.stop()); } catch { /* */ } };
+    // eslint-disable-next-line
+  }, []);
+
   useEffect(() => () => { try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } }, []);
 
   const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
@@ -217,11 +266,13 @@ export default function VoiceCommand({ onOpenTool }) {
       {onboard && (
         <div data-testid="voice-onboard" className="fixed inset-x-3 bottom-28 z-[60] mx-auto max-w-sm rounded-2xl bg-[#161616] border border-[#ff6b00]/50 p-4 shadow-2xl">
           <button data-testid="voice-onboard-close" onClick={() => { setOnboard(false); try { localStorage.setItem("mikilab_voice_onboard", "1"); } catch { /* */ } }} className="absolute top-2 end-2 text-[#7E8A93] hover:text-white"><X className="w-4 h-4" /></button>
-          <p className="font-display text-sm font-extrabold text-[#ff6b00] mb-2 flex items-center gap-1.5"><Mic className="w-4 h-4" /> Miki-Voice</p>
+          <p className="font-display text-sm font-extrabold text-[#ff6b00] mb-2 flex items-center gap-1.5"><Mic className="w-4 h-4" /> Lab Voice <span className="text-[9px] font-bold bg-[#ff6b00] text-white px-1.5 py-0.5 rounded-full uppercase">Exclusive</span></p>
           <p className="text-[12.5px] text-[#C9D4DC] leading-snug mb-2">{tri("Comanda a voce, mani libere. Prova:", "Sprich, freihändig. Probier:", "Voice control, hands-free. Try:", "Control por voz. Prueba:", "Commande vocale. Essaie :", "کنترل صوتی. امتحان کن:")}</p>
           <ul className="text-[12px] text-[#AEB8BF] space-y-1 list-disc ps-4">
-            <li>«{tri("Ehi Miki, timer autolisi 45 minuti", "Ehi Miki, Timer Autolyse 45 Minuten", "Ehi Miki, autolyse timer 45 minutes", "Ehi Miki, temporizador autólisis 45 minutos", "Ehi Miki, minuteur autolyse 45 minutes", "میکی، تایمر اتولیز ۴۵ دقیقه")}»</li>
-            <li>«{tri("Miki, trovami la ricetta delle mie baguette", "Miki, finde mein Baguette-Rezept", "Miki, find my baguette recipe", "Miki, busca mi receta de baguette", "Miki, trouve ma recette de baguette", "میکی، دستور باگت من را پیدا کن")}»</li>
+            <li>«{tri("Ehi Lab, timer autolisi 45 minuti", "Ehi Lab, Timer Autolyse 45 Minuten", "Ehi Lab, autolyse timer 45 minutes", "Ehi Lab, temporizador autólisis 45 minutos", "Ehi Lab, minuteur autolyse 45 minutes", "لب، تایمر اتولیز ۴۵ دقیقه")}»</li>
+            <li>«{tri("Ehi Lab, crea una nuova ricetta: Baguette di Michele", "Ehi Lab, neues Rezept: Baguette", "Ehi Lab, create a new recipe: Baguette", "Ehi Lab, crea receta: Baguette", "Ehi Lab, crée une recette : Baguette", "لب، دستور جدید بساز: باگت")}»</li>
+            <li>«{tri("Ehi Lab, l'impasto è a 26 gradi, come lo salvo?", "Ehi Lab, Teig 26 Grad, was tun?", "Ehi Lab, dough is 26°, how to fix?", "Ehi Lab, masa a 26°, ¿cómo la salvo?", "Ehi Lab, pâte à 26°, comment faire ?", "لب، خمیر ۲۶ درجه است، چطور نجاتش دهم؟")}» <span className="text-[9px] font-bold text-[#ff6b00]">Lab Sense</span></li>
+            <li>«{tri("Ehi Lab, portami alla home", "Ehi Lab, bring mich zur Startseite", "Ehi Lab, take me home", "Ehi Lab, llévame al inicio", "Ehi Lab, ramène-moi à l'accueil", "لب، برو به خانه")}»</li>
           </ul>
         </div>
       )}
@@ -230,14 +281,14 @@ export default function VoiceCommand({ onOpenTool }) {
       <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-1.5">
         <button data-testid="voice-wake-toggle" onClick={toggleWake}
           className={`text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${wake ? "bg-[#ff6b00] text-white border-[#ff6b00] animate-pulse" : "bg-[#161616]/90 text-[#ff6b00] border-[#ff6b00]/50"}`}>
-          {wake ? tri("👂 Ehi Miki ON", "👂 Ehi Miki AN", "👂 Ehi Miki ON", "👂 Ehi Miki ON", "👂 Ehi Miki ON", "👂 میکی روشن") : tri("Attiva «Ehi Miki»", "«Ehi Miki» an", "Enable «Ehi Miki»", "Activar «Ehi Miki»", "Activer «Ehi Miki»", "«میکی» فعال کن")}
+          {wake ? tri("👂 Ehi Lab ON", "👂 Ehi Lab AN", "👂 Ehi Lab ON", "👂 Ehi Lab ON", "👂 Ehi Lab ON", "👂 لب روشن") : tri("Attiva «Ehi Lab»", "«Ehi Lab» an", "Enable «Ehi Lab»", "Activar «Ehi Lab»", "Activer «Ehi Lab»", "«لب» فعال کن")}
         </button>
         <button data-testid="voice-command-btn" onClick={runOnce}
           className={`h-16 px-6 rounded-full text-white font-extrabold text-base shadow-2xl flex items-center gap-2.5 ring-4 active:scale-95 transition-all ${listening ? "bg-[#e05e00] ring-[#ff6b00]/70 scale-110" : "bg-[#ff6b00] hover:bg-[#e05e00] ring-[#ff6b00]/30"}`}>
           {listening ? <Loader2 className="w-7 h-7 animate-spin" /> : <Mic className="w-7 h-7" />}
           {listening ? tri("Ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Voce", "Stimme", "Voice", "Voz", "Voix", "صدا")}
         </button>
-        <span className="text-[9.5px] text-[#7E8A93] bg-[#161616]/70 px-2 py-0.5 rounded-full">{tri("Pronuncia «Ehi Miki» o premi", "Sag «Ehi Miki» oder drücke", "Say «Ehi Miki» or tap", "Di «Ehi Miki» o pulsa", "Dis «Ehi Miki» ou appuie", "بگو «میکی» یا بزن")}</span>
+        <span className="text-[9.5px] text-[#7E8A93] bg-[#161616]/70 px-2 py-0.5 rounded-full">{tri("Pronuncia «Ehi Lab» o premi", "Sag «Ehi Lab» oder drücke", "Say «Ehi Lab» or tap", "Di «Ehi Lab» o pulsa", "Dis «Ehi Lab» ou appuie", "بگو «لب» یا بزن")}</span>
       </div>
     </>
   );

@@ -12358,5 +12358,37 @@
 "Miki, trovami la ricetta delle mie baguette": {
 "fr": "Miki, trouve-moi la recette de mes baguettes",
 "fa": "Miki، دستور پخت باگت‌هایم را برایم پیدا کن"
+},
+"Ehi Lab, portami alla home": {
+"fr": "Ehi Lab, emmène-moi à l'accueil",
+"fa": "Ehi Lab، منو به خانه ببر"
+},
+"Ehi Lab, l'impasto è a 26 gradi, come lo salvo?": {
+"fr": "Ehi Lab, la pâte est à 26 degrés, comment je la sauvegarde ?",
+"fa": "Ehi Lab، خمیر ۲۶ درجه‌ست، چطور ذخیره‌اش کنم؟"
+},
+"Attiva «Ehi Lab»": {
+"fr": "Activer «Ehi Lab»",
+"fa": "فعال‌سازی «Ehi Lab»"
+},
+"Ehi Lab, timer autolisi 45 minuti": {
+"fr": "Ehi Lab, minuterie autolyse 45 minutes",
+"fa": "Ehi Lab، تایمر اتولیز ۴۵ دقیقه"
+},
+"Pronuncia «Ehi Lab» o premi": {
+"fr": "Prononcez «Ehi Lab» ou appuyez",
+"fa": "«Ehi Lab» بگو یا دکمه را فشار بده"
+},
+"👂 Ehi Lab ON": {
+"fr": "👂 Ehi Lab ON",
+"fa": "👂 Ehi Lab روشن"
+},
+"Ascolto «Ehi Lab» attivo.": {
+"fr": "Écoute «Ehi Lab» active.",
+"fa": "گوش دادن به «Ehi Lab» فعال است."
+},
+"Ehi Lab, crea una nuova ricetta: Baguette di Michele": {
+"fr": "Ehi Lab, crée une nouvelle recette : Baguette de Michele",
+"fa": "Ehi Lab، یک دستور جدید بساز: باگت Michele"
 }
 }
