@@ -12150,5 +12150,45 @@
 "Bilancia connessa. Ti guiderò a voce: leggerò i pesi uno alla volta, tu versa senza toccare lo schermo.": {
 "fr": "Balance connectée. Je vais te guider vocalement : je lirai les poids un à un, tu verses sans toucher l'écran.",
 "fa": "ترازو متصل شد. صوتی راهنماییت می‌کنم: وزن‌ها را یکی یکی می‌خوانم، تو بریز بدون اینکه صفحه را لمس کنی."
+},
+"Impara la panificazione da zero in 3 passi: lezioni, quiz ed esercizi pratici.": {
+"fr": "Apprenez la boulangerie de zéro en 3 étapes : leçons, quiz et exercices pratiques.",
+"fa": "نانوایی را از صفر در ۳ مرحله یاد بگیرید: درس‌ها، آزمون‌ها و تمرین‌های عملی."
+},
+"Impara gratis": {
+"fr": "Apprenez gratuitement",
+"fa": "رایگان یاد بگیرید"
+},
+"Metti alla prova quello che sai": {
+"fr": "Mettez à l'épreuve ce que vous savez",
+"fa": "دانسته‌هایتان را به آزمون بگذارید"
+},
+"Hai sbloccato il badge «Fornaio Diplomato». Sei pronto per il Laboratorio!": {
+"fr": "Vous avez débloqué le badge «Boulanger Diplômé». Vous êtes prêt pour le Laboratoire !",
+"fa": "شما نشان «نانوای فارغ‌التحصیل» را باز کردید. آماده‌ی آزمایشگاه هستید!"
+},
+"Video e basi passo passo": {
+"fr": "Vidéos et bases étape par étape",
+"fa": "ویدیوها و مبانی گام به گام"
+},
+"Strumenti extra": {
+"fr": "Outils supplémentaires",
+"fa": "ابزارهای اضافی"
+},
+"Calcola le dosi e prova sul campo": {
+"fr": "Calculez les doses et testez sur le terrain",
+"fa": "دوزها را محاسبه کنید و در عمل امتحان کنید"
+},
+"Scatta o carica una foto dell'impasto o della crosta: l'IA ti dice cosa correggere.": {
+"fr": "Prenez ou importez une photo de la pâte ou de la croûte : l'IA vous dit quoi corriger.",
+"fa": "از خمیر یا پوسته عکس بگیرید یا آپلود کنید: هوش مصنوعی به شما می‌گوید چه چیزی را اصلاح کنید."
+},
+"Lezioni": {
+"fr": "Leçons",
+"fa": "درس‌ها"
+},
+"Esercizi": {
+"fr": "Exercices",
+"fa": "تمرین‌ها"
 }
 }

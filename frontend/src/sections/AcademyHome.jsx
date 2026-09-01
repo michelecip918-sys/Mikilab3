@@ -1,113 +1,120 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Calculator, Wheat, Camera, Printer, Crown, CheckCircle2 } from "lucide-react";
+import { GraduationCap, Calculator, Wheat, Camera, Trophy, ClipboardList, CheckCircle2, ChevronRight, Printer } from "lucide-react";
+import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { FLOURS, CALC_RECIPES } from "@/data/academy";
 import Beginners from "@/sections/Beginners";
 import { mkTri } from "@/i18n/triMaps";
 
+// Accademia = percorso guidato in 3 passi: Lezioni → Quiz → Esercizi.
+// Farine e Diagnosi restano come strumenti extra. Tutti i tool esistenti sono preservati.
+const PATH_IDS = ["lezioni", "quiz", "esercizi"];
+
 export default function AcademyHome({ onNavigate }) {
   const { lang } = useLang();
-  const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const L = (o) => (o ? o[lang] || o.en || o.it : "");
-  const [sub, setSub] = useState("ricettario");
-  const [status, setStatus] = useState(null);
+  const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
+  const [sub, setSub] = useState("lezioni");
   const [pathDone, setPathDone] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); } catch { return []; } });
 
-  useEffect(() => { setStatus(null); }, []);
+  // Segna il passo come completato + porta a quiz quando serve.
   useEffect(() => {
-    if (["ricettario", "farine", "corsi"].includes(sub) && !pathDone.includes(sub)) {
+    if (PATH_IDS.includes(sub) && !pathDone.includes(sub)) {
       const nx = [...pathDone, sub];
       setPathDone(nx);
       localStorage.setItem("mikilab_impara_path", JSON.stringify(nx));
     }
+    if (sub === "quiz") {
+      const id = setTimeout(() => {
+        document.querySelector('[data-testid="evolving-quiz"],[data-testid="quiz-panel"],[data-testid="quiz-start-btn"]')
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 350);
+      return () => clearTimeout(id);
+    }
     // eslint-disable-next-line
   }, [sub]);
 
-  const diagUsed = status?.diagnosi_used ?? 0;
-  const diagLimit = status?.diagnosi_limit;
+  const doneCount = PATH_IDS.filter((x) => pathDone.includes(x)).length;
 
-  const upgradePro = async () => { /* MikiLab è gratis: nessun upgrade a pagamento */ };
-
-  const TABS = [
-    { id: "ricettario", label: tri("Ricettario", "Rezeptbuch", "Recipes"), Icon: Calculator },
-    { id: "farine", label: tri("Farine", "Mehle", "Flours"), Icon: Wheat },
-    { id: "diagnosi", label: tri("Diagnosi", "Diagnose", "Diagnosis"), Icon: Camera },
-    { id: "corsi", label: tri("Corsi & Quiz", "Kurse & Quiz", "Courses & Quiz"), Icon: GraduationCap },
+  const STEPS = [
+    { id: "lezioni", n: "1", Icon: GraduationCap, label: tri("Lezioni", "Lektionen", "Lessons", "Lecciones"), desc: tri("Video e basi passo passo", "Videos & Grundlagen Schritt für Schritt", "Videos & basics step by step", "Vídeos y bases paso a paso") },
+    { id: "quiz", n: "2", Icon: Trophy, label: tri("Quiz", "Quiz", "Quiz", "Quiz"), desc: tri("Metti alla prova quello che sai", "Teste dein Wissen", "Test what you know", "Pon a prueba lo que sabes") },
+    { id: "esercizi", n: "3", Icon: ClipboardList, label: tri("Esercizi", "Übungen", "Exercises", "Ejercicios"), desc: tri("Calcola le dosi e prova sul campo", "Mengen berechnen und üben", "Calculate doses and practise", "Calcula las dosis y practica") },
+  ];
+  const EXTRA = [
+    { id: "farine", Icon: Wheat, label: tri("Farine", "Mehle", "Flours", "Harinas") },
+    { id: "diagnosi", Icon: Camera, label: tri("Diagnosi", "Diagnose", "Diagnosis", "Diagnóstico") },
   ];
 
   return (
     <div className="pb-4" data-testid="academy-home">
       {/* Hero */}
-      <div className="relative rounded-3xl overflow-hidden mb-4 bg-gradient-to-br from-[#c94f00] to-[#325046] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#c94f00] to-[#3a2415] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-        <GraduationCap className="w-7 h-7 mb-2" />
-        <h1 className="font-display text-2xl font-bold">{tri("Impara da Casa", "Von zu Hause lernen", "Learn from Home")}</h1>
-        <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-1.5" />
-        <p className="text-white/85 text-sm mt-1 max-w-md">{tri("La tua Academy: ricettario dinamico, database farine, diagnosi delle cotture e corsi passo-passo.", "Deine Academy: dynamisches Rezeptbuch, Mehl-Datenbank, Back-Diagnose und Schritt-für-Schritt-Kurse.", "Your Academy: dynamic recipe book, flour database, bake diagnosis and step-by-step courses.")}</p>
-        {typeof diagLimit === "number" && (
-          <div data-testid="academy-diag-usage" className="mt-3 inline-flex items-center gap-2 rounded-xl bg-white/15 border border-white/25 px-3 py-1.5 text-sm font-semibold">
-            <Camera className="w-4 h-4" /> {tri("Diagnosi Foto", "Foto-Diagnosen", "Photo diagnoses")}: {diagUsed}/{diagLimit} {tri("questo mese", "diesen Monat", "this month")}
-          </div>
-        )}
-        <div className="mt-4 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold"><Wheat className="w-3.5 h-3.5" /> {FLOURS.length} {tri("farine", "Mehle", "flours")}</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold"><Calculator className="w-3.5 h-3.5" /> {CALC_RECIPES.length} {tri("ricette calcolabili", "berechenbare Rezepte", "calculable recipes")}</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold"><Camera className="w-3.5 h-3.5" /> {tri("Diagnosi IA", "KI-Diagnose", "AI Diagnosis")}</span>
-        </div>
+        <span className="inline-block mb-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/15 border border-white/25">{tri("Impara gratis", "Kostenlos lernen", "Learn free", "Aprende gratis")}</span>
+        <h1 className="font-display text-3xl font-extrabold">{tri("Accademia", "Akademie", "Academy", "Academia")}</h1>
+        <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-2" />
+        <p className="text-white/85 text-sm mt-2 max-w-md leading-snug">{tri("Impara la panificazione da zero in 3 passi: lezioni, quiz ed esercizi pratici.", "Lerne das Backen von Grund auf in 3 Schritten: Lektionen, Quiz und praktische Übungen.", "Learn baking from scratch in 3 steps: lessons, quizzes and practical exercises.", "Aprende panificación desde cero en 3 pasos: lecciones, cuestionarios y ejercicios prácticos.")}</p>
       </div>
 
-      {/* Percorso guidato: da dove inizio? */}
+      {/* Percorso guidato in 3 passi */}
       <div data-testid="academy-path" className="mb-5">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Il tuo percorso", "Dein Lernpfad", "Your path")}</p>
-          <span data-testid="academy-path-progress" className="text-xs font-bold text-[#ff6b00]">{pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length}/3 {tri("completati", "erledigt", "done")}</span>
+        <div className="flex items-center justify-between mb-2 px-1">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Il tuo percorso", "Dein Lernpfad", "Your path", "Tu ruta")}</p>
+          <span data-testid="academy-path-progress" className="text-xs font-bold text-[#ff6b00]">{doneCount}/3 {tri("completati", "erledigt", "done", "completados")}</span>
         </div>
-        <div className="grid grid-cols-3 gap-2">
-          {[
-            { id: "ricettario", n: "1", Icon: Calculator, t: tri("Calcola le dosi", "Mengen berechnen", "Calculate doses") },
-            { id: "farine", n: "2", Icon: Wheat, t: tri("Scegli la farina", "Mehl wählen", "Pick the flour") },
-            { id: "corsi", n: "3", Icon: GraduationCap, t: tri("Segui i corsi", "Kurse folgen", "Take the courses") },
-          ].map(({ id, n, Icon, t: label }) => {
+        <div className="space-y-2.5">
+          {STEPS.map(({ id, n, Icon, label, desc }, i) => {
             const done = pathDone.includes(id);
+            const on = sub === id;
             return (
-              <button key={id} data-testid={`academy-path-${id}`} onClick={() => setSub(id)}
-                className={`group relative rounded-2xl border p-3 text-left active:scale-97 transition-all ${done ? "bg-[#ff6b00]/12 border-[#ff6b00]/50" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
-                {done && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-[#ff6b00]" data-testid={`academy-path-done-${id}`} />}
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <span className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${done ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#181818] text-[#ff6b00]"}`}>{done ? "✓" : n}</span>
-                  <Icon className="w-4 h-4 text-[#ff6b00]" />
-                </div>
-                <p className="text-xs font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-snug">{label}</p>
+              <motion.button key={id} data-testid={`academy-path-${id}`} onClick={() => setSub(id)}
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: i * 0.06 }}
+                className={`group w-full flex items-center gap-3.5 min-h-[68px] rounded-2xl px-4 text-start active:scale-98 transition-all border ${on ? "bg-[#ff6b00]/12 border-[#ff6b00]" : done ? "bg-[#ff6b00]/8 border-[#ff6b00]/45" : "bg-[#1e1e1e] border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                <span className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 font-bold ${done ? "bg-[#ff6b00] text-white" : "bg-[#ff6b00]/15 border border-[#ff6b00]/40 text-[#ff6b00]"}`}>
+                  {done ? <CheckCircle2 className="w-6 h-6" data-testid={`academy-path-done-${id}`} /> : <Icon className="w-6 h-6" />}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-[#7E8A93]">{tri("Passo", "Schritt", "Step", "Paso")} {n}</span>
+                  </span>
+                  <span className="block font-display text-[16px] font-extrabold leading-tight text-[#e4eff8]">{label}</span>
+                  <span className="block text-[12px] text-[#AEB8BF] leading-snug">{desc}</span>
+                </span>
+                <ChevronRight className="w-5 h-5 text-[#ff6b00] shrink-0 rtl:rotate-180" />
+              </motion.button>
+            );
+          })}
+        </div>
+        {doneCount === 3 && (
+          <div data-testid="academy-path-complete" className="mt-3 rounded-2xl bg-[#ff6b00] text-white p-4 text-center shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-2"><CheckCircle2 className="w-7 h-7" /></div>
+            <p className="font-display text-lg font-bold">🎉 {tri("Percorso completato!", "Pfad abgeschlossen!", "Path complete!", "¡Ruta completada!")}</p>
+            <p className="text-sm text-white/85 mt-0.5">{tri("Hai sbloccato il badge «Fornaio Diplomato». Sei pronto per il Laboratorio!", "Du hast das Abzeichen «Diplom-Bäcker» freigeschaltet. Bereit fürs Labor!", "You unlocked the «Certified Baker» badge. Ready for the Lab!", "Has desbloqueado la insignia «Panadero Diplomado». ¡Listo para el Laboratorio!")}</p>
+            <span className="inline-block mt-2 text-[11px] font-bold bg-white/20 px-3 py-1 rounded-full uppercase tracking-wide">🏅 {tri("Fornaio Diplomato", "Diplom-Bäcker", "Certified Baker", "Panadero Diplomado")}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Strumenti extra */}
+      <div className="mb-5">
+        <p className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2 px-1">{tri("Strumenti extra", "Extra-Werkzeuge", "Extra tools", "Herramientas extra")}</p>
+        <div className="grid grid-cols-2 gap-2.5">
+          {EXTRA.map(({ id, Icon, label }) => {
+            const on = sub === id;
+            return (
+              <button key={id} data-testid={`academy-tab-${id}`} onClick={() => setSub(id)}
+                className={`flex items-center gap-2.5 min-h-[54px] rounded-2xl px-4 border active:scale-97 transition-all text-start ${on ? "bg-[#ff6b00]/12 border-[#ff6b00]" : "bg-[#1e1e1e] border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                <span className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Icon className="w-5 h-5 text-[#ff6b00]" /></span>
+                <span className="font-display text-sm font-bold text-[#e4eff8]">{label}</span>
               </button>
             );
           })}
         </div>
-        {pathDone.filter((x) => ["ricettario", "farine", "corsi"].includes(x)).length === 3 && (
-          <div data-testid="academy-path-complete" className="mt-3 rounded-2xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-4 text-center shadow-lg">
-            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-2"><CheckCircle2 className="w-7 h-7" /></div>
-            <p className="font-display text-lg font-bold">🎉 {tri("Percorso completato!", "Pfad abgeschlossen!", "Path complete!")}</p>
-            <p className="text-sm text-white/85 mt-0.5">{tri("Hai sbloccato il badge «Fornaio Diplomato». Sei pronto per Il Tuo Laboratorio!", "Du hast das Abzeichen «Diplom-Bäcker» freigeschaltet. Bereit für deine Backstube!", "You unlocked the «Certified Baker» badge. Ready for Your Lab!")}</p>
-            <span className="inline-block mt-2 text-[11px] font-bold bg-white/20 px-3 py-1 rounded-full uppercase tracking-wide">🏅 {tri("Fornaio Diplomato", "Diplom-Bäcker", "Certified Baker")}</span>
-          </div>
-        )}
       </div>
 
-      {/* Sub-nav */}
-      <div data-testid="academy-subnav" className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e] dark:border-[#2e2e2e]">
-        {TABS.map(({ id, label, Icon }) => {
-          const on = sub === id;
-          const isQuiz = id === "corsi";
-          return (
-            <button key={id} data-testid={`academy-tab-${id}`} onClick={() => setSub(id)}
-              className={`relative flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${on ? "bg-[#ff6b00] text-white shadow-md" : isQuiz ? "text-[#ff6b00] dark:text-[#ff6b00] bg-[#ff6b00]/15 ring-2 ring-[#ff6b00]/60" : "text-[#7E8A93] hover:bg-white/60 dark:hover:bg-[#1e1e1e]"}`}>
-              <Icon className="w-4 h-4 shrink-0" /><span className="truncate">{label}</span>
-              {isQuiz && !on && <span className="absolute -top-1.5 -right-1 text-[9px] font-black bg-[#ff6b00] text-white px-1.5 py-0.5 rounded-full leading-none">🎯</span>}
-            </button>
-          );
-        })}
-      </div>
-
-      {sub === "ricettario" && <DynamicRecipes />}
+      {/* Contenuto */}
+      {(sub === "lezioni" || sub === "quiz") && <Beginners />}
+      {sub === "esercizi" && <DynamicRecipes />}
       {sub === "farine" && <FlourDB />}
       {sub === "diagnosi" && (
         <div className="space-y-4" data-testid="academy-diagnosi">
@@ -115,16 +122,15 @@ export default function AcademyHome({ onNavigate }) {
             <div className="w-14 h-14 rounded-full bg-[#ff6b00]/15 flex items-center justify-center mx-auto mb-3">
               <Camera className="w-7 h-7 text-[#ff6b00]" />
             </div>
-            <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Diagnosi Foto IA", "Foto-Diagnose KI", "AI Photo Diagnosis")}</p>
-            <p className="text-sm text-[#7E8A93] mt-1 max-w-sm mx-auto">{tri("Scatta o carica una foto del tuo impasto o della crosta: l'IA ti dice cosa correggere in cottura e lievitazione.", "Mach oder lade ein Foto von Teig oder Kruste hoch: die KI sagt dir, was du bei Backen und Gärung korrigieren sollst.", "Take or upload a photo of your dough or crust: the AI tells you what to fix in baking and proofing.")}</p>
+            <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Diagnosi Foto IA", "Foto-Diagnose KI", "AI Photo Diagnosis", "Diagnóstico Foto IA")}</p>
+            <p className="text-sm text-[#7E8A93] mt-1 max-w-sm mx-auto">{tri("Scatta o carica una foto dell'impasto o della crosta: l'IA ti dice cosa correggere.", "Mach oder lade ein Foto von Teig oder Kruste hoch: die KI sagt dir, was du korrigieren sollst.", "Take or upload a photo of the dough or crust: the AI tells you what to fix.", "Haz o sube una foto de la masa o la corteza: la IA te dice qué corregir.")}</p>
             <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
               className="mt-4 inline-flex items-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
-              <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis")}
+              <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis", "Abrir Diagnóstico")}
             </button>
           </div>
         </div>
       )}
-      {sub === "corsi" && <Beginners />}
     </div>
   );
 }

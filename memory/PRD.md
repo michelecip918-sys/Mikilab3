@@ -3088,3 +3088,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Traduzioni FR/FA**: rigenerate con `/app/scripts/fill_missing_tri.py` (triTranslations.json -> 3038 voci).
 - **Guida vocale bilancia** (`GuidedWeighing.jsx`): alla connessione Bluetooth annuncia a voce la guida mani-libere; conferma vocale "Perfetto" al raggiungimento del peso target prima dell auto-avanzamento (i pesi target erano gia letti in sequenza).
 - Redesign "tutta l'app a fasi": FASE 1 = Home FATTA. Prossime fasi: Ricette, Guide, Accademia, Laboratorio, Community (da confermare ordine con utente).
+
+## v-fork3 (2026-06) — FASE 2 redesign: Accademia ristrutturata
+- **Accademia** (`AcademyHome.jsx`) trasformata in **percorso guidato pulito a 3 passi**: Passo 1 Lezioni -> Passo 2 Quiz -> Passo 3 Esercizi (card grandi e leggibili, numerate, con progresso X/3 e badge "Fornaio Diplomato" a completamento). Rimossa la doppia navigazione ridondante (path + subnav a 4 tab). Farine e Diagnosi spostati in "Strumenti extra". Tutti i tool esistenti preservati: Lezioni/Quiz -> Beginners (video+quiz+esercizi), Esercizi -> DynamicRecipes (calcolo dosi), Farine -> FlourDB, Diagnosi -> apre PhotoDiagnosi. Quiz auto-scrolla al pannello quiz. Verificato IT via screenshot.
+- Copy Accademia riscritto breve/diretto (IT/DE/EN/ES) + FR/FA rigenerati via fill_missing_tri.py.
+- **Ricette** (`Ricette.jsx`) e **Laboratorio** (`Maestro.jsx`): gia allineati allo stile pulito richiesto (Ricette: hero + jump-bar per categorie + card; Laboratorio: header ordinato + Modalita Laboratorio a tasti giganti + Piano IA + comandi vocali). Nessuna riscrittura rischiosa: in attesa che l utente indichi i punti specifici da ripulire.
