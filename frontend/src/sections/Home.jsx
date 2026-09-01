@@ -24,19 +24,9 @@ export default function Home({ onNavigate }) {
         "Recetas exclusivas con cantidades y pasos, listas para seguir."),
     },
     {
-      tab: "impara", img: "hero-impara.jpg",
-      title: L("Guide", "Anleitungen", "Guides", "Guías"),
-      badge: L("Da casa", "Für zuhause", "From home", "Desde casa"),
-      desc: L(
-        "Guide pratiche e contenuti per imparare comodamente da casa.",
-        "Praktische Anleitungen und Inhalte, um bequem zu Hause zu lernen.",
-        "Practical guides and content to learn comfortably from home.",
-        "Guías prácticas y contenidos para aprender cómodamente en casa."),
-    },
-    {
       tab: "imparacon", img: "hero-bakery.jpg",
-      title: L("Accademia", "Akademie", "Academy", "Academia"),
-      badge: L("Da zero", "Von Grund auf", "From scratch", "Desde cero"),
+      title: L("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"),
+      badge: L("Impara", "Lernen", "Learn", "Aprende"),
       desc: L(
         "Lezioni, quiz ed esercizi per iniziare passo passo.",
         "Lektionen, Quiz und Übungen, um Schritt für Schritt zu starten.",

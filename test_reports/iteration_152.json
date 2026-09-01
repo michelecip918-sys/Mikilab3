@@ -1,0 +1,37 @@
+{
+  "summary": "Frontend-only test of the Laboratorio refactor (mobile 430x920, lang=it, profile=pro). Verified: 4-tab bottom nav, 'Scienza & Guide' -> Accademia, giant CTA -> Generatore di Ricette, Pro/Passione toggle from ☰ menu, and the Generatore di Piano 3-tab bar. CRITICAL FAILURE: the capo tabs 'Parametri IA' and 'Genera & Salva' render EMPTY (their content is nested inside the still-open produci wrapper), so [data-testid=capo-generate] and [data-testid=capo-advanced-title] are never visible -> the planner Generate button is unreachable (regression).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PianoProduzioneAI (capo tabs)", "issue": "JSX nesting bug: the wrapper <div className={planTab === 'produci' ? '' : 'hidden'}> opened at line 953 is NEVER closed at line 1022 — line 1022's </div> closes the <div className=\"flex flex-col\"> opened at line 1002. Consequence: the 'parametri' wrapper (line 1023), the 'produci||genera' wrapper (line 1235) and the 'genera' wrapper (line 1565) are all CHILDREN of the produci wrapper. DOM proof (x-line-number attrs): capo-generate -> div@1565 -> Section -> div@1235 -> div@953 (display:none) when planTab='genera'. Measured: produci tab -> plan-switch=True, advanced-title=False, generate=False; genera tab -> ALL False; parametri tab -> ALL False. Tabs 2 and 3 show a blank screen below the sticky tab bar.", "selector": "[data-testid=capo-generate], [data-testid=capo-advanced-title]", "priority": "CRITICAL"},
+      {"component": "RecipeGenerator / PianoProduzioneAI", "issue": "Native browser <select> used for 'PRE-FERMENTO / LIEVITAZIONE' (and other dropdowns) instead of the shadcn Select — inconsistent with the dark/orange design system on mobile.", "selector": "main select", "priority": "LOW"},
+      {"component": "SiteMenu", "issue": "Menu stays open after choosing Pro/Passione and does not close on Escape; the full-screen overlay [data-testid=site-menu] (fixed inset-0 z-[300]) then intercepts pointer events on the bottom nav until [data-testid=site-menu-close] is clicked. Minor UX/testability friction.", "selector": "[data-testid=site-menu]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Planner: Cosa Produci -> Genera & Salva (critical regression check)", "issue": "Cannot complete: after entering a quantity and switching to 'Genera & Salva', [data-testid=capo-generate] is present in the DOM but display:none via the un-closed produci wrapper (bounding_box = None), so the Genera button is not clickable. No JS crash / no white page, but the flow is functionally blocked.", "affected_selectors": ["[data-testid=capo-tab-genera]", "[data-testid=capo-generate]"]}
+    ],
+    "design_issues": [
+      {"screen": "Laboratorio - Generatore di Piano, tabs 2 & 3", "issues": ["Empty page body below the sticky capo-tabs bar (only hero slogan visible) - looks broken to the user"]},
+      {"screen": "Laboratorio", "issues": ["Floating 'Voce' mic button (bottom-right) overlaps content/list rows just above the bottom nav"]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/find_div.py"],
+  "action_items": [
+    "FIX CRITICAL: close the produci tab wrapper in /app/frontend/src/sections/PianoProduzioneAI.jsx — add the missing </div> so the div opened at line 953 closes before line 1023 (line 1002's 'flex flex-col' div must have its own closing tag). Then re-verify: produci -> only capo-plan-switch visible; parametri -> only capo-advanced-title visible; genera -> only capo-generate visible.",
+    "Re-test planner end-to-end after the fix (select recipe + qty -> Genera clickable).",
+    "Optional: close SiteMenu (or at least allow Escape) after a Pro/Passione selection.",
+    "Optional: replace native <select> with shadcn Select in RecipeGenerator/planner."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx is 1833 lines with manually managed 'hidden' wrapper divs — the unbalanced wrapper at line 953 is exactly the failure mode this pattern invites. Extract each tab into its own component (<TabProduci/>, <TabParametri/>, <TabGenera/>) and render conditionally.",
+    "goPlanTab() calls scrollIntoView on a selector that may be display:none; add a guard/assert so a hidden target surfaces as a bug instead of a silent no-op."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "71% (5/7 features pass: 4-tab nav OK, nav-tab-impara removed OK, Accademia OK, giant CTA -> Generatore di Ricette OK, Pro/Passione gating OK; capo tabs FAIL, planner Genera FAIL)"},
+  "seed_data_creation": "none (tested anonymous; recipe dropdown had no options without login, so quantity-only path was used)",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "not used - Laboratorio reachable without login (fornaio@mikilab.de / Mikilab2026! available in /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Set localStorage mikilab_lang='it', mikilab_profile='pro', mikilab_lab_tour_v2='1' (skips the Mohammadreza onboarding) before tests. Beware: page.locator('select').first hits the language switcher in the header — scope recipe selects to [data-testid=capo-products]. Passion mode verified: maestro-plan and maestro-lab-big-toggle absent, only lab-hub-scienza + lab-hub-produzione present; Pro restores all 4 hubs + planner. After the nesting fix, re-run the 3-tab visibility matrix and the Genera flow.",
+  "rca_of_the_issue": "In /app/frontend/src/sections/PianoProduzioneAI.jsx the tab wrapper opened at line 953 (planTab==='produci') is not closed: line 1022's </div> pairs with the <div className=\"flex flex-col\"> opened at line 1002. Therefore every subsequent tab wrapper (1023 parametri, 1235 produci||genera, 1565 genera) is a descendant of the produci wrapper and inherits display:none whenever planTab !== 'produci'. Verified in the live DOM via the x-line-number attributes on the ancestor chain of [data-testid=capo-generate]. Fix = add the missing </div> (or extract each tab into a component)."
+}

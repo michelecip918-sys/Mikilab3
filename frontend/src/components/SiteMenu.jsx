@@ -55,7 +55,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
     { id: "home", Icon: HomeIcon, label: tri("Home", "Home", "Home", "Inicio"), color: "#ff6b00" },
     { id: "ricette", Icon: BookOpen, label: tri("Le Ricette di MikiLab", "Die MikiLab-Rezepte", "The MikiLab Recipes", "Las Recetas de MikiLab"), color: "#ff6b00" },
     { id: "maestro", Icon: Wrench, label: tri("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio"), color: "#ff6b00" },
-    { id: "impara", Icon: GraduationCap, label: tri("Impara a Livelli", "Lerne in Stufen", "Learn by Levels", "Aprende por Niveles"), color: "#A16207" },
+    { id: "imparacon", Icon: GraduationCap, label: tri("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), color: "#A16207" },
     { id: "community", Icon: Users, label: tri("Community", "Community", "Community", "Comunidad"), color: "#ff6b00" },
   ];
   const SOCIAL = [

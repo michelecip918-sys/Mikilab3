@@ -33,17 +33,16 @@ export default function BottomNav({ active, onChange }) {
   }, [loadUnread, checkSocial]);
   const markSocialSeen = () => { try { localStorage.setItem("mikilab_social_seen", new Date().toISOString()); } catch { /* */ } setSocialNew(false); };
 
-  const norm = ["news", "enciclopedia"].includes(active) ? "impara" : active;
-  // 5 sezioni fisse con icone dedicate (immagini su misura).
+  const norm = ["news", "enciclopedia", "impara"].includes(active) ? "imparacon" : active;
+  // 4 sezioni fisse con icone dedicate (immagini su misura).
   const PUB = process.env.PUBLIC_URL;
   const TABS = [
     { id: "ricette", label: triNav("Ricette", "Rezepte", "Recipes", "Recetas"), img: "nav-ricette.jpg" },
-    { id: "impara", label: triNav("Guide", "Anleitungen", "Guides", "Guías"), img: "nav-impara.jpg" },
-    { id: "imparacon", label: triNav("Accademia", "Akademie", "Academy", "Academia"), img: "nav-imparacon.jpg" },
+    { id: "imparacon", label: triNav("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), img: "nav-imparacon.jpg" },
     { id: "maestro", label: triNav("Laboratorio", "Labor", "Lab", "Laboratorio"), img: "nav-maestro.jpg" },
     { id: "community", label: "Community", img: "nav-community.jpg" },
   ];
-  const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
+  const ROT = [-4.5, -1.5, 1.5, 4.5]; // leggera rotazione a ventaglio delle pale
 
   return (
     <nav
@@ -52,7 +51,7 @@ export default function BottomNav({ active, onChange }) {
     >
       <div aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-b from-[#e7c79a]/70 to-transparent" />
       <div aria-hidden className="absolute inset-0 bg-[#2b190c]/25" />
-      <div className="relative max-w-xl mx-auto grid grid-cols-5 gap-1 px-2 pt-2" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
+      <div className="relative max-w-xl mx-auto grid grid-cols-4 gap-1 px-2 pt-2" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
         {TABS.map(({ id, label, img }, i) => {
           const on = norm === id;
           return (

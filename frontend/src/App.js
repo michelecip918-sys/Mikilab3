@@ -9,7 +9,6 @@ import ProfileSelect from "@/profile/ProfileSelect";
 import Home from "@/sections/Home";
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
-import LearnHub from "@/sections/LearnHub";
 import AcademyHome from "@/sections/AcademyHome";
 import Community from "@/sections/Community";
 import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
@@ -248,7 +247,7 @@ function App() {
             {tab === "ricette" && <Ricette />}
             {tab === "maestro" && <Maestro />}
             {tab === "imparacon" && <AcademyHome onNavigate={navigate} />}
-            {["impara", "news", "enciclopedia"].includes(tab) && <LearnHub key={tab} initial={tab} onNavigate={navigate} />}
+            {["impara", "news", "enciclopedia"].includes(tab) && <AcademyHome key={tab} onNavigate={navigate} />}
             {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
             {tab === "community" && <Community onNavigate={navigate} />}
             {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}

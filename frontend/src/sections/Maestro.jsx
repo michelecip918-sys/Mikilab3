@@ -201,6 +201,13 @@ export default function Maestro() {
     <div className="pb-28">
       <HighFive />
 
+      {/* CTA gigante: avvia subito la generazione guidata */}
+      <button data-testid="maestro-cta-generate" onClick={() => openTool("generatore")}
+        className="w-full flex items-center justify-center gap-3 min-h-[76px] rounded-2xl px-5 mb-4 bg-gradient-to-r from-[#ff6b00] to-[#c94f00] text-white font-extrabold text-lg shadow-[0_6px_0_rgba(0,0,0,.35),0_10px_20px_rgba(255,107,0,.4)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all">
+        <Sparkles className="w-7 h-7 shrink-0" />
+        <span className="font-display tracking-tight text-center">{mkTri(lang)("✨ NUOVA RICETTA / WORKFLOW", "✨ NEUES REZEPT / WORKFLOW", "✨ NEW RECIPE / WORKFLOW", "✨ NUEVA RECETA / WORKFLOW", "✨ NOUVELLE RECETTE / WORKFLOW", "✨ دستور / گردش‌کار جدید")}</span>
+      </button>
+
       {/* Header pulito e professionale: solo titolo, nessuna immagine decorativa (lab = lavoro veloce). */}
       <div data-testid="maestro-title" className="mb-4">
         <h1 className="font-display text-2xl font-extrabold text-white leading-tight">{mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}</h1>

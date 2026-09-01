@@ -3120,3 +3120,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **PianoProduzioneAI.jsx**: aggiunta barra a 3 schede STICKY in cima (`capo-tabs`): "1 · Cosa Produci" -> capo-plan-switch, "2 · Parametri IA" -> capo-advanced-title (moduli Forni/Celle/Turni/Meteo), "3 · Genera & Salva" -> capo-generate. Toccando una scheda si evidenzia e si scorre alla sezione. Implementato come navigazione sticky (NON hide/show) per non rischiare di rompere un componente da ~1750 righe fortemente interlacciato. Verificato via screenshot in Pro.
 - Traduzioni FR/FA rigenerate.
 - NOTA: se si vuole il vero comportamento a tab (una sezione visibile per volta), va fatto un intervento dedicato con test, avvolgendo i 3 range con visibilita condizionale.
+
+## v-fork9 (2026-06) — Tab VERE + fusione sezioni + CTA gigante
+- **PianoProduzioneAI**: convertita la barra a 3 schede in TAB VERE (una sola sezione visibile per volta) avvolgendo le <Section> con wrapper hidden: Parametri IA=Section order1 (interruttori/moduli), Cosa Produci+Genera=Section order2 spezzata internamente (produci-part fino a capo-generate, genera-part da capo-generate). Section order3 ("Apri altri strumenti", DOPPIONE dei 4 hub) NASCOSTA con {false && ...}. Intro helper (setup-hint/pizza/quicklinks) sempre visibile. Barra sticky sotto header (top-58px). Verificato: produci->plan-switch, parametri->advanced-title, genera->generate (QA aveva trovato tab vuote per wrapper intro non chiuso: BUG CORRETTO rimuovendo il wrapper intro e ribilanciando i div).
+- **Fusione Guide+Accademia -> "Scienza & Guide"**: BottomNav ora 4 tab (rimossa impara), routing App.js impara->AcademyHome, Home.jsx blocco unico, SiteMenu aggiornato. Rimosso import LearnHub inutilizzato.
+- **CTA gigante** in Maestro: `maestro-cta-generate` (✨ NUOVA RICETTA / WORKFLOW) apre il Generatore Ricette.
+- QA: iteration_152 (bug tab risolto), poi self-verify is_visible su tutte e 3 le tab OK.

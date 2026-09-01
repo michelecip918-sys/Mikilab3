@@ -869,7 +869,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   return (
     <div className="pb-40">
       {/* 3 schede del Generatore di Piano: Cosa Produci · Parametri IA · Genera & Salva */}
-      <div data-testid="capo-tabs" className="sticky top-2 z-20 mb-3 grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/40 shadow-lg">
+      <div data-testid="capo-tabs" className="sticky top-[58px] z-30 mb-3 grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/40 shadow-lg">
         {[
           { id: "produci", sel: '[data-testid="capo-plan-switch"]', label: tri3(lang, "1 · Cosa Produci", "1 · Was", "1 · What", "1 · Qué") },
           { id: "parametri", sel: '[data-testid="capo-advanced-title"]', label: tri3(lang, "2 · Parametri IA", "2 · KI-Parameter", "2 · AI Params", "2 · Parámetros") },
@@ -1018,6 +1018,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </div>
         </div>
       )}
+      <div className={planTab === "parametri" ? "" : "hidden"}>
       <Section order={1} icon={<SlidersHorizontal className="w-4 h-4" />} title={tri3(lang, "INIZIA — passi base e interruttori", "START — Basisschritte & Schalter", "START — base steps & switches")}>
         {onOpenTool && (
           <div data-testid="capo-quicklinks" className="mb-4">
@@ -1088,7 +1089,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           })}
         </div>
       </Section>
-
+      </div>
+      {false && (
       <Section order={3} icon={<Wrench className="w-4 h-4" />} title={tri3(lang, "Apri anche altri strumenti", "Weitere Werkzeuge öffnen", "Open other tools")}>
         <div className="mb-3 rounded-xl bg-[#1e1e1e] dark:bg-[#2a2418] border border-[#e5d4b0] dark:border-[#4a3f28] p-2.5 flex items-start gap-2">
           <span className="w-5 h-5 rounded-full bg-[#ff6b00] flex items-center justify-center text-white shrink-0 mt-0.5"><Info className="w-3 h-3" /></span>
@@ -1226,8 +1228,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </>
         )}
       </Section>
+      )}
 
+      <div className={(planTab === "produci" || planTab === "genera") ? "" : "hidden"}>
       <Section order={2} highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
+        <div className={planTab === "produci" ? "" : "hidden"}>
         <div data-testid="capo-plan-switch" className="flex items-center gap-1 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] mb-2">
           <button data-testid="capo-switch-weekly" onClick={() => setUseWeekly(true)}
             className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${useWeekly ? "bg-[#ff6b00] text-white shadow-sm" : "text-[#7E8A93]"}`}>{tri3(lang, "Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal")}</button>
@@ -1554,6 +1559,8 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
           );
         })()}
+        </div>
+        <div className={planTab === "genera" ? "" : "hidden"}>
 
         <button data-testid="capo-generate" onClick={generate} disabled={generating}
           className={`mt-3 w-full ${canGenerate ? "bg-[#ff6b00] hover:bg-[#ff8a33]" : "bg-[#ff6b00]/60"} disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2`}>
@@ -1747,7 +1754,9 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             return tri3(lang, `${n} ricette`, `${n} Rezepte`, `${n} recipes`);
           }}
         />
+        </div>
       </Section>
+      </div>
       </div>
       {planHF && (
         <HandsFreeMode
