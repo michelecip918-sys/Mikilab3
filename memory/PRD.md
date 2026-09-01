@@ -3204,3 +3204,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Laboratorio ridotto all'essenziale**: ToolsDirectory ora mostra SOLO la griglia rapida 2 colonne con i 4 strumenti chiave (acqua, convlievito, sosimpasto, settimana) + barra di ricerca. RIMOSSO del tutto il rendering degli hub (scienza/produzione/forni/business). Gli altri strumenti (Mani In Pasta, timer, forni, ecc.) restano raggiungibili SOLO via ricerca (allIds da LAB_HUBS come sorgente). Verificato iter 160: 0 hub, ricerca completa, 0 errori JS.
 - **Scaffold Build Nativa Capacitor**: creato `frontend/capacitor.config.json` (appId com.mikilab.app, webDir build) + guida completa `frontend/CAPACITOR_BUILD.md` con spec del plugin nativo `MikiAudio` (speakTo per-MAC, background listening, BLE) e permessi Android/iOS. Il bridge `lib/nativeAudio.js` è già pronto (rileva `window.Capacitor.Plugins.MikiAudio`). La build nativa va compilata sul PC dell'utente (Android Studio/Xcode) — è l'unico modo per mic in background + audio per-operatore su Bluetooth; non compilabile nella preview web.
 - Fix audio/mobile (barge-in, mute, voce Momi maschile, FAB compatto+hide-on-scroll) già completati e verificati in iter 159.
+
+## v-fork23 (2026-06) — Rifiniture UX Laboratorio (Pro)
+- **Sottotitolo guida** sotto "Il Tuo Laboratorio": "Inserisci la produzione di oggi: l'IA calcola dosi esatte, orari e gestione del freddo." (Maestro.jsx).
+- **Micro-descrizioni** sotto i 4 pulsanti rapidi (ToolsDirectory QUICK_DESC): acqua/convlievito/sosimpasto/settimana con spiegazione del beneficio; box griglia alzati a min-h 128px.
+- **Pulizia**: rimosso il banner citazione "Il pizzico di sapienza" (MikilaWisdom) dal tab Laboratorio; rimosso il FAB Radio dal Laboratorio (App.js: entrambi esclusi su tab 'maestro'). Resta il FAB Voce (che si nasconde in scroll).
+- Verificato iter 161: 5/5 PASS, 0 errori JS.

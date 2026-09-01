@@ -247,7 +247,7 @@ function App() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
-            {tab !== "home" && <MikilaWisdom section={tab} />}
+            {tab !== "home" && tab !== "maestro" && <MikilaWisdom section={tab} />}
             {tab === "home" && <Home onNavigate={navigate} />}
             {tab === "ricette" && <Ricette />}
             {tab === "maestro" && <Maestro />}
@@ -281,7 +281,7 @@ function App() {
       <BottomNav active={tab} onChange={navigate} />
       <ModeBadge />
       <VoiceCommand />
-      <RadioFornaio />
+      {tab !== "maestro" && <RadioFornaio />}
       <GuidaMikiLab />
       <ShiftScheduler />
       <AudioRouteIndicator />

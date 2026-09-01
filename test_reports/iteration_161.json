@@ -1,0 +1,20 @@
+{
+  "summary": "Frontend-only E2E (mobile 390x844) delle rifiniture UI del Laboratorio MikiLab (Pro). Setup completato: onboarding vocale chiuso, lingua IT, login admin@mikilab.de, modalita Pro (site-menu-mode-pro), nav-tab-maestro, lab-big-exit + 'Salta' LabOnboarding. RISULTATI: (1) SOTTOTITOLO OK - [data-testid=maestro-title] contiene 'Il Tuo Laboratorio' + 'Inserisci la produzione di oggi: l'IA calcola dosi esatte, orari e gestione del freddo.' (match esatto). (2) DESCRIZIONI QUICK OK - lab-quick-grid (count=1) con i 4 pulsanti e micro-descrizioni corrette: acqua='Calcola i gradi esatti per l'impasto.', convlievito='Passa da madre a birra senza ricalcoli manuali.', sosimpasto='Soluzioni immediate per impasti molli o surriscaldati.', settimana='Pianifica i lotti e i turni di produzione.'. (3) NESSUN BANNER CITAZIONE - testo 'Il pizzico di sapienza'/'pinch of wisdom' assente nel body; [data-testid*=wisdom] count=0. (4) NESSUN RADIO - [data-testid*=radio] count=0 nel tab Laboratorio; FAB Voce voice-command-btn presente (count=1). (5) 0 pageerror JS. Unici errori console: 401 su chiamate pre-login (attesi). Codice verificato: App.js linee 250/284 escludono MikilaWisdom e RadioFornaio su tab 'maestro'.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": ["Nota minore: non esiste un data-testid per le nav tab diverse da nav-tab-maestro (es. nav-tab-scienza non trovato), quindi non e stato possibile verificare in automatico che wisdom/Radio restino presenti nelle ALTRE tab; la logica in App.js (tab !== 'maestro') lo garantisce a livello di codice."],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100%"},
+  "seed_data_creation": "nessuna",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante)",
+  "context_for_next_testing_agent": "Setup: goto -> voice-onboard-close -> lang-select=it -> login-btn -> auth-email/auth-password/auth-submit -> site-menu-open -> site-menu-mode-pro -> site-menu-close -> nav-tab-maestro -> lab-big-exit -> bottone 'Salta'. Nel Laboratorio: maestro-title (titolo+sottotitolo guida), lab-quick-grid con 4 bottoni con micro-descrizioni, tools-dir-search, voice-command-btn presente, nessun wisdom banner e nessun Radio FAB. Le nav tab non-maestro non hanno data-testid dedicati.",
+  "rca_of_the_issue": ""
+}

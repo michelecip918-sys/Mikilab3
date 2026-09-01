@@ -21,6 +21,12 @@ export default function ToolsDirectory({ onOpenTool }) {
 
   // Strumenti immediati (griglia rapida in alto).
   const QUICK = ["acqua", "convlievito", "sosimpasto", "settimana"].map(byId).filter(Boolean);
+  const QUICK_DESC = {
+    acqua: tri("Calcola i gradi esatti per l'impasto.", "Berechnet die genaue Wassertemperatur.", "Calculates the exact water temperature.", "Calcula los grados exactos para la masa.", "Calcule les degrés exacts pour la pâte.", "دمای دقیق آب خمیر را حساب می‌کند."),
+    convlievito: tri("Passa da madre a birra senza ricalcoli manuali.", "Von Sauerteig zu Hefe ohne Rechnen.", "Switch from sourdough to yeast, no manual math.", "Pasa de masa madre a levadura sin recalcular.", "Passe du levain à la levure sans recalcul.", "از خمیرترش به مخمر بدون محاسبه دستی."),
+    sosimpasto: tri("Soluzioni immediate per impasti molli o surriscaldati.", "Soforthilfe bei weichem oder überhitztem Teig.", "Instant fixes for slack or overheated dough.", "Soluciones inmediatas para masas blandas o calientes.", "Solutions immédiates pour pâtes molles ou chaudes.", "راه‌حل فوری برای خمیر شل یا داغ."),
+    settimana: tri("Pianifica i lotti e i turni di produzione.", "Plane Chargen und Produktionsschichten.", "Plan batches and production shifts.", "Planifica lotes y turnos de producción.", "Planifie lots et équipes de production.", "لات‌ها و شیفت‌های تولید را برنامه‌ریزی کن."),
+  };
 
   // Tutti gli strumenti visibili (rispettando la modalità), per la ricerca. Deduplicati (un tool può stare in più hub).
   const allIds = Array.from(new Set(hubs.flatMap((h) => h.ids)));
@@ -51,9 +57,10 @@ export default function ToolsDirectory({ onOpenTool }) {
           <div className="grid grid-cols-2 gap-2.5">
             {QUICK.map((tl) => (
               <button key={tl.id} data-testid={`lab-quick-${tl.id}`} onClick={() => onOpenTool && onOpenTool(tl.id)}
-                className="flex flex-col items-start gap-2 text-left rounded-2xl bg-gradient-to-br from-[#ff6b00]/18 to-[#1e1e1e] border border-[#ff6b00]/40 hover:border-[#ff6b00] min-h-[104px] p-3.5 active:scale-[0.97] transition-all">
+                className="flex flex-col items-start gap-2 text-left rounded-2xl bg-gradient-to-br from-[#ff6b00]/18 to-[#1e1e1e] border border-[#ff6b00]/40 hover:border-[#ff6b00] min-h-[128px] p-3.5 active:scale-[0.97] transition-all">
                 <span className="w-11 h-11 rounded-xl bg-[#ff6b00] flex items-center justify-center shrink-0"><tl.Icon className="w-6 h-6 text-white" /></span>
                 <span className="text-[15px] font-bold text-white leading-tight">{name(tl)}</span>
+                <span className="text-[11.5px] text-[#AEB8BF] leading-snug">{QUICK_DESC[tl.id]}</span>
               </button>
             ))}
           </div>
