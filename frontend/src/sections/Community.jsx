@@ -124,14 +124,6 @@ export default function Community({ onNavigate }) {
     return () => { window.removeEventListener("mikilab-social-view", onView); window.removeEventListener("mikilab-social-feed", onFeed); };
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const SOCIAL_SLOGANS = [
-    { it: "È ora di rilassarti, Chef 🥐", de: "Zeit zum Entspannen, Chef 🥐", en: "Time to relax, Chef 🥐", es: "Hora de relajarte, Chef 🥐" },
-    { it: "Pausa caffè tra fornai ☕", de: "Kaffeepause unter Bäckern ☕", en: "Coffee break among bakers ☕", es: "Pausa café entre panaderos ☕" },
-    { it: "Due chiacchiere con i colleghi 💬", de: "Ein Schwatz mit Kollegen 💬", en: "A chat with fellow bakers 💬", es: "Charla con colegas 💬" },
-    { it: "Mostra la tua sfornata! 📸", de: "Zeig dein Backwerk! 📸", en: "Show your bake! 📸", es: "¡Muestra tu horneada! 📸" },
-  ];
-  const [socialSlogan] = useState(() => SOCIAL_SLOGANS[Math.floor(Math.random() * SOCIAL_SLOGANS.length)]);
-
   const needLogin = () => { if (!user) { setAuthOpen(true); return true; } return false; };
 
   const onPhoto = async (e) => {
@@ -213,30 +205,16 @@ export default function Community({ onNavigate }) {
       <SectionHero testid="community-title" image="hero-social.jpg" position="50% 30%"
         title={tri("Social", "Social", "Social", "Social")}
         subtitle={mkTri(lang)("Confronto, consigli e ricette tra fornai veri", "Austausch, Tipps und Rezepte unter echten Bäckern", "Sharing, tips and recipes among real bakers", "Intercambio, consejos y recetas entre panaderos de verdad", "Échanges, conseils et recettes entre vrais boulangers", "گفت‌وگو، نکته‌ها و دستورها میان نانوایان واقعی")} />
-      {/* Header social — compatto (navigazione via menù globale) */}
-      <div data-testid="community-social-header" className="relative overflow-hidden rounded-2xl p-4 mb-4 text-white shadow-md"
-        style={{ background: "linear-gradient(135deg,#1e1e1e 0%,#1f5a68 60%,#ff6b00 100%)" }}>
-        <div className="flex items-center gap-3">
-          <div className="relative shrink-0">
-            <div className="w-12 h-12 rounded-xl bg-white/25 border-2 border-white/70 overflow-hidden shadow">
-              <img src={`${process.env.PUBLIC_URL}/michele-avatar.jpg`} alt="MikiLab" className="w-full h-full object-cover" />
-            </div>
-          </div>
-          <div className="min-w-0 flex-1">
-            <h1 className="font-display text-xl font-extrabold leading-none drop-shadow-sm">{lang === "de" ? socialSlogan.de : lang === "en" ? socialSlogan.en : lang === "es" ? socialSlogan.es : socialSlogan.it}</h1>
-            <p className="text-[12px] text-white/90 mt-1 leading-snug">{tri("Stacca dal forno: idee, foto e amici tra colleghi", "Pause vom Ofen: Ideen, Fotos & Freunde", "Off the oven: ideas, photos & friends", "Fuera del horno: ideas, fotos y amigos")}</p>
-          </div>
-          {user && (
-            <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
-              className="shrink-0 inline-flex items-center gap-1.5 text-[12px] font-bold bg-white/20 hover:bg-white/30 border border-white/40 px-3 py-1.5 rounded-full active:scale-95 transition-all">
-              <UserPlus className="w-3.5 h-3.5" /> {tri("Profilo", "Profil", "Profile", "Perfil")}
-            </button>
-          )}
-        </div>
-      </div>
-
       {/* Azioni Social compatte (le stesse sono anche nel menu ☰) */}
-      <div className="grid grid-cols-3 gap-2 mb-4" data-testid="community-quick-actions">
+      <div className="grid grid-cols-4 gap-2 mb-4" data-testid="community-quick-actions">
+        <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
+          className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+          <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
+            <UserPlus className="w-5 h-5 text-[#ff6b00]" />
+          </div>
+          <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Profilo", "Profil", "Profile", "Perfil")}</span>
+        </button>
+
         <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
           className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
           <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
@@ -281,7 +259,7 @@ export default function Community({ onNavigate }) {
       {/* Composer */}
       {(() => {
         let done = false;
-        try { const p = JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); done = ["ricettario", "farine", "corsi"].every((x) => p.includes(x)); } catch { /* */ }
+        try { const p = JSON.parse(localStorage.getItem("mikilab_impara_path") || "[]"); done = ["lezioni", "quiz", "esercizi"].every((x) => p.includes(x)); } catch { /* */ }
         if (!done) return null;
         return (
           <div data-testid="community-badge" className="flex items-center gap-2 mb-4 rounded-2xl bg-gradient-to-r from-[#ff6b00] to-[#ff6b00] text-white px-4 py-2.5 shadow">
