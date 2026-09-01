@@ -3115,3 +3115,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Dock/Voce**: gia conforme — UN solo FAB Voce (VoiceCommand in Laboratorio) + RadioFornaio nel dock. Verificato.
 - Verificato via screenshot: Pro (planner+4hub), Passione (2 hub, no planner), toggle live (planner 1→0).
 - **DA COMPLETARE**: il "Generatore di Piano a 3 schede letterali" (Cosa Produci / Parametri IA / Genera&Salva): al momento PianoProduzioneAI resta il modulo unico (gia unifica il flusso) ma NON e stato spezzato in 3 tab per non rischiare di rompere un componente da 1300+ righe. Prossimo step dedicato.
+
+## v-fork8 (2026-06) — Generatore Piano: 3 schede
+- **PianoProduzioneAI.jsx**: aggiunta barra a 3 schede STICKY in cima (`capo-tabs`): "1 · Cosa Produci" -> capo-plan-switch, "2 · Parametri IA" -> capo-advanced-title (moduli Forni/Celle/Turni/Meteo), "3 · Genera & Salva" -> capo-generate. Toccando una scheda si evidenzia e si scorre alla sezione. Implementato come navigazione sticky (NON hide/show) per non rischiare di rompere un componente da ~1750 righe fortemente interlacciato. Verificato via screenshot in Pro.
+- Traduzioni FR/FA rigenerate.
+- NOTA: se si vuole il vero comportamento a tab (una sezione visibile per volta), va fatto un intervento dedicato con test, avvolgendo i 3 range con visibilita condizionale.

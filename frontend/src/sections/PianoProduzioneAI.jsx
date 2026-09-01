@@ -217,6 +217,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const { t, lang } = useLang();
   const { addTimer } = useTimers();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [planTab, setPlanTab] = useState("produci");
+  const goPlanTab = (tab, sel) => {
+    setPlanTab(tab);
+    setTimeout(() => { const el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }, 40);
+  };
   const LAB_SLOGANS = [
     { it: "Bentornato a lavoro, Chef 👨‍🍳", de: "Willkommen zurück, Chef 👨‍🍳", en: "Welcome back to work, Chef 👨‍🍳", es: "Bienvenido al trabajo, Chef 👨‍🍳" },
     { it: "Che si sforna oggi? 🔥", de: "Was wird heute gebacken? 🔥", en: "What are we baking today? 🔥", es: "¿Qué horneamos hoy? 🔥" },
@@ -863,6 +868,19 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
   return (
     <div className="pb-40">
+      {/* 3 schede del Generatore di Piano: Cosa Produci · Parametri IA · Genera & Salva */}
+      <div data-testid="capo-tabs" className="sticky top-2 z-20 mb-3 grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/40 shadow-lg">
+        {[
+          { id: "produci", sel: '[data-testid="capo-plan-switch"]', label: tri3(lang, "1 · Cosa Produci", "1 · Was", "1 · What", "1 · Qué") },
+          { id: "parametri", sel: '[data-testid="capo-advanced-title"]', label: tri3(lang, "2 · Parametri IA", "2 · KI-Parameter", "2 · AI Params", "2 · Parámetros") },
+          { id: "genera", sel: '[data-testid="capo-generate"]', label: tri3(lang, "3 · Genera & Salva", "3 · Erstellen", "3 · Generate", "3 · Generar") },
+        ].map((tb) => (
+          <button key={tb.id} data-testid={`capo-tab-${tb.id}`} onClick={() => goPlanTab(tb.id, tb.sel)}
+            className={`py-2.5 rounded-xl text-[12.5px] font-bold leading-tight transition-all ${planTab === tb.id ? "bg-[#ff6b00] text-white shadow" : "text-[#AEB8BF] hover:text-white"}`}>
+            {tb.label}
+          </button>
+        ))}
+      </div>
       {onOpenTool && <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_lab_tour_v2"
         labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip"), next: tri3(lang, "Avanti", "Weiter", "Next"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!") }}
         steps={[
