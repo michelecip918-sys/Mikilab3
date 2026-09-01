@@ -21,8 +21,8 @@ export default function ToolsDirectory({ onOpenTool }) {
   const [q, setQ] = useState("");
   const toggleSection = (id) => setOpen((o) => ({ ...o, [id]: !o[id] }));
 
-  // Tutti gli strumenti visibili (rispettando la modalità), per la ricerca.
-  const allIds = hubs.flatMap((h) => h.ids);
+  // Tutti gli strumenti visibili (rispettando la modalità), per la ricerca. Deduplicati (un tool può stare in più hub).
+  const allIds = Array.from(new Set(hubs.flatMap((h) => h.ids)));
   const s = q.trim().toLowerCase();
   const hits = s ? allIds.map(byId).filter((tl) => tl && name(tl).toLowerCase().includes(s)) : [];
 

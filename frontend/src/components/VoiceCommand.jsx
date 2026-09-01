@@ -8,6 +8,7 @@ import { api } from "@/lib/api";
 import { playTTS, stopTTS } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
 import { fetchWeeklyItems, todayKey, tomorrowKey, summarizeDay } from "@/lib/weeklyPlan";
+import { PROACTIVE_MODULES, moduleName, moduleMsg } from "@/lib/proactiveModules";
 
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
@@ -183,6 +184,24 @@ export default function VoiceCommand({ onOpenTool }) {
     return true;
   };
 
+  // Didattica on-demand di Momi: "spiegami questa funzione / il Naso Digitale".
+  const tryExplain = (raw, t) => {
+    if (!/(spiegami|spiega|explain|erkl[aä]r|explica|expli(que|quer))/.test(t)) return false;
+    const found = PROACTIVE_MODULES.find((m) => t.includes(norm(moduleName(m, lang))));
+    const msg = found
+      ? `${moduleName(found, lang)}. ${moduleMsg(found, lang)}`
+      : tri("Sono Momi. Questa è la modalità mani libere: lavori con la voce, i moduli controllano l'impasto e ti avviso solo quando serve. Chiedimi di spiegarti un modulo, ad esempio il Naso Digitale o il Tatto Digitale.",
+            "Ich bin Momi. Freihand-Modus: du arbeitest mit der Stimme, die Module überwachen den Teig und ich melde mich nur wenn nötig. Frag nach einem Modul, z. B. die Digitale Nase.",
+            "I'm Momi. Hands-free mode: you work with your voice, the modules watch the dough and I speak only when needed. Ask me about a module, e.g. the Digital Nose.",
+            "Soy Momi. Modo manos libres: trabajas con la voz, los módulos vigilan la masa y aviso solo cuando hace falta. Pídeme un módulo, p. ej. la Nariz Digital.",
+            "Je suis Momi. Mode mains libres : tu travailles à la voix, les modules surveillent la pâte et j'interviens seulement si besoin.",
+            "من مومی هستم. حالت بدون دست: با صدا کار می‌کنی و ماژول‌ها خمیر را کنترل می‌کنند.");
+    setSpeaking(true);
+    playTTS(msg, { lang, voice: "momy", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
+    toast.success("🎓 Momi: " + msg);
+    return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
@@ -192,6 +211,7 @@ export default function VoiceCommand({ onOpenTool }) {
     if (tryCreateRecipe(raw, t)) return;
     if (tryCalc(t)) return;
     if (await tryPlan(raw, t)) return;
+    if (tryExplain(raw, t)) return;
     if (await tryRecipe(t)) return;
     for (const [id, kws] of Object.entries(TOOL_ALIASES)) if (kws.some((k) => t.includes(k) || c.includes(k))) { open(id); return; }
     for (const n of NAV) if (n.kw.some((k) => c === k || c.includes(k))) { goto(n.tab, raw); return; }

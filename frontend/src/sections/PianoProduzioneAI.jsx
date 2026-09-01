@@ -179,6 +179,7 @@ export const TOOLS = [
   { id: "saporicasa", Icon: Cookie, cat: "manisporche", kind: "controlla", it: "Sapori di Casa", de: "Hausgemachte Spezialitäten", en: "Home Flavours", es: "Sabores de Casa" },
   // 🏬 Gestione Attività & Cold Chain
   { id: "settimana", Icon: CalendarDays, cat: "coldchain", kind: "gestisci", it: "Programma Settimana", de: "Wochenplan", en: "Weekly Plan", es: "Programa Semanal" },
+  { id: "turni", Icon: Users, cat: "coldchain", kind: "gestisci", it: "Turni di Lavoro", de: "Arbeitsschichten", en: "Work shifts", es: "Turnos de trabajo" },
   { id: "capo", Icon: Building2, cat: "coldchain", kind: "gestisci", it: "Controllo Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers", es: "Cámaras y Amasadoras" },
   { id: "freezer", Icon: Snowflake, cat: "coldchain", kind: "gestisci", it: "Giacenze Freezer", de: "Gefrier-Bestand", en: "Freezer Stock", es: "Stock Congelador" },
   { id: "foodcost", Icon: Euro, cat: "coldchain", kind: "calcola", it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & Margin", es: "Costes y Margen" },

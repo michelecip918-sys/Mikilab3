@@ -1,6 +1,7 @@
 import { mkTri } from "@/i18n/triMaps";
 import { useState, useEffect } from "react";
-import { Users, Plus, X } from "lucide-react";
+import { Users, Plus, X, Bluetooth, Headphones } from "lucide-react";
+import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 
 const KEY = "mikilab_shifts";
@@ -17,9 +18,20 @@ export default function ShiftRoles() {
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(people)); }, [people]);
 
-  const add = () => setPeople((p) => [...p, { id: `${Date.now()}`, name: "", role: roles[0], task: "" }]);
+  const add = () => setPeople((p) => [...p, { id: `${Date.now()}`, name: "", role: roles[0], task: "", earphone: "" }]);
   const upd = (id, patch) => setPeople((p) => p.map((x) => x.id === id ? { ...x, ...patch } : x));
   const del = (id) => setPeople((p) => p.filter((x) => x.id !== id));
+
+  // Associa un auricolare Bluetooth all'operatore (best-effort via Web Bluetooth).
+  const pairEarphone = async (id) => {
+    try {
+      if (!navigator.bluetooth) { toast.error(mkTri(lang)("Bluetooth non supportato dal browser.", "Bluetooth nicht unterstützt.", "Bluetooth not supported.", "Bluetooth no soportado.")); return; }
+      const dev = await navigator.bluetooth.requestDevice({ acceptAllDevices: true });
+      const nm = dev && (dev.name || dev.id) ? (dev.name || dev.id) : mkTri(lang)("Auricolare", "Headset", "Headset", "Auricular");
+      upd(id, { earphone: nm });
+      toast.success(mkTri(lang)(`Auricolare «${nm}» associato.`, `Headset «${nm}» verbunden.`, `Headset «${nm}» paired.`, `Auricular «${nm}» asociado.`));
+    } catch { /* annullato dall'utente */ }
+  };
 
   return (
     <div className="pb-4">
@@ -48,6 +60,19 @@ export default function ShiftRoles() {
             <input data-testid={`shift-task-${p.id}`} value={p.task} placeholder={mkTri(lang)("Compito / nota (opzionale)", "Aufgabe / Notiz (optional)", "Task / note (optional)")}
               onChange={(e) => upd(p.id, { task: e.target.value })}
               className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
+            {/* Auricolare Bluetooth associato all'operatore */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 min-w-0 flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2">
+                <Headphones className="w-4 h-4 text-[#ff6b00] shrink-0" />
+                <input data-testid={`shift-earphone-${p.id}`} value={p.earphone || ""} placeholder={mkTri(lang)("Auricolare Bluetooth (nome)", "Bluetooth-Headset (Name)", "Bluetooth earphone (name)", "Auricular Bluetooth (nombre)")}
+                  onChange={(e) => upd(p.id, { earphone: e.target.value })}
+                  className="flex-1 min-w-0 bg-transparent text-sm outline-none" />
+              </div>
+              <button data-testid={`shift-pair-${p.id}`} onClick={() => pairEarphone(p.id)}
+                className="shrink-0 inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#3B82F6] hover:bg-[#2f6fd6] px-3 py-2 rounded-lg active:scale-95">
+                <Bluetooth className="w-3.5 h-3.5" /> {mkTri(lang)("Collega", "Verbinden", "Pair", "Conectar")}
+              </button>
+            </div>
           </div>
         ))}
       </div>

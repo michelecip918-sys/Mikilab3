@@ -1,0 +1,40 @@
+{
+  "summary": "Frontend-only, solo le 2 aggiunte testabili di questo ciclo (didattica vocale Momi NON testata come richiesto). Flusso: login admin@mikilab.de -> chiusura voice-onboard -> lingua IT -> Pro mode via site-menu-open + site-menu-mode-pro -> nav-tab-maestro -> lab-big-exit. RISULTATO: (1) AURICOLARE BLUETOOTH in 'Turni & Mansioni' PASSA al 100% (input shift-earphone-<id>, pulsante shift-pair-<id> 'Collega', persistenza in localStorage e dopo reload, click su Collega non crasha: toast 'Bluetooth non supportato dal browser.'); (2) HUB BUSINESS FALLISCE PARZIALMENTE: l'hub 'Business, Marketing & HACCP' (lab-hub-business) contiene lab-tool-settimana ('Programma Settimana') e lab-tool-macchine ('Parco Macchine') ma NON lab-tool-turni — il badge mostra 11 su 12 id dichiarati e la ricerca 'turni' in tools-dir-search restituisce 0 risultati. Root cause: manca la voce {id:'turni'} nell'array esportato TOOLS di PianoProduzioneAI.jsx (esiste solo in MODULES), quindi ToolsDirectory.byId('turni') = undefined e la riga viene filtrata. Il tool esiste ed e' funzionante (Maestro.jsx: tool==='turni' -> <ShiftRoles/>): l'ho aperto dispatchando window 'mikilab-open-lab-tool' {id:'turni'}. Nessun pageerror JS; solo 401 attesi pre-login e 2 warning React di chiavi duplicate.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "ToolsDirectory / PianoProduzioneAI.TOOLS",
+        "issue": "'Turni di Lavoro' NON e' raggiungibile dalla directory strumenti: lab-tool-turni non viene mai renderizzato (ne' nell'hub business ne' nella ricerca). Manca la entry { id: 'turni', Icon: Users, it: 'Turni di Lavoro', ... } nell'array esportato TOOLS (riga ~141-193 di sections/PianoProduzioneAI.jsx). Esiste solo in MODULES (riga 77), che ToolsDirectory non usa. Badge hub business = 11 invece di 12.",
+        "selector": "lab-tool-turni / tools-dir-search",
+        "priority": "HIGH"
+      },
+      {
+        "component": "ToolsDirectory (ricerca)",
+        "issue": "Righe DUPLICATE nei risultati di ricerca perche' allIds = hubs.flatMap(h=>h.ids) contiene 'settimana' e 'macchine' due volte (produzione/forni + business). Misurato: search 'settimana' -> 2 risultati identici; search 'macchine' -> 3 risultati (Programma Settimana + Parco Macchine x2). Console React: 'Encountered two children with the same key: settimana / macchine'. Fix: de-duplicare (Array.from(new Set(allIds))). Impatto test: locator strict-mode ambigui su lab-tool-settimana/macchine.",
+        "selector": "tools-dir-results [data-testid^=lab-tool-]",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "AGGIUNGERE la voce { id: 'turni', Icon: Users, cat: 'coldchain', kind: 'gestisci', it: 'Turni di Lavoro', de: 'Arbeitsschichten', en: 'Work shifts', es: 'Turnos de trabajo' } all'array export TOOLS in /app/frontend/src/sections/PianoProduzioneAI.jsx, altrimenti l'hub business e la ricerca non mostrano mai lab-tool-turni (unico accesso attuale: evento 'mikilab-open-lab-tool').",
+    "De-duplicare gli id nella ricerca di ToolsDirectory (Array.from(new Set(allIds))) per eliminare righe doppie e i warning React di chiavi duplicate."
+  ],
+  "critical_code_review_comments": [
+    "labHubs.js: gli id ripetuti fra hub (settimana in produzione+business, macchine in forni+business) sono voluti per il raggruppamento, ma ToolsDirectory non li de-duplica nella ricerca -> chiavi React duplicate. Serve un unique() a livello di allIds.",
+    "ToolsDirectory: byId() restituisce undefined silenziosamente per id non presenti in TOOLS; conviene loggare in dev o derivare gli ids degli hub direttamente da TOOLS per evitare tool 'fantasma' come 'turni'.",
+    "ShiftRoles.jsx: implementazione corretta (fallback graceful se navigator.bluetooth assente, catch su annullamento, persistenza localStorage). Nota: il campo earphone non e' sincronizzato lato server (solo localStorage), quindi non e' condiviso fra dispositivi/operatori."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "auricolare 100% (1/1) · hub business 66% (2/3 tool presenti)" },
+  "seed_data_creation": "Creata e poi rimossa una persona di test in localStorage 'mikilab_shifts' (Mario Rossi / Operatore Forni / AirPods Mario). Nessun dato server modificato.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (da /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Flusso login/setup verificato in questa iterazione: (a) header 'login-btn' -> auth-screen -> email+password+Enter; (b) chiudere 'voice-onboard-close'; (c) la lingua di default e' EN: impostare IT con select 'lang-select'.select_option('it') se si cercano nomi italiani in tools-dir-search (la ricerca filtra sul nome localizzato); (d) Pro mode: 'site-menu-open' -> 'site-menu-mode-pro' -> 'site-menu-close'; (e) 'nav-tab-maestro' poi 'lab-big-exit' se presente; (f) hub 'business' e 'forni' sono CHIUSI di default (scienza/produzione aperti): cliccare lab-hub-toggle-business; (g) per aprire un tool non presente in TOOLS: page.evaluate window.dispatchEvent(new CustomEvent('mikilab-open-lab-tool',{detail:{id:'turni'}})). Misurato: shift testids = shift-list, shift-<id>, shift-name/role/task/earphone/pair-<id>, shift-add; toast Collega = 'Bluetooth non supportato dal browser.' (headless, atteso).",
+  "rca_of_the_issue": "lab-tool-turni assente: ToolsDirectory renderizza una riga solo se TOOLS.find(t=>t.id===id) esiste; 'turni' e' presente in MODULES e in MODULE_TOOL ma NON nell'array esportato TOOLS, quindi h.ids.filter(byId) lo scarta sia negli hub sia nella ricerca. Riproduzione: Lab -> lab-hub-toggle-business -> contare i tool (11, nessun 'Turni di Lavoro'); tools-dir-search='turni' -> 'Nessuno strumento trovato'. Mitigazione immediata: aggiungere la entry in TOOLS."
+}
