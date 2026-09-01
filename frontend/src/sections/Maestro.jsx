@@ -26,6 +26,7 @@ import RegistroScarti from "@/sections/RegistroScarti";
 import BraccioLab from "@/sections/BraccioLab";
 import RicettaDelGiorno from "@/sections/RicettaDelGiorno";
 import Emergenze from "@/sections/Emergenze";
+import Magazzino from "@/sections/Magazzino";
 import Checklists from "@/sections/Checklists";
 import FreezerStock from "@/sections/FreezerStock";
 import WaterTempCalc from "@/sections/WaterTempCalc";
@@ -181,6 +182,7 @@ export default function Maestro() {
         {tool === "scarti" && <RegistroScarti />}
         {tool === "ricettadelgiorno" && <RicettaDelGiorno />}
         {tool === "emergenze" && <Emergenze />}
+        {tool === "magazzino" && <Magazzino />}
         {tool === "check" && <Checklists />}
         {tool === "sveglia" && <SvegliaLievito />}
         {tool === "salespoints" && <SalesPoints />}

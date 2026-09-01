@@ -6,6 +6,8 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { fetchWeeklyItems, todayKey, itemsForDay, dayLabel } from "@/lib/weeklyPlan";
 import { useShift, setWorkMode, setBatchStatus, batchStatus, statusLabel, STATUS_COLOR, basesSummary, autonomyDeadline, fmtHM, baseAlert } from "@/lib/shiftState";
+import { warehouseApi } from "@/sections/Magazzino";
+import { toast } from "sonner";
 
 // Ricette del Giorno — lista prodotti in programma oggi; tap → dosi in GRANDE + stato lotto.
 // Flusso continuo o Autonomia: aggiorni lo stato (Pronto / In cella / Pre-cotto…) per chi lavora dopo.
@@ -79,7 +81,22 @@ export default function RicettaDelGiorno() {
             );
           })}
         </div>
-        <button data-testid="rdg-done" onClick={() => { setBatchStatus(batchFor(sel), "fatto"); setSel(null); }}
+        <button data-testid="rdg-done" onClick={async () => {
+            setBatchStatus(batchFor(sel), "fatto");
+            const items = [];
+            if (r.flour_grams) items.push({ name: r.flour_name || r.flour_type || "farina", kg: r.flour_grams / 1000, kind: "farina" });
+            if (r.sourdough_grams) items.push({ name: r.preferment_type === "biga" ? "biga" : "lievito madre", kg: r.sourdough_grams / 1000, kind: "ingrediente" });
+            if (r.salt_grams) items.push({ name: "sale", kg: r.salt_grams / 1000, kind: "ingrediente" });
+            if (items.length) {
+              try {
+                const res = await warehouseApi.consume(items);
+                window.dispatchEvent(new Event("mikilab-warehouse-updated"));
+                if (res && res.shortfalls && res.shortfalls.length) toast.warning(tri("Materie scarse in magazzino: controlla le giacenze.", "Rohstoffe knapp.", "Low materials in stock.", "Materias escasas.", "Matières faibles.", "مواد کم است."));
+                else toast.success(tri("Giacenze aggiornate dal magazzino.", "Bestand aktualisiert.", "Stock updated.", "Stock actualizado.", "Stock mis à jour.", "موجودی به‌روز شد."));
+              } catch { /* offline */ }
+            }
+            setSel(null);
+          }}
           className="mt-5 w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 font-extrabold" style={{ background: C.dark, color: C.cream, fontSize: "clamp(16px,4.5vw,19px)" }}>
           <CheckCircle2 className="w-5 h-5" style={{ color: "#6E5320" }} /> {tri("Lotto completato \u2192 prossimo", "Charge fertig", "Batch done \u2192 next", "Lote hecho")}
         </button>

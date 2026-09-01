@@ -3254,3 +3254,11 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Deploy produzione autorizzato (50 ECU) e inoltrato alla pipeline.
 - Plugin Capacitor `@mikilab/bluetooth-audio` (/app/capacitor-plugins/bluetooth-audio): Android (BluetoothHeadset/SCO) + iOS (AVAudioSession HFP) + web fallback. Bridge in lib/nativeAudio.js (connectHeadset/startHeadsetSco/isHeadsetRoutingAvailable). Tasto "Cuffie hands-free" alto contrasto (braccio-headset) in BraccioLab.
 - Sezioni confermate CONGELATE (menu + chiavi traduzione invariati): IMPARA (LearnHub + SOS Impasto/PhotoDiagnosi = pronto intervento 2 passaggi), SOCIAL (Community.jsx collaborativa/bake-along), CORE (HaccpLog, BatchTraceability, allergeni, calcolo ricette/idratazione, 21 moduli proattivi su sensori reali).
+
+---
+## v-fork5 (2026-06) — Modulo Magazzino materie prime + scalatura automatica
+- Backend: /api/lab/warehouse (GET/POST/DELETE) + /api/lab/warehouse/consume (scala giacenze da impastata confermata; match per nome, fallback farina per W/quantità). Verificato via curl: carico 25kg→consumo 10kg→15kg; sale 5→4.5.
+- Frontend sezione Magazzino.jsx (tema Grain Gold scuro): carico rapido 3 campi (Nome/Tipo, Forza W/Caratteristica, Quantità+unità) + Lotto/Scadenza opzionali (collassati); lista giacenze con badge scorta bassa e scadenza (≤7gg). Nessun form/dicitura HACCP nel carico (HaccpLog resta separato come tracciabilità core).
+- Wiring: TOOLS id 'magazzino' (cat coldchain/gestisci) + routing Maestro. warehouseApi esportato da Magazzino.jsx.
+- Aggancio consumo: in RicettaDelGiorno, "Lotto completato → fatto" chiama warehouseApi.consume(flour+lievito madre/biga+sale) e mostra toast (aggiornato/scorte scarse) + evento mikilab-warehouse-updated.
+- NOTA: aggiunto DOPO il deploy dispatch → serve un redeploy per averlo in produzione. UI non catturabile via screenshot tool (limite ambiente) ma compila senza errori e segue pattern verificati.

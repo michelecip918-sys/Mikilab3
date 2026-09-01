@@ -2006,6 +2006,77 @@ async def post_sensor(payload: SensorReading, user: Optional[dict] = Depends(opt
     return doc
 
 
+# Magazzino materie prime (farine/ingredienti) — carico rapido + scalatura automatica.
+class WarehouseItem(BaseModel):
+    id: Optional[str] = None
+    name: str
+    kind: str = "farina"          # farina | ingrediente
+    force_w: Optional[str] = ""   # Forza W o caratteristica
+    quantity_kg: float = 0
+    unit: Optional[str] = "kg"
+    lot: Optional[str] = ""
+    expiry: Optional[str] = ""
+    updated_at: Optional[str] = None
+
+
+class ConsumeItem(BaseModel):
+    name: str
+    kg: float
+    kind: Optional[str] = "ingrediente"
+
+
+class ConsumePayload(BaseModel):
+    items: List[ConsumeItem] = []
+
+
+@api_router.get("/lab/warehouse")
+async def get_warehouse(user: Optional[dict] = Depends(optional_user)):
+    return await db.lab_warehouse.find({}, {"_id": 0}).sort("name", 1).to_list(500)
+
+
+@api_router.post("/lab/warehouse")
+async def add_warehouse(payload: WarehouseItem, user: Optional[dict] = Depends(optional_user)):
+    payload.updated_at = now_iso()
+    doc = payload.model_dump()
+    doc["id"] = payload.id or str(uuid.uuid4())
+    await db.lab_warehouse.update_one({"id": doc["id"]}, {"$set": doc}, upsert=True)
+    return doc
+
+
+@api_router.delete("/lab/warehouse/{item_id}")
+async def del_warehouse(item_id: str, user: Optional[dict] = Depends(optional_user)):
+    await db.lab_warehouse.delete_one({"id": item_id})
+    return {"ok": True}
+
+
+@api_router.post("/lab/warehouse/consume")
+async def consume_warehouse(payload: ConsumePayload, user: Optional[dict] = Depends(optional_user)):
+    # Scala le giacenze in base alle materie usate da un'impastata confermata.
+    updated, shortfalls = [], []
+    stock = await db.lab_warehouse.find({}, {"_id": 0}).to_list(500)
+    def find(name, kind):
+        nl = (name or "").lower().strip()
+        cand = [s for s in stock if nl and (nl in (s.get("name", "").lower()) or s.get("name", "").lower() in nl)]
+        if not cand and kind == "farina":
+            cand = sorted([s for s in stock if s.get("kind") == "farina"], key=lambda x: x.get("quantity_kg", 0), reverse=True)
+        return cand[0] if cand else None
+    for it in payload.items:
+        if not it.kg or it.kg <= 0:
+            continue
+        s = find(it.name, it.kind)
+        if not s:
+            shortfalls.append({"name": it.name, "kg": it.kg, "reason": "not_found"})
+            continue
+        newq = round(float(s.get("quantity_kg", 0)) - float(it.kg), 3)
+        if newq < 0:
+            shortfalls.append({"name": s["name"], "missing": round(-newq, 3)})
+            newq = 0
+        await db.lab_warehouse.update_one({"id": s["id"]}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
+        s["quantity_kg"] = newq
+        updated.append({"name": s["name"], "quantity_kg": newq})
+    return {"updated": updated, "shortfalls": shortfalls}
+
+
 # ---------------------------------------------------------------------------
 # Memoria temperatura impasto per ricetta (termostato)
 # ---------------------------------------------------------------------------

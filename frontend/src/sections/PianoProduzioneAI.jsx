@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download, Globe, Bluetooth } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download, Globe, Bluetooth, Warehouse } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -186,6 +186,7 @@ export const TOOLS = [
   { id: "foodcost", Icon: Euro, cat: "coldchain", kind: "calcola", it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & Margin", es: "Costes y Margen" },
   { id: "spreco", Icon: Recycle, cat: "coldchain", kind: "gestisci", it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-Waste", es: "Anti-Desperdicio" },
   { id: "mydata", Icon: Archive, cat: "coldchain", kind: "gestisci", it: "I Miei Dati", de: "Meine Daten", en: "My Data" },
+  { id: "magazzino", Icon: Warehouse, cat: "coldchain", kind: "gestisci", it: "Magazzino Materie Prime", de: "Rohstofflager", en: "Raw Materials Stock", es: "Almacén de Materias" },
   { id: "macchine", Icon: Wrench, cat: "coldchain", kind: "gestisci", it: "Parco Macchine", de: "Maschinenpark", en: "Machine Park" },
   { id: "diagnosi", Icon: Camera, cat: "coldchain", kind: "controlla", it: "Diagnosi Foto", de: "Foto-Diagnose", en: "Photo Diagnosis" },
   { id: "suono", Icon: Camera, cat: "coldchain", kind: "controlla", it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
