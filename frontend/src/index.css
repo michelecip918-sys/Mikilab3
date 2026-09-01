@@ -243,3 +243,7 @@ button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Modalità operativa "Braccio": vero zero-scroll (niente footer, niente padding extra) */
+body.braccio-mode [data-testid="page-footer"] { display: none !important; }
+body.braccio-mode main { padding-bottom: 0 !important; }

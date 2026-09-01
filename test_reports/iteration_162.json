@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only E2E (mobile 390x844) della nuova architettura Lab 'Braccio' su https://edit-33.preview.emergentagent.com. Setup: chiusura onboarding vocale, lingua IT via [data-testid=lang-select], login admin@mikilab.de, modalita Pro (site-menu-mode-pro), nav-tab-maestro, lab-big-exit, 'Salta' LabOnboarding. RISULTATI (tutti PASS): (1) BRACCIO default -> braccio-lab presente (count=1) con braccio-banner (testo IT esatto: 'Il tuo assistente di laboratorio: l'IA calcola in automatico idratazioni, orari e bilanciamento ricette.'), braccio-mic + braccio-mic-label='Tieni premuto e parla', ESATTAMENTE 3 tasti rapidi ([data-testid^=braccio-quick-] count=3: 'Ricetta del Giorno/Dosi di oggi', 'Celle Frigo/Stato temperature', 'SOS Impasto/Soluzioni rapide') e braccio-gestione. (2) NIENTE CALCOLATORI PASSIVI: maestro-cta-generate=0, maestro-tech-banner=0, lab-quick-grid=0 nel Braccio; FAB voice-command-btn nascosto (count=0). (3) ZERO-SCROLL: braccio-lab rect = top 81, bottom 745, altezza 664 -> interamente entro i 844px di viewport (bottone Gestione visibile senza scroll). (4) TASTI RAPIDI: sosimpasto apre 'Dough SOS / SOS Impasto' con maestro-back-btn e ritorno OK al Braccio; idem manisporche ('Mani in Pasta' con produzione del giorno) e capo (Celle Frigo). (5) MIC: pointer down su braccio-mic -> label passa a 'Ti ascolto…/Listening…', pointer up ritorna a 'Tieni premuto e parla'; 0 errori JS. (6) GESTIONE: braccio-gestione -> maestro-tech-banner=1, maestro-cta-generate=1, lab-quick-grid=1, maestro-to-braccio=1; localStorage mikilab_lab_view='gestione'; dopo reload + rientro nel tab Lab la vista Gestione persiste; maestro-to-braccio riporta al Braccio e riscrive localStorage='braccio'. (7) 0 pageerror JS in tutte le run; soli errori console = 401 su chiamate pre-login (attesi).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Lab / Braccio (mobile 390x844)", "issues": ["Il contenuto del Braccio sta nel viewport, ma il documento resta scrollabile di ~511px (document.scrollHeight=1355 vs innerHeight=844) perche il <main class='... pb-64'> mantiene il padding-bottom 256px e il footer globale [data-testid=page-footer] (mt-10) resta renderizzato sotto il Braccio. Per un vero 'zero-scroll' conviene nascondere page-footer e ridurre pb-64 quando labView==='braccio'."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "(Minore/opzionale) Nascondere il footer globale e ridurre il padding-bottom del <main> quando la vista Lab e 'braccio', per eliminare lo scroll residuo di ~511px."
+  ],
+  "critical_code_review_comments": [
+    "BraccioLab usa altezza fissa 'calc(100vh - 180px)' con minHeight 460px: su device molto bassi (<640px di altezza) i 3 tasti rapidi + bottone Gestione potrebbero uscire dal viewport. Valutare 100dvh e/o clamp dell'altezza del mic."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100%"},
+  "seed_data_creation": "nessuna",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante)",
+  "context_for_next_testing_agent": "Lingua: usare page.select_option('[data-testid=lang-select]','it') (non esiste lang-select-it). Setup Lab: voice-onboard-close -> lang-select it -> login-btn/auth-email/auth-password/auth-submit -> site-menu-open -> site-menu-mode-pro -> site-menu-close -> nav-tab-maestro -> lab-big-exit -> 'Salta'. Attenzione: dopo un reload l'app riapre il tab di default (Ricette), quindi per testare la persistenza di mikilab_lab_view bisogna ricliccare nav-tab-maestro. Tutti i testid del Braccio verificati funzionanti.",
+  "rca_of_the_issue": ""
+}

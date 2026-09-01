@@ -3210,3 +3210,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Micro-descrizioni** sotto i 4 pulsanti rapidi (ToolsDirectory QUICK_DESC): acqua/convlievito/sosimpasto/settimana con spiegazione del beneficio; box griglia alzati a min-h 128px.
 - **Pulizia**: rimosso il banner citazione "Il pizzico di sapienza" (MikilaWisdom) dal tab Laboratorio; rimosso il FAB Radio dal Laboratorio (App.js: entrambi esclusi su tab 'maestro'). Resta il FAB Voce (che si nasconde in scroll).
 - Verificato iter 161: 5/5 PASS, 0 errori JS.
+
+## v-fork24 (2026-06) — Home "Braccio" operativa (zero-scroll) + separazione Gestione
+- **Nuova Home Laboratorio "Braccio"** (`sections/BraccioLab.jsx`, default su mobile): schermata unica zero-scroll con banner compatto ("Il tuo assistente di laboratorio: l'IA calcola idratazioni, orari e bilanciamento"), **microfono gigante** centrale (tieni premuto e parla → eventi mikilab-voice-start/stop a VoiceCommand), e SOLO 3 tasti rapidi: Ricetta del Giorno (manisporche), Celle Frigo (capo), SOS Impasto (sosimpasto). FAB Voce globale nascosto qui.
+- **Separazione Mente/Gestione**: tutta la pianificazione/generatore/tool/costi ora nella vista "Gestione (PC/Chef)" raggiungibile da `braccio-gestione`; ritorno con `maestro-to-braccio`. Stato in localStorage `mikilab_lab_view` (default 'braccio'). Rimossi dal Braccio i calcolatori passivi (CTA, tech-banner, quick-grid).
+- **Zero-scroll reale**: body.braccio-mode nasconde page-footer e azzera pb del main (index.css).
+- Verificato iter 162: tutti i flussi PASS (Braccio default, 3 tasti, mic press, toggle Gestione, ritorno), 0 errori JS.

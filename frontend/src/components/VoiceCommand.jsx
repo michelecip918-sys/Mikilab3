@@ -383,6 +383,15 @@ export default function VoiceCommand({ onOpenTool }) {
     return () => window.removeEventListener("mikilab-fab", onFab);
   }, []);
 
+  // Mic gigante "Braccio": start/stop ascolto via eventi.
+  useEffect(() => {
+    const start = () => { if (!listening) runOnce(); };
+    const stop = () => { try { recRef.current && recRef.current.stop(); } catch { /* */ } };
+    window.addEventListener("mikilab-voice-start", start);
+    window.addEventListener("mikilab-voice-stop", stop);
+    return () => { window.removeEventListener("mikilab-voice-start", start); window.removeEventListener("mikilab-voice-stop", stop); };
+  }, [listening]);
+
   const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   return (

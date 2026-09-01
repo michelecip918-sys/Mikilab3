@@ -23,6 +23,7 @@ import BackwardScheduler from "@/sections/BackwardScheduler";
 import ShoppingList from "@/sections/ShoppingList";
 import ShiftRoles from "@/sections/ShiftRoles";
 import RegistroScarti from "@/sections/RegistroScarti";
+import BraccioLab from "@/sections/BraccioLab";
 import Checklists from "@/sections/Checklists";
 import FreezerStock from "@/sections/FreezerStock";
 import WaterTempCalc from "@/sections/WaterTempCalc";
@@ -118,6 +119,8 @@ export default function Maestro() {
   const { profile } = useProfile();
   const passion = isPassion(profile);
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
+  const [labView, setLabView] = useState(() => { try { return localStorage.getItem("mikilab_lab_view") || "braccio"; } catch { return "braccio"; } });
+  const setView = (v) => { setLabView(v); try { localStorage.setItem("mikilab_lab_view", v); } catch { /* */ } };
   useBackClose(!!tool, back);
 
   if (tool) {
@@ -199,9 +202,23 @@ export default function Maestro() {
     return <LabModeBig onExit={() => setBig(false)} onOpenTool={openTool} onOpenPlan={() => setBig(false)} />;
   }
 
+  // HOME "Braccio": schermata operativa mobile (default). La "Mente" (pianificazione/tool) è in Gestione.
+  if (labView === "braccio") {
+    return (
+      <div className="pb-4">
+        <HighFive />
+        <BraccioLab onOpenTool={openTool} onGestione={() => setView("gestione")} />
+      </div>
+    );
+  }
+
   return (
     <div className="pb-28">
       <HighFive />
+      <button data-testid="maestro-to-braccio" onClick={() => setView("braccio")}
+        className="inline-flex items-center gap-1.5 mb-3 px-3.5 py-2 rounded-full bg-[#ff6b00]/12 border border-[#ff6b00]/40 text-[#ff6b00] font-semibold text-[13px] active:scale-95 transition-all">
+        <ChevronLeft className="w-4 h-4" /> {tri("Laboratorio operativo", "Betriebsmodus", "Operative mode", "Modo operativo")}
+      </button>
 
       {/* Banner: La Tua Tecnologia Unica — 6 killer feature */}
       <div data-testid="maestro-tech-banner" className="mb-3 rounded-2xl border border-[#ff6b00]/45 bg-gradient-to-br from-[#1e130a] to-[#141414] p-4">
