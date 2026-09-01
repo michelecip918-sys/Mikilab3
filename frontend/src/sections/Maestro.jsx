@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   PlusCircle, CalendarDays, ChefHat, Flame, Wheat, ChevronLeft, ChevronRight,
   ClipboardList, Thermometer, ScanLine, Clock, ShoppingCart, Users, CheckSquare, ListChecks, Snowflake, Droplets, FlaskConical,
-  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp, Maximize2, Mic,
+  Cog, BookOpen, LayoutDashboard, Scale, Euro, Recycle, Timer as TimerIcon, CloudSun, Store, QrCode, CalendarCheck, Sparkles, Camera, Building2, Wrench, ChevronDown, ChevronUp, Maximize2, Mic, Bluetooth, Zap,
 } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import WhatsAppHelp from "@/components/WhatsAppHelp";
@@ -200,6 +200,36 @@ export default function Maestro() {
   return (
     <div className="pb-28">
       <HighFive />
+
+      {/* Banner: La Tua Tecnologia Unica — 6 killer feature */}
+      <div data-testid="maestro-tech-banner" className="mb-3 rounded-2xl border border-[#ff6b00]/45 bg-gradient-to-br from-[#1e130a] to-[#141414] p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="w-4 h-4 text-[#ff6b00] shrink-0" />
+          <h3 className="font-display text-[13px] font-extrabold uppercase tracking-wider text-[#ff6b00] leading-tight">
+            {mkTri(lang)("La Tua Tecnologia Unica", "Deine einzigartige Technologie", "Your Unique Technology", "Tu Tecnología Única", "Ta Technologie Unique", "فناوری منحصربه‌فرد تو")}
+          </h3>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { Icon: Bluetooth, t: mkTri(lang)("IoT & Sonde Live", "IoT & Live-Sonden", "IoT & Live Probes", "IoT y Sondas en Vivo", "IoT & Sondes Live", "اینترنت اشیا و سنسور زنده"), sub: "BLE" },
+            { Icon: Mic, t: mkTri(lang)("Miki-Voice Multilingua", "Miki-Voice mehrsprachig", "Multilingual Miki-Voice", "Miki-Voice Multilingüe", "Miki-Voice Multilingue", "میکی‌وویس چندزبانه"), sub: "IT·DE·EN·ES·FR·FA" },
+            { Icon: Camera, t: mkTri(lang)("IA Diagnostica Visiva", "Visuelle KI-Diagnose", "Visual AI Diagnosis", "IA Diagnóstico Visual", "IA Diagnostic Visuel", "تشخیص تصویری هوش مصنوعی"), sub: null },
+            { Icon: Wheat, t: mkTri(lang)("Auto-Tuning Farine", "Auto-Tuning Mehle", "Flour Auto-Tuning", "Auto-Ajuste Harinas", "Auto-Réglage Farines", "تنظیم خودکار آرد"), sub: "W · P/L" },
+            { Icon: Zap, t: mkTri(lang)("Energy & Bake Optimizer", "Energie- & Back-Optimizer", "Energy & Bake Optimizer", "Optimizador Energía & Horno", "Optimiseur Énergie & Cuisson", "بهینه‌ساز انرژی و پخت"), sub: null },
+            { Icon: TimerIcon, t: mkTri(lang)("Smart Starter Timer", "Smart Starter-Timer", "Smart Starter Timer", "Temporizador Masa Madre", "Minuteur Levain Intelligent", "تایمر هوشمند خمیرمایه"), sub: mkTri(lang)("Offline First", "Offline First", "Offline First", "Sin conexión", "Hors-ligne", "آفلاین") },
+          ].map(({ Icon, t, sub }, i) => (
+            <div key={i} data-testid={`tech-feat-${i}`} className="flex items-center gap-2.5 rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 px-2.5 py-2 min-h-[52px]">
+              <span className="w-8 h-8 rounded-lg bg-[#ff6b00]/18 border border-[#ff6b00]/35 flex items-center justify-center shrink-0">
+                <Icon className="w-5 h-5 text-[#ff6b00]" />
+              </span>
+              <span className="min-w-0 text-start">
+                <span className="block text-[11.5px] font-bold text-[#e4eff8] leading-tight">{t}</span>
+                {sub && <span className="block text-[10px] font-semibold text-[#ff6b00]/85 leading-tight mt-0.5">{sub}</span>}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* CTA gigante: avvia subito la generazione guidata */}
       <button data-testid="maestro-cta-generate" onClick={() => openTool("generatore")}

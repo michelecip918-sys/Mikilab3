@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend-only regression test (mobile 430x920) su MikiLab preview URL. Verificati: banner 'La Tua Tecnologia Unica' (maestro-tech-banner) con 6 feature sopra la CTA arancione, CTA maestro-cta-generate che apre il Generatore di Ricette, bottom nav a 4 tab (senza vecchia nav-tab-impara), tab VERE del Generatore di Piano (capo-tab-produci/parametri/genera con una sola sezione visibile per volta) sia in IT sia in FA, gating Pro/Passione dal menu, e layout RTL con lingua Persiana. Tutti i 6 punti richiesti PASSANO.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "SiteMenu", "issue": "Dopo aver scelto la modalita' (site-menu-mode-pro/passion) il menu overlay resta aperto e il tasto Escape non lo chiude: bisogna cliccare site-menu-close. Blocca click successivi sull'header (overlay z-[300] intercetta i pointer events).", "selector": "[data-testid=\"site-menu\"]", "priority": "LOW/MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Laboratorio in FA (RTL)", "issues": ["Stringa non tradotta: il bottone 'Aggiungi ricette' resta in italiano nella UI persiana (nel blocco '1 · Cosa Produci'). Altre label FA sono corrette e il layout e' correttamente specchiato senza overflow (scrollWidth==clientWidth==430)."]},
+      {"screen": "Console (guest)", "issues": ["Numerosi 401 in console al load per /api/auth/me, /api/notifications, /api/favorites/sync, /api/combos/sync, /api/weekly-plan, /api/plans/archive, /api/capo/last-plan, /api/freezer: attesi per utente non loggato ma generano rumore; valutare skip delle chiamate se non autenticato."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Chiudere automaticamente SiteMenu dopo chooseProfile (e supportare Escape) per evitare che l'overlay blocchi l'header.",
+    "Tradurre in FA (e altre lingue) il bottone 'Aggiungi ricette' in PianoProduzioneAI.",
+    "Opzionale: evitare le chiamate API autenticate quando l'utente e' guest (rumore 401 in console)."
+  ],
+  "critical_code_review_comments": [
+    "PianoProduzioneAI.jsx e' molto grande (>1500 righe): consigliato split per tab (produci/parametri/genera) per manutenibilita'.",
+    "Il gating passion/pro e il rendering delle tab usano solo classi 'hidden': funziona ma tutti i componenti restano montati (costo di render/fetch anche per tab non visibili)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% (6/6 requisiti richiesti)"},
+  "seed_data_creation": "Nessuna. Solo localStorage seed: mikilab_lang, mikilab_profile, mikilab_onb_done.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Non necessarie: Laboratorio accessibile come guest.",
+  "context_for_next_testing_agent": "Il menu si apre con data-testid='site-menu-open' (NON 'site-menu-button') e si chiude con 'site-menu-close' (Escape non funziona). Le capo-tabs vivono nel Laboratorio dentro maestro-plan (NON dentro il tool aperto dalla CTA: quella apre il Generatore di Ricette, che non ha capo-tabs). Verificati: banner y=210 < CTA y=466; hubs pro=[1,1,1,1], passion=[1,1,0,0] con maestro-plan e big-toggle assenti in passion; FA -> document.documentElement.dir='rtl', direction rtl sui feature, nessun overflow orizzontale; capo-tab: una sola sezione visibile per tab sia IT sia FA; capo-generate abilitato ('Genera piano di lavoro').",
+  "rca_of_the_issue": "La regressione delle tab Parametri/Genera segnalata in iteration_152 risulta risolta: ogni tab mostra esclusivamente la propria sezione (capo-plan-switch / capo-advanced-title / capo-generate) e nessuna pagina bianca o errore JS in console."
+}

@@ -3126,3 +3126,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Fusione Guide+Accademia -> "Scienza & Guide"**: BottomNav ora 4 tab (rimossa impara), routing App.js impara->AcademyHome, Home.jsx blocco unico, SiteMenu aggiornato. Rimosso import LearnHub inutilizzato.
 - **CTA gigante** in Maestro: `maestro-cta-generate` (✨ NUOVA RICETTA / WORKFLOW) apre il Generatore Ricette.
 - QA: iteration_152 (bug tab risolto), poi self-verify is_visible su tutte e 3 le tab OK.
+
+## v-fork10 (2026-06) — Banner Tecnologia Unica + RTL persiano confermato
+- **Maestro.jsx**: banner `maestro-tech-banner` "La Tua Tecnologia Unica" IN CIMA al Laboratorio, SOPRA la CTA arancione. 6 feature (grid 2col, tech-feat-0..5, multilingua IT/DE/EN/ES/FR/FA): IoT & Sonde Live (BLE), Miki-Voice Multilingua, IA Diagnostica Visiva, Auto-Tuning Farine (W,P/L), Energy & Bake Optimizer, Smart Starter Timer (Offline First). Icone lucide (Bluetooth, Mic, Camera, Wheat, Zap, Timer) aggiunte allimport.
+- CTA gigante subito sotto il banner; 4 tab in basso confermate; tab vere del generatore OK; Persiano FA -> dir=rtl e layout specchiato.
+- QA iteration_153: tutti e 6 i punti PASSANO. Nessuna regressione.
