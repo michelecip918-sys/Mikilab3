@@ -3189,3 +3189,7 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Brigata & cambio mansione**: ShiftRoles con zona/orario turno/cambio mansione programmato; `ShiftScheduler.jsx` avvisa a voce (routeVoice) l'operatore all'orario del cambio.
 - Comandi vocali aggiunti: guida, chiama [nome] (indicatore), registra scarto, vasca sanificata, produzione oggi/domani, spiegami (Momi).
 - Test iteration_158: frontend 7/7 PASS, 0 errori JS, nessun /api/tts. Note cosmetiche: FAB Radio si sovrappone a titoli sezione (scrollabile); momi-listen senza feedback se SpeechSynthesis privo di voci (headless).
+
+## v-fork20 (2026-06) — Report Scarti Settimanale + fix nome brand
+- **Registro Scarti**: aggiunto campo costo €/kg per voce (`scarto-cost`), € totale per riga, e **Riepilogo settimanale** (`scarto-report`, toggle `scarto-report-toggle`): raggruppa gli ultimi 7 giorni per giorno e per prodotto con kg e € + totali; **export CSV** (`scarto-export`, download con BOM UTF-8). Tutto offline localStorage.
+- **Fix nome brand**: in `WebRecipe.jsx` il metodo era "Metodo Mikilab" → corretto in "Metodo MikiLab" (IT/DE/EN/ES/FR). Verificato: nessun'altra occorrenza user-facing di "Mikilab" con grafia errata.

@@ -22,7 +22,7 @@ export default function WebRecipe() {
   useEffect(() => { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 8))); } catch { /* */ } }, [history]);
 
   const METHODS = [
-    { id: "mikilab", label: tri("Metodo Mikilab", "Mikilab-Methode", "Mikilab Method", "Método Mikilab", "Méthode Mikilab", "روش میکی‌لب") },
+    { id: "mikilab", label: tri("Metodo MikiLab", "MikiLab-Methode", "MikiLab Method", "Método MikiLab", "Méthode MikiLab", "روش میکی‌لب") },
     { id: "qualita", label: tri("Qualità massima", "Höchste Qualität", "Top quality", "Máxima calidad", "Qualité max", "بالاترین کیفیت") },
     { id: "veloce", label: tri("Veloce", "Schnell", "Fast", "Rápido", "Rapide", "سریع") },
     { id: "diretto", label: tri("Diretto", "Direkt", "Direct", "Directo", "Direct", "مستقیم") },
