@@ -268,6 +268,7 @@ function App() {
               className="w-20 h-20 rounded-2xl object-cover mx-auto ring-2 ring-[#D4AF37]/60 shadow-lg mt-1" />
             <p className="font-display text-2xl font-extrabold tracking-tight mt-3">MikiLab</p>
             <p className="text-[12px] font-bold tracking-wide text-[#3D2B1F] mt-1" data-testid="footer-bakemix">MikiLab — powered by BakeMix AI</p>
+            <p className="text-[10px] leading-snug text-white/60 mt-2 max-w-sm mx-auto" data-testid="footer-legal">© MikiLab — Proprietà Intellettuale Riservata. Software ideato, sviluppato e diretto da Michele. Tutti i diritti relativi all'architettura di sistema e al modello personalizzato BakeMix AI sono riservati. È severamente vietata qualsiasi riproduzione, modifica o distribuzione non autorizzata.</p>
             <p className="text-[12px] text-white/85 leading-snug mt-1 max-w-xs mx-auto">{t("brand_slogan")}</p>
             <p className="text-[11px] text-[#ff6b00]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
           </div>
