@@ -3262,3 +3262,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Wiring: TOOLS id 'magazzino' (cat coldchain/gestisci) + routing Maestro. warehouseApi esportato da Magazzino.jsx.
 - Aggancio consumo: in RicettaDelGiorno, "Lotto completato → fatto" chiama warehouseApi.consume(flour+lievito madre/biga+sale) e mostra toast (aggiornato/scorte scarse) + evento mikilab-warehouse-updated.
 - NOTA: aggiunto DOPO il deploy dispatch → serve un redeploy per averlo in produzione. UI non catturabile via screenshot tool (limite ambiente) ma compila senza errori e segue pattern verificati.
+
+---
+## v-fork6 (2026-06) — Co-branding BakeMix + scan etichetta + riordino + storico consumi
+- Branding "MikiLab — powered by BakeMix AI" nel footer (footer-bakemix) e nella schermata operativa (braccio-bakemix). SOS Impasto: a diagnosi aperta mostra "Impasto calibrato con successo da Miki & BakeMix" (sos-calibrated-*).
+- Alert vocale scorte basse: consumo impastata → se scorte ≤ soglia dispatch mikilab-say (VoiceCommand parla) + toast.
+- Magazzino: scansione etichetta REALE via /api/lab/warehouse/scan-label (LLM vision claude-sonnet-4-6, prefill campi), lista riordino fornitori (mag-reorder, copia), storico consumi (mag-consumption + backend /lab/warehouse/consumption con log su ogni consume).
+- Verificato via curl: consume logga consumo; scan-label 200; carico/scala ok. Redeploy avviato.

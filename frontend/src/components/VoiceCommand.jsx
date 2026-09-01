@@ -523,6 +523,13 @@ export default function VoiceCommand({ onOpenTool }) {
   }, [lang]);
   // Espone lo stato voce (ascolto/parla) all'Avatar 3D.
   useEffect(() => { window.dispatchEvent(new CustomEvent("mikilab-voice-state", { detail: { listening, speaking } })); }, [listening, speaking]);
+  // Voce arbitraria (es. alert scorte basse durante l'impasto).
+  useEffect(() => {
+    const say = (e) => { const txt = e && e.detail && e.detail.text; if (txt) speak(txt); };
+    window.addEventListener("mikilab-say", say);
+    return () => window.removeEventListener("mikilab-say", say);
+    // eslint-disable-next-line
+  }, [lang]);
 
   const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 

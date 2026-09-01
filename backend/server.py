@@ -2074,7 +2074,50 @@ async def consume_warehouse(payload: ConsumePayload, user: Optional[dict] = Depe
         await db.lab_warehouse.update_one({"id": s["id"]}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
         s["quantity_kg"] = newq
         updated.append({"name": s["name"], "quantity_kg": newq})
+        await db.lab_consumption_log.insert_one({"id": str(uuid.uuid4()), "name": s["name"], "kg": float(it.kg), "kind": it.kind, "at": now_iso()})
     return {"updated": updated, "shortfalls": shortfalls}
+
+
+@api_router.get("/lab/warehouse/consumption")
+async def get_consumption(user: Optional[dict] = Depends(optional_user)):
+    return await db.lab_consumption_log.find({}, {"_id": 0}).sort("at", -1).to_list(100)
+
+
+class LabelScan(BaseModel):
+    image_base64: str
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/lab/warehouse/scan-label")
+async def scan_label(payload: LabelScan, user: Optional[dict] = Depends(optional_user)):
+    # Scansione REALE etichetta farina/ingrediente via LLM vision → prefill del carico.
+    if not EMERGENT_LLM_KEY:
+        return {"ok": False}
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"label-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Analizza la foto dell'etichetta o del sacco di una farina o di un ingrediente da panificazione. "
+                "Estrai i dati e rispondi SOLO con JSON valido, senza altro testo: "
+                '{"name":"tipo farina o ingrediente","force_w":"forza W se presente es. W300, altrimenti stringa vuota",'
+                '"quantity_kg": numero_in_kg_se_visibile_altrimenti_0, "kind":"farina oppure ingrediente"}.'
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=400)
+        img = (payload.image_base64 or "").split(",")[-1]
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text="Estrai i dati dall'etichetta.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        import json as _json
+        import re as _re
+        m = _re.search(r"\{.*\}", full, _re.S)
+        data = _json.loads(m.group(0)) if m else {}
+        return {"ok": True, "data": data}
+    except Exception as e:
+        logging.warning(f"scan_label failed: {e}")
+        return {"ok": False}
 
 
 # ---------------------------------------------------------------------------

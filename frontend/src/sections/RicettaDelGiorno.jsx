@@ -91,8 +91,15 @@ export default function RicettaDelGiorno() {
               try {
                 const res = await warehouseApi.consume(items);
                 window.dispatchEvent(new Event("mikilab-warehouse-updated"));
-                if (res && res.shortfalls && res.shortfalls.length) toast.warning(tri("Materie scarse in magazzino: controlla le giacenze.", "Rohstoffe knapp.", "Low materials in stock.", "Materias escasas.", "Matières faibles.", "مواد کم است."));
-                else toast.success(tri("Giacenze aggiornate dal magazzino.", "Bestand aktualisiert.", "Stock updated.", "Stock actualizado.", "Stock mis à jour.", "موجودی به‌روز شد."));
+                const low = (res && res.updated || []).filter((u) => u.quantity_kg <= 5);
+                const short = (res && res.shortfalls) || [];
+                if (short.length || low.length) {
+                  const names = [...short.map((s) => s.name), ...low.map((u) => u.name)].filter(Boolean).join(", ");
+                  toast.warning(tri("Scorte basse in magazzino: " + names, "Bestand niedrig: " + names, "Low stock: " + names, "Stock bajo: " + names, "Stock bas : " + names, "موجودی کم: " + names));
+                  window.dispatchEvent(new CustomEvent("mikilab-say", { detail: { text: tri(`Attenzione, scorte basse in magazzino: ${names}. Ricordati di riordinare.`, `Achtung, Bestand niedrig: ${names}. Bitte nachbestellen.`, `Warning, low stock: ${names}. Remember to reorder.`, `Atención, stock bajo: ${names}. Recuerda reponer.`, `Attention, stock bas : ${names}. Pense à recommander.`, `توجه، موجودی کم است: ${names}.`) } }));
+                } else {
+                  toast.success(tri("Giacenze aggiornate dal magazzino.", "Bestand aktualisiert.", "Stock updated.", "Stock actualizado.", "Stock mis à jour.", "موجودی به‌روز شد."));
+                }
               } catch { /* offline */ }
             }
             setSel(null);

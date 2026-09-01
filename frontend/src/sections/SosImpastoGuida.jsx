@@ -50,6 +50,10 @@ export default function SosImpastoGuida({ onBack, onOpenTool }) {
                 <div className="px-4 pb-4 space-y-2 text-[13.5px] leading-relaxed">
                   <p className="text-[#ff6b00] dark:text-[#AEB8BF]"><span className="font-bold text-[#ff6b00]">{L("Causa:", "Ursache:", "Cause:", "Causa:")} </span>{d.cause}</p>
                   <p className="text-[#ff6b00] dark:text-[#AEB8BF]"><span className="font-bold text-[#2e8b6f]">{L("Rimedio:", "Lösung:", "Fix:", "Solución:")} </span>{d.fix}</p>
+                  <div data-testid={`sos-calibrated-${i}`} className="flex items-center gap-2 mt-1 rounded-xl px-3 py-2" style={{ background: "#2E2214", border: "2px solid #E7B23C" }}>
+                    <span className="text-base">✅</span>
+                    <span className="text-[12.5px] font-extrabold" style={{ color: "#E7B23C" }}>{L("Impasto calibrato con successo da Miki & BakeMix", "Teig erfolgreich kalibriert von Miki & BakeMix", "Dough successfully calibrated by Miki & BakeMix", "Masa calibrada con éxito por Miki & BakeMix")}</span>
+                  </div>
                 </div>
               )}
             </div>
