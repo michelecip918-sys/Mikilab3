@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Search, X } from "lucide-react";
+import { ChevronRight, Search, X } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useProfile } from "@/profile/ProfileContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -17,9 +17,7 @@ export default function ToolsDirectory({ onOpenTool }) {
   const name = (tl) => tri(tl.it, tl.de, tl.en, tl.es);
 
   const hubs = LAB_HUBS.filter((h) => !(passion && h.pro));
-  const [open, setOpen] = useState(() => ({}));
   const [q, setQ] = useState("");
-  const toggleSection = (id) => setOpen((o) => ({ ...o, [id]: !o[id] }));
 
   // Strumenti immediati (griglia rapida in alto).
   const QUICK = ["acqua", "convlievito", "sosimpasto", "settimana"].map(byId).filter(Boolean);
@@ -77,30 +75,9 @@ export default function ToolsDirectory({ onOpenTool }) {
             : <p className="text-center text-[#7E8A93] py-6 text-base">{tri("Nessuno strumento trovato", "Kein Werkzeug gefunden", "No tool found", "Ninguna herramienta", "Aucun outil", "ابزاری یافت نشد")}</p>}
         </div>
       ) : (
-        <div className="space-y-2.5">
-          <p className="text-[13px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Tutte le funzioni", "Alle Funktionen", "All functions", "Todas las funciones")}</p>
-          {hubs.map((h) => {
-            const ids = h.ids.filter((id) => byId(id));
-            if (ids.length === 0) return null;
-            const isOpen = !!open[h.id];
-            return (
-              <div key={h.id} data-testid={`lab-hub-${h.id}`} className="rounded-2xl border border-[#2C2C2C] bg-[#161616] overflow-hidden">
-                <button data-testid={`lab-hub-toggle-${h.id}`} onClick={() => toggleSection(h.id)}
-                  className="w-full flex items-center justify-between gap-3 px-4 py-4 min-h-[68px] text-start active:scale-[0.995] transition-all">
-                  <span className="flex items-center gap-2.5 min-w-0">
-                    <span className="text-2xl leading-none shrink-0">{h.emoji}</span>
-                    <span className="font-display text-lg sm:text-xl font-bold text-white leading-tight">{tri(h.it, h.de, h.en, h.es, h.fr, h.fa)}</span>
-                  </span>
-                  <span className="flex items-center gap-2.5 shrink-0">
-                    <span className="text-[13px] font-bold text-[#ff6b00] bg-[#ff6b00]/12 border border-[#ff6b00]/30 px-2.5 py-1 rounded-full">{ids.length}</span>
-                    {isOpen ? <ChevronDown className="w-6 h-6 text-[#ff6b00]" /> : <ChevronRight className="w-6 h-6 text-[#7E8A93] rtl:rotate-180" />}
-                  </span>
-                </button>
-                {isOpen && <div className="px-3 pb-3 space-y-2">{ids.map((id) => Row(id))}</div>}
-              </div>
-            );
-          })}
-        </div>
+        <p className="text-center text-[13px] text-[#7E8A93] py-3">
+          {tri("Cerca un altro strumento nella barra qui sopra.", "Weitere Werkzeuge über die Suche oben.", "Find any other tool via the search above.", "Busca otra herramienta en la barra de arriba.", "Cherche un autre outil via la recherche.", "ابزارهای دیگر را از جستجوی بالا پیدا کن.")}
+        </p>
       )}
     </div>
   );

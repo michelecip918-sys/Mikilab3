@@ -1,0 +1,18 @@
+{
+  "appId": "com.mikilab.app",
+  "appName": "MikiLab",
+  "webDir": "build",
+  "backgroundColor": "#121212",
+  "plugins": {
+    "SplashScreen": {
+      "backgroundColor": "#121212",
+      "showSpinner": false
+    }
+  },
+  "android": {
+    "allowMixedContent": true
+  },
+  "ios": {
+    "contentInset": "always"
+  }
+}

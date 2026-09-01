@@ -1,0 +1,23 @@
+{
+  "summary": "Frontend-only E2E (mobile 390x844, Chromium) del Laboratorio ESSENZIALE MikiLab. Setup OK: onboarding chiuso, lingua IT, login admin@mikilab.de, modalita Pro attivata, nav-tab-maestro, lab-big-exit + 'Salta' del LabOnboarding. RISULTATI: (1) 'maestro-tools-directory' contiene SOLO 'lab-quick-grid' (count=1) con esattamente 4 pulsanti (lab-quick-acqua/convlievito/sosimpasto/settimana, tutti count=1; totale nodi lab-quick-* = 5 = grid + 4 bottoni) + 'tools-dir-search' (count=1). (2) NESSUN hub renderizzato: lab-hub-scienza/produzione/forni/business = 0, anche lab-hub-toggle-* = 0 e lab-tool-* = 0 a riposo. Testo 'Tutte le funzioni' ASSENTE. Testo directory: 'STRUMENTI RAPIDI / Temp. Acqua / Convertitore Lieviti / SOS Impasto / Programma Settimana / Cerca un altro strumento nella barra qui sopra.'. (3) GRIGLIA FUNZIONANTE: lab-quick-acqua apre 'Temperatura Acqua' (heading verificato), maestro-back-btn riporta alla griglia (lab-quick-grid=1); lab-quick-settimana apre 'Piano settimanale' e il ritorno funziona. (4) RICERCA COMPLETA: 'mani' -> lab-tool-manisporche (Mani In Pasta (Voce)); 'timer' -> Smart Timer Multi-Impasto; 'forno' -> Gestione Vapore & Forno, Adatta Forno, Costo Energia Forno. Durante la ricerca la griglia si nasconde correttamente (count=0). (5) 0 pageerror JS; nessuna chiamata /api/tts nei log console (grep=0).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ToolsDirectory.jsx: la ricerca costruisce allIds da LAB_HUBS, quindi i tool dell'hub business/HACCP (es. 'foodcost') NON sono trovabili ('food' -> 'Nessuno strumento trovato'). Coerente con la rimozione voluta del business hub, ma se in futuro quei tool devono restare raggiungibili via ricerca occorre usare TOOLS come sorgente.",
+    "4 chiamate restituiscono 401 pre-login (/api/auth/me, /api/notifications, /api/favorites/sync, /api/combos/sync): rumore in console, atteso ma migliorabile evitando le chiamate da guest."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100%"},
+  "seed_data_creation": "Nessuna. Usato admin@mikilab.de esistente.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "context_for_next_testing_agent": "Setup: goto -> voice-onboard-close -> lang-select=it -> login-btn -> auth-email/auth-password/auth-submit -> site-menu-open -> site-menu-mode-pro -> site-menu-close -> nav-tab-maestro -> lab-big-exit e poi bottone 'Salta' (LabOnboarding). Uscita da un tool: 'maestro-back-btn'. Laboratorio ora contiene SOLO lab-quick-grid (4 bottoni) + tools-dir-search; nessun hub. Ricerca copre solo i tool presenti in LAB_HUBS (business/HACCP esclusi).",
+  "rca_of_the_issue": "Nessun difetto funzionale trovato."
+}
