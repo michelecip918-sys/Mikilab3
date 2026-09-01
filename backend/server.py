@@ -3483,9 +3483,17 @@ async def diagnosi_sound(payload: SoundDiagnosiReq, user: dict = Depends(require
 
 _ELEVEN_KEY = os.environ.get("ELEVEN_API_KEY")
 _eleven_client = ElevenLabs(api_key=_ELEVEN_KEY) if _ELEVEN_KEY else None
-MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "nPczCjzI2devNBz1zQrb")  # Brian — profondo, rassicurante (assistente)
-MICHELE_VOICE_ID = os.environ.get("MICHELE_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb")  # George — caldo, narratore (fondatore)
-_VOICE_MAP = {"momy": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID}
+# Momi (tutor Mohamed) — voce descrittiva; Lab/Michele (fondatore) — voce telegrafica
+MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "o4b57JYAECRMJyCEXyIE")
+MICHELE_VOICE_ID = os.environ.get("MICHELE_VOICE_ID", "mxbgw5PwaQHOrln90mhH")
+_VOICE_MAP = {"momy": MOMY_VOICE_ID, "momi": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID, "lab": MICHELE_VOICE_ID}
+
+
+def _voice_settings(voice: str) -> VoiceSettings:
+    """Lab/Michele = deciso e telegrafico; Momi = caldo e descrittivo."""
+    if (voice or "").lower() in ("michele", "lab"):
+        return VoiceSettings(stability=0.62, similarity_boost=0.85, style=0.12, use_speaker_boost=True)
+    return VoiceSettings(stability=0.40, similarity_boost=0.80, style=0.45, use_speaker_boost=True)
 
 
 class TTSReq(BaseModel):
@@ -3509,12 +3517,13 @@ def tts_generate(payload: TTSReq):
             text=text,
             voice_id=voice_id,
             model_id="eleven_multilingual_v2",
-            voice_settings=VoiceSettings(stability=0.45, similarity_boost=0.8, style=0.35, use_speaker_boost=True),
+            voice_settings=_voice_settings(payload.voice),
         )
         audio = b"".join(gen)
     except Exception:
         logger.exception("tts error")
-        raise HTTPException(status_code=502, detail="Errore TTS")
+        # 424 (non-5xx) così l'edge non maschera l'errore: il frontend fa fallback alla voce del dispositivo.
+        raise HTTPException(status_code=424, detail="Errore TTS")
     return StreamingResponse(iter([audio]), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400"})
 
 

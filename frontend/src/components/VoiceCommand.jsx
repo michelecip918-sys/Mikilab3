@@ -5,6 +5,8 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { TOOLS } from "@/sections/PianoProduzioneAI";
 import { api } from "@/lib/api";
+import { playTTS, stopTTS } from "@/lib/tts";
+import SpeakingAvatar from "@/components/SpeakingAvatar";
 
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
@@ -41,6 +43,8 @@ export default function VoiceCommand({ onOpenTool }) {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const name = (tl) => norm(mkTri(lang)(tl.it, tl.de, tl.en, tl.es));
   const [listening, setListening] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [wake, setWake] = useState(() => { try { return localStorage.getItem("mikilab_voice_wake") === "1"; } catch { return false; } });
   const [timers, setTimers] = useState([]);
   const [onboard, setOnboard] = useState(() => { try { return !localStorage.getItem("mikilab_voice_onboard"); } catch { return true; } });
@@ -62,7 +66,10 @@ export default function VoiceCommand({ onOpenTool }) {
   }, [timers.length]);
 
   const beep = () => { try { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.value = 0.15; o.start(); setTimeout(() => { o.stop(); a.close(); }, 140); } catch { /* */ } };
-  const speak = useCallback((text) => { try { const u = new SpeechSynthesisUtterance(text); u.lang = SR_LANG[lang] || "it-IT"; u.rate = 1.08; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch { /* */ } }, [lang]);
+  // Voce di Lab (ElevenLabs, telegrafica) con fallback alla voce del dispositivo.
+  const speak = useCallback((text) => {
+    playTTS(text, { lang, voice: "michele", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
+  }, [lang]);
   const stripVerbs = (t) => t.replace(/\b(aprimi|apri|apre|vai alle|vai alla|vai al|vai ai|vai a|portami|mostrami|mostra|voglio|trovami|trova|cerca|open|go to|show me|show|find|abre|ir a|offne|öffne|zeige|zeig mir|zeig)\b/g, " ").replace(/\s+/g, " ").trim();
 
   // ---- Comandi timer a voce ----
@@ -162,7 +169,7 @@ export default function VoiceCommand({ onOpenTool }) {
 
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
-    if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { try { window.speechSynthesis.cancel(); } catch { /* */ } toast.info("⏹"); return; }
+    if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
     if (tryTimer(t)) return;
     if (labSense(t)) return;
     if (tryConvert(t)) return;
@@ -254,13 +261,20 @@ export default function VoiceCommand({ onOpenTool }) {
 
   useEffect(() => () => { try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } }, []);
 
+  // Nasconde il FAB dove esiste già un controllo vocale dedicato (es. Mani In Pasta).
+  useEffect(() => {
+    const onFab = (e) => setHidden(!!(e.detail && e.detail.hide));
+    window.addEventListener("mikilab-fab", onFab);
+    return () => window.removeEventListener("mikilab-fab", onFab);
+  }, []);
+
   const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   return (
     <>
       {/* Timer multipli attivi */}
       {timers.length > 0 && (
-        <div data-testid="voice-timers" className="fixed bottom-40 right-3 z-50 space-y-1.5 max-w-[62vw]">
+        <div data-testid="voice-timers" className="fixed bottom-48 right-3 z-50 space-y-1.5 max-w-[62vw]">
           {timers.map((tm) => (
             <div key={tm.id} className="flex items-center gap-2 rounded-xl bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/50 px-2.5 py-1.5 shadow-lg">
               <TimerIcon className="w-4 h-4 text-[#ff6b00] shrink-0" />
@@ -289,7 +303,14 @@ export default function VoiceCommand({ onOpenTool }) {
       )}
 
       {/* Tasto vocale + wake toggle + micro-copy */}
-      <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-1.5">
+      {!hidden && (
+      <div className="fixed bottom-28 right-4 z-50 flex flex-col items-end gap-1.5">
+        {/* Avatar 3D pop-out di Lab: blu in ascolto, arancio mentre parla */}
+        {(listening || speaking) && (
+          <div className="mb-1 me-2">
+            <SpeakingAvatar who="lab" active testid="lab-avatar" mode={speaking ? "speaking" : "listening"} size={58} />
+          </div>
+        )}
         <button data-testid="voice-wake-toggle" onClick={toggleWake}
           className={`text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${wake ? "bg-[#ff6b00] text-white border-[#ff6b00] animate-pulse" : "bg-[#161616]/90 text-[#ff6b00] border-[#ff6b00]/50"}`}>
           {wake ? tri("👂 Ehi Lab ON", "👂 Ehi Lab AN", "👂 Ehi Lab ON", "👂 Ehi Lab ON", "👂 Ehi Lab ON", "👂 لب روشن") : tri("Attiva «Ehi Lab»", "«Ehi Lab» an", "Enable «Ehi Lab»", "Activar «Ehi Lab»", "Activer «Ehi Lab»", "«لب» فعال کن")}
@@ -301,6 +322,7 @@ export default function VoiceCommand({ onOpenTool }) {
         </button>
         <span className="text-[9.5px] text-[#7E8A93] bg-[#161616]/70 px-2 py-0.5 rounded-full">{tri("Pronuncia «Ehi Lab» o premi", "Sag «Ehi Lab» oder drücke", "Say «Ehi Lab» or tap", "Di «Ehi Lab» o pulsa", "Dis «Ehi Lab» ou appuie", "بگو «لب» یا بزن")}</span>
       </div>
+      )}
     </>
   );
 }

@@ -1,0 +1,35 @@
+{
+  "summary": "Iteration 154 — Tested POST /api/tts (voices michele/momy/momi/lab) + 3 frontend flows (Academy Momi avatar/TTS button, Mani In Pasta active-recipe presets, Planner tab-conditional hints). Backend: 7/7 pytest passed. Frontend: all 3 requested flows verified working with no JS/page errors; found 1 code-review issue (dead ProfileSelect import) and minor UX notes.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/api/tts", "issue": "App correctly returns clean JSON 502 {'detail':'Errore TTS'} on ElevenLabs 402 'paid_plan_required' (verified on localhost:8001, no unhandled 500, no timeout, server stays alive). HOWEVER the public edge (Cloudflare) intercepts the app-generated 502 and returns its own HTML 'Bad gateway' page, so browsers/clients never receive the JSON detail. Recommend returning a non-5xx status (e.g. 424/409/503 or 200 with {ok:false,reason:'quota'}) so the frontend can distinguish quota errors from infra outages."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Lab → Mani In Pasta / Academy (390x844)", "issues": ["The floating 'Voice' FAB + 'Enable «Ehi Lab»' chip (bottom-right) overlaps content: it partially covers the 'manisporche-recipe-hint' line and the right-hand preset tiles, and covers the 'Voice · Dirty Hands' tile label in Bakery Mode. Consider extra bottom-right padding or moving the chip."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter154_tts.py", "/app/test_reports/pytest/iter154_tts.xml"],
+  "action_items": [
+    "OPTIONAL: change /api/tts error status from 502 to a non-5xx code (Cloudflare masks 502 with an HTML page, so the frontend sees an infra error instead of the quota reason).",
+    "Remove the dead import `ProfileSelect` in /app/frontend/src/App.js (line 8) or render it — the profile-selection screen (data-testid profile-select / profile-select-pro) is currently unreachable; mode switching only works via SiteMenu (site-menu-mode-pro).",
+    "Mani In Pasta: 72/148 MikiLab recipes have no bulk_fermentation_hours and 78/148 no proofing_hours, so Puntata/Appretto silently stay at the 90/60 defaults while the hint says 'Tempi aggiornati da <ricetta>'. Consider showing a 'standard' marker per phase when the recipe has no value."
+  ],
+  "critical_code_review_comments": [
+    "server.py tts_generate() is a sync def calling a blocking ElevenLabs SDK — it runs in the threadpool so it does not block the loop, acceptable, but consider a timeout on the SDK call to avoid threadpool starvation if ElevenLabs hangs.",
+    "server.py is ~8039 lines — well past the 700-line guideline; should be split into routers/modules.",
+    "App.js has an unused import (ProfileSelect) that hides an unreachable feature; eslint config does not flag unused imports here."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter154_tts.py"],
+  "success_rate": {"backend": "100% (7/7)", "frontend": "100% of the 3 requested flows"},
+  "seed_data_creation": "None (used existing admin@mikilab.de account and existing recipes)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (works, login OK). Guest access also works (Passione mode).",
+  "context_for_next_testing_agent": "Verified results: (1) POST /api/tts accepts voice=michele|momy|momi|lab, returns 502 'Errore TTS' (ElevenLabs 402 paid_plan_required — expected), 400 on empty text, 422 on missing text; server stays up. (2) Academy (nav-tab-imparacon): momi-avatar and momi-listen visible; clicking momi-listen only produces a 502 network log, no JS/page error, view stays mounted. (3) Mani In Pasta: reachable via nav-tab-maestro → tech-feat-1; manisporche-recipe-select has 150 options; selecting a recipe shows manisporche-recipe-hint ('Times from <name>'); presets do update (e.g. 'Whole Soul' → Bake 22′ instead of 40′) but Puntata/Appretto often stay 90/60 because many recipes lack those fields. (4) Planner: capo-tabs is ONLY rendered in Pro mode AND after leaving Bakery/Big mode — flow: dispatch window event 'mikilab-open-menu' → click site-menu-mode-pro → nav-tab-maestro → click 'Exit'/'Esci' on Bakery Mode → capo-tabs appears. capo-setup-hint and capo-pizza-pastry are visible ONLY on tab 'produci' and absent on 'parametri'/'genera' (verified, including returning to produci). No JS errors; the many console 401s in guest mode are expected for unauthenticated endpoints.",
+  "rca_of_the_issue": "/api/tts 502: ElevenLabs API returns HTTP 402 {code: paid_plan_required, 'Free users cannot use library voices via the API'} for both Voice IDs; the handler catches it and maps to HTTPException(502). Root cause is the FREE ElevenLabs plan, not app code. Side effect: the Emergent/Cloudflare edge rewrites 5xx into an HTML error page, hiding the JSON detail from clients."
+}

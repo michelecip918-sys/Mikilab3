@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import { Hand, Mic, MicOff, Volume2, RefreshCw, Trash2, Clock } from "lucide-react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { Hand, Mic, MicOff, Volume2, RefreshCw, Trash2, Clock, ChefHat } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers, remainingOf } from "@/audio/TimerContext";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
+import { recipesApi } from "@/lib/api";
+import { recipeTitle } from "@/lib/loc";
 
 // Modalità "Mani Sporche": interfaccia XL a mani libere, comandi vocali,
 // timer di lavorazione grandi. Pensata per usare l'app con le mani infarinate.
@@ -24,10 +26,31 @@ export default function ManiSporche() {
   const [micOn, setMicOn] = useState(false);
   const [heard, setHeard] = useState("");
   const [clock, setClock] = useState(new Date());
+  const [recipes, setRecipes] = useState([]);
+  const [activeId, setActiveId] = useState(() => { try { return localStorage.getItem("mikilab_active_recipe") || ""; } catch { return ""; } });
   const recRef = useRef(null);
   const wlRef = useRef(null);
 
+  // Carica le ricette (MikiLab + personali) per collegare i tempi delle fasi.
+  useEffect(() => {
+    (async () => {
+      const [mk, pe] = await Promise.all([recipesApi.list("mikilab"), recipesApi.list("personal")]);
+      const seen = new Set(); const all = [];
+      for (const r of [...(pe || []), ...(mk || [])]) { const id = r.id || r.recipe_id; if (id && !seen.has(id)) { seen.add(id); all.push(r); } }
+      setRecipes(all);
+    })();
+  }, []);
+
+  const activeRecipe = useMemo(() => recipes.find((r) => (r.id || r.recipe_id) === activeId) || null, [recipes, activeId]);
+  const setActive = (id) => { setActiveId(id); try { id ? localStorage.setItem("mikilab_active_recipe", id) : localStorage.removeItem("mikilab_active_recipe"); } catch { /* */ } };
+
   useEffect(() => { const id = setInterval(() => setClock(new Date()), 1000); return () => clearInterval(id); }, []);
+
+  // In "Mani In Pasta" ho già un mic XL: nascondo il FAB Voce globale per evitare sovrapposizioni.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("mikilab-fab", { detail: { hide: true } }));
+    return () => window.dispatchEvent(new CustomEvent("mikilab-fab", { detail: { hide: false } }));
+  }, []);
 
   // Wake Lock: tiene lo schermo acceso mentre lavori.
   useEffect(() => {
@@ -46,12 +69,17 @@ export default function ManiSporche() {
     try { const s = window.speechSynthesis; if (!s) return; const u = new SpeechSynthesisUtterance(text); u.lang = voiceLang; u.rate = 0.98; s.speak(u); } catch { /* */ }
   }, [voiceLang]);
 
-  const PRESETS = [
-    { key: "pieghe", label: tri("Pieghe", "Falten", "Folds", "Pliegues"), min: 30, repeat: true },
-    { key: "puntata", label: tri("Puntata", "Stockgare", "Bulk", "Fermentación"), min: 90 },
-    { key: "appretto", label: tri("Appretto", "Stückgare", "Final proof", "Formado"), min: 60 },
-    { key: "cottura", label: tri("Cottura", "Backen", "Bake", "Cocción"), min: 40 },
-  ];
+  // Tempi delle fasi: se c'è una ricetta attiva, li derivo dai suoi parametri.
+  const PRESETS = useMemo(() => {
+    const r = activeRecipe;
+    const hasP = !!(r && r.bulk_fermentation_hours), hasA = !!(r && r.proofing_hours), hasC = !!(r && r.bake_minutes);
+    return [
+      { key: "pieghe", label: tri("Pieghe", "Falten", "Folds", "Pliegues"), min: 30, repeat: true, fromRecipe: false },
+      { key: "puntata", label: tri("Puntata", "Stockgare", "Bulk", "Fermentación"), min: hasP ? Math.round(r.bulk_fermentation_hours * 60) : 90, fromRecipe: hasP },
+      { key: "appretto", label: tri("Appretto", "Stückgare", "Final proof", "Formado"), min: hasA ? Math.round(r.proofing_hours * 60) : 60, fromRecipe: hasA },
+      { key: "cottura", label: tri("Cottura", "Backen", "Bake", "Cocción"), min: hasC ? Math.round(r.bake_minutes) : 40, fromRecipe: hasC },
+    ];
+  }, [activeRecipe, lang]); // eslint-disable-line
 
   const startPreset = (p) => { addTimer(p.label, p.min, p.repeat); speak(tri(`${p.label}, ${p.min} minuti`, `${p.label}, ${p.min} Minuten`, `${p.label}, ${p.min} minutes`, `${p.label}, ${p.min} minutos`)); };
 
@@ -78,12 +106,12 @@ export default function ManiSporche() {
   const stopMic = () => { const rec = recRef.current; recRef.current = null; try { rec && rec.stop(); } catch { /* */ } setMicOn(false); setHeard(""); };
 
   return (
-    <div className="pb-40" data-testid="manisporche">
+    <div className="pb-52" data-testid="manisporche">
       <div className="flex items-center gap-3 mb-3">
         <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><Hand className="w-6 h-6 text-white" /></div>
         <div>
-          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Mani Sporche", "Schmutzige Hände", "Dirty Hands", "Manos Sucias")}</h1>
-          <p className="text-sm text-[#7E8A93]">{tri("Tasti grandi e voce: usa l'app con le mani in pasta", "Große Tasten und Stimme", "Big buttons and voice", "Botones grandes y voz")}</p>
+          <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Mani In Pasta", "Hände im Teig", "Hands in the Dough", "Manos en la Masa")}</h1>
+          <p className="text-sm text-[#7E8A93]">{tri("Tasti grandi e controllo vocale hands-free mentre impasti", "Große Tasten und freihändige Sprachsteuerung beim Kneten", "Big buttons and hands-free voice control while you knead", "Botones grandes y control por voz mientras amasas")}</p>
         </div>
       </div>
 
@@ -91,6 +119,23 @@ export default function ManiSporche() {
       <div className="rounded-3xl bg-[#3a2415] text-white p-6 text-center mb-4">
         <p className="font-mono-data text-6xl font-bold tracking-tight" data-testid="manisporche-clock">{clock.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}</p>
         <p className="text-white/60 text-sm mt-1">{clock.toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { weekday: "long", day: "numeric", month: "long" })}</p>
+      </div>
+
+      {/* Ricetta attiva: collega i tempi delle fasi */}
+      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] p-3 mb-4">
+        <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-1.5">
+          <ChefHat className="w-4 h-4" /> {tri("Ricetta attiva", "Aktives Rezept", "Active recipe", "Receta activa")}
+        </label>
+        <select data-testid="manisporche-recipe-select" value={activeId} onChange={(e) => setActive(e.target.value)}
+          className="w-full rounded-xl bg-[#f5f5f5] dark:bg-[#151515] border border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-base font-semibold px-3 py-3">
+          <option value="">{tri("Nessuna (tempi standard)", "Keins (Standardzeiten)", "None (standard times)", "Ninguna (tiempos estándar)")}</option>
+          {recipes.map((r) => { const id = r.id || r.recipe_id; return <option key={id} value={id}>{recipeTitle(r, lang)}</option>; })}
+        </select>
+        {activeRecipe && (
+          <p className="text-[12px] text-[#7E8A93] mt-1.5" data-testid="manisporche-recipe-hint">
+            {tri("Tempi aggiornati da", "Zeiten aus", "Times from", "Tiempos de")} <span className="text-[#ff6b00] font-semibold">{recipeTitle(activeRecipe, lang)}</span>
+          </p>
+        )}
       </div>
 
       {/* Preset XL */}
@@ -102,6 +147,9 @@ export default function ManiSporche() {
             {p.repeat && <RefreshCw className="absolute top-3 right-3 w-4 h-4 text-[#ff6b00]" />}
             <span className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
             <span className="font-mono-data text-base text-[#7E8A93]">{p.min}′</span>
+            {activeRecipe && !p.fromRecipe && p.key !== "pieghe" && (
+              <span className="text-[9px] font-bold uppercase tracking-wide text-[#7E8A93]/80">{tri("standard", "Standard", "standard", "estándar")}</span>
+            )}
           </button>
         ))}
       </div>

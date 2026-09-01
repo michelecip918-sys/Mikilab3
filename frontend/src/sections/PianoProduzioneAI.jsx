@@ -167,7 +167,7 @@ export const TOOLS = [
   // 🧁 Laboratorio Pasticceria & Gelateria
   { id: "labpasticceria", Icon: Cake, cat: "pasticceria", kind: "crea", it: "Laboratorio Pasticceria & Gelateria", de: "Konditorei & Eis-Labor", en: "Pastry & Gelato Lab", es: "Lab Pastelería y Helado" },
   // 🛠️ Strumenti Mani in Pasta
-  { id: "manisporche", Icon: Hand, cat: "manisporche", kind: "controlla", it: "Mani Sporche (Voce)", de: "Schmutzige Hände (Stimme)", en: "Dirty Hands (Voice)", es: "Manos Sucias (Voz)" },
+  { id: "manisporche", Icon: Hand, cat: "manisporche", kind: "controlla", it: "Mani In Pasta (Voce)", de: "Hände im Teig (Stimme)", en: "Hands in Dough (Voice)", es: "Manos en la Masa (Voz)" },
   { id: "convlievito", Icon: RefreshCw, cat: "manisporche", kind: "calcola", it: "Convertitore Lieviti", de: "Hefe-Umrechner", en: "Leavening Converter", es: "Conversor Levaduras" },
   { id: "timer", Icon: TimerIcon, cat: "manisporche", kind: "gestisci", it: "Smart Timer Multi-Impasto", de: "Smart Timer Multi-Teig", en: "Smart Multi-Dough Timer" },
   { id: "ph", Icon: FlaskConical, cat: "manisporche", kind: "gestisci", it: "Registro Lievito Madre", de: "Sauerteig-Register", en: "Sourdough Log", es: "Registro Masa Madre" },
@@ -950,7 +950,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      {(mixers.length === 0 || cells.length === 0) && modules.celle && (
+      {planTab === "produci" && (mixers.length === 0 || cells.length === 0) && modules.celle && (
         <div data-testid="capo-setup-hint" className="mb-4 rounded-2xl bg-[#ff6b00]/12 border border-[#ff6b00]/35 p-3.5">
           <p className="text-sm text-[#ff6b00] dark:text-[#8FB0C2] leading-snug">
             {(() => {
@@ -976,7 +976,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         </div>
       )}
 
-      {onOpenTool && (
+      {planTab === "produci" && onOpenTool && (
         <div data-testid="capo-pizza-pastry" className="mb-4 rounded-2xl border border-[#ff6b00]/40 bg-[#161616] p-3.5">
           <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-1 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" /> {tri3(lang, "Pianifichi pizza o pasticceria?", "Planst du Pizza oder Konditorei?", "Planning pizza or pastry?", "¿Planificas pizza o pastelería?")}

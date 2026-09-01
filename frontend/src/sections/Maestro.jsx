@@ -211,12 +211,12 @@ export default function Maestro() {
         </div>
         <div className="grid grid-cols-2 gap-2">
           {[
-            { Icon: Bluetooth, t: mkTri(lang)("IoT & Sonde Live", "IoT & Live-Sonden", "IoT & Live Probes", "IoT y Sondas en Vivo", "IoT & Sondes Live", "اینترنت اشیا و سنسور زنده"), sub: "BLE" },
-            { Icon: Mic, t: mkTri(lang)("Miki-Voice Multilingua", "Miki-Voice mehrsprachig", "Multilingual Miki-Voice", "Miki-Voice Multilingüe", "Miki-Voice Multilingue", "میکی‌وویس چندزبانه"), sub: "IT·DE·EN·ES·FR·FA" },
-            { Icon: Camera, t: mkTri(lang)("IA Diagnostica Visiva", "Visuelle KI-Diagnose", "Visual AI Diagnosis", "IA Diagnóstico Visual", "IA Diagnostic Visuel", "تشخیص تصویری هوش مصنوعی"), sub: null },
-            { Icon: Wheat, t: mkTri(lang)("Auto-Tuning Farine", "Auto-Tuning Mehle", "Flour Auto-Tuning", "Auto-Ajuste Harinas", "Auto-Réglage Farines", "تنظیم خودکار آرد"), sub: "W · P/L" },
-            { Icon: Zap, t: mkTri(lang)("Energy & Bake Optimizer", "Energie- & Back-Optimizer", "Energy & Bake Optimizer", "Optimizador Energía & Horno", "Optimiseur Énergie & Cuisson", "بهینه‌ساز انرژی و پخت"), sub: null },
-            { Icon: TimerIcon, t: mkTri(lang)("Smart Starter Timer", "Smart Starter-Timer", "Smart Starter Timer", "Temporizador Masa Madre", "Minuteur Levain Intelligent", "تایمر هوشمند خمیرمایه"), sub: mkTri(lang)("Offline First", "Offline First", "Offline First", "Sin conexión", "Hors-ligne", "آفلاین") },
+            { Icon: Bluetooth, t: mkTri(lang)("Sonde & Sensori Live", "Live-Sonden & Sensoren", "Live Probes & Sensors", "Sondas y Sensores en Vivo", "Sondes & Capteurs Live", "سنسور و پروب زنده"), sub: "BLE" },
+            { Icon: Mic, t: mkTri(lang)("Assistente Vocale Multilingua", "Mehrsprachiger Sprachassistent", "Multilingual Voice Assistant", "Asistente de Voz Multilingüe", "Assistant Vocal Multilingue", "دستیار صوتی چندزبانه"), sub: "IT·DE·EN·ES·FR·FA" },
+            { Icon: Camera, t: mkTri(lang)("Analisi Visiva IA", "Visuelle KI-Analyse", "Visual AI Analysis", "Análisis Visual IA", "Analyse Visuelle IA", "تحلیل تصویری هوش مصنوعی"), sub: null },
+            { Icon: Wheat, t: mkTri(lang)("Calcolo & Bilanciamento Farine", "Mehl-Berechnung & Balance", "Flour Calc & Balancing", "Cálculo y Balance de Harinas", "Calcul & Équilibrage Farines", "محاسبه و تعادل آرد"), sub: "W · P/L" },
+            { Icon: Zap, t: mkTri(lang)("Ottimizzatore Consumi & Cottura", "Verbrauchs- & Back-Optimierung", "Consumption & Bake Optimizer", "Optimizador Consumo y Cocción", "Optimiseur Conso & Cuisson", "بهینه‌ساز مصرف و پخت"), sub: null },
+            { Icon: TimerIcon, t: mkTri(lang)("Timer Lievitazione Smart", "Smart Gär-Timer", "Smart Proofing Timer", "Temporizador Fermentación Smart", "Minuteur Levée Intelligent", "تایمر هوشمند ور آمدن"), sub: mkTri(lang)("Offline First", "Offline First", "Offline First", "Sin conexión", "Hors-ligne", "آفلاین") },
           ].map(({ Icon, t, sub }, i) => (
             <button key={i} data-testid={`tech-feat-${i}`} onClick={() => openTool(["bluetooth", "manisporche", "diagnosi", "trovafarina", "energia", "timer"][i])}
               className="w-full text-start flex items-center gap-2.5 rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 px-2.5 py-2 min-h-[52px] active:scale-97 hover:border-[#ff6b00]/60 transition-all">
