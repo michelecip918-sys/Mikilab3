@@ -10,7 +10,7 @@ export const LAB_HUBS = [
   {
     id: "produzione", emoji: "⏱️", pro: false,
     it: "Controllo Produzione & Fermentazione", de: "Produktion & Gärung", en: "Production & Fermentation", es: "Producción y Fermentación", fr: "Production & Fermentation", fa: "کنترل تولید و تخمیر",
-    ids: ["fermentazione", "twin", "weatherbaker", "timelapse", "bilancia", "pesata", "manisporche", "timer", "ph", "bancalievito", "diagnosi", "suono"],
+    ids: ["settimana", "fermentazione", "twin", "weatherbaker", "timelapse", "bilancia", "pesata", "manisporche", "timer", "ph", "bancalievito", "diagnosi", "suono"],
   },
   {
     id: "forni", emoji: "🍞", pro: true,

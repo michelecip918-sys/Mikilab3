@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend-only E2E su MikiLab (preview URL) con admin@mikilab.de. Verificati: (1) accesso al tool 'Programma Settimana' dentro l'hub 'Controllo Produzione & Fermentazione' del Laboratorio e apertura dell'editor WeeklyPlan con i 7 item seedati (Anima Integrale, lun-dom); (2) auto-load produzione di OGGI in Mani In Pasta (blocco manisporche-today + chip lotto + selezione ricetta automatica + preset sincronizzati); (3) motore proattivo DEMO (pannello, 21 moduli, mute, simulazione vasca 26°, interventi automatici); (4) regressione capo-tabs (capo-setup-hint / capo-pizza-pastry solo in tab 1). Nessun errore JS/pageerror in nessun flusso. Tutti i test richiesti sono PASSATI.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {
+        "screen": "Mani In Pasta — intervento proattivo",
+        "issues": [
+          "Il toast sonner (top-center) e l'overlay avatar 'proactive-avatar-overlay' (fixed top-20) si sovrappongono visivamente: il testo del toast copre parzialmente la bolla dell'avatar e la card 'Il Pizzico di Sapienza'. Suggerito offset verticale del toast o dell'overlay quando l'avatar parla."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "OPZIONALE (design): evitare la sovrapposizione toast/overlay avatar durante gli interventi proattivi in Mani In Pasta.",
+    "NOTA DATI (non bug): la ricetta 'Anima Integrale' ha bulk_fermentation_hours=null e proofing_hours=null, quindi i preset Puntata/Appretto restano 90'/60' con badge STANDARD; solo Cottura (22') deriva dalla ricetta (bake_minutes=22). Se si vuole dimostrare la sincronizzazione completa dei 4 tasti, valorizzare quei campi nella ricetta seed."
+  ],
+  "critical_code_review_comments": [
+    "ManiSporche.jsx: activeId è inizializzato da localStorage ('mikilab_active_recipe') e l'auto-select del lotto di oggi avviene solo se non c'è già un valore salvato. Se l'utente ha una ricetta 'stale' in localStorage non più presente nel catalogo, il select mostra un valore vuoto e i preset restano standard senza feedback. Valutare fallback al primo lotto di oggi quando l'id salvato non risolve a una ricetta esistente.",
+    "ProactiveAssistant.jsx: l'interval di auto-fire viene ricreato ad ogni cambio di 'lang' (fire dipende da lang) resettando il timer; accettabile ma il primo intervento si ri-schedula a 9s ad ogni cambio lingua.",
+    "ToolsDirectory.jsx: gli hub 'scienza' e 'produzione' sono aperti di default (utile per i test); notare per i prossimi agenti che cliccare lab-hub-toggle-produzione li CHIUDE."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "100% (5/5 flussi richiesti)" },
+  "seed_data_creation": "Nessun dato creato/modificato. Solo letture (GET /api/weekly-plan, /api/recipes) e un login backend read-only per verificare i campi ricetta.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (letto da /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "IMPORTANTE per i prossimi test: (a) all'avvio NON compare la schermata auth (accesso guest consentito) — bisogna cliccare data-testid 'login-btn' nell'header per aprire 'auth-screen'; (b) dopo il login il Laboratorio può essere in 'Modalità Laboratorio' big-mode: uscire con 'lab-big-exit' altrimenti gli hub/tool (lab-tool-*) non sono nel DOM; (c) gli hub 'scienza' e 'produzione' sono GIÀ espansi: non cliccare lab-hub-toggle-produzione o si chiudono; (d) 'Programma Settimana' = data-testid lab-tool-settimana; (e) il Planner (capo-tabs) è renderizzato inline nella pagina Lab (data-testid maestro-plan) in modalità Pro, non come tool separato; 'maestro-cta-generate' apre il Generatore Ricette, non il Planner; (f) 401 in console per API auth-gated pre-login e 424 su /api/tts (quota ElevenLabs) sono attesi. Risultati misurati: WeeklyPlan 7 giorni + 7 righe item 'Anima Integrale'; manisporche-today con 1 chip ('Anima Integrale · 25×', martedì); preset Cottura 22' dalla ricetta, Puntata/Appretto STANDARD; ProactiveAssistant 21 moduli, toast test-thermal 'Mickey Lab · Impasto Termico Predizionale' + overlay avatar, 2 interventi automatici distinti in ~40s (Ritmo Bio-Pace @8s, Carta d'Identità dell'Acqua @24s).",
+  "rca_of_the_issue": "Nessun difetto funzionale riscontrato. I due falsi negativi iniziali erano di test harness: (1) attesa della schermata auth invece del click su 'login-btn'; (2) click su lab-hub-toggle-produzione che chiudeva l'hub già aperto; (3) big-mode del Laboratorio persistito in localStorage che nascondeva la directory strumenti."
+}

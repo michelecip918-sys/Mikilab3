@@ -6,6 +6,9 @@ import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
 import { recipeTitle } from "@/lib/loc";
+import ProactiveAssistant from "@/components/ProactiveAssistant";
+import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, dayLabel, summarizeDay } from "@/lib/weeklyPlan";
+import { playTTS } from "@/lib/tts";
 
 // Modalità "Mani Sporche": interfaccia XL a mani libere, comandi vocali,
 // timer di lavorazione grandi. Pensata per usare l'app con le mani infarinate.
@@ -27,6 +30,8 @@ export default function ManiSporche() {
   const [heard, setHeard] = useState("");
   const [clock, setClock] = useState(new Date());
   const [recipes, setRecipes] = useState([]);
+  const [todayItems, setTodayItems] = useState([]);
+  const [weeklyAll, setWeeklyAll] = useState([]);
   const [activeId, setActiveId] = useState(() => { try { return localStorage.getItem("mikilab_active_recipe") || ""; } catch { return ""; } });
   const recRef = useRef(null);
   const wlRef = useRef(null);
@@ -41,8 +46,29 @@ export default function ManiSporche() {
     })();
   }, []);
 
+  // Auto-carica la produzione di OGGI dal Piano Settimanale attivo.
+  useEffect(() => {
+    (async () => {
+      const items = await fetchWeeklyItems();
+      setWeeklyAll(items);
+      const today = itemsForDay(items, todayKey());
+      setTodayItems(today);
+      // Se non c'è già una ricetta attiva, seleziona il primo lotto di oggi.
+      setActiveId((cur) => {
+        if (cur) return cur;
+        if (today[0]) { try { localStorage.setItem("mikilab_active_recipe", today[0].recipe_id); } catch { /* */ } return today[0].recipe_id; }
+        return cur;
+      });
+    })();
+  }, []);
+
   const activeRecipe = useMemo(() => recipes.find((r) => (r.id || r.recipe_id) === activeId) || null, [recipes, activeId]);
   const setActive = (id) => { setActiveId(id); try { id ? localStorage.setItem("mikilab_active_recipe", id) : localStorage.removeItem("mikilab_active_recipe"); } catch { /* */ } };
+
+  // Se la ricetta salvata non esiste più nel catalogo, ripiega sul primo lotto di oggi.
+  useEffect(() => {
+    if (activeId && !activeRecipe && recipes.length && todayItems[0]) setActive(todayItems[0].recipe_id);
+  }, [activeId, activeRecipe, recipes.length, todayItems]); // eslint-disable-line
 
   useEffect(() => { const id = setInterval(() => setClock(new Date()), 1000); return () => clearInterval(id); }, []);
 
@@ -85,6 +111,12 @@ export default function ManiSporche() {
 
   const handleTranscript = useCallback((said) => {
     const s = said.toLowerCase(); setHeard(said);
+    // Piano Settimanale a voce (produzione di oggi/domani).
+    if (/(produzion|programma|quanti impast|\blotti\b|cosa produ|production|\bplan\b|produkti|producci)/.test(s)) {
+      const key = /(domani|tomorrow|morgen|mañana)/.test(s) ? tomorrowKey() : todayKey();
+      const msg = summarizeDay(weeklyAll, key, lang);
+      playTTS(msg, { lang, voice: "michele" }); toast.success("👨‍🍳 " + msg); return;
+    }
     const mTimer = s.match(/(\d{1,3})\s*(min|minut|minute|minuten|minutos)/);
     if (mTimer) { const n = parseInt(mTimer[1], 10); addTimer(tri("Timer vocale", "Sprach-Timer", "Voice timer", "Temporizador"), n, false); speak(tri(`Timer di ${n} minuti`, `Timer über ${n} Minuten`, `${n} minute timer`, `${n} minutos`)); return; }
     for (const p of PRESETS) { if (s.includes(p.label.toLowerCase()) || (p.key === "pieghe" && /piegh|falt|fold/.test(s))) { startPreset(p); return; } }
@@ -121,6 +153,26 @@ export default function ManiSporche() {
         <p className="text-white/60 text-sm mt-1">{clock.toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { weekday: "long", day: "numeric", month: "long" })}</p>
       </div>
 
+      {/* Produzione di OGGI dal Piano Settimanale */}
+      {todayItems.length > 0 && (
+        <div className="rounded-2xl bg-gradient-to-br from-[#ff6b00]/15 to-[#3a2415]/40 border border-[#ff6b00]/40 p-3 mb-4" data-testid="manisporche-today">
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">
+            <ChefHat className="w-4 h-4" /> {tri("Produzione di oggi", "Heutige Produktion", "Today's production", "Producción de hoy")} · {dayLabel(todayKey(), lang)}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {todayItems.map((it) => {
+              const on = activeId === it.recipe_id;
+              return (
+                <button key={it.id} data-testid={`manisporche-today-${it.recipe_id}`} onClick={() => setActive(it.recipe_id)}
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white/5 text-[#e4eff8] border-[#ff6b00]/30 hover:border-[#ff6b00]"}`}>
+                  {it.recipe_name} <span className="opacity-70">· {Math.round(it.pieces || 0)}×</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Ricetta attiva: collega i tempi delle fasi */}
       <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] p-3 mb-4">
         <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-1.5">
@@ -137,6 +189,9 @@ export default function ManiSporche() {
           </p>
         )}
       </div>
+
+      {/* Motore proattivo DEMO (21 innovazioni always-on) */}
+      <ProactiveAssistant />
 
       {/* Preset XL */}
       <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{tri("Avvia un timer", "Timer starten", "Start a timer", "Iniciar temporizador")}</p>

@@ -7,6 +7,7 @@ import { TOOLS } from "@/sections/PianoProduzioneAI";
 import { api } from "@/lib/api";
 import { playTTS, stopTTS } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
+import { fetchWeeklyItems, todayKey, tomorrowKey, summarizeDay } from "@/lib/weeklyPlan";
 
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
@@ -29,6 +30,7 @@ const TOOL_ALIASES = {
   simforno: ["vapore", "gestione forno", "simulatore forno", "smart oven"], timelapse: ["time lapse", "raddoppio", "visual ferment"],
   esuberozero: ["esubero", "zero sprechi"], recupero: ["angolo recupero"], spreco: ["anti spreco"], bluetooth: ["bluetooth", "sonde", "iot", "dispositivi", "sonda"],
   manisporche: ["mani sporche", "mani infarinate", "copilot"],
+  settimana: ["piano settimanale", "programma settimana", "wochenplan", "weekly plan", "programa semanal", "produzione settimanale"],
 };
 const NAV = [
   { tab: "ricette", kw: ["ricette", "recipes", "rezepte", "recetas", "ricettario"] },
@@ -167,6 +169,20 @@ export default function VoiceCommand({ onOpenTool }) {
     open("aggiungi"); return true;
   };
 
+  // Piano Settimanale a voce: "produzione di oggi/domani", "quanti impasti".
+  const tryPlan = async (raw, t) => {
+    if (!/(produzion|produrre|produco|produciamo|programma|\blotti\b|\bimpasti\b|quanti impast|cosa produ|production|\bplan\b|produkti|producci)/.test(t)) return false;
+    const wantTomorrow = /(domani|tomorrow|morgen|mañana|demain)/.test(t);
+    const key = wantTomorrow ? tomorrowKey() : todayKey();
+    const items = await fetchWeeklyItems();
+    const msg = summarizeDay(items, key, lang);
+    const persona = /\bmomi\b|\bmomy\b/.test(t) ? "momy" : "michele";
+    setSpeaking(true);
+    playTTS(msg, { lang, voice: persona, onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
+    toast.success((persona === "momy" ? "🎓 Momi: " : "👨‍🍳 Lab: ") + msg);
+    return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
@@ -175,6 +191,7 @@ export default function VoiceCommand({ onOpenTool }) {
     if (tryConvert(t)) return;
     if (tryCreateRecipe(raw, t)) return;
     if (tryCalc(t)) return;
+    if (await tryPlan(raw, t)) return;
     if (await tryRecipe(t)) return;
     for (const [id, kws] of Object.entries(TOOL_ALIASES)) if (kws.some((k) => t.includes(k) || c.includes(k))) { open(id); return; }
     for (const n of NAV) if (n.kw.some((k) => c === k || c.includes(k))) { goto(n.tab, raw); return; }
