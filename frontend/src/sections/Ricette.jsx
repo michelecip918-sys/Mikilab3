@@ -39,6 +39,7 @@ export default function Ricette() {
     } finally { setExpBusy(false); }
   };
   const [view, setView] = useState("main");
+  const [backupOpen, setBackupOpen] = useState(false);
   const [custoditeInit, setCustoditeInit] = useState(null);
   const coll = "mikilab";
   useBackClose(view !== "main", () => setView("main"));
@@ -139,12 +140,11 @@ export default function Ricette() {
       )}
 
       {coll === "mikilab" && (
-        <div data-testid="ricette-utils" className="grid grid-cols-3 gap-2.5 mb-4">
+        <div data-testid="ricette-utils" className="grid grid-cols-2 gap-2.5 mb-4">
           <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab", "Découvre MikiLab")} onClick={() => setView("scopri")} />
           <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
-          <UtilBtn testid="ricette-export-csv-btn" Icon={Download} label={tri("Backup Ricette (CSV)", "Rezept-Backup (CSV)", "Recipe Backup (CSV)", "Copia Recetas (CSV)")} onClick={() => exportMine("csv")} />
-          <UtilBtn testid="ricette-export-pdf-btn" Icon={Download} label={tri("Backup Ricette (PDF)", "Rezept-Backup (PDF)", "Recipe Backup (PDF)", "Copia Recetas (PDF)")} onClick={() => exportMine("pdf")} />
+          <UtilBtn testid="ricette-backup-btn" Icon={Download} label={tri("Backup Ricette", "Rezept-Backup", "Recipe Backup", "Copia de Recetas", "Sauvegarde Recettes")} onClick={() => setBackupOpen(true)} />
         </div>
       )}
 
@@ -159,6 +159,31 @@ export default function Ricette() {
         extraHeader={<NovitaColorate />}
       />
       </div>
+
+      {backupOpen && (
+        <div data-testid="ricette-backup-modal" className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4" onClick={() => setBackupOpen(false)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="relative w-full max-w-sm bg-[#161616] border border-[#2e2e2e] rounded-3xl shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2.5 mb-1">
+              <span className="w-10 h-10 rounded-2xl bg-[#ff6b00]/15 border border-[#ff6b00]/40 flex items-center justify-center shrink-0"><Download className="w-5 h-5 text-[#ff6b00]" /></span>
+              <h3 className="font-display text-lg font-extrabold text-white">{tri("Backup delle tue ricette", "Backup deiner Rezepte", "Backup your recipes", "Copia de tus recetas", "Sauvegarde de tes recettes")}</h3>
+            </div>
+            <p className="text-[13px] text-[#AEB8BF] leading-snug mb-4">{tri("Scarica una copia delle tue ricette personali. Scegli il formato.", "Lade eine Kopie deiner eigenen Rezepte herunter. Wähle das Format.", "Download a copy of your personal recipes. Choose the format.", "Descarga una copia de tus recetas personales. Elige el formato.", "Télécharge une copie de tes recettes personnelles. Choisis le format.")}</p>
+            <div className="grid grid-cols-2 gap-2.5">
+              <button data-testid="ricette-export-csv-btn" disabled={expBusy} onClick={() => { setBackupOpen(false); exportMine("csv"); }}
+                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#1e1e1e] border border-[#ff6b00]/40 text-white active:scale-97 hover:border-[#ff6b00] transition-all disabled:opacity-50">
+                <Download className="w-5 h-5 text-[#ff6b00]" /><span className="font-display text-sm font-bold">CSV</span>
+                <span className="text-[10.5px] text-[#7E8A93]">{tri("Fogli di calcolo", "Tabellen", "Spreadsheets", "Hojas de cálculo", "Tableurs")}</span>
+              </button>
+              <button data-testid="ricette-export-pdf-btn" disabled={expBusy} onClick={() => { setBackupOpen(false); exportMine("pdf"); }}
+                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#1e1e1e] border border-[#ff6b00]/40 text-white active:scale-97 hover:border-[#ff6b00] transition-all disabled:opacity-50">
+                <Download className="w-5 h-5 text-[#ff6b00]" /><span className="font-display text-sm font-bold">PDF</span>
+                <span className="text-[10.5px] text-[#7E8A93]">{tri("Da stampare", "Zum Drucken", "For printing", "Para imprimir", "À imprimer")}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

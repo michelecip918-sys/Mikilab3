@@ -12190,5 +12190,25 @@
 "Esercizi": {
 "fr": "Exercices",
 "fa": "تمرین‌ها"
+},
+"Da stampare": {
+"fr": "À imprimer",
+"fa": "برای چاپ"
+},
+"Fogli di calcolo": {
+"fr": "Feuilles de calcul",
+"fa": "صفحات محاسبه"
+},
+"Backup Ricette": {
+"fr": "Sauvegarde Recettes",
+"fa": "پشتیبان‌گیری دستورها"
+},
+"Backup delle tue ricette": {
+"fr": "Sauvegarde de vos recettes",
+"fa": "پشتیبان‌گیری از دستورهای شما"
+},
+"Scarica una copia delle tue ricette personali. Scegli il formato.": {
+"fr": "Téléchargez une copie de vos recettes personnelles. Choisissez le format.",
+"fa": "یک نسخه از دستورهای شخصی خود را دانلود کنید. فرمت را انتخاب کنید."
 }
 }
