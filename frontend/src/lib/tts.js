@@ -1,49 +1,42 @@
-import { API } from "@/lib/api";
 import { cleanForSpeech } from "@/lib/voice";
 
-let _audio = null;
+// Sintesi vocale 100% nativa del dispositivo (SpeechSynthesis) — nessun servizio esterno.
+// Tono differenziato: Mickey Lab (deciso/telegrafico) vs Momi (caldo/descrittivo).
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
 
-export function stopTTS() {
-  try { if (_audio) { _audio.pause(); _audio = null; } } catch { /* */ }
-  try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch { /* */ }
+let _voices = [];
+function loadVoices() { try { _voices = window.speechSynthesis.getVoices() || []; } catch { _voices = []; } }
+loadVoices();
+try { window.speechSynthesis.onvoiceschanged = loadVoices; } catch { /* */ }
+
+function pickVoice(lang, persona) {
+  if (!_voices.length) loadVoices();
+  const code = (SR_LANG[lang] || "it-IT").slice(0, 2);
+  const cands = _voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(code));
+  if (!cands.length) return null;
+  const female = /female|donna|femmin|samantha|alice|aria|elsa|paola|federica|karen|zira|lucia|google italiano/i;
+  const male = /male|uomo|masch|luca|diego|cosimo|giorgio|paolo|david|marco|thomas/i;
+  if (persona === "momy" || persona === "momi") return cands.find((v) => female.test(v.name)) || cands[0];
+  return cands.find((v) => male.test(v.name)) || cands[0];
 }
 
-// Fallback: voce gratuita del dispositivo (se ElevenLabs non risponde).
-function freeFallback(text, lang, onStart, onEnded) {
-  try {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = SR_LANG[lang] || "it-IT";
-    u.rate = 1.02;
-    u.onstart = () => { if (onStart) onStart(); };
-    u.onend = () => { if (onEnded) onEnded(); };
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(u);
-  } catch { if (onEnded) onEnded(); }
-}
+export function stopTTS() { try { window.speechSynthesis.cancel(); } catch { /* */ } }
 
-// Legge un testo con la voce umana ElevenLabs. voice: "michele" (Lab) | "momy" (Momi).
-export async function playTTS(text, { lang = "it", voice = "momy", onStart, onEnded } = {}) {
+// voice: "michele" (Lab) | "momy" (Momi)
+export function playTTS(text, { lang = "it", voice = "momy", onStart, onEnded } = {}) {
   stopTTS();
   const clean = cleanForSpeech(text);
   if (!clean) { if (onEnded) onEnded(); return; }
   try {
-    const res = await fetch(`${API}/tts`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ text: clean, lang, voice }),
-    });
-    if (!res.ok) throw new Error("tts");
-    const blob = await res.blob();
-    if (!blob || blob.size < 200) throw new Error("empty");
-    const a = new Audio(URL.createObjectURL(blob));
-    _audio = a;
-    a.onplay = () => { if (onStart) onStart(); };
-    a.onended = () => { if (onEnded) onEnded(); };
-    a.onerror = () => { if (onEnded) onEnded(); };
-    await a.play();
-  } catch {
-    freeFallback(clean, lang, onStart, onEnded);
-  }
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = SR_LANG[lang] || "it-IT";
+    const v = pickVoice(lang, voice);
+    if (v) u.voice = v;
+    if (voice === "michele" || voice === "lab") { u.pitch = 0.85; u.rate = 1.1; }
+    else { u.pitch = 1.08; u.rate = 0.98; }
+    u.onstart = () => { if (onStart) onStart(); };
+    u.onend = () => { if (onEnded) onEnded(); };
+    u.onerror = () => { if (onEnded) onEnded(); };
+    window.speechSynthesis.speak(u);
+  } catch { if (onEnded) onEnded(); }
 }

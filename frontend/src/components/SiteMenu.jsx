@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Home as HomeIcon, BookOpen, Wrench, GraduationCap, Users, Trophy, Menu, Search, Star,
-  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield } from "lucide-react";
+  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield, BookOpenCheck } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { TOOLS, TOOL_KINDS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
@@ -208,6 +208,11 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white active:scale-98 transition-all">
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-white/20"><Trophy className="w-4 h-4" /></span>
               <span className="font-display text-sm font-semibold">{tri("Motore Sfide", "Challenges", "Challenges", "Desafíos")}</span>
+            </button>
+            <button data-testid="site-menu-guida" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-guida")); }}
+              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
+              <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#ff6b00]/15"><BookOpenCheck className="w-4 h-4 text-[#ff6b00]" /></span>
+              <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Guida MikiLab", "MikiLab-Anleitung", "MikiLab Guide", "Guía MikiLab")}</span>
             </button>
             {/* Interruttore modalità: Pro (tutto) / Passione (senza HACCP e B2B) */}
             <div data-testid="site-menu-mode" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">

@@ -9,6 +9,8 @@ import { playTTS, stopTTS } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
 import { fetchWeeklyItems, todayKey, tomorrowKey, summarizeDay } from "@/lib/weeklyPlan";
 import { PROACTIVE_MODULES, moduleName, moduleMsg } from "@/lib/proactiveModules";
+import { routeVoice } from "@/lib/nativeAudio";
+import { getOperators } from "@/lib/brigata";
 
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
@@ -69,7 +71,7 @@ export default function VoiceCommand({ onOpenTool }) {
   }, [timers.length]);
 
   const beep = () => { try { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.value = 0.15; o.start(); setTimeout(() => { o.stop(); a.close(); }, 140); } catch { /* */ } };
-  // Voce di Lab (ElevenLabs, telegrafica) con fallback alla voce del dispositivo.
+  // Voce di Lab (sintesi nativa del dispositivo, tono telegrafico).
   const speak = useCallback((text) => {
     playTTS(text, { lang, voice: "michele", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
   }, [lang]);
@@ -202,6 +204,68 @@ export default function VoiceCommand({ onOpenTool }) {
     return true;
   };
 
+  // "Mickey, guida" → apre la Guida MikiLab.
+  const tryGuida = (t) => {
+    if (!/\bguida\b|\bguide\b|\banleitung\b|\bgu[ií]a\b/.test(t)) return false;
+    window.dispatchEvent(new Event("mikilab-open-guida"));
+    setSpeaking(true);
+    playTTS(tri("Apro la guida.", "Öffne die Anleitung.", "Opening the guide.", "Abro la guía.", "J'ouvre le guide.", "راهنما را باز می‌کنم."), { lang, voice: "michele", onEnded: () => setSpeaking(false) });
+    toast.success(tri("📖 Guida MikiLab", "📖 Anleitung", "📖 Guide", "📖 Guía", "📖 Guide", "📖 راهنما"));
+    return true;
+  };
+
+  // "Mickey, chiama [nome/ruolo]" → chiamata interna (indicatore UI; audio nativo in build app).
+  const tryCall = (t) => {
+    const m = t.match(/\b(chiama|chiamare|call|ruf|rufe|rufst|llama|appelle)\b\s+(.+)/);
+    if (!m) return false;
+    const target = m[2].trim();
+    const op = getOperators().find((o) => (o.name || "").toLowerCase().includes(target.split(" ")[0]));
+    const msg = tri(`Chiamo ${op ? op.name : target}.`, `Rufe ${op ? op.name : target}.`, `Calling ${op ? op.name : target}.`, `Llamo a ${op ? op.name : target}.`, `J'appelle ${target}.`, `${target} را صدا می‌زنم.`);
+    setSpeaking(true);
+    routeVoice({ text: msg, lang, persona: "michele", operator: op, onEnded: () => setSpeaking(false) });
+    toast.info("📞 " + msg + " (DEMO)");
+    return true;
+  };
+
+  // "Ehi Lab, registra scarto 2 chili pane" → aggiunge al Registro Scarti.
+  const NUMW = { uno: 1, una: 1, due: 2, tre: 3, quattro: 4, cinque: 5, sei: 6, sette: 7, otto: 8, nove: 9, dieci: 10, mezzo: 0.5 };
+  const tryScarto = (t) => {
+    if (!/\b(scarto|scarti|spreco|sprechi|waste|ausschuss|merma)\b/.test(t)) return false;
+    let qty = 0;
+    const md = t.match(/(\d+(?:[.,]\d+)?)/);
+    if (md) qty = parseFloat(md[1].replace(",", "."));
+    else { for (const w in NUMW) { if (new RegExp("\\b" + w + "\\b").test(t)) { qty = NUMW[w]; break; } } }
+    let product = "";
+    const mp = t.match(/(?:chili|chilo|kg|kili|kilo|kilos|kilogramm)\s+(?:di\s+)?([a-zàèéìòù]+(?:\s+[a-zàèéìòù]+)?)/);
+    if (mp) product = mp[1].trim();
+    if (!product) { const mp2 = t.match(/\b(?:pane|pizza|focaccia|brioche|dolci|impasto|farina|baguette|panini)\b/); if (mp2) product = mp2[0]; }
+    try {
+      const arr = JSON.parse(localStorage.getItem("mikilab_scarti") || "[]");
+      arr.unshift({ id: `${Date.now()}`, ts: new Date().toISOString(), qty, product: product || tri("Prodotto", "Produkt", "Product", "Producto"), reason: "" });
+      localStorage.setItem("mikilab_scarti", JSON.stringify(arr));
+    } catch { /* */ }
+    window.dispatchEvent(new Event("mikilab-scarti-updated"));
+    const msg = tri(`Scarto registrato: ${qty} chili ${product}.`, `Ausschuss: ${qty} Kilo ${product}.`, `Waste logged: ${qty} kilos ${product}.`, `Merma: ${qty} kilos ${product}.`, `Rebut: ${qty} kilos ${product}.`, `ضایعات ثبت شد.`);
+    setSpeaking(true);
+    playTTS(msg, { lang, voice: "michele", onEnded: () => setSpeaking(false) });
+    toast.success("♻️ " + msg);
+    return true;
+  };
+
+  // "Vasca 1 sanificata" / "sanifica vasca due" → segna sanificazione.
+  const trySanifica = (t) => {
+    if (!/\b(sanific|sanifica|sanitis|sanitiz|reinig|higieniz|vasca sanific)\b/.test(t)) return false;
+    let n = "1"; const md = t.match(/vasca\s*(\d)/) || t.match(/\b(uno|due|tre)\b/);
+    if (md) { const raw = md[1]; n = raw === "uno" ? "1" : raw === "due" ? "2" : raw === "tre" ? "3" : raw; }
+    try { const m = JSON.parse(localStorage.getItem("mikilab_sanific") || "{}"); m[n] = new Date().toISOString(); localStorage.setItem("mikilab_sanific", JSON.stringify(m)); } catch { /* */ }
+    window.dispatchEvent(new Event("mikilab-sanific-updated"));
+    const msg = tri(`Vasca ${n} sanificata.`, `Kessel ${n} gereinigt.`, `Bowl ${n} sanitised.`, `Cuba ${n} higienizada.`, `Cuve ${n} nettoyée.`, `مخزن ${n} ضدعفونی شد.`);
+    setSpeaking(true);
+    playTTS(msg, { lang, voice: "michele", onEnded: () => setSpeaking(false) });
+    toast.success("💧 " + msg);
+    return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
@@ -210,6 +274,10 @@ export default function VoiceCommand({ onOpenTool }) {
     if (tryConvert(t)) return;
     if (tryCreateRecipe(raw, t)) return;
     if (tryCalc(t)) return;
+    if (tryGuida(t)) return;
+    if (trySanifica(t)) return;
+    if (tryScarto(t)) return;
+    if (tryCall(t)) return;
     if (await tryPlan(raw, t)) return;
     if (tryExplain(raw, t)) return;
     if (await tryRecipe(t)) return;

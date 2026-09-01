@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Users, Plus, X, Bluetooth, Headphones } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
+import { ZONES, zoneLabel } from "@/lib/brigata";
 
 const KEY = "mikilab_shifts";
 const ROLES = {
@@ -18,7 +19,7 @@ export default function ShiftRoles() {
 
   useEffect(() => { localStorage.setItem(KEY, JSON.stringify(people)); }, [people]);
 
-  const add = () => setPeople((p) => [...p, { id: `${Date.now()}`, name: "", role: roles[0], task: "", earphone: "" }]);
+  const add = () => setPeople((p) => [...p, { id: `${Date.now()}`, name: "", role: roles[0], task: "", earphone: "", zone: "impasti", shiftStart: "", changeTo: "", changeAt: "" }]);
   const upd = (id, patch) => setPeople((p) => p.map((x) => x.id === id ? { ...x, ...patch } : x));
   const del = (id) => setPeople((p) => p.filter((x) => x.id !== id));
 
@@ -43,7 +44,7 @@ export default function ShiftRoles() {
         </div>
       </div>
 
-      <div className="space-y-3" data-testid="shift-list">
+      <div className="space-y-3 pb-24" data-testid="shift-list">
         {people.length === 0 && <p className="text-sm text-[#9AA6AE] text-center py-6">{mkTri(lang)("Nessuno in turno.", "Noch niemand im Einsatz.", "No one on shift yet.")}</p>}
         {people.map((p) => (
           <div key={p.id} data-testid={`shift-${p.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3 space-y-2">
@@ -72,6 +73,26 @@ export default function ShiftRoles() {
                 className="shrink-0 inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#3B82F6] hover:bg-[#2f6fd6] px-3 py-2 rounded-lg active:scale-95">
                 <Bluetooth className="w-3.5 h-3.5" /> {mkTri(lang)("Collega", "Verbinden", "Pair", "Conectar")}
               </button>
+            </div>
+            {/* Brigata: zona di lavoro + orario turno */}
+            <div className="grid grid-cols-2 gap-2">
+              <select data-testid={`shift-zone-${p.id}`} value={p.zone || "impasti"} onChange={(e) => upd(p.id, { zone: e.target.value })}
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                {ZONES.map((z) => <option key={z.id} value={z.id}>{zoneLabel(z.id, lang)}</option>)}
+              </select>
+              <input type="time" data-testid={`shift-start-${p.id}`} value={p.shiftStart || ""} onChange={(e) => upd(p.id, { shiftStart: e.target.value })}
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" title={mkTri(lang)("Inizio turno", "Schichtbeginn", "Shift start", "Inicio turno")} />
+            </div>
+            {/* Cambio mansione programmato (avviso vocale automatico) */}
+            <div className="grid grid-cols-2 gap-2 items-center rounded-lg bg-[#ff6b00]/8 border border-[#ff6b00]/25 p-2">
+              <div className="col-span-2 text-[11px] font-bold uppercase tracking-wide text-[#ff6b00]">{mkTri(lang)("Cambio mansione (avviso vocale)", "Aufgabenwechsel (Sprachhinweis)", "Role change (voice alert)", "Cambio de tarea (aviso de voz)")}</div>
+              <select data-testid={`shift-changeto-${p.id}`} value={p.changeTo || ""} onChange={(e) => upd(p.id, { changeTo: e.target.value })}
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                <option value="">{mkTri(lang)("Nessuno", "Keiner", "None", "Ninguno")}</option>
+                {ZONES.map((z) => <option key={z.id} value={z.id}>{zoneLabel(z.id, lang)}</option>)}
+              </select>
+              <input type="time" data-testid={`shift-changeat-${p.id}`} value={p.changeAt || ""} onChange={(e) => upd(p.id, { changeAt: e.target.value })}
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" title={mkTri(lang)("Orario cambio", "Wechselzeit", "Change time", "Hora del cambio")} />
             </div>
           </div>
         ))}

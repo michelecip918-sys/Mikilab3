@@ -9,6 +9,7 @@ import { recipeTitle } from "@/lib/loc";
 import ProactiveAssistant from "@/components/ProactiveAssistant";
 import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, dayLabel, summarizeDay } from "@/lib/weeklyPlan";
 import { playTTS } from "@/lib/tts";
+import { getCurrentOperator, zoneLabel } from "@/lib/brigata";
 
 // Modalità "Mani Sporche": interfaccia XL a mani libere, comandi vocali,
 // timer di lavorazione grandi. Pensata per usare l'app con le mani infarinate.
@@ -32,6 +33,12 @@ export default function ManiSporche() {
   const [recipes, setRecipes] = useState([]);
   const [todayItems, setTodayItems] = useState([]);
   const [weeklyAll, setWeeklyAll] = useState([]);
+  const [operator, setOperator] = useState(() => getCurrentOperator());
+  useEffect(() => {
+    const h = () => setOperator(getCurrentOperator());
+    window.addEventListener("mikilab-operator", h);
+    return () => window.removeEventListener("mikilab-operator", h);
+  }, []);
   const [activeId, setActiveId] = useState(() => { try { return localStorage.getItem("mikilab_active_recipe") || ""; } catch { return ""; } });
   const recRef = useRef(null);
   const wlRef = useRef(null);
@@ -152,6 +159,24 @@ export default function ManiSporche() {
         <p className="font-mono-data text-6xl font-bold tracking-tight" data-testid="manisporche-clock">{clock.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}</p>
         <p className="text-white/60 text-sm mt-1">{clock.toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { weekday: "long", day: "numeric", month: "long" })}</p>
       </div>
+
+      {/* Operatore corrente */}
+      <button data-testid="manisporche-operator" onClick={() => window.dispatchEvent(new Event("mikilab-open-guida"))}
+        className="w-full flex items-center gap-2 mb-4 rounded-2xl bg-[#161616] border border-[#2e2e2e] px-3 py-2.5 active:scale-[0.99] transition-all">
+        <span className="w-8 h-8 rounded-full bg-[#ff6b00]/15 border border-[#ff6b00]/40 flex items-center justify-center text-[#ff6b00] font-bold text-sm shrink-0">
+          {operator ? (operator.name || "?").charAt(0).toUpperCase() : "?"}
+        </span>
+        <span className="min-w-0 text-left flex-1">
+          {operator ? (
+            <>
+              <span className="block text-sm font-bold text-[#e4eff8] truncate">{operator.name}{operator.zone ? <span className="text-[#7E8A93] font-normal"> · {zoneLabel(operator.zone, lang)}</span> : null}</span>
+              <span className="block text-[11px] text-[#7E8A93]">{tri("Tocca per cambiare operatore", "Zum Wechseln tippen", "Tap to switch operator", "Toca para cambiar")}</span>
+            </>
+          ) : (
+            <span className="block text-sm font-semibold text-[#ff6b00]">{tri("Seleziona il tuo profilo", "Profil wählen", "Select your profile", "Selecciona tu perfil")}</span>
+          )}
+        </span>
+      </button>
 
       {/* Produzione di OGGI dal Piano Settimanale */}
       {todayItems.length > 0 && (

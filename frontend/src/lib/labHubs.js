@@ -20,7 +20,7 @@ export const LAB_HUBS = [
   {
     id: "business", emoji: "📊", pro: true,
     it: "Business, Marketing & HACCP", de: "Business, Marketing & HACCP", en: "Business, Marketing & HACCP", es: "Negocio, Marketing y HACCP", fr: "Business, Marketing & HACCP", fa: "کسب‌وکار، بازاریابی و HACCP",
-    ids: ["settimana", "turni", "macchine", "foodcost", "freezer", "shelf", "esuberozero", "spreco", "check", "sessioni", "recupero", "mydata"],
+    ids: ["settimana", "turni", "scarti", "macchine", "foodcost", "freezer", "shelf", "esuberozero", "spreco", "check", "sessioni", "recupero", "mydata"],
   },
 ];
 

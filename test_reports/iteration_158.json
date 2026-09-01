@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only E2E (mobile 390x844) sul ciclo TTS nativo + Registro Scarti + indicatore audio multi-operatore. TUTTI i 7 flussi richiesti PASSANO. (1) HOME BADGE GATED: da guest 'home-system-badge' mostra SOLO 'SYSTEM 100% OFFLINE READY' (nessun 'Account aziendale attivo'); dopo login admin@mikilab.de compaiono ENTRAMBI ('SISTEMA 100% OFFLINE PRONTO' + 'ACCOUNT AZIENDALE ATTIVO') -> fix confermato. (2) REGISTRO SCARTI: apertura via nav-tab-maestro -> lab-big-exit -> tools-dir-search 'scarti' -> lab-tool-scarti; 'registro-scarti' visibile; scarto 2 kg Pane -> 1 riga, scarto-total '2.0 kg'; secondo scarto 1.5 Focaccia -> 2 righe, '3.5 kg'; delete cestino -> 1 riga, '2.0 kg'; localStorage mikilab_scarti coerente; dopo reload+riapertura i dati PERSISTONO (1 riga, 2.0 kg). (3) SANIFICAZIONE: sanif-btn-1 -> toast 'Vasca 1 sanificata OK', riga sanif-1 'Ultima: 11:30', persiste dopo reload (mikilab_sanific {\"1\":...}); vasche 2/3 restano 'Mai sanificata'. (4) AUDIO ROUTE INDICATOR: dispatch evento 'mikilab-audio-route' -> overlay 'audio-route-indicator' con 'IN CUFFIA A: MARCO · CONSEGNE / GUIDA · AIRPODS MARCO' e 'audio-route-text' = 'Marco, cambio mansione: Consegne.'; scompare automaticamente (0 elementi dopo ~7s). (5) TTS NATIVO: NESSUNA richiesta di rete a '/api/tts' (ne' a elevenlabs) durante login, Home, Accademia + click 'momi-listen', Registro Scarti, Turni; 0 pageerror JS. (6) TURNI: shift-list ha class 'space-y-3 pb-24'; shift-add crea riga con tutti i campi (name/role/task/earphone/pair/zone/start/changeto/changeat); l'input orario 'shift-changeat-<id>' ora e' scorribile oltre il FAB Voce e scrivibile (valore 05:30 accettato) -> regressione iter157 risolta. Comandi vocali (mic) non testati come richiesto.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Registro Scarti (mobile 390px)", "issues": ["Il FAB 'Radio' (bottom-left, fisso) copre parzialmente l'intestazione 'Sanificazione Vasche' in alcune posizioni di scroll; solo cosmetico, il contenuto e' raggiungibile scrollando (il container ha pb-24)."]},
+      {"screen": "Accademia - momi-listen", "issues": ["Con SpeechSynthesis senza voci disponibili (headless/alcuni Linux) il pulsante non cambia stato ('Ascolta con Momi' resta invariato) e non c'e' alcun feedback UI: valutare un fallback/avviso se speechSynthesis.getVoices() e' vuoto."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Nessun bug bloccante. Opzionale: feedback UI quando SpeechSynthesis non ha voci disponibili.",
+    "Opzionale: evitare che il FAB 'Radio' si sovrapponga ai titoli di sezione nei tool (offset/nascondi in scroll)."
+  ],
+  "critical_code_review_comments": [
+    "RegistroScarti usa Date.now() come id: due scarti aggiunti nello stesso millisecondo (es. via comando vocale ripetuto) avrebbero id duplicato -> preferire crypto.randomUUID().",
+    "RegistroScarti mostra 'Scarti di oggi' ma nessun filtro per data: le voci di giorni precedenti restano nel totale (localStorage non viene mai ripulito).",
+    "tts.js: se getVoices() e' vuoto (voci caricate in async) nessun onstart/onend affidabile; considerare attesa dell'evento onvoiceschanged prima di speak.",
+    "AudioRouteIndicator monta un timer unico: eventi ravvicinati resettano correttamente il timeout, OK."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (7/7 flussi richiesti)"},
+  "seed_data_creation": "localStorage: mikilab_scarti (1 voce 2kg Pane), mikilab_sanific (vasca 1), mikilab_shifts (riga Marco) nel browser di test",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante)",
+  "context_for_next_testing_agent": "Setup affidabile: goto -> voice-onboard-close/intro-close-btn -> lang-select=it -> login-btn -> auth-email/auth-password/auth-submit -> site-menu-open -> site-menu-mode-pro -> site-menu-close -> nav-tab-maestro -> lab-big-exit -> tools-dir-search '<key>' -> lab-tool-<key>. ATTENZIONE: senza Pro mode 'lab-tool-scarti' NON compare nella directory strumenti. Tab Accademia = nav-tab-imparacon (non 'impara'). Nessuna richiesta /api/tts presente nel frontend (grep confermato).",
+  "rca_of_the_issue": "N/A - nessun difetto funzionale riscontrato in questo ciclo."
+}

@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only E2E (mobile 390x844) sulle nuove feature del ciclo: badge Home, Guida MikiLab (Home + menu), campi Brigata in 'Turni di Lavoro' con persistenza, selezione operatore riflessa in 'Mani In Pasta'. TUTTI i flussi richiesti PASSANO. Setup: login admin@mikilab.de -> voice-onboard-close -> lang IT -> Pro via site-menu -> nav-tab-maestro (+lab-big-exit) -> tools-dir-search 'turni' -> lab-tool-turni (ora presente in TOOLS: il bug di iter156 e' risolto). Risultati: (1) home-system-badge mostra 'SISTEMA 100% OFFLINE PRONTO' + 'ACCOUNT AZIENDALE ATTIVO' e home-guida-btn 'Guida MikiLab' visibile; (2) guida-overlay si apre da home-guida-btn e da site-menu-guida con titolo 'Guida MikiLab', guida-operator, guida-card-0/1/2, guida-voice, guida-earphone; guida-close chiude correttamente; (3) shift-add crea riga, campi shift-zone/start/changeto/changeat presenti e funzionanti: localStorage mikilab_shifts = {name:Marco, zone:forni, shiftStart:04:00, changeTo:consegne, changeAt:05:30}; dopo reload tutti i valori sono persistiti; (4) chip guida-op-<id> 'Marco · Forni' cliccabile, diventa arancio (bg-[#ff6b00]), mikilab_operator salvato; (5) manisporche-operator mostra 'Marco · Forni · Tocca per cambiare operatore' e il click riapre guida-overlay. Nessun errore JS (0 pageerror); soli 401 attesi pre-login. Comandi vocali e scheduler cambio-mansione non testati (headless), come richiesto.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Turni di Lavoro (mobile 390px)", "issues": ["Il pulsante flottante 'Voce' (mic, bottom-right) copre parzialmente l'input orario 'shift-changeat-<id>' della riga in basso: il valore 05:30 e' visivamente tagliato. Aggiungere padding-bottom alla lista turni o spostare il FAB."]},
+      {"screen": "Home (guest, non loggato)", "issues": ["Il badge 'ACCOUNT AZIENDALE ATTIVO' e' visibile anche prima del login (stato guest) - potenzialmente fuorviante; valutare di mostrarlo solo ad utente autenticato."]},
+      {"screen": "Mani In Pasta / tool aperto da evento", "issues": ["Quando un tool viene aperto direttamente (senza directory) non e' presente 'tools-dir-search'; e' solo un dettaglio di navigazione, il pulsante 'Torna agli strumenti' funziona."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Minore: evitare che il FAB 'Voce' sovrapponga i campi orario in fondo alla lista Turni (aggiungere pb-24 alla sezione).",
+    "Minore: valutare condizione di login per il badge 'Account aziendale attivo' in Home."
+  ],
+  "critical_code_review_comments": [
+    "GuidaMikiLab legge gli operatori solo all'apertura dell'evento (nessun listener su 'mikilab-operator'/storage): se i turni cambiano mentre l'overlay e' aperto la lista non si aggiorna - accettabile ma da tenere presente.",
+    "ShiftRoles usa Date.now() come id: creando due righe nello stesso millisecondo si avrebbero id duplicati (rischio basso, ma preferire crypto.randomUUID())."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% (6/6 flussi richiesti)"},
+  "seed_data_creation": "Creato in localStorage del browser di test l'operatore 'Marco' (zone=forni, start 04:00, changeTo=consegne 05:30). Nessun dato server modificato.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (funzionante)",
+  "context_for_next_testing_agent": "Setup valido: login-btn -> auth-email/auth-password/auth-submit; chiudere voice-onboard-close; lingua default EN -> lang-select 'it'; Pro via site-menu-open -> site-menu-mode-pro -> site-menu-close; nav-tab-maestro (+lab-big-exit); tools-dir-search 'turni' ORA restituisce lab-tool-turni (fix confermato). Per tool non in directory usare page.evaluate window.dispatchEvent(new CustomEvent('mikilab-open-lab-tool',{detail:{id:'manisporche'}})). Gli operatori vivono in localStorage mikilab_shifts, l'operatore corrente in mikilab_operator.",
+  "rca_of_the_issue": "Nessun difetto funzionale riscontrato in questo ciclo."
+}

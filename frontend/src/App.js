@@ -19,6 +19,9 @@ import MikilaWisdom from "@/components/MikilaWisdom";
 import RadioFornaio from "@/components/RadioFornaio";
 import VoiceCommand from "@/components/VoiceCommand";
 import ModeBadge from "@/components/ModeBadge";
+import GuidaMikiLab from "@/sections/GuidaMikiLab";
+import ShiftScheduler from "@/components/ShiftScheduler";
+import AudioRouteIndicator from "@/components/AudioRouteIndicator";
 import IntroGuide from "@/components/IntroGuide";
 import SiteMenu from "@/components/SiteMenu";
 import { getProfile } from "@/components/Onboarding";
@@ -279,6 +282,9 @@ function App() {
       <ModeBadge />
       <VoiceCommand />
       <RadioFornaio />
+      <GuidaMikiLab />
+      <ShiftScheduler />
+      <AudioRouteIndicator />
       {/* WhatsApp FAB globale rimosso: WhatsApp ora SOLO in Corsi e Il Tuo Laboratorio */}
       {!resetToken && showIntro && <IntroGuide />}
       {/* Onboarding a domande rimosso: ingresso diretto (profilo di default seminato) */}

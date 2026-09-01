@@ -22,6 +22,7 @@ import ScanFlour from "@/sections/ScanFlour";
 import BackwardScheduler from "@/sections/BackwardScheduler";
 import ShoppingList from "@/sections/ShoppingList";
 import ShiftRoles from "@/sections/ShiftRoles";
+import RegistroScarti from "@/sections/RegistroScarti";
 import Checklists from "@/sections/Checklists";
 import FreezerStock from "@/sections/FreezerStock";
 import WaterTempCalc from "@/sections/WaterTempCalc";
@@ -161,6 +162,7 @@ export default function Maestro() {
         {tool === "freezer" && <FreezerStock />}
         {tool === "spesa" && <ShoppingList />}
         {tool === "turni" && <ShiftRoles />}
+        {tool === "scarti" && <RegistroScarti />}
         {tool === "check" && <Checklists />}
         {tool === "sveglia" && <SvegliaLievito />}
         {tool === "salespoints" && <SalesPoints />}

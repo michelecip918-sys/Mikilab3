@@ -1,7 +1,8 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, BookOpenCheck, WifiOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { useAuth } from "@/auth/AuthContext";
 import ShareInstall from "@/components/ShareInstall";
 
 const PUB = process.env.PUBLIC_URL;
@@ -9,6 +10,7 @@ const PUB = process.env.PUBLIC_URL;
 // Home minimal e ordinata: hero + 5 blocchi-sezione (copertina, badge, titolo, frase breve) + condivisione.
 export default function Home({ onNavigate }) {
   const { lang } = useLang();
+  const { user } = useAuth();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const go = (t) => onNavigate && onNavigate(t);
 
@@ -71,6 +73,22 @@ export default function Home({ onNavigate }) {
         <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#ff6b00]/15 text-[#ff6b00] border border-[#ff6b00]/40">
           {L("100% gratis", "100% kostenlos", "100% free", "100% gratis")}
         </span>
+        {/* Badge stato sistema */}
+        <div data-testid="home-system-badge" className="mt-3 flex items-center justify-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#22c55e]/15 text-[#22c55e] border border-[#22c55e]/40">
+            <WifiOff className="w-3 h-3" /> {L("Sistema 100% offline pronto", "System 100% offline bereit", "System 100% offline ready", "Sistema 100% offline listo")}
+          </span>
+          {user && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#ff6b00]/15 text-[#ff6b00] border border-[#ff6b00]/40">
+              {L("Account aziendale attivo", "Firmenkonto aktiv", "Company account active", "Cuenta de empresa activa")}
+            </span>
+          )}
+        </div>
+        {/* Guida MikiLab */}
+        <button data-testid="home-guida-btn" onClick={() => window.dispatchEvent(new Event("mikilab-open-guida"))}
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 px-4 py-2 text-sm font-bold text-white active:scale-95 transition-all">
+          <BookOpenCheck className="w-4 h-4 text-[#ff6b00]" /> {L("Guida MikiLab", "MikiLab-Anleitung", "MikiLab Guide", "Guía MikiLab")}
+        </button>
       </div>
 
       {/* 5 sezioni */}
