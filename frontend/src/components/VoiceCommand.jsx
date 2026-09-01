@@ -443,10 +443,15 @@ export default function VoiceCommand({ onOpenTool }) {
   };
 
   // ---- Wake-word: ascolto continuo (opt-in, richiede il tap iniziale) ----
-  const toggleWake = () => {
+  const toggleWake = async () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { toast.error(tri("Non supportato da questo browser.", "Nicht unterstützt.", "Not supported.", "No soportado.", "Non supporté.", "پشتیبانی نمی‌شود.")); return; }
     if (wake) { setWake(false); try { localStorage.setItem("mikilab_voice_wake", "0"); } catch { /* */ } try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } return; }
+    // Richiede ESPLICITAMENTE il permesso microfono (Web Speech API) al click.
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      try { const st = await navigator.mediaDevices.getUserMedia({ audio: true }); st.getTracks().forEach((t) => t.stop()); }
+      catch { toast.error(tri("Permesso microfono negato. Abilitalo per l'ascolto continuo.", "Mikrofon-Zugriff verweigert.", "Microphone permission denied.", "Permiso de micrófono denegado.", "Micro refusé.", "اجازه میکروفون رد شد.")); return; }
+    }
     setWake(true); try { localStorage.setItem("mikilab_voice_wake", "1"); } catch { /* */ } beep();
     toast.success(tri("Ascolto «Ehi Lab» attivo.", "Höre auf «Ehi Lab».", "Listening for «Ehi Lab».", "Escuchando «Ehi Lab».", "À l'écoute «Ehi Lab».", "در حال شنیدن «لب»."));
     const loop = () => {
@@ -516,6 +521,8 @@ export default function VoiceCommand({ onOpenTool }) {
     return () => window.removeEventListener("mikilab-consegne", cons);
     // eslint-disable-next-line
   }, [lang]);
+  // Espone lo stato voce (ascolto/parla) all'Avatar 3D.
+  useEffect(() => { window.dispatchEvent(new CustomEvent("mikilab-voice-state", { detail: { listening, speaking } })); }, [listening, speaking]);
 
   const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 

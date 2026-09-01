@@ -9,7 +9,7 @@ import { useShift, setWorkMode, setBatchStatus, batchStatus, statusLabel, STATUS
 
 // Ricette del Giorno — lista prodotti in programma oggi; tap → dosi in GRANDE + stato lotto.
 // Flusso continuo o Autonomia: aggiorni lo stato (Pronto / In cella / Pre-cotto…) per chi lavora dopo.
-const C = { cream: "#F5ECD7", surf: "#FBF6E8", border: "#E3C989", gold: "#C8862B", title: "#8A5A16", dark: "#3D2B1F", muted: "#6B5138" };
+const C = { cream: "#17120B", surf: "#241B10", border: "#6E5320", gold: "#E7B23C", title: "#E7B23C", dark: "#F0E4CC", muted: "#B79B6A" };
 // Stati mostrati in dettaglio (avanzamento del lotto).
 const STEP_STATUSES = ["pronto", "in_cella", "in_lievitazione", "precotto", "base_pronta", "fatto"];
 
@@ -58,7 +58,7 @@ export default function RicettaDelGiorno() {
           {rows.map((row, i) => (
             <div key={i} className="flex items-baseline justify-between gap-3 rounded-2xl px-4 py-3" style={{ background: C.surf, border: `2px solid ${C.border}` }}>
               <span className="font-bold" style={{ fontSize: "clamp(18px,5vw,26px)", color: C.dark }}>{row.k}</span>
-              <span className="font-mono-data font-extrabold whitespace-nowrap" style={{ fontSize: "clamp(24px,7vw,38px)", color: "#8A5A16" }}>
+              <span className="font-mono-data font-extrabold whitespace-nowrap" style={{ fontSize: "clamp(24px,7vw,38px)", color: "#E7B23C" }}>
                 {Math.round(row.v)}{row.u}{row.extra ? <span className="ml-2 font-bold" style={{ fontSize: "0.6em", color: C.gold }}>{row.extra}</span> : null}
               </span>
             </div>
@@ -73,7 +73,7 @@ export default function RicettaDelGiorno() {
             return (
               <button key={st} data-testid={`rdg-status-${st}`} onClick={() => setBatchStatus(batchFor(sel), st)}
                 className="rounded-2xl py-3 px-3 font-extrabold text-[14px] active:scale-95 transition-all text-center"
-                style={{ background: on ? (STATUS_COLOR[st] || C.gold) : C.surf, border: `2px solid ${on ? (STATUS_COLOR[st] || C.gold) : C.border}`, color: on ? "#FBF6E8" : C.dark }}>
+                style={{ background: on ? (STATUS_COLOR[st] || C.gold) : C.surf, border: `2px solid ${on ? (STATUS_COLOR[st] || C.gold) : C.border}`, color: on ? "#241B10" : C.dark }}>
                 {statusLabel(st, tri)}
               </button>
             );
@@ -81,7 +81,7 @@ export default function RicettaDelGiorno() {
         </div>
         <button data-testid="rdg-done" onClick={() => { setBatchStatus(batchFor(sel), "fatto"); setSel(null); }}
           className="mt-5 w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 font-extrabold" style={{ background: C.dark, color: C.cream, fontSize: "clamp(16px,4.5vw,19px)" }}>
-          <CheckCircle2 className="w-5 h-5" style={{ color: "#E3C989" }} /> {tri("Lotto completato \u2192 prossimo", "Charge fertig", "Batch done \u2192 next", "Lote hecho")}
+          <CheckCircle2 className="w-5 h-5" style={{ color: "#6E5320" }} /> {tri("Lotto completato \u2192 prossimo", "Charge fertig", "Batch done \u2192 next", "Lote hecho")}
         </button>
       </div>
     );
@@ -111,9 +111,9 @@ export default function RicettaDelGiorno() {
         })}
       </div>
       {autonomia && (
-        <div className="rounded-xl px-3 py-2 mb-3" style={{ background: "#FBEEDD", border: `2px solid ${C.gold}` }}>
+        <div className="rounded-xl px-3 py-2 mb-3" style={{ background: "#2E2214", border: `2px solid ${C.gold}` }}>
           <p className="text-[12px] leading-snug" style={{ color: C.dark }}>{tri("Modalità Autonomia: completa i lotti in blocco e aggiorna lo stato (Pronto / In cella / In lievitazione) per chi lavora dopo di te.", "Autonomie: Chargen im Block fertigen und Status setzen.", "Autonomy: complete batches in bulk and update status for the next worker.", "Autonomía: completa lotes y actualiza el estado.", "Autonomie : termine les lots et mets à jour le statut.", "خودگردان: دسته‌ها را کامل کن و وضعیت را به‌روز کن.")}</p>
-          {deadline && <p className="text-[12px] font-extrabold mt-1" style={{ color: "#8A5A16" }}>⏰ {tri("Puoi lavorare in autonomia fino alle", "Autonom bis", "Work autonomously until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} {fmtHM(deadline, lang)}.</p>}
+          {deadline && <p className="text-[12px] font-extrabold mt-1" style={{ color: "#E7B23C" }}>⏰ {tri("Puoi lavorare in autonomia fino alle", "Autonom bis", "Work autonomously until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} {fmtHM(deadline, lang)}.</p>}
         </div>
       )}
 
@@ -130,7 +130,7 @@ export default function RicettaDelGiorno() {
             {bases.map((b, i) => {
               const al = baseAlert(b);
               return (
-                <span key={i} className="text-[12px] font-bold rounded-full px-3 py-1.5" style={{ background: al ? "#F3C9A6" : "#EED8A8", color: C.dark }}>{b.qty}{b.unit ? ` ${b.unit}` : ""} {b.product} · {statusLabel(b.kind, tri)}{al ? (al === "scaduto" ? " ⚠️" : " ⏳") : ""}</span>
+                <span key={i} className="text-[12px] font-bold rounded-full px-3 py-1.5" style={{ background: al ? "#4A2E16" : "#3A2C16", color: C.dark }}>{b.qty}{b.unit ? ` ${b.unit}` : ""} {b.product} · {statusLabel(b.kind, tri)}{al ? (al === "scaduto" ? " ⚠️" : " ⏳") : ""}</span>
               );
             })}
           </div>

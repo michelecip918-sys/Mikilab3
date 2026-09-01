@@ -1980,6 +1980,32 @@ async def add_fault_log(payload: FaultLogEntry, user: Optional[dict] = Depends(o
     return doc
 
 
+# Sensori/sonde REALI (Web Bluetooth lato client) — letture condivise.
+# Ultimo valore per (device_id, type); il client invia le letture via BLE notifications.
+class SensorReading(BaseModel):
+    device_id: str
+    name: Optional[str] = ""
+    type: str = "temperature"   # temperature | humidity | weight | co2 | battery
+    value: float
+    unit: Optional[str] = ""
+    operator: Optional[str] = ""
+    at: Optional[str] = None
+
+
+@api_router.get("/lab/sensors")
+async def get_sensors(user: Optional[dict] = Depends(optional_user)):
+    return await db.lab_sensors.find({}, {"_id": 0, "_key": 0}).sort("at", -1).to_list(200)
+
+
+@api_router.post("/lab/sensors")
+async def post_sensor(payload: SensorReading, user: Optional[dict] = Depends(optional_user)):
+    payload.at = now_iso()
+    doc = payload.model_dump()
+    key = f"{payload.device_id}:{payload.type}"
+    await db.lab_sensors.update_one({"_key": key}, {"$set": {**doc, "_key": key}}, upsert=True)
+    return doc
+
+
 # ---------------------------------------------------------------------------
 # Memoria temperatura impasto per ricetta (termostato)
 # ---------------------------------------------------------------------------

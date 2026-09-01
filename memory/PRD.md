@@ -3238,3 +3238,13 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Nuove funzioni (shiftState.js): autonomyDeadline+fmtHM (Autonomia con orari), handoverSummary (Consegne del turno via evento mikilab-consegne→VoiceCommand speak; comando vocale tryConsegne), basesSummary+baseAlert (Basi in scadenza), fault-log backend `/api/lab/fault-log` (GET/POST) + logFault (await→dispatch) mostrato in Emergenze (emg-faultlog). Guasti/cella registrano nello storico.
 - Back arrow gold "Indietro" (maestro-back-btn). Audit doc aggiornato (/app/memory/AUDIT_MIKILAB.md + /audit/*.pdf|md).
 - Testato iter164: backend 7/7; UI flows OK. Fix: logFault race (await), BottomNav break-words.
+
+---
+## v-fork3 (2026-06) — Tema scuro Grain Gold, Avatar 3D, Web Bluetooth REALE
+- Tema SCURO "Grain Gold" (ebano #17120B + oro #E7B23C) su BraccioLab/Emergenze/RicettaDelGiorno; icone tab in oro luminoso (BottomNav filtro sepia/saturate + glow).
+- Avatar3D.jsx (framer-motion): sfera oro con entrata a "porta" (rotateY), bocca animata quando parla; reagisce a mikilab-voice-state emesso da VoiceCommand. Sostituisce i pulsanti piatti nel Braccio.
+- ORECCHIO (voice-wake-toggle) ora richiede ESPLICITAMENTE il permesso microfono (getUserMedia) al click; ascolto continuo "Ehi Lab".
+- Web Bluetooth REALE: lib/bluetooth.js (Environmental Sensing 0x181A temp 0x2A6E / hum 0x2A6F + battery) → POST /api/lab/sensors; GET per letture condivise. Pannello 'Sonde Bluetooth (reali)' in Emergenze (emg-sensors) con letture live.
+- ProactiveAssistant NON più random/demo: legge /api/lab/sensors e interviene solo su soglie reali (temp>=26, umidità<=55, batteria<=15, freschezza <2min); silenzioso senza sonde. Badge 'LIVE'. Overlay min 5s.
+- NOTA: routing AUDIO Bluetooth multi-operatore NON fattibile via Web Bluetooth (solo etichetta operatore); richiede build nativa Capacitor. Pairing BLE reale richiede hardware fisico (non verificabile headless).
+- Testato iter165: backend 9/9; fix applicati (overlay flash→5s, lista sensori sempre visibile, pannelli chiari residui→scuro).

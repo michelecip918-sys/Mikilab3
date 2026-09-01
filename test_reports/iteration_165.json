@@ -1,0 +1,45 @@
+{
+  "summary": "Iter165: tested new /api/lab/sensors endpoint (POST/GET/upsert/422) + regression fault-log & shift-state (9/9 pytest passed), and frontend: dark 'Grain Gold' theme on BraccioLab/Emergenze, Avatar3D, gold tab icons, Emergenze Bluetooth section fallback, real (non-random) ProactiveAssistant, ORECCHIO mic-permission click, tab navigation + back. One real bug found: proactive avatar overlay flashes for <150ms when device TTS is unavailable, so the intervention is effectively invisible.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/lab/sensors, /api/lab/fault-log", "issue": "Pydantic models silently ignore unknown fields (e.g. sending {machine, status, operator} to fault-log returns 200 with empty name). Consider model_config extra='forbid' to catch client/API drift."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ProactiveAssistant", "issue": "fire() sets speaking then playTTS(); when SpeechSynthesis has no voices/errors (headless, desktop w/o TTS, autoplay-blocked) u.onerror -> onEnded fires immediately, so [data-testid='proactive-avatar-overlay'] mounts and unmounts in <150ms (confirmed via MutationObserver: 1 mount, 0 visible polls at 150ms). The real-threshold intervention (temp 29.5 posted to /api/lab/sensors) therefore produced NO visible message. Fix: keep the overlay for a minimum ~4-5s regardless of TTS result.", "selector": "[data-testid='proactive-avatar-overlay']", "priority": "HIGH"},
+      {"component": "Emergenze / emg-sensors", "issue": "When isBluetoothSupported() is false the whole sensor list is hidden (only the 'not supported' text). Readings pushed by other operators/mobile devices (already in /api/lab/sensors) are invisible on non-BT browsers. Suggestion: always render the readings grid and only hide the connect button.", "selector": "[data-testid='emg-sensors']", "priority": "MEDIUM"},
+      {"component": "Emergenze / emg-autonomy", "issue": "[data-testid='emg-autonomy'] never rendered even after switching to emg-mode-autonomia (depends on `deadline` being computed) - could not be verified. Also its style is hardcoded light (background #FBF6E8) with gold text (C.title #E7B23C) inside the new dark theme: leftover light panel + ~1.9:1 contrast.", "selector": "[data-testid='emg-autonomy']", "priority": "MEDIUM"},
+      {"component": "RecipeList", "issue": "React warning: <button data-testid='recipe-fav-*'> nested inside <button data-testid='recipe-row-*'> (invalid HTML / hydration error). Pre-existing.", "selector": "[data-testid^='recipe-fav-']", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Bluetooth sensor data -> UI list", "issue": "Could not be verified end-to-end in headless (no Web Bluetooth): after POST /api/lab/sensors + mikilab-sensor event, the Emergenze section keeps showing only the unsupported message (see ui_bug above). Data layer itself verified OK via API.", "affected_selectors": ["[data-testid='emg-sensors']"]}
+    ],
+    "design_issues": [
+      {"screen": "BottomNav", "issues": ["Tab icons are jpg images with sepia(1) saturate(4) filter: they render as 4 nearly identical gold blobs, hard to distinguish at a glance (labels carry all the meaning). Consider vector/lucide icons in gold or a lighter filter."]},
+      {"screen": "Emergenze (dark)", "issues": ["emg-autonomy panel still uses the old cream background inside the ebony theme (contrast/consistency)."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter165_sensors.py", "/app/test_reports/pytest/iter165_results.xml"],
+  "action_items": [
+    "ProactiveAssistant: guarantee a minimum visible duration (~4-5s) for proactive-avatar-overlay even when playTTS fails/ends instantly (currently the proactive message is invisible without device TTS).",
+    "Emergenze: render sensor readings from /api/lab/sensors even when Web Bluetooth is unsupported (hide only the connect button).",
+    "Emergenze emg-autonomy: restyle to the dark Grain Gold palette (remove hardcoded #FBF6E8) and verify the `deadline` condition so the panel actually appears in 'autonomia' mode.",
+    "Optional: fix nested <button> in RecipeList (recipe-fav inside recipe-row)."
+  ],
+  "critical_code_review_comments": [
+    "ProactiveAssistant.fire(): setSpeaking is cleared by playTTS onEnded/onerror synchronously -> use a floor timer (setTimeout min 4s) before allowing clear.",
+    "ProactiveAssistant polls /api/lab/sensors every 15s from every mounted instance with no dedup/backoff; with many clients this is chatty. Also the reading loop `break`s only on fire, fine, but per-type cooldown keys are global (temp/hum/batt) so a second probe cannot fire while another is in cooldown.",
+    "Emergenze.jsx line ~107 hardcodes light colors (#FBF6E8) inconsistent with the new dark palette C.",
+    "SensorReading/FaultLogEntry accept extra fields silently; add strict validation."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter165_sensors.py"],
+  "success_rate": {"backend": "100% (9/9)", "frontend": "~85% (theme, Avatar3D, tabs, nav, faultlog, mic-toggle, LIVE badge & silence OK; proactive visibility + sensor list rendering failed)"},
+  "seed_data_creation": "Created TEST_ sensor readings (TEST_iter165_probe/ui/hot) and TEST fault-log entries; ALL cleaned up (lab_sensors emptied, TEST fault entries deleted, shift-state reset to work_mode=continuo, shift_notes/machines_down cleared).",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "Not needed: all tested endpoints/views are anonymous-accessible. /api/auth/me, /api/weekly-plan, /api/notifications, /api/favorites/sync, /api/combos/sync, /api/recipes?collection_name=personal return 401 for guests (expected but noisy in console).",
+  "context_for_next_testing_agent": "Backend sensors suite: /app/backend/tests/test_iter165_sensors.py (run with -p no:randomly). To reach ProactiveAssistant UI: braccio-gestione -> tech-feat-1 (ManiSporche). Proactive overlay is transient: detect it with a MutationObserver, not with 2s polling. Emergenze reached via braccio-quick-emergenze; Web Bluetooth is unsupported in headless so emg-bt-connect never renders. Remember to clean lab_sensors / lab_fault_log (TEST_ prefix) and reset lab_shift_state after tests.",
+  "rca_of_the_issue": "Proactive invisibility RCA: lib/tts.js playTTS sets u.onerror -> onEnded; in environments without SpeechSynthesis voices the error fires immediately, so ProactiveAssistant's onEnded sets speaking=null in the same tick range, unmounting proactive-avatar-overlay before it is perceivable. The 9s safety timeout only clears, never keeps it. Reproduced by dispatching window 'mikilab-proactive-trigger' {id:'thermal_dough'} and by POSTing a 29.5C reading to /api/lab/sensors + 'mikilab-sensor' event: MutationObserver counted 1 overlay mount, no frame where it was visible."
+}

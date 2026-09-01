@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Radar, ChevronDown, ChevronUp, Volume2, VolumeX, Zap } from "lucide-react";
+import { Radar, ChevronDown, ChevronUp, Volume2, VolumeX } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { toast } from "sonner";
 import { playTTS } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
 import { PROACTIVE_MODULES, moduleName, moduleMsg } from "@/lib/proactiveModules";
+import { loadSensors } from "@/lib/bluetooth";
 
 // Motore proattivo DEMO: le 21 innovazioni girano sempre-attive in sottofondo.
 // Quando una soglia SIMULATA viene superata, l'avatar (Lab operativo / Momi tutor)
@@ -30,22 +31,40 @@ export default function ProactiveAssistant() {
       toast(`${m.persona === "momi" ? "Momi" : "Mickey Lab"} · ${label}`, { description: text });
       return;
     }
-    // Voce ON: mostro l'avatar overlay (che porta già il testo) e parlo — niente toast per non sovrapporre.
+    // Voce ON: mostro l'avatar overlay (che porta già il testo) e parlo.
     setSpeaking({ persona: m.persona, name: label });
     playTTS(text, {
       lang,
       voice: m.persona === "momi" ? "momy" : "michele",
-      onEnded: () => setSpeaking(null),
     });
-    // sicurezza: sblocca l'avatar anche se l'audio non parte
-    setTimeout(() => setSpeaking((s) => (s && s.name === label ? null : s)), 9000);
+    // Mantengo l'overlay un tempo minimo VISIBILE anche se la TTS non parte (headless/autoplay).
+    setTimeout(() => setSpeaking((s) => (s && s.name === label ? null : s)), 5000);
   }, [lang]);
 
-  // Auto-start: prima segnalazione dopo ~9s, poi ogni 22-30s (simulato).
+  // Motore REALE: legge i sensori dal backend (Web Bluetooth) e interviene solo su
+  // soglie REALI. Se nessuna sonda è collegata, l'assistente resta in silenzio.
+  const firedRef = useRef({});
   useEffect(() => {
-    const first = setTimeout(() => fire(), 9000);
-    const iv = setInterval(() => fire(), 22000 + Math.floor(Math.random() * 8000));
-    return () => { clearTimeout(first); clearInterval(iv); };
+    const M = (id) => PROACTIVE_MODULES.find((x) => x.id === id);
+    const check = async () => {
+      const now = Date.now();
+      const readings = await loadSensors();
+      const canFire = (k) => now - (firedRef.current[k] || 0) > 300000; // cooldown 5 min
+      const doFire = (k, m) => { if (!m) return; firedRef.current[k] = now; fire(m); };
+      for (const s of readings) {
+        let age = Infinity; try { age = now - new Date(s.at).getTime(); } catch { /* */ }
+        if (age > 120000) continue; // ignora letture vecchie (>2 min)
+        const v = Number(s.value);
+        if (s.type === "temperature" && v >= 26 && canFire("temp")) { doFire("temp", M("thermal_dough")); break; }
+        if (s.type === "humidity" && v <= 55 && canFire("hum")) { doFire("hum", M("climate_timer")); break; }
+        if (s.type === "battery" && v <= 15 && canFire("batt")) { doFire("batt", M("flour_dust")); break; }
+      }
+    };
+    check();
+    const iv = setInterval(check, 15000);
+    const onSensor = () => check();
+    window.addEventListener("mikilab-sensor", onSensor);
+    return () => { clearInterval(iv); window.removeEventListener("mikilab-sensor", onSensor); };
   }, [fire]);
 
   // Trigger programmatico (per i test): window event con { id }.
@@ -54,8 +73,6 @@ export default function ProactiveAssistant() {
     window.addEventListener("mikilab-proactive-trigger", onTrig);
     return () => window.removeEventListener("mikilab-proactive-trigger", onTrig);
   }, [fire]);
-
-  const thermal = PROACTIVE_MODULES.find((m) => m.id === "thermal_dough");
 
   return (
     <>
@@ -82,27 +99,23 @@ export default function ProactiveAssistant() {
             </span>
             <Radar className="w-4 h-4 text-[#ff6b00]" />
             {tri("Assistente Proattivo", "Proaktiver Assistent", "Proactive Assistant", "Asistente Proactivo")}
-            <span className="text-[9px] font-extrabold bg-[#ff6b00] text-white px-1.5 py-0.5 rounded-full uppercase">DEMO</span>
+            <span className="text-[9px] font-extrabold bg-[#22c55e] text-white px-1.5 py-0.5 rounded-full uppercase">LIVE</span>
           </span>
           <span className="flex items-center gap-2 text-[11px] text-[#7E8A93]">21 {tri("moduli attivi", "Module aktiv", "modules on", "módulos")}{open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</span>
         </button>
         {open && (
           <div className="px-3.5 pb-3.5 border-t border-[#2e2e2e]">
             <p className="text-[11px] text-[#7E8A93] leading-snug my-2">
-              {tri("Tutti i sensori e i moduli IA lavorano in sottofondo in modalità silenziosa. Gli avatar intervengono a voce solo su anomalie o suggerimenti. (Valori simulati per dimostrazione.)",
-                "Alle Sensoren und KI-Module laufen still im Hintergrund. Avatare sprechen nur bei Anomalien. (Simulierte Werte.)",
-                "All sensors and AI modules run silently in the background. Avatars speak only on anomalies or tips. (Simulated values for demo.)",
-                "Todos los sensores y módulos IA trabajan en segundo plano. Los avatares intervienen solo ante anomalías. (Valores simulados.)")}
+              {tri("Sensori e moduli IA collegati alle sonde Bluetooth REALI del laboratorio. Gli avatar intervengono a voce solo su anomalie o consigli reali. Se nessuna sonda è collegata, restano in silenzio.",
+                "Sensoren und KI-Module mit ECHTEN Bluetooth-Sonden verbunden. Avatare sprechen nur bei echten Anomalien. Ohne verbundene Sonde bleiben sie still.",
+                "Sensors and AI modules connected to the lab's REAL Bluetooth probes. Avatars speak only on real anomalies or tips. With no probe connected they stay silent.",
+                "Sensores y módulos IA conectados a sondas Bluetooth REALES. Los avatares intervienen solo ante anomalías reales. Sin sonda, permanecen en silencio.")}
             </p>
             <div className="flex items-center gap-2 mb-3">
               <button data-testid="proactive-mute" onClick={() => setMuted((m) => !m)}
                 className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg active:scale-95 ${muted ? "bg-[#2e2e2e] text-[#AEB8BF]" : "bg-[#ff6b00] text-white"}`}>
                 {muted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
                 {muted ? tri("Voce OFF", "Stimme AUS", "Voice OFF", "Voz OFF") : tri("Voce ON", "Stimme AN", "Voice ON", "Voz ON")}
-              </button>
-              <button data-testid="proactive-test-thermal" onClick={() => fire(thermal)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#3a2415] text-[#ffb27a] active:scale-95">
-                <Zap className="w-3.5 h-3.5" /> {tri("Simula vasca 26°", "Kessel 26° simulieren", "Simulate bowl 26°", "Simular cuba 26°")}
               </button>
             </div>
             <div className="grid grid-cols-2 gap-1.5">

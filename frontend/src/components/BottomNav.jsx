@@ -72,11 +72,11 @@ export default function BottomNav({ active, onChange }) {
                 }`}
                 style={{ transform: `rotate(var(--rot))` }}
               >
-                <span aria-hidden className="absolute inset-0 rounded-t-full rounded-b-[7px] bg-gradient-to-b from-white/15 to-black/25" />
+                <span aria-hidden className="absolute inset-0 rounded-t-full rounded-b-[7px] bg-gradient-to-b from-[#ffe1a8]/25 to-black/10" />
                 {img ? (
                   <img src={`${PUB}/${img}`} alt={label}
-                    className="relative w-8 h-8 object-contain drop-shadow-[0_1px_0_rgba(255,240,210,.4)]"
-                    style={{ mixBlendMode: "multiply", opacity: on ? 1 : 0.82 }} />
+                    className="relative w-8 h-8 object-contain"
+                    style={{ filter: `sepia(1) saturate(4) hue-rotate(3deg) brightness(${on ? 1.5 : 1.28}) contrast(1.05) drop-shadow(0 0 4px rgba(255,190,90,${on ? 0.85 : 0.45}))`, opacity: 1 }} />
                 ) : null}
                 {id === "community" && unread > 0 && (
                   <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#2b190c]">{unread > 9 ? "9+" : unread}</span>
