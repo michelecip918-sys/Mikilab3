@@ -17,9 +17,12 @@ export default function ToolsDirectory({ onOpenTool }) {
   const name = (tl) => tri(tl.it, tl.de, tl.en, tl.es);
 
   const hubs = LAB_HUBS.filter((h) => !(passion && h.pro));
-  const [open, setOpen] = useState(() => ({ scienza: true, produzione: true }));
+  const [open, setOpen] = useState(() => ({}));
   const [q, setQ] = useState("");
   const toggleSection = (id) => setOpen((o) => ({ ...o, [id]: !o[id] }));
+
+  // Strumenti immediati (griglia rapida in alto).
+  const QUICK = ["acqua", "convlievito", "sosimpasto", "settimana"].map(byId).filter(Boolean);
 
   // Tutti gli strumenti visibili (rispettando la modalità), per la ricerca. Deduplicati (un tool può stare in più hub).
   const allIds = Array.from(new Set(hubs.flatMap((h) => h.ids)));
@@ -43,6 +46,22 @@ export default function ToolsDirectory({ onOpenTool }) {
 
   return (
     <div className="mt-2" data-testid="maestro-tools-directory">
+      {/* Griglia strumenti rapidi (2 colonne) */}
+      {!s && QUICK.length > 0 && (
+        <div className="mb-4" data-testid="lab-quick-grid">
+          <p className="text-[13px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{tri("Strumenti rapidi", "Schnellzugriff", "Quick tools", "Herramientas rápidas")}</p>
+          <div className="grid grid-cols-2 gap-2.5">
+            {QUICK.map((tl) => (
+              <button key={tl.id} data-testid={`lab-quick-${tl.id}`} onClick={() => onOpenTool && onOpenTool(tl.id)}
+                className="flex flex-col items-start gap-2 text-left rounded-2xl bg-gradient-to-br from-[#ff6b00]/18 to-[#1e1e1e] border border-[#ff6b00]/40 hover:border-[#ff6b00] min-h-[104px] p-3.5 active:scale-[0.97] transition-all">
+                <span className="w-11 h-11 rounded-xl bg-[#ff6b00] flex items-center justify-center shrink-0"><tl.Icon className="w-6 h-6 text-white" /></span>
+                <span className="text-[15px] font-bold text-white leading-tight">{name(tl)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Ricerca */}
       <div className="relative mb-3">
         <Search className="w-4 h-4 text-[#7E8A93] absolute start-3 top-1/2 -translate-y-1/2" />
@@ -59,6 +78,7 @@ export default function ToolsDirectory({ onOpenTool }) {
         </div>
       ) : (
         <div className="space-y-2.5">
+          <p className="text-[13px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Tutte le funzioni", "Alle Funktionen", "All functions", "Todas las funciones")}</p>
           {hubs.map((h) => {
             const ids = h.ids.filter((id) => byId(id));
             if (ids.length === 0) return null;

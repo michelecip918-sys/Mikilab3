@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only E2E (mobile 390x844, Chromium headless) sui 6 fix richiesti del Laboratorio/audio/FAB MikiLab. Setup: onboarding chiuso, lingua IT, login admin@mikilab.de, modalita Pro. TUTTI i flussi richiesti PASSANO. (1) LAB QUICK GRID: 'lab-quick-grid' presente in alto nel tab Laboratorio con i 4 pulsanti in 2 colonne (lab-quick-acqua/convlievito/sosimpasto/settimana); ognuno apre il tool corretto verificato dall'heading: 'Temperatura Acqua d'Impasto', 'Convertitore Lieviti', 'SOS Impasto - Trova il Tuo Errore', 'Piano settimanale' (la griglia scompare e appare 'maestro-back-btn' = Torna agli strumenti). (2) BUSINESS/HACCP RIMOSSO: 'lab-hub-business' count=0; presenti solo lab-hub-scienza, lab-hub-produzione, lab-hub-forni (in Pro). Hub COMPRESSI di default (0 elementi lab-tool-* visibili all'apertura del tab). Etichetta 'Tutte le funzioni' presente sotto la griglia rapida. (3) TOOL GESTIONE IN PRODUZIONE: espandendo lab-hub-toggle-produzione sono presenti lab-tool-settimana, lab-tool-turni, lab-tool-scarti; foodcost/freezer/shelf/check/mydata NON raggiungibili (count=0) dagli hub. (4) MUTE: FAB compatto con voice-mute-btn + voice-wake-toggle + voice-command-btn; click su mute -> icona VolumeX, toast 'Audio disattivato', localStorage mikilab_voice_muted='1'; dopo reload resta muto (ls='1', icona volume-x); riclick -> ls='0' e icona Volume2. (5) HOME: 'home-guida-btn' count=0 (rimosso), 'home-system-badge' presente; Guida raggiungibile da site-menu-open -> site-menu-guida -> 'guida-overlay' si apre e si chiude correttamente. (6) FAB MOBILE: nessuna sovrapposizione geometrica tra FAB Voce (322,692 56x56) / mute (226,700 40x40) / wake (274,700) e Radio in basso a sinistra (12,678 48x48); radio-fornaio-btn cliccabile e apre 'radio-panel'; scrollando a fondo pagina (Home e Lab) sotto i FAB c'e' solo area vuota/padding, nessun CTA coperto; lab-hub-toggle-forni cliccabile anche a fondo pagina. 0 pageerror JS in tutti i run. Barge-in / genere voce non verificabili headless (no audio/mic) come indicato.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Laboratorio / tool aperti (mobile 390x844)", "issues": ["Durante lo scroll a meta pagina la riga di FAB (mute/wake/mic) si sovrappone visivamente ai contenuti scorrevoli (es. chip ingredienti in Piano Settimanale) - non blocca CTA e a fine pagina il padding e' sufficiente, ma la leggibilita' momentanea e' ridotta"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "4 chiamate API restituiscono 401 prima del login (/api/auth/me, /api/notifications, /api/favorites/sync, /api/combos/sync): comportamento atteso ma inquinano la console; valutare di non invocarle da guest.",
+    "ToolsDirectory.jsx: la ricerca usa solo gli id degli hub, quindi i tool business/HACCP restano correttamente non raggiungibili dal Laboratorio (verificato via codice + UI)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100%"},
+  "seed_data_creation": "Nessuna. Usato account esistente admin@mikilab.de.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (da /app/memory/test_credentials.md)",
+  "context_for_next_testing_agent": "Setup: goto -> voice-onboard-close -> lang-select=it -> login-btn -> auth-email/auth-password/auth-submit -> (opz.) site-menu-open->site-menu-mode-pro->site-menu-close -> nav-tab-maestro -> lab-big-exit. IMPORTANTE: per uscire da un tool del Laboratorio il testid corretto e' 'maestro-back-btn' (NON lab-big-exit). Non esiste 'nav-tab-home' (la Home si raggiunge dal logo o dispatch mikilab-goto). Il FAB Radio ha testid 'radio-fornaio-btn'. Hub del Lab tutti compressi di default: usare lab-hub-toggle-<id>. Tornando su nav-tab-maestro puo' riapparire LabOnboarding: chiudere col pulsante 'Salta'.",
+  "rca_of_the_issue": "Nessun difetto funzionale trovato in questa iterazione."
+}

@@ -10,17 +10,12 @@ export const LAB_HUBS = [
   {
     id: "produzione", emoji: "⏱️", pro: false,
     it: "Controllo Produzione & Fermentazione", de: "Produktion & Gärung", en: "Production & Fermentation", es: "Producción y Fermentación", fr: "Production & Fermentation", fa: "کنترل تولید و تخمیر",
-    ids: ["settimana", "fermentazione", "twin", "weatherbaker", "timelapse", "bilancia", "pesata", "manisporche", "timer", "ph", "bancalievito", "diagnosi", "suono"],
+    ids: ["settimana", "turni", "scarti", "fermentazione", "twin", "weatherbaker", "timelapse", "bilancia", "pesata", "manisporche", "timer", "ph", "bancalievito", "diagnosi", "suono"],
   },
   {
     id: "forni", emoji: "🍞", pro: true,
     it: "Gestione Forni & Attrezzature", de: "Öfen & Ausrüstung", en: "Ovens & Equipment", es: "Hornos y Equipos", fr: "Fours & Équipements", fa: "مدیریت فر و تجهیزات",
     ids: ["macchine", "simforno", "adatta", "capo", "energia"],
-  },
-  {
-    id: "business", emoji: "📊", pro: true,
-    it: "Business, Marketing & HACCP", de: "Business, Marketing & HACCP", en: "Business, Marketing & HACCP", es: "Negocio, Marketing y HACCP", fr: "Business, Marketing & HACCP", fa: "کسب‌وکار، بازاریابی و HACCP",
-    ids: ["settimana", "turni", "scarti", "macchine", "foodcost", "freezer", "shelf", "esuberozero", "spreco", "check", "sessioni", "recupero", "mydata"],
   },
 ];
 

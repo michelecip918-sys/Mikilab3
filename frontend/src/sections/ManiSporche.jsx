@@ -8,7 +8,7 @@ import { recipesApi } from "@/lib/api";
 import { recipeTitle } from "@/lib/loc";
 import ProactiveAssistant from "@/components/ProactiveAssistant";
 import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, dayLabel, summarizeDay } from "@/lib/weeklyPlan";
-import { playTTS } from "@/lib/tts";
+import { playTTS, stopTTS } from "@/lib/tts";
 import { getCurrentOperator, zoneLabel } from "@/lib/brigata";
 
 // Modalità "Mani Sporche": interfaccia XL a mani libere, comandi vocali,
@@ -133,6 +133,7 @@ export default function ManiSporche() {
   const startMic = () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { toast.error(tri("Comandi vocali non supportati.", "Sprachbefehle nicht unterstützt.", "Voice commands not supported.", "Comandos de voz no compatibles.")); return; }
+    stopTTS(); // barge-in: zittisci l'avatar quando parte il microfono
     try {
       const rec = new SR();
       rec.lang = voiceLang; rec.continuous = true; rec.interimResults = false;

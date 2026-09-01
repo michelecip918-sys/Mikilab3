@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Mic, Loader2, X, Timer as TimerIcon, Pause, Play, Trash2 } from "lucide-react";
+import { Mic, Loader2, X, Timer as TimerIcon, Pause, Play, Trash2, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { TOOLS } from "@/sections/PianoProduzioneAI";
 import { api } from "@/lib/api";
-import { playTTS, stopTTS } from "@/lib/tts";
+import { playTTS, stopTTS, isTTSMuted, setTTSMuted } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
 import { fetchWeeklyItems, todayKey, tomorrowKey, summarizeDay } from "@/lib/weeklyPlan";
 import { PROACTIVE_MODULES, moduleName, moduleMsg } from "@/lib/proactiveModules";
@@ -50,6 +50,14 @@ export default function VoiceCommand({ onOpenTool }) {
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [muted, setMuted] = useState(isTTSMuted());
+  const [scrolling, setScrolling] = useState(false);
+  useEffect(() => {
+    let t;
+    const onScroll = () => { setScrolling(true); clearTimeout(t); t = setTimeout(() => setScrolling(false), 650); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); clearTimeout(t); };
+  }, []);
   const [wake, setWake] = useState(() => { try { return localStorage.getItem("mikilab_voice_wake") === "1"; } catch { return false; } });
   const [timers, setTimers] = useState([]);
   const [onboard, setOnboard] = useState(() => { try { return !localStorage.getItem("mikilab_voice_onboard"); } catch { return true; } });
@@ -315,6 +323,7 @@ export default function VoiceCommand({ onOpenTool }) {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { toast.error(tri("Comandi vocali non supportati. Usa Chrome/Safari.", "Nicht unterstützt.", "Voice not supported. Use Chrome/Safari.", "No soportado.", "Non supporté.", "پشتیبانی نمی‌شود.")); return; }
     if (listening) { try { recRef.current && recRef.current.stop(); } catch { /* */ } return; }
+    stopTTS(); setSpeaking(false); // barge-in: zittisci l'avatar
     beep();
     const rec = new SR(); rec.lang = SR_LANG[lang] || "it-IT"; rec.interimResults = false; rec.maxAlternatives = 1;
     rec.onstart = () => setListening(true);
@@ -338,6 +347,7 @@ export default function VoiceCommand({ onOpenTool }) {
         const tr = norm(last[0].transcript);
         const w = WAKE.find((k) => tr.includes(k)); if (!w) return;
         const cmd = tr.slice(tr.indexOf(w) + w.length).trim();
+        stopTTS(); setSpeaking(false); // barge-in
         beep(); setListening(true); setTimeout(() => setListening(false), 1200);
         if (cmd.length > 1) handle(cmd);
         else speak(tri("Dimmi.", "Sag's.", "Yes?", "Dime.", "Oui ?", "بگو."));
@@ -355,7 +365,7 @@ export default function VoiceCommand({ onOpenTool }) {
     let rec;
     try {
       rec = new SR(); rec.lang = SR_LANG[lang] || "it-IT"; rec.continuous = true; rec.interimResults = true; rec._stop = false;
-      rec.onresult = (e) => { const last = e.results[e.results.length - 1]; if (!last || !last.isFinal) return; const tr = norm(last[0].transcript); const w = WAKE.find((k) => tr.includes(k)); if (!w) return; const cmd = tr.slice(tr.indexOf(w) + w.length).trim(); beep(); setListening(true); setTimeout(() => setListening(false), 1200); if (cmd.length > 1) handle(cmd); else speak(tri("Dimmi.", "Sag's.", "Yes?", "Dime.", "Oui ?", "بگو.")); };
+      rec.onresult = (e) => { const last = e.results[e.results.length - 1]; if (!last || !last.isFinal) return; const tr = norm(last[0].transcript); const w = WAKE.find((k) => tr.includes(k)); if (!w) return; const cmd = tr.slice(tr.indexOf(w) + w.length).trim(); stopTTS(); setSpeaking(false); beep(); setListening(true); setTimeout(() => setListening(false), 1200); if (cmd.length > 1) handle(cmd); else speak(tri("Dimmi.", "Sag's.", "Yes?", "Dime.", "Oui ?", "بگو.")); };
       rec.onend = () => { if (!rec._stop) { try { rec.start(); } catch { /* */ } } };
       rec.onerror = () => { /* gesture richiesta: riattiva col toggle */ };
       wakeRef.current = rec; rec.start();
@@ -407,25 +417,29 @@ export default function VoiceCommand({ onOpenTool }) {
         </div>
       )}
 
-      {/* Tasto vocale + wake toggle + micro-copy */}
+      {/* Tasto vocale compatto + wake + mute */}
       {!hidden && (
-      <div className="fixed bottom-28 right-4 z-50 flex flex-col items-end gap-1.5">
-        {/* Avatar 3D pop-out di Lab: blu in ascolto, arancio mentre parla */}
+      <div className={`fixed bottom-24 right-3 z-40 flex flex-col items-end gap-2 transition-all duration-300 ${scrolling && !listening ? "translate-y-28 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`} style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
         {(listening || speaking) && (
-          <div className="mb-1 me-2">
-            <SpeakingAvatar who="lab" active testid="lab-avatar" mode={speaking ? "speaking" : "listening"} size={58} />
+          <div className="me-1">
+            <SpeakingAvatar who="lab" active testid="lab-avatar" mode={speaking ? "speaking" : "listening"} size={50} />
           </div>
         )}
-        <button data-testid="voice-wake-toggle" onClick={toggleWake}
-          className={`text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${wake ? "bg-[#ff6b00] text-white border-[#ff6b00] animate-pulse" : "bg-[#161616]/90 text-[#ff6b00] border-[#ff6b00]/50"}`}>
-          {wake ? tri("👂 Ehi Lab ON", "👂 Ehi Lab AN", "👂 Ehi Lab ON", "👂 Ehi Lab ON", "👂 Ehi Lab ON", "👂 لب روشن") : tri("Attiva «Ehi Lab»", "«Ehi Lab» an", "Enable «Ehi Lab»", "Activar «Ehi Lab»", "Activer «Ehi Lab»", "«لب» فعال کن")}
-        </button>
-        <button data-testid="voice-command-btn" onClick={runOnce}
-          className={`h-16 px-6 rounded-full text-white font-extrabold text-base shadow-2xl flex items-center gap-2.5 ring-4 active:scale-95 transition-all ${listening ? "bg-[#e05e00] ring-[#ff6b00]/70 scale-110" : "bg-[#ff6b00] hover:bg-[#e05e00] ring-[#ff6b00]/30"}`}>
-          {listening ? <Loader2 className="w-7 h-7 animate-spin" /> : <Mic className="w-7 h-7" />}
-          {listening ? tri("Ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Voce", "Stimme", "Voice", "Voz", "Voix", "صدا")}
-        </button>
-        <span className="text-[9.5px] text-[#7E8A93] bg-[#161616]/70 px-2 py-0.5 rounded-full">{tri("Pronuncia «Ehi Lab» o premi", "Sag «Ehi Lab» oder drücke", "Say «Ehi Lab» or tap", "Di «Ehi Lab» o pulsa", "Dis «Ehi Lab» ou appuie", "بگو «لب» یا بزن")}</span>
+        <div className="flex items-center gap-2">
+          <button data-testid="voice-mute-btn" onClick={() => { const nv = !muted; setMuted(nv); setTTSMuted(nv); toast.info(nv ? tri("Audio disattivato", "Ton aus", "Audio off", "Audio apagado", "Son coupé", "صدا خاموش") : tri("Audio attivo", "Ton an", "Audio on", "Audio activo", "Son activé", "صدا روشن")); }}
+            title={muted ? "Audio OFF" : "Audio ON"}
+            className={`w-10 h-10 rounded-full flex items-center justify-center border shadow-lg active:scale-95 transition-all ${muted ? "bg-[#161616] text-[#7E8A93] border-[#2C2C2C]" : "bg-[#161616] text-[#ff6b00] border-[#ff6b00]/50"}`}>
+            {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+          </button>
+          <button data-testid="voice-wake-toggle" onClick={toggleWake} title="Ehi Lab"
+            className={`w-10 h-10 rounded-full flex items-center justify-center border shadow-lg active:scale-95 transition-all text-lg ${wake ? "bg-[#ff6b00] text-white border-[#ff6b00] animate-pulse" : "bg-[#161616] text-[#ff6b00] border-[#ff6b00]/50"}`}>
+            👂
+          </button>
+          <button data-testid="voice-command-btn" onClick={runOnce} aria-label="Voce"
+            className={`w-14 h-14 rounded-full text-white shadow-2xl flex items-center justify-center ring-4 active:scale-95 transition-all ${listening ? "bg-[#e05e00] ring-[#ff6b00]/70" : "bg-[#ff6b00] hover:bg-[#e05e00] ring-[#ff6b00]/30"}`}>
+            {listening ? <Loader2 className="w-7 h-7 animate-spin" /> : <Mic className="w-7 h-7" />}
+          </button>
+        </div>
       </div>
       )}
     </>

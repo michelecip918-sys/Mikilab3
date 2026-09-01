@@ -1,4 +1,4 @@
-import { ChevronRight, BookOpenCheck, WifiOff } from "lucide-react";
+import { ChevronRight, WifiOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -84,11 +84,6 @@ export default function Home({ onNavigate }) {
             </span>
           )}
         </div>
-        {/* Guida MikiLab */}
-        <button data-testid="home-guida-btn" onClick={() => window.dispatchEvent(new Event("mikilab-open-guida"))}
-          className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 px-4 py-2 text-sm font-bold text-white active:scale-95 transition-all">
-          <BookOpenCheck className="w-4 h-4 text-[#ff6b00]" /> {L("Guida MikiLab", "MikiLab-Anleitung", "MikiLab Guide", "Guía MikiLab")}
-        </button>
       </div>
 
       {/* 5 sezioni */}
