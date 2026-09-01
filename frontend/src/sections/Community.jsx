@@ -423,10 +423,10 @@ export default function Community({ onNavigate }) {
 
                 <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
                   <button data-testid={`community-like-${p.id}`} onClick={() => like(p.id)} className={`flex items-center gap-1.5 text-sm font-semibold ${p.liked_by_me ? "text-[#E4572E]" : "text-[#7E8A93]"}`}>
-                    <Heart className={`w-4 h-4 ${p.liked_by_me ? "fill-[#E4572E]" : ""}`} /> {p.like_count || 0}
+                    <Heart className={`w-4 h-4 ${p.liked_by_me ? "fill-[#E4572E]" : ""}`} /> {(p.like_count || 0) >= 5 ? p.like_count : ""}
                   </button>
                   <button data-testid={`community-comment-toggle-${p.id}`} onClick={() => setCommentFor(commentFor === p.id ? null : p.id)} className="flex items-center gap-1.5 text-sm font-semibold text-[#7E8A93]">
-                    <MessageCircle className="w-4 h-4" /> {(p.comments || []).length}
+                    <MessageCircle className="w-4 h-4" /> {(p.comments || []).length >= 5 ? (p.comments || []).length : ""}
                   </button>
                 </div>
 

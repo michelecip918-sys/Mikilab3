@@ -3149,3 +3149,7 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Backend: nuovo endpoint **POST /api/lab/ask** (ChatRequest) — LlmChat Anthropic claude-sonnet-4-6, system telegrafico da maestro panettiere, risposta {answer} non-streaming. Testato via curl (OK, risposta breve e tecnica).
 - Frontend (VoiceCommand): il fallback vocale ora chiama **askLab()** -> qualsiasi frase non riconosciuta diventa DIALOGO LIBERO con Lab (consigli tecnici, calcoli complessi) con risposta parlata breve.
 - ANCORA DA FARE (troppo grandi per il budget di contesto di questo ciclo): dettato ricetta completo campo-per-campo + salvataggio con conferma vocale; voce/TTS dedicata Momi tutor (Mohamed) in Impara; 100+ lingue (ora 6); soppressione rumore/whisper (non esposta da Web Speech API); lettura step-by-step + ricalcolo dosi + note produzione a voce; sweep standardizzazione avatar.
+
+## v-fork14 (2026-06) — Community Zero-Counters
+- Community.jsx: Like e conteggio commenti nascosti finche < 5 (mostrati solo con 5+ interazioni). Icone sempre visibili.
+- Roadmap moduli grandi rimanenti (uno per turno, con test): dettato ricetta campo-per-campo+salvataggio con conferma vocale; standardizzazione avatar (Michele->Lab, Mohamed->Momi); Momi TTS tutor in Impara; timeline ricetta step-by-step con audio-guida; 15 post pre-popolati Michele/Momi + Scatta e Confronta; estensione multilingua 100+.
