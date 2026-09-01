@@ -3153,3 +3153,6 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ## v-fork14 (2026-06) — Community Zero-Counters
 - Community.jsx: Like e conteggio commenti nascosti finche < 5 (mostrati solo con 5+ interazioni). Icone sempre visibili.
 - Roadmap moduli grandi rimanenti (uno per turno, con test): dettato ricetta campo-per-campo+salvataggio con conferma vocale; standardizzazione avatar (Michele->Lab, Mohamed->Momi); Momi TTS tutor in Impara; timeline ricetta step-by-step con audio-guida; 15 post pre-popolati Michele/Momi + Scatta e Confronta; estensione multilingua 100+.
+
+## v-fork15 (2026-06) — Momi tutor TTS (Modulo 3, avvio)
+- AcademyHome: pulsante "Ascolta con Momi" (momi-listen) legge l intro con speechSynthesis, voce lang-aware (prova voce femminile). Primo pezzo del Modulo 3.

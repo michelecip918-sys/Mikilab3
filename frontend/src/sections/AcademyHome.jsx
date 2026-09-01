@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Calculator, Wheat, Camera, Trophy, ClipboardList, CheckCircle2, ChevronRight, Printer } from "lucide-react";
+import { GraduationCap, Calculator, Wheat, Camera, Trophy, ClipboardList, CheckCircle2, ChevronRight, Printer, Volume2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { FLOURS, CALC_RECIPES } from "@/data/academy";
@@ -54,6 +54,12 @@ export default function AcademyHome({ onNavigate }) {
         <h1 className="font-display text-3xl font-extrabold">{tri("Accademia", "Akademie", "Academy", "Academia")}</h1>
         <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-2" />
         <p className="text-white/85 text-sm mt-2 max-w-md leading-snug">{tri("Impara la panificazione da zero in 3 passi: lezioni, quiz ed esercizi pratici.", "Lerne das Backen von Grund auf in 3 Schritten: Lektionen, Quiz und praktische Übungen.", "Learn baking from scratch in 3 steps: lessons, quizzes and practical exercises.", "Aprende panificación desde cero en 3 pasos: lecciones, cuestionarios y ejercicios prácticos.")}</p>
+        <button data-testid="momi-listen" onClick={() => {
+          const txt = tri("Ciao, sono Momi, il tuo tutor. Impara la panificazione da zero in tre passi: lezioni, quiz ed esercizi pratici. Iniziamo dalle lezioni!", "Hallo, ich bin Momi, dein Tutor. Lerne das Backen in drei Schritten.", "Hi, I'm Momi, your tutor. Learn baking from scratch in three steps.", "Hola, soy Momi, tu tutor. Aprende panificación en tres pasos.", "Salut, je suis Momi, ton tuteur. Apprends la boulangerie en trois étapes.", "سلام، من مومی هستم، مربی تو. نان‌پزی را در سه گام یاد بگیر.");
+          try { const u = new SpeechSynthesisUtterance(txt); const L = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" }; u.lang = L[lang] || "it-IT"; u.rate = 1.02; const vs = window.speechSynthesis.getVoices(); const fem = vs.find(v => v.lang.startsWith((L[lang]||"it").slice(0,2)) && /female|donna|samantha|google|aria|femminile/i.test(v.name)); if (fem) u.voice = fem; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch { /* */ }
+        }} className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/15 hover:bg-white/25 border border-white/30 px-4 py-2 text-sm font-bold active:scale-95 transition-all">
+          <Volume2 className="w-4 h-4" /> {tri("Ascolta con Momi", "Mit Momi anhören", "Listen with Momi", "Escuchar con Momi", "Écouter avec Momi", "با مومی گوش کن")}
+        </button>
       </div>
 
       {/* Percorso guidato in 3 passi */}
