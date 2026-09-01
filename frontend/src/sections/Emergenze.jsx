@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, Snowflake, Wrench, Zap, ZapOff, RotateCcw, CheckCircle2, PackageCheck, Flame } from "lucide-react";
+import { AlertTriangle, Snowflake, Wrench, Zap, ZapOff, RotateCcw, PackageCheck, Flame, ClipboardList, Clock, History } from "lucide-react";
 import { labConfigApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import {
   useShift, setWorkMode, toggleMachineDown, isMachineDown, setColdDown,
-  addNote, clearNotes, basesSummary, statusLabel, machineDownNote, coldDownNote,
+  addNote, clearNotes, basesSummary, statusLabel, machineDownNote, coldDownNote, logFault,
+  autonomyDeadline, fmtHM, baseAlert, loadFaultLog,
 } from "@/lib/shiftState";
 
 // Gestione Guasti & Celle — vista operativa (tema Oro del Grano).
@@ -19,6 +20,15 @@ export default function Emergenze() {
   const shift = useShift();
   const [mixers, setMixers] = useState([]);
   const [cells, setCells] = useState([]);
+  const [faults, setFaults] = useState([]);
+  const deadline = shift.work_mode === "autonomia" ? autonomyDeadline(shift) : null;
+
+  useEffect(() => {
+    const load = () => loadFaultLog().then(setFaults);
+    load();
+    window.addEventListener("mikilab-faultlog-updated", load);
+    return () => window.removeEventListener("mikilab-faultlog-updated", load);
+  }, []);
 
   useEffect(() => {
     labConfigApi.get().then((cfg) => {
@@ -35,13 +45,13 @@ export default function Emergenze() {
   const onMachine = (name) => {
     const willDown = !isMachineDown(shift, name);
     toggleMachineDown(name, willDown);
-    if (willDown) addNote("🔧 " + machineDownNote(name, mixers, [...downNames, name], tri), "guasto");
+    if (willDown) { const nt = machineDownNote(name, mixers, [...downNames, name], tri); addNote("🔧 " + nt, "guasto"); logFault({ type: "macchina", name, note: nt }); }
   };
 
   const onCold = () => {
     const willDown = !shift.cold_down;
     setColdDown(willDown, willDown ? tri("Cella spenta stanotte", "Zelle heute Nacht aus", "Cell off tonight", "Cámara apagada", "Chambre éteinte", "سردخانه خاموش") : "");
-    if (willDown) addNote("❄️→🔥 " + coldDownNote(tri), "cella");
+    if (willDown) { const nt = coldDownNote(tri); addNote("❄️→🔥 " + nt, "cella"); logFault({ type: "cella", name: tri("Cella / fermalievitazione", "Zelle", "Cold cell", "Cámara", "Chambre", "سردخانه"), note: nt }); }
   };
 
   const fmtTime = (iso) => { try { return new Date(iso).toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" }); } catch { return ""; } };
@@ -72,6 +82,18 @@ export default function Emergenze() {
           );
         })}
       </div>
+
+      {/* Autonomia con orari + Consegne del turno */}
+      {deadline && (
+        <div data-testid="emg-autonomy" className="flex items-center gap-2 rounded-2xl px-4 py-3 mb-2" style={{ background: "#FBF6E8", border: `2px solid ${C.border}` }}>
+          <Clock className="w-5 h-5 shrink-0" style={{ color: C.gold }} />
+          <span className="text-[13px] font-bold" style={{ color: C.title }}>{tri("Autonomia consigliata fino alle", "Autonom empfohlen bis", "Autonomy recommended until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} <span className="font-mono-data" style={{ color: C.dark }}>{fmtHM(deadline, lang)}</span> — {tri("poi inforna i lotti in cella", "dann Chargen backen", "then bake the cell batches", "luego hornea", "puis enfourne", "سپس بپز")}</span>
+        </div>
+      )}
+      <button data-testid="emg-consegne" onClick={() => window.dispatchEvent(new Event("mikilab-consegne"))}
+        className="w-full flex items-center justify-center gap-2 rounded-2xl py-3 mb-5 font-extrabold active:scale-98 transition-all" style={{ background: C.dark, color: C.cream }}>
+        <ClipboardList className="w-5 h-5" style={{ color: "#E3C989" }} /> {tri("Consegne del turno (voce)", "Schichtübergabe (Stimme)", "Shift handover (voice)", "Relevo de turno (voz)", "Passation (voix)", "تحویل شیفت (صوتی)")}
+      </button>
 
       {/* Impastatrici / macchine */}
       <p className="text-xs font-extrabold uppercase tracking-widest mb-2 flex items-center gap-1.5" style={{ color: C.title }}><Wrench className="w-4 h-4" /> {tri("Impastatrici & macchine", "Maschinen", "Mixers & machines", "Amasadoras y máquinas", "Machines", "همزن‌ها")}</p>
@@ -121,13 +143,17 @@ export default function Emergenze() {
           <p className="text-[13px]" style={{ color: C.muted }}>{tri("Nessuna base o pre-cotto registrato. Aggiorna dalle Ricette del Giorno o a voce.", "Noch nichts registriert.", "Nothing registered yet.", "Nada registrado aún.", "Rien enregistré.", "چیزی ثبت نشده.")}</p>
         ) : (
           <div className="grid grid-cols-2 gap-2">
-            {bases.map((b, i) => (
-              <div key={i} className="rounded-2xl px-3 py-2.5" style={{ background: C.surf, border: `2px solid ${C.border}` }}>
-                <span className="block font-mono-data font-extrabold" style={{ fontSize: "22px", color: C.title }}>{b.qty}{b.unit ? ` ${b.unit}` : ""}</span>
-                <span className="block font-bold text-[13px] truncate" style={{ color: C.dark }}>{b.product}</span>
-                <span className="block text-[10px] font-semibold" style={{ color: C.gold }}>{statusLabel(b.kind, tri)}</span>
-              </div>
-            ))}
+            {bases.map((b, i) => {
+              const al = baseAlert(b);
+              return (
+                <div key={i} className="rounded-2xl px-3 py-2.5" style={{ background: al ? "#FBEEDD" : C.surf, border: `2px solid ${al ? C.danger : C.border}` }}>
+                  <span className="block font-mono-data font-extrabold" style={{ fontSize: "22px", color: al ? C.danger : C.title }}>{b.qty}{b.unit ? ` ${b.unit}` : ""}</span>
+                  <span className="block font-bold text-[13px] truncate" style={{ color: C.dark }}>{b.product}</span>
+                  <span className="block text-[10px] font-semibold" style={{ color: C.gold }}>{statusLabel(b.kind, tri)}</span>
+                  {al && <span className="block text-[10px] font-extrabold mt-0.5" style={{ color: C.danger }}>{al === "scaduto" ? tri("⚠️ Da abbattere/scartare", "⚠️ Abschlagen/verwerfen", "⚠️ Blast-chill/discard", "⚠️ Abatir/descartar", "⚠️ Cellule/jeter", "⚠️ منجمد/دور بریز") : tri("⏳ Usare presto", "⏳ Bald verwenden", "⏳ Use soon", "⏳ Usar pronto", "⏳ À utiliser vite", "⏳ زودتر مصرف کن")}</span>}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -149,6 +175,25 @@ export default function Emergenze() {
             <div key={n.id} className="rounded-2xl px-4 py-3" style={{ background: "#FBEEDD", border: `2px solid ${C.danger}` }}>
               <p className="text-[13.5px] leading-snug font-medium" style={{ color: C.dark }}>{n.text}</p>
               <p className="text-[10px] mt-1 font-semibold" style={{ color: C.danger }}>{fmtTime(n.at)}</p>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Storico guasti (persistente) */}
+      <div className="flex items-center gap-1.5 mt-5 mb-2">
+        <History className="w-4 h-4" style={{ color: C.title }} />
+        <p className="text-xs font-extrabold uppercase tracking-widest" style={{ color: C.title }}>{tri("Storico guasti", "Störungsverlauf", "Fault history", "Historial de averías", "Historique des pannes", "تاریخچه خرابی")}</p>
+      </div>
+      <div className="space-y-1.5" data-testid="emg-faultlog">
+        {faults.length === 0 ? (
+          <p className="text-[13px]" style={{ color: C.muted }}>{tri("Nessun guasto registrato.", "Keine Störungen.", "No faults logged.", "Sin averías.", "Aucune panne.", "خرابی ثبت نشده.")}</p>
+        ) : (
+          faults.slice(0, 20).map((f) => (
+            <div key={f.id} className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: C.surf, border: `1px solid ${C.border}` }}>
+              {f.type === "cella" ? <Snowflake className="w-4 h-4 shrink-0" style={{ color: C.gold }} /> : <Wrench className="w-4 h-4 shrink-0" style={{ color: C.gold }} />}
+              <span className="flex-1 min-w-0 text-[12.5px] font-bold truncate" style={{ color: C.dark }}>{f.name}</span>
+              <span className="text-[10.5px] font-semibold shrink-0" style={{ color: C.muted }}>{(() => { try { return new Date(f.at).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); } catch { return ""; } })()}</span>
             </div>
           ))
         )}

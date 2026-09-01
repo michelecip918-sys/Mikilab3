@@ -122,20 +122,55 @@ export function resetShift() {
 // ---- Riepilogo basi & pre-cotti disponibili (da lotti + inserimenti manuali) ----
 export function basesSummary(state) {
   const map = {};
-  for (const b of state.batches || []) {
-    if (b.status === "precotto" || b.status === "base_pronta") {
-      const k = `${b.recipe_name}|${b.status}`;
-      map[k] = map[k] || { product: b.recipe_name, qty: 0, unit: "pz", kind: b.status };
-      map[k].qty += Number(b.pieces || 0);
-    }
-  }
-  for (const b of state.bases || []) {
-    const k = `${b.product}|${b.kind}|${b.unit}`;
-    map[k] = map[k] || { product: b.product, qty: 0, unit: b.unit || "", kind: b.kind };
-    map[k].qty += Number(b.qty || 0);
-  }
+  const add = (product, kind, qty, unit, ts) => {
+    const k = `${product}|${kind}|${unit || ""}`;
+    if (!map[k]) map[k] = { product, qty: 0, unit: unit || "", kind, oldest: ts || null };
+    map[k].qty += Number(qty || 0);
+    if (ts && (!map[k].oldest || ts < map[k].oldest)) map[k].oldest = ts;
+  };
+  for (const b of state.batches || []) if (b.status === "precotto" || b.status === "base_pronta") add(b.recipe_name, b.status, b.pieces, "pz", b.updated_at);
+  for (const b of state.bases || []) add(b.product, b.kind, b.qty, b.unit, b.updated_at);
   return Object.values(map).filter((x) => x.qty > 0 || x.unit);
 }
+
+// ---- Basi in scadenza (pre-cotto/abbattuto dura di più di una base fresca) ----
+export const BASE_SHELF_HOURS = { precotto: 48, base_pronta: 24 };
+export function baseHoursLeft(item, now = Date.now()) {
+  if (!item || !item.oldest) return null;
+  const max = BASE_SHELF_HOURS[item.kind] ?? 24;
+  return Math.round((max - (now - new Date(item.oldest).getTime()) / 3600000) * 10) / 10;
+}
+export function baseAlert(item) { const h = baseHoursLeft(item); if (h == null) return null; if (h <= 0) return "scaduto"; if (h <= 4) return "scadenza"; return null; }
+
+// ---- Autonomia con orari: fin quando l'impastatore lavora da solo prima che scada la cella ----
+export const COLD_HOLD_HOURS = 10;
+export function autonomyDeadline(state, holdHours = COLD_HOLD_HOURS) {
+  const t = (state.batches || []).filter((b) => b.status === "in_cella" || b.status === "in_lievitazione")
+    .map((b) => (b.updated_at ? new Date(b.updated_at).getTime() + holdHours * 3600000 : null)).filter(Boolean);
+  return t.length ? new Date(Math.min(...t)) : null;
+}
+export function fmtHM(d, lang = "it") { try { return new Date(d).toLocaleTimeString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { hour: "2-digit", minute: "2-digit" }); } catch { return ""; } }
+
+// ---- Consegne del turno: riepilogo parlato (pronto / in cella / da completare / basi) ----
+export function handoverSummary(state, tri) {
+  const b = state.batches || [];
+  const pronto = b.filter((x) => x.status === "pronto").length;
+  const cella = b.filter((x) => x.status === "in_cella" || x.status === "in_lievitazione").length;
+  const daFare = b.filter((x) => !x.status || x.status === "da_fare" || x.status === "in_lavorazione").length;
+  const bs = basesSummary(state).filter((x) => x.kind === "precotto" || x.kind === "base_pronta");
+  const basi = bs.length ? bs.map((x) => `${x.qty} ${x.product}`).join(", ") : tri("nessuna", "keine", "none", "ninguna", "aucune", "هیچ");
+  return tri(
+    `Consegne del turno. Pronti: ${pronto}. In cella o lievitazione: ${cella}. Da completare: ${daFare}. Basi e pre-cotti: ${basi}.`,
+    `Schichtübergabe. Fertig: ${pronto}. In Zelle/Gärung: ${cella}. Offen: ${daFare}. Basen/Vorgebacken: ${basi}.`,
+    `Shift handover. Ready: ${pronto}. In cell/proofing: ${cella}. To complete: ${daFare}. Bases/pre-baked: ${basi}.`,
+    `Relevo de turno. Listos: ${pronto}. En cámara: ${cella}. Por completar: ${daFare}. Bases/precocidos: ${basi}.`,
+    `Passation. Prêts : ${pronto}. En chambre : ${cella}. À finir : ${daFare}. Bases/précuits : ${basi}.`,
+    `تحویل شیفت. آماده: ${pronto}. در سردخانه: ${cella}. باقی‌مانده: ${daFare}. پایه‌ها: ${basi}.`);
+}
+
+// ---- Storico guasti (persistente sul backend) ----
+export async function loadFaultLog() { try { const { data } = await api.get("/lab/fault-log"); return data || []; } catch { return []; } }
+export function logFault({ type, name, note }) { return api.post("/lab/fault-log", { type: type || "macchina", name: name || "", note: note || "" }).then((r) => { window.dispatchEvent(new Event("mikilab-faultlog-updated")); return r.data; }).catch(() => { window.dispatchEvent(new Event("mikilab-faultlog-updated")); }); }
 
 export const hasActiveAlerts = (state) => !!state && ((state.machines_down || []).length > 0 || state.cold_down || (state.shift_notes || []).length > 0);
 

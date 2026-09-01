@@ -1,0 +1,37 @@
+{
+  "summary": "iter164 — Validated the new 'Schede di Produzione' (maestro) lab UI + hands-free voice controls and the lab shift/fault-log backend. Backend: 7/7 pytest tests pass (/api/lab/fault-log GET+POST anonymous, ordering desc, no _id leak, /api/lab/shift-state GET/PUT persistence + 422 validation). Frontend (mobile 390x844): clean startup with default view braccio-lab, NO voice-onboard / mode-badge / voice-command-btn in DOM, hands-free card 'Assistant listening' + ear toggle present and toggling styles (dark <-> orange with ping), 4 renamed nav tabs (Master Recipes / Science & Guides / Production Sheets / Community), Emergenze flow (emg-consegne, machine toggle -> shift note + fault-log entry, cold toggle -> note, emg-autonomy time row, base-expiry badge in emg-bases), RicettaDelGiorno (autonomy hint with '⏰ Work autonomously until 22:30', admin login + weekly plan -> list -> detail -> precotto -> rdg-bases summary with expiry ⏳), maestro-back-btn on every tool, tab re-tap returns to Braccio, Gestione view + 'Operative mode' back button, zero-scroll respected (scrollHeight == innerHeight = 844). Only 2 minor issues found (fault-log UI refresh race, pre-existing nested <button> DOM error in RecipeList).",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Emergenze / shiftState.logFault", "issue": "Race condition: logFault() dispatches 'mikilab-faultlog-updated' immediately WITHOUT awaiting the POST /api/lab/fault-log, so the 'Storico guasti' list sometimes re-fetches before the insert is visible. Reproduced: after emg-cold-toggle the entry was correctly created in Mongo (verified via API: type=cella 'Cold cell') but the emg-faultlog list stayed at 4 entries until reload. Fix: await the POST then dispatch (or optimistically prepend the entry).", "selector": "[data-testid='emg-faultlog']", "priority": "MEDIUM"},
+      {"component": "RecipeList (Master Recipes tab)", "issue": "Console error (React DOM validation): nested <button> inside <button> — recipe-fav-* button rendered inside recipe-row-* button. Pre-existing, causes hydration warning/error on the Ricette tab.", "selector": "[data-testid^='recipe-row-']", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "BottomNav labels", "issues": ["Labels use 'break-all' with 9px font, so words are split mid-word: 'Science & Guide s', 'Production She ets'. Use break-words / smaller tracking instead."]},
+      {"screen": "Anonymous startup", "issues": ["Several background calls return 401 for anonymous users (notifications/greetings) producing console noise on every load; harmless but should be gated behind `user`."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter164_faultlog.py"],
+  "action_items": [
+    "shiftState.logFault: await POST /lab/fault-log before dispatching 'mikilab-faultlog-updated' (or optimistically add the entry) so Storico guasti updates immediately.",
+    "RecipeList: move the favourite button out of the recipe row <button> (nested button DOM error).",
+    "BottomNav: replace 'break-all' with 'break-words' so tab labels are not split mid-word.",
+    "Optional cleanup: App.js line 21 still imports ModeBadge with an eslint-disable (dead import); /api/lab-config currently contains a leftover test mixer 'TEST Impastatrice QA' from a previous iteration.",
+    "Optional: skip anonymous-only 401 calls (notifications/greetings) to reduce console noise."
+  ],
+  "critical_code_review_comments": [
+    "shiftState.logFault fire-and-forget POST + immediate event = stale UI (see action items).",
+    "Maestro.jsx persists labView in localStorage; a user last left in 'gestione' will NOT get the new default 'Braccio' view on startup — consider migrating/clearing 'mikilab_lab_view' once.",
+    "VoiceCommand.jsx (578 lines) and Maestro.jsx keep growing; the onboarding JSX block (voice-onboard) is dead code since onboard is permanently false — remove it.",
+    "/api/lab/fault-log has no pruning/delete endpoint; collection grows unbounded (GET caps at 200 which mitigates response size only)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter164_faultlog.py"],
+  "success_rate": {"backend": "100%", "frontend": "95%"},
+  "seed_data_creation": "Temporary: PUT /api/lab/shift-state with TEST_ batches (in_cella + 47h-old precotto) to exercise autonomy deadline/base expiry, PUT /api/weekly-plan with one TEST item for today (mar). Both reverted at the end (work_mode=continuo, empty plan). Fault-log entries named TEST_* remain (endpoint has no delete, as expected).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (UI login verified working)",
+  "context_for_next_testing_agent": "All 8 requested items of iter164 PASS. Backend regression file: /app/backend/tests/test_iter164_faultlog.py (fault-log + shift-state). To exercise autonomy/base-expiry in UI, PUT /api/lab/shift-state with batches status in_cella (deadline = updated_at+10h) and precotto with updated_at 47h ago (shelf 48h -> ⏳ Use soon). Weekly plan is per-user, needs admin auth (PUT /api/weekly-plan, day key from JS getDay()). Voice/SpeechRecognition not testable headless — only verified the button dispatchers (braccio-consegne, emg-consegne) work and TTS toast 'Shift handover…' appears.",
+  "rca_of_the_issue": "Fault-log UI staleness: lib/shiftState.js logFault() calls api.post(...).catch() and then synchronously dispatches 'mikilab-faultlog-updated'; the Emergenze listener performs GET /lab/fault-log which can run before the insert is committed/returned, so the newly created fault does not appear until a manual reload."
+}

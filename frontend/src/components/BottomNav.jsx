@@ -37,9 +37,9 @@ export default function BottomNav({ active, onChange }) {
   // 4 sezioni fisse con icone dedicate (immagini su misura).
   const PUB = process.env.PUBLIC_URL;
   const TABS = [
-    { id: "ricette", label: triNav("Ricette", "Rezepte", "Recipes", "Recetas"), img: "nav-ricette.jpg" },
+    { id: "ricette", label: triNav("Ricette del Maestro", "Meister-Rezepte", "Master Recipes", "Recetas del Maestro"), img: "nav-ricette.jpg" },
     { id: "imparacon", label: triNav("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), img: "nav-imparacon.jpg" },
-    { id: "maestro", label: triNav("Laboratorio", "Labor", "Lab", "Laboratorio"), img: "nav-maestro.jpg" },
+    { id: "maestro", label: triNav("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción"), img: "nav-maestro.jpg" },
     { id: "community", label: "Community", img: "nav-community.jpg" },
   ];
   const ROT = [-4.5, -1.5, 1.5, 4.5]; // leggera rotazione a ventaglio delle pale
@@ -89,7 +89,7 @@ export default function BottomNav({ active, onChange }) {
                   <span className="absolute inset-y-1.5 left-1/2 -translate-x-1/2 w-px bg-[#3e2510]/50" />
                 </span>
               </span>
-              <span className={`mt-[28px] text-[9px] font-bold leading-[1.05] text-center break-all line-clamp-2 max-w-[72px] transition-colors ${on ? "text-[#ffe6bf]" : "text-[#e7c79a]/85"}`}
+              <span className={`mt-[28px] text-[9px] font-bold leading-[1.05] text-center break-words line-clamp-2 max-w-[76px] transition-colors ${on ? "text-[#ffe6bf]" : "text-[#e7c79a]/85"}`}
                 style={{ textShadow: "0 1px 1px rgba(0,0,0,.6)" }}>
                 {label}
               </span>

@@ -292,3 +292,12 @@ Piattaforma di panificazione artigianale · 100% gratuita · Multilingua (IT · 
 ---
 
 *Documento generato per audit/export. Lo stato del turno (modalità, lotti, basi, guasti, celle, note) è condiviso fra tutti i dispositivi del laboratorio e disponibile offline. I comandi vocali usano il riconoscimento vocale nativo del browser (Chrome/Safari) con conferma parlata.*
+
+---
+## AGGIORNAMENTO (direttiva UI definitiva)
+- **Tab definitivi**: Ricette del Maestro · Scienza & Guide · **Schede di Produzione** (ex Laboratorio) · Community. **Vista di default all'avvio = Schede di Produzione**.
+- **Hands-free**: RIMOSSO il push-to-talk (niente più microfono gigante). Ascolto **continuo** in background; il **tasto ORECCHIO** (in basso a destra) è il toggle attivo/inattivo dell'ascolto. Parlare liberamente o dire «Ehi Lab».
+- **Nessun popup**: onboarding vocale e badge PRO rimossi; ingresso diretto senza sovrapposizioni.
+- **Freccia Indietro** (←) in alto a sinistra nelle pagine interne del lab.
+- **Nuove funzioni operative**: Autonomia con **orari** (fino a che ora lavorare da solo prima della scadenza cella), **Consegne del turno** (riepilogo vocale: pronto/in cella/da completare/basi), **Storico guasti** persistente (`/api/lab/fault-log`), **Basi in scadenza** (avviso usa/abbatti su pre-cotti e basi).
+- Regola architetturale: ogni elemento UI è collegato a logica reale (nessun elemento decorativo).

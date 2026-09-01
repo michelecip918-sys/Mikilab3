@@ -5,7 +5,7 @@ import { recipeTitle } from "@/lib/loc";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { fetchWeeklyItems, todayKey, itemsForDay, dayLabel } from "@/lib/weeklyPlan";
-import { useShift, setWorkMode, setBatchStatus, batchStatus, statusLabel, STATUS_COLOR, basesSummary } from "@/lib/shiftState";
+import { useShift, setWorkMode, setBatchStatus, batchStatus, statusLabel, STATUS_COLOR, basesSummary, autonomyDeadline, fmtHM, baseAlert } from "@/lib/shiftState";
 
 // Ricette del Giorno — lista prodotti in programma oggi; tap → dosi in GRANDE + stato lotto.
 // Flusso continuo o Autonomia: aggiorni lo stato (Pronto / In cella / Pre-cotto…) per chi lavora dopo.
@@ -88,6 +88,7 @@ export default function RicettaDelGiorno() {
   }
 
   const autonomia = shift.work_mode === "autonomia";
+  const deadline = autonomia ? autonomyDeadline(shift) : null;
   return (
     <div data-testid="ricetta-del-giorno" className="min-h-[70vh] rounded-3xl p-5 pb-28" style={{ background: C.cream, color: C.dark }}>
       <p className="text-sm font-bold uppercase tracking-widest" style={{ color: C.title }}>{tri("Ricette del Giorno", "Tagesrezepte", "Today's Recipes", "Recetas del D\u00eda")} · {dayLabel(todayKey(), lang)}</p>
@@ -112,6 +113,7 @@ export default function RicettaDelGiorno() {
       {autonomia && (
         <div className="rounded-xl px-3 py-2 mb-3" style={{ background: "#FBEEDD", border: `2px solid ${C.gold}` }}>
           <p className="text-[12px] leading-snug" style={{ color: C.dark }}>{tri("Modalità Autonomia: completa i lotti in blocco e aggiorna lo stato (Pronto / In cella / In lievitazione) per chi lavora dopo di te.", "Autonomie: Chargen im Block fertigen und Status setzen.", "Autonomy: complete batches in bulk and update status for the next worker.", "Autonomía: completa lotes y actualiza el estado.", "Autonomie : termine les lots et mets à jour le statut.", "خودگردان: دسته‌ها را کامل کن و وضعیت را به‌روز کن.")}</p>
+          {deadline && <p className="text-[12px] font-extrabold mt-1" style={{ color: "#8A5A16" }}>⏰ {tri("Puoi lavorare in autonomia fino alle", "Autonom bis", "Work autonomously until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} {fmtHM(deadline, lang)}.</p>}
         </div>
       )}
 
@@ -125,9 +127,12 @@ export default function RicettaDelGiorno() {
         <div className="mb-4" data-testid="rdg-bases">
           <p className="text-[11px] font-extrabold uppercase tracking-widest mb-1.5 flex items-center gap-1.5" style={{ color: C.title }}><PackageCheck className="w-4 h-4" /> {tri("Basi & Pre-cotti in cella", "Basen & Vorgebacken", "Bases & Pre-baked", "Bases y Precocidos", "Bases & Précuits", "پایه‌ها و نیم‌پزها")}</p>
           <div className="flex flex-wrap gap-1.5">
-            {bases.map((b, i) => (
-              <span key={i} className="text-[12px] font-bold rounded-full px-3 py-1.5" style={{ background: "#EED8A8", color: C.dark }}>{b.qty}{b.unit ? ` ${b.unit}` : ""} {b.product} · {statusLabel(b.kind, tri)}</span>
-            ))}
+            {bases.map((b, i) => {
+              const al = baseAlert(b);
+              return (
+                <span key={i} className="text-[12px] font-bold rounded-full px-3 py-1.5" style={{ background: al ? "#F3C9A6" : "#EED8A8", color: C.dark }}>{b.qty}{b.unit ? ` ${b.unit}` : ""} {b.product} · {statusLabel(b.kind, tri)}{al ? (al === "scaduto" ? " ⚠️" : " ⏳") : ""}</span>
+              );
+            })}
           </div>
         </div>
       )}

@@ -3230,3 +3230,11 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Fix da iter163: onboarding vocale nascosto in `braccio-mode` (bloccava i tasti zero-scroll); re-tap tab Lab chiude tool/torna al Braccio (App.js `mikilab-nav-retap`); padding inferiore nei tool Braccio.
 ### C. Documentazione di Audit (FATTO)
 - `/app/memory/AUDIT_MIKILAB.md` (master). Copie scaricabili: `/audit/AUDIT_MIKILAB.md` e `/audit/AUDIT_MIKILAB.pdf` (public/audit, HTTP 200). Mappa per sezione: schermata+funzioni, comandi vocali completi, gestione imprevisti.
+
+---
+## v-fork2 (2026-06) — Hands-free, rinomina, default view, 4 funzioni operative
+- Vista default avvio = tab 'maestro' rinominato "Schede di Produzione" (BottomNav). Ricette→"Ricette del Maestro".
+- RIMOSSI: push-to-talk (voice-command-btn), onboarding vocale (voice-onboard disabilitato), badge PRO (ModeBadge non montato). ORECCHIO (voice-wake-toggle) = toggle hands-free ascolto continuo; BraccioLab auto-attiva wake su mount (evento mikilab-wake-on) e non nasconde più il FAB.
+- Nuove funzioni (shiftState.js): autonomyDeadline+fmtHM (Autonomia con orari), handoverSummary (Consegne del turno via evento mikilab-consegne→VoiceCommand speak; comando vocale tryConsegne), basesSummary+baseAlert (Basi in scadenza), fault-log backend `/api/lab/fault-log` (GET/POST) + logFault (await→dispatch) mostrato in Emergenze (emg-faultlog). Guasti/cella registrano nello storico.
+- Back arrow gold "Indietro" (maestro-back-btn). Audit doc aggiornato (/app/memory/AUDIT_MIKILAB.md + /audit/*.pdf|md).
+- Testato iter164: backend 7/7; UI flows OK. Fix: logFault race (await), BottomNav break-words.

@@ -18,7 +18,7 @@ import PaywallGate from "@/components/PaywallGate";
 import MikilaWisdom from "@/components/MikilaWisdom";
 import RadioFornaio from "@/components/RadioFornaio";
 import VoiceCommand from "@/components/VoiceCommand";
-import ModeBadge from "@/components/ModeBadge";
+import ModeBadge from "@/components/ModeBadge"; // eslint-disable-line no-unused-vars
 import GuidaMikiLab from "@/sections/GuidaMikiLab";
 import ShiftScheduler from "@/components/ShiftScheduler";
 import AudioRouteIndicator from "@/components/AudioRouteIndicator";
@@ -51,7 +51,7 @@ import { hydrateCombos } from "@/lib/combos";
 function App() {
   const { lang, t } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
+  const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "maestro"));
   useState(() => {
     // Ingresso diretto: niente più schermata di domande. Semino un profilo di default completo.
     if (!getProfile()) {
@@ -97,7 +97,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.history.replaceState({ tab: "home" }, "");
+    window.history.replaceState({ tab: "maestro" }, "");
     const onPop = (e) => {
       try {
         if (consumeBack()) return; // chiude prima le viste profonde aperte
@@ -279,7 +279,6 @@ function App() {
         </footer>
       </main>
       <BottomNav active={tab} onChange={navigate} />
-      <ModeBadge />
       <VoiceCommand />
       {tab !== "maestro" && <RadioFornaio />}
       <GuidaMikiLab />

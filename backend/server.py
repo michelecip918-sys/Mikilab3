@@ -1957,6 +1957,29 @@ async def save_lab_shift_state(payload: LabShiftState, user: Optional[dict] = De
     return payload
 
 
+# Storico guasti (persistente, condiviso) — fermi macchina e celle guaste.
+class FaultLogEntry(BaseModel):
+    id: Optional[str] = None
+    type: str = "macchina"   # "macchina" | "cella"
+    name: Optional[str] = ""
+    note: Optional[str] = ""
+    at: Optional[str] = None
+
+
+@api_router.get("/lab/fault-log")
+async def get_fault_log(user: Optional[dict] = Depends(optional_user)):
+    return await db.lab_fault_log.find({}, {"_id": 0}).sort("at", -1).to_list(200)
+
+
+@api_router.post("/lab/fault-log")
+async def add_fault_log(payload: FaultLogEntry, user: Optional[dict] = Depends(optional_user)):
+    doc = payload.model_dump()
+    doc["id"] = str(uuid.uuid4())
+    doc["at"] = now_iso()
+    await db.lab_fault_log.insert_one(dict(doc))
+    return doc
+
+
 # ---------------------------------------------------------------------------
 # Memoria temperatura impasto per ricetta (termostato)
 # ---------------------------------------------------------------------------

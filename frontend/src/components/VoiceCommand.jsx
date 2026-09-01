@@ -8,7 +8,7 @@ import { api, labConfigApi } from "@/lib/api";
 import { playTTS, stopTTS, isTTSMuted, setTTSMuted } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
 import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, summarizeDay } from "@/lib/weeklyPlan";
-import { getCached as shiftGet, setWorkMode, setBatchStatus, addBase, toggleMachineDown, setColdDown, addNote, statusLabel, machineDownNote, coldDownNote } from "@/lib/shiftState";
+import { getCached as shiftGet, setWorkMode, setBatchStatus, addBase, toggleMachineDown, setColdDown, addNote, statusLabel, machineDownNote, coldDownNote, handoverSummary, logFault } from "@/lib/shiftState";
 import { PROACTIVE_MODULES, moduleName, moduleMsg } from "@/lib/proactiveModules";
 import { routeVoice } from "@/lib/nativeAudio";
 import { getOperators } from "@/lib/brigata";
@@ -61,7 +61,7 @@ export default function VoiceCommand({ onOpenTool }) {
   }, []);
   const [wake, setWake] = useState(() => { try { return localStorage.getItem("mikilab_voice_wake") === "1"; } catch { return false; } });
   const [timers, setTimers] = useState([]);
-  const [onboard, setOnboard] = useState(() => { try { return !localStorage.getItem("mikilab_voice_onboard"); } catch { return true; } });
+  const [onboard, setOnboard] = useState(false); // onboarding vocale DISABILITATO: nessun popup all'avvio
   const recRef = useRef(null);
   const wakeRef = useRef(null);
   const recipesRef = useRef(null);
@@ -313,6 +313,7 @@ export default function VoiceCommand({ onOpenTool }) {
     setColdDown(true, /stanotte|stasera|tonight|heute nacht|esta noche|cette nuit/.test(t) ? tri("Stanotte", "Heute Nacht", "Tonight", "Esta noche", "Cette nuit", "امشب") : "");
     const note = coldDownNote(tri);
     addNote("❄️→🔥 " + note, "cella");
+    logFault({ type: "cella", name: tri("Cella / fermalievitazione", "Zelle", "Cold cell", "Cámara", "Chambre", "سردخانه"), note });
     speak(tri(`Cella non funzionante. ${note}`, `Zelle defekt. ${note}`, `Cell not working. ${note}`, `Cámara no funciona. ${note}`, `Chambre en panne. ${note}`, `سردخانه خراب. ${note}`));
     toast.error(tri("❄️ Cella fuori uso → lievitazione diretta", "❄️ Zelle aus → direkte Gärung", "❄️ Cell off → direct leavening", "❄️ Cámara → fermentación directa", "❄️ Chambre → levée directe", "❄️ سردخانه → مستقیم"));
     return true;
@@ -333,6 +334,7 @@ export default function VoiceCommand({ onOpenTool }) {
     const downNames = (shiftGet().machines_down || []).map((x) => x.name);
     const note = machineDownNote(name, mixers.length ? mixers : [{ name }], downNames, tri);
     addNote("🔧 " + note, "guasto");
+    logFault({ type: "macchina", name, note });
     speak(tri(`${name} fuori uso. ${note}`, `${name} außer Betrieb. ${note}`, `${name} out of order. ${note}`, `${name} fuera de uso. ${note}`, `${name} hors service. ${note}`, `${name} خراب. ${note}`));
     toast.error("🔧 " + name);
     return true;
@@ -369,6 +371,13 @@ export default function VoiceCommand({ onOpenTool }) {
     speak(msg); toast.success("✅ " + msg); return true;
   };
 
+  // Consegne del turno: riepilogo vocale (pronto / in cella / da completare / basi).
+  const tryConsegne = (t) => {
+    if (!/(conseg|cambio turno|riepilogo turno|passaggio di conseg|handover|schicht[uü]berg|relevo|passation)/.test(t)) return false;
+    const msg = handoverSummary(shiftGet(), tri);
+    speak(msg); toast.success("📋 " + msg); return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
@@ -380,6 +389,7 @@ export default function VoiceCommand({ onOpenTool }) {
     if (tryGuida(t)) return;
     if (trySanifica(t)) return;
     if (tryModo(t)) return;
+    if (tryConsegne(t)) return;
     if (tryCella(t)) return;
     if (await tryGuasto(t)) return;
     if (await tryLotto(t)) return;
@@ -491,6 +501,22 @@ export default function VoiceCommand({ onOpenTool }) {
     return () => { window.removeEventListener("mikilab-voice-start", start); window.removeEventListener("mikilab-voice-stop", stop); };
   }, [listening]);
 
+  // Hands-free: attiva/disattiva ascolto continuo (tasto ORECCHIO) via eventi + consegne turno.
+  useEffect(() => {
+    const on = () => { if (!wake) toggleWake(); };
+    const off = () => { if (wake) toggleWake(); };
+    window.addEventListener("mikilab-wake-on", on);
+    window.addEventListener("mikilab-wake-off", off);
+    return () => { window.removeEventListener("mikilab-wake-on", on); window.removeEventListener("mikilab-wake-off", off); };
+    // eslint-disable-next-line
+  }, [wake]);
+  useEffect(() => {
+    const cons = () => { const msg = handoverSummary(shiftGet(), tri); speak(msg); toast.success("📋 " + msg); };
+    window.addEventListener("mikilab-consegne", cons);
+    return () => window.removeEventListener("mikilab-consegne", cons);
+    // eslint-disable-next-line
+  }, [lang]);
+
   const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   return (
@@ -539,13 +565,10 @@ export default function VoiceCommand({ onOpenTool }) {
             className={`w-10 h-10 rounded-full flex items-center justify-center border shadow-lg active:scale-95 transition-all ${muted ? "bg-[#161616] text-[#7E8A93] border-[#2C2C2C]" : "bg-[#161616] text-[#ff6b00] border-[#ff6b00]/50"}`}>
             {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
           </button>
-          <button data-testid="voice-wake-toggle" onClick={toggleWake} title="Ehi Lab"
-            className={`w-10 h-10 rounded-full flex items-center justify-center border shadow-lg active:scale-95 transition-all text-lg ${wake ? "bg-[#ff6b00] text-white border-[#ff6b00] animate-pulse" : "bg-[#161616] text-[#ff6b00] border-[#ff6b00]/50"}`}>
-            👂
-          </button>
-          <button data-testid="voice-command-btn" onClick={runOnce} aria-label="Voce"
-            className={`w-14 h-14 rounded-full text-white shadow-2xl flex items-center justify-center ring-4 active:scale-95 transition-all ${listening ? "bg-[#e05e00] ring-[#ff6b00]/70" : "bg-[#ff6b00] hover:bg-[#e05e00] ring-[#ff6b00]/30"}`}>
-            {listening ? <Loader2 className="w-7 h-7 animate-spin" /> : <Mic className="w-7 h-7" />}
+          <button data-testid="voice-wake-toggle" onClick={toggleWake} aria-label="Hands-free" title="Hands-free (Ehi Lab)"
+            className={`relative w-14 h-14 rounded-full flex items-center justify-center border-2 shadow-2xl active:scale-95 transition-all text-2xl ${wake ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#161616] text-[#ff6b00] border-[#ff6b00]/60"}`}>
+            {wake && <span aria-hidden className="absolute inset-0 rounded-full bg-[#ff6b00] opacity-50 animate-ping" />}
+            <span className="relative">👂</span>
           </button>
         </div>
       </div>
