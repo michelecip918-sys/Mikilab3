@@ -2179,6 +2179,35 @@ async def maestro_history(session_id: str):
     return docs
 
 
+@api_router.post("/lab/ask")
+async def lab_ask(payload: ChatRequest):
+    """Lab AI 360: risposta vocale ultra-breve (non streaming) per dialogo libero."""
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    lang = payload.lang or "it"
+    sys = (
+        "Sei 'Lab', assistente vocale da laboratorio di panificazione per professionisti. "
+        "Rispondi SEMPRE in modo ULTRA-BREVE e pratico (massimo 2 frasi), come un maestro panettiere. "
+        "Niente elenchi lunghi ne premesse. Dai numeri concreti quando servono. "
+        + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"])
+    )
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY, session_id=f"labask-{uuid.uuid4().hex[:8]}",
+        system_message=sys,
+    ).with_model("anthropic", "claude-sonnet-4-6")
+    text = ""
+    try:
+        async for ev in chat.stream_message(UserMessage(text=payload.message)):
+            if isinstance(ev, TextDelta):
+                text += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+    except Exception:
+        logger.exception("lab_ask error")
+        raise HTTPException(status_code=500, detail="Lab AI error")
+    return {"answer": text.strip()}
+
+
 # ---------------------------------------------------------------------------
 # Mohammed — assistente di "Il Tuo Laboratorio" (Claude Sonnet 4.6, streaming)
 # ---------------------------------------------------------------------------

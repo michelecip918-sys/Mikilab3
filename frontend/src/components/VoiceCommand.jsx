@@ -174,8 +174,19 @@ export default function VoiceCommand({ onOpenTool }) {
     let best = null;
     for (const tl of TOOLS) { const nm = name(tl); if (nm && (c.includes(nm) || nm.includes(c)) && (!best || nm.length > best.len)) best = { id: tl.id, len: nm.length }; }
     if (best) { open(best.id); return; }
-    speak(tri("Non ho capito.", "Nicht verstanden.", "Didn't catch that.", "No entendí.", "Pas compris.", "متوجه نشدم."));
-    toast.error(tri(`Non ho capito: "${raw}"`, `Nicht verstanden: "${raw}"`, `Didn't catch: "${raw}"`, `No entendí: "${raw}"`, `Pas compris : "${raw}"`, `متوجه نشدم: "${raw}"`));
+    await askLab(raw);
+  };
+
+  // Lab AI 360: dialogo libero (fallback) — risposta breve da maestro
+  const askLab = async (raw) => {
+    setListening(true);
+    try {
+      const { data } = await api.post("/lab/ask", { session_id: "lab-voice", message: raw, lang });
+      const ans = (data && data.answer) || tri("Non ho una risposta.", "Keine Antwort.", "No answer.", "Sin respuesta.", "Pas de réponse.", "پاسخی ندارم.");
+      speak(ans); toast.success("🧑‍🍳 " + ans);
+    } catch {
+      speak(tri("Assistente non disponibile.", "Assistent nicht verfügbar.", "Assistant unavailable.", "Asistente no disponible.", "Assistant indisponible.", "دستیار در دسترس نیست."));
+    } finally { setListening(false); }
   };
 
   const open = (id) => {
