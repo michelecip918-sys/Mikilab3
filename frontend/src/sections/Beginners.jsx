@@ -472,36 +472,6 @@ export default function Beginners({ onNavigate }) {
         </div>
       </div>
 
-      <button data-testid="impara-riproduci-btn" onClick={() => setRiproduci(true)}
-        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#ff8a33] to-[#ff6b00] text-[#121212] shadow-md active:scale-98 transition-all text-left hover:shadow-lg">
-        <div className="w-12 h-12 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0"><PlayCircle className="w-6 h-6" /></div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Riproduci Passo-Passo", "Schritt-für-Schritt nachbacken", "Bake Step by Step", "Reproduce Paso a Paso", "Reproduis Pas à Pas", "پخت گام‌به‌گام")}</h3>
-          <p className="text-[#121212]/80 text-[13px] leading-snug">{mkTri(lang)("Ti guido su ogni passaggio con timer, temperature e la lista della spesa (dove comprare)", "Ich führe dich durch jeden Schritt mit Timer, Temperatur und Einkaufsliste", "I guide you through every step with timers, temperatures and the shopping list", "Te guío en cada paso con temporizadores, temperaturas y la lista de la compra", "Je te guide à chaque étape avec minuteurs, températures et liste de courses", "با تایمر، دما و لیست خرید در هر مرحله راهنمایی‌ات می‌کنم")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-[#121212]/60 shrink-0" />
-      </button>
-
-
-      <button data-testid="impara-livelli-btn" onClick={() => setImparaLiv(true)}
-        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#F0B429] to-[#ff6b00] text-white shadow-md active:scale-98 transition-all text-left hover:shadow-lg">
-        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0"><Trophy className="w-6 h-6 text-[#f0dcb4]" /></div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Impara a Livelli", "Lernen nach Stufen", "Learn by Levels", "Aprende por Niveles", "Apprendre par Niveaux", "یادگیری مرحله‌ای")}</h3>
-          <p className="text-white/85 text-[13px] leading-snug">{mkTri(lang)("Quiz a livelli che contano come sfida: sblocca badge e sali di grado", "Level-Quiz als Challenge: schalte Abzeichen frei und steige auf", "Level quizzes that count as a challenge: unlock badges and rank up", "Cuestionarios por niveles que cuentan como desafío: desbloquea insignias", "Des quiz par niveaux qui comptent comme défi : débloque des badges", "آزمون‌های مرحله‌ای به‌عنوان چالش: نشان‌ها را باز کنید")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-white/70 shrink-0" />
-      </button>
-
-      <button data-testid="impara-askmaster-btn" onClick={() => setAskMaster(true)}
-        className="w-full flex items-center gap-4 rounded-2xl p-4 bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white shadow-md active:scale-98 transition-all text-left hover:shadow-lg">
-        <div className="w-12 h-12 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center shrink-0"><MessageCircle className="w-6 h-6" /></div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display text-lg font-bold leading-tight">{mkTri(lang)("Chiedi al Maestro", "Frag den Meister", "Ask the Master", "Pregunta al Maestro", "Demande au Maître", "از استاد بپرس")}</h3>
-          <p className="text-white/85 text-[13px] leading-snug">{mkTri(lang)("Dubbi sull'impasto? Chiedi a Michele e ricevi consigli su misura", "Fragen zum Teig? Frag Michele für persönliche Tipps", "Dough doubts? Ask Michele for tailored advice", "¿Dudas con la masa? Pregunta a Michele", "Des doutes sur la pâte ? Demande à Michele", "سوال درباره خمیر؟ از میکله بپرس")}</p>
-        </div>
-        <ChevronRight className="w-6 h-6 text-white/70 shrink-0" />
-      </button>
       <div className="rounded-2xl p-5 bg-[#ff6b00]/12 border border-[#ff6b00]/30">
         <div className="flex items-center gap-2 mb-2">
           <Sprout className="w-5 h-5 text-[#ff6b00] dark:text-[#a9d2ec]" />
@@ -576,18 +546,7 @@ export default function Beginners({ onNavigate }) {
       </div>
       <AcademyCoach />
 
-      {/* SOS Impasto: manda la foto del pane a Mohammadreza per una diagnosi */}
-      <button data-testid="beginners-sos-btn" onClick={() => setSosOpen(true)}
-        className="w-full flex items-center gap-3 rounded-2xl p-4 bg-gradient-to-br from-[#ff6b00] to-[#7a1f1f] text-white shadow-md active:scale-98 transition-all">
-        <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
-          <Stethoscope className="w-6 h-6" />
-        </div>
-        <div className="flex-1 min-w-0 text-left">
-          <p className="font-display text-base font-bold leading-tight">{tri3(lang, "SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa")}</p>
-          <p className="text-[11px] text-white/85 leading-snug">{tri3(lang, "Manda la foto del tuo pane a Mohammadreza per una diagnosi immediata", "Sende Mohammadreza ein Foto deines Brotes für eine Sofortdiagnose", "Send Mohammadreza a photo of your bread for an instant diagnosis", "Envía a Mohammadreza una foto de tu pan para un diagnóstico inmediato")}</p>
-        </div>
-        <span className="text-xs font-bold bg-white/20 px-2.5 py-1 rounded-full shrink-0">{tri3(lang, "Apri", "Öffnen", "Open", "Abrir")}</span>
-      </button>
+      {/* SOS Impasto: la foto del pane va a Mohammadreza per una diagnosi (apri dagli accessi rapidi) */}
       <SosImpasto open={sosOpen} onClose={() => setSosOpen(false)} onNavigate={onNavigate} />
 
 

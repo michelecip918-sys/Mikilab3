@@ -3103,3 +3103,7 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Ricette** (`Ricette.jsx`): blocco strumenti riordinato da 3-col (5 tile sbilanciati) a **2x2 pulito** (Scopri / Enciclopedia / Tabelle&Farine / Backup Ricette). I due bottoni backup CSV+PDF uniti in un unico tile "Backup Ricette" che apre un **modale** con scelta formato (CSV = fogli di calcolo, PDF = da stampare). Testid CSV/PDF preservati. Verificato via screenshot (login utente).
 - **Laboratorio** (`Maestro.jsx`): gia allineato allo stile pulito richiesto (header essenziale, Modalita Laboratorio a tasti giganti, Piano IA in cima, percorso guidato, tutti gli strumenti dietro toggle, comandi vocali). Nessuna riscrittura: era gia ordinato e con tasti grandi.
 - Redesign a fasi: Home / Accademia / Community / Ricette FATTE. Laboratorio confermato ok. Resta eventuale rifinitura mirata di Guide (Beginners) su richiesta.
+
+## v-fork6 (2026-06) — Guide (Beginners) sfoltita
+- **Guide** (`Beginners.jsx`, condiviso con Accademia): rimossi 4 grandi pulsanti che DUPLICAVANO le scorciatoie gia presenti nella barra accessi rapidi in alto (Riproduci Passo-Passo, Impara a Livelli, Chiedi al Maestro, SOS Impasto). Le funzioni restano tutte accessibili dai chip (Livelli/Passo-Passo/Quiz/Chiedi al Maestro/Ricetta del giorno/SOS). Modale SosImpasto mantenuto e aperto dal chip SOS. Pagina piu corta e ordinata. Verificato via screenshot (login utente).
+- Redesign a fasi COMPLETATO: Home / Accademia / Community / Ricette / Guide sfoltite; Laboratorio gia a norma.
