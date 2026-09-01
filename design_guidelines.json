@@ -1,198 +1,214 @@
 {
-  "theme": {
-    "name": "MikiLab Il Tuo Laboratorio Accessibility Redesign",
-    "background_color": "#121212",
-    "card_background": "#1E1E1E",
-    "card_border": "#2C2C2C",
-    "primary_accent": "#FF6B00",
-    "primary_accent_hover": "#E05E00",
-    "text_primary": "#FFFFFF",
-    "text_secondary": "#A1A1AA",
-    "font_family_heading": "font-display, sans-serif",
-    "font_family_body": "sans-serif",
-    "theme_mode": "dark_only"
+  "project_identity": {
+    "name": "MikiLab",
+    "description": "Cohesive, reusable 'clean & ordered' visual design system for MikiLab — a free gamified home-baker & professional bakery PWA (React + Tailwind).",
+    "design_archetype": "Warm Artisan Bakery Modern Minimalist (Deep Dark + Warm Wood + Vibrant Orange Accent)",
+    "primary_viewport": "Mobile-first PWA (~430px width, fluidly scaling to desktop grid)",
+    "i18n_support": {
+      "languages": ["IT", "DE", "EN", "ES", "FR", "FA"],
+      "default": "IT",
+      "rtl_languages": ["FA"],
+      "rtl_protocol": "Use Tailwind logical properties (ms-*, me-*, ps-*, pe-*, start-*, end-*) and dir='rtl' wrapper attributes to ensure clean Persian layout."
+    },
+    "monetization": "100% Free app (No paywalls or premium gates)"
   },
-  "accessibility_standards": {
-    "minimum_touch_target": "56px to 64px for standard tools, 72px for hero/voice actions",
-    "target_user_profile": "Elderly (80-year-old vision/dexterity), impaired users, messy/floury hands in bakery environment",
-    "contrast_ratio": "APCA AAA compliant (high contrast text #FFFFFF on #121212 and #1E1E1E)",
-    "voice_command_accessibility": "Persistent floating hands-free voice trigger button always reachable on screen (z-50)",
-    "typography_scale": {
-      "page_title": "text-2xl sm:text-3xl font-black font-display tracking-tight text-white",
-      "section_header": "text-xl sm:text-2xl font-bold font-display text-white",
-      "tool_title": "text-lg sm:text-xl font-bold text-white",
-      "subtext_description": "text-sm sm:text-base font-medium text-zinc-400",
-      "badge_text": "text-xs sm:text-sm font-semibold tracking-wider text-orange-400"
+  "color_system": {
+    "backgrounds": {
+      "app_bg": "#121212",
+      "surface_base": "#181716",
+      "surface_elevated": "#22201D",
+      "surface_card": "#1E1C1A",
+      "surface_card_hover": "#282522",
+      "overlay_scrim": "rgba(18, 18, 18, 0.75)"
+    },
+    "accents": {
+      "primary_orange": "#FF6B00",
+      "primary_orange_hover": "#FF8533",
+      "primary_orange_glow": "rgba(255, 107, 0, 0.25)",
+      "warm_wood": "#A66E38",
+      "warm_wood_light": "#C48B52",
+      "amber_accent": "#D97706",
+      "flour_white": "#F7F5F0"
+    },
+    "text": {
+      "primary": "#F7F5F0",
+      "secondary": "#B0A89E",
+      "muted": "#787166",
+      "inverse": "#121212",
+      "orange_highlight": "#FF8533"
+    },
+    "borders_and_dividers": {
+      "border_subtle": "rgba(247, 245, 240, 0.08)",
+      "border_medium": "rgba(247, 245, 240, 0.15)",
+      "border_wood": "rgba(166, 110, 56, 0.3)",
+      "border_orange": "rgba(255, 107, 0, 0.4)"
+    },
+    "surfaces_and_effects": {
+      "glassmorphism": "backdrop-blur-xl bg-[#181716]/80 border border-white/10 shadow-2xl",
+      "nav_glass": "backdrop-blur-xl bg-[#121212]/90 border-t border-white/10",
+      "hero_gradient_mask": "bg-gradient-to-t from-[#121212] via-[#121212]/60 to-transparent",
+      "card_gradient_overlay": "bg-gradient-to-t from-[#181716] via-[#181716]/50 to-transparent"
     }
   },
-  "sections_breakdown": [
-    {
-      "id": "header_intro",
-      "title": "Benvenuto nel Tuo Laboratorio",
-      "type": "intro_banner",
-      "description": "Essential brief description only. All superfluous comments, avatars, and noise removed.",
-      "content": "Hub professionale per panificatori e pizzaioli. Gestisci ricette, calcoli, celle e tempi a mani libere."
+  "typography": {
+    "font_families": {
+      "headings": "'Fraunces', 'Playfair Display', serif",
+      "body": "'Plus Jakarta Sans', 'Inter', sans-serif",
+      "mono_metrics": "'JetBrains Mono', 'Fira Code', monospace",
+      "persian": "'Vazirmatn', 'Tahoma', sans-serif"
     },
-    {
-      "id": "primary_ai_plan",
-      "title": "Genera il Piano IA",
-      "type": "hero_action_card",
-      "description": "Primary high-priority AI production planning hero card",
-      "button_label": "Avvia Generazione Piano Produzione IA",
-      "target_tool_id": "piano_produzione_ia",
-      "min_height": "80px"
+    "scale": {
+      "h1_hero": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight",
+      "h2_section": "text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight leading-snug",
+      "h3_card": "text-lg sm:text-xl font-semibold leading-snug",
+      "body_large": "text-base font-normal leading-relaxed",
+      "body_standard": "text-sm font-normal leading-normal",
+      "caption_micro": "text-xs font-medium tracking-wider uppercase text-[#B0A89E]"
     },
-    {
-      "id": "accessible_mode_voice",
-      "title": "Modalità Laboratorio & Comandi Vocali",
-      "type": "accessible_hub",
-      "description": "Giant-button accessible mode and hands-free voice control hub",
-      "items": [
-        {
-          "id": "lab_mode_big",
-          "label": "Attiva Modalità Schermo Intero / Tasti Giganti",
-          "icon": "Maximize2",
-          "badge": "Mani Sporche"
-        },
-        {
-          "id": "voice_assistant_toggle",
-          "label": "Attiva Comandi Vocali (Assistente Miki)",
-          "icon": "Mic",
-          "badge": "Voice Active"
-        }
-      ]
-    },
-    {
-      "id": "ricette",
-      "title": "Ricette & Sviluppo",
-      "type": "accordion_section",
-      "default_open": true,
-      "tools": [
-        { "id": "ricette_custodite", "name": "Le Mie Ricette", "icon": "BookOpen", "description": "Archivio personalizzato e ricette salvate" },
-        { "id": "cantiere_ricetta", "name": "Cerca & Adatta Ricetta", "icon": "Sliders", "description": "Bilanciamento e adattamento quantità" },
-        { "id": "scopri_ricette", "name": "Catalogo Ricette MikiLab", "icon": "Utensils", "description": "Ricette base e avanzate per professionisti" }
-      ]
-    },
-    {
-      "id": "calcolatori",
-      "title": "Calcolatori di Laboratorio",
-      "type": "accordion_section",
-      "default_open": true,
-      "tools": [
-        { "id": "calcola_gradi", "name": "Idratazione & Farine", "icon": "Droplet", "description": "Calcolo idratazione e W farine" },
-        { "id": "water_temp", "name": "Temperatura Acqua", "icon": "Thermometer", "description": "Formula del 60 e temperatura impasto" },
-        { "id": "calcolatore_sequenze", "name": "Sequenze & Orari Impasto", "icon": "Clock", "description": "Orari di puntata, appretto e infornata" },
-        { "id": "convertitore_lieviti", "name": "Convertitore Lieviti", "icon": "RefreshCw", "description": "Conversione LFB, Lievito Madre e Secco" },
-        { "id": "calcolatore_stampi", "name": "Calcolatore Stampi", "icon": "Square", "description": "Dimensionamento teglie e ruoti" },
-        { "id": "adatta_forno", "name": "Adatta Forno", "icon": "Flame", "description": "Rapporto temperatura e tempi di cottura" },
-        { "id": "costo_energia", "name": "Costo Energia", "icon": "Zap", "description": "Calcolo consumo kW/h per cottura" }
-      ]
-    },
-    {
-      "id": "celle_freddo",
-      "title": "Celle, Freddo & Conservazione",
-      "type": "accordion_section",
-      "default_open": false,
-      "tools": [
-        { "id": "clima_termostato", "name": "Controllo Celle & Impastatrici", "icon": "Cpu", "description": "Monitoraggio temperature e umidità" },
-        { "id": "freezer_stock", "name": "Gestione Freezer", "icon": "Snowflake", "description": "Mappatura prodotti congelati ed etichette" },
-        { "id": "shelf_life", "name": "Shelf-Life Prodotto", "icon": "Calendar", "description": "Scadenze e conservazione in banco" },
-        { "id": "anti_waste", "name": "Anti-Spreco / Esuberi", "icon": "Recycle", "description": "Riutilizzo esuberi impasto e pane raffermo" }
-      ]
-    },
-    {
-      "id": "costi_dati",
-      "title": "Costi, Margini & Dati",
-      "type": "accordion_section",
-      "default_open": false,
-      "tools": [
-        { "id": "food_cost", "name": "Costi & Margine Prodotto", "icon": "DollarSign", "description": "Calcolo costo scheda e ricetta" },
-        { "id": "my_data", "name": "I Miei Dati & Fornitori", "icon": "Database", "description": "Archivio ingredienti e listini" },
-        { "id": "machine_park", "name": "Parco Macchine", "icon": "Wrench", "description": "Schede tecniche impastatrici e forni" }
-      ]
-    },
-    {
-      "id": "diagnosi_registri",
-      "title": "Diagnosi, SOS & Registri",
-      "type": "accordion_section",
-      "default_open": false,
-      "tools": [
-        { "id": "photo_diagnosi", "name": "Diagnosi Foto / Suono", "icon": "Camera", "description": "Analisi alveolatura e rumori macchina" },
-        { "id": "sos_impasto", "name": "SOS Impasto Difficile", "icon": "AlertTriangle", "description": "Rimedio rapido per impasti strappati o caldi" },
-        { "id": "sourdough_tracker", "name": "Registro Lievito Madre", "icon": "Activity", "description": "Diario rinfreschi e pH" },
-        { "id": "dough_log", "name": "Diario Impasti", "icon": "FileText", "description": "Storico lotti e parametri di produzione" },
-        { "id": "checklists", "name": "Checklist Apertura/Chiusura", "icon": "CheckSquare", "description": "Procedure giornaliere di laboratorio" }
-      ]
-    },
-    {
-      "id": "specializzazioni",
-      "title": "Pizzeria & Pasticceria",
-      "type": "accordion_section",
-      "default_open": false,
-      "tools": [
-        { "id": "lab_pizzeria", "name": "Modulo Pizzeria", "icon": "Pizza", "description": "Calcoli dedicati a pala, teglia e tonda" },
-        { "id": "lab_pasticceria", "name": "Modulo Pasticceria", "icon": "Cake", "description": "Grandi lievitati, cremosi e bilanciamento zuccheri" }
-      ]
-    },
-    {
-      "id": "altri_strumenti",
-      "title": "Altri Strumenti & Avanzati",
-      "type": "accordion_section",
-      "default_open": false,
-      "tools": [
-        { "id": "trova_farina", "name": "Trova & Compara Farina", "icon": "Search", "description": "Database tecnico farine commerciali" },
-        { "id": "haccp_log", "name": "Registro HACCP", "icon": "ShieldCheck", "description": "Temperature e autocontrollo" },
-        { "id": "smart_weather", "name": "Meteo & Umidità Laboratorio", "icon": "CloudSun", "description": "Condizioni ambientali locali" }
-      ]
-    }
-  ],
-  "tool_card_design": {
-    "min_height": "64px",
-    "background": "bg-[#1E1E1E] hover:bg-[#252525] border border-[#2C2C2C] rounded-xl",
-    "drag_handle": {
-      "icon": "GripVertical (three lines/dots)",
-      "color": "text-zinc-500 hover:text-orange-500",
-      "touch_target": "w-10 h-12 flex items-center justify-center cursor-grab"
-    },
-    "icon_tile": {
-      "background": "bg-orange-950/40 border border-orange-500/30 text-[#FF6B00]",
-      "size": "w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
-    },
-    "label_area": {
-      "title_style": "text-base sm:text-lg font-bold text-white tracking-wide leading-snug",
-      "desc_style": "text-xs sm:text-sm text-zinc-400 line-clamp-1"
-    },
-    "toggle_switch": {
-      "component": "Shadcn Switch or Custom Toggle",
-      "active_color": "bg-[#FF6B00]",
-      "label": "Attivo / Nascosto",
-      "touch_target": "p-2 min-h-[48px] flex items-center"
+    "rules": {
+      "headings_contrast": "Always pairing Fraunces/Playfair for section titles with warm orange accent badges",
+      "text_transform": "Use tracking-widest uppercase for section overlines (e.g., LAB MIKILAB • 100% GRATIS)",
+      "rtl_alignment": "Text automatically aligns right under dir='rtl', with start-aligned icons"
     }
   },
-  "persistent_voice_bar": {
-    "position": "fixed bottom-20 right-4 sm:right-6 z-50",
-    "button_style": "h-16 px-6 bg-[#FF6B00] hover:bg-[#E05E00] text-black font-extrabold text-lg rounded-full shadow-2xl flex items-center gap-3 border-2 border-orange-300 ring-4 ring-orange-500/20 active:scale-95 transition-all",
-    "label": "🎤 COMANDI VOCALI",
-    "tooltip": "Parla per aprire qualsiasi strumento senza usare le mani"
+  "spacing_and_layout": {
+    "containers": "max-w-md mx-auto px-4 sm:px-6 lg:max-w-5xl lg:px-8",
+    "mobile_viewport_target": "430px optimal width (iPhone / Android standard)",
+    "padding_system": {
+      "card_internal": "p-5 sm:p-6",
+      "section_spacing": "py-6 space-y-6",
+      "bento_gap": "gap-4 sm:gap-6"
+    },
+    "home_bento_grid": {
+      "layout_mode": "Tetris-Bento Hybrid for 5 Main Hub Sections",
+      "grid_columns": "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+      "section_spans": {
+        "ricette": "col-span-1 md:col-span-2 row-span-1",
+        "laboratorio": "col-span-1 md:col-span-1 row-span-2",
+        "accademia": "col-span-1 md:col-span-1 row-span-1",
+        "guide": "col-span-1 md:col-span-1 row-span-1",
+        "community": "col-span-1 md:col-span-2 row-span-1"
+      }
+    }
   },
   "component_guidelines": {
-    "accordion": "Use Shadcn Accordion (single or multiple) with clear section headers, showing badge counter of active tools (e.g., '7 Strumenti').",
-    "drag_and_drop": "Allow bakers to reorder tool cards within section or hide them via switch toggle.",
-    "routing": "Tool cards must open tools by invoking onSelectTool(toolId) maintaining existing routing integrity."
+    "home_page_hub_cards": {
+      "structure": "5 prominent feature cards with high-quality warm bakery background photography, dark linear gradient masks, subtle wood-grain hover glow, and clear multi-language CTAs.",
+      "sections": [
+        {
+          "id": "ricette",
+          "title_it": "Ricette & Formule",
+          "subtitle_it": "Esplora pane, pizza, grandi lievitati e impasti con calcolatori dosi automatici",
+          "badge": "Oltre 100 Ricette",
+          "color": "#FF6B00",
+          "testid": "home-card-ricette"
+        },
+        {
+          "id": "laboratorio",
+          "title_it": "Laboratorio AI & Timer",
+          "subtitle_it": "Pianificazione rinfreschi, diagnosi foto/audio e calcolo gradi acqua",
+          "badge": "Strumenti AI Pro",
+          "color": "#A66E38",
+          "testid": "home-card-laboratorio"
+        },
+        {
+          "id": "accademia",
+          "title_it": "Accademia & Quiz",
+          "subtitle_it": "Lezioni interattive, calcolo W farina e sfide di panificazione",
+          "badge": "Impara Gratis",
+          "color": "#D97706",
+          "testid": "home-card-accademia"
+        },
+        {
+          "id": "guide",
+          "title_it": "Guide & Metodi",
+          "subtitle_it": "Lievito Madre, Licoli, Biga, Poolish e SOS Impasto in 1-Click",
+          "badge": "Passo Passo",
+          "color": "#C48B52",
+          "testid": "home-card-guide"
+        },
+        {
+          "id": "community",
+          "title_it": "Community & Mappa",
+          "subtitle_it": "Condividi le tue infornate, trova fornai vicini a te e accumula punti",
+          "badge": "Fornaio Social",
+          "color": "#FF8533",
+          "testid": "home-card-community"
+        }
+      ],
+      "styling": "relative overflow-hidden rounded-2xl border border-white/10 bg-[#1E1C1A] hover:border-[#FF6B00]/50 transition-all duration-300 shadow-xl group cursor-pointer"
+    },
+    "bottom_navigation": {
+      "style": "Fixed bottom bar, glassmorphism backdrop (#121212/90 + backdrop-blur-md), border-t border-white/10, z-50",
+      "items": [
+        { "id": "home", "label": "Home", "icon": "HomeIcon", "testid": "nav-item-home" },
+        { "id": "ricette", "label": "Ricette", "icon": "BookOpenIcon", "testid": "nav-item-ricette" },
+        { "id": "lab", "label": "Laboratorio", "icon": "BeakerIcon", "testid": "nav-item-lab" },
+        { "id": "accademia", "label": "Accademia", "icon": "AcademicCapIcon", "testid": "nav-item-accademia" },
+        { "id": "community", "label": "Community", "icon": "UserGroupIcon", "testid": "nav-item-community" }
+      ],
+      "active_state": "text-[#FF6B00] bg-[#FF6B00]/10 rounded-xl px-3 py-1 font-semibold",
+      "inactive_state": "text-[#B0A89E] hover:text-[#F7F5F0] transition-colors"
+    },
+    "pwa_share_install": {
+      "card_style": "rounded-2xl border border-[#A66E38]/40 bg-gradient-to-br from-[#1E1C1A] via-[#242220] to-[#1E1C1A] p-6 shadow-2xl relative overflow-hidden",
+      "features": [
+        "Installa MikiLab come PWA nativa per usarla offline durante le impastate",
+        "100% Gratuita per sempre — Nessun abbonamento, nessuna pubblicità invasiva",
+        "Pulsante rapido Condividi App + Generatore QR Code"
+      ],
+      "buttons": {
+        "install": {
+          "label": "Installa App Gratis",
+          "style": "bg-[#FF6B00] hover:bg-[#FF8533] text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-[#FF6B00]/25 transition-all duration-200 active:scale-95",
+          "testid": "pwa-install-button"
+        },
+        "share": {
+          "label": "Condividi MikiLab",
+          "style": "bg-[#2A2724] hover:bg-[#332E2B] text-[#F7F5F0] border border-white/10 font-medium px-5 py-3 rounded-xl transition-all duration-200 active:scale-95",
+          "testid": "pwa-share-button"
+        }
+      }
+    },
+    "guided_weighing_scale": {
+      "display": "Font mono high-contrast, glowing digital display (#FF6B00 text on dark surface #121212), animated weight change, audio voice confirmation feedback toggle.",
+      "status_indicators": "Bluetooth connect status badge (Connected / Disconnected / Tare)"
+    },
+    "language_selector": {
+      "style": "Pill switcher with flags / ISO codes (IT, DE, EN, ES, FR, FA), active language highlighted in #FF6B00 badge.",
+      "testid": "header-language-selector"
+    }
   },
-  "general_ui_ux_guidelines": {
-    "test_id_convention": "All interactive elements MUST have data-testid. Format: data-testid='lab-tool-[tool_id]', data-testid='lab-section-[section_id]', data-testid='voice-command-btn', data-testid='lab-mode-toggle'.",
-    "no_transparent_overlays": "Never use pure transparent backgrounds for headers, dialogs, or collapsible cards. Always use minimum bg-[#121212] or bg-[#1E1E1E] with border-[#2C2C2C].",
-    "micro_interactions": "Smooth accordion expansion via Framer Motion / standard Shadcn collapsible transitions. Hover states with primary orange highlight (#FF6B00).",
-    "toast_notifications": "Use sonner toast notifications for voice command confirmation and tool customization saving."
+  "motion_and_interactions": {
+    "hover_effects": "Subtle 2px lift (-translate-y-0.5), glowing border transition, subtle scale up of card background image (scale-105).",
+    "active_press": "active:scale-95 transition-transform duration-100",
+    "entrance_animations": "Staggered fade-in-up using Framer Motion (delayChildren: 0.1, staggerChildren: 0.05).",
+    "reduced_motion": "respect prefers-reduced-motion by replacing smooth translation with instant opacity transitions"
+  },
+  "accessibility_and_rtl": {
+    "contrast_ratio": "Minimum 4.5:1 for normal text, 3:1 for large display headers and buttons",
+    "rtl_rules": "Under RTL (FA), margin-left becomes margin-right, flex-row order flips logically, text aligns right natively",
+    "focus_states": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212]",
+    "testing_attributes": "All buttons, tabs, input cards, and interactive blocks MUST include data-testid='...' in kebab-case."
+  },
+  "media_assets": {
+    "hero_bakery": "https://images.unsplash.com/photo-1627308595181-fa2b6f5f04e9?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "kneading_dough": "https://images.unsplash.com/photo-1649675602947-81a41c1ba4af?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "flour_dust_bread": "https://images.unsplash.com/photo-1627308593341-d886acdc06a2?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "wood_texture": "https://images.unsplash.com/photo-1583651981363-9dbe542f4df8?crop=entropy&cs=srgb&fm=jpg&q=85"
   },
   "instructions_to_main_agent": [
-    "Refactor tools directory in /frontend/src/components/ToolsDirectory.jsx or relevant section files.",
-    "Implement clear 10-section accordion structure as specified in sections_breakdown.",
-    "Ensure touch targets are strictly >= 56px-64px with clear text sizes suitable for elderly / hands-free users.",
-    "Keep the strict dark color scheme (#121212 background, #1E1E1E card background, #FF6B00 orange primary).",
-    "Add persistent Voice Command floating trigger button with data-testid='voice-command-btn'.",
-    "Include tool enable/disable toggle switch and drag handle icon on each tool item tile.",
-    "Remove all noisy comments, avatars, and superfluous clutter from the main hub top area."
+    "1. Maintain the warm bakery mood (deep dark #121212, warm wood accents #A66E38, vibrant warm orange #FF6B00).",
+    "2. Make the layout clean, spacious, and modern with generous internal card padding and clear typographic hierarchy.",
+    "3. Apply this design system across the whole app, starting with the 5-section Home Hub, Bottom Nav, and PWA Share & Install banner.",
+    "4. Ensure 100% free messaging (no paywalls).",
+    "5. Ensure full multi-language RTL compliance when FA (Persian) is active.",
+    "6. Keep all interactive elements equipped with explicit data-testid attributes."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Do NOT use pure black #000000 or harsh neon colors. Tint darks to warm dark (#121212, #181716).",
+    "Never hide header or bottom nav behind missing borders or zero backdrop-blur.",
+    "Ensure contrast ratios meet WCAG AA specifications across all buttons and inputs.",
+    "Include data-testid on all interactive buttons, cards, links, tabs, and form components."
   ]
 }

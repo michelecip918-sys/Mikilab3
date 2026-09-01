@@ -3081,3 +3081,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 
 ## v-fork (2026-06) — Allineamento titoli Home
 - Titoli delle card Home ora localizzati e coerenti col menu BottomNav: Ricette/Guide/Accademia/Laboratorio/Community (via helper L trilingue+ES). Rimossi i vecchi nomi brandizzati (ImparaDaCasa/ImparaConMikiLab/LavoraConMikiLab/ViviMikiLab).
+
+## v-fork2 (2026-06) — FASE 1 redesign (Home) + guida vocale bilancia
+- **Design system aggiornato** (`/app/design_guidelines.json`, design_agent): "Warm Artisan Bakery Modern Minimalist" — evolve il mood caldo (nero #121212, legno #A66E38, arancione #FF6B00) rendendolo piu pulito/ordinato. Font mantenuti (Playfair Display + Manrope + Vazirmatn FA). Riutilizzabile per le fasi successive.
+- **Home riscritta e riordinata** (`Home.jsx`): hero con logo, tagline breve e badge "100% gratis"; 5 card sezione con badge overline, titoli localizzati (Ricette/Guide/Accademia/Laboratorio/Community) e frasi brevi e dirette (copy ripulito, IT/DE/EN/ES). Entrata staggered (framer-motion), hover zoom immagine, classi logiche RTL (start/end, chevron rtl:rotate-180). Verificato IT + FA (RTL) via screenshot.
+- **Traduzioni FR/FA**: rigenerate con `/app/scripts/fill_missing_tri.py` (triTranslations.json -> 3038 voci).
+- **Guida vocale bilancia** (`GuidedWeighing.jsx`): alla connessione Bluetooth annuncia a voce la guida mani-libere; conferma vocale "Perfetto" al raggiungimento del peso target prima dell auto-avanzamento (i pesi target erano gia letti in sequenza).
+- Redesign "tutta l'app a fasi": FASE 1 = Home FATTA. Prossime fasi: Ricette, Guide, Accademia, Laboratorio, Community (da confermare ordine con utente).

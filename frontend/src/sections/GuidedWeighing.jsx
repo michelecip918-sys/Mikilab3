@@ -129,7 +129,7 @@ export default function GuidedWeighing() {
   useEffect(() => {
     if (!started) return;
     if (state === "ok") {
-      if (!stableRef.current) { beep(); stableRef.current = setTimeout(() => { next(); }, 2000); }
+      if (!stableRef.current) { beep(); speak(tri("Perfetto", "Perfekt", "Perfect")); stableRef.current = setTimeout(() => { next(); }, 2000); }
     } else { if (stableRef.current) { clearTimeout(stableRef.current); stableRef.current = null; } }
     return () => { if (stableRef.current && state !== "ok") { clearTimeout(stableRef.current); stableRef.current = null; } };
   }, [state, started, next, beep]);
@@ -149,6 +149,11 @@ export default function GuidedWeighing() {
         setWeight(Math.round(grams));
       });
       setBleOn(true); toast.success(tri("Bilancia connessa", "Waage verbunden", "Scale connected"));
+      // Guida a mani libere: annuncia che leggerà i pesi in sequenza ad alta voce
+      speak(tri(
+        "Bilancia connessa. Ti guiderò a voce: leggerò i pesi uno alla volta, tu versa senza toccare lo schermo.",
+        "Waage verbunden. Ich leite dich per Stimme: Ich lese die Gewichte nacheinander vor, gib ein, ohne den Bildschirm zu berühren.",
+        "Scale connected. I will guide you by voice: I read the weights one at a time, pour without touching the screen."));
     } catch { toast.error(tri("Connessione annullata o fallita", "Verbindung fehlgeschlagen", "Connection cancelled/failed")); }
   };
 
