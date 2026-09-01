@@ -3078,3 +3078,6 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Bluetooth: nuovo BluetoothConnect.jsx (Web Bluetooth), tool id "bluetooth" (TOOLS + ToolsDirectory sez. celle + rotta Maestro). Legge standard GATT: Weight Scale 0x2A9D + Temperature 0x2A6E; device custom -> mostra nota "manda modello". Solo Android/Chrome (no iPhone). NON testabile headless (no device).
 - PENDENTE: ImparaConMikiLab layout dedicato (Lezioni->Esercizi->Quiz->Ricette) non ancora costruito; pH-metro custom da mappare per modello.
 - NB: PREVIEW -> REDEPLOY per mikilab.de.
+
+## v-fork (2026-06) — Allineamento titoli Home
+- Titoli delle card Home ora localizzati e coerenti col menu BottomNav: Ricette/Guide/Accademia/Laboratorio/Community (via helper L trilingue+ES). Rimossi i vecchi nomi brandizzati (ImparaDaCasa/ImparaConMikiLab/LavoraConMikiLab/ViviMikiLab).

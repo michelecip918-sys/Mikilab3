@@ -13,7 +13,8 @@ export default function Home({ onNavigate }) {
 
   const BLOCKS = [
     {
-      tab: "ricette", img: "hero-ricette.jpg", title: "Ricette",
+      tab: "ricette", img: "hero-ricette.jpg",
+      title: L("Ricette", "Rezepte", "Recipes", "Recetas"),
       desc: L(
         "Esplora le mie ricette esclusive, un regalo pensato per farti imparare subito le basi e le preparazioni passo passo.",
         "Entdecke meine exklusiven Rezepte – ein Geschenk, um sofort die Grundlagen und Zubereitungen Schritt für Schritt zu lernen.",
@@ -21,7 +22,8 @@ export default function Home({ onNavigate }) {
         "Explora mis recetas exclusivas, un regalo para aprender enseguida las bases y las preparaciones paso a paso."),
     },
     {
-      tab: "impara", img: "hero-impara.jpg", title: "ImparaDaCasa",
+      tab: "impara", img: "hero-impara.jpg",
+      title: L("Guide", "Anleitungen", "Guides", "Guías"),
       desc: L(
         "Risorse, contenuti e guide pratiche da consultare comodamente da casa.",
         "Ressourcen, Inhalte und praktische Anleitungen bequem von zu Hause.",
@@ -29,7 +31,8 @@ export default function Home({ onNavigate }) {
         "Recursos, contenidos y guías prácticas para consultar cómodamente desde casa."),
     },
     {
-      tab: "imparacon", img: "hero-bakery.jpg", title: "ImparaConMikiLab",
+      tab: "imparacon", img: "hero-bakery.jpg",
+      title: L("Accademia", "Akademie", "Academy", "Academia"),
       desc: L(
         "L'hub per chi inizia: lezioni guidate, quiz interattivi ed esercizi per imparare da zero.",
         "Der Hub für Einsteiger: geführte Lektionen, interaktive Quiz und Übungen, um von Grund auf zu lernen.",
@@ -37,7 +40,8 @@ export default function Home({ onNavigate }) {
         "El hub para principiantes: lecciones guiadas, cuestionarios interactivos y ejercicios para aprender desde cero."),
     },
     {
-      tab: "maestro", img: "hero-laboratorio.jpg", title: "LavoraConMikiLab",
+      tab: "maestro", img: "hero-laboratorio.jpg",
+      title: L("Laboratorio", "Labor", "Lab", "Laboratorio"),
       desc: L(
         "Lo strumento avanzato e libero per professionisti: progetta, crea e sviluppa in autonomia.",
         "Das fortschrittliche, freie Werkzeug für Profis: planen, erstellen und entwickeln in Eigenregie.",
@@ -45,7 +49,7 @@ export default function Home({ onNavigate }) {
         "La herramienta avanzada y libre para profesionales: diseña, crea y desarrolla con autonomía."),
     },
     {
-      tab: "community", img: "hero-social.jpg", title: "ViviMikiLab",
+      tab: "community", img: "hero-social.jpg", title: "Community",
       desc: L(
         "Entra nella community, condividi i tuoi risultati e interagisci con gli altri appassionati.",
         "Tritt der Community bei, teile deine Ergebnisse und tausche dich mit anderen Begeisterten aus.",

@@ -38,10 +38,10 @@ export default function BottomNav({ active, onChange }) {
   const PUB = process.env.PUBLIC_URL;
   const TABS = [
     { id: "ricette", label: triNav("Ricette", "Rezepte", "Recipes", "Recetas"), img: "nav-ricette.jpg" },
-    { id: "impara", label: "ImparaDaCasa", img: "nav-impara.jpg" },
-    { id: "imparacon", label: "ImparaConMikiLab", img: "nav-imparacon.jpg" },
-    { id: "maestro", label: "LavoraConMikiLab", img: "nav-maestro.jpg" },
-    { id: "community", label: "ViviMikiLab", img: "nav-community.jpg" },
+    { id: "impara", label: triNav("Guide", "Anleitungen", "Guides", "Guías"), img: "nav-impara.jpg" },
+    { id: "imparacon", label: triNav("Accademia", "Akademie", "Academy", "Academia"), img: "nav-imparacon.jpg" },
+    { id: "maestro", label: triNav("Laboratorio", "Labor", "Lab", "Laboratorio"), img: "nav-maestro.jpg" },
+    { id: "community", label: "Community", img: "nav-community.jpg" },
   ];
   const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
 
