@@ -4,10 +4,11 @@ import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { TOOLS } from "@/sections/PianoProduzioneAI";
-import { api } from "@/lib/api";
+import { api, labConfigApi } from "@/lib/api";
 import { playTTS, stopTTS, isTTSMuted, setTTSMuted } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
-import { fetchWeeklyItems, todayKey, tomorrowKey, summarizeDay } from "@/lib/weeklyPlan";
+import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, summarizeDay } from "@/lib/weeklyPlan";
+import { getCached as shiftGet, setWorkMode, setBatchStatus, addBase, toggleMachineDown, setColdDown, addNote, statusLabel, machineDownNote, coldDownNote } from "@/lib/shiftState";
 import { PROACTIVE_MODULES, moduleName, moduleMsg } from "@/lib/proactiveModules";
 import { routeVoice } from "@/lib/nativeAudio";
 import { getOperators } from "@/lib/brigata";
@@ -274,6 +275,100 @@ export default function VoiceCommand({ onOpenTool }) {
     return true;
   };
 
+  // ---- GESTIONE TURNO / GUASTI / PRE-COTTI (offline, conferma vocale) ----
+  const STATUS_WORDS = [
+    { st: "precotto", rx: /(precott|pre-cott|abbattut|vorgebacken|pre-?baked|precocid|pr[ée]cuit)/ },
+    { st: "base_pronta", rx: /(base pronta|basi pronte|base ready|ready base|base fatta|base lista)/ },
+    { st: "in_cella", rx: /(in cella|nella cella|in frigo|in cold|en c[aá]mara|in der zelle|en chambre)/ },
+    { st: "in_lievitazione", rx: /(lievitaz|in lievito|proofing|g[aä]rung|fermentaci|en pousse)/ },
+    { st: "pronto", rx: /(pronto|pronta|pronte|pronti|fertig|ready|listo|pr[êe]t)/ },
+    { st: "fatto", rx: /(fatto|completat|finit|erledigt|\bdone\b|hecho|termin)/ },
+  ];
+
+  // Modalità di lavoro: "modalità autonomia" / "flusso continuo".
+  const tryModo = (t) => {
+    if (!/(modalit|flusso|autonom|continu|arbeitsmodus|work mode|eigenst[aä]nd)/.test(t)) return false;
+    if (/(autonom|anticip|blocco|eigenst[aä]nd|autonomous)/.test(t)) {
+      setWorkMode("autonomia");
+      const msg = tri("Modalità Autonomia attiva. Prepara in blocco e aggiorna gli stati.", "Autonomie-Modus aktiv.", "Autonomy mode on.", "Modo autonomía activo.", "Mode autonomie activé.", "حالت خودگردان فعال شد.");
+      speak(msg); toast.success("🧩 " + msg); return true;
+    }
+    if (/(continu|flusso|real|team|kontinu|continuous)/.test(t)) {
+      setWorkMode("continuo");
+      const msg = tri("Flusso Continuo attivo.", "Kontinuierlicher Fluss aktiv.", "Continuous flow on.", "Flujo continuo activo.", "Flux continu activé.", "جریان پیوسته فعال شد.");
+      speak(msg); toast.success("⚡ " + msg); return true;
+    }
+    return false;
+  };
+
+  // Cella/fermalievitazione fuori uso → lievitazione diretta a temperatura ambiente.
+  const tryCella = (t) => {
+    if (!/(cella|frigo|reo|fermalievit|k[uü]hl|cold cell|c[aá]mara|chambre)/.test(t)) return false;
+    if (!/(rott|guast|fuori uso|non funzion|spent|kaputt|defekt|\boff\b|broken|down|salt|en panne|\bok\b|funzion|ripristin|torna)/.test(t)) return false;
+    if (/(\bok\b|ripristin|torna|riparat|wieder|working|restored)/.test(t) && !/(non funzion|nicht|not working)/.test(t)) {
+      setColdDown(false, "");
+      const msg = tri("Cella ripristinata. Torno alla lievitazione in cella.", "Zelle wieder aktiv.", "Cell restored.", "Cámara restaurada.", "Chambre rétablie.", "سردخانه بازگشت.");
+      speak(msg); toast.success("❄️ " + msg); return true;
+    }
+    setColdDown(true, /stanotte|stasera|tonight|heute nacht|esta noche|cette nuit/.test(t) ? tri("Stanotte", "Heute Nacht", "Tonight", "Esta noche", "Cette nuit", "امشب") : "");
+    const note = coldDownNote(tri);
+    addNote("❄️→🔥 " + note, "cella");
+    speak(tri(`Cella non funzionante. ${note}`, `Zelle defekt. ${note}`, `Cell not working. ${note}`, `Cámara no funciona. ${note}`, `Chambre en panne. ${note}`, `سردخانه خراب. ${note}`));
+    toast.error(tri("❄️ Cella fuori uso → lievitazione diretta", "❄️ Zelle aus → direkte Gärung", "❄️ Cell off → direct leavening", "❄️ Cámara → fermentación directa", "❄️ Chambre → levée directe", "❄️ سردخانه → مستقیم"));
+    return true;
+  };
+
+  // Guasto impastatrice/macchina → ripartizione lotti sulle macchine disponibili.
+  const tryGuasto = async (t) => {
+    if (!/(rott|guast|fuori uso|non funzion|kaputt|defekt|au[sß]er betrieb|broken|out of order|averi|en panne)/.test(t)) return false;
+    if (/(cella|frigo|reo|fermalievit|k[uü]hl|cold cell|c[aá]mara|chambre)/.test(t)) return false; // gestito da tryCella
+    let mixers = [];
+    try { const cfg = await labConfigApi.get(); mixers = (cfg && cfg.mixers) || []; } catch { /* offline */ }
+    let name = null;
+    for (const m of mixers) { if (m.name && t.includes(norm(m.name))) { name = m.name; break; } }
+    if (!name) name = /principal|haupt|\bmain\b/.test(t)
+      ? (mixers[0]?.name || tri("Impastatrice principale", "Hauptmaschine", "Main mixer", "Amasadora principal", "Pétrin principal", "همزن اصلی"))
+      : tri("Impastatrice", "Maschine", "Mixer", "Amasadora", "Pétrin", "همزن");
+    toggleMachineDown(name, true);
+    const downNames = (shiftGet().machines_down || []).map((x) => x.name);
+    const note = machineDownNote(name, mixers.length ? mixers : [{ name }], downNames, tri);
+    addNote("🔧 " + note, "guasto");
+    speak(tri(`${name} fuori uso. ${note}`, `${name} außer Betrieb. ${note}`, `${name} out of order. ${note}`, `${name} fuera de uso. ${note}`, `${name} hors service. ${note}`, `${name} خراب. ${note}`));
+    toast.error("🔧 " + name);
+    return true;
+  };
+
+  // Avanzamento lotto / pre-cotto: "segna 10 teglie focaccia precotte", "lotto 2 pronto in cella".
+  const tryLotto = async (t) => {
+    const sw = STATUS_WORDS.find((x) => x.rx.test(t));
+    const mentions = /\b(lotto|lotti|teglie|teglia|tegli|charge|batch|tray|trays|bandej|plaque|blech)\b/.test(t) || /(segna|marca|imposta|aggiorna|mark|markier)/.test(t);
+    if (!sw || !mentions) return false;
+    let qty = null; const qm = t.match(/(\d+(?:[.,]\d+)?)/);
+    if (qm) qty = parseFloat(qm[1].replace(",", ".")); else { for (const w in NUMW) { if (new RegExp("\\b" + w + "\\b").test(t)) { qty = NUMW[w]; break; } } }
+    let unit = ""; if (/\b(teglie|teglia|tegli|bleche|blech|trays|tray|bandejas|plaques)\b/.test(t)) unit = tri("teglie", "Bleche", "trays", "bandejas", "plaques", "سینی");
+
+    if ((sw.st === "precotto" || sw.st === "base_pronta") && qty) {
+      let product = "";
+      const pm = t.match(/(?:teglie|teglia|tegli|pezzi|pezz|di)\s+([a-zàèéìòù]+(?:\s+[a-zàèéìòù]+)?)/);
+      if (pm) product = pm[1].trim();
+      if (!product) { const p2 = t.match(/\b(focaccia|pane|pizza|baguette|panini|brioche|croissant|ciabatta|pagnotta|panettone)\b/); if (p2) product = p2[0]; }
+      addBase({ product: product || tri("Prodotto", "Produkt", "Product", "Producto", "Produit", "محصول"), qty, unit, kind: sw.st });
+      const lbl = statusLabel(sw.st, tri);
+      const msg = tri(`Registrate ${qty} ${unit} ${product} — ${lbl}.`, `${qty} ${unit} ${product} — ${lbl}.`, `Logged ${qty} ${unit} ${product} — ${lbl}.`, `Registrado ${qty} ${unit} ${product} — ${lbl}.`, `${qty} ${unit} ${product} — ${lbl}.`, `${qty} ${unit} ${product} — ${lbl}.`);
+      speak(msg); toast.success("📦 " + msg); return true;
+    }
+
+    const items = itemsForDay(await fetchWeeklyItems(), todayKey());
+    let target = null;
+    const lm = t.match(/lotto\s*(\d+)/);
+    if (lm) { target = items[parseInt(lm[1], 10) - 1] || null; }
+    if (!target) target = items.find((it) => norm(it.recipe_name || "").split(" ").some((w) => w.length > 2 && t.includes(w)));
+    if (!target) { speak(tri("Non trovo il lotto. Ripeti col nome o il numero.", "Charge nicht gefunden.", "Batch not found.", "Lote no encontrado.", "Lot introuvable.", "دسته پیدا نشد.")); return true; }
+    setBatchStatus({ id: target.id, recipe_id: target.recipe_id, recipe_name: target.recipe_name, pieces: target.pieces }, sw.st);
+    const msg = `${target.recipe_name}: ${statusLabel(sw.st, tri)}.`;
+    speak(msg); toast.success("✅ " + msg); return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
@@ -284,6 +379,10 @@ export default function VoiceCommand({ onOpenTool }) {
     if (tryCalc(t)) return;
     if (tryGuida(t)) return;
     if (trySanifica(t)) return;
+    if (tryModo(t)) return;
+    if (tryCella(t)) return;
+    if (await tryGuasto(t)) return;
+    if (await tryLotto(t)) return;
     if (tryScarto(t)) return;
     if (tryCall(t)) return;
     if (await tryPlan(raw, t)) return;
@@ -411,8 +510,8 @@ export default function VoiceCommand({ onOpenTool }) {
         </div>
       )}
 
-      {/* Onboarding rapido */}
-      {onboard && (
+      {/* Onboarding rapido (nascosto in modalità Braccio/mani libere per non coprire i tasti) */}
+      {onboard && !hidden && (
         <div data-testid="voice-onboard" className="fixed inset-x-3 bottom-28 z-[60] mx-auto max-w-sm rounded-2xl bg-[#161616] border border-[#ff6b00]/50 p-4 shadow-2xl">
           <button data-testid="voice-onboard-close" onClick={() => { setOnboard(false); try { localStorage.setItem("mikilab_voice_onboard", "1"); } catch { /* */ } }} className="absolute top-2 end-2 text-[#7E8A93] hover:text-white"><X className="w-4 h-4" /></button>
           <p className="font-display text-sm font-extrabold text-[#ff6b00] mb-2 flex items-center gap-1.5"><Mic className="w-4 h-4" /> Lab Voice <span className="text-[9px] font-bold bg-[#ff6b00] text-white px-1.5 py-0.5 rounded-full uppercase">Exclusive</span></p>

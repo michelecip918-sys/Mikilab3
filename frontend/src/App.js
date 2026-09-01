@@ -90,7 +90,7 @@ function App() {
 
   // Gestione tasto Indietro: sincronizza i tab con la history del browser.
   const navigate = useCallback((next) => {
-    if (next === tabRef.current) return;
+    if (next === tabRef.current) { window.dispatchEvent(new CustomEvent("mikilab-nav-retap", { detail: { tab: next } })); return; }
     tabRef.current = next;
     window.history.pushState({ tab: next }, "");
     setTab(next);

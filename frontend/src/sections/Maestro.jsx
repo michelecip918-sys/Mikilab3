@@ -24,6 +24,8 @@ import ShoppingList from "@/sections/ShoppingList";
 import ShiftRoles from "@/sections/ShiftRoles";
 import RegistroScarti from "@/sections/RegistroScarti";
 import BraccioLab from "@/sections/BraccioLab";
+import RicettaDelGiorno from "@/sections/RicettaDelGiorno";
+import Emergenze from "@/sections/Emergenze";
 import Checklists from "@/sections/Checklists";
 import FreezerStock from "@/sections/FreezerStock";
 import WaterTempCalc from "@/sections/WaterTempCalc";
@@ -121,6 +123,16 @@ export default function Maestro() {
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [labView, setLabView] = useState(() => { try { return localStorage.getItem("mikilab_lab_view") || "braccio"; } catch { return "braccio"; } });
   const setView = (v) => { setLabView(v); try { localStorage.setItem("mikilab_lab_view", v); } catch { /* */ } };
+  // Ri-tap del tab "Lab" dalla bottom nav: chiude il tool aperto o torna alla vista operativa (per raggiungere il banner turno).
+  useEffect(() => {
+    const onRetap = (e) => {
+      if (!e?.detail || e.detail.tab !== "maestro") return;
+      if (tool) setTool(null); else setLabView("braccio");
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("mikilab-nav-retap", onRetap);
+    return () => window.removeEventListener("mikilab-nav-retap", onRetap);
+  }, [tool]);
   useBackClose(!!tool, back);
 
   if (tool) {
@@ -166,6 +178,8 @@ export default function Maestro() {
         {tool === "spesa" && <ShoppingList />}
         {tool === "turni" && <ShiftRoles />}
         {tool === "scarti" && <RegistroScarti />}
+        {tool === "ricettadelgiorno" && <RicettaDelGiorno />}
+        {tool === "emergenze" && <Emergenze />}
         {tool === "check" && <Checklists />}
         {tool === "sveglia" && <SvegliaLievito />}
         {tool === "salespoints" && <SalesPoints />}

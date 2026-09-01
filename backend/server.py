@@ -1926,6 +1926,38 @@ async def save_lab_config(payload: LabConfig, user: dict = Depends(current_user)
 
 
 # ---------------------------------------------------------------------------
+# Lab Shift State — stato operativo CONDIVISO del turno (lotti, guasti, celle, note)
+# Documento singolo (_key="default"): tutti i dispositivi del laboratorio vedono lo
+# stesso stato, così il "passaggio di consegne" tra chi lavora funziona in tempo reale.
+# ---------------------------------------------------------------------------
+class LabShiftState(BaseModel):
+    work_mode: str = "continuo"        # "continuo" (flusso) | "autonomia" (prep. anticipata)
+    batches: List[dict] = []           # {id, recipe_id, recipe_name, pieces, status, note, updated_at}
+    bases: List[dict] = []             # basi/pre-cotti manuali {id, product, qty, unit, kind, updated_at}
+    machines_down: List[dict] = []     # {id, name, at}
+    cold_down: bool = False            # cella/fermalievitazione fuori uso stanotte
+    cold_note: Optional[str] = ""
+    shift_notes: List[dict] = []       # note per il turno successivo {id, text, kind, at}
+    updated_at: Optional[str] = None
+
+
+@api_router.get("/lab/shift-state")
+async def get_lab_shift_state(user: Optional[dict] = Depends(optional_user)):
+    doc = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+    return doc or LabShiftState().model_dump()
+
+
+@api_router.put("/lab/shift-state", response_model=LabShiftState)
+async def save_lab_shift_state(payload: LabShiftState, user: Optional[dict] = Depends(optional_user)):
+    payload.updated_at = now_iso()
+    doc = payload.model_dump()
+    await db.lab_shift_state.update_one(
+        {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
+    )
+    return payload
+
+
+# ---------------------------------------------------------------------------
 # Memoria temperatura impasto per ricetta (termostato)
 # ---------------------------------------------------------------------------
 class RecipeTemp(BaseModel):

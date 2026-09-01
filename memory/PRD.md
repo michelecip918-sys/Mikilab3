@@ -3216,3 +3216,17 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Separazione Mente/Gestione**: tutta la pianificazione/generatore/tool/costi ora nella vista "Gestione (PC/Chef)" raggiungibile da `braccio-gestione`; ritorno con `maestro-to-braccio`. Stato in localStorage `mikilab_lab_view` (default 'braccio'). Rimossi dal Braccio i calcolatori passivi (CTA, tech-banner, quick-grid).
 - **Zero-scroll reale**: body.braccio-mode nasconde page-footer e azzera pb del main (index.css).
 - Verificato iter 162: tutti i flussi PASS (Braccio default, 3 tasti, mic press, toggle Gestione, ritorno), 0 errori JS.
+
+---
+## v-fork (2026-06) — Turno impastatore (Autonomia/Pre-cotture), Guasti & Celle, Audit doc
+### A. Modalità impastatore + pre-cotture + voce (FATTO, testato iter163 6/6 backend + UI)
+- Stato del turno CONDIVISO backend: `LabShiftState` + `GET/PUT /api/lab/shift-state` (doc singolo `_key="default"`, `optional_user` → accessibile anche anonimo; cache offline). File `src/lib/shiftState.js` (hook `useShift`, mutazioni, regole ricalcolo offline).
+- **Modalità di lavoro** Flusso Continuo / In Autonomia (toggle in BraccioLab + Emergenze + RicettaDelGiorno), persistita e condivisa.
+- **RicettaDelGiorno**: stati lotto (pronto/in_cella/in_lievitazione/precotto/base_pronta/fatto) nel dettaglio; riepilogo **Basi & Pre-cotti**; nomi lotti localizzati.
+- **Comandi vocali** (VoiceCommand.jsx, locali offline + conferma): `tryModo`, `tryCella`, `tryGuasto`, `tryLotto` ("segna 10 teglie focaccia precotte", "lotto 2 pronto in cella", "impastatrice principale rotta", "cella non funzionante stasera").
+### B. Emergenze / guasti (FATTO)
+- Nuova sezione `sections/Emergenze.jsx` ("Guasti & Celle", tema Oro del Grano): macchine Fuori Uso, cella non funzionante → **ricalcolo offline** (ripartizione lotti / lievitazione diretta a temp. ambiente), note turno con reset "Nuovo turno".
+- **BraccioLab**: banner emergenza in alto (nota per il turno) + pallino di avviso; 3° tasto ora "Guasti & Celle" (era "Celle Frigo"→capo). Wiring tool `emergenze` in Maestro.
+- Fix da iter163: onboarding vocale nascosto in `braccio-mode` (bloccava i tasti zero-scroll); re-tap tab Lab chiude tool/torna al Braccio (App.js `mikilab-nav-retap`); padding inferiore nei tool Braccio.
+### C. Documentazione di Audit (FATTO)
+- `/app/memory/AUDIT_MIKILAB.md` (master). Copie scaricabili: `/audit/AUDIT_MIKILAB.md` e `/audit/AUDIT_MIKILAB.pdf` (public/audit, HTTP 200). Mappa per sezione: schermata+funzioni, comandi vocali completi, gestione imprevisti.

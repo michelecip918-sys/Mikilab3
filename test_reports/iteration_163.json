@@ -1,0 +1,44 @@
+{
+  "summary": "Iteration 163 — tested the new shared lab shift-state backend (GET/PUT /api/lab/shift-state, anonymous access, persistence, validation) with 6 pytest cases (6/6 PASS) and end-to-end UI verification of BraccioLab, Emergenze and RicettaDelGiorno on mobile viewport (390x844). All requested feature flows work: work_mode toggle persists across reload/new sessions via shared backend doc; machine-down and cold-down rules generate the correct recalculation notes; emergency banner + warning dot appear on BraccioLab and disappear after 'New shift' + restore; RicettaDelGiorno shows plan items after admin login, opens detail with large doses, batch status grid works and 'precotto' feeds the Bases & Pre-baked summary in both RicettaDelGiorno and Emergenze. One real blocking overlay was found (first-run Lab Voice onboarding card covers the 3 quick keys in the zero-scroll BraccioLab). No console errors, no 5xx during the whole run.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PUT /api/lab/shift-state", "issue": "Fully unauthenticated write to a single shared document (_key='default') with no rate limit: any anonymous client can overwrite the whole shift state of the bakery. Accepted per user choice, but consider at least a soft guard/audit field (last_writer)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "VoiceCommand (voice-onboard) over BraccioLab", "issue": "First-run 'Lab Voice' onboarding card (fixed inset-x-3 bottom-28 z-[60]) intercepts pointer events over the 3 quick keys (braccio-quick-*) and the braccio-gestione button. Playwright normal click failed with 'subtree intercepts pointer events'; since BraccioLab is zero-scroll the keys are unreachable until the tiny X is tapped. Fix: hide voice-onboard while document.body has class 'braccio-mode' (or when the FAB is hidden).", "selector": "[data-testid=\"voice-onboard\"] blocking [data-testid=\"braccio-quick-emergenze\"]", "priority": "HIGH"},
+      {"component": "VoiceCommand floating FAB cluster", "issue": "Floating mic/audio buttons (bottom-right) visually overlap bottom content inside the Lab tools (last shift note in Emergenze, 'In cold cell' status button in rdg-detail). Content is scrollable so not blocking, but overlaps text.", "selector": "[data-testid=\"voice-mute-btn\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Bottom nav while a Lab tool is open", "issue": "Tapping the 'Lab' tab (nav-tab-maestro) while Emergenze/RicettaDelGiorno is open does NOT return to BraccioLab (Maestro's local `tool` state is not reset), so the emergency banner cannot be reached from the nav bar; user must use 'Back to tools'. Suggest resetting tool on nav-tab re-tap.", "affected_selectors": ["nav-tab-maestro", "maestro-back-btn", "braccio-alert-banner"]},
+      {"flow": "Bases & Pre-baked naming", "issue": "basesSummary uses the raw weekly-plan recipe_name (IT, e.g. 'Anima Integrale') while list/detail show the localized title ('Whole Soul (Whole Wheat Bread)') — same product appears under two different names in emg-bases / rdg-bases.", "affected_selectors": ["rdg-bases", "emg-bases"]}
+    ],
+    "design_issues": [
+      {"screen": "BraccioLab (Oro del Grano)", "issues": ["Theme renders as specified (bg rgb(245,236,215), gold accents, dark text) and is truly zero-scroll (scrollHeight == innerHeight = 844)", "Dark app chrome (header/bottom nav) around the cream panel is a strong contrast switch but readable — no contrast failures found"]},
+      {"screen": "Emergenze", "issues": ["Machine card 'TEST Impastatrice QA · 50kg' is leftover seed data in lab-config from an earlier iteration — consider cleaning the mixers list"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter163_shift_state.py", "/app/test_reports/pytest/iter163.xml", "/app/backend/tests/_cleanup_iter163.py"],
+  "action_items": [
+    "HIGH: do not render voice-onboard while BraccioLab is active (body.braccio-mode) — it blocks all 3 quick keys and the Gestione button in the zero-scroll layout.",
+    "MEDIUM: re-tapping the Lab bottom-nav tab should close the open tool and return to BraccioLab.",
+    "LOW: localize recipe_name used in basesSummary (use recipeTitle) so bases chips match the list titles.",
+    "LOW: keep the floating voice FAB from overlapping bottom content of Lab tools (extra bottom padding)."
+  ],
+  "critical_code_review_comments": [
+    "server.py GET /api/lab/shift-state correctly projects out _id and _key — OK. PUT accepts the full model and stamps updated_at — OK; 422 returned for wrong types (validated).",
+    "shiftState.js persist() fires api.put on every mutation with no debounce; rapid taps (e.g. status grid) generate one PUT per click on a shared doc — consider debouncing/last-write-wins guard.",
+    "shiftState.js mutate() shallow-copies arrays only; nested batch objects are spread on update so OK, but there is no server merge — two devices editing simultaneously will overwrite each other (no version/etag).",
+    "Maestro.jsx is very large (tool switch of 60+ components); consider a lazy route map to reduce bundle and re-render cost."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter163_shift_state.py", "/app/backend/tests/_cleanup_iter163.py"],
+  "success_rate": {"backend": "100% (6/6)", "frontend": "92% (all requested flows pass; 1 blocking overlay + 3 minor issues)"},
+  "seed_data_creation": "Seeded one weekly-plan item (id TEST_wp1, day='mar', recipe 'Anima Integrale', 24 pcs) for admin@mikilab.de to test RicettaDelGiorno; removed afterwards. Shared shift-state reset to default {work_mode:'continuo', empty arrays} at the end (verified via GET).",
+  "should_call_test_agent_after_fix": true,
+  "should_main_agent_self_test": false,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md) — login via UI works, session_token returned by POST /api/auth/login usable as Bearer",
+  "context_for_next_testing_agent": "App language in preview is EN, so Emergenze/BraccioLab texts appear translated — assert on data-testid, not Italian strings. Always click [data-testid=\"voice-onboard-close\"] right after entering the Lab tab, otherwise the quick keys are pointer-blocked. To leave a Lab tool use [data-testid=\"maestro-back-btn\"] (nav-tab-maestro does not reset the tool). Weekly plan is per-user (auth required): seed via PUT /api/weekly-plan as admin with day key from getDay() mapping [dom,lun,mar,mer,gio,ven,sab]. Backend regression file: /app/backend/tests/test_iter163_shift_state.py (run with pytest from /app/backend, pytest.ini already sets xdist).",
+  "rca_of_the_issue": "Blocking overlay: VoiceCommand.jsx line ~515 renders the onboarding card as `fixed inset-x-3 bottom-28 z-[60]` and is only dismissed by the user (localStorage mikilab_voice_onboard). BraccioLab hides the voice FAB via the 'mikilab-fab' event but not this onboarding card, and its layout is height-capped (zero-scroll), so the card sits exactly on top of the 3 quick keys / Gestione button and intercepts clicks on first visit."
+}
