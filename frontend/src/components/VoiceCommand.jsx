@@ -441,7 +441,9 @@ export default function VoiceCommand({ onOpenTool }) {
     try {
       const { data } = await api.post("/lab/ask", { session_id: "lab-voice", message: raw, lang });
       const ans = (data && data.answer) || tri("Non ho una risposta.", "Keine Antwort.", "No answer.", "Sin respuesta.", "Pas de réponse.", "پاسخی ندارم.");
-      speak(ans); toast.success("🧑‍🍳 " + ans);
+      // L'avatar pronuncia solo una sintesi breve (playTTS accorcia); il testo COMPLETO resta a schermo.
+      speak(ans);
+      toast.success("🧑‍🍳 " + ans, { duration: Math.min(20000, Math.max(6000, ans.length * 55)) });
     } catch {
       speak(tri("Assistente non disponibile.", "Assistent nicht verfügbar.", "Assistant unavailable.", "Asistente no disponible.", "Assistant indisponible.", "دستیار در دسترس نیست."));
     } finally { setListening(false); }

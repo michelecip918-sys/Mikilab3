@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import time
 import json
 import logging
 import re
@@ -3743,23 +3744,27 @@ def _clean_for_tts(text: str) -> str:
     return _re.sub(r"\s+", " ", t).strip()
 
 
+_eleven_cooldown_until = 0.0  # se ElevenLabs fallisce (quota/crediti), salta per un po' → fallback istantaneo
+
+
 @api_router.post("/tts/speak")
 async def tts_speak(payload: TTSReq):
-    """TTS default = ElevenLabs (voce ultra-realistica). Fallback automatico → OpenAI (onyx/echo)."""
+    """TTS = ElevenLabs (voce ultra-realistica). Se non disponibile (crediti finiti),
+    risponde 424 e il frontend passa in automatico alla voce del TELEFONO (senza errori)."""
+    global _eleven_cooldown_until
     text = _clean_for_tts(payload.text)[:2000]
     if not text:
         raise HTTPException(status_code=400, detail="Testo vuoto")
     vkey = (payload.voice or "michele").lower()
 
-    # 1) ElevenLabs (provider di default) — Michele: voce maschile profonda; Momi: voce dedicata
-    if _eleven_client:
+    if _eleven_client and time.time() >= _eleven_cooldown_until:
         vid = payload.voice_id or _VOICE_MAP.get(vkey, MICHELE_VOICE_ID)
         ck = _hashlib.sha256(f"11l|{text}|{vid}|mp3".encode()).hexdigest()
         cpath = os.path.join(_TTS_CACHE_DIR, ck + ".mp3")
         try:
             if os.path.exists(cpath):
                 with open(cpath, "rb") as f:
-                    return Response(content=f.read(), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400"})
+                    return Response(content=f.read(), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "elevenlabs"})
         except Exception:
             pass
         try:
@@ -3775,33 +3780,12 @@ async def tts_speak(payload: TTSReq):
                 pass
             return Response(content=audio, media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "elevenlabs"})
         except Exception as e:
-            logger.warning("ElevenLabs TTS non disponibile (%s) → fallback OpenAI", str(e)[:120])
+            # Crediti/quota finiti o errore → cooldown 10 min, poi fallback voce del telefono.
+            _eleven_cooldown_until = time.time() + 600
+            logger.warning("ElevenLabs TTS non disponibile (%s) → fallback voce dispositivo", str(e)[:120])
 
-    # 2) Fallback: OpenAI TTS (voce maschile onyx/echo)
-    if not _TTS_KEY:
-        raise HTTPException(status_code=503, detail="TTS non configurato")
-    voice = _OAI_VOICE.get(vkey, "onyx")
-    ck = _hashlib.sha256(f"oai|{text}|{voice}|tts-1|mp3".encode()).hexdigest()
-    cpath = os.path.join(_TTS_CACHE_DIR, ck + ".mp3")
-    try:
-        if os.path.exists(cpath):
-            with open(cpath, "rb") as f:
-                return Response(content=f.read(), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400"})
-    except Exception:
-        pass
-    try:
-        from emergentintegrations.llm.openai import OpenAITextToSpeech
-        tts = OpenAITextToSpeech(api_key=_TTS_KEY)
-        audio = await tts.generate_speech(text=text, model="tts-1", voice=voice, response_format="mp3")
-        try:
-            with open(cpath, "wb") as f:
-                f.write(audio)
-        except Exception:
-            pass
-    except Exception:
-        logger.exception("openai tts error")
-        raise HTTPException(status_code=424, detail="Errore TTS")
-    return Response(content=audio, media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "openai"})
+    # Nessun audio dal server → il frontend usa la sintesi vocale del telefono (maschile, lingua dell'app).
+    raise HTTPException(status_code=424, detail="TTS server non disponibile: usa voce dispositivo")
 
 
 class ScanRecipeRequest(BaseModel):

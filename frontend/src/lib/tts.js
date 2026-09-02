@@ -10,18 +10,36 @@ function loadVoices() { try { _voices = window.speechSynthesis.getVoices() || []
 loadVoices();
 try { window.speechSynthesis.onvoiceschanged = loadVoices; } catch { /* */ }
 
+// Nomi tipici di voci MASCHILI per lingua (per scegliere sempre un timbro maschile).
+const MALE_HINTS = {
+  it: ["luca", "diego", "cosimo", "giorgio", "paolo", "carlo", "marco", "alessandro", "roberto", "male", "uomo", "maschile"],
+  en: ["david", "mark", "guy", "alex", "daniel", "james", "george", "fred", "aaron", "arthur", "oliver", "ryan", "male", "english male"],
+  de: ["stefan", "conrad", "markus", "yannick", "hans", "male", "männlich", "deutsch male"],
+  es: ["jorge", "diego", "carlos", "juan", "enrique", "pablo", "miguel", "male", "masculino"],
+  fr: ["thomas", "henri", "paul", "nicolas", "male", "masculin", "français male"],
+  fa: ["farid", "reza", "dariush", "male", "مرد"],
+};
+const FEMALE_HINTS = ["female", "femme", "weiblich", "mujer", "donna", "femmin", "masculin", "samantha", "alice", "elsa", "paola", "federica", "karen", "zira", "lucia", "aria", "victoria", "amelie", "amélie", "anna", "monica", "mónica", "paulina", "sara", "laura", "helena", "catherine", "fiona", "moira", "tessa", "veena", "yuna", "google.*female"]
+  .filter((h) => h !== "masculin");
+
+// Sceglie una voce del dispositivo MASCHILE nella lingua dell'app; voce distinta per Momi.
 function pickVoice(lang, persona) {
   if (!_voices.length) loadVoices();
   const code = (SR_LANG[lang] || "it-IT").slice(0, 2);
-  const cands = _voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(code));
+  let cands = _voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(code));
+  if (!cands.length) cands = _voices;
   if (!cands.length) return null;
-  const female = /female|donna|femmin|samantha|alice|elsa|paola|federica|karen|zira|lucia|aria|google.*italiano/i;
-  const male = /male|uomo|masch|luca|diego|cosimo|giorgio|paolo|david|thomas|carlo|marco|alessandro/i;
-  const males = cands.filter((v) => male.test(v.name));
-  const pool = males.length ? males : cands.filter((v) => !female.test(v.name));
-  const list = pool.length ? pool : cands;
-  if (persona === "momy" || persona === "momi") return list[1] || list[0];
-  return list[0];
+  const name = (v) => (v.name || "").toLowerCase();
+  const isFemale = (v) => FEMALE_HINTS.some((h) => new RegExp(h, "i").test(name(v)));
+  const isMaleWord = (v) => /\bmale\b|männlich|masculin|masculino|maschile|uomo|homme|hombre|mard|مرد/i.test(name(v)) || /male/i.test((v.voiceURI || "").toLowerCase());
+  const hints = MALE_HINTS[code] || MALE_HINTS.en;
+  const byName = cands.filter((v) => hints.some((h) => name(v).includes(h)) && !isFemale(v));
+  const byWord = cands.filter((v) => isMaleWord(v) && !isFemale(v));
+  const notFemale = cands.filter((v) => !isFemale(v));
+  const pool = byName.length ? byName : (byWord.length ? byWord : (notFemale.length ? notFemale : cands));
+  // Momi = voce maschile DIVERSA da Michele quando possibile.
+  if ((persona === "momy" || persona === "momi") && pool.length > 1) return pool[1];
+  return pool[0];
 }
 
 export const isTTSMuted = () => { try { return localStorage.getItem("mikilab_voice_muted") === "1"; } catch { return false; } };
@@ -35,21 +53,41 @@ export function setTTSMuted(v) {
 let _lastText = "";
 export const getLastTTS = () => _lastText;
 
+// OTTIMIZZAZIONE CREDITI: l'avatar pronuncia solo 1-2 frasi essenziali; i dettagli restano a schermo.
+export function shortenForSpeech(text, maxChars = 180, maxSentences = 2) {
+  let t = (text || "").replace(/\s+/g, " ").trim();
+  if (!t) return "";
+  if (t.length <= maxChars) return t;
+  const parts = t.split(/(?<=[.!?…])\s+/);
+  let out = "";
+  let sentences = 0;
+  for (const p of parts) {
+    if (out && (out.length + 1 + p.length) > maxChars) break;
+    out = out ? out + " " + p : p;
+    sentences += 1;
+    if (sentences >= maxSentences) break;
+  }
+  if (!out) out = t.slice(0, maxChars);
+  if (out.length > maxChars) out = out.slice(0, maxChars).replace(/\s+\S*$/, "").trim() + "…";
+  return out.trim();
+}
+
 let _audio = null;
 export function stopTTS() {
   try { if (_audio) { _audio.pause(); _audio.src = ""; _audio = null; } } catch { /* */ }
   try { window.speechSynthesis.cancel(); } catch { /* */ }
 }
 
-// Voce nativa del dispositivo (fallback).
+// Voce nativa del dispositivo (fallback): lingua dell'app + timbro sempre maschile.
 function nativeSpeak(clean, lang, voice, onStart, onEnded) {
   try {
     const u = new SpeechSynthesisUtterance(clean);
     u.lang = SR_LANG[lang] || "it-IT";
     const v = pickVoice(lang, voice);
     if (v) u.voice = v;
-    if (voice === "michele" || voice === "lab") { u.pitch = 0.9; u.rate = 1.08; }
-    else { u.pitch = 1.0; u.rate = 0.97; }
+    // Timbro maschile: Michele più profondo, Momi maschile ma leggermente più chiaro.
+    if (voice === "michele" || voice === "lab") { u.pitch = 0.85; u.rate = 1.06; }
+    else { u.pitch = 0.92; u.rate = 0.98; }
     u.onstart = () => { if (onStart) onStart(); };
     u.onend = () => { if (onEnded) onEnded(); };
     u.onerror = () => { if (onEnded) onEnded(); };
@@ -60,8 +98,9 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
 // voice: "michele" (Lab, onyx) | "momy" (Momi, echo)
 export function playTTS(text, { lang = "it", voice = "momy", onStart, onEnded } = {}) {
   stopTTS();
-  const clean = cleanForSpeech(text);
-  if (!clean) { if (onEnded) onEnded(); return; }
+  const full = cleanForSpeech(text);
+  if (!full) { if (onEnded) onEnded(); return; }
+  const clean = shortenForSpeech(full); // solo sintesi breve → meno crediti + voce essenziale
   _lastText = clean;
   if (isTTSMuted()) { if (onEnded) onEnded(); return; } // Mute: solo testo a schermo
 
