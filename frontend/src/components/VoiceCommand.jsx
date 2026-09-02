@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { TOOLS } from "@/sections/PianoProduzioneAI";
 import { api, labConfigApi } from "@/lib/api";
-import { playTTS, stopTTS, isTTSMuted, setTTSMuted } from "@/lib/tts";
+import { playTTS, stopTTS, isTTSMuted, setTTSMuted, getLastTTS } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
 import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, summarizeDay } from "@/lib/weeklyPlan";
 import { getCached as shiftGet, setWorkMode, setBatchStatus, addBase, toggleMachineDown, setColdDown, addNote, statusLabel, machineDownNote, coldDownNote, handoverSummary, logFault } from "@/lib/shiftState";
@@ -83,9 +83,11 @@ export default function VoiceCommand({ onOpenTool }) {
   }, [timers.length]);
 
   const beep = () => { try { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.value = 0.15; o.start(); setTimeout(() => { o.stop(); a.close(); }, 140); } catch { /* */ } };
-  // Voce di Lab (sintesi nativa del dispositivo, tono telegrafico).
+  // Voce di Lab (persona selezionabile nelle Impostazioni: Michele / Momi).
   const speak = useCallback((text) => {
-    playTTS(text, { lang, voice: "michele", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
+    let persona = "michele";
+    try { persona = localStorage.getItem("mikilab_voice_persona") || "michele"; } catch { /* */ }
+    playTTS(text, { lang, voice: persona, onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
   }, [lang]);
   const stripVerbs = (t) => t.replace(/\b(aprimi|apri|apre|vai alle|vai alla|vai al|vai ai|vai a|portami|mostrami|mostra|voglio|trovami|trova|cerca|open|go to|show me|show|find|abre|ir a|offne|öffne|zeige|zeig mir|zeig)\b/g, " ").replace(/\s+/g, " ").trim();
 
@@ -394,9 +396,19 @@ export default function VoiceCommand({ onOpenTool }) {
     speak(msg); toast.warning("🛒 " + msg); return true;
   };
 
+  // «Ehi Lab, ripeti» → riascolta l'ultima risposta senza rifare la domanda.
+  const tryRipeti = (t) => {
+    if (!/\b(ripeti|ripetere|di nuovo|repeat|again|wiederhol|nochmal|repite|repetir|otra vez|r[ée]p[eè]te|repeter|دوباره|تکرار)\b/.test(t)) return false;
+    const last = getLastTTS();
+    if (last) { speak(last); toast.info("🔁 " + tri("Ripeto", "Wiederhole", "Repeating", "Repito", "Je répète", "تکرار")); }
+    else { speak(tri("Non ho ancora detto niente da ripetere.", "Noch nichts zu wiederholen.", "Nothing to repeat yet.", "Nada que repetir aún.", "Rien à répéter.", "چیزی برای تکرار نیست.")); }
+    return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
+    if (tryRipeti(t)) return;
     if (tryTimer(t)) return;
     if (labSense(t)) return;
     if (tryConvert(t)) return;

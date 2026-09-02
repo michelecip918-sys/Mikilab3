@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, BookOpenCheck, WifiOff, Hand, ShieldCheck, Users, Headphones, Volume2 } from "lucide-react";
+import { X, BookOpenCheck, WifiOff, Hand, ShieldCheck, Users, Headphones, Volume2, BookOpen, GraduationCap, ClipboardList, Mic, Droplets, Clock, Repeat } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { getOperators, currentOperatorId, setCurrentOperator, zoneLabel } from "@/lib/brigata";
@@ -69,6 +69,44 @@ export default function GuidaMikiLab() {
                 </li>
               ))}
             </ol>
+          </div>
+
+          {/* Le 4 sezioni principali */}
+          <div className="rounded-2xl bg-[#161616] border border-[#ff6b00]/40 p-3.5" data-testid="guida-sezioni">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2"><BookOpen className="w-4 h-4" /> {tri("Le sezioni", "Die Bereiche", "The sections", "Las secciones", "Les sections", "بخش‌ها")}</p>
+            <div className="space-y-2">
+              {[
+                { Icon: BookOpen, c: "#ff6b00", t: tri("Ricette del Maestro", "Meister-Rezepte", "Master Recipes", "Recetas del Maestro", "Recettes du Maître", "دستورهای استاد"), d: tri("Tutte le schede con dosi, procedimento e note, pronte da seguire.", "Alle Karten mit Mengen, Ablauf und Notizen.", "All cards with doses, steps and notes, ready to follow.", "Todas las fichas con dosis, procedimiento y notas.", "Toutes les fiches avec doses, étapes et notes.", "همه کارت‌ها با مقدار و مراحل.") },
+                { Icon: GraduationCap, c: "#A16207", t: tri("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías", "Science & Guides", "علم و راهنما"), d: tri("Lezioni, quiz e guide per imparare i metodi passo passo.", "Lektionen, Quiz und Guides Schritt für Schritt.", "Lessons, quizzes and guides to learn the methods step by step.", "Lecciones, cuestionarios y guías paso a paso.", "Leçons, quiz et guides pas à pas.", "درس، آزمون و راهنما گام‌به‌گام.") },
+                { Icon: ClipboardList, c: "#E7B23C", t: tri("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción", "Fiches de Production", "برگه‌های تولید"), d: tri("Il Laboratorio operativo: produzione del giorno, celle, guasti, magazzino e assistente vocale mani libere.", "Der Betriebsmodus: Tagesproduktion, Zellen, Störungen, Lager und Freihand-Assistent.", "The operative Lab: today's production, cells, faults, warehouse and hands-free voice assistant.", "El Laboratorio operativo: producción del día, cámaras, averías, almacén y asistente por voz.", "Le Labo opérationnel : production du jour, chambres, pannes, stock et assistant vocal.", "آزمایشگاه عملیاتی: تولید روز، سردخانه، خرابی، انبار و دستیار صوتی.") },
+                { Icon: Users, c: "#22c55e", t: "Community", d: tri("Confrontati con altri fornai: bacheca, amici, messaggi e mappa.", "Tausch dich mit anderen Bäckern aus: Feed, Freunde, Nachrichten, Karte.", "Connect with other bakers: feed, friends, messages and map.", "Conecta con otros panaderos: muro, amigos, mensajes y mapa.", "Échange avec d'autres boulangers : fil, amis, messages, carte.", "با نانواهای دیگر در ارتباط باش.") },
+              ].map((s, i) => (
+                <div key={i} data-testid={`guida-sezione-${i}`} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${s.c}22` }}><s.Icon className="w-4 h-4" style={{ color: s.c }} /></span>
+                  <span className="min-w-0"><span className="block text-[13.5px] font-bold text-white leading-tight">{s.t}</span><span className="block text-[12px] leading-snug text-[#C9D4DC]">{s.d}</span></span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Cosa sa fare l'assistente vocale nel Laboratorio */}
+          <div className="rounded-2xl bg-[#161616] border border-[#ff6b00]/40 p-3.5" data-testid="guida-assistente">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2"><Mic className="w-4 h-4" /> {tri("L'assistente vocale sa fare", "Der Sprachassistent kann", "The voice assistant can", "El asistente de voz puede", "L'assistant vocal peut", "دستیار صوتی می‌تواند")}</p>
+            <p className="text-[12px] text-[#9AA6AE] mb-2">{tri("Nel Laboratorio parla a mani libere: di' «Ehi Lab» e poi:", "Im Labor freihändig: sag «Ehi Lab» und dann:", "In the Lab hands-free: say «Ehi Lab» then:", "En el Laboratorio manos libres: di «Ehi Lab» y luego:", "Au Labo mains libres : dis «Ehi Lab» puis :", "در آزمایشگاه بدون دست: بگو «لب» سپس:")}</p>
+            <div className="space-y-2">
+              {[
+                { Icon: Droplets, t: tri("Idratazione & dosi", "Hydratation & Mengen", "Hydration & doses", "Hidratación y dosis", "Hydratation & doses", "هیدراتاسیون و مقدار"), ex: tri("«2 kg di farina al 70%»", "«2 kg Mehl 70%»", "«2 kg flour at 70%»", "«2 kg de harina al 70%»", "«2 kg de farine à 70%»", "«۲ کیلو آرد ۷۰٪»") },
+                { Icon: ClipboardList, t: tri("Bilanciamento ricetta", "Rezept-Balance", "Recipe balancing", "Balance de receta", "Équilibrage recette", "تعادل دستور"), ex: tri("«apri calcolo dosi / idratazione»", "«Dosisrechner öffnen»", "«open dose calc»", "«abre cálculo de dosis»", "«ouvre calcul des doses»", "«محاسبه دوز را باز کن»") },
+                { Icon: Clock, t: tri("Orari lievitazione", "Gärzeiten", "Proofing schedule", "Horarios de fermentación", "Horaires de pousse", "زمان‌بندی ور آمدن"), ex: tri("«produzione di oggi / di domani»", "«Produktion heute/morgen»", "«today's / tomorrow's production»", "«producción de hoy/mañana»", "«production d'aujourd'hui/demain»", "«تولید امروز/فردا»") },
+                { Icon: BookOpenCheck, t: tri("Consegne del turno", "Schichtübergabe", "Shift handover", "Relevo de turno", "Passation de poste", "تحویل شیفت"), ex: tri("«consegne del turno»", "«Schichtübergabe»", "«shift handover»", "«relevo de turno»", "«passation»", "«تحویل شیفت»") },
+                { Icon: Repeat, t: tri("Ripeti l'ultima risposta", "Letzte Antwort wiederholen", "Repeat last answer", "Repetir última respuesta", "Répéter la réponse", "تکرار پاسخ"), ex: "«Ehi Lab, ripeti»" },
+              ].map((s, i) => (
+                <div key={i} data-testid={`guida-assist-${i}`} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-[#ff6b00]/15"><s.Icon className="w-4 h-4 text-[#ff6b00]" /></span>
+                  <span className="min-w-0"><span className="block text-[13px] font-bold text-white leading-tight">{s.t}</span><span className="block text-[12px] leading-snug text-[#8FE3B6]">{s.ex}</span></span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Selezione rapida operatore */}

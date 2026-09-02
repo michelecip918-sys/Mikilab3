@@ -3676,11 +3676,11 @@ async def diagnosi_sound(payload: SoundDiagnosiReq, user: dict = Depends(require
     return {"result": full.strip()}
 
 
-_ELEVEN_KEY = os.environ.get("ELEVEN_API_KEY")
+_ELEVEN_KEY = os.environ.get("ELEVENLABS_API_KEY") or os.environ.get("ELEVEN_API_KEY")
 _eleven_client = ElevenLabs(api_key=_ELEVEN_KEY) if _ELEVEN_KEY else None
-# Momi (tutor Mohamed) — voce descrittiva; Lab/Michele (fondatore) — voce telegrafica
-MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "o4b57JYAECRMJyCEXyIE")
-MICHELE_VOICE_ID = os.environ.get("MICHELE_VOICE_ID", "mxbgw5PwaQHOrln90mhH")
+# Momi (tutor) — voce dedicata; Michele/Lab (fondatore) — voce maschile italiana profonda
+MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "ErXwobaYiN019PkySvjV")
+MICHELE_VOICE_ID = os.environ.get("MICHELE_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
 _VOICE_MAP = {"momy": MOMY_VOICE_ID, "momi": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID, "lab": MICHELE_VOICE_ID}
 
 
@@ -3720,6 +3720,88 @@ def tts_generate(payload: TTSReq):
         # 424 (non-5xx) così l'edge non maschera l'errore: il frontend fa fallback alla voce del dispositivo.
         raise HTTPException(status_code=424, detail="Errore TTS")
     return StreamingResponse(iter([audio]), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400"})
+
+
+# ---- OpenAI TTS (voce MASCHILE: onyx/echo) — chiave OpenAI personalizzata o Universal Key ----
+import hashlib as _hashlib
+_TTS_KEY = os.environ.get("OPENAI_API_KEY") or os.environ.get("EMERGENT_LLM_KEY")
+_OAI_VOICE = {"michele": "onyx", "lab": "onyx", "momy": "echo", "momi": "echo"}
+_TTS_CACHE_DIR = "/tmp/mikilab_tts"
+try:
+    os.makedirs(_TTS_CACHE_DIR, exist_ok=True)
+except Exception:
+    pass
+
+
+def _clean_for_tts(text: str) -> str:
+    import re as _re
+    t = text or ""
+    t = _re.sub(r"https?://\S+", "", t)
+    t = _re.sub(r"`{1,3}[^`]*`{1,3}", "", t)
+    t = _re.sub(r"[*_#>~|]", "", t)
+    t = _re.sub(r"[\U0001F000-\U0001FAFF\u2600-\u27BF]", "", t)
+    return _re.sub(r"\s+", " ", t).strip()
+
+
+@api_router.post("/tts/speak")
+async def tts_speak(payload: TTSReq):
+    """TTS default = ElevenLabs (voce ultra-realistica). Fallback automatico → OpenAI (onyx/echo)."""
+    text = _clean_for_tts(payload.text)[:2000]
+    if not text:
+        raise HTTPException(status_code=400, detail="Testo vuoto")
+    vkey = (payload.voice or "michele").lower()
+
+    # 1) ElevenLabs (provider di default) — Michele: voce maschile profonda; Momi: voce dedicata
+    if _eleven_client:
+        vid = payload.voice_id or _VOICE_MAP.get(vkey, MICHELE_VOICE_ID)
+        ck = _hashlib.sha256(f"11l|{text}|{vid}|mp3".encode()).hexdigest()
+        cpath = os.path.join(_TTS_CACHE_DIR, ck + ".mp3")
+        try:
+            if os.path.exists(cpath):
+                with open(cpath, "rb") as f:
+                    return Response(content=f.read(), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400"})
+        except Exception:
+            pass
+        try:
+            gen = _eleven_client.text_to_speech.convert(
+                text=text, voice_id=vid, model_id="eleven_multilingual_v2",
+                voice_settings=_voice_settings(vkey),
+            )
+            audio = b"".join(gen)
+            try:
+                with open(cpath, "wb") as f:
+                    f.write(audio)
+            except Exception:
+                pass
+            return Response(content=audio, media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "elevenlabs"})
+        except Exception as e:
+            logger.warning("ElevenLabs TTS non disponibile (%s) → fallback OpenAI", str(e)[:120])
+
+    # 2) Fallback: OpenAI TTS (voce maschile onyx/echo)
+    if not _TTS_KEY:
+        raise HTTPException(status_code=503, detail="TTS non configurato")
+    voice = _OAI_VOICE.get(vkey, "onyx")
+    ck = _hashlib.sha256(f"oai|{text}|{voice}|tts-1|mp3".encode()).hexdigest()
+    cpath = os.path.join(_TTS_CACHE_DIR, ck + ".mp3")
+    try:
+        if os.path.exists(cpath):
+            with open(cpath, "rb") as f:
+                return Response(content=f.read(), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400"})
+    except Exception:
+        pass
+    try:
+        from emergentintegrations.llm.openai import OpenAITextToSpeech
+        tts = OpenAITextToSpeech(api_key=_TTS_KEY)
+        audio = await tts.generate_speech(text=text, model="tts-1", voice=voice, response_format="mp3")
+        try:
+            with open(cpath, "wb") as f:
+                f.write(audio)
+        except Exception:
+            pass
+    except Exception:
+        logger.exception("openai tts error")
+        raise HTTPException(status_code=424, detail="Errore TTS")
+    return Response(content=audio, media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "openai"})
 
 
 class ScanRecipeRequest(BaseModel):

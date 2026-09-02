@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Home as HomeIcon, BookOpen, Wrench, GraduationCap, Users, Trophy, Menu, Search, Star,
-  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield, BookOpenCheck } from "lucide-react";
+  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield, BookOpenCheck, Mic } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { TOOLS, TOOL_KINDS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
@@ -23,6 +23,8 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [favs, setFavs] = useState(() => { try { return JSON.parse(localStorage.getItem(FAV_KEY) || "[]"); } catch { return []; } });
+  const [persona, setPersona] = useState(() => { try { return localStorage.getItem("mikilab_voice_persona") || "michele"; } catch { return "michele"; } });
+  const choosePersona = (p) => { setPersona(p); try { localStorage.setItem("mikilab_voice_persona", p); } catch { /* */ } window.dispatchEvent(new CustomEvent("mikilab-voice-persona", { detail: { persona: p } })); };
 
   useEffect(() => {
     const h = () => { setQ(""); setOpen(true); };
@@ -214,6 +216,22 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#ff6b00]/15"><BookOpenCheck className="w-4 h-4 text-[#ff6b00]" /></span>
               <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Guida MikiLab", "MikiLab-Anleitung", "MikiLab Guide", "Guía MikiLab")}</span>
             </button>
+            {/* Voce assistente: selettore Operatore (Michele / Momi), voci ElevenLabs */}
+            <div data-testid="site-menu-voice" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
+              <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5"><Mic className="w-3.5 h-3.5 text-[#ff6b00]" /> {tri("Voce assistente", "Assistenten-Stimme", "Assistant voice", "Voz del asistente")}</p>
+              <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#121212]">
+                {[
+                  { id: "michele", label: tri("Michele", "Michele", "Michele", "Michele"), sub: tri("Maschile profonda", "Tief männlich", "Deep male", "Grave masculina") },
+                  { id: "momy", label: "Momi", sub: tri("Voce dedicata", "Eigene Stimme", "Dedicated voice", "Voz dedicada") },
+                ].map((v) => (
+                  <button key={v.id} data-testid={`site-menu-voice-${v.id}`} onClick={() => choosePersona(v.id)}
+                    className={`py-2 px-1 rounded-md text-[13px] font-bold leading-tight transition-all ${persona === v.id ? "bg-[#ff6b00] text-white shadow" : "text-[#7E8A93] hover:text-[#ff6b00]"}`}>
+                    {v.label}<span className={`block text-[9.5px] font-semibold ${persona === v.id ? "text-white/80" : "text-[#9AA6AE]"}`}>{v.sub}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 px-0.5">{tri("Voci ultra-realistiche ElevenLabs. Di' «Ehi Lab» per parlare a mani libere.", "Ultra-realistische ElevenLabs-Stimmen. Sag «Ehi Lab».", "Ultra-realistic ElevenLabs voices. Say «Ehi Lab» to talk hands-free.", "Voces ultrarrealistas ElevenLabs. Di «Ehi Lab».")}</p>
+            </div>
             {/* Interruttore modalità: Pro (tutto) / Passione (senza HACCP e B2B) */}
             <div data-testid="site-menu-mode" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5">{tri("Modalità", "Modus", "Mode", "Modo")}</p>
