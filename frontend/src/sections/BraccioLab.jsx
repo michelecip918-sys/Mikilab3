@@ -16,12 +16,12 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const shift = useShift();
   const alert = hasActiveAlerts(shift);
-  const [vs, setVs] = useState({ listening: false, speaking: false });
+  const [vs, setVs] = useState({ listening: false, speaking: false, wake: false });
 
   useEffect(() => {
     document.body.classList.add("braccio-mode");
     window.dispatchEvent(new Event("mikilab-wake-on"));
-    const onState = (e) => setVs({ listening: !!e.detail?.listening, speaking: !!e.detail?.speaking });
+    const onState = (e) => setVs({ listening: !!e.detail?.listening, speaking: !!e.detail?.speaking, wake: !!e.detail?.wake });
     window.addEventListener("mikilab-voice-state", onState);
     return () => { document.body.classList.remove("braccio-mode"); window.removeEventListener("mikilab-voice-state", onState); };
   }, []);
@@ -52,7 +52,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   const deadline = shift.work_mode === "autonomia" ? autonomyDeadline(shift) : null;
 
   return (
-    <div data-testid="braccio-lab" className="flex flex-col justify-between rounded-3xl p-4" style={{ height: "calc(100vh - 180px)", minHeight: "480px", background: `radial-gradient(120% 60% at 50% -10%, #2A2012 0%, ${D.bg} 55%)`, color: D.text, border: `1px solid ${D.border}` }}>
+    <div data-testid="braccio-lab" className="flex flex-col justify-between rounded-3xl p-4" style={{ height: "calc(100vh - 200px)", minHeight: "460px", background: `radial-gradient(120% 60% at 50% -10%, #2A2012 0%, ${D.bg} 55%)`, color: D.text, border: `1px solid ${D.border}` }}>
       {/* Banner emergenza / info */}
       {alert ? (
         <button data-testid="braccio-alert-banner" onClick={() => onOpenTool && onOpenTool("emergenze")}
@@ -98,8 +98,8 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
 
       {/* Avatar 3D vocale (hands-free) */}
       <div className="flex-1 flex flex-col items-center justify-center gap-3 py-2">
-        <Avatar3D active speaking={vs.speaking}
-          label={vs.speaking ? tri("Sto rispondendo…", "Ich antworte…", "Answering…", "Respondiendo…", "Je réponds…", "در حال پاسخ…") : (vs.listening ? tri("Ti ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Assistente in ascolto", "Assistent hört zu", "Assistant listening", "Asistente escuchando", "Assistant à l'écoute", "دستیار در حال شنیدن"))}
+        <Avatar3D active speaking={vs.speaking} listening={vs.listening || vs.wake}
+          label={vs.speaking ? tri("Sto rispondendo…", "Ich antworte…", "Answering…", "Respondiendo…", "Je réponds…", "در حال پاسخ…") : ((vs.listening || vs.wake) ? tri("Ti ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Assistente in ascolto", "Assistent hört zu", "Assistant listening", "Asistente escuchando", "Assistant à l'écoute", "دستیار در حال شنیدن"))}
           sub={tri("Parla o di' «Ehi Lab»", "Sprich oder sag «Ehi Lab»", "Speak or say «Ehi Lab»", "Habla o di «Ehi Lab»", "Parle ou dis «Ehi Lab»", "صحبت کن یا بگو «لب»")} />
         <button data-testid="braccio-headset" onClick={onHeadset} disabled={hsBusy}
           className="flex items-center gap-2 rounded-full px-6 py-3 font-extrabold text-[15px] shadow-lg active:scale-95 transition-all disabled:opacity-60"

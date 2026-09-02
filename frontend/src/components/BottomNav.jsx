@@ -1,4 +1,4 @@
-import { BookOpen, Wrench, GraduationCap, Users, Sparkles } from "lucide-react";
+import { BookOpen, Wrench, GraduationCap, Users, Sparkles, BookOpenCheck } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { notificationsApi, communityApi } from "@/lib/api";
@@ -41,8 +41,9 @@ export default function BottomNav({ active, onChange }) {
     { id: "imparacon", label: triNav("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), img: "nav-imparacon.jpg" },
     { id: "maestro", label: triNav("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción"), img: "nav-maestro.jpg" },
     { id: "community", label: "Community", img: "nav-community.jpg" },
+    { id: "guida", label: triNav("Guida · Come Funziona", "Anleitung", "Guide · How it works", "Guía · Cómo funciona"), icon: BookOpenCheck },
   ];
-  const ROT = [-4.5, -1.5, 1.5, 4.5]; // leggera rotazione a ventaglio delle pale
+  const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
 
   return (
     <nav
@@ -51,14 +52,14 @@ export default function BottomNav({ active, onChange }) {
     >
       <div aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-b from-[#e7c79a]/70 to-transparent" />
       <div aria-hidden className="absolute inset-0 bg-[#2b190c]/25" />
-      <div className="relative max-w-xl mx-auto grid grid-cols-4 gap-1 px-2 pt-2" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
-        {TABS.map(({ id, label, img }, i) => {
+      <div className="relative max-w-xl mx-auto grid grid-cols-5 gap-1 px-2 pt-2" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
+        {TABS.map(({ id, label, img, icon: Icon }, i) => {
           const on = norm === id;
           return (
             <button
               key={id}
               data-testid={`nav-tab-${id}`}
-              onClick={() => { if (id === "community") markSocialSeen(); onChange(id); }}
+              onClick={() => { if (id === "guida") { window.dispatchEvent(new Event("mikilab-open-guida")); return; } if (id === "community") markSocialSeen(); onChange(id); }}
               aria-pressed={on}
               className="group relative flex flex-col items-center justify-end min-h-[82px] pb-0.5 active:scale-95 transition-transform"
               style={{ ["--rot"]: `${ROT[i]}deg` }}
@@ -77,6 +78,8 @@ export default function BottomNav({ active, onChange }) {
                   <img src={`${PUB}/${img}`} alt={label}
                     className="relative w-8 h-8 object-contain"
                     style={{ filter: `sepia(1) saturate(4) hue-rotate(3deg) brightness(${on ? 1.5 : 1.28}) contrast(1.05) drop-shadow(0 0 4px rgba(255,190,90,${on ? 0.85 : 0.45}))`, opacity: 1 }} />
+                ) : Icon ? (
+                  <Icon className="relative w-6 h-6" style={{ color: "#ffcf7a", filter: `drop-shadow(0 0 4px rgba(255,190,90,${on ? 0.85 : 0.55}))` }} strokeWidth={2.2} />
                 ) : null}
                 {id === "community" && unread > 0 && (
                   <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#2b190c]">{unread > 9 ? "9+" : unread}</span>

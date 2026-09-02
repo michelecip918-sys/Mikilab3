@@ -244,9 +244,12 @@ button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Modalità operativa "Braccio": vero zero-scroll (niente footer, niente padding extra) */
+/* Modalità operativa "Braccio": zero-scroll ma la barra inferiore resta sempre visibile e non copre i contenuti */
 body.braccio-mode [data-testid="page-footer"] { display: none !important; }
-body.braccio-mode main { padding-bottom: 0 !important; }
+body.braccio-mode main { padding-bottom: 7rem !important; }
+/* Header e barra inferiore sempre fissi e in primo piano su ogni schermata */
+header[data-testid="app-header"] { position: sticky !important; top: 0 !important; z-index: 60 !important; }
+nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important; z-index: 55 !important; }
 
 /* Scenografia Cinematic Dark & Gold — effetto "Luce Forno" su hover carte/pulsanti */
 .oven-hover { transition: box-shadow .28s ease, border-color .28s ease, transform .15s ease; }

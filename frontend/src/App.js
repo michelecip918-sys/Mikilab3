@@ -51,7 +51,7 @@ import { hydrateCombos } from "@/lib/combos";
 function App() {
   const { lang, t } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "maestro"));
+  const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
   useState(() => {
     // Ingresso diretto: niente più schermata di domande. Semino un profilo di default completo.
     if (!getProfile()) {
@@ -97,7 +97,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.history.replaceState({ tab: "maestro" }, "");
+    window.history.replaceState({ tab: "home" }, "");
     const onPop = (e) => {
       try {
         if (consumeBack()) return; // chiude prima le viste profonde aperte

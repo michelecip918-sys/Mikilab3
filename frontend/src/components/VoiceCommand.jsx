@@ -65,6 +65,9 @@ export default function VoiceCommand({ onOpenTool }) {
   const recRef = useRef(null);
   const wakeRef = useRef(null);
   const recipesRef = useRef(null);
+  const wakeActiveRef = useRef(false);
+  const wakeTimerRef = useRef(null);
+  useEffect(() => { wakeActiveRef.current = wake; }, [wake]);
 
   // ---- Timer multipli ----
   useEffect(() => {
@@ -441,6 +444,46 @@ export default function VoiceCommand({ onOpenTool }) {
   };
   const goto = (tab, raw) => { speak(tri("Vado.", "Gehe hin.", "Going.", "Voy.", "J'y vais.", "می‌روم.")); toast.success(tri(`Vado a: ${raw}`, `Gehe zu: ${raw}`, `Going to: ${raw}`, `Voy a: ${raw}`, `Je vais : ${raw}`, `می‌روم به: ${raw}`)); window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab } })); };
 
+  // ---- Ascolto continuo hands-free: costruzione + RIAVVIO AUTOMATICO resiliente ----
+  // Chrome chiude la SpeechRecognition dopo ogni risposta/silenzio: qui la riavviamo sempre
+  // (dopo che l'AI ha finito di parlare o dopo un timeout) finché il wake resta attivo.
+  const buildWakeRec = () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return null;
+    const rec = new SR();
+    rec.lang = SR_LANG[lang] || "it-IT"; rec.continuous = true; rec.interimResults = true; rec._stop = false;
+    rec.onresult = (e) => {
+      const last = e.results[e.results.length - 1]; if (!last || !last.isFinal) return;
+      const tr = norm(last[0].transcript);
+      const w = WAKE.find((k) => tr.includes(k)); if (!w) return;
+      const cmd = tr.slice(tr.indexOf(w) + w.length).trim();
+      stopTTS(); setSpeaking(false); // barge-in
+      beep(); setListening(true); setTimeout(() => setListening(false), 1200);
+      if (cmd.length > 1) handle(cmd);
+      else speak(tri("Dimmi.", "Sag's.", "Yes?", "Dime.", "Oui ?", "بگو."));
+    };
+    rec.onend = () => { if (!rec._stop && wakeActiveRef.current) scheduleWakeRestart(350); };
+    rec.onerror = (e) => {
+      if (e && e.error === "not-allowed") {
+        setWake(false); wakeActiveRef.current = false; rec._stop = true;
+        try { localStorage.setItem("mikilab_voice_wake", "0"); } catch { /* */ }
+        toast.error(tri("Permesso microfono negato.", "Mikrofon verweigert.", "Mic denied.", "Micrófono denegado.", "Micro refusé.", "میکروفون رد شد."));
+      }
+      // altri errori (no-speech / aborted / network): ci pensa onend a riavviare.
+    };
+    return rec;
+  };
+  const restartWake = () => {
+    try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ }
+    const rec = buildWakeRec(); if (!rec) return;
+    wakeRef.current = rec; try { rec.start(); } catch { /* il browser può richiedere un gesto utente */ }
+  };
+  const scheduleWakeRestart = (delay = 350) => {
+    if (!wakeActiveRef.current) return;
+    clearTimeout(wakeTimerRef.current);
+    wakeTimerRef.current = setTimeout(() => { if (wakeActiveRef.current) restartWake(); }, delay);
+  };
+
   // ---- Riconoscimento: singolo (tasto) ----
   const runOnce = () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -460,47 +503,30 @@ export default function VoiceCommand({ onOpenTool }) {
   const toggleWake = async () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { toast.error(tri("Non supportato da questo browser.", "Nicht unterstützt.", "Not supported.", "No soportado.", "Non supporté.", "پشتیبانی نمی‌شود.")); return; }
-    if (wake) { setWake(false); try { localStorage.setItem("mikilab_voice_wake", "0"); } catch { /* */ } try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } return; }
+    if (wake) { setWake(false); wakeActiveRef.current = false; clearTimeout(wakeTimerRef.current); try { localStorage.setItem("mikilab_voice_wake", "0"); } catch { /* */ } try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } return; }
     // Richiede ESPLICITAMENTE il permesso microfono (Web Speech API) al click.
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       try { const st = await navigator.mediaDevices.getUserMedia({ audio: true }); st.getTracks().forEach((t) => t.stop()); }
       catch { toast.error(tri("Permesso microfono negato. Abilitalo per l'ascolto continuo.", "Mikrofon-Zugriff verweigert.", "Microphone permission denied.", "Permiso de micrófono denegado.", "Micro refusé.", "اجازه میکروفون رد شد.")); return; }
     }
-    setWake(true); try { localStorage.setItem("mikilab_voice_wake", "1"); } catch { /* */ } beep();
+    setWake(true); wakeActiveRef.current = true; try { localStorage.setItem("mikilab_voice_wake", "1"); } catch { /* */ } beep();
     toast.success(tri("Ascolto «Ehi Lab» attivo.", "Höre auf «Ehi Lab».", "Listening for «Ehi Lab».", "Escuchando «Ehi Lab».", "À l'écoute «Ehi Lab».", "در حال شنیدن «لب»."));
-    const loop = () => {
-      const rec = new SR(); rec.lang = SR_LANG[lang] || "it-IT"; rec.continuous = true; rec.interimResults = true; rec._stop = false;
-      rec.onresult = (e) => {
-        const last = e.results[e.results.length - 1]; if (!last || !last.isFinal) return;
-        const tr = norm(last[0].transcript);
-        const w = WAKE.find((k) => tr.includes(k)); if (!w) return;
-        const cmd = tr.slice(tr.indexOf(w) + w.length).trim();
-        stopTTS(); setSpeaking(false); // barge-in
-        beep(); setListening(true); setTimeout(() => setListening(false), 1200);
-        if (cmd.length > 1) handle(cmd);
-        else speak(tri("Dimmi.", "Sag's.", "Yes?", "Dime.", "Oui ?", "بگو."));
-      };
-      rec.onend = () => { if (!rec._stop) { try { rec.start(); } catch { /* */ } } };
-      rec.onerror = (e) => { if (e && e.error === "not-allowed") { setWake(false); rec._stop = true; toast.error(tri("Permesso microfono negato.", "Mikrofon verweigert.", "Mic denied.", "Micrófono denegado.", "Micro refusé.", "میکروفون رد شد.")); } };
-      wakeRef.current = rec; try { rec.start(); } catch { /* */ }
-    };
-    loop();
+    restartWake();
   };
   // Persistenza wake-word: se era attiva, prova a riavviare all'apertura (il browser può richiedere un tap)
   useEffect(() => {
     if (!wake) return;
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
-    let rec;
-    try {
-      rec = new SR(); rec.lang = SR_LANG[lang] || "it-IT"; rec.continuous = true; rec.interimResults = true; rec._stop = false;
-      rec.onresult = (e) => { const last = e.results[e.results.length - 1]; if (!last || !last.isFinal) return; const tr = norm(last[0].transcript); const w = WAKE.find((k) => tr.includes(k)); if (!w) return; const cmd = tr.slice(tr.indexOf(w) + w.length).trim(); stopTTS(); setSpeaking(false); beep(); setListening(true); setTimeout(() => setListening(false), 1200); if (cmd.length > 1) handle(cmd); else speak(tri("Dimmi.", "Sag's.", "Yes?", "Dime.", "Oui ?", "بگو.")); };
-      rec.onend = () => { if (!rec._stop) { try { rec.start(); } catch { /* */ } } };
-      rec.onerror = () => { /* gesture richiesta: riattiva col toggle */ };
-      wakeRef.current = rec; rec.start();
-    } catch { /* */ }
-    return () => { try { rec && (rec._stop = true, rec.stop()); } catch { /* */ } };
+    wakeActiveRef.current = true;
+    restartWake();
+    return () => { clearTimeout(wakeTimerRef.current); try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } };
     // eslint-disable-next-line
   }, []);
+
+  // RIAVVIO AUTOMATICO dell'ascolto appena l'AI ha finito di parlare (loop vocale continuo).
+  useEffect(() => {
+    if (!speaking && wakeActiveRef.current) scheduleWakeRestart(300);
+    // eslint-disable-next-line
+  }, [speaking]);
 
   useEffect(() => () => { try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } }, []);
 
@@ -535,8 +561,8 @@ export default function VoiceCommand({ onOpenTool }) {
     return () => window.removeEventListener("mikilab-consegne", cons);
     // eslint-disable-next-line
   }, [lang]);
-  // Espone lo stato voce (ascolto/parla) all'Avatar 3D.
-  useEffect(() => { window.dispatchEvent(new CustomEvent("mikilab-voice-state", { detail: { listening, speaking } })); }, [listening, speaking]);
+  // Espone lo stato voce (ascolto/parla/hands-free) all'Avatar 3D.
+  useEffect(() => { window.dispatchEvent(new CustomEvent("mikilab-voice-state", { detail: { listening, speaking, wake } })); }, [listening, speaking, wake]);
   // Voce arbitraria (es. alert scorte basse durante l'impasto).
   useEffect(() => {
     const say = (e) => { const txt = e && e.detail && e.detail.text; if (txt) speak(txt); };

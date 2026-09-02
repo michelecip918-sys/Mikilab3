@@ -53,6 +53,24 @@ export default function GuidaMikiLab() {
         </div>
 
         <div className="p-4 space-y-4">
+          {/* Come Funziona — istruzioni semplici d'uso */}
+          <div className="rounded-2xl bg-[#161616] border border-[#ff6b00]/40 p-3.5" data-testid="guida-comefunziona">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2"><BookOpenCheck className="w-4 h-4" /> {tri("Come Funziona", "So funktioniert's", "How It Works", "Cómo Funciona", "Comment ça marche", "چطور کار می‌کند")}</p>
+            <ol className="space-y-2">
+              {[
+                tri("Apri il menu ☰ in alto a sinistra o la barra in basso per raggiungere ogni sezione.", "Öffne das Menü ☰ oben links oder die untere Leiste, um jeden Bereich zu erreichen.", "Open the ☰ menu top-left or the bottom bar to reach any section.", "Abre el menú ☰ arriba a la izquierda o la barra inferior para ir a cualquier sección.", "Ouvre le menu ☰ en haut à gauche ou la barre du bas pour accéder à chaque section.", "منوی ☰ بالا-چپ یا نوار پایین را باز کن."),
+                tri("In «Ricette» trovi tutte le schede; in «Schede di Produzione» pianifichi il lavoro del giorno.", "Unter «Rezepte» findest du alle Karten; unter «Produktionsblätter» planst du den Tag.", "In «Master Recipes» you find all cards; in «Production Sheets» you plan the day's work.", "En «Recetas» tienes todas las fichas; en «Fichas de Producción» planificas el día.", "Dans «Recettes» toutes les fiches ; dans «Fiches de Production» tu planifies la journée.", "در «دستورها» همه کارت‌ها؛ در «برگه‌های تولید» کار روز را برنامه‌ریزی کن."),
+                tri("Nel Laboratorio lavori a mani libere: di' «Ehi Lab» e poi il comando (timer, dosi, guasti).", "Im Labor arbeitest du freihändig: sag «Ehi Lab» und dann den Befehl (Timer, Mengen, Störung).", "In the Lab you work hands-free: say «Ehi Lab» then the command (timer, doses, faults).", "En el Laboratorio trabajas manos libres: di «Ehi Lab» y luego el comando (timer, dosis, averías).", "Au Labo tu travailles mains libres : dis «Ehi Lab» puis la commande (minuteur, doses, pannes).", "در آزمایشگاه بدون دست کار کن: بگو «لب» و سپس فرمان."),
+                tri("Dopo il primo caricamento MikiLab funziona anche senza internet, in tutto il laboratorio.", "Nach dem ersten Laden funktioniert MikiLab auch offline im ganzen Labor.", "After the first load MikiLab also works offline, throughout the lab.", "Tras la primera carga MikiLab funciona también sin internet, en todo el laboratorio.", "Après le premier chargement, MikiLab fonctionne aussi hors ligne dans tout le labo.", "پس از بارگذاری اول، میکی‌لب آفلاین هم کار می‌کند."),
+              ].map((step, i) => (
+                <li key={i} data-testid={`guida-step-${i}`} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-[#ff6b00] text-white text-[12px] font-extrabold">{i + 1}</span>
+                  <span className="text-[13px] leading-snug text-[#C9D4DC]">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
           {/* Selezione rapida operatore */}
           <div className="rounded-2xl bg-[#161616] border border-[#ff6b00]/40 p-3.5" data-testid="guida-operator">
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2"><Users className="w-4 h-4" /> {tri("Chi sei? Seleziona il tuo profilo", "Wer bist du?", "Who are you?", "¿Quién eres?")}</p>
