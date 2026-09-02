@@ -11,9 +11,9 @@ const D = { bg: "#0A0B0E", card: "#12141D", input: "#161922", accent: "#D4AF37",
 
 // Database ricette locale (offline) per il ricalcolo dosi dinamico.
 const RECIPES = [
-  { id: "pane_matera", nome: "Pane di Matera IGP", farina: 10, acqua: 6.8, lievito: 0.15, sale: 0.2 },
-  { id: "brezel", nome: "Laugengebäck / Brezel", farina: 10, acqua: 5.0, lievito: 0.3, sale: 0.22, burro: 0.5 },
-  { id: "ciabatta", nome: "Ciabatta Alta Idratazione", farina: 10, acqua: 8.0, lievito: 0.2, sale: 0.22 },
+  { id: "pane_matera", nome: "Pane di Matera IGP", farina: 10, acqua: 6.8, lievito: 0.15, sale: 0.2, guida: "Doppiatura pasta, forma a cornetto alto e 3 tagli laterali a 45°." },
+  { id: "brezel", nome: "Laugengebäck / Brezel", farina: 10, acqua: 5.0, lievito: 0.3, sale: 0.22, burro: 0.5, guida: "Nodo centrale a 2 incroci, braccia sottili e pancia spessa." },
+  { id: "ciabatta", nome: "Ciabatta Alta Idratazione", farina: 10, acqua: 8.0, lievito: 0.2, sale: 0.22, guida: "Taglio netto senza schiacciare le bolle d'aria." },
 ];
 
 export default function TeamSync({ open, onClose }) {
@@ -108,11 +108,12 @@ export default function TeamSync({ open, onClose }) {
     const rec = recipes.find((r) => r.id === selRec) || recipes[0];
     const f = kg / rec.farina;
     const wt = Math.max(2, (24 * 3) - (Number(roomT) + Number(flourT) + 9)).toFixed(1); // Formula 3T
-    const r = { nome: rec.nome, acqua: (rec.acqua * f).toFixed(1), lievito: Math.round(rec.lievito * f * 1000), sale: Math.round(rec.sale * f * 1000), burro: rec.burro ? Math.round(rec.burro * f * 1000) : null, waterT: wt };
+    const r = { nome: rec.nome, acqua: (rec.acqua * f).toFixed(1), lievito: Math.round(rec.lievito * f * 1000), sale: Math.round(rec.sale * f * 1000), burro: rec.burro ? Math.round(rec.burro * f * 1000) : null, waterT: wt, guida: rec.guida || "" };
     setDosi(r);
     let msg = tri(`${rec.nome}, ${kg} kg farina: acqua ${r.acqua} litri, lievito ${r.lievito} grammi, sale ${r.sale} grammi.`, `${rec.nome}, ${kg} kg Mehl: Wasser ${r.acqua} L, Hefe ${r.lievito} g, Salz ${r.sale} g.`, `${rec.nome}, ${kg} kg flour: water ${r.acqua} L, yeast ${r.lievito} g, salt ${r.sale} g.`, `${rec.nome}, ${kg} kg harina: agua ${r.acqua} L, levadura ${r.lievito} g, sal ${r.sale} g.`, `${rec.nome}, ${kg} kg farine : eau ${r.acqua} L, levure ${r.lievito} g, sel ${r.sale} g.`, `${rec.nome}: آب ${r.acqua} لیتر.`);
     if (r.burro) msg += " " + tri(`Burro ${r.burro} grammi.`, `Butter ${r.burro} g.`, `Butter ${r.burro} g.`, `Mantequilla ${r.burro} g.`, `Beurre ${r.burro} g.`, `کره ${r.burro} گرم.`);
     msg += " " + tri(`Acqua a ${wt} gradi.`, `Wasser bei ${wt} Grad.`, `Water at ${wt} degrees.`, `Agua a ${wt} grados.`, `Eau à ${wt} degrés.`, `آب در ${wt} درجه.`);
+    if (r.guida) msg += " " + r.guida;
     speak(msg);
   };
 
@@ -261,7 +262,7 @@ export default function TeamSync({ open, onClose }) {
             <span className="text-[14px]">{tri("kg Farina", "kg Mehl", "kg Flour", "kg Harina", "kg Farine", "کیلو آرد")}</span>
             <button data-testid="team-calc" onClick={calcolaDosi} className="ml-auto rounded-md px-4 py-2 font-bold active:scale-97" style={{ background: D.accent, color: "#0A0B0E" }}>{tri("RICALCOLA DOSI & ACQUA", "MENGEN & WASSER", "DOSES & WATER", "DOSIS Y AGUA", "DOSES & EAU", "مقدار و آب")}</button>
           </div>
-          {dosi && (
+          {dosi && (<>
             <div data-testid="team-dosi-result" className={`grid gap-2 rounded-lg p-3 text-center ${dosi.burro ? "grid-cols-5" : "grid-cols-4"}`} style={{ background: D.bg, border: `1px solid ${D.border}` }}>
               <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("ACQUA", "WASSER", "WATER", "AGUA", "EAU", "آب")}</span><br /><strong className="text-[15px]" style={{ color: D.accent }}>{dosi.acqua} L</strong></div>
               <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("LIEVITO", "HEFE", "YEAST", "LEVADURA", "LEVURE", "مخمر")}</span><br /><strong className="text-[15px]" style={{ color: D.accent }}>{dosi.lievito} g</strong></div>
@@ -269,7 +270,8 @@ export default function TeamSync({ open, onClose }) {
               {dosi.burro && <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("BURRO", "BUTTER", "BUTTER", "MANTEQ.", "BEURRE", "کره")}</span><br /><strong className="text-[15px]" style={{ color: D.accent }}>{dosi.burro} g</strong></div>}
               <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("TEMP. H₂O", "WASSER T.", "WATER T.", "TEMP. H₂O", "TEMP. H₂O", "دمای آب")}</span><br /><strong className="text-[15px]" style={{ color: D.green }}>{dosi.waterT} °C</strong></div>
             </div>
-          )}
+            {dosi.guida && <p data-testid="team-dosi-guida" className="mt-2 text-[13px] italic rounded-md p-2.5" style={{ background: D.bg, borderLeft: `3px solid ${D.accent}`, color: D.muted }}>📌 {dosi.guida}</p>}
+          </>)}
         </div>
 
         {/* Tutor AI Visivo (ibrido: checklist gratis + analisi AI reale) */}

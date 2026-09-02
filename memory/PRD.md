@@ -3367,3 +3367,7 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Temperatura acqua automatica** (Formula 3T) nel pannello ricette: input Temp. Ambiente + Temp. Farina (`team-roomt`/`team-flourt`) → acqua = 24×3−(amb+farina+9), min 2°C, mostrata come TEMP. H₂O nel risultato e dettata a voce. Verificato 24/20 → 19.0°C.
 - **Tutor AI Visivo IBRIDO**: toggle Formatura/Incisione; "Guida gratis" (`team-coach-checklist`) = consigli vocali a costo zero; "Foto + AI reale" (`team-coach-ai`) apre fotocamera (input capture) → POST `/api/lab/vision-coach` (backend LlmChat + ImageContent, claude-sonnet-4-6, Emergent key) → feedback breve + voce. Endpoint valida 400 su immagine vuota.
 - Backend: nuovo endpoint `/api/lab/vision-coach` (riusa pattern LLM-vision di scan-label/SOS). Trinity header + footer legale già presenti app-wide (TrinityGold), non duplicati nel pannello.
+
+## v-fork22 (2026-06) — Guida formatura per ricetta
+- Aggiunto campo `guida` alle ricette del DB in TeamSync; il ricalcolo dosi ora mostra "📌 Guida" (formatura/taglio) sotto il risultato (`team-dosi-guida`) e la detta a voce. Verificato Pane Matera.
+- NB: il mockup "Elite Engine" a 5 tab (LAB/VISION/CAPO/IMPARA/SOCIAL) è in gran parte già coperto da sezioni esistenti dell'app (Ricette, Scienza & Guide/Impara, Community/BakeHub, dashboard Gestione) + pannelli Team/Ufficio. Non ricostruiti per evitare duplicati; elementi residui (widget silos/cella freeze, "aggiorna ricette su tutti i dispositivi") restano backlog.
