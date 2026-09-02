@@ -3540,3 +3540,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Foto profilo/laboratorio ottimizzata professionalmente** (Nano Banana editing sulla foto reale): posa leggermente più alta e naturale, look editoriale da laboratorio, identità e polo MikiLab intatti → `/public/michele-lab-pro.jpg`. Usata nel Manifesto di Shop e di Home (con fallback a `michele-real-lab.jpg`).
 - **RICHIESTA `sed` DISTRUTTIVA RIFIUTATA**: comando `sed -i s/store/.../gi; s/shop/.../gi; s/cart/.../gi` avrebbe corrotto `localStorage` (53 file), import lucide (ShoppingCart/Bag/Store), endpoint `/api/shop`, testid. Sostituito con edit mirati sicuri. `<Smile>` già assente (bretzel 🥨 già fatto in passato).
 - Build: `yarn build` OK (exit 0). Verificato via screenshot desktop+mobile 390px, flusso aggiunta test funzionante.
+
+## v-lab.1 (2026-06) — Home pulita, quiz verificati, mobile 390px
+- **Home ripulita**: rimosso il blocco "Reparto Analisi e Controllo Farine" dalla Home (ora vive SOLO nel Centro Formule/Shop). Home = hero + 5 blocchi sezione + condivisione.
+- **Quiz isolati (verificato)**: EvolvingQuiz/BakerQuiz/ImparaLivelli sono solo dentro Beginners.jsx, renderizzato esclusivamente da AcademyHome (tab Accademia/Impara). Community e Shop non renderizzano quiz. LearnHub non piu usato. Nessuna modifica necessaria.
+- **Mobile 390px**: verificato nessun overflow orizzontale su Home e Community (scrollWidth = clientWidth = 390). Shop responsive.
+- yarn build OK (exit 0).
