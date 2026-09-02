@@ -3320,3 +3320,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Selettore Operatore (Michele/Momi)** nelle Impostazioni (SiteMenu, `site-menu-voice` + `site-menu-voice-michele/momy`), persistito in `mikilab_voice_persona`; `VoiceCommand.speak()` usa la persona scelta come voce di default.
 - **BLOCCO NOTO (quota)**: la chiave ElevenLabs fornita è valida ma l'account è **free con quota di 10.000 caratteri ESAURITA** → ElevenLabs risponde `401 quota_exceeded` e alcune voci library richiedono piano a pagamento. Finché non si aggiorna il piano / si resetta la quota mensile, l'audio esce con la **voce maschile OpenAI (onyx/echo)** grazie al fallback (verificato: 200, `X-TTS-Provider: openai`). Al ripristino quota, ElevenLabs verrà usato automaticamente senza modifiche al codice.
 - Verificato: endpoint 200 con fallback; selettore voce visibile e persistente (screenshot); compilazione pulita.
+
+## v-fork14 (2026-06) — Blocco d'accesso con PIN a 4 cifre
+- **Schermata di blocco all'avvio** (`components/PinLock.jsx`): tastierino 4 cifre, tema Dark & Gold, mostrata PRIMA di qualsiasi schermata. Gate in `App.js`: `if (locked && !resetToken && !publicBatch) return <PinLock/>`. Le pagine pubbliche (QR lotto) e il reset password NON sono bloccate.
+- **Logica** (`lib/pinLock.js`): default PIN **1985** (seed al primo avvio via `ensurePinDefault`), chiavi localStorage `mikilab_pin`, `mikilab_pin_enabled`, `mikilab_pin_unlocked`, `mikilab_pin_init`. `isLocked()`=abilitato && non sbloccato.
+- **Stato di sblocco salvato sul dispositivo**: dopo lo sblocco `mikilab_pin_unlocked=1` in localStorage → NON richiede il PIN alle riaperture immediate. Verificato: reload resta sbloccato.
+- **Impostazioni (SiteMenu, `site-menu-security`)**: toggle "Blocco all'avvio" (attiva/disattiva), "Cambia PIN" (input 4 cifre → `site-menu-pin-save`), "Blocca ora" (`site-menu-lock-now` → evento `mikilab-lock`). Verificato: cambio PIN a 4321, blocca ora, sblocco con nuovo PIN, disattivazione → nessun blocco dopo reload.
+- NB: è un gate d'accesso LOCALE (localStorage), non sicurezza server-side; protegge l'accesso al preview come richiesto.

@@ -47,6 +47,8 @@ import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { hydrateFavs } from "@/lib/favorites";
 import { hydrateCombos } from "@/lib/combos";
+import PinLock from "@/components/PinLock";
+import { isLocked as pinIsLocked, lockNow as pinLockNow } from "@/lib/pinLock";
 
 function App() {
   const { lang, t } = useLang();
@@ -73,6 +75,12 @@ function App() {
   const [authMode, setAuthMode] = useState("login");
   const [sfideOpen, setSfideOpen] = useState(false);
   const publicBatch = new URLSearchParams(window.location.search).get("lotto");
+  const [locked, setLocked] = useState(() => pinIsLocked());
+  useEffect(() => {
+    const onLock = () => { pinLockNow(); setLocked(true); };
+    window.addEventListener("mikilab-lock", onLock);
+    return () => window.removeEventListener("mikilab-lock", onLock);
+  }, []);
 
   // Apertura del Motore Sfide da qualunque punto (PaywallGate, Home, ecc.)
   useEffect(() => {
@@ -218,6 +226,7 @@ function App() {
 
   // Pagina pubblica del lotto (QR): nessun login, nessuna navigazione.
   if (publicBatch) return <PublicBatch id={publicBatch} />;
+  if (locked && !resetToken && !publicBatch) return <PinLock onUnlock={() => setLocked(false)} />;
 
   return (
     <ProfileProvider>

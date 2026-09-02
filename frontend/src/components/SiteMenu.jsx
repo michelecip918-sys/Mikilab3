@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, Home as HomeIcon, BookOpen, Wrench, GraduationCap, Users, Trophy, Menu, Search, Star,
-  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield, BookOpenCheck, Mic } from "lucide-react";
+  Rss, UserPlus, MessageCircle, Store, MapPin, User, Clock, Flame, Shield, BookOpenCheck, Mic, Lock } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { TOOLS, TOOL_KINDS, TOOL_CATS } from "@/sections/PianoProduzioneAI";
@@ -14,6 +14,8 @@ const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u
 
 // Menù CONTESTUALE: mostra le voci della sezione in cui ti trovi (Laboratorio → strumenti,
 // Social → voci social + ordina feed) + una lista compatta per saltare tra le sezioni.
+import { isPinEnabled, setPin as pinSet, setPinEnabled as pinSetEnabled } from "@/lib/pinLock";
+
 export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const { lang } = useLang();
   const { user } = useAuth();
@@ -25,6 +27,13 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const [favs, setFavs] = useState(() => { try { return JSON.parse(localStorage.getItem(FAV_KEY) || "[]"); } catch { return []; } });
   const [persona, setPersona] = useState(() => { try { return localStorage.getItem("mikilab_voice_persona") || "michele"; } catch { return "michele"; } });
   const choosePersona = (p) => { setPersona(p); try { localStorage.setItem("mikilab_voice_persona", p); } catch { /* */ } window.dispatchEvent(new CustomEvent("mikilab-voice-persona", { detail: { persona: p } })); };
+  const [pinOn, setPinOn] = useState(() => isPinEnabled());
+  const [pinEditing, setPinEditing] = useState(false);
+  const [newPin, setNewPin] = useState("");
+  const [pinMsg, setPinMsg] = useState("");
+  const togglePin = () => { const v = !pinOn; setPinOn(v); pinSetEnabled(v); setPinEditing(false); setNewPin(""); setPinMsg(v ? tri("Blocco PIN attivo.", "PIN-Sperre aktiv.", "PIN lock on.", "Bloqueo PIN activo.") : tri("Blocco PIN disattivato.", "PIN-Sperre aus.", "PIN lock off.", "Bloqueo PIN desactivado.")); };
+  const savePin = () => { if (pinSet(newPin)) { setPinOn(true); setPinEditing(false); setNewPin(""); setPinMsg(tri("PIN aggiornato.", "PIN aktualisiert.", "PIN updated.", "PIN actualizado.")); } else { setPinMsg(tri("Servono 4 cifre.", "4 Ziffern nötig.", "Need 4 digits.", "Faltan 4 dígitos.")); } };
+  const lockNowBtn = () => { setOpen(false); window.dispatchEvent(new Event("mikilab-lock")); };
 
   useEffect(() => {
     const h = () => { setQ(""); setOpen(true); };
@@ -231,6 +240,36 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                 ))}
               </div>
               <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 px-0.5">{tri("Voci ultra-realistiche ElevenLabs. Di' «Ehi Lab» per parlare a mani libere.", "Ultra-realistische ElevenLabs-Stimmen. Sag «Ehi Lab».", "Ultra-realistic ElevenLabs voices. Say «Ehi Lab» to talk hands-free.", "Voces ultrarrealistas ElevenLabs. Di «Ehi Lab».")}</p>
+            </div>
+            {/* Sicurezza: blocco con PIN a 4 cifre */}
+            <div data-testid="site-menu-security" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
+              <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5"><Lock className="w-3.5 h-3.5 text-[#ff6b00]" /> {tri("Sicurezza · PIN", "Sicherheit · PIN", "Security · PIN", "Seguridad · PIN")}</p>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[13px] font-semibold text-[#2b3640] dark:text-[#E6EEF3]">{tri("Blocco all'avvio", "Sperre beim Start", "Lock on start", "Bloqueo al inicio")}</span>
+                <button data-testid="site-menu-pin-toggle" onClick={togglePin} role="switch" aria-checked={pinOn}
+                  className={`w-11 h-6 rounded-full transition-all relative ${pinOn ? "bg-[#ff6b00]" : "bg-[#c7d2da] dark:bg-[#333]"}`}>
+                  <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${pinOn ? "left-[22px]" : "left-0.5"}`} />
+                </button>
+              </div>
+              {pinOn && (
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  {!pinEditing ? (
+                    <>
+                      <button data-testid="site-menu-pin-change" onClick={() => { setPinEditing(true); setPinMsg(""); }} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#ff6b00]/12 text-[#ff6b00]">{tri("Cambia PIN", "PIN ändern", "Change PIN", "Cambiar PIN")}</button>
+                      <button data-testid="site-menu-lock-now" onClick={lockNowBtn} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#241B10] text-[#E7B23C] border border-[#6E5320]">{tri("Blocca ora", "Jetzt sperren", "Lock now", "Bloquear ahora")}</button>
+                    </>
+                  ) : (
+                    <>
+                      <input data-testid="site-menu-pin-input" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                        inputMode="numeric" maxLength={4} placeholder="1985" autoFocus
+                        className="w-20 text-center tracking-[6px] font-extrabold text-[16px] py-1.5 rounded-lg bg-[#f0f4f8] dark:bg-[#121212] border border-[#ff6b00]/40 text-[#2b3640] dark:text-white" />
+                      <button data-testid="site-menu-pin-save" onClick={savePin} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#ff6b00] text-white">{tri("Salva", "Speichern", "Save", "Guardar")}</button>
+                      <button onClick={() => { setPinEditing(false); setNewPin(""); }} className="text-[12px] font-semibold px-2 py-1.5 rounded-lg text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
+                    </>
+                  )}
+                </div>
+              )}
+              {pinMsg && <p data-testid="site-menu-pin-msg" className="text-[11px] text-[#22a06b] font-semibold mt-1.5 px-0.5">{pinMsg}</p>}
             </div>
             {/* Interruttore modalità: Pro (tutto) / Passione (senza HACCP e B2B) */}
             <div data-testid="site-menu-mode" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
