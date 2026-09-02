@@ -138,7 +138,7 @@ export default function MikilaWisdom({ section = "home" }) {
     <>
       <div data-testid="mikila-wisdom" className={`mb-4 rounded-2xl border px-3.5 py-3 shadow-sm ${special ? "border-[#ff6b00]/50 bg-[#ff6b00]/12" : "border-[#ff6b00]/25 bg-[#181818]"}`}>
         <div className="flex items-center gap-3">
-          <img src="/michele-avatar.jpg" alt="MikiLab" loading="lazy"
+          <img src="/michele-real-lab.jpg" alt="MikiLab" loading="lazy"
             className="w-10 h-10 rounded-full object-cover border-2 border-[#ff6b00]/40 shrink-0"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="flex-1 min-w-0">
@@ -329,7 +329,7 @@ function CardModal({ lang, text, author, onClose }) {
       finish();
     };
     img.onerror = finish;
-    img.src = "/michele-avatar.jpg";
+    img.src = "/michele-real-lab.jpg";
     return () => { alive = false; };
   }, [text, author]);
 

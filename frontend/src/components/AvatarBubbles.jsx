@@ -7,7 +7,7 @@ import { siteSettingsApi, weeklyApi } from "@/lib/api";
 
 const base = process.env.PUBLIC_URL || "";
 const AV = {
-  michele: `${base}/michele-avatar.jpg`,
+  michele: `${base}/michele-real-lab.jpg`,
   momy: `${base}/mohammed-avatar.jpg`,
 };
 

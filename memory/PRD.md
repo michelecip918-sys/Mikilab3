@@ -3506,3 +3506,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 
 ## v-fork39 (2026-06) — Griglia schede: Prodotti del forno
 - RicettaDelGiorno.jsx: lista `rdg-list` da `space-y-2.5` -> `grid grid-cols-1 sm:grid-cols-2 gap-2.5` (schede h-full), parita desktop/mobile. Shop gia responsive (invariato). PIN/moduli/dosi intatti. Rifiutato il sed globale flex-col/grid-cols (96 occorrenze) che avrebbe rotto il layout.
+
+## v-fork40 (2026-06) — Foto reale Miki + card warm + redeploy
+- Swap valore-only /michele-avatar.jpg -> /michele-real-lab.jpg in 7 file (AvatarBubbles, MikiAvatar, BakeStepByStep, MikilaWisdom, IntroGuide, Mikilab.jsx, MikiLabEliteEngine). Mohamed invariato. Evitata la regex greedy `src=.*avatar.*` (avrebbe cancellato alt/className e messo Miki al posto di Mohamed).
+- Restyle card: rounded-xl -> rounded-2xl + shadow-md + border-amber-900/40 (549 occorrenze). Verificato Home ordinata.
+- Build prod OK (yarn build). Redeploy avviato (job aa6b806a).

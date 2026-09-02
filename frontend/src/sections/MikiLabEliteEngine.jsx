@@ -189,7 +189,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
       color: "#B5714E",
       bgGradient: "linear-gradient(135deg, #241009 0%, #7A3F28 50%, #B5714E 100%)",
       avatarName: "Miki & Mohamed (Team Pasticceria)",
-      avatarImg: "/michele-avatar.jpg",
+      avatarImg: "/michele-real-lab.jpg",
       avatarAction: "Team all'opera con la laminazione del burro e l'abbattitore!",
       item3D: "🧊 Abbattitore Professionale -35°C & Sfogliatrice",
       desc: "Calcolo pieghe 4-4 e gestione temperature burro"
@@ -318,7 +318,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
                 boxShadow: `0 10px 25px rgba(0,0,0,0.8), 0 0 25px ${currentRoom.color}55`,
                 marginBottom: '10px'
               }}
-              onError={(e) => { e.currentTarget.src = "/michele-avatar.jpg"; }}
+              onError={(e) => { e.currentTarget.src = "/michele-real-lab.jpg"; }}
             />
 
             <div style={{ fontSize: '0.75rem', color: currentRoom.color, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
