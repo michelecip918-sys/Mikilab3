@@ -3419,3 +3419,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - data-testid: `elite-room-*`, `elite-timer`, `elite-start-bake`, `elite-guida-content`, `elite-privacy/impressum`, `elite-legal-modal/close`.
 - Verificato via screenshot: overlay + timer reale + guida + modale legale, compile pulito.
 
+
+## v-fork29 (2026-06) — MikiLab OS v10.2 (allarme sonoro + testi legali) — Elite Engine
+- `sections/MikiLabEliteEngine.jsx` SOVRASCRITTO con v10.2 (codice esatto, export default `MikiLabEliteEngine`). Overlay + Chiudi + ESC.
+- **Allarme forno PERSISTENTE**: oltre alla voce, `playBeepAlert()` genera un beep sintetico Web Audio (square 880Hz, 1.5s) a fine cottura. `speakVoice`/`playBeepAlert` definiti prima dell'useEffect.
+- **Testi legali REALI** in 3 modali: Privacy (GDPR/Reg. UE 2016/679), Tutela Copyright (© 2026 Mohamed & Miki, divieto copia), Impressum (MikiLab Industrial Systems, support@mikilab-os.com). Footer con 3 link.
+- Foto reali placeholder negli avatar (avatarVisual), radio "streaming live", stanza Guida con tutela proprietà intellettuale. Attribuzione aggiornata a "Mohamed & Miki".
+- data-testid: `elite-privacy/copyright/impressum`, `elite-legal-modal/close`, `elite-timer`, `elite-start-bake`.
+- Verificato via screenshot: overlay + modale Copyright con testo reale; timer/allarme come da logica v10.0. Compile pulito.
+

@@ -1,6 +1,6 @@
 /* ============================================================================
-   MIKILAB OS v10.0 - ULTIMATE 3D BAKERY ENTERPRISE EDITION (Miki & Mohamed)
-   UI: Multi-Avatar (Miki & Mohamed) + Real Timers + Live Radio + DB + Guida 3D
+   MIKILAB OS v10.2 - ULTIMATE 3D BAKERY ENTERPRISE EDITION (Miki & Mohamed)
+   UI: Multi-Avatar + Real Timers + Allarme Persistente + Radio + Testi Legali
    Reso come overlay a schermo intero (createPortal) con Chiudi + ESC.
    ============================================================================ */
 
@@ -13,9 +13,9 @@ export default function MikiLabEliteEngine({ open, onClose }) {
   const [language, setLanguage] = useState('it-IT');
   const [batchKg, setBatchKg] = useState(50);
   const [radioPlaying, setRadioPlaying] = useState(false);
-  const [modalOpen, setModalOpen] = useState(null);
+  const [modalOpen, setModalOpen] = useState(null); // 'privacy', 'impressum', 'copyright'
 
-  // Timer Forno Reale Dinamico
+  // Timer Forno Reale Dinamico con Allarme Persistente
   const [timerSeconds, setTimerSeconds] = useState(1080); // 18 minuti
   const [isBaking, setIsBaking] = useState(false);
 
@@ -29,6 +29,24 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     }
   };
 
+  // Audio sintetico di allarme persistente per lo schermo spento/rumore
+  const playBeepAlert = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(880, ctx.currentTime); // Nota alta
+      gain.gain.setValueAtTime(0.5, ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      setTimeout(() => { osc.stop(); }, 1500);
+    } catch (e) {
+      console.log("Audio non supportato automaticamente");
+    }
+  };
+
   useEffect(() => {
     let interval = null;
     if (isBaking && timerSeconds > 0) {
@@ -37,7 +55,9 @@ export default function MikiLabEliteEngine({ open, onClose }) {
       }, 1000);
     } else if (timerSeconds === 0 && isBaking) {
       setIsBaking(false);
-      speakVoice("Attenzione! Cottura forno completata!");
+      // Allarme persistente vocale e sonoro di emergenza fine cottura
+      speakVoice("Allarme forno! Cottura completata, spegnere immediatamente!");
+      playBeepAlert();
     }
     return () => clearInterval(interval);
   }, [isBaking, timerSeconds]);
@@ -50,14 +70,14 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     return () => window.removeEventListener("keydown", onEsc);
   }, [open, onClose]);
 
-  // AMBIENTI 3D DEL PANIFICIO (CON SEZIONE GUIDA E PROGETTO)
+  // AMBIENTI 3D DEL PANIFICIO
   const rooms3D = {
     impasti: {
       title: "🌾 BANCO IMPASTI & SILOS 3D",
       color: "#FFB300",
       bgGradient: "linear-gradient(135deg, #2A1A08 0%, #795548 50%, #FFB300 100%)",
       avatarName: "Miki (Maestro Impastatore)",
-      avatarEmoji: "🧔🏻‍♂️🌾",
+      avatarVisual: "📸 [Foto Reale Miki: Miki che gioca a palla di pane col tatuaggio visibile]",
       avatarAction: "Miki sta gestendo il banco impasti, l'acqua e la spirale!",
       item3D: "📦 Silo Farina T500 & Vasca Impastatrice",
       desc: "Reparto impasti ad alta idratazione e controllo del glutine"
@@ -66,31 +86,31 @@ export default function MikiLabEliteEngine({ open, onClose }) {
       title: "🔥 ZONA FORNI A LEGNA 3D",
       color: "#FF3D00",
       bgGradient: "linear-gradient(135deg, #3E2723 0%, #D84315 50%, #FF3D00 100%)",
-      avatarName: "Mohamed (Infornatore Capo)",
-      avatarEmoji: "👨🏽‍🍳🔥",
-      avatarAction: "Mohamed sta controllando il forno rotativo e gestendo le cotture!",
+      avatarName: "Mohamed & Miki (Infornatore Capo)",
+      avatarVisual: "📸 [Foto Reale Miki: Miki che inforna col tatuaggio in primo piano]",
+      avatarAction: "Mohamed e Miki stanno controllando il forno rotativo e le cotture!",
       item3D: "🌋 Forno Rotativo con Mattoni Refrattari",
-      desc: "Gestione vapore, infornate e timer di cottura in tempo reale"
+      desc: "Gestione vapore, infornate e timer di cottura con allarme persistente"
     },
     pasticceria: {
       title: "🥐 KONDITOREI & ABBATTITORE 3D",
       color: "#E040FB",
       bgGradient: "linear-gradient(135deg, #1A237E 0%, #7B1FA2 50%, #E040FB 100%)",
       avatarName: "Miki & Mohamed (Team Pasticceria)",
-      avatarEmoji: "👥🥐",
+      avatarVisual: "👥🥐 (Foto Storiche Laboratorio)",
       avatarAction: "Team all'opera con la laminazione del burro e l'abbattitore!",
       item3D: "🧊 Abbattitore Professionale -35°C & Sfogliatrice",
       desc: "Calcolo pieghe 4-4 e gestione temperature burro"
     },
     guida: {
-      title: "📖 GUIDA & CONFRONTO MERCATO (MIKILAB)",
+      title: "📖 GUIDA & TUTELA COPYRIGHT (MIKILAB)",
       color: "#00E676",
       bgGradient: "linear-gradient(135deg, #004D40 0%, #00796B 50%, #00E676 100%)",
       avatarName: "Miki & Mohamed (Progetto Ufficiale)",
-      avatarEmoji: "📚✨",
-      avatarAction: "Consultazione Guida 3D e Innovazioni di Laboratorio!",
+      avatarVisual: "📚✨ (Galleria Foto Reali dei Tatuaggi & Pane)",
+      avatarAction: "Consultazione Guida 3D e Protezione Legale del Software!",
       item3D: "💡 Archivio Tecnologie & Specifiche di Progetto",
-      desc: "Soluzioni sviluppate ad hoc da MikiLab vs Standard di Mercato"
+      desc: "Soluzioni sviluppate ad hoc da Miki & Mohamed vs Standard di Mercato"
     }
   };
 
@@ -117,7 +137,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     }}>
       <div style={{ padding: '16px', maxWidth: 760, margin: '0 auto', paddingBottom: '40px' }}>
 
-        {/* HEADER AMBIENTE & RADIO */}
+        {/* HEADER AMBIENTE & RADIO REALE */}
         <div style={{
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           backdropFilter: 'blur(12px)',
@@ -136,8 +156,11 @@ export default function MikiLabEliteEngine({ open, onClose }) {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <button data-testid="elite-radio-toggle" onClick={() => { setRadioPlaying(!radioPlaying); speakVoice(radioPlaying ? "Radio in pausa" : "Radio panificio attivata"); }} style={{ backgroundColor: radioPlaying ? '#00E676' : 'rgba(255,255,255,0.1)', color: '#FFF', border: `1px solid ${currentRoom.color}`, padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                📻 RADIO PANIFICIO: {radioPlaying ? 'ON (Live) 🎶' : 'OFF'}
+              <button data-testid="elite-radio-toggle" onClick={() => {
+                setRadioPlaying(!radioPlaying);
+                speakVoice(radioPlaying ? "Radio panificio spenta" : "Radio panificio in streaming live avviata");
+              }} style={{ backgroundColor: radioPlaying ? '#00E676' : 'rgba(255,255,255,0.1)', color: '#FFF', border: `1px solid ${currentRoom.color}`, padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                📻 RADIO REALE: {radioPlaying ? 'ON (Streaming 🎶)' : 'OFF'}
               </button>
               <button data-testid="elite-close" onClick={onClose} aria-label="Chiudi" style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#FFF', border: `1px solid ${currentRoom.color}`, padding: '7px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                 <X size={18} />
@@ -180,7 +203,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           ))}
         </div>
 
-        {/* SCENA 3D & AVATAR PERSONALE */}
+        {/* SCENA 3D & FOTO REALI */}
         <div data-testid="elite-scene-3d" style={{
           backgroundColor: 'rgba(0, 0, 0, 0.82)',
           borderRadius: '20px',
@@ -201,12 +224,17 @@ export default function MikiLabEliteEngine({ open, onClose }) {
             backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 10%, transparent 75%)'
           }}>
             <div style={{
-              fontSize: '5.5rem',
-              filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.9)) drop-shadow(0 0 20px rgba(255,255,255,0.3))',
-              transform: 'scale(1.1)',
-              marginBottom: '6px'
+              fontSize: '1.1rem',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              border: `2px dashed ${currentRoom.color}`,
+              padding: '14px 20px',
+              borderRadius: '12px',
+              color: '#FFF',
+              fontWeight: 'bold',
+              marginBottom: '10px',
+              boxShadow: '0 5px 15px rgba(0,0,0,0.5)'
             }}>
-              {currentRoom.avatarEmoji}
+              {currentRoom.avatarVisual}
             </div>
 
             <div style={{ fontSize: '0.75rem', color: currentRoom.color, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
@@ -232,7 +260,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           </div>
         </div>
 
-        {/* PANNELLO OPERATIVO O GUIDA DETTAGLIATA */}
+        {/* PANNELLO OPERATIVO O GUIDA */}
         <div style={{
           backgroundColor: 'rgba(0, 0, 0, 0.75)',
           backdropFilter: 'blur(10px)',
@@ -242,14 +270,14 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           marginBottom: '20px'
         }}>
           <h3 style={{ margin: '0 0 10px 0', color: currentRoom.color }}>
-            {activeTab === 'guida' ? '📖 Sezione Guida & Soluzioni di Mercato' : '⚙️ Dati Operativi Reparto'}
+            {activeTab === 'guida' ? '📖 Guida & Tutela Proprietà Intellettuale' : '⚙️ Dati Operativi Reparto'}
           </h3>
 
           {activeTab === 'guida' ? (
             <div data-testid="elite-guida-content" style={{ fontSize: '0.85rem', lineHeight: '1.6', color: '#DDD' }}>
-              <p>✨ <strong>Progetto Ufficiale MikiLab OS</strong> ideato e sviluppato da Miki & Mohamed.</p>
-              <p>🛒 <strong>Cosa c'è sul mercato:</strong> Software gestionali rigidi, costosi, non interattivi e basati su moduli complessi scollegati dalla realtà di laboratorio.</p>
-              <p>🚀 <strong>Cosa abbiamo creato noi (Miki & MikiLab):</strong> Un ambiente 3D multi-avatar interattivo, timer forno reali con allarme vocale, database ricette nativo, radio streaming e totale assenza di burocrazia inutile (zero allergeni e fronzoli).</p>
+              <p>✨ <strong>MikiLab OS v10.2</strong> ideato e sviluppato da Mohamed & Miki.</p>
+              <p>🔒 <strong>Protezione Copyright:</strong> Questo software, l'interfaccia 3D, la logica dei timer e i contenuti multimediali sono protetti da diritti di proprietà intellettuale esclusivi. Ogni duplicazione o uso non autorizzato è severamente vietato.</p>
+              <p>🛒 <strong>Rispetto al mercato:</strong> Soluzioni commerciali rigide superate da un sistema vivo, con allarmi persistenti per schermi spenti e radio live integrata.</p>
             </div>
           ) : (
             <p style={{ fontSize: '0.85rem', color: '#DDD', marginBottom: '12px' }}>{currentRoom.desc}</p>
@@ -275,18 +303,18 @@ export default function MikiLabEliteEngine({ open, onClose }) {
 
           {activeTab === 'forni' && (
             <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#FF3D00' }}>🔥 Forno Rotativo 1 (240°C) - Timer Reale</div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#FF3D00' }}>🔥 Forno Rotativo (240°C) - Allarme Persistente Attivo</div>
               <div data-testid="elite-timer" style={{ fontSize: '2rem', fontWeight: 'bold', margin: '6px 0', fontFamily: 'monospace' }}>
                 {formatTime(timerSeconds)}
               </div>
               <button data-testid="elite-start-bake" onClick={() => { setIsBaking(true); speakVoice("Conto alla rovescia forno avviato da Mohamed"); }} style={{ backgroundColor: '#FF3D00', color: '#FFF', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                {isBaking ? '⏳ COTTURA IN CORSO...' : '▶️ AVVIA CONTO ALLA ROVESCIA'}
+                {isBaking ? '⏳ COTTURA IN CORSO (ALLARME PRONTO)...' : '▶️ AVVIA COTTURA & ALLARME'}
               </button>
             </div>
           )}
         </div>
 
-        {/* FOOTER LEGALE */}
+        {/* FOOTER LEGALE & COPYRIGHT */}
         <div style={{
           textAlign: 'center',
           padding: '12px',
@@ -298,18 +326,21 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           gap: '15px',
           flexWrap: 'wrap'
         }}>
-          <span>© MikiLab OS v10.0 - Miki & Mohamed</span>
+          <span>© MikiLab OS v10.2 - Mohamed & Miki (Tutti i diritti riservati)</span>
           <button data-testid="elite-privacy" onClick={() => setModalOpen('privacy')} style={{ background: 'none', border: 'none', color: '#FFB300', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             🔒 Privacy (GDPR)
           </button>
-          <button data-testid="elite-impressum" onClick={() => setModalOpen('impressum')} style={{ background: 'none', border: 'none', color: '#00E676', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
+          <button data-testid="elite-copyright" onClick={() => setModalOpen('copyright')} style={{ background: 'none', border: 'none', color: '#00E676', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
+            🛡️ Tutela Copyright
+          </button>
+          <button data-testid="elite-impressum" onClick={() => setModalOpen('impressum')} style={{ background: 'none', border: 'none', color: '#E040FB', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             📜 Impressum
           </button>
         </div>
 
       </div>
 
-      {/* MODALE */}
+      {/* MODALE TESTI LEGALI VERI */}
       {modalOpen && (
         <div data-testid="elite-legal-modal" style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -318,13 +349,32 @@ export default function MikiLabEliteEngine({ open, onClose }) {
         }}>
           <div style={{
             backgroundColor: '#1E1E24', border: '2px solid #FFB300', borderRadius: '16px',
-            padding: '24px', maxWidth: '500px', width: '100%', color: '#FFF'
+            padding: '24px', maxWidth: '500px', width: '100%', color: '#FFF', maxHeight: '80vh', overflowY: 'auto'
           }}>
-            <h2 style={{ color: '#FFB300', marginTop: 0 }}>Note Legali MikiLab OS</h2>
-            <p style={{ fontSize: '0.85rem', color: '#DDD' }}>Sistema operativo per laboratorio di panificazione 3D sviluppato congiuntamente da Miki e Mohamed. Conformità GDPR e BetrVG §87.</p>
+            <h2 style={{ color: '#FFB300', marginTop: 0 }}>
+              {modalOpen === 'privacy' && '🔒 Informativa sulla Privacy (GDPR)'}
+              {modalOpen === 'copyright' && '🛡️ Protezione Copyright & Proprietà'}
+              {modalOpen === 'impressum' && '📜 Impressum & Note Legali'}
+            </h2>
+
+            <div style={{ fontSize: '0.85rem', lineHeight: '1.5', color: '#DDD', marginBottom: '20px' }}>
+              {modalOpen === 'privacy' && (
+                <p>I dati di produzione, le ricette e le impostazioni del laboratorio gestiti all'interno di MikiLab OS sono trattati in totale conformità al Regolamento UE 2016/679 (GDPR), garantendo la massima riservatezza e sicurezza dei dati aziendali.</p>
+              )}
+              {modalOpen === 'copyright' && (
+                <p><strong>© 2026 MikiLab OS - Mohamed & Miki.</strong> Tutti i diritti di proprietà intellettuale relativi al codice sorgente, all'interfaccia 3D, ai flussi operativi, alle immagini e ai concetti di laboratorio sono riservati. È vietata la copia, la riproduzione o la distribuzione non autorizzata, anche parziale, dell'opera.</p>
+              )}
+              {modalOpen === 'impressum' && (
+                <p><strong>MikiLab Industrial Systems</strong><br />
+                  Sviluppato da Mohamed & Miki<br />
+                  Laboratorio di Panificazione e Pasticceria 3D<br />
+                  Contatto ufficiale: support@mikilab-os.com</p>
+              )}
+            </div>
+
             <button data-testid="elite-legal-close" onClick={() => setModalOpen(null)} style={{
               backgroundColor: '#FFB300', color: '#000', border: 'none', padding: '10px 20px',
-              borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', width: '100%', marginTop: '10px'
+              borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', width: '100%'
             }}>
               CHIUDI
             </button>
