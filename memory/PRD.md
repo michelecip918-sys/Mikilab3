@@ -3449,3 +3449,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Voce (Task 1)**: le prompt "Comandante Lab, cos'è la biga" e "…timer autolisi 45 minuti" sono già gestite da `tryGlossary` (biga) e `tryTimer` (autolisi 45 min) in VoiceCommand.jsx — nessuna nuova hardcoding necessaria.
 - Verificato via screenshot: 8 stazioni nel dropdown; selezionando "Baguette a Lievito Madre" (22min/250°C) il forno mostra 250°C, timer 22:00 e "Parametri da ricetta: Baguette a Lievito Madre". Compile pulito.
 
+
+## v-fork32 (2026-06) — Fix preview stale (service worker cache)
+- Causa: il service worker `public/sw.js` (CACHE_NAME "mikilab-v10") serviva una build vecchia sul dispositivo dell'utente.
+- Fix: bump CACHE_NAME → "mikilab-v11" (l'handler `activate` elimina le cache vecchie + skipWaiting + clients.claim). Pulita la cache di build CRA (`node_modules/.cache`), ricompilato e riavviato il frontend.
+- Verifica: servizi tutti RUNNING; backend `/api`=200, frontend `/`=200. Il bundle servito dal preview contiene il codice NUOVO (`elite-radio-station`, `MikiLab OS v10.3`, `comandante lab`) e `/sw.js` servito = `mikilab-v11`. Screenshot preview (browser pulito) mostra la schermata PIN della build nuova.
+- Nota: i client già aperti con SW vecchio prendono la nuova versione al successivo caricamento (SW auto-update su cambio di sw.js).
+
