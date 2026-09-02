@@ -59,7 +59,7 @@ export default function VoiceCommand({ onOpenTool }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => { window.removeEventListener("scroll", onScroll); clearTimeout(t); };
   }, []);
-  const [wake, setWake] = useState(() => { try { return localStorage.getItem("mikilab_voice_wake") === "1"; } catch { return false; } });
+  const [wake, setWake] = useState(false); // Microfono MAI in autostart: si attiva SOLO col pulsante 👂
   const [timers, setTimers] = useState([]);
   const [onboard, setOnboard] = useState(false); // onboarding vocale DISABILITATO: nessun popup all'avvio
   const recRef = useRef(null);
@@ -582,11 +582,10 @@ export default function VoiceCommand({ onOpenTool }) {
     toast.success(tri("Ascolto «Comandante Lab» attivo.", "Höre auf «Comandante Lab».", "Listening for «Comandante Lab».", "Escuchando «Comandante Lab».", "À l'écoute «Comandante Lab».", "در حال شنیدن «Comandante Lab»."));
     restartWake();
   };
-  // Persistenza wake-word: se era attiva, prova a riavviare all'apertura (il browser può richiedere un tap)
+  // NESSUN avvio automatico del microfono all'apertura: si attiva SOLO col pulsante 👂 (nessun beep/vibrazione in loop).
   useEffect(() => {
-    if (!wake) return;
-    wakeActiveRef.current = true;
-    restartWake();
+    try { localStorage.setItem("mikilab_voice_wake", "0"); } catch { /* */ }
+    wakeActiveRef.current = false;
     return () => { clearTimeout(wakeTimerRef.current); try { wakeRef.current && (wakeRef.current._stop = true, wakeRef.current.stop()); } catch { /* */ } };
     // eslint-disable-next-line
   }, []);

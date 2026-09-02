@@ -3463,3 +3463,16 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Verifica live: index.html servito contiene `updateViaCache`; `/sw.js` = `mikilab-v11`; bundle contiene `elite-radio-station`; frontend/api = 200; screenshot preview = build nuova (PIN) senza loop di reload.
 - Effetto: i dispositivi con SW vecchio ora si auto-aggiornano al prossimo caricamento (un reload automatico) senza intervento manuale dell'utente.
 
+
+## v-fork34 (2026-06) — Restyle warm artisan (Elite Engine) + STOP microfono autostart
+### Fatto e verificato
+- **Elite Engine warm artisan**: rimossi tutti i colori neon/rosso acceso/rosa/viola. `#FF3D00→#C2612E` (terracotta), `#00E676→#8F9B5E` (oliva/salvia), `#E040FB→#B5714E` (argilla). Gradienti Pasticceria e Guida riscritti in toni caldi. 0 residui neon (grep). Verificato via screenshot (stanza Forni ora terracotta).
+- **Microfono NON in autostart** (`components/VoiceCommand.jsx`): `wake` init forzato a `false`; rimosso l'useEffect di persistenza che riavviava l'ascolto all'apertura; su mount si forza `mikilab_voice_wake=0` e `wakeActiveRef=false`. Il mic si attiva SOLO col pulsante 👂. Verificato: con storage `wake=1` il pulsante resta idle (#161616), nessun beep/loop.
+### RICHIESTE GRANDI ANCORA DA FARE (confermate dall'utente, non ancora implementate — multi-step)
+- P0 Laboratorio: mostrare SOLO l'Elite Engine (MikiLab OS v10.3), nascondere tutti gli altri tool della griglia (TOOLS in PianoProduzioneAI + banner tech in Maestro.jsx).
+- P0 Tema warm artisan su TUTTA l'app (rimuovere ovunque #ff6b00 neon/altri): molti file/CSS.
+- P1 Home "Panificio Virtuale": redesign accoglienza con avatar nelle postazioni 3D.
+- P1 Quiz/test SOLO in Accademia (Scienza & Guide): rimuoverli da Home/Community/Shop/Beginners/ProfileSelect ecc. (file con "quiz": Home.jsx, Community.jsx, Shop.jsx, Beginners.jsx, ImparaLivelli.jsx, ProfileSelect.jsx, AvatarBubbles.jsx, VoiceAssistant.jsx).
+- P1 Parità totale desktop/mobile su tutta l'app.
+- NOTA: un deploy era in corso; queste modifiche sono in PREVIEW e richiederanno un redeploy per andare in produzione.
+

@@ -176,8 +176,8 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     },
     forni: {
       title: "🔥 ZONA FORNI A LEGNA 3D",
-      color: "#FF3D00",
-      bgGradient: "linear-gradient(135deg, #3E2723 0%, #D84315 50%, #FF3D00 100%)",
+      color: "#C2612E",
+      bgGradient: "linear-gradient(135deg, #3E2723 0%, #D84315 50%, #C2612E 100%)",
       avatarName: "Mohamed & Miki (Infornatore Capo)",
       avatarImg: "/mohammed-avatar.jpg",
       avatarAction: "Mohamed e Miki stanno controllando il forno rotativo e le cotture!",
@@ -186,8 +186,8 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     },
     pasticceria: {
       title: "🥐 KONDITOREI & ABBATTITORE 3D",
-      color: "#E040FB",
-      bgGradient: "linear-gradient(135deg, #1A237E 0%, #7B1FA2 50%, #E040FB 100%)",
+      color: "#B5714E",
+      bgGradient: "linear-gradient(135deg, #241009 0%, #7A3F28 50%, #B5714E 100%)",
       avatarName: "Miki & Mohamed (Team Pasticceria)",
       avatarImg: "/michele-avatar.jpg",
       avatarAction: "Team all'opera con la laminazione del burro e l'abbattitore!",
@@ -196,8 +196,8 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     },
     guida: {
       title: "📖 GUIDA & TUTELA COPYRIGHT (MIKILAB)",
-      color: "#00E676",
-      bgGradient: "linear-gradient(135deg, #004D40 0%, #00796B 50%, #00E676 100%)",
+      color: "#8F9B5E",
+      bgGradient: "linear-gradient(135deg, #20240F 0%, #4E5A2A 50%, #8F9B5E 100%)",
       avatarName: "Miki & Mohamed (Progetto Ufficiale)",
       avatarImg: "/logo-emblem.png",
       avatarAction: "Consultazione Guida 3D e Protezione Legale del Software!",
@@ -251,7 +251,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <button data-testid="elite-radio-toggle" onClick={toggleRadio} style={{ backgroundColor: radioPlaying ? '#00E676' : 'rgba(255,255,255,0.1)', color: '#FFF', border: `1px solid ${currentRoom.color}`, padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}>
+              <button data-testid="elite-radio-toggle" onClick={toggleRadio} style={{ backgroundColor: radioPlaying ? '#8F9B5E' : 'rgba(255,255,255,0.1)', color: '#FFF', border: `1px solid ${currentRoom.color}`, padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}>
                 📻 {radioPlaying ? 'ON 🎶' : 'RADIO'}
               </button>
               <select data-testid="elite-radio-station" value={stationId} onChange={(e) => changeStation(e.target.value)}
@@ -381,7 +381,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
                 </div>
                 <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px' }}>
                   <div style={{ fontSize: '0.7rem' }}>Acqua ({hydration}%)</div>
-                  <strong data-testid="elite-water" style={{ color: '#00E676', fontSize: '1.2rem' }}>{acquaL} L</strong>
+                  <strong data-testid="elite-water" style={{ color: '#8F9B5E', fontSize: '1.2rem' }}>{acquaL} L</strong>
                 </div>
                 <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px' }}>
                   <div style={{ fontSize: '0.7rem' }}>Sale (2%)</div>
@@ -393,7 +393,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
 
           {activeTab === 'forni' && (
             <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#FF3D00' }}>🔥 Forno Rotativo ({ovenTemp}°C) - Allarme + Notifica Telefono</div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#C2612E' }}>🔥 Forno Rotativo ({ovenTemp}°C) - Allarme + Notifica Telefono</div>
               {ovenRecipeName && (
                 <div data-testid="elite-oven-recipe" style={{ fontSize: '0.72rem', color: '#FFB300', marginTop: '4px' }}>
                   📖 Parametri da ricetta: <strong>{ovenRecipeName}</strong>
@@ -402,7 +402,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
               <div data-testid="elite-timer" style={{ fontSize: '2rem', fontWeight: 'bold', margin: '6px 0', fontFamily: 'monospace' }}>
                 {formatTime(timerSeconds)}
               </div>
-              <button data-testid="elite-start-bake" onClick={startBake} style={{ backgroundColor: '#FF3D00', color: '#FFF', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+              <button data-testid="elite-start-bake" onClick={startBake} style={{ backgroundColor: '#C2612E', color: '#FFF', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
                 {isBaking ? '⏳ COTTURA IN CORSO (ALLARME PRONTO)...' : '▶️ AVVIA COTTURA & NOTIFICA'}
               </button>
             </div>
@@ -419,10 +419,10 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           <button data-testid="elite-privacy" onClick={() => setModalOpen('privacy')} style={{ background: 'none', border: 'none', color: '#FFB300', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             🔒 Privacy (GDPR)
           </button>
-          <button data-testid="elite-copyright" onClick={() => setModalOpen('copyright')} style={{ background: 'none', border: 'none', color: '#00E676', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
+          <button data-testid="elite-copyright" onClick={() => setModalOpen('copyright')} style={{ background: 'none', border: 'none', color: '#8F9B5E', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             🛡️ Tutela Copyright
           </button>
-          <button data-testid="elite-impressum" onClick={() => setModalOpen('impressum')} style={{ background: 'none', border: 'none', color: '#E040FB', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
+          <button data-testid="elite-impressum" onClick={() => setModalOpen('impressum')} style={{ background: 'none', border: 'none', color: '#B5714E', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             📜 Impressum
           </button>
         </div>
