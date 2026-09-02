@@ -37,7 +37,7 @@ export default function AngoloRecupero({ onBack }) {
 
       <div className="flex gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
         {[["raffermo", L("Pane raffermo", "Altes Brot", "Stale bread", "Pan duro"), Croissant], ["esubero", L("Esubero LM", "Sauerteig-Rest", "Sourdough discard", "Descarte MM"), Sparkles]].map(([id, label, Icon]) => (
-          <button key={id} data-testid={`recupero-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[13px] font-bold transition-all ${tab === id ? "bg-[#2e8b6f] text-[#121212] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`recupero-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[13px] font-bold transition-all ${tab === id ? "bg-[#2e8b6f] text-[#121212] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 

@@ -10,7 +10,7 @@ export default function ConvertitoreLieviti({ onBack }) {
   const { lang } = useLang();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   // 1) Lievito di birra fresco <-> secco
@@ -46,7 +46,7 @@ export default function ConvertitoreLieviti({ onBack }) {
         <p className="font-display text-base font-bold text-[#ff6b00] mb-2 flex items-center gap-1.5"><Beaker className="w-4.5 h-4.5" /> {L("Lievito di birra: fresco ⇄ secco", "Hefe: frisch ⇄ trocken", "Yeast: fresh ⇄ dry", "Levadura: fresca ⇄ seca")}</p>
         <div className="grid grid-cols-2 gap-3 items-end">
           <div><p className={lbl}>{L("Fresco (g)", "Frisch (g)", "Fresh (g)", "Fresca (g)")}</p><input data-testid="conv-fresco" type="number" value={fresco} onChange={(e) => setFresco(e.target.value)} className={inp} /></div>
-          <div><p className={lbl}>{L("Secco / istantaneo (g)", "Trocken (g)", "Dry (g)", "Seca (g)")}</p><div data-testid="conv-secco" className="rounded-xl bg-[#ffffff] text-[#ff6b00] font-mono-data font-bold px-3 py-2.5 text-center">{secco.toLocaleString(lang === "en" ? "en" : "it", { maximumFractionDigits: 1 })} g</div></div>
+          <div><p className={lbl}>{L("Secco / istantaneo (g)", "Trocken (g)", "Dry (g)", "Seca (g)")}</p><div data-testid="conv-secco" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] text-[#ff6b00] font-mono-data font-bold px-3 py-2.5 text-center">{secco.toLocaleString(lang === "en" ? "en" : "it", { maximumFractionDigits: 1 })} g</div></div>
         </div>
         <p className="text-[11px] text-[#ff8a33] mt-1.5">{L("Regola: 3 g di fresco = 1 g di secco.", "Regel: 3 g frisch = 1 g trocken.", "Rule: 3 g fresh = 1 g dry.", "Regla: 3 g fresca = 1 g seca.")}</p>
       </div>
@@ -56,7 +56,7 @@ export default function ConvertitoreLieviti({ onBack }) {
         <p className="font-display text-base font-bold text-[#ff6b00] mb-2">{L("Da lievito di birra a Lievito Madre", "Von Hefe zu Sauerteig", "From yeast to sourdough", "De levadura a masa madre")}</p>
         <div className="grid grid-cols-2 gap-3 items-end">
           <div><p className={lbl}>{L("Birra fresco (g)", "Frischhefe (g)", "Fresh yeast (g)", "Levadura (g)")}</p><input data-testid="conv-birra" type="number" value={birra} onChange={(e) => setBirra(e.target.value)} className={inp} /></div>
-          <div><p className={lbl}>{L("Lievito Madre (g)", "Sauerteig (g)", "Sourdough (g)", "Masa madre (g)")}</p><div data-testid="conv-lm-out" className="rounded-xl bg-[#ffffff] text-[#ff6b00] font-mono-data font-bold px-3 py-2.5 text-center">{num(lmFromBirra)} g</div></div>
+          <div><p className={lbl}>{L("Lievito Madre (g)", "Sauerteig (g)", "Sourdough (g)", "Masa madre (g)")}</p><div data-testid="conv-lm-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] text-[#ff6b00] font-mono-data font-bold px-3 py-2.5 text-center">{num(lmFromBirra)} g</div></div>
         </div>
         <p className="text-[11px] text-[#ff8a33] mt-1.5">{L("Stima: ~20 g di LM maturo per 1 g di birra. Allunga la lievitazione di 2-4 ore.", "~20 g reifer Sauerteig pro 1 g Hefe. Gärzeit +2-4 h.", "~20 g mature sourdough per 1 g yeast. Add 2-4 h proofing.", "~20 g de masa madre por 1 g de levadura. +2-4 h de fermentación.")}</p>
       </div>
@@ -69,7 +69,7 @@ export default function ConvertitoreLieviti({ onBack }) {
           <div><p className={lbl}>{L("Da", "Von", "From", "De")}</p><select data-testid="conv-from" value={from} onChange={(e) => setFrom(e.target.value)} className={inp}>{Object.entries(PNAME).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></div>
           <div><p className={lbl}>{L("A", "Zu", "To", "A")}</p><select data-testid="conv-to" value={to} onChange={(e) => setTo(e.target.value)} className={inp}>{Object.entries(PNAME).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></div>
         </div>
-        <div data-testid="conv-pref-out" className="rounded-xl bg-[#ffffff] p-3 text-[13px] text-[#ff6b00] font-semibold space-y-1">
+        <div data-testid="conv-pref-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-[13px] text-[#ff6b00] font-semibold space-y-1">
           <p>{PNAME[to]}: <span className="font-mono-data">{num(conv.flour)} g {L("farina", "Mehl", "flour", "harina")} + {num(conv.waterTo)} g {L("acqua", "Wasser", "water", "agua")}</span></p>
           <p className="text-[12px] text-[#ff6b00]">{L("Prefermento totale", "Vorteig gesamt", "Total preferment", "Prefermento total")}: {num(conv.totTo)} g ({L("prima era", "vorher", "was", "antes")} {num(conv.totFrom)} g). {L("Correggi l'acqua dell'impasto della differenza:", "Wasser im Teig um die Differenz anpassen:", "Adjust dough water by the difference:", "Ajusta el agua de la masa por la diferencia:")} {num(conv.waterTo - conv.waterFrom)} g.</p>
         </div>

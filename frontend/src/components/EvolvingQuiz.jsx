@@ -105,7 +105,7 @@ export default function EvolvingQuiz() {
       <p className="text-sm text-[#7E8A93] mb-3">{tri("Domande infinite generate dall'IA, con spiegazione tecnica ad ogni risposta.", "Unendliche KI-Fragen mit technischer Erklärung zu jeder Antwort.", "Infinite AI-generated questions with a technical explanation for every answer.", "Preguntas infinitas generadas por IA, con explicación técnica en cada respuesta.")}</p>
 
       {diploma && (
-        <div data-testid="diploma-badge" className="flex items-center gap-2 mb-3 rounded-xl bg-gradient-to-r from-[#F0B429] to-[#ff6b00] text-white px-3 py-2 shadow-sm">
+        <div data-testid="diploma-badge" className="flex items-center gap-2 mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-gradient-to-r from-[#F0B429] to-[#ff6b00] text-white px-3 py-2 shadow-sm">
           <Award className="w-5 h-5 shrink-0" />
           <span className="text-sm font-bold">{tri("Fornaio Diplomato 🎓", "Diplom-Bäcker 🎓", "Certified Baker 🎓", "Panadero Diplomado 🎓")}</span>
         </div>
@@ -118,7 +118,7 @@ export default function EvolvingQuiz() {
 
       {/* Sfida a Tema settimanale */}
       {theme && (
-        <div data-testid="weekly-theme-card" className="mb-3 rounded-xl p-3 text-white shadow-sm" style={{ background: themeMode ? "linear-gradient(135deg,#ff6b00,#7a1f1f)" : "linear-gradient(135deg,#ff6b00,#c94f00)" }}>
+        <div data-testid="weekly-theme-card" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 p-3 text-white shadow-sm" style={{ background: themeMode ? "linear-gradient(135deg,#ff6b00,#7a1f1f)" : "linear-gradient(135deg,#ff6b00,#c94f00)" }}>
           <div className="flex items-center gap-2">
             <Flame className="w-5 h-5 shrink-0" />
             <div className="flex-1 min-w-0">
@@ -140,7 +140,7 @@ export default function EvolvingQuiz() {
         {LEVELS.map((l) => (
           <button key={l.id} data-testid={`quiz-level-${l.id}`}
             onClick={() => { setLevel(l.id); setQ(null); setPicked(null); setStreak(0); setMasterStreak(0); }}
-            className={`py-2 rounded-xl text-[11px] font-bold transition-all leading-tight ${level === l.id ? "text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}
+            className={`py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all leading-tight ${level === l.id ? "text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}
             style={level === l.id ? { background: l.color } : {}}>
             {l.label}
           </button>
@@ -154,12 +154,12 @@ export default function EvolvingQuiz() {
 
       {user && (
         <button data-testid="quiz-leaderboard-toggle" onClick={() => { const n = !showBoard; setShowBoard(n); if (n) loadBoard(); }}
-          className="w-full mb-3 flex items-center justify-center gap-2 text-[12px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 py-2 rounded-xl active:scale-98">
+          className="w-full mb-3 flex items-center justify-center gap-2 text-[12px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-98">
           <Trophy className="w-4 h-4" /> {showBoard ? tri("Nascondi sfida", "Challenge ausblenden", "Hide challenge", "Ocultar desafío") : tri("Sfida della Settimana 👑", "Challenge der Woche 👑", "Weekly Challenge 👑", "Desafío de la Semana 👑")}
         </button>
       )}
       {user && showBoard && (
-        <div data-testid="quiz-leaderboard" className="mb-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3 space-y-1.5">
+        <div data-testid="quiz-leaderboard" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3 space-y-1.5">
           <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Sfida «Fornaio della Settimana» — punti Master tra amici", "Challenge «Bäcker der Woche» — Master-Punkte unter Freunden", "«Baker of the Week» challenge — Master points among friends", "Desafío «Panadero de la Semana» — puntos Master entre amigos")}</p>
           {champion && (
             <div data-testid="quiz-champion" className="flex items-center gap-2.5 rounded-lg bg-gradient-to-r from-[#ff6b00] to-[#c94f00] text-white px-2.5 py-2 mb-1">
@@ -206,7 +206,7 @@ export default function EvolvingQuiz() {
               else if (picked != null && chosen && !isCorrect) cls = "bg-[#ff6b00]/15 border-[#ff6b00]";
               return (
                 <button key={i} data-testid={`quiz-opt-${i}`} onClick={() => pick(i)} disabled={picked != null}
-                  className={`w-full flex items-center gap-2 text-left text-sm px-4 py-3 rounded-xl border transition-all ${cls}`}>
+                  className={`w-full flex items-center gap-2 text-left text-sm px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border transition-all ${cls}`}>
                   <span className="flex-1 text-[#2B303B] dark:text-[#e4eff8]">{opt}</span>
                   {picked != null && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#2e8b6f] shrink-0" />}
                   {picked != null && chosen && !isCorrect && <XCircle className="w-4 h-4 text-[#ff6b00] shrink-0" />}
@@ -216,13 +216,13 @@ export default function EvolvingQuiz() {
           </div>
 
           {picked != null && (
-            <div data-testid="quiz-explanation" className="mt-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+            <div data-testid="quiz-explanation" className="mt-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
               <p className={`text-sm font-bold mb-1 ${picked === q.correct ? "text-[#2e8b6f]" : "text-[#ff6b00]"}`}>
                 {picked === q.correct ? tri("✅ Corretto!", "✅ Richtig!", "✅ Correct!", "✅ ¡Correcto!") : tri("❌ Sbagliato", "❌ Falsch", "❌ Wrong", "❌ Incorrecto")}
               </p>
               <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{q.explanation}</p>
               <button data-testid="quiz-next" data-sfx="confirm" onClick={() => loadQuestion()}
-                className="mt-3 w-full text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all flex items-center justify-center gap-2" style={{ background: curLevel.color }}>
+                className="mt-3 w-full text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2" style={{ background: curLevel.color }}>
                 <RotateCcw className="w-4 h-4" /> {tri("Prossima domanda", "Nächste Frage", "Next question", "Siguiente pregunta")}
               </button>
             </div>

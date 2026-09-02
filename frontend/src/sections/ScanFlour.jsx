@@ -117,7 +117,7 @@ export default function ScanFlour() {
             <Field label={tri("Assorbimento", "Wasseraufnahme", "Absorption", "Absorción")} value={result.absorption_percent != null ? `${result.absorption_percent}%` : null} />
           </div>
           {result.ideal_use && (
-            <div className="mt-3 rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
+            <div className="mt-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
               <p className="text-[12px] font-bold text-[#ff6b00] uppercase tracking-wide mb-0.5">{tri("Uso ideale", "Ideale Verwendung", "Ideal use", "Uso ideal")}</p>
               <p className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{result.ideal_use}</p>
             </div>
@@ -142,7 +142,7 @@ export default function ScanFlour() {
           <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Le tue farine salvate: usale come riferimento (forza W e proteine) quando crei una ricetta.", "Deine gespeicherten Mehle: nutze sie als Referenz (W-Kraft und Protein) beim Erstellen eines Rezepts.", "Your saved flours: use them as reference (W strength and protein) when creating a recipe.", "Tus harinas guardadas: úsalas como referencia (fuerza W y proteína) al crear una receta.")}</p>
           <ul className="space-y-2">
             {pantry.map((f) => (
-              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3.5 py-2.5">
+              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3.5 py-2.5">
                 <Wheat className="w-5 h-5 text-[#ff6b00] shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{f.product_name || f.brand || f.flour_type || tri("Farina", "Mehl", "Flour", "Harina")}</p>

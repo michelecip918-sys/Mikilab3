@@ -54,7 +54,7 @@ export default function GuidaAvatar() {
         <div className="flex gap-2 mb-3">
           {["michele", "mohamed"].map((k) => (
             <button key={k} data-testid={`guida-tab-${k}`} onClick={() => setWho(k)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${who === k ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#ff6b00]"}`}>
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-bold transition-all ${who === k ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#ff6b00]"}`}>
               <ChefHat className="w-4 h-4" /> {k === "michele" ? "Michele" : "Mohammadreza"}
             </button>
           ))}
@@ -79,7 +79,7 @@ export default function GuidaAvatar() {
 
         <div className="mt-3 space-y-2">
           {steps.map((s, i) => (
-            <div key={i} className="flex items-start gap-3 rounded-xl bg-[#1e1e1e]/60 p-3">
+            <div key={i} className="flex items-start gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e]/60 p-3">
               <s.Icon className="w-5 h-5 text-[#ff6b00] mt-0.5 shrink-0" />
               <div>
                 <p className="font-semibold text-sm text-[#ff6b00]">{s.t}</p>

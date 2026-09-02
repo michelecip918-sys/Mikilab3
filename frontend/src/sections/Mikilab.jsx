@@ -113,7 +113,7 @@ export default function MikiLab() {
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("method_section_body")}</p>
         <div className="grid gap-3 mt-4 sm:grid-cols-2">
           {[["_606t-4KXT4", "method_video1_title"], ["HpOycYo1Cvc", "method_video2_title"]].map(([vid, tk]) => (
-            <div key={vid} data-testid={`method-video-${vid}`} className="rounded-xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e]">
+            <div key={vid} data-testid={`method-video-${vid}`} className="rounded-2xl shadow-md border border-amber-900/40 overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e]">
               <div className="aspect-video bg-black">
                 <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${vid}`} title={t(tk)}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />

@@ -109,13 +109,13 @@ export default function SourdoughTracker() {
         <div>
           <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">pH</label>
           <input data-testid="ph-input" type="number" step="0.1" value={ph} onChange={(e) => setPh(e.target.value)} placeholder="4.2"
-            className="mt-1 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 outline-none focus:border-[#ff6b00]" />
+            className="mt-1 w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#ff6b00]" />
         </div>
         <div>
           <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">{tri("Temperatura", "Temperatur", "Temperature")}</label>
           <div className="relative mt-1">
             <input data-testid="ph-temp-input" type="number" value={temp} onChange={(e) => setTemp(e.target.value)} placeholder="28"
-              className="w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 pr-8 outline-none focus:border-[#ff6b00]" />
+              className="w-full font-mono-data bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 pr-8 outline-none focus:border-[#ff6b00]" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">°C</span>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function SourdoughTracker() {
             {log.map((e) => {
               const ok = inWindow(Number(e.ph), Number(e.temp));
               return (
-                <div key={e.id} className={`flex items-center justify-between rounded-xl px-3 py-2 border text-sm ${ok ? "bg-[#ff6b00]/12 border-[#ff6b00]/30" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                <div key={e.id} className={`flex items-center justify-between rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 border text-sm ${ok ? "bg-[#ff6b00]/12 border-[#ff6b00]/30" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                   <span className="font-mono-data font-semibold text-[#2B303B] dark:text-[#e4eff8]">pH {Number(e.ph).toFixed(1)} · {e.temp}°C</span>
                   <span className="text-xs text-[#7E8A93]">{new Date(e.ts).toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}</span>
                 </div>

@@ -116,11 +116,11 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
         {mode !== "forgot" && (
           <div data-testid="auth-tabs" className="flex gap-1 mb-4 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#1e1e1e]">
             <button type="button" data-testid="auth-tab-login" onClick={() => { setMode("login"); setNeedVerify(false); setInfo(""); }}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "login" ? "bg-white dark:bg-[#ff6b00] text-[#ff6b00] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
+              className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "login" ? "bg-white dark:bg-[#ff6b00] text-[#ff6b00] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
               {T.login}
             </button>
             <button type="button" data-testid="auth-tab-register" onClick={() => { setMode("register"); setNeedVerify(false); setInfo(""); }}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "register" ? "bg-white dark:bg-[#ff6b00] text-[#ff6b00] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
+              className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "register" ? "bg-white dark:bg-[#ff6b00] text-[#ff6b00] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
               {T.register}
             </button>
           </div>

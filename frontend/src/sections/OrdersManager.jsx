@@ -91,7 +91,7 @@ export default function OrdersManager({ store, stores }) {
     if (o.status === "bozza") setStatus(o, "inviato");
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40" data-testid="orders-manager">
@@ -127,7 +127,7 @@ export default function OrdersManager({ store, stores }) {
           </div>
 
           <textarea data-testid="order-note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={2} placeholder={tri("Note per il fornitore…", "Notizen für den Lieferanten…", "Notes for the supplier…")} className={inp} />
-          <button data-testid="order-create" onClick={create} disabled={busy} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-xl active:scale-98 disabled:opacity-50">
+          <button data-testid="order-create" onClick={create} disabled={busy} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Crea ordine", "Bestellung erstellen", "Create order")}
           </button>
         </div>
@@ -143,7 +143,7 @@ export default function OrdersManager({ store, stores }) {
             return (
               <div key={o.id} data-testid={`order-card-${o.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 shadow-sm">
                 <div className="flex items-start gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><Truck className="w-5 h-5 text-[#ff6b00]" /></div>
+                  <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><Truck className="w-5 h-5 text-[#ff6b00]" /></div>
                   <div className="min-w-0 flex-1">
                     <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{o.supplier}</p>
                     <p className="text-[11px] text-[#7E8A93]">{storeName(o.store_id)} · {new Date(o.created_at).toLocaleDateString(lang === "en" ? "en-GB" : lang === "de" ? "de-DE" : "it-IT")}</p>
@@ -159,9 +159,9 @@ export default function OrdersManager({ store, stores }) {
 
                 {/* Invio */}
                 <div className="grid grid-cols-3 gap-2 mt-3">
-                  <button data-testid={`order-send-email-${o.id}`} onClick={() => sendEmail(o)} className="flex items-center justify-center gap-1 bg-[#ff6b00] text-white text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Mail className="w-4 h-4" /> Email</button>
-                  <button data-testid={`order-send-wa-${o.id}`} onClick={() => sendWhatsApp(o)} className="flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2.5 rounded-xl active:scale-95"><MessageCircle className="w-4 h-4" /> WhatsApp</button>
-                  <button data-testid={`order-print-${o.id}`} onClick={() => printOrder(o)} className="flex items-center justify-center gap-1 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-xs font-semibold py-2.5 rounded-xl active:scale-95"><Printer className="w-4 h-4 text-[#ff6b00]" /> {tri("Stampa", "Druck", "Print")}</button>
+                  <button data-testid={`order-send-email-${o.id}`} onClick={() => sendEmail(o)} className="flex items-center justify-center gap-1 bg-[#ff6b00] text-white text-xs font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-95"><Mail className="w-4 h-4" /> Email</button>
+                  <button data-testid={`order-send-wa-${o.id}`} onClick={() => sendWhatsApp(o)} className="flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-95"><MessageCircle className="w-4 h-4" /> WhatsApp</button>
+                  <button data-testid={`order-print-${o.id}`} onClick={() => printOrder(o)} className="flex items-center justify-center gap-1 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-xs font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-95"><Printer className="w-4 h-4 text-[#ff6b00]" /> {tri("Stampa", "Druck", "Print")}</button>
                 </div>
 
                 {/* Stato + elimina */}

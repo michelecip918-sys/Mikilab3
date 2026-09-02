@@ -255,7 +255,7 @@ export default function Maestro() {
             { Icon: TimerIcon, t: mkTri(lang)("Timer Lievitazione Smart", "Smart Gär-Timer", "Smart Proofing Timer", "Temporizador Fermentación Smart", "Minuteur Levée Intelligent", "تایمر هوشمند ور آمدن"), sub: mkTri(lang)("Offline First", "Offline First", "Offline First", "Sin conexión", "Hors-ligne", "آفلاین") },
           ].map(({ Icon, t, sub }, i) => (
             <button key={i} data-testid={`tech-feat-${i}`} onClick={() => openTool(["bluetooth", "manisporche", "diagnosi", "trovafarina", "energia", "timer"][i])}
-              className="w-full text-start flex items-center gap-2.5 rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 px-2.5 py-2 min-h-[52px] active:scale-97 hover:border-[#ff6b00]/60 transition-all">
+              className="w-full text-start flex items-center gap-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/8 border border-[#ff6b00]/25 px-2.5 py-2 min-h-[52px] active:scale-97 hover:border-[#ff6b00]/60 transition-all">
               <span className="w-8 h-8 rounded-lg bg-[#ff6b00]/18 border border-[#ff6b00]/35 flex items-center justify-center shrink-0">
                 <Icon className="w-5 h-5 text-[#ff6b00]" />
               </span>

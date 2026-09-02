@@ -12,7 +12,7 @@ export default function CapoProductRow({ p, i, recipes, setProducts }) {
   const patch = (fn) => setProducts((l) => l.map((x, k) => (k === i ? fn(x) : x)));
 
   return (
-    <div className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 space-y-2">
+    <div className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 space-y-2">
       <div className="flex items-center gap-2">
         <div className="flex-1 min-w-0">
           <CategoryRecipePicker recipes={recipes} value={p.recipe_id || ""}

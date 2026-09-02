@@ -109,11 +109,11 @@ function HomePlanner() {
             </div>
             <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-              className="w-16 shrink-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2.5 px-2 text-sm font-medium text-center outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all" />
+              className="w-16 shrink-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 px-2 text-sm font-medium text-center outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all" />
             <div className="relative w-24 shrink-0">
               <select data-testid={`home-product-day-${i}`} value={p.day || ""}
                 onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-                className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2.5 pl-3 pr-8 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all cursor-pointer">
+                className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-8 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all cursor-pointer">
                 {HOME_DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
               </select>
               <ChevronDown className="w-4 h-4 text-[#ff6b00] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -133,7 +133,7 @@ function HomePlanner() {
 
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93] mt-3 block">{t("home_when")}</label>
       <input data-testid="home-when" value={when} placeholder={t("home_when_ph")} onChange={(e) => setWhen(e.target.value)}
-        className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+        className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
 
       <button data-testid="home-generate" onClick={generate} disabled={generating}
         className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
@@ -308,7 +308,7 @@ function BakerQuiz() {
         <p className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8] my-1">{score} / {questions.length}</p>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-2">{msg}</p>
         {record}
-        <button data-testid="quiz-restart-btn" onClick={start} className="inline-flex items-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-2.5 rounded-xl">
+        <button data-testid="quiz-restart-btn" onClick={start} className="inline-flex items-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40">
           <RotateCcw className="w-4 h-4" /> {t("quiz_restart")}
         </button>
       </div>
@@ -329,7 +329,7 @@ function BakerQuiz() {
           else if (picked != null && chosen && !isCorrect) cls = "bg-[#ff6b00]/15 border-[#ff6b00]";
           return (
             <button key={i} data-testid={`quiz-option-${i}`} onClick={() => choose(i)} disabled={picked != null}
-              className={`w-full flex items-center gap-2 text-left text-sm px-4 py-3 rounded-xl border transition-all ${cls}`}>
+              className={`w-full flex items-center gap-2 text-left text-sm px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border transition-all ${cls}`}>
               <span className="flex-1 text-[#2B303B] dark:text-[#e4eff8]">{opt}</span>
               {picked != null && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#ff6b00] shrink-0" />}
               {picked != null && chosen && !isCorrect && <XCircle className="w-4 h-4 text-[#ff6b00] shrink-0" />}
@@ -342,7 +342,7 @@ function BakerQuiz() {
           <p className="text-sm font-medium text-[#3F4A54] dark:text-[#AEB8BF]">
             {picked === cur.correct ? t("quiz_correct") : `${t("quiz_wrong")} ${cur.options[cur.correct]}`}
           </p>
-          <button data-testid="quiz-next-btn" onClick={next} className="shrink-0 bg-[#ff6b00] text-white font-semibold px-4 py-2 rounded-xl">
+          <button data-testid="quiz-next-btn" onClick={next} className="shrink-0 bg-[#ff6b00] text-white font-semibold px-4 py-2 rounded-2xl shadow-md border border-amber-900/40">
             {t("quiz_next")}
           </button>
         </div>
@@ -554,7 +554,7 @@ export default function Beginners({ onNavigate }) {
       <button data-testid="impara-toggle-more" onClick={() => setShowMore((v) => !v)}
         className="w-full flex items-center justify-between gap-2 rounded-2xl px-4 py-3.5 bg-[#1e1e1e] border border-[#2e2e2e] hover:border-[#ff6b00]/50 text-white active:scale-98 transition-all text-left">
         <span className="flex items-center gap-2.5">
-          <span className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Sprout className="w-5 h-5 text-[#ff6b00]" /></span>
+          <span className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Sprout className="w-5 h-5 text-[#ff6b00]" /></span>
           <span className="min-w-0">
             <span className="block font-display text-sm font-bold leading-tight">{tri3(lang, "Approfondimenti", "Mehr lernen", "Learn more", "Más para aprender", "Pour aller plus loin")}</span>
             <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{tri3(lang, "Consigli base, Quiz del Fornaio e Sfida Bake-Along", "Basis-Tipps, Bäcker-Quiz & Bake-Along", "Basic tips, Baker's Quiz & Bake-Along", "Consejos base, Quiz del Panadero y Bake-Along")}</span>

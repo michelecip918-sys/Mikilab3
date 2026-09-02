@@ -82,10 +82,10 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
     const already = inPlan.has(r.id);
     const meta = picked.get(r.id) || {};
     return (
-      <div key={r.id} className={`rounded-xl border-b border-[#2e2e2e]/60 ${isPicked ? "bg-[#ff6b00]/10" : ""}`}>
+      <div key={r.id} className={`rounded-2xl shadow-md border border-amber-900/40 border-b border-[#2e2e2e]/60 ${isPicked ? "bg-[#ff6b00]/10" : ""}`}>
         <button type="button" data-testid={`${testid}-item-${r.id}`}
           onClick={() => (multi ? toggle(r.id) : pickSingle(r.id))}
-          className={`w-full text-left px-3 py-3 rounded-xl text-white text-[15px] font-medium flex items-center gap-2.5 transition-colors ${isPicked ? "" : "hover:bg-[#1e1e1e]"}`}>
+          className={`w-full text-left px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 text-white text-[15px] font-medium flex items-center gap-2.5 transition-colors ${isPicked ? "" : "hover:bg-[#1e1e1e]"}`}>
           {multi ? (
             <span className={`w-5 h-5 rounded-md border-2 shrink-0 flex items-center justify-center ${isPicked ? "bg-[#ff6b00] border-[#ff6b00]" : already ? "border-[#ff6b00]/50 bg-[#ff6b00]/10" : "border-[#4a5560]"}`}>
               {isPicked && <Check className="w-3.5 h-3.5 text-white" />}
@@ -126,13 +126,13 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
           </button>
         ) : (
           <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-            className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold py-2.5 rounded-xl active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
             <ChefHat className="w-4 h-4" /> {triggerLabel || (lang === "de" ? "Rezepte hinzufügen" : lang === "en" ? "Add recipes" : "Aggiungi ricette")}
           </button>
         )
       ) : (
         <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-          className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl py-2.5 pl-3 pr-9 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] transition-all text-left relative">
+          className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-9 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] transition-all text-left relative">
           <span className={`block truncate pr-1 ${selected ? "" : "text-[#7E8A93]"}`}>{selected ? recipeTitle(selected, lang) : (placeholder || t("capo_pick_recipe"))}</span>
           <ChevronDown className="w-4 h-4 text-[#ff6b00] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </button>
@@ -158,7 +158,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
               <div className="p-3 border-b border-[#2e2e2e] shrink-0 relative">
                 <Search className="w-4 h-4 text-[#7E8A93] absolute left-6 top-1/2 -translate-y-1/2" />
                 <input data-testid={`${testid}-search`} value={q} onChange={(e) => setQ(e.target.value)} placeholder={lang === "de" ? "Suchen…" : lang === "en" ? "Search…" : "Cerca…"}
-                  className="w-full bg-[#1e1e1e] border border-[#2e2e2e] rounded-xl py-2.5 pl-10 pr-3 text-sm text-white outline-none focus:border-[#ff6b00]" />
+                  className="w-full bg-[#1e1e1e] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-10 pr-3 text-sm text-white outline-none focus:border-[#ff6b00]" />
               </div>
             )}
 
@@ -226,7 +226,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
             {multi && (
               <div className="p-3 border-t border-[#2e2e2e] shrink-0">
                 <button data-testid={`${testid}-done`} onClick={confirmMulti} disabled={picked.size === 0}
-                  className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] disabled:opacity-40 text-white font-semibold py-2.5 rounded-xl active:scale-98 transition-all">
+                  className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] disabled:opacity-40 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
                   <Plus className="w-4 h-4" /> {lang === "de" ? "Hinzufügen" : lang === "en" ? "Add" : "Aggiungi"} ({picked.size})
                 </button>
               </div>

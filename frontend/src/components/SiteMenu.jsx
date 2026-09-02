@@ -101,7 +101,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
     return (
       <div className="flex items-center gap-1">
         <button data-testid={testid || `site-menu-tool-${tl.id}`} onClick={() => goTool(tl.id)}
-          className="flex-1 flex items-center gap-2.5 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 hover:border-[#ff6b00]/60 transition-all min-w-0">
+          className="flex-1 flex items-center gap-2.5 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 hover:border-[#ff6b00]/60 transition-all min-w-0">
           <tl.Icon className="w-4 h-4 shrink-0" style={{ color: c.color }} />
           <span className="text-sm font-medium text-[#2B303B] dark:text-[#e4eff8] truncate">{toolLabel(tl)}</span>
         </button>
@@ -130,7 +130,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
           </div>
           {ctx === "lab" && (
             <div className="px-3 pb-3">
-              <div className="flex items-center gap-2 bg-white/15 rounded-xl px-3 py-2">
+              <div className="flex items-center gap-2 bg-white/15 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
                 <Search className="w-4 h-4 text-white/80 shrink-0" />
                 <input data-testid="site-menu-search" value={q} onChange={(e) => setQ(e.target.value)}
                   placeholder={tri("Cerca strumento…", "Werkzeug suchen…", "Search a tool…", "Buscar herramienta…")}
@@ -183,7 +183,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <div className="grid grid-cols-3 gap-1.5 mb-4">
                 {FEED_ORDER.map((f) => (
                   <button key={f.o} data-testid={`site-menu-feed-${f.o}`} onClick={() => goFeed(f.o)}
-                    className="flex flex-col items-center gap-1 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+                    className="flex flex-col items-center gap-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00]/60 transition-all">
                     <f.Icon className="w-4 h-4 text-[#ff6b00]" /><span className="text-[12px] font-semibold text-[#2B303B] dark:text-[#e4eff8]">{f.label}</span>
                   </button>
                 ))}
@@ -192,7 +192,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <div className="grid grid-cols-1 gap-1.5">
                 {SOCIAL.map((s) => (
                   <button key={s.v} data-testid={`site-menu-social-${s.v}`} onClick={() => goSocial(s.v)}
-                    className="flex items-center gap-3 text-left px-3 py-3 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 hover:border-[#ff6b00]/60 transition-all">
+                    className="flex items-center gap-3 text-left px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 hover:border-[#ff6b00]/60 transition-all">
                     <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${s.color}1a` }}><s.Icon className="w-4.5 h-4.5" style={{ color: s.color }} /></span>
                     <span className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{s.label}</span>
                   </button>
@@ -209,24 +209,24 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
           <div className="grid grid-cols-1 gap-1.5">
             {SECTIONS.map((s) => (
               <button key={s.id} data-testid={`site-menu-section-${s.id}`} onClick={() => goTab(s.id)}
-                className={`flex items-center gap-3 text-left px-3 py-2.5 rounded-xl border active:scale-98 transition-all ${tab === s.id ? "bg-[#ff6b00]/10 border-[#ff6b00]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
+                className={`flex items-center gap-3 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border active:scale-98 transition-all ${tab === s.id ? "bg-[#ff6b00]/10 border-[#ff6b00]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
                 <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${s.color}1a` }}><s.Icon className="w-4 h-4" style={{ color: s.color }} /></span>
                 <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{s.label}</span>
                 {tab === s.id && <span className="ml-auto text-[10px] font-bold text-[#ff6b00] bg-[#ff6b00]/15 px-2 py-0.5 rounded-full">{tri("qui", "hier", "here", "aquí")}</span>}
               </button>
             ))}
             <button data-testid="site-menu-section-sfide" onClick={goSfide}
-              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white active:scale-98 transition-all">
+              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white active:scale-98 transition-all">
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-white/20"><Trophy className="w-4 h-4" /></span>
               <span className="font-display text-sm font-semibold">{tri("Motore Sfide", "Challenges", "Challenges", "Desafíos")}</span>
             </button>
             <button data-testid="site-menu-guida" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-guida")); }}
-              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
+              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#ff6b00]/15"><BookOpenCheck className="w-4 h-4 text-[#ff6b00]" /></span>
               <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Guida MikiLab", "MikiLab-Anleitung", "MikiLab Guide", "Guía MikiLab")}</span>
             </button>
             {/* Voce assistente: selettore Operatore (Michele / Momi), voci ElevenLabs */}
-            <div data-testid="site-menu-voice" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
+            <div data-testid="site-menu-voice" className="mt-1 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
               <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5"><Mic className="w-3.5 h-3.5 text-[#ff6b00]" /> {tri("Voce assistente", "Assistenten-Stimme", "Assistant voice", "Voz del asistente")}</p>
               <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#121212]">
                 {[
@@ -242,7 +242,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 px-0.5">{tri("Voci ultra-realistiche ElevenLabs. Di' «Ehi Lab» per parlare a mani libere.", "Ultra-realistische ElevenLabs-Stimmen. Sag «Ehi Lab».", "Ultra-realistic ElevenLabs voices. Say «Ehi Lab» to talk hands-free.", "Voces ultrarrealistas ElevenLabs. Di «Ehi Lab».")}</p>
             </div>
             {/* Sicurezza: blocco con PIN a 4 cifre */}
-            <div data-testid="site-menu-security" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
+            <div data-testid="site-menu-security" className="mt-1 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
               <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5"><Lock className="w-3.5 h-3.5 text-[#ff6b00]" /> {tri("Sicurezza · PIN", "Sicherheit · PIN", "Security · PIN", "Seguridad · PIN")}</p>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[13px] font-semibold text-[#2b3640] dark:text-[#E6EEF3]">{tri("Blocco all'avvio", "Sperre beim Start", "Lock on start", "Bloqueo al inicio")}</span>
@@ -272,7 +272,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               {pinMsg && <p data-testid="site-menu-pin-msg" className="text-[11px] text-[#22a06b] font-semibold mt-1.5 px-0.5">{pinMsg}</p>}
             </div>
             {/* Interruttore modalità: Pro (tutto) / Passione (senza HACCP e B2B) */}
-            <div data-testid="site-menu-mode" className="mt-1 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
+            <div data-testid="site-menu-mode" className="mt-1 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 p-2.5">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5">{tri("Modalità", "Modus", "Mode", "Modo")}</p>
               <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#121212]">
                 {[
@@ -293,7 +293,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
             </div>
             {user?.role === "admin" && (
               <button data-testid="site-menu-admin" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-admin")); }}
-                className="flex items-center gap-3 text-left px-3 py-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
+                className="flex items-center gap-3 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 active:scale-98 hover:border-[#ff6b00]/70 transition-all">
                 <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#ff6b00]/15"><Shield className="w-4 h-4 text-[#ff6b00]" /></span>
                 <span className="font-display text-sm font-semibold text-[#ff6b00]">{tri("Pannello Admin", "Admin-Panel", "Admin Panel", "Panel Admin")}</span>
               </button>

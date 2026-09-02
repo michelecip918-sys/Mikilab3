@@ -69,7 +69,7 @@ export default function SfidaLampo() {
         <h2 data-testid="sfida-lampo-theme" className="font-display text-2xl font-extrabold mt-2 leading-tight">{theme?.title || "…"}</h2>
         {theme?.description && <p className="text-[#121212]/85 text-sm mt-1 leading-snug">{theme.description}</p>}
         {theme?.tip && (
-          <p className="mt-2 inline-flex items-start gap-1.5 rounded-xl bg-[#121212]/12 px-3 py-2 text-[12px] font-medium">💡 {theme.tip}</p>
+          <p className="mt-2 inline-flex items-start gap-1.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212]/12 px-3 py-2 text-[12px] font-medium">💡 {theme.tip}</p>
         )}
       </div>
 
@@ -80,7 +80,7 @@ export default function SfidaLampo() {
 
         <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" data-testid="sfida-lampo-file" onChange={onFile} />
         {data?.already_submitted ? (
-          <div data-testid="sfida-lampo-submitted" className="flex items-center gap-2 text-[#2e8b6f] text-sm font-semibold bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 rounded-xl px-3.5 py-2.5">
+          <div data-testid="sfida-lampo-submitted" className="flex items-center gap-2 text-[#2e8b6f] text-sm font-semibold bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 rounded-2xl shadow-md border border-amber-900/40 px-3.5 py-2.5">
             <CheckCircle2 className="w-5 h-5" /> {L("Sei in gara! Puoi aggiornare la foto quando vuoi.", "Du bist dabei! Foto jederzeit aktualisierbar.", "You're in! Update your photo anytime.", "¡Estás dentro! Actualiza la foto cuando quieras.", "Tu es inscrit ! Mets à jour ta photo quand tu veux.", "شرکت کردی! هر وقت خواستی عکس را عوض کن.")}
           </div>
         ) : (
@@ -98,7 +98,7 @@ export default function SfidaLampo() {
           ) : (
             <div className="space-y-2">
               {entries.map((e) => (
-                <div key={e.id} data-testid={`sfida-lampo-entry-${e.id}`} className="flex items-center gap-3 rounded-xl bg-[#121212] border border-[#2e2e2e] p-2">
+                <div key={e.id} data-testid={`sfida-lampo-entry-${e.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212] border border-[#2e2e2e] p-2">
                   <span className="w-7 text-center text-lg font-extrabold text-[#ff6b00] shrink-0">{medal(e.rank)}</span>
                   {e.image_url ? <img src={e.image_url} alt="" loading="lazy" className="w-12 h-12 rounded-lg object-cover shrink-0" /> : <div className="w-12 h-12 rounded-lg bg-[#ff6b00]/15 shrink-0" />}
                   <div className="flex-1 min-w-0">

@@ -80,7 +80,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             <button
               data-testid="scale-mode-total"
               onClick={() => setMode("total")}
-              className={`px-3 py-2.5 rounded-xl text-sm font-medium border ${
+              className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-medium border ${
                 mode === "total"
                   ? "bg-[#ff6b00] text-white border-[#ff6b00]"
                   : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"
@@ -91,7 +91,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             <button
               data-testid="scale-mode-flour"
               onClick={() => setMode("flour")}
-              className={`px-3 py-2.5 rounded-xl text-sm font-medium border ${
+              className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-medium border ${
                 mode === "flour"
                   ? "bg-[#ff6b00] text-white border-[#ff6b00]"
                   : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"
@@ -110,13 +110,13 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
               type="number"
               value={target}
               onChange={(e) => setTarget(e.target.value)}
-              className="mt-1 w-full font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-xl p-3 text-lg outline-none"
+              className="mt-1 w-full font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/20 rounded-2xl shadow-md border border-amber-900/40 p-3 text-lg outline-none"
             />
           </div>
 
           <div className="space-y-2" data-testid="scale-preview">
             {scaled.map((f) => (
-              <div key={f.key} className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-4 py-2.5">
+              <div key={f.key} className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-4 py-2.5">
                 <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{t(f.labelKey)}</span>
                 <span className="font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2]">
                   {f.value != null ? `${f.value} g` : "—"}
@@ -135,7 +135,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
         <DialogFooter className="gap-2 sm:gap-2">
           <button
             onClick={() => onOpenChange(false)}
-            className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e]"
+            className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e]"
           >
             {t("cancel")}
           </button>
@@ -143,7 +143,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             data-testid="scale-save-btn"
             onClick={submit}
             disabled={!factor}
-            className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-xl shadow-md active:scale-98 transition-all"
+            className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 shadow-md active:scale-98 transition-all"
           >
             {t("save_as_new")}
           </button>

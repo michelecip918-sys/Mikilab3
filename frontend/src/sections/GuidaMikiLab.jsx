@@ -120,7 +120,7 @@ export default function GuidaMikiLab() {
                   const on = opId === o.id;
                   return (
                     <button key={o.id} data-testid={`guida-op-${o.id}`} onClick={() => pick(o.id)}
-                      className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white/5 text-[#e4eff8] border-[#ff6b00]/30 hover:border-[#ff6b00]"}`}>
+                      className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white/5 text-[#e4eff8] border-[#ff6b00]/30 hover:border-[#ff6b00]"}`}>
                       {o.name}{o.zone ? <span className="opacity-70"> · {zoneLabel(o.zone, lang)}</span> : null}
                     </button>
                   );

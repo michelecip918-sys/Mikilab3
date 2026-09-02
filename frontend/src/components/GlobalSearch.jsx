@@ -93,7 +93,7 @@ export default function GlobalSearch() {
 
   const Row = ({ testid, Icon, img, color, label, sub, onClick }) => (
     <button data-testid={testid} onClick={onClick}
-      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#ff6b00]/10 active:scale-98 transition-all text-left">
+      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#ff6b00]/10 active:scale-98 transition-all text-left">
       {img
         ? <img src={img} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0 bg-[#1e1e1e]" onError={(e) => { e.currentTarget.style.visibility = "hidden"; }} />
         : <span className="w-8 h-8 rounded-lg border flex items-center justify-center shrink-0" style={{ background: (color || "#ff6b00") + "22", borderColor: (color || "#ff6b00") + "55" }}><Icon className="w-4 h-4" style={{ color: color || "#ff6b00" }} /></span>}

@@ -66,7 +66,7 @@ export default function TimeLapseTracker({ onBack }) {
       <div className="grid grid-cols-2 gap-3 mb-4">
         {[["startPhoto", L("Inizio", "Start", "Start", "Inicio")], ["nowPhoto", L("Adesso", "Jetzt", "Now", "Ahora")]].map(([k, label]) => (
           <label key={k} data-testid={`timelapse-photo-${k}`} className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] p-3 flex flex-col items-center gap-2 cursor-pointer min-h-[120px] justify-center">
-            {data?.[k] ? <img src={data[k]} alt={label} className="w-full h-24 object-cover rounded-xl" /> : (uploading === k ? <Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /> : <Camera className="w-7 h-7 text-[#ff6b00]" />)}
+            {data?.[k] ? <img src={data[k]} alt={label} className="w-full h-24 object-cover rounded-2xl shadow-md border border-amber-900/40" /> : (uploading === k ? <Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /> : <Camera className="w-7 h-7 text-[#ff6b00]" />)}
             <span className="text-[12px] font-bold text-[#ff6b00]">{label}</span>
             <input type="file" accept="image/*" capture="environment" onChange={(e) => onPhoto(e, k)} className="hidden" />
           </label>

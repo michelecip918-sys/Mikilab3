@@ -114,12 +114,12 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
               <h3 className="font-display text-lg font-bold text-white leading-tight">{rLoc(zoom, "name", lang)}</h3>
               {rLoc(zoom, "notes", lang) && <p className="text-[12.5px] text-[#AEB8BF] leading-snug mt-1.5 whitespace-pre-line line-clamp-4">{rLoc(zoom, "notes", lang)}</p>}
               <button data-testid="vetrina-share" onClick={() => shareItem(zoom)}
-                className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#1e1e1e] border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
                 <Share2 className="w-4 h-4 text-[#ff6b00]" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
               </button>
               {onOpenRecipe && (
                 <button data-testid="vetrina-open-recipe" onClick={() => onOpenRecipe(zoom.id)}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
                   <BookOpen className="w-4 h-4" /> {tri("Vedi ricetta completa", "Ganzes Rezept ansehen", "See full recipe", "Ver receta completa", "Voir la recette complète", "دیدن دستور کامل")}
                 </button>
               )}

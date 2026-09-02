@@ -174,18 +174,18 @@ export default function Sfide({ open, onClose }) {
                 initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.6 }} />
             </div>
             <div className="grid grid-cols-2 gap-2 mt-3">
-              <div data-testid="sfide-milestone-panettoni" className={`rounded-xl p-2.5 border text-center ${count >= needPan ? "bg-[#ffffff] border-[#ff6b00]" : "bg-white/60 dark:bg-[#181818] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              <div data-testid="sfide-milestone-panettoni" className={`rounded-2xl shadow-md border border-amber-900/40 p-2.5 border text-center ${count >= needPan ? "bg-[#ffffff] border-[#ff6b00]" : "bg-white/60 dark:bg-[#181818] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                 <p className="text-[11px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF]">{count >= needPan ? "✅ " : `🔒 ${needPan} `}{tri("sfide", "Challenges", "challenges", "retos")}</p>
                 <p className="text-[13px] font-bold text-[#ff6b00] dark:text-[#e4eff8] leading-tight">{tri("Panettoni + Academy", "Panettoni + Academy", "Panettoni + Academy", "Panettones + Academy")}</p>
               </div>
-              <div data-testid="sfide-milestone-all" className={`rounded-xl p-2.5 border text-center ${count >= needAll ? "bg-[#ffffff] border-[#ff6b00]" : "bg-white/60 dark:bg-[#181818] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              <div data-testid="sfide-milestone-all" className={`rounded-2xl shadow-md border border-amber-900/40 p-2.5 border text-center ${count >= needAll ? "bg-[#ffffff] border-[#ff6b00]" : "bg-white/60 dark:bg-[#181818] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                 <p className="text-[11px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF]">{count >= needAll ? "✅ " : `🔒 ${needAll} `}{tri("sfide", "Challenges", "challenges", "retos")}</p>
                 <p className="text-[13px] font-bold text-[#ff6b00] dark:text-[#e4eff8] leading-tight">{tri("Sblocca tutto", "Alles freischalten", "Unlock everything", "Desbloquea todo")}</p>
               </div>
             </div>
             {user && count >= (state?.need_panettoni || 3) && (
               <button data-testid="sfide-certificate" onClick={downloadCertificate}
-                className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] hover:bg-[#ff6b00] text-[#121212] font-semibold px-4 py-2.5 active:scale-98 transition-all">
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] hover:bg-[#ff6b00] text-[#121212] font-semibold px-4 py-2.5 active:scale-98 transition-all">
                 <Trophy className="w-4.5 h-4.5" /> {tri("Scarica il Certificato PDF", "PDF-Zertifikat herunterladen", "Download PDF Certificate", "Descargar Certificado PDF")}
               </button>
             )}
@@ -254,7 +254,7 @@ export default function Sfide({ open, onClose }) {
                           )}
                           <button data-testid={`sfide-complete-${c.id}`} disabled={busy === c.id}
                             onClick={() => doComplete(c.id, isHonor)}
-                            className="ml-auto flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff6b00] disabled:opacity-50 text-[#121212] text-[13px] font-semibold px-4 py-2 rounded-xl active:scale-95 transition-all">
+                            className="ml-auto flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff6b00] disabled:opacity-50 text-[#121212] text-[13px] font-semibold px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
                             {busy === c.id ? <Loader2 className="w-4 h-4 animate-spin" /> : (isHonor ? <Check className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />)}
                             {isHonor ? tri("Ho fatto", "Erledigt", "I did it", "Hecho") : tri("Verifica ora", "Jetzt prüfen", "Verify now", "Verificar")}
                           </button>

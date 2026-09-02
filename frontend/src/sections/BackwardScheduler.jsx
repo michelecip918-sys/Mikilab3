@@ -83,13 +83,13 @@ export default function BackwardScheduler() {
       <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 mb-4">
         <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Pronto / Apertura alle", "Fertig / Öffnung um", "Ready / Opening at")}</label>
         <input data-testid="bs-end-time" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
-          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 text-lg font-mono-data font-bold outline-none focus:border-[#ff6b00]" />
+          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 text-lg font-mono-data font-bold outline-none focus:border-[#ff6b00]" />
       </div>
 
       <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{mkTri(lang)("Durata di ogni fase (min)", "Dauer je Phase (Min.)", "Duration per phase (min)")}</p>
       <div className="space-y-2 mb-4">
         {PHASES.map((p) => (
-          <div key={p.id} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5">
+          <div key={p.id} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5">
             <span className="flex-1 min-w-0 text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? p.de : lang === "en" ? p.en : p.it}</span>
             <input data-testid={`bs-dur-${p.id}`} type="number" min="0" value={dur[p.id]}
               onChange={(e) => setDur((d) => ({ ...d, [p.id]: e.target.value === "" ? "" : Number(e.target.value) }))}

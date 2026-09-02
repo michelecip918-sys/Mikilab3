@@ -209,16 +209,16 @@ export default function ImparaLivelli({ onBack }) {
             <p className="text-[13.5px] font-semibold text-[#ff6b00]">{L("Complimenti! Hai completato tutti i percorsi Impara.", "Congratulations! You completed all the Learn paths.")}</p>
           </div>
           <button data-testid="impara-diploma-pdf" onClick={downloadDiploma}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] hover:bg-[#ff6b00] text-[#121212] font-semibold px-4 py-3 active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] hover:bg-[#ff6b00] text-[#121212] font-semibold px-4 py-3 active:scale-98 transition-all">
             <Award className="w-5 h-5" /> {L("Scarica il Diploma MikiLab (PDF)", "Download the MikiLab Diploma (PDF)")}
           </button>
           <div className="grid grid-cols-2 gap-2 mt-2">
             <a data-testid="impara-share-wa" href={`https://wa.me/?text=${encodeURIComponent(diplomaShareText)}`} target="_blank" rel="noreferrer"
-              className="flex items-center justify-center gap-2 rounded-xl bg-[#2e8b6f] hover:bg-[#1c5c49] text-[#121212] font-semibold px-3 py-2.5 active:scale-98 transition-all">
+              className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#2e8b6f] hover:bg-[#1c5c49] text-[#121212] font-semibold px-3 py-2.5 active:scale-98 transition-all">
               <Send className="w-4 h-4" /> WhatsApp
             </a>
             <button data-testid="impara-share-more" onClick={shareDiploma}
-              className="flex items-center justify-center gap-2 rounded-xl bg-[#ff6b00] hover:bg-[#ff6b00] text-[#121212] font-semibold px-3 py-2.5 active:scale-98 transition-all">
+              className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] hover:bg-[#ff6b00] text-[#121212] font-semibold px-3 py-2.5 active:scale-98 transition-all">
               <Share2 className="w-4 h-4" /> {L("Instagram / Altro", "Instagram / More")}
             </button>
           </div>

@@ -102,7 +102,7 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={panelRef}>
       <button data-testid="notif-bell" onClick={toggle}
-        className="relative w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
+        className="relative w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
         aria-label={tri("Notifiche", "Benachrichtigungen", "Notifications")}>
         <Bell className="w-4.5 h-4.5" />
         {unread > 0 && (

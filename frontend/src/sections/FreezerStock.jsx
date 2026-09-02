@@ -41,7 +41,7 @@ export default function FreezerStock() {
       </div>
 
       {low.length > 0 && (
-        <div data-testid="freezer-low-warning" className="mb-3 rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3 flex items-start gap-2">
+        <div data-testid="freezer-low-warning" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3 flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
           <p className="text-sm text-[#ff6b00] dark:text-[#8FB0C2]">
             {de ? "Unter Mindestmenge: " : lang === "en" ? "Below minimum: " : "Sotto la soglia: "}<b>{low.map((x) => x.name).join(", ")}</b>
@@ -51,7 +51,7 @@ export default function FreezerStock() {
 
       <div className="space-y-2">
         {items.map((it, i) => (
-          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5">
+          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5">
             <input value={it.name} onChange={(e) => set(i, { name: e.target.value })} placeholder={de ? "Produkt" : lang === "en" ? "Product" : "Prodotto"}
               className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
             <div className="flex items-center gap-1">
@@ -66,7 +66,7 @@ export default function FreezerStock() {
         ))}
       </div>
 
-      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] rounded-xl py-2.5 active:scale-98">
+      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] rounded-2xl shadow-md border border-amber-900/40 py-2.5 active:scale-98">
         <Plus className="w-4 h-4" /> {de ? "Produkt hinzufügen" : lang === "en" ? "Add product" : "Aggiungi prodotto"}
       </button>
       <button data-testid="freezer-save" onClick={save} disabled={saving} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#ff6b00] disabled:opacity-50 text-white font-semibold rounded-2xl py-3 active:scale-98">

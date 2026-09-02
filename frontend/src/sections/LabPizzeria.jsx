@@ -16,7 +16,7 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
   const { lang } = useLang();
   const L = (i, e) => mkTri(lang)(i, e, e, e);
   const num = (v) => Math.round(v).toLocaleString(lang === "it" ? "it" : "en");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
   const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
   const [tab, setTab] = useState("prefermenti");
@@ -116,7 +116,7 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
 
       <div className="flex flex-wrap gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
         {TABS.map(({ id, Icon, label }) => (
-          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-bold transition-all ${tab === id ? "bg-[#ff6b00] text-[#121212] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all ${tab === id ? "bg-[#ff6b00] text-[#121212] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
@@ -129,7 +129,7 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
             <div><p className={lbl}>{L("% farina in prefermento", "% flour in preferment")}</p><input type="number" value={prefPct} onChange={(e) => setPrefPct(Number(e.target.value))} className={inp} /></div>
             <div><p className={lbl}>{L("T° ambiente", "Room T°")}</p><input type="number" value={tRoom} onChange={(e) => setTRoom(Number(e.target.value))} className={inp} /></div>
           </div>
-          <div data-testid="pz-pref-out" className="rounded-xl bg-[#ffffff] p-3 text-[13px] text-[#ff6b00] font-semibold space-y-1">
+          <div data-testid="pz-pref-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-[13px] text-[#ff6b00] font-semibold space-y-1">
             <p>{L("Chiusura impasto", "Dough hydration")}: <span className="font-mono-data">{bp.hyd}%</span> · {L("Acqua totale", "Total water")}: <span className="font-mono-data">{num(bp.totWater)} g</span></p>
             <p>{PREF[pref].name}: <span className="font-mono-data">{num(bp.pFlour)} g {L("farina", "flour")} + {num(bp.pWater)} g {L("acqua", "water")}</span></p>
             <p>{L("Acqua nell'impasto finale", "Water in final dough")}: <span className="font-mono-data">{num(bp.doughWater)} g</span></p>
@@ -145,8 +145,8 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
           <p className={lbl}>{L("Indice P/L (tenacità/estensibilità)", "P/L index (tenacity/extensibility)")}</p>
           <input data-testid="pz-pl" type="number" step="0.05" value={pl} onChange={(e) => setPl(e.target.value)} className={inp + " mb-3"} />
           <div className="grid grid-cols-2 gap-2 mb-2">
-            <div className="rounded-xl bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#ff6b00]">{L("Maturazione in frigo", "Cold maturation")}</p><p data-testid="pz-fridge" className="font-display text-xl font-bold text-[#ff6b00]">{matrix.fridge}</p></div>
-            <div className="rounded-xl bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#ff6b00]">{L("Appretto (fuori frigo)", "Appretto (room)")}</p><p data-testid="pz-appretto" className="font-display text-xl font-bold text-[#ff6b00]">{matrix.appretto}</p></div>
+            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#ff6b00]">{L("Maturazione in frigo", "Cold maturation")}</p><p data-testid="pz-fridge" className="font-display text-xl font-bold text-[#ff6b00]">{matrix.fridge}</p></div>
+            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#ff6b00]">{L("Appretto (fuori frigo)", "Appretto (room)")}</p><p data-testid="pz-appretto" className="font-display text-xl font-bold text-[#ff6b00]">{matrix.appretto}</p></div>
           </div>
           <p className="text-[12.5px] text-[#ff6b00] dark:text-[#AEB8BF] leading-snug">{matrix.note}</p>
         </div>
@@ -158,7 +158,7 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
             <div><p className={lbl}>{L("Numero di pizze", "Number of pizzas")}</p><input data-testid="pz-pizzas" type="number" value={pizzas} onChange={(e) => setPizzas(Number(e.target.value))} className={inp} /></div>
             <div><p className={lbl}>{L("Tipo", "Type")}</p><select data-testid="pz-sptype" value={sptype} onChange={(e) => setSptype(e.target.value)} className={inp}>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v.it}</option>)}</select></div>
           </div>
-          <div data-testid="pz-planner-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
+          <div data-testid="pz-planner-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
             {[[L("Impasto totale", "Total dough"), `${num(sp.doughTot)} g`], [L("Farina", "Flour"), `${sp.flourKg.toFixed(1)} kg`], [L("Acqua", "Water"), `${sp.waterKg.toFixed(1)} kg`], [L("Lievito (diretto ~0,3%)", "Yeast (~0.3%)"), `${num(sp.yeastG)} g`], [L("Cassette necessarie", "Boxes needed"), `${sp.boxes}`]].map(([k, v], i) => (
               <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#ff6b00]">{k}</span><span className="font-mono-data font-bold text-[#ff6b00]">{v}</span></div>
             ))}
@@ -175,7 +175,7 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
             <div><p className={lbl}>{L("T° farina", "Flour T°")}</p><input data-testid="pz-tflour" type="number" value={tFlour} onChange={(e) => setTFlour(e.target.value)} className={inp} /></div>
             <div><p className={lbl}>{L("T° attrito", "Friction T°")}</p><input data-testid="pz-tfriction" type="number" value={tFriction} onChange={(e) => setTFriction(e.target.value)} className={inp} /></div>
           </div>
-          <div data-testid="pz-water-out" className="rounded-xl bg-[#ffffff] p-4 text-center">
+          <div data-testid="pz-water-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-4 text-center">
             <p className="text-[12px] font-semibold text-[#ff6b00]">{L("Temperatura acqua consigliata", "Recommended water temperature")}</p>
             <p className="font-display text-4xl font-bold text-[#ff6b00]">{waterT}°C</p>
           </div>
@@ -194,7 +194,7 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
               </div>
             ))}
           </div>
-          <div data-testid="pz-week-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
+          <div data-testid="pz-week-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
             {[[L("Palline totali", "Total balls"), `${num(weekTot.balls)}`], [L("Impasto totale", "Total dough"), `${num(weekTot.dough)} g`], [L("Farina totale", "Total flour"), `${weekTot.flourKg.toFixed(1)} kg`]].map(([k, v], i) => (
               <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#ff6b00]">{k}</span><span className="font-mono-data font-bold text-[#ff6b00]">{v}</span></div>
             ))}

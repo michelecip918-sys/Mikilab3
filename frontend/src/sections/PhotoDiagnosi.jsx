@@ -297,7 +297,7 @@ export default function PhotoDiagnosi() {
               return (
                 <div key={d.id} data-testid={`diagnosi-item-${d.id}`} className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
                   <div className="flex items-center gap-3 p-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#e4eff8] dark:bg-[#181818] flex items-center justify-center shrink-0 overflow-hidden relative">
+                    <div className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#181818] flex items-center justify-center shrink-0 overflow-hidden relative">
                       <Camera className="w-5 h-5 text-[#7E8A93]" />
                       {d.thumb && <img src={d.thumb} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} className="absolute inset-0 w-full h-full object-cover" />}
                     </div>

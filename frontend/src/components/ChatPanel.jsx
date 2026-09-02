@@ -160,7 +160,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                     <div key={m.id} data-testid={`chat-msg-${m.id}`} className={`flex flex-col ${mine ? "items-end" : "items-start"}`}>
                       <div className={`group relative flex items-end gap-1 max-w-[85%] ${mine ? "flex-row-reverse" : ""}`}>
                         <div className={`rounded-2xl px-3.5 py-2 ${mine ? "bg-[#ff6b00] text-white rounded-br-sm" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] rounded-bl-sm border border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
-                          {m.image_url && <img src={m.image_url} alt="" data-testid="chat-msg-image" className="rounded-xl mb-1 max-h-56 w-full object-cover" />}
+                          {m.image_url && <img src={m.image_url} alt="" data-testid="chat-msg-image" className="rounded-2xl shadow-md border border-amber-900/40 mb-1 max-h-56 w-full object-cover" />}
                           {m.text && <p className="text-sm whitespace-pre-line leading-snug break-words">{m.text}</p>}
                           <p className={`text-[10px] mt-0.5 text-right ${mine ? "text-white/70" : "text-[#7E8A93]"}`}>{timeShort(m.created_at, lang)}</p>
                         </div>
@@ -208,7 +208,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
           /* ---- Nuova chat: scegli un amico ---- */
           <div className="flex-1 overflow-y-auto p-4 space-y-2" data-testid="chat-new">
             <button data-testid="chat-new-back" onClick={() => setShowNew(false)} className="flex items-center gap-1.5 text-sm font-semibold text-[#ff6b00] mb-1"><ArrowLeft className="w-4 h-4" />{tri("Indietro", "Zurück", "Back", "Atrás")}</button>
-            <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl px-3 py-2">
+            <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
               <Search className="w-4 h-4 text-[#7E8A93]" />
               <input data-testid="chat-friend-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tri("Cerca un amico…", "Freund suchen…", "Search a friend…", "Buscar amigo…")} className="bg-transparent flex-1 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
             </div>
@@ -216,7 +216,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               <p className="text-center text-sm text-[#7E8A93] py-8">{tri("Nessun amico ancora. Aggiungi colleghi da «Amici & Colleghi».", "Noch keine Freunde. Füge Kollegen hinzu.", "No friends yet. Add colleagues from «Friends».", "Sin amigos aún.")}</p>
             ) : filteredFriends.map((f) => (
               <button key={f.user_id} data-testid={`chat-friend-${f.user_id}`} onClick={() => { setShowNew(false); setActive({ user_id: f.user_id, name: f.name, picture: f.picture }); }}
-                className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 transition-all">
+                className="w-full flex items-center gap-3 p-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-98 transition-all">
                 <AvatarImg pic={f.picture} name={f.name} />
                 <span className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{f.name}</span>
               </button>
@@ -232,7 +232,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                 <p className="text-center text-sm text-[#7E8A93] py-10">{tri("Ancora nessuna conversazione. Inizia a scrivere a un amico!", "Noch keine Unterhaltungen. Schreib einem Freund!", "No conversations yet. Message a friend!", "Sin conversaciones aún.")}</p>
               ) : convos.map((c) => (
                 <button key={c.other_id} data-testid={`chat-convo-${c.other_id}`} onClick={() => setActive({ user_id: c.other_id, name: c.name, picture: c.picture })}
-                  className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#121212] dark:hover:bg-[#1e1e1e] active:scale-98 transition-all text-left">
+                  className="w-full flex items-center gap-3 p-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#121212] dark:hover:bg-[#1e1e1e] active:scale-98 transition-all text-left">
                   <AvatarImg pic={c.picture} name={c.name} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
@@ -243,7 +243,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               ))}
             </div>
             <div className="p-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e] shrink-0">
-              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">
+              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
                 <Send className="w-4 h-4" /> {tri("Nuovo messaggio", "Neue Nachricht", "New message", "Nuevo mensaje")}
               </button>
             </div>

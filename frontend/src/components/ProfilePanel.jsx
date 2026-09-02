@@ -150,7 +150,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                   <div className="grid grid-cols-4 gap-2">
                     {PRESET_AVATARS.map((a) => (
                       <button key={a.id} data-testid={`avatar-preset-${a.id}`} onClick={() => setPic(a.url)}
-                        className={`rounded-xl overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#ff6b00] ring-2 ring-[#ff6b00]/40" : "border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                        className={`rounded-2xl shadow-md border border-amber-900/40 overflow-hidden border-2 transition-all active:scale-95 ${pic === a.url ? "border-[#ff6b00] ring-2 ring-[#ff6b00]/40" : "border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                         <img src={a.url} alt={a[lang] || a.it} className="w-full aspect-square object-cover" />
                         <span className="block text-[9px] font-semibold text-[#3F4A54] dark:text-[#AEB8BF] py-0.5">{a[lang] || a.it}</span>
                       </button>
@@ -160,10 +160,10 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                 </div>
                 <textarea data-testid="profile-bio-input" value={bio} onChange={(e) => setBio(e.target.value)} rows={3} maxLength={300}
                   placeholder={tri("Scrivi una breve bio: chi sei, il tuo forno, la tua specialità…", "Kurze Bio: wer du bist, deine Bäckerei, deine Spezialität…", "Short bio: who you are, your bakery, your specialty…", "Bio breve: quién eres, tu horno, tu especialidad…")}
-                  className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 text-sm outline-none" />
+                  className="w-full bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 text-sm outline-none" />
                 <div className="flex gap-2">
-                  <button data-testid="profile-save" onClick={save} disabled={saving} className="flex-1 bg-[#1e1e1e] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-60">{saving ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
-                  <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
+                  <button data-testid="profile-save" onClick={save} disabled={saving} className="flex-1 bg-[#1e1e1e] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-60">{saving ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
+                  <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
                 </div>
               </>
             ) : (
@@ -197,7 +197,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                     { v: "off", it: "Disattivato", de: "Aus", en: "Off", es: "Apagado" },
                   ].map((o) => (
                     <button key={o.v} data-testid={`email-pref-${o.v}`} onClick={() => changeEmailMode(o.v)}
-                      className={`rounded-xl px-2 py-2.5 text-[12px] font-bold border transition-all active:scale-95 ${emailMode === o.v ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#121212] dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                      className={`rounded-2xl shadow-md border border-amber-900/40 px-2 py-2.5 text-[12px] font-bold border transition-all active:scale-95 ${emailMode === o.v ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#121212] dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                       {tri(o.it, o.de, o.en, o.es)}
                     </button>
                   ))}
@@ -210,7 +210,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2 flex items-center gap-1.5"><Stethoscope className="w-3.5 h-3.5 text-[#ff6b00]" /> {tri("Diagnosi SOS salvate", "Gespeicherte SOS-Diagnosen", "Saved SOS diagnoses", "Diagnósticos SOS guardados")} ({sosItems.length})</p>
                 <div className="space-y-2">
                   {sosItems.map((s) => (
-                    <div key={s.id} data-testid={`sos-history-${s.id}`} className="rounded-xl bg-[#fbeeec] dark:bg-[#2a1f1e] border border-[#e6cfc9] dark:border-[#4a2e2b] p-3 flex gap-3">
+                    <div key={s.id} data-testid={`sos-history-${s.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#fbeeec] dark:bg-[#2a1f1e] border border-[#e6cfc9] dark:border-[#4a2e2b] p-3 flex gap-3">
                       <div className="relative w-14 h-14 rounded-lg bg-[#ff6b00]/15 flex items-center justify-center shrink-0 overflow-hidden">
                         <Stethoscope className="w-6 h-6 text-[#ff6b00]" />
                         {s.thumb && <img src={s.thumb} alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />}
@@ -233,7 +233,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
               ) : (
                 <div className="space-y-2">
                   {data.posts.map((p) => (
-                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
                       <span className="text-[10px] font-bold uppercase tracking-wide text-[#1e1e1e] dark:text-[#8FB0C2]">{p.category}</span>
                       <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] mt-0.5 line-clamp-3">{p.text}</p>
                       {p.photo && <img src={p.photo} alt="" className="w-full h-32 object-cover rounded-lg mt-2" />}

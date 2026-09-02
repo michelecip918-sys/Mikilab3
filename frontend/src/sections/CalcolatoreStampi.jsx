@@ -12,7 +12,7 @@ export default function CalcolatoreStampi({ onBack }) {
   const { lang } = useLang();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
   const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
 
@@ -42,7 +42,7 @@ export default function CalcolatoreStampi({ onBack }) {
 
       <div className="flex gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
         {[["pirottini", L("Pirottini", "Formen", "Moulds", "Moldes"), Cookie], ["teglia", L("Teglia / Tortiera", "Blech / Form", "Pan / Tin", "Bandeja")], ].map(([id, label]) => (
-          <button key={id} data-testid={`stampi-tab-${id}`} onClick={() => setMode(id)} className={`flex-1 py-2 rounded-xl text-[13px] font-bold transition-all ${mode === id ? "bg-[#ff6b00] text-[#121212] shadow" : "text-[#ff6b00]"}`}>{label}</button>
+          <button key={id} data-testid={`stampi-tab-${id}`} onClick={() => setMode(id)} className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[13px] font-bold transition-all ${mode === id ? "bg-[#ff6b00] text-[#121212] shadow" : "text-[#ff6b00]"}`}>{label}</button>
         ))}
       </div>
 
@@ -55,7 +55,7 @@ export default function CalcolatoreStampi({ onBack }) {
               </select></div>
             <div><p className={lbl}>{L("Numero di pezzi", "Stückzahl", "Number of pieces", "Nº de piezas")}</p><input data-testid="stampi-pezzi" type="number" value={pezzi} onChange={(e) => setPezzi(e.target.value)} className={inp} /></div>
           </div>
-          <div data-testid="stampi-pirottini-out" className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] p-4 text-center">
+          <div data-testid="stampi-pirottini-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] p-4 text-center">
             <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Impasto totale necessario", "Benötigter Teig gesamt", "Total dough needed", "Masa total necesaria")}</p>
             <p className="font-display text-3xl font-bold text-[#ff6b00] mt-1">{num(totImpasto)} g</p>
             <p className="text-[12px] text-[#ff6b00] mt-1">{num(PIROTTINI[size])} g {L("per pirottino", "pro Form", "per mould", "por molde")} ({L("include la testa che lievita oltre il bordo", "inkl. Überstand", "includes rise over the rim", "incluye la cúpula")})</p>
@@ -65,7 +65,7 @@ export default function CalcolatoreStampi({ onBack }) {
         <div className={card}>
           <div className="flex gap-1.5 mb-3">
             {[["rect", L("Rettangolare", "Rechteckig", "Rectangular", "Rectangular"), Square], ["round", L("Tonda", "Rund", "Round", "Redonda"), Circle]].map(([id, label, Icon]) => (
-              <button key={id} data-testid={`stampi-shape-${id}`} onClick={() => setShape(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[13px] font-bold border transition-all ${shape === id ? "bg-[#ff6b00] text-[#121212] border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e]"}`}><Icon className="w-4 h-4" /> {label}</button>
+              <button key={id} data-testid={`stampi-shape-${id}`} onClick={() => setShape(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[13px] font-bold border transition-all ${shape === id ? "bg-[#ff6b00] text-[#121212] border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] border-[#2e2e2e]"}`}><Icon className="w-4 h-4" /> {label}</button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
@@ -82,7 +82,7 @@ export default function CalcolatoreStampi({ onBack }) {
               <option value="pizza">{L("Pizza in teglia", "Blechpizza", "Pan pizza", "Pizza en bandeja")}</option>
               <option value="pane">{L("Pane / pagnotta", "Brot", "Bread / loaf", "Pan")}</option>
             </select></div>
-          <div data-testid="stampi-teglia-out" className="rounded-xl bg-[#ffffff] p-4 text-center">
+          <div data-testid="stampi-teglia-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-4 text-center">
             <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Impasto consigliato", "Empfohlener Teig", "Recommended dough", "Masa recomendada")}</p>
             <p className="font-display text-3xl font-bold text-[#ff6b00] mt-1">{num(teglia.dough)} g</p>
             <p className="text-[12px] text-[#ff6b00] mt-1">{L("Superficie", "Fläche", "Area", "Superficie")}: {num(teglia.area)} cm²</p>

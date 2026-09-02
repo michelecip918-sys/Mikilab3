@@ -129,7 +129,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
           {rec && (
             <button data-testid="sos-recipe-suggestion" onClick={openRecipe}
               className="w-full flex items-center gap-3 rounded-2xl p-3.5 text-left bg-gradient-to-br from-[#ff6b00] to-[#7a531d] text-white shadow-md active:scale-98 transition-all">
-              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5" /></div>
+              <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-white/20 flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5" /></div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-white/80">{tri("Ricetta consigliata da Mohammadreza", "Von Mohammadreza empfohlenes Rezept", "Recipe recommended by Mohammadreza", "Receta recomendada por Mohammadreza")}</p>
                 <p className="font-display text-base font-bold leading-tight truncate">{rec.name}</p>

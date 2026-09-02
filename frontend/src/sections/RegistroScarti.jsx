@@ -81,7 +81,7 @@ export default function RegistroScarti() {
       </div>
 
       {/* Hint vocale */}
-      <div className="rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/30 p-2.5 mb-4 flex items-center gap-2">
+      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#3B82F6]/10 border border-[#3B82F6]/30 p-2.5 mb-4 flex items-center gap-2">
         <Mic className="w-4 h-4 text-[#3B82F6] shrink-0" />
         <p className="text-[12px] text-[#C9D4DC]">{tri("A voce: «Ehi Lab, registra scarto due chili pane» · «vasca uno sanificata».", "Sprich: «Ehi Lab, Ausschuss zwei Kilo Brot».", "Say: «Ehi Lab, log waste two kilos bread».", "Di: «Ehi Lab, registra merma dos kilos pan».")}</p>
       </div>
@@ -103,7 +103,7 @@ export default function RegistroScarti() {
               className="w-full bg-transparent text-sm text-[#e4eff8] outline-none" />
           </div>
         </div>
-        <button data-testid="scarto-add" onClick={submit} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="scarto-add" onClick={submit} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
           <Plus className="w-4 h-4" /> {tri("Registra scarto", "Ausschuss erfassen", "Log waste", "Registrar merma")}
         </button>
       </div>
@@ -116,7 +116,7 @@ export default function RegistroScarti() {
       <div className="space-y-2 mb-6" data-testid="scarto-list">
         {scarti.length === 0 && <p className="text-sm text-[#7E8A93] text-center py-4">{tri("Nessuno scarto registrato.", "Kein Ausschuss.", "No waste logged.", "Sin mermas.")}</p>}
         {scarti.map((x) => (
-          <div key={x.id} data-testid={`scarto-${x.id}`} className="flex items-center gap-3 rounded-xl bg-[#161616] border border-[#2e2e2e] px-3 py-2.5">
+          <div key={x.id} data-testid={`scarto-${x.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#161616] border border-[#2e2e2e] px-3 py-2.5">
             <span className="font-mono-data text-[#ff6b00] font-bold w-16 shrink-0">{(x.qty || 0).toFixed(1)}kg</span>
             <span className="flex-1 min-w-0"><span className="block text-sm text-[#e4eff8] truncate">{x.product}</span>{x.reason ? <span className="block text-[11px] text-[#7E8A93] truncate">{x.reason}</span> : null}</span>
             {x.cost ? <span className="text-[11px] font-bold text-[#22c55e] shrink-0">{eur((x.qty || 0) * (x.cost || 0))}</span> : null}
@@ -168,7 +168,7 @@ export default function RegistroScarti() {
       </div>
       <div className="grid grid-cols-1 gap-2" data-testid="sanif-list">
         {VASCHE.map((n) => (
-          <div key={n} data-testid={`sanif-${n}`} className="flex items-center gap-3 rounded-xl bg-[#161616] border border-[#2e2e2e] px-3 py-2.5">
+          <div key={n} data-testid={`sanif-${n}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#161616] border border-[#2e2e2e] px-3 py-2.5">
             <span className="font-display font-bold text-[#e4eff8] w-20 shrink-0">{tri("Vasca", "Kessel", "Bowl", "Cuba")} {n}</span>
             <span className="flex-1 text-[12px] text-[#7E8A93]">{sanif[n] ? `${tri("Ultima", "Zuletzt", "Last", "Última")}: ${fmtTime(sanif[n])}` : tri("Mai sanificata", "Nie gereinigt", "Never sanitised", "Nunca")}</span>
             <button data-testid={`sanif-btn-${n}`} onClick={() => sanifica(n)} className="shrink-0 inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#3B82F6] hover:bg-[#2f6fd6] px-3 py-2 rounded-lg active:scale-95">

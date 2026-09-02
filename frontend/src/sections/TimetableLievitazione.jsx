@@ -56,7 +56,7 @@ export default function TimetableLievitazione() {
       <div className="rounded-2xl bg-[#1e1e1e] border border-[#2e2e2e] p-4 mb-4">
         <label className="text-[12px] font-bold uppercase tracking-wide text-[#ff6b00]">{tri("Orario di inizio", "Startzeit", "Start time")}</label>
         <input data-testid="timetable-start" type="time" value={start} onChange={(e) => setStart(e.target.value || nowHM())}
-          className="ml-3 font-mono-data text-lg font-extrabold text-white bg-[#121212] border border-[#2e2e2e] rounded-xl px-3 py-1.5 outline-none focus:border-[#ff6b00]" />
+          className="ml-3 font-mono-data text-lg font-extrabold text-white bg-[#121212] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-1.5 outline-none focus:border-[#ff6b00]" />
       </div>
 
       <div className="space-y-2">

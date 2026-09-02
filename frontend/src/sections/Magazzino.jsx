@@ -93,30 +93,30 @@ export default function Magazzino() {
       {/* Carico rapido — 3 campi principali */}
       <div className="rounded-2xl p-4 mb-5" style={{ background: D.surf, border: `2px solid ${D.border}` }} data-testid="magazzino-form">
         <div className="grid grid-cols-2 gap-2 mb-2">
-          <button data-testid="mag-kind-farina" onClick={() => setKind("farina")} className="flex items-center justify-center gap-1.5 rounded-xl py-2 font-extrabold text-[13px]" style={{ background: kind === "farina" ? D.gold : D.surf2, border: `2px solid ${kind === "farina" ? D.gold : D.border}`, color: kind === "farina" ? D.bg : D.text }}><Wheat className="w-4 h-4" /> {tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")}</button>
-          <button data-testid="mag-kind-ingrediente" onClick={() => setKind("ingrediente")} className="flex items-center justify-center gap-1.5 rounded-xl py-2 font-extrabold text-[13px]" style={{ background: kind === "ingrediente" ? D.gold : D.surf2, border: `2px solid ${kind === "ingrediente" ? D.gold : D.border}`, color: kind === "ingrediente" ? D.bg : D.text }}><Package className="w-4 h-4" /> {tri("Ingrediente", "Zutat", "Ingredient", "Ingrediente", "Ingrédient", "ماده")}</button>
+          <button data-testid="mag-kind-farina" onClick={() => setKind("farina")} className="flex items-center justify-center gap-1.5 rounded-2xl shadow-md border border-amber-900/40 py-2 font-extrabold text-[13px]" style={{ background: kind === "farina" ? D.gold : D.surf2, border: `2px solid ${kind === "farina" ? D.gold : D.border}`, color: kind === "farina" ? D.bg : D.text }}><Wheat className="w-4 h-4" /> {tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")}</button>
+          <button data-testid="mag-kind-ingrediente" onClick={() => setKind("ingrediente")} className="flex items-center justify-center gap-1.5 rounded-2xl shadow-md border border-amber-900/40 py-2 font-extrabold text-[13px]" style={{ background: kind === "ingrediente" ? D.gold : D.surf2, border: `2px solid ${kind === "ingrediente" ? D.gold : D.border}`, color: kind === "ingrediente" ? D.bg : D.text }}><Package className="w-4 h-4" /> {tri("Ingrediente", "Zutat", "Ingredient", "Ingrediente", "Ingrédient", "ماده")}</button>
         </div>
         <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={onScan} className="hidden" data-testid="mag-scan-input" />
         <button data-testid="mag-scan" onClick={() => fileRef.current && fileRef.current.click()} disabled={scanning}
-          className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 mb-2 font-extrabold active:scale-98 transition-all disabled:opacity-60" style={{ background: D.surf2, border: `2px dashed ${D.gold}`, color: D.gold }}>
+          className="w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 py-2.5 mb-2 font-extrabold active:scale-98 transition-all disabled:opacity-60" style={{ background: D.surf2, border: `2px dashed ${D.gold}`, color: D.gold }}>
           <Camera className="w-5 h-5" /> {scanning ? tri("Leggo l'etichetta…", "Lese Etikett…", "Reading label…", "Leyendo…", "Lecture…", "خواندن…") : tri("Scansiona etichetta (foto)", "Etikett scannen", "Scan label (photo)", "Escanear etiqueta", "Scanner l'étiquette", "اسکن برچسب")}
         </button>
-        <input data-testid="mag-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={tri("Nome / Tipo (es. Tipo 0)", "Name / Typ", "Name / Type", "Nombre / Tipo", "Nom / Type", "نام / نوع")} className="w-full rounded-xl px-3 py-2.5 mb-2 text-[15px] font-semibold outline-none" style={inStyle} />
+        <input data-testid="mag-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={tri("Nome / Tipo (es. Tipo 0)", "Name / Typ", "Name / Type", "Nombre / Tipo", "Nom / Type", "نام / نوع")} className="w-full rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 mb-2 text-[15px] font-semibold outline-none" style={inStyle} />
         <div className="grid grid-cols-2 gap-2 mb-2">
-          <input data-testid="mag-w" value={w} onChange={(e) => setW(e.target.value)} placeholder={kind === "farina" ? tri("Forza W (es. W300)", "Stärke W", "Strength W", "Fuerza W", "Force W", "قدرت W") : tri("Caratteristica", "Merkmal", "Characteristic", "Característica", "Caractéristique", "ویژگی")} className="rounded-xl px-3 py-2.5 text-[15px] font-semibold outline-none" style={inStyle} />
+          <input data-testid="mag-w" value={w} onChange={(e) => setW(e.target.value)} placeholder={kind === "farina" ? tri("Forza W (es. W300)", "Stärke W", "Strength W", "Fuerza W", "Force W", "قدرت W") : tri("Caratteristica", "Merkmal", "Characteristic", "Característica", "Caractéristique", "ویژگی")} className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-[15px] font-semibold outline-none" style={inStyle} />
           <div className="flex gap-1.5">
-            <input data-testid="mag-qty" value={qty} onChange={(e) => setQty(e.target.value)} inputMode="decimal" placeholder={tri("Quantità", "Menge", "Quantity", "Cantidad", "Quantité", "مقدار")} className="flex-1 min-w-0 rounded-xl px-3 py-2.5 text-[15px] font-extrabold outline-none" style={inStyle} />
-            <select data-testid="mag-unit" value={unit} onChange={(e) => setUnit(e.target.value)} className="rounded-xl px-2 py-2.5 text-[14px] font-bold outline-none" style={inStyle}><option value="kg">kg</option><option value="pz">pz</option><option value="L">L</option></select>
+            <input data-testid="mag-qty" value={qty} onChange={(e) => setQty(e.target.value)} inputMode="decimal" placeholder={tri("Quantità", "Menge", "Quantity", "Cantidad", "Quantité", "مقدار")} className="flex-1 min-w-0 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-[15px] font-extrabold outline-none" style={inStyle} />
+            <select data-testid="mag-unit" value={unit} onChange={(e) => setUnit(e.target.value)} className="rounded-2xl shadow-md border border-amber-900/40 px-2 py-2.5 text-[14px] font-bold outline-none" style={inStyle}><option value="kg">kg</option><option value="pz">pz</option><option value="L">L</option></select>
           </div>
         </div>
         <button data-testid="mag-more" onClick={() => setMore((m) => !m)} className="flex items-center gap-1 text-[12px] font-bold mb-2" style={{ color: D.gold }}>{more ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />} {tri("Lotto e scadenza (opzionali)", "Charge & MHD (optional)", "Lot & expiry (optional)", "Lote y caducidad", "Lot & péremption", "بچ و انقضا")}</button>
         {more && (
           <div className="grid grid-cols-2 gap-2 mb-2">
-            <input data-testid="mag-lot" value={lot} onChange={(e) => setLot(e.target.value)} placeholder={tri("Lotto", "Charge", "Lot", "Lote", "Lot", "بچ")} className="rounded-xl px-3 py-2.5 text-[14px] outline-none" style={inStyle} />
-            <input data-testid="mag-expiry" type="date" value={expiry} onChange={(e) => setExpiry(e.target.value)} className="rounded-xl px-3 py-2.5 text-[14px] outline-none" style={inStyle} />
+            <input data-testid="mag-lot" value={lot} onChange={(e) => setLot(e.target.value)} placeholder={tri("Lotto", "Charge", "Lot", "Lote", "Lot", "بچ")} className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-[14px] outline-none" style={inStyle} />
+            <input data-testid="mag-expiry" type="date" value={expiry} onChange={(e) => setExpiry(e.target.value)} className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-[14px] outline-none" style={inStyle} />
           </div>
         )}
-        <button data-testid="mag-add" onClick={submit} disabled={busy || !name.trim() || !qty} className="w-full flex items-center justify-center gap-2 rounded-xl py-3 font-extrabold active:scale-98 transition-all disabled:opacity-50" style={{ background: D.gold, color: D.bg }}>
+        <button data-testid="mag-add" onClick={submit} disabled={busy || !name.trim() || !qty} className="w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 py-3 font-extrabold active:scale-98 transition-all disabled:opacity-50" style={{ background: D.gold, color: D.bg }}>
           <Plus className="w-5 h-5" /> {tri("Carica in magazzino", "Einlagern", "Add to stock", "Añadir al stock", "Ajouter", "افزودن")}
         </button>
       </div>
@@ -159,7 +159,7 @@ export default function Magazzino() {
             </div>
             <div className="space-y-1.5">
               {reorder.map((it) => (
-                <div key={it.id} className="flex items-center justify-between rounded-xl px-3 py-2" style={{ background: "#2E2214", border: `2px solid ${D.danger}` }}>
+                <div key={it.id} className="flex items-center justify-between rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: "#2E2214", border: `2px solid ${D.danger}` }}>
                   <span className="text-[13px] font-bold" style={{ color: D.text }}>{it.name}{it.force_w ? ` · ${it.force_w}` : ""}</span>
                   <span className="font-mono-data font-extrabold text-[14px]" style={{ color: D.danger }}>{Math.round(it.quantity_kg * 100) / 100}{it.unit}</span>
                 </div>
@@ -177,7 +177,7 @@ export default function Magazzino() {
         ) : (
           <div className="space-y-1.5">
             {consumption.slice(0, 20).map((c) => (
-              <div key={c.id} className="flex items-center justify-between rounded-xl px-3 py-2" style={{ background: D.surf, border: `1px solid ${D.border}` }}>
+              <div key={c.id} className="flex items-center justify-between rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: D.surf, border: `1px solid ${D.border}` }}>
                 <span className="text-[12.5px] font-bold truncate" style={{ color: D.text }}>{c.name}</span>
                 <span className="flex items-center gap-2 shrink-0">
                   <span className="font-mono-data font-extrabold text-[13px]" style={{ color: D.gold }}>-{Math.round(c.kg * 1000) / 1000} kg</span>

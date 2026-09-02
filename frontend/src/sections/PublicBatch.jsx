@@ -37,7 +37,7 @@ export default function PublicBatch({ id }) {
     <div data-testid="public-batch" className="fixed inset-0 z-[75] bg-[#121212] dark:bg-[#121212] overflow-auto">
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="flex items-center gap-3 mb-6">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#ff6b00]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#ff6b00]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div>
             <p className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">MikiLab</p>
             <p className="text-xs text-[#7E8A93]">{tri("Tracciabilità del lotto", "Chargen-Rückverfolgung", "Batch traceability")}</p>

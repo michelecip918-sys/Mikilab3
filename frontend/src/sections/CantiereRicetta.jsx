@@ -77,10 +77,10 @@ export default function CantiereRicetta({ onBack }) {
         <div className="space-y-2.5" data-testid="cantiere-list">
           {recipes.map((r, i) => (
             <div key={r.id || i} data-testid={`cantiere-recipe-${i}`} className="flex items-center gap-3 rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3.5 shadow-sm">
-              {r.image_url ? <img src={r.image_url} alt="" className="w-12 h-12 rounded-xl object-cover shrink-0" /> : <div className="w-12 h-12 rounded-xl bg-[#ff6b00]/12 flex items-center justify-center shrink-0"><FileText className="w-5 h-5 text-[#ff6b00]" /></div>}
+              {r.image_url ? <img src={r.image_url} alt="" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover shrink-0" /> : <div className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 flex items-center justify-center shrink-0"><FileText className="w-5 h-5 text-[#ff6b00]" /></div>}
               <p className="flex-1 min-w-0 font-display text-[15px] font-bold text-[#ff6b00] dark:text-[#e4eff8] leading-tight truncate">{field(r, "name") || "Ricetta"}</p>
               <button data-testid={`cantiere-pdf-${i}`} disabled={busy} onClick={() => generate(r)}
-                className="flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff6b00] disabled:opacity-50 text-[#121212] text-[13px] font-semibold px-3.5 py-2 rounded-xl active:scale-95 transition-all shrink-0">
+                className="flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff6b00] disabled:opacity-50 text-[#121212] text-[13px] font-semibold px-3.5 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all shrink-0">
                 <Printer className="w-4 h-4" /> PDF
               </button>
             </div>

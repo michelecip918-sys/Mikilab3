@@ -47,7 +47,7 @@ export const NovitaColorate = () => {
       <div className="grid grid-cols-3 gap-2">
         {items.map((r) => (
           <button key={r.id} data-testid={`novita-card-${r.id}`} onClick={() => open(r)}
-            className="text-left rounded-xl overflow-hidden bg-[#f8fbfe] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-97 transition-all">
+            className="text-left rounded-2xl shadow-md border border-amber-900/40 overflow-hidden bg-[#f8fbfe] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-97 transition-all">
             <div className="h-16 w-full overflow-hidden">
               <img src={r.image_url} alt={rn(r)} loading="lazy" className="w-full h-full object-cover" />
             </div>

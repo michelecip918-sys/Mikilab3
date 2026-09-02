@@ -26,7 +26,7 @@ export default function ShelfLife() {
   const days = Math.round(base * (1 + Math.min(h, 48) / 48 * 0.6));
   const highDigest = p >= 4.0 && p <= 4.6 && h >= 12;
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">
@@ -44,7 +44,7 @@ export default function ShelfLife() {
         <div className="grid grid-cols-2 gap-2">
           {PRODUCTS.map((x) => (
             <button key={x.id} data-testid={`sl-prod-${x.id}`} onClick={() => setProd(x.id)}
-              className={`px-3 py-2.5 rounded-xl text-sm font-semibold border ${prod === x.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{PLABEL[x.id]}</button>
+              className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${prod === x.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{PLABEL[x.id]}</button>
           ))}
         </div>
         )}

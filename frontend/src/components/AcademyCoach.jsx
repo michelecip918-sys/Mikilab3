@@ -127,7 +127,7 @@ export default function AcademyCoach() {
   return (
     <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e]">
       <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1e1e1e 55%,#ff6b00)" }}>
-        <div className="w-11 h-11 rounded-xl bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
+        <div className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
           <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
         <div className="min-w-0">

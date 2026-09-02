@@ -69,7 +69,7 @@ export default function CalcolatoreSequenze({ onBack }) {
   }, [dough, mixer, rhythm, lang]);
 
   const card = "rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4";
-  const inp = "w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] text-sm";
+  const inp = "w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] text-sm";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   return (
@@ -103,7 +103,7 @@ export default function CalcolatoreSequenze({ onBack }) {
       </div>
 
       {machines.length > 0 && (
-        <div data-testid="seq-machines" className="mb-4 rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/40 p-3 text-[12px] text-[#ff6b00] dark:text-[#ff6b00]">
+        <div data-testid="seq-machines" className="mb-4 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 border border-[#ff6b00]/40 p-3 text-[12px] text-[#ff6b00] dark:text-[#ff6b00]">
           🛠️ {L("Parco Macchine attivo", "Maschinenpark aktiv", "Machine Park active", "Maquinaria activa")}: {machines.join(", ")}. {L("Con spezzatrici/linee automatiche i ritmi si accorciano.", "Mit Teilern/Automatiklinien verkürzen sich die Rhythmen.", "With dividers/automatic lines the rhythm shortens.", "Con divisoras/líneas los ritmos se acortan.")}
         </div>
       )}

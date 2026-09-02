@@ -58,7 +58,7 @@ export default function ToolsDirectory({ onOpenTool }) {
             {QUICK.map((tl) => (
               <button key={tl.id} data-testid={`lab-quick-${tl.id}`} onClick={() => onOpenTool && onOpenTool(tl.id)}
                 className="flex flex-col items-start gap-2 text-left rounded-2xl bg-gradient-to-br from-[#ff6b00]/18 to-[#1e1e1e] border border-[#ff6b00]/40 hover:border-[#ff6b00] min-h-[128px] p-3.5 active:scale-[0.97] transition-all">
-                <span className="w-11 h-11 rounded-xl bg-[#ff6b00] flex items-center justify-center shrink-0"><tl.Icon className="w-6 h-6 text-white" /></span>
+                <span className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] flex items-center justify-center shrink-0"><tl.Icon className="w-6 h-6 text-white" /></span>
                 <span className="text-[15px] font-bold text-white leading-tight">{name(tl)}</span>
                 <span className="text-[11.5px] text-[#AEB8BF] leading-snug">{QUICK_DESC[tl.id]}</span>
               </button>
@@ -72,7 +72,7 @@ export default function ToolsDirectory({ onOpenTool }) {
         <Search className="w-4 h-4 text-[#7E8A93] absolute start-3 top-1/2 -translate-y-1/2" />
         <input data-testid="tools-dir-search" value={q} onChange={(e) => setQ(e.target.value)}
           placeholder={tri("Cerca uno strumento…", "Werkzeug suchen…", "Search a tool…", "Buscar herramienta…", "Chercher un outil…", "جستجوی ابزار…")}
-          className="w-full bg-[#161616] border border-[#2C2C2C] rounded-xl py-3 ps-10 pe-9 text-base text-white outline-none focus:border-[#ff6b00]" />
+          className="w-full bg-[#161616] border border-[#2C2C2C] rounded-2xl shadow-md border border-amber-900/40 py-3 ps-10 pe-9 text-base text-white outline-none focus:border-[#ff6b00]" />
         {q && <button data-testid="tools-dir-search-clear" onClick={() => setQ("")} className="absolute end-2.5 top-1/2 -translate-y-1/2 text-[#7E8A93] hover:text-white"><X className="w-4 h-4" /></button>}
       </div>
 

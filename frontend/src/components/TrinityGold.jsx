@@ -58,7 +58,7 @@ export function TrinitySeal() {
                 "MikiLab est une plateforme propriétaire avancée de gestion de boulangerie professionnelle, conçue et dirigée par Michele, avec BakeMix AI comme copilote et contributions techniques de l'équipe.",
                 "MikiLab یک پلتفرم اختصاصی پیشرفته برای مدیریت نانوایی حرفه‌ای است که توسط میکله طراحی و هدایت شده است.")}
             </p>
-            <div className="rounded-xl px-3 py-2.5 mb-3" style={{ background: "#12100C", border: "1px solid #6E5320" }}>
+            <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 mb-3" style={{ background: "#12100C", border: "1px solid #6E5320" }}>
               <p className="text-[11.5px] leading-snug" style={{ color: "#B79B6A" }}>
                 {tri("Credits di background — Technical Advisor: Mohammed (Silent Contributor).", "Hintergrund-Credits — Technical Advisor: Mohammed (Silent Contributor).", "Background credits — Technical Advisor: Mohammed (Silent Contributor).", "Créditos — Asesor técnico: Mohammed (Silent Contributor).", "Crédits — Conseiller technique : Mohammed (Silent Contributor).", "تقدیر — مشاور فنی: محمد.")}
               </p>

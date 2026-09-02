@@ -34,7 +34,7 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
     catch { toast.error(tri("Eliminazione non riuscita", "Löschen fehlgeschlagen", "Delete failed")); }
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40" data-testid="stores-manager">
@@ -58,7 +58,7 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
             ) : (
               <>
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#ff6b00] flex items-center justify-center shrink-0"><Store className="w-5 h-5 text-white" /></div>
+                  <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] flex items-center justify-center shrink-0"><Store className="w-5 h-5 text-white" /></div>
                   <div className="min-w-0 flex-1">
                     <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{s.name}</p>
                     {s.address && <p className="text-xs text-[#7E8A93] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" />{s.address}</p>}
@@ -68,12 +68,12 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
                 </div>
                 <div className="flex items-center gap-2 mt-3">
                   {current === s.id ? (
-                    <span data-testid={`store-active-${s.id}`} className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold text-[#ff6b00] bg-[#ff6b00]/10 rounded-xl py-2"><Check className="w-4 h-4" /> {tri("Attivo", "Aktiv", "Active")}</span>
+                    <span data-testid={`store-active-${s.id}`} className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold text-[#ff6b00] bg-[#ff6b00]/10 rounded-2xl shadow-md border border-amber-900/40 py-2"><Check className="w-4 h-4" /> {tri("Attivo", "Aktiv", "Active")}</span>
                   ) : (
-                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
+                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
                   )}
-                  <button data-testid={`store-edit-${s.id}`} onClick={() => setEditing(s.id)} className="p-2 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00]"><Pencil className="w-4 h-4" /></button>
-                  <button data-testid={`store-remove-${s.id}`} onClick={() => remove(s.id)} className="p-2 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>
+                  <button data-testid={`store-edit-${s.id}`} onClick={() => setEditing(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00]"><Pencil className="w-4 h-4" /></button>
+                  <button data-testid={`store-remove-${s.id}`} onClick={() => remove(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>
                 </div>
               </>
             )}
@@ -92,10 +92,10 @@ function StoreForm({ form, setForm, inp, onSave, onCancel, busy, tri, testidPref
       <input data-testid={`${testidPrefix}-phone`} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={tri("Telefono", "Telefon", "Phone")} className={inp} />
       <input data-testid={`${testidPrefix}-note`} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder={tri("Note", "Notizen", "Notes")} className={inp} />
       <div className="flex gap-2">
-        <button data-testid={`${testidPrefix}-save`} onClick={onSave} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#ff6b00] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-50">
+        <button data-testid={`${testidPrefix}-save`} onClick={onSave} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#ff6b00] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva", "Speichern", "Save")}
         </button>
-        <button data-testid={`${testidPrefix}-cancel`} onClick={onCancel} className="px-4 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-4 h-4" /></button>
+        <button data-testid={`${testidPrefix}-cancel`} onClick={onCancel} className="px-4 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-4 h-4" /></button>
       </div>
     </div>
   );

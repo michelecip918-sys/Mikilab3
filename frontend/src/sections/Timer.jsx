@@ -37,7 +37,7 @@ export default function Timer() {
   const [repeat, setRepeat] = useState(false);
   void nowTs; // forza il re-render al tick del provider
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40">
@@ -72,7 +72,7 @@ export default function Timer() {
           <RefreshCw className="w-4 h-4 text-[#ff6b00]" /> {tri("Ripeti automaticamente (pieghe/rinfreschi)", "Automatisch wiederholen (Falten/Auffrischen)", "Auto-repeat (folds/refreshes)")}
         </label>
         <button data-testid="timer-add" onClick={() => { addTimer(name.trim(), mins, repeat); setName(""); }}
-          className="mt-2 w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff6b00] text-white font-semibold py-3 rounded-xl active:scale-98 transition-all">
+          className="mt-2 w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
           <Plus className="w-5 h-5" /> {tri("Avvia timer", "Timer starten", "Start timer")} <span className="opacity-80">({mins || 0}′)</span>
         </button>
       </div>

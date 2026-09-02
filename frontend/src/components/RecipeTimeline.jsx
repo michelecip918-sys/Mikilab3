@@ -70,7 +70,7 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
 
   if (phases.length < 2) {
     return (
-      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
+      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
         <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] flex items-center gap-1 mb-2"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
         <p className="text-sm text-[#7E8A93]">{tri("Questa ricetta non ha una sequenza di lievitazione/cottura con tempi (es. una base, un lievito o un miglioratore).", "Dieses Rezept hat keine Gär-/Backsequenz mit Zeiten (z. B. eine Basis, ein Sauerteig oder ein Verbesserer).", "This recipe has no proof/bake sequence with times (e.g. a base, a starter or an improver).", "Esta receta no tiene una secuencia de fermentación/horneado con tiempos (p. ej. una base, una masa madre o un mejorante).")}</p>
       </div>
@@ -78,7 +78,7 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
   }
 
   return (
-    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
+    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
       <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
         <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
         <label className="text-[11px] font-semibold text-[#7E8A93] flex items-center gap-1.5 no-print">

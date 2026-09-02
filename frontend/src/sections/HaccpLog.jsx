@@ -89,7 +89,7 @@ export default function HaccpLog() {
     catch { toast.error(tri("Errore", "Fehler", "Error")); }
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // parsing scadenza (YYYY-MM-DD, DD/MM/YYYY, DD.MM.YYYY) → giorni residui (null se non parsabile)
   const daysToExpiry = (raw) => {
@@ -130,7 +130,7 @@ export default function HaccpLog() {
       {scanning && (
         <div className="relative rounded-2xl overflow-hidden mb-4 border border-[#ff6b00]" data-testid="haccp-scanner">
           <video ref={videoRef} className="w-full h-56 object-cover bg-black" muted playsInline />
-          <div className="absolute inset-0 border-[3px] border-white/60 m-10 rounded-xl pointer-events-none" />
+          <div className="absolute inset-0 border-[3px] border-white/60 m-10 rounded-2xl shadow-md border border-amber-900/40 pointer-events-none" />
           <button data-testid="haccp-scan-close" onClick={stopScan} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-2"><X className="w-4 h-4" /></button>
           <p className="absolute bottom-2 left-0 right-0 text-center text-white text-xs font-semibold">{tri("Inquadra il codice a barre / QR", "Barcode / QR anvisieren", "Aim at the barcode / QR")}</p>
         </div>
@@ -149,7 +149,7 @@ export default function HaccpLog() {
           <input data-testid="haccp-lot" value={form.lot} onChange={(e) => setForm((f) => ({ ...f, lot: e.target.value }))} placeholder={tri("Lotto fornitore", "Lieferanten-Charge", "Supplier lot")} className={inp} />
           <input data-testid="haccp-expiry" type="date" value={form.expiry} onChange={(e) => setForm((f) => ({ ...f, expiry: e.target.value }))} title={tri("Scadenza", "Ablauf", "Expiry")} className={inp} />
           <input data-testid="haccp-supplier" value={form.supplier} onChange={(e) => setForm((f) => ({ ...f, supplier: e.target.value }))} placeholder={tri("Fornitore", "Lieferant", "Supplier")} className={inp} />
-          <label className="flex items-center gap-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3">
+          <label className="flex items-center gap-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3">
             <Thermometer className="w-4 h-4 text-[#7E8A93]" />
             <input data-testid="haccp-temp" type="number" step="0.1" value={form.temp_c} onChange={(e) => setForm((f) => ({ ...f, temp_c: e.target.value }))} placeholder={tri("Temp. °C", "Temp. °C", "Temp °C")} className="w-full bg-transparent outline-none font-mono-data text-[#2B303B] dark:text-[#e4eff8]" />
           </label>
@@ -160,7 +160,7 @@ export default function HaccpLog() {
       {logs.length > 0 && (
         <div data-testid="haccp-list">
           {alerts > 0 && (
-            <div data-testid="haccp-alert-banner" className="flex items-center gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-xl px-3 py-2 mb-2 text-[#ff6b00] text-sm font-semibold">
+            <div data-testid="haccp-alert-banner" className="flex items-center gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-2 text-[#ff6b00] text-sm font-semibold">
               <AlertTriangle className="w-4 h-4 shrink-0" /> {tri(`${alerts} materia/e in scadenza o scaduta/e`, `${alerts} Rohstoff(e) bald ablaufend/abgelaufen`, `${alerts} material(s) expiring or expired`)}
             </div>
           )}
@@ -169,7 +169,7 @@ export default function HaccpLog() {
             {logs.map((l) => {
               const eb = expBadge(l.expiry);
               return (
-              <div key={l.id} data-testid={`haccp-item-${l.id}`} className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border rounded-xl px-3 py-2" style={eb ? { borderColor: eb.color + "66" } : {}}>
+              <div key={l.id} data-testid={`haccp-item-${l.id}`} className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={eb ? { borderColor: eb.color + "66" } : {}}>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">
                     {l.material}

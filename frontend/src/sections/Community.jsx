@@ -173,7 +173,7 @@ export default function Community({ onNavigate }) {
       setFollows((f) => (r.following ? [...new Set([...f, ch])] : f.filter((x) => x !== ch)));
     } catch { toast.error(tri("Azione non riuscita", "Aktion fehlgeschlagen", "Action failed", "Acción fallida")); }
   };
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // Registrazione OBBLIGATORIA per accedere al Social
   if (!user) {
@@ -209,7 +209,7 @@ export default function Community({ onNavigate }) {
       <div className="grid grid-cols-4 gap-2 mb-4" data-testid="community-quick-actions">
         <button data-testid="open-my-profile" onClick={() => setProfileUser(user.user_id)}
           className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
-          <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
+          <div className="relative w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center">
             <UserPlus className="w-5 h-5 text-[#ff6b00]" />
           </div>
           <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Profilo", "Profil", "Profile", "Perfil")}</span>
@@ -217,7 +217,7 @@ export default function Community({ onNavigate }) {
 
         <button data-testid="community-friends-btn" onClick={() => setFriendsOpen(true)}
           className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
-          <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
+          <div className="relative w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center">
             <UserPlus className="w-5 h-5 text-[#ff6b00]" />
             {friendReqCount > 0 && <span data-testid="friends-req-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff6b00] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{friendReqCount}</span>}
           </div>
@@ -226,7 +226,7 @@ export default function Community({ onNavigate }) {
 
         <button data-testid="community-messages-btn" onClick={() => { if (needLogin()) return; setChatUser(null); setChatOpen(true); }}
           className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
-          <div className="relative w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center">
+          <div className="relative w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center">
             <MessageCircle className="w-5 h-5 text-[#ff6b00]" />
             {msgUnread > 0 && <span data-testid="messages-unread-badge" className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff6b00] text-white text-[10px] font-extrabold flex items-center justify-center ring-2 ring-white">{msgUnread > 9 ? "9+" : msgUnread}</span>}
           </div>
@@ -235,7 +235,7 @@ export default function Community({ onNavigate }) {
 
         <button data-testid="community-map-btn" onClick={() => setMapOpen(true)}
           className="flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-95 hover:border-[#ff6b00]/60 transition-all">
-          <div className="relative w-9 h-9 rounded-xl bg-[#2e8b6f]/15 flex items-center justify-center">
+          <div className="relative w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#2e8b6f]/15 flex items-center justify-center">
             <MapPin className="w-5 h-5 text-[#2e8b6f]" />
           </div>
           <span className="text-[10.5px] font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight">{tri("Mappa", "Karte", "Map", "Mapa")}</span>
@@ -274,7 +274,7 @@ export default function Community({ onNavigate }) {
         <div className="grid grid-cols-3 gap-1.5 mb-2">
           {CATS.map(({ id, Icon, color }) => (
             <button key={id} data-testid={`community-cat-${id}`} onClick={() => setCat(id)}
-              className={`flex flex-col items-center gap-1 py-2 rounded-xl border text-[11px] font-semibold transition-all ${cat === id ? "text-white border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}
+              className={`flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 border text-[11px] font-semibold transition-all ${cat === id ? "text-white border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}
               style={cat === id ? { background: color } : {}}>
               <Icon className="w-4 h-4" /> {catLabel(id)}
             </button>
@@ -283,14 +283,14 @@ export default function Community({ onNavigate }) {
         <textarea data-testid="community-text" value={text} onChange={(e) => setText(e.target.value)} rows={3}
           placeholder={user ? tri("Condividi un consiglio, una foto o una ricetta…", "Teile einen Tipp, ein Foto oder ein Rezept…", "Share a tip, a photo or a recipe…", "Comparte un consejo, una foto o una receta…") : tri("Accedi per pubblicare…", "Zum Posten anmelden…", "Log in to post…", "Inicia sesión para publicar…")}
           className={inp} />
-        {photo && <div className="relative mt-2"><img src={photo} alt="" className="w-full h-40 object-cover rounded-xl" /><button data-testid="community-photo-clear" onClick={() => setPhoto("")} className="absolute top-2 right-2 bg-black/60 text-white rounded-full px-2 py-0.5 text-xs">✕</button></div>}
+        {photo && <div className="relative mt-2"><img src={photo} alt="" className="w-full h-40 object-cover rounded-2xl shadow-md border border-amber-900/40" /><button data-testid="community-photo-clear" onClick={() => setPhoto("")} className="absolute top-2 right-2 bg-black/60 text-white rounded-full px-2 py-0.5 text-xs">✕</button></div>}
         <div className="flex items-center gap-2 mt-2">
-          <label data-testid="community-photo-btn" className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-sm font-semibold text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">
+          <label data-testid="community-photo-btn" className="flex items-center gap-1.5 px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-sm font-semibold text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer">
             {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4 text-[#ff6b00]" />} {tri("Foto", "Foto", "Photo", "Foto")}
             <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
           <button data-testid="community-submit" data-sfx="save" onClick={submit} disabled={posting}
-            className="ml-auto flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-xl active:scale-98 transition-all">
+            className="ml-auto flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
             {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Pubblica", "Posten", "Post", "Publicar")}
           </button>
         </div>
@@ -318,7 +318,7 @@ export default function Community({ onNavigate }) {
               <button data-testid="follows-manager-close" onClick={() => setManageOpen(false)} className="w-8 h-8 rounded-full bg-[#1e1e1e] flex items-center justify-center text-[#7E8A93] active:scale-95"><X className="w-4 h-4" /></button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto p-2">
-              <div data-testid="channel-email-pref" className="mb-2 p-3 rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25">
+              <div data-testid="channel-email-pref" className="mb-2 p-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/8 border border-[#ff6b00]/25">
                 <p className="text-[12px] font-bold text-[#e4eff8] mb-2 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-[#ff6b00]" />{tri("Email dei canali seguiti", "E-Mails der abonnierten Kanäle", "Followed-channel emails", "Emails de canales seguidos", "E-mails des canaux suivis")}</p>
                 <div className="flex gap-1.5">
                   {[
@@ -336,7 +336,7 @@ export default function Community({ onNavigate }) {
               {CATS.map((c) => {
                 const on = follows.includes(c.id);
                 return (
-                  <div key={c.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#ff6b00]/5">
+                  <div key={c.id} className="flex items-center justify-between px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#ff6b00]/5">
                     <span className="flex items-center gap-2 text-sm text-[#e4eff8]"><c.Icon className="w-4 h-4" style={{ color: c.color || "#ff6b00" }} />{catLabel(c.id)}</span>
                     <button data-testid={`follow-manage-${c.id}`} onClick={() => toggleFollow(c.id)}
                       className={`px-3 py-1 rounded-full text-[12px] font-bold border transition-all ${on ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
@@ -369,7 +369,7 @@ export default function Community({ onNavigate }) {
       <div data-testid="feed-toggle" className="flex gap-2 mb-3">
         {[["all", tri("Recenti", "Neueste", "Recent", "Recientes")], ["popular", tri("Popolari", "Beliebt", "Popular", "Populares")], ["friends", tri("Amici", "Freunde", "Friends", "Amigos")]].map(([id, lbl]) => (
           <button key={id} data-testid={`feed-tab-${id}`} onClick={() => { if (id === "friends" && needLogin()) return; setFeed(id); }}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${feed === id ? "bg-[#1e1e1e] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>{lbl}</button>
+            className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${feed === id ? "bg-[#1e1e1e] text-white shadow-sm" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>{lbl}</button>
         ))}
       </div>
       {loading ? (
@@ -419,7 +419,7 @@ export default function Community({ onNavigate }) {
                   {p.can_delete && <button data-testid={`community-delete-${p.id}`} data-sfx="delete" onClick={() => remove(p.id)} className="text-[#7E8A93] hover:text-[#E4572E] p-1"><Trash2 className="w-4 h-4" /></button>}
                 </div>
                 {p.text && <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] whitespace-pre-line leading-relaxed">{lang === "de" ? (p.text_de || p.text) : lang === "es" ? (p.text_es || p.text_en || p.text) : lang === "en" ? (p.text_en || p.text) : p.text}</p>}
-                {p.image_url && <img src={p.image_url} alt="" className="w-full rounded-xl mt-2 max-h-80 object-cover" />}
+                {p.image_url && <img src={p.image_url} alt="" className="w-full rounded-2xl shadow-md border border-amber-900/40 mt-2 max-h-80 object-cover" />}
 
                 <div className="flex items-center gap-4 mt-3 pt-2 border-t border-[#2e2e2e] dark:border-[#2e2e2e]">
                   <button data-testid={`community-like-${p.id}`} onClick={() => like(p.id)} className={`flex items-center gap-1.5 text-sm font-semibold ${p.liked_by_me ? "text-[#E4572E]" : "text-[#7E8A93]"}`}>
@@ -443,7 +443,7 @@ export default function Community({ onNavigate }) {
                       <div className="flex gap-2 mt-1">
                         <input data-testid={`community-comment-input-${p.id}`} value={commentText} onChange={(e) => setCommentText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendComment(p.id)}
                           placeholder={tri("Scrivi un commento…", "Kommentar schreiben…", "Write a comment…", "Escribe un comentario…")} className={inp + " py-2"} />
-                        <button data-testid={`community-comment-send-${p.id}`} onClick={() => sendComment(p.id)} className="px-3 rounded-xl bg-[#ff6b00] text-white"><Send className="w-4 h-4" /></button>
+                        <button data-testid={`community-comment-send-${p.id}`} onClick={() => sendComment(p.id)} className="px-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] text-white"><Send className="w-4 h-4" /></button>
                       </div>
                     )}
                   </div>

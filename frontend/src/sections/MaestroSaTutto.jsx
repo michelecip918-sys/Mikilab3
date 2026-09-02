@@ -123,7 +123,7 @@ function ChatPanel() {
               key={i}
               data-testid={`prompt-suggestion-${i}`}
               onClick={() => send(s)}
-              className="w-full text-left bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-4 py-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF] active:scale-98 transition-all"
+              className="w-full text-left bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-4 py-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF] active:scale-98 transition-all"
             >
               {s}
             </button>
@@ -274,7 +274,7 @@ function StoccardaPanel() {
             value={form.title}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
             placeholder={t("ann_title_ph")}
-            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 outline-none focus:border-[#ff6b00]"
+            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#ff6b00]"
           />
           <textarea
             data-testid="announcement-details-input"
@@ -282,7 +282,7 @@ function StoccardaPanel() {
             onChange={(e) => setForm((f) => ({ ...f, details: e.target.value }))}
             rows={3}
             placeholder={t("ann_details_ph")}
-            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 outline-none focus:border-[#ff6b00] resize-none"
+            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#ff6b00] resize-none"
           />
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("ann_region")}</label>
@@ -290,18 +290,18 @@ function StoccardaPanel() {
               data-testid="announcement-region-select"
               value={form.region}
               onChange={(e) => setForm((f) => ({ ...f, region: e.target.value }))}
-              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 outline-none focus:border-[#ff6b00]"
+              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#ff6b00]"
             >
               {REGIONS.map((r) => <option key={r} value={r}>{regionLabel(r)}</option>)}
             </select>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setEditing(null)}
-              className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] px-4 py-3 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] font-medium">
+              className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] font-medium">
               {t("cancel")}
             </button>
             <button data-testid="announcement-save-btn" onClick={save}
-              className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-3 rounded-xl">
+              className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40">
               {t("save")}
             </button>
           </div>
@@ -310,7 +310,7 @@ function StoccardaPanel() {
         <button
           data-testid="add-announcement-btn"
           onClick={openNew}
-          className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2"
+          className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2"
         >
           <Plus className="w-4 h-4" /> {t("ann_add")}
         </button>
@@ -334,7 +334,7 @@ function StoccardaPanel() {
       {items.filter((a) => filter === "all" || (a.region || "stoccarda") === filter).map((a) => (
         <div key={a.id} data-testid={`announcement-${a.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
               <MapPin className="w-5 h-5 text-[#ff6b00]" />
             </div>
             <div className="flex-1 min-w-0">

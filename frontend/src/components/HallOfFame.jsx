@@ -50,7 +50,7 @@ export default function HallOfFame() {
           ) : (
             <div className="space-y-2" data-testid="hall-of-fame-list">
               {leaders.map((r) => (
-                <div key={r.user_id} data-testid={`hof-leader-${r.rank}`} className={`flex items-center gap-3 rounded-xl border p-2.5 ${r.rank <= 3 ? "bg-[#ff6b00]/10 border-[#ff6b00]/30" : "bg-[#121212] border-[#2e2e2e]"}`}>
+                <div key={r.user_id} data-testid={`hof-leader-${r.rank}`} className={`flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 border p-2.5 ${r.rank <= 3 ? "bg-[#ff6b00]/10 border-[#ff6b00]/30" : "bg-[#121212] border-[#2e2e2e]"}`}>
                   <span className="w-7 text-center text-lg font-extrabold text-[#ff6b00] shrink-0">{medal(r.rank)}</span>
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-[#ff6b00] flex items-center justify-center text-white font-bold shrink-0">
                     {r.picture ? <img src={r.picture} alt="" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} /> : (r.name || "F")[0].toUpperCase()}

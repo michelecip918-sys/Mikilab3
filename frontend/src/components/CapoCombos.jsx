@@ -41,7 +41,7 @@ export default function CapoCombos({ products, setProducts, lang, getSaveItems, 
   const remove = (id) => setCombos(deleteCombo(id));
 
   return (
-    <div className="mt-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#181818] p-2.5" data-testid="capo-combos">
+    <div className="mt-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#181818] p-2.5" data-testid="capo-combos">
       <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 flex items-center gap-1"><Star className="w-3.5 h-3.5" /> {tri3("Le mie combinazioni", "Meine Kombinationen", "My combos", "Mis combinaciones")}</p>
       <div className="flex flex-wrap items-center gap-1.5">
         {combos.map((c) => (

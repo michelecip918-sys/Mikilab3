@@ -167,7 +167,7 @@ export default function Enciclopedia({ embedded = false }) {
     return (
       <div data-testid="enciclopedia-embedded" className="mb-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
         <button data-testid="enc-panel-toggle" onClick={() => setPanelOpen((o) => !o)} className="w-full flex items-center gap-3 p-4 text-left">
-          <div className="w-10 h-10 rounded-xl bg-[#c94f00] flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-white" /></div>
+          <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-white" /></div>
           <div className="min-w-0 flex-1">
             <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{t("enc_title")}</h2>
             <p className="text-xs text-[#7E8A93] leading-snug mt-0.5">{t("enc_sub")}</p>

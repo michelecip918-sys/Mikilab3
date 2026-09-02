@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 export default function FoodCostBox() {
   const { lang } = useLang();
   const L = (i, e, s, f) => mkTri(lang)(i, e, e, s || e, f || e);
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
 
   const [rows, setRows] = useState([
@@ -63,7 +63,7 @@ export default function FoodCostBox() {
         <div><p className={lbl}>{L("Spese % ", "Overhead %", "Gastos %", "Frais %")}</p><input data-testid="fc-overhead" type="number" value={overhead} onChange={(e) => setOverhead(e.target.value)} className={inp} /></div>
       </div>
 
-      <div data-testid="fc-out" className="rounded-xl bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
+      <div data-testid="fc-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
         {[
           [L("Costo ingredienti", "Ingredient cost", "Coste ingredientes", "Coût ingrédients"), `€ ${eur(calc.ingCost)}`],
           [L("Spese generali", "Overhead", "Gastos generales", "Frais généraux"), `€ ${eur(calc.oh)}`],
@@ -75,12 +75,12 @@ export default function FoodCostBox() {
         ))}
       </div>
       <div className="grid grid-cols-2 gap-2 mt-2">
-        <div data-testid="fc-margin" className={`rounded-xl p-3 text-center border ${calc.profit >= 0 ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#FEE2E2] border-[#DC2626]"}`}>
+        <div data-testid="fc-margin" className={`rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border ${calc.profit >= 0 ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#FEE2E2] border-[#DC2626]"}`}>
           <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Margine", "Margin", "Margen", "Marge")}</p>
           <p className="font-display text-2xl font-bold text-[#ff6b00]">{calc.marginPct.toFixed(0)}%</p>
           <p className="text-[11px] text-[#ff6b00]">€ {eur(calc.profit)}</p>
         </div>
-        <div className="rounded-xl p-3 text-center border bg-[#ffffff] border-[#ff6b00]">
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border bg-[#ffffff] border-[#ff6b00]">
           <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Ricarico", "Markup", "Margen s/coste", "Marge s/coût")}</p>
           <p className="font-display text-2xl font-bold text-[#ff6b00]">{calc.markupPct.toFixed(0)}%</p>
           <p className="text-[11px] text-[#ff6b00]">{L("sul costo", "on cost", "sobre coste", "sur coût")}</p>

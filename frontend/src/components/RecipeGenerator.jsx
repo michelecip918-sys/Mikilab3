@@ -90,13 +90,13 @@ export default function RecipeGenerator() {
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{T("Prodotto", "Produkt", "Product", "Producto")}</label>
           <input data-testid="gen-product" value={product} onChange={(e) => setProduct(e.target.value)}
             placeholder={T("es. Focaccia al basilico, Ciabatta, Panini alla canapa…", "z. B. Focaccia mit Basilikum, Ciabatta…", "e.g. Basil focaccia, Ciabatta, Hemp rolls…", "p. ej. Focaccia de albahaca, Chapata, Bollos de cáñamo…")}
-            className="mt-1 w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" />
+            className="mt-1 w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" />
         </div>
 
         <div>
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{T("Pre-fermento / Lievitazione", "Vorteig / Triebmittel", "Preferment / Leavening", "Prefermento / Fermentación")}</label>
           <select data-testid="gen-preferment" value={preferment} onChange={(e) => setPreferment(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm">
+            className="mt-1 w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm">
             {PREFERMENTS.map((p) => <option key={p.id} value={p.id}>{T(p.it, p.de, p.en, p.es)}</option>)}
           </select>
         </div>
@@ -114,30 +114,30 @@ export default function RecipeGenerator() {
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93] flex items-center gap-1"><Package className="w-3.5 h-3.5" /> {T("Quantità", "Menge", "Quantity", "Cantidad")}</label>
           <div className="mt-1.5 flex gap-1.5">
             <button data-testid="gen-mode-weight" onClick={() => setMode("weight")}
-              className={`flex-1 text-xs font-semibold py-2 rounded-xl border transition-all active:scale-95 ${mode === "weight" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              className={`flex-1 text-xs font-semibold py-2 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-95 ${mode === "weight" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               {T("Peso totale", "Gesamtgewicht", "Total weight", "Peso total")}
             </button>
             <button data-testid="gen-mode-pieces" onClick={() => setMode("pieces")}
-              className={`flex-1 text-xs font-semibold py-2 rounded-xl border transition-all active:scale-95 ${mode === "pieces" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              className={`flex-1 text-xs font-semibold py-2 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-95 ${mode === "pieces" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               {T("Per pezzatura", "Nach Stückzahl", "By pieces", "Por piezas")}
             </button>
           </div>
           {mode === "weight" ? (
             <input data-testid="gen-weight" type="number" min={200} step={100} value={weight} onChange={(e) => setWeight(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" placeholder={T("Peso impasto totale (g)", "Gesamtteig (g)", "Total dough (g)", "Peso total (g)")} />
+              className="mt-2 w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" placeholder={T("Peso impasto totale (g)", "Gesamtteig (g)", "Total dough (g)", "Peso total (g)")} />
           ) : (
             <div className="mt-2 grid grid-cols-3 gap-1.5">
               <div>
                 <span className="text-[10px] text-[#7E8A93]">{T("N° pezzi", "Stückzahl", "Pieces", "Piezas")}</span>
-                <input data-testid="gen-pieces" type="number" min={1} value={pieces} onChange={(e) => setPieces(e.target.value)} className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
+                <input data-testid="gen-pieces" type="number" min={1} value={pieces} onChange={(e) => setPieces(e.target.value)} className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
               </div>
               <div>
                 <span className="text-[10px] text-[#7E8A93]">{T("g a pezzo", "g/Stück", "g/piece", "g/pieza")}</span>
-                <input data-testid="gen-piece-weight" type="number" min={10} value={pieceWeight} onChange={(e) => setPieceWeight(e.target.value)} className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
+                <input data-testid="gen-piece-weight" type="number" min={10} value={pieceWeight} onChange={(e) => setPieceWeight(e.target.value)} className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
               </div>
               <div>
                 <span className="text-[10px] text-[#7E8A93]">{T("Sfrido %", "Verschnitt %", "Waste %", "Merma %")}</span>
-                <input data-testid="gen-waste" type="number" min={0} max={30} value={waste} onChange={(e) => setWaste(e.target.value)} className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
+                <input data-testid="gen-waste" type="number" min={0} max={30} value={waste} onChange={(e) => setWaste(e.target.value)} className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />
               </div>
             </div>
           )}
@@ -150,7 +150,7 @@ export default function RecipeGenerator() {
             {T("Temperatura & costo (avanzato)", "Temperatur & Kosten (erweitert)", "Temperature & cost (advanced)", "Temperatura y coste (avanzado)")}
           </button>
           {showAdv && (
-            <div className="mt-2 grid grid-cols-2 gap-2 rounded-xl bg-[#ff6b00]/5 p-3">
+            <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/5 p-3">
               {[
                 ["dough", T("Temp. impasto °C", "Teigtemp. °C", "Dough temp °C", "Temp. masa °C"), doughTemp, setDoughTemp],
                 ["ambient", T("Temp. ambiente °C", "Raumtemp. °C", "Room temp °C", "Temp. ambiente °C"), ambient, setAmbient],
@@ -195,7 +195,7 @@ export default function RecipeGenerator() {
           {(result.warnings || []).length > 0 && (
             <div data-testid="gen-warnings" className="mb-4 space-y-1.5">
               {result.warnings.map((w, i) => (
-                <div key={i} className={`flex items-start gap-2 text-xs rounded-xl px-3 py-2 border ${w.level === "danger" ? "bg-[#E7513A]/10 border-[#E7513A]/40 text-[#b23a28]" : w.level === "warn" ? "bg-[#ff6b00]/10 border-[#ff6b00]/40 text-[#8a5e15]" : "bg-[#ff6b00]/10 border-[#ff6b00]/30 text-[#2e5f86]"}`}>
+                <div key={i} className={`flex items-start gap-2 text-xs rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 border ${w.level === "danger" ? "bg-[#E7513A]/10 border-[#E7513A]/40 text-[#b23a28]" : w.level === "warn" ? "bg-[#ff6b00]/10 border-[#ff6b00]/40 text-[#8a5e15]" : "bg-[#ff6b00]/10 border-[#ff6b00]/30 text-[#2e5f86]"}`}>
                   {w.level === "info" ? <Info className="w-4 h-4 shrink-0 mt-0.5" /> : <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />}
                   <span>{w.text}</span>
                 </div>
@@ -205,7 +205,7 @@ export default function RecipeGenerator() {
 
           <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1"><Wheat className="w-4 h-4" /> {T("Ingredienti (dosi calcolate)", "Zutaten (berechnet)", "Ingredients (calculated)", "Ingredientes (calculados)")}</p>
           {ing.preferment && (
-            <div className="mb-2 rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-2.5 text-sm">
+            <div className="mb-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-2.5 text-sm">
               <b>{ing.preferment.type}</b> ({ing.preferment.hours}): {ing.preferment.flour_g}g {T("farina","Mehl","flour","harina")} · {ing.preferment.water_g}g {T("acqua","Wasser","water","agua")}{ing.preferment.yeast_g ? ` · ${ing.preferment.yeast_g}g ${T("lievito","Hefe","yeast","levadura")}` : ""}
             </div>
           )}
@@ -222,7 +222,7 @@ export default function RecipeGenerator() {
 
           <div className="grid grid-cols-2 gap-2 mb-4">
             {result.water_temp && (
-              <div data-testid="gen-water-temp" className="rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
+              <div data-testid="gen-water-temp" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] flex items-center gap-1"><Thermometer className="w-3.5 h-3.5" /> {T("Acqua d'impasto", "Schüttwasser", "Dough water", "Agua de amasado")}</p>
                 <p className="text-2xl font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{result.water_temp.water_c}°C</p>
                 <p className="text-[10px] text-[#7E8A93]">{T("per impasto a", "für Teig bei", "for dough at", "para masa a")} {result.water_temp.target_dough_c}°C</p>
@@ -232,7 +232,7 @@ export default function RecipeGenerator() {
               </div>
             )}
             {result.food_cost && (
-              <div data-testid="gen-food-cost" className="rounded-xl bg-[#3E7C59]/10 border border-[#3E7C59]/25 p-3">
+              <div data-testid="gen-food-cost" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#3E7C59]/10 border border-[#3E7C59]/25 p-3">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#3E7C59] flex items-center gap-1"><Euro className="w-3.5 h-3.5" /> {T("Food cost", "Food-Cost", "Food cost", "Food cost")}</p>
                 <p className="text-2xl font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">€ {result.food_cost.cost_per_piece.toFixed(2)}</p>
                 <p className="text-[10px] text-[#7E8A93]">{T("a pezzo", "pro Stück", "per piece", "por pieza")} · {result.food_cost.pieces} {T("pz", "St.", "pcs", "pzs")}</p>
@@ -245,7 +245,7 @@ export default function RecipeGenerator() {
             <>
               <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{T("Procedimento su misura","Maßgeschneiderter Ablauf","Tailored process","Procedimiento a medida")}</p>
               <div data-testid="gen-procedure" className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-wrap leading-relaxed">{result.procedure}</div>
-              <div data-testid="gen-disclaimer" className="mt-4 flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-50 dark:bg-amber-500/10 px-3 py-2.5">
+              <div data-testid="gen-disclaimer" className="mt-4 flex items-start gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-amber-400/40 bg-amber-50 dark:bg-amber-500/10 px-3 py-2.5">
                 <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                 <p className="text-xs text-amber-700 dark:text-amber-300/90 leading-relaxed">
                   {T(
@@ -260,7 +260,7 @@ export default function RecipeGenerator() {
           )}
 
           <button data-testid="gen-print" onClick={() => window.print()}
-            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#ff6b00] border border-[#ff6b00]/40 px-4 py-2 rounded-xl active:scale-95">
+            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#ff6b00] border border-[#ff6b00]/40 px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95">
             <Printer className="w-4 h-4" /> {T("Stampa / Salva PDF","Drucken / PDF","Print / Save PDF","Imprimir / Guardar PDF")}
           </button>
         </div>

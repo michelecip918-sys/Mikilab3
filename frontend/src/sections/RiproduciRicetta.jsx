@@ -75,9 +75,9 @@ export default function RiproduciRicetta({ onBack, onNavigate }) {
                 className="w-full text-left flex items-center gap-3 rounded-2xl bg-[#1e1e1e] border border-[#2e2e2e] p-3 active:scale-98 hover:border-[#ff6b00]/60 transition-all">
                 {r.image_url ? (
                   <img src={r.image_url.startsWith("http") ? r.image_url : `${process.env.PUBLIC_URL}${r.image_url}`} alt="" loading="lazy"
-                    className="w-14 h-14 rounded-xl object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                    className="w-14 h-14 rounded-2xl shadow-md border border-amber-900/40 object-cover shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                 ) : (
-                  <div className="w-14 h-14 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><ChefHat className="w-6 h-6 text-[#ff6b00]" /></div>
+                  <div className="w-14 h-14 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><ChefHat className="w-6 h-6 text-[#ff6b00]" /></div>
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-[15px] font-bold text-white leading-tight truncate">{nm}</p>

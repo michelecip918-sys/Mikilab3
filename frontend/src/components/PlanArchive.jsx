@@ -133,7 +133,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
           data-testid={`plan-archive-save-btn-${kind}`}
           onClick={openNaming}
           disabled={!canSave}
-          className="w-full flex items-center justify-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] font-semibold px-4 py-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] disabled:opacity-40 active:scale-98 transition-all"
+          className="w-full flex items-center justify-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] disabled:opacity-40 active:scale-98 transition-all"
         >
           <Save className="w-4 h-4" /> {tri("Salva questo piano nell'archivio", "Diesen Plan im Archiv speichern", "Save this plan to the archive")}
         </button>
@@ -146,13 +146,13 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") doSave(); if (e.key === "Escape") setNaming(false); }}
             placeholder={tri("Nome piano (es. Settimana Natale)", "Planname (z. B. Weihnachtswoche)", "Plan name (e.g. Christmas week)")}
-            className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00] text-[#2B303B] dark:text-[#e4eff8]"
+            className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00] text-[#2B303B] dark:text-[#e4eff8]"
           />
           <button
             data-testid={`plan-archive-confirm-btn-${kind}`}
             onClick={doSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all disabled:opacity-50"
+            className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {tri("Salva", "Speichern", "Save")}
@@ -160,7 +160,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
           <button
             data-testid={`plan-archive-cancel-btn-${kind}`}
             onClick={() => setNaming(false)}
-            className="shrink-0 w-10 h-10 rounded-xl bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93]"
+            className="shrink-0 w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -177,7 +177,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
             <div
               key={p.id}
               data-testid={`plan-archive-item-${p.id}`}
-              className="flex items-center gap-2 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5"
+              className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5"
             >
               <div className="flex-1 min-w-0">
                 {editingId === p.id ? (

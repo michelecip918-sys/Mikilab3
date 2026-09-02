@@ -61,7 +61,7 @@ export default function HomeNews() {
       <p className="text-xs text-[#7E8A93] mb-3">{tri("Forni, farine, mulini, tendenze ed eventi — Italia, Germania e nel mondo.", "Öfen, Mehle, Mühlen, Trends und Events — Italien, Deutschland und weltweit.", "Ovens, flours, mills, trends and events — Italy, Germany and worldwide.")}</p>
 
       {isAdmin && editing !== null && (
-        <div data-testid="news-editor" className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 mb-3">
+        <div data-testid="news-editor" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 mb-3">
           {F("title", tri("Titolo (IT)", "Titel (IT)", "Title (IT)"))}
           {F("title_de", "Titel (DE)")}
           {F("title_en", "Title (EN)")}
@@ -81,7 +81,7 @@ export default function HomeNews() {
 
       <div className="space-y-2.5">
         {items.map((n) => (
-          <div key={n.id} data-testid={`news-item-${n.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+          <div key={n.id} data-testid={`news-item-${n.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 {n.tag && <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1 text-[#ff6b00] bg-[#ff6b00]/12">{n.tag}</span>}

@@ -17,7 +17,7 @@ export function TattooSignature({ className = "", testid = "tattoo-signature" })
         src={`${BASE}/bio-dough.jpg`}
         alt="Michele"
         loading="lazy"
-        className="w-12 h-12 rounded-xl object-cover ring-1 ring-[#1e1e1e]/30 shrink-0"
+        className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-[#1e1e1e]/30 shrink-0"
         draggable={false}
       />
       <div className="min-w-0">

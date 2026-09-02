@@ -33,7 +33,7 @@ export default function EsuberoZero({ onBack }) {
       <div className="rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm mb-4">
         <p className="text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1 flex items-center gap-1.5"><Scale className="w-4 h-4" /> {L("Peso esubero (g)", "Rest-Gewicht (g)", "Discard weight (g)", "Peso descarte (g)")}</p>
         <input data-testid="esubero-input" type="number" value={g} onChange={(e) => setG(e.target.value)}
-          className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data text-lg" />
+          className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data text-lg" />
       </div>
 
       <div className="space-y-3" data-testid="esubero-recipes">

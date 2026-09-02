@@ -127,7 +127,7 @@ export default function RicettaDelGiorno() {
           const on = shift.work_mode === m.id;
           return (
             <button key={m.id} data-testid={`rdg-mode-${m.id}`} onClick={() => setWorkMode(m.id)}
-              className="flex items-center justify-center gap-1.5 rounded-xl py-2.5 font-extrabold text-[13px] active:scale-95 transition-all"
+              className="flex items-center justify-center gap-1.5 rounded-2xl shadow-md border border-amber-900/40 py-2.5 font-extrabold text-[13px] active:scale-95 transition-all"
               style={{ background: on ? C.gold : C.surf, border: `2px solid ${on ? C.gold : C.border}`, color: on ? C.cream : C.dark }}>
               <m.Icon className="w-4 h-4" /> {m.t}
             </button>
@@ -135,13 +135,13 @@ export default function RicettaDelGiorno() {
         })}
       </div>
       {autonomia && (
-        <div className="rounded-xl px-3 py-2 mb-3" style={{ background: "#2E2214", border: `2px solid ${C.gold}` }}>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-3" style={{ background: "#2E2214", border: `2px solid ${C.gold}` }}>
           <p className="text-[12px] leading-snug" style={{ color: C.dark }}>{tri("Modalità Autonomia: completa i lotti in blocco e aggiorna lo stato (Pronto / In cella / In lievitazione) per chi lavora dopo di te.", "Autonomie: Chargen im Block fertigen und Status setzen.", "Autonomy: complete batches in bulk and update status for the next worker.", "Autonomía: completa lotes y actualiza el estado.", "Autonomie : termine les lots et mets à jour le statut.", "خودگردان: دسته‌ها را کامل کن و وضعیت را به‌روز کن.")}</p>
           {deadline && <p className="text-[12px] font-extrabold mt-1" style={{ color: "#E7B23C" }}>⏰ {tri("Puoi lavorare in autonomia fino alle", "Autonom bis", "Work autonomously until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} {fmtHM(deadline, lang)}.</p>}
         </div>
       )}
 
-      <div className="rounded-xl px-3 py-2 mb-4 flex items-center gap-2" style={{ background: C.surf, border: `2px solid ${C.border}` }}>
+      <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-4 flex items-center gap-2" style={{ background: C.surf, border: `2px solid ${C.border}` }}>
         <Mic className="w-4 h-4 shrink-0" style={{ color: C.gold }} />
         <p className="text-[12.5px]" style={{ color: C.muted }}>{tri("A voce: \u00abSegna 10 teglie focaccia come precotte\u00bb o \u00abLotto 2 pronto in cella\u00bb.", "Sag: \u00abMarkiere 10 Bleche Focaccia als vorgebacken\u00bb.", "Say: \u00abMark 10 focaccia trays as pre-baked\u00bb.", "Di: \u00abMarca 10 bandejas de focaccia como precocidas\u00bb.", "Dis : \u00abMarque 10 plaques de focaccia précuites\u00bb.", "بگو: «۱۰ سینی فوکاچا را نیم‌پز علامت بزن».")}</p>
       </div>

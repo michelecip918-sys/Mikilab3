@@ -42,7 +42,7 @@ export default function MyData({ onOpenTool }) {
       <div className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-4 border border-[#2e2e2e] dark:border-[#2e2e2e]">
         {TABS.map(({ id, Icon, label, n }) => (
           <button key={id} data-testid={`mydata-tab-${id}`} onClick={() => setTab(id)}
-            className={`flex flex-col items-center gap-1 py-2 rounded-xl text-[11px] font-semibold transition-all ${tab === id ? "bg-[#ff6b00] text-white shadow" : "text-[#7E8A93]"}`}>
+            className={`flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-semibold transition-all ${tab === id ? "bg-[#ff6b00] text-white shadow" : "text-[#7E8A93]"}`}>
             <Icon className="w-4 h-4" />
             <span className="leading-tight text-center">{label}{n != null ? ` (${n})` : ""}</span>
           </button>
@@ -53,7 +53,7 @@ export default function MyData({ onOpenTool }) {
         <div className="space-y-2" data-testid="mydata-piani">
           {plans.length === 0 ? <Empty text={tri("Nessun piano salvato. Salvane uno dal Piano Settimanale o dal Piano IA.", "Keine Pläne. Speichere einen im Wochenplan oder KI-Plan.", "No saved plans. Save one from the Weekly or AI plan.")} /> :
             plans.map((p) => (
-              <div key={p.id} className="flex items-center gap-2 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+              <div key={p.id} className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.kind === "capo" ? "bg-[#ff6b00]/15 text-[#ff6b00] dark:text-[#8FB0C2]" : "bg-[#ff6b00]/15 text-[#ff6b00] dark:text-[#a9d2ec]"}`}>{p.kind === "capo" ? tri("Piano IA", "KI-Plan", "AI Plan") : tri("Settimanale", "Woche", "Weekly")}</span>
                 <div className="min-w-0 flex-1"><p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{p.name}</p><p className="text-[11px] text-[#7E8A93] flex items-center gap-1"><Clock className="w-3 h-3" />{fmt(p.created_at)}</p></div>
                 <button data-testid={`mydata-open-plan-${p.id}`} onClick={() => onOpenTool && onOpenTool(p.kind === "capo" ? "pianoai" : "settimana")} className="text-xs font-semibold text-[#ff6b00]">{tri("Apri", "Öffnen", "Open")}</button>
@@ -66,7 +66,7 @@ export default function MyData({ onOpenTool }) {
         <div className="space-y-2" data-testid="mydata-ricette">
           {recipes.length === 0 ? <Empty text={tri("Nessuna ricetta personale. Aggiungile da Ricette → Le Mie Ricette.", "Keine eigenen Rezepte. Füge sie unter Rezepte → Meine Rezepte hinzu.", "No personal recipes. Add them under Recipes → My Recipes.")} /> :
             recipes.map((r) => (
-              <div key={r.id} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+              <div key={r.id} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
                 <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</p>
                 {r.category && <p className="text-[11px] text-[#7E8A93]">{r.category}</p>}
               </div>
@@ -114,9 +114,9 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
   };
 
   return (
-    <div data-testid={`mydata-chat-${chat.id}`} className="rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
+    <div data-testid={`mydata-chat-${chat.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
       <div className="flex items-center gap-2 p-3">
-        <div className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-[#ff6b00]" /></div>
+        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-[#ff6b00]" /></div>
         <button data-testid={`mydata-chat-toggle-${chat.id}`} onClick={toggle} className="min-w-0 flex-1 text-left">
           <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{label}</p>
           <p className="text-[11px] text-[#7E8A93] flex items-center gap-1"><Clock className="w-3 h-3" />{fmt(chat.ts)}</p>
@@ -146,5 +146,5 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
 }
 
 function Empty({ text }) {
-  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] p-4 text-sm text-[#7E8A93] leading-snug">{text}</div>;
+  return <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] p-4 text-sm text-[#7E8A93] leading-snug">{text}</div>;
 }

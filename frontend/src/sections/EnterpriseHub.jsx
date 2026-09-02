@@ -64,7 +64,7 @@ export default function EnterpriseHub() {
       <div className="grid grid-cols-3 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e] dark:border-[#2e2e2e]">
         {TABS.map(({ id, label, Icon }) => (
           <button key={id} data-testid={`enterprise-tab-${id}`} onClick={() => setSub(id)}
-            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${sub === id ? "bg-[#ff6b00] text-white shadow" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>
+            className={`flex items-center justify-center gap-1.5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${sub === id ? "bg-[#ff6b00] text-white shadow" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>
             <Icon className="w-4 h-4" /> {label}
           </button>
         ))}

@@ -84,7 +84,7 @@ export default function StreakFlame() {
       </div>
       {/* Badge-ricompensa al traguardo raggiunto */}
       {topRewardDays && (
-        <div data-testid="streak-reward" className="mt-2.5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#ff6b00]/20 to-[#7a531d]/20 border border-[#ff6b00]/40 px-3 py-2">
+        <div data-testid="streak-reward" className="mt-2.5 flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-gradient-to-r from-[#ff6b00]/20 to-[#7a531d]/20 border border-[#ff6b00]/40 px-3 py-2">
           <Award className="w-4 h-4 text-[#ff6b00] shrink-0" />
           <p className="text-[12px] font-bold text-white leading-tight">
             {REWARDS[topRewardDays]}

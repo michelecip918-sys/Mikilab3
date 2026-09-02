@@ -190,7 +190,7 @@ export default function ManiSporche() {
               const on = activeId === it.recipe_id;
               return (
                 <button key={it.id} data-testid={`manisporche-today-${it.recipe_id}`} onClick={() => setActive(it.recipe_id)}
-                  className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white/5 text-[#e4eff8] border-[#ff6b00]/30 hover:border-[#ff6b00]"}`}>
+                  className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white/5 text-[#e4eff8] border-[#ff6b00]/30 hover:border-[#ff6b00]"}`}>
                   {it.recipe_name} <span className="opacity-70">· {Math.round(it.pieces || 0)}×</span>
                 </button>
               );
@@ -205,7 +205,7 @@ export default function ManiSporche() {
           <ChefHat className="w-4 h-4" /> {tri("Ricetta attiva", "Aktives Rezept", "Active recipe", "Receta activa")}
         </label>
         <select data-testid="manisporche-recipe-select" value={activeId} onChange={(e) => setActive(e.target.value)}
-          className="w-full rounded-xl bg-[#f5f5f5] dark:bg-[#151515] border border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-base font-semibold px-3 py-3">
+          className="w-full rounded-2xl shadow-md border border-amber-900/40 bg-[#f5f5f5] dark:bg-[#151515] border border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-base font-semibold px-3 py-3">
           <option value="">{tri("Nessuna (tempi standard)", "Keins (Standardzeiten)", "None (standard times)", "Ninguna (tiempos estándar)")}</option>
           {recipes.map((r) => { const id = r.id || r.recipe_id; return <option key={id} value={id}>{recipeTitle(r, lang)}</option>; })}
         </select>

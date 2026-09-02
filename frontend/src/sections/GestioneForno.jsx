@@ -108,14 +108,14 @@ export default function GestioneForno() {
             data-testid="oven-name-input"
             value={form.name} onChange={(e) => set("name", e.target.value)}
             placeholder={t("oven_name_ph")}
-            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 outline-none focus:border-[#ff6b00]"
+            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#ff6b00]"
           />
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("oven_type")}</label>
             <select
               data-testid="oven-type-select"
               value={form.oven_type} onChange={(e) => set("oven_type", e.target.value)}
-              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3 outline-none focus:border-[#ff6b00]"
+              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#ff6b00]"
             >
               <option value="statico">{t("oven_type_static")}</option>
               <option value="ventilato">{t("oven_type_fan")}</option>
@@ -139,11 +139,11 @@ export default function GestioneForno() {
           </div>
           <div className="flex gap-2 pt-1">
             <button onClick={() => { setShowForm(false); setEditingId(null); }}
-              className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] px-4 py-3 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] font-medium">
+              className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] font-medium">
               {t("cancel")}
             </button>
             <button data-testid="oven-save-btn" onClick={save}
-              className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-3 rounded-xl">
+              className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40">
               {t("save")}
             </button>
           </div>
@@ -184,7 +184,7 @@ export default function GestioneForno() {
 
 function NumRow({ label, k, form, set }) {
   return (
-    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2">
+    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
       <span className="text-sm text-[#7E8A93] flex-1">{label}</span>
       <input
         data-testid={`oven-${k}-input`}
@@ -236,7 +236,7 @@ function PhaseTimer({ label, temp, minutes, onDone }) {
   const ss = String(left % 60).padStart(2, "0");
 
   return (
-    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl px-3 py-2 border border-[#2e2e2e] dark:border-[#2e2e2e]">
+    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 border border-[#2e2e2e] dark:border-[#2e2e2e]">
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium text-[#3F4A54] dark:text-[#AEB8BF] truncate">{label}</p>
         <p className="font-mono-data text-xs text-[#7E8A93]">{temp != null ? `${temp}°C · ` : ""}{minutes} min</p>

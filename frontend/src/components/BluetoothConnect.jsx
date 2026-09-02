@@ -97,12 +97,12 @@ export default function BluetoothConnect() {
             <button data-testid="bt-disconnect-btn" onClick={disconnect} className="text-[#7E8A93] hover:text-white flex items-center gap-1 text-sm font-bold"><X className="w-4 h-4" /> {tri("Scollega", "Trennen", "Disconnect", "Desconectar")}</button>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl bg-[#1e1e1e] border border-[#2C2C2C] p-4 text-center">
+            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#2C2C2C] p-4 text-center">
               <Scale className="w-6 h-6 text-[#ff6b00] mx-auto mb-1" />
               <p className="font-mono-data text-2xl font-extrabold text-white">{weight != null ? `${weight} g` : "—"}</p>
               <p className="text-[11px] text-[#7E8A93]">{tri("Peso", "Gewicht", "Weight", "Peso")}</p>
             </div>
-            <div className="rounded-xl bg-[#1e1e1e] border border-[#2C2C2C] p-4 text-center">
+            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#2C2C2C] p-4 text-center">
               <Thermometer className="w-6 h-6 text-[#ff6b00] mx-auto mb-1" />
               <p className="font-mono-data text-2xl font-extrabold text-white">{temp != null ? `${temp}°C` : "—"}</p>
               <p className="text-[11px] text-[#7E8A93]">{tri("Temperatura", "Temperatur", "Temperature", "Temperatura")}</p>

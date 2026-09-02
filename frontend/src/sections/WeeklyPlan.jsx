@@ -585,8 +585,8 @@ export default function WeeklyPlan() {
           <p className="font-display text-base font-bold flex items-center gap-2"><CalendarDays className="w-5 h-5 text-[#9fd0ee]" /> {tri("Nuova settimana!", "Neue Woche!", "New week!")}</p>
           <p className="text-[13px] text-white/85 mt-1 leading-snug">{tri("La lista riparte da zero. Vuoi ripartire dal piano che avevi salvato la scorsa settimana?", "Die Liste startet leer. Möchtest du den letzten gespeicherten Wochenplan wiederverwenden?", "The list starts empty. Do you want to reuse the plan you saved last week?")}</p>
           <div className="flex flex-wrap gap-2 mt-3">
-            <button data-testid="weekly-use-lastweek" onClick={useLastWeek} className="bg-white text-[#1e1e1e] font-bold text-sm px-4 py-2 rounded-xl active:scale-95 transition-all">{tri("Usa il piano della scorsa settimana", "Letzten Plan verwenden", "Use last week's plan")}</button>
-            <button data-testid="weekly-startfresh" onClick={() => setNewWeek(false)} className="bg-white/15 border border-white/30 text-white font-semibold text-sm px-4 py-2 rounded-xl active:scale-95 transition-all">{tri("Inizia da zero", "Leer beginnen", "Start fresh")}</button>
+            <button data-testid="weekly-use-lastweek" onClick={useLastWeek} className="bg-white text-[#1e1e1e] font-bold text-sm px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">{tri("Usa il piano della scorsa settimana", "Letzten Plan verwenden", "Use last week's plan")}</button>
+            <button data-testid="weekly-startfresh" onClick={() => setNewWeek(false)} className="bg-white/15 border border-white/30 text-white font-semibold text-sm px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">{tri("Inizia da zero", "Leer beginnen", "Start fresh")}</button>
           </div>
         </div>
       )}
@@ -730,7 +730,7 @@ export default function WeeklyPlan() {
           </p>
           <div className="grid grid-cols-1 gap-2.5">
             {assignedPoints.map((name) => (
-              <div key={name} className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+              <div key={name} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
                 <p className="flex items-center gap-1.5 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 min-w-0">
                   <Store className="w-4 h-4 text-[#ff6b00] shrink-0" /><span className="truncate">{name}</span>
                 </p>
@@ -738,14 +738,14 @@ export default function WeeklyPlan() {
                   <button
                     data-testid={`weekly-salepoint-pdf-${name}`}
                     onClick={() => pdfPerSalePoint(name)}
-                    className="flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
+                    className="flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all"
                   >
                     <FileText className="w-4 h-4" /> {tri("Ricette PDF", "Rezepte PDF", "Recipes PDF")}
                   </button>
                   <button
                     data-testid={`weekly-salepoint-labels-${name}`}
                     onClick={() => printLabels((x) => (x.sale_point || "") === name, name)}
-                    className="flex items-center justify-center gap-1.5 bg-[#C9A24B] hover:bg-[#b38f3f] text-white text-sm font-semibold px-3 py-2.5 rounded-xl active:scale-98 transition-all"
+                    className="flex items-center justify-center gap-1.5 bg-[#C9A24B] hover:bg-[#b38f3f] text-white text-sm font-semibold px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all"
                   >
                     <Tag className="w-4 h-4" /> {tri("Etichette", "Etiketten", "Labels")}
                   </button>
@@ -788,7 +788,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
   }));
 
   return (
-    <div className="bg-[#e4eff8] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-3">
+    <div className="bg-[#e4eff8] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3">
       <div className="flex items-center gap-2">
         <div className="flex-1 min-w-0">
           <CategoryRecipePicker recipes={recipes} value={item.recipe_id}

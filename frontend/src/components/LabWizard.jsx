@@ -247,7 +247,7 @@ export default function LabWizard({ onOpenTool }) {
                   <div key={s.n} data-testid={`lab-wizard-step-${s.n}`}
                     className={`rounded-2xl border p-3.5 transition-all ${s.complete ? "border-[#ff6b00]/60 bg-[#ff6b00]/10" : locked ? "border-[#2a2a2a] bg-[#141414] opacity-60" : "border-[#3a3a3a] bg-[#1e1e1e]"}`}>
                     <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${s.complete ? "bg-[#ff6b00] text-white" : locked ? "bg-[#1e1e1e] text-[#6b7379]" : "bg-[#2a2a2a] text-[#ff6b00]"}`}>
+                      <div className={`w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 flex items-center justify-center shrink-0 ${s.complete ? "bg-[#ff6b00] text-white" : locked ? "bg-[#1e1e1e] text-[#6b7379]" : "bg-[#2a2a2a] text-[#ff6b00]"}`}>
                         {s.complete ? <Check className="w-5 h-5" /> : locked ? <Lock className="w-5 h-5" /> : <s.Icon className="w-5 h-5" />}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -421,7 +421,7 @@ export default function LabWizard({ onOpenTool }) {
             {/* Sfida della settimana: prova una ricetta nuova (torna ogni lunedì) */}
             {challenge && (
               <div data-testid="lab-wizard-challenge" className={`mt-3 rounded-2xl border p-3.5 flex items-start gap-3 ${chalDone ? "border-[#ff6b00]/60 bg-[#ff6b00]/10" : "border-[#3a3a3a] bg-[#181818]"}`}>
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${chalDone ? "bg-[#ff6b00] text-white" : "bg-[#2a2a2a] text-[#F0B429]"}`}>
+                <div className={`w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 flex items-center justify-center shrink-0 ${chalDone ? "bg-[#ff6b00] text-white" : "bg-[#2a2a2a] text-[#F0B429]"}`}>
                   <Trophy className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">

@@ -13,7 +13,7 @@ export default function ScopriMikiLab() {
         <img src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`} alt="Michele" className="w-full h-52 object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="p-6">
           <div className="flex items-center gap-3 mb-3">
-            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-xl object-cover ring-2 ring-white/40" />
+            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-white/40" />
             <div>
               <h1 className="font-display text-2xl font-bold leading-none">Scopri MikiLab</h1>
               <p className="text-white/80 text-xs mt-1">{L("Chi è Michele, il metodo e la filosofia", "Wer Michele ist, Methode & Philosophie", "Who Michele is, the method & philosophy", "Quién es Michele, método y filosofía")}</p>

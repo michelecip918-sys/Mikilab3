@@ -118,7 +118,7 @@ export default function AcademyHome({ onNavigate }) {
             return (
               <button key={id} data-testid={`academy-tab-${id}`} onClick={() => setSub(id)}
                 className={`flex items-center gap-2.5 min-h-[54px] rounded-2xl px-4 border active:scale-97 transition-all text-start ${on ? "bg-[#ff6b00]/12 border-[#ff6b00]" : "bg-[#1e1e1e] border-[#2e2e2e] hover:border-[#ff6b00]/60"}`}>
-                <span className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Icon className="w-5 h-5 text-[#ff6b00]" /></span>
+                <span className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Icon className="w-5 h-5 text-[#ff6b00]" /></span>
                 <span className="font-display text-sm font-bold text-[#e4eff8]">{label}</span>
               </button>
             );
@@ -224,7 +224,7 @@ function DynamicRecipes() {
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Ricetta", "Rezept", "Recipe")}</span>
             <select data-testid="calc-recipe" value={recipe} onChange={(e) => setRecipe(e.target.value)}
-              className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
+              className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
               {CALC_RECIPES.map((c) => <option key={c.id} value={c.id}>{L(c.name)}</option>)}
             </select>
           </label>
@@ -232,18 +232,18 @@ function DynamicRecipes() {
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Larghezza teglia (cm)", "Blechbreite (cm)", "Tin width (cm)")}</span>
               <input data-testid="calc-width" type="number" value={width} onChange={(e) => setWidth(e.target.value)}
-                className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
+                className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
             </label>
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Lunghezza teglia (cm)", "Blechlänge (cm)", "Tin length (cm)")}</span>
               <input data-testid="calc-length" type="number" value={length} onChange={(e) => setLength(e.target.value)}
-                className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
+                className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5" />
             </label>
           </div>
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Farina", "Mehl", "Flour")}</span>
             <select data-testid="calc-flour" value={flour} onChange={(e) => setFlour(e.target.value)}
-              className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
+              className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5">
               {FLOURS.map((f) => <option key={f.name} value={f.name}>{f.name} · {f.type_de}</option>)}
             </select>
           </label>
@@ -291,7 +291,7 @@ function FlourDB() {
     <div className="space-y-3" data-testid="flour-db">
       <input data-testid="flour-search" value={q} onChange={(e) => setQ(e.target.value)}
         placeholder={tri("Cerca farina (es. 00, Dinkel, Manitoba)", "Mehl suchen (z.B. 00, Dinkel, Manitoba)", "Search flour (e.g. 00, Dinkel, Manitoba)")}
-        className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5 text-sm" />
+        className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#121212] px-3 py-2.5 text-sm" />
       <div className="rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e]">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 bg-[#e4eff8] dark:bg-[#181818] px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">
           <span>IT</span><span>DE (Type)</span><span>W</span>

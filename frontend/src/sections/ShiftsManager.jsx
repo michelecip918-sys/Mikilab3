@@ -51,7 +51,7 @@ export default function ShiftsManager({ store, storeName }) {
   };
   const remove = async (id) => { try { await shiftsApi.remove(id); setShifts((p) => p.filter((x) => x.id !== id)); } catch { toast.error(tri("Eliminazione non riuscita", "Löschen fehlgeschlagen", "Delete failed")); } };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
   const totalWeek = weekShifts.reduce((a, s) => a + (s.hours || 0), 0);
 
   return (
@@ -60,12 +60,12 @@ export default function ShiftsManager({ store, storeName }) {
 
       {/* Navigatore settimana */}
       <div className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-2 mb-4">
-        <button data-testid="shift-week-prev" onClick={() => setWeekStart((w) => addDays(w, -7))} className="p-2 rounded-xl hover:bg-[#121212] dark:hover:bg-[#181818]"><ChevronLeft className="w-5 h-5 text-[#ff6b00]" /></button>
+        <button data-testid="shift-week-prev" onClick={() => setWeekStart((w) => addDays(w, -7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#121212] dark:hover:bg-[#181818]"><ChevronLeft className="w-5 h-5 text-[#ff6b00]" /></button>
         <div className="text-center">
           <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1"><CalendarClock className="w-4 h-4 text-[#ff6b00]" /> {weekLabel}</p>
           <p className="text-[11px] text-[#7E8A93]">{tri("Totale settimana", "Woche gesamt", "Week total")}: <b className="font-mono-data">{totalWeek}h</b></p>
         </div>
-        <button data-testid="shift-week-next" onClick={() => setWeekStart((w) => addDays(w, 7))} className="p-2 rounded-xl hover:bg-[#121212] dark:hover:bg-[#181818]"><ChevronRight className="w-5 h-5 text-[#ff6b00]" /></button>
+        <button data-testid="shift-week-next" onClick={() => setWeekStart((w) => addDays(w, 7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#121212] dark:hover:bg-[#181818]"><ChevronRight className="w-5 h-5 text-[#ff6b00]" /></button>
       </div>
 
       {loading ? (
@@ -105,7 +105,7 @@ export default function ShiftsManager({ store, storeName }) {
 
                 {/* Form inline per il giorno */}
                 {formDay === dayIso && (
-                  <div data-testid={`shift-form-${dayIso}`} className="mt-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-xl p-3 space-y-2">
+                  <div data-testid={`shift-form-${dayIso}`} className="mt-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 p-3 space-y-2">
                     <input data-testid="shift-employee" value={form.employee} onChange={(e) => setForm({ ...form, employee: e.target.value })} placeholder={tri("Nome dipendente", "Mitarbeitername", "Employee name")} className={inp} />
                     <div className="grid grid-cols-2 gap-2">
                       <input data-testid="shift-role" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder={tri("Ruolo (es. Fornaio)", "Rolle (z.B. Bäcker)", "Role (e.g. Baker)")} className={inp} />
@@ -116,8 +116,8 @@ export default function ShiftsManager({ store, storeName }) {
                       <label className="text-[11px] text-[#7E8A93]">{tri("Fine", "Ende", "End")}<input data-testid="shift-end" type="time" value={form.end} onChange={(e) => setForm({ ...form, end: e.target.value })} className={inp + " mt-0.5 font-mono-data"} /></label>
                     </div>
                     <div className="flex gap-2">
-                      <button data-testid="shift-save" onClick={save} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#ff6b00] text-white font-semibold py-2.5 rounded-xl active:scale-98 disabled:opacity-50">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva turno", "Schicht speichern", "Save shift")}</button>
-                      <button data-testid="shift-cancel" onClick={() => setFormDay(null)} className="px-4 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-4 h-4" /></button>
+                      <button data-testid="shift-save" onClick={save} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#ff6b00] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva turno", "Schicht speichern", "Save shift")}</button>
+                      <button data-testid="shift-cancel" onClick={() => setFormDay(null)} className="px-4 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-4 h-4" /></button>
                     </div>
                   </div>
                 )}

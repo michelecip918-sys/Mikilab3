@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 
 const Avatar = ({ c }) => (
-  <div className="w-10 h-10 rounded-xl bg-[#ff6b00]/15 flex items-center justify-center overflow-hidden shrink-0">
+  <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center overflow-hidden shrink-0">
     {c.picture ? <img src={c.picture} alt={c.name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
       : <span className="font-bold text-[#ff6b00]">{(c.name || "?").slice(0, 1).toUpperCase()}</span>}
   </div>
@@ -74,7 +74,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
             <div className="grid grid-cols-3 gap-1.5 p-3">
               {TABS.map((t) => (
                 <button key={t.id} data-testid={`friends-tab-${t.id}`} onClick={() => setTab(t.id)}
-                  className={`py-2 rounded-xl text-xs font-semibold transition-all ${tab === t.id ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>
+                  className={`py-2 rounded-2xl shadow-md border border-amber-900/40 text-xs font-semibold transition-all ${tab === t.id ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>
                   {t.label}{t.n ? ` (${t.n})` : ""}
                 </button>
               ))}
@@ -109,7 +109,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
 
               {tab === "trova" && !loading && (
                 <>
-                  <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl px-3 py-2 mb-1">
+                  <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-1">
                     <Search className="w-4 h-4 text-[#7E8A93]" />
                     <input data-testid="friends-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tri("Cerca per nome o email…", "Nach Name oder E-Mail suchen…", "Search by name or email…")}
                       className="bg-transparent flex-1 text-sm outline-none text-[#2B303B] dark:text-[#EAF0EC]" />
@@ -157,7 +157,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
 
 function Row({ c, children, testid, sub }) {
   return (
-    <div data-testid={testid} className="flex items-center gap-3 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5">
+    <div data-testid={testid} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5">
       <Avatar c={c} />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-[#2B303B] dark:text-[#EAF0EC] truncate">{c.name}</p>
@@ -169,5 +169,5 @@ function Row({ c, children, testid, sub }) {
 }
 
 function Empty({ text }) {
-  return <div className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] p-4 text-sm text-[#7E8A93]">{text}</div>;
+  return <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] p-4 text-sm text-[#7E8A93]">{text}</div>;
 }

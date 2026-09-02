@@ -66,7 +66,7 @@ export default function BakeAlong() {
         <h3 className="font-display text-2xl font-bold leading-tight" data-testid="bake-along-title">{th.title}</h3>
         <p className="text-white/90 text-sm mt-1">{th.description}</p>
         {th.tip && (
-          <div className="mt-3 flex items-start gap-2 bg-white/15 rounded-xl px-3 py-2">
+          <div className="mt-3 flex items-start gap-2 bg-white/15 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
             <Lightbulb className="w-4 h-4 mt-0.5 shrink-0" />
             <p className="text-[13px] leading-snug">{th.tip}</p>
           </div>
@@ -79,7 +79,7 @@ export default function BakeAlong() {
       <div className="p-4 space-y-4">
         {/* Partecipa */}
         {data.already_submitted ? (
-          <div data-testid="bake-along-submitted" className="flex items-center gap-2 text-[#2e8b6f] text-sm font-semibold bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 rounded-xl px-3.5 py-2.5">
+          <div data-testid="bake-along-submitted" className="flex items-center gap-2 text-[#2e8b6f] text-sm font-semibold bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 rounded-2xl shadow-md border border-amber-900/40 px-3.5 py-2.5">
             <CheckCircle2 className="w-4.5 h-4.5" /> {tri("Hai già partecipato! Vota gli altri qui sotto.", "Du hast schon teilgenommen! Stimme unten ab.", "You've entered! Vote for others below.", "¡Ya participaste! Vota a los demás abajo.")}
           </div>
         ) : (
@@ -89,7 +89,7 @@ export default function BakeAlong() {
             {showForm && (
               <textarea data-testid="bake-along-note" value={note} onChange={(e) => setNote(e.target.value)} rows={2}
                 placeholder={tri("Racconta com'è andata (facoltativo)…", "Erzähl, wie es lief (optional)…", "Tell us how it went (optional)…", "Cuenta cómo fue (opcional)…")}
-                className="w-full mb-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00] text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full mb-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00] text-[#2B303B] dark:text-[#e4eff8]" />
             )}
             <button data-testid="bake-along-participate" disabled={busy}
               onClick={() => { if (!user) { setAuthOpen && setAuthOpen(true); return; } if (!showForm) { setShowForm(true); } else { fileRef.current?.click(); } }}
@@ -115,7 +115,7 @@ export default function BakeAlong() {
             <ul className="space-y-2.5" data-testid="bake-along-leaderboard">
               {entries.map((e) => (
                 <li key={e.id} data-testid={`bake-along-entry-${e.id}`}
-                  className="flex items-center gap-3 rounded-xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5">
+                  className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5">
                   <div className="relative shrink-0">
                     <img src={e.image_url} alt="" className="w-16 h-16 rounded-lg object-cover" />
                     {e.rank <= 3 && (
@@ -146,7 +146,7 @@ export default function BakeAlong() {
           </p>
         )}
         {champion && (
-          <div data-testid="bake-along-champion" className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#ff6b00]/12 to-[#ff6b00]/12 border border-[#ff6b00]/30 px-3 py-2">
+          <div data-testid="bake-along-champion" className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-gradient-to-r from-[#ff6b00]/12 to-[#ff6b00]/12 border border-[#ff6b00]/30 px-3 py-2">
             {champion.avatar ? <img src={champion.avatar} alt="" className="w-8 h-8 rounded-full object-cover" /> : <span className="text-xl">🥇</span>}
             <p className="text-[13px] text-[#2B303B] dark:text-[#e4eff8]">
               {tri("Campione:", "Champion:", "Champion:", "Campeón:")} <b>{champion.name}</b> <span className="text-[#7E8A93]">· {champion.likes} {tri("voti", "Stimmen", "votes", "votos")}</span>

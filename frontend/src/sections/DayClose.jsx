@@ -158,7 +158,7 @@ export default function DayClose() {
     setSaving(false);
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   // Consumi settimanali (farina vs lievito) dagli scarichi delle chiusure archiviate
   const consumption = useMemo(() => {
@@ -206,11 +206,11 @@ export default function DayClose() {
       {/* Toggle Nuova chiusura / Storico */}
       <div data-testid="dayclose-modeswitch" className="grid grid-cols-2 gap-2 mb-4 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl p-1">
         <button data-testid="dayclose-mode-wizard" onClick={() => setMode("wizard")}
-          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "wizard" ? "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
+          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "wizard" ? "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
           <CheckSquare className="w-4 h-4" /> {tri("Nuova chiusura", "Neuer Abschluss")}
         </button>
         <button data-testid="dayclose-mode-storico" onClick={() => { setMode("storico"); loadClosures(); }}
-          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === "storico" ? "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
+          className={`flex items-center justify-center gap-1.5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "storico" ? "bg-white dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] shadow-sm" : "text-[#7E8A93]"}`}>
           <History className="w-4 h-4" /> {tri("Storico chiusure", "Archiv")}
         </button>
       </div>
@@ -251,7 +251,7 @@ export default function DayClose() {
                   <p className="text-[11px] text-[#7E8A93] mt-0.5">{tri("Operatore", "Bediener")}: {c.operator || "—"} · {(c.produced || []).length} {tri("prodotti", "Produkte")} · {(c.temps || []).filter((t) => t.temp_c != null && t.temp_c !== "").length} {tri("temp.", "Temp.")} · {Object.values(c.cleaning || {}).filter(Boolean).length} {tri("pulizie", "Reinigungen")}</p>
                 </div>
                 <button data-testid={`storico-pdf-${c.id}`} onClick={() => downloadPdf(c.id, c.production_lot)}
-                  className="shrink-0 inline-flex items-center gap-1.5 bg-[#ff6b00] text-white text-xs font-semibold px-3 py-2 rounded-xl active:scale-95">
+                  className="shrink-0 inline-flex items-center gap-1.5 bg-[#ff6b00] text-white text-xs font-semibold px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95">
                   <FileText className="w-3.5 h-3.5" /> PDF
                 </button>
               </div>
@@ -281,7 +281,7 @@ export default function DayClose() {
           <Card icon={<QrCode className="w-4 h-4" />} title={tri("Lotto di produzione", "Produktionscharge")}>
             <div className="flex gap-2">
               <input data-testid="dayclose-lot" value={lot} onChange={(e) => setLot(e.target.value)} className={inp + " font-mono-data"} />
-              <button data-testid="dayclose-lot-regen" onClick={() => setLot(genLot())} className="shrink-0 px-3 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] text-xs font-semibold">{tri("Nuovo", "Neu")}</button>
+              <button data-testid="dayclose-lot-regen" onClick={() => setLot(genLot())} className="shrink-0 px-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] text-xs font-semibold">{tri("Nuovo", "Neu")}</button>
             </div>
             <p className="text-[11px] text-[#7E8A93] mt-1.5">{tri("Assegnato ai prodotti pronti alla vendita.", "Wird den verkaufsfertigen Produkten zugewiesen.")}</p>
           </Card>
@@ -303,7 +303,7 @@ export default function DayClose() {
 
           <Card icon={<Boxes className="w-4 h-4" />} title={tri("Magazzino materie prime", "Rohstofflager")}>
             {lowStock.length > 0 && (
-              <div data-testid="dayclose-lowstock" className="flex flex-wrap items-center gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-xl px-3 py-2 mb-2 text-[#ff6b00] text-xs font-semibold">
+              <div data-testid="dayclose-lowstock" className="flex flex-wrap items-center gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-2 text-[#ff6b00] text-xs font-semibold">
                 <AlertTriangle className="w-4 h-4 shrink-0" /> {tri(`${lowStock.length} materie sotto soglia`, `${lowStock.length} Rohstoffe unter Schwelle`)}
                 <button data-testid="dayclose-order-supplier" onClick={supplierOrder}
                   className="ml-auto inline-flex items-center gap-1.5 bg-[#ff6b00] text-white px-2.5 py-1 rounded-full active:scale-95">
@@ -313,7 +313,7 @@ export default function DayClose() {
             )}
             <div className="space-y-2">
               {inventory.map((it, i) => (
-                <div key={it.id || i} className="rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] p-2 space-y-1.5">
+                <div key={it.id || i} className="rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] p-2 space-y-1.5">
                   <div className="flex items-center gap-2">
                     <input data-testid={`inv-name-${i}`} value={it.name} placeholder={tri("Materia prima", "Rohstoff")}
                       onChange={(e) => setInventory((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))} className={inp} />
@@ -349,7 +349,7 @@ export default function DayClose() {
           </Card>
 
           <Card icon={<Package className="w-4 h-4" />} title={tri("Scarico materie prime (dal piano)", "Rohstoff-Abbuchung (aus Plan)")}>
-            <button data-testid="dayclose-suggest" onClick={suggestConsume} className="w-full mb-2 text-sm font-semibold text-white bg-[#ff6b00] py-2 rounded-xl active:scale-98 flex items-center justify-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Calcola scarico dal piano", "Abbuchung aus Plan berechnen")}</button>
+            <button data-testid="dayclose-suggest" onClick={suggestConsume} className="w-full mb-2 text-sm font-semibold text-white bg-[#ff6b00] py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 flex items-center justify-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Calcola scarico dal piano", "Abbuchung aus Plan berechnen")}</button>
             <div className="space-y-2">
               {consume.map((c, i) => (
                 <div key={i} className="flex items-center gap-2">
@@ -392,7 +392,7 @@ export default function DayClose() {
                 const on = !!cleaning[tri(it, de)] || !!cleaning[it];
                 return (
                   <button key={key} data-testid={`clean-${key}`} onClick={() => setCleaning((c) => ({ ...c, [tri(it, de)]: !on }))}
-                    className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left border transition-all active:scale-97 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                    className={`flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-left border transition-all active:scale-97 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                     <CheckSquare className={`w-4 h-4 shrink-0 ${on ? "text-white" : "text-[#7E8A93]"}`} />
                     <span className="text-xs font-semibold leading-tight">{tri(it, de)}</span>
                   </button>
@@ -432,7 +432,7 @@ export default function DayClose() {
               <li>• {tri("Temperature registrate", "Temperaturen")}: {temps.filter((t) => t.name && t.temp_c !== "").length}</li>
               <li>• {tri("Sanificazioni", "Reinigungen")}: {Object.values(cleaning).filter(Boolean).length}</li>
             </ul>
-            <div className="mt-3 flex items-start gap-2 bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-xl p-2.5">
+            <div className="mt-3 flex items-start gap-2 bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 p-2.5">
               <ShieldCheck className="w-4 h-4 text-[#ff6b00] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
               <p className="text-[12px] text-[#ff6b00] dark:text-[#8FB0C2]">{tri("Alla conferma i dati vengono archiviati e sincronizzati automaticamente nel Registro HACCP.", "Bei Bestätigung werden die Daten archiviert und automatisch ins HACCP-Register übernommen.")}</p>
             </div>
@@ -550,7 +550,7 @@ function SignaturePad({ value, onChange, tri }) {
 
   return (
     <div>
-      <div className="relative rounded-xl border-2 border-dashed border-[#c7d6e5] dark:border-[#2e2e2e] bg-[#f8fbfe] dark:bg-[#181818] overflow-hidden">
+      <div className="relative rounded-2xl shadow-md border border-amber-900/40 border-2 border-dashed border-[#c7d6e5] dark:border-[#2e2e2e] bg-[#f8fbfe] dark:bg-[#181818] overflow-hidden">
         <canvas ref={ref} width={600} height={180} data-testid="signature-pad"
           onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerLeave={end}
           className="w-full touch-none" style={{ height: "150px", cursor: "crosshair" }} />

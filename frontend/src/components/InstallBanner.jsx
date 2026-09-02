@@ -31,12 +31,12 @@ export default function InstallBanner() {
   return (
     <div data-testid="install-banner" className="max-w-xl mx-auto px-4 mt-2">
       <div className="flex items-center gap-3 rounded-2xl bg-[#2B303B] text-white px-4 py-2.5 shadow-lg border border-[#ff6b00]/30">
-        <div className="w-8 h-8 rounded-xl bg-[#ff6b00]/20 flex items-center justify-center shrink-0">
+        <div className="w-8 h-8 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/20 flex items-center justify-center shrink-0">
           <Download className="w-4 h-4 text-[#ff6b00]" />
         </div>
         <p className="flex-1 min-w-0 text-sm font-medium truncate">{t("install_banner_title")}</p>
         <button data-testid="install-banner-btn" onClick={install}
-          className="shrink-0 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold px-3 py-1.5 rounded-xl active:scale-95 transition-all">
+          className="shrink-0 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold px-3 py-1.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
           {t("install_app")}
         </button>
         <button data-testid="install-banner-close" onClick={close} className="shrink-0 text-white/60 hover:text-white p-1" aria-label="close">

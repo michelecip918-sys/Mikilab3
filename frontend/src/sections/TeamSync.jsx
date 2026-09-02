@@ -166,7 +166,7 @@ export default function TeamSync({ open, onClose }) {
 
       <div className="max-w-2xl mx-auto p-4 space-y-4 pb-24">
         {/* Modalità + operatore & reparto */}
-        <div className="rounded-xl p-4 space-y-3" style={{ background: D.card, border: `1px solid ${D.border}` }}>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-4 space-y-3" style={{ background: D.card, border: `1px solid ${D.border}` }}>
           <div className="grid grid-cols-2 gap-2">
             <button data-testid="team-mode-solo" onClick={() => setMode("solo")} className="rounded-md py-2 font-bold text-[13px]" style={{ background: mode === "solo" ? D.accent : "#222", color: "#fff" }}>👤 {tri("SOLO (Tuttofare)", "SOLO", "SOLO (All-round)", "SOLO", "SOLO", "تنها")}</button>
             <button data-testid="team-mode-team" onClick={() => setMode("team")} className="rounded-md py-2 font-bold text-[13px]" style={{ background: mode === "team" ? D.green : "#222", color: mode === "team" ? "#000" : "#fff" }}>👥 {tri("SQUADRA", "TEAM", "TEAM", "EQUIPO", "ÉQUIPE", "تیم")}</button>
@@ -188,7 +188,7 @@ export default function TeamSync({ open, onClose }) {
         </div>
 
         {/* Compito attuale */}
-        <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.accent}` }}>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-4" style={{ background: D.card, border: `1px solid ${D.accent}` }}>
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[12px] font-bold" style={{ color: D.accent }}>{tri("SEQUENZA · REPARTO", "SEQUENZ · BEREICH", "SEQUENCE · DEPT", "SECUENCIA · ÁREA", "SÉQUENCE · SECTEUR", "توالی · بخش")} {task ? repLabel(task.reparto) : "—"}</span>
             <span className="text-[12px]" style={{ color: D.muted }}>{task ? task.tempo : "—"}</span>
@@ -213,7 +213,7 @@ export default function TeamSync({ open, onClose }) {
         </div>
 
         {/* SOS impasto + temp */}
-        <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
           <h3 className="flex items-center gap-2 font-bold text-[15px] mb-2" style={{ color: D.accent }}><ThermometerSun className="w-4 h-4" /> {tri("SOS Impasto & Temp. Vasca", "SOS Teig & Bottich-Temp.", "Dough SOS & Vat Temp.", "SOS Masa y Temp.", "SOS Pâte & Temp.", "SOS خمیر و دما")}</h3>
           <div className="flex items-center gap-2 mb-3">
             <label className="text-[12px]" style={{ color: D.muted }}>{tri("Temp. rilevata °C", "Gemessene Temp. °C", "Measured temp °C", "Temp. medida °C", "Temp. mesurée °C", "دمای اندازه‌گیری")}</label>
@@ -228,7 +228,7 @@ export default function TeamSync({ open, onClose }) {
         </div>
 
         {/* Ricalcolo dosi */}
-        <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
           <div className="flex items-center justify-between mb-2">
             <h3 className="flex items-center gap-2 font-bold text-[15px]" style={{ color: D.accent }}><Calculator className="w-4 h-4" /> {tri("Database Ricette (illimitate)", "Rezept-DB (unbegrenzt)", "Recipe DB (unlimited)", "BD Recetas (ilimitadas)", "BD Recettes", "پایگاه دستورها")}</h3>
             <button data-testid="team-recipe-add-toggle" onClick={() => setShowAdd((v) => !v)} className="text-[11px] px-2 py-1 rounded-md font-bold" style={{ background: "#222", color: D.green, border: `1px solid ${D.green}` }}>{showAdd ? tri("❌ Chiudi", "❌ Zu", "❌ Close", "❌ Cerrar", "❌ Fermer", "❌ بستن") : tri("➕ Nuova", "➕ Neu", "➕ New", "➕ Nueva", "➕ Nouv.", "➕ جدید")}</button>
@@ -275,7 +275,7 @@ export default function TeamSync({ open, onClose }) {
         </div>
 
         {/* Tutor AI Visivo (ibrido: checklist gratis + analisi AI reale) */}
-        <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
           <h3 className="flex items-center gap-2 font-bold text-[15px] mb-2" style={{ color: D.accent }}><Eye className="w-4 h-4" /> {tri("Tutor AI Visivo", "Visueller KI-Tutor", "Visual AI Tutor", "Tutor AI Visual", "Tuteur IA Visuel", "مربی هوش مصنوعی")}</h3>
           <div className="grid grid-cols-2 gap-2 mb-2">
             <button data-testid="team-coach-formatura" onClick={() => setCoachType("formatura")} className="rounded-md py-2 text-[12px] font-bold" style={{ background: coachType === "formatura" ? D.accent : D.input, color: coachType === "formatura" ? "#0A0B0E" : D.text, border: `1px solid ${D.border}` }}>🥖 {tri("Formatura", "Formen", "Shaping", "Formado", "Façonnage", "فرم‌دهی")}</button>
@@ -291,7 +291,7 @@ export default function TeamSync({ open, onClose }) {
         </div>
 
         {/* Interfono */}
-        <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
           <h3 className="flex items-center gap-2 font-bold text-[15px] mb-1" style={{ color: D.accent }}><Radio className="w-4 h-4" /> {tri("Interfono Squadra (Push-To-Talk)", "Team-Gegensprechen", "Team Intercom (Push-To-Talk)", "Intercom Equipo", "Interphone Équipe", "اینترکام تیم")}</h3>
           <p className="text-[11px] mb-3" style={{ color: D.muted }}>{tri("Annuncio vocale sul dispositivo. La radio reale tra auricolari richiede l'app installata (Bluetooth).", "Sprachansage am Gerät. Echtes Funk-Intercom braucht die installierte App.", "Voice announcement on device. Real headset radio needs the installed app.", "Aviso de voz en el dispositivo. La radio real necesita la app instalada.", "Annonce vocale sur l'appareil. La radio réelle nécessite l'app installée.", "اعلام صوتی روی دستگاه.")}</p>
           <div className="grid grid-cols-2 gap-2">

@@ -125,7 +125,7 @@ export default function FermentazionePredittiva() {
   }).join(" ");
 
   const warm = est.Tf >= 25;
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
 
   return (
     <div className="pb-40" data-testid="fermentazione-tool">
@@ -146,11 +146,11 @@ export default function FermentazionePredittiva() {
       <div className="grid grid-cols-[1fr_auto] gap-2 mb-2">
         <input data-testid="ferment-city" value={city} onChange={(e) => setCity(e.target.value)} onKeyDown={(e) => e.key === "Enter" && searchCity()}
           placeholder={tri("…oppure cerca città", "…oder Stadt suchen", "…or search city", "…o busca ciudad")} className={inp} />
-        <button data-testid="ferment-city-search" onClick={searchCity} disabled={loading} className="px-4 rounded-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] font-semibold text-[#2B303B] dark:text-[#e4eff8] disabled:opacity-50">{tri("Cerca", "Suchen", "Search", "Buscar")}</button>
+        <button data-testid="ferment-city-search" onClick={searchCity} disabled={loading} className="px-4 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] font-semibold text-[#2B303B] dark:text-[#e4eff8] disabled:opacity-50">{tri("Cerca", "Suchen", "Search", "Buscar")}</button>
       </div>
       {err && <p data-testid="ferment-error" className="text-sm text-[#E4572E] mb-2">{err}</p>}
       {w && (
-        <div data-testid="ferment-weather" className="flex items-center gap-2 text-sm text-[#ff6b00] dark:text-[#a9d2ec] bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-xl px-3 py-2 mb-3">
+        <div data-testid="ferment-weather" className="flex items-center gap-2 text-sm text-[#ff6b00] dark:text-[#a9d2ec] bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-3">
           <CloudSun className="w-4 h-4" /> {w.place}: <b>{Math.round(w.temp)}°C</b>{w.humidity != null && <span className="text-[#7E8A93]">· {Math.round(w.humidity)}% {tri("umidità", "Feuchte", "humidity", "humedad")}</span>}
         </div>
       )}
@@ -171,7 +171,7 @@ export default function FermentazionePredittiva() {
       <div className="flex gap-2 mb-4">
         {[["double", tri("Raddoppio", "Verdopplung", "Double", "Duplica")], ["plus50", tri("+50% volume", "+50% Volumen", "+50% volume", "+50% volumen")]].map(([id, lbl]) => (
           <button key={id} data-testid={`ferment-level-${id}`} onClick={() => setLevel(id)}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-all active:scale-98 ${level === id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{lbl}</button>
+            className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-98 ${level === id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{lbl}</button>
         ))}
       </div>
 

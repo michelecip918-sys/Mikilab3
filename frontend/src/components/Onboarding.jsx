@@ -47,11 +47,11 @@ export default function Onboarding({ onDone }) {
         <div className="space-y-3">
           <input data-testid="ob-labname" value={p.labName} onChange={(e) => set({ labName: e.target.value })}
             placeholder={tri("Nome del laboratorio", "Name der Backstube", "Bakery name")}
-            className="w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+            className="w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8]" />
           <div className="grid grid-cols-2 gap-2">
             {TYPES.map((tp) => (
               <button key={tp.id} data-testid={`ob-type-${tp.id}`} onClick={() => set({ type: tp.id })}
-                className={`px-3 py-2.5 rounded-xl text-sm font-semibold border ${p.type === tp.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tp.label}</button>
+                className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${p.type === tp.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tp.label}</button>
             ))}
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function Onboarding({ onDone }) {
         <div className="grid grid-cols-2 gap-2">
           {FOCUS.map((f) => (
             <button key={f.id} data-testid={`ob-focus-${f.id}`} onClick={() => set({ focus: f.id })}
-              className={`px-3 py-3 rounded-xl text-sm font-semibold border ${p.focus === f.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{f.label}</button>
+              className={`px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${p.focus === f.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{f.label}</button>
           ))}
         </div>
       ),

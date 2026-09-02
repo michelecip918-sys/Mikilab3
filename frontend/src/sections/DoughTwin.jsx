@@ -198,7 +198,7 @@ export default function DoughTwin() {
         <div>
           <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><ChefHat className="w-3.5 h-3.5 text-[#ff6b00]" />{tri("Parti da una ricetta", "Von einem Rezept starten", "Start from a recipe")}</span>
           <select data-testid="twin-recipe" value={recipeId} onChange={(e) => applyRecipe(e.target.value)}
-            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]">
+            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#ff6b00]">
             <option value="">{tri("Manuale (usa i cursori)", "Manuell (Regler nutzen)", "Manual (use sliders)")}</option>
             {recipes.some((r) => r._own) && (
               <optgroup label={tri("Le mie ricette", "Meine Rezepte", "My recipes")}>
@@ -213,7 +213,7 @@ export default function DoughTwin() {
         <div>
           <span className="text-[11px] font-semibold uppercase text-[#7E8A93] flex items-center gap-1 mb-1"><Clock className="w-3.5 h-3.5 text-[#ff6b00]" />{tri("Ora d'inizio impasto", "Startzeit Teig", "Dough start time")}</span>
           <input data-testid="twin-start-time" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}
-            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00] font-mono-data" />
+            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#ff6b00] font-mono-data" />
         </div>
       </div>
 
@@ -231,12 +231,12 @@ export default function DoughTwin() {
         </p>
         {alarmAt ? (
           <button data-testid="twin-alarm-cancel" onClick={cancelAlarm}
-            className="mt-3 w-full flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 border border-white/40 text-white font-semibold py-2.5 rounded-xl active:scale-97 transition-all">
+            className="mt-3 w-full flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 border border-white/40 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-97 transition-all">
             <BellOff className="w-4 h-4" /> {tri(`Sveglia attiva alle ${alarmAt} · Annulla`, `Wecker aktiv um ${alarmAt} · Abbrechen`, `Alarm set for ${alarmAt} · Cancel`)}
           </button>
         ) : (
           <button data-testid="twin-alarm-set" onClick={schedulePeakAlarm}
-            className="mt-3 w-full flex items-center justify-center gap-2 bg-white text-[#1e1e1e] font-bold py-2.5 rounded-xl active:scale-97 transition-all">
+            className="mt-3 w-full flex items-center justify-center gap-2 bg-white text-[#1e1e1e] font-bold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-97 transition-all">
             <Bell className="w-4 h-4" /> {tri("Avvisami al picco", "Beim Peak wecken", "Alert me at the peak")}
           </button>
         )}
@@ -253,7 +253,7 @@ export default function DoughTwin() {
             <div className="flex gap-1.5">
               {[["ldb", tri("Birra", "Hefe", "Yeast")], ["madre", tri("Madre", "Sauer", "Sourdough")]].map(([id, lb]) => (
                 <button key={id} data-testid={`twin-type-${id}`} onClick={() => { setYeastType(id); setYeast(id === "ldb" ? 1 : 20); }}
-                  className={`flex-1 py-2 rounded-xl text-sm font-semibold border ${yeastType === id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{lb}</button>
+                  className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${yeastType === id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{lb}</button>
               ))}
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function DoughTwin() {
       {/* Consigli */}
       <div className="space-y-2" data-testid="twin-advice">
         {advice.map((a, i) => (
-          <div key={i} className="flex items-start gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/25 rounded-xl p-3">
+          <div key={i} className="flex items-start gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/25 rounded-2xl shadow-md border border-amber-900/40 p-3">
             <Sparkles className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-snug">{a}</p>
           </div>

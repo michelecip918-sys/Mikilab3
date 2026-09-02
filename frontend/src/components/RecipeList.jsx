@@ -482,7 +482,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                         )}
                         <div className={`absolute inset-0 ${coverSrc ? "bg-gradient-to-t from-[#1A1412]/85 via-[#1A1412]/30 to-[#1A1412]/10" : "bg-[#ff6b00]/12"}`} />
                         <div className="relative z-10 w-full flex items-center gap-2 px-3.5 py-3">
-                          <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl text-xl shrink-0 drop-shadow"
+                          <span className="inline-flex items-center justify-center w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 text-xl shrink-0 drop-shadow"
                             style={{ background: (CAT_COLORS[cat.key] || "#ff6b00") + (coverSrc ? "55" : "33"), boxShadow: `inset 0 0 0 1.5px ${CAT_COLORS[cat.key] || "#ff6b00"}` }}>{cat.icon}</span>
                           <h2 className={`font-display text-xl font-bold flex-1 text-left ${coverSrc ? "text-white drop-shadow" : "text-[#ff6b00]"}`}>{t(cat.label)}</h2>
                           <span className="text-xs font-mono-data font-bold px-2 py-0.5 rounded-full text-white"
@@ -661,7 +661,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
     const perPiece = pcs > 0 ? total / pcs : null;
     if (total > 0) {
       priceBlock = (
-        <div data-testid={`recipe-cost-${r.id}`} className="rounded-xl px-3 py-3 border bg-[#ff6b00]/10 border-[#ff6b00]/30">
+        <div data-testid={`recipe-cost-${r.id}`} className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 border bg-[#ff6b00]/10 border-[#ff6b00]/30">
           <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#8FB0C2] mb-2">{t("cost_breakdown")}</p>
           <div className="space-y-1 mb-2">
             {br.map(([label, val], idx) => (
@@ -784,7 +784,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         )}
 
         {isPanettone && !r.locked && farro && (
-          <div data-testid={`farro-banner-${r.id}`} className="rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/30 p-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
+          <div data-testid={`farro-banner-${r.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 border border-[#ff6b00]/30 p-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
             🌾 {tri(
               "VERSIONE AL FARRO: essendo il glutine del farro più fragile e tenace, l'idratazione è stata ridotta di ~4%. Impasta per meno tempo e più delicatamente (evita il surriscaldamento); inserisci burro e tuorli in piccole dosi frazionate. Gestione del lievito madre, glassa e procedimento restano invariati.",
               "DINKEL-VERSION: Da das Dinkelgluten zerbrechlicher ist, wurde die Hydratation ~4% reduziert. Kürzer und schonender kneten (Überhitzung vermeiden); Butter und Eigelb in kleinen Portionen fraktioniert einarbeiten. Lievito-Madre-Führung, Glasur und Ablauf bleiben unverändert.",
@@ -813,7 +813,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         ) : rows.length > 0 ? (
           <>
           {biga && (
-            <div data-testid={`recipe-biga-${r.id}`} className="rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3">
+            <div data-testid={`recipe-biga-${r.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3">
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#8FB0C2] mb-2">🥖 {tri("Fase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)", "Phase 1 · Vorteig (Biga)")}</p>
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-sm"><span className="text-[#3F4A54] dark:text-[#AEB8BF]">{t("ing_flour")}</span><span className="font-mono-data font-semibold text-[#ff6b00] dark:text-[#8FB0C2]">{bFlour} g</span></div>
@@ -824,7 +824,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             </div>
           )}
           {biga && <div className="border-t border-dashed border-[#ff6b00]/50 my-1" aria-hidden />}
-          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 print-table">
+          <div data-testid={`recipe-ingredients-${r.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 print-table">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">{biga ? tri("Fase 2 · Impasto principale", "Phase 2 · Hauptteig", "Phase 2 · Main dough") : t("recipe_ingredients")}</p>
               {flourG > 0 && (
@@ -890,7 +890,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         })()}
 
         {r.procedure ? (
-          <div data-testid={`recipe-procedure-${r.id}`} className="rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
+          <div data-testid={`recipe-procedure-${r.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">{t("recipe_procedure")}</p>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed whitespace-pre-line">{procWithImprover(rLoc(r, "procedure", lang), onImprover)}</p>
           </div>
@@ -903,7 +903,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         <GlossaryBox text={`${r.procedure || ""} ${r.notes || ""}`} />
 
         {Array.isArray(r.work_phases) && r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).length > 0 && (
-          <div data-testid={`recipe-phases-${r.id}`} className="rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/20 p-3">
+          <div data-testid={`recipe-phases-${r.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/8 border border-[#ff6b00]/20 p-3">
             <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{t("work_phases_section")}</p>
             <div className="space-y-1.5">
               {r.work_phases.filter((p) => p && (p.name || p.time || p.temp)).map((p, idx) => (
@@ -961,7 +961,7 @@ function ResaCaloPeso({ recipeId, rawDoughG, tri }) {
     </label>
   );
   return (
-    <div data-testid={`resa-calo-${recipeId}`} className="rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 p-3">
+    <div data-testid={`resa-calo-${recipeId}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/8 border border-[#ff6b00]/25 p-3">
       <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1.5">
         <Scale className="w-3.5 h-3.5" /> {tri("Resa & Calo Peso", "Ausbeute & Backverlust", "Yield & Weight Loss", "Rendimiento y Merma")}
       </p>
@@ -1193,7 +1193,7 @@ function GlossaryBox({ text }) {
   const found = Object.values(GLOSSARY).filter((g) => g.match.some((m) => low.includes(m)));
   if (found.length === 0) return null;
   return (
-    <div data-testid="recipe-glossary" className="rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3">
+    <div data-testid="recipe-glossary" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3">
       <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#8FB0C2] mb-1.5">{t("gloss_title")} *</p>
       <ul className="space-y-1.5">
         {found.map((g, i) => (
@@ -1276,7 +1276,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
         </div>
       )}
 
-      <div className="rounded-xl bg-[#ff6b00]/8 border border-[#ff6b00]/25 p-3">
+      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/8 border border-[#ff6b00]/25 p-3">
         <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">🌾 {tri("Gestione Lievito Madre (pH)", "Führung Lievito Madre (pH)", "Sourdough management (pH)")}</p>
         <div className="space-y-1">
           {PAN_MY[de ? "de" : lang === "en" ? "en" : "it"].map((m, i) => (
@@ -1288,7 +1288,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
         </div>
       </div>
 
-      <div className="rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 overflow-x-auto">
+      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] p-3 overflow-x-auto">
         <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{tri("Ingredienti: 1° e 2° Impasto · Totale", "Zutaten: 1./2. Teig · Gesamt", "Ingredients: 1st/2nd dough · Total")}</p>
         <table className="w-full text-sm border-collapse">
           <thead>
@@ -1319,7 +1319,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
         <p className="text-[10px] text-[#7E8A93] mt-2">{tri("g · % sul peso della farina totale. Sospensioni sempre a fine impasto, a bassa velocità.", "g · % auf das Gesamtmehl. Suspensionen immer am Ende, langsam einarbeiten.", "g · % of total flour. Add suspensions at the very end, at low speed.")}</p>
       </div>
 
-      <div className="rounded-xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3">
+      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-3">
         <div className="flex items-center justify-between mb-2">
           <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#8FB0C2]">{tri("Modulo Glassa (automatico)", "Glasur-Modul (automatisch)", "Glaze module (automatic)")}</p>
           <div className="flex items-center gap-1">

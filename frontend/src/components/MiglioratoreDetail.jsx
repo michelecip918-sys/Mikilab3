@@ -63,7 +63,7 @@ export default function MiglioratoreDetail() {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-            <div className="mt-2.5 rounded-xl bg-black/20 border border-white/20 p-3">
+            <div className="mt-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-black/20 border border-white/20 p-3">
               <p className="text-[12.5px] text-white/90 leading-snug mb-2.5">
                 {L({
                   it: "Trovi il Miglioratore Naturale MikiLab già dosato nelle basi delle ricette: è pronto all'uso. 5 ingredienti 100% naturali che danno al pane forza, profumo e una morbidezza che dura — senza additivi chimici.",

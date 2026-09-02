@@ -38,7 +38,7 @@ export default function FlourTable({ embedded = false }) {
     <div className="space-y-4">
       <div>
         <p className="text-xs font-bold uppercase text-[#1e1e1e] mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
-        <div className="overflow-x-auto rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e]">
+        <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e]">
           <table className="w-full border-collapse">
             <thead className="bg-[#121212] dark:bg-[#181818]">
               <tr><th className={th}>{tri("Tipo (DE · IT)", "Typ (DE · IT)", "Type (DE · IT)")}</th><th className={th}>W {tri("(forza)", "(Stärke)", "(strength)")}</th><th className={th}>{tri("Proteine", "Protein", "Protein")}</th><th className={th}>{tri("Metodo", "Methode", "Method")}</th></tr>
@@ -59,7 +59,7 @@ export default function FlourTable({ embedded = false }) {
 
       <div>
         <p className="text-xs font-bold uppercase text-[#1e1e1e] mb-1.5">{tri("Abbreviazioni d'impasto", "Teig-Abkürzungen", "Dough abbreviations")}</p>
-        <div className="overflow-x-auto rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e]">
+        <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e]">
           <table className="w-full border-collapse">
             <thead className="bg-[#121212] dark:bg-[#181818]">
               <tr><th className={th}>{tri("Sigla", "Kürzel", "Code")}</th><th className={th}>🇮🇹 IT</th><th className={th}>🇩🇪 DE</th><th className={th}>🌍 EN</th></tr>
@@ -76,7 +76,7 @@ export default function FlourTable({ embedded = false }) {
         </div>
       </div>
 
-      <div className="rounded-xl bg-[#ff6b00]/12 border border-[#ff6b00]/30 p-3 text-xs text-[#ff6b00] dark:text-[#8FB0C2] leading-relaxed">
+      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 border border-[#ff6b00]/30 p-3 text-xs text-[#ff6b00] dark:text-[#8FB0C2] leading-relaxed">
         ⚠️ {tri(
           "Nota del Maestro: nel sistema tedesco il 630 è il FARRO (Dinkel), mentre il 550 è il GRANO (Weizen). Le ricette con 630 (farro) e con farine ad alta estrazione sono quasi sempre IMPASTI INDIRETTI (con prefermento/lievito madre); alcune usano un tocco di aceto/acido per dare struttura al glutine più debole del farro.",
           "Meister-Hinweis: Im deutschen System ist 630 der DINKEL, während 550 der WEIZEN ist. Rezepte mit 630 (Dinkel) und hoch ausgemahlenen Mehlen sind fast immer INDIREKTE TEIGE (mit Vorteig/Sauerteig); manche nutzen etwas Essig/Säure, um dem schwächeren Dinkelkleber Struktur zu geben.",

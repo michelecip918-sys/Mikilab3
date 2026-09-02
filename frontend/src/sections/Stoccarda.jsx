@@ -25,7 +25,7 @@ export default function Stoccarda() {
   return (
     <div className="space-y-4 mb-5">
       <div className="flex items-center gap-2">
-        <div className="w-9 h-9 rounded-xl bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
+        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0">
           <MapPin className="w-5 h-5 text-[#ff6b00]" />
         </div>
         <div className="flex-1">

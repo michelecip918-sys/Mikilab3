@@ -43,7 +43,7 @@ export default function IntroGuide() {
           <div data-testid="intro-lang" className="mt-4 flex items-center justify-center gap-2">
             {LANGS.map((l) => (
               <button key={l.id} data-testid={`intro-lang-${l.id}`} onClick={() => setLang(l.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold border transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-bold border transition-all ${
                   lang === l.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"
                 }`}>
                 <span>{l.flag}</span> {l.label}

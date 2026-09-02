@@ -195,7 +195,7 @@ export default function PianificaProduzione() {
         data-testid="inf-add-btn"
         onClick={addRow}
         disabled={recipes.length === 0}
-        className="w-full mt-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2 disabled:opacity-40"
+        className="w-full mt-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center gap-2 disabled:opacity-40"
       >
         <Plus className="w-4 h-4" /> {t("sd_add")}
       </button>

@@ -126,7 +126,7 @@ export default function Emergenze() {
                 <span className="block text-[11px]" style={{ color: down ? C.danger : C.muted }}>{down ? tri("FUORI USO", "AUSSER BETRIEB", "OUT OF ORDER", "FUERA DE USO", "HORS SERVICE", "خراب") : tri("Operativa", "Betriebsbereit", "Operational", "Operativa", "Opérationnelle", "فعال")}</span>
               </span>
               <button data-testid={`emg-machine-toggle-${i}`} onClick={() => onMachine(m.name)}
-                className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-bold text-[13px] active:scale-95 transition-all"
+                className="flex items-center gap-1.5 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 font-bold text-[13px] active:scale-95 transition-all"
                 style={{ background: down ? C.gold : "#3A2C16", color: down ? C.cream : C.danger }}>
                 {down ? <><ZapOff className="w-4 h-4" /> {tri("Ripristina", "Zurück", "Restore", "Restaurar", "Rétablir", "بازگرداندن")}</> : <><ZapOff className="w-4 h-4" /> {tri("Fuori uso", "Störung", "Out of order", "Fuera de uso", "Panne", "خرابی")}</>}
               </button>
@@ -235,7 +235,7 @@ export default function Emergenze() {
           <p className="text-[13px]" style={{ color: C.muted }}>{tri("Nessun guasto registrato.", "Keine Störungen.", "No faults logged.", "Sin averías.", "Aucune panne.", "خرابی ثبت نشده.")}</p>
         ) : (
           faults.slice(0, 20).map((f) => (
-            <div key={f.id} className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: C.surf, border: `1px solid ${C.border}` }}>
+            <div key={f.id} className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: C.surf, border: `1px solid ${C.border}` }}>
               {f.type === "cella" ? <Snowflake className="w-4 h-4 shrink-0" style={{ color: C.gold }} /> : <Wrench className="w-4 h-4 shrink-0" style={{ color: C.gold }} />}
               <span className="flex-1 min-w-0 text-[12.5px] font-bold truncate" style={{ color: C.dark }}>{f.name}</span>
               <span className="text-[10.5px] font-semibold shrink-0" style={{ color: C.muted }}>{(() => { try { return new Date(f.at).toLocaleString(lang === "de" ? "de-DE" : lang === "en" ? "en-GB" : "it-IT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); } catch { return ""; } })()}</span>

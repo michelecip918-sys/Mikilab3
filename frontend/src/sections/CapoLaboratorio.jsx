@@ -92,7 +92,7 @@ export default function CapoLaboratorio() {
         <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 mt-4">{t("capo_cells")}</p>
         <div className="space-y-2" data-testid="capo-cells">
           {cells.map((c, i) => (
-            <div key={i} className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 space-y-2">
+            <div key={i} className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 space-y-2">
               <div className="flex items-center gap-2">
                 <CellIcon type={c.type} />
                 <input data-testid={`capo-cell-name-${i}`} value={c.name || ""} placeholder={t("capo_cell_name")}
@@ -125,7 +125,7 @@ export default function CapoLaboratorio() {
           <LabelInput testid="capo-staff" label={t("capo_staff")} type="number" value={staff} onChange={setStaff} />
           <LabelInput testid="capo-std-temp" label={t("capo_std_temp")} type="number" value={stdTemp} onChange={setStdTemp} unit="°C" />
         </div>
-        <button data-testid="capo-save-config" onClick={saveConfig} className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-xl active:scale-98 transition-all">
+        <button data-testid="capo-save-config" onClick={saveConfig} className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
           {t("capo_save_config")}
         </button>
       </Section>
@@ -222,10 +222,10 @@ function LabCamera() {
 
       {!open ? (
         <div className="grid grid-cols-2 gap-2">
-          <button data-testid="capo-film-start" onClick={start} className="bg-[#ff6b00] hover:bg-[#ff8a33] text-white rounded-xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2">
+          <button data-testid="capo-film-start" onClick={start} className="bg-[#ff6b00] hover:bg-[#ff8a33] text-white rounded-2xl shadow-md border border-amber-900/40 px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2">
             <Camera className="w-4 h-4" /> {mkTri(lang)("Filma ora", "Jetzt filmen", "Film now")}
           </button>
-          <label data-testid="capo-film-attach" className="cursor-pointer bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 text-[#2B303B] dark:text-[#e4eff8]">
+          <label data-testid="capo-film-attach" className="cursor-pointer bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 text-[#2B303B] dark:text-[#e4eff8]">
             <ImagePlus className="w-4 h-4 text-[#ff6b00]" /> {mkTri(lang)("Allega", "Anhängen", "Attach")}
             <input type="file" accept="image/*" className="hidden" onChange={onAttach} />
           </label>
@@ -236,10 +236,10 @@ function LabCamera() {
             <video ref={videoRef} data-testid="capo-video" playsInline muted className="w-full max-h-72 object-cover" />
           </div>
           <div className="flex gap-2 mt-2">
-            <button data-testid="capo-film-snap" onClick={snap} disabled={analyzing} className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+            <button data-testid="capo-film-snap" onClick={snap} disabled={analyzing} className="flex-1 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 flex items-center justify-center gap-2">
               <Camera className="w-4 h-4" /> {analyzing ? t("capo_film_analyzing") : t("capo_film_snap")}
             </button>
-            <button data-testid="capo-film-stop" onClick={stop} className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] px-4 py-2.5 rounded-xl font-medium text-[#2B303B] dark:text-[#e4eff8]">
+            <button data-testid="capo-film-stop" onClick={stop} className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-medium text-[#2B303B] dark:text-[#e4eff8]">
               {t("capo_film_stop")}
             </button>
           </div>
@@ -273,7 +273,7 @@ function LabelInput({ testid, label, type, value, onChange, unit }) {
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type={type} value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+          className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
         {unit && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93] pointer-events-none">{unit}</span>}
       </div>
     </div>

@@ -647,7 +647,7 @@ export default function VoiceCommand({ onOpenTool }) {
       {timers.length > 0 && (
         <div data-testid="voice-timers" className="fixed bottom-48 right-3 z-50 space-y-1.5 max-w-[62vw]">
           {timers.map((tm) => (
-            <div key={tm.id} className="flex items-center gap-2 rounded-xl bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/50 px-2.5 py-1.5 shadow-lg">
+            <div key={tm.id} className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/50 px-2.5 py-1.5 shadow-lg">
               <TimerIcon className="w-4 h-4 text-[#ff6b00] shrink-0" />
               <span className="text-[12px] font-bold text-white truncate max-w-[80px]">{tm.name}</span>
               <span className="font-mono text-[13px] font-bold text-[#ff6b00] tabular-nums">{fmt(tm.remaining)}</span>

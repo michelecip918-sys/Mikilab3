@@ -195,7 +195,7 @@ export default function WebRecipe() {
               [tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد"), o.flour_type, displayRecipe.flour_type],
             ].filter((r) => r[1] || r[2]);
             return (
-              <div data-testid="web-recipe-compare" className="mt-3 rounded-xl bg-[#f6f8fb] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+              <div data-testid="web-recipe-compare" className="mt-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#f6f8fb] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
                 <div className="grid grid-cols-[1fr_auto_1fr] gap-x-2 items-center mb-1.5">
                   <span className="text-[10px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Originale", "Original", "Original", "Original", "Original", "اصلی")}</span>
                   <span />
@@ -214,12 +214,12 @@ export default function WebRecipe() {
           })()}
           <div className="grid grid-cols-2 gap-2 mt-3">
             <button data-testid="web-recipe-farro-toggle" onClick={() => setFarro((v) => !v)}
-              className={`inline-flex items-center justify-center gap-1.5 font-semibold text-sm px-3 py-2.5 rounded-xl border transition-all active:scale-97 ${farro ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#ff6b00]/10 text-[#ff6b00] border-[#ff6b00]/40"}`}>
+              className={`inline-flex items-center justify-center gap-1.5 font-semibold text-sm px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-97 ${farro ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#ff6b00]/10 text-[#ff6b00] border-[#ff6b00]/40"}`}>
               <Wheat className="w-4 h-4" />
               {farro ? tri("Farro attivo — torna al grano", "Dinkel aktiv — zurück", "Spelt on — back to wheat", "Espelta activa — volver", "Épeautre activé — retour", "اسپلت فعال — بازگشت") : tri("Converti in Farro", "In Dinkel umwandeln", "Convert to Spelt", "Convertir a Espelta", "Convertir en Épeautre", "تبدیل به اسپلت")}
             </button>
             <button data-testid="web-recipe-edit-save" onClick={() => setDialogOpen(true)}
-              className="inline-flex items-center justify-center gap-1.5 bg-[#2e8b6f] text-white font-semibold text-sm px-3 py-2.5 rounded-xl active:scale-97 transition-all">
+              className="inline-flex items-center justify-center gap-1.5 bg-[#2e8b6f] text-white font-semibold text-sm px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-97 transition-all">
               <Pencil className="w-4 h-4" /> {tri("Modifica e salva", "Bearbeiten & speichern", "Edit and save", "Editar y guardar", "Modifier et enregistrer", "ویرایش و ذخیره")}
             </button>
           </div>
@@ -240,7 +240,7 @@ export default function WebRecipe() {
             {history.map((item, i) => (
               <li key={i}>
                 <button data-testid={`web-recipe-history-${i}`} onClick={() => openHistory(item)}
-                  className="w-full flex items-center gap-3 text-left px-3 py-2.5 rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#f6f8fb] dark:bg-[#181818] hover:border-[#ff6b00] active:scale-98 transition-all">
+                  className="w-full flex items-center gap-3 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#f6f8fb] dark:bg-[#181818] hover:border-[#ff6b00] active:scale-98 transition-all">
                   <Globe className="w-4 h-4 text-[#ff6b00] shrink-0" />
                   <span className="flex-1 min-w-0">
                     <span className="block font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{(item.recipe && item.recipe.name) || item.q}</span>

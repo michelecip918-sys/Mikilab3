@@ -115,10 +115,10 @@ export default function Academy() {
                   {isOwned ? (
                     <div className="mt-3">
                       <span className="inline-flex items-center gap-1 text-xs font-bold text-[#ff6b00] mb-2"><Check className="w-4 h-4" /> {tri("Sbloccato", "Freigeschaltet", "Unlocked")}</span>
-                      <video data-testid={`academy-video-${c.id}`} src={owned[c.id]} controls playsInline className="w-full rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-black" />
+                      <video data-testid={`academy-video-${c.id}`} src={owned[c.id]} controls playsInline className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-black" />
                     </div>
                   ) : (
-                    <div data-testid={`academy-course-soon-${c.id}`} className="mt-3 w-full bg-[#ff6b00]/12 border border-[#ff6b00]/30 text-[#ff6b00] dark:text-[#a9d2ec] font-semibold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
+                    <div data-testid={`academy-course-soon-${c.id}`} className="mt-3 w-full bg-[#ff6b00]/12 border border-[#ff6b00]/30 text-[#ff6b00] dark:text-[#a9d2ec] font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm flex items-center justify-center gap-2">
                       <CalendarClock className="w-4 h-4" /> {tri("In arrivo · presto disponibile", "Bald verfügbar", "Coming soon")}
                     </div>
                   )}
@@ -145,17 +145,17 @@ export default function Academy() {
             <p className="text-[11px] text-[#7E8A93] mt-1">{dur(cat.consult)}</p>
             <div className="grid grid-cols-1 gap-2 mt-3">
               <input data-testid="consult-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Il tuo nome", "Dein Name", "Your name")}
-                className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
               <div className="grid grid-cols-2 gap-2">
                 <input data-testid="consult-date" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
                 <input data-testid="consult-phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={tri("Telefono", "Telefon", "Phone")}
-                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
               </div>
               <input data-testid="consult-topic" value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })} placeholder={tri("Argomento (es. panettone, forno…)", "Thema (z.B. Panettone, Ofen…)", "Topic (e.g. panettone, oven…)")}
-                className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-xl px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
               <button data-testid="consult-book-btn" onClick={bookConsult} disabled={busy === "consult"}
-                className="w-full bg-[#ff6b00] hover:bg-[#8C6B4A] text-white font-semibold py-2.5 rounded-xl active:scale-98 text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+                className="w-full bg-[#ff6b00] hover:bg-[#8C6B4A] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 text-sm flex items-center justify-center gap-2 disabled:opacity-60">
                 {busy === "consult" ? <Loader2 className="w-4 h-4 animate-spin" /> : <CalendarClock className="w-4 h-4" />}
                 {tri("Prenota e paga", "Buchen & zahlen", "Book & pay")} · {euro(cat.consult.price_cents)}
               </button>
