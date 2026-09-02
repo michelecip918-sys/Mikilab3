@@ -164,7 +164,7 @@ export default function RicettaDelGiorno() {
       {items.length === 0 ? (
         <p className="text-lg" style={{ color: C.muted }}>{tri("Nessun prodotto in piano oggi. Pianifica in Gestione \u2192 Programma Settimana.", "Heute nichts geplant. Plane es unter Verwaltung \u2192 Wochenplan.", "Nothing planned today. Plan it in Management \u2192 Weekly Schedule.", "Nada planificado hoy. Plan\u00edficalo en Gesti\u00f3n \u2192 Programa Semanal.", "Rien de pr\u00e9vu aujourd'hui. Planifie-le dans Gestion \u2192 Programme Semaine.", "\u0627\u0645\u0631\u0648\u0632 \u0686\u06cc\u0632\u06cc \u0628\u0631\u0646\u0627\u0645\u0647\u200c\u0631\u06cc\u0632\u06cc \u0646\u0634\u062f\u0647.")}</p>
       ) : (
-        <div className="space-y-2.5" data-testid="rdg-list">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5" data-testid="rdg-list">
           {items.map((it) => {
             const rr = recById(it.recipe_id);
             const st = batchStatus(shift, it.id);
@@ -172,7 +172,7 @@ export default function RicettaDelGiorno() {
             const isActive = st !== "da_fare";
             return (
               <button key={it.id} data-testid={`rdg-item-${it.recipe_id}`} onClick={() => setSel(it)}
-                className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-98 transition-all" style={{ background: C.surf, border: `2px solid ${isActive ? (STATUS_COLOR[st] || C.gold) : C.border}`, opacity: isDone ? 0.6 : 1 }}>
+                className="w-full h-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-98 transition-all" style={{ background: C.surf, border: `2px solid ${isActive ? (STATUS_COLOR[st] || C.gold) : C.border}`, opacity: isDone ? 0.6 : 1 }}>
                 {isDone ? <CheckCircle2 className="w-6 h-6 shrink-0" style={{ color: "#5E7A3A" }} /> : <Circle className="w-6 h-6 shrink-0" style={{ color: isActive ? (STATUS_COLOR[st] || C.gold) : C.gold }} />}
                 <span className="flex-1 min-w-0">
                   <span className="block font-extrabold truncate" style={{ fontSize: "clamp(18px,5vw,24px)", color: C.dark, textDecoration: isDone ? "line-through" : "none" }}>{rr ? recipeTitle(rr, lang) : it.recipe_name}</span>

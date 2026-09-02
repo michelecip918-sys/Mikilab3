@@ -3503,3 +3503,6 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Applicato sed SOLO su frontend/src/sections|components|pages + index.css/App.css (ESCLUSO node_modules/.git e lib/countries.js dati bandiere): #FFD700->#C68B59, #FFB300->#D97706, tailwind yellow-/lime- -> amber-.
 - NON eseguito `npm run build` (preview gira col dev server yarn con hot reload; build non necessaria e comando era `npm`).
 - Verificato via screenshot: Elite Engine coerente e caldo (ambra), 0 residui #FFD700/#FFB300 nei file UI, compile ok.
+
+## v-fork39 (2026-06) — Griglia schede: Prodotti del forno
+- RicettaDelGiorno.jsx: lista `rdg-list` da `space-y-2.5` -> `grid grid-cols-1 sm:grid-cols-2 gap-2.5` (schede h-full), parita desktop/mobile. Shop gia responsive (invariato). PIN/moduli/dosi intatti. Rifiutato il sed globale flex-col/grid-cols (96 occorrenze) che avrebbe rotto il layout.
