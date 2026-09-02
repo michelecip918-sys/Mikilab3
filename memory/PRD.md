@@ -3498,3 +3498,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Warm palette sui restanti componenti (residui neon nei singoli file).
 - Parita totale desktop/mobile su tutta l app.
 - Redeploy per produzione.
+
+## v-fork38 (2026-06) — Warm color sweep UI (sed sicuro)
+- Applicato sed SOLO su frontend/src/sections|components|pages + index.css/App.css (ESCLUSO node_modules/.git e lib/countries.js dati bandiere): #FFD700->#C68B59, #FFB300->#D97706, tailwind yellow-/lime- -> amber-.
+- NON eseguito `npm run build` (preview gira col dev server yarn con hot reload; build non necessaria e comando era `npm`).
+- Verificato via screenshot: Elite Engine coerente e caldo (ambra), 0 residui #FFD700/#FFB300 nei file UI, compile ok.

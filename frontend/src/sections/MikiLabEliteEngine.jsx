@@ -166,8 +166,8 @@ export default function MikiLabEliteEngine({ open, onClose }) {
   const rooms3D = {
     impasti: {
       title: "🌾 BANCO IMPASTI & SILOS 3D",
-      color: "#FFB300",
-      bgGradient: "linear-gradient(135deg, #2A1A08 0%, #795548 50%, #FFB300 100%)",
+      color: "#D97706",
+      bgGradient: "linear-gradient(135deg, #2A1A08 0%, #795548 50%, #D97706 100%)",
       avatarName: "Miki (Maestro Impastatore)",
       avatarImg: "/michele-real-lab.jpg",
       avatarAction: "Miki sta gestendo il banco impasti, l'acqua e la spirale!",
@@ -385,7 +385,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
                 </div>
                 <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px' }}>
                   <div style={{ fontSize: '0.7rem' }}>Sale (2%)</div>
-                  <strong style={{ color: '#FFB300', fontSize: '1.2rem' }}>{saleG} g</strong>
+                  <strong style={{ color: '#D97706', fontSize: '1.2rem' }}>{saleG} g</strong>
                 </div>
               </div>
             </div>
@@ -395,7 +395,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
             <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#C2612E' }}>🔥 Forno Rotativo ({ovenTemp}°C) - Allarme + Notifica Telefono</div>
               {ovenRecipeName && (
-                <div data-testid="elite-oven-recipe" style={{ fontSize: '0.72rem', color: '#FFB300', marginTop: '4px' }}>
+                <div data-testid="elite-oven-recipe" style={{ fontSize: '0.72rem', color: '#D97706', marginTop: '4px' }}>
                   📖 Parametri da ricetta: <strong>{ovenRecipeName}</strong>
                 </div>
               )}
@@ -416,7 +416,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           gap: '15px', flexWrap: 'wrap'
         }}>
           <span>© MikiLab OS v10.3 - Mohamed & Miki (Tutti i diritti riservati)</span>
-          <button data-testid="elite-privacy" onClick={() => setModalOpen('privacy')} style={{ background: 'none', border: 'none', color: '#FFB300', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
+          <button data-testid="elite-privacy" onClick={() => setModalOpen('privacy')} style={{ background: 'none', border: 'none', color: '#D97706', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             🔒 Privacy (GDPR)
           </button>
           <button data-testid="elite-copyright" onClick={() => setModalOpen('copyright')} style={{ background: 'none', border: 'none', color: '#8F9B5E', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
@@ -437,10 +437,10 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10000, padding: '20px'
         }}>
           <div style={{
-            backgroundColor: '#1E1E24', border: '2px solid #FFB300', borderRadius: '16px',
+            backgroundColor: '#1E1E24', border: '2px solid #D97706', borderRadius: '16px',
             padding: '24px', maxWidth: '500px', width: '100%', color: '#FFF', maxHeight: '80vh', overflowY: 'auto'
           }}>
-            <h2 style={{ color: '#FFB300', marginTop: 0 }}>
+            <h2 style={{ color: '#D97706', marginTop: 0 }}>
               {modalOpen === 'privacy' && '🔒 Informativa sulla Privacy (GDPR)'}
               {modalOpen === 'copyright' && '🛡️ Protezione Copyright & Proprietà'}
               {modalOpen === 'impressum' && '📜 Impressum & Note Legali'}
@@ -462,7 +462,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
             </div>
 
             <button data-testid="elite-legal-close" onClick={() => setModalOpen(null)} style={{
-              backgroundColor: '#FFB300', color: '#000', border: 'none', padding: '10px 20px',
+              backgroundColor: '#D97706', color: '#000', border: 'none', padding: '10px 20px',
               borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', width: '100%'
             }}>
               CHIUDI
