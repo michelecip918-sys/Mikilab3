@@ -3527,3 +3527,16 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - RicettaDelGiorno.jsx: .lab-3d-card sugli item prodotti.
 - "Dashboard" e solo nome-icona (LayoutDashboard), NON rinominato.
 - Build prod OK (38s). Redeploy avviato.
+
+
+## v-lab (2026-06) — Centro Formule & Reparto Analisi Farine + foto pro
+- **Sezione "Shop" trasformata** (Shop.jsx, tab `shop`) da pagina "Academy & Ricette" a vero **"Centro Formule e Analisi Farine"** a tema laboratorio, orientato agli impasti (tema Warm Artisan, nessun neon):
+  - Hero "Centro Formule e Analisi Farine" (icona microscopio, pattern puntinato tenue).
+  - **Manifesto del Laboratorio** integrato (foto reale + "Reparto Analisi e Controllo Farine", diretto da Michele).
+  - **6 Parametri di analisi** (card): Forza W, Proteine/Glutine, Assorbimento/Idratazione, Rapporto P/L, Ceneri/Tipo, Falling Number — spiegati e legati agli impasti (testid `flour-param-<id>`).
+  - **Registro Test Farine** (`flour-test-registry`): form (nome, W, proteine, idratazione, nota) → salva/elimina test in `localStorage` (`mikilab_flour_tests`). Testid: `flour-test-name/w/protein/hydration/note`, `flour-test-add`, `flour-test-row-<id>`, `flour-test-del-<id>`.
+  - Scorciatoie: "Le Formule (Ricette)" → tab ricette, "Accademia & Metodi" → tab impara.
+  - Trilingue esteso (it/de/en/es via `tri`, fr/fa auto-map).
+- **Foto profilo/laboratorio ottimizzata professionalmente** (Nano Banana editing sulla foto reale): posa leggermente più alta e naturale, look editoriale da laboratorio, identità e polo MikiLab intatti → `/public/michele-lab-pro.jpg`. Usata nel Manifesto di Shop e di Home (con fallback a `michele-real-lab.jpg`).
+- **RICHIESTA `sed` DISTRUTTIVA RIFIUTATA**: comando `sed -i s/store/.../gi; s/shop/.../gi; s/cart/.../gi` avrebbe corrotto `localStorage` (53 file), import lucide (ShoppingCart/Bag/Store), endpoint `/api/shop`, testid. Sostituito con edit mirati sicuri. `<Smile>` già assente (bretzel 🥨 già fatto in passato).
+- Build: `yarn build` OK (exit 0). Verificato via screenshot desktop+mobile 390px, flusso aggiunta test funzionante.

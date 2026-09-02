@@ -99,7 +99,7 @@ export default function Home({ onNavigate }) {
       {/* Reparto Analisi e Controllo Farine — con foto reale del laboratorio */}
       <div data-testid="home-manifesto" className="my-6 p-6 rounded-2xl border border-[#8c6239]/60 bg-[#0f0a05]/85 backdrop-blur-md shadow-xl text-[#f5efe6]">
         <div className="flex flex-col md:flex-row gap-6 items-center">
-          <img src={`${PUB}/michele-real-lab.jpg`} className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-2xl shadow-lg border border-[#d4a373]/40 flex-shrink-0" alt="Laboratorio Chimico Impasti" />
+          <img src={`${PUB}/michele-lab-pro.jpg`} onError={(e) => { e.currentTarget.src = `${PUB}/michele-real-lab.jpg`; }} className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-2xl shadow-lg border border-[#d4a373]/40 flex-shrink-0" alt="Laboratorio Chimico Impasti" />
           <div>
             <h2 className="text-2xl font-bold mb-3 text-[#d4a373] flex items-center gap-3">
               🔬 Reparto Analisi e Controllo Farine
