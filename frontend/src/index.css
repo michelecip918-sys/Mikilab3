@@ -256,3 +256,14 @@ nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important
 .oven-hover:hover { box-shadow: 0 0 22px rgba(231,178,60,.42), inset 0 0 14px rgba(255,160,50,.16); border-color: #E7B23C !important; }
 .trinity-seal { box-shadow: 0 0 14px rgba(231,178,60,.55); }
 .trinity-seal:hover { box-shadow: 0 0 26px rgba(231,178,60,.9), 0 0 44px rgba(255,140,40,.45); }
+
+/* Responsive smartphone: evita testo tagliato/overflow orizzontale senza toccare il desktop */
+@media (max-width: 640px) {
+  body { overflow-x: hidden; overflow-wrap: break-word; word-break: break-word; }
+  main { overflow-x: hidden; }
+  /* Le tabelle scorrono orizzontalmente nel loro contenitore invece di essere tagliate */
+  table { max-width: 100%; }
+  /* Contenitori con scroll orizzontale fluido su touch */
+  .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+}
+

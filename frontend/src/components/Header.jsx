@@ -35,8 +35,8 @@ export default function Header() {
       data-testid="app-header"
       className="sticky top-0 z-40 bg-[#121212]/95 dark:bg-[#121212]/95 backdrop-blur-md border-b border-[#2e2e2e] dark:border-[#2e2e2e]"
     >
-      <div className="px-4 py-3 flex items-center justify-between gap-2">
-      <div className="flex items-center gap-2 min-w-0 flex-1">
+      <div className="px-3 sm:px-4 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-y-2 gap-x-2">
+      <div className="flex items-center gap-2 min-w-0 w-full sm:w-auto sm:flex-1">
         <button data-testid="site-menu-open" onClick={() => window.dispatchEvent(new Event("mikilab-open-menu"))} aria-label="Menu"
           className="menu-attn w-10 h-10 rounded-xl bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
           <Menu className="w-5 h-5" />
@@ -47,14 +47,14 @@ export default function Header() {
           </span>
           <span className="leading-none min-w-0 text-left">
             <span className="block font-display text-lg font-extrabold tracking-tight text-[#ff6b00] dark:text-[#e4eff8] truncate">MikiLab</span>
-            <span className="hidden min-[440px]:block text-[10px] font-semibold text-[#7E8A93] truncate max-w-[140px]">{t("brand_subtitle")}</span>
+            <span className="block text-[9px] sm:text-[10px] font-semibold text-[#7E8A93] truncate max-w-[150px]">{t("brand_subtitle")}</span>
           </span>
         </button>
         <TrinityBadges />
       </div>
 
-      <div className="flex items-center gap-1 shrink-0">
-        <span data-testid="bakemix-status" title="BakeMix AI online" className="hidden min-[520px]:flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #6E5320" }}>
+      <div className="flex items-center gap-1 flex-wrap justify-end w-full sm:w-auto">
+        <span data-testid="bakemix-status" title="BakeMix AI online" className="flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #6E5320" }}>
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#39d98a" }} />
           <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#E7B23C" }}>BakeMix AI</span>
         </span>
@@ -64,7 +64,7 @@ export default function Header() {
           <Search className="w-4.5 h-4.5" />
         </button>
         {/* Orologio (nascosto su schermi stretti per non coprire il titolo) */}
-        <div data-testid="header-clock" className="hidden min-[560px]:flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] px-2.5 py-1.5">
+        <div data-testid="header-clock" className="flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-xl border border-[#2e2e2e] dark:border-[#2e2e2e] px-2 py-1.5">
           <Clock className="w-3.5 h-3.5 text-[#ff6b00]" />
           <span className="font-mono-data text-xs font-bold text-[#2B303B] dark:text-[#e4eff8]">
             {now.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}

@@ -20,7 +20,15 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
 
   useEffect(() => {
     document.body.classList.add("braccio-mode");
-    window.dispatchEvent(new Event("mikilab-wake-on"));
+    // Il permesso microfono va chiesto al CLICK dell'utente (gesto). All'avvio riattiviamo
+    // l'ascolto SOLO se il permesso è già stato concesso in precedenza (nessun prompt a vuoto).
+    try {
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: "microphone" })
+          .then((p) => { if (p.state === "granted") window.dispatchEvent(new Event("mikilab-wake-on")); })
+          .catch(() => { /* Safari: si attende il tap sul pulsante */ });
+      }
+    } catch { /* */ }
     const onState = (e) => setVs({ listening: !!e.detail?.listening, speaking: !!e.detail?.speaking, wake: !!e.detail?.wake });
     window.addEventListener("mikilab-voice-state", onState);
     return () => { document.body.classList.remove("braccio-mode"); window.removeEventListener("mikilab-voice-state", onState); };
@@ -31,6 +39,11 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   const onHeadset = async () => {
     setHsBusy(true);
     try {
+      // Richiedi SUBITO il permesso microfono nel gesto del click (Web Speech API).
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try { const s = await navigator.mediaDevices.getUserMedia({ audio: true }); s.getTracks().forEach((t) => t.stop()); }
+        catch { toast.error(tri("Permesso microfono negato. Abilitalo nelle impostazioni del browser.", "Mikrofon verweigert. In den Browser-Einstellungen erlauben.", "Microphone denied. Enable it in browser settings.", "Micrófono denegado. Actívalo en el navegador.", "Micro refusé. Active-le dans le navigateur.", "میکروفون رد شد. در تنظیمات مرورگر فعال کن.")); setHsBusy(false); return; }
+      }
       if (isHeadsetRoutingAvailable()) {
         const r = await connectHeadset();
         if (r.ok) { await startHeadsetSco(); window.dispatchEvent(new Event("mikilab-wake-on")); toast.success(tri("Cuffie collegate. Assistente in cuffia.", "Headset verbunden.", "Headset connected.", "Auriculares conectados.", "Casque connecté.", "هدست وصل شد.")); }
