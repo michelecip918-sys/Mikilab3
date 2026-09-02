@@ -3428,3 +3428,17 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - data-testid: `elite-privacy/copyright/impressum`, `elite-legal-modal/close`, `elite-timer`, `elite-start-bake`.
 - Verificato via screenshot: overlay + modale Copyright con testo reale; timer/allarme come da logica v10.0. Compile pulito.
 
+
+## v-fork30 (2026-06) — MikiLab OS v10.3: Core+Voice enterprise upgrades
+### Modulo 1 (Core) — in `sections/MikiLabEliteEngine.jsx`
+- **Foto reali** negli avatar delle stanze: Impasti=/michele-real-lab.jpg (Miki), Forni=/mohammed-avatar.jpg (Mohamed), Pasticceria=/michele-avatar.jpg, Guida=/logo-emblem.png (fallback onError). Rese come <img> circolari.
+- **Radio reale**: toggle collegato allo stream RAI Radio 1 (`https://icestreaming.rai.it/1.mp3`, stessa sorgente di RadioFornaio.jsx) via Audio(); play/pause reale, si ferma alla chiusura overlay.
+- **Ricette dal DB**: fetch `GET /api/recipes?collection_name=mikilab` (149 ricette) → <select> nella stanza Impasti; il calcolo Acqua usa l'`hydration_percent` REALE della ricetta (es. Anima Integrale 88% → 50 kg = 44.0 L). Fallback 68%.
+- **Notifica push forno**: a fine timer, Web Notifications API (`new Notification`) + beep + voce; permesso richiesto all'avvio cottura.
+### Modulo 2 (Voice) — in `components/VoiceCommand.jsx`
+- **Wake-word "Comandante Lab"** aggiunto all'array WAKE (+ "commander lab"), toast aggiornato. Il pulsante flottante 👂 resta.
+- **Glossario tecnico** `tryGlossary()`: W, P/L, autolisi, biga, poolish, maglia glutinica — risposte telegrafiche in 6 lingue (IT/DE/EN/ES/FR/FA), registrato in handle() subito dopo tryRipeti.
+- Nota: timer multitasking (start/stop/pausa/stato) e TTS multilingua telegrafico (shortenForSpeech) erano GIÀ presenti nel sistema voce.
+### Testing
+- Verificato via screenshot: foto reale (naturalWidth 1024), 149 opzioni ricette, acqua=44.0 L a 88%, compile pulito. Wake-word/glossario NON testabili headless (richiedono microfono) — da validare a voce dall'utente.
+

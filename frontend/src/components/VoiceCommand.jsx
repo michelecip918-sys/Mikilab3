@@ -15,7 +15,7 @@ import { getOperators } from "@/lib/brigata";
 
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
-const WAKE = ["ehi lab", "hey lab", "e lab", "ei lab", "lab", "لب", "ok lab"];
+const WAKE = ["comandante lab", "comandante", "ehi lab", "hey lab", "e lab", "ei lab", "lab", "لب", "ok lab", "commander lab"];
 
 const TOOL_ALIASES = {
   timer: ["timer", "cronometro"], acqua: ["temperatura acqua", "temp acqua", "acqua impasto", "water temp"],
@@ -405,10 +405,65 @@ export default function VoiceCommand({ onOpenTool }) {
     return true;
   };
 
+  // Glossario tecnico da panificio: W, P/L, autolisi, biga, poolish, maglia glutinica (6 lingue, risposte telegrafiche).
+  const tryGlossary = (t) => {
+    const defs = [
+      { kw: ["p su l", "p/l", "p\\.l", "tenacit", "estensibil"], say: tri(
+        "P su L: rapporto tenacità-estensibilità. Equilibrato zero virgola cinque - zero virgola sei. Alto: impasto tenace. Basso: estensibile.",
+        "P/L: Verhältnis Zähigkeit-Dehnbarkeit. Ausgewogen 0,5-0,6. Hoch: zäh. Niedrig: dehnbar.",
+        "P/L: tenacity-to-extensibility ratio. Balanced 0.5-0.6. High: tough. Low: extensible.",
+        "P/L: relación tenacidad-extensibilidad. Equilibrado 0,5-0,6. Alto: tenaz. Bajo: extensible.",
+        "P/L: rapport ténacité-extensibilité. Équilibré 0,5-0,6. Haut: tenace. Bas: extensible.",
+        "نسبت P به L: چقرمگی به کشسانی. متعادل ۰٫۵ تا ۰٫۶.") },
+      { kw: ["forza w", "valore w", "forza della farina", "\\bw\\b"], say: tri(
+        "Forza W: la forza della farina. Debole 170-220, media 250-300, forte oltre 350. Più W, lievitazione più lunga.",
+        "W-Stärke: Mehlstärke. Schwach 170-220, mittel 250-300, stark über 350. Mehr W, längere Gärung.",
+        "W strength: flour strength. Weak 170-220, medium 250-300, strong over 350. Higher W, longer proof.",
+        "Fuerza W: fuerza de la harina. Débil 170-220, media 250-300, fuerte más de 350. Más W, fermentación más larga.",
+        "Force W : force de la farine. Faible 170-220, moyenne 250-300, forte plus de 350.",
+        "قدرت W: قدرت آرد. ضعیف ۱۷۰-۲۲۰، متوسط ۲۵۰-۳۰۰، قوی بالای ۳۵۰.") },
+      { kw: ["autolis", "autolyse"], say: tri(
+        "Autolisi: farina e acqua a riposo prima di sale e lievito. Migliora maglia ed estensibilità. Trenta - sessanta minuti.",
+        "Autolyse: Mehl und Wasser ruhen vor Salz und Hefe. Bessere Struktur. 30-60 Minuten.",
+        "Autolyse: flour and water rest before salt and yeast. Better gluten and extensibility. 30-60 minutes.",
+        "Autólisis: harina y agua reposan antes de sal y levadura. Mejor red. 30-60 minutos.",
+        "Autolyse : farine et eau au repos avant sel et levure. 30-60 minutes.",
+        "اتولیز: استراحت آرد و آب قبل از نمک و مخمر. ۳۰ تا ۶۰ دقیقه.") },
+      { kw: ["biga"], say: tri(
+        "Biga: preimpasto secco, quarantaquattro - cinquanta per cento di acqua. Aroma e alveolatura. Sedici - diciotto ore a diciotto gradi.",
+        "Biga: fester Vorteig, 44-50% Wasser. Aroma und Porung. 16-18 Stunden bei 18 Grad.",
+        "Biga: stiff preferment, 44-50% water. Aroma and crumb. 16-18 hours at 18 degrees.",
+        "Biga: prefermento seco, 44-50% de agua. Aroma y alveolado. 16-18 horas a 18 grados.",
+        "Biga : préferment ferme, 44-50% d'eau. 16-18 heures à 18 degrés.",
+        "بیگا: خمیر پیش‌ساز سفت، ۴۴ تا ۵۰٪ آب. ۱۶ تا ۱۸ ساعت.") },
+      { kw: ["poolish"], say: tri(
+        "Poolish: preimpasto liquido, acqua uguale alla farina. Estensibilità e profumo. Due - sedici ore.",
+        "Poolish: flüssiger Vorteig, Wasser gleich Mehl. Dehnbarkeit und Aroma. 2-16 Stunden.",
+        "Poolish: liquid preferment, water equal to flour. Extensibility and aroma. 2-16 hours.",
+        "Poolish: prefermento líquido, agua igual a harina. Extensibilidad y aroma. 2-16 horas.",
+        "Poolish : préferment liquide, eau égale à la farine. 2-16 heures.",
+        "پولیش: خمیر پیش‌ساز مایع، آب برابر آرد. ۲ تا ۱۶ ساعت.") },
+      { kw: ["maglia glutinic", "gluten network", "incordatura", "incorda"], say: tri(
+        "Maglia glutinica: la rete di glutine che trattiene i gas. Impasta fino a incordatura, liscia ed elastica.",
+        "Glutennetzwerk: hält die Gase. Kneten bis glatt und elastisch.",
+        "Gluten network: holds the gas. Knead until smooth and elastic.",
+        "Red de gluten: retiene los gases. Amasa hasta que quede lisa y elástica.",
+        "Réseau de gluten : retient les gaz. Pétrir jusqu'à lisse et élastique.",
+        "شبکه گلوتن: گازها را نگه می‌دارد. تا صاف و کشسان ورز بده.") },
+    ];
+    const hit = defs.find((d) => d.kw.some((k) => new RegExp(k).test(t)));
+    if (!hit) return false;
+    setSpeaking(true);
+    playTTS(hit.say, { lang, voice: "michele", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
+    toast.success("📚 " + hit.say, { duration: 12000 });
+    return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
     if (tryRipeti(t)) return;
+    if (tryGlossary(t)) return;
     if (tryTimer(t)) return;
     if (labSense(t)) return;
     if (tryConvert(t)) return;
@@ -524,7 +579,7 @@ export default function VoiceCommand({ onOpenTool }) {
       catch { toast.error(tri("Permesso microfono negato. Abilitalo per l'ascolto continuo.", "Mikrofon-Zugriff verweigert.", "Microphone permission denied.", "Permiso de micrófono denegado.", "Micro refusé.", "اجازه میکروفون رد شد.")); return; }
     }
     setWake(true); wakeActiveRef.current = true; try { localStorage.setItem("mikilab_voice_wake", "1"); } catch { /* */ } beep();
-    toast.success(tri("Ascolto «Ehi Lab» attivo.", "Höre auf «Ehi Lab».", "Listening for «Ehi Lab».", "Escuchando «Ehi Lab».", "À l'écoute «Ehi Lab».", "در حال شنیدن «لب»."));
+    toast.success(tri("Ascolto «Comandante Lab» attivo.", "Höre auf «Comandante Lab».", "Listening for «Comandante Lab».", "Escuchando «Comandante Lab».", "À l'écoute «Comandante Lab».", "در حال شنیدن «Comandante Lab»."));
     restartWake();
   };
   // Persistenza wake-word: se era attiva, prova a riavviare all'apertura (il browser può richiedere un tap)
