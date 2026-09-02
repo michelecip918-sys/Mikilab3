@@ -3350,3 +3350,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Reparti impasti/banco/forni, operatore (persistito), sequenza compiti multi-reparto con "Cosa faccio ora?" (`team-ask`) e avanzamento "TAP CUFFIA" (`team-confirm`).
 - SOS Impasto con temperatura (scalda/strappa/incolla) → soluzione vocale; Ricalcolo Dosi al volo (base 10kg → scala acqua/lievito/sale, verificato 25kg=16.3L/500g/550g); Interfono squadra push-to-talk (annuncio vocale locale; radio reale tra auricolari richiede build nativa Bluetooth).
 - Voce via `playTTS` (frasi brevi + fallback nativo → zero crediti). Tutto multilingue via `tri`. Verificato via screenshot.
+
+## v-fork19 (2026-06) — Team Auricolari potenziato ("Ultimate Engine")
+- Il mockup "BIG MICHI LAB Ultimate Engine" è un superset dei pannelli esistenti → potenziato `TeamSync.jsx` invece di creare un terzo doppione.
+- **Database ricette locale** (`RECIPES`: Pane Matera, Brezel/Laugen con burro, Ciabatta) con selettore `team-recipe` (persistito `mikilab_team_recipe`). Il "Ricalcolo Dosi" ora calcola sulla ricetta scelta e mostra anche il BURRO/grassi quando presenti. Verificato Brezel 20kg → 10.0L/600g/440g/1000g burro.
+- **Modalità Solo/Squadra** (`team-mode-solo`/`team-mode-team`): in Solo il selettore reparto è nascosto; in Squadra compare. Operatore persistito.
+- Restano: SOS impasto+temp, sequenza compiti + TAP conferma, interfono push-to-talk (annuncio locale; radio reale device-to-device richiede build nativa WebRTC/Bluetooth). Voce nativa zero-crediti, multilingue.

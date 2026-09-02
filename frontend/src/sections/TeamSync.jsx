@@ -9,7 +9,12 @@ import { playTTS } from "@/lib/tts";
 // Voce nativa del telefono (zero crediti). Fedele al mockup dell'utente (dark + arancione + verde).
 const D = { bg: "#121212", card: "#1E1E1E", input: "#151515", accent: "#FF6B00", green: "#00FF66", red: "#FF3333", amber: "#FF9900", text: "#FFFFFF", muted: "#A0A0A0", border: "#333333" };
 
-const BASE = { farina: 10, acqua: 6.5, lievito: 0.2, sale: 0.22 };
+// Database ricette locale (offline) per il ricalcolo dosi dinamico.
+const RECIPES = [
+  { id: "pane_matera", nome: "Pane di Matera IGP", farina: 10, acqua: 6.8, lievito: 0.15, sale: 0.2 },
+  { id: "brezel", nome: "Laugengebäck / Brezel", farina: 10, acqua: 5.0, lievito: 0.3, sale: 0.22, burro: 0.5 },
+  { id: "ciabatta", nome: "Ciabatta Alta Idratazione", farina: 10, acqua: 8.0, lievito: 0.2, sale: 0.22 },
+];
 
 export default function TeamSync({ open, onClose }) {
   const { lang } = useLang();
@@ -36,7 +41,10 @@ export default function TeamSync({ open, onClose }) {
   const [temp, setTemp] = useState(24);
   const [sos, setSos] = useState("");
   const [kg, setKg] = useState(25);
+  const [selRec, setSelRec] = useState(() => { try { return localStorage.getItem("mikilab_team_recipe") || "pane_matera"; } catch { return "pane_matera"; } });
+  const [mode, setMode] = useState("solo");
   const [dosi, setDosi] = useState(null);
+  useEffect(() => { try { localStorage.setItem("mikilab_team_recipe", selRec); } catch { /* */ } }, [selRec]);
 
   useEffect(() => { try { localStorage.setItem("mikilab_operatore", operatore); } catch { /* */ } }, [operatore]);
   useEffect(() => {
@@ -74,10 +82,13 @@ export default function TeamSync({ open, onClose }) {
   };
 
   const calcolaDosi = () => {
-    const f = kg / BASE.farina;
-    const r = { farina: kg, acqua: (BASE.acqua * f).toFixed(1), lievito: (BASE.lievito * f).toFixed(2), sale: (BASE.sale * f).toFixed(2) };
+    const rec = RECIPES.find((r) => r.id === selRec) || RECIPES[0];
+    const f = kg / rec.farina;
+    const r = { nome: rec.nome, acqua: (rec.acqua * f).toFixed(1), lievito: Math.round(rec.lievito * f * 1000), sale: Math.round(rec.sale * f * 1000), burro: rec.burro ? Math.round(rec.burro * f * 1000) : null };
     setDosi(r);
-    speak(tri(`Per ${kg} kg farina: acqua ${r.acqua} litri, lievito ${Math.round(r.lievito * 1000)} grammi, sale ${Math.round(r.sale * 1000)} grammi.`, `Für ${kg} kg Mehl: Wasser ${r.acqua} L, Hefe ${Math.round(r.lievito * 1000)} g, Salz ${Math.round(r.sale * 1000)} g.`, `For ${kg} kg flour: water ${r.acqua} L, yeast ${Math.round(r.lievito * 1000)} g, salt ${Math.round(r.sale * 1000)} g.`, `Para ${kg} kg harina: agua ${r.acqua} L, levadura ${Math.round(r.lievito * 1000)} g, sal ${Math.round(r.sale * 1000)} g.`, `Pour ${kg} kg farine : eau ${r.acqua} L, levure ${Math.round(r.lievito * 1000)} g, sel ${Math.round(r.sale * 1000)} g.`, `برای ${kg} کیلو آرد: آب ${r.acqua} لیتر.`));
+    let msg = tri(`${rec.nome}, ${kg} kg farina: acqua ${r.acqua} litri, lievito ${r.lievito} grammi, sale ${r.sale} grammi.`, `${rec.nome}, ${kg} kg Mehl: Wasser ${r.acqua} L, Hefe ${r.lievito} g, Salz ${r.sale} g.`, `${rec.nome}, ${kg} kg flour: water ${r.acqua} L, yeast ${r.lievito} g, salt ${r.sale} g.`, `${rec.nome}, ${kg} kg harina: agua ${r.acqua} L, levadura ${r.lievito} g, sal ${r.sale} g.`, `${rec.nome}, ${kg} kg farine : eau ${r.acqua} L, levure ${r.lievito} g, sel ${r.sale} g.`, `${rec.nome}: آب ${r.acqua} لیتر.`);
+    if (r.burro) msg += " " + tri(`Burro ${r.burro} grammi.`, `Butter ${r.burro} g.`, `Butter ${r.burro} g.`, `Mantequilla ${r.burro} g.`, `Beurre ${r.burro} g.`, `کره ${r.burro} گرم.`);
+    speak(msg);
   };
 
   const interfono = (msg) => {
@@ -102,17 +113,25 @@ export default function TeamSync({ open, onClose }) {
       </div>
 
       <div className="max-w-2xl mx-auto p-4 space-y-4 pb-24">
-        {/* Operatore & reparto */}
-        <div className="rounded-xl p-4 grid grid-cols-2 gap-3" style={{ background: D.card, border: `1px solid ${D.border}` }}>
-          <div>
-            <label className="text-[11px]" style={{ color: D.muted }}>{tri("Operatore", "Bediener", "Operator", "Operador", "Opérateur", "اپراتور")}</label>
-            <input data-testid="team-operatore" value={operatore} onChange={(e) => setOperatore(e.target.value)} className="w-full rounded-md px-3 py-2 mt-1 font-bold outline-none" style={inputSty} />
+        {/* Modalità + operatore & reparto */}
+        <div className="rounded-xl p-4 space-y-3" style={{ background: D.card, border: `1px solid ${D.border}` }}>
+          <div className="grid grid-cols-2 gap-2">
+            <button data-testid="team-mode-solo" onClick={() => setMode("solo")} className="rounded-md py-2 font-bold text-[13px]" style={{ background: mode === "solo" ? D.accent : "#222", color: "#fff" }}>👤 {tri("SOLO (Tuttofare)", "SOLO", "SOLO (All-round)", "SOLO", "SOLO", "تنها")}</button>
+            <button data-testid="team-mode-team" onClick={() => setMode("team")} className="rounded-md py-2 font-bold text-[13px]" style={{ background: mode === "team" ? D.green : "#222", color: mode === "team" ? "#000" : "#fff" }}>👥 {tri("SQUADRA", "TEAM", "TEAM", "EQUIPO", "ÉQUIPE", "تیم")}</button>
           </div>
-          <div>
-            <label className="text-[11px]" style={{ color: D.muted }}>{tri("Reparto cuffia", "Bereich", "Headset dept.", "Departamento", "Secteur", "بخش")}</label>
-            <select data-testid="team-reparto" value={reparto} onChange={(e) => setReparto(e.target.value)} className="w-full rounded-md px-3 py-2 mt-1 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.accent}`, color: D.accent }}>
-              {REPARTI.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
-            </select>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[11px]" style={{ color: D.muted }}>{tri("Operatore", "Bediener", "Operator", "Operador", "Opérateur", "اپراتور")}</label>
+              <input data-testid="team-operatore" value={operatore} onChange={(e) => setOperatore(e.target.value)} className="w-full rounded-md px-3 py-2 mt-1 font-bold outline-none" style={inputSty} />
+            </div>
+            {mode === "team" && (
+              <div>
+                <label className="text-[11px]" style={{ color: D.muted }}>{tri("Reparto cuffia", "Bereich", "Headset dept.", "Departamento", "Secteur", "بخش")}</label>
+                <select data-testid="team-reparto" value={reparto} onChange={(e) => setReparto(e.target.value)} className="w-full rounded-md px-3 py-2 mt-1 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.accent}`, color: D.accent }}>
+                  {REPARTI.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
+                </select>
+              </div>
+            )}
           </div>
         </div>
 
@@ -147,16 +166,20 @@ export default function TeamSync({ open, onClose }) {
         {/* Ricalcolo dosi */}
         <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
           <h3 className="flex items-center gap-2 font-bold text-[15px] mb-3" style={{ color: D.accent }}><Calculator className="w-4 h-4" /> {tri("Ricalcolo Dosi al Volo", "Mengen sofort neu", "Instant Dose Recalc", "Recalcular Dosis", "Recalcul des Doses", "بازمحاسبه مقدار")}</h3>
+          <select data-testid="team-recipe" value={selRec} onChange={(e) => setSelRec(e.target.value)} className="w-full rounded-md px-3 py-2 mb-2 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.border}`, color: D.text }}>
+            {RECIPES.map((r) => <option key={r.id} value={r.id}>{r.nome}</option>)}
+          </select>
           <div className="flex items-center gap-2 mb-3">
             <input data-testid="team-kg" type="number" value={kg} onChange={(e) => setKg(parseInt(e.target.value) || 0)} className="w-20 text-center rounded-md px-2 py-2 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.accent}`, color: D.text }} />
             <span className="text-[14px]">{tri("kg Farina", "kg Mehl", "kg Flour", "kg Harina", "kg Farine", "کیلو آرد")}</span>
             <button data-testid="team-calc" onClick={calcolaDosi} className="ml-auto rounded-md px-4 py-2 font-bold active:scale-97" style={{ background: D.input, border: `1px solid ${D.green}`, color: D.green }}>{tri("CALCOLA E DETTA", "BERECHNEN & DIKTIEREN", "CALC & DICTATE", "CALCULAR Y DICTAR", "CALCULER & DICTER", "محاسبه و اعلام")}</button>
           </div>
           {dosi && (
-            <div data-testid="team-dosi-result" className="grid grid-cols-3 gap-2 rounded-lg p-3 text-center" style={{ background: D.input }}>
+            <div data-testid="team-dosi-result" className={`grid gap-2 rounded-lg p-3 text-center ${dosi.burro ? "grid-cols-4" : "grid-cols-3"}`} style={{ background: D.input }}>
               <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("ACQUA", "WASSER", "WATER", "AGUA", "EAU", "آب")}</span><br /><strong className="text-[15px]">{dosi.acqua} L</strong></div>
-              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("LIEVITO", "HEFE", "YEAST", "LEVADURA", "LEVURE", "مخمر")}</span><br /><strong className="text-[15px]">{Math.round(dosi.lievito * 1000)} g</strong></div>
-              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("SALE", "SALZ", "SALT", "SAL", "SEL", "نمک")}</span><br /><strong className="text-[15px]">{Math.round(dosi.sale * 1000)} g</strong></div>
+              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("LIEVITO", "HEFE", "YEAST", "LEVADURA", "LEVURE", "مخمر")}</span><br /><strong className="text-[15px]">{dosi.lievito} g</strong></div>
+              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("SALE", "SALZ", "SALT", "SAL", "SEL", "نمک")}</span><br /><strong className="text-[15px]">{dosi.sale} g</strong></div>
+              {dosi.burro && <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("BURRO", "BUTTER", "BUTTER", "MANTEQ.", "BEURRE", "کره")}</span><br /><strong className="text-[15px]">{dosi.burro} g</strong></div>}
             </div>
           )}
         </div>
