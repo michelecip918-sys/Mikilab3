@@ -3456,3 +3456,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Verifica: servizi tutti RUNNING; backend `/api`=200, frontend `/`=200. Il bundle servito dal preview contiene il codice NUOVO (`elite-radio-station`, `MikiLab OS v10.3`, `comandante lab`) e `/sw.js` servito = `mikilab-v11`. Screenshot preview (browser pulito) mostra la schermata PIN della build nuova.
 - Nota: i client già aperti con SW vecchio prendono la nuova versione al successivo caricamento (SW auto-update su cambio di sw.js).
 
+
+## v-fork33 (2026-06) — Hard reset + auto-update service worker
+- `public/index.html`: registrazione SW aggiornata con `updateViaCache:"none"` + listener `controllerchange` che ricarica UNA volta la pagina quando il nuovo SW prende il controllo (auto-update dei client stale) + `reg.update()` all'avvio.
+- Infra: purge `node_modules/.cache` (`.vite`/`dist` non presenti su CRA), riavvio pulito del frontend via supervisor, ricompilazione da zero.
+- Verifica live: index.html servito contiene `updateViaCache`; `/sw.js` = `mikilab-v11`; bundle contiene `elite-radio-station`; frontend/api = 200; screenshot preview = build nuova (PIN) senza loop di reload.
+- Effetto: i dispositivi con SW vecchio ora si auto-aggiornano al prossimo caricamento (un reload automatico) senza intervento manuale dell'utente.
+

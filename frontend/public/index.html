@@ -90,7 +90,26 @@
         <script>
             if ("serviceWorker" in navigator) {
                 window.addEventListener("load", function () {
-                    navigator.serviceWorker.register("/sw.js").catch(function () {});
+                    // Auto-update: se arriva un nuovo service worker, ricarica UNA volta per servire l'ultima build.
+                    var refreshing = false;
+                    navigator.serviceWorker.addEventListener("controllerchange", function () {
+                        if (refreshing) return;
+                        refreshing = true;
+                        window.location.reload();
+                    });
+                    navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).then(function (reg) {
+                        try { reg.update(); } catch (e) { /* */ }
+                        reg.addEventListener("updatefound", function () {
+                            var nw = reg.installing;
+                            if (!nw) return;
+                            nw.addEventListener("statechange", function () {
+                                if (nw.state === "installed" && navigator.serviceWorker.controller) {
+                                    // nuova versione pronta: il controllerchange qui sopra farà il reload
+                                    try { nw.postMessage && nw.postMessage("skipWaiting"); } catch (e) { /* */ }
+                                }
+                            });
+                        });
+                    }).catch(function () {});
                 });
             }
         </script>
