@@ -378,6 +378,19 @@ export default function VoiceCommand({ onOpenTool }) {
     speak(msg); toast.success("📋 " + msg); return true;
   };
 
+  // Riordino a fine turno: legge il magazzino e suggerisce cosa ordinare domani.
+  const tryRiordino = async (t) => {
+    if (!/(riordin|cosa ordino|cosa comprare|cosa manca|domani mi serve|lista spesa farine|reorder|nachbestell|einkauf)/.test(t)) return false;
+    let stock = [];
+    try { const { data } = await api.get("/lab/warehouse"); stock = data || []; } catch { /* offline */ }
+    const low = stock.filter((s) => (s.kind === "farina" ? s.quantity_kg <= 5 : s.quantity_kg <= 1));
+    if (!stock.length) { speak(tri("Magazzino vuoto: carica prima le materie prime.", "Lager leer.", "Stock empty.", "Almacén vacío.", "Stock vide.", "انبار خالی.")); return true; }
+    if (!low.length) { speak(tri("Giacenze a posto, nessun riordino urgente.", "Bestand ok, keine Nachbestellung nötig.", "Stock is fine, no urgent reorder.", "Stock correcto, sin reposición urgente.", "Stock ok, aucun réappro urgent.", "موجودی خوب است.")); toast.success("✅"); return true; }
+    const names = low.map((s) => `${s.name} (${Math.round(s.quantity_kg * 10) / 10}${s.unit})`).join(", ");
+    const msg = tri(`Per domani riordina: ${names}.`, `Für morgen nachbestellen: ${names}.`, `Reorder for tomorrow: ${names}.`, `Repón para mañana: ${names}.`, `À recommander pour demain : ${names}.`, `برای فردا سفارش بده: ${names}.`);
+    speak(msg); toast.warning("🛒 " + msg); return true;
+  };
+
   const handle = async (raw) => {
     const t = norm(raw); const c = stripVerbs(t);
     if (/\blab stop\b|^stop$|silenzio|zitto|basta|be quiet/.test(t)) { stopTTS(); setSpeaking(false); toast.info("⏹"); return; }
@@ -390,6 +403,7 @@ export default function VoiceCommand({ onOpenTool }) {
     if (trySanifica(t)) return;
     if (tryModo(t)) return;
     if (tryConsegne(t)) return;
+    if (await tryRiordino(t)) return;
     if (tryCella(t)) return;
     if (await tryGuasto(t)) return;
     if (await tryLotto(t)) return;

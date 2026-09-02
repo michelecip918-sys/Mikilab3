@@ -3283,3 +3283,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Sigillo "MikiLab • Proprietary & Confidential" + narrativa Info Sistema + dicitura legale IP (footer + modal).
 - NOTA: avatar Michele aggiunto DOPO l'avvio del deploy → serve un ulteriore redeploy per averlo in produzione.
 - TODO dedicato: QC completa traduzioni IT/EN su tutte le schermate (non eseguita in questo turno per budget).
+
+---
+## v-fork9 (2026-06) — Riordino vocale + Badge Idratazione + redeploy avatar
+- Comando vocale "riordino/cosa ordino domani" (VoiceCommand.tryRiordino): legge /api/lab/warehouse, elenca a voce le materie sotto scorta.
+- Badge oro "Capolavoro — Idratazione Perfetta (h%)" in RicetteCustodite (scheda ricetta) quando idratazione 65–85%.
+- Redeploy per includere avatar 3D Michele + queste due funzioni.
+- TODO ancora aperto: QC completa traduzioni IT/EN su tutte le schermate (task dedicato).
