@@ -166,7 +166,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                         </div>
                         {!String(m.id).startsWith("tmp-") && (
                           <button data-testid={`chat-react-btn-${m.id}`} onClick={() => setReactFor(reactFor === m.id ? null : m.id)}
-                            className="opacity-60 hover:opacity-100 text-[#7E8A93] shrink-0 p-1"><Smile className="w-4 h-4" /></button>
+                            className="opacity-60 hover:opacity-100 shrink-0 p-0.5"><span className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shadow-inner text-sm" title="Laboratorio Panificazione">🥨</span></button>
                         )}
                         {reactFor === m.id && (
                           <div data-testid={`chat-react-picker-${m.id}`} className={`absolute -top-9 ${mine ? "right-8" : "left-8"} z-10 flex items-center gap-1 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-full px-2 py-1 shadow-lg`}>

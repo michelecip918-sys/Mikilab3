@@ -46,17 +46,13 @@ export default function Avatar3D({ active = true, speaking = false, listening = 
               animate={speaking ? { scale: [1, 1.05, 1] } : isListening ? { scale: [1, 1.03, 1] } : { scale: 1 }}
               transition={speaking ? { duration: 0.4, repeat: Infinity } : isListening ? { duration: 1.4, repeat: Infinity, ease: "easeInOut" } : {}}
             >
-              {/* Riflesso in alto (profondità 3D) */}
-              <span className="absolute rounded-full" style={{ top: 12, left: 20, width: 44, height: 30, background: "radial-gradient(ellipse at center, rgba(255,250,235,.75), transparent 70%)", filter: "blur(2px)" }} />
-              {/* Occhi */}
-              <div className="absolute flex gap-5" style={{ top: 48 }}>
-                <span className="rounded-full" style={{ width: 12, height: 12, background: "#2A1B08", boxShadow: "inset 0 1px 1px rgba(255,255,255,.4)" }} />
-                <span className="rounded-full" style={{ width: 12, height: 12, background: "#2A1B08", boxShadow: "inset 0 1px 1px rgba(255,255,255,.4)" }} />
-              </div>
-              {/* Bocca animata (parla) */}
-              <motion.div className="absolute rounded-full" style={{ bottom: 34, background: "#2A1B08" }}
-                animate={speaking ? { height: [6, 18, 8, 16, 6], width: [26, 22, 28, 22, 26] } : { height: 6, width: 30 }}
-                transition={speaking ? { duration: 0.5, repeat: Infinity } : {}} />
+              {/* Foto reale di Michele (sostituisce la faccina) */}
+              <img
+                src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`}
+                alt="Michele"
+                className="absolute inset-0 w-full h-full object-cover rounded-full"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+              />
               {/* Micro badge */}
               <span className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full flex items-center justify-center shadow-lg" style={{ background: "#17120B", border: `2px solid ${isListening ? "#34D399" : "#E7B23C"}` }}>
                 <Mic className="w-4 h-4" style={{ color: isListening ? "#34D399" : "#E7B23C" }} />
