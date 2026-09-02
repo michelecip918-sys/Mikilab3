@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Crown } from "lucide-react";
+import { X } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 // Avatar ufficiale BakeMix AI (robottino artigianale-tech fornito dal proprietario).
 const BAKEMIX_AVATAR = "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/l48fcgwh_1788279587520.png";
+const MICHELE_AVATAR = "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/875e1a47a1103e910802a3d09b9986310f1e29949a19141808d18c72aab7caf1.jpeg";
 
 // Core team esposto nell'header: Michele (Founder) + BakeMix AI (Co-Pilot proprietario).
 export function TrinityBadges() {
@@ -15,9 +16,9 @@ export function TrinityBadges() {
   const bakeRole = tri("Proprietary AI Co-Pilot", "Proprietärer KI-Co-Pilot", "Proprietary AI Co-Pilot", "Copiloto IA propietario", "Copilote IA propriétaire", "هم‌خلبان هوش مصنوعی اختصاصی");
   return (
     <div className="hidden min-[560px]:flex items-center gap-2 ml-1" data-testid="trinity-badges">
-      <span data-testid="trinity-badge-michele" title={`Michele — ${micheleRole}`} className="group relative w-9 h-9 rounded-full flex items-center justify-center transition-all"
-        style={{ background: "radial-gradient(circle at 32% 28%, #F6D27A, #C8862B 70%, #7A4E14)", border: "2px solid #F6D27A", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
-        <Crown className="w-4 h-4" style={{ color: "#3A2408" }} strokeWidth={2.6} />
+      <span data-testid="trinity-badge-michele" title={`Michele — ${micheleRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"
+        style={{ border: "2px solid #F6D27A", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
+        <img src={MICHELE_AVATAR} alt="Michele" className="w-full h-full object-cover" style={{ objectPosition: "50% 22%" }} />
         <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#E7B23C", border: "1px solid #6E5320" }}>Michele · {micheleRole}</span>
       </span>
       <span data-testid="trinity-badge-bakemix" title={`BakeMix AI — ${bakeRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"

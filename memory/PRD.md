@@ -3276,3 +3276,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Sigillo → modal (trinity-modal): testo Trinity ("Architettura software e logica co-progettate da Michele, BakeMix AI & Mohammed"), scheda "Chi è BakeMix AI" + firma software ("Progetto originale Michele, BakeMix AI & Mohammed").
 - CSS Cinematic Dark & Gold: effetto "Luce Forno" .oven-hover (glow ambrato su hover), applicato ai tasti operativi; glow sigillo.
 - Deploy finale avviato.
+
+---
+## v-fork8 (2026-06) — Ritratto 3D Michele + paternità proprietaria
+- Avatar 3D di Michele generato e inserito nel badge header (Founder & System Architect); BakeMix AI usa l'immagine robot fornita. Mohammed → crediti background (Silent Contributor) nel modal Sigillo.
+- Sigillo "MikiLab • Proprietary & Confidential" + narrativa Info Sistema + dicitura legale IP (footer + modal).
+- NOTA: avatar Michele aggiunto DOPO l'avvio del deploy → serve un ulteriore redeploy per averlo in produzione.
+- TODO dedicato: QC completa traduzioni IT/EN su tutte le schermate (non eseguita in questo turno per budget).
