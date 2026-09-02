@@ -290,7 +290,7 @@ function App() {
         </footer>
       </main>
       <BottomNav active={tab} onChange={navigate} />
-      <VoiceCommand />
+      {tab !== "home" && <VoiceCommand />}
       {tab !== "maestro" && <RadioFornaio />}
       <GuidaMikiLab />
       <ShiftScheduler />

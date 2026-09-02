@@ -3480,3 +3480,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ## v-fork35 (2026-06) — Palette globale Panificio Virtuale
 - Aggiunte a fine `index.css` le variabili :root warm artisan (--bg-primary #1e140a, --bg-secondary #2c1d0c, --accent-warm #d4a373, --accent-border #8c6239, --text-main #f5efe6; neon-* = transparent) e override `body/.app-container/.main-layout`.
 - Verificato: body bg = rgb(30,20,10), app carica, layout intatto.
+
+## v-fork36 (2026-06) — Home senza voce, Laboratorio = solo Elite Engine, stop neon
+- App.js: VoiceCommand nascosto in Home (`tab !== "home"`). Il widget "Ti ascolto"/pulsante 👂 non compare più in Home.
+- BraccioLab.jsx: rimosso l'auto-dispatch mic all'avvio (niente autostart nel Lab). Render ridotto al SOLO Elite Engine (rimossi workmode, deadline, cuffie, consegne, 3 quick tool, Gestione). Avatar + "Apri MikiLab Elite Engine" + "strumento unico".
+- index.css: glow menu-attn da neon arancione rgba(255,107,0) -> accento grano caldo rgba(212,163,115).
+- Verificato via screenshot: Home senza voice-wake-toggle; Lab con solo braccio-elite-engine (workmode/quick/gestione = assenti).
+### ANCORA DA FARE
+- Quiz SOLO in Accademia (rimuovere da Home/Community/Shop/Beginners...).
+- Palette warm su TUTTI i componenti (residui neon nei singoli file) + parità totale desktop/mobile.

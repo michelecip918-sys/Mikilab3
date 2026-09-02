@@ -22,15 +22,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
 
   useEffect(() => {
     document.body.classList.add("braccio-mode");
-    // Il permesso microfono va chiesto al CLICK dell'utente (gesto). All'avvio riattiviamo
-    // l'ascolto SOLO se il permesso è già stato concesso in precedenza (nessun prompt a vuoto).
-    try {
-      if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: "microphone" })
-          .then((p) => { if (p.state === "granted") window.dispatchEvent(new Event("mikilab-wake-on")); })
-          .catch(() => { /* Safari: si attende il tap sul pulsante */ });
-      }
-    } catch { /* */ }
+    // Microfono MAI in autostart: si attiva SOLO col pulsante 👂 (nessun prompt/beep automatico).
     const onState = (e) => setVs({ listening: !!e.detail?.listening, speaking: !!e.detail?.speaking, wake: !!e.detail?.wake });
     window.addEventListener("mikilab-voice-state", onState);
     return () => { document.body.classList.remove("braccio-mode"); window.removeEventListener("mikilab-voice-state", onState); };
@@ -89,69 +81,20 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
         </div>
       )}
 
-      {/* Modalità di lavoro */}
-      <div className="grid grid-cols-2 gap-2 mt-2" data-testid="braccio-workmode">
-        {[
-          { id: "continuo", Icon: Zap, t: tri("Flusso Continuo", "Kontinuierlich", "Continuous", "Flujo Continuo", "Flux Continu", "پیوسته") },
-          { id: "autonomia", Icon: PackageCheck, t: tri("In Autonomia", "Eigenständig", "Autonomous", "En Autonomía", "En Autonomie", "خودگردان") },
-        ].map((m) => {
-          const on = shift.work_mode === m.id;
-          return (
-            <button key={m.id} data-testid={`braccio-mode-${m.id}`} onClick={() => setWorkMode(m.id)}
-              className="flex items-center justify-center gap-1.5 rounded-xl py-2 font-extrabold text-[12.5px] active:scale-95 transition-all"
-              style={{ background: on ? D.gold : D.surf, border: `2px solid ${on ? D.gold : D.border}`, color: on ? D.bg : D.text }}>
-              <m.Icon className="w-4 h-4" /> {m.t}
-            </button>
-          );
-        })}
-      </div>
-      {deadline && (
-        <div data-testid="braccio-autonomy-deadline" className="mt-1.5 flex items-center gap-1.5 rounded-xl px-3 py-1.5" style={{ background: D.surf, border: `2px solid ${D.border}` }}>
-          <Clock className="w-3.5 h-3.5" style={{ color: D.gold }} />
-          <span className="text-[12px] font-bold" style={{ color: D.gold }}>{tri("Autonomia fino alle", "Autonom bis", "Autonomous until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} {fmtHM(deadline, lang)}</span>
-        </div>
-      )}
-
-      {/* Avatar 3D vocale (hands-free) */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-3 py-2">
+      {/* Avatar 3D vocale + STRUMENTO UNICO del laboratorio: Elite Engine */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 py-2">
         <Avatar3D active speaking={vs.speaking} listening={vs.listening || vs.wake}
-          label={vs.speaking ? tri("Sto rispondendo…", "Ich antworte…", "Answering…", "Respondiendo…", "Je réponds…", "در حال پاسخ…") : ((vs.listening || vs.wake) ? tri("Ti ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Assistente in ascolto", "Assistent hört zu", "Assistant listening", "Asistente escuchando", "Assistant à l'écoute", "دستیار در حال شنیدن"))}
-          sub={tri("Parla o di' «Ehi Lab»", "Sprich oder sag «Ehi Lab»", "Speak or say «Ehi Lab»", "Habla o di «Ehi Lab»", "Parle ou dis «Ehi Lab»", "صحبت کن یا بگو «لب»")} />
-        <button data-testid="braccio-headset" onClick={onHeadset} disabled={hsBusy}
-          className="flex items-center gap-2 rounded-full px-6 py-3 font-extrabold text-[15px] shadow-lg active:scale-95 transition-all disabled:opacity-60"
-          style={{ background: "#E7B23C", color: "#17120B", border: "3px solid #F6D27A" }}>
-          <Headphones className="w-5 h-5" strokeWidth={2.6} /> {hsBusy ? tri("Collego…", "Verbinde…", "Connecting…", "Conectando…", "Connexion…", "اتصال…") : tri("Cuffie hands-free", "Headset hands-free", "Hands-free headset", "Auriculares", "Casque mains libres", "هدست")}
-        </button>
-        <button data-testid="braccio-consegne" onClick={consegne}
-          className="flex items-center gap-2 rounded-full px-4 py-2 font-bold text-[13px] active:scale-95 transition-all" style={{ background: D.surf, border: `2px solid ${D.gold}`, color: D.gold }}>
-          <ClipboardList className="w-4 h-4" /> {tri("Consegne del turno", "Schichtübergabe", "Shift handover", "Relevo de turno", "Passation", "تحویل شیفت")}
-        </button>
+          label={vs.speaking ? tri("Sto rispondendo…", "Ich antworte…", "Answering…", "Respondiendo…", "Je réponds…", "در حال پاسخ…") : ((vs.listening || vs.wake) ? tri("Ti ascolto…", "Ich höre…", "Listening…", "Escuchando…", "J'écoute…", "می‌شنوم…") : tri("Assistente pronto", "Assistent bereit", "Assistant ready", "Asistente listo", "Assistant prêt", "دستیار آماده"))}
+          sub={tri("Tocca 👂 per parlare (mai da solo)", "Tippe 👂 zum Sprechen", "Tap 👂 to talk", "Toca 👂 para hablar", "Touche 👂 pour parler", "برای صحبت 👂 را بزن")} />
         <button data-testid="braccio-elite-engine" onClick={() => setEliteOpen(true)}
-          className="flex items-center gap-2 rounded-full px-5 py-2.5 font-extrabold text-[14px] active:scale-95 transition-all" style={{ background: D.gold, border: `2px solid ${D.gold}`, color: D.bg }}>
-          <Cpu className="w-4 h-4" /> {tri("MikiLab Elite Engine", "MikiLab Elite Engine", "MikiLab Elite Engine", "MikiLab Elite Engine", "MikiLab Elite Engine", "MikiLab Elite Engine")}
+          className="flex items-center gap-2 rounded-2xl px-7 py-4 font-extrabold text-[16px] shadow-lg active:scale-95 transition-all"
+          style={{ background: D.gold, border: `3px solid #F6D27A`, color: D.bg }}>
+          <Cpu className="w-5 h-5" /> {tri("Apri MikiLab Elite Engine", "MikiLab Elite Engine öffnen", "Open MikiLab Elite Engine", "Abrir MikiLab Elite Engine", "Ouvrir MikiLab Elite Engine", "باز کردن MikiLab Elite Engine")}
         </button>
+        <p className="text-[11px]" style={{ color: D.muted }}>{tri("Strumento unico del laboratorio", "Einziges Laborwerkzeug", "The lab's single tool", "Herramienta única del laboratorio", "Outil unique du laboratoire", "تنها ابزار آزمایشگاه")}</p>
       </div>
 
       <MikiLabEliteEngine open={eliteOpen} onClose={() => setEliteOpen(false)} />
-
-      {/* 3 tasti rapidi */}
-      <div className="grid grid-cols-3 gap-2.5">
-        {QUICK.map((q) => (
-          <button key={q.id} data-testid={`braccio-quick-${q.id}`} onClick={() => onOpenTool && onOpenTool(q.id)}
-            className="oven-hover relative flex flex-col items-center gap-1.5 rounded-2xl min-h-[90px] p-2.5 active:scale-95 transition-all" style={{ background: D.surf, border: `2px solid ${q.badge ? D.danger : D.border}` }}>
-            {q.badge && <span className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full animate-pulse" style={{ background: D.danger }} />}
-            <span className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: q.badge ? D.danger : D.gold }}><q.Icon className="w-5 h-5" style={{ color: D.bg }} /></span>
-            <span className="text-[12px] font-extrabold text-center leading-tight" style={{ color: D.text }}>{q.t}</span>
-            <span className="text-[9.5px] text-center leading-tight" style={{ color: D.muted }}>{q.s}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Accesso Gestione */}
-      <button data-testid="braccio-gestione" onClick={onGestione}
-        className="mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-bold active:scale-98 transition-all" style={{ background: "transparent", border: `2px solid ${D.gold}`, color: D.gold }}>
-        <SlidersHorizontal className="w-4 h-4" /> {tri("Gestione (PC / Chef)", "Verwaltung (PC / Chef)", "Management (PC / Chef)", "Gestión (PC / Chef)", "Gestion (PC / Chef)", "مدیریت")}
-      </button>
     </div>
   );
 }
