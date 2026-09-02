@@ -106,7 +106,7 @@ export default function Home({ onNavigate }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.06 }}
-            className="group block w-full text-start rounded-3xl overflow-hidden bg-[#161616] border border-[#2C2C2C] hover:border-[#d4a373]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
+            className="lab-3d-card group block w-full text-start rounded-3xl overflow-hidden bg-[#161616] border border-[#2C2C2C] hover:border-[#d4a373]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
           >
             <div className="relative h-40">
               <img src={`${PUB}/${b.img}`} alt={b.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />

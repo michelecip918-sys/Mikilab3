@@ -297,7 +297,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
         </div>
 
         {/* SCENA 3D & FOTO REALI */}
-        <div data-testid="elite-scene-3d" style={{
+        <div data-testid="elite-scene-3d" className="lab-3d-card" style={{
           backgroundColor: 'rgba(0, 0, 0, 0.82)', borderRadius: '20px',
           border: `3px solid ${currentRoom.color}`, padding: '24px', textAlign: 'center',
           marginBottom: '16px', position: 'relative', overflow: 'hidden',
@@ -351,7 +351,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
 
           {activeTab === 'guida' ? (
             <div data-testid="elite-guida-content" style={{ fontSize: '0.85rem', lineHeight: '1.6', color: '#DDD' }}>
-              <p>✨ <strong>MikiLab OS v10.3</strong> ideato e sviluppato da Mohamed & Miki.</p>
+              <p>✨ <strong>MikiLab | 3D Lab Simulation v10.3</strong> ideato e sviluppato da Mohamed & Miki.</p>
               <p>🔒 <strong>Protezione Copyright:</strong> Questo software, l'interfaccia 3D, la logica dei timer e i contenuti multimediali sono protetti da diritti di proprietà intellettuale esclusivi. Ogni duplicazione o uso non autorizzato è severamente vietato.</p>
               <p>🚀 <strong>Rispetto al mercato:</strong> Foto reali del team, radio live integrata, ricette collegate al database e allarmi con notifica del telefono per la cottura.</p>
             </div>
@@ -415,7 +415,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           fontSize: '0.75rem', color: '#AAA', display: 'flex', justifyContent: 'center',
           gap: '15px', flexWrap: 'wrap'
         }}>
-          <span>© MikiLab OS v10.3 - Mohamed & Miki (Tutti i diritti riservati)</span>
+          <span>© MikiLab | 3D Lab Simulation v10.3 - Mohamed & Miki (Tutti i diritti riservati)</span>
           <button data-testid="elite-privacy" onClick={() => setModalOpen('privacy')} style={{ background: 'none', border: 'none', color: '#D97706', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             🔒 Privacy (GDPR)
           </button>
@@ -448,10 +448,10 @@ export default function MikiLabEliteEngine({ open, onClose }) {
 
             <div style={{ fontSize: '0.85rem', lineHeight: '1.5', color: '#DDD', marginBottom: '20px' }}>
               {modalOpen === 'privacy' && (
-                <p>I dati di produzione, le ricette e le impostazioni del laboratorio gestiti all'interno di MikiLab OS sono trattati in totale conformità al Regolamento UE 2016/679 (GDPR), garantendo la massima riservatezza e sicurezza dei dati aziendali.</p>
+                <p>I dati di produzione, le ricette e le impostazioni del laboratorio gestiti all'interno di MikiLab | 3D Lab Simulation sono trattati in totale conformità al Regolamento UE 2016/679 (GDPR), garantendo la massima riservatezza e sicurezza dei dati aziendali.</p>
               )}
               {modalOpen === 'copyright' && (
-                <p><strong>© 2026 MikiLab OS - Mohamed & Miki.</strong> Tutti i diritti di proprietà intellettuale relativi al codice sorgente, all'interfaccia 3D, ai flussi operativi, alle immagini e ai concetti di laboratorio sono riservati. È vietata la copia, la riproduzione o la distribuzione non autorizzata, anche parziale, dell'opera.</p>
+                <p><strong>© 2026 MikiLab | 3D Lab Simulation - Mohamed & Miki.</strong> Tutti i diritti di proprietà intellettuale relativi al codice sorgente, all'interfaccia 3D, ai flussi operativi, alle immagini e ai concetti di laboratorio sono riservati. È vietata la copia, la riproduzione o la distribuzione non autorizzata, anche parziale, dell'opera.</p>
               )}
               {modalOpen === 'impressum' && (
                 <p><strong>MikiLab Industrial Systems</strong><br />

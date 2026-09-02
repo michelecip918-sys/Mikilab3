@@ -172,7 +172,7 @@ export default function RicettaDelGiorno() {
             const isActive = st !== "da_fare";
             return (
               <button key={it.id} data-testid={`rdg-item-${it.recipe_id}`} onClick={() => setSel(it)}
-                className="w-full h-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-98 transition-all" style={{ background: C.surf, border: `2px solid ${isActive ? (STATUS_COLOR[st] || C.gold) : C.border}`, opacity: isDone ? 0.6 : 1 }}>
+                className="lab-3d-card w-full h-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-98 transition-all" style={{ background: C.surf, border: `2px solid ${isActive ? (STATUS_COLOR[st] || C.gold) : C.border}`, opacity: isDone ? 0.6 : 1 }}>
                 {isDone ? <CheckCircle2 className="w-6 h-6 shrink-0" style={{ color: "#5E7A3A" }} /> : <Circle className="w-6 h-6 shrink-0" style={{ color: isActive ? (STATUS_COLOR[st] || C.gold) : C.gold }} />}
                 <span className="flex-1 min-w-0">
                   <span className="block font-extrabold truncate" style={{ fontSize: "clamp(18px,5vw,24px)", color: C.dark, textDecoration: isDone ? "line-through" : "none" }}>{rr ? recipeTitle(rr, lang) : it.recipe_name}</span>

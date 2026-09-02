@@ -3515,3 +3515,15 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ## v-fork41 (2026-06) — Tema caldo + parita mobile (final)
 - bg-neutral/gray/slate-900 -> bg-[#1c140d] (warm). max-w-7xl -> max-w-full px-4 sm:px-6. grid-cols-3 -> grid-cols-1 sm:grid-cols-2 lg:grid-cols-3.
 - rounded-xl era gia no-op (convertito prima). Build prod OK. Verificato mobile 390px: overflow orizzontale 0px. Redeploy avviato (job aa6b806a).
+
+## v-fork42 (2026-06) — Effetto 3D Lab (sicuro) + rinomini
+- index.css: classe `.lab-3d-card` (perspective + tilt hover rotateX/Y + glow ambra caldo, reduced-motion safe). Applicata a card Home (5) e scena Elite Engine.
+- Rinomini testuali: "MikiLab OS" -> "MikiLab | 3D Lab Simulation" (4 occorrenze, solo stringhe visibili).
+- RIFIUTATO il sed distruttivo (<div> -> commento HTML + doppio div + class=): avrebbe rotto JSX/build/preview. Ottenuto lo stesso look via CSS.
+- Verificato via screenshot: Home ordinata, 5 .lab-3d-card, nessuna rottura.
+
+## v-fork43 (2026-06) — Glass/3D su Shop+Prodotti, Shop de-neon, build ok
+- Shop.jsx: rimosso #ff6b00 residuo -> #d4a373; classe .lab-3d-card sulle 2 card.
+- RicettaDelGiorno.jsx: .lab-3d-card sugli item prodotti.
+- "Dashboard" e solo nome-icona (LayoutDashboard), NON rinominato.
+- Build prod OK (38s). Redeploy avviato.
