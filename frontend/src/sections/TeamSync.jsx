@@ -41,10 +41,28 @@ export default function TeamSync({ open, onClose }) {
   const [temp, setTemp] = useState(24);
   const [sos, setSos] = useState("");
   const [kg, setKg] = useState(25);
+  const [recipes, setRecipes] = useState(() => { try { const s = localStorage.getItem("mikilab_recipes_db"); return s ? JSON.parse(s) : RECIPES; } catch { return RECIPES; } });
   const [selRec, setSelRec] = useState(() => { try { return localStorage.getItem("mikilab_team_recipe") || "pane_matera"; } catch { return "pane_matera"; } });
   const [mode, setMode] = useState("solo");
   const [dosi, setDosi] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [nr, setNr] = useState({ nome: "", farina: 10, acqua: 6.5, lievito: 0.2, sale: 0.22 });
+  const [planEdits, setPlanEdits] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_plan_edits") || "{}"); } catch { return {}; } });
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState("");
   useEffect(() => { try { localStorage.setItem("mikilab_team_recipe", selRec); } catch { /* */ } }, [selRec]);
+  useEffect(() => { try { localStorage.setItem("mikilab_recipes_db", JSON.stringify(recipes)); } catch { /* */ } }, [recipes]);
+  useEffect(() => { try { localStorage.setItem("mikilab_plan_edits", JSON.stringify(planEdits)); } catch { /* */ } }, [planEdits]);
+
+  const addRecipe = () => {
+    if (!nr.nome.trim()) return;
+    const entry = { id: `rec_${Date.now()}`, nome: nr.nome.trim(), farina: Number(nr.farina) || 10, acqua: Number(nr.acqua) || 0, lievito: Number(nr.lievito) || 0, sale: Number(nr.sale) || 0 };
+    setRecipes((p) => [...p, entry]); setSelRec(entry.id); setShowAdd(false);
+    speak(tri(`Ricetta ${entry.nome} salvata nel database locale.`, `Rezept ${entry.nome} lokal gespeichert.`, `Recipe ${entry.nome} saved locally.`, `Receta ${entry.nome} guardada.`, `Recette ${entry.nome} enregistrée.`, `دستور ${entry.nome} ذخیره شد.`));
+    setNr({ nome: "", farina: 10, acqua: 6.5, lievito: 0.2, sale: 0.22 });
+  };
+  const actionOf = (t) => (t ? (planEdits[t.id] || t.azione) : "");
+  const saveEdit = () => { if (task) { setPlanEdits((p) => ({ ...p, [task.id]: editText })); setEditing(false); speak(tri("Piano aggiornato.", "Plan aktualisiert.", "Plan updated.", "Plan actualizado.", "Plan mis à jour.", "برنامه به‌روزرسانی شد.")); } };
 
   useEffect(() => { try { localStorage.setItem("mikilab_operatore", operatore); } catch { /* */ } }, [operatore]);
   useEffect(() => {
@@ -59,7 +77,7 @@ export default function TeamSync({ open, onClose }) {
 
   const askWhatNext = () => {
     if (!task) { speak(tri("Tutti i compiti di squadra sono completati.", "Alle Team-Aufgaben erledigt.", "All team tasks are complete.", "Todas las tareas completadas.", "Toutes les tâches sont terminées.", "همه کارها تمام شد.")); return; }
-    if (task.reparto === reparto) speak(tri(`${operatore}, il tuo compito: ${task.azione}, su ${task.vasca}.`, `${operatore}, deine Aufgabe: ${task.azione}, ${task.vasca}.`, `${operatore}, your task: ${task.azione}, at ${task.vasca}.`, `${operatore}, tu tarea: ${task.azione}.`, `${operatore}, ta tâche : ${task.azione}.`, `${operatore}: ${task.azione}.`));
+    if (task.reparto === reparto) speak(tri(`${operatore}, il tuo compito: ${actionOf(task)}, su ${task.vasca}.`, `${operatore}, deine Aufgabe: ${actionOf(task)}, ${task.vasca}.`, `${operatore}, your task: ${actionOf(task)}, at ${task.vasca}.`, `${operatore}, tu tarea: ${actionOf(task)}.`, `${operatore}, ta tâche : ${actionOf(task)}.`, `${operatore}: ${actionOf(task)}.`));
     else speak(tri(`Il tuo reparto è in attesa. Ora il lavoro è al reparto ${task.reparto}.`, `Dein Bereich wartet. Aktuell arbeitet ${task.reparto}.`, `Your department waits. Work is now at ${task.reparto}.`, `Tu área espera. Ahora trabaja ${task.reparto}.`, `Ton secteur attend. Le travail est à ${task.reparto}.`, `بخش تو منتظر است.`));
   };
 
@@ -67,7 +85,7 @@ export default function TeamSync({ open, onClose }) {
     if (idx + 1 < TASKS.length) {
       const n = idx + 1; setIdx(n);
       const nt = TASKS[n];
-      speak(tri("Compito completato.", "Aufgabe erledigt.", "Task done.", "Tarea hecha.", "Tâche faite.", "کار تمام شد.") + (nt.reparto === reparto ? " " + tri(`Prossimo: ${nt.azione}.`, `Nächste: ${nt.azione}.`, `Next: ${nt.azione}.`, `Siguiente: ${nt.azione}.`, `Suivant : ${nt.azione}.`, `بعدی: ${nt.azione}.`) : ""));
+      speak(tri("Compito completato.", "Aufgabe erledigt.", "Task done.", "Tarea hecha.", "Tâche faite.", "کار تمام شد.") + (nt.reparto === reparto ? " " + tri(`Prossimo: ${actionOf(nt)}.`, `Nächste: ${actionOf(nt)}.`, `Next: ${actionOf(nt)}.`, `Siguiente: ${actionOf(nt)}.`, `Suivant : ${actionOf(nt)}.`, `بعدی: ${actionOf(nt)}.`) : ""));
     } else {
       speak(tri("Turno completato con successo da tutta la squadra!", "Schicht vom ganzen Team erfolgreich beendet!", "Shift completed by the whole team!", "¡Turno completado por todo el equipo!", "Poste terminé par toute l'équipe !", "شیفت با موفقیت تمام شد!"));
     }
@@ -82,7 +100,7 @@ export default function TeamSync({ open, onClose }) {
   };
 
   const calcolaDosi = () => {
-    const rec = RECIPES.find((r) => r.id === selRec) || RECIPES[0];
+    const rec = recipes.find((r) => r.id === selRec) || recipes[0];
     const f = kg / rec.farina;
     const r = { nome: rec.nome, acqua: (rec.acqua * f).toFixed(1), lievito: Math.round(rec.lievito * f * 1000), sale: Math.round(rec.sale * f * 1000), burro: rec.burro ? Math.round(rec.burro * f * 1000) : null };
     setDosi(r);
@@ -141,7 +159,19 @@ export default function TeamSync({ open, onClose }) {
             <span className="text-[12px] font-bold" style={{ color: D.accent }}>{tri("SEQUENZA · REPARTO", "SEQUENZ · BEREICH", "SEQUENCE · DEPT", "SECUENCIA · ÁREA", "SÉQUENCE · SECTEUR", "توالی · بخش")} {task ? repLabel(task.reparto) : "—"}</span>
             <span className="text-[12px]" style={{ color: D.muted }}>{task ? task.tempo : "—"}</span>
           </div>
-          <div className="text-[16px] font-bold mb-3" data-testid="team-task">{task ? task.azione : tri("Turno completato", "Schicht fertig", "Shift complete", "Turno completo", "Poste terminé", "شیفت تمام")} {task && <span style={{ color: D.green }}>({task.vasca})</span>}</div>
+          <div className="text-[16px] font-bold mb-3 flex items-start justify-between gap-2" data-testid="team-task">
+            {editing ? (
+              <div className="flex-1 flex gap-2">
+                <input data-testid="team-task-edit" value={editText} onChange={(e) => setEditText(e.target.value)} className="flex-1 rounded-md px-2 py-1.5 text-[14px] outline-none" style={{ background: D.input, border: `1px solid ${D.green}`, color: D.text }} />
+                <button data-testid="team-task-save" onClick={saveEdit} className="rounded-md px-3 font-bold text-[12px]" style={{ background: D.green, color: "#000" }}>{tri("SALVA", "SPEICH.", "SAVE", "GUARDAR", "OK", "ذخیره")}</button>
+              </div>
+            ) : (
+              <>
+                <span>{task ? actionOf(task) : tri("Turno completato", "Schicht fertig", "Shift complete", "Turno completo", "Poste terminé", "شیفت تمام")} {task && <span style={{ color: D.green }}>({task.vasca})</span>}</span>
+                {task && <button data-testid="team-task-editbtn" onClick={() => { setEditText(actionOf(task)); setEditing(true); }} className="text-[11px] px-2 py-1 rounded-md shrink-0" style={{ background: "#333", color: D.muted }}>✏️</button>}
+              </>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-2.5">
             <button data-testid="team-ask" onClick={askWhatNext} className="rounded-lg py-3 font-bold text-white flex items-center justify-center gap-1.5 active:scale-97" style={{ background: D.accent }}><Mic className="w-4 h-4" /> {tri("Cosa faccio ora?", "Was mache ich?", "What now?", "¿Qué hago?", "Quoi faire ?", "الان چه کنم؟")}</button>
             <button data-testid="team-confirm" onClick={confirmTask} className="rounded-lg py-3 font-bold flex items-center justify-center gap-1.5 active:scale-97" style={{ background: D.green, color: "#000" }}><CheckCircle2 className="w-4 h-4" /> {tri("TAP CUFFIA ✓", "HEADSET TAP ✓", "HEADSET TAP ✓", "TAP ✓", "TAP ✓", "ضربه ✓")}</button>
@@ -165,9 +195,23 @@ export default function TeamSync({ open, onClose }) {
 
         {/* Ricalcolo dosi */}
         <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
-          <h3 className="flex items-center gap-2 font-bold text-[15px] mb-3" style={{ color: D.accent }}><Calculator className="w-4 h-4" /> {tri("Ricalcolo Dosi al Volo", "Mengen sofort neu", "Instant Dose Recalc", "Recalcular Dosis", "Recalcul des Doses", "بازمحاسبه مقدار")}</h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="flex items-center gap-2 font-bold text-[15px]" style={{ color: D.accent }}><Calculator className="w-4 h-4" /> {tri("Database Ricette (illimitate)", "Rezept-DB (unbegrenzt)", "Recipe DB (unlimited)", "BD Recetas (ilimitadas)", "BD Recettes", "پایگاه دستورها")}</h3>
+            <button data-testid="team-recipe-add-toggle" onClick={() => setShowAdd((v) => !v)} className="text-[11px] px-2 py-1 rounded-md font-bold" style={{ background: "#222", color: D.green, border: `1px solid ${D.green}` }}>{showAdd ? tri("❌ Chiudi", "❌ Zu", "❌ Close", "❌ Cerrar", "❌ Fermer", "❌ بستن") : tri("➕ Nuova", "➕ Neu", "➕ New", "➕ Nueva", "➕ Nouv.", "➕ جدید")}</button>
+          </div>
+          {showAdd && (
+            <div data-testid="team-recipe-form" className="rounded-md p-2.5 mb-2 space-y-2" style={{ background: D.input, border: `1px solid ${D.green}` }}>
+              <input data-testid="team-nr-nome" value={nr.nome} onChange={(e) => setNr({ ...nr, nome: e.target.value })} placeholder={tri("Nome impasto", "Teigname", "Dough name", "Nombre masa", "Nom pâte", "نام خمیر")} className="w-full rounded px-2 py-1.5 text-[13px] outline-none" style={{ background: D.card, border: `1px solid ${D.border}`, color: D.text }} />
+              <div className="grid grid-cols-4 gap-1.5 text-[11px]" style={{ color: D.muted }}>
+                {[["farina", tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")], ["acqua", tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")], ["lievito", tri("Lievito", "Hefe", "Yeast", "Levad.", "Levure", "مخمر")], ["sale", tri("Sale", "Salz", "Salt", "Sal", "Sel", "نمک")]].map(([k, lab]) => (
+                  <div key={k}>{lab}<input data-testid={`team-nr-${k}`} type="number" step="0.01" value={nr[k]} onChange={(e) => setNr({ ...nr, [k]: e.target.value })} className="w-full rounded px-1 py-1 mt-0.5 outline-none" style={{ background: D.card, border: `1px solid ${D.border}`, color: D.text }} /></div>
+                ))}
+              </div>
+              <button data-testid="team-nr-save" onClick={addRecipe} className="w-full rounded py-2 font-bold text-[13px]" style={{ background: D.green, color: "#000" }}>{tri("SALVA IN DATABASE", "IN DB SPEICHERN", "SAVE TO DATABASE", "GUARDAR EN BD", "ENREGISTRER", "ذخیره در پایگاه")}</button>
+            </div>
+          )}
           <select data-testid="team-recipe" value={selRec} onChange={(e) => setSelRec(e.target.value)} className="w-full rounded-md px-3 py-2 mb-2 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.border}`, color: D.text }}>
-            {RECIPES.map((r) => <option key={r.id} value={r.id}>{r.nome}</option>)}
+            {recipes.map((r) => <option key={r.id} value={r.id}>{r.nome}</option>)}
           </select>
           <div className="flex items-center gap-2 mb-3">
             <input data-testid="team-kg" type="number" value={kg} onChange={(e) => setKg(parseInt(e.target.value) || 0)} className="w-20 text-center rounded-md px-2 py-2 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.accent}`, color: D.text }} />

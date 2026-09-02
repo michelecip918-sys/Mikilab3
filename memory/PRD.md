@@ -3356,3 +3356,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Database ricette locale** (`RECIPES`: Pane Matera, Brezel/Laugen con burro, Ciabatta) con selettore `team-recipe` (persistito `mikilab_team_recipe`). Il "Ricalcolo Dosi" ora calcola sulla ricetta scelta e mostra anche il BURRO/grassi quando presenti. Verificato Brezel 20kg → 10.0L/600g/440g/1000g burro.
 - **Modalità Solo/Squadra** (`team-mode-solo`/`team-mode-team`): in Solo il selettore reparto è nascosto; in Squadra compare. Operatore persistito.
 - Restano: SOS impasto+temp, sequenza compiti + TAP conferma, interfono push-to-talk (annuncio locale; radio reale device-to-device richiede build nativa WebRTC/Bluetooth). Voce nativa zero-crediti, multilingue.
+
+## v-fork20 (2026-06) — Team Auricolari "Final Engine": ricette illimitate + piano editabile
+- **Database ricette illimitato**: `TeamSync` ora usa uno stato `recipes` persistito (`mikilab_recipes_db`, seed dai 3 default). Form "➕ Nuova" (`team-recipe-add-toggle` → `team-recipe-form`, campi nome/farina/acqua/lievito/sale, `team-nr-save`) per aggiungere ricette; la nuova viene selezionata e usata dal ricalcolo dosi. Verificato: "Focaccia Genovese" salvata e persistita.
+- **Piano compiti editabile dal capo**: il testo del compito corrente è modificabile (`team-task-editbtn` → `team-task-edit`/`team-task-save`), override persistito in `mikilab_plan_edits` per id. Le funzioni vocali usano `actionOf(task)` (edit || default). Verificato edit + persistenza.
+- Restano: Solo/Squadra + reparto, SOS+temp, sequenza+TAP conferma, interfono. Voce nativa zero-crediti. NB radio device-to-device reale = build nativa WebRTC/Bluetooth.
