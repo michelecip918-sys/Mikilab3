@@ -9,14 +9,24 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 const API = process.env.REACT_APP_BACKEND_URL;
-// Stazione reale della "Radio del Fornaio" (stessa sorgente di RadioFornaio.jsx)
-const BAKER_RADIO_URL = "https://icestreaming.rai.it/1.mp3";
+// Stazioni reali della "Radio del Fornaio" (sottoinsieme di RadioFornaio.jsx)
+const RADIO_STATIONS = [
+  { id: 'rai1', name: 'RAI Radio 1', url: 'https://icestreaming.rai.it/1.mp3' },
+  { id: 'rai2', name: 'RAI Radio 2', url: 'https://icestreaming.rai.it/2.mp3' },
+  { id: 'rai3', name: 'RAI Radio 3', url: 'https://icestreaming.rai.it/3.mp3' },
+  { id: 'r105', name: 'Radio 105', url: 'https://icy.unitedradio.it/Radio105.mp3' },
+  { id: 'virgin', name: 'Virgin Radio', url: 'https://icy.unitedradio.it/Virgin.mp3' },
+  { id: 'rmc', name: 'Radio Monte Carlo', url: 'https://icy.unitedradio.it/RMC.mp3' },
+  { id: 'swr3', name: 'SWR3 (DE)', url: 'https://liveradio.swr.de/sw282p3/swr3/play.mp3' },
+  { id: 'classicfm', name: 'Classic FM (UK)', url: 'https://media-ssl.musicradio.com/ClassicFMMP3' },
+];
 
 export default function MikiLabEliteEngine({ open, onClose }) {
   const [activeTab, setActiveTab] = useState('impasti');
   const [language, setLanguage] = useState('it-IT');
   const [batchKg, setBatchKg] = useState(50);
   const [radioPlaying, setRadioPlaying] = useState(false);
+  const [stationId, setStationId] = useState('rai1');
   const [modalOpen, setModalOpen] = useState(null);
 
   // Ricette reali dal DB MikiLab
@@ -26,6 +36,8 @@ export default function MikiLabEliteEngine({ open, onClose }) {
   // Timer Forno Reale con Allarme Persistente + Notifica Push
   const [timerSeconds, setTimerSeconds] = useState(1080); // 18 minuti
   const [isBaking, setIsBaking] = useState(false);
+  const [ovenTemp, setOvenTemp] = useState(240);       // °C dal DB ricetta
+  const [ovenRecipeName, setOvenRecipeName] = useState(''); // ricetta che pilota il forno
 
   const radioRef = useRef(null);
 
@@ -109,20 +121,43 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     if (!open && radioRef.current) { radioRef.current.pause(); setRadioPlaying(false); }
   }, [open]);
 
+  // BINDING Ricetta → Forno: la ricetta scelta popola minuti e temperatura del forno
+  useEffect(() => {
+    const r = dbRecipes.find(x => x.id === selectedRecipeId);
+    if (!r) return;
+    if (r.bake_minutes) { setTimerSeconds(Math.round(r.bake_minutes * 60)); setIsBaking(false); }
+    if (r.bake_temp) setOvenTemp(r.bake_temp);
+    setOvenRecipeName(r.name || '');
+  }, [selectedRecipeId, dbRecipes]);
+
+  const currentStation = RADIO_STATIONS.find(s => s.id === stationId) || RADIO_STATIONS[0];
+
+  const playStation = (st) => {
+    if (!radioRef.current) radioRef.current = new Audio();
+    const a = radioRef.current;
+    a.src = st.url;
+    const p = a.play();
+    if (p && p.catch) p.catch(() => {});
+    setRadioPlaying(true);
+  };
+
   const toggleRadio = () => {
-    if (!radioRef.current) radioRef.current = new Audio(BAKER_RADIO_URL);
+    if (!radioRef.current) radioRef.current = new Audio();
     const a = radioRef.current;
     if (radioPlaying) {
       a.pause();
       setRadioPlaying(false);
       speakVoice("Radio panificio spenta");
     } else {
-      a.src = BAKER_RADIO_URL;
-      const p = a.play();
-      if (p && p.catch) p.catch(() => {});
-      setRadioPlaying(true);
-      speakVoice("Radio del Fornaio in streaming live");
+      playStation(currentStation);
+      speakVoice(`Radio del Fornaio: ${currentStation.name}`);
     }
+  };
+
+  const changeStation = (id) => {
+    const st = RADIO_STATIONS.find(s => s.id === id) || RADIO_STATIONS[0];
+    setStationId(id);
+    if (radioPlaying) { playStation(st); speakVoice(st.name); }
   };
 
   useEffect(() => () => { try { if (radioRef.current) radioRef.current.pause(); } catch (e) {} }, []);
@@ -217,8 +252,12 @@ export default function MikiLabEliteEngine({ open, onClose }) {
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <button data-testid="elite-radio-toggle" onClick={toggleRadio} style={{ backgroundColor: radioPlaying ? '#00E676' : 'rgba(255,255,255,0.1)', color: '#FFF', border: `1px solid ${currentRoom.color}`, padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                📻 RADIO REALE: {radioPlaying ? 'ON (RAI 🎶)' : 'OFF'}
+                📻 {radioPlaying ? 'ON 🎶' : 'RADIO'}
               </button>
+              <select data-testid="elite-radio-station" value={stationId} onChange={(e) => changeStation(e.target.value)}
+                style={{ backgroundColor: 'rgba(0,0,0,0.5)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '8px', padding: '7px 6px', fontSize: '0.72rem', fontWeight: 'bold', maxWidth: '130px' }}>
+                {RADIO_STATIONS.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
               <button data-testid="elite-close" onClick={onClose} aria-label="Chiudi" style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#FFF', border: `1px solid ${currentRoom.color}`, padding: '7px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                 <X size={18} />
               </button>
@@ -354,7 +393,12 @@ export default function MikiLabEliteEngine({ open, onClose }) {
 
           {activeTab === 'forni' && (
             <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#FF3D00' }}>🔥 Forno Rotativo (240°C) - Allarme + Notifica Telefono</div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#FF3D00' }}>🔥 Forno Rotativo ({ovenTemp}°C) - Allarme + Notifica Telefono</div>
+              {ovenRecipeName && (
+                <div data-testid="elite-oven-recipe" style={{ fontSize: '0.72rem', color: '#FFB300', marginTop: '4px' }}>
+                  📖 Parametri da ricetta: <strong>{ovenRecipeName}</strong>
+                </div>
+              )}
               <div data-testid="elite-timer" style={{ fontSize: '2rem', fontWeight: 'bold', margin: '6px 0', fontFamily: 'monospace' }}>
                 {formatTime(timerSeconds)}
               </div>

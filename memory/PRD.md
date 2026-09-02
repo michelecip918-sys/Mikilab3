@@ -3442,3 +3442,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ### Testing
 - Verificato via screenshot: foto reale (naturalWidth 1024), 149 opzioni ricette, acqua=44.0 L a 88%, compile pulito. Wake-word/glossario NON testabili headless (richiedono microfono) — da validare a voce dall'utente.
 
+
+## v-fork31 (2026-06) — Elite Engine: selettore stazioni radio + binding Ricetta→Forno
+- **Selettore stazioni radio** (`elite-radio-station`): 8 stazioni reali (RAI 1/2/3, Radio 105, Virgin, RMC, SWR3 DE, Classic FM UK). `changeStation()` cambia al volo se la radio è in play. Sostituito il vecchio BAKER_RADIO_URL fisso con RADIO_STATIONS + `playStation()`.
+- **Binding Ricetta → Timer Forno**: useEffect su `selectedRecipeId` popola automaticamente `timerSeconds` da `bake_minutes` e `ovenTemp` da `bake_temp` della ricetta DB scelta. Pannello Forni mostra temperatura dinamica ({ovenTemp}°C) + riga `elite-oven-recipe` con il nome della ricetta collegata.
+- **Voce (Task 1)**: le prompt "Comandante Lab, cos'è la biga" e "…timer autolisi 45 minuti" sono già gestite da `tryGlossary` (biga) e `tryTimer` (autolisi 45 min) in VoiceCommand.jsx — nessuna nuova hardcoding necessaria.
+- Verificato via screenshot: 8 stazioni nel dropdown; selezionando "Baguette a Lievito Madre" (22min/250°C) il forno mostra 250°C, timer 22:00 e "Parametri da ricetta: Baguette a Lievito Madre". Compile pulito.
+
