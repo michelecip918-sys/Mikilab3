@@ -3409,3 +3409,13 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Fix rispetto al codice grezzo: `justify` → `justifyContent`, `transition:all` → transizioni mirate (transform/background-color).
 - Verificato via screenshot: overlay apre da tab "Schede di Produzione", cambio stanza aggiorna gradiente+scena+dati (verificata Zona Forni), compile pulito.
 
+
+## v-fork28 (2026-06) — MikiLab OS v10.0 Enterprise (Miki & Mohamed) — rebuild Elite Engine
+- `sections/MikiLabEliteEngine.jsx` SOVRASCRITTO con "v10.0 Ultimate 3D Bakery Enterprise" (codice esatto utente, funzione originaria MikiLabEnterpriseOS → export default `MikiLabEliteEngine` per non rompere BraccioLab). Overlay createPortal + Chiudi + ESC.
+- **Multi-avatar Miki & Mohamed**: Impasti (Miki 🧔🏻‍♂️🌾), Forni (Mohamed 👨🏽‍🍳🔥), Pasticceria (team 👥🥐), Guida (📚✨). Ogni stanza cambia gradiente/scena/avatar/frase.
+- **Timer forno REALE**: conto alla rovescia con setInterval (mm:ss monospace) + allarme vocale "Cottura completata" a 0. Verificato decremento live (18:00→17:58). `speakVoice` spostato prima dell'useEffect per evitare use-before-define.
+- **Stanza Guida & Confronto Mercato**: testo progetto MikiLab (Miki & Mohamed) vs software di mercato.
+- **Footer legale** con modali Privacy (GDPR) e Impressum (BetrVG §87). 6 lingue, radio toggle.
+- data-testid: `elite-room-*`, `elite-timer`, `elite-start-bake`, `elite-guida-content`, `elite-privacy/impressum`, `elite-legal-modal/close`.
+- Verificato via screenshot: overlay + timer reale + guida + modale legale, compile pulito.
+
