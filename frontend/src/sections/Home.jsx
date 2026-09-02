@@ -16,6 +16,16 @@ export default function Home({ onNavigate }) {
 
   const BLOCKS = [
     {
+      tab: "maestro", img: "hero-laboratorio.jpg",
+      title: L("Panificio Virtuale 3D", "Virtuelle 3D-Backstube", "3D Virtual Bakery", "Panadería Virtual 3D"),
+      badge: L("Novità · 3D", "Neu · 3D", "New · 3D", "Nuevo · 3D"),
+      desc: L(
+        "Entra nel panificio 3D con Miki e Mohamed: MikiLab Elite Engine, dosi, forni e radio.",
+        "Betritt die 3D-Backstube mit Miki und Mohamed: MikiLab Elite Engine, Mengen, Öfen und Radio.",
+        "Enter the 3D bakery with Miki and Mohamed: MikiLab Elite Engine, doses, ovens and radio.",
+        "Entra en la panadería 3D con Miki y Mohamed: MikiLab Elite Engine, dosis, hornos y radio."),
+    },
+    {
       tab: "ricette", img: "hero-ricette.jpg",
       title: L("Ricette", "Rezepte", "Recipes", "Recetas"),
       badge: L("Ricettario", "Rezeptbuch", "Recipe book", "Recetario"),
@@ -61,8 +71,8 @@ export default function Home({ onNavigate }) {
     <div className="pb-24" data-testid="home">
       {/* Hero */}
       <div className="text-center mb-8">
-        <img src={`${PUB}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover mx-auto ring-2 ring-[#ff6b00]/40 shadow-lg" />
-        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#ff6b00] mt-3">MikiLab</h1>
+        <img src={`${PUB}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover mx-auto ring-2 ring-[#d4a373]/40 shadow-lg" />
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#d4a373] mt-3">MikiLab</h1>
         <p className="mt-2 text-[15px] leading-snug text-[#C9D4DC] max-w-sm mx-auto">
           {L(
             "Il laboratorio del fornaio: ricette, guide e strumenti.",
@@ -70,16 +80,16 @@ export default function Home({ onNavigate }) {
             "The baker's workshop: recipes, guides and tools.",
             "El taller del panadero: recetas, guías y herramientas.")}
         </p>
-        <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#ff6b00]/15 text-[#ff6b00] border border-[#ff6b00]/40">
+        <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#d4a373]/15 text-[#d4a373] border border-[#d4a373]/40">
           {L("100% gratis", "100% kostenlos", "100% free", "100% gratis")}
         </span>
         {/* Badge stato sistema */}
         <div data-testid="home-system-badge" className="mt-3 flex items-center justify-center gap-2 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#22c55e]/15 text-[#22c55e] border border-[#22c55e]/40">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#8F9B5E]/15 text-[#8F9B5E] border border-[#8F9B5E]/40">
             <WifiOff className="w-3 h-3" /> {L("Sistema 100% offline pronto", "System 100% offline bereit", "System 100% offline ready", "Sistema 100% offline listo")}
           </span>
           {user && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#ff6b00]/15 text-[#ff6b00] border border-[#ff6b00]/40">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#d4a373]/15 text-[#d4a373] border border-[#d4a373]/40">
               {L("Account aziendale attivo", "Firmenkonto aktiv", "Company account active", "Cuenta de empresa activa")}
             </span>
           )}
@@ -96,19 +106,19 @@ export default function Home({ onNavigate }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.06 }}
-            className="group block w-full text-start rounded-3xl overflow-hidden bg-[#161616] border border-[#2C2C2C] hover:border-[#ff6b00]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
+            className="group block w-full text-start rounded-3xl overflow-hidden bg-[#161616] border border-[#2C2C2C] hover:border-[#d4a373]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
           >
             <div className="relative h-40">
               <img src={`${PUB}/${b.img}`} alt={b.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/45 to-transparent" />
-              <span className="absolute top-3 start-4 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/45 text-[#ffcf7a] border border-[#ffcf7a]/30 backdrop-blur-sm">
+              <span className="absolute top-3 start-4 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/45 text-[#e6c79a] border border-[#e6c79a]/30 backdrop-blur-sm">
                 {b.badge}
               </span>
               <h2 className="absolute bottom-3 start-4 end-4 font-display text-2xl sm:text-3xl font-extrabold text-white drop-shadow">{b.title}</h2>
             </div>
             <div className="flex items-center gap-3 p-4">
               <p className="flex-1 text-[14px] leading-snug text-[#C9D4DC]">{b.desc}</p>
-              <span className="shrink-0 w-10 h-10 rounded-full bg-[#ff6b00]/15 border border-[#ff6b00]/40 flex items-center justify-center text-[#ff6b00] group-hover:bg-[#ff6b00] group-hover:text-white transition-all duration-300">
+              <span className="shrink-0 w-10 h-10 rounded-full bg-[#d4a373]/15 border border-[#d4a373]/40 flex items-center justify-center text-[#d4a373] group-hover:bg-[#d4a373] group-hover:text-white transition-all duration-300">
                 <ChevronRight className="w-5 h-5 rtl:rotate-180" />
               </span>
             </div>

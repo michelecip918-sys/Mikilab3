@@ -3489,3 +3489,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ### ANCORA DA FARE
 - Quiz SOLO in Accademia (rimuovere da Home/Community/Shop/Beginners...).
 - Palette warm su TUTTI i componenti (residui neon nei singoli file) + parità totale desktop/mobile.
+
+## v-fork37 (2026-06) — v13.0: Home 3D bakery hero + stop vibrazione + Home warm
+- index.js: `navigator.vibrate` reso no-op globale (hapticFeedback:false). Verificato: vibrate([10]) => false.
+- Home.jsx: aggiunto hero "3D Virtual Bakery / Panificio Virtuale 3D" in cima a BLOCKS (apre tab maestro = Elite Engine). Palette calda: #ff6b00->#d4a373, #22c55e->#8F9B5E, #ffcf7a->#e6c79a. Verificato via screenshot.
+### ANCORA DA FARE (v13.0)
+- Quiz SOLO in Accademia (rimuovere da altre schermate).
+- Warm palette sui restanti componenti (residui neon nei singoli file).
+- Parita totale desktop/mobile su tutta l app.
+- Redeploy per produzione.
