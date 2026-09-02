@@ -2121,6 +2121,36 @@ async def scan_label(payload: LabelScan, user: Optional[dict] = Depends(optional
         return {"ok": False}
 
 
+class VisionCoach(BaseModel):
+    image_base64: str
+    type: str = "formatura"
+    lang: str = "it"
+
+
+@api_router.post("/lab/vision-coach")
+async def vision_coach(payload: VisionCoach):
+    """Tutor AI Visivo: analizza una foto di formatura/incisione e dà una correzione breve (voce del capo)."""
+    img = (payload.image_base64 or "").split(",")[-1]
+    if not img:
+        raise HTTPException(status_code=400, detail="Nessuna immagine")
+    focus = "la FORMATURA del pane/impasto" if (payload.type or "").startswith("form") else "l'INCISIONE con la lama (il taglio)"
+    sysmsg = (f"Sei il Super-Capo fornaio, esperto e diretto. Osserva la foto e valuta {focus}. "
+              f"Rispondi in massimo 2 frasi: dì se è corretta oppure l'errore preciso, e UN consiglio pratico immediato per migliorarla. "
+              f"Rispondi nella lingua con codice '{payload.lang}'. Niente premesse.")
+    try:
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"coach-{uuid.uuid4()}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6")
+        out = ""
+        async for ev in chat.stream_message(UserMessage(text="Analizza il gesto del fornaio nella foto.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                out += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        return {"ok": True, "feedback": out.strip() or "Analisi non disponibile."}
+    except Exception as e:
+        logging.warning(f"vision_coach failed: {e}")
+        raise HTTPException(status_code=503, detail="Tutor AI non disponibile")
+
+
 # ---------------------------------------------------------------------------
 # Memoria temperatura impasto per ricetta (termostato)
 # ---------------------------------------------------------------------------

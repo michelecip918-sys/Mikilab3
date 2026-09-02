@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X, Headphones, Radio, Mic, CheckCircle2, ThermometerSun, Calculator } from "lucide-react";
+import { X, Headphones, Radio, Mic, CheckCircle2, ThermometerSun, Calculator, Eye, Camera } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { playTTS } from "@/lib/tts";
 
 // "Team Sync Auricolari" — coordinamento squadra multi-reparto (impasti/banco/forni) a mani libere.
 // Voce nativa del telefono (zero crediti). Fedele al mockup dell'utente (dark + arancione + verde).
-const D = { bg: "#121212", card: "#1E1E1E", input: "#151515", accent: "#FF6B00", green: "#00FF66", red: "#FF3333", amber: "#FF9900", text: "#FFFFFF", muted: "#A0A0A0", border: "#333333" };
+const D = { bg: "#0A0B0E", card: "#12141D", input: "#161922", accent: "#D4AF37", green: "#00FF66", red: "#FF3333", amber: "#FF9900", text: "#F0F0F0", muted: "#8A9BA8", border: "#2A2E3D" };
 
 // Database ricette locale (offline) per il ricalcolo dosi dinamico.
 const RECIPES = [
@@ -45,6 +45,11 @@ export default function TeamSync({ open, onClose }) {
   const [selRec, setSelRec] = useState(() => { try { return localStorage.getItem("mikilab_team_recipe") || "pane_matera"; } catch { return "pane_matera"; } });
   const [mode, setMode] = useState("solo");
   const [dosi, setDosi] = useState(null);
+  const [roomT, setRoomT] = useState(24);
+  const [flourT, setFlourT] = useState(20);
+  const [coachType, setCoachType] = useState("formatura");
+  const [coachMsg, setCoachMsg] = useState("");
+  const [coachBusy, setCoachBusy] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [nr, setNr] = useState({ nome: "", farina: 10, acqua: 6.5, lievito: 0.2, sale: 0.22 });
   const [planEdits, setPlanEdits] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_plan_edits") || "{}"); } catch { return {}; } });
@@ -102,11 +107,39 @@ export default function TeamSync({ open, onClose }) {
   const calcolaDosi = () => {
     const rec = recipes.find((r) => r.id === selRec) || recipes[0];
     const f = kg / rec.farina;
-    const r = { nome: rec.nome, acqua: (rec.acqua * f).toFixed(1), lievito: Math.round(rec.lievito * f * 1000), sale: Math.round(rec.sale * f * 1000), burro: rec.burro ? Math.round(rec.burro * f * 1000) : null };
+    const wt = Math.max(2, (24 * 3) - (Number(roomT) + Number(flourT) + 9)).toFixed(1); // Formula 3T
+    const r = { nome: rec.nome, acqua: (rec.acqua * f).toFixed(1), lievito: Math.round(rec.lievito * f * 1000), sale: Math.round(rec.sale * f * 1000), burro: rec.burro ? Math.round(rec.burro * f * 1000) : null, waterT: wt };
     setDosi(r);
     let msg = tri(`${rec.nome}, ${kg} kg farina: acqua ${r.acqua} litri, lievito ${r.lievito} grammi, sale ${r.sale} grammi.`, `${rec.nome}, ${kg} kg Mehl: Wasser ${r.acqua} L, Hefe ${r.lievito} g, Salz ${r.sale} g.`, `${rec.nome}, ${kg} kg flour: water ${r.acqua} L, yeast ${r.lievito} g, salt ${r.sale} g.`, `${rec.nome}, ${kg} kg harina: agua ${r.acqua} L, levadura ${r.lievito} g, sal ${r.sale} g.`, `${rec.nome}, ${kg} kg farine : eau ${r.acqua} L, levure ${r.lievito} g, sel ${r.sale} g.`, `${rec.nome}: آب ${r.acqua} لیتر.`);
     if (r.burro) msg += " " + tri(`Burro ${r.burro} grammi.`, `Butter ${r.burro} g.`, `Butter ${r.burro} g.`, `Mantequilla ${r.burro} g.`, `Beurre ${r.burro} g.`, `کره ${r.burro} گرم.`);
+    msg += " " + tri(`Acqua a ${wt} gradi.`, `Wasser bei ${wt} Grad.`, `Water at ${wt} degrees.`, `Agua a ${wt} grados.`, `Eau à ${wt} degrés.`, `آب در ${wt} درجه.`);
     speak(msg);
+  };
+
+  const runCoach = async () => {
+    const inp = document.getElementById("team-coach-file");
+    if (inp) inp.click();
+  };
+  const onCoachFile = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    setCoachBusy(true); setCoachMsg("");
+    try {
+      const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+      const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/lab/vision-coach`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image_base64: b64, type: coachType, lang }) });
+      if (!resp.ok) throw new Error("coach");
+      const data = await resp.json();
+      setCoachMsg(data.feedback || ""); if (data.feedback) speak(data.feedback);
+    } catch {
+      setCoachMsg(tri("Tutor AI non disponibile ora. Riprova.", "KI-Tutor nicht verfügbar.", "AI tutor unavailable now.", "Tutor AI no disponible.", "Tuteur IA indisponible.", "مربی هوش مصنوعی در دسترس نیست."));
+    } finally { setCoachBusy(false); }
+  };
+  const coachChecklist = (t) => {
+    const tips = t === "formatura"
+      ? tri("Formatura: pirlatura con tensione uniforme, chiusura ben sigillata sotto, testa alta e simmetrica.", "Formen: gleichmäßige Spannung, Naht unten gut verschlossen, symmetrisch.", "Shaping: even tension, seam sealed underneath, symmetric high top.", "Formado: tensión uniforme, cierre sellado abajo, simétrico.", "Façonnage : tension uniforme, soudure dessous, symétrique.", "فرم‌دهی: کشش یکنواخت.")
+      : tri("Incisione: lama a 45°, taglio deciso e superficiale (3-4 mm), un solo gesto continuo.", "Schnitt: Klinge 45°, entschlossen und flach (3-4 mm), eine Bewegung.", "Scoring: blade at 45°, decisive shallow cut (3-4 mm), one continuous move.", "Corte: cuchilla a 45°, decidido y superficial (3-4 mm), un gesto.", "Lame à 45°, coupe nette et peu profonde (3-4 mm), un geste.", "برش: تیغه ۴۵ درجه.");
+    setCoachMsg(tips); speak(tips);
   };
 
   const interfono = (msg) => {
@@ -213,19 +246,46 @@ export default function TeamSync({ open, onClose }) {
           <select data-testid="team-recipe" value={selRec} onChange={(e) => setSelRec(e.target.value)} className="w-full rounded-md px-3 py-2 mb-2 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.border}`, color: D.text }}>
             {recipes.map((r) => <option key={r.id} value={r.id}>{r.nome}</option>)}
           </select>
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <div>
+              <label className="text-[11px]" style={{ color: D.muted }}>{tri("Temp. Ambiente °C", "Raumtemp. °C", "Room temp °C", "Temp. ambiente °C", "Temp. ambiante °C", "دمای محیط")}</label>
+              <input data-testid="team-roomt" type="number" value={roomT} onChange={(e) => setRoomT(Number(e.target.value))} className="w-full rounded-md px-3 py-2 mt-1 outline-none" style={{ background: D.input, border: `1px solid ${D.border}`, color: D.text }} />
+            </div>
+            <div>
+              <label className="text-[11px]" style={{ color: D.muted }}>{tri("Temp. Farina °C", "Mehltemp. °C", "Flour temp °C", "Temp. harina °C", "Temp. farine °C", "دمای آرد")}</label>
+              <input data-testid="team-flourt" type="number" value={flourT} onChange={(e) => setFlourT(Number(e.target.value))} className="w-full rounded-md px-3 py-2 mt-1 outline-none" style={{ background: D.input, border: `1px solid ${D.border}`, color: D.text }} />
+            </div>
+          </div>
           <div className="flex items-center gap-2 mb-3">
             <input data-testid="team-kg" type="number" value={kg} onChange={(e) => setKg(parseInt(e.target.value) || 0)} className="w-20 text-center rounded-md px-2 py-2 font-bold outline-none" style={{ background: D.input, border: `1px solid ${D.accent}`, color: D.text }} />
             <span className="text-[14px]">{tri("kg Farina", "kg Mehl", "kg Flour", "kg Harina", "kg Farine", "کیلو آرد")}</span>
-            <button data-testid="team-calc" onClick={calcolaDosi} className="ml-auto rounded-md px-4 py-2 font-bold active:scale-97" style={{ background: D.input, border: `1px solid ${D.green}`, color: D.green }}>{tri("CALCOLA E DETTA", "BERECHNEN & DIKTIEREN", "CALC & DICTATE", "CALCULAR Y DICTAR", "CALCULER & DICTER", "محاسبه و اعلام")}</button>
+            <button data-testid="team-calc" onClick={calcolaDosi} className="ml-auto rounded-md px-4 py-2 font-bold active:scale-97" style={{ background: D.accent, color: "#0A0B0E" }}>{tri("RICALCOLA DOSI & ACQUA", "MENGEN & WASSER", "DOSES & WATER", "DOSIS Y AGUA", "DOSES & EAU", "مقدار و آب")}</button>
           </div>
           {dosi && (
-            <div data-testid="team-dosi-result" className={`grid gap-2 rounded-lg p-3 text-center ${dosi.burro ? "grid-cols-4" : "grid-cols-3"}`} style={{ background: D.input }}>
-              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("ACQUA", "WASSER", "WATER", "AGUA", "EAU", "آب")}</span><br /><strong className="text-[15px]">{dosi.acqua} L</strong></div>
-              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("LIEVITO", "HEFE", "YEAST", "LEVADURA", "LEVURE", "مخمر")}</span><br /><strong className="text-[15px]">{dosi.lievito} g</strong></div>
-              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("SALE", "SALZ", "SALT", "SAL", "SEL", "نمک")}</span><br /><strong className="text-[15px]">{dosi.sale} g</strong></div>
-              {dosi.burro && <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("BURRO", "BUTTER", "BUTTER", "MANTEQ.", "BEURRE", "کره")}</span><br /><strong className="text-[15px]">{dosi.burro} g</strong></div>}
+            <div data-testid="team-dosi-result" className={`grid gap-2 rounded-lg p-3 text-center ${dosi.burro ? "grid-cols-5" : "grid-cols-4"}`} style={{ background: D.bg, border: `1px solid ${D.border}` }}>
+              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("ACQUA", "WASSER", "WATER", "AGUA", "EAU", "آب")}</span><br /><strong className="text-[15px]" style={{ color: D.accent }}>{dosi.acqua} L</strong></div>
+              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("LIEVITO", "HEFE", "YEAST", "LEVADURA", "LEVURE", "مخمر")}</span><br /><strong className="text-[15px]" style={{ color: D.accent }}>{dosi.lievito} g</strong></div>
+              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("SALE", "SALZ", "SALT", "SAL", "SEL", "نمک")}</span><br /><strong className="text-[15px]" style={{ color: D.accent }}>{dosi.sale} g</strong></div>
+              {dosi.burro && <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("BURRO", "BUTTER", "BUTTER", "MANTEQ.", "BEURRE", "کره")}</span><br /><strong className="text-[15px]" style={{ color: D.accent }}>{dosi.burro} g</strong></div>}
+              <div><span className="text-[11px]" style={{ color: D.muted }}>{tri("TEMP. H₂O", "WASSER T.", "WATER T.", "TEMP. H₂O", "TEMP. H₂O", "دمای آب")}</span><br /><strong className="text-[15px]" style={{ color: D.green }}>{dosi.waterT} °C</strong></div>
             </div>
           )}
+        </div>
+
+        {/* Tutor AI Visivo (ibrido: checklist gratis + analisi AI reale) */}
+        <div className="rounded-xl p-4" style={{ background: D.card, border: `1px solid ${D.border}` }}>
+          <h3 className="flex items-center gap-2 font-bold text-[15px] mb-2" style={{ color: D.accent }}><Eye className="w-4 h-4" /> {tri("Tutor AI Visivo", "Visueller KI-Tutor", "Visual AI Tutor", "Tutor AI Visual", "Tuteur IA Visuel", "مربی هوش مصنوعی")}</h3>
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <button data-testid="team-coach-formatura" onClick={() => setCoachType("formatura")} className="rounded-md py-2 text-[12px] font-bold" style={{ background: coachType === "formatura" ? D.accent : D.input, color: coachType === "formatura" ? "#0A0B0E" : D.text, border: `1px solid ${D.border}` }}>🥖 {tri("Formatura", "Formen", "Shaping", "Formado", "Façonnage", "فرم‌دهی")}</button>
+            <button data-testid="team-coach-taglio" onClick={() => setCoachType("taglio")} className="rounded-md py-2 text-[12px] font-bold" style={{ background: coachType === "taglio" ? D.accent : D.input, color: coachType === "taglio" ? "#0A0B0E" : D.text, border: `1px solid ${D.border}` }}>🔪 {tri("Incisione lama", "Schnitt", "Scoring", "Corte", "Lame", "برش")}</button>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <button data-testid="team-coach-checklist" onClick={() => coachChecklist(coachType)} className="rounded-md py-2.5 text-[12px] font-bold flex items-center justify-center gap-1.5" style={{ background: D.input, border: `1px solid ${D.border}`, color: D.text }}><CheckCircle2 className="w-4 h-4" /> {tri("Guida gratis", "Gratis-Guide", "Free guide", "Guía gratis", "Guide gratuit", "راهنمای رایگان")}</button>
+            <button data-testid="team-coach-ai" onClick={runCoach} disabled={coachBusy} className="rounded-md py-2.5 text-[12px] font-bold flex items-center justify-center gap-1.5" style={{ background: D.green, color: "#000", opacity: coachBusy ? 0.6 : 1 }}><Camera className="w-4 h-4" /> {coachBusy ? tri("Analisi…", "Analyse…", "Analyzing…", "Analizando…", "Analyse…", "در حال تحلیل…") : tri("Foto + AI reale", "Foto + KI", "Photo + real AI", "Foto + IA", "Photo + IA", "عکس + هوش مصنوعی")}</button>
+          </div>
+          <input id="team-coach-file" data-testid="team-coach-file" type="file" accept="image/*" capture="environment" onChange={onCoachFile} style={{ display: "none" }} />
+          <p className="text-[11px] mt-2" style={{ color: D.muted }}>{tri("La guida è gratuita. «Foto + AI reale» analizza uno scatto con l'AI (consuma crediti).", "Guide gratis. «Foto + KI» analysiert ein Foto (Guthaben).", "Guide is free. «Photo + real AI» analyzes a shot with AI (uses credits).", "La guía es gratis. «Foto + IA» analiza con IA (gasta créditos).", "Guide gratuit. «Photo + IA» consomme des crédits.", "راهنما رایگان است.")}</p>
+          {coachMsg && <div data-testid="team-coach-result" className="mt-2 rounded-md p-3 text-[14px]" style={{ background: D.bg, borderLeft: `3px solid ${D.green}`, color: "#DDD" }}>{coachMsg}</div>}
         </div>
 
         {/* Interfono */}
