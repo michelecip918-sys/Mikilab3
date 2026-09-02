@@ -3290,3 +3290,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Badge oro "Capolavoro — Idratazione Perfetta (h%)" in RicetteCustodite (scheda ricetta) quando idratazione 65–85%.
 - Redeploy per includere avatar 3D Michele + queste due funzioni.
 - TODO ancora aperto: QC completa traduzioni IT/EN su tutte le schermate (task dedicato).
+
+## v-fork10 (2026-06) — QC Traduzioni schermate operative (COMPLETATA)
+- Verificata la copertura i18n completa su TUTTE le schermate operative: Magazzino, Emergenze, BraccioLab, RicettaDelGiorno, TrinityGold + helper condivisi shiftState.js (statusLabel, machineDownNote, coldDownNote, handoverSummary) e VoiceCommand (feedback vocale). Tutte le stringhe user-facing sono avvolte in `tri(it, de, en, es, fr, fa)`.
+- Scan app-wide (sections/ + components/) per nodi di testo JSX in italiano hardcoded → 0 risultati. Nessuna stringa operativa rimasta fuori dalla traduzione.
+- Fix di PARITÀ EN/DE/ES in RicettaDelGiorno.jsx: "Lotto completato → prossimo" e il messaggio "Nessun prodotto in piano oggi…" ora riportano in EN/DE/ES/FR/FA la stessa guida presente in IT (prima erano troncati).
+- Verifica visiva (viewport 430px, lang=EN): Braccio ("Your lab assistant", Continuous/Autonomous, Today's Recipes, Failures & Cells, Dough SOS, Management) ed Emergenze (Failures & Cells, Work mode, Bluetooth probes, Shift notes, Fault history) interamente in inglese. Tema Grain Gold, header Trinity Gold e footer legale/IP invariati.
+- NB voice keyword arrays/regex in VoiceCommand restano multilingua per il riconoscimento vocale (non sono testo visibile → corretto lasciarli così).

@@ -105,7 +105,7 @@ export default function RicettaDelGiorno() {
             setSel(null);
           }}
           className="mt-5 w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 font-extrabold" style={{ background: C.dark, color: C.cream, fontSize: "clamp(16px,4.5vw,19px)" }}>
-          <CheckCircle2 className="w-5 h-5" style={{ color: "#6E5320" }} /> {tri("Lotto completato \u2192 prossimo", "Charge fertig", "Batch done \u2192 next", "Lote hecho")}
+          <CheckCircle2 className="w-5 h-5" style={{ color: "#6E5320" }} /> {tri("Lotto completato \u2192 prossimo", "Charge fertig \u2192 n\u00e4chste", "Batch done \u2192 next", "Lote hecho \u2192 siguiente", "Lot termin\u00e9 \u2192 suivant", "\u062f\u0633\u062a\u0647 \u062a\u0645\u0627\u0645 \u2192 \u0628\u0639\u062f\u06cc")}
         </button>
       </div>
     );
@@ -162,7 +162,7 @@ export default function RicettaDelGiorno() {
       )}
 
       {items.length === 0 ? (
-        <p className="text-lg" style={{ color: C.muted }}>{tri("Nessun prodotto in piano oggi. Pianifica in Gestione \u2192 Programma Settimana.", "Heute nichts geplant.", "Nothing planned today.", "Nada planificado hoy.")}</p>
+        <p className="text-lg" style={{ color: C.muted }}>{tri("Nessun prodotto in piano oggi. Pianifica in Gestione \u2192 Programma Settimana.", "Heute nichts geplant. Plane es unter Verwaltung \u2192 Wochenplan.", "Nothing planned today. Plan it in Management \u2192 Weekly Schedule.", "Nada planificado hoy. Plan\u00edficalo en Gesti\u00f3n \u2192 Programa Semanal.", "Rien de pr\u00e9vu aujourd'hui. Planifie-le dans Gestion \u2192 Programme Semaine.", "\u0627\u0645\u0631\u0648\u0632 \u0686\u06cc\u0632\u06cc \u0628\u0631\u0646\u0627\u0645\u0647\u200c\u0631\u06cc\u0632\u06cc \u0646\u0634\u062f\u0647.")}</p>
       ) : (
         <div className="space-y-2.5" data-testid="rdg-list">
           {items.map((it) => {
