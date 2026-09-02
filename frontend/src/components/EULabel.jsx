@@ -35,11 +35,11 @@ export default function EULabel({ recipe, lang }) {
   return (
     <div data-testid="eu-label" className="mt-4 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
       <div className="flex items-center justify-between gap-2 mb-2">
-        <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">
+        <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#c94f00]">
           <Tag className="w-3.5 h-3.5" /> {L(lang, "Etichetta UE", "EU-Etikett", "EU label")}
         </p>
         <button data-testid="eu-label-print-btn" onClick={() => printEULabel(recipe, lang)}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3 py-1.5 rounded-lg active:scale-95">
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3 py-1.5 rounded-lg active:scale-95">
           <Printer className="w-3.5 h-3.5" /> {L(lang, "Stampa", "Drucken", "Print")}
         </button>
       </div>
@@ -49,7 +49,7 @@ export default function EULabel({ recipe, lang }) {
           {rows(label, lang).map(([k, v, bold], i) => (
             <tr key={i} className="border-b border-dashed border-[#e4eff8] dark:border-[#1e1e1e] last:border-0">
               <td className={`py-1 ${bold ? "font-semibold text-[#2B303B] dark:text-[#e4eff8]" : "pl-3 text-[#7E8A93]"}`}>{k}</td>
-              <td className="py-1 text-right font-mono-data text-[#ff6b00] dark:text-[#8FB0C2]">{v}</td>
+              <td className="py-1 text-right font-mono-data text-[#c94f00] dark:text-[#8FB0C2]">{v}</td>
             </tr>
           ))}
         </tbody>
@@ -96,7 +96,7 @@ export async function printEULabel(recipe, lang) {
       *{box-sizing:border-box}
       body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;padding:8mm}
       .label{width:80mm;border:1px solid #111;border-radius:4px;padding:4mm}
-      .brand{font-size:9px;font-weight:800;color:#ff6b00;letter-spacing:.05em}
+      .brand{font-size:9px;font-weight:800;color:#c94f00;letter-spacing:.05em}
       h1{font-size:15px;margin:2px 0 6px}
       h2{font-size:11px;margin:8px 0 2px;border-top:1px solid #111;padding-top:4px}
       table{width:100%;border-collapse:collapse;font-size:11px}

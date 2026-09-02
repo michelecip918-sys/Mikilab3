@@ -80,12 +80,12 @@ export default function Meteo() {
     ? tri("Aria secca: puoi aumentare l'acqua dell'1-2% e coprire bene gli impasti.", "Trockene Luft: Wasser um 1-2% erhöhen, Teige gut abdecken.", "Dry air: you can add 1-2% water and cover doughs well.")
     : tri("Umidità nella norma: nessuna correzione dell'acqua.", "Normale Feuchte: keine Wasserkorrektur.", "Normal humidity: no water correction.");
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
 
   return (
     <div className="pb-40">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><CloudSun className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><CloudSun className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Meteo & Laboratorio", "Wetter & Backstube", "Weather & Bakery")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Adatta acqua e lievitazione al clima di oggi", "Wasser & Gärung an das heutige Klima anpassen", "Adapt water & proofing to today's climate")}</p>
@@ -94,7 +94,7 @@ export default function Meteo() {
 
       {/* Sorgente meteo */}
       <button data-testid="meteo-geo" onClick={useGeo} disabled={loading}
-        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
+        className="w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
         {tri("Usa la mia posizione", "Meinen Standort verwenden", "Use my location")}
       </button>
@@ -112,7 +112,7 @@ export default function Meteo() {
       {w && (
         <>
           {/* Card meteo attuale */}
-          <div data-testid="meteo-current" className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff8a33] text-white p-5 shadow-lg mb-4">
+          <div data-testid="meteo-current" className="rounded-3xl bg-gradient-to-br from-[#c94f00] to-[#d4a373] text-white p-5 shadow-lg mb-4">
             <p className="text-white/85 text-sm font-semibold flex items-center gap-1"><MapPin className="w-4 h-4" /> {w.place}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-3 text-center">
               <div><Thermometer className="w-5 h-5 mx-auto mb-1 opacity-80" /><p data-testid="meteo-temp" className="font-mono-data text-2xl font-bold">{Math.round(w.temp)}°C</p><p className="text-[10px] text-white/70 uppercase">{tri("Temp", "Temp", "Temp")}</p></div>
@@ -132,7 +132,7 @@ export default function Meteo() {
           {/* Consigli IA */}
           <div data-testid="meteo-advice" className="space-y-3">
             <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><Droplets className="w-5 h-5 text-[#ff6b00]" /></div>
+              <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/15 flex items-center justify-center shrink-0"><Droplets className="w-5 h-5 text-[#c94f00]" /></div>
               <div className="min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Acqua consigliata", "Empfohlenes Wasser", "Recommended water")}</p>
                 <p data-testid="meteo-water" className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{water}°C</p>
@@ -140,7 +140,7 @@ export default function Meteo() {
               </div>
             </div>
             <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><Timer className="w-5 h-5 text-[#ff6b00]" /></div>
+              <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/15 flex items-center justify-center shrink-0"><Timer className="w-5 h-5 text-[#c94f00]" /></div>
               <div className="min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{tri("Lievitazione stimata", "Geschätzte Gärung", "Estimated proof")}</p>
                 <p data-testid="meteo-prooftime" className="font-mono-data text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{adjMin} min</p>

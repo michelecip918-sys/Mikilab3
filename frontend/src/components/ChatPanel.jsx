@@ -149,7 +149,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
           <>
             <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-[#121212] dark:bg-[#161b20]" data-testid="chat-thread">
               {loadingThread ? (
-                <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /></div>
+                <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#c94f00]" /></div>
               ) : msgs.length === 0 ? (
                 <p className="text-center text-sm text-[#7E8A93] py-10">{tri("Nessun messaggio. Scrivi tu per primo! 👋", "Noch keine Nachrichten. Schreib zuerst! 👋", "No messages yet. Say hi first! 👋", "Sin mensajes. ¡Saluda primero! 👋")}</p>
               ) : (
@@ -159,7 +159,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                   return (
                     <div key={m.id} data-testid={`chat-msg-${m.id}`} className={`flex flex-col ${mine ? "items-end" : "items-start"}`}>
                       <div className={`group relative flex items-end gap-1 max-w-[85%] ${mine ? "flex-row-reverse" : ""}`}>
-                        <div className={`rounded-2xl px-3.5 py-2 ${mine ? "bg-[#ff6b00] text-white rounded-br-sm" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] rounded-bl-sm border border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                        <div className={`rounded-2xl px-3.5 py-2 ${mine ? "bg-[#c94f00] text-white rounded-br-sm" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] rounded-bl-sm border border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                           {m.image_url && <img src={m.image_url} alt="" data-testid="chat-msg-image" className="rounded-2xl shadow-md border border-amber-900/40 mb-1 max-h-56 w-full object-cover" />}
                           {m.text && <p className="text-sm whitespace-pre-line leading-snug break-words">{m.text}</p>}
                           <p className={`text-[10px] mt-0.5 text-right ${mine ? "text-white/70" : "text-[#7E8A93]"}`}>{timeShort(m.created_at, lang)}</p>
@@ -193,13 +193,13 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
             </div>
             <div className="p-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center gap-2 shrink-0">
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) sendPhoto(f); e.target.value = ""; }} />
-              <button data-testid="chat-photo" onClick={() => fileRef.current?.click()} disabled={uploading} className="w-10 h-10 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
+              <button data-testid="chat-photo" onClick={() => fileRef.current?.click()} disabled={uploading} className="w-10 h-10 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#c94f00] flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
                 {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImagePlus className="w-5 h-5" />}
               </button>
               <input data-testid="chat-input" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())}
                 placeholder={tri("Scrivi un messaggio…", "Nachricht schreiben…", "Type a message…", "Escribe un mensaje…")}
-                className="flex-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
-              <button data-testid="chat-send" data-sfx="confirm" onClick={send} disabled={sending || !text.trim()} className="w-11 h-11 rounded-full bg-[#ff6b00] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
+                className="flex-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]" />
+              <button data-testid="chat-send" data-sfx="confirm" onClick={send} disabled={sending || !text.trim()} className="w-11 h-11 rounded-full bg-[#c94f00] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
                 {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </button>
             </div>
@@ -207,7 +207,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
         ) : showNew ? (
           /* ---- Nuova chat: scegli un amico ---- */
           <div className="flex-1 overflow-y-auto p-4 space-y-2" data-testid="chat-new">
-            <button data-testid="chat-new-back" onClick={() => setShowNew(false)} className="flex items-center gap-1.5 text-sm font-semibold text-[#ff6b00] mb-1"><ArrowLeft className="w-4 h-4" />{tri("Indietro", "Zurück", "Back", "Atrás")}</button>
+            <button data-testid="chat-new-back" onClick={() => setShowNew(false)} className="flex items-center gap-1.5 text-sm font-semibold text-[#c94f00] mb-1"><ArrowLeft className="w-4 h-4" />{tri("Indietro", "Zurück", "Back", "Atrás")}</button>
             <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
               <Search className="w-4 h-4 text-[#7E8A93]" />
               <input data-testid="chat-friend-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tri("Cerca un amico…", "Freund suchen…", "Search a friend…", "Buscar amigo…")} className="bg-transparent flex-1 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
@@ -227,7 +227,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
           <>
             <div className="flex-1 overflow-y-auto p-3 space-y-1.5" data-testid="chat-convos">
               {loadingList ? (
-                <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /></div>
+                <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#c94f00]" /></div>
               ) : convos.length === 0 ? (
                 <p className="text-center text-sm text-[#7E8A93] py-10">{tri("Ancora nessuna conversazione. Inizia a scrivere a un amico!", "Noch keine Unterhaltungen. Schreib einem Freund!", "No conversations yet. Message a friend!", "Sin conversaciones aún.")}</p>
               ) : convos.map((c) => (
@@ -238,12 +238,12 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                     <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
                     <p className="text-[12px] text-[#7E8A93] truncate">{c.last || "📷"}</p>
                   </div>
-                  {c.unread > 0 && <span data-testid={`chat-unread-${c.other_id}`} className="min-w-[20px] h-5 px-1.5 rounded-full bg-[#ff6b00] text-white text-[11px] font-bold flex items-center justify-center shrink-0">{c.unread}</span>}
+                  {c.unread > 0 && <span data-testid={`chat-unread-${c.other_id}`} className="min-w-[20px] h-5 px-1.5 rounded-full bg-[#c94f00] text-white text-[11px] font-bold flex items-center justify-center shrink-0">{c.unread}</span>}
                 </button>
               ))}
             </div>
             <div className="p-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e] shrink-0">
-              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
                 <Send className="w-4 h-4" /> {tri("Nuovo messaggio", "Neue Nachricht", "New message", "Nuevo mensaje")}
               </button>
             </div>

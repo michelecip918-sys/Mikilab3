@@ -73,7 +73,7 @@ export default function BackwardScheduler() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><Clock className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><Clock className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("tool_inversa")}</h1>
           <p className="text-sm text-[#7E8A93]">{mkTri(lang)("Calcola gli orari a ritroso dall'apertura/vendita", "Zeiten rückwärts ab Öffnung/Verkauf berechnen", "Compute times backwards from opening/sale")}</p>
@@ -83,7 +83,7 @@ export default function BackwardScheduler() {
       <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 mb-4">
         <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Pronto / Apertura alle", "Fertig / Öffnung um", "Ready / Opening at")}</label>
         <input data-testid="bs-end-time" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}
-          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 text-lg font-mono-data font-bold outline-none focus:border-[#ff6b00]" />
+          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 text-lg font-mono-data font-bold outline-none focus:border-[#c94f00]" />
       </div>
 
       <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93] mb-2">{mkTri(lang)("Durata di ogni fase (min)", "Dauer je Phase (Min.)", "Duration per phase (min)")}</p>
@@ -93,20 +93,20 @@ export default function BackwardScheduler() {
             <span className="flex-1 min-w-0 text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{lang === "de" ? p.de : lang === "en" ? p.en : p.it}</span>
             <input data-testid={`bs-dur-${p.id}`} type="number" min="0" value={dur[p.id]}
               onChange={(e) => setDur((d) => ({ ...d, [p.id]: e.target.value === "" ? "" : Number(e.target.value) }))}
-              className="w-20 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none" />
+              className="w-20 text-right font-mono-data font-bold text-[#c94f00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none" />
           </div>
         ))}
       </div>
 
       <div data-testid="bs-schedule" className="rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] mb-4">
-        <div className="bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white px-4 py-3">
+        <div className="bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white px-4 py-3">
           <p className="text-xs uppercase tracking-wide text-white/80">{mkTri(lang)("Scansione oraria", "Zeitplan", "Timetable")}</p>
           <p className="font-display text-lg font-bold">{mkTri(lang)("Fine", "Ende", "End")} · {fmt(end, lang)}</p>
         </div>
         <ol>
           {schedule.map((s, i) => (
             <li key={s.id} data-testid={`bs-row-${s.id}`} className="flex items-center gap-3 px-4 py-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e]">
-              <span className="font-mono-data text-lg font-extrabold text-[#ff6b00] w-16 shrink-0">{fmt(s.start, lang)}</span>
+              <span className="font-mono-data text-lg font-extrabold text-[#c94f00] w-16 shrink-0">{fmt(s.start, lang)}</span>
               <span className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{lang === "de" ? s.de : lang === "en" ? s.en : s.it}</span>
             </li>
           ))}
@@ -114,10 +114,10 @@ export default function BackwardScheduler() {
       </div>
 
       <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
-        <Bell className="w-4 h-4 text-[#ff6b00]" />
+        <Bell className="w-4 h-4 text-[#c94f00]" />
         <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] flex-1">{mkTri(lang)("Sveglie per ogni fase", "Wecker für jede Phase", "Alarms for each phase")}</span>
         <button data-testid="bs-alarm-toggle" onClick={toggleAlarms}
-          className={`w-11 h-6 rounded-full transition-colors relative ${alarms ? "bg-[#ff6b00]" : "bg-[#AEB8BF] dark:bg-[#2e2e2e]"}`}>
+          className={`w-11 h-6 rounded-full transition-colors relative ${alarms ? "bg-[#c94f00]" : "bg-[#AEB8BF] dark:bg-[#2e2e2e]"}`}>
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${alarms ? "left-[22px]" : "left-0.5"}`} />
         </button>
       </div>

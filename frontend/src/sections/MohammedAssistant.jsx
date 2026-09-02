@@ -88,7 +88,7 @@ export default function MohammedAssistant() {
   };
 
   return (
-    <div data-testid="mohammed-assistant" className="rounded-2xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-3 mb-4 shadow-md">
+    <div data-testid="mohammed-assistant" className="rounded-2xl bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white p-3 mb-4 shadow-md">
       <div className="flex items-center gap-2.5">
         <img src={AVATAR} alt="Mohammadreza Jafari" data-testid="mohammed-avatar" className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-white/70 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
@@ -102,7 +102,7 @@ export default function MohammedAssistant() {
         {GUIDE.map((g) => (
           <button key={g.n} data-testid={`mohammed-guide-${g.n}`} onClick={() => askGuide(g.q)}
             className="w-full flex items-center gap-2 bg-white/12 hover:bg-white/22 rounded-lg px-2.5 py-1.5 text-left active:scale-98 transition-all">
-            <span className="w-5 h-5 rounded-full bg-white/90 text-[#ff6b00] font-bold text-[11px] flex items-center justify-center shrink-0">{g.n}</span>
+            <span className="w-5 h-5 rounded-full bg-white/90 text-[#c94f00] font-bold text-[11px] flex items-center justify-center shrink-0">{g.n}</span>
             <span className="text-[13px] font-medium leading-tight">{g.t}</span>
           </button>
         ))}
@@ -121,7 +121,7 @@ export default function MohammedAssistant() {
               <div className="flex flex-wrap gap-2">
                 {suggestions.map((s, i) => (
                   <button key={i} data-testid={`mohammed-suggest-${i}`} onClick={() => send(s)}
-                    className="text-xs font-medium bg-[#ff6b00]/12 text-[#ff6b00] dark:text-[#9ec4b8] border border-[#ff6b00]/30 rounded-full px-3 py-1.5 active:scale-97">
+                    className="text-xs font-medium bg-[#c94f00]/12 text-[#c94f00] dark:text-[#9ec4b8] border border-[#c94f00]/30 rounded-full px-3 py-1.5 active:scale-97">
                     {s}
                   </button>
                 ))}
@@ -129,8 +129,8 @@ export default function MohammedAssistant() {
             )}
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8]"}`}>
-                  {m.role === "assistant" && !m.content ? <Loader2 className="w-4 h-4 animate-spin text-[#ff6b00]" /> : <ReactMarkdown>{m.content}</ReactMarkdown>}
+                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#c94f00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8]"}`}>
+                  {m.role === "assistant" && !m.content ? <Loader2 className="w-4 h-4 animate-spin text-[#c94f00]" /> : <ReactMarkdown>{m.content}</ReactMarkdown>}
                 </div>
               </div>
             ))}
@@ -138,9 +138,9 @@ export default function MohammedAssistant() {
           <div className="flex items-center gap-2 mt-2">
             <input data-testid="mohammed-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder={tri("Scrivi a Mohammadreza…", "Schreibe an Mohammadreza…", "Message Mohammadreza…", "Escribe a Mohammadreza…")}
-              className="flex-1 bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
+              className="flex-1 bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]" />
             <button data-testid="mohammed-send" onClick={() => send()} disabled={busy || !input.trim()}
-              className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
+              className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
               {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
             </button>
           </div>

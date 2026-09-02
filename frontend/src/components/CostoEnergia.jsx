@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 const LS = "mikilab_energia";
 const load = () => { try { return JSON.parse(localStorage.getItem(LS) || "null"); } catch { return null; } };
 
-const INP = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+const INP = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
 const Field = ({ label, tid, val, set, step, suffix }) => (
   <label className="text-[11px] font-semibold uppercase text-[#7E8A93] flex flex-col gap-1">
     <span>{label}</span>
@@ -41,7 +41,7 @@ export default function CostoEnergia() {
   return (
     <div className="pb-40" data-testid="energia-tool">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><Zap className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><Zap className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Costo Energia Forno", "Ofen-Energiekosten", "Oven Energy Cost", "Coste Energía Horno")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Quanto ti costa ogni infornata", "Was jede Charge kostet", "What each bake costs you", "Cuánto cuesta cada horneada")}</p>
@@ -59,7 +59,7 @@ export default function CostoEnergia() {
         <p className="text-[10.5px] text-[#7E8A93] mt-1">{tri("L'assorbimento medio tiene conto del fatto che il forno non consuma sempre alla massima potenza (mantenimento).", "Die Ø-Auslastung berücksichtigt, dass der Ofen nicht immer bei voller Leistung läuft.", "Average duty accounts for the oven not always drawing full power.", "La absorción media considera que el horno no consume siempre a plena potencia.")}</p>
       </div>
 
-      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#8f3a32] text-white p-5 shadow-lg space-y-3">
+      <div className="rounded-3xl bg-gradient-to-br from-[#c94f00] to-[#8f3a32] text-white p-5 shadow-lg space-y-3">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2 text-white/90"><Zap className="w-5 h-5" /> {tri("Energia", "Energie", "Energy", "Energía")}</span>
           <b data-testid="energia-kwh" className="font-mono-data text-2xl">{r.kwh.toFixed(2)} kWh</b>

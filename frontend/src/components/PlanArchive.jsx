@@ -117,7 +117,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
   return (
     <div ref={rootRef} data-testid={`plan-archive-${kind}`} className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
       <div className="flex items-center gap-2 mb-1">
-        <Archive className="w-5 h-5 text-[#ff6b00]" />
+        <Archive className="w-5 h-5 text-[#c94f00]" />
         <h3 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">
           {tri("I Miei Piani Salvati", "Meine gespeicherten Pläne", "My Saved Plans")}
         </h3>
@@ -133,7 +133,7 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
           data-testid={`plan-archive-save-btn-${kind}`}
           onClick={openNaming}
           disabled={!canSave}
-          className="w-full flex items-center justify-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] disabled:opacity-40 active:scale-98 transition-all"
+          className="w-full flex items-center justify-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#c94f00] dark:text-[#8FB0C2] font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] disabled:opacity-40 active:scale-98 transition-all"
         >
           <Save className="w-4 h-4" /> {tri("Salva questo piano nell'archivio", "Diesen Plan im Archiv speichern", "Save this plan to the archive")}
         </button>
@@ -146,13 +146,13 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
             onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") doSave(); if (e.key === "Escape") setNaming(false); }}
             placeholder={tri("Nome piano (es. Settimana Natale)", "Planname (z. B. Weihnachtswoche)", "Plan name (e.g. Christmas week)")}
-            className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00] text-[#2B303B] dark:text-[#e4eff8]"
+            className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#c94f00] text-[#2B303B] dark:text-[#e4eff8]"
           />
           <button
             data-testid={`plan-archive-confirm-btn-${kind}`}
             onClick={doSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all disabled:opacity-50"
+            className="shrink-0 flex items-center gap-1.5 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all disabled:opacity-50"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             {tri("Salva", "Speichern", "Save")}
@@ -188,12 +188,12 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
                       onKeyDown={(e) => { if (e.key === "Enter") doRename(p.id); if (e.key === "Escape") setEditingId(null); }}
-                      className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#ff6b00] rounded-lg px-2 py-1.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
+                      className="flex-1 min-w-0 bg-white dark:bg-[#181818] border border-[#c94f00] rounded-lg px-2 py-1.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]"
                     />
                     <button
                       data-testid={`plan-archive-rename-confirm-${p.id}`}
                       onClick={() => doRename(p.id)}
-                      className="shrink-0 w-8 h-8 rounded-lg bg-[#ff6b00] text-white flex items-center justify-center"
+                      className="shrink-0 w-8 h-8 rounded-lg bg-[#c94f00] text-white flex items-center justify-center"
                     >
                       <Check className="w-4 h-4" />
                     </button>
@@ -220,14 +220,14 @@ const PlanArchive = forwardRef(function PlanArchive({ kind, getPayload, canSave,
                   <button
                     data-testid={`plan-archive-repeat-btn-${p.id}`}
                     onClick={() => doRepeat(p)}
-                    className="shrink-0 flex items-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-xs font-semibold px-3 py-2 rounded-lg active:scale-98 transition-all"
+                    className="shrink-0 flex items-center gap-1.5 bg-[#c94f00] hover:bg-[#d4a373] text-white text-xs font-semibold px-3 py-2 rounded-lg active:scale-98 transition-all"
                   >
                     <RotateCcw className="w-3.5 h-3.5" /> {repeatLabel || tri("Ripeti", "Wiederholen", "Repeat")}
                   </button>
                   <button
                     data-testid={`plan-archive-delete-btn-${p.id}`}
                     onClick={() => doRemove(p.id)}
-                    className="shrink-0 w-9 h-9 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00]"
+                    className="shrink-0 w-9 h-9 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#c94f00]"
                     aria-label="delete"
                   >
                     <Trash2 className="w-4 h-4" />

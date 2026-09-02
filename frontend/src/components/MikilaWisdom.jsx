@@ -136,13 +136,13 @@ export default function MikilaWisdom({ section = "home" }) {
 
   return (
     <>
-      <div data-testid="mikila-wisdom" className={`mb-4 rounded-2xl border px-3.5 py-3 shadow-sm ${special ? "border-[#ff6b00]/50 bg-[#ff6b00]/12" : "border-[#ff6b00]/25 bg-[#181818]"}`}>
+      <div data-testid="mikila-wisdom" className={`mb-4 rounded-2xl border px-3.5 py-3 shadow-sm ${special ? "border-[#c94f00]/50 bg-[#c94f00]/12" : "border-[#c94f00]/25 bg-[#181818]"}`}>
         <div className="flex items-center gap-3">
           <img src="/michele-real-lab.jpg" alt="MikiLab" loading="lazy"
-            className="w-10 h-10 rounded-full object-cover border-2 border-[#ff6b00]/40 shrink-0"
+            className="w-10 h-10 rounded-full object-cover border-2 border-[#c94f00]/40 shrink-0"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-[#ff6b00] flex items-center gap-1">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-[#c94f00] flex items-center gap-1">
               <HeadIcon className="w-3 h-3" /> {special ? L("MikiLab per te", "MikiLab für dich", "MikiLab for you", "MikiLab para ti", "MikiLab pour toi", "میکی‌لب برای تو") : L("Il pizzico di sapienza di MikiLab", "MikiLabs Prise Weisheit", "MikiLab's pinch of wisdom", "El pellizco de sabiduría de MikiLab", "La pincée de sagesse de MikiLab", "چکه‌ای از خرد میکی‌لب")}
             </p>
             <AnimatePresence mode="wait">
@@ -151,12 +151,12 @@ export default function MikilaWisdom({ section = "home" }) {
                 className="text-[13px] text-[#E0D5CF] leading-snug mt-0.5 italic">"{text}"</motion.p>
             </AnimatePresence>
             {!special && cur.author && (
-              <p className="text-[11px] text-[#ff8a33] mt-0.5 font-semibold">— {cur.author}</p>
+              <p className="text-[11px] text-[#d4a373] mt-0.5 font-semibold">— {cur.author}</p>
             )}
           </div>
           {!special && (
             <button data-testid="mikila-wisdom-next" onClick={() => setOffset((o) => o + 1)} aria-label="next tip"
-              className="shrink-0 w-8 h-8 rounded-full bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center text-[#ff6b00] active:scale-90 transition-transform">
+              className="shrink-0 w-8 h-8 rounded-full bg-[#c94f00]/15 border border-[#c94f00]/30 flex items-center justify-center text-[#c94f00] active:scale-90 transition-transform">
               <RefreshCw className="w-4 h-4" />
             </button>
           )}
@@ -168,13 +168,13 @@ export default function MikilaWisdom({ section = "home" }) {
                 <Heart className={`w-3 h-3 ${cur.likedByMe ? "fill-current" : ""}`} /> {cur.likeCount || 0}
               </button>
             )}
-            <button data-testid="mikila-wisdom-share" onClick={shareCur} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
+            <button data-testid="mikila-wisdom-share" onClick={shareCur} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#c94f00] px-2 py-1 rounded-full border border-[#c94f00]/40 active:scale-90 transition-all">
               <Share2 className="w-3 h-3" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
             </button>
-            <button data-testid="mikila-wisdom-card" onClick={() => setCardText({ text, author: special ? null : cur.author })} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
+            <button data-testid="mikila-wisdom-card" onClick={() => setCardText({ text, author: special ? null : cur.author })} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#c94f00] px-2 py-1 rounded-full border border-[#c94f00]/40 active:scale-90 transition-all">
               <ImageIcon className="w-3 h-3" /> {L("Crea card", "Karte erstellen", "Make card", "Crear tarjeta", "Créer carte", "ساخت کارت")}
             </button>
-            <button data-testid="mikila-wisdom-propose" onClick={() => setProposeOpen(true)} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff6b00] px-2 py-1 rounded-full border border-[#ff6b00]/40 active:scale-90 transition-all">
+            <button data-testid="mikila-wisdom-propose" onClick={() => setProposeOpen(true)} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#c94f00] px-2 py-1 rounded-full border border-[#c94f00]/40 active:scale-90 transition-all">
               <Plus className="w-3 h-3" /> {L("Proponi il tuo", "Deins vorschlagen", "Propose yours", "Propón el tuyo", "Propose le tien", "پیشنهاد بده")}
             </button>
             {user?.role === "admin" && (
@@ -212,19 +212,19 @@ function ProposeModal({ lang, user, onClose }) {
     <div data-testid="wisdom-propose-modal" className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-md p-3" onClick={onClose}>
       <div className="w-full max-w-md rounded-3xl bg-[#181818] border border-[#2e2e2e] p-5" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="w-5 h-5 text-[#ff6b00]" />
+          <Sparkles className="w-5 h-5 text-[#c94f00]" />
           <h3 className="font-display text-lg font-bold text-white">{L("Proponi un proverbio da fornaio", "Bäcker-Spruch vorschlagen", "Propose a baker's proverb", "Propón un proverbio panadero", "Propose un proverbe de boulanger", "یک ضرب‌المثل نانوایی پیشنهاد بده")}</h3>
         </div>
         <p className="text-[12px] text-[#AEB8BF] mb-2">{L("I migliori (più votati) entrano nella rotazione di MikiLab dopo l'ok dell'admin.", "Die beliebtesten kommen nach Admin-OK in MikiLabs Rotation.", "The most-voted enter MikiLab's rotation after admin approval.", "Los más votados entran en la rotación de MikiLab tras el OK del admin.", "Les plus votés entrent dans la rotation de MikiLab après validation admin.", "پس از تأیید ادمین، پرطرفدارها به چرخش میکی‌لب می‌آیند.")}</p>
         <textarea data-testid="wisdom-propose-text" value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={240}
           placeholder={L("Es. «Poco lievito e tanto tempo: pane più buono e leggero.»", "z.B. «Wenig Hefe, viel Zeit: besseres Brot.»", "e.g. 'Little yeast and lots of time: better bread.'", "Ej. «Poca levadura y mucho tiempo.»", "Ex. « Peu de levure, beaucoup de temps. »", "مثلاً «کم مخمر، زمان زیاد.»")}
-          className="w-full bg-[#121212] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#ff6b00]" />
+          className="w-full bg-[#121212] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#c94f00]" />
         <label className="block text-[11px] font-bold uppercase tracking-wider text-[#AEB8BF] mt-3 mb-1">{L("Il tuo compleanno (facoltativo)", "Dein Geburtstag (optional)", "Your birthday (optional)", "Tu cumpleaños (opcional)", "Ton anniversaire (facultatif)", "تولد تو (اختیاری)")}</label>
         <input data-testid="wisdom-birthday-input" type="date" value={bday} onChange={(e) => setBday(e.target.value)}
-          className="w-full bg-[#121212] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#ff6b00]" />
+          className="w-full bg-[#121212] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#c94f00]" />
         <div className="grid grid-cols-2 gap-2 mt-4">
           <button onClick={onClose} className="rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] text-white font-semibold py-2.5 active:scale-95">{L("Annulla", "Abbrechen", "Cancel", "Cancelar", "Annuler", "لغو")}</button>
-          <button data-testid="wisdom-propose-submit" disabled={busy} onClick={submit} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] text-[#121212] font-bold py-2.5 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
+          <button data-testid="wisdom-propose-submit" disabled={busy} onClick={submit} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] text-[#121212] font-bold py-2.5 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {L("Invia", "Senden", "Send", "Enviar", "Envoyer", "ارسال")}
           </button>
         </div>
@@ -298,18 +298,18 @@ function CardModal({ lang, text, author, onClose }) {
     // Sfondo
     ctx.fillStyle = "#121212"; ctx.fillRect(0, 0, S, S);
     // Bordo arancio
-    ctx.strokeStyle = "#ff6b00"; ctx.lineWidth = 14; ctx.strokeRect(28, 28, S - 56, S - 56);
+    ctx.strokeStyle = "#c94f00"; ctx.lineWidth = 14; ctx.strokeRect(28, 28, S - 56, S - 56);
     // Glow decorativo
     const g = ctx.createRadialGradient(S / 2, 200, 50, S / 2, 200, 520);
     g.addColorStop(0, "rgba(255,107,0,0.18)"); g.addColorStop(1, "rgba(255,107,0,0)");
     ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
     // Testo virgolette
-    ctx.fillStyle = "#ff6b00"; ctx.font = "bold 160px Georgia, serif"; ctx.textAlign = "center"; ctx.fillText("“", S / 2, 330);
+    ctx.fillStyle = "#c94f00"; ctx.font = "bold 160px Georgia, serif"; ctx.textAlign = "center"; ctx.fillText("“", S / 2, 330);
     // Proverbio
     ctx.fillStyle = "#f2ede8"; ctx.font = "italic 600 52px Georgia, serif"; ctx.textAlign = "center";
     drawWrapped(ctx, text, S / 2, S / 2 + 20, S - 220, 74);
     // Autore
-    ctx.fillStyle = "#ff8a33"; ctx.font = "bold 34px Arial, sans-serif";
+    ctx.fillStyle = "#d4a373"; ctx.font = "bold 34px Arial, sans-serif";
     ctx.fillText(author ? `— ${author}` : "— MikiLab", S / 2, S - 260);
 
     const finish = () => {
@@ -325,7 +325,7 @@ function CardModal({ lang, text, author, onClose }) {
       const r = 78, cx = S / 2, cy = 150;
       ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
       ctx.drawImage(img, cx - r, cy - r, r * 2, r * 2); ctx.restore();
-      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.strokeStyle = "#ff6b00"; ctx.lineWidth = 8; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.strokeStyle = "#c94f00"; ctx.lineWidth = 8; ctx.stroke();
       finish();
     };
     img.onerror = finish;
@@ -346,16 +346,16 @@ function CardModal({ lang, text, author, onClose }) {
     <div data-testid="wisdom-card-modal" className="fixed inset-0 z-[70] flex items-center justify-center bg-black/85 backdrop-blur-md p-4" onClick={onClose}>
       <div className="w-full max-w-sm rounded-3xl bg-[#181818] border border-[#2e2e2e] p-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-display text-base font-bold text-white flex items-center gap-2"><ImageIcon className="w-5 h-5 text-[#ff6b00]" /> {L("Card condivisibile", "Teilbare Karte", "Shareable card", "Tarjeta para compartir", "Carte à partager", "کارت اشتراکی")}</h3>
+          <h3 className="font-display text-base font-bold text-white flex items-center gap-2"><ImageIcon className="w-5 h-5 text-[#c94f00]" /> {L("Card condivisibile", "Teilbare Karte", "Shareable card", "Tarjeta para compartir", "Carte à partager", "کارت اشتراکی")}</h3>
           <button onClick={onClose} className="text-[#AEB8BF]"><X className="w-5 h-5" /></button>
         </div>
         {url ? <img data-testid="wisdom-card-image" src={url} alt="proverbio" className="w-full rounded-2xl" />
-          : <div className="aspect-square rounded-2xl bg-[#121212] flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /></div>}
+          : <div className="aspect-square rounded-2xl bg-[#121212] flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-[#c94f00]" /></div>}
         <div className="grid grid-cols-2 gap-2 mt-3">
-          <a data-testid="wisdom-card-download" href={url || "#"} download="mikilab-proverbio.png" className={`flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 ${!url ? "opacity-50 pointer-events-none" : ""}`}>
-            <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Scarica", "Download", "Download", "Descargar", "Télécharger", "دانلود")}
+          <a data-testid="wisdom-card-download" href={url || "#"} download="mikilab-proverbio.png" className={`flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 ${!url ? "opacity-50 pointer-events-none" : ""}`}>
+            <Download className="w-4 h-4 text-[#c94f00]" /> {L("Scarica", "Download", "Download", "Descargar", "Télécharger", "دانلود")}
           </a>
-          <button data-testid="wisdom-card-share" disabled={!url} onClick={shareImg} className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] text-[#121212] font-bold py-2.5 text-sm active:scale-95 disabled:opacity-50">
+          <button data-testid="wisdom-card-share" disabled={!url} onClick={shareImg} className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] text-[#121212] font-bold py-2.5 text-sm active:scale-95 disabled:opacity-50">
             <Share2 className="w-4 h-4" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
           </button>
         </div>

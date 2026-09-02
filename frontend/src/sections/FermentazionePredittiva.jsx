@@ -125,12 +125,12 @@ export default function FermentazionePredittiva() {
   }).join(" ");
 
   const warm = est.Tf >= 25;
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
 
   return (
     <div className="pb-40" data-testid="fermentazione-tool">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><Activity className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><Activity className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Fermentazione Predittiva", "Gärungs-Prognose", "Fermentation Forecast", "Fermentación Predictiva")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Quanto lieviterà oggi e a che ora è pronto", "Wie lange die Gare heute dauert und wann fertig", "How long proofing takes today and when it's ready", "Cuánto leudará hoy y a qué hora está lista")}</p>
@@ -139,7 +139,7 @@ export default function FermentazionePredittiva() {
 
       {/* Meteo automatico */}
       <button data-testid="ferment-geo" onClick={useGeo} disabled={loading}
-        className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-2">
+        className="w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-2">
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
         {tri("Usa il meteo della mia zona", "Wetter meiner Gegend", "Use my local weather", "Usar el clima de mi zona")}
       </button>
@@ -150,7 +150,7 @@ export default function FermentazionePredittiva() {
       </div>
       {err && <p data-testid="ferment-error" className="text-sm text-[#E4572E] mb-2">{err}</p>}
       {w && (
-        <div data-testid="ferment-weather" className="flex items-center gap-2 text-sm text-[#ff6b00] dark:text-[#a9d2ec] bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-3">
+        <div data-testid="ferment-weather" className="flex items-center gap-2 text-sm text-[#c94f00] dark:text-[#a9d2ec] bg-[#c94f00]/12 border border-[#c94f00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-3">
           <CloudSun className="w-4 h-4" /> {w.place}: <b>{Math.round(w.temp)}°C</b>{w.humidity != null && <span className="text-[#7E8A93]">· {Math.round(w.humidity)}% {tri("umidità", "Feuchte", "humidity", "humedad")}</span>}
         </div>
       )}
@@ -171,12 +171,12 @@ export default function FermentazionePredittiva() {
       <div className="flex gap-2 mb-4">
         {[["double", tri("Raddoppio", "Verdopplung", "Double", "Duplica")], ["plus50", tri("+50% volume", "+50% Volumen", "+50% volume", "+50% volumen")]].map(([id, lbl]) => (
           <button key={id} data-testid={`ferment-level-${id}`} onClick={() => setLevel(id)}
-            className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-98 ${level === id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{lbl}</button>
+            className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-98 ${level === id ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#1e1e1e] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{lbl}</button>
         ))}
       </div>
 
       {/* Risultato + curva */}
-      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff8a33] text-white p-5 shadow-lg mb-4">
+      <div className="rounded-3xl bg-gradient-to-br from-[#c94f00] to-[#d4a373] text-white p-5 shadow-lg mb-4">
         <p className="text-white/85 text-xs font-semibold uppercase tracking-wide">{tri("Tempo stimato di lievitazione", "Geschätzte Gärzeit", "Estimated proofing time", "Tiempo estimado")}</p>
         <div className="flex items-end justify-between mt-1">
           <p data-testid="ferment-time" className="font-mono-data text-4xl font-bold leading-none">{timeStr}</p>
@@ -202,7 +202,7 @@ export default function FermentazionePredittiva() {
       </div>
 
       <div data-testid="ferment-note" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 mb-4 flex items-start gap-2">
-        <Sparkles className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
+        <Sparkles className="w-4 h-4 text-[#c94f00] shrink-0 mt-0.5" />
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
           {est.Tf > 45 && <b className="text-[#E4572E]">{tri("Attenzione: oltre i 45°C il lievito muore. ", "Achtung: über 45°C stirbt die Hefe. ", "Warning: above 45°C the yeast dies. ", "Atención: por encima de 45°C la levadura muere. ")}</b>}
           {warm
@@ -215,12 +215,12 @@ export default function FermentazionePredittiva() {
 
       {run ? (
         <button data-testid="ferment-cancel" onClick={cancelRun}
-          className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/40 text-[#ff6b00] font-bold py-4 rounded-2xl active:scale-98 transition-all">
+          className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#c94f00]/40 text-[#c94f00] font-bold py-4 rounded-2xl active:scale-98 transition-all">
           <Bell className="w-5 h-5" /> {tri("Annulla il promemoria", "Erinnerung abbrechen", "Cancel the reminder", "Cancelar el aviso")}
         </button>
       ) : (
         <button data-testid="ferment-remind" onClick={startReminder}
-          className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#a66f20] text-white font-bold py-4 rounded-2xl active:scale-98 transition-all">
+          className="w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#a66f20] text-white font-bold py-4 rounded-2xl active:scale-98 transition-all">
           <Bell className="w-5 h-5" /> {tri("Avvisami quando è pronto", "Erinnere mich, wenn fertig", "Alert me when ready", "Avísame cuando esté lista")}
         </button>
       )}

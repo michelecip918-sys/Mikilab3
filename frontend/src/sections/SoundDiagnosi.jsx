@@ -107,31 +107,31 @@ export default function SoundDiagnosi() {
 
   return (
     <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#c94f00] to-[#c94f00] p-6 text-white">
         <Volume2 className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Diagnosi Sonora", "Klang-Diagnose", "Sound Diagnosis")}</h1>
         <p className="text-white/85 text-sm mt-1">{tri("Avvicina il telefono all'impastatrice: dal ritmo del suono capisco se l'impasto è ancora duro o quasi pronto.", "Halte das Handy an den Kneter: am Rhythmus erkenne ich, ob der Teig noch hart oder fast fertig ist.", "Hold the phone near the mixer: from the sound rhythm I can tell if the dough is still hard or almost ready.")}</p>
       </div>
 
-      <div className="rounded-2xl bg-[#ff6b00]/12 border border-[#ff6b00]/30 p-4 mb-4 text-sm text-[#ff6b00] dark:text-[#8FB0C2] leading-relaxed">
+      <div className="rounded-2xl bg-[#c94f00]/12 border border-[#c94f00]/30 p-4 mb-4 text-sm text-[#c94f00] dark:text-[#8FB0C2] leading-relaxed">
         ⚠️ {tri("È una stima «a orecchio» (beta), non un sensore di laboratorio. Registra ~8 secondi durante l'impastamento.", "Es ist eine Schätzung «nach Gehör» (Beta), kein Laborsensor. Nimm ~8 Sek. während des Knetens auf.", "It's an «by ear» estimate (beta), not a lab sensor. Record ~8 seconds during kneading.")}
       </div>
 
       {!recording ? (
         <button data-testid="sound-start-btn" onClick={start} disabled={analyzing}
-          className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="w-full bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           {analyzing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
           {analyzing ? tri("Analizzo…", "Analysiere…", "Analyzing…") : tri("Registra e analizza", "Aufnehmen & analysieren", "Record & analyze")}
         </button>
       ) : (
         <button data-testid="sound-stop-btn" onClick={stop}
-          className="w-full bg-[#ff6b00] hover:bg-[#a8483f] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 animate-pulse">
+          className="w-full bg-[#c94f00] hover:bg-[#a8483f] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 animate-pulse">
           <Square className="w-5 h-5" /> {tri("Sto ascoltando… tocca per fermare", "Ich höre zu… tippen zum Stoppen", "Listening… tap to stop")}
         </button>
       )}
 
       {recording && (
-        <div data-testid="sound-wave" className="mt-4 rounded-2xl bg-[#ff6b00] p-4">
+        <div data-testid="sound-wave" className="mt-4 rounded-2xl bg-[#c94f00] p-4">
           <div className="flex items-end justify-center gap-[3px] h-16">
             {wave.length === 0 && <span className="text-white/50 text-xs self-center">{tri("Avvicina il telefono all'impastatrice…", "Handy an den Kneter halten…", "Bring the phone near the mixer…")}</span>}
             {wave.map((v, k) => (
@@ -153,7 +153,7 @@ export default function SoundDiagnosi() {
             <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
           </button>
           <ListenButton text={result} who="momy" testid="sound-listen-btn"
-            className="mt-2 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
+            className="mt-2 w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
         </div>
       )}
     </div>

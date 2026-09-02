@@ -68,7 +68,7 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
 
   return (
     <div className="pb-8" data-testid="vetrina-focacce">
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#c94f00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#c94f00,#c94f00)" }}>
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Wheat className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes", "ویترین دستورها")}</h1>
@@ -79,14 +79,14 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="vetrina-tabs">
         {tabs.map((t) => (
           <button key={t.key} data-testid={`vetrina-tab-${t.key}`} onClick={() => setCat(t.key)}
-            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
+            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#c94f00] text-[#121212] border-[#c94f00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
             {t.icon} {catName(t.key)}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#ff6b00]" /></div>
+        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#c94f00]" /></div>
       ) : (
         <div className="grid grid-cols-2 gap-2.5" data-testid="vetrina-grid">
           {items.map((r) => (
@@ -114,12 +114,12 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
               <h3 className="font-display text-lg font-bold text-white leading-tight">{rLoc(zoom, "name", lang)}</h3>
               {rLoc(zoom, "notes", lang) && <p className="text-[12.5px] text-[#AEB8BF] leading-snug mt-1.5 whitespace-pre-line line-clamp-4">{rLoc(zoom, "notes", lang)}</p>}
               <button data-testid="vetrina-share" onClick={() => shareItem(zoom)}
-                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
-                <Share2 className="w-4 h-4 text-[#ff6b00]" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                <Share2 className="w-4 h-4 text-[#c94f00]" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
               </button>
               {onOpenRecipe && (
                 <button data-testid="vetrina-open-recipe" onClick={() => onOpenRecipe(zoom.id)}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
                   <BookOpen className="w-4 h-4" /> {tri("Vedi ricetta completa", "Ganzes Rezept ansehen", "See full recipe", "Ver receta completa", "Voir la recette complète", "دیدن دستور کامل")}
                 </button>
               )}

@@ -19,7 +19,7 @@ export default function OfflineBanner() {
 
   if (!offline) return null;
   return (
-    <div data-testid="offline-banner" className="fixed top-0 left-0 right-0 z-[60] bg-[#ff6b00] text-white text-[13px] font-semibold px-4 py-2 flex items-center justify-center gap-2 shadow-md">
+    <div data-testid="offline-banner" className="fixed top-0 left-0 right-0 z-[60] bg-[#c94f00] text-white text-[13px] font-semibold px-4 py-2 flex items-center justify-center gap-2 shadow-md">
       <WifiOff className="w-4 h-4 shrink-0" />
       <span>{tri(
         "Offline — ricette e piano di produzione salvati sono comunque consultabili.",

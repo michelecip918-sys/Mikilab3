@@ -27,7 +27,7 @@ export default function LabModeBig({ onOpenTool, onExit, onOpenPlan }) {
       <div className="flex items-center justify-between mb-4">
         <div className="min-w-0">
           <h1 className="font-display text-2xl font-extrabold text-white leading-tight flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#ff6b00] animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#c94f00] animate-pulse" />
             {tri("Modalità Laboratorio", "Labor-Modus", "Bakery Mode", "Modo Laboratorio", "Mode Atelier", "حالت کارگاه")}
           </h1>
           <p className="text-[13px] text-[#AEB8BF] leading-snug mt-0.5">{tri("Pulsanti grandi, usali anche con le mani infarinate.", "Große Tasten, auch mit mehligen Händen.", "Big buttons, use them even with floury hands.", "Botones grandes, úsalos con las manos enharinadas.")}</p>
@@ -40,7 +40,7 @@ export default function LabModeBig({ onOpenTool, onExit, onOpenPlan }) {
 
       {/* Piano di Produzione: tile largo in evidenza */}
       <button data-testid="lab-big-plan" onClick={onOpenPlan}
-        className="w-full flex items-center gap-4 min-h-[92px] rounded-3xl px-5 mb-3 bg-gradient-to-r from-[#ff6b00] to-[#c94f00] text-white shadow-[0_6px_0_rgba(0,0,0,.35)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all text-left">
+        className="w-full flex items-center gap-4 min-h-[92px] rounded-3xl px-5 mb-3 bg-gradient-to-r from-[#c94f00] to-[#c94f00] text-white shadow-[0_6px_0_rgba(0,0,0,.35)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all text-left">
         <span className="w-14 h-14 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0"><CalendarDays className="w-8 h-8" /></span>
         <span className="min-w-0">
           <span className="block font-display text-xl font-extrabold leading-tight">{tri("Piano di Produzione", "Produktionsplan", "Production Plan", "Plan de Producción")}</span>
@@ -53,17 +53,17 @@ export default function LabModeBig({ onOpenTool, onExit, onOpenPlan }) {
           <button key={id} data-testid={`lab-big-tile-${id}`} onClick={() => onOpenTool(id)}
             className={`flex flex-col items-center justify-center gap-2.5 min-h-[118px] rounded-3xl px-3 py-4 text-center active:scale-97 transition-all shadow-[0_5px_0_rgba(0,0,0,.3)] active:translate-y-0.5 ${
               primary
-                ? "bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white border-2 border-[#ff6b00]"
-                : "bg-[#1e1e1e] text-white border-2 border-[#ff6b00]/70"
+                ? "bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white border-2 border-[#c94f00]"
+                : "bg-[#1e1e1e] text-white border-2 border-[#c94f00]/70"
             }`}>
-            <Icon className={`w-9 h-9 shrink-0 ${primary ? "text-white" : "text-[#ff6b00]"}`} />
+            <Icon className={`w-9 h-9 shrink-0 ${primary ? "text-white" : "text-[#c94f00]"}`} />
             <span className="font-display text-[17px] font-extrabold leading-tight">{label}</span>
           </button>
         ))}
       </div>
 
       <p className="text-[12px] text-[#7E8A93] leading-snug mt-4 flex items-start gap-1.5">
-        <Sparkles className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />
+        <Sparkles className="w-4 h-4 text-[#c94f00] shrink-0 mt-0.5" />
         {tri("Suggerimento: tocca «Voce» per usare tutto a mani libere.", "Tipp: Tippe „Stimme“ für freihändige Bedienung.", "Tip: tap 'Voice' to use everything hands-free.", "Consejo: toca «Voz» para usar todo con manos libres.")}
       </p>
     </div>

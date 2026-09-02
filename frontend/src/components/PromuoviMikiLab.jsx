@@ -171,7 +171,7 @@ export default function PromuoviMikiLab() {
         ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
         const x = Math.round(W * 0.06), y = Math.round(H * 0.93);
         ctx.lineWidth = Math.max(4, fs * 0.18); ctx.strokeStyle = "#121212"; ctx.strokeText(txt, x, y);
-        ctx.fillStyle = "#ff6b00"; ctx.fillText(txt, x, y);
+        ctx.fillStyle = "#c94f00"; ctx.fillText(txt, x, y);
       } else {
         // Verticale: nome centrato sopra il QR
         const fs = Math.round(H * 0.034);
@@ -179,7 +179,7 @@ export default function PromuoviMikiLab() {
         ctx.textAlign = "center"; ctx.textBaseline = "middle";
         const y = Math.round(H * 0.463);
         ctx.lineWidth = Math.max(4, fs * 0.18); ctx.strokeStyle = "#121212"; ctx.strokeText(txt, W / 2, y);
-        ctx.fillStyle = "#ff6b00"; ctx.fillText(txt, W / 2, y);
+        ctx.fillStyle = "#c94f00"; ctx.fillText(txt, W / 2, y);
       }
       try { setPersonalUrl(c.toDataURL("image/png")); } catch { setPersonalUrl(null); }
     };
@@ -255,8 +255,8 @@ export default function PromuoviMikiLab() {
   };
 
   return (
-    <div data-testid="promuovi-mikilab" className="rounded-3xl overflow-hidden border border-[#ff6b00]/40 bg-[#181818]">
-      <div className="p-4 text-[#121212] flex items-center gap-3" style={{ background: "linear-gradient(135deg,#ff8a33,#ff6b00 75%)" }}>
+    <div data-testid="promuovi-mikilab" className="rounded-3xl overflow-hidden border border-[#c94f00]/40 bg-[#181818]">
+      <div className="p-4 text-[#121212] flex items-center gap-3" style={{ background: "linear-gradient(135deg,#d4a373,#c94f00 75%)" }}>
         <div className="w-11 h-11 rounded-2xl bg-[#121212]/15 border border-[#121212]/20 flex items-center justify-center shrink-0"><Megaphone className="w-6 h-6" /></div>
         <div className="min-w-0">
           <p className="text-[11px] font-extrabold uppercase tracking-widest">{L("Fai crescere MikiLab", "Lass MikiLab wachsen", "Grow MikiLab", "Haz crecer MikiLab", "Fais grandir MikiLab", "میکی‌لب را بزرگ کن")}</p>
@@ -267,49 +267,49 @@ export default function PromuoviMikiLab() {
       <div className="p-4 space-y-4">
         {/* Invita */}
         <button data-testid="promuovi-invite" onClick={invite}
-          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#ff6b00] text-[#121212] font-bold py-3.5 active:scale-98 transition-all">
+          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#c94f00] text-[#121212] font-bold py-3.5 active:scale-98 transition-all">
           <Share2 className="w-5 h-5" /> {L("Invita un amico", "Freund einladen", "Invite a friend", "Invita a un amigo", "Inviter un ami", "دعوت از دوست")}
         </button>
 
         {/* Post pronto */}
         <div className="rounded-2xl bg-[#121212] border border-[#2e2e2e] p-3.5">
-          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-1.5">{L("Post pronto da copiare", "Fertiger Beitrag zum Kopieren", "Ready-to-post caption", "Publicación lista", "Légende prête", "کپشن آماده")}</p>
+          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#c94f00] mb-1.5">{L("Post pronto da copiare", "Fertiger Beitrag zum Kopieren", "Ready-to-post caption", "Publicación lista", "Légende prête", "کپشن آماده")}</p>
           <div className="flex gap-1.5 mb-2" data-testid="promuovi-variants">
             {VARIANTS.map((v) => (
               <button key={v.id} data-testid={`promuovi-variant-${v.id}`} onClick={() => setVariant(v.id)}
-                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${variant === v.id ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#AEB8BF] border border-[#2e2e2e]"}`}>
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${variant === v.id ? "bg-[#c94f00] text-[#121212]" : "bg-[#1e1e1e] text-[#AEB8BF] border border-[#2e2e2e]"}`}>
                 {v.label}
               </button>
             ))}
           </div>
           <p data-testid="promuovi-caption" className="text-[12.5px] text-[#E0D5CF] leading-snug whitespace-pre-line mb-2.5">{caption}</p>
           <button data-testid="promuovi-copy-caption" onClick={copyCaption}
-            className="w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-            {copied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#ff6b00]" />} {L("Copia il post", "Beitrag kopieren", "Copy caption", "Copiar", "Copier", "کپی کپشن")}
+            className="w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+            {copied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#c94f00]" />} {L("Copia il post", "Beitrag kopieren", "Copy caption", "Copiar", "Copier", "کپی کپشن")}
           </button>
         </div>
 
         {/* Post stagionali */}
         <div className="rounded-2xl bg-[#121212] border border-[#2e2e2e] p-3.5">
-          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2">{L("Post stagionali pronti", "Saisonale Beiträge", "Seasonal posts", "Publicaciones de temporada", "Posts saisonniers", "پست‌های فصلی")}</p>
+          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#c94f00] mb-2">{L("Post stagionali pronti", "Saisonale Beiträge", "Seasonal posts", "Publicaciones de temporada", "Posts saisonniers", "پست‌های فصلی")}</p>
           <div className="flex flex-wrap gap-1.5 mb-2" data-testid="promuovi-seasons">
             {SEASONAL.map((s) => (
               <button key={s.id} data-testid={`promuovi-season-${s.id}`} onClick={() => setSeason(s.id)}
-                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${season === s.id ? "bg-[#ff6b00] text-[#121212]" : "bg-[#1e1e1e] text-[#AEB8BF] border border-[#2e2e2e]"}`}>
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all ${season === s.id ? "bg-[#c94f00] text-[#121212]" : "bg-[#1e1e1e] text-[#AEB8BF] border border-[#2e2e2e]"}`}>
                 {s.label[lang] || s.label.it}
               </button>
             ))}
           </div>
           <p data-testid="promuovi-season-text" className="text-[12.5px] text-[#E0D5CF] leading-snug whitespace-pre-line mb-2.5">{seasonText}</p>
-          <button data-testid="promuovi-season-copy" onClick={copySeason} className="w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-            {seasonCopied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#ff6b00]" />} {L("Copia il post", "Kopieren", "Copy", "Copiar", "Copier", "کپی")}
+          <button data-testid="promuovi-season-copy" onClick={copySeason} className="w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+            {seasonCopied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#c94f00]" />} {L("Copia il post", "Kopieren", "Copy", "Copiar", "Copier", "کپی")}
           </button>
         </div>
 
         {/* Kit Reel di lancio */}
         <div className="rounded-2xl bg-[#121212] border border-[#2e2e2e] overflow-hidden">
           <button data-testid="promuovi-reel-toggle" onClick={() => setReelOpen((v) => !v)} className="w-full flex items-center gap-2 p-3.5 text-left">
-            <Film className="w-5 h-5 text-[#ff6b00] shrink-0" />
+            <Film className="w-5 h-5 text-[#c94f00] shrink-0" />
             <span className="flex-1 font-display text-sm font-bold text-white">{L("Kit Reel di lancio (script 15s)", "Reel-Kit (15s-Skript)", "Launch Reel kit (15s script)", "Kit Reel de lanzamiento (guion 15s)", "Kit Reel de lancement (script 15s)", "کیت ریل (اسکریپت ۱۵ ثانیه)")}</span>
             {reelOpen ? <ChevronUp className="w-4 h-4 text-[#AEB8BF]" /> : <ChevronDown className="w-4 h-4 text-[#AEB8BF]" />}
           </button>
@@ -318,38 +318,38 @@ export default function PromuoviMikiLab() {
               <img src={`${process.env.PUBLIC_URL}/reel-cover.png`} alt="Reel cover" className="w-28 h-auto rounded-lg border border-[#2e2e2e] float-right ml-3 mb-2" />
               <pre data-testid="promuovi-reel-script" className="text-[11.5px] text-[#E0D5CF] leading-snug whitespace-pre-wrap font-sans">{reelScript}</pre>
               <div className="grid grid-cols-2 gap-2 mt-3 clear-both">
-                <button data-testid="promuovi-reel-copy" onClick={copyReel} className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  {reelCopied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#ff6b00]" />} {L("Copia script", "Skript kopieren", "Copy script", "Copiar guion", "Copier script", "کپی اسکریپت")}
+                <button data-testid="promuovi-reel-copy" onClick={copyReel} className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  {reelCopied ? <Check className="w-4 h-4 text-[#2e8b6f]" /> : <Copy className="w-4 h-4 text-[#c94f00]" />} {L("Copia script", "Skript kopieren", "Copy script", "Copiar guion", "Copier script", "کپی اسکریپت")}
                 </button>
-                <a data-testid="promuovi-reel-cover" href={`${process.env.PUBLIC_URL}/reel-cover.png`} download="mikilab-reel-cover.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00] text-[#121212] font-bold py-2.5 text-sm active:scale-95">
+                <a data-testid="promuovi-reel-cover" href={`${process.env.PUBLIC_URL}/reel-cover.png`} download="mikilab-reel-cover.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] text-[#121212] font-bold py-2.5 text-sm active:scale-95">
                   <Download className="w-4 h-4" /> {L("Cover 9:16", "Cover 9:16", "9:16 cover", "Portada 9:16", "Cover 9:16", "کاور ۹:۱۶")}
                 </a>
               </div>
-              <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mt-3 mb-1.5">{L("Cover stagionali", "Saisonale Cover", "Seasonal covers", "Portadas de temporada", "Covers saisonnières", "کاورهای فصلی")}</p>
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#c94f00] mt-3 mb-1.5">{L("Cover stagionali", "Saisonale Cover", "Seasonal covers", "Portadas de temporada", "Covers saisonnières", "کاورهای فصلی")}</p>
               <div className="grid grid-cols-2 gap-2">
-                <a data-testid="promuovi-cover-panettone" href={`${process.env.PUBLIC_URL}/reel-cover-panettone.png`} download="mikilab-panettone.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Natale · Panettone", "Weihnachten", "Christmas", "Navidad", "Noël", "کریسمس")}
+                <a data-testid="promuovi-cover-panettone" href={`${process.env.PUBLIC_URL}/reel-cover-panettone.png`} download="mikilab-panettone.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> {L("Natale · Panettone", "Weihnachten", "Christmas", "Navidad", "Noël", "کریسمس")}
                 </a>
-                <a data-testid="promuovi-cover-colomba" href={`${process.env.PUBLIC_URL}/reel-cover-colomba.png`} download="mikilab-colomba.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Pasqua · Colomba", "Ostern", "Easter", "Pascua", "Pâques", "عید پاک")}
+                <a data-testid="promuovi-cover-colomba" href={`${process.env.PUBLIC_URL}/reel-cover-colomba.png`} download="mikilab-colomba.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> {L("Pasqua · Colomba", "Ostern", "Easter", "Pascua", "Pâques", "عید پاک")}
                 </a>
-                <a data-testid="promuovi-cover-estate" href={`${process.env.PUBLIC_URL}/reel-cover-estate.png`} download="mikilab-estate.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Estate · Focacce", "Sommer", "Summer", "Verano", "Été", "تابستان")}
+                <a data-testid="promuovi-cover-estate" href={`${process.env.PUBLIC_URL}/reel-cover-estate.png`} download="mikilab-estate.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> {L("Estate · Focacce", "Sommer", "Summer", "Verano", "Été", "تابستان")}
                 </a>
-                <a data-testid="promuovi-cover-valentino" href={`${process.env.PUBLIC_URL}/reel-cover-valentino.png`} download="mikilab-valentino.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("San Valentino", "Valentinstag", "Valentine's", "San Valentín", "Saint-Valentin", "ولنتاین")}
+                <a data-testid="promuovi-cover-valentino" href={`${process.env.PUBLIC_URL}/reel-cover-valentino.png`} download="mikilab-valentino.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> {L("San Valentino", "Valentinstag", "Valentine's", "San Valentín", "Saint-Valentin", "ولنتاین")}
                 </a>
-                <a data-testid="promuovi-cover-halloween" href={`${process.env.PUBLIC_URL}/reel-cover-halloween.png`} download="mikilab-halloween.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> Halloween
+                <a data-testid="promuovi-cover-halloween" href={`${process.env.PUBLIC_URL}/reel-cover-halloween.png`} download="mikilab-halloween.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> Halloween
                 </a>
-                <a data-testid="promuovi-cover-ferragosto" href={`${process.env.PUBLIC_URL}/reel-cover-ferragosto.png`} download="mikilab-ferragosto.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Ferragosto", "Mariä Himmelfahrt", "Ferragosto (Aug 15)", "Ferragosto (15 ago)", "Ferragosto (15 août)", "فراگوستو")}
+                <a data-testid="promuovi-cover-ferragosto" href={`${process.env.PUBLIC_URL}/reel-cover-ferragosto.png`} download="mikilab-ferragosto.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> {L("Ferragosto", "Mariä Himmelfahrt", "Ferragosto (Aug 15)", "Ferragosto (15 ago)", "Ferragosto (15 août)", "فراگوستو")}
                 </a>
-                <a data-testid="promuovi-cover-carnevale" href={`${process.env.PUBLIC_URL}/reel-cover-carnevale.png`} download="mikilab-carnevale.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Carnevale", "Karneval", "Carnival", "Carnaval", "Carnaval", "کارناوال")}
+                <a data-testid="promuovi-cover-carnevale" href={`${process.env.PUBLIC_URL}/reel-cover-carnevale.png`} download="mikilab-carnevale.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> {L("Carnevale", "Karneval", "Carnival", "Carnaval", "Carnaval", "کارناوال")}
                 </a>
-                <a data-testid="promuovi-cover-mamma" href={`${process.env.PUBLIC_URL}/reel-cover-mamma.png`} download="mikilab-festa-mamma.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
-                  <Download className="w-4 h-4 text-[#ff6b00]" /> {L("Festa Mamma", "Muttertag", "Mother's Day", "Día de la Madre", "Fête des Mères", "روز مادر")}
+                <a data-testid="promuovi-cover-mamma" href={`${process.env.PUBLIC_URL}/reel-cover-mamma.png`} download="mikilab-festa-mamma.png" className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95">
+                  <Download className="w-4 h-4 text-[#c94f00]" /> {L("Festa Mamma", "Muttertag", "Mother's Day", "Día de la Madre", "Fête des Mères", "روز مادر")}
                 </a>
               </div>
             </div>
@@ -363,7 +363,7 @@ export default function PromuoviMikiLab() {
             <p className="text-sm font-bold text-white leading-tight">{L("QR del sito", "Website-QR", "Website QR", "QR del sitio", "QR du site", "کد QR سایت")}</p>
             <p className="text-[12px] text-[#AEB8BF] leading-snug mb-2">{L("Stampalo per il forno, i volantini e la vetrina.", "Für Backstube, Flyer und Schaufenster.", "Print it for the bakery, flyers and window.", "Imprímelo para el horno y los folletos.", "Imprime-le pour la boulangerie et les flyers.", "برای نانوایی و بروشور چاپش کن.")}</p>
             <a data-testid="promuovi-qr-download" href={`${process.env.PUBLIC_URL}/qr-mikilab.png`} download="qr-mikilab.png"
-              className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95">
+              className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#c94f00] border border-[#c94f00]/40 rounded-full px-3 py-1.5 active:scale-95">
               <Download className="w-3.5 h-3.5" /> {L("Scarica QR", "QR laden", "Download QR", "Descargar QR", "Télécharger QR", "دانلود QR")}
             </a>
           </div>
@@ -376,43 +376,43 @@ export default function PromuoviMikiLab() {
           <div className="flex items-center gap-1.5 mb-2">
             {FLYER_LANGS.map(({ k, f }) => (
               <button key={k} data-testid={`flyer-lang-${k}`} onClick={() => setFlyerLang(k)}
-                className={`text-[13px] rounded-lg px-2 py-1 border transition-all active:scale-95 ${flyerLang === k ? "bg-[#ff6b00] border-[#ff6b00]" : "bg-[#181818] border-[#2e2e2e] opacity-70 hover:opacity-100"}`}>
+                className={`text-[13px] rounded-lg px-2 py-1 border transition-all active:scale-95 ${flyerLang === k ? "bg-[#c94f00] border-[#c94f00]" : "bg-[#181818] border-[#2e2e2e] opacity-70 hover:opacity-100"}`}>
                 {f} <span className="uppercase text-[10px] font-bold text-white/90">{k}</span>
               </button>
             ))}
           </div>
           <div className="flex items-center gap-1.5 mb-2.5">
             <button data-testid="flyer-orient-v" onClick={() => setFlyerOrient("v")}
-              className={`text-[12px] font-bold rounded-lg px-2.5 py-1 border transition-all active:scale-95 ${flyerOrient === "v" ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#181818] text-white/80 border-[#2e2e2e]"}`}>
+              className={`text-[12px] font-bold rounded-lg px-2.5 py-1 border transition-all active:scale-95 ${flyerOrient === "v" ? "bg-[#c94f00] text-[#121212] border-[#c94f00]" : "bg-[#181818] text-white/80 border-[#2e2e2e]"}`}>
               {L("Verticale", "Hochformat", "Vertical", "Vertical", "Vertical", "عمودی")}
             </button>
             <button data-testid="flyer-orient-h" onClick={() => setFlyerOrient("h")}
-              className={`text-[12px] font-bold rounded-lg px-2.5 py-1 border transition-all active:scale-95 ${flyerOrient === "h" ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#181818] text-white/80 border-[#2e2e2e]"}`}>
+              className={`text-[12px] font-bold rounded-lg px-2.5 py-1 border transition-all active:scale-95 ${flyerOrient === "h" ? "bg-[#c94f00] text-[#121212] border-[#c94f00]" : "bg-[#181818] text-white/80 border-[#2e2e2e]"}`}>
               {L("Orizzontale", "Querformat", "Horizontal", "Horizontal", "Horizontal", "افقی")}
             </button>
           </div>
           {/* Personalizza con il nome del forno (sopra il QR) */}
           <input data-testid="flyer-bakery-name" value={bakeryName} onChange={(e) => setBakeryName(e.target.value)}
             maxLength={26} placeholder={L("Il tuo nome (forno, pizzeria, pasticceria, privato…)", "Dein Name (Bäckerei, Pizzeria, Konditorei, privat…)", "Your name (bakery, pizzeria, pastry, private…)", "Tu nombre (horno, pizzería, pastelería, privado…)", "Ton nom (boulangerie, pizzeria, pâtisserie, privé…)", "نام تو (نانوایی، پیتزریا، قنادی، شخصی…)")}
-            className="w-full bg-[#181818] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 text-sm text-white outline-none focus:border-[#ff6b00] mb-2.5" />
+            className="w-full bg-[#181818] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 text-sm text-white outline-none focus:border-[#c94f00] mb-2.5" />
           <div className="flex items-center gap-3">
             <button data-testid="promuovi-flyer-preview" onClick={() => setFlyerBig(true)}
-              className="shrink-0 rounded-2xl shadow-md border border-amber-900/40 overflow-hidden border border-[#2e2e2e] hover:border-[#ff6b00] transition-all active:scale-95">
+              className="shrink-0 rounded-2xl shadow-md border border-amber-900/40 overflow-hidden border border-[#2e2e2e] hover:border-[#c94f00] transition-all active:scale-95">
               <img src={displayFlyer} alt="Locandina MikiLab" className={`${flyerOrient === "h" ? "w-[130px] h-[86px]" : "w-[72px] h-[102px]"} object-cover`} loading="lazy"
                 onError={(e) => { const fb = `${process.env.PUBLIC_URL}/locandina-mikilab.png`; if (e.currentTarget.src !== fb) e.currentTarget.src = fb; }} />
             </button>
             <div className="flex-1 min-w-0 flex flex-wrap gap-2">
               <a data-testid="promuovi-flyer-download" href={displayFlyer} download={flyerFile}
-                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#ff6b00] rounded-full px-3 py-1.5 active:scale-95">
+                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#121212] bg-[#c94f00] rounded-full px-3 py-1.5 active:scale-95">
                 <Download className="w-3.5 h-3.5" /> {L("Scarica", "Laden", "Download", "Descargar", "Télécharger", "دانلود")}
               </a>
               <button data-testid="promuovi-flyer-share" onClick={shareFlyer}
-                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3 py-1.5 active:scale-95">
+                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#c94f00] border border-[#c94f00]/40 rounded-full px-3 py-1.5 active:scale-95">
                 <Share2 className="w-3.5 h-3.5" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
               </button>
               <button data-testid="promuovi-flyer-tiktok" onClick={publishTikTok}
                 className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-[#010101] border border-[#2e2e2e] rounded-full px-3 py-1.5 active:scale-95">
-                <Music2 className="w-3.5 h-3.5 text-[#ff6b00]" /> {L("Pubblica su TikTok", "Auf TikTok posten", "Post on TikTok", "Publicar en TikTok", "Publier sur TikTok", "انتشار در تیک‌تاک")}
+                <Music2 className="w-3.5 h-3.5 text-[#c94f00]" /> {L("Pubblica su TikTok", "Auf TikTok posten", "Post on TikTok", "Publicar en TikTok", "Publier sur TikTok", "انتشار در تیک‌تاک")}
               </button>
               <p className="w-full text-[11px] text-[#7E8A93]">{L("Formato A5 · pronta da stampare", "Format A5 · druckfertig", "A5 format · ready to print", "Formato A5 · lista para imprimir", "Format A5 · prête à imprimer", "قطع A5 · آمادهٔ چاپ")}</p>
             </div>
@@ -427,17 +427,17 @@ export default function PromuoviMikiLab() {
             {POSTS.map((p, i) => (
               <div key={p.file} data-testid={`promuovi-post-${i}`} className="shrink-0 w-[112px]">
                 <button onClick={() => setPostBig(`${process.env.PUBLIC_URL}/${p.file}`)}
-                  className="block rounded-2xl shadow-md border border-amber-900/40 overflow-hidden border border-[#2e2e2e] hover:border-[#ff6b00] transition-all active:scale-95">
+                  className="block rounded-2xl shadow-md border border-amber-900/40 overflow-hidden border border-[#2e2e2e] hover:border-[#c94f00] transition-all active:scale-95">
                   <img src={`${process.env.PUBLIC_URL}/${p.file}`} alt={p.label} className="w-[112px] h-[160px] object-cover" loading="lazy" />
                 </button>
                 <p className="text-[11px] text-white/90 font-semibold text-center mt-1 truncate">{p.label}</p>
                 <div className="flex gap-1 mt-1">
                   <a data-testid={`post-download-${i}`} href={`${process.env.PUBLIC_URL}/${p.file}`} download={p.file}
-                    className="flex-1 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-[#121212] bg-[#ff6b00] rounded-full py-1 active:scale-95">
+                    className="flex-1 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-[#121212] bg-[#c94f00] rounded-full py-1 active:scale-95">
                     <Download className="w-3 h-3" />
                   </a>
                   <button data-testid={`post-share-${i}`} onClick={() => sharePoster(p.file)}
-                    className="flex-1 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full py-1 active:scale-95">
+                    className="flex-1 inline-flex items-center justify-center gap-1 text-[11px] font-bold text-[#c94f00] border border-[#c94f00]/40 rounded-full py-1 active:scale-95">
                     <Share2 className="w-3 h-3" />
                   </button>
                 </div>
@@ -468,15 +468,15 @@ export default function PromuoviMikiLab() {
 
         {/* Seguici — TikTok è il canale ufficiale principale (grande e centrale) */}
         <div data-testid="promuovi-follow">
-          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#ff6b00] mb-2 text-center">{L("Seguici", "Folge uns", "Follow us", "Síguenos", "Suis-nous", "ما را دنبال کن")}</p>
+          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#c94f00] mb-2 text-center">{L("Seguici", "Folge uns", "Follow us", "Síguenos", "Suis-nous", "ما را دنبال کن")}</p>
           <a data-testid="promuovi-social-tiktok" href={tiktokUrl} target="_blank" rel="noreferrer"
             onClick={() => communityApi.socialClick("tiktok")}
-            className="group flex flex-col items-center gap-1.5 rounded-2xl bg-gradient-to-b from-[#1c1c1c] to-[#121212] border border-[#2e2e2e] hover:border-[#ff6b00] px-5 py-5 active:scale-[0.98] transition-all">
-            <span className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#ff6b00] group-hover:scale-105 transition-transform">
+            className="group flex flex-col items-center gap-1.5 rounded-2xl bg-gradient-to-b from-[#1c1c1c] to-[#121212] border border-[#2e2e2e] hover:border-[#c94f00] px-5 py-5 active:scale-[0.98] transition-all">
+            <span className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[#c94f00] group-hover:scale-105 transition-transform">
               <Music2 className="w-7 h-7 text-[#121212]" />
             </span>
             <span className="text-lg font-extrabold text-white leading-tight">TikTok</span>
-            <span className="text-[13px] font-semibold text-[#ff6b00]">@{ttHandle}</span>
+            <span className="text-[13px] font-semibold text-[#c94f00]">@{ttHandle}</span>
             <span className="text-[11px] text-[#AEB8BF]">{L("Il canale ufficiale di MikiLab", "Der offizielle MikiLab-Kanal", "The official MikiLab channel", "El canal oficial de MikiLab", "La chaîne officielle de MikiLab", "کانال رسمی MikiLab")}</span>
           </a>
           {activeSocials.length > 0 && (
@@ -484,7 +484,7 @@ export default function PromuoviMikiLab() {
               {activeSocials.map(({ key, Icon, label, color }) => (
                 <a key={key} data-testid={`promuovi-social-${key}`} href={socialUrls[key]} target="_blank" rel="noreferrer"
                   onClick={() => communityApi.socialClick(key)}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#121212] border border-[#2e2e2e] px-3.5 py-2 text-sm font-semibold text-white active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+                  className="inline-flex items-center gap-2 rounded-full bg-[#121212] border border-[#2e2e2e] px-3.5 py-2 text-sm font-semibold text-white active:scale-95 hover:border-[#c94f00]/60 transition-all">
                   <Icon className="w-4 h-4" style={{ color }} /> {label}
                 </a>
               ))}

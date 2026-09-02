@@ -42,7 +42,7 @@ export default function MyData({ onOpenTool }) {
       <div className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#181818] p-1.5 rounded-2xl mb-4 border border-[#2e2e2e] dark:border-[#2e2e2e]">
         {TABS.map(({ id, Icon, label, n }) => (
           <button key={id} data-testid={`mydata-tab-${id}`} onClick={() => setTab(id)}
-            className={`flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-semibold transition-all ${tab === id ? "bg-[#ff6b00] text-white shadow" : "text-[#7E8A93]"}`}>
+            className={`flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-semibold transition-all ${tab === id ? "bg-[#c94f00] text-white shadow" : "text-[#7E8A93]"}`}>
             <Icon className="w-4 h-4" />
             <span className="leading-tight text-center">{label}{n != null ? ` (${n})` : ""}</span>
           </button>
@@ -54,9 +54,9 @@ export default function MyData({ onOpenTool }) {
           {plans.length === 0 ? <Empty text={tri("Nessun piano salvato. Salvane uno dal Piano Settimanale o dal Piano IA.", "Keine Pläne. Speichere einen im Wochenplan oder KI-Plan.", "No saved plans. Save one from the Weekly or AI plan.")} /> :
             plans.map((p) => (
               <div key={p.id} className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.kind === "capo" ? "bg-[#ff6b00]/15 text-[#ff6b00] dark:text-[#8FB0C2]" : "bg-[#ff6b00]/15 text-[#ff6b00] dark:text-[#a9d2ec]"}`}>{p.kind === "capo" ? tri("Piano IA", "KI-Plan", "AI Plan") : tri("Settimanale", "Woche", "Weekly")}</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${p.kind === "capo" ? "bg-[#c94f00]/15 text-[#c94f00] dark:text-[#8FB0C2]" : "bg-[#c94f00]/15 text-[#c94f00] dark:text-[#a9d2ec]"}`}>{p.kind === "capo" ? tri("Piano IA", "KI-Plan", "AI Plan") : tri("Settimanale", "Woche", "Weekly")}</span>
                 <div className="min-w-0 flex-1"><p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{p.name}</p><p className="text-[11px] text-[#7E8A93] flex items-center gap-1"><Clock className="w-3 h-3" />{fmt(p.created_at)}</p></div>
-                <button data-testid={`mydata-open-plan-${p.id}`} onClick={() => onOpenTool && onOpenTool(p.kind === "capo" ? "pianoai" : "settimana")} className="text-xs font-semibold text-[#ff6b00]">{tri("Apri", "Öffnen", "Open")}</button>
+                <button data-testid={`mydata-open-plan-${p.id}`} onClick={() => onOpenTool && onOpenTool(p.kind === "capo" ? "pianoai" : "settimana")} className="text-xs font-semibold text-[#c94f00]">{tri("Apri", "Öffnen", "Open")}</button>
               </div>
             ))}
         </div>
@@ -116,12 +116,12 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
   return (
     <div data-testid={`mydata-chat-${chat.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
       <div className="flex items-center gap-2 p-3">
-        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-[#ff6b00]" /></div>
+        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/15 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-[#c94f00]" /></div>
         <button data-testid={`mydata-chat-toggle-${chat.id}`} onClick={toggle} className="min-w-0 flex-1 text-left">
           <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{label}</p>
           <p className="text-[11px] text-[#7E8A93] flex items-center gap-1"><Clock className="w-3 h-3" />{fmt(chat.ts)}</p>
         </button>
-        <button data-testid={`mydata-chat-delete-${chat.id}`} onClick={onDelete} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#ff6b00] shrink-0"><Trash2 className="w-4 h-4" /></button>
+        <button data-testid={`mydata-chat-delete-${chat.id}`} onClick={onDelete} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#c94f00] shrink-0"><Trash2 className="w-4 h-4" /></button>
         <button onClick={toggle} className="w-8 h-8 rounded-lg flex items-center justify-center text-[#7E8A93] shrink-0"><ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} /></button>
       </div>
       {open && (
@@ -131,7 +131,7 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
           ) : (msgs && msgs.length > 0) ? (
             msgs.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#ff6b00] text-white whitespace-pre-wrap" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8]"}`}>
+                <div className={`markdown-body max-w-[85%] rounded-2xl px-3 py-2 text-sm ${m.role === "user" ? "bg-[#c94f00] text-white whitespace-pre-wrap" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8]"}`}>
                   {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
                 </div>
               </div>

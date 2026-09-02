@@ -51,7 +51,7 @@ export default function Onboarding({ onDone }) {
           <div className="grid grid-cols-2 gap-2">
             {TYPES.map((tp) => (
               <button key={tp.id} data-testid={`ob-type-${tp.id}`} onClick={() => set({ type: tp.id })}
-                className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${p.type === tp.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tp.label}</button>
+                className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${p.type === tp.id ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{tp.label}</button>
             ))}
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function Onboarding({ onDone }) {
         <div className="flex flex-wrap gap-2">
           {EQUIP.map((e) => (
             <button key={e.id} data-testid={`ob-equip-${e.id}`} onClick={() => toggleEquip(e.id)}
-              className={`px-3 py-2 rounded-full text-sm font-semibold border ${p.equip.includes(e.id) ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              className={`px-3 py-2 rounded-full text-sm font-semibold border ${p.equip.includes(e.id) ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               {p.equip.includes(e.id) && <Check className="w-3.5 h-3.5 inline mr-1" />}{e.label}
             </button>
           ))}
@@ -76,7 +76,7 @@ export default function Onboarding({ onDone }) {
         <div className="grid grid-cols-2 gap-2">
           {FOCUS.map((f) => (
             <button key={f.id} data-testid={`ob-focus-${f.id}`} onClick={() => set({ focus: f.id })}
-              className={`px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${p.focus === f.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{f.label}</button>
+              className={`px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border ${p.focus === f.id ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>{f.label}</button>
           ))}
         </div>
       ),
@@ -88,11 +88,11 @@ export default function Onboarding({ onDone }) {
     <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-3" data-testid="onboarding">
       <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full max-w-md bg-white dark:bg-[#121212] rounded-3xl p-6 shadow-2xl">
         <div className="flex items-center gap-2 mb-1">
-          {STEPS.map((_, i) => <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-[#ff6b00]" : "bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />)}
+          {STEPS.map((_, i) => <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-[#c94f00]" : "bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />)}
         </div>
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mt-3">{tri("Passo", "Schritt", "Step")} {step + 1}/3</p>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[#c94f00] mt-3">{tri("Passo", "Schritt", "Step")} {step + 1}/3</p>
         <div className="flex items-center gap-2 mb-4">
-          <cur.icon className="w-6 h-6 text-[#ff6b00]" />
+          <cur.icon className="w-6 h-6 text-[#c94f00]" />
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{cur.title}</h2>
         </div>
         <AnimatePresence mode="wait">
@@ -104,12 +104,12 @@ export default function Onboarding({ onDone }) {
           <button data-testid="ob-skip" onClick={finish} className="text-sm text-[#7E8A93]">{tri("Salta", "Überspringen", "Skip")}</button>
           {step < 2 ? (
             <button data-testid="ob-next" onClick={() => setStep((x) => x + 1)}
-              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold">
+              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold">
               {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
             </button>
           ) : (
             <button data-testid="ob-finish" onClick={finish}
-              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold">
+              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold">
               <Check className="w-5 h-5" /> {tri("Inizia!", "Los geht's!", "Start!")}
             </button>
           )}

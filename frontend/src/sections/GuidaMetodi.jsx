@@ -42,10 +42,10 @@ export default function GuidaMetodi() {
   const [open, setOpen] = useState("poolish");
   return (
     <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#c94f00] to-[#c94f00] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#ff6b00]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#ff6b00]" /><div className="flex-1 bg-[#ff6b00]" />
+          <div className="flex-1 bg-[#c94f00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#c94f00]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#c94f00]" /><div className="flex-1 bg-[#c94f00]" />
         </div>
         <HeroAvatar />
         <BookOpen className="w-7 h-7 mb-2" />
@@ -63,7 +63,7 @@ export default function GuidaMetodi() {
                 className="w-full flex items-center gap-3 p-4 text-left">
                 <span className="text-2xl">{s.icon}</span>
                 <span className="flex-1 font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{c.title}</span>
-                <ChevronDown className={`w-5 h-5 text-[#ff6b00] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <ChevronDown className={`w-5 h-5 text-[#c94f00] transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
               <AnimatePresence initial={false}>
                 {isOpen && (

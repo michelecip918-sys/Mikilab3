@@ -48,29 +48,29 @@ export default function TimetableLievitazione() {
   return (
     <div data-testid="timetable-lievitazione" className="pb-8">
       <div className="flex items-center gap-2 mb-1">
-        <Clock className="w-6 h-6 text-[#ff6b00]" />
+        <Clock className="w-6 h-6 text-[#c94f00]" />
         <h1 className="font-display text-2xl font-extrabold text-white leading-tight">{tri("Timetable Lievitazione", "Gär-Timetable", "Fermentation Timetable")}</h1>
       </div>
       <p className="text-[13px] text-[#AEB8BF] leading-snug mb-4">{tri("Fasi in sequenza: ogni fase parte quando finisce la precedente.", "Phasen nacheinander: jede Phase startet, wenn die vorige endet.", "Sequential phases: each starts when the previous ends.")}</p>
 
       <div className="rounded-2xl bg-[#1e1e1e] border border-[#2e2e2e] p-4 mb-4">
-        <label className="text-[12px] font-bold uppercase tracking-wide text-[#ff6b00]">{tri("Orario di inizio", "Startzeit", "Start time")}</label>
+        <label className="text-[12px] font-bold uppercase tracking-wide text-[#c94f00]">{tri("Orario di inizio", "Startzeit", "Start time")}</label>
         <input data-testid="timetable-start" type="time" value={start} onChange={(e) => setStart(e.target.value || nowHM())}
-          className="ml-3 font-mono-data text-lg font-extrabold text-white bg-[#121212] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-1.5 outline-none focus:border-[#ff6b00]" />
+          className="ml-3 font-mono-data text-lg font-extrabold text-white bg-[#121212] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-1.5 outline-none focus:border-[#c94f00]" />
       </div>
 
       <div className="space-y-2">
         {rows.map((r, i) => (
           <div key={i} data-testid={`timetable-row-${i}`} className="flex items-center gap-2 rounded-2xl bg-[#1e1e1e] border border-[#2e2e2e] p-3">
-            <span className="w-7 h-7 rounded-full bg-[#ff6b00] text-white text-[13px] font-extrabold flex items-center justify-center shrink-0">{i + 1}</span>
+            <span className="w-7 h-7 rounded-full bg-[#c94f00] text-white text-[13px] font-extrabold flex items-center justify-center shrink-0">{i + 1}</span>
             <div className="flex-1 min-w-0">
               <input data-testid={`timetable-name-${i}`} value={r.name} onChange={(e) => setPhase(i, { name: e.target.value })}
-                className="w-full bg-transparent text-white font-semibold text-[15px] outline-none border-b border-transparent focus:border-[#ff6b00]/50" />
+                className="w-full bg-transparent text-white font-semibold text-[15px] outline-none border-b border-transparent focus:border-[#c94f00]/50" />
               <p className="text-[12px] text-[#8FB0C2] font-mono-data mt-0.5">{r.start} → {r.end} <span className="text-[#7E8A93]">· {fmtDur(Number(r.min) || 0)}</span></p>
             </div>
             <div className="flex items-center gap-1 shrink-0">
               <input data-testid={`timetable-min-${i}`} type="number" min="0" step="5" value={r.min} onChange={(e) => setPhase(i, { min: e.target.value })}
-                className="w-16 text-right font-mono-data text-sm font-bold text-[#ff6b00] bg-[#121212] border border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none" />
+                className="w-16 text-right font-mono-data text-sm font-bold text-[#c94f00] bg-[#121212] border border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none" />
               <span className="text-[11px] text-[#7E8A93]">min</span>
               <button data-testid={`timetable-del-${i}`} onClick={() => del(i)} className="ml-1 w-8 h-8 rounded-lg bg-[#121212] border border-[#2e2e2e] flex items-center justify-center text-[#7E8A93] active:scale-90"><Trash2 className="w-4 h-4" /></button>
             </div>
@@ -79,11 +79,11 @@ export default function TimetableLievitazione() {
       </div>
 
       <div className="flex items-center gap-2 mt-3">
-        <button data-testid="timetable-add" onClick={addPhase} className="flex items-center gap-1.5 text-sm font-semibold text-[#ff6b00] border border-[#ff6b00]/40 rounded-full px-3.5 py-2 active:scale-95"><Plus className="w-4 h-4" /> {tri("Aggiungi fase", "Phase hinzufügen", "Add phase")}</button>
+        <button data-testid="timetable-add" onClick={addPhase} className="flex items-center gap-1.5 text-sm font-semibold text-[#c94f00] border border-[#c94f00]/40 rounded-full px-3.5 py-2 active:scale-95"><Plus className="w-4 h-4" /> {tri("Aggiungi fase", "Phase hinzufügen", "Add phase")}</button>
         <button data-testid="timetable-reset" onClick={reset} className="flex items-center gap-1.5 text-sm font-semibold text-[#AEB8BF] border border-[#2e2e2e] rounded-full px-3.5 py-2 active:scale-95"><RotateCcw className="w-4 h-4" /> {tri("Reimposta", "Zurücksetzen", "Reset")}</button>
       </div>
 
-      <div data-testid="timetable-summary" className="mt-4 rounded-2xl bg-gradient-to-br from-[#ff6b00] to-[#c94f00] text-white p-4 flex items-center justify-between">
+      <div data-testid="timetable-summary" className="mt-4 rounded-2xl bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white p-4 flex items-center justify-between">
         <div>
           <p className="text-[12px] uppercase tracking-wide font-bold text-white/85">{tri("Durata totale", "Gesamtdauer", "Total time")}</p>
           <p className="font-display text-2xl font-extrabold">{fmtDur(totalMin)}</p>

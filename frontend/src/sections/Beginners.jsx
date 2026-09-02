@@ -93,7 +93,7 @@ function HomePlanner() {
 
   return (
     <div data-testid="home-planner" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
-      <div className="flex items-center gap-2 mb-1 text-[#ff6b00]">
+      <div className="flex items-center gap-2 mb-1 text-[#c94f00]">
         <ChefHat className="w-5 h-5" />
         <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("home_plan_title")}</h3>
       </div>
@@ -109,20 +109,20 @@ function HomePlanner() {
             </div>
             <input data-testid={`home-product-qty-${i}`} type="number" value={p.qty} placeholder={t("capo_qty")}
               onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, qty: e.target.value } : x))}
-              className="w-16 shrink-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 px-2 text-sm font-medium text-center outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all" />
+              className="w-16 shrink-0 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 px-2 text-sm font-medium text-center outline-none focus:border-[#c94f00] focus:ring-2 focus:ring-[#c94f00]/30 transition-all" />
             <div className="relative w-24 shrink-0">
               <select data-testid={`home-product-day-${i}`} value={p.day || ""}
                 onChange={(e) => setProducts((l) => l.map((x, k) => k === i ? { ...x, day: e.target.value } : x))}
-                className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-8 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] focus:ring-2 focus:ring-[#ff6b00]/30 transition-all cursor-pointer">
+                className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-8 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#c94f00] focus:ring-2 focus:ring-[#c94f00]/30 transition-all cursor-pointer">
                 {HOME_DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
               </select>
-              <ChevronDown className="w-4 h-4 text-[#ff6b00] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-4 h-4 text-[#c94f00] absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
-            {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#ff6b00] p-1 shrink-0"><X className="w-4 h-4" /></button>}
+            {products.length > 1 && <button onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#c94f00] p-1 shrink-0"><X className="w-4 h-4" /></button>}
           </div>
         ))}
         <div className="flex flex-wrap items-center gap-3 mt-1">
-          <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#ff6b00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
+          <button data-testid="home-product-add" onClick={() => setProducts((l) => [...l, { recipe_id: "", qty: "2", gpp: "500", day: "" }])} className="text-sm font-medium text-[#c94f00] flex items-center gap-1"><Plus className="w-4 h-4" /> {t("capo_add_product")}</button>
           <div className="w-full sm:w-auto sm:min-w-[190px]">
             <CategoryRecipePicker recipes={recipes} multi onAddMany={addRecipesHome}
               quickAdd={{ qty: true, day: true, defaultQty: "2" }}
@@ -133,22 +133,22 @@ function HomePlanner() {
 
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93] mt-3 block">{t("home_when")}</label>
       <input data-testid="home-when" value={when} placeholder={t("home_when_ph")} onChange={(e) => setWhen(e.target.value)}
-        className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+        className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#c94f00]" />
 
       <button data-testid="home-generate" onClick={generate} disabled={generating}
-        className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="mt-3 w-full bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("home_generate")}
       </button>
 
       {plan && (
         <>
           <button data-testid="home-print" onClick={() => window.print()}
-            className="no-print mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="no-print mt-3 w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Printer className="w-5 h-5" /> {t("capo_print")}
           </button>
           <div className="print-area mt-4 space-y-4">
             <div data-testid="home-plan" className="markdown-body bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{t("home_plan_result")}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-[#c94f00] mb-2">{t("home_plan_result")}</p>
               <ReactMarkdown>{plan}</ReactMarkdown>
             </div>
             <SupplierOrder totals={shopTotals} />
@@ -283,7 +283,7 @@ function BakerQuiz() {
   };
 
   const record = best > 0 && (
-    <p data-testid="quiz-best" className="text-xs font-semibold text-[#ff6b00] flex items-center justify-center gap-1 mb-2">
+    <p data-testid="quiz-best" className="text-xs font-semibold text-[#c94f00] flex items-center justify-center gap-1 mb-2">
       <Trophy className="w-3.5 h-3.5" /> {lang === "de" ? `Dein Rekord: ${best}/${questions.length}` : lang === "es" ? `Tu récord: ${best}/${questions.length}` : lang === "en" ? `Your record: ${best}/${questions.length}` : `Il tuo record: ${best}/${questions.length}`}
     </p>
   );
@@ -292,7 +292,7 @@ function BakerQuiz() {
     return (
       <div>
         {record}
-        <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
           <Trophy className="w-5 h-5" /> {t("quiz_start")}
         </button>
       </div>
@@ -302,13 +302,13 @@ function BakerQuiz() {
   if (done) {
     const msg = score >= 4 ? t("quiz_result_great") : score >= 2 ? t("quiz_result_good") : t("quiz_result_keep");
     return (
-      <div data-testid="quiz-result" className="text-center bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-2xl p-6">
-        <Trophy className="w-10 h-10 text-[#ff6b00] mx-auto mb-2" />
+      <div data-testid="quiz-result" className="text-center bg-[#c94f00]/12 border border-[#c94f00]/30 rounded-2xl p-6">
+        <Trophy className="w-10 h-10 text-[#c94f00] mx-auto mb-2" />
         <p className="text-sm text-[#7E8A93]">{t("quiz_your_score")}</p>
         <p className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8] my-1">{score} / {questions.length}</p>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-2">{msg}</p>
         {record}
-        <button data-testid="quiz-restart-btn" onClick={start} className="inline-flex items-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40">
+        <button data-testid="quiz-restart-btn" onClick={start} className="inline-flex items-center gap-2 bg-[#c94f00] text-white font-semibold px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40">
           <RotateCcw className="w-4 h-4" /> {t("quiz_restart")}
         </button>
       </div>
@@ -318,21 +318,21 @@ function BakerQuiz() {
   const cur = questions[idx];
   return (
     <div data-testid="quiz-panel" className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
-      <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1">{t("quiz_question")} {idx + 1} / {questions.length}</p>
+      <p className="text-[10px] font-bold uppercase tracking-wide text-[#c94f00] mb-1">{t("quiz_question")} {idx + 1} / {questions.length}</p>
       <h4 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-3">{cur.q}</h4>
       <div className="space-y-2">
         {cur.options.map((opt, i) => {
           const isCorrect = i === cur.correct;
           const chosen = picked === i;
           let cls = "bg-[#e4eff8] dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]";
-          if (picked != null && isCorrect) cls = "bg-[#ff6b00]/20 border-[#ff6b00]";
-          else if (picked != null && chosen && !isCorrect) cls = "bg-[#ff6b00]/15 border-[#ff6b00]";
+          if (picked != null && isCorrect) cls = "bg-[#c94f00]/20 border-[#c94f00]";
+          else if (picked != null && chosen && !isCorrect) cls = "bg-[#c94f00]/15 border-[#c94f00]";
           return (
             <button key={i} data-testid={`quiz-option-${i}`} onClick={() => choose(i)} disabled={picked != null}
               className={`w-full flex items-center gap-2 text-left text-sm px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border transition-all ${cls}`}>
               <span className="flex-1 text-[#2B303B] dark:text-[#e4eff8]">{opt}</span>
-              {picked != null && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#ff6b00] shrink-0" />}
-              {picked != null && chosen && !isCorrect && <XCircle className="w-4 h-4 text-[#ff6b00] shrink-0" />}
+              {picked != null && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#c94f00] shrink-0" />}
+              {picked != null && chosen && !isCorrect && <XCircle className="w-4 h-4 text-[#c94f00] shrink-0" />}
             </button>
           );
         })}
@@ -342,7 +342,7 @@ function BakerQuiz() {
           <p className="text-sm font-medium text-[#3F4A54] dark:text-[#AEB8BF]">
             {picked === cur.correct ? t("quiz_correct") : `${t("quiz_wrong")} ${cur.options[cur.correct]}`}
           </p>
-          <button data-testid="quiz-next-btn" onClick={next} className="shrink-0 bg-[#ff6b00] text-white font-semibold px-4 py-2 rounded-2xl shadow-md border border-amber-900/40">
+          <button data-testid="quiz-next-btn" onClick={next} className="shrink-0 bg-[#c94f00] text-white font-semibold px-4 py-2 rounded-2xl shadow-md border border-amber-900/40">
             {t("quiz_next")}
           </button>
         </div>
@@ -411,7 +411,7 @@ export default function Beginners({ onNavigate }) {
   if (riproduci) return <RiproduciRicetta onBack={() => setRiproduci(false)} onNavigate={onNavigate} />;
   if (askMaster) return (
     <div className="pb-4">
-      <button data-testid="impara-askmaster-back" onClick={() => setAskMaster(false)} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4">
+      <button data-testid="impara-askmaster-back" onClick={() => setAskMaster(false)} className="flex items-center gap-1 text-[#c94f00] font-medium mb-4">
         <ChevronRight className="w-5 h-5 rotate-180" /> {mkTri(lang)("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}
       </button>
       <MaestroSaTutto />
@@ -435,8 +435,8 @@ export default function Beginners({ onNavigate }) {
           { id: "sos", Icon: Stethoscope, label: mkTri(lang)("SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa", "SOS Pâte", "اورژانس خمیر"), act: () => setSosOpen(true) },
         ].map(({ id, Icon, label, act }) => (
           <button key={id} data-testid={`impara-quick-${id}`} onClick={act}
-            className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#1e1e1e] border border-[#ff6b00]/40 text-white active:scale-95 hover:border-[#ff6b00] transition-all">
-            <Icon className="w-4.5 h-4.5 text-[#ff6b00]" />
+            className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#1e1e1e] border border-[#c94f00]/40 text-white active:scale-95 hover:border-[#c94f00] transition-all">
+            <Icon className="w-4.5 h-4.5 text-[#c94f00]" />
             <span className="text-sm font-bold whitespace-nowrap">{label}</span>
           </button>
         ))}
@@ -472,14 +472,14 @@ export default function Beginners({ onNavigate }) {
         </div>
       </div>
 
-      <div className="rounded-2xl p-5 bg-[#ff6b00]/12 border border-[#ff6b00]/30">
+      <div className="rounded-2xl p-5 bg-[#c94f00]/12 border border-[#c94f00]/30">
         <div className="flex items-center gap-2 mb-2">
-          <Sprout className="w-5 h-5 text-[#ff6b00] dark:text-[#a9d2ec]" />
+          <Sprout className="w-5 h-5 text-[#c94f00] dark:text-[#a9d2ec]" />
           <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("beginners_title")}</h2>
         </div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">{t("beginners_intro")}</p>
         <button data-testid="impara-tour-replay" onClick={() => setTourForce((n) => n + 1)}
-          className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] bg-white dark:bg-[#1e1e1e] border border-[#ff6b00]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
+          className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec] bg-white dark:bg-[#1e1e1e] border border-[#c94f00]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
           {tri3(lang, "Come si fa?", "Wie geht's?", "How to?", "¿Cómo se hace?")}
         </button>
         {(() => {
@@ -503,10 +503,10 @@ export default function Beginners({ onNavigate }) {
       <div data-testid="beginner-path" className="rounded-2xl p-5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e]">
         <div className="flex items-center justify-between mb-1">
           <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri3(lang, "Il tuo percorso", "Dein Weg", "Your path", "Tu recorrido")}</h3>
-          <span className="text-xs font-bold text-[#ff6b00]">{doneCount}/{PATH.length}</span>
+          <span className="text-xs font-bold text-[#c94f00]">{doneCount}/{PATH.length}</span>
         </div>
         <div className="h-2 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] overflow-hidden mb-3">
-          <div className="h-full bg-[#ff6b00] transition-all" style={{ width: `${(doneCount / PATH.length) * 100}%` }} />
+          <div className="h-full bg-[#c94f00] transition-all" style={{ width: `${(doneCount / PATH.length) * 100}%` }} />
         </div>
         <div className="space-y-2">
           {PATH.map((label, i) => {
@@ -515,14 +515,14 @@ export default function Beginners({ onNavigate }) {
               <button key={i} data-testid={`beginner-step-${i}`} onClick={() => toggleStep(i)}
                 className="w-full flex items-center gap-3 text-left active:scale-99 transition-all">
                 {ok
-                  ? <CheckCircle2 className="w-6 h-6 text-[#ff6b00] shrink-0" />
+                  ? <CheckCircle2 className="w-6 h-6 text-[#c94f00] shrink-0" />
                   : <span className="w-6 h-6 rounded-full border-2 border-[#2e2e2e] dark:border-[#4a5560] flex items-center justify-center text-[11px] font-bold text-[#7E8A93] shrink-0">{i + 1}</span>}
                 <span className={`text-sm ${ok ? "line-through text-[#7E8A93]" : "text-[#3F4A54] dark:text-[#AEB8BF]"}`}>{label}</span>
               </button>
             );
           })}
         </div>
-        {doneCount === PATH.length && <p className="text-sm font-semibold text-[#ff6b00] mt-3">🎉 {tri3(lang, "Percorso completato! Sei pronto per il tuo primo pane.", "Weg abgeschlossen! Bereit für dein erstes Brot.", "Path completed! Ready for your first bread.", "¡Recorrido completado! Estás listo para tu primer pan.")}</p>}
+        {doneCount === PATH.length && <p className="text-sm font-semibold text-[#c94f00] mt-3">🎉 {tri3(lang, "Percorso completato! Sei pronto per il tuo primo pane.", "Weg abgeschlossen! Bereit für dein erstes Brot.", "Path completed! Ready for your first bread.", "¡Recorrido completado! Estás listo para tu primer pan.")}</p>}
       </div>
 
       {/* Ricetta del giorno gratis — cambia ogni giorno */}
@@ -552,15 +552,15 @@ export default function Beginners({ onNavigate }) {
 
       {/* Approfondimenti (teoria, quiz, sfida) raccolti dietro un toggle per tenere pulita la pagina */}
       <button data-testid="impara-toggle-more" onClick={() => setShowMore((v) => !v)}
-        className="w-full flex items-center justify-between gap-2 rounded-2xl px-4 py-3.5 bg-[#1e1e1e] border border-[#2e2e2e] hover:border-[#ff6b00]/50 text-white active:scale-98 transition-all text-left">
+        className="w-full flex items-center justify-between gap-2 rounded-2xl px-4 py-3.5 bg-[#1e1e1e] border border-[#2e2e2e] hover:border-[#c94f00]/50 text-white active:scale-98 transition-all text-left">
         <span className="flex items-center gap-2.5">
-          <span className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 border border-[#ff6b00]/30 flex items-center justify-center shrink-0"><Sprout className="w-5 h-5 text-[#ff6b00]" /></span>
+          <span className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/15 border border-[#c94f00]/30 flex items-center justify-center shrink-0"><Sprout className="w-5 h-5 text-[#c94f00]" /></span>
           <span className="min-w-0">
             <span className="block font-display text-sm font-bold leading-tight">{tri3(lang, "Approfondimenti", "Mehr lernen", "Learn more", "Más para aprender", "Pour aller plus loin")}</span>
             <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{tri3(lang, "Consigli base, Quiz del Fornaio e Sfida Bake-Along", "Basis-Tipps, Bäcker-Quiz & Bake-Along", "Basic tips, Baker's Quiz & Bake-Along", "Consejos base, Quiz del Panadero y Bake-Along")}</span>
           </span>
         </span>
-        {showMore ? <ChevronUp className="w-5 h-5 text-[#ff6b00] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#ff6b00] shrink-0" />}
+        {showMore ? <ChevronUp className="w-5 h-5 text-[#c94f00] shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#c94f00] shrink-0" />}
       </button>
 
       {showMore && (

@@ -89,7 +89,7 @@ export default function HaccpLog() {
     catch { toast.error(tri("Errore", "Fehler", "Error")); }
   };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
 
   // parsing scadenza (YYYY-MM-DD, DD/MM/YYYY, DD.MM.YYYY) → giorni residui (null se non parsabile)
   const daysToExpiry = (raw) => {
@@ -105,7 +105,7 @@ export default function HaccpLog() {
   const expBadge = (raw) => {
     const dd = daysToExpiry(raw);
     if (dd === null) return null;
-    if (dd < 0) return { color: "#ff6b00", label: tri("Scaduto", "Abgelaufen", "Expired") };
+    if (dd < 0) return { color: "#c94f00", label: tri("Scaduto", "Abgelaufen", "Expired") };
     if (dd <= 7) return { color: "#E0A458", label: tri(`Scade tra ${dd}g`, `Läuft in ${dd}T ab`, `Expires in ${dd}d`) };
     return null;
   };
@@ -114,7 +114,7 @@ export default function HaccpLog() {
   return (
     <div className="pb-40" data-testid="haccp">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><ShieldCheck className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><ShieldCheck className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Registro HACCP", "HACCP-Register", "HACCP Log")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Scansiona le materie prime prima di pesarle", "Rohstoffe vor dem Wiegen scannen", "Scan raw materials before weighing")}</p>
@@ -122,13 +122,13 @@ export default function HaccpLog() {
       </div>
 
       {!user && (
-        <button data-testid="haccp-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl mb-4">
+        <button data-testid="haccp-login" onClick={() => setAuthOpen(true)} className="w-full flex items-center justify-center gap-2 bg-[#c94f00] text-white font-semibold py-3 rounded-2xl mb-4">
           <LogIn className="w-5 h-5" /> {tri("Accedi per registrare l'HACCP", "Anmelden für HACCP", "Sign in to log HACCP")}
         </button>
       )}
 
       {scanning && (
-        <div className="relative rounded-2xl overflow-hidden mb-4 border border-[#ff6b00]" data-testid="haccp-scanner">
+        <div className="relative rounded-2xl overflow-hidden mb-4 border border-[#c94f00]" data-testid="haccp-scanner">
           <video ref={videoRef} className="w-full h-56 object-cover bg-black" muted playsInline />
           <div className="absolute inset-0 border-[3px] border-white/60 m-10 rounded-2xl shadow-md border border-amber-900/40 pointer-events-none" />
           <button data-testid="haccp-scan-close" onClick={stopScan} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-2"><X className="w-4 h-4" /></button>
@@ -137,7 +137,7 @@ export default function HaccpLog() {
       )}
 
       <div className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 mb-4 space-y-3">
-        <button data-testid="haccp-scan-btn" onClick={scanning ? stopScan : startScan} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98">
+        <button data-testid="haccp-scan-btn" onClick={scanning ? stopScan : startScan} className="w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold py-3 rounded-2xl active:scale-98">
           {scanning ? <><X className="w-5 h-5" /> {tri("Chiudi scanner", "Scanner schließen", "Close scanner")}</> : <><Camera className="w-5 h-5" /> {tri("Scansiona codice", "Code scannen", "Scan code")}</>}
         </button>
         <input data-testid="haccp-material" value={form.material} onChange={(e) => setForm((f) => ({ ...f, material: e.target.value }))} placeholder={tri("Materia prima (es. Farina Tipo 0)", "Rohstoff (z. B. Mehl Type 550)", "Raw material (e.g. Flour T0)")} className={inp} />
@@ -154,13 +154,13 @@ export default function HaccpLog() {
             <input data-testid="haccp-temp" type="number" step="0.1" value={form.temp_c} onChange={(e) => setForm((f) => ({ ...f, temp_c: e.target.value }))} placeholder={tri("Temp. °C", "Temp. °C", "Temp °C")} className="w-full bg-transparent outline-none font-mono-data text-[#2B303B] dark:text-[#e4eff8]" />
           </label>
         </div>
-        <button data-testid="haccp-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Registra nel log HACCP", "Im HACCP-Log erfassen", "Add to HACCP log")}</button>
+        <button data-testid="haccp-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Registra nel log HACCP", "Im HACCP-Log erfassen", "Add to HACCP log")}</button>
       </div>
 
       {logs.length > 0 && (
         <div data-testid="haccp-list">
           {alerts > 0 && (
-            <div data-testid="haccp-alert-banner" className="flex items-center gap-2 bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-2 text-[#ff6b00] text-sm font-semibold">
+            <div data-testid="haccp-alert-banner" className="flex items-center gap-2 bg-[#c94f00]/10 border border-[#c94f00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-2 text-[#c94f00] text-sm font-semibold">
               <AlertTriangle className="w-4 h-4 shrink-0" /> {tri(`${alerts} materia/e in scadenza o scaduta/e`, `${alerts} Rohstoff(e) bald ablaufend/abgelaufen`, `${alerts} material(s) expiring or expired`)}
             </div>
           )}
@@ -177,7 +177,7 @@ export default function HaccpLog() {
                   </p>
                   <p className="text-[11px] text-[#7E8A93] font-mono-data truncate">{[l.code, l.lot ? `${tri("lotto", "Charge", "lot")} ${l.lot}` : "", l.expiry ? `${tri("scad.", "MHD", "exp.")} ${l.expiry}` : "", l.temp_c != null ? `${l.temp_c}°C` : ""].filter(Boolean).join(" · ")}</p>
                 </div>
-                <button data-testid={`haccp-remove-${l.id}`} onClick={() => remove(l.id)} className="text-[#7E8A93] hover:text-[#ff6b00] shrink-0"><Trash2 className="w-4 h-4" /></button>
+                <button data-testid={`haccp-remove-${l.id}`} onClick={() => remove(l.id)} className="text-[#7E8A93] hover:text-[#c94f00] shrink-0"><Trash2 className="w-4 h-4" /></button>
               </div>
               );
             })}

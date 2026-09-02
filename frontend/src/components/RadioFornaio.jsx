@@ -201,7 +201,7 @@ export default function RadioFornaio() {
               onClick={() => playStation(st)}
               className={`relative flex items-center gap-2 pl-3 pr-8 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-medium text-left transition-all active:scale-98 border cursor-pointer ${
                 active
-                  ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm"
+                  ? "bg-[#c94f00] text-white border-[#c94f00] shadow-sm"
                   : "bg-white dark:bg-[#181818] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"
               }`}
             >
@@ -220,7 +220,7 @@ export default function RadioFornaio() {
                 onClick={(e) => { e.stopPropagation(); toggleFav(st.id); }}
                 className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 active:scale-90"
               >
-                <Star className={`w-4 h-4 ${isFav ? "fill-[#ff6b00] text-[#ff6b00]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
+                <Star className={`w-4 h-4 ${isFav ? "fill-[#c94f00] text-[#c94f00]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
               </button>
             </div>
           );
@@ -238,13 +238,13 @@ export default function RadioFornaio() {
         <div className="fixed inset-x-0 bottom-40 z-40 px-4 flex justify-center pointer-events-none">
           <div data-testid="radio-panel" className="pointer-events-auto w-full max-w-xl max-h-[70vh] overflow-y-auto bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-xl p-4">
             <div className="flex items-center gap-2 mb-3">
-              <Radio className="w-5 h-5 text-[#ff6b00]" />
+              <Radio className="w-5 h-5 text-[#c94f00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] leading-none">{t("radio_title")}</p>
                 <p className="text-[11px] text-[#7E8A93] mt-0.5">{t("radio_sub")}</p>
               </div>
               <button data-testid="radio-voice" onClick={listenStation}
-                className={`p-1.5 rounded-lg mr-1 ${listening ? "bg-[#ff6b00] text-white animate-pulse" : "text-[#ff6b00]"}`}
+                className={`p-1.5 rounded-lg mr-1 ${listening ? "bg-[#c94f00] text-white animate-pulse" : "text-[#c94f00]"}`}
                 aria-label="voice" title={tri("Cambia stazione a voce", "Sender per Stimme wechseln", "Change station by voice")}>
                 <Mic className="w-4 h-4" />
               </button>
@@ -256,10 +256,10 @@ export default function RadioFornaio() {
               data-testid="ambient-toggle"
               onClick={toggleAmbient}
               className={`w-full mb-3 flex items-center gap-2.5 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border text-left transition-all active:scale-98 ${
-                ambientOn ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#ff6b00]/10 text-[#ff6b00] dark:text-[#8FB0C2] border-[#ff6b00]/40"
+                ambientOn ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-[#c94f00]/10 text-[#c94f00] dark:text-[#8FB0C2] border-[#c94f00]/40"
               }`}
             >
-              <Flame className={`w-5 h-5 shrink-0 ${ambientOn ? "text-white" : "text-[#ff6b00]"}`} />
+              <Flame className={`w-5 h-5 shrink-0 ${ambientOn ? "text-white" : "text-[#c94f00]"}`} />
               <span className="flex-1 min-w-0">
                 <span className="block text-sm font-semibold">{t("ambient_fire_title")}</span>
                 <span className={`block text-[11px] ${ambientOn ? "text-white/80" : "text-[#7E8A93]"}`}>{ambientOn ? t("ambient_on") : t("ambient_off")}</span>
@@ -271,19 +271,19 @@ export default function RadioFornaio() {
                   {AMB.map((a) => (
                     <button key={a.id} data-testid={`ambient-mode-${a.id}`} onClick={() => setAmbientMode(a.id)}
                       className={`flex flex-col items-center gap-0.5 py-1.5 rounded-2xl shadow-md border border-amber-900/40 border text-[10px] font-semibold transition-all active:scale-95 ${
-                        ambientMode === a.id ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#181818] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"
+                        ambientMode === a.id ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#181818] text-[#7E8A93] border-[#2e2e2e] dark:border-[#2e2e2e]"
                       }`}>
                       <span className="text-base leading-none">{a.emoji}</span>{a.label}
                     </button>
                   ))}
                 </div>
                 <div className="flex items-center gap-2 px-1">
-                  <Flame className="w-4 h-4 text-[#ff6b00] shrink-0" />
+                  <Flame className="w-4 h-4 text-[#c94f00] shrink-0" />
                   <input
                     data-testid="ambient-volume"
                     type="range" min="0" max="1" step="0.05" value={ambientVol}
                     onChange={(e) => setAmbientVol(Number(e.target.value))}
-                    className="flex-1 accent-[#ff6b00]"
+                    className="flex-1 accent-[#c94f00]"
                   />
                 </div>
               </div>
@@ -294,10 +294,10 @@ export default function RadioFornaio() {
               data-testid="sfx-toggle"
               onClick={toggleSfx}
               className={`w-full mb-3 flex items-center gap-2.5 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border text-left transition-all active:scale-98 ${
-                sfxEnabled ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#ff6b00]/10 text-[#ff6b00] dark:text-[#d3ab6b] border-[#ff6b00]/40"
+                sfxEnabled ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-[#c94f00]/10 text-[#c94f00] dark:text-[#d3ab6b] border-[#c94f00]/40"
               }`}
             >
-              <Volume2 className={`w-5 h-5 shrink-0 ${sfxEnabled ? "text-white" : "text-[#ff6b00]"}`} />
+              <Volume2 className={`w-5 h-5 shrink-0 ${sfxEnabled ? "text-white" : "text-[#c94f00]"}`} />
               <span className="flex-1 min-w-0">
                 <span className="block text-sm font-semibold">{tri("Suoni dell'app (click)", "App-Klänge (Klick)", "App sounds (click)", "Sonidos de la app (clic)")}</span>
                 <span className={`block text-[11px] ${sfxEnabled ? "text-white/80" : "text-[#7E8A93]"}`}>{sfxEnabled ? tri("Attivi · crosta, forno, farina", "Aktiv · Kruste, Ofen, Mehl", "On · crust, oven, flour", "Activos · corteza, horno, harina") : tri("Disattivati", "Aus", "Off", "Desactivados")}</span>
@@ -305,9 +305,9 @@ export default function RadioFornaio() {
             </button>
             {sfxEnabled && (
               <div className="-mt-1 mb-3 flex items-center gap-2 px-1">
-                <Volume2 className="w-4 h-4 text-[#ff6b00] shrink-0" />
+                <Volume2 className="w-4 h-4 text-[#c94f00] shrink-0" />
                 <input data-testid="sfx-volume" type="range" min="0" max="1" step="0.05" value={sfxVolume}
-                  onChange={(e) => setSfxVol(Number(e.target.value))} className="flex-1 accent-[#ff6b00]" />
+                  onChange={(e) => setSfxVol(Number(e.target.value))} className="flex-1 accent-[#c94f00]" />
               </div>
             )}
 
@@ -315,26 +315,26 @@ export default function RadioFornaio() {
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" />
               <input data-testid="radio-search" value={q} onChange={(e) => setQ(e.target.value)}
                 placeholder={tri("Cerca una stazione…", "Sender suchen…", "Search a station…", "Buscar una emisora…")}
-                className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 pl-9 pr-9 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
+                className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 pl-9 pr-9 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]" />
               {q && <button data-testid="radio-search-clear" onClick={() => setQ("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#7E8A93] p-1"><X className="w-4 h-4" /></button>}
             </div>
 
             <button data-testid="radio-add-toggle" onClick={() => setShowAdd((v) => !v)}
-              className={`w-full mb-3 flex items-center gap-2 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border text-sm font-semibold text-left transition-all active:scale-98 ${showAdd ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-white dark:bg-[#181818] text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              className={`w-full mb-3 flex items-center gap-2 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border text-sm font-semibold text-left transition-all active:scale-98 ${showAdd ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#181818] text-[#c94f00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <Plus className="w-4 h-4 shrink-0" />
               {tri("Aggiungi la tua radio (URL)", "Eigenen Sender hinzufügen (URL)", "Add your radio (URL)", "Añade tu radio (URL)")}
             </button>
             {showAdd && (
-              <div data-testid="radio-add-form" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#ff6b00]/40 bg-[#ff6b00]/8 p-3 space-y-2">
+              <div data-testid="radio-add-form" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#c94f00]/40 bg-[#c94f00]/8 p-3 space-y-2">
                 <input data-testid="radio-add-name" value={cName} onChange={(e) => setCName(e.target.value)}
                   placeholder={tri("Nome (facoltativo)", "Name (optional)", "Name (optional)", "Nombre (opcional)")}
-                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-3 py-2 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
+                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-3 py-2 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]" />
                 <input data-testid="radio-add-url" value={cUrl} onChange={(e) => setCUrl(e.target.value)}
                   placeholder="https://…/stream.mp3"
-                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-3 py-2 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]" />
+                  className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-3 py-2 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]" />
                 <p className="text-[10.5px] text-[#7E8A93] leading-snug">{tri("Incolla il link diretto dello stream (.mp3, .aac o .m3u8).", "Füge den direkten Stream-Link ein (.mp3, .aac oder .m3u8).", "Paste the direct stream link (.mp3, .aac or .m3u8).", "Pega el enlace directo del stream (.mp3, .aac o .m3u8).")}</p>
                 <button data-testid="radio-add-save" onClick={addCustom}
-                  className="w-full bg-[#ff6b00] text-white font-semibold px-3 py-2 rounded-lg active:scale-98 text-sm">
+                  className="w-full bg-[#c94f00] text-white font-semibold px-3 py-2 rounded-lg active:scale-98 text-sm">
                   {tri("Salva e ascolta", "Speichern & hören", "Save & listen", "Guardar y escuchar")}
                 </button>
               </div>
@@ -349,7 +349,7 @@ export default function RadioFornaio() {
             <>
             {lastStation && current !== lastStation.id && (
               <button data-testid="radio-resume" onClick={() => playStation(lastStation)}
-                className="w-full flex items-center gap-2 mb-3 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 border border-[#ff6b00]/40 text-[#8a5e17] dark:text-[#e0b566] text-sm font-semibold active:scale-98">
+                className="w-full flex items-center gap-2 mb-3 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/12 border border-[#c94f00]/40 text-[#8a5e17] dark:text-[#e0b566] text-sm font-semibold active:scale-98">
                 <RotateCcw className="w-4 h-4 shrink-0" />
                 <span className="truncate">{tri("Riprendi", "Weiter", "Resume", "Reanudar")}: {lastStation.name}</span>
               </button>
@@ -363,16 +363,16 @@ export default function RadioFornaio() {
                     const isFav = favs.includes(st.id);
                     return (
                       <div key={st.id} data-testid={`radio-station-${st.id}`} onClick={() => playStation(st)}
-                        className={`relative flex items-center gap-2 pl-3 pr-12 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-medium text-left transition-all active:scale-98 border cursor-pointer ${active ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow-sm" : "bg-white dark:bg-[#181818] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                        className={`relative flex items-center gap-2 pl-3 pr-12 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-medium text-left transition-all active:scale-98 border cursor-pointer ${active ? "bg-[#c94f00] text-white border-[#c94f00] shadow-sm" : "bg-white dark:bg-[#181818] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                         {active && status === "loading" ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : active && status === "playing" ? <Square className="w-4 h-4 shrink-0 fill-current" /> : <Play className="w-4 h-4 shrink-0" />}
                         <span className="truncate">{st.name}</span>
                         <button type="button" data-testid={`radio-fav-${st.id}`} aria-label="favorite" onClick={(e) => { e.stopPropagation(); toggleFav(st.id); }}
                           className="absolute right-7 top-1/2 -translate-y-1/2 p-1 active:scale-90">
-                          <Star className={`w-4 h-4 ${isFav ? "fill-[#ff6b00] text-[#ff6b00]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
+                          <Star className={`w-4 h-4 ${isFav ? "fill-[#c94f00] text-[#c94f00]" : active ? "text-white/70" : "text-[#c9b17e]"}`} />
                         </button>
                         <button type="button" data-testid={`radio-custom-remove-${st.id}`} aria-label="remove" onClick={(e) => { e.stopPropagation(); removeCustom(st.id); }}
                           className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1 active:scale-90">
-                          <Trash2 className={`w-4 h-4 ${active ? "text-white/70" : "text-[#ff6b00]"}`} />
+                          <Trash2 className={`w-4 h-4 ${active ? "text-white/70" : "text-[#c94f00]"}`} />
                         </button>
                       </div>
                     );
@@ -390,12 +390,12 @@ export default function RadioFornaio() {
             )}
 
             {nowPlaying && (
-              <div data-testid="radio-now-playing" className="mt-1 flex items-center gap-2 bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
-                <span className={`w-2 h-2 rounded-full shrink-0 ${status === "playing" ? "bg-[#ff6b00] animate-pulse" : status === "error" ? "bg-[#ff6b00]" : "bg-[#ff6b00]"}`} />
+              <div data-testid="radio-now-playing" className="mt-1 flex items-center gap-2 bg-[#c94f00]/12 border border-[#c94f00]/30 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
+                <span className={`w-2 h-2 rounded-full shrink-0 ${status === "playing" ? "bg-[#c94f00] animate-pulse" : status === "error" ? "bg-[#c94f00]" : "bg-[#c94f00]"}`} />
                 <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] flex-1 truncate">
                   {status === "error" ? t("radio_error") : status === "loading" ? t("radio_loading") : `${t("radio_now_playing")}: ${nowPlaying.name}`}
                 </p>
-                <button data-testid="radio-stop-btn" onClick={stop} className="text-[#ff6b00] p-1"><Square className="w-4 h-4 fill-current" /></button>
+                <button data-testid="radio-stop-btn" onClick={stop} className="text-[#c94f00] p-1"><Square className="w-4 h-4 fill-current" /></button>
               </div>
             )}
 
@@ -405,7 +405,7 @@ export default function RadioFornaio() {
                 data-testid="radio-volume"
                 type="range" min="0" max="1" step="0.05" value={volume}
                 onChange={(e) => setVolume(Number(e.target.value))}
-                className="flex-1 accent-[#ff6b00]"
+                className="flex-1 accent-[#c94f00]"
               />
             </div>
           </div>
@@ -418,10 +418,10 @@ export default function RadioFornaio() {
           onClick={() => setOpen((o) => !o)}
           aria-label={t("radio_title")}
           className={`relative w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
-            status === "playing" ? "bg-[#ff6b00]" : "bg-[#ff6b00] hover:bg-[#ff6b00]"
+            status === "playing" ? "bg-[#c94f00]" : "bg-[#c94f00] hover:bg-[#c94f00]"
           }`}
         >
-          {status !== "playing" && !open && <span aria-hidden className="absolute inset-0 rounded-full bg-[#ff6b00] opacity-50 animate-ping" />}
+          {status !== "playing" && !open && <span aria-hidden className="absolute inset-0 rounded-full bg-[#c94f00] opacity-50 animate-ping" />}
           {status === "playing" ? (
             <span className="flex items-end gap-0.5 h-5 relative" aria-hidden>
               <span className="w-1 bg-white rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "60%" }} />
@@ -432,7 +432,7 @@ export default function RadioFornaio() {
             <Radio className="w-6 h-6 text-white relative" />
           )}
         </button>
-        <span className="text-[9px] font-bold text-[#ff6b00] bg-[#121212]/90 dark:bg-[#121212]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("radio_label")}</span>
+        <span className="text-[9px] font-bold text-[#c94f00] bg-[#121212]/90 dark:bg-[#121212]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("radio_label")}</span>
       </div>
     </>
   );

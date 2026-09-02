@@ -63,8 +63,8 @@ export default function NotificationBell() {
   };
 
   const renderNotif = (n) => (
-    <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] last:border-0 ${!n.read ? "bg-[#ff6b00]/5" : ""}`}>
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#ff6b00]/15 text-[#ff6b00]"}`}>
+    <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] last:border-0 ${!n.read ? "bg-[#c94f00]/5" : ""}`}>
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#c94f00]/15 text-[#c94f00]"}`}>
         {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type === "email_import" ? <Mail className="w-4 h-4" /> : n.type === "channel_post" ? <Wheat className="w-4 h-4" /> : (n.type === "bakealong" || n.type === "bakealong_win") ? <Flame className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
       </div>
       <div className="min-w-0 flex-1">
@@ -102,7 +102,7 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={panelRef}>
       <button data-testid="notif-bell" onClick={toggle}
-        className="relative w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#ff6b00] active:scale-95 transition-all"
+        className="relative w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#c94f00] active:scale-95 transition-all"
         aria-label={tri("Notifiche", "Benachrichtigungen", "Notifications")}>
         <Bell className="w-4.5 h-4.5" />
         {unread > 0 && (
@@ -122,7 +122,7 @@ export default function NotificationBell() {
                 { k: "likes", l: tri("Like", "Likes", "Likes", "Me gusta", "J'aime") },
               ].map((o) => (
                 <button key={o.k} data-testid={`notif-filter-${o.k}`} onClick={() => setNfilter(o.k)}
-                  className={`shrink-0 px-2.5 py-1 rounded-full text-[11.5px] font-bold border transition-all ${nfilter === o.k ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-transparent text-[#7E8A93] border-[#2e2e2e]"}`}>
+                  className={`shrink-0 px-2.5 py-1 rounded-full text-[11.5px] font-bold border transition-all ${nfilter === o.k ? "bg-[#c94f00] text-[#121212] border-[#c94f00]" : "bg-transparent text-[#7E8A93] border-[#2e2e2e]"}`}>
                   {o.l}
                 </button>
               ))}
@@ -135,7 +135,7 @@ export default function NotificationBell() {
               {otherItems.map((n) => renderNotif(n))}
               {Object.entries(chanByCat).map(([cat, list]) => (
                 <div key={cat} data-testid={`notif-group-${cat}`}>
-                  <p className="px-4 pt-3 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00] flex items-center gap-1 bg-[#ff6b00]/5">
+                  <p className="px-4 pt-3 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-[#c94f00] flex items-center gap-1 bg-[#c94f00]/5">
                     <Wheat className="w-3 h-3" /> {tri("Canale", "Kanal", "Channel")}: {cat} · {list.length}
                   </p>
                   {list.map((n) => renderNotif(n))}

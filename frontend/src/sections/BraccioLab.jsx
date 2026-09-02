@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones } from "lucide-react";
+import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones, PlusCircle, Wheat } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -60,7 +60,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   const deadline = shift.work_mode === "autonomia" ? autonomyDeadline(shift) : null;
 
   return (
-    <div data-testid="braccio-lab" className="flex flex-col justify-between rounded-3xl p-4" style={{ height: "calc(100vh - 200px)", minHeight: "460px", background: `radial-gradient(120% 60% at 50% -10%, #2A2012 0%, ${D.bg} 55%)`, color: D.text, border: `1px solid ${D.border}` }}>
+    <div data-testid="braccio-lab" className="flex flex-col rounded-3xl p-4 gap-3" style={{ minHeight: "460px", background: `radial-gradient(120% 60% at 50% -10%, #2A2012 0%, ${D.bg} 55%)`, color: D.text, border: `1px solid ${D.border}` }}>
       {/* Banner emergenza / info */}
       {alert ? (
         <button data-testid="braccio-alert-banner" onClick={() => onOpenTool && onOpenTool("emergenze")}
@@ -91,7 +91,59 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
           style={{ background: D.gold, border: `3px solid #F6D27A`, color: D.bg }}>
           <Cpu className="w-5 h-5" /> {tri("Apri MikiLab Elite Engine", "MikiLab Elite Engine öffnen", "Open MikiLab Elite Engine", "Abrir MikiLab Elite Engine", "Ouvrir MikiLab Elite Engine", "باز کردن MikiLab Elite Engine")}
         </button>
-        <p className="text-[11px]" style={{ color: D.muted }}>{tri("Strumento unico del laboratorio", "Einziges Laborwerkzeug", "The lab's single tool", "Herramienta única del laboratorio", "Outil unique du laboratoire", "تنها ابزار آزمایشگاه")}</p>
+        <p className="text-[11px]" style={{ color: D.muted }}>{tri("Include Banco Impasti 3D, Forni, Pasticceria e Guida", "Enthält Teigbank 3D, Öfen, Konditorei & Guide", "Includes 3D Dough Bench, Ovens, Pastry & Guide", "Incluye Banco de Masas 3D, Hornos, Pastelería y Guía", "Inclut Banc à Pâte 3D, Fours, Pâtisserie & Guide", "شامل میز خمیر سه‌بعدی، فرها، شیرینی و راهنما")}</p>
+      </div>
+
+      {/* Comandi rapidi + Inserisci Ricetta */}
+      <div className="space-y-2">
+        <p className="text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1.5" style={{ color: D.gold }}>
+          <Zap className="w-3.5 h-3.5" /> {tri("Comandi rapidi", "Schnellbefehle", "Quick commands", "Comandos rápidos", "Commandes rapides", "دستورهای سریع")}
+        </p>
+        <div className="grid grid-cols-2 gap-2" data-testid="braccio-quick">
+          {QUICK.map((q) => (
+            <button key={q.id} data-testid={`braccio-quick-${q.id}`} onClick={() => onOpenTool && onOpenTool(q.id)}
+              className="relative flex items-center gap-2 rounded-2xl px-2.5 py-2 text-left active:scale-97 transition-all"
+              style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
+              <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(231,178,60,.14)", border: `1px solid ${D.goldSoft}` }}>
+                <q.Icon className="w-4 h-4" style={{ color: D.gold }} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{q.t}</span>
+                <span className="block text-[10px] leading-tight truncate" style={{ color: D.muted }}>{q.s}</span>
+              </span>
+              {q.badge && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: D.danger }} />}
+            </button>
+          ))}
+          <button data-testid="braccio-quick-banco" onClick={() => setEliteOpen(true)}
+            className="flex items-center gap-2 rounded-2xl px-2.5 py-2 text-left active:scale-97 transition-all"
+            style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
+            <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(231,178,60,.14)", border: `1px solid ${D.goldSoft}` }}>
+              <Wheat className="w-4 h-4" style={{ color: D.gold }} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{tri("Banco Impasti", "Teigbank", "Dough Bench", "Banco de Masas", "Banc à Pâte", "میز خمیر")}</span>
+              <span className="block text-[10px] leading-tight truncate" style={{ color: D.muted }}>{tri("Silos & dosi 3D", "Silos & Mengen 3D", "Silos & doses 3D", "Silos y dosis 3D", "Silos & doses 3D", "سیلو و مقدار")}</span>
+            </span>
+          </button>
+          <button data-testid="braccio-quick-aggiungi" onClick={() => onOpenTool && onOpenTool("aggiungi")}
+            className="flex items-center gap-2 rounded-2xl px-2.5 py-2 text-left active:scale-97 transition-all"
+            style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
+            <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(231,178,60,.14)", border: `1px solid ${D.goldSoft}` }}>
+              <PlusCircle className="w-4 h-4" style={{ color: D.gold }} />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{tri("Inserisci Ricetta", "Rezept hinzufügen", "Add Recipe", "Añadir Receta", "Ajouter Recette", "افزودن دستور")}</span>
+              <span className="block text-[10px] leading-tight truncate" style={{ color: D.muted }}>{tri("Scrivi o scansiona", "Schreiben/Scannen", "Write or scan", "Escribe o escanea", "Écris ou scanne", "بنویس یا اسکن کن")}</span>
+            </span>
+          </button>
+        </div>
+
+        {/* Modalità Cuffie (hands-free) */}
+        <button data-testid="braccio-headset" onClick={onHeadset} disabled={hsBusy}
+          className="w-full flex items-center justify-center gap-2 rounded-2xl px-4 py-3 font-extrabold text-[14px] active:scale-97 transition-all disabled:opacity-60"
+          style={{ background: "rgba(231,178,60,.12)", border: `2px solid ${D.goldSoft}`, color: D.gold }}>
+          <Headphones className="w-5 h-5" /> {hsBusy ? tri("Collego le cuffie…", "Verbinde…", "Connecting…", "Conectando…", "Connexion…", "در حال اتصال…") : tri("Modalità Cuffie (mani libere)", "Headset-Modus (freihändig)", "Headset Mode (hands-free)", "Modo Auriculares (manos libres)", "Mode Casque (mains libres)", "حالت هدست (بدون دست)")}
+        </button>
       </div>
 
       <MikiLabEliteEngine open={eliteOpen} onClose={() => setEliteOpen(false)} />

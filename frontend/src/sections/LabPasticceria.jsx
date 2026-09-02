@@ -17,8 +17,8 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
   const { lang } = useLang();
   const L = (i, e) => mkTri(lang)(i, e, e, e);
   const num = (v) => Math.round(v).toLocaleString(lang === "it" ? "it" : "en");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
-  const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#c94f00] dark:text-[#e4eff8] focus:border-[#c94f00] font-mono-data";
+  const lbl = "text-[12px] font-semibold text-[#c94f00] dark:text-[#AEB8BF] mb-1";
   const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
   const [tab, setTab] = useState("lievitati");
 
@@ -101,9 +101,9 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
 
   return (
     <div className="pb-8" data-testid="lab-pasticceria">
-      {onBack && <button data-testid="pasticceria-back" onClick={onBack} className="flex items-center gap-1 text-[#ff6b00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
+      {onBack && <button data-testid="pasticceria-back" onClick={onBack} className="flex items-center gap-1 text-[#c94f00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
       <RelatedToolsRow cat="pasticceria" onOpenTool={onOpenTool} />
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#ff6b00,#ff6b00 60%,#ff6b00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#c94f00,#c94f00 60%,#c94f00)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Cake className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Laboratorio Pasticceria & Lievitati", "Pastry & Leavened Lab")}</h1>
         <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Grandi lievitati, bilanciamento impasti dolci e gelateria da vetrina.", "Big leavened cakes, sweet dough balancing and display gelato.")}</p>
@@ -111,7 +111,7 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
 
       <div className="flex flex-wrap gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
         {TABS.map(({ id, Icon, label }) => (
-          <button key={id} data-testid={`pasticceria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all ${tab === id ? "bg-[#ff6b00] text-[#121212] shadow" : "text-[#ff6b00]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`pasticceria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all ${tab === id ? "bg-[#c94f00] text-[#121212] shadow" : "text-[#c94f00]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
@@ -121,15 +121,15 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
           <input data-testid="gl-first" type="time" value={firstRefresh} onChange={(e) => setFirstRefresh(e.target.value)} className={inp + " mb-3"} />
           <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 space-y-2" data-testid="gl-schedule">
             {schedule.steps.map((t, i) => (
-              <div key={i} className="flex items-center gap-2 text-[13px]"><span className="w-6 h-6 rounded-full bg-[#ff6b00] text-white text-[11px] font-bold flex items-center justify-center">{i + 1}</span><span className="text-[#ff6b00]">{L(`Rinfresco ${i + 1} · lievito raddoppiato in ~4h a 30°C`, `Refresh ${i + 1} · doubled in ~4h at 30°C`)}</span><span className="ml-auto font-mono-data font-bold text-[#ff6b00]">{t}</span></div>
+              <div key={i} className="flex items-center gap-2 text-[13px]"><span className="w-6 h-6 rounded-full bg-[#c94f00] text-white text-[11px] font-bold flex items-center justify-center">{i + 1}</span><span className="text-[#c94f00]">{L(`Rinfresco ${i + 1} · lievito raddoppiato in ~4h a 30°C`, `Refresh ${i + 1} · doubled in ~4h at 30°C`)}</span><span className="ml-auto font-mono-data font-bold text-[#c94f00]">{t}</span></div>
             ))}
-            <div className="flex items-center gap-2 text-[13px] pt-2 border-t border-[#2e2e2e]"><span className="w-6 h-6 rounded-full bg-[#ff6b00] text-white text-[11px] font-bold flex items-center justify-center">★</span><span className="text-[#ff6b00] font-semibold">{L("Primo impasto pronto", "First dough ready")}</span><span className="ml-auto font-mono-data font-bold text-[#ff6b00]">{schedule.impasto}</span></div>
+            <div className="flex items-center gap-2 text-[13px] pt-2 border-t border-[#2e2e2e]"><span className="w-6 h-6 rounded-full bg-[#c94f00] text-white text-[11px] font-bold flex items-center justify-center">★</span><span className="text-[#c94f00] font-semibold">{L("Primo impasto pronto", "First dough ready")}</span><span className="ml-auto font-mono-data font-bold text-[#c94f00]">{schedule.impasto}</span></div>
           </div>
-          <p className="text-[12px] text-[#ff6b00] mt-2 leading-snug">{L("Tra un rinfresco e l'altro il lievito madre deve triplicare a 28-30°C. Il bagnetto in acqua (a 18°C con poco zucchero) prima dell'ultimo rinfresco riduce l'acidità.", "Between refreshes the sourdough should triple at 28-30°C. A water bath (18°C, a little sugar) before the last refresh lowers acidity.")}</p>
+          <p className="text-[12px] text-[#c94f00] mt-2 leading-snug">{L("Tra un rinfresco e l'altro il lievito madre deve triplicare a 28-30°C. Il bagnetto in acqua (a 18°C con poco zucchero) prima dell'ultimo rinfresco riduce l'acidità.", "Between refreshes the sourdough should triple at 28-30°C. A water bath (18°C, a little sugar) before the last refresh lowers acidity.")}</p>
           <div className="mt-3 pt-3 border-t border-[#2e2e2e]">
             <p className={lbl}>{L("Peso lievito madre per il bagnetto (g)", "Sourdough weight for the water bath (g)")}</p>
             <input data-testid="gl-lm" type="number" value={lmWeight} onChange={(e) => setLmWeight(e.target.value)} className={inp} />
-            <div data-testid="gl-bagnetto" className="mt-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-[13px] text-[#ff6b00] font-semibold">
+            <div data-testid="gl-bagnetto" className="mt-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-[13px] text-[#c94f00] font-semibold">
               {L("Bagnetto", "Water bath")}: <span className="font-mono-data">{num(bagnetto.water)} g {L("acqua", "water")}</span> {L("a", "at")} {bagnetto.temp}°C + <span className="font-mono-data">{bagnetto.sugar} g {L("zucchero", "sugar")}</span> · {L("immergi 15-20 min", "soak 15-20 min")}
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
 
       {tab === "podpac" && (
         <div className={card} data-testid="pasticceria-podpac">
-          <p className="text-[12.5px] text-[#ff6b00] mb-3">{L("Inserisci i grammi di ogni zucchero e il peso totale della miscela per bilanciare dolcezza (POD) e struttura al freddo (PAC) per vetrina a -12°C.", "Enter grams of each sugar and total mix weight to balance sweetness (POD) and freezing (PAC) for a -12°C display.")}</p>
+          <p className="text-[12.5px] text-[#c94f00] mb-3">{L("Inserisci i grammi di ogni zucchero e il peso totale della miscela per bilanciare dolcezza (POD) e struttura al freddo (PAC) per vetrina a -12°C.", "Enter grams of each sugar and total mix weight to balance sweetness (POD) and freezing (PAC) for a -12°C display.")}</p>
           <div className="grid grid-cols-2 gap-3 mb-3">
             {Object.entries(SUGARS).map(([k, v]) => (
               <div key={k}><p className={lbl}>{v.it} (g)</p><input data-testid={`pp-${k}`} type="number" value={sg[k]} onChange={(e) => setSg({ ...sg, [k]: e.target.value })} className={inp} /></div>
@@ -161,8 +161,8 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
             <div className="col-span-2"><p className={lbl}>{L("Peso totale miscela (g)", "Total mix weight (g)")}</p><input data-testid="pp-mix" type="number" value={mix} onChange={(e) => setMix(e.target.value)} className={inp} /></div>
           </div>
           <div data-testid="pp-out" className="grid grid-cols-2 gap-2">
-            <div className={`rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border ${podpac.podOk ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#ffffff] border-[#ff6b00]"}`}><p className="text-[11px] font-semibold text-[#ff6b00]">POD (/kg)</p><p className="font-display text-2xl font-bold text-[#ff6b00]">{num(podpac.podR)}</p><p className="text-[10px] text-[#ff6b00]">{L("ideale 180-280", "ideal 180-280")}</p></div>
-            <div className={`rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border ${podpac.pacOk ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#ffffff] border-[#ff6b00]"}`}><p className="text-[11px] font-semibold text-[#ff6b00]">PAC (/kg)</p><p className="font-display text-2xl font-bold text-[#ff6b00]">{num(podpac.pacR)}</p><p className="text-[10px] text-[#ff6b00]">{L("ideale 250-300 (-12°C)", "ideal 250-300 (-12°C)")}</p></div>
+            <div className={`rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border ${podpac.podOk ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#ffffff] border-[#c94f00]"}`}><p className="text-[11px] font-semibold text-[#c94f00]">POD (/kg)</p><p className="font-display text-2xl font-bold text-[#c94f00]">{num(podpac.podR)}</p><p className="text-[10px] text-[#c94f00]">{L("ideale 180-280", "ideal 180-280")}</p></div>
+            <div className={`rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border ${podpac.pacOk ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#ffffff] border-[#c94f00]"}`}><p className="text-[11px] font-semibold text-[#c94f00]">PAC (/kg)</p><p className="font-display text-2xl font-bold text-[#c94f00]">{num(podpac.pacR)}</p><p className="text-[10px] text-[#c94f00]">{L("ideale 250-300 (-12°C)", "ideal 250-300 (-12°C)")}</p></div>
           </div>
         </div>
       )}
@@ -181,10 +181,10 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
           </div>
           <div data-testid="cr-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#2e2e2e]">
             {creme.map(([k, v], i) => (
-              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#ff6b00]">{k}</span><span className="font-mono-data font-bold text-[#ff6b00]">{num(v)} g</span></div>
+              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#c94f00]">{k}</span><span className="font-mono-data font-bold text-[#c94f00]">{num(v)} g</span></div>
             ))}
           </div>
-          <p className="text-[12px] text-[#ff6b00] mt-2 leading-snug">{L("Dosi indicative scalate sulla base. Cuoci la pasticcera a 82-85°C; raffredda rapidamente e conserva a +4°C.", "Indicative doses scaled to the base. Cook pastry cream to 82-85°C; cool fast and keep at +4°C.")}</p>
+          <p className="text-[12px] text-[#c94f00] mt-2 leading-snug">{L("Dosi indicative scalate sulla base. Cuoci la pasticcera a 82-85°C; raffredda rapidamente e conserva a +4°C.", "Indicative doses scaled to the base. Cook pastry cream to 82-85°C; cool fast and keep at +4°C.")}</p>
         </div>
       )}
 
@@ -195,7 +195,7 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
           <p className={lbl}>{L("Ingredienti", "Ingredients")}</p>
           <textarea data-testid="sc-ing" value={prodIng} onChange={(e) => setProdIng(e.target.value)} rows={3} className={inp + " !font-sans mb-3"} placeholder={L("Farina, burro, uova, zucchero…", "Flour, butter, eggs, sugar…")} />
           <div data-testid="sc-preview" className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#121212] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
-            <p className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8]">{prodName || L("Scheda prodotto", "Product sheet")}</p>
+            <p className="font-display text-lg font-bold text-[#c94f00] dark:text-[#e4eff8]">{prodName || L("Scheda prodotto", "Product sheet")}</p>
             {prodIng && <p className="text-[13px] text-[#3F4A54] dark:text-[#AEB8BF] mt-1"><b>{L("Ingredienti", "Ingredients")}:</b> {prodIng}</p>}
           </div>
         </div>

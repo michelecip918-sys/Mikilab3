@@ -37,7 +37,7 @@ export default function Timer() {
   const [repeat, setRepeat] = useState(false);
   void nowTs; // forza il re-render al tick del provider
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
 
   return (
     <div className="pb-40">
@@ -54,25 +54,25 @@ export default function Timer() {
         {PRESETS.map((p) => (
           <button key={p.key} data-testid={`timer-preset-${p.key}`} onClick={() => addTimer(p.label, p.min, p.repeat)}
             className="relative flex flex-col items-center gap-0.5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl py-3 active:scale-95 hover:border-[#E4572E]/50 transition-all">
-            {p.repeat && <span className="absolute top-1.5 right-1.5"><RefreshCw className="w-3.5 h-3.5 text-[#ff6b00]" /></span>}
+            {p.repeat && <span className="absolute top-1.5 right-1.5"><RefreshCw className="w-3.5 h-3.5 text-[#c94f00]" /></span>}
             <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
             <span className="font-mono-data text-xs text-[#7E8A93]">{p.min}′</span>
           </button>
         ))}
       </div>
 
-      <div className="bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl p-4 mb-5">
-        <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{tri("Timer personalizzato", "Eigener Timer", "Custom timer")}</p>
+      <div className="bg-[#c94f00]/10 border border-[#c94f00]/30 rounded-2xl p-4 mb-5">
+        <p className="text-xs font-bold uppercase tracking-wide text-[#c94f00] mb-2">{tri("Timer personalizzato", "Eigener Timer", "Custom timer")}</p>
         <div className="grid grid-cols-[1fr_88px] gap-2">
           <input data-testid="timer-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={tri("Nome (es. Baguette)", "Name (z.B. Baguette)", "Name (e.g. Baguette)")} className={inp} />
           <input data-testid="timer-mins" type="number" inputMode="numeric" value={mins} onChange={(e) => setMins(e.target.value)} className={inp + " text-center font-mono-data"} />
         </div>
         <label data-testid="timer-repeat" className="flex items-center gap-2 mt-2 text-sm text-[#3F4A54] dark:text-[#AEB8BF] cursor-pointer select-none">
-          <input type="checkbox" checked={repeat} onChange={(e) => setRepeat(e.target.checked)} className="w-4 h-4 accent-[#ff6b00]" />
-          <RefreshCw className="w-4 h-4 text-[#ff6b00]" /> {tri("Ripeti automaticamente (pieghe/rinfreschi)", "Automatisch wiederholen (Falten/Auffrischen)", "Auto-repeat (folds/refreshes)")}
+          <input type="checkbox" checked={repeat} onChange={(e) => setRepeat(e.target.checked)} className="w-4 h-4 accent-[#c94f00]" />
+          <RefreshCw className="w-4 h-4 text-[#c94f00]" /> {tri("Ripeti automaticamente (pieghe/rinfreschi)", "Automatisch wiederholen (Falten/Auffrischen)", "Auto-repeat (folds/refreshes)")}
         </label>
         <button data-testid="timer-add" onClick={() => { addTimer(name.trim(), mins, repeat); setName(""); }}
-          className="mt-2 w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+          className="mt-2 w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#c94f00] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
           <Plus className="w-5 h-5" /> {tri("Avvia timer", "Timer starten", "Start timer")} <span className="opacity-80">({mins || 0}′)</span>
         </button>
       </div>
@@ -88,13 +88,13 @@ export default function Timer() {
             <div key={t.id} data-testid={`timer-card-${t.id}`}
               className={`rounded-3xl p-5 shadow-sm border ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#1e1e1e] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <div className="flex items-center justify-between mb-2">
-                <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#ff6b00] shrink-0" />}</span>
+                <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#c94f00] shrink-0" />}</span>
                 <button data-testid={`timer-remove-${t.id}`} onClick={() => remove(t.id)} className="text-[#7E8A93] hover:text-[#E4572E] p-1"><Trash2 className="w-5 h-5" /></button>
               </div>
               <p className={`font-mono-data text-5xl font-bold text-center ${done ? "text-[#E4572E]" : "text-[#2B303B] dark:text-[#e4eff8]"}`} data-testid={`timer-time-${t.id}`}>{fmt(rem)}</p>
               <div className="grid grid-cols-2 gap-2 mt-4">
                 <button data-testid={`timer-toggle-${t.id}`} onClick={() => toggle(t.id)} disabled={done}
-                  className="flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
+                  className="flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
                   {t.running ? <><Pause className="w-6 h-6" /> {tri("Pausa", "Pause", "Pause")}</> : <><Play className="w-6 h-6" /> {tri("Vai", "Start", "Go")}</>}
                 </button>
                 <button data-testid={`timer-reset-${t.id}`} onClick={() => reset(t.id)}

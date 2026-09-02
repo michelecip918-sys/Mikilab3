@@ -31,8 +31,8 @@ export default class ErrorBoundary extends React.Component {
     const tri = (i, d, e) => mkTri(lang)(i, d, e);
     return (
       <div data-testid="error-boundary" className="max-w-md mx-auto mt-10 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-6 text-center">
-        <div className="w-14 h-14 mx-auto rounded-full bg-[#ff6b00]/12 flex items-center justify-center mb-3">
-          <AlertTriangle className="w-7 h-7 text-[#ff6b00]" />
+        <div className="w-14 h-14 mx-auto rounded-full bg-[#c94f00]/12 flex items-center justify-center mb-3">
+          <AlertTriangle className="w-7 h-7 text-[#c94f00]" />
         </div>
         <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">
           {tri("Ops, qualcosa si è bloccato", "Ups, etwas ist hängengeblieben", "Oops, something got stuck")}
@@ -42,11 +42,11 @@ export default class ErrorBoundary extends React.Component {
         </p>
         <div className="flex flex-col gap-2 mt-5">
           <button data-testid="error-retry" onClick={() => this.setState({ hasError: false })}
-            className="inline-flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+            className="inline-flex items-center justify-center gap-2 bg-[#c94f00] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
             <RotateCcw className="w-4.5 h-4.5" /> {tri("Riprova", "Erneut versuchen", "Retry")}
           </button>
           <button data-testid="error-home" onClick={() => { window.location.assign(window.location.origin + "/"); }}
-            className="inline-flex items-center justify-center gap-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00] dark:text-[#a9d2ec] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+            className="inline-flex items-center justify-center gap-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#c94f00] dark:text-[#a9d2ec] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
             <Home className="w-4.5 h-4.5" /> {tri("Torna alla Home", "Zur Startseite", "Go Home")}
           </button>
         </div>

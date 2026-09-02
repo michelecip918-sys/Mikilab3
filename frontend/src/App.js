@@ -271,7 +271,7 @@ function App() {
         </ErrorBoundary>
 
         <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#2e2e2e]">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#ff6b00] via-[#ff6b00] to-[#ff6b00] text-white p-6 shadow-lg text-center">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#c94f00] via-[#c94f00] to-[#c94f00] text-white p-6 shadow-lg text-center">
             <div className="it-de-ribbon absolute top-0 left-0 right-0" />
             <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" data-testid="footer-logo" loading="lazy"
               className="w-20 h-20 rounded-2xl object-cover mx-auto ring-2 ring-[#D4AF37]/60 shadow-lg mt-1" />
@@ -279,13 +279,13 @@ function App() {
             <p className="text-[12px] font-bold tracking-wide text-[#3D2B1F] mt-1" data-testid="footer-bakemix">MikiLab — powered by BakeMix AI</p>
             <p className="text-[10px] leading-snug text-white/60 mt-2 max-w-sm mx-auto" data-testid="footer-legal">© MikiLab — Proprietà Intellettuale Riservata. Software ideato, sviluppato e diretto da Michele. Tutti i diritti relativi all'architettura di sistema e al modello personalizzato BakeMix AI sono riservati. È severamente vietata qualsiasi riproduzione, modifica o distribuzione non autorizzata.</p>
             <p className="text-[12px] text-white/85 leading-snug mt-1 max-w-xs mx-auto">{t("brand_slogan")}</p>
-            <p className="text-[11px] text-[#ff6b00]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
+            <p className="text-[11px] text-[#c94f00]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
           </div>
           <p className="text-center text-[10px] text-[#9AA6AE] mt-3">© {new Date().getFullYear()} MikiLab · mikilab.de</p>
           <div className="flex items-center justify-center gap-4 mt-2">
-            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#ff6b00] hover:underline">Impressum</button>
-            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#ff6b00] hover:underline">Datenschutz</button>
-            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#ff6b00] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
+            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#c94f00] hover:underline">Impressum</button>
+            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#c94f00] hover:underline">Datenschutz</button>
+            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#c94f00] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
           </div>
         </footer>
       </main>
@@ -314,7 +314,7 @@ function App() {
       {legalOpen && (
         <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#121212] overflow-auto">
           <div className="max-w-xl mx-auto px-4 py-5">
-            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#ff6b00]">← {tri("Chiudi", "Schließen", "Close")}</button>
+            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#c94f00]">← {tri("Chiudi", "Schließen", "Close")}</button>
             <LegalPage />
           </div>
         </div>

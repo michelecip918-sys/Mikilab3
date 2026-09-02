@@ -42,8 +42,8 @@ export default function NewsletterSignup() {
 
   return (
     <div data-testid="home-newsletter" className="relative overflow-hidden rounded-3xl p-6 border border-[#2a2a2a] shadow-md"
-      style={{ background: "linear-gradient(135deg,#ff6b00 0%,#ff6b00 60%,#ff6b00 100%)" }}>
-      <div aria-hidden className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full opacity-20" style={{ background: "radial-gradient(circle,#ff8a33,transparent 70%)" }} />
+      style={{ background: "linear-gradient(135deg,#c94f00 0%,#c94f00 60%,#c94f00 100%)" }}>
+      <div aria-hidden className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full opacity-20" style={{ background: "radial-gradient(circle,#d4a373,transparent 70%)" }} />
       <div className="relative">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-11 h-11 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0">
@@ -103,13 +103,13 @@ export default function NewsletterSignup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={L("La tua email", "Deine E-Mail", "Your email", "Tu email", "Ton e-mail", "ایمیل شما")}
-              className="flex-1 rounded-2xl bg-white/95 text-[#ff6b00] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ff6b00] placeholder:text-[#8a7a63]"
+              className="flex-1 rounded-2xl bg-white/95 text-[#c94f00] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c94f00] placeholder:text-[#8a7a63]"
             />
             <button
               data-testid="newsletter-submit-btn"
               type="submit"
               disabled={!valid || busy}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#ff6b00] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#c94f00] text-white font-bold text-sm px-5 py-3 shadow-lg active:scale-97 transition-all disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
               {busy

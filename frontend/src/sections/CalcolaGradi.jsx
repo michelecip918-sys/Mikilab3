@@ -36,7 +36,7 @@ export default function CalcolaGradi() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center">
           <Thermometer className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -55,7 +55,7 @@ export default function CalcolaGradi() {
                 type="number"
                 value={vals[key]}
                 onChange={(e) => set(key, e.target.value)}
-                className="w-20 text-right font-mono-data font-bold text-[#ff6b00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none focus:border-[#ff6b00]"
+                className="w-20 text-right font-mono-data font-bold text-[#c94f00] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2 py-1.5 outline-none focus:border-[#c94f00]"
               />
               <span className="text-[#7E8A93] text-sm">°C</span>
             </div>
@@ -66,14 +66,14 @@ export default function CalcolaGradi() {
       <button
         data-testid="btn-calculate-temp"
         onClick={calc}
-        className="w-full mt-5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-5 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <Droplets className="w-5 h-5" /> {t("clima_calc")}
       </button>
 
       {result && (
         <>
-          <div data-testid="calc-result" className="mt-5 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] rounded-3xl p-6 text-white shadow-lg">
+          <div data-testid="calc-result" className="mt-5 bg-gradient-to-br from-[#c94f00] to-[#c94f00] rounded-3xl p-6 text-white shadow-lg">
             <p className="text-white/80 text-sm uppercase tracking-wider font-semibold">{t("clima_water_at")}</p>
             <p className="font-mono-data text-5xl font-bold mt-1">
               {result.water}<span className="text-2xl">°C</span>
@@ -87,17 +87,17 @@ export default function CalcolaGradi() {
             data-testid="clima-verdict"
             className={`mt-3 rounded-2xl p-4 border flex items-start gap-3 ${
               result.status === "ok"
-                ? "bg-[#ff6b00]/12 border-[#ff6b00]/35"
-                : "bg-[#ff6b00]/12 border-[#ff6b00]/35"
+                ? "bg-[#c94f00]/12 border-[#c94f00]/35"
+                : "bg-[#c94f00]/12 border-[#c94f00]/35"
             }`}
           >
             {result.status === "ok" ? (
-              <CheckCircle2 className="w-5 h-5 text-[#ff6b00] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-[#c94f00] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
             ) : (
-              <AlertTriangle className="w-5 h-5 text-[#ff6b00] shrink-0 mt-0.5" />
+              <AlertTriangle className="w-5 h-5 text-[#c94f00] shrink-0 mt-0.5" />
             )}
             <div>
-              <p className={`text-xs font-bold uppercase tracking-wide ${result.status === "ok" ? "text-[#ff6b00] dark:text-[#a9d2ec]" : "text-[#ff6b00]"}`}>
+              <p className={`text-xs font-bold uppercase tracking-wide ${result.status === "ok" ? "text-[#c94f00] dark:text-[#a9d2ec]" : "text-[#c94f00]"}`}>
                 {t("clima_verdict")}
               </p>
               <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-0.5 leading-relaxed">

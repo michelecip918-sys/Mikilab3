@@ -88,18 +88,18 @@ export default function GlobalSearch() {
     if (!hi || typeof text !== "string") return text || null;
     const i = text.toLowerCase().indexOf(hi.toLowerCase());
     if (i < 0) return text;
-    return (<>{text.slice(0, i)}<span className="bg-[#ff6b00]/35 text-white rounded px-0.5">{text.slice(i, i + hi.length)}</span>{text.slice(i + hi.length)}</>);
+    return (<>{text.slice(0, i)}<span className="bg-[#c94f00]/35 text-white rounded px-0.5">{text.slice(i, i + hi.length)}</span>{text.slice(i + hi.length)}</>);
   };
 
   const Row = ({ testid, Icon, img, color, label, sub, onClick }) => (
     <button data-testid={testid} onClick={onClick}
-      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#ff6b00]/10 active:scale-98 transition-all text-left">
+      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#c94f00]/10 active:scale-98 transition-all text-left">
       {img
         ? <img src={img} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0 bg-[#1e1e1e]" onError={(e) => { e.currentTarget.style.visibility = "hidden"; }} />
-        : <span className="w-8 h-8 rounded-lg border flex items-center justify-center shrink-0" style={{ background: (color || "#ff6b00") + "22", borderColor: (color || "#ff6b00") + "55" }}><Icon className="w-4 h-4" style={{ color: color || "#ff6b00" }} /></span>}
+        : <span className="w-8 h-8 rounded-lg border flex items-center justify-center shrink-0" style={{ background: (color || "#c94f00") + "22", borderColor: (color || "#c94f00") + "55" }}><Icon className="w-4 h-4" style={{ color: color || "#c94f00" }} /></span>}
       <span className="min-w-0 flex-1">
         <span className="block text-sm text-[#e4eff8] leading-tight"><Highlight text={label} /></span>
-        {sub && <span data-testid={`${testid}-reason`} className="block text-[11px] text-[#ff8a33] leading-tight mt-0.5 truncate"><Highlight text={sub} /></span>}
+        {sub && <span data-testid={`${testid}-reason`} className="block text-[11px] text-[#d4a373] leading-tight mt-0.5 truncate"><Highlight text={sub} /></span>}
       </span>
     </button>
   );
@@ -109,7 +109,7 @@ export default function GlobalSearch() {
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <div className="relative w-full max-w-lg bg-[#161616] border border-[#2e2e2e] rounded-3xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2 p-3 border-b border-[#2e2e2e]">
-          <Search className="w-5 h-5 text-[#ff6b00] shrink-0" />
+          <Search className="w-5 h-5 text-[#c94f00] shrink-0" />
           <input ref={inputRef} data-testid="global-search-input" value={q} onChange={(e) => setQ(e.target.value)}
             placeholder={tri("Cerca ricette (anche per ingrediente), strumenti, guide…", "Suche Rezepte (auch nach Zutat), Werkzeuge, Anleitungen…", "Search recipes (also by ingredient), tools, guides…", "Busca recetas (por ingrediente), herramientas, guías…", "Cherche recettes (par ingrédient), outils, guides…", "جستجوی دستور، ابزار، راهنما…")}
             className="flex-1 bg-transparent outline-none text-[15px] text-white placeholder-[#7E8A93]" />
@@ -123,7 +123,7 @@ export default function GlobalSearch() {
             { key: "guides", label: tri("Guide", "Anleitungen", "Guides", "Guías", "Guides", "راهنماها") },
           ].map((s) => (
             <button key={s.key} data-testid={`gs-scope-${s.key}`} onClick={() => setScope(s.key)}
-              className={`shrink-0 px-3 py-1 rounded-full text-[12.5px] font-bold whitespace-nowrap border transition-all ${scope === s.key ? "bg-[#ff6b00] text-[#121212] border-[#ff6b00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
+              className={`shrink-0 px-3 py-1 rounded-full text-[12.5px] font-bold whitespace-nowrap border transition-all ${scope === s.key ? "bg-[#c94f00] text-[#121212] border-[#c94f00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
               {s.label}{nq ? ` · ${counts[s.key]}` : ""}
             </button>
           ))}
@@ -133,13 +133,13 @@ export default function GlobalSearch() {
             recent.length > 0 ? (
               <div className="p-2" data-testid="global-search-recent">
                 <div className="flex items-center justify-between px-1 pb-2">
-                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00]">{tri("Ricerche recenti", "Letzte Suchen", "Recent searches", "Búsquedas recientes", "Recherches récentes", "جستجوهای اخیر")}</p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#c94f00]">{tri("Ricerche recenti", "Letzte Suchen", "Recent searches", "Búsquedas recientes", "Recherches récentes", "جستجوهای اخیر")}</p>
                   <button data-testid="global-search-clear-recent" onClick={() => { setRecent([]); try { localStorage.removeItem("mikilab_recent_searches"); } catch { /* */ } }} className="text-[11px] text-[#7E8A93] active:scale-95">{tri("Cancella", "Löschen", "Clear", "Borrar", "Effacer", "پاک کردن")}</button>
                 </div>
                 <div className="flex flex-wrap gap-2 px-1">
                   {recent.map((term) => (
                     <button key={term} data-testid={`gs-recent-${term}`} onClick={() => { setQ(term); setTimeout(() => inputRef.current?.focus(), 30); }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1e1e1e] border border-[#2e2e2e] text-[#e4eff8] text-[12.5px] active:scale-95 hover:border-[#ff6b00]/60 transition-all">
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1e1e1e] border border-[#2e2e2e] text-[#e4eff8] text-[12.5px] active:scale-95 hover:border-[#c94f00]/60 transition-all">
                       <Search className="w-3 h-3 text-[#7E8A93]" />{term}
                     </button>
                   ))}
@@ -152,19 +152,19 @@ export default function GlobalSearch() {
           {empty && <p data-testid="global-search-empty" className="text-center text-[13px] text-[#7E8A93] py-8">{tri("Nessun risultato.", "Keine Ergebnisse.", "No results.", "Sin resultados.", "Aucun résultat.", "نتیجه‌ای نیست.")}</p>}
           {recHits.length > 0 && (
             <div className="mb-1">
-              <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00] px-3 pt-2 pb-1">{tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها")}</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#c94f00] px-3 pt-2 pb-1">{tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها")}</p>
               {recHits.map((r) => <Row key={r.id} testid={`gs-recipe-${r.id}`} img={r.image_url} Icon={BookOpen} label={rLoc(r, "name", lang)} sub={matchReason(r)} onClick={() => openRecipe(r.id)} />)}
             </div>
           )}
           {toolHits.length > 0 && (
             <div className="mb-1">
-              <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00] px-3 pt-2 pb-1">{tri("Strumenti", "Werkzeuge", "Tools", "Herramientas", "Outils", "ابزارها")}</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#c94f00] px-3 pt-2 pb-1">{tri("Strumenti", "Werkzeuge", "Tools", "Herramientas", "Outils", "ابزارها")}</p>
               {toolHits.map((t) => <Row key={t.id} testid={`gs-tool-${t.id}`} color={t.color} Icon={t.Icon || Wrench} label={t.label} onClick={() => openTool(t.id)} />)}
             </div>
           )}
           {guideHits.length > 0 && (
             <div className="mb-1">
-              <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#ff6b00] px-3 pt-2 pb-1">{tri("Guide", "Anleitungen", "Guides", "Guías", "Guides", "راهنماها")}</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#c94f00] px-3 pt-2 pb-1">{tri("Guide", "Anleitungen", "Guides", "Guías", "Guides", "راهنماها")}</p>
               {guideHits.map((g) => <Row key={g.id} testid={`gs-${g.id}`} Icon={GraduationCap} label={g.label} onClick={() => openGuide(g)} />)}
             </div>
           )}

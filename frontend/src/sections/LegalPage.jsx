@@ -65,7 +65,7 @@ export default function LegalPage() {
 
   return (
     <div data-testid="legal-page" className="pb-4 space-y-4">
-      <div className="rounded-3xl p-6 bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white">
+      <div className="rounded-3xl p-6 bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white">
         <ShieldCheck className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{c.title}</h1>
         <p className="text-white/90 text-sm mt-2 leading-relaxed">{c.intro}</p>
@@ -79,7 +79,7 @@ export default function LegalPage() {
 
       {/* Impressum (Germania) — segnaposto da compilare */}
       <div data-testid="impressum" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
-        <div className="flex items-center gap-2 mb-2"><Building2 className="w-5 h-5 text-[#ff6b00]" /><h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">Impressum</h2></div>
+        <div className="flex items-center gap-2 mb-2"><Building2 className="w-5 h-5 text-[#c94f00]" /><h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">Impressum</h2></div>
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
           {tr("Ai sensi del § 5 TMG (Germania):", "Angaben gemäß § 5 TMG:", "Information pursuant to § 5 TMG (Germany):")}
         </p>
@@ -93,15 +93,15 @@ export default function LegalPage() {
 
       {/* Modulo contatti */}
       <div data-testid="contact-form" className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
-        <div className="flex items-center gap-2 mb-3"><Mail className="w-5 h-5 text-[#ff6b00]" /><h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tr("Contattaci", "Kontakt", "Contact us", "Contáctanos")}</h2></div>
+        <div className="flex items-center gap-2 mb-3"><Mail className="w-5 h-5 text-[#c94f00]" /><h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tr("Contattaci", "Kontakt", "Contact us", "Contáctanos")}</h2></div>
         <input data-testid="contact-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tr("Il tuo nome", "Dein Name", "Your name", "Tu nombre")}
-          className="w-full mb-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+          className="w-full mb-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#c94f00]" />
         <input data-testid="contact-email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" type="email"
-          className="w-full mb-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+          className="w-full mb-2 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#c94f00]" />
         <textarea data-testid="contact-message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} placeholder={tr("Il tuo messaggio…", "Deine Nachricht…", "Your message…", "Tu mensaje…")}
-          className="w-full mb-3 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#ff6b00]" />
+          className="w-full mb-3 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#c94f00]" />
         <button data-testid="contact-send" onClick={submit} disabled={sending}
-          className="w-full inline-flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 disabled:opacity-60">
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#c94f00] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 disabled:opacity-60">
           {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           {tr("Invia messaggio", "Nachricht senden", "Send message", "Enviar mensaje")}
         </button>

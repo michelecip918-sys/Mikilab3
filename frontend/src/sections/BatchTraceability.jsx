@@ -86,13 +86,13 @@ export default function BatchTraceability() {
   };
   const copyLink = (pid) => { try { navigator.clipboard.writeText(pubUrl(pid)); toast.success(tri("Link copiato", "Link kopiert", "Link copied")); } catch { /* */ } };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
   const lbl = "text-[11px] font-semibold uppercase text-[#7E8A93]";
 
   return (
     <div className="pb-40">
       <div className="no-print flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><QrCode className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><QrCode className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Tracciabilità Lotti", "Chargen-Rückverfolgung", "Batch Traceability")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Dalla farina al prodotto finito, con QR stampabile", "Vom Mehl zum Endprodukt, mit druckbarem QR", "From flour to finished product, with printable QR")}</p>
@@ -100,12 +100,12 @@ export default function BatchTraceability() {
       </div>
 
       <button data-testid="batch-add" onClick={() => setShowForm((s) => !s)}
-        className="no-print w-full flex items-center justify-center gap-2 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
+        className="no-print w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
         <Plus className="w-5 h-5" /> {tri("Nuovo lotto", "Neue Charge", "New batch")}
       </button>
 
       {showForm && (
-        <div data-testid="batch-form" className="no-print bg-[#ff6b00]/10 border border-[#ff6b00]/30 rounded-2xl p-4 mb-5 space-y-3">
+        <div data-testid="batch-form" className="no-print bg-[#c94f00]/10 border border-[#c94f00]/30 rounded-2xl p-4 mb-5 space-y-3">
           <div>
             <label className={lbl}>{tri("Codice lotto", "Chargencode", "Batch code")}</label>
             <input data-testid="batch-code" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} className={inp + " font-mono-data mt-1"} />
@@ -134,14 +134,14 @@ export default function BatchTraceability() {
           </div>
           <div><label className={lbl}>{tri("Note (temperature…)", "Notizen (Temperaturen…)", "Notes (temps…)")}</label>
             <textarea data-testid="batch-note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={2} className={inp + " mt-1"} /></div>
-          <button data-testid="batch-save" onClick={add} className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">{tri("Crea lotto", "Charge erstellen", "Create batch")}</button>
+          <button data-testid="batch-save" onClick={add} className="w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">{tri("Crea lotto", "Charge erstellen", "Create batch")}</button>
         </div>
       )}
 
       {batches.length > 0 && (
         <button data-testid="batch-print" onClick={() => window.print()}
           className="no-print w-full mb-4 flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-2xl active:scale-98 transition-all">
-          <Printer className="w-5 h-5 text-[#ff6b00]" /> {tri("Stampa etichette lotto", "Chargen-Etiketten drucken", "Print batch labels")}
+          <Printer className="w-5 h-5 text-[#c94f00]" /> {tri("Stampa etichette lotto", "Chargen-Etiketten drucken", "Print batch labels")}
         </button>
       )}
 
@@ -152,7 +152,7 @@ export default function BatchTraceability() {
           <div key={b.id} data-testid={`batch-card-${b.id}`} className="bg-white border border-[#2e2e2e] rounded-2xl p-4 break-inside-avoid">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <p className="font-mono-data text-xs font-bold text-[#ff6b00]">{b.code}</p>
+                <p className="font-mono-data text-xs font-bold text-[#c94f00]">{b.code}</p>
                 <p className="font-display text-lg font-bold text-[#2B303B] leading-tight break-words">{b.product}</p>
               </div>
               {qr[b.id] && <img data-testid={`batch-qr-${b.id}`} src={qr[b.id]} alt="QR" className="w-20 h-20 shrink-0" />}
@@ -171,15 +171,15 @@ export default function BatchTraceability() {
             <div className="no-print mt-3 pt-2 border-t border-[#e4eff8] dark:border-[#2e2e2e]">
               {b.publicId ? (
                 <div data-testid={`batch-public-${b.id}`}>
-                  <p className="text-[11px] font-semibold text-[#ff6b00] flex items-center gap-1 mb-1.5"><Globe className="w-3.5 h-3.5" /> {tri("QR pubblico attivo", "Öffentlicher QR aktiv", "Public QR active")}</p>
+                  <p className="text-[11px] font-semibold text-[#c94f00] flex items-center gap-1 mb-1.5"><Globe className="w-3.5 h-3.5" /> {tri("QR pubblico attivo", "Öffentlicher QR aktiv", "Public QR active")}</p>
                   <div className="flex gap-1.5">
                     <button data-testid={`batch-copy-${b.id}`} onClick={() => copyLink(b.publicId)} className="flex-1 flex items-center justify-center gap-1 bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-xs font-semibold py-2 rounded-lg active:scale-95"><Copy className="w-3.5 h-3.5" /> {tri("Copia link", "Link kopieren", "Copy link")}</button>
-                    <a data-testid={`batch-open-${b.id}`} href={pubUrl(b.publicId)} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-[#ff6b00] text-white text-xs font-semibold py-2 rounded-lg active:scale-95"><Globe className="w-3.5 h-3.5" /> {tri("Apri pagina", "Seite öffnen", "Open page")}</a>
+                    <a data-testid={`batch-open-${b.id}`} href={pubUrl(b.publicId)} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-1 bg-[#c94f00] text-white text-xs font-semibold py-2 rounded-lg active:scale-95"><Globe className="w-3.5 h-3.5" /> {tri("Apri pagina", "Seite öffnen", "Open page")}</a>
                   </div>
                 </div>
               ) : (
                 <button data-testid={`batch-publish-${b.id}`} onClick={() => publish(b)} disabled={publishing === b.id}
-                  className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-xs font-semibold py-2.5 rounded-lg active:scale-98 disabled:opacity-50">
+                  className="w-full flex items-center justify-center gap-1.5 bg-[#c94f00] hover:bg-[#d4a373] text-white text-xs font-semibold py-2.5 rounded-lg active:scale-98 disabled:opacity-50">
                   {publishing === b.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />} {tri("Genera QR pubblico", "Öffentlichen QR erstellen", "Generate public QR")}
                 </button>
               )}

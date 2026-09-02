@@ -25,7 +25,7 @@ export default function PublicBatch({ id }) {
 
   const Row = ({ Icon, label, value }) => value ? (
     <div className="flex items-start gap-3 py-3 border-b border-[#e4eff8] dark:border-[#2e2e2e] last:border-0">
-      <Icon className="w-5 h-5 text-[#ff6b00] shrink-0 mt-0.5" />
+      <Icon className="w-5 h-5 text-[#c94f00] shrink-0 mt-0.5" />
       <div className="min-w-0">
         <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">{label}</p>
         <p className="text-[15px] font-semibold text-[#2B303B] dark:text-[#e4eff8] break-words">{value}</p>
@@ -37,7 +37,7 @@ export default function PublicBatch({ id }) {
     <div data-testid="public-batch" className="fixed inset-0 z-[75] bg-[#121212] dark:bg-[#121212] overflow-auto">
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="flex items-center gap-3 mb-6">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#ff6b00]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#c94f00]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div>
             <p className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">MikiLab</p>
             <p className="text-xs text-[#7E8A93]">{tri("Tracciabilità del lotto", "Chargen-Rückverfolgung", "Batch traceability")}</p>
@@ -45,7 +45,7 @@ export default function PublicBatch({ id }) {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="w-7 h-7 animate-spin text-[#ff6b00]" /></div>
+          <div className="flex justify-center py-20"><Loader2 className="w-7 h-7 animate-spin text-[#c94f00]" /></div>
         ) : error || !batch ? (
           <div data-testid="public-batch-error" className="text-center py-16">
             <AlertCircle className="w-12 h-12 text-[#E4572E] mx-auto mb-3" />
@@ -54,7 +54,7 @@ export default function PublicBatch({ id }) {
           </div>
         ) : (
           <>
-            <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-6 shadow-xl mb-5">
+            <div className="rounded-3xl bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white p-6 shadow-xl mb-5">
               <div className="flex items-center gap-2 text-white/85 text-sm font-semibold"><ShieldCheck className="w-5 h-5" /> {tri("Prodotto tracciato", "Rückverfolgtes Produkt", "Traced product")}</div>
               <h1 data-testid="public-batch-product" className="font-display text-3xl font-bold mt-2 leading-tight">{batch.product}</h1>
               <p data-testid="public-batch-code" className="font-mono-data text-sm text-white/80 mt-1">{batch.code}</p>
@@ -71,14 +71,14 @@ export default function PublicBatch({ id }) {
             </div>
 
             {batch.note && (
-              <div className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-4">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1">{tri("Note", "Notizen", "Notes")}</p>
+              <div className="rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-4 mt-4">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[#c94f00] mb-1">{tri("Note", "Notizen", "Notes")}</p>
                 <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line">{batch.note}</p>
               </div>
             )}
 
             <p className="text-center text-xs text-[#7E8A93] mt-6">{tri("Tracciabilità garantita da MikiLab", "Rückverfolgbarkeit garantiert von MikiLab", "Traceability powered by MikiLab")} 🍞</p>
-            <a href="/" className="block text-center text-sm font-semibold text-[#ff6b00] underline underline-offset-2 mt-3">mikilab.de</a>
+            <a href="/" className="block text-center text-sm font-semibold text-[#c94f00] underline underline-offset-2 mt-3">mikilab.de</a>
           </>
         )}
       </div>

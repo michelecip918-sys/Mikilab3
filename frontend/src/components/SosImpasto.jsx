@@ -86,7 +86,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
     <div className="fixed inset-0 z-[75] flex items-end sm:items-center justify-center" data-testid="sos-panel">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       <div className="relative w-full sm:max-w-md bg-white dark:bg-[#121212] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[88vh] flex flex-col overflow-hidden">
-        <div className="flex items-center gap-3 p-4 text-white shrink-0" style={{ background: "linear-gradient(135deg,#7a1f1f,#ff6b00 55%,#ff6b00)" }}>
+        <div className="flex items-center gap-3 p-4 text-white shrink-0" style={{ background: "linear-gradient(135deg,#7a1f1f,#c94f00 55%,#c94f00)" }}>
           <Stethoscope className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="font-display text-lg font-bold leading-none">{tri("SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa")}</p>
@@ -118,7 +118,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
           {(busy || result) && (
             <div data-testid="sos-result" className="rounded-2xl bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
               {busy && !result ? (
-                <div className="flex items-center gap-2 text-[#ff6b00]"><Loader2 className="w-5 h-5 animate-spin" /> {tri("Analisi in corso…", "Analyse läuft…", "Analysing…", "Analizando…")}</div>
+                <div className="flex items-center gap-2 text-[#c94f00]"><Loader2 className="w-5 h-5 animate-spin" /> {tri("Analisi in corso…", "Analyse läuft…", "Analysing…", "Analizando…")}</div>
               ) : (
                 <div className="markdown-body text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]"><ReactMarkdown>{result}</ReactMarkdown></div>
               )}
@@ -128,7 +128,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
 
           {rec && (
             <button data-testid="sos-recipe-suggestion" onClick={openRecipe}
-              className="w-full flex items-center gap-3 rounded-2xl p-3.5 text-left bg-gradient-to-br from-[#ff6b00] to-[#7a531d] text-white shadow-md active:scale-98 transition-all">
+              className="w-full flex items-center gap-3 rounded-2xl p-3.5 text-left bg-gradient-to-br from-[#c94f00] to-[#7a531d] text-white shadow-md active:scale-98 transition-all">
               <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-white/20 flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5" /></div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-white/80">{tri("Ricetta consigliata da Mohammadreza", "Von Mohammadreza empfohlenes Rezept", "Recipe recommended by Mohammadreza", "Receta recomendada por Mohammadreza")}</p>
@@ -142,7 +142,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
             <p className="text-[11px] text-[#7E8A93] text-center">{tri("Cerco la ricetta più adatta…", "Suche das passende Rezept…", "Finding the best recipe…", "Buscando la mejor receta…")}</p>
           )}
           {recLoading && !rec && (
-            <p className="text-[11px] text-[#ff6b00] text-center flex items-center justify-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {tri("Cerco la ricetta più adatta…", "Suche das passende Rezept…", "Finding the best recipe…", "Buscando la mejor receta…")}</p>
+            <p className="text-[11px] text-[#c94f00] text-center flex items-center justify-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {tri("Cerco la ricetta più adatta…", "Suche das passende Rezept…", "Finding the best recipe…", "Buscando la mejor receta…")}</p>
           )}
         </div>
       </div>

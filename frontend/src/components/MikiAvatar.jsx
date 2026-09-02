@@ -5,7 +5,7 @@ export const MikiAvatar = ({ label, subtitle, size = 46, className = "" }) => (
       src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`}
       alt="Michele — MikiLab"
       style={{ width: size, height: size }}
-      className="rounded-full object-cover ring-2 ring-[#ff6b00]/60 shadow-sm shrink-0"
+      className="rounded-full object-cover ring-2 ring-[#c94f00]/60 shadow-sm shrink-0"
       onError={(e) => { e.currentTarget.style.display = "none"; }}
     />
     {(label || subtitle) && (

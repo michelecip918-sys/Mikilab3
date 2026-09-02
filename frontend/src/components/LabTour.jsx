@@ -41,7 +41,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
       if (el) {
         const tall = el.getBoundingClientRect().height > window.innerHeight * 0.6;
         el.scrollIntoView({ behavior: "smooth", block: tall ? "start" : "center" });
-        el.style.outline = "3px solid #ff6b00";
+        el.style.outline = "3px solid #c94f00";
         el.style.outlineOffset = "3px";
         el.style.borderRadius = "18px";
         el.setAttribute("data-tour-highlight", "1");
@@ -79,7 +79,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
       <div ref={cardRef} className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-24 w-[92%] max-w-md rounded-2xl bg-white dark:bg-[#121212] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-2xl p-4">
         <button data-testid="lab-tour-skip" onClick={finish} className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center text-[#7E8A93]"><X className="w-4 h-4" /></button>
         <div className="flex items-start gap-3">
-          <img src={AVATAR} alt="Mohammadreza" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#ff6b00]/50 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={AVATAR} alt="Mohammadreza" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#c94f00]/50 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="min-w-0 flex-1 pr-6">
             <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">{s.title}</h3>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-snug mt-0.5">{s.body}</p>
@@ -87,12 +87,12 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
         </div>
         <div className="flex items-center justify-between mt-3">
           <div className="flex gap-1.5">
-            {steps.map((_, i) => (<span key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? "bg-[#ff6b00]" : "bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />))}
+            {steps.map((_, i) => (<span key={i} className={`w-2 h-2 rounded-full transition-colors ${i === step ? "bg-[#c94f00]" : "bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />))}
           </div>
           <div className="flex items-center gap-2">
             {!last && <button data-testid="lab-tour-skip-2" onClick={finish} className="text-xs font-semibold text-[#7E8A93] px-2 py-2">{L.skip}</button>}
             <button data-testid="lab-tour-next" onClick={() => (last ? finish() : setStep(step + 1))}
-              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#ff6b00] hover:bg-[#ff8a33] text-white px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
+              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#c94f00] hover:bg-[#d4a373] text-white px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
               {last ? L.done : L.next}
               {!last && <ArrowRight className="w-4 h-4" />}
             </button>

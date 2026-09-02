@@ -37,7 +37,7 @@ export default function ShiftRoles() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#ff6b00] flex items-center justify-center"><Users className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><Users className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{mkTri(lang)("Turni & Mansioni", "Schichten & Aufgaben", "Shifts & Roles")}</h1>
           <p className="text-sm text-[#7E8A93]">{mkTri(lang)("Assegna i ruoli al team", "Rollen im Team zuweisen", "Assign roles to the team")}</p>
@@ -51,20 +51,20 @@ export default function ShiftRoles() {
             <div className="flex items-center gap-2">
               <input data-testid={`shift-name-${p.id}`} value={p.name} placeholder={mkTri(lang)("Nome", "Name", "Name")}
                 onChange={(e) => upd(p.id, { name: e.target.value })}
-                className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
-              <button onClick={() => del(p.id)} className="text-[#ff6b00] p-1"><X className="w-4 h-4" /></button>
+                className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]" />
+              <button onClick={() => del(p.id)} className="text-[#c94f00] p-1"><X className="w-4 h-4" /></button>
             </div>
             <select data-testid={`shift-role-${p.id}`} value={p.role} onChange={(e) => upd(p.id, { role: e.target.value })}
-              className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+              className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]">
               {roles.map((r) => <option key={r} value={r}>{r}</option>)}
             </select>
             <input data-testid={`shift-task-${p.id}`} value={p.task} placeholder={mkTri(lang)("Compito / nota (opzionale)", "Aufgabe / Notiz (optional)", "Task / note (optional)")}
               onChange={(e) => upd(p.id, { task: e.target.value })}
-              className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" />
+              className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]" />
             {/* Auricolare Bluetooth associato all'operatore */}
             <div className="flex items-center gap-2">
               <div className="flex-1 min-w-0 flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2">
-                <Headphones className="w-4 h-4 text-[#ff6b00] shrink-0" />
+                <Headphones className="w-4 h-4 text-[#c94f00] shrink-0" />
                 <input data-testid={`shift-earphone-${p.id}`} value={p.earphone || ""} placeholder={mkTri(lang)("Auricolare Bluetooth (nome)", "Bluetooth-Headset (Name)", "Bluetooth earphone (name)", "Auricular Bluetooth (nombre)")}
                   onChange={(e) => upd(p.id, { earphone: e.target.value })}
                   className="flex-1 min-w-0 bg-transparent text-sm outline-none" />
@@ -77,28 +77,28 @@ export default function ShiftRoles() {
             {/* Brigata: zona di lavoro + orario turno */}
             <div className="grid grid-cols-2 gap-2">
               <select data-testid={`shift-zone-${p.id}`} value={p.zone || "impasti"} onChange={(e) => upd(p.id, { zone: e.target.value })}
-                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]">
                 {ZONES.map((z) => <option key={z.id} value={z.id}>{zoneLabel(z.id, lang)}</option>)}
               </select>
               <input type="time" data-testid={`shift-start-${p.id}`} value={p.shiftStart || ""} onChange={(e) => upd(p.id, { shiftStart: e.target.value })}
-                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" title={mkTri(lang)("Inizio turno", "Schichtbeginn", "Shift start", "Inicio turno")} />
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]" title={mkTri(lang)("Inizio turno", "Schichtbeginn", "Shift start", "Inicio turno")} />
             </div>
             {/* Cambio mansione programmato (avviso vocale automatico) */}
-            <div className="grid grid-cols-2 gap-2 items-center rounded-lg bg-[#ff6b00]/8 border border-[#ff6b00]/25 p-2">
-              <div className="col-span-2 text-[11px] font-bold uppercase tracking-wide text-[#ff6b00]">{mkTri(lang)("Cambio mansione (avviso vocale)", "Aufgabenwechsel (Sprachhinweis)", "Role change (voice alert)", "Cambio de tarea (aviso de voz)")}</div>
+            <div className="grid grid-cols-2 gap-2 items-center rounded-lg bg-[#c94f00]/8 border border-[#c94f00]/25 p-2">
+              <div className="col-span-2 text-[11px] font-bold uppercase tracking-wide text-[#c94f00]">{mkTri(lang)("Cambio mansione (avviso vocale)", "Aufgabenwechsel (Sprachhinweis)", "Role change (voice alert)", "Cambio de tarea (aviso de voz)")}</div>
               <select data-testid={`shift-changeto-${p.id}`} value={p.changeTo || ""} onChange={(e) => upd(p.id, { changeTo: e.target.value })}
-                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]">
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]">
                 <option value="">{mkTri(lang)("Nessuno", "Keiner", "None", "Ninguno")}</option>
                 {ZONES.map((z) => <option key={z.id} value={z.id}>{zoneLabel(z.id, lang)}</option>)}
               </select>
               <input type="time" data-testid={`shift-changeat-${p.id}`} value={p.changeAt || ""} onChange={(e) => upd(p.id, { changeAt: e.target.value })}
-                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#ff6b00]" title={mkTri(lang)("Orario cambio", "Wechselzeit", "Change time", "Hora del cambio")} />
+                className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]" title={mkTri(lang)("Orario cambio", "Wechselzeit", "Change time", "Hora del cambio")} />
             </div>
           </div>
         ))}
       </div>
 
-      <button data-testid="shift-add" onClick={add} className="w-full mt-4 bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+      <button data-testid="shift-add" onClick={add} className="w-full mt-4 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
         <Plus className="w-5 h-5" /> {mkTri(lang)("Aggiungi persona", "Person hinzufügen", "Add person")}
       </button>
     </div>

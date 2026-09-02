@@ -25,7 +25,7 @@ export default function CoursesPanel() {
           </div>
           <div className="p-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00]">{c.category}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[#c94f00]">{c.category}</span>
               {c.isNew && (
                 <span data-testid={`course-new-${i}`} className="text-[10px] font-bold uppercase tracking-wide text-white bg-[#8FB0C2] px-2 py-0.5 rounded-full">{t("course_new")}</span>
               )}

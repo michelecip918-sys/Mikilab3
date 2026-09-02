@@ -14,7 +14,7 @@ const escapeHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "
 const mdLiteHtml = (s) => escapeHtml(s)
   .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
   .replace(/\*(.+?)\*/g, "<em>$1</em>")
-  .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" style="color:#ff6b00">$1</a>')
+  .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" style="color:#c94f00">$1</a>')
   .replace(/\n/g, "<br/>");
 
 const BUBBLE_SECTIONS = [
@@ -264,14 +264,14 @@ export default function AdminPanel({ open, onOpenChange }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#121212] dark:bg-[#121212] border-[#2e2e2e] dark:border-[#2e2e2e]">
         <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
-          <Crown className="w-5 h-5 text-[#ff6b00]" /> {de ? "Admin-Panel" : "Pannello Admin"}
+          <Crown className="w-5 h-5 text-[#c94f00]" /> {de ? "Admin-Panel" : "Pannello Admin"}
         </DialogTitle>
         <DialogDescription className="text-sm text-[#7E8A93]">
           {de ? "Verwalte Inhalte, Abonnenten und spezielle Zugänge." : "Gestisci contenuti, iscritti e accessi speciali."}
         </DialogDescription>
 
-        <div data-testid="admin-inventory" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4">
-          <p className="flex items-center gap-2 text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">
+        <div data-testid="admin-inventory" className="rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-4">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#c94f00] dark:text-[#a9d2ec]">
             <FileText className="w-4 h-4" /> {de ? "Website-Inventar" : "Inventario del sito"}
           </p>
           <p className="text-[12px] text-[#AEB8BF] leading-snug mt-1">
@@ -279,15 +279,15 @@ export default function AdminPanel({ open, onOpenChange }) {
           </p>
           <button
             data-testid="admin-inventory-pdf" onClick={downloadInventory} disabled={invBusy}
-            className="mt-3 w-full bg-[#121212] dark:bg-[#1e1e1e] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 border-2 border-[#ff6b00] disabled:opacity-60 active:scale-98 transition-all flex items-center justify-center gap-2"
+            className="mt-3 w-full bg-[#121212] dark:bg-[#1e1e1e] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 border-2 border-[#c94f00] disabled:opacity-60 active:scale-98 transition-all flex items-center justify-center gap-2"
           >
-            <FileText className="w-4 h-4 text-[#ff6b00]" />
+            <FileText className="w-4 h-4 text-[#c94f00]" />
             {invBusy ? (de ? "PDF wird erstellt..." : "Creo il PDF...") : (de ? "Inventar als PDF" : "Scarica inventario PDF")}
           </button>
         </div>
 
-        <div className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 space-y-3">
-          <p className="flex items-center gap-2 text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">
+        <div className="rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-4 space-y-3">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#c94f00] dark:text-[#a9d2ec]">
             <Gift className="w-4 h-4" /> {de ? "PRO verschenken" : "Regala PRO"}
           </p>
           <input
@@ -303,38 +303,38 @@ export default function AdminPanel({ open, onOpenChange }) {
           </select>
           <button
             data-testid="admin-grant-btn" onClick={grant} disabled={busy}
-            className="w-full bg-[#ff6b00] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all"
+            className="w-full bg-[#c94f00] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all"
           >
             {de ? "PRO schenken" : "Regala PRO"}
           </button>
         </div>
 
-        <div data-testid="admin-shop" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-2">
+        <div data-testid="admin-shop" className="rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-4 mt-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#8FB0C2]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
+              <p className="text-sm font-semibold text-[#c94f00] dark:text-[#8FB0C2]">{de ? "Shop & Academy" : "Shop & Academy"}</p>
               <p className="text-[11px] text-[#7E8A93]">{de ? "Warteliste" : "Lista d'attesa"}: <b>{shop.waitlist_count}</b> · {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}</p>
             </div>
             <button data-testid="admin-shop-toggle" onClick={toggleShop}
-              className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#ff6b00] dark:text-[#8FB0C2] border border-[#ff6b00]/30"}`}>
+              className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold active:scale-97 ${shop.enabled ? "bg-[#c94f00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#c94f00] dark:text-[#8FB0C2] border border-[#c94f00]/30"}`}>
               {shop.enabled ? (de ? "Aktiv" : "Attivo") : (de ? "In Arrivo" : "In arrivo")}
             </button>
           </div>
         </div>
 
-        <div data-testid="admin-bakealong" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-2">
+        <div data-testid="admin-bakealong" className="rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-4 mt-2">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#e0b877]">Bake-Along</p>
+              <p className="text-sm font-semibold text-[#c94f00] dark:text-[#e0b877]">Bake-Along</p>
               <p className="text-[11px] text-[#7E8A93]">{de ? "Alle Abonnenten über die Wochen-Challenge benachrichtigen" : "Avvisa tutti gli iscritti della sfida della settimana"}</p>
             </div>
             <button data-testid="admin-bakealong-notify" onClick={notifyBakeAlong} disabled={baBusy}
-              className="px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold bg-[#ff6b00] text-white active:scale-97 disabled:opacity-60 shrink-0">
+              className="px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold bg-[#c94f00] text-white active:scale-97 disabled:opacity-60 shrink-0">
               {baBusy ? (de ? "Sende…" : "Invio…") : (de ? "Senden" : "Invia ora")}
             </button>
           </div>
           <button data-testid="admin-bakealong-award" onClick={awardBakeAlong} disabled={baBusy}
-            className="mt-2 w-full px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold bg-[#ff6b00] text-white active:scale-97 disabled:opacity-60">
+            className="mt-2 w-full px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold bg-[#c94f00] text-white active:scale-97 disabled:opacity-60">
             🥇 {de ? "Wochensieger krönen" : "Proclama il vincitore della settimana"}
           </button>
           <button data-testid="admin-send-digest" onClick={sendDigest} disabled={baBusy}
@@ -370,11 +370,11 @@ export default function AdminPanel({ open, onOpenChange }) {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-3">
                 <div className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5 text-center">
-                  <p data-testid="email-report-total" className="font-display text-xl font-extrabold text-[#ff6b00]">{emailRep.total}</p>
+                  <p data-testid="email-report-total" className="font-display text-xl font-extrabold text-[#c94f00]">{emailRep.total}</p>
                   <p className="text-[10px] text-[#7E8A93] leading-tight">{de ? "Gesendet" : "Inviate"}</p>
                 </div>
                 <div className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5 text-center">
-                  <p data-testid="email-report-users" className="font-display text-xl font-extrabold text-[#ff6b00]">{emailRep.users}</p>
+                  <p data-testid="email-report-users" className="font-display text-xl font-extrabold text-[#c94f00]">{emailRep.users}</p>
                   <p className="text-[10px] text-[#7E8A93] leading-tight">{de ? "Nutzer" : "Utenti"}</p>
                 </div>
                 <div className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5 text-center">
@@ -450,7 +450,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                 <div key={s.email} data-testid={`nl-row-${s.email}`} className="flex items-center justify-between gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg px-2.5 py-2">
                   <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{s.email}</span>
                   <span className="shrink-0 flex items-center gap-1.5">
-                    <span className="text-[10px] font-bold uppercase text-[#ff6b00] bg-[#ff6b00]/10 rounded px-1.5 py-0.5">{s.lang || "it"}</span>
+                    <span className="text-[10px] font-bold uppercase text-[#c94f00] bg-[#c94f00]/10 rounded px-1.5 py-0.5">{s.lang || "it"}</span>
                     <span className="text-[10px] text-[#7E8A93]">{s.source || "home"}</span>
                   </span>
                 </div>
@@ -482,7 +482,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               <div className="mb-2">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-[#2f5a2f] dark:text-[#9cd6a0] mb-1">{de ? "Vorschau" : "Anteprima"}</p>
                 <div data-testid="nl-preview" className="rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden bg-white">
-                  <div className="bg-[#ff6b00] px-4 py-3 flex items-center gap-2">
+                  <div className="bg-[#c94f00] px-4 py-3 flex items-center gap-2">
                     <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-8 h-8 rounded-lg object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                     <span className="font-display text-white font-bold text-base">MikiLab</span>
                   </div>
@@ -553,7 +553,7 @@ export default function AdminPanel({ open, onOpenChange }) {
             <>
               <div className="flex flex-wrap gap-2 mb-3">
                 <div className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] px-3 py-2 text-center">
-                  <p data-testid="social-report-tiktok" className="font-display text-xl font-extrabold text-[#ff6b00]">{socialRep.totals?.tiktok || 0}</p>
+                  <p data-testid="social-report-tiktok" className="font-display text-xl font-extrabold text-[#c94f00]">{socialRep.totals?.tiktok || 0}</p>
                   <p className="text-[10px] text-[#7E8A93] leading-tight">TikTok</p>
                 </div>
                 {Object.entries(socialRep.totals || {}).filter(([k]) => k !== "tiktok").map(([k, v]) => (
@@ -571,7 +571,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                   return (
                     <div key={d.date} className="flex-1 flex flex-col items-center justify-end gap-1 h-full">
                       <span className="text-[9px] font-bold text-[#a37b52] dark:text-[#d8b48a]">{d.count || ""}</span>
-                      <div className="w-full rounded-t bg-[#ff6b00]" style={{ height: `${Math.max(4, h)}%` }} />
+                      <div className="w-full rounded-t bg-[#c94f00]" style={{ height: `${Math.max(4, h)}%` }} />
                       <span className="text-[8px] text-[#7E8A93]">{d.date.slice(5)}</span>
                     </div>
                   );
@@ -581,12 +581,12 @@ export default function AdminPanel({ open, onOpenChange }) {
           )}
         </div>
 
-        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
-          <p className="text-sm font-bold text-[#ff6b00] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
+        <div data-testid="admin-site-settings" className="rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-4 mt-2 space-y-4 min-w-0 max-w-full overflow-hidden">
+          <p className="text-sm font-bold text-[#c94f00] dark:text-[#8FB0C2]">{de ? "Website-Einstellungen" : "Impostazioni del sito"}</p>
 
           {/* WhatsApp */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec] mb-1.5">
               <MessageCircle className="w-4 h-4 text-[#25D366]" /> {de ? "WhatsApp-Nummer (nur Ziffern, mit Ländervorwahl)" : "Numero WhatsApp (solo cifre, con prefisso)"}
             </label>
             <input data-testid="admin-wa-number" value={settings.whatsapp_number}
@@ -597,7 +597,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
           {/* Handle TikTok (canale ufficiale nel "Seguici") */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec] mb-1.5">
               <Music2 className="w-4 h-4 text-white" /> {de ? "TikTok-Handle (ohne @)" : "Handle TikTok (senza @)"}
             </label>
             <div className="flex items-center gap-1.5">
@@ -611,7 +611,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
           {/* Instagram / Facebook (predisposti: incolla l'URL quando aprirai i profili ufficiali) */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec] mb-1.5">
               <Instagram className="w-4 h-4 text-[#E1306C]" /> {de ? "Instagram-URL (leer = ausgeblendet)" : "URL Instagram (vuoto = nascosto)"}
             </label>
             <input data-testid="admin-instagram-url" value={settings.instagram_url}
@@ -620,7 +620,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8]" />
           </div>
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+            <label className="flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec] mb-1.5">
               <Facebook className="w-4 h-4 text-[#1877F2]" /> {de ? "Facebook-URL (leer = ausgeblendet)" : "URL Facebook (vuoto = nascosto)"}
             </label>
             <input data-testid="admin-facebook-url" value={settings.facebook_url}
@@ -631,13 +631,13 @@ export default function AdminPanel({ open, onOpenChange }) {
 
           {/* Fumetti avatar */}
           <div>
-            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec] mb-1.5">
               <MessageSquareText className="w-4 h-4" /> {de ? "Avatar-Sprechblasen (leer = Standardtext)" : "Fumetti avatar (vuoto = testo predefinito)"}
             </p>
             <div className="space-y-3">
               {BUBBLE_SECTIONS.map((sec) => (
                 <div key={sec.variant} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] mb-1.5">{de ? sec.de : sec.it}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-[#c94f00] mb-1.5">{de ? sec.de : sec.it}</p>
                   {["michele", "momy"].map((who) => (
                     <div key={who} className="mb-1.5">
                       <p className="text-[10px] font-semibold text-[#7E8A93] uppercase">{who}</p>
@@ -660,7 +660,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
           {/* Copertine cartelle */}
           <div>
-            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec] mb-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec] mb-1.5">
               <ImageIcon className="w-4 h-4" /> {de ? "Ordner-Titelbilder (Bild antippen)" : "Copertine cartelle (tocca una foto)"}
             </p>
             <div className="space-y-2.5">
@@ -672,14 +672,14 @@ export default function AdminPanel({ open, onOpenChange }) {
                   <div key={cat.key} data-testid={`admin-cover-${cat.key}`} className="min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <p className="text-[11px] font-semibold text-[#2B303B] dark:text-[#e4eff8]">{cat.icon} {t(cat.label)}</p>
-                      {sel && <button data-testid={`admin-cover-clear-${cat.key}`} onClick={() => setCover(cat.key, "")} className="text-[10px] text-[#ff6b00] font-semibold">{de ? "Zurücksetzen" : "Ripristina"}</button>}
+                      {sel && <button data-testid={`admin-cover-clear-${cat.key}`} onClick={() => setCover(cat.key, "")} className="text-[10px] text-[#c94f00] font-semibold">{de ? "Zurücksetzen" : "Ripristina"}</button>}
                     </div>
                     <div className="flex gap-2 overflow-x-auto pb-1 min-w-0 max-w-full">
                       {imgs.map((r) => {
                         const active = sel === r.image_url;
                         return (
                           <button key={r.id} data-testid={`admin-cover-pick-${cat.key}-${r.id}`} onClick={() => setCover(cat.key, r.image_url)}
-                            className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${active ? "border-[#ff6b00] ring-2 ring-[#ff6b00]/40" : "border-transparent opacity-80"}`}>
+                            className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${active ? "border-[#c94f00] ring-2 ring-[#c94f00]/40" : "border-transparent opacity-80"}`}>
                             <img src={r.image_url.startsWith("http") ? r.image_url : `${process.env.PUBLIC_URL}${r.image_url}`} alt={r.name} className="w-full h-full object-cover" />
                           </button>
                         );
@@ -692,7 +692,7 @@ export default function AdminPanel({ open, onOpenChange }) {
           </div>
 
           <button data-testid="admin-save-settings" onClick={saveSettings} disabled={savingSet}
-            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#c94f00] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
             <Save className="w-4 h-4" /> {de ? "Einstellungen speichern" : "Salva impostazioni sito"}
           </button>
         </div>
@@ -703,16 +703,16 @@ export default function AdminPanel({ open, onOpenChange }) {
             <Languages className="w-4 h-4" /> {de ? "Rezept-Übersetzungen IT/DE/EN" : "Traduzioni ricette IT/DE/EN"}
           </p>
           {trCoverage.incomplete.length === 0 ? (
-            <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 border border-[#ff6b00]/35 px-3 py-2.5">
-              <CheckCircle2 className="w-5 h-5 text-[#ff8a33] shrink-0" />
-              <p className="text-sm font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">
+            <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/12 border border-[#c94f00]/35 px-3 py-2.5">
+              <CheckCircle2 className="w-5 h-5 text-[#d4a373] shrink-0" />
+              <p className="text-sm font-semibold text-[#c94f00] dark:text-[#a9d2ec]">
                 {de ? `Alle ${trCoverage.total} Rezepte verifiziert ✓ (IT/DE/EN)` : `Tutte le ${trCoverage.total} ricette verificate ✓ (IT/DE/EN)`}
               </p>
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 border border-[#ff6b00]/40 px-3 py-2.5 mb-2">
-                <AlertTriangle className="w-5 h-5 text-[#ff6b00] shrink-0" />
+              <div className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/12 border border-[#c94f00]/40 px-3 py-2.5 mb-2">
+                <AlertTriangle className="w-5 h-5 text-[#c94f00] shrink-0" />
                 <p data-testid="admin-translation-count" className="text-sm font-semibold text-[#8a5a1a] dark:text-[#e0b877]">
                   {de ? `${trCoverage.incomplete.length} von ${trCoverage.total} Rezepten unvollständig` : `${trCoverage.incomplete.length} ricette su ${trCoverage.total} da completare`}
                 </p>
@@ -728,7 +728,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                     <span className="text-xs text-[#2B303B] dark:text-[#e4eff8] truncate">{r.name}</span>
                     <span className="shrink-0 flex gap-1">
                       {r.miss.map((l) => (
-                        <span key={l} className="text-[10px] font-bold text-[#ff6b00] bg-[#ff6b00]/12 border border-[#ff6b00]/30 rounded px-1.5 py-0.5">{l}</span>
+                        <span key={l} className="text-[10px] font-bold text-[#c94f00] bg-[#c94f00]/12 border border-[#c94f00]/30 rounded px-1.5 py-0.5">{l}</span>
                       ))}
                     </span>
                   </div>
@@ -739,7 +739,7 @@ export default function AdminPanel({ open, onOpenChange }) {
         </div>
 
         <div className="flex items-center justify-between mt-2 mb-1">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00]">{de ? "Zugänge" : "Accessi"}</p>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#c94f00]">{de ? "Zugänge" : "Accessi"}</p>
           <button data-testid="admin-refresh" onClick={load} className="text-[#7E8A93] active:scale-90">
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </button>
@@ -754,7 +754,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{e.email}</p>
                 <p className="text-[11px] text-[#7E8A93]">
-                  <span className={`font-bold ${e.active ? "text-[#ff6b00]" : "text-[#ff6b00]"}`}>
+                  <span className={`font-bold ${e.active ? "text-[#c94f00]" : "text-[#c94f00]"}`}>
                     {e.active ? "PRO" : (de ? "inaktiv" : "inattivo")}
                   </span>
                   {" · "}{e.source || "—"}{" · "}{fmt(e.expires_at)}
@@ -762,7 +762,7 @@ export default function AdminPanel({ open, onOpenChange }) {
               </div>
               {e.active && (
                 <button data-testid={`ent-revoke-${e.email}`} onClick={() => revoke(e.email)}
-                  className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#ff6b00] shrink-0 active:scale-95">
+                  className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#c94f00] shrink-0 active:scale-95">
                   <Trash2 className="w-4 h-4" />
                 </button>
               )}

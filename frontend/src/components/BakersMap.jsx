@@ -64,7 +64,7 @@ export default function BakersMap({ open, onClose }) {
       const safe = (s) => (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
       const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? safe(u) : "");
       const lurl = safeUrl(p.link);
-      const linkHtml = lurl ? `<br/><a href="${lurl}" target="_blank" rel="noopener noreferrer" style="color:#ff6b00;font-weight:600">🔗 ${safe((p.link || "").replace(/^https?:\/\//, ""))}</a>` : "";
+      const linkHtml = lurl ? `<br/><a href="${lurl}" target="_blank" rel="noopener noreferrer" style="color:#c94f00;font-weight:600">🔗 ${safe((p.link || "").replace(/^https?:\/\//, ""))}</a>` : "";
       m.bindPopup(`<b>${safe(p.name)}</b>${p.city ? `<br/>📍 ${safe(p.city)}` : ""}${p.bio ? `<br/><span style="color:#555">${safe(p.bio)}</span>` : ""}${linkHtml}`);
     });
     if (list.length) {
@@ -114,7 +114,7 @@ export default function BakersMap({ open, onClose }) {
   };
 
   if (!open) return null;
-  const inp = "w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#ff6b00]";
+  const inp = "w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
 
   return (
     <div className="fixed inset-0 z-[80] bg-[#12212e] flex flex-col" data-testid="bakers-map">
@@ -127,7 +127,7 @@ export default function BakersMap({ open, onClose }) {
       <div className="bg-[#121212] dark:bg-[#121212] border-t border-[#2e2e2e] dark:border-[#2e2e2e] p-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
         {!showForm ? (
           <button data-testid="bakers-optin-toggle" onClick={() => setShowForm(true)}
-            className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl active:scale-98">
+            className="w-full flex items-center justify-center gap-2 bg-[#c94f00] text-white font-semibold py-3 rounded-2xl active:scale-98">
             <MapPin className="w-5 h-5" /> {mine ? tri("Modifica la mia posizione", "Meinen Standort bearbeiten", "Edit my location", "Editar mi ubicación") : tri("Mettimi sulla mappa", "Auf die Karte setzen", "Put me on the map", "Ponme en el mapa")}
           </button>
         ) : (
@@ -135,14 +135,14 @@ export default function BakersMap({ open, onClose }) {
             <input data-testid="bakers-name" value={name} onChange={(e) => setName(e.target.value)} placeholder={tri("Nome / forno", "Name / Bäckerei", "Name / bakery", "Nombre / panadería")} className={inp} />
             <div className="grid grid-cols-[1fr_auto] gap-2">
               <input data-testid="bakers-city" value={city} onChange={(e) => { setCity(e.target.value); setCoords(null); }} placeholder={tri("Città", "Stadt", "City", "Ciudad")} className={inp} />
-              <button data-testid="bakers-gps" onClick={useGeo} disabled={busy} className="px-3 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#ff6b00]" title="GPS">{busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Navigation className="w-5 h-5" />}</button>
+              <button data-testid="bakers-gps" onClick={useGeo} disabled={busy} className="px-3 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#c94f00]" title="GPS">{busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Navigation className="w-5 h-5" />}</button>
             </div>
             <input data-testid="bakers-bio" value={bio} onChange={(e) => setBio(e.target.value)} maxLength={200} placeholder={tri("Due parole su di te (facoltativo)", "Kurz über dich (optional)", "A short bio (optional)", "Bio breve (opcional)")} className={inp} />
             <input data-testid="bakers-link" value={link} onChange={(e) => setLink(e.target.value)} maxLength={200} placeholder={tri("Sito o Instagram (facoltativo)", "Website oder Instagram (optional)", "Website or Instagram (optional)", "Web o Instagram (opcional)")} className={inp} />
             <p className="text-[10.5px] text-[#7E8A93]">{tri("La posizione è approssimata alla città (privacy). Comparire è facoltativo.", "Standort auf Stadt gerundet (Privatsphäre). Freiwillig.", "Location is rounded to the city (privacy). Opt-in.", "Ubicación aproximada a la ciudad (privacidad). Opcional.")}</p>
             <div className="flex gap-2">
-              <button data-testid="bakers-save" onClick={save} disabled={busy} className="flex-1 bg-[#ff6b00] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">{busy ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
-              {mine && <button data-testid="bakers-remove" onClick={removeMe} disabled={busy} className="px-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/15 text-[#ff6b00]"><Trash2 className="w-5 h-5" /></button>}
+              <button data-testid="bakers-save" onClick={save} disabled={busy} className="flex-1 bg-[#c94f00] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">{busy ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
+              {mine && <button data-testid="bakers-remove" onClick={removeMe} disabled={busy} className="px-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/15 text-[#c94f00]"><Trash2 className="w-5 h-5" /></button>}
               <button data-testid="bakers-cancel" onClick={() => setShowForm(false)} className="px-3 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-5 h-5" /></button>
             </div>
           </div>

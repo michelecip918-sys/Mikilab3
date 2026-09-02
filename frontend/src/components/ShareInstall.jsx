@@ -33,7 +33,7 @@ export default function ShareInstall() {
     { id: "telegram", label: "Telegram", Icon: Send, color: "#0088cc", href: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}` },
     { id: "facebook", label: "Facebook", Icon: Facebook, color: "#1877F2", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
     { id: "x", label: "X", Icon: Twitter, color: "#111827", href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}` },
-    { id: "email", label: "Email", Icon: Mail, color: "#ff6b00", href: `mailto:?subject=${enc("MikiLab")}&body=${enc(text + "\n\n" + url)}` },
+    { id: "email", label: "Email", Icon: Mail, color: "#c94f00", href: `mailto:?subject=${enc("MikiLab")}&body=${enc(text + "\n\n" + url)}` },
   ];
 
   const nativeShare = async () => {
@@ -60,7 +60,7 @@ export default function ShareInstall() {
 
   return (
     <div data-testid="share-install" className="rounded-3xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-5">
-      <div className="flex items-center gap-2 mb-1 text-[#ff6b00]">
+      <div className="flex items-center gap-2 mb-1 text-[#c94f00]">
         <Share2 className="w-5 h-5" />
         <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{t("share_title")}</h3>
       </div>
@@ -84,24 +84,24 @@ export default function ShareInstall() {
       </div>
 
       <button data-testid="share-native" onClick={nativeShare}
-        className="mt-3 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="mt-3 w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
         <Share2 className="w-5 h-5" /> {t("share_more")}
       </button>
 
       {!installed && (
         <button data-testid="install-app" onClick={install}
-          className="mt-2 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="mt-2 w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           <Download className="w-5 h-5" /> {t("install_app")}
         </button>
       )}
       {installed && (
-        <p data-testid="install-done" className="mt-3 text-center text-sm text-[#ff6b00] font-medium flex items-center justify-center gap-1.5">
+        <p data-testid="install-done" className="mt-3 text-center text-sm text-[#c94f00] font-medium flex items-center justify-center gap-1.5">
           <Smartphone className="w-4 h-4" /> {t("install_done")}
         </p>
       )}
 
       {iosHint && (
-        <div data-testid="install-ios-hint" className="mt-3 rounded-2xl bg-[#ff6b00]/12 border border-[#ff6b00]/30 p-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF]">
+        <div data-testid="install-ios-hint" className="mt-3 rounded-2xl bg-[#c94f00]/12 border border-[#c94f00]/30 p-3 text-sm text-[#3F4A54] dark:text-[#AEB8BF]">
           {t("install_ios_hint")}
         </div>
       )}

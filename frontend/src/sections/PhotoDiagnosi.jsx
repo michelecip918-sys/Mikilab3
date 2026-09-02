@@ -200,7 +200,7 @@ export default function PhotoDiagnosi() {
         <HeroAvatar />
         <Camera className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("photo_title")}</h1>
-        <div className="h-1 w-12 rounded-full bg-[#ff6b00] mt-1.5" />
+        <div className="h-1 w-12 rounded-full bg-[#c94f00] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("photo_subtitle")}</p>
         <button data-testid="diag-tour-replay" onClick={() => setTourForce((n) => n + 1)}
           className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold bg-white/15 hover:bg-white/25 backdrop-blur px-3 py-1.5 rounded-lg active:scale-95 transition-all">
@@ -216,7 +216,7 @@ export default function PhotoDiagnosi() {
             onClick={() => { setMode(id); setResult(""); setPraised(false); }}
             className={`flex flex-col items-start gap-1 p-3.5 rounded-2xl border text-left transition-all ${
               mode === id
-                ? "bg-[#ff6b00] text-white border-[#ff6b00]"
+                ? "bg-[#c94f00] text-white border-[#c94f00]"
                 : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#e4eff8] border-[#2e2e2e] dark:border-[#2e2e2e]"
             }`}
           >
@@ -243,15 +243,15 @@ export default function PhotoDiagnosi() {
         data-testid="photo-analyze-btn"
         onClick={analyze}
         disabled={!preview || analyzing}
-        className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         {analyzing ? t("photo_analyzing") : t("photo_analyze")}
       </button>
 
       {praised && (
-        <div data-testid="photo-compliment" className="mt-4 flex items-center gap-3 bg-[#ff6b00]/15 border border-[#ff6b00]/40 rounded-2xl p-4">
-          <PartyPopper className="w-6 h-6 text-[#ff6b00] dark:text-[#a9d2ec] shrink-0" />
-          <p className="text-sm font-bold text-[#ff6b00] dark:text-[#a9d2ec]">{t("photo_compliment")}</p>
+        <div data-testid="photo-compliment" className="mt-4 flex items-center gap-3 bg-[#c94f00]/15 border border-[#c94f00]/40 rounded-2xl p-4">
+          <PartyPopper className="w-6 h-6 text-[#c94f00] dark:text-[#a9d2ec] shrink-0" />
+          <p className="text-sm font-bold text-[#c94f00] dark:text-[#a9d2ec]">{t("photo_compliment")}</p>
         </div>
       )}
 
@@ -265,7 +265,7 @@ export default function PhotoDiagnosi() {
       )}
       {result && (
         <ListenButton text={result} who="momy" testid="photo-listen-btn"
-          className="no-print mt-2 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
+          className="no-print mt-2 w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
       )}
       {result && (
         <button data-testid="photo-share-btn" onClick={() => shareContent(`${modeLabel(mode)} — MikiLab`, result, lang)}
@@ -275,14 +275,14 @@ export default function PhotoDiagnosi() {
       )}
       {result && (
         <button data-testid="photo-pdf-btn" onClick={() => window.print()}
-          className="no-print mt-2 w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
+          className="no-print mt-2 w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
           <Printer className="w-5 h-5" /> {mkTri(lang)("PDF / Stampa", "Als PDF / Drucken", "PDF / Print")}
         </button>
       )}
 
       {recent.length > 0 && (
         <div data-testid="diagnosi-recenti" className="mt-8">
-          <div className="flex items-center gap-2 mb-3 text-[#ff6b00]">
+          <div className="flex items-center gap-2 mb-3 text-[#c94f00]">
             <History className="w-5 h-5" />
             <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">
               {mkTri(lang)("Diagnosi Recenti", "Letzte Diagnosen", "Recent diagnoses")}
@@ -305,8 +305,8 @@ export default function PhotoDiagnosi() {
                       <p className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{modeLabel(d.mode)}</p>
                       <p className="text-[11px] text-[#7E8A93]">{new Date(d.created_at).toLocaleString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
                     </button>
-                    <button data-testid={`diagnosi-share-${d.id}`} onClick={() => shareContent(`${modeLabel(d.mode)} — MikiLab`, d.result, lang)} className="p-2 text-[#ff6b00] active:scale-90 shrink-0" aria-label="share"><Share2 className="w-4 h-4" /></button>
-                    <button data-testid={`diagnosi-delete-${d.id}`} onClick={() => deleteRecent(d.id)} className="p-2 text-[#ff6b00] active:scale-90 shrink-0" aria-label="delete"><Trash2 className="w-4 h-4" /></button>
+                    <button data-testid={`diagnosi-share-${d.id}`} onClick={() => shareContent(`${modeLabel(d.mode)} — MikiLab`, d.result, lang)} className="p-2 text-[#c94f00] active:scale-90 shrink-0" aria-label="share"><Share2 className="w-4 h-4" /></button>
+                    <button data-testid={`diagnosi-delete-${d.id}`} onClick={() => deleteRecent(d.id)} className="p-2 text-[#c94f00] active:scale-90 shrink-0" aria-label="delete"><Trash2 className="w-4 h-4" /></button>
                     <button onClick={() => setOpenRec(isOpen ? null : d.id)} className="p-1 text-[#7E8A93] shrink-0" aria-label="toggle"><ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} /></button>
                   </div>
                   {isOpen && (

@@ -31,7 +31,7 @@ export default function FlourTable({ embedded = false }) {
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [open, setOpen] = useState(embedded);
 
-  const th = "text-left text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] px-2 py-1.5";
+  const th = "text-left text-[10px] font-bold uppercase tracking-wide text-[#c94f00] px-2 py-1.5";
   const td = "px-2 py-1.5 text-xs text-[#2B303B] dark:text-[#e4eff8] border-t border-[#e4eff8] dark:border-[#2e2e2e]";
 
   const body = (
@@ -76,7 +76,7 @@ export default function FlourTable({ embedded = false }) {
         </div>
       </div>
 
-      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/12 border border-[#ff6b00]/30 p-3 text-xs text-[#ff6b00] dark:text-[#8FB0C2] leading-relaxed">
+      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/12 border border-[#c94f00]/30 p-3 text-xs text-[#c94f00] dark:text-[#8FB0C2] leading-relaxed">
         ⚠️ {tri(
           "Nota del Maestro: nel sistema tedesco il 630 è il FARRO (Dinkel), mentre il 550 è il GRANO (Weizen). Le ricette con 630 (farro) e con farine ad alta estrazione sono quasi sempre IMPASTI INDIRETTI (con prefermento/lievito madre); alcune usano un tocco di aceto/acido per dare struttura al glutine più debole del farro.",
           "Meister-Hinweis: Im deutschen System ist 630 der DINKEL, während 550 der WEIZEN ist. Rezepte mit 630 (Dinkel) und hoch ausgemahlenen Mehlen sind fast immer INDIREKTE TEIGE (mit Vorteig/Sauerteig); manche nutzen etwas Essig/Säure, um dem schwächeren Dinkelkleber Struktur zu geben.",
@@ -88,7 +88,7 @@ export default function FlourTable({ embedded = false }) {
   if (embedded) {
     return (
       <div data-testid="flour-table" className="pb-24">
-        <div className="flex items-center gap-2 mb-3 text-[#ff6b00]">
+        <div className="flex items-center gap-2 mb-3 text-[#c94f00]">
           <Table2 className="w-5 h-5" />
           <h1 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Tabella Farine & Sigle", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</h1>
         </div>
@@ -100,7 +100,7 @@ export default function FlourTable({ embedded = false }) {
   return (
     <div data-testid="flour-table" className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden">
       <button data-testid="flour-table-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 text-left">
-        <Table2 className="w-5 h-5 text-[#ff6b00]" />
+        <Table2 className="w-5 h-5 text-[#c94f00]" />
         <span className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex-1">{tri("Tabella Farine & Sigle (DE / IT / EN)", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</span>
         <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform ${open ? "rotate-180" : ""}`} />
       </button>

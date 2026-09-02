@@ -7,8 +7,8 @@ import { mkTri } from "@/i18n/triMaps";
 export default function FoodCostBox() {
   const { lang } = useLang();
   const L = (i, e, s, f) => mkTri(lang)(i, e, e, s || e, f || e);
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#ff6b00] dark:text-[#e4eff8] focus:border-[#ff6b00] font-mono-data";
-  const lbl = "text-[12px] font-semibold text-[#ff6b00] dark:text-[#AEB8BF] mb-1";
+  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#c94f00] dark:text-[#e4eff8] focus:border-[#c94f00] font-mono-data";
+  const lbl = "text-[12px] font-semibold text-[#c94f00] dark:text-[#AEB8BF] mb-1";
 
   const [rows, setRows] = useState([
     { name: L("Farina", "Flour", "Harina", "Farine"), cost: 1.2, qty: 1 },
@@ -40,8 +40,8 @@ export default function FoodCostBox() {
   return (
     <div className={card} data-testid="foodcost-box">
       <div className="flex items-center gap-2 mb-3">
-        <TrendingUp className="w-5 h-5 text-[#ff6b00]" />
-        <h3 className="font-display text-lg font-bold text-[#ff6b00] dark:text-[#e4eff8]">{L("Food Cost & Margini", "Food Cost & Margins", "Food Cost y Márgenes", "Food Cost & Marges")}</h3>
+        <TrendingUp className="w-5 h-5 text-[#c94f00]" />
+        <h3 className="font-display text-lg font-bold text-[#c94f00] dark:text-[#e4eff8]">{L("Food Cost & Margini", "Food Cost & Margins", "Food Cost y Márgenes", "Food Cost & Marges")}</h3>
       </div>
 
       <p className={lbl}>{L("Ingredienti (costo al kg/l · quantità in kg/l)", "Ingredients (cost per kg/l · qty in kg/l)", "Ingredientes (coste por kg/l · cantidad kg/l)", "Ingrédients (coût au kg/l · quantité kg/l)")}</p>
@@ -51,11 +51,11 @@ export default function FoodCostBox() {
             <input data-testid={`fc-name-${i}`} value={r.name} onChange={(e) => set(i, "name", e.target.value)} placeholder={L("Ingrediente", "Ingredient", "Ingrediente", "Ingrédient")} className={inp + " flex-1 min-w-0 !font-sans"} />
             <input data-testid={`fc-cost-${i}`} type="number" step="0.01" value={r.cost} onChange={(e) => set(i, "cost", e.target.value)} className={inp + " w-20 shrink-0"} title="€/kg" />
             <input data-testid={`fc-qty-${i}`} type="number" step="0.01" value={r.qty} onChange={(e) => set(i, "qty", e.target.value)} className={inp + " w-20 shrink-0"} title="kg" />
-            <button data-testid={`fc-del-${i}`} onClick={() => del(i)} className="text-[#ff6b00] shrink-0 p-1"><Trash2 className="w-4 h-4" /></button>
+            <button data-testid={`fc-del-${i}`} onClick={() => del(i)} className="text-[#c94f00] shrink-0 p-1"><Trash2 className="w-4 h-4" /></button>
           </div>
         ))}
       </div>
-      <button data-testid="fc-add" onClick={add} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#ff6b00] mb-4"><Plus className="w-4 h-4" /> {L("Aggiungi ingrediente", "Add ingredient", "Añadir ingrediente", "Ajouter un ingrédient")}</button>
+      <button data-testid="fc-add" onClick={add} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#c94f00] mb-4"><Plus className="w-4 h-4" /> {L("Aggiungi ingrediente", "Add ingredient", "Añadir ingrediente", "Ajouter un ingrédient")}</button>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-3">
         <div><p className={lbl}>{L("Pezzi", "Pieces", "Piezas", "Pièces")}</p><input data-testid="fc-pieces" type="number" value={pieces} onChange={(e) => setPieces(Number(e.target.value))} className={inp} /></div>
@@ -71,19 +71,19 @@ export default function FoodCostBox() {
           [L("Costo a pezzo", "Cost per piece", "Coste por pieza", "Coût par pièce"), `€ ${eur(calc.perPiece)}`],
           [L("Ricavo", "Revenue", "Ingresos", "Revenu"), `€ ${eur(calc.revenue)}`],
         ].map(([k, v], i) => (
-          <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#ff6b00]">{k}</span><span className="font-mono-data font-bold text-[#ff6b00]">{v}</span></div>
+          <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#c94f00]">{k}</span><span className="font-mono-data font-bold text-[#c94f00]">{v}</span></div>
         ))}
       </div>
       <div className="grid grid-cols-2 gap-2 mt-2">
         <div data-testid="fc-margin" className={`rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border ${calc.profit >= 0 ? "bg-[#DCFCE7] border-[#16A34A]" : "bg-[#FEE2E2] border-[#DC2626]"}`}>
-          <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Margine", "Margin", "Margen", "Marge")}</p>
-          <p className="font-display text-2xl font-bold text-[#ff6b00]">{calc.marginPct.toFixed(0)}%</p>
-          <p className="text-[11px] text-[#ff6b00]">€ {eur(calc.profit)}</p>
+          <p className="text-[11px] font-semibold text-[#c94f00]">{L("Margine", "Margin", "Margen", "Marge")}</p>
+          <p className="font-display text-2xl font-bold text-[#c94f00]">{calc.marginPct.toFixed(0)}%</p>
+          <p className="text-[11px] text-[#c94f00]">€ {eur(calc.profit)}</p>
         </div>
-        <div className="rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border bg-[#ffffff] border-[#ff6b00]">
-          <p className="text-[11px] font-semibold text-[#ff6b00]">{L("Ricarico", "Markup", "Margen s/coste", "Marge s/coût")}</p>
-          <p className="font-display text-2xl font-bold text-[#ff6b00]">{calc.markupPct.toFixed(0)}%</p>
-          <p className="text-[11px] text-[#ff6b00]">{L("sul costo", "on cost", "sobre coste", "sur coût")}</p>
+        <div className="rounded-2xl shadow-md border border-amber-900/40 p-3 text-center border bg-[#ffffff] border-[#c94f00]">
+          <p className="text-[11px] font-semibold text-[#c94f00]">{L("Ricarico", "Markup", "Margen s/coste", "Marge s/coût")}</p>
+          <p className="font-display text-2xl font-bold text-[#c94f00]">{calc.markupPct.toFixed(0)}%</p>
+          <p className="text-[11px] text-[#c94f00]">{L("sul costo", "on cost", "sobre coste", "sur coût")}</p>
         </div>
       </div>
     </div>

@@ -58,15 +58,15 @@ export default function VoiceSettings({ open, onClose }) {
         {VOICE_OPTIONS.map((v) => {
           const on = sel === v.id;
           return (
-            <div key={v.id} className={`flex items-center gap-2 rounded-2xl border p-2.5 ${on ? "border-[#ff6b00] bg-[#ff6b00]/8" : "border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+            <div key={v.id} className={`flex items-center gap-2 rounded-2xl border p-2.5 ${on ? "border-[#c94f00] bg-[#c94f00]/8" : "border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               <button data-testid={`voice-${who}-${v.name}`} onClick={() => setSel(v.id)} className="flex-1 text-left min-w-0">
                 <span className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8]">{v.name}</span>
                 <span className="text-xs text-[#7E8A93] block truncate">{v.desc[lang] || v.desc.it}</span>
               </button>
               <button data-testid={`voice-preview-${who}-${v.name}`} onClick={() => preview(v.id, who)} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center shrink-0 active:scale-90 transition-transform">
-                {previewing === v.id + who ? <Loader2 className="w-4 h-4 animate-spin text-[#ff6b00]" /> : <Volume2 className="w-4 h-4 text-[#ff6b00]" />}
+                {previewing === v.id + who ? <Loader2 className="w-4 h-4 animate-spin text-[#c94f00]" /> : <Volume2 className="w-4 h-4 text-[#c94f00]" />}
               </button>
-              {on && <Check className="w-5 h-5 text-[#ff6b00] shrink-0" />}
+              {on && <Check className="w-5 h-5 text-[#c94f00] shrink-0" />}
             </div>
           );
         })}
@@ -89,7 +89,7 @@ export default function VoiceSettings({ open, onClose }) {
             <Group title={tri("Voce di Mohammadreza (assistente)", "Mohammadreza-Stimme (Assistent)", "Mohammadreza's voice (assistant)")} sel={momy} setSel={setMohammadreza} who="momy" />
             <Group title={tri("Voce di Michele (fondatore)", "Michele-Stimme (Gründer)", "Michele's voice (founder)")} sel={michele} setSel={setMichele} who="michele" />
             <button data-testid="voice-settings-save" onClick={save}
-              className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+              className="w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
               {tri("Salva le voci", "Stimmen speichern", "Save voices")}
             </button>
           </motion.div>

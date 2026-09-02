@@ -128,7 +128,7 @@ html[lang="fa"] textarea {
 .markdown-body th, .markdown-body td { border: 1px solid #d5e4f0; padding: 6px 8px; text-align: left; }
 .dark .markdown-body th, .dark .markdown-body td { border-color: #2e2e2e; }
 .markdown-body th { background: rgba(110,140,160,0.15); }
-.markdown-body a { color: #ff6b00; text-decoration: underline; }
+.markdown-body a { color: #c94f00; text-decoration: underline; }
 
 /* Stampa etichette: mostra solo l'area etichette */
 @media print {
@@ -177,7 +177,7 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* portale ad arco in mattoni */
 .brick-arch {
   border: 10px solid transparent;
-  border-image: linear-gradient(160deg,#ff8a33,#ff6b00 55%,#c94f00) 1;
+  border-image: linear-gradient(160deg,#d4a373,#c94f00 55%,#c94f00) 1;
 }
 .grain-overlay::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .06; mix-blend-mode: multiply;
@@ -232,12 +232,12 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* Base: sfondo nero, testo chiaro */
 body { background:#121212; color:#E0D5CF; }
 /* Titoli/paragrafi STATICI che erano arancioni tornano bianchi. I pulsanti mantengono i loro colori. */
-h1.text-\[\#ff6b00\], h2.text-\[\#ff6b00\], h3.text-\[\#ff6b00\], h4.text-\[\#ff6b00\], p.text-\[\#ff6b00\],
-h1.text-\[\#ff8a33\], h2.text-\[\#ff8a33\], h3.text-\[\#ff8a33\], p.text-\[\#ff8a33\],
+h1.text-\[\#c94f00\], h2.text-\[\#c94f00\], h3.text-\[\#c94f00\], h4.text-\[\#c94f00\], p.text-\[\#c94f00\],
+h1.text-\[\#d4a373\], h2.text-\[\#d4a373\], h3.text-\[\#d4a373\], p.text-\[\#d4a373\],
 h1.text-\[\#c94f00\], h2.text-\[\#c94f00\], h3.text-\[\#c94f00\] { color:#FFFFFF !important; }
 /* Affordance: ogni pulsante/link con sfondo arancione o giallo ha ombra netta */
-button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"],
-button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"], button[class*="bg-[#ff6b00]"], a[class*="bg-[#ff6b00]"] {
+button[class*="bg-[#c94f00]"], a[class*="bg-[#c94f00]"], button[class*="bg-[#c94f00]"], a[class*="bg-[#c94f00]"],
+button[class*="bg-[#c94f00]"], a[class*="bg-[#c94f00]"], button[class*="bg-[#c94f00]"], a[class*="bg-[#c94f00]"] {
   box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 14px rgba(255,107,0,.28) !important;
 }
 

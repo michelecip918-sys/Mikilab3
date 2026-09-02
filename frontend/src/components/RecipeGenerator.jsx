@@ -78,7 +78,7 @@ export default function RecipeGenerator() {
 
   return (
     <div data-testid="recipe-generator" className="pb-28">
-      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-5 mb-4">
+      <div className="rounded-3xl bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white p-5 mb-4">
         <div className="flex items-center gap-2 mb-1"><Sparkles className="w-6 h-6" />
           <h1 className="font-display text-2xl font-bold">{T("Generatore di Ricette", "Rezept-Generator", "Recipe Generator", "Generador de Recetas")}</h1>
         </div>
@@ -104,21 +104,21 @@ export default function RecipeGenerator() {
         <div>
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93] flex items-center gap-1"><Droplets className="w-3.5 h-3.5" /> {T("Idratazione", "Hydration", "Hydration", "Hidratación")}</label>
-            <span data-testid="gen-hydration-val" className="text-sm font-bold text-[#ff6b00]">{hydration}%</span>
+            <span data-testid="gen-hydration-val" className="text-sm font-bold text-[#c94f00]">{hydration}%</span>
           </div>
           <input data-testid="gen-hydration" type="range" min={50} max={100} step={1} value={hydration}
-            onChange={(e) => setHydration(e.target.value)} className="mt-2 w-full accent-[#ff6b00]" />
+            onChange={(e) => setHydration(e.target.value)} className="mt-2 w-full accent-[#c94f00]" />
         </div>
 
         <div>
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93] flex items-center gap-1"><Package className="w-3.5 h-3.5" /> {T("Quantità", "Menge", "Quantity", "Cantidad")}</label>
           <div className="mt-1.5 flex gap-1.5">
             <button data-testid="gen-mode-weight" onClick={() => setMode("weight")}
-              className={`flex-1 text-xs font-semibold py-2 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-95 ${mode === "weight" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              className={`flex-1 text-xs font-semibold py-2 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-95 ${mode === "weight" ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-transparent text-[#c94f00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               {T("Peso totale", "Gesamtgewicht", "Total weight", "Peso total")}
             </button>
             <button data-testid="gen-mode-pieces" onClick={() => setMode("pieces")}
-              className={`flex-1 text-xs font-semibold py-2 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-95 ${mode === "pieces" ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+              className={`flex-1 text-xs font-semibold py-2 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-95 ${mode === "pieces" ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-transparent text-[#c94f00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
               {T("Per pezzatura", "Nach Stückzahl", "By pieces", "Por piezas")}
             </button>
           </div>
@@ -145,12 +145,12 @@ export default function RecipeGenerator() {
 
         <div>
           <button data-testid="gen-adv-toggle" onClick={() => setShowAdv((v) => !v)}
-            className="flex items-center gap-1 text-xs font-semibold text-[#ff6b00]">
+            className="flex items-center gap-1 text-xs font-semibold text-[#c94f00]">
             <ChevronDown className={`w-4 h-4 transition-transform ${showAdv ? "rotate-180" : ""}`} />
             {T("Temperatura & costo (avanzato)", "Temperatur & Kosten (erweitert)", "Temperature & cost (advanced)", "Temperatura y coste (avanzado)")}
           </button>
           {showAdv && (
-            <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/5 p-3">
+            <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/5 p-3">
               {[
                 ["dough", T("Temp. impasto °C", "Teigtemp. °C", "Dough temp °C", "Temp. masa °C"), doughTemp, setDoughTemp],
                 ["ambient", T("Temp. ambiente °C", "Raumtemp. °C", "Room temp °C", "Temp. ambiente °C"), ambient, setAmbient],
@@ -174,7 +174,7 @@ export default function RecipeGenerator() {
           <div className="mt-2 flex flex-wrap gap-1.5">
             {EXTRAS.map((x) => (
               <button key={x.id} data-testid={`gen-extra-${x.id}`} onClick={() => toggleExtra(x.id)}
-                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all active:scale-95 ${extras.includes(x.id) ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-transparent text-[#ff6b00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all active:scale-95 ${extras.includes(x.id) ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-transparent text-[#c94f00] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                 {T(x.it, x.de, x.en, x.es)}
               </button>
             ))}
@@ -182,7 +182,7 @@ export default function RecipeGenerator() {
         </div>
 
         <button data-testid="gen-submit" onClick={generate} disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-[#ff6b00] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
+          className="w-full flex items-center justify-center gap-2 bg-[#c94f00] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
           {loading ? T("Genero la ricetta…", "Erstelle Rezept…", "Generating recipe…", "Generando receta…") : T("Genera Ricetta", "Rezept generieren", "Generate Recipe", "Generar Receta")}
         </button>
@@ -195,7 +195,7 @@ export default function RecipeGenerator() {
           {(result.warnings || []).length > 0 && (
             <div data-testid="gen-warnings" className="mb-4 space-y-1.5">
               {result.warnings.map((w, i) => (
-                <div key={i} className={`flex items-start gap-2 text-xs rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 border ${w.level === "danger" ? "bg-[#E7513A]/10 border-[#E7513A]/40 text-[#b23a28]" : w.level === "warn" ? "bg-[#ff6b00]/10 border-[#ff6b00]/40 text-[#8a5e15]" : "bg-[#ff6b00]/10 border-[#ff6b00]/30 text-[#2e5f86]"}`}>
+                <div key={i} className={`flex items-start gap-2 text-xs rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 border ${w.level === "danger" ? "bg-[#E7513A]/10 border-[#E7513A]/40 text-[#b23a28]" : w.level === "warn" ? "bg-[#c94f00]/10 border-[#c94f00]/40 text-[#8a5e15]" : "bg-[#c94f00]/10 border-[#c94f00]/30 text-[#2e5f86]"}`}>
                   {w.level === "info" ? <Info className="w-4 h-4 shrink-0 mt-0.5" /> : <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />}
                   <span>{w.text}</span>
                 </div>
@@ -203,9 +203,9 @@ export default function RecipeGenerator() {
             </div>
           )}
 
-          <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1"><Wheat className="w-4 h-4" /> {T("Ingredienti (dosi calcolate)", "Zutaten (berechnet)", "Ingredients (calculated)", "Ingredientes (calculados)")}</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-[#c94f00] mb-2 flex items-center gap-1"><Wheat className="w-4 h-4" /> {T("Ingredienti (dosi calcolate)", "Zutaten (berechnet)", "Ingredients (calculated)", "Ingredientes (calculados)")}</p>
           {ing.preferment && (
-            <div className="mb-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/30 p-2.5 text-sm">
+            <div className="mb-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/10 border border-[#c94f00]/30 p-2.5 text-sm">
               <b>{ing.preferment.type}</b> ({ing.preferment.hours}): {ing.preferment.flour_g}g {T("farina","Mehl","flour","harina")} · {ing.preferment.water_g}g {T("acqua","Wasser","water","agua")}{ing.preferment.yeast_g ? ` · ${ing.preferment.yeast_g}g ${T("lievito","Hefe","yeast","levadura")}` : ""}
             </div>
           )}
@@ -222,12 +222,12 @@ export default function RecipeGenerator() {
 
           <div className="grid grid-cols-2 gap-2 mb-4">
             {result.water_temp && (
-              <div data-testid="gen-water-temp" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ff6b00]/10 border border-[#ff6b00]/25 p-3">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-[#ff6b00] flex items-center gap-1"><Thermometer className="w-3.5 h-3.5" /> {T("Acqua d'impasto", "Schüttwasser", "Dough water", "Agua de amasado")}</p>
+              <div data-testid="gen-water-temp" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/10 border border-[#c94f00]/25 p-3">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#c94f00] flex items-center gap-1"><Thermometer className="w-3.5 h-3.5" /> {T("Acqua d'impasto", "Schüttwasser", "Dough water", "Agua de amasado")}</p>
                 <p className="text-2xl font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{result.water_temp.water_c}°C</p>
                 <p className="text-[10px] text-[#7E8A93]">{T("per impasto a", "für Teig bei", "for dough at", "para masa a")} {result.water_temp.target_dough_c}°C</p>
                 {result.water_temp.status !== "ok" && (
-                  <p className="text-[10px] font-semibold text-[#ff6b00] mt-0.5">{result.water_temp.status === "hot" ? T("ambiente caldo: usa acqua fredda/ghiaccio", "warm: kaltes Wasser/Eis", "hot room: use cold water/ice", "ambiente cálido: agua fría/hielo") : T("ambiente freddo: acqua tiepida", "kalt: lauwarmes Wasser", "cold room: warm water", "ambiente frío: agua tibia")}</p>
+                  <p className="text-[10px] font-semibold text-[#c94f00] mt-0.5">{result.water_temp.status === "hot" ? T("ambiente caldo: usa acqua fredda/ghiaccio", "warm: kaltes Wasser/Eis", "hot room: use cold water/ice", "ambiente cálido: agua fría/hielo") : T("ambiente freddo: acqua tiepida", "kalt: lauwarmes Wasser", "cold room: warm water", "ambiente frío: agua tibia")}</p>
                 )}
               </div>
             )}
@@ -243,7 +243,7 @@ export default function RecipeGenerator() {
 
           {result.procedure && (
             <>
-              <p className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2">{T("Procedimento su misura","Maßgeschneiderter Ablauf","Tailored process","Procedimiento a medida")}</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-[#c94f00] mb-2">{T("Procedimento su misura","Maßgeschneiderter Ablauf","Tailored process","Procedimiento a medida")}</p>
               <div data-testid="gen-procedure" className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-wrap leading-relaxed">{result.procedure}</div>
               <div data-testid="gen-disclaimer" className="mt-4 flex items-start gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-amber-400/40 bg-amber-50 dark:bg-amber-500/10 px-3 py-2.5">
                 <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
@@ -260,7 +260,7 @@ export default function RecipeGenerator() {
           )}
 
           <button data-testid="gen-print" onClick={() => window.print()}
-            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#ff6b00] border border-[#ff6b00]/40 px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95">
+            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#c94f00] border border-[#c94f00]/40 px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95">
             <Printer className="w-4 h-4" /> {T("Stampa / Salva PDF","Drucken / PDF","Print / Save PDF","Imprimir / Guardar PDF")}
           </button>
         </div>

@@ -78,7 +78,7 @@ export default function BluetoothConnect() {
 
   return (
     <div className="pb-24" data-testid="bluetooth-connect">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#ff6b00] to-[#c94f00] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#c94f00] to-[#c94f00] p-6 text-white">
         <Bluetooth className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Dispositivi Bluetooth", "Bluetooth-Geräte", "Bluetooth Devices", "Dispositivos Bluetooth")}</h1>
         <p className="text-white/85 text-sm mt-1">{tri("Collega bilancia, sonda temperatura e pH-metro per leggere i valori in diretta nel Laboratorio.", "Verbinde Waage, Temperaturfühler und pH-Meter für Live-Werte.", "Connect scale, temperature probe and pH meter to read live values in the Lab.", "Conecta báscula, sonda y medidor de pH para leer valores en directo.")}</p>
@@ -86,7 +86,7 @@ export default function BluetoothConnect() {
 
       {status !== "connected" ? (
         <button data-testid="bt-connect-btn" onClick={connect} disabled={status === "connecting"}
-          className="w-full inline-flex items-center justify-center gap-2.5 bg-[#ff6b00] hover:bg-[#e05e00] text-white font-extrabold text-lg px-5 py-4 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
+          className="w-full inline-flex items-center justify-center gap-2.5 bg-[#c94f00] hover:bg-[#e05e00] text-white font-extrabold text-lg px-5 py-4 rounded-2xl active:scale-98 transition-all disabled:opacity-60">
           {status === "connecting" ? <Loader2 className="w-6 h-6 animate-spin" /> : <Bluetooth className="w-6 h-6" />}
           {status === "connecting" ? tri("Collegamento…", "Verbinde…", "Connecting…", "Conectando…") : tri("Collega un dispositivo", "Gerät verbinden", "Connect a device", "Conectar un dispositivo")}
         </button>
@@ -98,12 +98,12 @@ export default function BluetoothConnect() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#2C2C2C] p-4 text-center">
-              <Scale className="w-6 h-6 text-[#ff6b00] mx-auto mb-1" />
+              <Scale className="w-6 h-6 text-[#c94f00] mx-auto mb-1" />
               <p className="font-mono-data text-2xl font-extrabold text-white">{weight != null ? `${weight} g` : "—"}</p>
               <p className="text-[11px] text-[#7E8A93]">{tri("Peso", "Gewicht", "Weight", "Peso")}</p>
             </div>
             <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#2C2C2C] p-4 text-center">
-              <Thermometer className="w-6 h-6 text-[#ff6b00] mx-auto mb-1" />
+              <Thermometer className="w-6 h-6 text-[#c94f00] mx-auto mb-1" />
               <p className="font-mono-data text-2xl font-extrabold text-white">{temp != null ? `${temp}°C` : "—"}</p>
               <p className="text-[11px] text-[#7E8A93]">{tri("Temperatura", "Temperatur", "Temperature", "Temperatura")}</p>
             </div>
@@ -111,7 +111,7 @@ export default function BluetoothConnect() {
         </div>
       )}
 
-      {note && <p data-testid="bt-note" className="text-[13px] text-[#AEB8BF] leading-snug mt-3 px-1 flex items-start gap-2"><Droplets className="w-4 h-4 text-[#ff6b00] shrink-0 mt-0.5" />{note}</p>}
+      {note && <p data-testid="bt-note" className="text-[13px] text-[#AEB8BF] leading-snug mt-3 px-1 flex items-start gap-2"><Droplets className="w-4 h-4 text-[#c94f00] shrink-0 mt-0.5" />{note}</p>}
       {!supported && status === "idle" && <p className="text-[12px] text-[#7E8A93] mt-3 px-1">{tri("Nota: il Bluetooth web funziona su Chrome (Android/PC), non su iPhone.", "Hinweis: Web-Bluetooth läuft auf Chrome (Android/PC), nicht auf iPhone.", "Note: Web Bluetooth works on Chrome (Android/PC), not iPhone.", "Nota: Web Bluetooth funciona en Chrome (Android/PC), no en iPhone.")}</p>}
     </div>
   );

@@ -82,18 +82,18 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
     const already = inPlan.has(r.id);
     const meta = picked.get(r.id) || {};
     return (
-      <div key={r.id} className={`rounded-2xl shadow-md border border-amber-900/40 border-b border-[#2e2e2e]/60 ${isPicked ? "bg-[#ff6b00]/10" : ""}`}>
+      <div key={r.id} className={`rounded-2xl shadow-md border border-amber-900/40 border-b border-[#2e2e2e]/60 ${isPicked ? "bg-[#c94f00]/10" : ""}`}>
         <button type="button" data-testid={`${testid}-item-${r.id}`}
           onClick={() => (multi ? toggle(r.id) : pickSingle(r.id))}
           className={`w-full text-left px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 text-white text-[15px] font-medium flex items-center gap-2.5 transition-colors ${isPicked ? "" : "hover:bg-[#1e1e1e]"}`}>
           {multi ? (
-            <span className={`w-5 h-5 rounded-md border-2 shrink-0 flex items-center justify-center ${isPicked ? "bg-[#ff6b00] border-[#ff6b00]" : already ? "border-[#ff6b00]/50 bg-[#ff6b00]/10" : "border-[#4a5560]"}`}>
+            <span className={`w-5 h-5 rounded-md border-2 shrink-0 flex items-center justify-center ${isPicked ? "bg-[#c94f00] border-[#c94f00]" : already ? "border-[#c94f00]/50 bg-[#c94f00]/10" : "border-[#4a5560]"}`}>
               {isPicked && <Check className="w-3.5 h-3.5 text-white" />}
             </span>
-          ) : value === r.id ? <Check className="w-4 h-4 text-[#ff6b00] shrink-0" /> : null}
+          ) : value === r.id ? <Check className="w-4 h-4 text-[#c94f00] shrink-0" /> : null}
           <span className="flex-1 truncate">{recipeTitle(r, lang)}</span>
           {multi && already && !isPicked && (
-            <span className="text-[10px] text-[#ff6b00] font-semibold shrink-0">{lang === "de" ? "im Plan" : lang === "en" ? "in plan" : "nel piano"}</span>
+            <span className="text-[10px] text-[#c94f00] font-semibold shrink-0">{lang === "de" ? "im Plan" : lang === "en" ? "in plan" : "nel piano"}</span>
           )}
         </button>
         {multi && quickAdd && isPicked && (
@@ -101,12 +101,12 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
             <div className="relative">
               <input type="number" data-testid={`${testid}-qty-${r.id}`} value={meta.qty ?? ""} placeholder={quickAdd.qtyLabel || (lang === "de" ? "Menge" : lang === "en" ? "Qty" : "Qtà")}
                 onChange={(e) => setMeta(r.id, { qty: e.target.value })}
-                className="w-24 bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg py-1.5 pl-2.5 pr-8 text-sm text-white outline-none focus:border-[#ff6b00] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                className="w-24 bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg py-1.5 pl-2.5 pr-8 text-sm text-white outline-none focus:border-[#c94f00] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
               <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">{quickAdd.qtyLabel || (lang === "de" ? "St." : lang === "en" ? "pcs" : "pz")}</span>
             </div>
             {quickAdd.day && (
               <select data-testid={`${testid}-day-${r.id}`} value={meta.day ?? ""} onChange={(e) => setMeta(r.id, { day: e.target.value })}
-                className="flex-1 min-w-0 bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg py-1.5 px-2 text-sm text-white outline-none focus:border-[#ff6b00]">
+                className="flex-1 min-w-0 bg-[#1e1e1e] border border-[#2e2e2e] rounded-lg py-1.5 px-2 text-sm text-white outline-none focus:border-[#c94f00]">
                 {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
               </select>
             )}
@@ -121,20 +121,20 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
       {multi ? (
         compact ? (
           <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-            className="flex items-center gap-1 text-sm font-medium text-[#ff6b00] active:scale-95 transition-all">
+            className="flex items-center gap-1 text-sm font-medium text-[#c94f00] active:scale-95 transition-all">
             <Plus className="w-4 h-4" /> {triggerLabel || t("weekly_add")}
           </button>
         ) : (
           <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-            className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] hover:bg-[#ff8a33] text-white text-sm font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-1.5 bg-[#c94f00] hover:bg-[#d4a373] text-white text-sm font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
             <ChefHat className="w-4 h-4" /> {triggerLabel || (lang === "de" ? "Rezepte hinzufügen" : lang === "en" ? "Add recipes" : "Aggiungi ricette")}
           </button>
         )
       ) : (
         <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-          className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-9 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#ff6b00] transition-all text-left relative">
+          className="w-full appearance-none bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-9 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#c94f00] transition-all text-left relative">
           <span className={`block truncate pr-1 ${selected ? "" : "text-[#7E8A93]"}`}>{selected ? recipeTitle(selected, lang) : (placeholder || t("capo_pick_recipe"))}</span>
-          <ChevronDown className="w-4 h-4 text-[#ff6b00] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <ChevronDown className="w-4 h-4 text-[#c94f00] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </button>
       )}
 
@@ -144,7 +144,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
           <div className="relative w-full sm:max-w-md bg-[#161616] border-t sm:border border-[#2e2e2e] rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-2xl">
             <div className="flex items-center gap-2 p-4 border-b border-[#2e2e2e] shrink-0">
               {cat ? (
-                <button data-testid={`${testid}-back`} onClick={() => setCat(null)} className="p-1 text-[#ff6b00]"><ChevronLeft className="w-6 h-6" /></button>
+                <button data-testid={`${testid}-back`} onClick={() => setCat(null)} className="p-1 text-[#c94f00]"><ChevronLeft className="w-6 h-6" /></button>
               ) : null}
               <h3 className="font-display text-lg font-extrabold text-white flex-1 truncate">
                 {cat === "__fav__" ? `❤ ${lang === "de" ? "Favoriten" : lang === "en" ? "Favorites" : "Preferite"}`
@@ -158,7 +158,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
               <div className="p-3 border-b border-[#2e2e2e] shrink-0 relative">
                 <Search className="w-4 h-4 text-[#7E8A93] absolute left-6 top-1/2 -translate-y-1/2" />
                 <input data-testid={`${testid}-search`} value={q} onChange={(e) => setQ(e.target.value)} placeholder={lang === "de" ? "Suchen…" : lang === "en" ? "Search…" : "Cerca…"}
-                  className="w-full bg-[#1e1e1e] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-10 pr-3 text-sm text-white outline-none focus:border-[#ff6b00]" />
+                  className="w-full bg-[#1e1e1e] border border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-10 pr-3 text-sm text-white outline-none focus:border-[#c94f00]" />
               </div>
             )}
 
@@ -184,7 +184,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
                           return (
                             <button key={r.id} type="button" data-testid={`${testid}-recent-${r.id}`}
                               onClick={() => (multi ? toggle(r.id) : pickSingle(r.id))}
-                              className={`shrink-0 flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full border transition-all ${isPicked ? "bg-[#ff6b00] text-white border-[#ff6b00]" : "bg-[#1e1e1e] text-[#e4eff8] border-[#2e2e2e] hover:border-[#ff6b00]"}`}>
+                              className={`shrink-0 flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full border transition-all ${isPicked ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-[#1e1e1e] text-[#e4eff8] border-[#2e2e2e] hover:border-[#c94f00]"}`}>
                               {isPicked && <Check className="w-3 h-3" />} <span className="max-w-[130px] truncate">{recipeTitle(r, lang)}</span>
                             </button>
                           );
@@ -195,23 +195,23 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
                   <div className="grid grid-cols-2 gap-2.5">
                     {favRecipes.length > 0 && (
                       <button data-testid={`${testid}-cat-favs`} onClick={() => setCat("__fav__")}
-                        className="group relative overflow-hidden rounded-2xl border border-[#ff6b00]/40 hover:border-[#ff6b00] active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end bg-gradient-to-br from-[#ff6b00]/30 via-[#3a1a10] to-[#161616]">
+                        className="group relative overflow-hidden rounded-2xl border border-[#c94f00]/40 hover:border-[#c94f00] active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end bg-gradient-to-br from-[#c94f00]/30 via-[#3a1a10] to-[#161616]">
                         <div className="relative p-3">
-                          <Heart className="w-6 h-6 text-[#ff6b00] fill-[#ff6b00] mb-0.5" />
+                          <Heart className="w-6 h-6 text-[#c94f00] fill-[#c94f00] mb-0.5" />
                           <span className="font-display text-[15px] font-bold text-white leading-tight block">{lang === "de" ? "Favoriten" : lang === "en" ? "Favorites" : "Preferite"}</span>
-                          <span className="text-[11px] text-[#ff8a33] font-semibold">{favRecipes.length} {favRecipes.length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
+                          <span className="text-[11px] text-[#d4a373] font-semibold">{favRecipes.length} {favRecipes.length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
                         </div>
                       </button>
                     )}
                     {CATS.filter((c) => byCat[c.key].length > 0).map((c) => (
                       <button key={c.key} data-testid={`${testid}-cat-${c.key}`} onClick={() => setCat(c.key)}
-                        className="group relative overflow-hidden rounded-2xl border border-[#ff6b00]/30 hover:border-[#ff6b00] active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end">
+                        className="group relative overflow-hidden rounded-2xl border border-[#c94f00]/30 hover:border-[#c94f00] active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end">
                         <img src={CAT_IMAGES[c.key]} alt={t(c.label)} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
                         <div className="relative p-3">
                           <span className="text-xl block leading-none mb-0.5">{c.icon}</span>
                           <span className="font-display text-[15px] font-bold text-white leading-tight block">{t(c.label)}</span>
-                          <span className="text-[11px] text-[#ff8a33] font-semibold">{byCat[c.key].length} {byCat[c.key].length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
+                          <span className="text-[11px] text-[#d4a373] font-semibold">{byCat[c.key].length} {byCat[c.key].length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
                         </div>
                       </button>
                     ))}
@@ -226,7 +226,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
             {multi && (
               <div className="p-3 border-t border-[#2e2e2e] shrink-0">
                 <button data-testid={`${testid}-done`} onClick={confirmMulti} disabled={picked.size === 0}
-                  className="w-full flex items-center justify-center gap-1.5 bg-[#ff6b00] disabled:opacity-40 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+                  className="w-full flex items-center justify-center gap-1.5 bg-[#c94f00] disabled:opacity-40 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
                   <Plus className="w-4 h-4" /> {lang === "de" ? "Hinzufügen" : lang === "en" ? "Add" : "Aggiungi"} ({picked.size})
                 </button>
               </div>

@@ -30,7 +30,7 @@ export default function MachinePark() {
 
   return (
     <div data-testid="machine-park" className="pb-4">
-      <div className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff6b00] text-white p-5 mb-4 shadow-lg">
+      <div className="rounded-3xl bg-gradient-to-br from-[#c94f00] to-[#c94f00] text-white p-5 mb-4 shadow-lg">
         <Cog className="w-7 h-7 mb-2" />
         <h2 className="font-display text-xl font-bold">{tri("Parco Macchine", "Maschinenpark", "Machine Park")}</h2>
         <p className="text-white/85 text-sm mt-1 leading-snug">
@@ -51,17 +51,17 @@ export default function MachinePark() {
 
       <div data-testid="machine-presets" className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#a9d2ec] flex items-center gap-1.5"><Bookmark className="w-4 h-4" />{tri("Preset laboratorio", "Labor-Presets", "Lab presets")}</p>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#c94f00] dark:text-[#a9d2ec] flex items-center gap-1.5"><Bookmark className="w-4 h-4" />{tri("Preset laboratorio", "Labor-Presets", "Lab presets")}</p>
           <button data-testid="machine-save-preset" onClick={savePreset}
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff6b00] border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-2.5 py-1 rounded-full active:scale-95">
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#c94f00] border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] px-2.5 py-1 rounded-full active:scale-95">
             <Plus className="w-3.5 h-3.5" />{tri("Salva attuali", "Aktuelle speichern", "Save current")}
           </button>
         </div>
         <div className="flex flex-wrap gap-2">
           {allPresets.map((p) => (
-            <span key={p.id} data-testid={`preset-${p.id}`} className="inline-flex items-center gap-1 rounded-full bg-[#ff6b00]/12 border border-[#ff6b00]/40 pl-3 pr-2 py-1">
-              <button onClick={() => applyPreset(p.ids)} className="text-xs font-semibold text-[#ff6b00] dark:text-[#a9d2ec]">{presetLabel(p, lang)}</button>
-              {!p.builtin && <button data-testid={`preset-del-${p.id}`} onClick={() => removePreset(p.id)} className="text-[#ff6b00]"><X className="w-3.5 h-3.5" /></button>}
+            <span key={p.id} data-testid={`preset-${p.id}`} className="inline-flex items-center gap-1 rounded-full bg-[#c94f00]/12 border border-[#c94f00]/40 pl-3 pr-2 py-1">
+              <button onClick={() => applyPreset(p.ids)} className="text-xs font-semibold text-[#c94f00] dark:text-[#a9d2ec]">{presetLabel(p, lang)}</button>
+              {!p.builtin && <button data-testid={`preset-del-${p.id}`} onClick={() => removePreset(p.id)} className="text-[#c94f00]"><X className="w-3.5 h-3.5" /></button>}
             </span>
           ))}
         </div>
@@ -70,15 +70,15 @@ export default function MachinePark() {
       <div className="space-y-4">
         {MACHINE_CATEGORIES.map((c) => (
           <div key={c.id} data-testid={`machine-cat-${c.id}`}>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff6b00] dark:text-[#a9d2ec] mb-2 px-1">{tri(c.it, c.de, c.en)}</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[#c94f00] dark:text-[#a9d2ec] mb-2 px-1">{tri(c.it, c.de, c.en)}</p>
             <div className="space-y-2">
               {c.machines.map((m) => {
                 const on = active.has(m.id);
                 return (
                   <button key={m.id} data-testid={`machine-${m.id}`} onClick={() => toggle(m.id)}
-                    className={`w-full flex items-center gap-3 rounded-2xl p-3.5 text-left border transition-all active:scale-98 ${on ? "bg-[#ff6b00] text-white border-[#ff6b00] shadow" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#EAF0EC] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+                    className={`w-full flex items-center gap-3 rounded-2xl p-3.5 text-left border transition-all active:scale-98 ${on ? "bg-[#c94f00] text-white border-[#c94f00] shadow" : "bg-white dark:bg-[#1e1e1e] text-[#2B303B] dark:text-[#EAF0EC] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
                     <span className={`w-10 h-6 rounded-full flex items-center px-0.5 shrink-0 transition-colors ${on ? "bg-white/30 justify-end" : "bg-[#2e2e2e] dark:bg-[#2e2e2e] justify-start"}`}>
-                      <span className={`w-5 h-5 rounded-full bg-white flex items-center justify-center ${on ? "text-[#ff6b00]" : "text-transparent"}`}>{on && <Check className="w-3.5 h-3.5" />}</span>
+                      <span className={`w-5 h-5 rounded-full bg-white flex items-center justify-center ${on ? "text-[#c94f00]" : "text-transparent"}`}>{on && <Check className="w-3.5 h-3.5" />}</span>
                     </span>
                     <span className="flex-1 min-w-0 text-sm font-semibold leading-tight">{tri(m.it, m.de, m.en)}</span>
                     <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${on ? "bg-white/25 text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#9aa4ac]"}`}>{on ? "ON" : "OFF"}</span>

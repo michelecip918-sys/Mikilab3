@@ -125,7 +125,7 @@ export function TimerProvider({ children }) {
             <p className="text-xs font-bold uppercase tracking-widest text-[#7E8A93]">{tri("Tempo scaduto", "Zeit abgelaufen", "Time is up")}{ringing.length > 1 ? ` (${ringing.length})` : ""}</p>
             <h2 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8] mt-1 mb-6 break-words">{alarm.name || tri("Timer", "Timer", "Timer")}</h2>
             <button data-testid="timer-alarm-dismiss" onClick={() => dismiss(alarm.id)}
-              className="w-full bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-bold text-lg py-5 rounded-2xl active:scale-97 transition-all flex items-center justify-center gap-2">
+              className="w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-bold text-lg py-5 rounded-2xl active:scale-97 transition-all flex items-center justify-center gap-2">
               <X className="w-6 h-6" /> {tri("TACITA", "STOPP", "STOP")}
             </button>
           </div>

@@ -143,7 +143,7 @@ export default function LabOnboarding() {
           <motion.div key={i} initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28 }}
             className="w-full max-w-md rounded-3xl bg-[#121212] dark:bg-[#121212] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-2xl overflow-hidden">
             {/* header */}
-            <div className={`p-5 ${cur.who === "michele" ? "bg-gradient-to-br from-[#3F4A54] to-[#5E6B62]" : "bg-gradient-to-br from-[#ff6b00] to-[#ff6b00]"} text-white`}>
+            <div className={`p-5 ${cur.who === "michele" ? "bg-gradient-to-br from-[#3F4A54] to-[#5E6B62]" : "bg-gradient-to-br from-[#c94f00] to-[#c94f00]"} text-white`}>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-bold uppercase tracking-wide text-white/70">
                   {cur.who === "michele" ? tri("Michele · MikiLab", "Michele · MikiLab", "Michele · MikiLab") : tri("Mohammadreza · il tuo assistente", "Mohammadreza · dein Assistent", "Mohammadreza · your assistant")}
@@ -166,7 +166,7 @@ export default function LabOnboarding() {
               {/* dots */}
               <div className="flex items-center justify-center gap-1.5 mt-5">
                 {slides.map((_, k) => (
-                  <span key={k} className={`h-1.5 rounded-full transition-all ${k === i ? "w-5 bg-[#ff6b00]" : "w-1.5 bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />
+                  <span key={k} className={`h-1.5 rounded-full transition-all ${k === i ? "w-5 bg-[#c94f00]" : "w-1.5 bg-[#2e2e2e] dark:bg-[#2e2e2e]"}`} />
                 ))}
               </div>
               {/* nav */}
@@ -177,12 +177,12 @@ export default function LabOnboarding() {
                 </button>
                 {i < slides.length - 1 ? (
                   <button data-testid="lab-onboarding-next" onClick={next}
-                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold active:scale-97 transition-all">
                     {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
                   </button>
                 ) : (
                   <button data-testid="lab-onboarding-done" onClick={close}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#ff6b00] hover:bg-[#ff8a33] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold active:scale-97 transition-all">
                     <Check className="w-5 h-5" /> {tri("Ho capito, iniziamo!", "Verstanden, los geht's!", "Got it, let's start!")}
                   </button>
                 )}

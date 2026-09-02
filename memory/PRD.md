@@ -3546,3 +3546,14 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Quiz isolati (verificato)**: EvolvingQuiz/BakerQuiz/ImparaLivelli sono solo dentro Beginners.jsx, renderizzato esclusivamente da AcademyHome (tab Accademia/Impara). Community e Shop non renderizzano quiz. LearnHub non piu usato. Nessuna modifica necessaria.
 - **Mobile 390px**: verificato nessun overflow orizzontale su Home e Community (scrollWidth = clientWidth = 390). Shop responsive.
 - yarn build OK (exit 0).
+
+## v-lab.2 (2026-06) — RIPRISTINO Laboratorio + purge neon globale
+- **BraccioLab (vista default del Laboratorio) ripristinato**: erano definiti ma NON renderizzati (codice morto dopo la riduzione al solo Elite Engine). Ora resi:
+  - **Comandi rapidi** (QUICK grid): Ricette del Giorno, Guasti & Celle, SOS Impasto (testid `braccio-quick-<id>`).
+  - **Banco Impasti** (apre Elite Engine, stanza 3D IMPASTI di default) — `braccio-quick-banco`.
+  - **Inserisci Ricetta** (apre tool `aggiungi` = RecipeList personal + ScanRecipe) — `braccio-quick-aggiungi`.
+  - **Modalità Cuffie** (hands-free, `onHeadset`) — `braccio-headset`.
+  - Contenitore ora a min-height (niente clipping); caption Elite Engine aggiornata (Include Banco Impasti 3D, Forni, Pasticceria, Guida).
+- **PURGE NEON globale (sicuro)**: sostituito il valore esadecimale letterale `#ff6b00`→`#c94f00` (terracotta) e `#ff8a33`→`#d4a373` (grano) in TUTTO `frontend/src` (2598+122 occorrenze, 164 file). 0 residui. Solo valori colore, nessun rischio codice.
+- Verificato: yarn build OK (exit 0). Screenshot mobile 390px: Laboratorio con comandi rapidi/cuffie/banco/inserisci ricetta, Elite Engine apre Banco Impasti 3D con binding ricetta→dosi (149 ricette DB). Nessun overflow, nessun neon.
+- NB: dominio "emtra.be" citato nella spec NON configurabile lato codice; la produzione resta mikilab.de (impostare i domini dal pannello).

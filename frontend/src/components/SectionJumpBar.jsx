@@ -12,8 +12,8 @@ export default function SectionJumpBar({ sections = [], testid = "section-jump-b
           const Icon = s.Icon;
           return (
             <button key={s.target} data-testid={`jump-${s.target}`} onClick={() => go(s.target)}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1e1e1e] border border-[#2e2e2e] text-[#e4eff8] text-[12.5px] font-bold whitespace-nowrap active:scale-95 hover:border-[#ff6b00]/60 transition-all">
-              {Icon && <Icon className="w-3.5 h-3.5 text-[#ff6b00]" />}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1e1e1e] border border-[#2e2e2e] text-[#e4eff8] text-[12.5px] font-bold whitespace-nowrap active:scale-95 hover:border-[#c94f00]/60 transition-all">
+              {Icon && <Icon className="w-3.5 h-3.5 text-[#c94f00]" />}
               {s.label}
             </button>
           );
