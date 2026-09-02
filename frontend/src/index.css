@@ -267,3 +267,24 @@ nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important
   .overflow-x-auto { -webkit-overflow-scrolling: touch; }
 }
 
+
+/* ==========================================================================
+   PANIFICIO VIRTUALE — Palette generale "warm artisan" (no neon/rosa/viola)
+   ========================================================================== */
+:root {
+  --bg-primary: #1e140a; /* Marrone legno scuro forno */
+  --bg-secondary: #2c1d0c;
+  --accent-warm: #d4a373; /* Tono grano / pane caldo */
+  --accent-border: #8c6239;
+  --text-main: #f5efe6;
+  --neon-pink: transparent;
+  --neon-purple: transparent;
+  --neon-green: transparent;
+  --neon-orange: transparent;
+}
+
+body, .app-container, .main-layout {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-main) !important;
+}
+

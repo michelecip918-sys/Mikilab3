@@ -3476,3 +3476,7 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - P1 Parità totale desktop/mobile su tutta l'app.
 - NOTA: un deploy era in corso; queste modifiche sono in PREVIEW e richiederanno un redeploy per andare in produzione.
 
+
+## v-fork35 (2026-06) — Palette globale Panificio Virtuale
+- Aggiunte a fine `index.css` le variabili :root warm artisan (--bg-primary #1e140a, --bg-secondary #2c1d0c, --accent-warm #d4a373, --accent-border #8c6239, --text-main #f5efe6; neon-* = transparent) e override `body/.app-container/.main-layout`.
+- Verificato: body bg = rgb(30,20,10), app carica, layout intatto.
