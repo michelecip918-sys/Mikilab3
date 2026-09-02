@@ -180,7 +180,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
           ) : ctx === "social" ? (
             <div data-testid="site-menu-social">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-1">{tri("Ordina la bacheca", "Feed sortieren", "Sort the feed", "Ordenar el muro")}</p>
-              <div className="grid grid-cols-3 gap-1.5 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 mb-4">
                 {FEED_ORDER.map((f) => (
                   <button key={f.o} data-testid={`site-menu-feed-${f.o}`} onClick={() => goFeed(f.o)}
                     className="flex flex-col items-center gap-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00]/60 transition-all">

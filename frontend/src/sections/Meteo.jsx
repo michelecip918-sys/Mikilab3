@@ -114,7 +114,7 @@ export default function Meteo() {
           {/* Card meteo attuale */}
           <div data-testid="meteo-current" className="rounded-3xl bg-gradient-to-br from-[#ff6b00] to-[#ff8a33] text-white p-5 shadow-lg mb-4">
             <p className="text-white/85 text-sm font-semibold flex items-center gap-1"><MapPin className="w-4 h-4" /> {w.place}</p>
-            <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-3 text-center">
               <div><Thermometer className="w-5 h-5 mx-auto mb-1 opacity-80" /><p data-testid="meteo-temp" className="font-mono-data text-2xl font-bold">{Math.round(w.temp)}°C</p><p className="text-[10px] text-white/70 uppercase">{tri("Temp", "Temp", "Temp")}</p></div>
               <div><Droplets className="w-5 h-5 mx-auto mb-1 opacity-80" /><p data-testid="meteo-hum" className="font-mono-data text-2xl font-bold">{Math.round(w.humidity)}%</p><p className="text-[10px] text-white/70 uppercase">{tri("Umidità", "Feuchte", "Humidity")}</p></div>
               <div><Wind className="w-5 h-5 mx-auto mb-1 opacity-80" /><p className="font-mono-data text-2xl font-bold">{Math.round(w.wind)}</p><p className="text-[10px] text-white/70 uppercase">km/h</p></div>

@@ -44,7 +44,7 @@ export const NovitaColorate = () => {
              "Breads and croissants coloured ONLY with natural ingredients, indirect method. Tap to open the recipe.",
              "Panes y cruasanes coloreados SOLO con ingredientes naturales, método indirecto. Toca para abrir.")}
       </p>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         {items.map((r) => (
           <button key={r.id} data-testid={`novita-card-${r.id}`} onClick={() => open(r)}
             className="text-left rounded-2xl shadow-md border border-amber-900/40 overflow-hidden bg-[#f8fbfe] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] shadow-sm active:scale-97 transition-all">

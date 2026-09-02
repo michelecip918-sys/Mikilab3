@@ -50,7 +50,7 @@ export default function Timer() {
       </div>
 
       <p className="text-xs font-bold uppercase tracking-wide text-[#E4572E] mb-2">{tri("Preset di lavorazione", "Prozess-Presets", "Process presets")}</p>
-      <div className="grid grid-cols-3 gap-2 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-5">
         {PRESETS.map((p) => (
           <button key={p.key} data-testid={`timer-preset-${p.key}`} onClick={() => addTimer(p.label, p.min, p.repeat)}
             className="relative flex flex-col items-center gap-0.5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl py-3 active:scale-95 hover:border-[#E4572E]/50 transition-all">

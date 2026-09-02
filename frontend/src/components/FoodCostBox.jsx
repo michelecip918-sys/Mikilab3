@@ -57,7 +57,7 @@ export default function FoodCostBox() {
       </div>
       <button data-testid="fc-add" onClick={add} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#ff6b00] mb-4"><Plus className="w-4 h-4" /> {L("Aggiungi ingrediente", "Add ingredient", "Añadir ingrediente", "Ajouter un ingrédient")}</button>
 
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-3">
         <div><p className={lbl}>{L("Pezzi", "Pieces", "Piezas", "Pièces")}</p><input data-testid="fc-pieces" type="number" value={pieces} onChange={(e) => setPieces(Number(e.target.value))} className={inp} /></div>
         <div><p className={lbl}>{L("Prezzo/pz €", "Price/pc €", "Precio/pza €", "Prix/pc €")}</p><input data-testid="fc-price" type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} className={inp} /></div>
         <div><p className={lbl}>{L("Spese % ", "Overhead %", "Gastos %", "Frais %")}</p><input data-testid="fc-overhead" type="number" value={overhead} onChange={(e) => setOverhead(e.target.value)} className={inp} /></div>

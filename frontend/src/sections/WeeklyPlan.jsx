@@ -667,7 +667,7 @@ export default function WeeklyPlan() {
         </p>
       )}
 
-      <div className="grid grid-cols-3 gap-2 mt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-2">
         <button
           data-testid="weekly-print-btn"
           onClick={printPlan}
@@ -834,7 +834,7 @@ function WeeklyItemRow({ item, recipes, recipe, salesPoints, t, onRecipeChange, 
       {/* Destinazione pezzi: lievitazione (oggi) / frigo (domani) / freezer (resto) */}
       <div className="mt-3 pt-2 border-t border-dashed border-[#2e2e2e] dark:border-[#2e2e2e]">
         <p className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("weekly_dest_title")}</p>
-        <div className="grid grid-cols-3 gap-2 mt-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-1.5">
           {[
             ["to_proof", t("weekly_dest_proof")],
             ["to_fridge", t("weekly_dest_fridge")],

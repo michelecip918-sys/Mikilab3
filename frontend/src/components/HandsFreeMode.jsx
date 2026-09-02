@@ -150,7 +150,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
       )}
 
       <div className="p-5 pb-8 space-y-3" style={{ paddingBottom: "calc(2rem + env(safe-area-inset-bottom))" }}>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <button data-testid="handsfree-prev" onClick={() => go((c) => c - 1)} disabled={idx === 0}
             className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-white/12 disabled:opacity-40 active:scale-95 font-semibold text-sm"><SkipBack className="w-5 h-5" />{tri("Indietro", "Zurück", "Back", "Atrás")}</button>
           <button data-testid="handsfree-repeat" onClick={() => speak(steps[idx])}
@@ -158,7 +158,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
           <button data-testid="handsfree-next" onClick={() => go((c) => c + 1)} disabled={idx === steps.length - 1}
             className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-white/12 disabled:opacity-40 active:scale-95 font-semibold text-sm"><SkipForward className="w-5 h-5" />{tri("Avanti", "Weiter", "Next", "Adelante")}</button>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <button data-testid="handsfree-tts" onClick={() => { setTtsOn((v) => { const nv = !v; if (!nv) { try { window.speechSynthesis.cancel(); } catch { /* */ } } return nv; }); }}
             className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-white text-[#ff6b00]" : "bg-white/12"}`}>{ttsOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}{tri("Voce", "Stimme", "Voice", "Voz")}</button>
           <button data-testid="handsfree-timer" onClick={() => doTimer(20)}

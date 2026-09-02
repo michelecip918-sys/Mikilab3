@@ -158,7 +158,7 @@ export default function OrdersManager({ store, stores }) {
                 {o.note && <p className="text-xs text-[#7E8A93] mt-1 italic">{o.note}</p>}
 
                 {/* Invio */}
-                <div className="grid grid-cols-3 gap-2 mt-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-3">
                   <button data-testid={`order-send-email-${o.id}`} onClick={() => sendEmail(o)} className="flex items-center justify-center gap-1 bg-[#ff6b00] text-white text-xs font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-95"><Mail className="w-4 h-4" /> Email</button>
                   <button data-testid={`order-send-wa-${o.id}`} onClick={() => sendWhatsApp(o)} className="flex items-center justify-center gap-1 bg-[#25D366] text-white text-xs font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-95"><MessageCircle className="w-4 h-4" /> WhatsApp</button>
                   <button data-testid={`order-print-${o.id}`} onClick={() => printOrder(o)} className="flex items-center justify-center gap-1 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] text-xs font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-95"><Printer className="w-4 h-4 text-[#ff6b00]" /> {tri("Stampa", "Druck", "Print")}</button>

@@ -72,7 +72,7 @@ export default function CalcolatoreMetodo({ onBack }) {
           {Object.entries(PREF).map(([k, v]) => <option key={k} value={k}>{v[lang] || v.it}</option>)}
         </select>
       </div>
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
         <div><p className={lbl}><Thermometer className="w-3.5 h-3.5" /> T° {L("ambiente", "Raum", "room", "ambiente")}</p><input data-testid="calc-troom" type="number" value={tRoom} onChange={(e) => setTRoom(Number(e.target.value))} className={inp} /></div>
         <div><p className={lbl}>T° {L("farina", "Mehl", "flour", "harina")}</p><input data-testid="calc-tflour" type="number" value={tFlour} onChange={(e) => setTFlour(Number(e.target.value))} className={inp} /></div>
         <div><p className={lbl}>W {L("farina", "Mehl", "flour", "harina")}</p><input data-testid="calc-w" type="number" value={wStrength} onChange={(e) => setWStrength(Number(e.target.value))} className={inp} /></div>

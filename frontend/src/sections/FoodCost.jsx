@@ -108,7 +108,7 @@ export default function FoodCost() {
 
       {/* Resa / calo peso */}
       <h2 className="text-xs font-bold uppercase tracking-wide text-[#ff6b00] mb-2 flex items-center gap-1"><Flame className="w-3.5 h-3.5" /> {tri("Resa & calo cottura", "Ausbeute & Backverlust", "Yield & baking loss")}</h2>
-      <div className="grid grid-cols-3 gap-2 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-5">
         <label className="text-[11px] text-[#7E8A93]">{tri("Impasto g", "Teig g", "Dough g")}<input data-testid="fc-dough" type="number" value={s.doughG} onChange={(e) => set({ doughG: e.target.value })} className={inp + " w-full mt-1"} /></label>
         <label className="text-[11px] text-[#7E8A93]">{tri("Calo %", "Verlust %", "Loss %")}<input data-testid="fc-loss" type="number" value={s.loss} onChange={(e) => set({ loss: e.target.value })} className={inp + " w-full mt-1"} /></label>
         <label className="text-[11px] text-[#7E8A93]">{tri("Pezzi", "Stück", "Pieces")}<input data-testid="fc-pieces" type="number" value={s.pieces} onChange={(e) => set({ pieces: e.target.value })} className={inp + " w-full mt-1"} /></label>

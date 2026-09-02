@@ -126,7 +126,7 @@ export default function RecipeGenerator() {
             <input data-testid="gen-weight" type="number" min={200} step={100} value={weight} onChange={(e) => setWeight(e.target.value)}
               className="mt-2 w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-3 py-2.5 text-sm" placeholder={T("Peso impasto totale (g)", "Gesamtteig (g)", "Total dough (g)", "Peso total (g)")} />
           ) : (
-            <div className="mt-2 grid grid-cols-3 gap-1.5">
+            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5">
               <div>
                 <span className="text-[10px] text-[#7E8A93]">{T("N° pezzi", "Stückzahl", "Pieces", "Piezas")}</span>
                 <input data-testid="gen-pieces" type="number" min={1} value={pieces} onChange={(e) => setPieces(e.target.value)} className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] bg-transparent px-2 py-2 text-sm" />

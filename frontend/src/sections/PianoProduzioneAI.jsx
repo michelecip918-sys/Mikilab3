@@ -873,7 +873,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   return (
     <div className="pb-40">
       {/* 3 schede del Generatore di Piano: Cosa Produci · Parametri IA · Genera & Salva */}
-      <div data-testid="capo-tabs" className="sticky top-[58px] z-30 mb-3 grid grid-cols-3 gap-1 p-1 rounded-2xl bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/40 shadow-lg">
+      <div data-testid="capo-tabs" className="sticky top-[58px] z-30 mb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 p-1 rounded-2xl bg-[#161616]/95 backdrop-blur border border-[#ff6b00]/40 shadow-lg">
         {[
           { id: "produci", sel: '[data-testid="capo-plan-switch"]', label: tri3(lang, "1 · Cosa Produci", "1 · Was", "1 · What", "1 · Qué") },
           { id: "parametri", sel: '[data-testid="capo-advanced-title"]', label: tri3(lang, "2 · Parametri IA", "2 · KI-Parameter", "2 · AI Params", "2 · Parámetros") },
@@ -1064,7 +1064,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
         {/* La spiegazione di Mohammadreza ora è un pannello fisso in fondo (vedi sotto): niente più scroll in alto. */}
 
-        <div data-testid="capo-modules" className="grid grid-cols-3 gap-2">
+        <div data-testid="capo-modules" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {MODULES.map(({ id, Icon, it, de, en }) => {
             const on = !!modules[id];
             return (
@@ -1184,7 +1184,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             {!editTools && !toolQuery.trim() && suggestedTools.length > 0 && (
               <div data-testid="tools-suggested" className="mb-4">
                 <p className="font-display text-lg font-bold text-[#ff6b00] mb-2">{tri3(lang, "Suggeriti per te", "Für dich empfohlen", "Suggested for you", "Sugeridos para ti")}</p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                   {suggestedTools.map((tl) => renderToolCard(tl))}
                 </div>
               </div>
@@ -1196,7 +1196,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 {visibleTools.map((tl) => renderToolReorderRow(tl))}
               </Reorder.Group>
             ) : toolQuery.trim() ? (
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {visibleTools.filter(({ it, de, en }) => {
                   const q = toolQuery.trim().toLowerCase();
                   if (!q) return true;
@@ -1216,7 +1216,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                         </span>
                         <p className="font-display text-lg font-bold" style={{ color: c.color }}>{tri3(lang, c.it, c.de, c.en, c.es)}</p>
                       </div>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                         {items.map((tl) => renderToolCard(tl))}
                       </div>
                     </div>
@@ -1342,7 +1342,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {quickTools.map((id) => QUICK_CATALOG.find((c) => c.id === id)).filter(Boolean).map((q) => (
                   <button key={q.id} data-testid={`capo-quicktool-${q.id}`} onClick={() => onOpenTool(q.id)}
                     className="flex flex-col items-center gap-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95 hover:border-[#ff6b00] transition-all">
@@ -1548,7 +1548,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   </div>
                 ))}
               </div>
-              <div className="mt-3 pt-3 border-t border-[#ff6b00]/20 grid grid-cols-3 gap-2 text-center">
+              <div className="mt-3 pt-3 border-t border-[#ff6b00]/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-center">
                 <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Costo", "Kosten", "Cost")}</p><p className="font-mono-data font-bold text-[#1e1e1e]">{eur(totCost)}</p></div>
                 <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Ricavo", "Umsatz", "Revenue")}</p><p className="font-mono-data font-bold text-[#ff6b00] dark:text-[#a9d2ec]">{eur(totRev)}</p></div>
                 <div><p className="text-[10px] uppercase text-[#7E8A93]">{tri3(lang, "Margine", "Marge", "Margin")}</p><p className="font-mono-data font-bold text-[#ff6b00]">{eur(margin)}{marginPct != null ? ` · ${marginPct.toFixed(0)}%` : ""}</p></div>

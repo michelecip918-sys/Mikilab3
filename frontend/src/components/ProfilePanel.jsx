@@ -190,7 +190,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
             {isMe && (
               <div data-testid="profile-email-pref">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-2 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-[#ff6b00]" /> {tri("Notifiche email dai canali seguiti", "E-Mail-Benachrichtigungen der gefolgten Kanäle", "Email notifications from followed channels", "Notificaciones por email de los canales seguidos")}</p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                   {[
                     { v: "daily", it: "Giornaliero", de: "Täglich", en: "Daily", es: "Diario" },
                     { v: "instant", it: "Istantaneo", de: "Sofort", en: "Instant", es: "Instantáneo" },

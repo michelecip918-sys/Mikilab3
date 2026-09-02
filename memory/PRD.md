@@ -3511,3 +3511,7 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Swap valore-only /michele-avatar.jpg -> /michele-real-lab.jpg in 7 file (AvatarBubbles, MikiAvatar, BakeStepByStep, MikilaWisdom, IntroGuide, Mikilab.jsx, MikiLabEliteEngine). Mohamed invariato. Evitata la regex greedy `src=.*avatar.*` (avrebbe cancellato alt/className e messo Miki al posto di Mohamed).
 - Restyle card: rounded-xl -> rounded-2xl + shadow-md + border-amber-900/40 (549 occorrenze). Verificato Home ordinata.
 - Build prod OK (yarn build). Redeploy avviato (job aa6b806a).
+
+## v-fork41 (2026-06) — Tema caldo + parita mobile (final)
+- bg-neutral/gray/slate-900 -> bg-[#1c140d] (warm). max-w-7xl -> max-w-full px-4 sm:px-6. grid-cols-3 -> grid-cols-1 sm:grid-cols-2 lg:grid-cols-3.
+- rounded-xl era gia no-op (convertito prima). Build prod OK. Verificato mobile 390px: overflow orizzontale 0px. Redeploy avviato (job aa6b806a).

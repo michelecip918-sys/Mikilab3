@@ -66,7 +66,7 @@ export default function ShareInstall() {
       </div>
       <p className="text-sm text-[#7E8A93] mb-4">{t("share_sub")}</p>
 
-      <div className="grid grid-cols-3 gap-2.5" data-testid="share-networks">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5" data-testid="share-networks">
         {NETS.map(({ id, label, Icon, color, href }) => (
           <a key={id} data-testid={`share-${id}`} href={href} target="_blank" rel="noopener noreferrer"
             className="flex flex-col items-center gap-1.5 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-[#e4eff8] dark:bg-[#1e1e1e] py-3 active:scale-95 transition-transform">

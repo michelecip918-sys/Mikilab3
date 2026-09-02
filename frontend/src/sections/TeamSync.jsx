@@ -219,7 +219,7 @@ export default function TeamSync({ open, onClose }) {
             <label className="text-[12px]" style={{ color: D.muted }}>{tri("Temp. rilevata °C", "Gemessene Temp. °C", "Measured temp °C", "Temp. medida °C", "Temp. mesurée °C", "دمای اندازه‌گیری")}</label>
             <input data-testid="team-temp" type="number" value={temp} onChange={(e) => setTemp(parseInt(e.target.value) || 0)} className="w-16 text-center rounded-md px-2 py-1.5 font-bold outline-none" style={inputSty} />
           </div>
-          <div className="grid grid-cols-3 gap-2 mb-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-3">
             <button data-testid="team-sos-scalda" onClick={() => handleSOS("scalda")} className="rounded-md py-2.5 text-[12px] font-bold" style={{ background: D.input, border: `1px solid ${D.red}`, color: D.text }}>🔥 {tri("Scalda", "Heiß", "Hot", "Caliente", "Chaud", "داغ")} ({temp}°)</button>
             <button data-testid="team-sos-strappa" onClick={() => handleSOS("strappa")} className="rounded-md py-2.5 text-[12px] font-bold" style={{ background: D.input, border: `1px solid ${D.amber}`, color: D.text }}>⚡ {tri("Strappa", "Reißt", "Tears", "Rompe", "Déchire", "پاره")}</button>
             <button data-testid="team-sos-incolla" onClick={() => handleSOS("incolla")} className="rounded-md py-2.5 text-[12px] font-bold" style={{ background: D.input, border: "1px solid #FFFF00", color: D.text }}>💧 {tri("Incolla", "Klebt", "Sticky", "Pega", "Colle", "می‌چسبد")}</button>

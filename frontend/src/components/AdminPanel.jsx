@@ -368,7 +368,7 @@ export default function AdminPanel({ open, onOpenChange }) {
             <p className="text-[12px] text-[#7E8A93]">{de ? "Wird geladen…" : "Caricamento…"}</p>
           ) : (
             <>
-              <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-3">
                 <div className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] p-2.5 text-center">
                   <p data-testid="email-report-total" className="font-display text-xl font-extrabold text-[#ff6b00]">{emailRep.total}</p>
                   <p className="text-[10px] text-[#7E8A93] leading-tight">{de ? "Gesendet" : "Inviate"}</p>

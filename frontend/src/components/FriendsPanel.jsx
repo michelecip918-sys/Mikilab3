@@ -71,7 +71,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
           <div className="p-6 text-center text-sm text-[#7E8A93]">{tri("Accedi per aggiungere amici e vedere le richieste.", "Melde dich an, um Freunde hinzuzufügen.", "Sign in to add friends and see requests.")}</div>
         ) : (
           <>
-            <div className="grid grid-cols-3 gap-1.5 p-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 p-3">
               {TABS.map((t) => (
                 <button key={t.id} data-testid={`friends-tab-${t.id}`} onClick={() => setTab(t.id)}
                   className={`py-2 rounded-2xl shadow-md border border-amber-900/40 text-xs font-semibold transition-all ${tab === t.id ? "bg-[#ff6b00] text-white" : "bg-[#e4eff8] dark:bg-[#1e1e1e] text-[#7E8A93]"}`}>

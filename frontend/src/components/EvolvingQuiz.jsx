@@ -136,7 +136,7 @@ export default function EvolvingQuiz() {
       )}
 
       {/* Selettore livello */}
-      <div className="grid grid-cols-3 gap-1.5 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 mb-3">
         {LEVELS.map((l) => (
           <button key={l.id} data-testid={`quiz-level-${l.id}`}
             onClick={() => { setLevel(l.id); setQ(null); setPicked(null); setStreak(0); setMasterStreak(0); }}
