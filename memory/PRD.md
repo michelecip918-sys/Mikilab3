@@ -3378,3 +3378,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - `BraccioLab.jsx`: sostituiti i due pulsanti frammentati "Ufficio & Squadra" (UfficioSquadra) e "Team Auricolari" (TeamSync) con UN unico pulsante `braccio-elite-engine` che apre l'Elite Engine. Import UfficioSquadra/TeamSync rimossi da BraccioLab (i file restano nel repo, non più referenziati).
 - Verificato via screenshot: overlay si apre dalla tab "Schede di Produzione" (Maestro), switch schede OK, tema corretto, compile pulito.
 
+
+## v-fork24 (2026-06) — MikiLab Elite OS v5.0 (upgrade Elite Engine)
+- `sections/MikiLabEliteEngine.jsx` SOVRASCRITTO con "MikiLab OS v5.0" (codice esatto utente), stesso wrapper overlay (createPortal, Chiudi + ESC).
+- 6 schede: ⚙️ BANCO (calcolo Acqua 3T + dosi vocali + sensore IoT amperometrico sforzo spirale con allarme "manca sale" <1.3 kW + simulatori OK/no-sale, stato cella full-auto, modulo precotto/par-baked), 📖 RICETTE (ricettario a categorie Brot/Brötchen/Konditorei/Vorgebacken/Snacks, click → seleziona e va a BANCO), ℹ️ GUIDA (scaler tutorial 4 step con slider + voce), 📸 CAM AI (placeholder vision), 📦 STOCK (silos + flotta), 👑 REGIA (invio report serale Tagesbericht).
+- Voce multilingua nativa IT/DE/RO (selettore in header). data-testid `elite-*`.
+- Verificato via screenshot: overlay apre da tab "Schede di Produzione", allarme IoT scatta, filtro categorie ricette OK, compile pulito.
+
