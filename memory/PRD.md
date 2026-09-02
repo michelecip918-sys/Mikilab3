@@ -3371,3 +3371,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 ## v-fork22 (2026-06) — Guida formatura per ricetta
 - Aggiunto campo `guida` alle ricette del DB in TeamSync; il ricalcolo dosi ora mostra "📌 Guida" (formatura/taglio) sotto il risultato (`team-dosi-guida`) e la detta a voce. Verificato Pane Matera.
 - NB: il mockup "Elite Engine" a 5 tab (LAB/VISION/CAPO/IMPARA/SOCIAL) è in gran parte già coperto da sezioni esistenti dell'app (Ricette, Scienza & Guide/Impara, Community/BakeHub, dashboard Gestione) + pannelli Team/Ufficio. Non ricostruiti per evitare duplicati; elementi residui (widget silos/cella freeze, "aggiorna ricette su tutti i dispositivi") restano backlog.
+
+## v-fork23 (2026-06) — MikiLab Elite Engine unificato
+- Nuovo componente `sections/MikiLabEliteEngine.jsx` (codice esatto fornito dall'utente, tema Grain Gold #D4AF37 / Dark Slate #0B0B0C) reso come overlay a schermo intero (createPortal, tasto Chiudi + ESC, data-testid `elite-*`).
+- 5 schede: ⚙️ BANCO (silos auto-sensor + cella freeze, selettore ricetta, calcolo Acqua 3T + costo materia prima, avvio timer con scarico stock, input vocale temp farina), 📦 STOCK AI (magazzino vivo + scan bolla Becco che carica giacenze), 🚛 FURGONI (flotta + rotta vocale), 📸 FOTO AI (placeholder controllo pagnotta), 👑 CAPO (CRUD ricette locale + push a tutti i panettieri). Voce nativa Web Speech, ricette in localStorage `mikilab_recipes`.
+- `BraccioLab.jsx`: sostituiti i due pulsanti frammentati "Ufficio & Squadra" (UfficioSquadra) e "Team Auricolari" (TeamSync) con UN unico pulsante `braccio-elite-engine` che apre l'Elite Engine. Import UfficioSquadra/TeamSync rimossi da BraccioLab (i file restano nel repo, non più referenziati).
+- Verificato via screenshot: overlay si apre dalla tab "Schede di Produzione" (Maestro), switch schede OK, tema corretto, compile pulito.
+
