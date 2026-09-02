@@ -1,7 +1,7 @@
 /* ============================================================================
-   MIKILAB ELITE OS v5.0 — FULL INDUSTRIAL ENGINE
-   Tema: Grain Gold #D4AF37 / Dark Slate #0B0B0C
-   Focus: Anti-Error OS + Bäckerei/Konditorei + Full Automation + Camera AI
+   MIKILAB ELITE ENGINE v9.0 - BIG MIX AI (FULL REBUILD & REFACTOR)
+   UI Theme: Grain Gold (#D4AF37) / Deep Slate (#0A0A0C) / Amber (#FFB300)
+   System: Integrated Anti-Error OS, IoT Sensors, AI Vision & Radio
    Reso come overlay a schermo intero (createPortal) con Chiudi + ESC.
    ============================================================================ */
 
@@ -10,45 +10,31 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 export default function MikiLabEliteEngine({ open, onClose }) {
-  const SYSTEM_NAME = "MikiLab OS v5.0";
-  const [activeTab, setActiveTab] = useState('banco');
+  const SYSTEM_NAME = "MikiLab OS v9.0";
+  const AI_IDENTITY = "Big Mix AI";
+
+  const [activeTab, setActiveTab] = useState('home');
   const [language, setLanguage] = useState('it-IT');
 
-  // --- 1. RICETTARIO DIVISO PER CATEGORIE (BÄCKEREI & KONDITOREI) ---
+  // --- RICETTARIO UNIFICATO BÄCKEREI & KONDITOREI ---
   const [activeCategory, setActiveCategory] = useState('Brot');
-  const [recipeBook] = useState([
-    // BROT (PANE)
-    { id: 'pane_matera', cat: 'Brot', nome: 'Pane di Matera IGP', farina: 50, acqua: 34, lievito: 0.75, sale: 1.0, tempIdeal: 24, note: 'Lievitazione lunga' },
-    { id: 'pane_grano_duro', cat: 'Brot', nome: 'Altstadt Landbrot (Grano Duro)', farina: 40, acqua: 26, lievito: 0.6, sale: 0.8, tempIdeal: 23, note: 'Cottura a cielo alto' },
-    // BRÖTCHEN (PANINI)
-    { id: 'ciabatta_trad', cat: 'Brötchen', nome: 'Ciabatta Classica 100g', farina: 25, acqua: 20, lievito: 0.5, sale: 0.5, tempIdeal: 22, note: 'Alta idratazione' },
-    { id: 'laugen_brezel', cat: 'Brötchen', nome: 'Laugenbrezel Bayrisch', farina: 30, acqua: 15, lievito: 0.9, sale: 0.66, tempIdeal: 21, note: 'Passaggio in soluzione soda' },
-    // KONDITOREI (PASTICCERIA)
-    { id: 'schwarzwald_boden', cat: 'Konditorei', nome: 'Schwarzwälder Kirschtorte (Basi)', farina: 10, zucchero: 8, uova: 60, cacao: 2, tempIdeal: 20, note: 'Montata soffice' },
-    { id: 'croissant_butter', cat: 'Konditorei', nome: 'Buttercroissant (Sfogliati)', farina: 20, acqua: 10, burroSfoglia: 10, lievito: 0.4, tempIdeal: 18, note: 'Laminazione a 4-4' },
-    // VORGEBACKEN (PRECOTTO)
-    { id: 'parbaked_baguette', cat: 'Vorgebacken', nome: 'Baguette Precotta (Par-Baked)', farina: 30, acqua: 21, lievito: 0.45, sale: 0.6, tempIdeal: 22, note: '80% Cottura - Vapore Max' },
-    // SNACKS & RIPIENI
-    { id: 'snack_focaccia', cat: 'Snacks', nome: 'Focaccia Ligure da Farcitura', farina: 20, acqua: 15, olio: 2, sale: 0.4, tempIdeal: 25, note: 'Buca manuale con salamoia' }
+  const [recipes] = useState([
+    { id: 'brot_matera', cat: 'Brot', name: 'Pane di Matera IGP', farina: 50, acqua: 34, lievito: 0.75, sale: 1.0, note: 'Lievitazione lunga' },
+    { id: 'brot_dinkel', cat: 'Brot', name: 'Dinkel-Vollkornbrot', farina: 40, acqua: 28, lievito: 0.6, sale: 0.8, note: 'Grano integrale' },
+    { id: 'broetchen_kaiser', cat: 'Brötchen', name: 'Kaisersemmel Classico', farina: 30, acqua: 18, lievito: 0.8, sale: 0.6, note: 'Stampa e stella veloce' },
+    { id: 'broetchen_brezel', cat: 'Brötchen', name: 'Laugenbrezel Bayrisch', farina: 35, acqua: 17.5, lievito: 0.9, sale: 0.7, note: 'Bagno in soluzione soda' },
+    { id: 'kondi_croissant', cat: 'Konditorei', name: 'Buttercroissant', farina: 25, acqua: 12.5, burro: 12.5, lievito: 0.5, note: 'Laminazione a 4-4' },
+    { id: 'precotto_baguette', cat: 'Vorgebacken', name: 'Par-Baked Baguette (80%)', farina: 30, acqua: 21, lievito: 0.5, sale: 0.6, note: 'Cottura parziale' }
   ]);
 
-  const [selectedRecipe, setSelectedRecipe] = useState(recipeBook[0]);
+  const [selectedRecipe, setSelectedRecipe] = useState(recipes[0]);
   const [batchKg, setBatchKg] = useState(50);
 
-  // --- 2. HARDWARE, IOT & CELLE AUTOMATICHE ---
-  const [silosFarina] = useState({ percentuale: 82, temp: 19.5 });
-  const [amperometroIoT, setAmperometroIoT] = useState(1.8); // kW Assorbimento Spirale (1.8 kW = OK, <1.2 kW = Manca Sale)
-  const [cellaAuto] = useState({ fase: 'Lievitazione (+24°C)', umidita: 80, contoRovescia: '00:45:00' });
-  const [fornoState] = useState({ forno1: 'In Cottura (230°C)', forno2: 'PRONTO PRECOTTO (190°C)' });
-
-  // --- 3. SCALER TUTORIAL PER APPRENDISTI ---
-  const [scalerStep, setScalerStep] = useState(0);
-  const scalerSteps = [
-    { titolo: "1. Controllo Silos & Calcolo 3T", icona: "🌾", desc: "La farina scende dal silos a 19.5°C. MikiLab calcola l'acqua esatta a 3T per avere l'impasto a 24°C." },
-    { titolo: "2. Impasto & Controllo IoT Sale", icona: "⚡", desc: "La pinza amperometrica misura 1.8 kW. Se dimentichi il sale, lo sforzo scende sotto 1.2 kW e suona l'allarme." },
-    { titolo: "3. Cella Fermalievitazione Auto", icona: "❄️", desc: "La cella passa da Freezer (-18°C) a Frigo (+2°C) e infine a Lievitazione (+24°C) pronte alle 02:00 di notte." },
-    { titolo: "4. Cottura Precotto & Abbattitore", icona: "🥖", desc: "I panini precotti cuociono all'80% per non scurire. Allarme vocale per estrazione e passaggio diretto a -35°C." }
-  ];
+  // --- TELEMETRIA HARDWARE & SENSORI ---
+  const [motorKw, setMotorKw] = useState(1.85);
+  const [radioPlaying, setRadioPlaying] = useState(false);
+  const [cameraActive, setCameraActive] = useState(false);
+  const [checkoutDone, setCheckoutDone] = useState(false);
 
   // ESC per chiudere
   useEffect(() => {
@@ -58,8 +44,8 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     return () => window.removeEventListener("keydown", onEsc);
   }, [open, onClose]);
 
-  // --- 4. TRADUTTORE VOCALE MULTILINGUA (MIKI-TRANSLATE) ---
-  const speakCommand = (text) => {
+  // --- SINTESI VOCALE MULTILINGUA ---
+  const speakVoice = (text) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
@@ -69,200 +55,187 @@ export default function MikiLabEliteEngine({ open, onClose }) {
     }
   };
 
-  // --- CALCOLO DOSI DINAMICHE ---
-  const factor = batchKg / selectedRecipe.farina;
-  const acquaCalcolata = (selectedRecipe.acqua * factor).toFixed(1);
-  const saleCalcolato = selectedRecipe.sale ? (selectedRecipe.sale * factor * 1000).toFixed(0) : 0;
-  const lievitoCalcolato = selectedRecipe.lievito ? (selectedRecipe.lievito * factor * 1000).toFixed(0) : 0;
+  // --- CALCOLATORE DOSI ---
+  const ratio = batchKg / selectedRecipe.farina;
+  const acquaLitri = (selectedRecipe.acqua * ratio).toFixed(1);
+  const saleGrammi = selectedRecipe.sale ? (selectedRecipe.sale * ratio * 1000).toFixed(0) : 0;
+  const lievitoGrammi = selectedRecipe.lievito ? (selectedRecipe.lievito * ratio * 1000).toFixed(0) : 0;
 
   if (!open) return null;
 
   const TABS = [
-    { id: 'banco', label: '⚙️ BANCO' },
-    { id: 'ricette', label: '📖 RICETTE' },
-    { id: 'guida', label: 'ℹ️ GUIDA' },
-    { id: 'camera', label: '📸 CAM AI' },
-    { id: 'stock', label: '📦 STOCK' },
-    { id: 'regia', label: '👑 REGIA' },
+    { id: 'home', label: '🏠 HOME BANCO' },
+    { id: 'ricette', label: '📖 RICETTARIO' },
+    { id: 'camera', label: '📸 VISIONE AI' },
+    { id: 'stock', label: '📦 MAGAZZINO' },
+    { id: 'regia', label: '👑 REGIA' }
   ];
 
   return createPortal(
-    <div data-testid="elite-engine-overlay" style={{ position: 'fixed', inset: 0, zIndex: 9999, overflowY: 'auto', backgroundColor: '#0B0B0C', color: '#FFF', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div data-testid="elite-engine-overlay" style={{ position: 'fixed', inset: 0, zIndex: 9999, overflowY: 'auto', backgroundColor: '#0A0A0C', color: '#F0F0F0', fontFamily: 'system-ui, sans-serif' }}>
       <div style={{ padding: '12px', maxWidth: 680, margin: '0 auto', paddingBottom: '80px' }}>
 
-        {/* HEADER DI BORDO INDUSTRIAL OS */}
-        <div style={{ borderBottom: '2px solid #D4AF37', paddingBottom: '8px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* HEADER MASTER OS */}
+        <div style={{ borderBottom: '2px solid #D4AF37', paddingBottom: '10px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: '1.2rem', color: '#D4AF37', letterSpacing: '1px' }}>{SYSTEM_NAME}</h1>
-            <span style={{ fontSize: '0.68rem', color: '#00FF66' }}>● SENSORI IOT CONNESSI | DSGVO & BetrVG COMPLIANT</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ backgroundColor: '#D4AF37', color: '#000', padding: '2px 6px', borderRadius: '4px', fontWeight: '900', fontSize: '0.75rem' }}>{AI_IDENTITY}</span>
+              <h1 style={{ margin: 0, fontSize: '1.2rem', color: '#D4AF37', letterSpacing: '0.5px' }}>{SYSTEM_NAME}</h1>
+            </div>
+            <div style={{ fontSize: '0.65rem', color: '#00E676', marginTop: '3px' }}>● SISTEMA UNIFICATO PRONTO | HARDWARE ONLINE</div>
           </div>
 
-          {/* SELETTORE LINGUA INTERFONO + CHIUDI */}
-          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-            <button data-testid="elite-lang-it" onClick={() => { setLanguage('it-IT'); speakCommand("Lingua Italiana impostata."); }} style={{ backgroundColor: language === 'it-IT' ? '#D4AF37' : '#18181A', color: language === 'it-IT' ? '#000' : '#FFF', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>IT</button>
-            <button data-testid="elite-lang-de" onClick={() => { setLanguage('de-DE'); speakCommand("Deutsche Sprache aktiv."); }} style={{ backgroundColor: language === 'de-DE' ? '#D4AF37' : '#18181A', color: language === 'de-DE' ? '#000' : '#FFF', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>DE</button>
-            <button data-testid="elite-lang-ro" onClick={() => { setLanguage('ro-RO'); speakCommand("Limba Română activă."); }} style={{ backgroundColor: language === 'ro-RO' ? '#D4AF37' : '#18181A', color: language === 'ro-RO' ? '#000' : '#FFF', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>RO</button>
-            <button data-testid="elite-close" onClick={onClose} aria-label="Chiudi" style={{ backgroundColor: '#18181A', color: '#FFF', border: '1px solid #333', padding: '5px 6px', borderRadius: '4px', display: 'flex', alignItems: 'center' }}>
+          {/* CONTROLLI RADIO & LINGUA + CHIUDI */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button data-testid="elite-radio-toggle" onClick={() => { setRadioPlaying(!radioPlaying); speakVoice(radioPlaying ? "Radio in pausa" : "Radio attivata"); }} style={{ backgroundColor: radioPlaying ? '#00E676' : '#18181A', color: radioPlaying ? '#000' : '#FFF', border: '1px solid #333', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}>
+              📻 RADIO: {radioPlaying ? 'ON' : 'OFF'}
+            </button>
+
+            <div style={{ display: 'flex', gap: '4px' }}>
+              {['it-IT', 'de-DE', 'ro-RO'].map(lang => (
+                <button key={lang} data-testid={`elite-lang-${lang.split('-')[0]}`} onClick={() => { setLanguage(lang); speakVoice(`Lingua ${lang.split('-')[0]}`); }} style={{ backgroundColor: language === lang ? '#D4AF37' : '#18181A', color: language === lang ? '#000' : '#FFF', border: '1px solid #333', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}>
+                  {lang.split('-')[0].toUpperCase()}
+                </button>
+              ))}
+            </div>
+
+            <button data-testid="elite-close" onClick={onClose} aria-label="Chiudi" style={{ backgroundColor: '#18181A', color: '#FFF', border: '1px solid #333', padding: '5px 6px', borderRadius: '4px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
               <X size={16} />
             </button>
           </div>
         </div>
 
-        {/* STRUTTURA A 6 TAB RIGIDE E PULITE */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '4px', marginBottom: '14px' }}>
+        {/* MENU TABS UNIFICATO */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px', marginBottom: '12px' }}>
           {TABS.map(tab => (
-            <button key={tab.id} data-testid={`elite-tab-${tab.id}`} onClick={() => setActiveTab(tab.id)} style={{ backgroundColor: activeTab === tab.id ? '#D4AF37' : '#18181A', color: activeTab === tab.id ? '#000' : '#FFF', border: 'none', padding: '10px 2px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>{tab.label}</button>
+            <button key={tab.id} data-testid={`elite-tab-${tab.id}`} onClick={() => setActiveTab(tab.id)} style={{ backgroundColor: activeTab === tab.id ? '#D4AF37' : '#18181A', color: activeTab === tab.id ? '#000' : '#FFF', border: '1px solid #222', padding: '10px 2px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}>
+              {tab.label}
+            </button>
           ))}
         </div>
 
-        {/* ================= TAB 1: BANCO PRODUZIONE NOTTURNO ================= */}
-        {activeTab === 'banco' && (
-          <div data-testid="elite-panel-banco" style={{ display: 'grid', gap: '10px' }}>
+        {/* ================= TAB 1: HOME BANCO ================= */}
+        {activeTab === 'home' && (
+          <div data-testid="elite-panel-home" style={{ display: 'grid', gap: '10px' }}>
 
-            {/* DOSAGGIO IMPASTO E CALCOLO ACQUA 3T */}
-            <div style={{ backgroundColor: '#18181A', padding: '12px', borderRadius: '8px', border: '1px solid #333' }}>
+            {/* DOSAGGIO CON SINTESI VOCALE */}
+            <div style={{ backgroundColor: '#141416', padding: '12px', borderRadius: '8px', border: '1px solid #2A2A2E' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <h3 style={{ margin: 0, color: '#D4AF37', fontSize: '0.95rem' }}>🥣 Impasto In Lavorazione: {selectedRecipe.nome}</h3>
-                <span style={{ fontSize: '0.7rem', color: '#AAA' }}>Categoria: {selectedRecipe.cat}</span>
+                <h3 style={{ margin: 0, color: '#D4AF37', fontSize: '0.95rem' }}>🥣 {selectedRecipe.name}</h3>
+                <span style={{ fontSize: '0.7rem', color: '#FFB300' }}>Cat: {selectedRecipe.cat}</span>
               </div>
 
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px' }}>
-                <label style={{ fontSize: '0.75rem' }}>KG Farina:</label>
-                <input data-testid="elite-input-kg" type="number" value={batchKg} onChange={(e) => setBatchKg(Number(e.target.value))} style={{ backgroundColor: '#0B0B0C', color: '#D4AF37', border: '1px solid #D4AF37', padding: '6px', borderRadius: '4px', width: '70px', fontWeight: 'bold' }} />
-                <button data-testid="elite-read-doses" onClick={() => speakCommand(`Dosi per ${batchKg} chili di farina. Versa ${acquaCalcolata} litri di acqua e ${saleCalcolato} grammi di sale.`)} style={{ backgroundColor: '#222', color: '#D4AF37', border: '1px solid #D4AF37', padding: '6px 10px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                <label style={{ fontSize: '0.75rem' }}>Farina (kg):</label>
+                <input data-testid="elite-input-kg" type="number" value={batchKg} onChange={(e) => setBatchKg(Number(e.target.value))} style={{ backgroundColor: '#0A0A0C', color: '#D4AF37', border: '1px solid #D4AF37', padding: '4px 8px', borderRadius: '4px', width: '70px', fontWeight: 'bold' }} />
+                <button data-testid="elite-read-doses" onClick={() => speakVoice(`Impostati ${batchKg} kg di farina. Dosi: ${acquaLitri} litri di acqua a tre T e ${saleGrammi} grammi di sale.`)} style={{ backgroundColor: '#18181A', color: '#D4AF37', border: '1px solid #D4AF37', padding: '6px 10px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}>
                   🎙️ LEGGI DOSI
                 </button>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', backgroundColor: '#0B0B0C', padding: '10px', borderRadius: '6px' }}>
-                <div>💧 Acqua 3T: <strong style={{ color: '#00FF66' }}>{acquaCalcolata} L</strong></div>
-                <div>🧂 Sale Fine: <strong>{saleCalcolato} g</strong></div>
-                <div>🍞 Lievito: <strong>{lievitoCalcolato} g</strong></div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', backgroundColor: '#0A0A0C', padding: '10px', borderRadius: '6px', textAlign: 'center' }}>
+                <div><span style={{ fontSize: '0.65rem', color: '#AAA' }}>💧 ACQUA 3T</span><br /><strong style={{ color: '#00E676', fontSize: '1rem' }}>{acquaLitri} L</strong></div>
+                <div><span style={{ fontSize: '0.65rem', color: '#AAA' }}>🧂 SALE</span><br /><strong style={{ color: '#FFB300', fontSize: '1rem' }}>{saleGrammi} g</strong></div>
+                <div><span style={{ fontSize: '0.65rem', color: '#AAA' }}>🍞 LIEVITO</span><br /><strong style={{ color: '#FFF', fontSize: '1rem' }}>{lievitoGrammi} g</strong></div>
               </div>
             </div>
 
-            {/* CONTROL SENSOR IOT (PINZA AMPEROMETRICA SALE) */}
-            <div data-testid="elite-iot-sensor" style={{ backgroundColor: amperometroIoT < 1.3 ? '#330000' : '#18181A', border: amperometroIoT < 1.3 ? '2px solid #FF3366' : '1px solid #00FF66', padding: '12px', borderRadius: '8px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '0.85rem' }}>⚡ Sensore IoT Sforzo Motore Spirale:</span>
-                <strong style={{ color: amperometroIoT < 1.3 ? '#FF3366' : '#00FF66' }}>{amperometroIoT} kW</strong>
+            {/* CONTROL SENSOR IOT (VERIFICA SALE) */}
+            <div data-testid="elite-iot-sensor" style={{ backgroundColor: motorKw < 1.3 ? '#2A0008' : '#141416', border: motorKw < 1.3 ? '2px solid #FF1744' : '1px solid #00E676', padding: '12px', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>⚡ Sforzo Motore Spirale:</span>
+                <strong style={{ fontSize: '1.1rem', color: motorKw < 1.3 ? '#FF1744' : '#00E676' }}>{motorKw} kW</strong>
               </div>
 
-              {amperometroIoT < 1.3 ? (
-                <div style={{ color: '#FF3366', marginTop: '6px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                  ⚠️ ALLARME SFORZO BASSO: Maglia glutinica assente. Hai dimenticato di versare il sale?
+              {motorKw < 1.3 ? (
+                <div style={{ color: '#FF1744', marginTop: '6px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                  ⚠️ ALLARME: Resistenza impasto insufficiente. Mancanza sale rilevata!
                 </div>
               ) : (
-                <div style={{ color: '#00FF66', marginTop: '4px', fontSize: '0.75rem' }}>
-                  ✓ Sforzo regolare: Maglia glutinica e sale confermati dalla resistenza meccanica.
+                <div style={{ color: '#00E676', marginTop: '4px', fontSize: '0.75rem' }}>
+                  ✓ Formazione maglia glutinica e sale confermati.
                 </div>
               )}
 
-              {/* Simulatore di test per la demo */}
-              <div style={{ marginTop: '8px', display: 'flex', gap: '6px' }}>
-                <button data-testid="elite-sim-ok" onClick={() => setAmperometroIoT(1.8)} style={{ fontSize: '0.65rem', backgroundColor: '#222', color: '#00FF66', border: 'none', padding: '4px 6px', borderRadius: '3px' }}>Simula Impasto OK (1.8 kW)</button>
-                <button data-testid="elite-sim-nosalt" onClick={() => setAmperometroIoT(0.9)} style={{ fontSize: '0.65rem', backgroundColor: '#222', color: '#FF3366', border: 'none', padding: '4px 6px', borderRadius: '3px' }}>Simula Dimenticanza Sale (0.9 kW)</button>
+              <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
+                <button data-testid="elite-sim-ok" onClick={() => setMotorKw(1.85)} style={{ backgroundColor: '#0A0A0C', color: '#00E676', border: '1px solid #00E676', padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem', cursor: 'pointer' }}>Simula Impasto OK</button>
+                <button data-testid="elite-sim-nosalt" onClick={() => setMotorKw(0.95)} style={{ backgroundColor: '#0A0A0C', color: '#FF1744', border: '1px solid #FF1744', padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem', cursor: 'pointer' }}>Simula Manca Sale</button>
               </div>
             </div>
 
-            {/* STATO CELLE & PRECOTTO */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              <div style={{ backgroundColor: '#18181A', padding: '10px', borderRadius: '6px', border: '1px solid #333' }}>
-                <h4 style={{ margin: '0 0 4px 0', color: '#D4AF37', fontSize: '0.8rem' }}>❄️ Cella Full-Automatic</h4>
-                <div style={{ fontSize: '0.75rem' }}>Stato: <strong>{cellaAuto.fase}</strong></div>
-                <div style={{ fontSize: '0.7rem', color: '#AAA' }}>Pronto tra: {cellaAuto.contoRovescia}</div>
-              </div>
-
-              <div style={{ backgroundColor: '#18181A', padding: '10px', borderRadius: '6px', border: '1px solid #333' }}>
-                <h4 style={{ margin: '0 0 4px 0', color: '#D4AF37', fontSize: '0.8rem' }}>🥖 Modulo Precotto (Par-Baked)</h4>
-                <div style={{ fontSize: '0.75rem' }}>Forno 2: <strong style={{ color: '#00FF66' }}>{fornoState.forno2}</strong></div>
-                <div style={{ fontSize: '0.7rem', color: '#AAA' }}>Cottura 80% + Abbattitore a -35°C</div>
+            {/* CHECKOUT FINE TURNO */}
+            <div style={{ backgroundColor: '#141416', padding: '12px', borderRadius: '8px', border: checkoutDone ? '1px solid #00E676' : '1px solid #FF1744' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>🛡️ Ciclo Automatico Notturno</span>
+                <button data-testid="elite-nightcycle" onClick={() => { setCheckoutDone(!checkoutDone); speakVoice(checkoutDone ? "Ciclo disattivato" : "Ciclo notturno attivato"); }} style={{ backgroundColor: checkoutDone ? '#00E676' : '#FF1744', color: checkoutDone ? '#000' : '#FFF', border: 'none', padding: '6px 10px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}>
+                  {checkoutDone ? '✓ CELLA ATTIVA' : 'ATTIVA ORA'}
+                </button>
               </div>
             </div>
 
           </div>
         )}
 
-        {/* ================= TAB 2: RICETTARIO BÄCKEREI & KONDITOREI ================= */}
+        {/* ================= TAB 2: RICETTARIO ================= */}
         {activeTab === 'ricette' && (
-          <div data-testid="elite-panel-ricette" style={{ backgroundColor: '#18181A', padding: '12px', borderRadius: '8px' }}>
-            <h3 style={{ margin: '0 0 10px 0', color: '#D4AF37', fontSize: '1rem' }}>📖 Ricettario Digitale Bäckerei & Konditorei</h3>
+          <div data-testid="elite-panel-ricette" style={{ backgroundColor: '#141416', padding: '12px', borderRadius: '8px', border: '1px solid #2A2A2E' }}>
+            <h3 style={{ margin: '0 0 10px 0', color: '#D4AF37', fontSize: '0.95rem' }}>📖 Seleziona Ricetta da Produzione</h3>
 
-            {/* FILTRO CATEGORIE */}
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '12px', overflowX: 'auto' }}>
-              {['Brot', 'Brötchen', 'Konditorei', 'Vorgebacken', 'Snacks'].map(cat => (
-                <button key={cat} data-testid={`elite-cat-${cat}`} onClick={() => setActiveCategory(cat)} style={{ backgroundColor: activeCategory === cat ? '#D4AF37' : '#0B0B0C', color: activeCategory === cat ? '#000' : '#FFF', border: '1px solid #333', padding: '6px 10px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+            <div style={{ display: 'flex', gap: '4px', marginBottom: '10px', overflowX: 'auto' }}>
+              {['Brot', 'Brötchen', 'Konditorei', 'Vorgebacken'].map(cat => (
+                <button key={cat} data-testid={`elite-cat-${cat}`} onClick={() => setActiveCategory(cat)} style={{ backgroundColor: activeCategory === cat ? '#D4AF37' : '#0A0A0C', color: activeCategory === cat ? '#000' : '#FFF', border: '1px solid #333', padding: '6px 10px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                   {cat}
                 </button>
               ))}
             </div>
 
-            {/* LISTA RICETTE FILTRATE */}
             <div style={{ display: 'grid', gap: '6px' }}>
-              {recipeBook.filter(r => r.cat === activeCategory).map(r => (
-                <div key={r.id} data-testid={`elite-recipe-${r.id}`} onClick={() => { setSelectedRecipe(r); setActiveTab('banco'); }} style={{ backgroundColor: '#0B0B0C', padding: '10px', borderRadius: '6px', borderLeft: '4px solid #D4AF37', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {recipes.filter(r => r.cat === activeCategory).map(r => (
+                <div key={r.id} data-testid={`elite-recipe-${r.id}`} onClick={() => { setSelectedRecipe(r); setActiveTab('home'); speakVoice(`Selezionato ${r.name}`); }} style={{ backgroundColor: '#0A0A0C', padding: '10px', borderRadius: '6px', borderLeft: '3px solid #D4AF37', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <strong style={{ fontSize: '0.85rem' }}>{r.nome}</strong>
-                    <div style={{ fontSize: '0.7rem', color: '#888' }}>{r.note}</div>
+                    <strong style={{ fontSize: '0.85rem' }}>{r.name}</strong>
+                    <div style={{ fontSize: '0.7rem', color: '#AAA' }}>{r.note}</div>
                   </div>
-                  <button style={{ backgroundColor: '#D4AF37', color: '#000', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>SELEZIONA</button>
+                  <button style={{ backgroundColor: '#D4AF37', color: '#000', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold' }}>CARICA</button>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* ================= TAB 3: GUIDA & SCALER INTERATTIVO ================= */}
-        {activeTab === 'guida' && (
-          <div data-testid="elite-panel-guida" style={{ backgroundColor: '#18181A', padding: '12px', borderRadius: '8px' }}>
-            <h3 style={{ margin: '0 0 8px 0', color: '#D4AF37', fontSize: '1rem' }}>ℹ️ Guida Operativa & Scaler Tutorial</h3>
-
-            <input data-testid="elite-scaler-range" type="range" min="0" max={scalerSteps.length - 1} value={scalerStep} onChange={(e) => setScalerStep(Number(e.target.value))} style={{ width: '100%', accentColor: '#D4AF37', marginBottom: '10px' }} />
-
-            <div style={{ backgroundColor: '#0B0B0C', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #D4AF37' }}>
-              <h4 style={{ margin: '0 0 6px 0', color: '#FFF' }}>{scalerSteps[scalerStep].icona} {scalerSteps[scalerStep].titolo}</h4>
-              <p style={{ margin: 0, fontSize: '0.8rem', color: '#CCC', lineHeight: '1.4' }}>{scalerSteps[scalerStep].desc}</p>
-            </div>
-
-            <button data-testid="elite-scaler-speak" onClick={() => speakCommand(scalerSteps[scalerStep].desc)} style={{ width: '100%', marginTop: '10px', backgroundColor: '#222', color: '#D4AF37', border: '1px solid #D4AF37', padding: '10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold' }}>
-              🎙️ ASCOLTA ISTRUZIONE VOCALE
-            </button>
-          </div>
-        )}
-
-        {/* ================= TAB 4: FOTOCAMERA AI & VISION ================= */}
+        {/* ================= TAB 3: CAMERA AI ================= */}
         {activeTab === 'camera' && (
-          <div data-testid="elite-panel-camera" style={{ backgroundColor: '#18181A', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-            <h3 style={{ margin: '0 0 8px 0', color: '#D4AF37', fontSize: '1rem' }}>📸 Visione Artificiale AI</h3>
-            <p style={{ fontSize: '0.75rem', color: '#AAA' }}>Analisi visiva dell'alveolatura, sagoma della pagnotta e scansione bolle fornitore (Becco).</p>
-            <div style={{ backgroundColor: '#0B0B0C', padding: '24px', borderRadius: '6px', border: '1px dashed #444', margin: '10px 0' }}>
-              <div style={{ fontSize: '2rem' }}>📷</div>
-              <span style={{ fontSize: '0.8rem', color: '#00FF66' }}>SISTEMA VISIONE PRONTO</span>
+          <div data-testid="elite-panel-camera" style={{ backgroundColor: '#141416', padding: '12px', borderRadius: '8px', textAlign: 'center', border: '1px solid #2A2A2E' }}>
+            <h3 style={{ margin: '0 0 8px 0', color: '#D4AF37', fontSize: '0.95rem' }}>📸 Scansione AI Alveolatura & Bolle</h3>
+
+            <div style={{ backgroundColor: '#0A0A0C', height: '160px', borderRadius: '6px', border: '1px dashed #D4AF37', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: '10px 0' }}>
+              {cameraActive ? (
+                <span style={{ color: '#00E676', fontWeight: 'bold', fontSize: '0.8rem' }}>📷 SCANSIONE IN CORSO... (LIVE FEED OK)</span>
+              ) : (
+                <button data-testid="elite-cam-activate" onClick={() => setCameraActive(true)} style={{ backgroundColor: '#D4AF37', color: '#000', border: 'none', padding: '8px 14px', borderRadius: '4px', fontWeight: 'bold', fontSize: '0.75rem', cursor: 'pointer' }}>
+                  ATTIVA FOTOCAMERA
+                </button>
+              )}
             </div>
-            <button data-testid="elite-cam-scan" onClick={() => speakCommand("Fotocamera attiva. Inquadra il lotto di pane o la bolla di consegna.")} style={{ backgroundColor: '#D4AF37', color: '#000', border: 'none', padding: '10px 16px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.75rem' }}>AZIONA SCANSIONE AI</button>
           </div>
         )}
 
-        {/* ================= TAB 5: STOCK & LOGISTICA ================= */}
+        {/* ================= TAB 4: STOCK ================= */}
         {activeTab === 'stock' && (
-          <div data-testid="elite-panel-stock" style={{ backgroundColor: '#18181A', padding: '12px', borderRadius: '8px' }}>
-            <h3 style={{ margin: '0 0 10px 0', color: '#D4AF37', fontSize: '1rem' }}>📦 Magazzino Silos & Flotta</h3>
-            <div style={{ backgroundColor: '#0B0B0C', padding: '10px', borderRadius: '6px', marginBottom: '8px' }}>
-              <strong>🌾 Silos Farina Principale:</strong> <span style={{ color: '#00FF66' }}>{silosFarina.percentuale}% (Livello OK)</span>
-            </div>
-            <div style={{ backgroundColor: '#0B0B0C', padding: '10px', borderRadius: '6px' }}>
-              <strong>🚛 Furgone 1 (Centro):</strong> 24 Ceste Caricate (In Partenza)
+          <div data-testid="elite-panel-stock" style={{ backgroundColor: '#141416', padding: '12px', borderRadius: '8px', border: '1px solid #2A2A2E' }}>
+            <h3 style={{ margin: '0 0 8px 0', color: '#D4AF37', fontSize: '0.95rem' }}>📦 Stato Silos & Stock</h3>
+            <div style={{ backgroundColor: '#0A0A0C', padding: '10px', borderRadius: '6px', borderLeft: '3px solid #00E676' }}>
+              <strong>🌾 Silos Farina T500:</strong> <span style={{ color: '#00E676', fontWeight: 'bold' }}>84% Disponibile</span>
             </div>
           </div>
         )}
 
-        {/* ================= TAB 6: REGIA & REPORT SERALE ================= */}
+        {/* ================= TAB 5: REGIA ================= */}
         {activeTab === 'regia' && (
-          <div data-testid="elite-panel-regia" style={{ backgroundColor: '#18181A', padding: '12px', borderRadius: '8px' }}>
-            <h3 style={{ margin: '0 0 8px 0', color: '#D4AF37', fontSize: '1rem' }}>👑 Regia Capo & Report Tagesbericht</h3>
-            <p style={{ fontSize: '0.75rem', color: '#AAA' }}>Report serale di produzione inviato all'ufficio (Formato aggregato conforme BetrVG / DSGVO).</p>
-            <button data-testid="elite-send-report" onClick={() => speakCommand("Report serale inviato con successo all'ufficio contabile.")} style={{ backgroundColor: '#00FF66', color: '#000', border: 'none', padding: '10px', borderRadius: '6px', width: '100%', fontWeight: 'bold', fontSize: '0.75rem' }}>
-              📄 INVIA REPORT SERALE TAGESBERICHT
+          <div data-testid="elite-panel-regia" style={{ backgroundColor: '#141416', padding: '12px', borderRadius: '8px', border: '1px solid #2A2A2E' }}>
+            <h3 style={{ margin: '0 0 8px 0', color: '#D4AF37', fontSize: '0.95rem' }}>👑 Regia Big Mix AI</h3>
+            <button data-testid="elite-send-report" onClick={() => speakVoice("Report serale inviato all'ufficio contabile.")} style={{ backgroundColor: '#00E676', color: '#000', border: 'none', padding: '10px', borderRadius: '4px', width: '100%', fontWeight: 'bold', fontSize: '0.75rem', cursor: 'pointer' }}>
+              📄 INVIA TAGESBERICHT VIA EMAIL
             </button>
           </div>
         )}

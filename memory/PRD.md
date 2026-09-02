@@ -3385,3 +3385,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Voce multilingua nativa IT/DE/RO (selettore in header). data-testid `elite-*`.
 - Verificato via screenshot: overlay apre da tab "Schede di Produzione", allarme IoT scatta, filtro categorie ricette OK, compile pulito.
 
+
+## v-fork25 (2026-06) — MikiLab OS v9.0 "Big Mix AI" (upgrade Elite Engine)
+- `sections/MikiLabEliteEngine.jsx` SOVRASCRITTO con "MikiLab OS v9.0 / Big Mix AI" (codice esatto utente), tema Deep Slate #0A0A0C + Grain Gold #D4AF37 + Amber #FFB300. Stesso wrapper overlay (createPortal, Chiudi + ESC).
+- Header con badge "Big Mix AI", toggle RADIO ON/OFF, selettore lingua IT/DE/RO (voce nativa).
+- 5 schede: 🏠 HOME BANCO (calcolo dosi 3T + voce, sensore IoT sforzo motore con allarme "manca sale" <1.3 kW + simulatori, ciclo automatico notturno cella), 📖 RICETTARIO (categorie Brot/Brötchen/Konditorei/Vorgebacken, click → carica in HOME), 📸 VISIONE AI (attiva fotocamera live feed), 📦 MAGAZZINO (silos), 👑 REGIA (invio Tagesbericht via email vocale). data-testid `elite-*`.
+- Verificato via screenshot: apre da tab "Schede di Produzione", radio toggle, allarme IoT, calcolo dosi corretto, compile pulito.
+
