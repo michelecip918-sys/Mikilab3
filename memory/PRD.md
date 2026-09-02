@@ -3400,3 +3400,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Toggle 📻 RADIO STAZIONI (elemento <audio> presente, avvio via voce), 5 tab (BANCO/RUOLO · RICETTARIO DB · VISIONE AI · MAGAZZINO · REGIA), invio Tagesbericht email con stato ✓. data-testid `elite-*` (role, lang, oven, ecc.).
 - Verificato via screenshot: overlay apre, switch ruolo cambia pannello (verificati fornaio timer e pasticcere), lingua FR OK, compile pulito.
 
+
+## v-fork27 (2026-06) — MikiLab OS v9.3 "3D Bakery World" (rebuild Elite Engine)
+- `sections/MikiLabEliteEngine.jsx` SOVRASCRITTO con il rebuild "3D Bakery World" (codice esatto utente, funzione originaria MikiLab3DBakeryOS → mantenuto export default `MikiLabEliteEngine` per non rompere l'import in BraccioLab). Overlay createPortal + Chiudi + ESC.
+- **4 stanze 3D interattive** con gradiente/colore/scena dedicati e transizione morbida: 🌾 Banco Impasti & Silos (input farina → acqua 68% + sale 2%), 🔥 Zona Forni a Legna (timer 18:00 + AVVIA COTTURA vocale), 🥐 Pasticceria & Abbattitore (-35°C, pieghe 4-4), 🛠️ Sala Macchine (silos + compressore).
+- Avatar cartoon 👨‍🍳 animato (keyframe `miki-bounce` iniettata via <style>, mancante nel codice originale), badge "STANZA 3D ATTIVA", frase d'azione per stanza.
+- Header glass (backdrop-blur), toggle 📻 Radio Panificio, selettore 6 lingue IT/DE/ES/FR/EN/FA (voce nativa). data-testid `elite-room-*`, `elite-scene-3d`, `elite-lang-*`, `elite-start-bake`, ecc.
+- Fix rispetto al codice grezzo: `justify` → `justifyContent`, `transition:all` → transizioni mirate (transform/background-color).
+- Verificato via screenshot: overlay apre da tab "Schede di Produzione", cambio stanza aggiorna gradiente+scena+dati (verificata Zona Forni), compile pulito.
+
