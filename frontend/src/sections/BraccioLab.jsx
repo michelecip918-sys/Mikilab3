@@ -7,6 +7,7 @@ import { useShift, setWorkMode, hasActiveAlerts, autonomyDeadline, fmtHM } from 
 import { isHeadsetRoutingAvailable, connectHeadset, startHeadsetSco } from "@/lib/nativeAudio";
 import Avatar3D from "@/components/Avatar3D";
 import UfficioSquadra from "@/sections/UfficioSquadra";
+import TeamSync from "@/sections/TeamSync";
 import { Building2 } from "lucide-react";
 
 // VISTA "SCHEDE DI PRODUZIONE" — tema SCURO "Grain Gold" (ebano caldo + oro), zero-scroll.
@@ -38,6 +39,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
 
   const consegne = () => window.dispatchEvent(new Event("mikilab-consegne"));
   const [officeOpen, setOfficeOpen] = useState(false);
+  const [teamOpen, setTeamOpen] = useState(false);
   const [hsBusy, setHsBusy] = useState(false);
   const onHeadset = async () => {
     setHsBusy(true);
@@ -130,9 +132,14 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
           className="flex items-center gap-2 rounded-full px-4 py-2 font-bold text-[13px] active:scale-95 transition-all" style={{ background: D.surf, border: `2px solid ${D.gold}`, color: D.gold }}>
           <Building2 className="w-4 h-4" /> {tri("Ufficio & Squadra", "Büro & Team", "Office & Team", "Oficina y Equipo", "Bureau & Équipe", "دفتر و تیم")}
         </button>
+        <button data-testid="braccio-team" onClick={() => setTeamOpen(true)}
+          className="flex items-center gap-2 rounded-full px-4 py-2 font-bold text-[13px] active:scale-95 transition-all" style={{ background: D.surf, border: `2px solid ${D.gold}`, color: D.gold }}>
+          <Headphones className="w-4 h-4" /> {tri("Team Auricolari", "Team-Headsets", "Team Headsets", "Auriculares Equipo", "Casques Équipe", "هدست تیم")}
+        </button>
       </div>
 
       <UfficioSquadra open={officeOpen} onClose={() => setOfficeOpen(false)} />
+      <TeamSync open={teamOpen} onClose={() => setTeamOpen(false)} />
 
       {/* 3 tasti rapidi */}
       <div className="grid grid-cols-3 gap-2.5">

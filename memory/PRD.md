@@ -3344,3 +3344,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Cuffie Squadra hands-free** (`ufficio-cuffie`): permesso microfono richiesto al click (getUserMedia), poi riusa l'ascolto continuo globale via eventi `mikilab-wake-on`/`mikilab-wake-off`; stato riflesso da `mikilab-voice-state.wake`. Voce nativa del telefono → ZERO crediti.
 - **Temperatura Acqua (Formula 3T)** integrata (`ufficio-calcola-acqua`): (Tdes×3)−(Tamb+Tfar+Timp). Testato: 24×3−51 = 21.0°C.
 - NB: gli strumenti erano già presenti singolarmente in MikiLab (WaterTempCalc, ToolsDirectory `acqua`/`convlievito`, SosImpasto); questo pannello li consolida nello stile richiesto dall'utente. Voce via `playTTS` (accorcia + fallback nativo).
+
+## v-fork18 (2026-06) — Pannello "Team Sync Auricolari" (multi-reparto)
+- Nuovo `sections/TeamSync.jsx` (overlay portal, tema dark+arancione+verde, fedele al mockup). Aperto da `braccio-team` in BraccioLab.
+- Reparti impasti/banco/forni, operatore (persistito), sequenza compiti multi-reparto con "Cosa faccio ora?" (`team-ask`) e avanzamento "TAP CUFFIA" (`team-confirm`).
+- SOS Impasto con temperatura (scalda/strappa/incolla) → soluzione vocale; Ricalcolo Dosi al volo (base 10kg → scala acqua/lievito/sale, verificato 25kg=16.3L/500g/550g); Interfono squadra push-to-talk (annuncio vocale locale; radio reale tra auricolari richiede build nativa Bluetooth).
+- Voce via `playTTS` (frasi brevi + fallback nativo → zero crediti). Tutto multilingue via `tri`. Verificato via screenshot.
