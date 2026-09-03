@@ -3741,3 +3741,14 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Calcolatore BakeMix** (`elite-bakemix`, sezione Ricette dell'Elite): input Farina kg, Idratazione %, T° Ambiente/Farina/Finale → calcola **Acqua (L)** = farina×idrat% (`bakemix-water-l`) e **T° Acqua** = (T°Finale×3)−(T°Amb+T°Farina+9) (`bakemix-water-t`). Pulsante `bakemix-speak` legge il risultato in cuffia (TTS reale). Formula deterministica, non mock.
 - Verifica: screenshot (10kg/70%→7.0 L; 24/22/20→21°C corretti) sopra le 148 ricette reali. Compilazione pulita.
 - RESTA (prossima sessione): simulatore Gesture magazzino (nod/shake→scarico giacenza), ruolo Capo/Braccio, widget Silos/Freezer con dati reali.
+
+## v48 (2026-06) — Guide Scientifiche Audio (Scienza & Fermentazione)
+- **Guide Audio** (`elite-guide-scienza` nella sezione Diagnosi): 2 schede a lettura vocale reale — `elite-guide-0` Lievito Madre & pH (range 4.1–4.3), `elite-guide-1` Difetti Alveolatura (mollica compatta = sotto-lievitazione/farina debole). TTS reale, nessun mock.
+- Verifica: screenshot Diagnosi (entrambe le guide presenti sopra i tool). Compilazione pulita.
+- RESTA (prossima sessione): Community feed (richiede persistenza server), Gesture magazzino, ruolo Capo/Braccio, widget Silos/Freezer.
+
+## Blocco 3 (2026-06) — Modulo "Scienza & Guide" (statico + audio)
+- Nuovo componente statico `frontend/src/sections/ModuloScienza.jsx` (opzione A): "Polo Didattico & Schede Tecniche Fermentazione" con 4 schede curate (Lievito Madre & pH, Difetti Alveolatura, Idratazione & Bassinage, Temperatura Finale Impasto), ognuna con audio-guida via `window.speechSynthesis` (lang it-IT). Estetica calm-tech teal/slate.
+- Collegato dentro l'hub "Scienza & Guide" (tab bottom-nav `imparacon` → `AcademyHome`) come voce "Strumenti extra" (sub `scienza`, testid `academy-tab-scienza`). Nessun nuovo tab bottom-nav (griglia fissa a 5).
+- Community NON toccata: il feed social (`Community.jsx` + `/api/community/*`) resta completo e persistito.
+- Verificato via screenshot: 4 schede presenti, audio-guida attiva SpeechSynthesis con testo corretto.

@@ -537,6 +537,17 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
         {/* SEZIONE DIAGNOSI & FORNI (panoramica stato sottosistemi) */}
         {!isLocked && eliteSection === 'diagnosi' && (
           <div data-testid="elite-panel-diagnosi" style={{ marginBottom: '16px' }}>
+            {/* Guide scientifiche audio (Scienza & Fermentazione) */}
+            <div data-testid="elite-guide-scienza" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '8px', marginBottom: '10px' }}>
+              <button data-testid="elite-guide-0" onClick={() => speakVoice("Guida Lievito Madre: mantenere il pH tra 4.1 e 4.3 per evitare un'eccessiva acidità acetica.")} style={{ backgroundColor: 'rgba(230,162,60,0.12)', border: '1px solid #E6A23C55', borderRadius: '10px', padding: '10px', textAlign: 'left', cursor: 'pointer' }}>
+                <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#E6A23C' }}>🧫 Lievito Madre & pH</div>
+                <div style={{ fontSize: '0.62rem', color: '#AAA', marginTop: '2px' }}>🎧 {_pick('Ascolta guida', 'Anhören', 'Listen', 'Escuchar', 'Écouter', 'گوش کن')} (pH 4.1–4.3)</div>
+              </button>
+              <button data-testid="elite-guide-1" onClick={() => speakVoice("Guida diagnostica: la mollica compatta indica solitamente una lievitazione incompleta o farina troppo debole.")} style={{ backgroundColor: `${currentRoom.color}18`, border: `1px solid ${currentRoom.color}55`, borderRadius: '10px', padding: '10px', textAlign: 'left', cursor: 'pointer' }}>
+                <div style={{ fontSize: '0.74rem', fontWeight: 700, color: currentRoom.color }}>🫓 Difetti Alveolatura</div>
+                <div style={{ fontSize: '0.62rem', color: '#AAA', marginTop: '2px' }}>🎧 {_pick('Ascolta guida', 'Anhören', 'Listen', 'Escuchar', 'Écouter', 'گوش کن')}</div>
+              </button>
+            </div>
             {activeTool && (
               <div data-testid="elite-tool-active" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: `${currentRoom.color}22`, border: `1px solid ${currentRoom.color}`, color: currentRoom.color, borderRadius: '10px', padding: '10px', marginBottom: '10px', fontWeight: 800, fontSize: '0.78rem' }}>
                 <span>🟢 {_pick("Strumento attivo", "Aktives Tool", "Active tool", "Herramienta activa", "Outil actif", "ابزار فعال")}: {activeTool}</span>

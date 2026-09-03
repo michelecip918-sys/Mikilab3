@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { GraduationCap, Calculator, Wheat, Camera, Trophy, ClipboardList, CheckCircle2, ChevronRight, Printer, Volume2 } from "lucide-react";
+import { GraduationCap, Calculator, Wheat, Camera, Trophy, ClipboardList, CheckCircle2, ChevronRight, Printer, Volume2, FlaskConical } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { FLOURS, CALC_RECIPES } from "@/data/academy";
 import Beginners from "@/sections/Beginners";
+import ModuloScienza from "@/sections/ModuloScienza";
 import { mkTri } from "@/i18n/triMaps";
 import { playTTS, stopTTS } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
@@ -44,6 +45,7 @@ export default function AcademyHome({ onNavigate }) {
     { id: "esercizi", n: "3", Icon: ClipboardList, label: tri("Esercizi", "Übungen", "Exercises", "Ejercicios"), desc: tri("Calcola le dosi e prova sul campo", "Mengen berechnen und üben", "Calculate doses and practise", "Calcula las dosis y practica") },
   ];
   const EXTRA = [
+    { id: "scienza", Icon: FlaskConical, label: tri("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías") },
     { id: "farine", Icon: Wheat, label: tri("Farine", "Mehle", "Flours", "Harinas") },
     { id: "diagnosi", Icon: Camera, label: tri("Diagnosi", "Diagnose", "Diagnosis", "Diagnóstico") },
   ];
@@ -128,6 +130,7 @@ export default function AcademyHome({ onNavigate }) {
 
       {/* Contenuto */}
       {(sub === "lezioni" || sub === "quiz") && <Beginners />}
+      {sub === "scienza" && <ModuloScienza activeTab="scienza" />}
       {sub === "esercizi" && <DynamicRecipes />}
       {sub === "farine" && <FlourDB />}
       {sub === "diagnosi" && (
