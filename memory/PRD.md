@@ -3630,3 +3630,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
   5. Setup iniziale: scansione macchinari con fotocamera + autocalibrazione sensori.
   6. Divise avatar diverse per reparto (6 immagini) + alternanza logo/avatar 1-1 estesa.
   7. titlePurge: rimuovere titoli/sottotitoli residui (serve indicare le schermate specifiche).
+
+## v-lab.13 (2026-06) — titlePurge (menu + footer) + Modulo Assenze
+- **SiteMenu (tre puntini)**: rinominate le voci ai titoli personali: ricette "Le Mie Ricette di MikiLab", maestro "Laboratorio di MikiLab" (+ ctxTitle).
+- **Footer sezioni**: rimossa la grande card (it-de-ribbon tricolore, logo, titolo MikiLab, paragrafo legale lungo, slogan, bandiere). Sostituito con footer minimale: riga brand + copyright "Michele (Il Comandante)" + link Impressum/Datenschutz/Contatti. Layout piu pulito su tutte le sezioni.
+- **Modulo Assenze** (MyData): pulsanti Malattia/Ferie + periodo/nota → POST /api/operator/absence → notifica in-app ai Capo/admin (_notify, type "absence") + email Resend. NotificationBell mostra il tipo assenza. Testato via curl (200, 2 notifiche create).
+- Auto-duck radio (tts events) attivo. Build OK.

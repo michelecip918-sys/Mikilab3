@@ -276,18 +276,9 @@ function App() {
         </AnimatePresence>
         </ErrorBoundary>
 
-        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#2A3B49]">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#3E9C93] via-[#3E9C93] to-[#3E9C93] text-white p-6 shadow-lg text-center">
-            <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" data-testid="footer-logo" loading="lazy"
-              className="w-20 h-20 rounded-2xl object-cover mx-auto ring-2 ring-[#D4AF37]/60 shadow-lg mt-1" />
-            <p className="font-display text-2xl font-extrabold tracking-tight mt-3">MikiLab</p>
-            <p className="text-[12px] font-bold tracking-wide text-[#3D2B1F] mt-1" data-testid="footer-bakemix">MikiLab — powered by BakeMix AI</p>
-            <p className="text-[10px] leading-snug text-white/60 mt-2 max-w-sm mx-auto" data-testid="footer-legal">© MikiLab — Proprietà Intellettuale Riservata. Software ideato, sviluppato e diretto da Michele. Tutti i diritti relativi all'architettura di sistema e al modello personalizzato BakeMix AI sono riservati. È severamente vietata qualsiasi riproduzione, modifica o distribuzione non autorizzata.</p>
-            <p className="text-[12px] text-white/85 leading-snug mt-1 max-w-xs mx-auto">{t("brand_slogan")}</p>
-            <p className="text-[11px] text-[#3E9C93]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
-          </div>
-          <p className="text-center text-[10px] text-[#9AA6AE] mt-3">© {new Date().getFullYear()} MikiLab · mikilab.de</p>
+        <footer data-testid="page-footer" className="mt-10 pt-5 border-t border-[#2A3B49]">
+          <p className="text-center text-[11px] text-[#94A3B8]">MikiLab · mikilab.de — powered by BakeMix AI · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
+          <p className="text-center text-[10px] text-[#64748B] mt-1 max-w-sm mx-auto" data-testid="footer-legal">© {new Date().getFullYear()} MikiLab — {tri("ideato e diretto da Michele (Il Comandante). Tutti i diritti riservati.", "konzipiert und geleitet von Michele (Der Kommandant). Alle Rechte vorbehalten.", "conceived and directed by Michele (The Commander). All rights reserved.", "ideado y dirigido por Michele (El Comandante). Todos los derechos reservados.")}</p>
           <div className="flex items-center justify-center gap-4 mt-2">
             <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">Impressum</button>
             <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">Datenschutz</button>
