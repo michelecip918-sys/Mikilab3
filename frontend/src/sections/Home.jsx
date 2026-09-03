@@ -1,4 +1,4 @@
-import { ChevronRight, WifiOff } from "lucide-react";
+import { ChevronRight, WifiOff, ChefHat } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -17,7 +17,7 @@ export default function Home({ onNavigate }) {
   const BLOCKS = [
     {
       tab: "maestro", img: "bg-lab.jpg",
-      title: L("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio"),
+      title: L("Laboratorio di MikiLab", "MikiLab-Labor", "MikiLab Lab", "Laboratorio de MikiLab"),
       badge: L("Pro · 3D", "Pro · 3D", "Pro · 3D", "Pro · 3D"),
       desc: L(
         "Elite Engine, banco impasti 3D, dosi dal database, forni, radio e comandi vocali.",
@@ -27,13 +27,13 @@ export default function Home({ onNavigate }) {
     },
     {
       tab: "ricette", img: "bg-ricette.jpg",
-      title: L("Ricette", "Rezepte", "Recipes", "Recetas"),
-      badge: L("Ricettario", "Rezeptbuch", "Recipe book", "Recetario"),
+      title: L("Le Mie Ricette di MikiLab", "MikiLab-Rezepte", "My MikiLab Recipes", "Mis Recetas de MikiLab"),
+      badge: L("Personali", "Persönlich", "Personal", "Personales"),
       desc: L(
-        "Ricette esclusive con dosi e passaggi, pronte da seguire.",
-        "Exklusive Rezepte mit Mengen und Schritten, sofort umsetzbar.",
-        "Exclusive recipes with quantities and steps, ready to follow.",
-        "Recetas exclusivas con cantidades y pasos, listas para seguir."),
+        "Le mie ricette personali di MikiLab, con dosi e passaggi pronti da seguire.",
+        "Meine persönlichen MikiLab-Rezepte mit Mengen und Schritten.",
+        "My personal MikiLab recipes, with quantities and steps ready to follow.",
+        "Mis recetas personales de MikiLab, con cantidades y pasos listos."),
     },
     {
       tab: "imparacon", img: "bg-accademia.jpg",
@@ -69,6 +69,17 @@ export default function Home({ onNavigate }) {
 
   return (
     <div className="pb-24" data-testid="home">
+      {/* Modalità Chef · Laboratorio — comando operativo primario, in cima */}
+      <button data-testid="home-chef-mode" onClick={() => go("maestro")}
+        className="w-full mb-6 flex items-center gap-3 rounded-3xl p-4 bg-gradient-to-r from-[#3E9C93] to-[#2E7D75] text-white shadow-[0_0_26px_rgba(62,156,147,0.45)] active:scale-[0.99] transition-all border border-[#3E9C93]/50 animate-pulse-slow">
+        <span className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center shrink-0"><ChefHat className="w-7 h-7" /></span>
+        <span className="text-start min-w-0 flex-1">
+          <span className="block font-display text-lg font-extrabold leading-tight">{L("Modalità Chef · Laboratorio", "Chef-Modus · Labor", "Chef Mode · Lab", "Modo Chef · Laboratorio")}</span>
+          <span className="block text-[12px] text-white/85 leading-snug">{L("Entra subito nel laboratorio operativo", "Direkt ins operative Labor", "Jump straight into the operative lab", "Entra directo al laboratorio operativo")}</span>
+        </span>
+        <ChevronRight className="w-6 h-6 shrink-0 rtl:rotate-180" />
+      </button>
+
       {/* Hero */}
       <div className="text-center mb-8">
         <img src={`${PUB}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover mx-auto ring-2 ring-[#5E8CA8]/40 shadow-lg" />

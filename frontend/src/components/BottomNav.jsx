@@ -37,7 +37,7 @@ export default function BottomNav({ active, onChange }) {
   // 4 sezioni fisse con icone dedicate (immagini su misura).
   const PUB = process.env.PUBLIC_URL;
   const TABS = [
-    { id: "ricette", label: triNav("Ricette del Maestro", "Meister-Rezepte", "Master Recipes", "Recetas del Maestro"), Icon: BookOpen },
+    { id: "ricette", label: triNav("Le Mie Ricette", "Meine Rezepte", "My Recipes", "Mis Recetas"), Icon: BookOpen },
     { id: "imparacon", label: triNav("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), Icon: GraduationCap },
     { id: "maestro", label: triNav("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción"), Icon: Wrench },
     { id: "community", label: "Community", Icon: Users },

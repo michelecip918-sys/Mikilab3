@@ -86,8 +86,9 @@ export default function VoiceSettings({ open, onClose }) {
               <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Scegli le voci 🎙️", "Stimmen wählen 🎙️", "Choose the voices 🎙️")}</h2>
               <button data-testid="voice-settings-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1B2A38] flex items-center justify-center"><X className="w-4 h-4" /></button>
             </div>
-            <Group title={tri("Voce di Mohammadreza (assistente)", "Mohammadreza-Stimme (Assistent)", "Mohammadreza's voice (assistant)")} sel={momy} setSel={setMohammadreza} who="momy" />
-            <Group title={tri("Voce di Michele (fondatore)", "Michele-Stimme (Gründer)", "Michele's voice (founder)")} sel={michele} setSel={setMichele} who="michele" />
+            <Group title={tri("Voce di Michele — Il Comandante", "Michele-Stimme — Der Kommandant", "Michele's voice — The Commander")} sel={michele} setSel={setMichele} who="michele" />
+            <p className="text-[11px] text-[#7E8A93] -mt-2 mb-2">{tri("Opzione secondaria · supporto tecnico", "Sekundäre Option · technischer Support", "Secondary option · technical support")}</p>
+            <Group title={tri("Voce di Mohammadreza (supporto)", "Mohammadreza-Stimme (Support)", "Mohammadreza's voice (support)")} sel={momy} setSel={setMohammadreza} who="momy" />
             <button data-testid="voice-settings-save" onClick={save}
               className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
               {tri("Salva le voci", "Stimmen speichern", "Save voices")}

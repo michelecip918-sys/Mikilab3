@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones, PlusCircle, Wheat } from "lucide-react";
+import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones, PlusCircle, Wheat, Hand, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -92,6 +92,28 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
           <Cpu className="w-5 h-5" /> {tri("Apri MikiLab Elite Engine", "MikiLab Elite Engine öffnen", "Open MikiLab Elite Engine", "Abrir MikiLab Elite Engine", "Ouvrir MikiLab Elite Engine", "باز کردن MikiLab Elite Engine")}
         </button>
         <p className="text-[11px]" style={{ color: D.muted }}>{tri("Include Banco Impasti 3D, Forni, Pasticceria e Guida", "Enthält Teigbank 3D, Öfen, Konditorei & Guide", "Includes 3D Dough Bench, Ovens, Pastry & Guide", "Incluye Banco de Masas 3D, Hornos, Pastelería y Guía", "Inclut Banc à Pâte 3D, Fours, Pâtisserie & Guide", "شامل میز خمیر سه‌بعدی، فرها، شیرینی و راهنما")}</p>
+      </div>
+
+      {/* Sistema mani libere: 3 concetti distinti */}
+      <div className="space-y-2" data-testid="handsfree-system">
+        <p className="text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1.5" style={{ color: D.gold }}>
+          <Headphones className="w-3.5 h-3.5" /> {tri("Sistema mani libere", "Freihändig-System", "Hands-free system", "Sistema manos libres", "Système mains libres", "سیستم بدون دست")}
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { Icon: Headphones, t: tri("Collega le cuffie", "Kopfhörer verbinden", "Connect headphones", "Conecta auriculares", "Connecter le casque", "اتصال هدفون"), s: tri("Audio privato", "Privates Audio", "Private audio", "Audio privado", "Audio privé", "صدای خصوصی") },
+            { Icon: Hand, t: tri("Mani libere", "Freihändig", "Hands-free", "Manos libres", "Mains libres", "بدون دست"), s: tri("Senza sporcare lo schermo", "Ohne den Bildschirm zu verschmutzen", "No dirty screen", "Sin ensuciar la pantalla", "Sans salir l'écran", "بدون کثیف کردن صفحه") },
+            { Icon: Mic, t: tri("Comandi vocali", "Sprachbefehle", "Voice commands", "Comandos de voz", "Commandes vocales", "دستور صوتی"), s: tri("Gestisci a voce", "Per Stimme steuern", "Control by voice", "Controla por voz", "Contrôle vocal", "کنترل صوتی") },
+          ].map((c, i) => (
+            <div key={i} className="rounded-2xl p-2.5 text-center" style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
+              <span className="mx-auto mb-1 flex items-center justify-center w-9 h-9 rounded-xl" style={{ background: "rgba(94,140,168,.14)", border: `1px solid ${D.goldSoft}` }}>
+                <c.Icon className="w-5 h-5" style={{ color: D.gold }} />
+              </span>
+              <span className="block text-[11px] font-bold leading-tight" style={{ color: D.text }}>{c.t}</span>
+              <span className="block text-[9px] leading-tight mt-0.5" style={{ color: D.muted }}>{c.s}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Comandi rapidi + Inserisci Ricetta */}

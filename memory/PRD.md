@@ -3599,3 +3599,12 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **HACCP PURGATO** (user-facing): DayClose/SiteMenu/LegalPage/siteInventory/toolGuide → "Registro di Produzione"/"Produktions-Register", rimosse diciture HACCP; eliminato file morto HaccpLog.jsx; commento labHubs neutralizzato. ("dispute/arguments" dello spec: nessuna sezione reale, solo falsi positivi).
 - Pulsanti: le CTA principali restano teal ad alto contrasto (Sign in, Open Elite Engine, Registra) su palette calma.
 - PDF funzioni rigenerato (sync). Build OK, verificato 390px. Deploy non lanciato. Target "emtra.be" NON configurabile da codice (dominio da pannello); produzione = mikilab.de.
+
+## v-lab.10 (2026-06) — Absolute Final Sync
+- **Modalità Chef · Laboratorio** in cima alla Home (CTA teal primario, testid home-chef-mode).
+- **Blocco Sistema mani-libere** in BraccioLab: 3 concetti distinti (Collega cuffie / Mani libere / Comandi vocali) con icone (testid handsfree-system).
+- **Titoli personali**: Home block "Laboratorio di MikiLab" + "Le Mie Ricette di MikiLab"; nav "Le Mie Ricette"; Magazzino → "Magazzino & Freezer di MikiLab".
+- **Autore unico**: rimosso riferimento a "contributi del team" in TrinityGold; firma "Michele (Il Comandante) con BakeMix AI". Footer copyright gia solo-Michele.
+- **Voce**: VoiceSettings riordinato — Michele (Il Comandante) primario, Mohammadreza come opzione secondaria/supporto tecnico.
+- **Purghe**: PaywallGate gia trasparente (nessun pagamento/abbonamento); rimosso il campo/tabella ALLERGENI dall etichetta UE (RecipeDialog); HACCP gia purgato.
+- Target "emtra.be": non configurabile da codice (dominio da pannello). Build OK, verificato 390px. Deploy non lanciato.

@@ -51,11 +51,11 @@ export function TrinitySeal() {
               <div><h2 className="font-display font-extrabold text-xl leading-tight" style={{ color: "#5E8CA8" }}>MikiLab</h2><p className="text-[11px] font-bold tracking-widest" style={{ color: "#94A3B8" }}>PROPRIETARY & CONFIDENTIAL</p></div>
             </div>
             <p className="text-[13.5px] leading-snug mb-3" style={{ color: "#EDE3CE" }}>
-              {tri("MikiLab è una piattaforma proprietaria avanzata per la gestione della panificazione professionale. Il sistema è stato concepito e diretto da Michele, con il supporto di BakeMix AI come co-pilota operativo di laboratorio e contributi tecnici di background del team.",
-                "MikiLab ist eine proprietäre Plattform für professionelles Backmanagement, konzipiert und geleitet von Michele, mit BakeMix AI als operativem Co-Piloten und technischen Hintergrundbeiträgen des Teams.",
-                "MikiLab is an advanced proprietary platform for professional bakery management, conceived and directed by Michele, with BakeMix AI as the operational lab co-pilot and background technical contributions from the team.",
-                "MikiLab es una plataforma propietaria avanzada para la gestión de panadería profesional, concebida y dirigida por Michele, con BakeMix AI como copiloto operativo y contribuciones técnicas del equipo.",
-                "MikiLab est une plateforme propriétaire avancée de gestion de boulangerie professionnelle, conçue et dirigée par Michele, avec BakeMix AI comme copilote et contributions techniques de l'équipe.",
+              {tri("MikiLab è una piattaforma proprietaria avanzata per la gestione della panificazione professionale, ideata, sviluppata e diretta esclusivamente da Michele (Il Comandante) con BakeMix AI, co-pilota operativo di laboratorio.",
+                "MikiLab ist eine proprietäre Plattform für professionelles Backmanagement, ausschließlich konzipiert, entwickelt und geleitet von Michele (Der Kommandant) mit BakeMix AI als operativem Co-Piloten.",
+                "MikiLab is an advanced proprietary platform for professional bakery management, conceived, developed and directed exclusively by Michele (The Commander) with BakeMix AI as the operational lab co-pilot.",
+                "MikiLab es una plataforma propietaria avanzada para la gestión de panadería profesional, ideada, desarrollada y dirigida exclusivamente por Michele (El Comandante) con BakeMix AI como copiloto operativo.",
+                "MikiLab est une plateforme propriétaire avancée de gestion de boulangerie professionnelle, conçue, développée et dirigée exclusivement par Michele (Le Commandant) avec BakeMix AI comme copilote.",
                 "MikiLab یک پلتفرم اختصاصی پیشرفته برای مدیریت نانوایی حرفه‌ای است که توسط میکله طراحی و هدایت شده است.")}
             </p>
             <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 mb-3" style={{ background: "#12100C", border: "1px solid #2A3B49" }}>

@@ -642,15 +642,6 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               ))}
             </div>
             <div className="mt-2">
-              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Allergeni (separati da virgola)", "Allergene (durch Komma getrennt)", "Allergens (comma separated)", "Alérgenos (separados por comas)")}</label>
-              <input
-                data-testid="label-allergens-input" value={lab.allergens}
-                onChange={(e) => setLab("allergens", e.target.value)}
-                placeholder={mkTri(lang)("es. Glutine, Latte, Uova", "z. B. Gluten, Milch, Eier", "e.g. Gluten, Milk, Eggs", "p. ej. Gluten, Leche, Huevos")}
-                className="mt-0.5 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg p-2 text-sm outline-none focus:border-[#3E9C93]"
-              />
-            </div>
-            <div className="mt-2">
               <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Elenco ingredienti", "Zutatenliste", "Ingredients list", "Lista de ingredientes")}</label>
               <textarea
                 data-testid="label-ingredients-input" rows={2} value={lab.ingredients}

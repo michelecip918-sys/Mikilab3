@@ -86,7 +86,7 @@ export default function Magazzino() {
     <div data-testid="magazzino" className="min-h-[70vh] rounded-3xl p-5 pb-28" style={{ background: D.bg, color: D.text, border: `1px solid ${D.border}` }}>
       <div className="flex items-center gap-2 mb-1">
         <Warehouse className="w-6 h-6" style={{ color: D.gold }} />
-        <h1 className="font-display font-extrabold leading-tight" style={{ fontSize: "clamp(24px,6vw,34px)", color: D.text }}>{tri("Magazzino Materie Prime", "Rohstofflager", "Raw Materials Stock", "Almacén de Materias", "Stock Matières", "انبار مواد اولیه")}</h1>
+        <h1 className="font-display font-extrabold leading-tight" style={{ fontSize: "clamp(24px,6vw,34px)", color: D.text }}>{tri("Magazzino & Freezer di MikiLab", "MikiLab-Lager & Freezer", "MikiLab Warehouse & Freezer", "Almacén & Freezer de MikiLab", "Stock & Congélateur MikiLab", "انبار و فریزر میکی‌لب")}</h1>
       </div>
       <p className="text-[13px] mb-4" style={{ color: D.muted }}>{tri("Carico rapido: nome, forza e quantità. Le impastate confermate scalano da sole le giacenze.", "Schnell erfassen; bestätigte Teige ziehen automatisch ab.", "Quick load; confirmed doughs auto-deduct stock.", "Carga rápida; las masas confirmadas descuentan solo.", "Saisie rapide; les pâtes confirmées déduisent.", "بارگذاری سریع.")}</p>
 
