@@ -128,13 +128,28 @@ export default function RadioFornaio() {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
-  // Auto-duck: quando il Co-Pilot (TTS) parla, abbassa la radio e la ripristina a fine avviso.
+  // Auto-duck BLINDATO: alla voce del Co-Pilot abbassa la radio, poi la RIPRISTINA in modo FLUIDO al 100%.
   useEffect(() => {
-    const duck = () => { const a = audioRef.current; if (a) a.volume = Math.min(0.08, volume); };
-    const restore = () => { const a = audioRef.current; if (a) a.volume = volume; };
+    let rampId = null;
+    const clearRamp = () => { if (rampId) { clearInterval(rampId); rampId = null; } };
+    const duck = () => { clearRamp(); const a = audioRef.current; if (a) a.volume = Math.min(0.08, volume); };
+    const restore = () => {
+      clearRamp();
+      const a = audioRef.current; if (!a) return;
+      const target = volume; const step = Math.max(0.02, target / 12);
+      rampId = setInterval(() => {
+        if (!audioRef.current) { clearRamp(); return; }
+        const cur = audioRef.current.volume;
+        if (cur >= target - 0.02) { audioRef.current.volume = target; clearRamp(); }
+        else audioRef.current.volume = Math.min(target, cur + step);
+      }, 40);
+    };
     window.addEventListener("mikilab-tts-start", duck);
     window.addEventListener("mikilab-tts-end", restore);
+    // Rete di sicurezza: se un evento "end" si perde, ogni 3s riporta la radio al volume pieno.
+    const safety = setInterval(() => { const a = audioRef.current; if (a && a.volume < volume - 0.05 && !rampId) restore(); }, 3000);
     return () => {
+      clearRamp(); clearInterval(safety);
       window.removeEventListener("mikilab-tts-start", duck);
       window.removeEventListener("mikilab-tts-end", restore);
     };

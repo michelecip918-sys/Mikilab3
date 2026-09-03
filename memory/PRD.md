@@ -3879,3 +3879,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Rinominato robot ufficiale in "Bake Mix"** (era Big Mix AI) in tutti i testi visibili; chiavi interne `bigmix` invariate.
 - Manuale B2B esteso a **Indice Moduli 1-64** (59 Audio Snapshot, 60 Smart Scale Sync, 61 Stress Index, 62 Recipe Scaling, 63 Squad Check-In, 64 Multi-Chief).
 - Verificato preview: copilot selector, intercom live, handoff, multi-chief + briefing, focus glow su Neural Load Radar. ZERO errori console. sw CACHE_NAME=mikilab-v16.
+
+## v14 — Protocollo Zero-Bug + PDF Ecosystem (2026-06)
+- **PDF "MikiLab_v14_Ecosystem_Document.pdf"** generato da reportlab (script /app/scripts/gen_pdf.py) da dati reali del codice: architettura, 8 sezioni, mappa 64 moduli, schede Cyber-Trio (Miki/Mohamed/Bake Mix), Plancia Capo Commander Voice, ~55 strumenti rilevati, hardware IoT + macchinari B2B con dove acquistarli. In /app/frontend/public (servito anche in produzione). ITALIANO.
+- **Zero-Bug/Fallback**: TalkWithMiki ascolto continuo con FALLBACK automatico su perdita cuffia Bluetooth/microfono o rete (stop + messaggio, si continua a tastiera); warm-up voci speechSynthesis per latenza minima di avvio TTS; RadioFornaio Auto-Duck BLINDATO (ripristino fluido a rampa al 100% + rete di sicurezza anti-stuck ogni 3s); guard anti-doppioni TTS (_ttsActive) + cleanup listener negli effetti.
+- IntroGuide statica già disattivata (showIntro=false); guida affidata solo agli avatar dinamici.
+- sw CACHE_NAME=mikilab-v17. Compilazione pulita, zero errori console.

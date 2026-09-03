@@ -42,6 +42,7 @@ export default function TalkWithMiki({ tab }) {
   const [copilot, setCopilot] = useState(() => localStorage.getItem("mikilab_copilot") || "trio");
   const [handoff, setHandoff] = useState(false);
   const [continuous, setContinuous] = useState(false);
+  const [micError, setMicError] = useState("");
   const listRef = useRef(null);
   const hapticRef = useRef(null);
   const recRef = useRef(null);
@@ -136,10 +137,19 @@ export default function TalkWithMiki({ tab }) {
     const rec = new SR();
     rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-US" : "it-IT";
     rec.continuous = true; rec.interimResults = false;
-    rec.onresult = (e) => { const t = e.results[e.results.length - 1][0].transcript.trim(); if (t) send(t); };
+    rec.onresult = (e) => { const t = e.results[e.results.length - 1][0].transcript.trim(); if (t) { setMicError(""); send(t); } };
     rec.onend = () => { if (contRef.current) { try { rec.start(); } catch { /* */ } } else setListening(false); };
     rec.onstart = () => setListening(true);
-    rec.onerror = () => { if (!contRef.current) setListening(false); };
+    rec.onerror = (ev) => {
+      // Fallback automatico: cuffia Bluetooth persa / microfono non disponibile / rumore alto
+      if (["not-allowed", "audio-capture", "service-not-allowed"].includes(ev.error)) {
+        contRef.current = false; setContinuous(false); setListening(false);
+        setMicError("Microfono o cuffia non disponibili: continua pure scrivendo qui sotto.");
+      } else if (ev.error === "network") {
+        setMicError("Connessione instabile: ho messo in pausa l'ascolto, usa la tastiera se serve.");
+      }
+      // no-speech / rumore: onend riavvia in automatico
+    };
     recRef.current = rec;
     try { rec.start(); } catch { /* */ }
   };
@@ -164,7 +174,7 @@ export default function TalkWithMiki({ tab }) {
     <>
       {/* Launcher fluttuante Miki */}
       {!open && (
-        <button data-testid="talk-miki-launcher" onClick={() => setOpen(true)}
+        <button data-testid="talk-miki-launcher" onClick={() => { setOpen(true); try { window.speechSynthesis && window.speechSynthesis.getVoices(); } catch { /* warm-up voci per latenza minima */ } }}
           className="fixed z-[60] bottom-24 right-4 w-16 h-16 rounded-full overflow-hidden border-2 border-[#E0A106] shadow-2xl active:scale-95 transition-transform"
           style={{ boxShadow: "0 0 24px rgba(224,161,6,.5)" }} aria-label="Talk with Miki">
           <img src={AV("avatar_miki.jpg")} alt="Miki" className="w-full h-full object-cover object-top" />
@@ -234,6 +244,7 @@ export default function TalkWithMiki({ tab }) {
                 <button data-testid="talk-continuous" onClick={toggleContinuous} className={`w-full inline-flex items-center justify-center gap-1.5 text-[11px] font-bold py-1.5 rounded-lg border ${continuous ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/50" : "text-slate-400 border-slate-700"}`}>
                   <Mic className="w-3.5 h-3.5" /> {continuous ? "Ascolto continuo attivo · parla pure" : "Attiva ascolto continuo (senza parole chiave)"}
                 </button>
+                {micError && <p data-testid="talk-mic-error" className="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-2.5 py-1.5">{micError}</p>}
                 {speaking && (
                   <button data-testid="talk-stop-voice" onClick={stopSpeak} className="w-full inline-flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300 text-xs font-bold py-1.5 rounded-lg"><Square className="w-3.5 h-3.5" /> Ferma la voce di Miki</button>
                 )}
