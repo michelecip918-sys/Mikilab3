@@ -40,7 +40,7 @@ export default function SmartPlannerStressZero() {
   const STATE_LABEL = { sopra: "Sovraccarico", sotto: "Sotto media", linea: "In linea", riposo: "Riposo" };
 
   const [importing, setImporting] = useState(false);
-  const importFromPlan = async () => {
+  const doImport = async (thenLevel) => {
     setImporting(true);
     try {
       const plan = await weeklyApi.get();
@@ -51,14 +51,24 @@ export default function SmartPlannerStressZero() {
         const idx = DAY_KEYS.indexOf(String(it.day || "").toLowerCase());
         if (idx >= 0) agg[idx] += Number(it.pieces) || 0;
       }
-      setWeek(agg.map((v) => Math.round(v)));
-      toast.success("Carichi importati dal Piano Settimana");
+      if (thenLevel) {
+        const rounded = agg.map((v) => Math.round(v));
+        const work = rounded.filter((v) => v > 0).length || 7;
+        const avg = Math.round(rounded.reduce((a, b) => a + b, 0) / work);
+        setWeek(rounded.map((v) => (v > 0 ? avg : 0)));
+        toast.success("Importato dal Piano e livellato");
+      } else {
+        setWeek(agg.map((v) => Math.round(v)));
+        toast.success("Carichi importati dal Piano Settimana");
+      }
     } catch {
       toast.error("Piano non disponibile (accedi per salvarlo)");
     } finally {
       setImporting(false);
     }
   };
+  const importFromPlan = () => doImport(false);
+  const importAndLevel = () => doImport(true);
 
   return (
     <div data-testid="smart-planner" className="bg-slate-900/80 p-6 rounded-2xl border border-indigo-500/30 space-y-6">
@@ -125,6 +135,14 @@ export default function SmartPlannerStressZero() {
           className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-teal-300 text-xs font-semibold rounded-lg border border-teal-500/30 active:scale-95 transition-all"
         >
           <CalendarDays className="w-3.5 h-3.5" /> {importing ? "Importazione…" : "Importa dal Piano Settimana"}
+        </button>
+        <button
+          data-testid="team-import-level"
+          onClick={importAndLevel}
+          disabled={importing}
+          className="inline-flex items-center gap-1.5 px-3 py-2 ml-2 bg-teal-600 hover:bg-teal-500 disabled:opacity-50 text-white text-xs font-bold rounded-lg active:scale-95 transition-all"
+        >
+          <Wand2 className="w-3.5 h-3.5" /> Importa e Livella (1 tap)
         </button>
 
         <div className="p-5 bg-slate-950 rounded-2xl border border-slate-800 space-y-4">

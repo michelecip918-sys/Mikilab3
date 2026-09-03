@@ -7,7 +7,7 @@ import { useShift, setWorkMode, hasActiveAlerts, autonomyDeadline, fmtHM } from 
 import { isHeadsetRoutingAvailable, connectHeadset, startHeadsetSco } from "@/lib/nativeAudio";
 import Avatar3D from "@/components/Avatar3D";
 import { useMixers } from "@/audio/MixerTimersContext";
-import { useLabTools } from "@/lib/labTools";
+import { useMachines } from "@/audio/MachinesContext";
 import MikiLabEliteEngine from "@/sections/MikiLabEliteEngine";
 import { Cpu } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
@@ -60,7 +60,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
 
   const consegne = () => window.dispatchEvent(new Event("mikilab-consegne"));
   const { list: mixers, start: startMixer, stop: stopMixer, dismiss: dismissMixer } = useMixers();
-  const { list: labTools, cycle: cycleTool } = useLabTools();
+  const { toolsRow, cycle: cycleMachine } = useMachines();
   const [eliteOpen, setEliteOpen] = useState(false);
   const [hsBusy, setHsBusy] = useState(false);
   const onHeadset = async () => {
@@ -201,11 +201,12 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
           <Wrench className="w-3.5 h-3.5" /> {tri("Strumenti Laboratorio", "Laborgeräte", "Lab tools", "Herramientas de laboratorio", "Outils du laboratoire", "ابزارهای آزمایشگاه")}
         </p>
         <div className="space-y-2" data-testid="braccio-labtools">
-          {labTools.map((tool) => (
-            <button key={tool.id} data-testid={`braccio-labtool-${tool.id}`} onClick={() => cycleTool(tool.id)}
-              className="w-full flex items-center justify-between rounded-2xl px-3 py-2.5 text-left active:scale-98 transition-all" style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
+          {toolsRow.map((tool) => (
+            <button key={tool.id} data-testid={`braccio-labtool-${tool.id}`} onClick={() => tool.kind === "manual" && cycleMachine(tool.id)}
+              className={`w-full flex items-center justify-between rounded-2xl px-3 py-2.5 text-left transition-all ${tool.kind === "manual" ? "active:scale-98" : ""} ${tool.alarm ? "animate-pulse" : ""}`} style={{ background: D.surf, border: `1.5px solid ${tool.alarm ? D.danger : D.border}` }}>
               <span className="text-[12px] font-bold" style={{ color: D.text }}>{tool.name}</span>
               <span className="flex items-center gap-1.5 text-[11px] font-extrabold" style={{ color: tool.color }}>
+                {tool.kind === "thermal" && <b className="font-mono text-[13px]" data-testid={`braccio-labtemp-${tool.id}`}>{tool.temp}{tool.unit}</b>}
                 <span className="w-2 h-2 rounded-full" style={{ background: tool.color }} /> {tool.status}
               </span>
             </button>

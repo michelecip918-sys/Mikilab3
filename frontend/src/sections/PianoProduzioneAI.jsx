@@ -182,6 +182,7 @@ export const TOOLS = [
   { id: "turni", Icon: Users, cat: "coldchain", kind: "gestisci", it: "Turni di Lavoro", de: "Arbeitsschichten", en: "Work shifts", es: "Turnos de trabajo" },
   { id: "planner", Icon: CalendarClock, cat: "coldchain", kind: "gestisci", it: "Smart Planner Stress-Zero", de: "Smart Planner Stress-Null", en: "Smart Planner Stress-Zero", es: "Smart Planner Estrés-Cero" },
   { id: "voicecore", Icon: Mic, cat: "coldchain", kind: "gestisci", it: "Voice Core", de: "Voice Core", en: "Voice Core", es: "Voice Core" },
+  { id: "thermalguard", Icon: Thermometer, cat: "coldchain", kind: "gestisci", it: "Zero-Night & Thermal Guard", de: "Zero-Night & Thermal Guard", en: "Zero-Night & Thermal Guard", es: "Zero-Night & Thermal Guard" },
   { id: "scarti", Icon: Recycle, cat: "coldchain", kind: "gestisci", it: "Registro Scarti", de: "Ausschuss-Register", en: "Waste Log", es: "Registro de Mermas" },
   { id: "capo", Icon: Building2, cat: "coldchain", kind: "gestisci", it: "Controllo Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers", es: "Cámaras y Amasadoras" },
   { id: "freezer", Icon: Snowflake, cat: "coldchain", kind: "gestisci", it: "Giacenze Freezer", de: "Gefrier-Bestand", en: "Freezer Stock", es: "Stock Congelador" },

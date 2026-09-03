@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Timer, Play, Square, RotateCcw, Headphones, Activity, Plus, Trash2, BellRing, Maximize2, Wrench } from "lucide-react";
 import { useMixers } from "@/audio/MixerTimersContext";
-import { useLabTools } from "@/lib/labTools";
+import { useMachines } from "@/audio/MachinesContext";
 
 const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
@@ -31,7 +31,7 @@ const LAB_TOOLS = null;
 
 export default function VoiceCore() {
   const { list, start, stop, reset, setMinutes, add, remove, dismiss } = useMixers();
-  const { list: labTools, cycle: cycleTool } = useLabTools();
+  const { toolsRow, cycle: cycleMachine } = useMachines();
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(true);
   const [transcript, setTranscript] = useState("");
@@ -224,10 +224,11 @@ export default function VoiceCore() {
           <Wrench className="w-4 h-4" /> Strumenti Laboratorio
         </h3>
         <div className="space-y-2">
-          {labTools.map((tool) => (
-            <button key={tool.id} data-testid={`labtool-${tool.id}`} onClick={() => cycleTool(tool.id)} className="w-full flex items-center justify-between bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-left active:scale-98 transition-all hover:border-slate-700">
+          {toolsRow.map((tool) => (
+            <button key={tool.id} data-testid={`labtool-${tool.id}`} onClick={() => tool.kind === "manual" && cycleMachine(tool.id)} className={`w-full flex items-center justify-between bg-slate-950 border rounded-xl px-4 py-3 text-sm text-left transition-all ${tool.kind === "manual" ? "active:scale-98 hover:border-slate-700" : ""} ${tool.alarm ? "animate-pulse border-rose-500" : "border-slate-800"}`}>
               <span className="text-slate-200">{tool.name}</span>
               <span className="flex items-center gap-1.5 font-semibold" style={{ color: tool.color }}>
+                {tool.kind === "thermal" && <b className="font-mono" data-testid={`labtemp-${tool.id}`}>{tool.temp}{tool.unit}</b>}
                 <span className="w-2 h-2 rounded-full" style={{ background: tool.color }} /> {tool.status}
               </span>
             </button>
