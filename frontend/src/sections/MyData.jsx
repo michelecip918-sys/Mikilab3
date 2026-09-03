@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { CalendarDays, BookOpen, FileText, MessageSquare, Clock, ChevronDown, Trash2, Loader2, Thermometer, Palmtree, Send } from "lucide-react";
+import { CalendarDays, BookOpen, FileText, MessageSquare, Clock, ChevronDown, Trash2, Loader2, Thermometer, Palmtree, Send, KeyRound, Copy, ShieldCheck } from "lucide-react";
 import { plansArchiveApi, recipesApi, chatApi, operatorApi } from "@/lib/api";
 import { getChats, removeChat } from "@/lib/chatHistory";
 import { useLang } from "@/i18n/LanguageContext";
@@ -49,10 +49,76 @@ export default function MyData({ onOpenTool }) {
     } finally { setAbsSending(""); }
   };
 
+  const isAdmin = user?.role === "admin";
+  const [invites, setInvites] = useState([]);
+  const [invBusy, setInvBusy] = useState(false);
+  const [redeemCode, setRedeemCode] = useState("");
+  const [redeemBusy, setRedeemBusy] = useState(false);
+  useEffect(() => {
+    if (isAdmin) operatorApi.listInvites().then((r) => setInvites(r.invites || [])).catch(() => {});
+  }, [isAdmin]);
+  const genInvite = async () => {
+    setInvBusy(true);
+    try {
+      await operatorApi.createInvite();
+      const r = await operatorApi.listInvites();
+      setInvites(r.invites || []);
+      toast.success(tri("Nuovo codice operatore generato ✔", "Neuer Operator-Code erstellt ✔", "New operator code created ✔"));
+    } catch { toast.error(tri("Solo il Capo può generare codici.", "Nur der Chef kann Codes erstellen.", "Only the Boss can create codes.")); }
+    finally { setInvBusy(false); }
+  };
+  const doRedeem = async () => {
+    if (!redeemCode.trim()) return;
+    setRedeemBusy(true);
+    try {
+      await operatorApi.redeem(redeemCode.trim());
+      toast.success(tri("Sei registrato come Operatore ✔ Ricarica per aggiornare.", "Als Operator registriert ✔", "Registered as Operator ✔"));
+      setRedeemCode("");
+    } catch (e) {
+      const s = e?.response?.status;
+      toast.error(s === 409 ? tri("Codice già utilizzato.", "Code bereits benutzt.", "Code already used.") : tri("Codice non valido.", "Ungültiger Code.", "Invalid code."));
+    } finally { setRedeemBusy(false); }
+  };
+
   return (
     <div data-testid="my-data" className="pb-4">
       <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] mb-1">{tri("I Miei Dati Salvati", "Meine gespeicherten Daten", "My Saved Data")}</h2>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Tutto ciò che salvi, in un unico posto.", "Alles, was du speicherst, an einem Ort.", "Everything you save, in one place.")}</p>
+
+      {/* Portale Operatori — token invito (Capo) / riscatto (Operatore) */}
+      <div data-testid="operator-portal" className="mb-4 rounded-2xl border border-[#2A3B49] bg-white dark:bg-[#1B2A38] p-4 shadow-md">
+        <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#5E8CA8] mb-1 flex items-center gap-1.5"><KeyRound className="w-3.5 h-3.5" /> {isAdmin ? tri("Codici Operatori (Capo)", "Operator-Codes (Chef)", "Operator Codes (Boss)") : tri("Codice Operatore", "Operator-Code", "Operator Code")}</p>
+        {isAdmin ? (
+          <>
+            <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Genera codici d'invito univoci da dare ai tuoi operatori per la registrazione sicura.", "Erzeuge eindeutige Einladungscodes für deine Operatoren.", "Generate unique invite codes for your operators' secure sign-up.")}</p>
+            <button data-testid="operator-gen-code" disabled={invBusy} onClick={genInvite} className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#3E9C93] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60 mb-3">
+              {invBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} {tri("Genera nuovo codice", "Neuen Code erzeugen", "Generate new code")}
+            </button>
+            <div className="space-y-1.5" data-testid="operator-code-list">
+              {invites.length === 0 && <p className="text-[12px] text-[#7E8A93] text-center py-1">{tri("Nessun codice ancora.", "Noch keine Codes.", "No codes yet.")}</p>}
+              {invites.slice(0, 12).map((iv) => (
+                <div key={iv.code} className="flex items-center justify-between rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2">
+                  <span className="font-mono-data font-bold tracking-widest text-[#2B303B] dark:text-[#e4eff8]">{iv.code}</span>
+                  <span className="flex items-center gap-2">
+                    {iv.used_by ? <span className="text-[10px] text-[#3E9C93] font-semibold flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5" />{iv.used_by_name || tri("Usato", "Benutzt", "Used")}</span> : <span className="text-[10px] text-[#7E8A93]">{tri("Libero", "Frei", "Free")}</span>}
+                    <button data-testid={`operator-copy-${iv.code}`} onClick={() => { try { navigator.clipboard.writeText(iv.code); toast.success(tri("Copiato", "Kopiert", "Copied")); } catch { /* */ } }} className="text-[#5E8CA8]"><Copy className="w-4 h-4" /></button>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : user?.role === "operatore" ? (
+          <p className="text-[13px] text-[#3E9C93] font-semibold flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> {tri("Sei registrato come Operatore di MikiLab.", "Du bist als MikiLab-Operator registriert.", "You are registered as a MikiLab Operator.")}</p>
+        ) : (
+          <>
+            <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Hai un codice dal Capo? Inseriscilo per attivare il tuo accesso da operatore.", "Code vom Chef? Gib ihn ein, um deinen Operator-Zugang zu aktivieren.", "Got a code from the Boss? Enter it to activate your operator access.")}</p>
+            <div className="flex gap-2">
+              <input data-testid="operator-redeem-input" value={redeemCode} onChange={(e) => setRedeemCode(e.target.value.toUpperCase())} placeholder="ES. A1B2C3D4" className="flex-1 rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm font-mono-data tracking-widest text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+              <button data-testid="operator-redeem-btn" disabled={redeemBusy} onClick={doRedeem} className="rounded-xl bg-[#3E9C93] text-white font-semibold px-4 active:scale-97 transition-all disabled:opacity-60">{redeemBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : tri("Attiva", "Aktivieren", "Activate")}</button>
+            </div>
+          </>
+        )}
+      </div>
 
       {/* Modulo Assenze — avvisa il Capo (malattia/ferie) */}
       <div data-testid="absence-module" className="mb-4 rounded-2xl border border-[#2A3B49] bg-white dark:bg-[#1B2A38] p-4 shadow-md">

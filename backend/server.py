@@ -7253,6 +7253,38 @@ async def operator_absence(body: AbsenceReq, user: dict = Depends(current_user))
     return {"ok": True, "label": label}
 
 
+@api_router.post("/operator/invites")
+async def create_operator_invite(user: dict = Depends(require_admin)):
+    code = uuid.uuid4().hex[:8].upper()
+    doc = {"code": code, "created_by": user.get("user_id"), "created_at": now_iso(), "used_by": None, "used_by_name": None, "used_at": None, "role": "operatore"}
+    await db.operator_invites.insert_one(doc)
+    return {"code": code}
+
+
+@api_router.get("/operator/invites")
+async def list_operator_invites(user: dict = Depends(require_admin)):
+    items = await db.operator_invites.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return {"invites": items}
+
+
+class RedeemReq(BaseModel):
+    code: str = Field(..., max_length=32)
+
+
+@api_router.post("/operator/redeem")
+async def redeem_operator_invite(body: RedeemReq, user: dict = Depends(current_user)):
+    code = (body.code or "").strip().upper()
+    inv = await db.operator_invites.find_one({"code": code})
+    if not inv:
+        raise HTTPException(status_code=404, detail="Codice non valido")
+    if inv.get("used_by") and inv.get("used_by") != user.get("user_id"):
+        raise HTTPException(status_code=409, detail="Codice gia utilizzato")
+    await db.operator_invites.update_one({"code": code}, {"$set": {"used_by": user.get("user_id"), "used_by_name": user.get("name") or user.get("email"), "used_at": now_iso()}})
+    if user.get("role") != "admin":
+        await db.users.update_one({"user_id": user.get("user_id")}, {"$set": {"role": "operatore"}})
+    return {"ok": True, "role": "operatore" if user.get("role") != "admin" else "admin"}
+
+
 
 # ---------------------------------------------------------------------------
 # Enterprise — Multi-Negozio (21) + Ordini Multi-Fornitore (23)

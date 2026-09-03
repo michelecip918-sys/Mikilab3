@@ -3636,3 +3636,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Footer sezioni**: rimossa la grande card (it-de-ribbon tricolore, logo, titolo MikiLab, paragrafo legale lungo, slogan, bandiere). Sostituito con footer minimale: riga brand + copyright "Michele (Il Comandante)" + link Impressum/Datenschutz/Contatti. Layout piu pulito su tutte le sezioni.
 - **Modulo Assenze** (MyData): pulsanti Malattia/Ferie + periodo/nota → POST /api/operator/absence → notifica in-app ai Capo/admin (_notify, type "absence") + email Resend. NotificationBell mostra il tipo assenza. Testato via curl (200, 2 notifiche create).
 - Auto-duck radio (tts events) attivo. Build OK.
+
+## v-lab.15 (2026-06) — v24/v26 Token Operatori + separazione ruoli
+- Nav: guida → "Guida Rapida".
+- **Portale Operatori** (MyData): Capo (role admin) genera codici invito univoci (POST /api/operator/invites, uuid 8 char), lista con stato usato/libero + copia; Operatore riscatta codice (POST /api/operator/redeem) → ruolo "operatore"; GET /api/operator/invites (admin). Guest = sola lettura (non loggato).
+- Backend: require_admin su create/list; redeem su current_user; 404 codice invalido, 409 gia usato.
+- Testato via curl: 403 senza admin, redeem→operatore, ruolo aggiornato in DB, invito segnato used_by. Build OK.
+- Ruoli: Capo(Admin) / Operatore(Token) / Ospite(read-only).

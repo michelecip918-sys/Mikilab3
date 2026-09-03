@@ -323,4 +323,7 @@ export const dayCloseApi = {
 
 export const operatorApi = {
   absence: (data) => api.post(`/operator/absence`, data).then((r) => r.data),
+  createInvite: () => api.post(`/operator/invites`).then((r) => r.data),
+  listInvites: () => api.get(`/operator/invites`).then((r) => r.data),
+  redeem: (code) => api.post(`/operator/redeem`, { code }).then((r) => r.data),
 };
