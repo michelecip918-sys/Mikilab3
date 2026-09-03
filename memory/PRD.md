@@ -3718,3 +3718,10 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - Operatori bloccati: nessun menu, restano nella vista operativa del loro reparto (invariato).
 - Verifica: screenshot Capo (switch tra le 4 sezioni, scena nascosta fuori da Laboratorio e ripristinata al ritorno). Compilazione pulita.
 - NOTA: la schermata PIN dello script v36 non è stata replicata (PIN 1985 già globale).
+
+## v44 (2026-06) — v37.0 Master Elite: Sposta Cesta in Consegna + Totale Pezzi + Diagnosi Collegata
+- **Sposta Cesta in Consegna**: pulsante `elite-crate-send-<i>` su ogni cesta → crea una consegna (client=negozio, fattorino della cesta) via `POST /api/deliveries` e SVUOTA la cesta; annuncio vocale. La consegna appare nella sezione Consegne.
+- **Totale Pezzi per Cesta**: badge `elite-crate-count-<i>` "(N pz)" sull'intestazione di ogni cesta, aggiornato in tempo reale.
+- **Diagnosi Collegata**: i riquadri Diagnosi (`elite-diag-<i>`) ora sono pulsanti; al tap mostrano il banner `elite-tool-active` "Strumento attivo: …" e annunciano a voce l'avvio. (Attivazione/annuncio; il collegamento profondo ai tool reali resta come evoluzione futura.)
+- **Ricette in Cesta** (bonus dallo script): le card ricette possono inviare in cesta (via addToCrate).
+- Verifica: screenshot Capo end-to-end — cesta (2 pz)→invio→(0 pz), consegna comparsa in Consegne, tap Scanner Farina→banner attivo. Compilazione pulita. Dati test ripuliti.

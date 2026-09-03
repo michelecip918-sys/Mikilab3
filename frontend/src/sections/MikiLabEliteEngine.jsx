@@ -54,6 +54,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const [crateDriver, setCrateDriver] = useState(DRIVERS[0]);
   const [targetCrateId, setTargetCrateId] = useState('');
   const [eliteSection, setEliteSection] = useState('laboratorio');
+  const [activeTool, setActiveTool] = useState(null);
   const isAfterCutoff = new Date().getHours() >= 18;
   const [holiday, setHoliday] = useState(false);
   const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
@@ -212,6 +213,17 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     if (targetCrateId === id) setTargetCrateId('');
     try { await fetch(`${API}/api/crates/${id}`, { method: 'DELETE', credentials: 'include' }); } catch (e) { loadCrates(); }
   };
+  const sendCrateToDelivery = async (crate) => {
+    if (!crate.items || crate.items.length === 0) { speakVoice("La cesta è vuota, impossibile spedire."); return; }
+    try {
+      await fetch(`${API}/api/deliveries`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client: crate.store_name, driver: crate.driver || '', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }) });
+      await fetch(`${API}/api/crates/${crate.id}/clear`, { method: 'POST', credentials: 'include' });
+      setCrates(prev => prev.map(c => c.id === crate.id ? { ...c, items: [] } : c));
+      loadDeliveries();
+      speakVoice(`Cesta di ${crate.store_name} affidata a ${crate.driver || 'fattorino'} e messa in consegna.`);
+    } catch (e) { loadCrates(); }
+  };
+  const openTool = (name) => { setActiveTool(name); speakVoice(`Avvio diagnostica: ${name}.`); };
 
   const speakVoice = (text) => {
     if ('speechSynthesis' in window) {
@@ -509,13 +521,21 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
         {/* SEZIONE DIAGNOSI & FORNI (panoramica stato sottosistemi) */}
         {!isLocked && eliteSection === 'diagnosi' && (
-          <div data-testid="elite-panel-diagnosi" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px', marginBottom: '16px' }}>
-            {[['🌾 Scanner Farina', 'Pronto'], ['📶 Bluetooth', 'Connessi'], ['✋ Mani in Pasta (Voce)', 'Attivo'], ['🩺 SOS Impasto', 'Standby'], ['📷 Diagnosi Foto', 'Attivo'], ['🔊 Diagnosi Suono', 'Attivo'], ['🔥 Forni', 'Operativi']].map(([t, st], i) => (
-              <div key={i} data-testid={`elite-diag-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: `1px solid ${currentRoom.color}44`, borderRadius: '10px', padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#EEE' }}>{t}</span>
-                <span style={{ fontSize: '0.6rem', backgroundColor: st === 'Standby' ? 'rgba(230,162,60,0.2)' : `${currentRoom.color}33`, color: st === 'Standby' ? '#E6A23C' : currentRoom.color, padding: '3px 6px', borderRadius: '6px', fontWeight: 700 }}>{st}</span>
+          <div data-testid="elite-panel-diagnosi" style={{ marginBottom: '16px' }}>
+            {activeTool && (
+              <div data-testid="elite-tool-active" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: `${currentRoom.color}22`, border: `1px solid ${currentRoom.color}`, color: currentRoom.color, borderRadius: '10px', padding: '10px', marginBottom: '10px', fontWeight: 800, fontSize: '0.78rem' }}>
+                <span>🟢 {_pick("Strumento attivo", "Aktives Tool", "Active tool", "Herramienta activa", "Outil actif", "ابزار فعال")}: {activeTool}</span>
+                <button onClick={() => setActiveTool(null)} style={{ background: 'none', border: 'none', color: '#FFF', cursor: 'pointer', fontWeight: 900 }}>✕</button>
               </div>
-            ))}
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px' }}>
+              {[['🌾 Scanner Farina', 'Apri Tool'], ['📶 Bluetooth', 'Connetti'], ['✋ Mani in Pasta (Voce)', 'Ascolta'], ['🩺 SOS Impasto', 'Controlla'], ['📷 Diagnosi Foto', 'Apri'], ['🔊 Diagnosi Suono', 'Ascolta'], ['🔥 Forni', 'Verifica']].map(([t, cta], i) => (
+                <button key={i} data-testid={`elite-diag-${i}`} onClick={() => openTool(t)} style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: `1px solid ${currentRoom.color}44`, borderRadius: '10px', padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', cursor: 'pointer', textAlign: 'left' }}>
+                  <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#EEE' }}>{t}</span>
+                  <span style={{ fontSize: '0.6rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px', fontWeight: 700 }}>{cta}</span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
@@ -931,7 +951,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                   {crates.map((c, i) => (
                     <div key={c.id} data-testid={`elite-crate-${i}`} onClick={() => setTargetCrateId(c.id)} style={{ cursor: 'pointer', backgroundColor: targetCrateId === c.id ? 'rgba(62,156,147,0.12)' : 'rgba(255,255,255,0.05)', border: `2px solid ${targetCrateId === c.id ? currentRoom.color : 'rgba(255,255,255,0.12)'}`, borderRadius: '10px', padding: '10px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-                        <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#FFF' }}>{c.store_name}</span>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#FFF' }}>{c.store_name} <span data-testid={`elite-crate-count-${i}`} style={{ fontSize: '0.62rem', color: currentRoom.color }}>({(c.items || []).length} pz)</span></span>
                         <div style={{ display: 'flex', gap: '4px' }}>
                           <button data-testid={`elite-crate-clear-${i}`} onClick={(e) => { e.stopPropagation(); clearCrate(c.id); }} title="Svuota" style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #55606B', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>🧹</button>
                           <button data-testid={`elite-crate-delete-${i}`} onClick={(e) => { e.stopPropagation(); deleteCrate(c.id); }} title="Elimina" style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>✕</button>
@@ -945,6 +965,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                         {(c.items || []).length === 0 ? <span style={{ fontSize: '0.66rem', color: '#777', fontStyle: 'italic' }}>{_pick("Cesta vuota…", "Leer…", "Empty…", "Vacía…", "Vide…", "خالی…")}</span>
                           : (c.items || []).map((p, j) => <span key={j} style={{ backgroundColor: currentRoom.color, color: '#000', fontSize: '0.64rem', padding: '3px 6px', borderRadius: '6px', fontWeight: 800 }}>{p}</span>)}
                       </div>
+                      <button data-testid={`elite-crate-send-${i}`} onClick={(e) => { e.stopPropagation(); sendCrateToDelivery(c); }} style={{ marginTop: '8px', width: '100%', backgroundColor: 'rgba(230,162,60,0.18)', color: '#E6A23C', border: '1px solid rgba(230,162,60,0.5)', borderRadius: '8px', padding: '8px', fontSize: '0.7rem', fontWeight: 800, cursor: 'pointer' }}>
+                        🚚 {_pick("Sposta in Consegna", "In Lieferung", "Send to Delivery", "Enviar a entrega", "Envoyer en livraison", "ارسال به تحویل")}
+                      </button>
                     </div>
                   ))}
                 </div>
