@@ -39,7 +39,7 @@ export default function BottomNav({ active, onChange }) {
   const TABS = [
     { id: "ricette", label: triNav("Le Mie Ricette", "Meine Rezepte", "My Recipes", "Mis Recetas"), Icon: BookOpen },
     { id: "imparacon", label: triNav("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), Icon: GraduationCap },
-    { id: "maestro", label: triNav("Laboratorio", "Labor", "Lab", "Laboratorio"), Icon: Wrench },
+    { id: "maestro", label: triNav("Modalità Chef", "Chef-Modus", "Chef Mode", "Modo Chef"), Icon: Wrench },
     { id: "community", label: "Community", Icon: Users },
     { id: "guida", label: triNav("Guida Rapida", "Kurzanleitung", "Quick Guide", "Guía Rápida"), Icon: BookOpenCheck },
   ];

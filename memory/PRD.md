@@ -3655,3 +3655,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Frontend (MyData): card "Il Mio Profilo Operatore" visibile solo per role operatore/sostituto: nome + select reparto (6) + salva; mostra reparto assegnato.
 - Testato via curl: save ok, get restituisce nome+reparto+role. Build OK.
 - Pronto per deploy unico con Delega 8h (scelta utente B).
+
+## v39 (2026-06) — Vista Pulita Operatore + blocco reparto + sync titoli
+- **Vista Pulita Operatore (P0)** in `BraccioLab.jsx`: per role `operatore`/`sostituto` nascosti i comandi da Capo (`braccio-quick-banco` = Banco Impasti, `braccio-quick-aggiungi` = Inserisci Ricetta). Restano visibili: avatar assistente, Elite Engine, sistema mani libere, comandi operativi rapidi. Il role `user` (fornaio) e gli ospiti mantengono la vista completa. Usa `useAuth()` + `operatorApi.getProfile()` per il reparto.
+- **Blocco Operatore sul reparto (P1)** in `MikiLabEliteEngine.jsx`: nuove props `locked`/`lockedDept`. Per operatore/sostituto il selettore 6 stanze è NASCOSTO e l'`activeTab` è forzato al reparto assegnato; badge `elite-locked-dept` trilingue (IT/DE/EN/ES/FR/FA). **Fail-closed**: se il reparto non è valido/assegnato, il selettore resta comunque nascosto con messaggio "Reparto non ancora assegnato — chiedi al Capo". Reparti = stanze: impasti/forni/pasticceria/laugen/banco/pretzel.
+- **Sincronizzazione titoli/menu**: etichetta sezione operativa standardizzata su "Modalità Chef · Laboratorio" (Home BLOCKS + CTA `home-chef-mode`, SiteMenu SECTIONS+ctxTitle, Maestro title) e "Modalità Chef" nella BottomNav (`nav-tab-maestro`). Eliminate le etichette disallineate ("Laboratorio", "Laboratorio di MikiLab", "Il Tuo Laboratorio").
+- Test: iteration_166 → frontend 100% (5/5 scenari: admin vede tutto+6 stanze; operatore vista pulita+lock FORNI; ospite vista completa; label sync). Self-test screenshot operatore OK.
+- Credenziali: admin@mikilab.de / **Mikilab2026!** (Capo); operatore@mikilab.de / Test1234! (dept=forni). Seed: `backend/seed_test_operator.py`.

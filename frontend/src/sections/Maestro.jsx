@@ -277,7 +277,7 @@ export default function Maestro() {
 
       {/* Header pulito e professionale: solo titolo, nessuna immagine decorativa (lab = lavoro veloce). */}
       <div data-testid="maestro-title" className="mb-4">
-        <h1 className="font-display text-2xl font-extrabold text-white leading-tight">{mkTri(lang)("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio", "Ton Atelier", "کارگاه تو")}</h1>
+        <h1 className="font-display text-2xl font-extrabold text-white leading-tight">{mkTri(lang)("Modalità Chef · Laboratorio", "Chef-Modus · Labor", "Chef Mode · Lab", "Modo Chef · Laboratorio", "Mode Chef · Atelier", "حالت شف · کارگاه")}</h1>
         <p className="text-[13px] text-[#AEB8BF] leading-snug mt-0.5">{mkTri(lang)("Inserisci la produzione di oggi: l'IA calcola dosi esatte, orari e gestione del freddo.", "Gib die heutige Produktion ein: die KI berechnet Mengen, Zeiten und Kältesteuerung.", "Enter today's production: the AI computes exact doses, timing and cold management.", "Introduce la producción de hoy: la IA calcula dosis exactas, horarios y gestión del frío.", "Saisis la production du jour : l'IA calcule doses, horaires et gestion du froid.", "تولید امروز را وارد کن: هوش مصنوعی مقدار، زمان و مدیریت سرما را حساب می‌کند.")}</p>
       </div>
 

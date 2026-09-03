@@ -65,7 +65,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const SECTIONS = [
     { id: "home", Icon: HomeIcon, label: tri("Home", "Home", "Home", "Inicio"), color: "#3E9C93" },
     { id: "ricette", Icon: BookOpen, label: tri("Le Mie Ricette di MikiLab", "Meine MikiLab-Rezepte", "My MikiLab Recipes", "Mis Recetas de MikiLab"), color: "#3E9C93" },
-    { id: "maestro", Icon: Wrench, label: tri("Laboratorio di MikiLab", "MikiLab-Labor", "MikiLab Lab", "Laboratorio de MikiLab"), color: "#3E9C93" },
+    { id: "maestro", Icon: Wrench, label: tri("Modalità Chef · Laboratorio", "Chef-Modus · Labor", "Chef Mode · Lab", "Modo Chef · Laboratorio"), color: "#3E9C93" },
     { id: "imparacon", Icon: GraduationCap, label: tri("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), color: "#A16207" },
     { id: "community", Icon: Users, label: tri("Community", "Community", "Community", "Comunidad"), color: "#3E9C93" },
   ];
@@ -91,7 +91,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
   const favTools = favs.map((id) => byId[id]).filter((t) => t && allowed(t));
 
   const ctx = tab === "maestro" ? "lab" : tab === "community" ? "social" : tab === "ricette" ? "ricette" : "generic";
-  const ctxTitle = ctx === "lab" ? tri("Laboratorio di MikiLab", "MikiLab-Labor", "MikiLab Lab", "Laboratorio de MikiLab")
+  const ctxTitle = ctx === "lab" ? tri("Modalità Chef · Laboratorio", "Chef-Modus · Labor", "Chef Mode · Lab", "Modo Chef · Laboratorio")
     : ctx === "social" ? tri("Social", "Social", "Social", "Social")
     : ctx === "ricette" ? tri("Le Mie Ricette di MikiLab", "Meine MikiLab-Rezepte", "My MikiLab Recipes", "Mis Recetas de MikiLab")
     : tri("MikiLab", "MikiLab", "MikiLab", "MikiLab");

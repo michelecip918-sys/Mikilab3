@@ -17,7 +17,7 @@ export default function Home({ onNavigate }) {
   const BLOCKS = [
     {
       tab: "maestro", img: "bg-lab.jpg",
-      title: L("Laboratorio di MikiLab", "MikiLab-Labor", "MikiLab Lab", "Laboratorio de MikiLab"),
+      title: L("Modalità Chef · Laboratorio", "Chef-Modus · Labor", "Chef Mode · Lab", "Modo Chef · Laboratorio"),
       badge: L("Pro · 3D", "Pro · 3D", "Pro · 3D", "Pro · 3D"),
       desc: L(
         "Elite Engine, banco impasti 3D, dosi dal database, forni, radio e comandi vocali.",

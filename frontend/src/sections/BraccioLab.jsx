@@ -8,6 +8,8 @@ import { isHeadsetRoutingAvailable, connectHeadset, startHeadsetSco } from "@/li
 import Avatar3D from "@/components/Avatar3D";
 import MikiLabEliteEngine from "@/sections/MikiLabEliteEngine";
 import { Cpu } from "lucide-react";
+import { useAuth } from "@/auth/AuthContext";
+import { operatorApi } from "@/lib/api";
 
 // VISTA "SCHEDE DI PRODUZIONE" — tema SCURO "Grain Gold" (ebano caldo + oro), zero-scroll.
 // Hands-free: ascolto continuo (tasto ORECCHIO in basso). Avatar 3D vocale al centro.
@@ -16,6 +18,12 @@ const D = { bg: "#0E1620", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49",
 export default function BraccioLab({ onOpenTool, onGestione }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const { user } = useAuth();
+  const isOperator = user?.role === "operatore" || user?.role === "sostituto";
+  const [opDept, setOpDept] = useState("");
+  useEffect(() => {
+    if (isOperator) operatorApi.getProfile().then((p) => setOpDept(p.department || "")).catch(() => {});
+  }, [isOperator]);
   const shift = useShift();
   const alert = hasActiveAlerts(shift);
   const [vs, setVs] = useState({ listening: false, speaking: false, wake: false });
@@ -136,6 +144,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
               {q.badge && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: D.danger }} />}
             </button>
           ))}
+          {!isOperator && (<>
           <button data-testid="braccio-quick-banco" onClick={() => setEliteOpen(true)}
             className="flex items-center gap-2 rounded-2xl px-2.5 py-2 text-left active:scale-97 transition-all"
             style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
@@ -158,6 +167,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
               <span className="block text-[10px] leading-tight truncate" style={{ color: D.muted }}>{tri("Scrivi o scansiona", "Schreiben/Scannen", "Write or scan", "Escribe o escanea", "Écris ou scanne", "بنویس یا اسکن کن")}</span>
             </span>
           </button>
+          </>)}
         </div>
 
         {/* Modalità Cuffie (hands-free) */}
@@ -168,7 +178,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
         </button>
       </div>
 
-      <MikiLabEliteEngine open={eliteOpen} onClose={() => setEliteOpen(false)} />
+      <MikiLabEliteEngine open={eliteOpen} onClose={() => setEliteOpen(false)} locked={isOperator} lockedDept={opDept} />
     </div>
   );
 }

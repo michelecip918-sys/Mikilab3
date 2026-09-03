@@ -21,8 +21,12 @@ const RADIO_STATIONS = [
   { id: 'classicfm', name: 'Classic FM (UK)', url: 'https://media-ssl.musicradio.com/ClassicFMMP3' },
 ];
 
-export default function MikiLabEliteEngine({ open, onClose }) {
-  const [activeTab, setActiveTab] = useState('impasti');
+const ROOM_IDS = ['impasti', 'forni', 'pasticceria', 'laugen', 'banco', 'pretzel'];
+
+export default function MikiLabEliteEngine({ open, onClose, locked = false, lockedDept = '' }) {
+  const hasValidDept = ROOM_IDS.includes(lockedDept);
+  const isLocked = locked; // operatore/sostituto: sempre bloccato (fail-closed anche senza reparto valido)
+  const [activeTab, setActiveTab] = useState(locked && hasValidDept ? lockedDept : 'impasti');
   const [language, setLanguage] = useState('it-IT');
   const [batchKg, setBatchKg] = useState(50);
   const [radioPlaying, setRadioPlaying] = useState(false);
@@ -40,6 +44,12 @@ export default function MikiLabEliteEngine({ open, onClose }) {
   const [ovenRecipeName, setOvenRecipeName] = useState(''); // ricetta che pilota il forno
 
   const radioRef = useRef(null);
+
+  // Blocco Operatore: quando l'engine si apre in modalità bloccata, forza il reparto assegnato.
+  useEffect(() => {
+    if (open && locked && hasValidDept) setActiveTab(lockedDept);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, locked, hasValidDept, lockedDept]);
 
   const speakVoice = (text) => {
     if ('speechSynthesis' in window) {
@@ -227,6 +237,10 @@ export default function MikiLabEliteEngine({ open, onClose }) {
   };
 
   const currentRoom = rooms3D[activeTab];
+  const _lc = (language || 'it-IT').slice(0, 2);
+  const _pick = (it, de, en, es, fr, fa) => ({ it, de, en, es, fr, fa }[_lc] || it);
+  const lockLabel = _pick("Reparto assegnato", "Zugewiesene Abteilung", "Assigned department", "Departamento asignado", "Rayon assigné", "بخش تعیین‌شده");
+  const noDeptLabel = _pick("Reparto non ancora assegnato — chiedi al Capo", "Noch keine Abteilung — frag den Chef", "No department yet — ask the Capo", "Sin departamento — pide al Capo", "Aucun rayon — demande au Chef", "بخش تعیین نشده — از سرآشپز بپرس");
 
   const formatTime = (secs) => {
     const mins = Math.floor(secs / 60);
@@ -294,7 +308,19 @@ export default function MikiLabEliteEngine({ open, onClose }) {
           </div>
         </div>
 
-        {/* SELETTORE STANZE 3D */}
+        {/* SELETTORE STANZE 3D — nascosto per l'operatore bloccato sul suo reparto */}
+        {isLocked ? (
+          <div data-testid="elite-locked-dept" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            backgroundColor: 'rgba(0,0,0,0.55)', border: `2px solid ${currentRoom.color}`,
+            borderRadius: '12px', padding: '12px', marginBottom: '16px',
+            color: currentRoom.color, fontWeight: 'bold', fontSize: '0.85rem', textAlign: 'center'
+          }}>
+            {hasValidDept
+              ? `🔒 ${lockLabel} · ${currentRoom.title}`
+              : `🔒 ${noDeptLabel}`}
+          </div>
+        ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px' }}>
           {[
             { id: 'impasti', icon: '🌾', label: 'IMPASTI' },
@@ -317,6 +343,7 @@ export default function MikiLabEliteEngine({ open, onClose }) {
             </button>
           ))}
         </div>
+        )}
 
         {/* SCENA 3D & FOTO REALI */}
         <div data-testid="elite-scene-3d" className="lab-3d-card" style={{

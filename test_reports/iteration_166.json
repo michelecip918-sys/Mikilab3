@@ -1,0 +1,38 @@
+{
+  "summary": "Frontend-only testing of 'Vista Pulita Operatore' (role separation Capo vs Operatore) on the preview URL. All 5 requested scenarios PASS. Admin (Capo) sees Capo quick commands (braccio-quick-banco, braccio-quick-aggiungi) and all 6 Elite Engine rooms with no locked badge and can switch rooms (verified switch to PASTICCERIA). Operatore (operatore@mikilab.de, dept=forni) sees the clean lab: both Capo commands absent, Elite launcher + hands-free system present; Elite Engine shows NO elite-room-* buttons and shows data-testid='elite-locked-dept' with text '\ud83d\udd12 Reparto assegnato \u00b7 \ud83d\udd25 FORNI SINCRONIZZATI 3D' and overlay content forced to FORNI (cannot switch department). Guest/unauthenticated view keeps the full Capo commands. Label sync verified: bottom nav maestro tab = 'Chef Mode' (EN), site menu maestro entry + site-menu-title = 'Chef Mode \u00b7 Lab', Home CTA home-chef-mode = 'Chef Mode \u00b7 Lab' and navigates to the operative lab. Only blocker found: documented ADMIN password was wrong.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/auth/login", "issue": "admin@mikilab.de / Test1234! returns 401 'Credenziali non valide'. Working password is Mikilab2026!. /app/memory/test_credentials.md and the review request were both stale; I corrected the memory file."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "SiteMenu", "issue": "Side menu overlay does not close on Escape key; only site-menu-close closes it. While open, the full-screen overlay intercepts header/nav clicks (blocked header-logo-home during automation).", "selector": "[data-testid=\"site-menu\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Elite Engine (operatore)", "issues": ["Locked badge label is Italian-only ('Reparto assegnato') while the rest of the UI rendered in EN \u2014 not trilingual like other labels"]},
+      {"screen": "BottomNav", "issues": ["No 'home' tab in bottom nav (My Recipes, Science & Guides, Chef Mode, Community, Quick Guide); Home is only reachable via header logo \u2014 noted for future test scripts, not a defect"]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/iteration_166.json"],
+  "action_items": [
+    "Update any docs/tests still using admin@mikilab.de / Test1234! (actual: Mikilab2026!)",
+    "Optional: add Escape-key + backdrop close to SiteMenu",
+    "Optional: make the elite-locked-dept badge label trilingual"
+  ],
+  "critical_code_review_comments": [
+    "MikiLabEliteEngine: isLocked = locked && ROOM_IDS.includes(lockedDept). If operatorApi.getProfile() fails or department is empty/invalid, an operatore gets the FULL room selector (fail-open). Make it fail-closed: when locked=true but dept unresolved, still hide the selector and show a 'reparto non assegnato' state.",
+    "BraccioLab: operatorApi.getProfile() error is swallowed with .catch(() => {}) \u2014 no loading/error state, and the lock silently degrades to unlocked.",
+    "MikiLabEliteEngine.jsx is a very large single file (room data + UI); consider extracting rooms3D data into a separate module."
+  ],
+  "updated_files": ["/app/memory/test_credentials.md"],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (5/5 scenarios)"},
+  "seed_data_creation": "None; used existing seeded admin and operatore accounts",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (Capo); operatore@mikilab.de / Test1234! (operatore, dept=forni); PIN bypass via localStorage mikilab_pin_unlocked=1, mikilab_pin_enabled=0, mikilab_lab_tour_done=1, mikilab_lab_view=braccio",
+  "context_for_next_testing_agent": "Feature verified end-to-end for admin, operatore and guest. Login: click [data-testid=login-btn] -> auth-email/auth-password -> auth-submit, wait ~5s. Set the 4 localStorage keys then reload BEFORE login. Bottom nav has no 'nav-tab-home'; use [data-testid=header-logo-home]. Close SiteMenu with [data-testid=site-menu-close] (Escape does not work) or later clicks are intercepted. Untested: sostituto role (not seeded) and behaviour when the operator profile fetch fails.",
+  "rca_of_the_issue": "Initial admin login failure was not a product bug: docs listed Test1234! for admin while the backend seed uses Mikilab2026! (confirmed via direct /api/auth/login: 401 vs 200)."
+}
