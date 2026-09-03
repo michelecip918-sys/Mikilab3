@@ -7453,11 +7453,12 @@ async def list_deliveries(user: dict = Depends(current_user)):
 class DeliveryReq(BaseModel):
     client: str = Field(..., max_length=120)
     time: Optional[str] = Field("", max_length=20)
+    driver: Optional[str] = Field("", max_length=80)
 
 
 @api_router.post("/deliveries")
 async def create_delivery(body: DeliveryReq, user: dict = Depends(current_user)):
-    doc = {"id": str(uuid.uuid4()), "client": body.client.strip(), "time": (body.time or "").strip(), "status": "in consegna", "created_at": now_iso()}
+    doc = {"id": str(uuid.uuid4()), "client": body.client.strip(), "time": (body.time or "").strip(), "driver": (body.driver or "").strip() or "Fattorino Standard", "status": "in consegna", "created_at": now_iso()}
     await db.deliveries.insert_one(doc)
     doc.pop("_id", None)
     return {"ok": True, "delivery": doc}
@@ -7477,9 +7478,15 @@ async def update_delivery(delivery_id: str, body: DeliveryStatusReq, user: dict 
 
 
 @api_router.delete("/deliveries/{delivery_id}")
-async def delete_delivery(delivery_id: str, user: dict = Depends(require_admin)):
+async def delete_delivery(delivery_id: str, user: dict = Depends(current_user)):
     await db.deliveries.delete_one({"id": delivery_id})
     return {"ok": True}
+
+
+@api_router.post("/oven/alarms/read")
+async def mark_oven_alarms_read(user: dict = Depends(require_admin)):
+    res = await db.notifications.update_many({"user_id": user["user_id"], "type": "oven_alarm", "read": False}, {"$set": {"read": True}})
+    return {"ok": True, "updated": res.modified_count}
 
 
 @api_router.post("/operator/delegation")

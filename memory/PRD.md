@@ -3692,3 +3692,11 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - Rifiniture: feedback errori su crea/elimina reparto (`elite-dept-error`, conferma su delete); consegne nascoste agli ospiti.
 - Test: iteration_168 → frontend **100% (7/7)** incl. round-trip persistenza + regressione ruoli (operatore locked, ospite read-only). Backend curl-verificato. Stato dati ripulito.
 - Backlog: annuncio vocale cambi stato; badge contatore allarmi non letti; delete consegna dalla UI; estrarre sub-componenti (file >700 righe).
+
+## v41 (2026-06) — v32.0 Master Elite: Voce, Badge Allarmi, Consegne Complete, Ferie Intelligenti
+- **Annuncio Vocale di Stato**: pulsante `elite-announce-status` (Pannello Capo) → sintesi vocale del turno (consegne in corso, allarmi non letti, reparto attivo). Annuncio vocale anche all'aggiunta consegna e al toggle Ferie.
+- **Badge Allarmi Non Letti**: contatore rosso `elite-alarms-unread` sullo Storico Allarmi + `elite-alarms-markread` ("Segna come letti"). Backend `POST /api/oven/alarms/read` (admin) imposta read=true; `GET /api/oven/alarms` include `read`.
+- **Consegne Complete**: campo fattorino (`elite-delivery-driver`) mostrato in riga (🛵) + pulsante elimina `elite-delivery-delete-<i>`. Backend: `DeliveryReq.driver`, `DELETE /api/deliveries/{id}` ora per utente loggato.
+- **Ferie Intelligenti**: label "cicli clonati" + annuncio vocale sul toggle (clonazione cicli resta a livello UI/annuncio, nessuna logica di produzione fittizia lato server).
+- NOTA: la schermata "System Blocked" dello script v32 è stata SALTATA (duplicherebbe il gate PIN 1985 già esistente).
+- Verifica: backend curl (delivery+driver, mark-read updated=1, alarm read) + screenshot Capo (badge "1", Segna letti, Annuncia Stato, consegna con fattorino + elimina). Compilazione pulita. Dati test ripuliti.

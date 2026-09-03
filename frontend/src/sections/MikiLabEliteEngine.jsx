@@ -46,6 +46,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const [newFeature, setNewFeature] = useState('');
   const [newClient, setNewClient] = useState('');
   const [newDeliveryTime, setNewDeliveryTime] = useState('');
+  const [newDriver, setNewDriver] = useState('');
   const isAfterCutoff = new Date().getHours() >= 18;
   const [holiday, setHoliday] = useState(false);
   const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
@@ -145,11 +146,23 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   };
   const addDelivery = async () => {
     const client = newClient.trim(); if (!client) return;
-    try { const res = await fetch(`${API}/api/deliveries`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client, time: newDeliveryTime.trim() }) }); if (res.ok) { setNewClient(''); setNewDeliveryTime(''); loadDeliveries(); } } catch (e) { /* */ }
+    try { const res = await fetch(`${API}/api/deliveries`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client, time: newDeliveryTime.trim(), driver: newDriver.trim() }) }); if (res.ok) { setNewClient(''); setNewDeliveryTime(''); setNewDriver(''); loadDeliveries(); speakVoice(`Nuova consegna aggiunta per ${client}.`); } } catch (e) { /* */ }
   };
   const setDeliveryStatus = async (id, status) => {
     setDeliveries(prev => prev.map(d => d.id === id ? { ...d, status } : d));
     try { await fetch(`${API}/api/deliveries/${id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) }); } catch (e) { loadDeliveries(); }
+  };
+  const deleteDelivery = async (id) => {
+    setDeliveries(prev => prev.filter(d => d.id !== id));
+    try { await fetch(`${API}/api/deliveries/${id}`, { method: 'DELETE', credentials: 'include' }); } catch (e) { loadDeliveries(); }
+  };
+  const markAlarmsRead = async () => {
+    try { await fetch(`${API}/api/oven/alarms/read`, { method: 'POST', credentials: 'include' }); setOvenAlarms(prev => prev.map(a => ({ ...a, read: true }))); } catch (e) { /* */ }
+  };
+  const announceStatus = () => {
+    const inConsegna = deliveries.filter(d => d.status === 'in consegna').length;
+    const unread = ovenAlarms.filter(a => !a.read).length;
+    speakVoice(`Stato laboratorio. ${inConsegna} consegne in corso. ${unread} allarmi forno non letti. Reparto ${currentRoom.title} operativo.`);
   };
 
   const speakVoice = (text) => {
@@ -233,6 +246,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
       const res = await fetch(`${API}/api/lab/holiday`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active: next }) });
       if (!res.ok) { setHoliday(!next); return; }
       window.dispatchEvent(new Event('mikilab-holiday-changed'));
+      speakVoice(next ? "Modalità ferie intelligenti attivata, cicli settimanali clonati." : "Modalità ferie disattivata, produzione ripresa.");
     } catch (e) { setHoliday(!next); }
   };
 
@@ -462,6 +476,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                   {_pick("Ho una Squadra", "Ich habe ein Team", "I have a Crew", "Tengo Equipo", "J'ai une Équipe", "تیم دارم")}
                 </button>
               </div>
+              <button data-testid="elite-announce-status" onClick={announceStatus} style={{ backgroundColor: 'rgba(62,156,147,0.15)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '10px', padding: '8px 12px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}>
+                📢 {_pick("Annuncia Stato", "Status ansagen", "Announce Status", "Anunciar estado", "Annoncer l'état", "اعلام وضعیت")}
+              </button>
             </div>
             <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '0.75rem', color: '#CCC', fontWeight: 600 }}>🌴 {_pick("Modalità Ferie", "Urlaubsmodus", "Holiday mode", "Modo vacaciones", "Mode congé", "حالت تعطیلات")}</span>
@@ -509,8 +526,20 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
         {/* STORICO ALLARMI FORNO (Capo) */}
         {isCapo && !isLocked && ovenAlarms.length > 0 && (
           <div data-testid="elite-oven-alarms" style={{ backgroundColor: 'rgba(0,0,0,0.6)', border: '1px solid #E6A23C', borderRadius: '12px', padding: '12px', marginBottom: '16px' }}>
-            <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', color: '#E6A23C', fontWeight: 800, marginBottom: '8px' }}>
-              🔥 {_pick("Storico Allarmi Forno non gestiti", "Ofen-Alarm-Verlauf", "Unhandled oven alarms", "Historial de alarmas del horno", "Historique alarmes four", "تاریخچه هشدار فر")}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px' }}>
+              <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', color: '#E6A23C', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🔥 {_pick("Storico Allarmi Forno non gestiti", "Ofen-Alarm-Verlauf", "Unhandled oven alarms", "Historial de alarmas del horno", "Historique alarmes four", "تاریخچه هشدار فر")}
+                {ovenAlarms.filter(a => !a.read).length > 0 && (
+                  <span data-testid="elite-alarms-unread" style={{ backgroundColor: '#E63946', color: '#FFF', borderRadius: '50%', minWidth: '20px', height: '20px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.68rem', fontWeight: 800, padding: '0 5px' }}>
+                    {ovenAlarms.filter(a => !a.read).length}
+                  </span>
+                )}
+              </div>
+              {ovenAlarms.filter(a => !a.read).length > 0 && (
+                <button data-testid="elite-alarms-markread" onClick={markAlarmsRead} style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #55606B', borderRadius: '8px', padding: '4px 8px', fontSize: '0.66rem', cursor: 'pointer' }}>
+                  {_pick("Segna come letti", "Als gelesen", "Mark as read", "Marcar leídos", "Marquer lus", "خوانده شد")}
+                </button>
+              )}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '160px', overflowY: 'auto' }}>
               {ovenAlarms.slice(0, 20).map((a, i) => (
@@ -739,18 +768,23 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                       <div style={{ minWidth: 0 }}>
                         <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#EEE' }}>{del.client}</span>
                         {del.time && <span style={{ fontSize: '0.66rem', color: '#AAA', marginLeft: '6px' }}>({del.time})</span>}
+                        {del.driver && <span style={{ display: 'block', fontSize: '0.64rem', color: currentRoom.color, marginTop: '2px' }}>🛵 {del.driver}</span>}
                       </div>
-                      <select data-testid={`elite-delivery-status-${i}`} value={del.status} onChange={e => setDeliveryStatus(del.id, e.target.value)} style={{ backgroundColor: '#0E1620', color: del.status === 'consegnato' ? '#3E9C93' : '#E6A23C', border: `1px solid ${del.status === 'consegnato' ? '#3E9C93' : '#E6A23C'}`, borderRadius: '6px', padding: '4px', fontSize: '0.68rem', fontWeight: 700 }}>
-                        <option value="in consegna">{_pick("In consegna", "Unterwegs", "Out for delivery", "En reparto", "En livraison", "در حال تحویل")}</option>
-                        <option value="consegnato">{_pick("Consegnato", "Geliefert", "Delivered", "Entregado", "Livré", "تحویل شد")}</option>
-                      </select>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <select data-testid={`elite-delivery-status-${i}`} value={del.status} onChange={e => setDeliveryStatus(del.id, e.target.value)} style={{ backgroundColor: '#0E1620', color: del.status === 'consegnato' ? '#3E9C93' : '#E6A23C', border: `1px solid ${del.status === 'consegnato' ? '#3E9C93' : '#E6A23C'}`, borderRadius: '6px', padding: '4px', fontSize: '0.68rem', fontWeight: 700 }}>
+                          <option value="in consegna">{_pick("In consegna", "Unterwegs", "Out for delivery", "En reparto", "En livraison", "در حال تحویل")}</option>
+                          <option value="consegnato">{_pick("Consegnato", "Geliefert", "Delivered", "Entregado", "Livré", "تحویل شد")}</option>
+                        </select>
+                        <button data-testid={`elite-delivery-delete-${i}`} onClick={() => deleteDelivery(del.id)} title="Elimina" style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '4px 8px', fontSize: '0.66rem', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                      </div>
                     </div>
                   ))}
                 </div>
                 {!readOnly && (
                   <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    <input data-testid="elite-delivery-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} style={{ flex: '2 1 120px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
-                    <input data-testid="elite-delivery-time" value={newDeliveryTime} onChange={e => setNewDeliveryTime(e.target.value)} placeholder={_pick("Ora", "Zeit", "Time", "Hora", "Heure", "زمان")} style={{ flex: '1 1 70px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <input data-testid="elite-delivery-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} style={{ flex: '2 1 110px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <input data-testid="elite-delivery-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} placeholder={_pick("Fattorino", "Fahrer", "Driver", "Repartidor", "Livreur", "پیک")} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <input data-testid="elite-delivery-time" value={newDeliveryTime} onChange={e => setNewDeliveryTime(e.target.value)} placeholder={_pick("Ora", "Zeit", "Time", "Hora", "Heure", "زمان")} style={{ flex: '1 1 60px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
                     <button data-testid="elite-delivery-add" onClick={addDelivery} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '7px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>＋</button>
                   </div>
                 )}
