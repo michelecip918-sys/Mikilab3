@@ -1,0 +1,30 @@
+{
+  "summary": "Frontend-only E2E test of MikiLab v31.0 new features in the Elite Engine overlay: (A) Reparti Dinamici (create/delete department + add machine/feature), (B) Logistica Consegne Pizzeria, (C) Ferie cutoff 18:00 banner, plus role-gating regression for Operatore and Guest. All 7 requested scenarios PASSED. Admin: created department 'congelati2' (Area Congelati) -> chip elite-room-congelati2 appeared and became active with generic features (Postazione Universale, Gestione Scorte); add-feature 'Forno Extra Test' appeared instantly in elite-features; delete via elite-room-delete-congelati2 removed the chip and fell back to panetteria. Deliveries: elite-deliveries present only in Pizzeria (verified HIDDEN in Panetteria and Pasticceria); added 'Ristorante Prova' 18:30, changed status to 'consegnato' and confirmed persistence after leaving/returning to the pizzeria tab (re-fetch from GET /api/deliveries). Cutoff banner elite-cutoff renders 'Regular hours - edits open (cutoff 18:00)' and add-feature input is enabled (browser local time < 18:00). Modalita Ferie toggle ON -> elite-holiday-banner + braccio-holiday-banner both appear; toggled OFF -> banners cleared (clean state left). Operatore regression: braccio-lab clean (no braccio-quick-banco/aggiungi), room selector hidden (elite-locked-dept = 'Assigned department - CENTRO PANETTERIA & IMPASTI 3D', 0 elite-room-* buttons, no elite-add-dept-btn), no elite-capo-panel / elite-oven-alarms / elite-add-feature-input, kg input editable. Guest: elite-guest-badge shown, elite-input-kg + elite-start-bake disabled, 3 rooms browsable, and NO add-dept / add-feature / delivery-add controls.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Elite Engine (headless EN render)", "issues": ["Capo panel / locked-dept / guest badge render in EN while section titles remain IT (mixed language) - expected per note that headless may render EN, but confirms the language auto-detect overrides the IT-primary requirement in some environments"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: no UI control exists to delete a delivery (only status change). Test rows accumulate in the Pizzeria list (currently 'Ristorante Stella' + 'Ristorante Prova'). Consider adding a remove button (admin-only) or a cleanup path.",
+    "Optional: deleting a custom department does not remove its extras from the server 'extras' map (orphan features remain keyed by the deleted dept id). Cascade-delete extras in DELETE /api/lab/departments/{id}.",
+    "Optional: guest in Pizzeria sees the empty 'Deliveries / Baskets' block because GET /api/deliveries returns 401 for anonymous users (silently swallowed). Consider hiding the block for guests instead of showing an empty list."
+  ],
+  "critical_code_review_comments": [
+    "MikiLabEliteEngine.jsx is 821 lines - beyond the 700-line guideline; consider extracting the Capo panel, deliveries block and department selector into sub-components.",
+    "createDept/addFeature/addDelivery/deleteDept swallow all errors (empty catch, no !res.ok handling for delete): a rejected create (duplicate id, 403, or attempt to delete a base dept) gives the Capo zero UI feedback. Add error/loading state.",
+    "deleteDept fires the DELETE without confirmation and without checking res.ok - a failed delete still resets activeTab to panetteria, which can look like a successful delete."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested (frontend-only request)", "frontend": "100% (7/7 scenarios)" },
+  "seed_data_creation": "Created and then DELETED department 'congelati2' (Area Congelati). Left over: delivery 'Ristorante Prova' (18:30, status consegnato) in /api/deliveries and feature 'Forno Extra Test' under orphan extras key congelati2. Holiday mode explicitly left OFF.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! ; operatore@mikilab.de / Test1234! ; PIN bypass via localStorage keys",
+  "context_for_next_testing_agent": "Elite Engine is a portal overlay reached via login -> nav-tab-maestro -> braccio-elite-engine; set the 4 mikilab_* localStorage keys BEFORE reload to bypass the PIN. Deliveries list is only fetched when activeTab==='pizzeria', so switch tabs away and back to verify persistence. Delivery row testids are index-based (elite-delivery-0..n) so always locate the row by client text, not a fixed index. Leftover test rows exist in the deliveries list.",
+  "rca_of_the_issue": "No defects found; all three new features round-trip correctly against the server and role gating (Capo / Operatore locked / Guest read-only) behaves as specified."
+}

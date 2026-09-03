@@ -36,6 +36,17 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const [workMode, setWorkMode] = useState(() => { try { return localStorage.getItem('mikilab_work_mode') || 'solo'; } catch { return 'solo'; } });
   const [crew, setCrew] = useState([]);
   const [ovenAlarms, setOvenAlarms] = useState([]);
+  const [customDepts, setCustomDepts] = useState([]);
+  const [deptExtras, setDeptExtras] = useState({});
+  const [deliveries, setDeliveries] = useState([]);
+  const [showAddDept, setShowAddDept] = useState(false);
+  const [newDeptId, setNewDeptId] = useState('');
+  const [newDeptTitle, setNewDeptTitle] = useState('');
+  const [deptError, setDeptError] = useState('');
+  const [newFeature, setNewFeature] = useState('');
+  const [newClient, setNewClient] = useState('');
+  const [newDeliveryTime, setNewDeliveryTime] = useState('');
+  const isAfterCutoff = new Date().getHours() >= 18;
   const [holiday, setHoliday] = useState(false);
   const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
   const alarmTimerRef = useRef(null);
@@ -95,6 +106,50 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
       const res = await fetch(`${API}/api/operator/assign`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, department: dept }) });
       if (!res.ok) loadCrew();
     } catch (e) { loadCrew(); }
+  };
+
+  // Reparti dinamici + consegne
+  const loadDepartments = () => {
+    if (!API) return;
+    fetch(`${API}/api/lab/departments`).then(r => r.ok ? r.json() : {}).then(d => { setCustomDepts(d.custom || []); setDeptExtras(d.extras || {}); }).catch(() => {});
+  };
+  const loadDeliveries = () => {
+    if (!API) return;
+    fetch(`${API}/api/deliveries`, { credentials: 'include' }).then(r => r.ok ? r.json() : {}).then(d => setDeliveries(d.deliveries || [])).catch(() => {});
+  };
+  useEffect(() => { if (open && API) loadDepartments(); /* eslint-disable-next-line */ }, [open]);
+  useEffect(() => { if (open && API && activeTab === 'pizzeria') loadDeliveries(); /* eslint-disable-next-line */ }, [open, activeTab]);
+
+  const createDept = async () => {
+    const id = newDeptId.trim(); const title = newDeptTitle.trim();
+    setDeptError('');
+    if (!id || !title) { setDeptError('Inserisci ID e nome'); return; }
+    try {
+      const res = await fetch(`${API}/api/lab/departments`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, title }) });
+      if (res.ok) { const d = await res.json(); setNewDeptId(''); setNewDeptTitle(''); setShowAddDept(false); loadDepartments(); if (d.department) setActiveTab(d.department.id); }
+      else { const e = await res.json().catch(() => ({})); setDeptError(e.detail || 'Errore creazione reparto'); }
+    } catch (e) { setDeptError('Errore di rete'); }
+  };
+  const deleteDept = async (id) => {
+    if (!window.confirm('Eliminare questo reparto?')) return;
+    try {
+      const res = await fetch(`${API}/api/lab/departments/${id}`, { method: 'DELETE', credentials: 'include' });
+      if (!res.ok) return;
+      if (activeTab === id) setActiveTab('panetteria');
+      loadDepartments();
+    } catch (e) { /* */ }
+  };
+  const addFeature = async () => {
+    const feat = newFeature.trim(); if (!feat) return;
+    try { const res = await fetch(`${API}/api/lab/departments/${activeTab}/feature`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ feature: feat }) }); if (res.ok) { setNewFeature(''); loadDepartments(); } } catch (e) { /* */ }
+  };
+  const addDelivery = async () => {
+    const client = newClient.trim(); if (!client) return;
+    try { const res = await fetch(`${API}/api/deliveries`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client, time: newDeliveryTime.trim() }) }); if (res.ok) { setNewClient(''); setNewDeliveryTime(''); loadDeliveries(); } } catch (e) { /* */ }
+  };
+  const setDeliveryStatus = async (id, status) => {
+    setDeliveries(prev => prev.map(d => d.id === id ? { ...d, status } : d));
+    try { await fetch(`${API}/api/deliveries/${id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) }); } catch (e) { loadDeliveries(); }
   };
 
   const speakVoice = (text) => {
@@ -288,7 +343,12 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     }
   };
 
-  const currentRoom = rooms3D[activeTab];
+  const CUSTOM_COLOR = '#8FB0C2';
+  const allRooms = { ...rooms3D };
+  customDepts.forEach(d => {
+    allRooms[d.id] = { title: `🧩 ${d.title.toUpperCase()}`, color: CUSTOM_COLOR, bgGradient: 'linear-gradient(135deg, #0E1620 0%, #14212C 55%, #8FB0C2 100%)', avatarName: `Michele · ${d.title}`, avatarImg: '/michele-real-lab.jpg', avatarAction: 'Reparto flessibile operativo!', item3D: '🧩 Postazione Universale', desc: d.desc || '', features: d.features || [], custom: true };
+  });
+  const currentRoom = allRooms[activeTab] || allRooms.panetteria;
   const _lc = (language || 'it-IT').slice(0, 2);
   const _pick = (it, de, en, es, fr, fa) => ({ it, de, en, es, fr, fa }[_lc] || it);
   const lockLabel = _pick("Reparto assegnato", "Zugewiesene Abteilung", "Assigned department", "Departamento asignado", "Rayon assigné", "بخش تعیین‌شده");
@@ -409,6 +469,11 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 {holiday ? _pick("ATTIVA — Disattiva", "AKTIV — Aus", "ON — Turn off", "ACTIVO — Apagar", "ACTIF — Éteindre", "روشن — خاموش") : _pick("Attiva ferie", "Urlaub an", "Turn on", "Activar", "Activer", "روشن کن")}
               </button>
             </div>
+            <div data-testid="elite-cutoff" style={{ marginTop: '8px', fontSize: '0.7rem', fontWeight: 700, color: isAfterCutoff ? '#E6A23C' : '#7FB0A6' }}>
+              {isAfterCutoff
+                ? _pick("⚠️ Dopo le 18:00 · ordini e modifiche bloccati", "⚠️ Nach 18:00 · Bestellungen gesperrt", "⚠️ After 18:00 · orders & edits locked", "⚠️ Después de 18:00 · pedidos bloqueados", "⚠️ Après 18h · commandes bloquées", "⚠️ بعد از ۱۸ · سفارش‌ها قفل")
+                : _pick("✅ Orario regolare · modifiche aperte (cutoff 18:00)", "✅ Reguläre Zeit · offen (Cutoff 18:00)", "✅ Regular hours · edits open (cutoff 18:00)", "✅ Horario regular · abierto (corte 18:00)", "✅ Heures normales · ouvert (18h)", "✅ ساعت عادی · باز (۱۸)")}
+            </div>
             {workMode === 'squadra' && (
               <div data-testid="elite-capo-crew" style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
                 <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '1px', color: currentRoom.color, fontWeight: 700, marginBottom: '8px' }}>
@@ -471,25 +536,51 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               : `🔒 ${noDeptLabel}`}
           </div>
         ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px' }}>
+        <>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '10px' }}>
           {[
             { id: 'panetteria', icon: '🍞', label: 'PANETTERIA' },
             { id: 'pizzeria', icon: '🍕', label: 'PIZZERIA' },
-            { id: 'pasticceria', icon: '🥐', label: 'PASTICCERIA' }
+            { id: 'pasticceria', icon: '🥐', label: 'PASTICCERIA' },
+            ...customDepts.map(d => ({ id: d.id, icon: '🧩', label: (d.title || d.id).toUpperCase(), custom: true }))
           ].map(room => (
-            <button key={room.id} data-testid={`elite-room-${room.id}`} onClick={() => { setActiveTab(room.id); speakVoice(`Spostamento in ${room.label}`); }} style={{
-              backgroundColor: activeTab === room.id ? rooms3D[room.id].color : 'rgba(0,0,0,0.6)',
-              color: activeTab === room.id ? '#000' : '#FFF',
-              border: `2px solid ${rooms3D[room.id].color}`, borderRadius: '12px',
-              padding: '12px 4px', cursor: 'pointer', fontWeight: 'bold',
-              transform: activeTab === room.id ? 'scale(1.05)' : 'scale(1)',
-              transition: 'transform 0.4s ease, background-color 0.4s ease'
-            }}>
-              <div style={{ fontSize: '1.4rem' }}>{room.icon}</div>
-              <div style={{ fontSize: '0.6rem', marginTop: '4px' }}>{room.label}</div>
-            </button>
+            <div key={room.id} style={{ position: 'relative' }}>
+              <button data-testid={`elite-room-${room.id}`} onClick={() => { setActiveTab(room.id); speakVoice(`Spostamento in ${room.label}`); }} style={{
+                width: '100%',
+                backgroundColor: activeTab === room.id ? (allRooms[room.id] ? allRooms[room.id].color : CUSTOM_COLOR) : 'rgba(0,0,0,0.6)',
+                color: activeTab === room.id ? '#000' : '#FFF',
+                border: `2px solid ${allRooms[room.id] ? allRooms[room.id].color : CUSTOM_COLOR}`, borderRadius: '12px',
+                padding: '12px 4px', cursor: 'pointer', fontWeight: 'bold',
+                transform: activeTab === room.id ? 'scale(1.05)' : 'scale(1)',
+                transition: 'transform 0.4s ease, background-color 0.4s ease'
+              }}>
+                <div style={{ fontSize: '1.4rem' }}>{room.icon}</div>
+                <div style={{ fontSize: '0.55rem', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{room.label}</div>
+              </button>
+              {isCapo && room.custom && (
+                <button data-testid={`elite-room-delete-${room.id}`} onClick={(e) => { e.stopPropagation(); deleteDept(room.id); }} title="Elimina reparto" style={{ position: 'absolute', top: '-6px', right: '-6px', backgroundColor: '#E63946', color: '#FFF', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '20px', padding: 0 }}>✕</button>
+              )}
+            </div>
           ))}
         </div>
+        {isCapo && (
+          <div style={{ marginBottom: '16px' }}>
+            {!showAddDept ? (
+              <button data-testid="elite-add-dept-btn" onClick={() => setShowAddDept(true)} style={{ backgroundColor: 'transparent', color: currentRoom.color, border: `1px dashed ${currentRoom.color}`, borderRadius: '10px', padding: '8px', width: '100%', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700 }}>
+                ＋ {_pick("Crea Nuovo Reparto", "Neue Abteilung", "Create New Department", "Crear departamento", "Nouveau rayon", "بخش جدید")}
+              </button>
+            ) : (
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', backgroundColor: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '10px', border: `1px solid ${currentRoom.color}` }}>
+                <input data-testid="elite-new-dept-id" value={newDeptId} onChange={e => setNewDeptId(e.target.value)} placeholder="ID (es. congelati)" style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
+                <input data-testid="elite-new-dept-title" value={newDeptTitle} onChange={e => setNewDeptTitle(e.target.value)} placeholder="Nome reparto" style={{ flex: '2 1 140px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
+                <button data-testid="elite-new-dept-save" onClick={createDept} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>OK</button>
+                <button onClick={() => { setShowAddDept(false); setDeptError(''); }} style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #33414E', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontSize: '0.72rem' }}>✕</button>
+                {deptError && <div data-testid="elite-dept-error" style={{ flexBasis: '100%', color: '#E63946', fontSize: '0.68rem', fontWeight: 700 }}>{deptError}</div>}
+              </div>
+            )}
+          </div>
+        )}
+        </>
         )}
 
         {/* SCENA 3D & FOTO REALI */}
@@ -613,16 +704,59 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             </div>
           )}
 
-          {/* GRIGLIA FUNZIONI DEL REPARTO (tutte le macro-aree) */}
-          {activeTab !== 'guida' && Array.isArray(currentRoom.features) && (
+          {/* GRIGLIA FUNZIONI DEL REPARTO (base + macchine extra aggiunte dal Capo) */}
+          {activeTab !== 'guida' && (
+            <>
             <div data-testid="elite-features" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px', marginTop: '14px' }}>
-              {currentRoom.features.map((feat, i) => (
+              {[...(Array.isArray(currentRoom.features) ? currentRoom.features : []), ...((deptExtras[activeTab]) || [])].map((feat, i) => (
                 <div key={i} data-testid={`elite-feature-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: `1px solid ${currentRoom.color}44`, padding: '10px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
                   <span style={{ fontSize: '0.75rem', color: '#EEE', fontWeight: 600 }}>{feat}</span>
                   <span style={{ fontSize: '0.6rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>Attivo</span>
                 </div>
               ))}
             </div>
+
+            {/* Aggiungi macchina / forno / postazione (Capo) */}
+            {isCapo && !isLocked && (
+              <div style={{ display: 'flex', gap: '6px', marginTop: '10px', flexWrap: 'wrap' }}>
+                <input data-testid="elite-add-feature-input" value={newFeature} onChange={e => setNewFeature(e.target.value)} disabled={isAfterCutoff} placeholder={isAfterCutoff ? "Modifiche bloccate dopo le 18:00" : "Aggiungi forno extra, macchina o postazione…"} style={{ flex: '1 1 180px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: `1px solid ${currentRoom.color}55`, borderRadius: '8px', padding: '8px', fontSize: '0.72rem', opacity: isAfterCutoff ? 0.6 : 1 }} />
+                <button data-testid="elite-add-feature-btn" onClick={addFeature} disabled={isAfterCutoff} style={{ backgroundColor: isAfterCutoff ? '#3A4652' : currentRoom.color, color: isAfterCutoff ? '#888' : '#000', border: 'none', borderRadius: '8px', padding: '8px 14px', fontWeight: 700, cursor: isAfterCutoff ? 'not-allowed' : 'pointer', fontSize: '0.72rem' }}>
+                  ＋ {_pick("Aggiungi", "Hinzufügen", "Add", "Añadir", "Ajouter", "افزودن")}
+                </button>
+              </div>
+            )}
+
+            {/* LOGISTICA CONSEGNE (Lieferung) — reparto Pizzeria (nascosto agli ospiti) */}
+            {activeTab === 'pizzeria' && !readOnly && (
+              <div data-testid="elite-deliveries" style={{ marginTop: '14px', backgroundColor: 'rgba(0,0,0,0.55)', border: `1px solid ${currentRoom.color}`, borderRadius: '12px', padding: '12px' }}>
+                <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>
+                  🚚 {_pick("Consegne Ceste / Lieferung", "Lieferungen / Körbe", "Deliveries / Baskets", "Entregas / Cestas", "Livraisons / Paniers", "تحویل‌ها")}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '8px' }}>
+                  {deliveries.length === 0 && <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick("Nessuna consegna in coda.", "Keine Lieferungen.", "No deliveries queued.", "Sin entregas.", "Aucune livraison.", "تحویلی نیست.")}</div>}
+                  {deliveries.map((del, i) => (
+                    <div key={del.id} data-testid={`elite-delivery-${i}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '8px' }}>
+                      <div style={{ minWidth: 0 }}>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#EEE' }}>{del.client}</span>
+                        {del.time && <span style={{ fontSize: '0.66rem', color: '#AAA', marginLeft: '6px' }}>({del.time})</span>}
+                      </div>
+                      <select data-testid={`elite-delivery-status-${i}`} value={del.status} onChange={e => setDeliveryStatus(del.id, e.target.value)} style={{ backgroundColor: '#0E1620', color: del.status === 'consegnato' ? '#3E9C93' : '#E6A23C', border: `1px solid ${del.status === 'consegnato' ? '#3E9C93' : '#E6A23C'}`, borderRadius: '6px', padding: '4px', fontSize: '0.68rem', fontWeight: 700 }}>
+                        <option value="in consegna">{_pick("In consegna", "Unterwegs", "Out for delivery", "En reparto", "En livraison", "در حال تحویل")}</option>
+                        <option value="consegnato">{_pick("Consegnato", "Geliefert", "Delivered", "Entregado", "Livré", "تحویل شد")}</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+                {!readOnly && (
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    <input data-testid="elite-delivery-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} style={{ flex: '2 1 120px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <input data-testid="elite-delivery-time" value={newDeliveryTime} onChange={e => setNewDeliveryTime(e.target.value)} placeholder={_pick("Ora", "Zeit", "Time", "Hora", "Heure", "زمان")} style={{ flex: '1 1 70px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <button data-testid="elite-delivery-add" onClick={addDelivery} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '7px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>＋</button>
+                  </div>
+                )}
+              </div>
+            )}
+            </>
           )}
         </div>
 

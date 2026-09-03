@@ -3684,3 +3684,11 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Storico Allarmi Forno** (Capo, `elite-oven-alarms`): lista degli allarmi forno non gestiti da `GET /api/oven/alarms` (notifiche type=oven_alarm dell'admin), con testo + data/ora.
 - Verificato via curl (assign→crew aggiornata, alarms, reparto invalido→400) + screenshot Capo. Compilazione pulita.
 - RESTA dal Master Elite v31.0 (confermato, da fare): Logistica Consegne Pizzeria (lista Lieferung con stato), Reparti dinamici (crea/elimina + aggiungi macchine), Ferie con Cutoff ordini 18:00.
+
+## v40.2 (2026-06) — Master Elite completo: Reparti Dinamici + Consegne Pizzeria + Cutoff 18:00
+- **Reparti Dinamici**: il Capo può creare reparti (`elite-add-dept-btn` → form `elite-new-dept-id/title`), eliminarli (`elite-room-delete-<id>`, con conferma; base non eliminabili) e aggiungere macchine/postazioni a qualsiasi reparto (`elite-add-feature-input/btn`). `allRooms` = base 3 + custom; griglia funzioni = base + `deptExtras`. Backend: `GET/POST /api/lab/departments`, `DELETE /api/lab/departments/{id}` (cascade su feature extra), `POST /api/lab/departments/{id}/feature`.
+- **Logistica Consegne Pizzeria (Lieferung)**: blocco `elite-deliveries` solo nel reparto Pizzeria (nascosto agli ospiti); aggiungi consegna (cliente+ora), cambia stato in consegna/consegnato. Backend: `GET/POST /api/deliveries`, `PATCH /api/deliveries/{id}`, `DELETE` (admin).
+- **Ferie con Cutoff 18:00**: banner `elite-cutoff` nel Pannello Capo; dopo le 18:00 (ora locale) il form "aggiungi macchina" è disabilitato ("blocco modifiche").
+- Rifiniture: feedback errori su crea/elimina reparto (`elite-dept-error`, conferma su delete); consegne nascoste agli ospiti.
+- Test: iteration_168 → frontend **100% (7/7)** incl. round-trip persistenza + regressione ruoli (operatore locked, ospite read-only). Backend curl-verificato. Stato dati ripulito.
+- Backlog: annuncio vocale cambi stato; badge contatore allarmi non letti; delete consegna dalla UI; estrarre sub-componenti (file >700 righe).
