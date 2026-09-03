@@ -3581,3 +3581,8 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Sfondi scenografici per sezione** (fornaio + AI, stile calmo): bg-home/bg-lab/bg-ricette/bg-farine/bg-accademia/bg-community.jpg in /public, collegati in App.js per-tab con velo scuro (leggibilità). Home e Lab rigenerati con **logo MikiLab in evidenza sulle maglie** (Lab con team + cuffie).
 - **PDF funzioni**: /app/frontend/public/mikilab-funzioni.pdf (reportlab) con tutte le sezioni, comandi e funzioni in italiano. Scaricabile: <preview>/mikilab-funzioni.pdf.
 - Verificato: build OK; screenshot Home/Lab a 390px (teal, sfondi, avatar+logo, nav glass). Deploy non lanciato (attesa ok utente).
+
+## v-lab.7 (2026-06) — Sfondi piu visibili + persona reale
+- Alleggerito il velo scuro degli sfondi (App.js: img opacity 0.55→0.85; scrim 0.80/0.97 → 0.42/0.80) → scenari piu visibili mantenendo leggibilita.
+- Home e Lab rigenerati usando la FOTO REALE di Michele (michele-lab-pro.jpg come riferimento): volto riconoscibile, polo MikiLab con logo, scena calma teal + AI; Lab con assistente + cuffie. Salvati come bg-home.jpg / bg-lab.jpg.
+- Verificato: build OK, screenshot 390px (persona reale visibile in Home, testo leggibile).

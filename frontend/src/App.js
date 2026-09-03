@@ -243,9 +243,9 @@ function App() {
           (tab === "imparacon" || tab === "impara" || tab === "news" || tab === "enciclopedia") ? "bg-accademia.jpg" :
           tab === "community" ? "bg-community.jpg" :
           (tab === "diagnosi" || tab === "enterprise") ? "bg-lab.jpg" :
-          "bg-home.jpg"})`, opacity: 0.55 }} />
+          "bg-home.jpg"})`, opacity: 0.85 }} />
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(14,22,32,0.80) 0%, rgba(14,22,32,0.90) 55%, rgba(14,22,32,0.97) 100%)" }} />
+        style={{ background: "linear-gradient(180deg, rgba(14,22,32,0.42) 0%, rgba(14,22,32,0.58) 45%, rgba(14,22,32,0.80) 100%)" }} />
       <div className="relative z-10">
       <Header />
       <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />
