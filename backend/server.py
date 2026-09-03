@@ -7279,10 +7279,23 @@ async def redeem_operator_invite(body: RedeemReq, user: dict = Depends(current_u
         raise HTTPException(status_code=404, detail="Codice non valido")
     if inv.get("used_by") and inv.get("used_by") != user.get("user_id"):
         raise HTTPException(status_code=409, detail="Codice gia utilizzato")
+    exp = inv.get("expires_at")
+    if exp and now_iso() > exp:
+        raise HTTPException(status_code=410, detail="Codice scaduto")
+    new_role = inv.get("role") or "operatore"
     await db.operator_invites.update_one({"code": code}, {"$set": {"used_by": user.get("user_id"), "used_by_name": user.get("name") or user.get("email"), "used_at": now_iso()}})
     if user.get("role") != "admin":
-        await db.users.update_one({"user_id": user.get("user_id")}, {"$set": {"role": "operatore"}})
-    return {"ok": True, "role": "operatore" if user.get("role") != "admin" else "admin"}
+        await db.users.update_one({"user_id": user.get("user_id")}, {"$set": {"role": new_role}})
+    return {"ok": True, "role": new_role if user.get("role") != "admin" else "admin"}
+
+
+@api_router.post("/operator/delegation")
+async def create_delegation(user: dict = Depends(require_admin)):
+    code = uuid.uuid4().hex[:8].upper()
+    exp = (datetime.now(timezone.utc) + timedelta(hours=8)).isoformat()
+    doc = {"code": code, "created_by": user.get("user_id"), "created_at": now_iso(), "used_by": None, "used_by_name": None, "used_at": None, "role": "sostituto", "kind": "delega", "expires_at": exp}
+    await db.operator_invites.insert_one(doc)
+    return {"code": code, "expires_at": exp}
 
 
 

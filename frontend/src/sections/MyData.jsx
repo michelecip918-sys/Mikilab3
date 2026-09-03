@@ -67,6 +67,15 @@ export default function MyData({ onOpenTool }) {
     } catch { toast.error(tri("Solo il Capo può generare codici.", "Nur der Chef kann Codes erstellen.", "Only the Boss can create codes.")); }
     finally { setInvBusy(false); }
   };
+  const genDelegation = async () => {
+    setInvBusy(true);
+    try {
+      const r = await operatorApi.createDelegation();
+      await operatorApi.listInvites().then((x) => setInvites(x.invites || []));
+      toast.success(tri(`Delega 8h creata: ${r.code}`, `8h-Delegation erstellt: ${r.code}`, `8h delegation created: ${r.code}`));
+    } catch { toast.error(tri("Solo il Capo può creare deleghe.", "Nur der Chef.", "Boss only.")); }
+    finally { setInvBusy(false); }
+  };
   const doRedeem = async () => {
     if (!redeemCode.trim()) return;
     setRedeemBusy(true);
@@ -91,14 +100,19 @@ export default function MyData({ onOpenTool }) {
         {isAdmin ? (
           <>
             <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Genera codici d'invito univoci da dare ai tuoi operatori per la registrazione sicura.", "Erzeuge eindeutige Einladungscodes für deine Operatoren.", "Generate unique invite codes for your operators' secure sign-up.")}</p>
-            <button data-testid="operator-gen-code" disabled={invBusy} onClick={genInvite} className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#3E9C93] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60 mb-3">
-              {invBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} {tri("Genera nuovo codice", "Neuen Code erzeugen", "Generate new code")}
-            </button>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <button data-testid="operator-gen-code" disabled={invBusy} onClick={genInvite} className="flex items-center justify-center gap-2 rounded-xl bg-[#3E9C93] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
+                {invBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} {tri("Nuovo codice", "Neuer Code", "New code")}
+              </button>
+              <button data-testid="operator-gen-delega" disabled={invBusy} onClick={genDelegation} className="flex items-center justify-center gap-2 rounded-xl bg-[#5E8CA8] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
+                <Clock className="w-4 h-4" /> {tri("Delega 8h", "Delegation 8h", "8h delegation")}
+              </button>
+            </div>
             <div className="space-y-1.5" data-testid="operator-code-list">
               {invites.length === 0 && <p className="text-[12px] text-[#7E8A93] text-center py-1">{tri("Nessun codice ancora.", "Noch keine Codes.", "No codes yet.")}</p>}
               {invites.slice(0, 12).map((iv) => (
                 <div key={iv.code} className="flex items-center justify-between rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2">
-                  <span className="font-mono-data font-bold tracking-widest text-[#2B303B] dark:text-[#e4eff8]">{iv.code}</span>
+                  <span className="font-mono-data font-bold tracking-widest text-[#2B303B] dark:text-[#e4eff8]">{iv.code}{iv.kind === "delega" && <span className="ml-2 text-[9px] font-sans font-bold text-[#5E8CA8] align-middle">DELEGA 8h</span>}</span>
                   <span className="flex items-center gap-2">
                     {iv.used_by ? <span className="text-[10px] text-[#3E9C93] font-semibold flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5" />{iv.used_by_name || tri("Usato", "Benutzt", "Used")}</span> : <span className="text-[10px] text-[#7E8A93]">{tri("Libero", "Frei", "Free")}</span>}
                     <button data-testid={`operator-copy-${iv.code}`} onClick={() => { try { navigator.clipboard.writeText(iv.code); toast.success(tri("Copiato", "Kopiert", "Copied")); } catch { /* */ } }} className="text-[#5E8CA8]"><Copy className="w-4 h-4" /></button>
