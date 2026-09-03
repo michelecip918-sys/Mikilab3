@@ -26,6 +26,8 @@ const RADIO_STATIONS = [
 
 const ROOM_IDS = ['panetteria', 'pizzeria', 'pasticceria'];
 const DEPT_LABELS = { panetteria: 'Panetteria', pizzeria: 'Pizzeria', pasticceria: 'Pasticceria', impasti: 'Panetteria', forni: 'Panetteria', laugen: 'Panetteria', banco: 'Panetteria', pretzel: 'Panetteria' };
+const DRIVERS = ['Marco', 'Giovanni', 'Luca', 'Alex'];
+const QUICK_BAKES = ['4x Baguette', '4x Croissant', '2x Teglia Pizza', '10x Pane Saponetta'];
 
 export default function MikiLabEliteEngine({ open, onClose, locked = false, lockedDept = '', isCapo = false, readOnly = false }) {
   const hasValidDept = ROOM_IDS.includes(lockedDept);
@@ -47,6 +49,10 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const [newClient, setNewClient] = useState('');
   const [newDeliveryTime, setNewDeliveryTime] = useState('');
   const [newDriver, setNewDriver] = useState('');
+  const [crates, setCrates] = useState([]);
+  const [newStore, setNewStore] = useState('');
+  const [crateDriver, setCrateDriver] = useState(DRIVERS[0]);
+  const [targetCrateId, setTargetCrateId] = useState('');
   const isAfterCutoff = new Date().getHours() >= 18;
   const [holiday, setHoliday] = useState(false);
   const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
@@ -163,6 +169,47 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     const inConsegna = deliveries.filter(d => d.status === 'in consegna').length;
     const unread = ovenAlarms.filter(a => !a.read).length;
     speakVoice(`Stato laboratorio. ${inConsegna} consegne in corso. ${unread} allarmi forno non letti. Reparto ${currentRoom.title} operativo.`);
+  };
+
+  // Ceste Smart
+  const loadCrates = () => {
+    if (!API) return;
+    fetch(`${API}/api/crates`, { credentials: 'include' }).then(r => r.ok ? r.json() : {}).then(d => {
+      const list = d.crates || [];
+      setCrates(list);
+      setTargetCrateId(prev => prev || (list[0] && list[0].id) || '');
+    }).catch(() => {});
+  };
+  useEffect(() => { if (open && API && !readOnly) loadCrates(); /* eslint-disable-next-line */ }, [open, readOnly]);
+  // Sintesi vocale automatica all'apertura dell'Elite Engine (Capo)
+  useEffect(() => {
+    if (open && isCapo) { const t = setTimeout(() => speakVoice("Benvenuto Comandante. Plancia MikiLab pronta. Reparti e ceste attivi."), 700); return () => clearTimeout(t); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  const createCrate = async () => {
+    const store = newStore.trim(); if (!store) return;
+    try { const res = await fetch(`${API}/api/crates`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store_name: store, driver: crateDriver }) }); if (res.ok) { const d = await res.json(); setNewStore(''); loadCrates(); if (d.crate) setTargetCrateId(d.crate.id); speakVoice(`Cesta creata per ${store}.`); } } catch (e) { /* */ }
+  };
+  const addToCrate = async (product) => {
+    if (!targetCrateId) return;
+    setCrates(prev => prev.map(c => c.id === targetCrateId ? { ...c, items: [...(c.items || []), product] } : c));
+    try { await fetch(`${API}/api/crates/${targetCrateId}/item`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item: product }) }); } catch (e) { loadCrates(); }
+    const store = (crates.find(c => c.id === targetCrateId) || {}).store_name || '';
+    speakVoice(`Aggiunto ${product} nella cesta ${store}.`);
+  };
+  const setCrateDriverServer = async (id, driver) => {
+    setCrates(prev => prev.map(c => c.id === id ? { ...c, driver } : c));
+    try { await fetch(`${API}/api/crates/${id}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ driver }) }); } catch (e) { loadCrates(); }
+  };
+  const clearCrate = async (id) => {
+    setCrates(prev => prev.map(c => c.id === id ? { ...c, items: [] } : c));
+    try { await fetch(`${API}/api/crates/${id}/clear`, { method: 'POST', credentials: 'include' }); } catch (e) { loadCrates(); }
+  };
+  const deleteCrate = async (id) => {
+    setCrates(prev => prev.filter(c => c.id !== id));
+    if (targetCrateId === id) setTargetCrateId('');
+    try { await fetch(`${API}/api/crates/${id}`, { method: 'DELETE', credentials: 'include' }); } catch (e) { loadCrates(); }
   };
 
   const speakVoice = (text) => {
@@ -783,9 +830,69 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 {!readOnly && (
                   <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                     <input data-testid="elite-delivery-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} style={{ flex: '2 1 110px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
-                    <input data-testid="elite-delivery-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} placeholder={_pick("Fattorino", "Fahrer", "Driver", "Repartidor", "Livreur", "پیک")} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <select data-testid="elite-delivery-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }}>
+                      <option value="">{_pick("Fattorino", "Fahrer", "Driver", "Repartidor", "Livreur", "پیک")}</option>
+                      {DRIVERS.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
                     <input data-testid="elite-delivery-time" value={newDeliveryTime} onChange={e => setNewDeliveryTime(e.target.value)} placeholder={_pick("Ora", "Zeit", "Time", "Hora", "Heure", "زمان")} style={{ flex: '1 1 60px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
                     <button data-testid="elite-delivery-add" onClick={addDelivery} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '7px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>＋</button>
+                  </div>
+                )}
+              </div>
+            )}
+            {/* CESTE SMART — smistamento rapido prodotti sfornati per negozio */}
+            {!readOnly && (
+              <div data-testid="elite-crates" style={{ marginTop: '14px', backgroundColor: 'rgba(0,0,0,0.55)', border: `2px solid ${currentRoom.color}55`, borderRadius: '12px', padding: '12px' }}>
+                <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>
+                  📦 {_pick("Smistamento Rapido Ceste", "Schnelle Körbe", "Quick Crate Packing", "Cestas rápidas", "Paniers rapides", "بسته‌بندی سریع")}
+                </div>
+                {/* Griglia ceste per negozio */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '8px', marginBottom: '10px' }}>
+                  {crates.length === 0 && <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick("Nessuna cesta. Creane una per un negozio.", "Keine Körbe.", "No crates yet. Create one for a shop.", "Sin cestas.", "Aucun panier.", "سبدی نیست.")}</div>}
+                  {crates.map((c, i) => (
+                    <div key={c.id} data-testid={`elite-crate-${i}`} onClick={() => setTargetCrateId(c.id)} style={{ cursor: 'pointer', backgroundColor: targetCrateId === c.id ? 'rgba(62,156,147,0.12)' : 'rgba(255,255,255,0.05)', border: `2px solid ${targetCrateId === c.id ? currentRoom.color : 'rgba(255,255,255,0.12)'}`, borderRadius: '10px', padding: '10px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#FFF' }}>{c.store_name}</span>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          <button data-testid={`elite-crate-clear-${i}`} onClick={(e) => { e.stopPropagation(); clearCrate(c.id); }} title="Svuota" style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #55606B', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>🧹</button>
+                          <button data-testid={`elite-crate-delete-${i}`} onClick={(e) => { e.stopPropagation(); deleteCrate(c.id); }} title="Elimina" style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>✕</button>
+                        </div>
+                      </div>
+                      <select data-testid={`elite-crate-driver-${i}`} value={c.driver || ''} onClick={(e) => e.stopPropagation()} onChange={(e) => setCrateDriverServer(c.id, e.target.value)} style={{ width: '100%', backgroundColor: '#0E1620', color: currentRoom.color, border: `1px solid ${currentRoom.color}55`, borderRadius: '6px', padding: '4px', fontSize: '0.66rem', fontWeight: 700, marginBottom: '6px' }}>
+                        <option value="">🛵 {_pick("Fattorino", "Fahrer", "Driver", "Repartidor", "Livreur", "پیک")}</option>
+                        {DRIVERS.map(d => <option key={d} value={d}>🛵 {d}</option>)}
+                      </select>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', minHeight: '30px' }}>
+                        {(c.items || []).length === 0 ? <span style={{ fontSize: '0.66rem', color: '#777', fontStyle: 'italic' }}>{_pick("Cesta vuota…", "Leer…", "Empty…", "Vacía…", "Vide…", "خالی…")}</span>
+                          : (c.items || []).map((p, j) => <span key={j} style={{ backgroundColor: currentRoom.color, color: '#000', fontSize: '0.64rem', padding: '3px 6px', borderRadius: '6px', fontWeight: 800 }}>{p}</span>)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Tasti giganti sfornata veloce */}
+                {crates.length > 0 && (
+                  <>
+                  <div style={{ fontSize: '0.66rem', color: '#CCC', fontWeight: 700, marginBottom: '6px' }}>{_pick("Sfornata veloce → cesta selezionata", "Schnell in Korb", "Quick bake → selected crate", "Rápido → cesta", "Rapide → panier", "سریع → سبد")}</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', marginBottom: '8px' }}>
+                    {QUICK_BAKES.map((q, i) => (
+                      <button key={q} data-testid={`elite-quickbake-${i}`} onClick={() => addToCrate(q)} style={{ backgroundColor: 'rgba(62,156,147,0.18)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '10px', padding: '12px 6px', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer' }}>
+                        ＋ {q}
+                      </button>
+                    ))}
+                  </div>
+                  <select data-testid="elite-crate-target" value={targetCrateId} onChange={(e) => setTargetCrateId(e.target.value)} style={{ width: '100%', backgroundColor: '#0E1620', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '8px', padding: '8px', fontSize: '0.72rem', fontWeight: 700, marginBottom: '8px' }}>
+                    {crates.map(c => <option key={c.id} value={c.id}>📦 {c.store_name}</option>)}
+                  </select>
+                  </>
+                )}
+                {/* Crea nuova cesta */}
+                {isCapo && (
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    <input data-testid="elite-crate-store" value={newStore} onChange={e => setNewStore(e.target.value)} placeholder={_pick("Nuovo negozio…", "Neuer Laden…", "New shop…", "Nueva tienda…", "Nouveau magasin…", "فروشگاه جدید…")} style={{ flex: '2 1 130px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '8px', fontSize: '0.72rem' }} />
+                    <select data-testid="elite-crate-newdriver" value={crateDriver} onChange={e => setCrateDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '8px', fontSize: '0.72rem' }}>
+                      {DRIVERS.map(d => <option key={d} value={d}>🛵 {d}</option>)}
+                    </select>
+                    <button data-testid="elite-crate-create" onClick={createCrate} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '8px 14px', fontWeight: 800, cursor: 'pointer', fontSize: '0.72rem' }}>＋ {_pick("Cesta", "Korb", "Crate", "Cesta", "Panier", "سبد")}</button>
                   </div>
                 )}
               </div>

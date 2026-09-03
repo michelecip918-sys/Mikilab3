@@ -7489,6 +7489,62 @@ async def mark_oven_alarms_read(user: dict = Depends(require_admin)):
     return {"ok": True, "updated": res.modified_count}
 
 
+# ---- Ceste Smart (smistamento rapido per negozio) ----
+@api_router.get("/crates")
+async def list_crates(user: dict = Depends(current_user)):
+    docs = await db.crates.find({}, {"_id": 0}).sort("created_at", 1).to_list(100)
+    return {"crates": docs}
+
+
+class CrateReq(BaseModel):
+    store_name: str = Field(..., max_length=120)
+    driver: Optional[str] = Field("", max_length=80)
+
+
+@api_router.post("/crates")
+async def create_crate(body: CrateReq, user: dict = Depends(current_user)):
+    doc = {"id": str(uuid.uuid4()), "store_name": body.store_name.strip(), "driver": (body.driver or "").strip(), "items": [], "created_at": now_iso()}
+    await db.crates.insert_one(doc)
+    doc.pop("_id", None)
+    return {"ok": True, "crate": doc}
+
+
+class CrateItemReq(BaseModel):
+    item: str = Field(..., max_length=80)
+
+
+@api_router.post("/crates/{crate_id}/item")
+async def add_crate_item(crate_id: str, body: CrateItemReq, user: dict = Depends(current_user)):
+    feat = (body.item or "").strip()
+    if not feat:
+        raise HTTPException(status_code=400, detail="Prodotto mancante")
+    await db.crates.update_one({"id": crate_id}, {"$push": {"items": feat}})
+    doc = await db.crates.find_one({"id": crate_id}, {"_id": 0})
+    return {"ok": True, "crate": doc}
+
+
+class CrateDriverReq(BaseModel):
+    driver: str = Field(..., max_length=80)
+
+
+@api_router.patch("/crates/{crate_id}")
+async def update_crate_driver(crate_id: str, body: CrateDriverReq, user: dict = Depends(current_user)):
+    await db.crates.update_one({"id": crate_id}, {"$set": {"driver": (body.driver or "").strip()}})
+    return {"ok": True, "driver": (body.driver or "").strip()}
+
+
+@api_router.post("/crates/{crate_id}/clear")
+async def clear_crate(crate_id: str, user: dict = Depends(current_user)):
+    await db.crates.update_one({"id": crate_id}, {"$set": {"items": []}})
+    return {"ok": True}
+
+
+@api_router.delete("/crates/{crate_id}")
+async def delete_crate(crate_id: str, user: dict = Depends(current_user)):
+    await db.crates.delete_one({"id": crate_id})
+    return {"ok": True}
+
+
 @api_router.post("/operator/delegation")
 async def create_delegation(user: dict = Depends(require_admin)):
     code = uuid.uuid4().hex[:8].upper()

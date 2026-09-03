@@ -3700,3 +3700,11 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Ferie Intelligenti**: label "cicli clonati" + annuncio vocale sul toggle (clonazione cicli resta a livello UI/annuncio, nessuna logica di produzione fittizia lato server).
 - NOTA: la schermata "System Blocked" dello script v32 è stata SALTATA (duplicherebbe il gate PIN 1985 già esistente).
 - Verifica: backend curl (delivery+driver, mark-read updated=1, alarm read) + screenshot Capo (badge "1", Segna letti, Annuncia Stato, consegna con fattorino + elimina). Compilazione pulita. Dati test ripuliti.
+
+## v42 (2026-06) — v34/v35 Master Elite: Ceste Smart + Fattorino da elenco + Voce all'apertura
+- **Ceste Smart (Smistamento Rapido)**: nuova sezione `elite-crates` nell'Elite Engine (Capo/operatori, nascosta agli ospiti). Ogni cesta = negozio con fattorino + prodotti. Tasti giganti sfornata veloce (`elite-quickbake-<i>`: 4x Baguette, 4x Croissant, 2x Teglia Pizza, 10x Pane Saponetta) aggiungono alla cesta selezionata (`elite-crate-target`). Crea cesta (`elite-crate-store` + `elite-crate-newdriver` + `elite-crate-create`), svuota (`elite-crate-clear-<i>`), elimina (`elite-crate-delete-<i>`), cambia fattorino (`elite-crate-driver-<i>`). Persistito su server. Annuncio vocale ad ogni aggiunta.
+- Backend Ceste: `GET/POST /api/crates`, `POST /api/crates/{id}/item`, `PATCH /api/crates/{id}` (driver), `POST /api/crates/{id}/clear`, `DELETE /api/crates/{id}` (tutti utente loggato).
+- **Fattorino da elenco**: dropdown fisso (Marco/Giovanni/Luca/Alex) sia nelle Consegne (`elite-delivery-driver`) sia nelle Ceste (niente più testo libero).
+- **Sintesi vocale all'apertura**: alla apertura dell'Elite Engine il Capo sente "Benvenuto Comandante. Plancia MikiLab pronta…".
+- NOTA: la schermata PIN e il menu a 4 sezioni degli script v34/v35 NON sono stati replicati (PIN 1985 già globale; la navigazione app — Home, Modalità Chef, Diagnosi, Ricette, Consegne — esiste già altrove).
+- Verifica: backend curl (crate CRUD + item + driver) + screenshot Capo (crea cesta, tasto "+ 4x Baguette" → chip nella cesta persistito). Compilazione pulita. Dati test ripuliti.
