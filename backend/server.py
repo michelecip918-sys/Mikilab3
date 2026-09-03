@@ -7216,6 +7216,44 @@ async def notifications_read(user: dict = Depends(current_user)):
     return {"ok": True}
 
 
+class AbsenceReq(BaseModel):
+    kind: str = Field(..., max_length=20)   # 'malattia' | 'ferie'
+    note: Optional[str] = Field("", max_length=500)
+    dates: Optional[str] = Field("", max_length=120)
+
+
+@api_router.post("/operator/absence")
+async def operator_absence(body: AbsenceReq, user: dict = Depends(current_user)):
+    label = "Ferie" if body.kind == "ferie" else "Malattia"
+    actor_name = user.get("name") or user.get("email") or "Operatore"
+    note = (body.note or "").strip()
+    dates = (body.dates or "").strip()
+    snippet = f"{label}" + (f" · {dates}" if dates else "") + (f" — {note}" if note else "")
+    owners = await db.users.find(
+        {"$or": [{"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}, {"role": "admin"}]},
+        {"_id": 0, "user_id": 1, "email": 1},
+    ).to_list(100)
+    for o in owners:
+        await _notify(o.get("user_id"), user.get("user_id"), "absence", None, actor_name, snippet)
+    try:
+        if _resend and RESEND_API_KEY:
+            html = f"<p><b>{actor_name}</b> ha inviato un avviso di <b>{label}</b>.</p>"
+            if dates:
+                html += f"<p>Periodo: {dates}</p>"
+            if note:
+                html += f"<p>Nota: {note}</p>"
+            for o in owners:
+                if o.get("email"):
+                    await asyncio.to_thread(_resend.Emails.send, {
+                        "from": f"MikiLab <{SENDER_EMAIL}>", "to": [o["email"]],
+                        "subject": f"MikiLab · Avviso {label} da {actor_name}", "html": html,
+                    })
+    except Exception:
+        pass
+    return {"ok": True, "label": label}
+
+
+
 # ---------------------------------------------------------------------------
 # Enterprise — Multi-Negozio (21) + Ordini Multi-Fornitore (23)
 # Dati salvati sul backend e separati per proprietario (user) e per negozio.

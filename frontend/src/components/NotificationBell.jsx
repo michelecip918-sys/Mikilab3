@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Bell, Heart, MessageCircle, UserPlus, Flame, Mail, Wheat } from "lucide-react";
+import { Bell, Heart, MessageCircle, UserPlus, Flame, Mail, Wheat, Thermometer } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
 import { notificationsApi } from "@/lib/api";
@@ -65,12 +65,14 @@ export default function NotificationBell() {
   const renderNotif = (n) => (
     <div key={n.id} data-testid={`notif-item-${n.id}`} className={`flex items-start gap-3 px-4 py-3 border-b border-[#e4eff8] dark:border-[#2A3B49] last:border-0 ${!n.read ? "bg-[#3E9C93]/5" : ""}`}>
       <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${n.type === "like" ? "bg-[#E4572E]/15 text-[#E4572E]" : n.type && n.type.startsWith("friend") ? "bg-[#2e8b6f]/15 text-[#2e8b6f]" : "bg-[#3E9C93]/15 text-[#3E9C93]"}`}>
-        {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type === "email_import" ? <Mail className="w-4 h-4" /> : n.type === "channel_post" ? <Wheat className="w-4 h-4" /> : (n.type === "bakealong" || n.type === "bakealong_win") ? <Flame className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
+        {n.type === "like" ? <Heart className="w-4 h-4" /> : n.type === "absence" ? <Thermometer className="w-4 h-4" /> : n.type === "email_import" ? <Mail className="w-4 h-4" /> : n.type === "channel_post" ? <Wheat className="w-4 h-4" /> : (n.type === "bakealong" || n.type === "bakealong_win") ? <Flame className="w-4 h-4" /> : n.type && n.type.startsWith("friend") ? <UserPlus className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] leading-snug">
           <b>{n.actor_name}</b> {n.type === "like"
             ? tri("ha messo mi piace al tuo post", "gefällt dein Beitrag", "liked your post")
+            : n.type === "absence"
+            ? tri("ha inviato un avviso di assenza al Capo", "hat eine Abwesenheitsmeldung gesendet", "sent an absence notice to the Boss")
             : n.type === "email_import"
             ? tri("🥖 nuove ricette importate via email!", "🥖 neue Rezepte per E-Mail importiert!", "🥖 new recipes imported by email!")
             : n.type === "channel_post"

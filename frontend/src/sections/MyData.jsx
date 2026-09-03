@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { CalendarDays, BookOpen, FileText, MessageSquare, Clock, ChevronDown, Trash2, Loader2 } from "lucide-react";
-import { plansArchiveApi, recipesApi, chatApi } from "@/lib/api";
+import { CalendarDays, BookOpen, FileText, MessageSquare, Clock, ChevronDown, Trash2, Loader2, Thermometer, Palmtree, Send } from "lucide-react";
+import { plansArchiveApi, recipesApi, chatApi, operatorApi } from "@/lib/api";
 import { getChats, removeChat } from "@/lib/chatHistory";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/auth/AuthContext";
+import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 
 // Archivio "I Miei Dati Salvati": Piani (archivio), Ricette (personali), Documenti & PDF, Chat AI.
@@ -34,10 +35,44 @@ export default function MyData({ onOpenTool }) {
 
   const deleteChat = (id) => { removeChat(id); setChats(getChats()); };
 
+  const [absNote, setAbsNote] = useState("");
+  const [absDates, setAbsDates] = useState("");
+  const [absSending, setAbsSending] = useState("");
+  const sendAbsence = async (kind) => {
+    setAbsSending(kind);
+    try {
+      const r = await operatorApi.absence({ kind, note: absNote, dates: absDates });
+      toast.success(tri(`Avviso di ${r.label} inviato al Capo ✔`, `${r.label}-Meldung an den Chef gesendet ✔`, `${r.label} notice sent to the Boss ✔`));
+      setAbsNote(""); setAbsDates("");
+    } catch {
+      toast.error(tri("Accedi per inviare l'avviso al Capo.", "Melde dich an, um den Chef zu benachrichtigen.", "Sign in to notify the Boss."));
+    } finally { setAbsSending(""); }
+  };
+
   return (
     <div data-testid="my-data" className="pb-4">
       <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] mb-1">{tri("I Miei Dati Salvati", "Meine gespeicherten Daten", "My Saved Data")}</h2>
       <p className="text-sm text-[#7E8A93] mb-4">{tri("Tutto ciò che salvi, in un unico posto.", "Alles, was du speicherst, an einem Ort.", "Everything you save, in one place.")}</p>
+
+      {/* Modulo Assenze — avvisa il Capo (malattia/ferie) */}
+      <div data-testid="absence-module" className="mb-4 rounded-2xl border border-[#2A3B49] bg-white dark:bg-[#1B2A38] p-4 shadow-md">
+        <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#3E9C93] mb-1">{tri("Avvisa il Capo", "Chef benachrichtigen", "Notify the Boss")}</p>
+        <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Invia un avviso immediato di malattia o ferie: arriva direttamente al Capo.", "Sende sofort eine Krankheits- oder Urlaubsmeldung direkt an den Chef.", "Send an instant sickness or holiday notice straight to the Boss.")}</p>
+        <div className="grid grid-cols-2 gap-2 mb-2">
+          <input data-testid="absence-dates" value={absDates} onChange={(e) => setAbsDates(e.target.value)} placeholder={tri("Quando? (es. oggi, 12-15/06)", "Wann? (z. B. heute)", "When? (e.g. today)")} className="rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+          <input data-testid="absence-note" value={absNote} onChange={(e) => setAbsNote(e.target.value)} placeholder={tri("Nota (facoltativa)", "Notiz (optional)", "Note (optional)")} className="rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <button data-testid="absence-malattia" disabled={!!absSending} onClick={() => sendAbsence("malattia")}
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#5E8CA8] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
+            {absSending === "malattia" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Thermometer className="w-4 h-4" />} {tri("Malattia", "Krankheit", "Sick")}
+          </button>
+          <button data-testid="absence-ferie" disabled={!!absSending} onClick={() => sendAbsence("ferie")}
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#3E9C93] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
+            {absSending === "ferie" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Palmtree className="w-4 h-4" />} {tri("Ferie", "Urlaub", "Holiday")}
+          </button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-4 gap-1.5 bg-[#e4eff8] dark:bg-[#1B2A38] p-1.5 rounded-2xl mb-4 border border-[#2A3B49] dark:border-[#2A3B49]">
         {TABS.map(({ id, Icon, label, n }) => (

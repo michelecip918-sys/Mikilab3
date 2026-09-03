@@ -319,3 +319,8 @@ export const dayCloseApi = {
   list: () => api.get(`/day-close/list`).then((r) => r.data).catch(() => ({ closures: [] })),
   pdf: (id, lang = "it") => api.get(`/day-close/${id}/pdf`, { params: { lang }, responseType: "blob" }).then((r) => r.data),
 };
+
+
+export const operatorApi = {
+  absence: (data) => api.post(`/operator/absence`, data).then((r) => r.data),
+};
