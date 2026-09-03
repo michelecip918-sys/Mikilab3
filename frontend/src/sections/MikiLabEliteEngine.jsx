@@ -224,6 +224,12 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     } catch (e) { loadCrates(); }
   };
   const openTool = (name) => { setActiveTool(name); speakVoice(`Avvio diagnostica: ${name}.`); };
+  const loadRecurring = async (crate) => {
+    const items = ['5x Baguette', '5x Croissant'];
+    setCrates(prev => prev.map(c => c.id === crate.id ? { ...c, items: [...(c.items || []), ...items] } : c));
+    try { for (const it of items) await fetch(`${API}/api/crates/${crate.id}/item`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item: it }) }); } catch (e) { loadCrates(); }
+    speakVoice(`Cesta ricorrente caricata per ${crate.store_name}.`);
+  };
 
   const speakVoice = (text) => {
     if ('speechSynthesis' in window) {
@@ -560,19 +566,16 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
           <div data-testid="elite-panel-consegne" style={{ marginBottom: '16px', backgroundColor: 'rgba(0,0,0,0.5)', border: `1px solid ${currentRoom.color}`, borderRadius: '12px', padding: '12px' }}>
             <div style={{ fontSize: '0.7rem', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>🚚 {_pick('Gestione Consegne (Lieferung)', 'Lieferungen', 'Deliveries', 'Entregas', 'Livraisons', 'تحویل‌ها')}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '8px' }}>
-              {deliveries.length === 0 && <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick('Nessuna consegna in coda.', 'Keine Lieferungen.', 'No deliveries queued.', 'Sin entregas.', 'Aucune livraison.', 'تحویلی نیست.')}</div>}
-              {deliveries.map((del, i) => (
+              {deliveries.filter(d => d.status !== 'consegnato').length === 0 && <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick('Nessuna consegna in coda.', 'Keine Lieferungen.', 'No deliveries queued.', 'Sin entregas.', 'Aucune livraison.', 'تحویلی نیست.')}</div>}
+              {deliveries.filter(d => d.status !== 'consegnato').map((del, i) => (
                 <div key={del.id} data-testid={`elite-cons-delivery-${i}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '8px' }}>
                   <div style={{ minWidth: 0 }}>
                     <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#EEE' }}>{del.client}</span>
                     {del.driver && <span style={{ display: 'block', fontSize: '0.64rem', color: currentRoom.color }}>🛵 {del.driver}{del.time ? ` · ${del.time}` : ''}</span>}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <select value={del.status} onChange={e => setDeliveryStatus(del.id, e.target.value)} style={{ backgroundColor: '#0E1620', color: del.status === 'consegnato' ? '#3E9C93' : '#E6A23C', border: `1px solid ${del.status === 'consegnato' ? '#3E9C93' : '#E6A23C'}`, borderRadius: '6px', padding: '4px', fontSize: '0.66rem', fontWeight: 700 }}>
-                      <option value="in consegna">{_pick('In consegna', 'Unterwegs', 'Out', 'En reparto', 'En livraison', 'در حال')}</option>
-                      <option value="consegnato">{_pick('Consegnato', 'Geliefert', 'Delivered', 'Entregado', 'Livré', 'تحویل شد')}</option>
-                    </select>
-                    <button onClick={() => deleteDelivery(del.id)} style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '4px 8px', fontSize: '0.66rem', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                    <button data-testid={`elite-cons-done-${i}`} onClick={() => setDeliveryStatus(del.id, 'consegnato')} style={{ backgroundColor: '#3E9C93', color: '#000', border: 'none', borderRadius: '6px', padding: '6px 10px', fontSize: '0.66rem', cursor: 'pointer', fontWeight: 800 }}>✅ {_pick('Consegnato', 'Geliefert', 'Delivered', 'Entregado', 'Livré', 'تحویل')}</button>
+                    <button onClick={() => deleteDelivery(del.id)} style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '6px 8px', fontSize: '0.66rem', cursor: 'pointer', fontWeight: 700 }}>✕</button>
                   </div>
                 </div>
               ))}
@@ -585,6 +588,22 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               </select>
               <button data-testid="elite-cons-add" onClick={addDelivery} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '7px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>＋</button>
             </div>
+            {deliveries.filter(d => d.status === 'consegnato').length > 0 && (
+              <div data-testid="elite-cons-storico" style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+                <div style={{ fontSize: '0.66rem', textTransform: 'uppercase', letterSpacing: '1px', color: '#AAA', fontWeight: 700, marginBottom: '6px' }}>{_pick('Storico consegne concluse', 'Abgeschlossen', 'Delivery history', 'Historial', 'Historique', 'تاریخچه')}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '140px', overflowY: 'auto' }}>
+                  {deliveries.filter(d => d.status === 'consegnato').map((del, i) => (
+                    <div key={del.id} data-testid={`elite-cons-hist-${i}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', backgroundColor: 'rgba(62,156,147,0.08)', border: '1px solid rgba(62,156,147,0.25)', borderRadius: '8px', padding: '7px' }}>
+                      <div style={{ minWidth: 0 }}>
+                        <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#EEE' }}>{del.client}</span>
+                        {del.driver && <span style={{ fontSize: '0.62rem', color: '#8FB0C2', marginLeft: '6px' }}>🛵 {del.driver}</span>}
+                      </div>
+                      <span style={{ fontSize: '0.6rem', backgroundColor: 'rgba(62,156,147,0.2)', color: '#3E9C93', padding: '3px 6px', borderRadius: '6px', fontWeight: 700 }}>✓ {_pick('Completato', 'Fertig', 'Done', 'Hecho', 'Fait', 'انجام شد')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -961,6 +980,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                         <option value="">🛵 {_pick("Fattorino", "Fahrer", "Driver", "Repartidor", "Livreur", "پیک")}</option>
                         {DRIVERS.map(d => <option key={d} value={d}>🛵 {d}</option>)}
                       </select>
+                      <button data-testid={`elite-crate-recurring-${i}`} onClick={(e) => { e.stopPropagation(); loadRecurring(c); }} style={{ width: '100%', backgroundColor: 'rgba(255,255,255,0.06)', color: '#CCC', border: '1px solid #55606B', borderRadius: '8px', padding: '6px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer', marginBottom: '6px' }}>
+                        ⚡ {_pick("Ricarica Ricorrente", "Standard laden", "Load Recurring", "Cargar habitual", "Charger habituel", "بارگذاری ثابت")}
+                      </button>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', minHeight: '30px' }}>
                         {(c.items || []).length === 0 ? <span style={{ fontSize: '0.66rem', color: '#777', fontStyle: 'italic' }}>{_pick("Cesta vuota…", "Leer…", "Empty…", "Vacía…", "Vide…", "خالی…")}</span>
                           : (c.items || []).map((p, j) => <span key={j} style={{ backgroundColor: currentRoom.color, color: '#000', fontSize: '0.64rem', padding: '3px 6px', borderRadius: '6px', fontWeight: 800 }}>{p}</span>)}

@@ -3725,3 +3725,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Diagnosi Collegata**: i riquadri Diagnosi (`elite-diag-<i>`) ora sono pulsanti; al tap mostrano il banner `elite-tool-active` "Strumento attivo: …" e annunciano a voce l'avvio. (Attivazione/annuncio; il collegamento profondo ai tool reali resta come evoluzione futura.)
 - **Ricette in Cesta** (bonus dallo script): le card ricette possono inviare in cesta (via addToCrate).
 - Verifica: screenshot Capo end-to-end — cesta (2 pz)→invio→(0 pz), consegna comparsa in Consegne, tap Scanner Farina→banner attivo. Compilazione pulita. Dati test ripuliti.
+
+## v45 (2026-06) — v44.0 Master Elite: Consegnato + Storico + Ceste Ricorrenti
+- **Consegnato + Storico**: nella sezione Consegne i viaggi attivi (`elite-cons-delivery-<i>`) hanno il tasto `elite-cons-done-<i>` "✅ Consegnato" (PATCH status→consegnato); i conclusi passano allo **Storico** `elite-cons-storico` (`elite-cons-hist-<i>`). Filtri: attivi = status≠consegnato, storico = status=consegnato (dati reali dal server).
+- **Ceste Ricorrenti**: pulsante `elite-crate-recurring-<i>` ricarica la cesta con il set abituale (5x Baguette, 5x Croissant) via API, con annuncio vocale.
+- SALTATO (cosmetico/duplicato): i toggle Cuffie/Microfono dello script — il sistema mani-libere + Web Radio con auto-ducking esiste già in BraccioLab/RadioFornaio.
+- Verifica: screenshot Capo end-to-end — Ricorrente→(2 pz)→Sposta in Consegna→sezione Consegne→✅ Consegnato→comparsa nello Storico. Compilazione pulita. Dati test ripuliti.
