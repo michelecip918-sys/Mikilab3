@@ -3608,3 +3608,11 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Voce**: VoiceSettings riordinato — Michele (Il Comandante) primario, Mohammadreza come opzione secondaria/supporto tecnico.
 - **Purghe**: PaywallGate gia trasparente (nessun pagamento/abbonamento); rimosso il campo/tabella ALLERGENI dall etichetta UE (RecipeDialog); HACCP gia purgato.
 - Target "emtra.be": non configurabile da codice (dominio da pannello). Build OK, verificato 390px. Deploy non lanciato.
+
+## v-lab.11 (2026-06) — Master Ultimate: 6 reparti + solo avatar Michele
+- Palette: CONFERMATA calma teal/blu-ardesia (utente ha scelto di NON passare al caldo terroso).
+- **Elite Engine a 6 reparti**: impasti, forni (Forni Sincronizzati), pasticceria (Konditorei), laugen (Linea Laugen), banco (Lavori a Mano), pretzel (Macchina/Postazione Pretzel slot 05:00). Selettore 3x2. Stanza guida rimossa (guida resta nel nav).
+- **Solo avatar di Michele** ovunque (regola "nessun volto di terzi"): rooms3D avatarName = ruoli di Michele per reparto; sovrascritto mohammed-avatar.jpg con avatar cyber di Michele (SpeakingAvatar/GuidaAvatar ora mostrano Michele). Mohammadreza resta solo come nome-voce secondaria.
+- Palette stanze aggiornata a teal/slate (via colori nuovi).
+- DEFERRED (crediti/scope): 6 avatar con divisa diversa per reparto (ora stesso avatar), alternanza logo/avatar 1-1 estesa, Guide Capo/Operai separate, scheduling turni completo. Master recipes gia editabili solo da admin/Capo.
+- Build OK, verificato 390px. Deploy non lanciato. Target emtra.be non configurabile da codice.

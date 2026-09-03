@@ -166,43 +166,63 @@ export default function MikiLabEliteEngine({ open, onClose }) {
   const rooms3D = {
     impasti: {
       title: "🌾 BANCO IMPASTI & SILOS 3D",
-      color: "#D97706",
-      bgGradient: "linear-gradient(135deg, #2A1A08 0%, #795548 50%, #D97706 100%)",
-      avatarName: "Miki (Maestro Impastatore)",
+      color: "#5E8CA8",
+      bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #3E9C93 100%)",
+      avatarName: "Michele (Maestro Impastatore)",
       avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Miki sta gestendo il banco impasti, l'acqua e la spirale!",
+      avatarAction: "Michele sta gestendo il banco impasti, l'acqua e la spirale!",
       item3D: "📦 Silo Farina T500 & Vasca Impastatrice",
       desc: "Reparto impasti ad alta idratazione e controllo del glutine"
     },
     forni: {
-      title: "🔥 ZONA FORNI A LEGNA 3D",
-      color: "#C2612E",
-      bgGradient: "linear-gradient(135deg, #3E2723 0%, #D84315 50%, #C2612E 100%)",
-      avatarName: "Mohamed & Miki (Infornatore Capo)",
-      avatarImg: "/mohammed-avatar.jpg",
-      avatarAction: "Mohamed e Miki stanno controllando il forno rotativo e le cotture!",
-      item3D: "🌋 Forno Rotativo con Mattoni Refrattari",
+      title: "🔥 FORNI SINCRONIZZATI 3D",
+      color: "#3E9C93",
+      bgGradient: "linear-gradient(135deg, #0E1620 0%, #14212C 55%, #5E8CA8 100%)",
+      avatarName: "Michele (Capo Fornaio)",
+      avatarImg: "/michele-real-lab.jpg",
+      avatarAction: "Michele sta sincronizzando forni, vapore e timer di cottura!",
+      item3D: "🌋 Forni Sincronizzati con Mattoni Refrattari",
       desc: "Gestione vapore, infornate e timer di cottura con allarme e notifica"
     },
     pasticceria: {
-      title: "🥐 KONDITOREI & ABBATTITORE 3D",
-      color: "#B5714E",
-      bgGradient: "linear-gradient(135deg, #241009 0%, #7A3F28 50%, #B5714E 100%)",
-      avatarName: "Miki & Mohamed (Team Pasticceria)",
+      title: "🥐 KONDITOREI & PASTICCERIA 3D",
+      color: "#7FB0A6",
+      bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #7FB0A6 100%)",
+      avatarName: "Michele (Maestro Pasticcere)",
       avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Team all'opera con la laminazione del burro e l'abbattitore!",
-      item3D: "🧊 Abbattitore Professionale -35°C & Sfogliatrice",
+      avatarAction: "Laminazione del burro e abbattitore in azione!",
+      item3D: "🧊 Abbattitore -35°C & Sfogliatrice",
       desc: "Calcolo pieghe 4-4 e gestione temperature burro"
     },
-    guida: {
-      title: "📖 GUIDA & TUTELA COPYRIGHT (MIKILAB)",
-      color: "#8F9B5E",
-      bgGradient: "linear-gradient(135deg, #20240F 0%, #4E5A2A 50%, #8F9B5E 100%)",
-      avatarName: "Miki & Mohamed (Progetto Ufficiale)",
-      avatarImg: "/logo-emblem.png",
-      avatarAction: "Consultazione Guida 3D e Protezione Legale del Software!",
-      item3D: "💡 Archivio Tecnologie & Specifiche di Progetto",
-      desc: "Soluzioni sviluppate ad hoc da Miki & Mohamed vs Standard di Mercato"
+    laugen: {
+      title: "🥨 LINEA LAUGEN 3D",
+      color: "#5E8CA8",
+      bgGradient: "linear-gradient(135deg, #0E1620 0%, #14212C 55%, #3E9C93 100%)",
+      avatarName: "Michele (Operatore Laugen)",
+      avatarImg: "/michele-real-lab.jpg",
+      avatarAction: "Immersione in soda e taglio: linea Laugen operativa!",
+      item3D: "🧪 Vasca Soda Laugen & Sale Grosso",
+      desc: "Bretzel e Laugengebäck: bagno alcalino, sicurezza e taglio"
+    },
+    banco: {
+      title: "✋ LAVORI A MANO (BANCO) 3D",
+      color: "#3E9C93",
+      bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #5E8CA8 100%)",
+      avatarName: "Michele (Formatore Artigianale)",
+      avatarImg: "/michele-real-lab.jpg",
+      avatarAction: "Formatura a mano: pezzatura, arrotondamento e taglio!",
+      item3D: "🪵 Banco in Legno & Tarocco",
+      desc: "Formatura artigianale, pezzatura e pirlatura a mano"
+    },
+    pretzel: {
+      title: "⚙️ MACCHINA / POSTAZIONE PRETZEL",
+      color: "#8FB0C2",
+      bgGradient: "linear-gradient(135deg, #0E1620 0%, #14212C 55%, #8FB0C2 100%)",
+      avatarName: "Michele (Operatore Macchine Dedicate)",
+      avatarImg: "/michele-real-lab.jpg",
+      avatarAction: "Postazione Pretzel dedicata · turno delle 05:00 attivo!",
+      item3D: "🥨 Macchina Pretzel Automatica (slot 05:00)",
+      desc: "Lavori a macchina e postazione Pretzel con slot orario dedicato"
     }
   };
 
@@ -275,12 +295,14 @@ export default function MikiLabEliteEngine({ open, onClose }) {
         </div>
 
         {/* SELETTORE STANZE 3D */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px' }}>
           {[
-            { id: 'impasti', icon: '🌾', label: 'IMPASTI (MIKI)' },
-            { id: 'forni', icon: '🔥', label: 'FORNI (MOHAMED)' },
+            { id: 'impasti', icon: '🌾', label: 'IMPASTI' },
+            { id: 'forni', icon: '🔥', label: 'FORNI' },
             { id: 'pasticceria', icon: '🥐', label: 'PASTICCERIA' },
-            { id: 'guida', icon: '📖', label: 'GUIDA & INFO' }
+            { id: 'laugen', icon: '🥨', label: 'LAUGEN' },
+            { id: 'banco', icon: '✋', label: 'BANCO' },
+            { id: 'pretzel', icon: '⚙️', label: 'PRETZEL' }
           ].map(room => (
             <button key={room.id} data-testid={`elite-room-${room.id}`} onClick={() => { setActiveTab(room.id); speakVoice(`Spostamento in ${room.label}`); }} style={{
               backgroundColor: activeTab === room.id ? rooms3D[room.id].color : 'rgba(0,0,0,0.6)',
