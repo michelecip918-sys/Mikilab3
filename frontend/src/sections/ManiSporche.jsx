@@ -5,6 +5,7 @@ import { useTimers, remainingOf } from "@/audio/TimerContext";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
+import { cleanForSpeech } from "@/lib/voice";
 import { recipeTitle } from "@/lib/loc";
 import ProactiveAssistant from "@/components/ProactiveAssistant";
 import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, dayLabel, summarizeDay } from "@/lib/weeklyPlan";
@@ -99,7 +100,7 @@ export default function ManiSporche() {
   }, []);
 
   const speak = useCallback((text) => {
-    try { const s = window.speechSynthesis; if (!s) return; const u = new SpeechSynthesisUtterance(text); u.lang = voiceLang; u.rate = 0.98; s.speak(u); } catch { /* */ }
+    try { const s = window.speechSynthesis; if (!s) return; const u = new SpeechSynthesisUtterance(cleanForSpeech(text)); u.lang = voiceLang; u.rate = 0.98; s.speak(u); } catch { /* */ }
   }, [voiceLang]);
 
   // Tempi delle fasi: se c'è una ricetta attiva, li derivo dai suoi parametri.

@@ -3765,3 +3765,15 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - Nuova sezione "Team Balance · Anti-Burnout": input pezzi per i 7 giorni (Lun–Dom) + n° persone squadra → calcola totale settimana, media livellata/giorno (su giorni lavorativi), pezzi/persona, e segnala giorni SOVRACCARICO/SOTTO MEDIA/IN LINEA/RIPOSO (soglia ±15%). Consiglio di spostamento carico + audio "Ascolta il Bilanciamento" (it-IT). Persistito in localStorage (`mikilab_planner_week`, `mikilab_planner_team`).
 - testid: `team-balance`, `team-day-{0..6}`, `team-state-{i}`, `team-size`, `balance-report`, `balance-total/avg/perperson`, `balance-sync`.
 - Verificato via screenshot+evaluate: stati colorati corretti, riepilogo corretto (2320/387/129/6), audio attivo. Statico/locale, nessun backend.
+
+## Elite v3.0.2 (2026-06) — Audio mirato, avatar nuovo, Team Balance dal piano
+- **Audio**: la voce hands-free per i comandi di laboratorio (fasi impasto, litri acqua) RESTA attiva (playTTS + cleanForSpeech già rimuove asterischi/markdown/simboli → voce pulita). Rimosso SOLO l'audio dei report/bilanciamenti lunghi dai 3 moduli nuovi (ModuloScienza, BrotSommelier, SmartPlannerStressZero) → ora sono visivi/silenziosi.
+- **Nuovo avatar (non foto reale)**: generato personaggio stilizzato (magro, capelli militari cortissimi, orecchino, tatuaggi sulle braccia, grembiule scuro con "ML", palette teal/slate). Sovrascritti i file avatar/ritratto: michele-avatar.jpg, michele-avatar-full.jpg, michele-avatar-real.jpg, michele-avatar-talk.jpg, michele-real-lab.jpg, michele-cartoon.jpg, michele-photo.jpg, bio-photo.jpg → aggiornato ovunque (Header, Home, Academy, BraccioLab/Avatar3D) senza toccare il codice. Sfondi/hero delle sezioni invariati (scelta utente). Videos explainer NON toccati.
+- **Team Balance dal piano**: pulsante "Importa dal Piano Settimana" (testid `team-import-plan`) → legge `weeklyApi.get()`, aggrega `pieces` per giorno (lun..dom) e riempie i 7 giorni. Backend verificato.
+- **SW cache**: bump `mikilab-v12` per propagare il nuovo avatar (evita cache stantia).
+- Verificato via screenshot: nuovo avatar mostrato in Chef Mode; moduli silenziosi; compilazione pulita.
+
+## Elite v3.0.3 (2026-06) — Pulizia voce hands-free (mantenuto il Mani-Libere)
+- Il sistema Mani-Libere / comandi vocali RESTA (nessuna rimozione). Migliorata SOLO la pulizia del testo letto in `lib/voice.js` (`cleanForSpeech`): rimuove asterischi/markdown/backtick/emoji, caratteri speciali (`=^{}<>[]\/@$%&+`), codici tipo "XX 122"/"ERR12", e converte i gradi in linguaggio naturale (24°C → "24 gradi"). I numeri validi (litri/pezzi/percentuali) restano.
+- Instradati attraverso `cleanForSpeech` i due punti che leggevano testo grezzo: `ManiSporche.jsx` (speak) e `MikiLabEliteEngine.jsx` (speakVoice). AcademyCoach/HandsFreeMode/playTTS già lo usavano.
+- Verificato con unit test: "Temperatura 26° e idratazione 75%, versa 122 litri a 24°C" → "Temperatura 26 gradi e idratazione 75, versa 122 litri a 24 gradi".

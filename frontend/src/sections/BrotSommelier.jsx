@@ -1,15 +1,5 @@
-import { useState, useEffect } from "react";
-import { Wine, Volume2 } from "lucide-react";
-
-const speak = (msg) => {
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(msg);
-    u.lang = "it-IT";
-    u.rate = 1.0;
-    window.speechSynthesis.speak(u);
-  }
-};
+import { useState } from "react";
+import { Wine } from "lucide-react";
 
 const SOMMELIER = {
   segale_miele: {
@@ -34,7 +24,6 @@ const SOMMELIER = {
 
 export default function BrotSommelier() {
   const [sel, setSel] = useState("segale_miele");
-  useEffect(() => () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); }, []);
   const d = SOMMELIER[sel];
 
   return (
@@ -81,13 +70,6 @@ export default function BrotSommelier() {
           <span className="text-xs font-bold text-amber-300 block mb-1 uppercase tracking-wider">Nota del Brot Sommelier</span>
           <p className="text-xs text-amber-200 italic">{d.notaSommelier}</p>
         </div>
-        <button
-          data-testid="sommelier-audio"
-          onClick={() => speak(`${d.nome}. Profilo: ${d.profilo} Abbinamento consigliato: ${d.abbinamento} Nota del sommelier: ${d.notaSommelier}`)}
-          className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-semibold rounded-lg border border-amber-500/30 active:scale-95 transition-all"
-        >
-          <Volume2 className="w-3.5 h-3.5" /> Ascolta l'Abbinamento
-        </button>
       </div>
     </div>
   );

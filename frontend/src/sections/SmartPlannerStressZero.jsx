@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
-import { Moon, Volume2, Users, Scale } from "lucide-react";
-
-const speak = (msg) => {
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(msg);
-    u.lang = "it-IT";
-    u.rate = 1.0;
-    window.speechSynthesis.speak(u);
-  }
-};
+import { Moon, Users, Scale, CalendarDays } from "lucide-react";
+import { weeklyApi } from "@/lib/api";
+import { toast } from "sonner";
 
 const GIORNI = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
+const DAY_KEYS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 const DEFAULT_WEEK = [520, 180, 300, 300, 420, 600, 0];
 
 export default function SmartPlannerStressZero() {
@@ -22,7 +15,6 @@ export default function SmartPlannerStressZero() {
 
   useEffect(() => { try { localStorage.setItem("mikilab_planner_hour", shiftHour); localStorage.setItem("mikilab_planner_vol", String(volume)); } catch { /* */ } }, [shiftHour, volume]);
   useEffect(() => { try { localStorage.setItem("mikilab_planner_week", JSON.stringify(week)); localStorage.setItem("mikilab_planner_team", String(team)); } catch { /* */ } }, [week, team]);
-  useEffect(() => () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); }, []);
 
   const impasti = 3;
   const perImpasto = Math.max(0, Math.round((Number(volume) || 0) / impasti));
@@ -32,7 +24,7 @@ export default function SmartPlannerStressZero() {
   const giorniLavorativi = nums.filter((v) => v > 0).length || 7;
   const totSettimana = nums.reduce((a, b) => a + b, 0);
   const mediaGiorno = Math.round(totSettimana / giorniLavorativi);
-  const livellato = Math.round(totSettimana / giorniLavorativi);
+  const livellato = mediaGiorno;
   const perPersona = Math.max(1, Number(team) || 1);
   const carichoPersona = Math.round(livellato / perPersona);
   const soglia = mediaGiorno * 0.15; // ±15% considerato "in linea"
@@ -43,10 +35,25 @@ export default function SmartPlannerStressZero() {
   const STATE_STYLE = { sopra: "text-rose-400 border-rose-500/40", sotto: "text-amber-400 border-amber-500/40", linea: "text-teal-300 border-teal-500/40", riposo: "text-slate-500 border-slate-700" };
   const STATE_LABEL = { sopra: "Sovraccarico", sotto: "Sotto media", linea: "In linea", riposo: "Riposo" };
 
-  const syncBalance = () => {
-    const sopraTxt = giorniSopra.length ? `Giorni sovraccarichi: ${giorniSopra.join(", ")}.` : "Nessun giorno sovraccarico.";
-    const sottoTxt = giorniSotto.length ? `Giorni sotto media: ${giorniSotto.join(", ")}.` : "";
-    speak(`Bilanciamento settimanale attivo. Totale ${totSettimana} pezzi su ${giorniLavorativi} giorni, media livellata ${livellato} pezzi al giorno, circa ${carichoPersona} pezzi a persona con ${perPersona} in squadra. ${sopraTxt} ${sottoTxt}`);
+  const [importing, setImporting] = useState(false);
+  const importFromPlan = async () => {
+    setImporting(true);
+    try {
+      const plan = await weeklyApi.get();
+      const items = (plan && plan.items) || [];
+      if (!items.length) { toast.error("Nessun piano settimana salvato da importare"); return; }
+      const agg = [0, 0, 0, 0, 0, 0, 0];
+      for (const it of items) {
+        const idx = DAY_KEYS.indexOf(String(it.day || "").toLowerCase());
+        if (idx >= 0) agg[idx] += Number(it.pieces) || 0;
+      }
+      setWeek(agg.map((v) => Math.round(v)));
+      toast.success("Carichi importati dal Piano Settimana");
+    } catch {
+      toast.error("Piano non disponibile (accedi per salvarlo)");
+    } finally {
+      setImporting(false);
+    }
   };
 
   return (
@@ -85,22 +92,13 @@ export default function SmartPlannerStressZero() {
           </div>
         </div>
 
-        <div className="p-5 bg-indigo-950/20 border border-indigo-800/40 rounded-2xl flex flex-col justify-between space-y-4">
-          <div>
-            <span className="text-xs font-bold text-indigo-300 uppercase tracking-widest block mb-2">Report Organizzativo</span>
-            <ul data-testid="planner-report" className="text-xs text-slate-300 space-y-2 font-mono">
-              <li>• Turno ottimizzato alle ore {shiftHour} per il massimo riposo.</li>
-              <li>• Carico suddiviso in {impasti} impasti da {perImpasto} pezzi l'uno.</li>
-              <li>• Zero stress logistico: scorte frigorifero e sili pre-allertate.</li>
-            </ul>
-          </div>
-          <button
-            data-testid="planner-sync"
-            onClick={() => speak(`Pianificazione Stress Zero attivata. Turno impostato alle ${shiftHour} per ${volume} pezzi totali, suddivisi in ${impasti} impasti da ${perImpasto} pezzi.`)}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg inline-flex items-center justify-center gap-1.5"
-          >
-            <Volume2 className="w-4 h-4" /> Sincronizza Planner in Cuffia
-          </button>
+        <div className="p-5 bg-indigo-950/20 border border-indigo-800/40 rounded-2xl">
+          <span className="text-xs font-bold text-indigo-300 uppercase tracking-widest block mb-2">Report Organizzativo</span>
+          <ul data-testid="planner-report" className="text-xs text-slate-300 space-y-2 font-mono">
+            <li>• Turno ottimizzato alle ore {shiftHour} per il massimo riposo.</li>
+            <li>• Carico suddiviso in {impasti} impasti da {perImpasto} pezzi l'uno.</li>
+            <li>• Zero stress logistico: scorte frigorifero e sili pre-allertate.</li>
+          </ul>
         </div>
       </div>
 
@@ -115,6 +113,15 @@ export default function SmartPlannerStressZero() {
             <p className="text-slate-400 text-sm mt-0.5">Livella i carichi sui giorni della settimana per evitare picchi (es. lunedì pieno, martedì vuoto) e distribuire il lavoro sulla squadra.</p>
           </div>
         </div>
+
+        <button
+          data-testid="team-import-plan"
+          onClick={importFromPlan}
+          disabled={importing}
+          className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-teal-300 text-xs font-semibold rounded-lg border border-teal-500/30 active:scale-95 transition-all"
+        >
+          <CalendarDays className="w-3.5 h-3.5" /> {importing ? "Importazione…" : "Importa dal Piano Settimana"}
+        </button>
 
         <div className="p-5 bg-slate-950 rounded-2xl border border-slate-800 space-y-4">
           <div className="grid grid-cols-7 gap-2">
@@ -160,16 +167,9 @@ export default function SmartPlannerStressZero() {
           </div>
           <p className="text-xs text-slate-300">
             {giorniSopra.length > 0
-              ? <>⚠️ Sovraccarico: <b className="text-rose-400">{giorniSopra.join(", ")}</b>. Sposta parte della produzione verso i giorni più scarichi{giorniSotto.length ? <> (<b className="text-amber-400">{giorniSotto.join(", ")}</b>)</> : null} o congela in anticipo.</>
-              : <>✅ Carico già equilibrato: nessun giorno sovraccarico rispetto alla media livellata di {livellato} pezzi.</>}
+              ? <>Sovraccarico: <b className="text-rose-400">{giorniSopra.join(", ")}</b>. Sposta parte della produzione verso i giorni più scarichi{giorniSotto.length ? <> (<b className="text-amber-400">{giorniSotto.join(", ")}</b>)</> : null} o congela in anticipo.</>
+              : <>Carico già equilibrato: nessun giorno sovraccarico rispetto alla media livellata di {livellato} pezzi.</>}
           </p>
-          <button
-            data-testid="balance-sync"
-            onClick={syncBalance}
-            className="w-full py-3 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg inline-flex items-center justify-center gap-1.5"
-          >
-            <Volume2 className="w-4 h-4" /> Ascolta il Bilanciamento
-          </button>
         </div>
       </div>
     </div>

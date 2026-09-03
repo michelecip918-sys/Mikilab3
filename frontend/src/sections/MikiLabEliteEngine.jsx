@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useLang } from '@/i18n/LanguageContext';
+import { cleanForSpeech } from '@/lib/voice';
 
 const APP_LANG_TO_TTS = { it: 'it-IT', de: 'de-DE', en: 'en-US', es: 'es-ES', fr: 'fr-FR', fa: 'fa-IR' };
 
@@ -243,7 +244,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const speakVoice = (text) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
+      const u = new SpeechSynthesisUtterance(cleanForSpeech(text));
       u.lang = language;
       u.rate = 0.95;
       window.speechSynthesis.speak(u);
