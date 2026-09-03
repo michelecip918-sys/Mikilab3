@@ -234,12 +234,18 @@ function App() {
     <TimerProvider>
     <SoundFXProvider>
     <div className="App min-h-screen app-warm-bg">
-      {/* Sfondo tematico: filigrana grano/farina elegante su ogni pagina (contrasto garantito dalle card) */}
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-repeat opacity-[0.35] dark:opacity-[0.05]"
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/wheat-bg.webp)`, backgroundSize: "340px", mixBlendMode: "multiply" }} />
-      {/* Alone caldo tipo luce del forno */}
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none dark:opacity-0"
-        style={{ background: "radial-gradient(80% 40% at 50% -5%, rgba(216,150,70,.22), transparent 60%)" }} />
+      {/* Sfondo scenografico per sezione (fornaio + AI), toni calmi + velo scuro per leggibilità */}
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/${
+          tab === "maestro" ? "bg-lab.jpg" :
+          tab === "ricette" ? "bg-ricette.jpg" :
+          tab === "shop" ? "bg-farine.jpg" :
+          (tab === "imparacon" || tab === "impara" || tab === "news" || tab === "enciclopedia") ? "bg-accademia.jpg" :
+          tab === "community" ? "bg-community.jpg" :
+          (tab === "diagnosi" || tab === "enterprise") ? "bg-lab.jpg" :
+          "bg-home.jpg"})`, opacity: 0.55 }} />
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none"
+        style={{ background: "linear-gradient(180deg, rgba(14,22,32,0.80) 0%, rgba(14,22,32,0.90) 55%, rgba(14,22,32,0.97) 100%)" }} />
       <div className="relative z-10">
       <Header />
       <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />
@@ -270,8 +276,8 @@ function App() {
         </AnimatePresence>
         </ErrorBoundary>
 
-        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#26324A]">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#F26419] via-[#F26419] to-[#F26419] text-white p-6 shadow-lg text-center">
+        <footer data-testid="page-footer" className="mt-10 pt-6 border-t border-[#d5e4f0] dark:border-[#2A3B49]">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#3E9C93] via-[#3E9C93] to-[#3E9C93] text-white p-6 shadow-lg text-center">
             <div className="it-de-ribbon absolute top-0 left-0 right-0" />
             <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" data-testid="footer-logo" loading="lazy"
               className="w-20 h-20 rounded-2xl object-cover mx-auto ring-2 ring-[#D4AF37]/60 shadow-lg mt-1" />
@@ -279,13 +285,13 @@ function App() {
             <p className="text-[12px] font-bold tracking-wide text-[#3D2B1F] mt-1" data-testid="footer-bakemix">MikiLab — powered by BakeMix AI</p>
             <p className="text-[10px] leading-snug text-white/60 mt-2 max-w-sm mx-auto" data-testid="footer-legal">© MikiLab — Proprietà Intellettuale Riservata. Software ideato, sviluppato e diretto da Michele. Tutti i diritti relativi all'architettura di sistema e al modello personalizzato BakeMix AI sono riservati. È severamente vietata qualsiasi riproduzione, modifica o distribuzione non autorizzata.</p>
             <p className="text-[12px] text-white/85 leading-snug mt-1 max-w-xs mx-auto">{t("brand_slogan")}</p>
-            <p className="text-[11px] text-[#F26419]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
+            <p className="text-[11px] text-[#3E9C93]/90 font-semibold mt-2">🇮🇹 🇩🇪 🇬🇧 🇪🇸 🇫🇷 · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
           </div>
           <p className="text-center text-[10px] text-[#9AA6AE] mt-3">© {new Date().getFullYear()} MikiLab · mikilab.de</p>
           <div className="flex items-center justify-center gap-4 mt-2">
-            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#F26419] hover:underline">Impressum</button>
-            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#F26419] hover:underline">Datenschutz</button>
-            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#F26419] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
+            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">Impressum</button>
+            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">Datenschutz</button>
+            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
           </div>
         </footer>
       </main>
@@ -304,7 +310,7 @@ function App() {
           <motion.div
             data-testid="auth-modal"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-[#f0f6fb] dark:bg-[#0B0E14] overflow-auto"
+            className="fixed inset-0 z-[70] bg-[#f0f6fb] dark:bg-[#0E1620] overflow-auto"
           >
             <AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} />
           </motion.div>
@@ -312,9 +318,9 @@ function App() {
       </AnimatePresence>
 
       {legalOpen && (
-        <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#0B0E14] overflow-auto">
+        <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#0E1620] overflow-auto">
           <div className="max-w-xl mx-auto px-4 py-5">
-            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#F26419]">← {tri("Chiudi", "Schließen", "Close")}</button>
+            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#3E9C93]">← {tri("Chiudi", "Schließen", "Close")}</button>
             <LegalPage />
           </div>
         </div>

@@ -3575,3 +3575,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **index.css**: .lab-3d-card ora frosted glass (backdrop-blur 16px, bordo white/8, sheen, hover glow rame); .app-warm-bg → obsidian + bagliore rame/oro; :root e body aggiornati via remap.
 - **BottomNav** riscritta: da "pale di legno" a glass obsidian con icone lucide (BookOpen/GraduationCap/Wrench/Users/BookOpenCheck), stato attivo ember, badge community. **Header**: pulsante Accedi ember gradient, selettore lingua glass (rimossi wood-surface/wood-emboss).
 - Verificato build OK; screenshot 390px Home/Lab/Ricette/Centro Formule/header/nav: coerente, leggibile, 0 overflow. Deploy NON lanciato (attesa ok utente per non consumare crediti).
+
+## v-lab.6 (2026-06) — Palette CALMA + sfondi scenografici per sezione + PDF funzioni
+- **Palette calma** (richiesta utente: rilassante, non stancante, no femminile, no marrone): rame/ember → teal #3E9C93, oro → blu acciaio #5E8CA8, base blu-ardesia #0E1620/#14212C/#1B2A38, bordi #2A3B49. Remap sicuro hex su tutto frontend/src; glow rame→teal in index.css.
+- **Sfondi scenografici per sezione** (fornaio + AI, stile calmo): bg-home/bg-lab/bg-ricette/bg-farine/bg-accademia/bg-community.jpg in /public, collegati in App.js per-tab con velo scuro (leggibilità). Home e Lab rigenerati con **logo MikiLab in evidenza sulle maglie** (Lab con team + cuffie).
+- **PDF funzioni**: /app/frontend/public/mikilab-funzioni.pdf (reportlab) con tutte le sezioni, comandi e funzioni in italiano. Scaricabile: <preview>/mikilab-funzioni.pdf.
+- Verificato: build OK; screenshot Home/Lab a 390px (teal, sfondi, avatar+logo, nav glass). Deploy non lanciato (attesa ok utente).

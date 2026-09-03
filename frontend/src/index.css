@@ -126,9 +126,9 @@ html[lang="fa"] textarea {
 .markdown-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; background: rgba(94,139,126,0.10); padding: 0.05em 0.35em; border-radius: 4px; }
 .markdown-body table { width: 100%; border-collapse: collapse; margin: 0.5em 0; font-size: 0.92em; display: block; overflow-x: auto; }
 .markdown-body th, .markdown-body td { border: 1px solid #d5e4f0; padding: 6px 8px; text-align: left; }
-.dark .markdown-body th, .dark .markdown-body td { border-color: #26324A; }
+.dark .markdown-body th, .dark .markdown-body td { border-color: #2A3B49; }
 .markdown-body th { background: rgba(110,140,160,0.15); }
-.markdown-body a { color: #F26419; text-decoration: underline; }
+.markdown-body a { color: #3E9C93; text-decoration: underline; }
 
 /* Stampa etichette: mostra solo l'area etichette */
 @media print {
@@ -177,15 +177,15 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* portale ad arco in mattoni */
 .brick-arch {
   border: 10px solid transparent;
-  border-image: linear-gradient(160deg,#E8A838,#F26419 55%,#F26419) 1;
+  border-image: linear-gradient(160deg,#5E8CA8,#3E9C93 55%,#3E9C93) 1;
 }
 .grain-overlay::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .06; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .chalkboard {
-  background: radial-gradient(120% 120% at 30% 20%, #18202E 0%, #121722 60%, #121722 100%);
-  border: 7px solid #26324A; border-radius: 14px;
+  background: radial-gradient(120% 120% at 30% 20%, #1B2A38 0%, #14212C 60%, #14212C 100%);
+  border: 7px solid #2A3B49; border-radius: 14px;
   box-shadow: inset 0 0 18px rgba(0,0,0,.5), 0 8px 16px rgba(44,30,16,.35);
 }
 .font-chalk { font-family: "Caveat", "Comic Sans MS", cursive; }
@@ -196,16 +196,16 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* Sfondo caldo "panificio" per tutte le pagine */
 .app-warm-bg {
   background:
-    radial-gradient(95% 55% at 50% 0%, #0B0E14 0%, transparent 55%),
-    radial-gradient(120% 80% at 50% 100%, #121722 0%, transparent 60%),
-    linear-gradient(180deg, #0B0E14 0%, #121722 100%);
+    radial-gradient(95% 55% at 50% 0%, #0E1620 0%, transparent 55%),
+    radial-gradient(120% 80% at 50% 100%, #14212C 0%, transparent 60%),
+    linear-gradient(180deg, #0E1620 0%, #14212C 100%);
   background-attachment: fixed;
 }
 .dark .app-warm-bg {
   background:
-    radial-gradient(85% 42% at 50% -4%, rgba(242,100,25,.18) 0%, transparent 58%),
-    radial-gradient(120% 70% at 50% 105%, rgba(232,168,56,.10) 0%, transparent 60%),
-    linear-gradient(180deg, #0B0E14 0%, #0B0E14 45%, #121722 100%);
+    radial-gradient(85% 42% at 50% -4%, rgba(62,156,147,.18) 0%, transparent 58%),
+    radial-gradient(120% 70% at 50% 105%, rgba(94,140,168,.10) 0%, transparent 60%),
+    linear-gradient(180deg, #0E1620 0%, #0E1620 45%, #14212C 100%);
   background-attachment: fixed;
 }
 
@@ -230,14 +230,14 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 
 /* ===== REGOLA UX: cosa si legge (bianco/grigio) vs cosa si clicca (arancio/giallo) ===== */
 /* Base: sfondo nero, testo chiaro */
-body { background:#0B0E14; color:#E2E8F0; }
+body { background:#0E1620; color:#E2E8F0; }
 /* Titoli/paragrafi STATICI che erano arancioni tornano bianchi. I pulsanti mantengono i loro colori. */
-h1.text-\[\#F26419\], h2.text-\[\#F26419\], h3.text-\[\#F26419\], h4.text-\[\#F26419\], p.text-\[\#F26419\],
-h1.text-\[\#E8A838\], h2.text-\[\#E8A838\], h3.text-\[\#E8A838\], p.text-\[\#E8A838\],
-h1.text-\[\#F26419\], h2.text-\[\#F26419\], h3.text-\[\#F26419\] { color:#FFFFFF !important; }
+h1.text-\[\#3E9C93\], h2.text-\[\#3E9C93\], h3.text-\[\#3E9C93\], h4.text-\[\#3E9C93\], p.text-\[\#3E9C93\],
+h1.text-\[\#5E8CA8\], h2.text-\[\#5E8CA8\], h3.text-\[\#5E8CA8\], p.text-\[\#5E8CA8\],
+h1.text-\[\#3E9C93\], h2.text-\[\#3E9C93\], h3.text-\[\#3E9C93\] { color:#FFFFFF !important; }
 /* Affordance: ogni pulsante/link con sfondo arancione o giallo ha ombra netta */
-button[class*="bg-[#F26419]"], a[class*="bg-[#F26419]"], button[class*="bg-[#F26419]"], a[class*="bg-[#F26419]"],
-button[class*="bg-[#F26419]"], a[class*="bg-[#F26419]"], button[class*="bg-[#F26419]"], a[class*="bg-[#F26419]"] {
+button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"], button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"],
+button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"], button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"] {
   box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 14px rgba(255,107,0,.28) !important;
 }
 
@@ -253,7 +253,7 @@ nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important
 
 /* Scenografia Cinematic Dark & Gold — effetto "Luce Forno" su hover carte/pulsanti */
 .oven-hover { transition: box-shadow .28s ease, border-color .28s ease, transform .15s ease; }
-.oven-hover:hover { box-shadow: 0 0 22px rgba(231,178,60,.42), inset 0 0 14px rgba(255,160,50,.16); border-color: #E8A838 !important; }
+.oven-hover:hover { box-shadow: 0 0 22px rgba(231,178,60,.42), inset 0 0 14px rgba(255,160,50,.16); border-color: #5E8CA8 !important; }
 .trinity-seal { box-shadow: 0 0 14px rgba(231,178,60,.55); }
 .trinity-seal:hover { box-shadow: 0 0 26px rgba(231,178,60,.9), 0 0 44px rgba(255,140,40,.45); }
 
@@ -272,10 +272,10 @@ nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important
    PANIFICIO VIRTUALE — Palette generale "warm artisan" (no neon/rosa/viola)
    ========================================================================== */
 :root {
-  --bg-primary: #0B0E14; /* Marrone legno scuro forno */
-  --bg-secondary: #121722;
-  --accent-warm: #E8A838; /* Tono grano / pane caldo */
-  --accent-border: #26324A;
+  --bg-primary: #0E1620; /* Marrone legno scuro forno */
+  --bg-secondary: #14212C;
+  --accent-warm: #5E8CA8; /* Tono grano / pane caldo */
+  --accent-border: #2A3B49;
   --text-main: #F7F9FC;
   --neon-pink: transparent;
   --neon-purple: transparent;
@@ -305,7 +305,7 @@ body, .app-container, .main-layout {
 }
 .lab-3d-card:hover {
   transform: perspective(1000px) rotateX(1.2deg) rotateY(-1.2deg) translateY(-3px);
-  border-color: rgba(242,100,25,0.45);
-  box-shadow: 0 18px 40px -12px rgba(0,0,0,0.7), 0 0 26px -4px rgba(242,100,25,0.35);
+  border-color: rgba(62,156,147,0.45);
+  box-shadow: 0 18px 40px -12px rgba(0,0,0,0.7), 0 0 26px -4px rgba(62,156,147,0.35);
 }
 @media (prefers-reduced-motion: reduce) { .lab-3d-card:hover { transform: none; } }

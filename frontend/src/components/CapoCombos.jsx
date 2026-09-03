@@ -41,23 +41,23 @@ export default function CapoCombos({ products, setProducts, lang, getSaveItems, 
   const remove = (id) => setCombos(deleteCombo(id));
 
   return (
-    <div className="mt-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] bg-[#18202E] p-2.5" data-testid="capo-combos">
+    <div className="mt-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-[#1B2A38] p-2.5" data-testid="capo-combos">
       <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 flex items-center gap-1"><Star className="w-3.5 h-3.5" /> {tri3("Le mie combinazioni", "Meine Kombinationen", "My combos", "Mis combinaciones")}</p>
       <div className="flex flex-wrap items-center gap-1.5">
         {combos.map((c) => (
-          <span key={c.id} className="inline-flex items-center rounded-full bg-[#F26419]/12 border border-[#F26419]/30 overflow-hidden">
+          <span key={c.id} className="inline-flex items-center rounded-full bg-[#3E9C93]/12 border border-[#3E9C93]/30 overflow-hidden">
             <button type="button" data-testid={`capo-combo-apply-${c.id}`} onClick={() => apply(c)}
-              className="text-xs font-semibold text-[#F26419] dark:text-[#ffd9b8] pl-3 pr-2 py-1.5 active:scale-95 transition-all max-w-[220px] truncate flex items-center gap-1">
+              className="text-xs font-semibold text-[#3E9C93] dark:text-[#ffd9b8] pl-3 pr-2 py-1.5 active:scale-95 transition-all max-w-[220px] truncate flex items-center gap-1">
               {c.synced && <Cloud data-testid={`capo-combo-synced-${c.id}`} className="w-3.5 h-3.5 text-[#AEB8BF] shrink-0" aria-label={tri3("Sincronizzata sull'account", "Mit Konto synchronisiert", "Synced to account", "Sincronizada en la cuenta")} />}
               <span className="truncate">{c.name}</span> <span className="opacity-70 shrink-0">· {c.items.length}</span>
             </button>
             <button type="button" data-testid={`capo-combo-del-${c.id}`} onClick={() => remove(c.id)}
-              className="text-[#F26419]/70 hover:text-[#F26419] pr-2 pl-0.5 py-1.5"><X className="w-3 h-3" /></button>
+              className="text-[#3E9C93]/70 hover:text-[#3E9C93] pr-2 pl-0.5 py-1.5"><X className="w-3 h-3" /></button>
           </span>
         ))}
         {hasRecipes && !saveOpen && (
           <button type="button" data-testid="capo-combo-save-open" onClick={() => setSaveOpen(true)}
-            className="text-xs font-semibold text-white bg-[#F26419] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95">
+            className="text-xs font-semibold text-white bg-[#3E9C93] px-3 py-1.5 rounded-full flex items-center gap-1 active:scale-95">
             <Plus className="w-3.5 h-3.5" /> {tri3("Salva combinazione", "Kombination speichern", "Save combo", "Guardar combinación")}
           </button>
         )}
@@ -67,9 +67,9 @@ export default function CapoCombos({ products, setProducts, lang, getSaveItems, 
           <input data-testid="capo-combo-name" value={name} onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") doSave(); }} autoFocus
             placeholder={tri3("es. Produzione del lunedì", "z.B. Montagsproduktion", "e.g. Monday production", "ej. Producción del lunes")}
-            className="flex-1 min-w-0 bg-[#18202E] border border-[#26324A] rounded-lg py-1.5 px-2.5 text-sm text-white outline-none focus:border-[#F26419]" />
+            className="flex-1 min-w-0 bg-[#1B2A38] border border-[#2A3B49] rounded-lg py-1.5 px-2.5 text-sm text-white outline-none focus:border-[#3E9C93]" />
           <button type="button" data-testid="capo-combo-save" onClick={doSave} disabled={!name.trim()}
-            className="text-xs font-semibold text-white bg-[#F26419] disabled:opacity-40 px-3 py-1.5 rounded-lg active:scale-95 shrink-0">{tri3("Salva", "Speichern", "Save", "Guardar")}</button>
+            className="text-xs font-semibold text-white bg-[#3E9C93] disabled:opacity-40 px-3 py-1.5 rounded-lg active:scale-95 shrink-0">{tri3("Salva", "Speichern", "Save", "Guardar")}</button>
           <button type="button" onClick={() => { setSaveOpen(false); setName(""); }} className="text-[#7E8A93] p-1 shrink-0"><X className="w-4 h-4" /></button>
         </div>
       )}

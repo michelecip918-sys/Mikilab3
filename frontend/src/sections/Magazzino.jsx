@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 // MAGAZZINO materie prime — carico rapido (3 campi) + scalatura automatica dalle impastate.
 // Tema Grain Gold (scuro, alto contrasto da laboratorio).
-const D = { bg: "#0B0E14", surf: "#18202E", surf2: "#18202E", border: "#26324A", gold: "#E8A838", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
+const D = { bg: "#0E1620", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
 
 export const warehouseApi = {
   list: () => api.get("/lab/warehouse").then((r) => r.data),
@@ -159,7 +159,7 @@ export default function Magazzino() {
             </div>
             <div className="space-y-1.5">
               {reorder.map((it) => (
-                <div key={it.id} className="flex items-center justify-between rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: "#18202E", border: `2px solid ${D.danger}` }}>
+                <div key={it.id} className="flex items-center justify-between rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: "#1B2A38", border: `2px solid ${D.danger}` }}>
                   <span className="text-[13px] font-bold" style={{ color: D.text }}>{it.name}{it.force_w ? ` · ${it.force_w}` : ""}</span>
                   <span className="font-mono-data font-extrabold text-[14px]" style={{ color: D.danger }}>{Math.round(it.quantity_kg * 100) / 100}{it.unit}</span>
                 </div>

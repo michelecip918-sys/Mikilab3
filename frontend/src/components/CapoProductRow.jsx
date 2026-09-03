@@ -12,19 +12,19 @@ export default function CapoProductRow({ p, i, recipes, setProducts }) {
   const patch = (fn) => setProducts((l) => l.map((x, k) => (k === i ? fn(x) : x)));
 
   return (
-    <div className="bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-2.5 space-y-2">
+    <div className="bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 p-2.5 space-y-2">
       <div className="flex items-center gap-2">
         <div className="flex-1 min-w-0">
           <CategoryRecipePicker recipes={recipes} value={p.recipe_id || ""}
             onChange={(e) => { const r = recipes.find((x) => x.id === e.target.value); patch((x) => ({ ...x, recipe_id: e.target.value, name: r ? r.name : x.name })); }}
             testid={`capo-product-recipe-${i}`} />
         </div>
-        <button data-testid={`capo-product-del-${i}`} onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#F26419] p-1 shrink-0"><X className="w-4 h-4" /></button>
+        <button data-testid={`capo-product-del-${i}`} onClick={() => setProducts((l) => l.filter((_, k) => k !== i))} className="text-[#3E9C93] p-1 shrink-0"><X className="w-4 h-4" /></button>
       </div>
       {p.day && (
         <button type="button" data-testid={`capo-product-daychip-${i}`}
           onClick={() => patch((x) => ({ ...x, _opts: true }))}
-          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#F26419] bg-[#F26419]/12 border border-[#F26419]/30 rounded-full pl-2 pr-2.5 py-1 active:scale-95 transition-all">
+          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#3E9C93] bg-[#3E9C93]/12 border border-[#3E9C93]/30 rounded-full pl-2 pr-2.5 py-1 active:scale-95 transition-all">
           <CalendarDays className="w-3.5 h-3.5" /> {t(`day_${p.day}`)}
         </button>
       )}
@@ -33,8 +33,8 @@ export default function CapoProductRow({ p, i, recipes, setProducts }) {
           onClick={() => setProducts((l) => l.map((x, k) => ({ ...x, start: k === i ? !x.start : false })))}
           className={`w-full flex items-center justify-center gap-1.5 text-xs font-semibold py-1.5 rounded-lg border transition-all active:scale-97 ${
             p.start
-              ? "bg-[#18202E] text-white border-[#18202E]"
-              : "bg-white dark:bg-[#18202E] text-[#7E8A93] border-[#26324A] dark:border-[#26324A]"}`}>
+              ? "bg-[#1B2A38] text-white border-[#1B2A38]"
+              : "bg-white dark:bg-[#1B2A38] text-[#7E8A93] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
           <Flag className="w-3.5 h-3.5" />
           {p.start
             ? tri3("Impasto di partenza", "Start-Teig", "Starting dough")
@@ -45,12 +45,12 @@ export default function CapoProductRow({ p, i, recipes, setProducts }) {
         <div className="relative flex-1">
           <input data-testid={`capo-product-qty-${i}`} type="number" value={p.qty} placeholder={tri3("Quantità", "Menge", "Quantity")}
             onChange={(e) => patch((x) => ({ ...x, qty: e.target.value }))}
-            className="w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 pr-12 text-sm outline-none focus:border-[#F26419]" />
+            className="w-full bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg p-2 pr-12 text-sm outline-none focus:border-[#3E9C93]" />
           <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-[#7E8A93]">{p.unit === "kg" ? "kg" : t("capo_unit_pieces")}</span>
         </div>
         <button type="button" data-testid={`capo-product-opts-${i}`}
           onClick={() => patch((x) => ({ ...x, _opts: !x._opts }))}
-          className="shrink-0 text-xs font-semibold text-[#F26419] px-2.5 py-2 rounded-lg border border-[#26324A] dark:border-[#26324A] active:scale-95 transition-all">
+          className="shrink-0 text-xs font-semibold text-[#3E9C93] px-2.5 py-2 rounded-lg border border-[#2A3B49] dark:border-[#2A3B49] active:scale-95 transition-all">
           {p._opts ? tri3("Meno", "Weniger", "Less") : tri3("Opzioni", "Optionen", "Options")}
         </button>
       </div>
@@ -58,7 +58,7 @@ export default function CapoProductRow({ p, i, recipes, setProducts }) {
         <div className="flex items-center gap-2 flex-wrap">
           <select data-testid={`capo-product-unit-${i}`} value={p.unit}
             onChange={(e) => patch((x) => ({ ...x, unit: e.target.value }))}
-            className="w-[80px] shrink-0 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 text-sm outline-none focus:border-[#F26419]">
+            className="w-[80px] shrink-0 bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg p-2 text-sm outline-none focus:border-[#3E9C93]">
             <option value="pezzi">{t("capo_unit_pieces")}</option>
             <option value="kg">{t("capo_unit_kg")}</option>
           </select>
@@ -66,13 +66,13 @@ export default function CapoProductRow({ p, i, recipes, setProducts }) {
             <div className="relative w-[80px] shrink-0">
               <input data-testid={`capo-product-gpp-${i}`} type="number" value={p.gpp ?? ""} placeholder="g/pz"
                 onChange={(e) => patch((x) => ({ ...x, gpp: e.target.value }))}
-                className="w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#F26419]" />
+                className="w-full bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#3E9C93]" />
               <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">g</span>
             </div>
           )}
           <select data-testid={`capo-product-day-${i}`} value={p.day || ""}
             onChange={(e) => patch((x) => ({ ...x, day: e.target.value }))}
-            className="flex-1 min-w-[110px] bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 text-sm outline-none focus:border-[#F26419]">
+            className="flex-1 min-w-[110px] bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg p-2 text-sm outline-none focus:border-[#3E9C93]">
             {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
           </select>
         </div>

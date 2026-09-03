@@ -114,15 +114,15 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
 
   if (!steps.length) {
     return createPortal((
-      <div className="fixed inset-0 z-[95] bg-[#0B0E14] text-white flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay">
+      <div className="fixed inset-0 z-[95] bg-[#0E1620] text-white flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay">
         <p className="mb-4">{tri("Questa ricetta non ha un procedimento passo-passo.", "Dieses Rezept hat keine Schritt-für-Schritt-Anleitung.", "This recipe has no step-by-step procedure.", "Esta receta no tiene un procedimiento paso a paso.")}</p>
-        <button data-testid="handsfree-close" onClick={onClose} className="bg-[#F26419] px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-semibold">{tri("Chiudi", "Schließen", "Close", "Cerrar")}</button>
+        <button data-testid="handsfree-close" onClick={onClose} className="bg-[#3E9C93] px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-semibold">{tri("Chiudi", "Schließen", "Close", "Cerrar")}</button>
       </div>
     ), document.body);
   }
 
   return createPortal((
-    <div className="fixed inset-0 z-[95] bg-gradient-to-b from-[#F26419] to-[#12212e] text-white flex flex-col" data-testid="handsfree-overlay">
+    <div className="fixed inset-0 z-[95] bg-gradient-to-b from-[#3E9C93] to-[#12212e] text-white flex flex-col" data-testid="handsfree-overlay">
       <div className="flex items-center justify-between px-5 pt-5 pb-2">
         <div className="flex items-center gap-2 min-w-0">
           <Hand className="w-5 h-5 shrink-0" />
@@ -160,11 +160,11 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <button data-testid="handsfree-tts" onClick={() => { setTtsOn((v) => { const nv = !v; if (!nv) { try { window.speechSynthesis.cancel(); } catch { /* */ } } return nv; }); }}
-            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-white text-[#F26419]" : "bg-white/12"}`}>{ttsOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}{tri("Voce", "Stimme", "Voice", "Voz")}</button>
+            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-white text-[#3E9C93]" : "bg-white/12"}`}>{ttsOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}{tri("Voce", "Stimme", "Voice", "Voz")}</button>
           <button data-testid="handsfree-timer" onClick={() => doTimer(20)}
             className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-white/12 font-semibold text-sm active:scale-95"><TimerIcon className="w-5 h-5" />+20m</button>
           <button data-testid="handsfree-mic" onClick={toggleMic}
-            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-[#F26419] text-white animate-pulse" : "bg-white/12"}`}>{micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}{tri("Comandi", "Befehle", "Commands", "Comandos")}</button>
+            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-[#3E9C93] text-white animate-pulse" : "bg-white/12"}`}>{micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}{tri("Comandi", "Befehle", "Commands", "Comandos")}</button>
         </div>
       </div>
     </div>

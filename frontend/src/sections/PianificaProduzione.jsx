@@ -108,7 +108,7 @@ export default function PianificaProduzione() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#3E9C93] flex items-center justify-center">
           <CalendarClock className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -118,20 +118,20 @@ export default function PianificaProduzione() {
       </div>
 
       {loaded && recipes.length === 0 && (
-        <div className="mt-5 flex items-start gap-3 bg-[#F26419]/15 border border-[#F26419]/30 rounded-2xl p-4">
-          <AlertTriangle className="w-5 h-5 text-[#F26419] shrink-0 mt-0.5" />
+        <div className="mt-5 flex items-start gap-3 bg-[#3E9C93]/15 border border-[#3E9C93]/30 rounded-2xl p-4">
+          <AlertTriangle className="w-5 h-5 text-[#3E9C93] shrink-0 mt-0.5" />
           <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{t("sd_no_recipes")}</p>
         </div>
       )}
 
-      <div className="mt-5 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl px-4 py-3">
+      <div className="mt-5 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl px-4 py-3">
         <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("plan_bake_time")}</label>
         <input
           data-testid="bake-time-input"
           type="datetime-local"
           value={bakeTime}
           onChange={(e) => setBakeTime(e.target.value)}
-          className="mt-1 w-full font-mono-data bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg px-3 py-2 outline-none focus:border-[#F26419]"
+          className="mt-1 w-full font-mono-data bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-3 py-2 outline-none focus:border-[#3E9C93]"
         />
       </div>
 
@@ -141,7 +141,7 @@ export default function PianificaProduzione() {
           data-testid="inf-load-day"
           onChange={(e) => loadDay(e.target.value)}
           defaultValue=""
-          className="mt-1 w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#F26419]"
+          className="mt-1 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]"
         >
           <option value="">{t("sd_choose_day")}</option>
           {DAY_IDS.filter((d) => weekly.some((w) => w.day === d)).map((d) => (
@@ -155,7 +155,7 @@ export default function PianificaProduzione() {
         <select
           data-testid="inf-oven-select"
           value={ovenId} onChange={(e) => setOvenId(e.target.value)}
-          className="mt-1 w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#F26419]"
+          className="mt-1 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]"
         >
           <option value="">{t("inf_oven_none")}</option>
           {ovens.map((o) => (
@@ -168,12 +168,12 @@ export default function PianificaProduzione() {
 
       <div className="space-y-2 mt-4">
         {rows.map((r) => (
-          <div key={r.id} className="flex items-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl px-3 py-2.5">
+          <div key={r.id} className="flex items-center gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl px-3 py-2.5">
             <select
               data-testid={`inf-recipe-${r.id}`}
               value={r.recipe_id}
               onChange={(e) => onRecipe(r.id, e.target.value)}
-              className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#F26419]"
+              className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-2 text-sm outline-none focus:border-[#3E9C93]"
             >
               {recipes.map((rec) => <option key={rec.id} value={rec.id}>{rec.name}</option>)}
             </select>
@@ -181,10 +181,10 @@ export default function PianificaProduzione() {
               data-testid={`inf-rest-${r.id}`}
               type="number" value={r.rest_min}
               onChange={(e) => updateRow(r.id, { rest_min: e.target.value })}
-              className="w-16 text-right font-mono-data font-bold text-[#F26419] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg px-2 py-1.5 outline-none"
+              className="w-16 text-right font-mono-data font-bold text-[#3E9C93] dark:text-[#8FB0C2] bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 outline-none"
             />
             <span className="text-[10px] text-[#7E8A93] w-10">{t("sd_rest_min")}</span>
-            <button onClick={() => removeRow(r.id)} className="text-[#F26419] p-1" aria-label={t("delete")}>
+            <button onClick={() => removeRow(r.id)} className="text-[#3E9C93] p-1" aria-label={t("delete")}>
               <Trash2 className="w-4 h-4" />
             </button>
           </div>
@@ -195,7 +195,7 @@ export default function PianificaProduzione() {
         data-testid="inf-add-btn"
         onClick={addRow}
         disabled={recipes.length === 0}
-        className="w-full mt-2 bg-[#e4eff8] dark:bg-[#18202E] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] flex items-center justify-center gap-2 disabled:opacity-40"
+        className="w-full mt-2 bg-[#e4eff8] dark:bg-[#1B2A38] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] flex items-center justify-center gap-2 disabled:opacity-40"
       >
         <Plus className="w-4 h-4" /> {t("sd_add")}
       </button>
@@ -203,7 +203,7 @@ export default function PianificaProduzione() {
       <button
         data-testid="btn-compute-plan"
         onClick={compute}
-        className="w-full mt-3 bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
+        className="w-full mt-3 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
       >
         {t("plan_compute")}
       </button>
@@ -215,19 +215,19 @@ export default function PianificaProduzione() {
             const ovenType = selectedOven?.oven_type || "statico";
             const bs = bakeSuggest(it.name, ovenType);
             return (
-            <div key={i} className="flex items-center gap-3 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl px-4 py-3">
-              <div className="w-8 h-8 rounded-full bg-[#F26419]/20 text-[#F26419] dark:text-[#8FB0C2] font-mono-data font-bold text-sm flex items-center justify-center shrink-0">{i + 1}</div>
+            <div key={i} className="flex items-center gap-3 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl px-4 py-3">
+              <div className="w-8 h-8 rounded-full bg-[#3E9C93]/20 text-[#3E9C93] dark:text-[#8FB0C2] font-mono-data font-bold text-sm flex items-center justify-center shrink-0">{i + 1}</div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-[#2B303B] dark:text-[#e4eff8] truncate">{it.name}</p>
                 <p className="font-mono-data text-xs text-[#7E8A93]">{t("sd_start_mix")} {fmt(it.start, lang)} · {t("sd_rest_min")} {it.rest}</p>
-                <p data-testid={`inf-bake-${i}`} className="font-mono-data text-xs text-[#F26419] dark:text-[#8FB0C2] mt-0.5">
+                <p data-testid={`inf-bake-${i}`} className="font-mono-data text-xs text-[#3E9C93] dark:text-[#8FB0C2] mt-0.5">
                   🔥 {t("inf_bake")}: {bs.temp}°C · {bs.mins}′ ({ovenType === "ventilato" ? t("oven_type_fan") : t("oven_type_static")})
                 </p>
               </div>
             </div>
             );
           })}
-          <div className="flex items-center gap-3 bg-[#F26419] rounded-2xl px-4 py-3 text-white">
+          <div className="flex items-center gap-3 bg-[#3E9C93] rounded-2xl px-4 py-3 text-white">
             <Flame className="w-5 h-5 shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-semibold">{t("plan_bake_label")}</p>
@@ -236,10 +236,10 @@ export default function PianificaProduzione() {
           </div>
 
           {selectedOven && (
-            <div data-testid="inf-oven-suggestion" className="bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl p-4">
+            <div data-testid="inf-oven-suggestion" className="bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Flame className="w-4 h-4 text-[#F26419]" />
-                <span className="text-xs font-bold uppercase tracking-wide text-[#F26419] dark:text-[#8FB0C2]">
+                <Flame className="w-4 h-4 text-[#3E9C93]" />
+                <span className="text-xs font-bold uppercase tracking-wide text-[#3E9C93] dark:text-[#8FB0C2]">
                   {t("inf_suggest")} · {selectedOven.name}
                 </span>
               </div>
@@ -252,7 +252,7 @@ export default function PianificaProduzione() {
                 return (
                   <div key={k} className="flex items-center justify-between font-mono-data text-sm py-0.5">
                     <span className="text-[#3F4A54] dark:text-[#AEB8BF]">{label}</span>
-                    <span className="text-[#F26419] dark:text-[#8FB0C2] font-bold">
+                    <span className="text-[#3E9C93] dark:text-[#8FB0C2] font-bold">
                       {shownTemp != null ? `${shownTemp}°C` : "—"}{mins != null ? ` · ${mins}′` : ""}
                     </span>
                   </div>

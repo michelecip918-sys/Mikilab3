@@ -11,7 +11,7 @@ import { Cpu } from "lucide-react";
 
 // VISTA "SCHEDE DI PRODUZIONE" — tema SCURO "Grain Gold" (ebano caldo + oro), zero-scroll.
 // Hands-free: ascolto continuo (tasto ORECCHIO in basso). Avatar 3D vocale al centro.
-const D = { bg: "#0B0E14", surf: "#18202E", surf2: "#18202E", border: "#26324A", gold: "#E8A838", goldSoft: "#E8A838", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
+const D = { bg: "#0E1620", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", goldSoft: "#5E8CA8", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
 
 export default function BraccioLab({ onOpenTool, onGestione }) {
   const { lang } = useLang();
@@ -60,11 +60,11 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   const deadline = shift.work_mode === "autonomia" ? autonomyDeadline(shift) : null;
 
   return (
-    <div data-testid="braccio-lab" className="flex flex-col rounded-3xl p-4 gap-3" style={{ minHeight: "460px", background: `radial-gradient(120% 60% at 50% -10%, #121722 0%, ${D.bg} 55%)`, color: D.text, border: `1px solid ${D.border}` }}>
+    <div data-testid="braccio-lab" className="flex flex-col rounded-3xl p-4 gap-3" style={{ minHeight: "460px", background: `radial-gradient(120% 60% at 50% -10%, #14212C 0%, ${D.bg} 55%)`, color: D.text, border: `1px solid ${D.border}` }}>
       {/* Banner emergenza / info */}
       {alert ? (
         <button data-testid="braccio-alert-banner" onClick={() => onOpenTool && onOpenTool("emergenze")}
-          className="rounded-2xl p-3 text-left active:scale-98 transition-all" style={{ background: "#18202E", border: `2px solid ${D.danger}` }}>
+          className="rounded-2xl p-3 text-left active:scale-98 transition-all" style={{ background: "#1B2A38", border: `2px solid ${D.danger}` }}>
           <div className="flex items-center gap-2 mb-0.5">
             <AlertTriangle className="w-4 h-4 shrink-0" style={{ color: D.danger }} />
             <span className="font-extrabold text-[13px]" style={{ color: D.danger }}>{tri("Nota per il turno", "Schicht-Notiz", "Shift note", "Nota del turno", "Note de poste", "یادداشت شیفت")}</span>

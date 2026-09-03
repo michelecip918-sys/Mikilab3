@@ -26,7 +26,7 @@ export default function RecipeShowcase({ onOpen }) {
           {mkTri(lang)("Le mie ricette", "Meine Rezepte", "My recipes")}
         </h2>
         <button data-testid="home-recipes-all" onClick={() => onOpen && onOpen()}
-          className="text-sm font-medium text-[#F26419] flex items-center gap-1">
+          className="text-sm font-medium text-[#3E9C93] flex items-center gap-1">
           {mkTri(lang)("Tutte", "Alle", "All")} <ChevronRight className="w-4 h-4" />
         </button>
       </div>
@@ -42,9 +42,9 @@ export default function RecipeShowcase({ onOpen }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(i * 0.03, 0.3) }}
-              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] shadow-sm active:scale-[0.98] hover:border-[#F26419]/60 transition-all text-left"
+              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] shadow-sm active:scale-[0.98] hover:border-[#3E9C93]/60 transition-all text-left"
             >
-              <div className="relative h-36 w-full overflow-hidden bg-[#e4eff8] dark:bg-[#18202E]">
+              <div className="relative h-36 w-full overflow-hidden bg-[#e4eff8] dark:bg-[#1B2A38]">
                 {r.image_url ? (
                   <img src={r.image_url} alt="" loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -68,7 +68,7 @@ export default function RecipeShowcase({ onOpen }) {
                   {rLoc(r, "name", lang)}
                 </h3>
                 {rLoc(r, "real_name", lang) && rLoc(r, "real_name", lang).toLowerCase() !== (rLoc(r, "name", lang) || "").toLowerCase() ? (
-                  <p className="text-[11px] font-medium text-[#F26419] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p>
+                  <p className="text-[11px] font-medium text-[#3E9C93] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p>
                 ) : null}
                 {r.flour_type ? (
                   <p className="text-[11px] text-[#7E8A93] truncate mt-0.5">{rLoc(r, "flour_type", lang)}</p>

@@ -12,7 +12,7 @@ export default function SpeakingAvatar({
   className = "",
   testid,
 }) {
-  const color = mode === "listening" ? "#3B82F6" : "#F26419";
+  const color = mode === "listening" ? "#3B82F6" : "#3E9C93";
   const src = `${process.env.PUBLIC_URL}/${IMG[who] || IMG.lab}`;
   return (
     <div

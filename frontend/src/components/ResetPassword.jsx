@@ -26,15 +26,15 @@ export default function ResetPassword({ token, onDone }) {
   };
 
   return (
-    <div data-testid="reset-screen" className="fixed inset-0 z-[80] bg-[#0B0E14] dark:bg-[#0B0E14] overflow-auto flex items-center justify-center px-4">
+    <div data-testid="reset-screen" className="fixed inset-0 z-[80] bg-[#0E1620] dark:bg-[#0E1620] overflow-auto flex items-center justify-center px-4">
       <div className="w-full max-w-sm relative">
         <button data-testid="reset-close" onClick={onDone} aria-label="Chiudi"
-          className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] flex items-center justify-center text-[#7E8A93] z-10">
+          className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] flex items-center justify-center text-[#7E8A93] z-10">
           <X className="w-5 h-5" />
         </button>
         <div className="text-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-[#F26419]/10 border border-[#F26419]/30 flex items-center justify-center mx-auto mb-3">
-            <KeyRound className="w-8 h-8 text-[#F26419]" />
+          <div className="w-16 h-16 rounded-2xl bg-[#3E9C93]/10 border border-[#3E9C93]/30 flex items-center justify-center mx-auto mb-3">
+            <KeyRound className="w-8 h-8 text-[#3E9C93]" />
           </div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">
             {tri("Nuova password", "Neues Passwort", "New password", "Nueva contraseña")}
@@ -47,7 +47,7 @@ export default function ResetPassword({ token, onDone }) {
               placeholder={tri("Nuova password", "Neues Passwort", "New password", "Nueva contraseña")}
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
-          <p className={`text-xs ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#F26419]") : "text-[#7E8A93]"}`}>
+          <p className={`text-xs ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#3E9C93]") : "text-[#7E8A93]"}`}>
             {tri("Min 8 caratteri, con lettere e numeri.", "Min. 8 Zeichen, Buchstaben und Zahlen.", "Min 8 characters, letters and numbers.", "Mín. 8 caracteres, con letras y números.")}
           </p>
           <Field icon={<Lock className="w-4 h-4" />}>
@@ -56,7 +56,7 @@ export default function ResetPassword({ token, onDone }) {
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
           <button data-testid="reset-submit" type="submit" disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-[#F26419] hover:bg-[#E8A838] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
             {tri("Cambia password", "Passwort ändern", "Change password", "Cambiar contraseña")}
           </button>
         </form>
@@ -67,8 +67,8 @@ export default function ResetPassword({ token, onDone }) {
 
 function Field({ icon, children }) {
   return (
-    <div className="flex items-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl px-4 py-3">
-      <span className="text-[#F26419]">{icon}</span>
+    <div className="flex items-center gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl px-4 py-3">
+      <span className="text-[#3E9C93]">{icon}</span>
       {children}
     </div>
   );

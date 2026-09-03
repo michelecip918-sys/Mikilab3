@@ -115,28 +115,28 @@ export default function AvatarBubbles({ variant = "impara" }) {
             className={`flex items-end gap-2.5 ${isMichele ? "" : "flex-row-reverse"}`}>
             <div className="relative shrink-0">
               <img src={AV[m.who]} alt={NAME[m.who]}
-                className="w-11 h-11 rounded-full object-cover shadow-sm ring-2 ring-[#F26419]/60"
+                className="w-11 h-11 rounded-full object-cover shadow-sm ring-2 ring-[#3E9C93]/60"
                 onError={(e) => { e.currentTarget.style.display = "none"; }} />
               {!isMichele && hint && (
-                <span data-testid="assistant-dot" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#F26419] ring-2 ring-[#f7efe6] dark:ring-[#0B0E14] animate-pulse" />
+                <span data-testid="assistant-dot" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#3E9C93] ring-2 ring-[#f7efe6] dark:ring-[#0E1620] animate-pulse" />
               )}
             </div>
             <div data-testid={`bubble-${m.who}`}
               onClick={act || undefined}
               role={act ? "button" : undefined}
-              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border transition-all bg-[#F26419]/5 border-[#F26419]/20 ${isMichele ? "rounded-bl-sm" : "rounded-br-sm"} ${act ? "cursor-pointer hover:border-[#F26419]/60 hover:bg-[#F26419]/10 active:scale-98" : ""}`}>
+              className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 border transition-all bg-[#3E9C93]/5 border-[#3E9C93]/20 ${isMichele ? "rounded-bl-sm" : "rounded-br-sm"} ${act ? "cursor-pointer hover:border-[#3E9C93]/60 hover:bg-[#3E9C93]/10 active:scale-98" : ""}`}>
               <p className={`text-[10px] font-extrabold uppercase tracking-wide mb-0.5 ${isMichele ? "text-[#9cd6a0]" : "text-[#f0b76b]"}`}>{NAME[m.who]}</p>
               <p className="text-sm font-semibold text-[#141210] dark:text-white leading-snug">{bubbleText(m)}</p>
               {!isMichele && hint && (
                 hintClickable ? (
                   <button data-testid={`bubble-hint-${variant}`} onClick={(e) => { e.stopPropagation(); openChallenges(); }}
-                    className="text-[12px] font-bold text-[#F26419] leading-snug mt-1 underline decoration-[#F26419]/40 underline-offset-2 active:scale-98">{hint}</button>
+                    className="text-[12px] font-bold text-[#3E9C93] leading-snug mt-1 underline decoration-[#3E9C93]/40 underline-offset-2 active:scale-98">{hint}</button>
                 ) : (
-                  <p data-testid={`bubble-hint-${variant}`} className="text-[12px] font-semibold text-[#F26419] leading-snug mt-1">{hint}</p>
+                  <p data-testid={`bubble-hint-${variant}`} className="text-[12px] font-semibold text-[#3E9C93] leading-snug mt-1">{hint}</p>
                 )
               )}
               {act && (
-                <span className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-[#F26419]">
+                <span className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-bold text-[#3E9C93]">
                   {tri("Portami lì", "Bring mich hin", "Take me there", "Llévame allí", "Emmène-moi", "من را ببر")} <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               )}

@@ -19,12 +19,12 @@ export function TrinityBadges() {
       <span data-testid="trinity-badge-michele" title={`Michele — ${micheleRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"
         style={{ border: "2px solid #F6D27A", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
         <img src={MICHELE_AVATAR} alt="Michele" className="w-full h-full object-cover" style={{ objectPosition: "50% 22%" }} />
-        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#E8A838", border: "1px solid #26324A" }}>Michele · {micheleRole}</span>
+        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#5E8CA8", border: "1px solid #2A3B49" }}>Michele · {micheleRole}</span>
       </span>
       <span data-testid="trinity-badge-bakemix" title={`BakeMix AI — ${bakeRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"
         style={{ border: "2px solid #F6D27A", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
         <img src={BAKEMIX_AVATAR} alt="BakeMix AI" className="w-full h-full object-cover" style={{ objectPosition: "50% 32%" }} />
-        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#E8A838", border: "1px solid #26324A" }}>BakeMix AI · {bakeRole}</span>
+        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#5E8CA8", border: "1px solid #2A3B49" }}>BakeMix AI · {bakeRole}</span>
       </span>
     </div>
   );
@@ -44,11 +44,11 @@ export function TrinitySeal() {
       {open && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ background: "rgba(8,6,3,.85)", backdropFilter: "blur(6px)" }} onClick={() => setOpen(false)} data-testid="trinity-modal">
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl p-6 relative max-h-[88vh] overflow-y-auto"
-            style={{ background: "linear-gradient(160deg,#20242B,#101318)", border: "2px solid #E8A838", boxShadow: "0 0 60px rgba(231,178,60,.35)" }}>
-            <button data-testid="trinity-close" onClick={() => setOpen(false)} className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#18202E", color: "#E8A838" }}><X className="w-4 h-4" /></button>
+            style={{ background: "linear-gradient(160deg,#20242B,#101318)", border: "2px solid #5E8CA8", boxShadow: "0 0 60px rgba(231,178,60,.35)" }}>
+            <button data-testid="trinity-close" onClick={() => setOpen(false)} className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#1B2A38", color: "#5E8CA8" }}><X className="w-4 h-4" /></button>
             <div className="flex items-center gap-3 mb-4">
               <img src={BAKEMIX_AVATAR} alt="BakeMix AI" className="w-14 h-14 rounded-full object-cover" style={{ border: "2px solid #F6D27A", objectPosition: "50% 30%" }} />
-              <div><h2 className="font-display font-extrabold text-xl leading-tight" style={{ color: "#E8A838" }}>MikiLab</h2><p className="text-[11px] font-bold tracking-widest" style={{ color: "#94A3B8" }}>PROPRIETARY & CONFIDENTIAL</p></div>
+              <div><h2 className="font-display font-extrabold text-xl leading-tight" style={{ color: "#5E8CA8" }}>MikiLab</h2><p className="text-[11px] font-bold tracking-widest" style={{ color: "#94A3B8" }}>PROPRIETARY & CONFIDENTIAL</p></div>
             </div>
             <p className="text-[13.5px] leading-snug mb-3" style={{ color: "#EDE3CE" }}>
               {tri("MikiLab è una piattaforma proprietaria avanzata per la gestione della panificazione professionale. Il sistema è stato concepito e diretto da Michele, con il supporto di BakeMix AI come co-pilota operativo di laboratorio e contributi tecnici di background del team.",
@@ -58,7 +58,7 @@ export function TrinitySeal() {
                 "MikiLab est une plateforme propriétaire avancée de gestion de boulangerie professionnelle, conçue et dirigée par Michele, avec BakeMix AI comme copilote et contributions techniques de l'équipe.",
                 "MikiLab یک پلتفرم اختصاصی پیشرفته برای مدیریت نانوایی حرفه‌ای است که توسط میکله طراحی و هدایت شده است.")}
             </p>
-            <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 mb-3" style={{ background: "#12100C", border: "1px solid #26324A" }}>
+            <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 mb-3" style={{ background: "#12100C", border: "1px solid #2A3B49" }}>
               <p className="text-[11.5px] leading-snug" style={{ color: "#94A3B8" }}>
                 {tri("Credits di background — Technical Advisor: Mohammed (Silent Contributor).", "Hintergrund-Credits — Technical Advisor: Mohammed (Silent Contributor).", "Background credits — Technical Advisor: Mohammed (Silent Contributor).", "Créditos — Asesor técnico: Mohammed (Silent Contributor).", "Crédits — Conseiller technique : Mohammed (Silent Contributor).", "تقدیر — مشاور فنی: محمد.")}
               </p>

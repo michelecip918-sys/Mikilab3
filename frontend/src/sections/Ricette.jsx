@@ -49,7 +49,7 @@ export default function Ricette() {
     return () => window.removeEventListener("mikilab-ricette-view", h);
   }, []);
 
-  if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#26324A] dark:border-[#26324A]"><Glossario /></div></Sub>;
+  if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><Glossario /></div></Sub>;
   if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
@@ -57,10 +57,10 @@ export default function Ricette() {
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#F26419] to-[#F26419] p-6 text-white">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] p-6 text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")}</h1></div>
-          <div className="h-1 w-12 rounded-full bg-[#F26419] mb-3" />
+          <div className="h-1 w-12 rounded-full bg-[#3E9C93] mb-3" />
           <p className="text-sm text-white/90 leading-relaxed italic">
             {tri(
               "«La farina è la mia lingua madre. In Italia ho imparato che ogni grano racconta una storia: la forza (W), l'assorbimento, i tempi. Qui trovi le sigle e le tabelle che uso ogni giorno per scegliere la farina giusta per ogni impasto. Rispetta il grano e il grano ti ripagherà.» — Michele",
@@ -92,11 +92,11 @@ export default function Ricette() {
       <div className="mb-4"><SaporeDelGiorno /></div>
       {coll === "mikilab" && (
         <button data-testid="ricette-vetrina" onClick={() => { setCustoditeInit("matera"); setView("custodite"); }}
-          className="relative w-full h-32 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left ring-2 ring-[#F26419]/60">
+          className="relative w-full h-32 rounded-2xl overflow-hidden mb-3 shadow-md active:scale-98 transition-all text-left ring-2 ring-[#3E9C93]/60">
           <img src="https://images.unsplash.com/photo-1549413468-cd78edb7e75c?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 15%,#F26419aa 60%,#F2641922)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 15%,#3E9C93aa 60%,#3E9C9322)" }} />
           <div className="relative h-full flex flex-col justify-center px-4 text-white">
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#F26419] px-2 py-0.5 rounded-full w-fit mb-1">★ {tri("In vetrina", "Im Schaufenster", "Featured", "En vitrina", "À la une")}</span>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#3E9C93] px-2 py-0.5 rounded-full w-fit mb-1">★ {tri("In vetrina", "Im Schaufenster", "Featured", "En vitrina", "À la une")}</span>
             <h3 className="font-display text-xl font-bold leading-tight">{tri("Pane di Matera IGP", "Materaner Brot", "Bread of Matera", "Pan de Matera", "Pain de Matera")}</h3>
             <p className="text-[12px] text-white/90">{tri("La ricetta della tradizione, adattata alle tue dosi", "Das Traditionsrezept, an deine Mengen angepasst", "The traditional recipe, adapted to your amounts", "La receta tradicional, adaptada a tus dosis", "La recette de tradition, adaptée à tes quantités")}</p>
           </div>
@@ -105,12 +105,12 @@ export default function Ricette() {
 
       {coll === "mikilab" && (
         <div data-testid="ricette-tradizione" className="mb-4">
-          <p className="text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2 px-1 flex items-center gap-1.5"><UtensilsCrossed className="w-4 h-4" /> {tri("La Tradizione", "Die Tradition", "The Tradition", "La Tradición", "La Tradition")}</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2 px-1 flex items-center gap-1.5"><UtensilsCrossed className="w-4 h-4" /> {tri("La Tradizione", "Die Tradition", "The Tradition", "La Tradición", "La Tradition")}</p>
           <div className="grid grid-cols-2 gap-2.5">
             <button data-testid="ricette-sapori-band" onClick={() => setView("sapori")}
               className="relative h-28 rounded-2xl overflow-hidden shadow-md active:scale-98 transition-all text-left">
               <img src="https://images.unsplash.com/photo-1598616068594-93ef7202a8ca?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#F2641988)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#3E9C9388)" }} />
               <div className="relative h-full flex flex-col justify-end p-3 text-white">
                 <h3 className="font-display text-base font-bold leading-tight">{tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa", "Saveurs de la Maison")}</h3>
                 <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pane, focacce e pasta fatta in casa", "Brot, Focaccia & Pasta", "Bread, focaccia & pasta", "Pan, focaccia y pasta", "Pain, focaccia & pâtes maison")}</p>
@@ -119,7 +119,7 @@ export default function Ricette() {
             <button data-testid="ricette-custodite-band" onClick={() => setView("custodite")}
               className="relative h-28 rounded-2xl overflow-hidden shadow-md active:scale-98 transition-all text-left">
               <img src="https://images.unsplash.com/photo-1590301157172-7ba48dd1c2b2?crop=entropy&cs=srgb&fm=jpg&q=85&w=900" alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#F2641988)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(160deg,#3a2415cc,#3E9C9388)" }} />
               <div className="relative h-full flex flex-col justify-end p-3 text-white">
                 <h3 className="font-display text-base font-bold leading-tight">{tri("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas", "Recettes Gardées")}</h3>
                 <p className="text-[10.5px] text-white/90 leading-snug">{tri("Pani del Sud + adatta le dosi + QR", "Süd-Brote + Mengen + QR", "Southern breads + adapt doses + QR", "Panes del Sur + dosis + QR", "Pains du Sud + adapte les doses + QR")}</p>
@@ -128,9 +128,9 @@ export default function Ricette() {
             <button data-testid="ricette-focacce-band" onClick={() => setView("focacce")}
               className="relative h-28 rounded-2xl overflow-hidden shadow-md active:scale-98 transition-all text-left col-span-2">
               <img src="/recipes/foc_barese.jpg" alt="" className="absolute inset-0 w-full h-full object-cover object-center" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 10%,#F2641999 70%,#F2641922)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#3a2415ee 10%,#3E9C9399 70%,#3E9C9322)" }} />
               <div className="relative h-full flex flex-col justify-center p-3 text-white">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#F26419] px-2 py-0.5 rounded-full w-fit mb-1">🫓 {tri("Novità", "Neu", "New", "Novedad", "Nouveau")}</span>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide bg-[#3E9C93] px-2 py-0.5 rounded-full w-fit mb-1">🫓 {tri("Novità", "Neu", "New", "Novedad", "Nouveau")}</span>
                 <h3 className="font-display text-lg font-bold leading-tight">{tri("Vetrina delle Focacce", "Focaccia-Schaufenster", "Focaccia Showcase", "Vitrina de Focaccias", "Vitrine des Focaccias")}</h3>
                 <p className="text-[11px] text-white/90 leading-snug">{tri("Tutti i gusti in foto, sfoglia e scegli", "Alle Sorten in Fotos, blättern und wählen", "Every flavour in photos, browse and choose", "Todos los sabores en fotos, hojea y elige", "Toutes les saveurs en photos, feuillette et choisis")}</p>
               </div>
@@ -163,21 +163,21 @@ export default function Ricette() {
       {backupOpen && (
         <div data-testid="ricette-backup-modal" className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4" onClick={() => setBackupOpen(false)}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-          <div className="relative w-full max-w-sm bg-[#121722] border border-[#26324A] rounded-3xl shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
+          <div className="relative w-full max-w-sm bg-[#14212C] border border-[#2A3B49] rounded-3xl shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2.5 mb-1">
-              <span className="w-10 h-10 rounded-2xl bg-[#F26419]/15 border border-[#F26419]/40 flex items-center justify-center shrink-0"><Download className="w-5 h-5 text-[#F26419]" /></span>
+              <span className="w-10 h-10 rounded-2xl bg-[#3E9C93]/15 border border-[#3E9C93]/40 flex items-center justify-center shrink-0"><Download className="w-5 h-5 text-[#3E9C93]" /></span>
               <h3 className="font-display text-lg font-extrabold text-white">{tri("Backup delle tue ricette", "Backup deiner Rezepte", "Backup your recipes", "Copia de tus recetas", "Sauvegarde de tes recettes")}</h3>
             </div>
             <p className="text-[13px] text-[#AEB8BF] leading-snug mb-4">{tri("Scarica una copia delle tue ricette personali. Scegli il formato.", "Lade eine Kopie deiner eigenen Rezepte herunter. Wähle das Format.", "Download a copy of your personal recipes. Choose the format.", "Descarga una copia de tus recetas personales. Elige el formato.", "Télécharge une copie de tes recettes personnelles. Choisis le format.")}</p>
             <div className="grid grid-cols-2 gap-2.5">
               <button data-testid="ricette-export-csv-btn" disabled={expBusy} onClick={() => { setBackupOpen(false); exportMine("csv"); }}
-                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#18202E] border border-[#F26419]/40 text-white active:scale-97 hover:border-[#F26419] transition-all disabled:opacity-50">
-                <Download className="w-5 h-5 text-[#F26419]" /><span className="font-display text-sm font-bold">CSV</span>
+                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#1B2A38] border border-[#3E9C93]/40 text-white active:scale-97 hover:border-[#3E9C93] transition-all disabled:opacity-50">
+                <Download className="w-5 h-5 text-[#3E9C93]" /><span className="font-display text-sm font-bold">CSV</span>
                 <span className="text-[10.5px] text-[#7E8A93]">{tri("Fogli di calcolo", "Tabellen", "Spreadsheets", "Hojas de cálculo", "Tableurs")}</span>
               </button>
               <button data-testid="ricette-export-pdf-btn" disabled={expBusy} onClick={() => { setBackupOpen(false); exportMine("pdf"); }}
-                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#18202E] border border-[#F26419]/40 text-white active:scale-97 hover:border-[#F26419] transition-all disabled:opacity-50">
-                <Download className="w-5 h-5 text-[#F26419]" /><span className="font-display text-sm font-bold">PDF</span>
+                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#1B2A38] border border-[#3E9C93]/40 text-white active:scale-97 hover:border-[#3E9C93] transition-all disabled:opacity-50">
+                <Download className="w-5 h-5 text-[#3E9C93]" /><span className="font-display text-sm font-bold">PDF</span>
                 <span className="text-[10.5px] text-[#7E8A93]">{tri("Da stampare", "Zum Drucken", "For printing", "Para imprimir", "À imprimer")}</span>
               </button>
             </div>
@@ -191,9 +191,9 @@ export default function Ricette() {
 function UtilBtn({ testid, Icon, label, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick}
-      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#F26419]/60 transition-all min-w-0">
-      <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419]/15 border border-[#F26419]/30 flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-[#F26419]" />
+      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#3E9C93]/60 transition-all min-w-0">
+      <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/15 border border-[#3E9C93]/30 flex items-center justify-center shrink-0">
+        <Icon className="w-5 h-5 text-[#3E9C93]" />
       </div>
       <span className="w-full font-display text-xs sm:text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight break-words hyphens-auto">{label}</span>
     </button>
@@ -205,7 +205,7 @@ function Sub({ onBack, children }) {
   const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : lang === "es" ? "Recetas" : lang === "fr" ? "Recettes" : lang === "fa" ? (triFA("Ricette") || "دستورها") : "Ricette";
   return (
     <div className="pb-4">
-      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#F26419] font-medium mb-4">
+      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4">
         <ChevronLeft className="w-5 h-5" /> {backLabel}
       </button>
       {children}

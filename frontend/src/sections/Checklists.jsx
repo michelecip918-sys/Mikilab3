@@ -59,7 +59,7 @@ export default function Checklists() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center"><ListChecks className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#3E9C93] flex items-center justify-center"><ListChecks className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{mkTri(lang)("Check-list", "Checklisten", "Checklists")}</h1>
           <p className="text-sm text-[#7E8A93]">{mkTri(lang)("Controlli standard del laboratorio", "Standard-Kontrollen der Backstube", "Standard bakery checks")}</p>
@@ -73,25 +73,25 @@ export default function Checklists() {
           const d = tp.items[L].filter((_, i) => st[i]).length;
           return (
             <button key={tp.id} data-testid={`cl-tab-${tp.id}`} onClick={() => setActive(tp.id)}
-              className={`flex items-center gap-2 p-3 rounded-2xl border text-left transition-colors ${on ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white dark:bg-[#18202E] text-[#3F4A54] dark:text-[#AEB8BF] border-[#26324A] dark:border-[#26324A]"}`}>
-              <tp.Icon className={`w-5 h-5 shrink-0 ${on ? "text-white" : "text-[#F26419]"}`} />
+              className={`flex items-center gap-2 p-3 rounded-2xl border text-left transition-colors ${on ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+              <tp.Icon className={`w-5 h-5 shrink-0 ${on ? "text-white" : "text-[#3E9C93]"}`} />
               <span className="text-xs font-semibold leading-tight">{tp[L]}<span className={`block text-[10px] font-mono-data ${on ? "text-white/80" : "text-[#7E8A93]"}`}>{d}/{tp.items[L].length}</span></span>
             </button>
           );
         })}
       </div>
 
-      <div data-testid="cl-items" className="rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2.5 bg-[#e4eff8] dark:bg-[#18202E]">
+      <div data-testid="cl-items" className="rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-[#e4eff8] dark:bg-[#1B2A38]">
           <span className="font-display font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8]">{tpl[L]}</span>
-          <span className="font-mono-data text-xs font-bold text-[#F26419]">{done}/{items.length}</span>
+          <span className="font-mono-data text-xs font-bold text-[#3E9C93]">{done}/{items.length}</span>
         </div>
         {items.map((it, i) => {
           const on = !!state[i];
           return (
             <button key={i} data-testid={`cl-item-${active}-${i}`} onClick={() => toggle(i)}
-              className="w-full flex items-center gap-3 px-4 py-3 border-t border-[#26324A] dark:border-[#26324A] text-left active:bg-[#e4eff8] dark:active:bg-[#18202E]">
-              {on ? <CheckCircle2 className="w-5 h-5 text-[#F26419] shrink-0" /> : <Circle className="w-5 h-5 text-[#AEB8BF] shrink-0" />}
+              className="w-full flex items-center gap-3 px-4 py-3 border-t border-[#2A3B49] dark:border-[#2A3B49] text-left active:bg-[#e4eff8] dark:active:bg-[#1B2A38]">
+              {on ? <CheckCircle2 className="w-5 h-5 text-[#3E9C93] shrink-0" /> : <Circle className="w-5 h-5 text-[#AEB8BF] shrink-0" />}
               <span className={`text-sm ${on ? "line-through text-[#9AA6AE]" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{it}</span>
             </button>
           );

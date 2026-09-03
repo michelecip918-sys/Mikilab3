@@ -20,7 +20,7 @@ const parseDuration = (s) => {
   return Math.round(total);
 };
 
-const COLORS = ["#F26419", "#F26419", "#2e8b6f", "#F26419", "#a05eb5", "#F26419", "#F26419"];
+const COLORS = ["#3E9C93", "#3E9C93", "#2e8b6f", "#3E9C93", "#a05eb5", "#3E9C93", "#3E9C93"];
 
 export default function RecipeTimeline({ recipe, lang: langProp }) {
   const { lang: ctxLang } = useLang();
@@ -66,42 +66,42 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
   }, [phases, target, totalMins, lang]);
 
   const durStr = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? " " + (m % 60) + "m" : ""}` : `${m}m`);
-  const inp = "bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-[#2B303B] dark:text-[#e4eff8] focus:border-[#F26419]";
+  const inp = "bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   if (phases.length < 2) {
     return (
-      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#F26419] flex items-center gap-1 mb-2"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
+      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[#3E9C93] flex items-center gap-1 mb-2"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
         <p className="text-sm text-[#7E8A93]">{tri("Questa ricetta non ha una sequenza di lievitazione/cottura con tempi (es. una base, un lievito o un miglioratore).", "Dieses Rezept hat keine Gär-/Backsequenz mit Zeiten (z. B. eine Basis, ein Sauerteig oder ein Verbesserer).", "This recipe has no proof/bake sequence with times (e.g. a base, a starter or an improver).", "Esta receta no tiene una secuencia de fermentación/horneado con tiempos (p. ej. una base, una masa madre o un mejorante).")}</p>
       </div>
     );
   }
 
   return (
-    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4">
+    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
       <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#F26419] flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-[#3E9C93] flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
         <label className="text-[11px] font-semibold text-[#7E8A93] flex items-center gap-1.5 no-print">
           {tri("Sforno alle", "Ausbacken um", "Bake out at", "Sacar a las")}
           <input data-testid={`timeline-target-${recipe.id}`} type="time" value={target} onChange={(e) => setTarget(e.target.value)} className={inp} />
         </label>
       </div>
-      <p className="text-xs text-[#7E8A93] mb-3">{tri("Inizia a impastare alle", "Beginne zu kneten um", "Start mixing at", "Empieza a amasar a las")} <b data-testid={`timeline-start-${recipe.id}`} className="text-[#F26419] dark:text-[#a9d2ec] font-mono-data">{rows.startClock}</b> · {tri("durata totale", "Gesamtdauer", "total", "duración total")} {durStr(totalMins)}</p>
+      <p className="text-xs text-[#7E8A93] mb-3">{tri("Inizia a impastare alle", "Beginne zu kneten um", "Start mixing at", "Empieza a amasar a las")} <b data-testid={`timeline-start-${recipe.id}`} className="text-[#3E9C93] dark:text-[#a9d2ec] font-mono-data">{rows.startClock}</b> · {tri("durata totale", "Gesamtdauer", "total", "duración total")} {durStr(totalMins)}</p>
       <div className="relative pl-4">
-        <div className="absolute left-[6px] top-1 bottom-1 w-0.5 bg-[#26324A] dark:bg-[#26324A]" />
+        <div className="absolute left-[6px] top-1 bottom-1 w-0.5 bg-[#2A3B49] dark:bg-[#2A3B49]" />
         {rows.out.map((p) => (
           <div key={p.i} data-testid={`timeline-phase-${recipe.id}-${p.i}`} className="relative mb-3 last:mb-0">
-            <span className="absolute -left-4 top-1 w-3 h-3 rounded-full border-2 border-white dark:border-[#18202E]" style={{ background: COLORS[p.i % COLORS.length] }} />
+            <span className="absolute -left-4 top-1 w-3 h-3 rounded-full border-2 border-white dark:border-[#1B2A38]" style={{ background: COLORS[p.i % COLORS.length] }} />
             <div className="flex items-baseline justify-between gap-2">
               <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{p.name}</p>
-              <span className="font-mono-data text-xs text-[#F26419] dark:text-[#8FB0C2] shrink-0">{p.start} → {p.end}</span>
+              <span className="font-mono-data text-xs text-[#3E9C93] dark:text-[#8FB0C2] shrink-0">{p.start} → {p.end}</span>
             </div>
             <p className="text-[11px] text-[#7E8A93]">{durStr(p.mins)}{p.temp ? ` · ${p.temp}°C` : ""}</p>
           </div>
         ))}
         <div className="relative">
-          <span className="absolute -left-4 top-1 w-3 h-3 rounded-full bg-[#F26419] border-2 border-white dark:border-[#18202E]" />
-          <p className="text-sm font-bold text-[#F26419]">🍞 {tri("Pronto / Sforno", "Fertig / Ausbacken", "Ready / Bake out", "Listo / Sacar")} — <span className="font-mono-data">{target}</span></p>
+          <span className="absolute -left-4 top-1 w-3 h-3 rounded-full bg-[#3E9C93] border-2 border-white dark:border-[#1B2A38]" />
+          <p className="text-sm font-bold text-[#3E9C93]">🍞 {tri("Pronto / Sforno", "Fertig / Ausbacken", "Ready / Bake out", "Listo / Sacar")} — <span className="font-mono-data">{target}</span></p>
         </div>
       </div>
       {!isReal && (

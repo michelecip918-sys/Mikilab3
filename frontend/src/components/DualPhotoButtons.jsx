@@ -16,12 +16,12 @@ export default function DualPhotoButtons({ onFile, allowVideo = false, testid = 
       <input ref={camRef} data-testid={`${testid}-cam-input`} type="file" accept={acc} capture="environment" onChange={pick} className="hidden" />
       <input ref={galRef} data-testid={`${testid}-gallery-input`} type="file" accept={acc} onChange={pick} className="hidden" />
       <button type="button" data-testid={`${testid}-take`} onClick={() => camRef.current && camRef.current.click()}
-        className="flex items-center justify-center gap-2 bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+        className="flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
         <Camera className="w-5 h-5" /> {tri("Scatta ora", "Jetzt aufnehmen", "Take photo")}
       </button>
       <button type="button" data-testid={`${testid}-attach`} onClick={() => galRef.current && galRef.current.click()}
-        className="flex items-center justify-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
-        <ImagePlus className="w-5 h-5 text-[#F26419]" /> {tri("Allega", "Anhängen", "Attach")}
+        className="flex items-center justify-center gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#2B303B] dark:text-[#e4eff8] font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+        <ImagePlus className="w-5 h-5 text-[#3E9C93]" /> {tri("Allega", "Anhängen", "Attach")}
       </button>
     </div>
   );

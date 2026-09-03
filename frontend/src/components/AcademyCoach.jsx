@@ -125,8 +125,8 @@ export default function AcademyCoach() {
   const hasTimeline = (txt) => parseTimeline(txt).length > 0;
 
   return (
-    <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A]">
-      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#18202E 55%,#F26419)" }}>
+    <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49]">
+      <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1B2A38 55%,#3E9C93)" }}>
         <div className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
           <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
@@ -156,7 +156,7 @@ export default function AcademyCoach() {
         <div className="flex flex-wrap gap-1.5">
           {CHIPS.map((c, i) => (
             <button key={i} data-testid={`academy-chip-${i}`} onClick={() => ask(c.text)} disabled={busy}
-              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#18202E] dark:text-[#8FB0C2] bg-[#F26419]/10 border border-[#F26419]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
+              className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1B2A38] dark:text-[#8FB0C2] bg-[#3E9C93]/10 border border-[#3E9C93]/30 px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50">
               <c.Icon className="w-3.5 h-3.5" /> {c.label}
             </button>
           ))}
@@ -166,13 +166,13 @@ export default function AcademyCoach() {
           <div className="space-y-3 max-h-[420px] overflow-y-auto" data-testid="academy-coach-thread">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#F26419] text-white rounded-br-sm" : "bg-[#0B0E14] dark:bg-[#18202E] text-[#2B303B] dark:text-[#e4eff8] border border-[#26324A] dark:border-[#26324A] rounded-bl-sm"}`}>
+                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#3E9C93] text-white rounded-br-sm" : "bg-[#0E1620] dark:bg-[#1B2A38] text-[#2B303B] dark:text-[#e4eff8] border border-[#2A3B49] dark:border-[#2A3B49] rounded-bl-sm"}`}>
                   {m.role === "assistant" ? (
-                    m.content ? <div className="markdown-body leading-relaxed"><ReactMarkdown>{m.content}</ReactMarkdown></div> : <Loader2 className="w-4 h-4 animate-spin text-[#F26419]" />
+                    m.content ? <div className="markdown-body leading-relaxed"><ReactMarkdown>{m.content}</ReactMarkdown></div> : <Loader2 className="w-4 h-4 animate-spin text-[#3E9C93]" />
                   ) : <p className="whitespace-pre-line">{m.content}</p>}
                   {m.role === "assistant" && m.content && !busy && hasTimeline(m.content) && (
                     <button data-testid={`academy-save-timeline-${i}`} data-sfx="save" onClick={() => saveTimeline(m.content)}
-                      className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-[#F26419] hover:bg-[#F26419] px-3 py-1.5 rounded-full active:scale-95">
+                      className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-white bg-[#3E9C93] hover:bg-[#3E9C93] px-3 py-1.5 rounded-full active:scale-95">
                       <BellRing className="w-3.5 h-3.5" /> {tri("Salva nei promemoria", "In Erinnerungen speichern", "Save to reminders", "Guardar en recordatorios")}
                     </button>
                   )}
@@ -186,20 +186,20 @@ export default function AcademyCoach() {
         <div className="flex items-center gap-2 pt-1">
           <input data-testid="academy-coach-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()}
             placeholder={tri("Scrivi o parla a Mohammadreza…", "Schreib oder sprich mit Mohammadreza…", "Type or talk to Mohammadreza…", "Escribe o habla con Mohammadreza…")}
-            className="flex-1 bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#F26419]" />
+            className="flex-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
           {speechSupported && (
             <button data-testid="academy-coach-mic" onClick={startListening} disabled={busy}
               title={tri("Parla con Mohammadreza", "Mit Mohammadreza sprechen", "Talk to Mohammadreza", "Habla con Mohammadreza")}
-              className={`w-11 h-11 rounded-full flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0 transition-all ${listening ? "bg-[#F26419] animate-pulse text-white" : "bg-[#F26419] hover:bg-[#F26419] text-white"}`}>
+              className={`w-11 h-11 rounded-full flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0 transition-all ${listening ? "bg-[#3E9C93] animate-pulse text-white" : "bg-[#3E9C93] hover:bg-[#3E9C93] text-white"}`}>
               <Mic className="w-5 h-5" />
             </button>
           )}
-          <button data-testid="academy-coach-send" data-sfx="confirm" onClick={() => ask()} disabled={busy || !input.trim()} className="w-11 h-11 rounded-full bg-[#F26419] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
+          <button data-testid="academy-coach-send" data-sfx="confirm" onClick={() => ask()} disabled={busy || !input.trim()} className="w-11 h-11 rounded-full bg-[#3E9C93] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
             {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           </button>
         </div>
         {listening && (
-          <p data-testid="academy-coach-listening" className="text-[12px] text-[#F26419] font-semibold text-center pt-1">
+          <p data-testid="academy-coach-listening" className="text-[12px] text-[#3E9C93] font-semibold text-center pt-1">
             {tri("Sto ascoltando… parla pure.", "Ich höre zu… sprich einfach.", "Listening… go ahead.", "Escuchando… habla.")}
           </p>
         )}

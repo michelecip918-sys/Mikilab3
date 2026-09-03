@@ -45,7 +45,7 @@ export default function AdattaForno() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#3E9C93] flex items-center justify-center">
           <Flame className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -61,7 +61,7 @@ export default function AdattaForno() {
             data-testid={`adatta-mode-${m}`}
             onClick={() => setMode(m)}
             className={`px-4 py-2.5 rounded-2xl text-sm font-semibold border transition-all ${
-              mode === m ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white dark:bg-[#18202E] text-[#7E8A93] border-[#26324A] dark:border-[#26324A]"
+              mode === m ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] text-[#7E8A93] border-[#2A3B49] dark:border-[#2A3B49]"
             }`}
           >
             {t(lk)}
@@ -112,7 +112,7 @@ export default function AdattaForno() {
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_from_recipe")}</label>
             <select
               data-testid="adatta-recipe" defaultValue="" onChange={(e) => loadRecipe(e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#F26419]"
+              className="mt-1 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]"
             >
               <option value="">{t("adatta_choose")}</option>
               {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
@@ -124,12 +124,12 @@ export default function AdattaForno() {
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_temp")}</label>
             <input data-testid="adatta-temp" type="number" value={temp} onChange={(e) => setTemp(e.target.value)}
-              className="mt-1 w-full font-mono-data bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#F26419]" />
+              className="mt-1 w-full font-mono-data bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#3E9C93]" />
           </div>
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_min")}</label>
             <input data-testid="adatta-min" type="number" value={min} onChange={(e) => setMin(e.target.value)}
-              className="mt-1 w-full font-mono-data bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#F26419]" />
+              className="mt-1 w-full font-mono-data bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#3E9C93]" />
           </div>
         </div>
 
@@ -137,20 +137,20 @@ export default function AdattaForno() {
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_from_oven")}</label>
             <select data-testid="adatta-from-oven" value={fromOven} onChange={(e) => setFromOven(e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#F26419]">
+              className="mt-1 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]">
               {OVENS.map((o) => <option key={o} value={o}>{ovenLabel(o)}</option>)}
             </select>
           </div>
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("adatta_to_oven")}</label>
             <select data-testid="adatta-to-oven" value={toOven} onChange={(e) => setToOven(e.target.value)}
-              className="mt-1 w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#F26419]">
+              className="mt-1 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]">
               {OVENS.map((o) => <option key={o} value={o}>{ovenLabel(o)}</option>)}
             </select>
           </div>
         </div>
 
-        <div data-testid="adatta-result" className="mt-2 bg-gradient-to-br from-[#F26419] to-[#F26419] rounded-3xl p-6 text-white shadow-lg">
+        <div data-testid="adatta-result" className="mt-2 bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] rounded-3xl p-6 text-white shadow-lg">
           <p className="text-white/80 text-sm uppercase tracking-wider font-semibold">{t("adatta_result")} {ovenLabel(toOven)}</p>
           <p className="font-mono-data text-4xl font-bold mt-1">{outTemp}°C · {outMin}′</p>
           <p className="text-white/85 text-sm mt-3 leading-relaxed">
@@ -205,16 +205,16 @@ export default function AdattaForno() {
         <p className="text-sm text-[#7E8A93] mb-3 leading-relaxed">{t("adatta_photo_hint")}</p>
         <div className="mb-4"><DualPhotoButtons onFile={onPick} testid="adatta" /></div>
         {preview && (
-          <div className="rounded-3xl overflow-hidden border border-[#26324A] dark:border-[#26324A] mb-4">
+          <div className="rounded-3xl overflow-hidden border border-[#2A3B49] dark:border-[#2A3B49] mb-4">
             <img src={preview} alt="forno" className="w-full max-h-80 object-cover" />
           </div>
         )}
         <button data-testid="adatta-analyze-btn" onClick={analyze} disabled={!preview || analyzing}
-          className="w-full bg-[#F26419] hover:bg-[#E8A838] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           {analyzing ? t("adatta_analyzing") : t("adatta_analyze")} {!analyzing && <ArrowRight className="w-4 h-4" />}
         </button>
         {result && (
-          <div data-testid="adatta-result-photo" className="markdown-body mt-5 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
+          <div data-testid="adatta-result-photo" className="markdown-body mt-5 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl p-5 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
             <ReactMarkdown>{result}</ReactMarkdown>
           </div>
         )}

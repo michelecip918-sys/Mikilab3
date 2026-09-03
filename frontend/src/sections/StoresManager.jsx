@@ -34,12 +34,12 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
     catch { toast.error(tri("Eliminazione non riuscita", "Löschen fehlgeschlagen", "Delete failed")); }
   };
 
-  const inp = "w-full bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#F26419]";
+  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   return (
     <div className="pb-40" data-testid="stores-manager">
       <button data-testid="store-add" onClick={() => setEditing(editing === "new" ? null : "new")}
-        className="w-full flex items-center justify-center gap-2 bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
+        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
         <Plus className="w-5 h-5" /> {tri("Aggiungi negozio", "Filiale hinzufügen", "Add store")}
       </button>
 
@@ -52,13 +52,13 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
           <p className="text-center text-sm text-[#7E8A93] py-8">{tri("Nessun negozio. Aggiungi il tuo primo punto vendita.", "Keine Filiale. Füge deinen ersten Standort hinzu.", "No store yet. Add your first location.")}</p>
         )}
         {stores.map((s) => (
-          <div key={s.id} data-testid={`store-card-${s.id}`} className={`rounded-2xl p-4 border shadow-sm ${current === s.id ? "bg-[#F26419]/10 border-[#F26419]" : "bg-white dark:bg-[#18202E] border-[#26324A] dark:border-[#26324A]"}`}>
+          <div key={s.id} data-testid={`store-card-${s.id}`} className={`rounded-2xl p-4 border shadow-sm ${current === s.id ? "bg-[#3E9C93]/10 border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
             {editing === s.id ? (
               <StoreForm form={form} setForm={setForm} inp={inp} onSave={save} onCancel={() => setEditing(null)} busy={busy} tri={tri} testidPrefix={`store-edit-${s.id}`} />
             ) : (
               <>
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419] flex items-center justify-center shrink-0"><Store className="w-5 h-5 text-white" /></div>
+                  <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] flex items-center justify-center shrink-0"><Store className="w-5 h-5 text-white" /></div>
                   <div className="min-w-0 flex-1">
                     <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{s.name}</p>
                     {s.address && <p className="text-xs text-[#7E8A93] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" />{s.address}</p>}
@@ -68,12 +68,12 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
                 </div>
                 <div className="flex items-center gap-2 mt-3">
                   {current === s.id ? (
-                    <span data-testid={`store-active-${s.id}`} className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold text-[#F26419] bg-[#F26419]/10 rounded-2xl shadow-md border border-amber-900/40 py-2"><Check className="w-4 h-4" /> {tri("Attivo", "Aktiv", "Active")}</span>
+                    <span data-testid={`store-active-${s.id}`} className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold text-[#3E9C93] bg-[#3E9C93]/10 rounded-2xl shadow-md border border-amber-900/40 py-2"><Check className="w-4 h-4" /> {tri("Attivo", "Aktiv", "Active")}</span>
                   ) : (
-                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
+                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
                   )}
-                  <button data-testid={`store-edit-${s.id}`} onClick={() => setEditing(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] text-[#F26419]"><Pencil className="w-4 h-4" /></button>
-                  <button data-testid={`store-remove-${s.id}`} onClick={() => remove(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>
+                  <button data-testid={`store-edit-${s.id}`} onClick={() => setEditing(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] text-[#3E9C93]"><Pencil className="w-4 h-4" /></button>
+                  <button data-testid={`store-remove-${s.id}`} onClick={() => remove(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>
                 </div>
               </>
             )}
@@ -86,16 +86,16 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
 
 function StoreForm({ form, setForm, inp, onSave, onCancel, busy, tri, testidPrefix }) {
   return (
-    <div data-testid={`${testidPrefix}-form`} className="bg-[#F26419]/10 border border-[#F26419]/30 rounded-2xl p-4 mb-4 space-y-2">
+    <div data-testid={`${testidPrefix}-form`} className="bg-[#3E9C93]/10 border border-[#3E9C93]/30 rounded-2xl p-4 mb-4 space-y-2">
       <input data-testid={`${testidPrefix}-name`} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Nome negozio", "Filialname", "Store name")} className={inp} />
       <input data-testid={`${testidPrefix}-address`} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder={tri("Indirizzo", "Adresse", "Address")} className={inp} />
       <input data-testid={`${testidPrefix}-phone`} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={tri("Telefono", "Telefon", "Phone")} className={inp} />
       <input data-testid={`${testidPrefix}-note`} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder={tri("Note", "Notizen", "Notes")} className={inp} />
       <div className="flex gap-2">
-        <button data-testid={`${testidPrefix}-save`} onClick={onSave} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#F26419] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">
+        <button data-testid={`${testidPrefix}-save`} onClick={onSave} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#3E9C93] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva", "Speichern", "Save")}
         </button>
-        <button data-testid={`${testidPrefix}-cancel`} onClick={onCancel} className="px-4 rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] text-[#7E8A93]"><X className="w-4 h-4" /></button>
+        <button data-testid={`${testidPrefix}-cancel`} onClick={onCancel} className="px-4 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] text-[#7E8A93]"><X className="w-4 h-4" /></button>
       </div>
     </div>
   );

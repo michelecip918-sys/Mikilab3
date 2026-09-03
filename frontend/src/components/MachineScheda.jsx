@@ -9,8 +9,8 @@ export default function MachineScheda() {
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const s = machineScheda(lang);
   return (
-    <div data-testid="recipe-machine-scheda" className="mt-4 rounded-2xl border border-[#F26419]/40 bg-[#F26419]/8 p-4">
-      <p className="text-[11px] font-bold uppercase tracking-wide text-[#F26419] dark:text-[#a9d2ec] flex items-center gap-1.5 mb-2">
+    <div data-testid="recipe-machine-scheda" className="mt-4 rounded-2xl border border-[#3E9C93]/40 bg-[#3E9C93]/8 p-4">
+      <p className="text-[11px] font-bold uppercase tracking-wide text-[#3E9C93] dark:text-[#a9d2ec] flex items-center gap-1.5 mb-2">
         <Cog className="w-4 h-4" /> {tri("Scheda Macchina", "Maschinen-Blatt", "Machine Sheet")}
       </p>
       <div className="space-y-1 text-sm text-[#2B303B] dark:text-[#EAF0EC]">

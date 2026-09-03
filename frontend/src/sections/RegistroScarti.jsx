@@ -73,7 +73,7 @@ export default function RegistroScarti() {
   return (
     <div className="pb-24" data-testid="registro-scarti">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center"><Recycle className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#3E9C93] flex items-center justify-center"><Recycle className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#e4eff8]">{tri("Registro Scarti", "Ausschuss-Register", "Waste Log", "Registro de Mermas")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Traccia gli sprechi e l'igiene vasche", "Verschwendung & Hygiene erfassen", "Track waste & bowl hygiene", "Registra mermas e higiene")}</p>
@@ -87,23 +87,23 @@ export default function RegistroScarti() {
       </div>
 
       {/* Form scarto */}
-      <div className="rounded-2xl bg-[#18202E] border border-[#26324A] p-3 mb-4 space-y-2">
+      <div className="rounded-2xl bg-[#1B2A38] border border-[#2A3B49] p-3 mb-4 space-y-2">
         <div className="flex gap-2">
           <input data-testid="scarto-qty" value={qty} onChange={(e) => setQty(e.target.value)} inputMode="decimal" placeholder={tri("Kg", "Kg", "Kg", "Kg")}
-            className="w-20 bg-[#151515] border border-[#26324A] rounded-lg p-2 text-sm text-[#e4eff8] outline-none focus:border-[#F26419]" />
+            className="w-20 bg-[#151515] border border-[#2A3B49] rounded-lg p-2 text-sm text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
           <input data-testid="scarto-product" value={product} onChange={(e) => setProduct(e.target.value)} placeholder={tri("Prodotto (es. pane)", "Produkt", "Product", "Producto")}
-            className="flex-1 min-w-0 bg-[#151515] border border-[#26324A] rounded-lg p-2 text-sm text-[#e4eff8] outline-none focus:border-[#F26419]" />
+            className="flex-1 min-w-0 bg-[#151515] border border-[#2A3B49] rounded-lg p-2 text-sm text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
         </div>
         <div className="flex gap-2">
           <input data-testid="scarto-reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder={tri("Motivo (opzionale)", "Grund (optional)", "Reason (optional)", "Motivo (opcional)")}
-            className="flex-1 min-w-0 bg-[#151515] border border-[#26324A] rounded-lg p-2 text-sm text-[#e4eff8] outline-none focus:border-[#F26419]" />
-          <div className="flex items-center gap-1 bg-[#151515] border border-[#26324A] rounded-lg px-2 w-24 shrink-0">
+            className="flex-1 min-w-0 bg-[#151515] border border-[#2A3B49] rounded-lg p-2 text-sm text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+          <div className="flex items-center gap-1 bg-[#151515] border border-[#2A3B49] rounded-lg px-2 w-24 shrink-0">
             <span className="text-[#7E8A93] text-sm">€/kg</span>
             <input data-testid="scarto-cost" value={cost} onChange={(e) => setCost(e.target.value)} inputMode="decimal" placeholder="0"
               className="w-full bg-transparent text-sm text-[#e4eff8] outline-none" />
           </div>
         </div>
-        <button data-testid="scarto-add" onClick={submit} className="w-full bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="scarto-add" onClick={submit} className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
           <Plus className="w-4 h-4" /> {tri("Registra scarto", "Ausschuss erfassen", "Log waste", "Registrar merma")}
         </button>
       </div>
@@ -111,29 +111,29 @@ export default function RegistroScarti() {
       {/* Totale + lista */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-bold text-[#e4eff8]">{tri("Scarti di oggi", "Ausschuss heute", "Today's waste", "Mermas de hoy")}</span>
-        <span data-testid="scarto-total" className="text-sm font-bold text-[#F26419]">{total.toFixed(1)} kg</span>
+        <span data-testid="scarto-total" className="text-sm font-bold text-[#3E9C93]">{total.toFixed(1)} kg</span>
       </div>
       <div className="space-y-2 mb-6" data-testid="scarto-list">
         {scarti.length === 0 && <p className="text-sm text-[#7E8A93] text-center py-4">{tri("Nessuno scarto registrato.", "Kein Ausschuss.", "No waste logged.", "Sin mermas.")}</p>}
         {scarti.map((x) => (
-          <div key={x.id} data-testid={`scarto-${x.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121722] border border-[#26324A] px-3 py-2.5">
-            <span className="font-mono-data text-[#F26419] font-bold w-16 shrink-0">{(x.qty || 0).toFixed(1)}kg</span>
+          <div key={x.id} data-testid={`scarto-${x.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#14212C] border border-[#2A3B49] px-3 py-2.5">
+            <span className="font-mono-data text-[#3E9C93] font-bold w-16 shrink-0">{(x.qty || 0).toFixed(1)}kg</span>
             <span className="flex-1 min-w-0"><span className="block text-sm text-[#e4eff8] truncate">{x.product}</span>{x.reason ? <span className="block text-[11px] text-[#7E8A93] truncate">{x.reason}</span> : null}</span>
             {x.cost ? <span className="text-[11px] font-bold text-[#22c55e] shrink-0">{eur((x.qty || 0) * (x.cost || 0))}</span> : null}
             <span className="text-[11px] text-[#7E8A93] shrink-0">{fmtTime(x.ts)}</span>
-            <button onClick={() => del(x.id)} className="text-[#F26419] p-1 shrink-0"><Trash2 className="w-4 h-4" /></button>
+            <button onClick={() => del(x.id)} className="text-[#3E9C93] p-1 shrink-0"><Trash2 className="w-4 h-4" /></button>
           </div>
         ))}
       </div>
 
       {/* Riepilogo settimanale */}
-      <div className="rounded-2xl bg-[#18202E] border border-[#26324A] overflow-hidden mb-6" data-testid="scarto-report">
+      <div className="rounded-2xl bg-[#1B2A38] border border-[#2A3B49] overflow-hidden mb-6" data-testid="scarto-report">
         <button data-testid="scarto-report-toggle" onClick={() => setShowReport((v) => !v)} className="w-full flex items-center justify-between gap-2 px-3.5 py-3">
-          <span className="flex items-center gap-2 text-sm font-bold text-[#e4eff8]"><BarChart3 className="w-4 h-4 text-[#F26419]" /> {tri("Riepilogo settimanale", "Wochenübersicht", "Weekly summary", "Resumen semanal")}</span>
-          <span className="flex items-center gap-2 text-[12px]"><span className="font-bold text-[#F26419]">{weekKg.toFixed(1)} kg</span><span className="font-bold text-[#22c55e]">{eur(weekEur)}</span>{showReport ? <ChevronUp className="w-4 h-4 text-[#7E8A93]" /> : <ChevronDown className="w-4 h-4 text-[#7E8A93]" />}</span>
+          <span className="flex items-center gap-2 text-sm font-bold text-[#e4eff8]"><BarChart3 className="w-4 h-4 text-[#3E9C93]" /> {tri("Riepilogo settimanale", "Wochenübersicht", "Weekly summary", "Resumen semanal")}</span>
+          <span className="flex items-center gap-2 text-[12px]"><span className="font-bold text-[#3E9C93]">{weekKg.toFixed(1)} kg</span><span className="font-bold text-[#22c55e]">{eur(weekEur)}</span>{showReport ? <ChevronUp className="w-4 h-4 text-[#7E8A93]" /> : <ChevronDown className="w-4 h-4 text-[#7E8A93]" />}</span>
         </button>
         {showReport && (
-          <div className="px-3.5 pb-3.5 border-t border-[#26324A] space-y-3">
+          <div className="px-3.5 pb-3.5 border-t border-[#2A3B49] space-y-3">
             <div className="flex justify-end pt-2">
               <button data-testid="scarto-export" onClick={exportCSV} className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#22c55e] hover:bg-[#1fb457] px-3 py-1.5 rounded-lg active:scale-95">
                 <Download className="w-3.5 h-3.5" /> {tri("Esporta CSV", "CSV exportieren", "Export CSV", "Exportar CSV")}
@@ -146,13 +146,13 @@ export default function RegistroScarti() {
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Per giorno", "Pro Tag", "By day", "Por día")}</p>
                   {Object.entries(byDay).map(([d, v]) => (
-                    <div key={d} className="flex items-center justify-between text-[13px] py-0.5"><span className="text-[#C9D4DC]">{d}</span><span className="flex gap-3"><span className="text-[#F26419] font-semibold">{v.kg.toFixed(1)} kg</span><span className="text-[#22c55e] font-semibold w-16 text-right">{eur(v.e)}</span></span></div>
+                    <div key={d} className="flex items-center justify-between text-[13px] py-0.5"><span className="text-[#C9D4DC]">{d}</span><span className="flex gap-3"><span className="text-[#3E9C93] font-semibold">{v.kg.toFixed(1)} kg</span><span className="text-[#22c55e] font-semibold w-16 text-right">{eur(v.e)}</span></span></div>
                   ))}
                 </div>
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Per prodotto", "Pro Produkt", "By product", "Por producto")}</p>
                   {Object.entries(byProduct).sort((a, b) => b[1].kg - a[1].kg).map(([p, v]) => (
-                    <div key={p} className="flex items-center justify-between text-[13px] py-0.5"><span className="text-[#C9D4DC] truncate">{p}</span><span className="flex gap-3"><span className="text-[#F26419] font-semibold">{v.kg.toFixed(1)} kg</span><span className="text-[#22c55e] font-semibold w-16 text-right">{eur(v.e)}</span></span></div>
+                    <div key={p} className="flex items-center justify-between text-[13px] py-0.5"><span className="text-[#C9D4DC] truncate">{p}</span><span className="flex gap-3"><span className="text-[#3E9C93] font-semibold">{v.kg.toFixed(1)} kg</span><span className="text-[#22c55e] font-semibold w-16 text-right">{eur(v.e)}</span></span></div>
                   ))}
                 </div>
               </>
@@ -168,7 +168,7 @@ export default function RegistroScarti() {
       </div>
       <div className="grid grid-cols-1 gap-2" data-testid="sanif-list">
         {VASCHE.map((n) => (
-          <div key={n} data-testid={`sanif-${n}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121722] border border-[#26324A] px-3 py-2.5">
+          <div key={n} data-testid={`sanif-${n}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#14212C] border border-[#2A3B49] px-3 py-2.5">
             <span className="font-display font-bold text-[#e4eff8] w-20 shrink-0">{tri("Vasca", "Kessel", "Bowl", "Cuba")} {n}</span>
             <span className="flex-1 text-[12px] text-[#7E8A93]">{sanif[n] ? `${tri("Ultima", "Zuletzt", "Last", "Última")}: ${fmtTime(sanif[n])}` : tri("Mai sanificata", "Nie gereinigt", "Never sanitised", "Nunca")}</span>
             <button data-testid={`sanif-btn-${n}`} onClick={() => sanifica(n)} className="shrink-0 inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#3B82F6] hover:bg-[#2f6fd6] px-3 py-2 rounded-lg active:scale-95">

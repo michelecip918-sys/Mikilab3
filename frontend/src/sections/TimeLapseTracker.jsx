@@ -37,45 +37,45 @@ export default function TimeLapseTracker({ onBack }) {
 
   return (
     <div className="pb-8" data-testid="timelapse">
-      {onBack && <button data-testid="timelapse-back" onClick={onBack} className="flex items-center gap-1 text-[#F26419] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#F26419,#F26419 60%,#F26419)" }}>
+      {onBack && <button data-testid="timelapse-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><TrendingUp className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Time-Lapse Raddoppio", "Time-Lapse Verdopplung", "Doubling Time-Lapse", "Time-Lapse Duplicado")}</h1>
-        <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">{L("Fotografa l'impasto all'inizio e adesso, segna quanto è cresciuto: ti dico se ha raddoppiato ed è pronto.", "Fotografiere Start & Jetzt, markiere den Anstieg.", "Photograph start & now, mark the rise: I'll tell you when it's doubled.", "Fotografía inicio y ahora, marca el crecimiento.")}</p>
+        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Fotografa l'impasto all'inizio e adesso, segna quanto è cresciuto: ti dico se ha raddoppiato ed è pronto.", "Fotografiere Start & Jetzt, markiere den Anstieg.", "Photograph start & now, mark the rise: I'll tell you when it's doubled.", "Fotografía inicio y ahora, marca el crecimiento.")}</p>
       </div>
 
       {/* Progress ring */}
       <div className="flex flex-col items-center mb-5">
         <svg width="140" height="140" viewBox="0 0 140 140" data-testid="timelapse-ring">
-          <circle cx="70" cy="70" r={R} fill="none" stroke="#26324A" strokeWidth="12" />
-          <circle cx="70" cy="70" r={R} fill="none" stroke={ready ? "#2e8b6f" : "#F26419"} strokeWidth="12" strokeLinecap="round"
+          <circle cx="70" cy="70" r={R} fill="none" stroke="#2A3B49" strokeWidth="12" />
+          <circle cx="70" cy="70" r={R} fill="none" stroke={ready ? "#2e8b6f" : "#3E9C93"} strokeWidth="12" strokeLinecap="round"
             strokeDasharray={C} strokeDashoffset={C - (pct / 100) * C} transform="rotate(-90 70 70)" style={{ transition: "stroke-dashoffset .5s" }} />
-          <text x="70" y="66" textAnchor="middle" className="font-display" fontSize="26" fontWeight="bold" fill="#F26419">+{rise}%</text>
-          <text x="70" y="88" textAnchor="middle" fontSize="11" fill="#F26419">{ready ? L("PRONTO", "FERTIG", "READY", "LISTO") : L("in crescita", "wächst", "rising", "creciendo")}</text>
+          <text x="70" y="66" textAnchor="middle" className="font-display" fontSize="26" fontWeight="bold" fill="#3E9C93">+{rise}%</text>
+          <text x="70" y="88" textAnchor="middle" fontSize="11" fill="#3E9C93">{ready ? L("PRONTO", "FERTIG", "READY", "LISTO") : L("in crescita", "wächst", "rising", "creciendo")}</text>
         </svg>
-        <p className="text-[13px] text-[#F26419] mt-2">⏱️ {eh ? `${eh}h ` : ""}{em}m {L("dall'inizio", "seit Start", "since start", "desde inicio")}</p>
+        <p className="text-[13px] text-[#3E9C93] mt-2">⏱️ {eh ? `${eh}h ` : ""}{em}m {L("dall'inizio", "seit Start", "since start", "desde inicio")}</p>
       </div>
 
       {/* Slider rise */}
-      <div className="rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4 shadow-sm mb-4">
-        <p className="text-[12px] font-semibold text-[#F26419] dark:text-[#AEB8BF] mb-2">{L("Quanto è cresciuto? (0 = uguale, 100 = raddoppiato)", "Wie stark gewachsen? (100 = verdoppelt)", "How much did it grow? (100 = doubled)", "¿Cuánto creció? (100 = duplicado)")}</p>
-        <input data-testid="timelapse-rise" type="range" min="0" max="150" value={rise} onChange={(e) => setRiseVal(Number(e.target.value))} className="w-full accent-[#F26419]" />
+      <div className="rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm mb-4">
+        <p className="text-[12px] font-semibold text-[#3E9C93] dark:text-[#AEB8BF] mb-2">{L("Quanto è cresciuto? (0 = uguale, 100 = raddoppiato)", "Wie stark gewachsen? (100 = verdoppelt)", "How much did it grow? (100 = doubled)", "¿Cuánto creció? (100 = duplicado)")}</p>
+        <input data-testid="timelapse-rise" type="range" min="0" max="150" value={rise} onChange={(e) => setRiseVal(Number(e.target.value))} className="w-full accent-[#3E9C93]" />
       </div>
 
       {/* Photos */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         {[["startPhoto", L("Inizio", "Start", "Start", "Inicio")], ["nowPhoto", L("Adesso", "Jetzt", "Now", "Ahora")]].map(([k, label]) => (
-          <label key={k} data-testid={`timelapse-photo-${k}`} className="rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-dashed border-[#26324A] dark:border-[#26324A] p-3 flex flex-col items-center gap-2 cursor-pointer min-h-[120px] justify-center">
-            {data?.[k] ? <img src={data[k]} alt={label} className="w-full h-24 object-cover rounded-2xl shadow-md border border-amber-900/40" /> : (uploading === k ? <Loader2 className="w-6 h-6 animate-spin text-[#F26419]" /> : <Camera className="w-7 h-7 text-[#F26419]" />)}
-            <span className="text-[12px] font-bold text-[#F26419]">{label}</span>
+          <label key={k} data-testid={`timelapse-photo-${k}`} className="rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-dashed border-[#2A3B49] dark:border-[#2A3B49] p-3 flex flex-col items-center gap-2 cursor-pointer min-h-[120px] justify-center">
+            {data?.[k] ? <img src={data[k]} alt={label} className="w-full h-24 object-cover rounded-2xl shadow-md border border-amber-900/40" /> : (uploading === k ? <Loader2 className="w-6 h-6 animate-spin text-[#3E9C93]" /> : <Camera className="w-7 h-7 text-[#3E9C93]" />)}
+            <span className="text-[12px] font-bold text-[#3E9C93]">{label}</span>
             <input type="file" accept="image/*" capture="environment" onChange={(e) => onPhoto(e, k)} className="hidden" />
           </label>
         ))}
       </div>
 
       <div className="flex gap-2">
-        <button data-testid="timelapse-start" onClick={start} className="flex-1 flex items-center justify-center gap-2 bg-[#F26419] hover:bg-[#F26419] text-[#0B0E14] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><Play className="w-4 h-4" /> {L("Avvia timer", "Timer starten", "Start timer", "Iniciar")}</button>
-        <button data-testid="timelapse-reset" onClick={reset} className="px-4 flex items-center justify-center bg-[#18202E] text-[#F26419] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><RotateCcw className="w-4 h-4" /></button>
+        <button data-testid="timelapse-start" onClick={start} className="flex-1 flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#3E9C93] text-[#0E1620] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><Play className="w-4 h-4" /> {L("Avvia timer", "Timer starten", "Start timer", "Iniciar")}</button>
+        <button data-testid="timelapse-reset" onClick={reset} className="px-4 flex items-center justify-center bg-[#1B2A38] text-[#3E9C93] font-semibold py-3 rounded-2xl active:scale-98 transition-all"><RotateCcw className="w-4 h-4" /></button>
       </div>
     </div>
   );

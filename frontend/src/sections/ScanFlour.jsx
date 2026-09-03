@@ -74,8 +74,8 @@ export default function ScanFlour() {
   };
 
   const Field = ({ label, value, Icon }) => (
-    <div className="flex items-start gap-2.5 py-2 border-b border-[#eef4f9] dark:border-[#26324A] last:border-0">
-      {Icon && <Icon className="w-4 h-4 text-[#F26419] mt-0.5 shrink-0" />}
+    <div className="flex items-start gap-2.5 py-2 border-b border-[#eef4f9] dark:border-[#2A3B49] last:border-0">
+      {Icon && <Icon className="w-4 h-4 text-[#3E9C93] mt-0.5 shrink-0" />}
       <span className="text-[13px] text-[#7E8A93] w-32 shrink-0">{label}</span>
       <span className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] flex-1">{value || "—"}</span>
     </div>
@@ -83,16 +83,16 @@ export default function ScanFlour() {
 
   return (
     <div className="pb-24" data-testid="scan-flour">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#F26419] to-[#6b4a1c] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#3E9C93] to-[#6b4a1c] p-6 text-white">
         <Wheat className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{tri("Scanner Farina", "Mehl-Scanner", "Flour Scanner", "Escáner de Harina")}</h1>
         <p className="text-white/85 text-sm mt-1">{tri("Fotografa il sacco: leggo forza W, proteine e tipo.", "Fotografiere den Sack: ich lese W-Kraft, Protein und Typ.", "Photograph the bag: I read W strength, protein and type.", "Fotografía el saco: leo fuerza W, proteína y tipo.")}</p>
       </div>
 
-      <div className="rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-6 text-center">
+      <div className="rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-6 text-center">
         <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mb-4">{tri("Inquadra l'etichetta o la scheda tecnica della farina.", "Richte die Kamera auf das Etikett oder das Datenblatt.", "Frame the label or the flour's technical sheet.", "Enfoca la etiqueta o la ficha técnica.")}</p>
         {loading ? (
-          <div data-testid="flour-loading" className="inline-flex items-center gap-2 bg-[#F26419] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
+          <div data-testid="flour-loading" className="inline-flex items-center gap-2 bg-[#3E9C93] text-white font-semibold px-5 py-3.5 rounded-2xl opacity-70">
             <Loader2 className="w-5 h-5 animate-spin" /> {tri("Sto leggendo…", "Ich lese…", "Reading…", "Leyendo…")}
           </div>
         ) : (
@@ -101,8 +101,8 @@ export default function ScanFlour() {
       </div>
 
       {result && (
-        <div data-testid="flour-result" className="mt-4 rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-5">
-          <div className="flex items-center gap-2 mb-3 text-[#F26419]">
+        <div data-testid="flour-result" className="mt-4 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-5">
+          <div className="flex items-center gap-2 mb-3 text-[#3E9C93]">
             <Sparkles className="w-5 h-5" />
             <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">
               {result.product_name || result.brand || tri("Dati farina", "Mehl-Daten", "Flour data", "Datos de harina")}
@@ -117,8 +117,8 @@ export default function ScanFlour() {
             <Field label={tri("Assorbimento", "Wasseraufnahme", "Absorption", "Absorción")} value={result.absorption_percent != null ? `${result.absorption_percent}%` : null} />
           </div>
           {result.ideal_use && (
-            <div className="mt-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419]/10 border border-[#F26419]/25 p-3">
-              <p className="text-[12px] font-bold text-[#F26419] uppercase tracking-wide mb-0.5">{tri("Uso ideale", "Ideale Verwendung", "Ideal use", "Uso ideal")}</p>
+            <div className="mt-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/10 border border-[#3E9C93]/25 p-3">
+              <p className="text-[12px] font-bold text-[#3E9C93] uppercase tracking-wide mb-0.5">{tri("Uso ideale", "Ideale Verwendung", "Ideal use", "Uso ideal")}</p>
               <p className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{result.ideal_use}</p>
             </div>
           )}
@@ -134,23 +134,23 @@ export default function ScanFlour() {
       )}
 
       {pantry.length > 0 && (
-        <div data-testid="flour-pantry" className="mt-4 rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-5">
-          <div className="flex items-center gap-2 mb-3 text-[#F26419]">
+        <div data-testid="flour-pantry" className="mt-4 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-5">
+          <div className="flex items-center gap-2 mb-3 text-[#3E9C93]">
             <Archive className="w-5 h-5" />
             <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("La mia dispensa farine", "Mein Mehlvorrat", "My flour pantry", "Mi despensa de harinas")}</h3>
           </div>
           <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Le tue farine salvate: usale come riferimento (forza W e proteine) quando crei una ricetta.", "Deine gespeicherten Mehle: nutze sie als Referenz (W-Kraft und Protein) beim Erstellen eines Rezepts.", "Your saved flours: use them as reference (W strength and protein) when creating a recipe.", "Tus harinas guardadas: úsalas como referencia (fuerza W y proteína) al crear una receta.")}</p>
           <ul className="space-y-2">
             {pantry.map((f) => (
-              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] px-3.5 py-2.5">
-                <Wheat className="w-5 h-5 text-[#F26419] shrink-0" />
+              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] px-3.5 py-2.5">
+                <Wheat className="w-5 h-5 text-[#3E9C93] shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{f.product_name || f.brand || f.flour_type || tri("Farina", "Mehl", "Flour", "Harina")}</p>
                   <p className="text-[11px] text-[#7E8A93] truncate">
                     {[f.flour_type, f.w_index != null ? `W ${f.w_index}` : null, f.protein_percent != null ? `${f.protein_percent}g prot.` : null].filter(Boolean).join(" · ")}
                   </p>
                 </div>
-                <button data-testid={`flour-pantry-del-${f.id}`} onClick={() => removeFlour(f.id)} className="text-[#F26419] p-1.5 shrink-0 active:scale-90"><Trash2 className="w-4 h-4" /></button>
+                <button data-testid={`flour-pantry-del-${f.id}`} onClick={() => removeFlour(f.id)} className="text-[#3E9C93] p-1.5 shrink-0 active:scale-90"><Trash2 className="w-4 h-4" /></button>
               </li>
             ))}
           </ul>

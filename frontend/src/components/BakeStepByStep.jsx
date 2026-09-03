@@ -76,20 +76,20 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
   if (finished) {
     return (
       <div data-testid="bake-finished" className="pb-8">
-        <div className="rounded-3xl p-7 text-center text-[#0B0E14] shadow-xl" style={{ background: "linear-gradient(135deg,#E8A838,#F26419)" }}>
+        <div className="rounded-3xl p-7 text-center text-[#0E1620] shadow-xl" style={{ background: "linear-gradient(135deg,#5E8CA8,#3E9C93)" }}>
           <div className="w-16 h-16 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center mx-auto mb-3"><PartyPopper className="w-8 h-8" /></div>
           <h2 className="font-display text-2xl font-bold">{L("Ce l'hai fatta!", "Geschafft!", "You did it!", "¡Lo lograste!", "Tu as réussi !", "موفق شدی!")}</h2>
-          <p className="text-[#0B0E14]/85 text-sm mt-2 font-semibold">{name}</p>
+          <p className="text-[#0E1620]/85 text-sm mt-2 font-semibold">{name}</p>
         </div>
         <button data-testid="bake-finished-community" onClick={() => onGoCommunity && onGoCommunity()}
-          className="mt-4 w-full flex items-center justify-center gap-2 bg-[#F26419] text-[#0B0E14] font-semibold py-3.5 rounded-2xl active:scale-98 transition-all">
+          className="mt-4 w-full flex items-center justify-center gap-2 bg-[#3E9C93] text-[#0E1620] font-semibold py-3.5 rounded-2xl active:scale-98 transition-all">
           <Users className="w-5 h-5" /> {L("Vai al feed della community", "Zum Community-Feed", "Go to community feed", "Ir al feed de la comunidad", "Aller au fil de la communauté", "به فید انجمن برو")}
         </button>
         <button data-testid="bake-finished-again" onClick={() => { setFinished(false); setI(0); }}
-          className="mt-2 w-full rounded-2xl border border-[#26324A] text-white font-semibold py-3 active:scale-98 transition-all">
+          className="mt-2 w-full rounded-2xl border border-[#2A3B49] text-white font-semibold py-3 active:scale-98 transition-all">
           {L("Rifai da capo", "Nochmal", "Bake again", "Hacer de nuevo", "Refaire", "دوباره از اول")}
         </button>
-        {onExit && <button data-testid="bake-finished-exit" onClick={onExit} className="mt-2 w-full text-[#F26419] font-medium py-2">{L("Torna a Impara", "Zurück zu Lernen", "Back to Learn", "Volver a Aprender", "Retour à Apprendre", "بازگشت به یادگیری")}</button>}
+        {onExit && <button data-testid="bake-finished-exit" onClick={onExit} className="mt-2 w-full text-[#3E9C93] font-medium py-2">{L("Torna a Impara", "Zurück zu Lernen", "Back to Learn", "Volver a Aprender", "Retour à Apprendre", "بازگشت به یادگیری")}</button>}
       </div>
     );
   }
@@ -97,40 +97,40 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
   return (
     <div data-testid="bake-step-by-step" className="pb-8">
       {onExit && (
-        <button data-testid="bake-exit" onClick={onExit} className="flex items-center gap-1 text-[#F26419] font-medium mb-3">
+        <button data-testid="bake-exit" onClick={onExit} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-3">
           <ChevronLeft className="w-5 h-5" /> {L("Cambia ricetta", "Rezept wechseln", "Change recipe", "Cambiar receta", "Changer de recette", "تغییر دستور")}
         </button>
       )}
 
       {/* Header ricetta + progress */}
-      <div className="rounded-3xl p-5 text-[#0B0E14] shadow-xl" style={{ background: "linear-gradient(135deg,#E8A838,#F26419 70%)" }}>
+      <div className="rounded-3xl p-5 text-[#0E1620] shadow-xl" style={{ background: "linear-gradient(135deg,#5E8CA8,#3E9C93 70%)" }}>
         <p className="text-[11px] font-bold uppercase tracking-widest text-white/90">{L("Riproduci passo-passo", "Schritt für Schritt", "Bake step by step", "Paso a paso", "Pas à pas", "گام‌به‌گام")}</p>
         <h1 className="font-display text-xl font-bold mt-1 leading-tight">{name}</h1>
-        <div className="mt-3 flex items-center justify-between text-[12px] font-bold text-[#0B0E14]/80">
+        <div className="mt-3 flex items-center justify-between text-[12px] font-bold text-[#0E1620]/80">
           <span data-testid="bake-step-count">{L("Passo", "Schritt", "Step", "Paso", "Étape", "مرحله")} {i + 1} / {total}</span>
           <span>{pct}%</span>
         </div>
         <div className="mt-1.5 h-2.5 rounded-full bg-black/15 overflow-hidden">
-          <div data-testid="bake-progress" className="h-full rounded-full bg-[#0B0E14] transition-all" style={{ width: `${pct}%` }} />
+          <div data-testid="bake-progress" className="h-full rounded-full bg-[#0E1620] transition-all" style={{ width: `${pct}%` }} />
         </div>
       </div>
 
       {/* Avatar Mikila + incoraggiamento */}
-      <div className="mt-4 flex items-start gap-3 rounded-2xl bg-[#F26419]/10 border border-[#F26419]/30 p-3.5">
+      <div className="mt-4 flex items-start gap-3 rounded-2xl bg-[#3E9C93]/10 border border-[#3E9C93]/30 p-3.5">
         <div className="relative shrink-0">
-          <img src="/michele-real-lab.jpg" alt="MikiLab" className="w-11 h-11 rounded-full object-cover border-2 border-[#F26419]/40"
+          <img src="/michele-real-lab.jpg" alt="MikiLab" className="w-11 h-11 rounded-full object-cover border-2 border-[#3E9C93]/40"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#2e8b6f] border-2 border-[#18202E]" />
+          <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-[#2e8b6f] border-2 border-[#1B2A38]" />
         </div>
         <p data-testid="bake-avatar-tip" className="text-[13px] text-[#E2E8F0] leading-snug pt-0.5">{tip}</p>
       </div>
 
       {/* Card istruzione */}
-      <div className="mt-4 rounded-2xl bg-[#18202E] border border-[#26324A] p-5">
+      <div className="mt-4 rounded-2xl bg-[#1B2A38] border border-[#2A3B49] p-5">
         {uniqueBadges.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3" data-testid="bake-badges">
             {uniqueBadges.map((b, k) => (
-              <span key={k} className="inline-flex items-center gap-1.5 rounded-full bg-[#F26419]/15 border border-[#F26419]/30 px-3 py-1 text-[12px] font-bold text-[#F26419]">
+              <span key={k} className="inline-flex items-center gap-1.5 rounded-full bg-[#3E9C93]/15 border border-[#3E9C93]/30 px-3 py-1 text-[12px] font-bold text-[#3E9C93]">
                 {b.type === "time" ? <Clock className="w-3.5 h-3.5" /> : <Thermometer className="w-3.5 h-3.5" />} {b.val}
               </span>
             ))}
@@ -141,8 +141,8 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
 
       {/* Toggle Lista Spesa & Dove Comprare */}
       <button data-testid="bake-shopping-toggle" onClick={() => setShopOpen((v) => !v)}
-        className="mt-4 w-full flex items-center justify-center gap-2 rounded-2xl bg-[#18202E] border border-[#F26419]/40 text-white font-semibold py-3 active:scale-98 transition-all">
-        <ShoppingCart className="w-5 h-5 text-[#F26419]" />
+        className="mt-4 w-full flex items-center justify-center gap-2 rounded-2xl bg-[#1B2A38] border border-[#3E9C93]/40 text-white font-semibold py-3 active:scale-98 transition-all">
+        <ShoppingCart className="w-5 h-5 text-[#3E9C93]" />
         {shopOpen ? L("Nascondi lista spesa", "Einkaufsliste ausblenden", "Hide shopping list", "Ocultar lista", "Masquer la liste", "پنهان کردن لیست") : L("Cosa e Dove Comprare", "Was & Wo kaufen", "What & Where to Buy", "Qué y dónde comprar", "Quoi et où acheter", "چه و از کجا بخریم")}
       </button>
       {shopOpen && <div className="mt-3"><ShoppingWhereToBuy recipe={recipe} lang={lang} /></div>}
@@ -150,17 +150,17 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
       {/* Navigazione */}
       <div className="mt-5 grid grid-cols-2 gap-3">
         <button data-testid="bake-prev" disabled={i === 0} onClick={() => setI((n) => Math.max(0, n - 1))}
-          className="flex items-center justify-center gap-1.5 rounded-2xl border border-[#26324A] text-white font-semibold py-3.5 disabled:opacity-40 active:scale-95 transition-all">
+          className="flex items-center justify-center gap-1.5 rounded-2xl border border-[#2A3B49] text-white font-semibold py-3.5 disabled:opacity-40 active:scale-95 transition-all">
           <ChevronLeft className="w-5 h-5" /> {L("Indietro", "Zurück", "Back", "Atrás", "Retour", "قبلی")}
         </button>
         {isLast ? (
           <button data-testid="bake-finish" disabled={busy} onClick={finish}
-            className="flex items-center justify-center gap-2 rounded-2xl bg-[#F26419] text-[#0B0E14] font-bold py-3.5 disabled:opacity-50 active:scale-95 transition-all">
+            className="flex items-center justify-center gap-2 rounded-2xl bg-[#3E9C93] text-[#0E1620] font-bold py-3.5 disabled:opacity-50 active:scale-95 transition-all">
             {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Trophy className="w-5 h-5" />} {L("Ho finito!", "Fertig!", "I'm done!", "¡Terminé!", "J'ai fini !", "تمام شد!")}
           </button>
         ) : (
           <button data-testid="bake-next" onClick={() => setI((n) => Math.min(total - 1, n + 1))}
-            className="flex items-center justify-center gap-1.5 rounded-2xl bg-[#F26419] text-[#0B0E14] font-bold py-3.5 active:scale-95 transition-all">
+            className="flex items-center justify-center gap-1.5 rounded-2xl bg-[#3E9C93] text-[#0E1620] font-bold py-3.5 active:scale-95 transition-all">
             {L("Avanti", "Weiter", "Next", "Siguiente", "Suivant", "بعدی")} <ChevronRight className="w-5 h-5" />
           </button>
         )}

@@ -23,8 +23,8 @@ export default function MaestroAI() {
             onClick={() => setTab(id)}
             className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl text-sm font-semibold border transition-colors ${
               tab === id
-                ? "bg-[#F26419] text-white border-[#F26419]"
-                : "bg-white dark:bg-[#18202E] text-[#3F4A54] dark:text-[#AEB8BF] border-[#26324A] dark:border-[#26324A]"
+                ? "bg-[#3E9C93] text-white border-[#3E9C93]"
+                : "bg-white dark:bg-[#1B2A38] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2A3B49] dark:border-[#2A3B49]"
             }`}
           >
             <Icon className="w-4 h-4" /> {label}

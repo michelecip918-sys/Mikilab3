@@ -9,7 +9,7 @@ function Field({ testid, label, value, onChange, hint }) {
       <label className="text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type="number" value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full font-mono-data bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-3 pr-8 outline-none focus:border-[#F26419]" />
+          className="w-full font-mono-data bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 p-3 pr-8 outline-none focus:border-[#3E9C93]" />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">°C</span>
       </div>
       {hint ? <p className="text-[10px] text-[#7E8A93] mt-1 leading-snug">{hint}</p> : null}
@@ -35,7 +35,7 @@ export default function WaterTempCalc() {
   return (
     <div className="pb-24">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#3E9C93] flex items-center justify-center">
           <Droplets className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -54,7 +54,7 @@ export default function WaterTempCalc() {
           hint={tri("Impastatrice: spirale ~3, tuffante ~1-2, planetaria ~4-6", "Kneter: Spirale ~3, Tauchkneter ~1-2, Planeten ~4-6", "Mixer: spiral ~3, plunger ~1-2, planetary ~4-6")} />
       </div>
 
-      <div data-testid="wtc-result" className="mt-5 bg-gradient-to-br from-[#F26419] to-[#E8A838] rounded-3xl p-6 text-white shadow-lg text-center">
+      <div data-testid="wtc-result" className="mt-5 bg-gradient-to-br from-[#3E9C93] to-[#5E8CA8] rounded-3xl p-6 text-white shadow-lg text-center">
         <p className="text-white/80 text-sm uppercase tracking-wider font-semibold flex items-center justify-center gap-1">
           <Thermometer className="w-4 h-4" /> {tri("Acqua da usare", "Wasser verwenden", "Use water at")}
         </p>

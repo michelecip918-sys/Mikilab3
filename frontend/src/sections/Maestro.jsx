@@ -142,7 +142,7 @@ export default function Maestro() {
         <HighFive />
         <button data-testid="maestro-back-btn" onClick={back}
           className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full font-bold text-sm shadow-sm active:scale-95 transition-all"
-          style={{ background: "#FBF6E8", border: "2px solid #E8A838", color: "#8A5A16" }}>
+          style={{ background: "#FBF6E8", border: "2px solid #5E8CA8", color: "#8A5A16" }}>
           <ChevronLeft className="w-5 h-5" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}
         </button>
         {tool === "aggiungi" && (
@@ -233,15 +233,15 @@ export default function Maestro() {
     <div className="pb-28">
       <HighFive />
       <button data-testid="maestro-to-braccio" onClick={() => setView("braccio")}
-        className="inline-flex items-center gap-1.5 mb-3 px-3.5 py-2 rounded-full bg-[#F26419]/12 border border-[#F26419]/40 text-[#F26419] font-semibold text-[13px] active:scale-95 transition-all">
+        className="inline-flex items-center gap-1.5 mb-3 px-3.5 py-2 rounded-full bg-[#3E9C93]/12 border border-[#3E9C93]/40 text-[#3E9C93] font-semibold text-[13px] active:scale-95 transition-all">
         <ChevronLeft className="w-4 h-4" /> {tri("Laboratorio operativo", "Betriebsmodus", "Operative mode", "Modo operativo")}
       </button>
 
       {/* Banner: La Tua Tecnologia Unica — 6 killer feature */}
-      <div data-testid="maestro-tech-banner" className="mb-3 rounded-2xl border border-[#F26419]/45 bg-gradient-to-br from-[#121722] to-[#121722] p-4">
+      <div data-testid="maestro-tech-banner" className="mb-3 rounded-2xl border border-[#3E9C93]/45 bg-gradient-to-br from-[#14212C] to-[#14212C] p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="w-4 h-4 text-[#F26419] shrink-0" />
-          <h3 className="font-display text-[13px] font-extrabold uppercase tracking-wider text-[#F26419] leading-tight">
+          <Sparkles className="w-4 h-4 text-[#3E9C93] shrink-0" />
+          <h3 className="font-display text-[13px] font-extrabold uppercase tracking-wider text-[#3E9C93] leading-tight">
             {mkTri(lang)("La Tua Tecnologia Unica", "Deine einzigartige Technologie", "Your Unique Technology", "Tu Tecnología Única", "Ta Technologie Unique", "فناوری منحصربه‌فرد تو")}
           </h3>
         </div>
@@ -255,13 +255,13 @@ export default function Maestro() {
             { Icon: TimerIcon, t: mkTri(lang)("Timer Lievitazione Smart", "Smart Gär-Timer", "Smart Proofing Timer", "Temporizador Fermentación Smart", "Minuteur Levée Intelligent", "تایمر هوشمند ور آمدن"), sub: mkTri(lang)("Offline First", "Offline First", "Offline First", "Sin conexión", "Hors-ligne", "آفلاین") },
           ].map(({ Icon, t, sub }, i) => (
             <button key={i} data-testid={`tech-feat-${i}`} onClick={() => openTool(["bluetooth", "manisporche", "diagnosi", "trovafarina", "energia", "timer"][i])}
-              className="w-full text-start flex items-center gap-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419]/8 border border-[#F26419]/25 px-2.5 py-2 min-h-[52px] active:scale-97 hover:border-[#F26419]/60 transition-all">
-              <span className="w-8 h-8 rounded-lg bg-[#F26419]/18 border border-[#F26419]/35 flex items-center justify-center shrink-0">
-                <Icon className="w-5 h-5 text-[#F26419]" />
+              className="w-full text-start flex items-center gap-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/8 border border-[#3E9C93]/25 px-2.5 py-2 min-h-[52px] active:scale-97 hover:border-[#3E9C93]/60 transition-all">
+              <span className="w-8 h-8 rounded-lg bg-[#3E9C93]/18 border border-[#3E9C93]/35 flex items-center justify-center shrink-0">
+                <Icon className="w-5 h-5 text-[#3E9C93]" />
               </span>
               <span className="min-w-0 text-start">
                 <span className="block text-[11.5px] font-bold text-[#e4eff8] leading-tight">{t}</span>
-                {sub && <span className="block text-[10px] font-semibold text-[#F26419]/85 leading-tight mt-0.5">{sub}</span>}
+                {sub && <span className="block text-[10px] font-semibold text-[#3E9C93]/85 leading-tight mt-0.5">{sub}</span>}
               </span>
             </button>
           ))}
@@ -270,7 +270,7 @@ export default function Maestro() {
 
       {/* CTA gigante: avvia subito la generazione guidata */}
       <button data-testid="maestro-cta-generate" onClick={() => openTool("generatore")}
-        className="w-full flex items-center justify-center gap-3 min-h-[76px] rounded-2xl px-5 mb-4 bg-gradient-to-r from-[#F26419] to-[#F26419] text-white font-extrabold text-lg shadow-[0_6px_0_rgba(0,0,0,.35),0_10px_20px_rgba(255,107,0,.4)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all">
+        className="w-full flex items-center justify-center gap-3 min-h-[76px] rounded-2xl px-5 mb-4 bg-gradient-to-r from-[#3E9C93] to-[#3E9C93] text-white font-extrabold text-lg shadow-[0_6px_0_rgba(0,0,0,.35),0_10px_20px_rgba(255,107,0,.4)] active:translate-y-1 active:shadow-[0_2px_0_rgba(0,0,0,.35)] transition-all">
         <Sparkles className="w-7 h-7 shrink-0" />
         <span className="font-display tracking-tight text-center">{mkTri(lang)("✨ NUOVA RICETTA / WORKFLOW", "✨ NEUES REZEPT / WORKFLOW", "✨ NEW RECIPE / WORKFLOW", "✨ NUEVA RECETA / WORKFLOW", "✨ NOUVELLE RECETTE / WORKFLOW", "✨ دستور / گردش‌کار جدید")}</span>
       </button>
@@ -284,13 +284,13 @@ export default function Maestro() {
       {/* Modalità Laboratorio: pulsanti giganti per lavorare con le mani infarinate (solo Pro) */}
       {!passion && (
       <button data-testid="maestro-lab-big-toggle" onClick={() => setBig(true)}
-        className="w-full flex items-center gap-3 min-h-[64px] rounded-2xl px-4 mb-3 bg-[#18202E] border-2 border-[#F26419]/60 hover:border-[#F26419] text-white active:scale-98 transition-all text-left">
-        <span className="w-11 h-11 rounded-2xl bg-[#F26419]/15 border border-[#F26419]/40 flex items-center justify-center shrink-0"><Maximize2 className="w-6 h-6 text-[#F26419]" /></span>
+        className="w-full flex items-center gap-3 min-h-[64px] rounded-2xl px-4 mb-3 bg-[#1B2A38] border-2 border-[#3E9C93]/60 hover:border-[#3E9C93] text-white active:scale-98 transition-all text-left">
+        <span className="w-11 h-11 rounded-2xl bg-[#3E9C93]/15 border border-[#3E9C93]/40 flex items-center justify-center shrink-0"><Maximize2 className="w-6 h-6 text-[#3E9C93]" /></span>
         <span className="min-w-0 flex-1">
           <span className="block font-display text-[15px] font-extrabold leading-tight">{mkTri(lang)("Modalità Laboratorio", "Labor-Modus", "Bakery Mode", "Modo Laboratorio", "Mode Atelier", "حالت کارگاه")}</span>
           <span className="block text-[11.5px] text-[#7E8A93] leading-snug">{mkTri(lang)("Pulsanti giganti, per mani infarinate e voce", "Große Tasten, für mehlige Hände & Stimme", "Giant buttons, for floury hands & voice", "Botones gigantes, para manos enharinadas y voz")}</span>
         </span>
-        <ChevronRight className="w-5 h-5 text-[#F26419] shrink-0" />
+        <ChevronRight className="w-5 h-5 text-[#3E9C93] shrink-0" />
       </button>
       )}
 
@@ -302,7 +302,7 @@ export default function Maestro() {
       )}
 
       {/* 4 Macro-Hub: tutti gli strumenti in ordine. Ognuno si apre come schermata sovrapposta. */}
-      <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#F26419] mb-2 flex items-center gap-1.5">
+      <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3E9C93] mb-2 flex items-center gap-1.5">
         <Wrench className="w-4 h-4" /> {mkTri(lang)("Strumenti del Laboratorio", "Labor-Werkzeuge", "Lab tools", "Herramientas del Lab", "Outils de l'atelier", "ابزارهای کارگاه")}
       </p>
       <ToolsDirectory onOpenTool={openTool} />

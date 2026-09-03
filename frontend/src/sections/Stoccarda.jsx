@@ -25,14 +25,14 @@ export default function Stoccarda() {
   return (
     <div className="space-y-4 mb-5">
       <div className="flex items-center gap-2">
-        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419]/15 border border-[#F26419]/30 flex items-center justify-center shrink-0">
-          <MapPin className="w-5 h-5 text-[#F26419]" />
+        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/15 border border-[#3E9C93]/30 flex items-center justify-center shrink-0">
+          <MapPin className="w-5 h-5 text-[#3E9C93]" />
         </div>
         <div className="flex-1">
           <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8] leading-none">{t("tab_stoccarda")}</h2>
           <p className="text-xs text-[#7E8A93] mt-0.5">{t("news_auto_sub")}</p>
         </div>
-        <button data-testid="news-refresh" onClick={load} className="p-2 rounded-lg text-[#F26419] hover:bg-[#F26419]/10" aria-label="refresh">
+        <button data-testid="news-refresh" onClick={load} className="p-2 rounded-lg text-[#3E9C93] hover:bg-[#3E9C93]/10" aria-label="refresh">
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
         </button>
       </div>
@@ -40,7 +40,7 @@ export default function Stoccarda() {
       <div className="flex gap-2 overflow-x-auto pb-1">
         {REGIONS.map((r) => (
           <button key={r} data-testid={`news-filter-${r}`} onClick={() => setFilter(r)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${filter === r ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white dark:bg-[#18202E] text-[#3F4A54] dark:text-[#AEB8BF] border-[#26324A] dark:border-[#26324A]"}`}>
+            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${filter === r ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
             {regionLabel(r)}
           </button>
         ))}
@@ -57,9 +57,9 @@ export default function Stoccarda() {
           {shown.map((a, i) => (
             <a key={i} href={a.link || "#"} target="_blank" rel="noopener noreferrer"
               data-testid={`news-item-${i}`}
-              className="block bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl p-4 hover:border-[#F26419]/50 transition-colors">
+              className="block bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl p-4 hover:border-[#3E9C93]/50 transition-colors">
               <div className="flex items-start gap-2">
-                <span className="mt-1 shrink-0 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-[#F26419]/12 text-[#F26419] dark:text-[#a9d2ec] border border-[#F26419]/25">{t(`region_${a.region || "stoccarda"}`)}</span>
+                <span className="mt-1 shrink-0 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-[#3E9C93]/12 text-[#3E9C93] dark:text-[#a9d2ec] border border-[#3E9C93]/25">{t(`region_${a.region || "stoccarda"}`)}</span>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-snug">{a.title}</p>
                   {a.details ? <p className="text-xs text-[#7E8A93] mt-1 flex items-center gap-1">{a.details} <ExternalLink className="w-3 h-3" /></p> : null}

@@ -23,7 +23,7 @@ export default function GuidaMikiLab() {
   const pick = (id) => { setOpId(id); setCurrentOperator(id); };
 
   const CARDS = [
-    { Icon: ShieldCheck, color: "#F26419", t: tri("Gestione Account", "Konto", "Account", "Cuenta"),
+    { Icon: ShieldCheck, color: "#3E9C93", t: tri("Gestione Account", "Konto", "Account", "Cuenta"),
       d: tri("L'azienda fornisce l'accesso sicuro. Tu selezioni solo il tuo nome per vedere il tuo piano settimanale e le tue mansioni.",
              "Das Unternehmen stellt den sicheren Zugang. Du wählst nur deinen Namen, um Wochenplan und Aufgaben zu sehen.",
              "The company provides secure access. You just pick your name to see your weekly plan and tasks.",
@@ -46,16 +46,16 @@ export default function GuidaMikiLab() {
     <div data-testid="guida-overlay" className="fixed inset-0 z-[320]" onClick={() => setOpen(false)}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
       <div onClick={(e) => e.stopPropagation()}
-        className="absolute inset-x-0 bottom-0 top-10 max-w-lg mx-auto bg-[#0B0E14] rounded-t-3xl border-t border-x border-[#26324A] shadow-2xl overflow-y-auto animate-in slide-in-from-bottom duration-300">
-        <div className="sticky top-0 z-10 bg-[#F26419] text-white flex items-center justify-between px-4 py-3">
+        className="absolute inset-x-0 bottom-0 top-10 max-w-lg mx-auto bg-[#0E1620] rounded-t-3xl border-t border-x border-[#2A3B49] shadow-2xl overflow-y-auto animate-in slide-in-from-bottom duration-300">
+        <div className="sticky top-0 z-10 bg-[#3E9C93] text-white flex items-center justify-between px-4 py-3">
           <span className="font-display text-lg font-bold flex items-center gap-2"><BookOpenCheck className="w-5 h-5" /> {tri("Guida MikiLab", "MikiLab-Anleitung", "MikiLab Guide", "Guía MikiLab")}</span>
           <button data-testid="guida-close" onClick={() => setOpen(false)} className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center active:scale-95"><X className="w-5 h-5" /></button>
         </div>
 
         <div className="p-4 space-y-4">
           {/* Come Funziona — istruzioni semplici d'uso */}
-          <div className="rounded-2xl bg-[#121722] border border-[#F26419]/40 p-3.5" data-testid="guida-comefunziona">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2"><BookOpenCheck className="w-4 h-4" /> {tri("Come Funziona", "So funktioniert's", "How It Works", "Cómo Funciona", "Comment ça marche", "چطور کار می‌کند")}</p>
+          <div className="rounded-2xl bg-[#14212C] border border-[#3E9C93]/40 p-3.5" data-testid="guida-comefunziona">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2"><BookOpenCheck className="w-4 h-4" /> {tri("Come Funziona", "So funktioniert's", "How It Works", "Cómo Funciona", "Comment ça marche", "چطور کار می‌کند")}</p>
             <ol className="space-y-2">
               {[
                 tri("Apri il menu ☰ in alto a sinistra o la barra in basso per raggiungere ogni sezione.", "Öffne das Menü ☰ oben links oder die untere Leiste, um jeden Bereich zu erreichen.", "Open the ☰ menu top-left or the bottom bar to reach any section.", "Abre el menú ☰ arriba a la izquierda o la barra inferior para ir a cualquier sección.", "Ouvre le menu ☰ en haut à gauche ou la barre du bas pour accéder à chaque section.", "منوی ☰ بالا-چپ یا نوار پایین را باز کن."),
@@ -64,7 +64,7 @@ export default function GuidaMikiLab() {
                 tri("Dopo il primo caricamento MikiLab funziona anche senza internet, in tutto il laboratorio.", "Nach dem ersten Laden funktioniert MikiLab auch offline im ganzen Labor.", "After the first load MikiLab also works offline, throughout the lab.", "Tras la primera carga MikiLab funciona también sin internet, en todo el laboratorio.", "Après le premier chargement, MikiLab fonctionne aussi hors ligne dans tout le labo.", "پس از بارگذاری اول، میکی‌لب آفلاین هم کار می‌کند."),
               ].map((step, i) => (
                 <li key={i} data-testid={`guida-step-${i}`} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-[#F26419] text-white text-[12px] font-extrabold">{i + 1}</span>
+                  <span className="mt-0.5 w-6 h-6 rounded-full flex items-center justify-center shrink-0 bg-[#3E9C93] text-white text-[12px] font-extrabold">{i + 1}</span>
                   <span className="text-[13px] leading-snug text-[#C9D4DC]">{step}</span>
                 </li>
               ))}
@@ -72,13 +72,13 @@ export default function GuidaMikiLab() {
           </div>
 
           {/* Le 4 sezioni principali */}
-          <div className="rounded-2xl bg-[#121722] border border-[#F26419]/40 p-3.5" data-testid="guida-sezioni">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2"><BookOpen className="w-4 h-4" /> {tri("Le sezioni", "Die Bereiche", "The sections", "Las secciones", "Les sections", "بخش‌ها")}</p>
+          <div className="rounded-2xl bg-[#14212C] border border-[#3E9C93]/40 p-3.5" data-testid="guida-sezioni">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2"><BookOpen className="w-4 h-4" /> {tri("Le sezioni", "Die Bereiche", "The sections", "Las secciones", "Les sections", "بخش‌ها")}</p>
             <div className="space-y-2">
               {[
-                { Icon: BookOpen, c: "#F26419", t: tri("Ricette del Maestro", "Meister-Rezepte", "Master Recipes", "Recetas del Maestro", "Recettes du Maître", "دستورهای استاد"), d: tri("Tutte le schede con dosi, procedimento e note, pronte da seguire.", "Alle Karten mit Mengen, Ablauf und Notizen.", "All cards with doses, steps and notes, ready to follow.", "Todas las fichas con dosis, procedimiento y notas.", "Toutes les fiches avec doses, étapes et notes.", "همه کارت‌ها با مقدار و مراحل.") },
+                { Icon: BookOpen, c: "#3E9C93", t: tri("Ricette del Maestro", "Meister-Rezepte", "Master Recipes", "Recetas del Maestro", "Recettes du Maître", "دستورهای استاد"), d: tri("Tutte le schede con dosi, procedimento e note, pronte da seguire.", "Alle Karten mit Mengen, Ablauf und Notizen.", "All cards with doses, steps and notes, ready to follow.", "Todas las fichas con dosis, procedimiento y notas.", "Toutes les fiches avec doses, étapes et notes.", "همه کارت‌ها با مقدار و مراحل.") },
                 { Icon: GraduationCap, c: "#A16207", t: tri("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías", "Science & Guides", "علم و راهنما"), d: tri("Lezioni, quiz e guide per imparare i metodi passo passo.", "Lektionen, Quiz und Guides Schritt für Schritt.", "Lessons, quizzes and guides to learn the methods step by step.", "Lecciones, cuestionarios y guías paso a paso.", "Leçons, quiz et guides pas à pas.", "درس، آزمون و راهنما گام‌به‌گام.") },
-                { Icon: ClipboardList, c: "#E8A838", t: tri("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción", "Fiches de Production", "برگه‌های تولید"), d: tri("Il Laboratorio operativo: produzione del giorno, celle, guasti, magazzino e assistente vocale mani libere.", "Der Betriebsmodus: Tagesproduktion, Zellen, Störungen, Lager und Freihand-Assistent.", "The operative Lab: today's production, cells, faults, warehouse and hands-free voice assistant.", "El Laboratorio operativo: producción del día, cámaras, averías, almacén y asistente por voz.", "Le Labo opérationnel : production du jour, chambres, pannes, stock et assistant vocal.", "آزمایشگاه عملیاتی: تولید روز، سردخانه، خرابی، انبار و دستیار صوتی.") },
+                { Icon: ClipboardList, c: "#5E8CA8", t: tri("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción", "Fiches de Production", "برگه‌های تولید"), d: tri("Il Laboratorio operativo: produzione del giorno, celle, guasti, magazzino e assistente vocale mani libere.", "Der Betriebsmodus: Tagesproduktion, Zellen, Störungen, Lager und Freihand-Assistent.", "The operative Lab: today's production, cells, faults, warehouse and hands-free voice assistant.", "El Laboratorio operativo: producción del día, cámaras, averías, almacén y asistente por voz.", "Le Labo opérationnel : production du jour, chambres, pannes, stock et assistant vocal.", "آزمایشگاه عملیاتی: تولید روز، سردخانه، خرابی، انبار و دستیار صوتی.") },
                 { Icon: Users, c: "#22c55e", t: "Community", d: tri("Confrontati con altri fornai: bacheca, amici, messaggi e mappa.", "Tausch dich mit anderen Bäckern aus: Feed, Freunde, Nachrichten, Karte.", "Connect with other bakers: feed, friends, messages and map.", "Conecta con otros panaderos: muro, amigos, mensajes y mapa.", "Échange avec d'autres boulangers : fil, amis, messages, carte.", "با نانواهای دیگر در ارتباط باش.") },
               ].map((s, i) => (
                 <div key={i} data-testid={`guida-sezione-${i}`} className="flex items-start gap-2.5">
@@ -90,8 +90,8 @@ export default function GuidaMikiLab() {
           </div>
 
           {/* Cosa sa fare l'assistente vocale nel Laboratorio */}
-          <div className="rounded-2xl bg-[#121722] border border-[#F26419]/40 p-3.5" data-testid="guida-assistente">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2"><Mic className="w-4 h-4" /> {tri("L'assistente vocale sa fare", "Der Sprachassistent kann", "The voice assistant can", "El asistente de voz puede", "L'assistant vocal peut", "دستیار صوتی می‌تواند")}</p>
+          <div className="rounded-2xl bg-[#14212C] border border-[#3E9C93]/40 p-3.5" data-testid="guida-assistente">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2"><Mic className="w-4 h-4" /> {tri("L'assistente vocale sa fare", "Der Sprachassistent kann", "The voice assistant can", "El asistente de voz puede", "L'assistant vocal peut", "دستیار صوتی می‌تواند")}</p>
             <p className="text-[12px] text-[#9AA6AE] mb-2">{tri("Nel Laboratorio parla a mani libere: di' «Ehi Lab» e poi:", "Im Labor freihändig: sag «Ehi Lab» und dann:", "In the Lab hands-free: say «Ehi Lab» then:", "En el Laboratorio manos libres: di «Ehi Lab» y luego:", "Au Labo mains libres : dis «Ehi Lab» puis :", "در آزمایشگاه بدون دست: بگو «لب» سپس:")}</p>
             <div className="space-y-2">
               {[
@@ -102,7 +102,7 @@ export default function GuidaMikiLab() {
                 { Icon: Repeat, t: tri("Ripeti l'ultima risposta", "Letzte Antwort wiederholen", "Repeat last answer", "Repetir última respuesta", "Répéter la réponse", "تکرار پاسخ"), ex: "«Ehi Lab, ripeti»" },
               ].map((s, i) => (
                 <div key={i} data-testid={`guida-assist-${i}`} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-[#F26419]/15"><s.Icon className="w-4 h-4 text-[#F26419]" /></span>
+                  <span className="mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-[#3E9C93]/15"><s.Icon className="w-4 h-4 text-[#3E9C93]" /></span>
                   <span className="min-w-0"><span className="block text-[13px] font-bold text-white leading-tight">{s.t}</span><span className="block text-[12px] leading-snug text-[#8FE3B6]">{s.ex}</span></span>
                 </div>
               ))}
@@ -110,8 +110,8 @@ export default function GuidaMikiLab() {
           </div>
 
           {/* Selezione rapida operatore */}
-          <div className="rounded-2xl bg-[#121722] border border-[#F26419]/40 p-3.5" data-testid="guida-operator">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2"><Users className="w-4 h-4" /> {tri("Chi sei? Seleziona il tuo profilo", "Wer bist du?", "Who are you?", "¿Quién eres?")}</p>
+          <div className="rounded-2xl bg-[#14212C] border border-[#3E9C93]/40 p-3.5" data-testid="guida-operator">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2"><Users className="w-4 h-4" /> {tri("Chi sei? Seleziona il tuo profilo", "Wer bist du?", "Who are you?", "¿Quién eres?")}</p>
             {ops.length === 0 ? (
               <p className="text-[13px] text-[#9AA6AE]">{tri("Nessun operatore configurato. Chiedi al capo di aggiungere la squadra in «Turni di Lavoro».", "Keine Bediener. Team unter «Arbeitsschichten» hinzufügen.", "No operators yet. Ask the boss to add the team in «Work shifts».", "Sin operarios. Pide al jefe añadir el equipo en «Turnos».")}</p>
             ) : (
@@ -120,7 +120,7 @@ export default function GuidaMikiLab() {
                   const on = opId === o.id;
                   return (
                     <button key={o.id} data-testid={`guida-op-${o.id}`} onClick={() => pick(o.id)}
-                      className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white/5 text-[#e4eff8] border-[#F26419]/30 hover:border-[#F26419]"}`}>
+                      className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white/5 text-[#e4eff8] border-[#3E9C93]/30 hover:border-[#3E9C93]"}`}>
                       {o.name}{o.zone ? <span className="opacity-70"> · {zoneLabel(o.zone, lang)}</span> : null}
                     </button>
                   );
@@ -131,15 +131,15 @@ export default function GuidaMikiLab() {
 
           {/* Didascalie squadra */}
           {CARDS.map((c, i) => (
-            <div key={i} data-testid={`guida-card-${i}`} className="rounded-2xl bg-[#121722] border border-[#26324A] p-3.5">
+            <div key={i} data-testid={`guida-card-${i}`} className="rounded-2xl bg-[#14212C] border border-[#2A3B49] p-3.5">
               <p className="flex items-center gap-2 font-display text-base font-bold text-white mb-1"><c.Icon className="w-5 h-5" style={{ color: c.color }} /> {c.t}</p>
               <p className="text-[13px] leading-snug text-[#C9D4DC]">{c.d}</p>
             </div>
           ))}
 
           {/* Voce in ambiente rumoroso */}
-          <div className="rounded-2xl bg-[#121722] border border-[#26324A] p-3.5" data-testid="guida-voice">
-            <p className="flex items-center gap-2 font-display text-base font-bold text-white mb-1"><Volume2 className="w-5 h-5 text-[#F26419]" /> {tri("Voce chiara nel rumore", "Klare Stimme im Lärm", "Clear voice in noise", "Voz clara en ruido")}</p>
+          <div className="rounded-2xl bg-[#14212C] border border-[#2A3B49] p-3.5" data-testid="guida-voice">
+            <p className="flex items-center gap-2 font-display text-base font-bold text-white mb-1"><Volume2 className="w-5 h-5 text-[#3E9C93]" /> {tri("Voce chiara nel rumore", "Klare Stimme im Lärm", "Clear voice in noise", "Voz clara en ruido")}</p>
             <p className="text-[13px] leading-snug text-[#C9D4DC]">{tri("Mickey Lab e Momi parlano con frasi brevi (max 8-10 parole) per farsi capire sopra le impastatrici. Di' «Mickey, chiama Marco» per parlare con un collega in cuffia.",
               "Mickey Lab und Momi sprechen in kurzen Sätzen (max. 8-10 Wörter). Sag «Mickey, ruf Marco».",
               "Mickey Lab and Momi speak in short phrases (max 8-10 words). Say «Mickey, call Marco».",
@@ -148,7 +148,7 @@ export default function GuidaMikiLab() {
           </div>
 
           {/* Auricolare */}
-          <div className="rounded-2xl bg-[#121722] border border-[#26324A] p-3.5" data-testid="guida-earphone">
+          <div className="rounded-2xl bg-[#14212C] border border-[#2A3B49] p-3.5" data-testid="guida-earphone">
             <p className="flex items-center gap-2 font-display text-base font-bold text-white mb-1"><Headphones className="w-5 h-5 text-[#3B82F6]" /> {tri("Il tuo auricolare", "Dein Headset", "Your earphone", "Tu auricular")}</p>
             <p className="text-[13px] leading-snug text-[#C9D4DC]">{tri("Il capo associa il tuo auricolare Bluetooth in «Turni di Lavoro». Al cambio mansione (es. Guida alle 05:00) ricevi solo le notifiche del tuo reparto.",
               "Der Chef verbindet dein Headset in «Arbeitsschichten».",

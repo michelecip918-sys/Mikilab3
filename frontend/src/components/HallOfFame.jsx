@@ -32,10 +32,10 @@ export default function HallOfFame() {
   }
 
   return (
-    <div data-testid="hall-of-fame" className="mb-5 rounded-3xl overflow-hidden border border-[#F26419]/40 bg-[#18202E] shadow-lg">
+    <div data-testid="hall-of-fame" className="mb-5 rounded-3xl overflow-hidden border border-[#3E9C93]/40 bg-[#1B2A38] shadow-lg">
       <button data-testid="hall-of-fame-toggle" onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-3 p-4 text-[#0B0E14]" style={{ background: "linear-gradient(135deg,#ffd27a,#E8A838 60%,#F26419)" }}>
-        <div className="w-11 h-11 rounded-2xl bg-[#0B0E14]/15 border border-[#0B0E14]/20 flex items-center justify-center shrink-0"><Crown className="w-6 h-6" /></div>
+        className="w-full flex items-center gap-3 p-4 text-[#0E1620]" style={{ background: "linear-gradient(135deg,#ffd27a,#5E8CA8 60%,#3E9C93)" }}>
+        <div className="w-11 h-11 rounded-2xl bg-[#0E1620]/15 border border-[#0E1620]/20 flex items-center justify-center shrink-0"><Crown className="w-6 h-6" /></div>
         <div className="flex-1 min-w-0 text-left">
           <p className="text-[11px] font-extrabold uppercase tracking-widest">{L("Hall of Fame", "Ruhmeshalle", "Hall of Fame", "Salón de la Fama", "Panthéon", "تالار مشاهیر")}</p>
           <p className="font-display text-lg font-extrabold leading-tight">{L("I fornai del mese", "Bäcker des Monats", "Bakers of the month", "Panaderos del mes", "Boulangers du mois", "نانواهای ماه")} · {monthLabel}</p>
@@ -50,19 +50,19 @@ export default function HallOfFame() {
           ) : (
             <div className="space-y-2" data-testid="hall-of-fame-list">
               {leaders.map((r) => (
-                <div key={r.user_id} data-testid={`hof-leader-${r.rank}`} className={`flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 border p-2.5 ${r.rank <= 3 ? "bg-[#F26419]/10 border-[#F26419]/30" : "bg-[#0B0E14] border-[#26324A]"}`}>
-                  <span className="w-7 text-center text-lg font-extrabold text-[#F26419] shrink-0">{medal(r.rank)}</span>
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-[#F26419] flex items-center justify-center text-white font-bold shrink-0">
+                <div key={r.user_id} data-testid={`hof-leader-${r.rank}`} className={`flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 border p-2.5 ${r.rank <= 3 ? "bg-[#3E9C93]/10 border-[#3E9C93]/30" : "bg-[#0E1620] border-[#2A3B49]"}`}>
+                  <span className="w-7 text-center text-lg font-extrabold text-[#3E9C93] shrink-0">{medal(r.rank)}</span>
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-[#3E9C93] flex items-center justify-center text-white font-bold shrink-0">
                     {r.picture ? <img src={r.picture} alt="" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} /> : (r.name || "F")[0].toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-white truncate flex items-center gap-1">{r.name} {r.champion && <Trophy className="w-3.5 h-3.5 text-[#F26419]" />}</p>
+                    <p className="text-sm font-bold text-white truncate flex items-center gap-1">{r.name} {r.champion && <Trophy className="w-3.5 h-3.5 text-[#3E9C93]" />}</p>
                     <p className="text-[11px] text-[#AEB8BF] inline-flex items-center gap-2">
                       <span>❤️ {r.likes}</span><span>📸 {r.posts}</span>
-                      {r.streak_best > 0 && <span className="inline-flex items-center gap-0.5"><Flame className="w-3 h-3 text-[#F26419]" />{r.streak_best}</span>}
+                      {r.streak_best > 0 && <span className="inline-flex items-center gap-0.5"><Flame className="w-3 h-3 text-[#3E9C93]" />{r.streak_best}</span>}
                     </p>
                   </div>
-                  <span className="text-[13px] font-extrabold text-[#F26419] shrink-0">{r.score} {L("pt", "Pkt", "pts", "pts", "pts", "امتیاز")}</span>
+                  <span className="text-[13px] font-extrabold text-[#3E9C93] shrink-0">{r.score} {L("pt", "Pkt", "pts", "pts", "pts", "امتیاز")}</span>
                 </div>
               ))}
             </div>

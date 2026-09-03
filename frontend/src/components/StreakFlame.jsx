@@ -54,10 +54,10 @@ export default function StreakFlame() {
   const topRewardDays = [100, 30, 7].find((d) => (s.earned || []).includes(d) || n >= d);
 
   return (
-    <div data-testid="streak-badge" className={`mb-4 rounded-2xl border px-4 py-3 ${active ? "border-[#F26419]/50 bg-[#F26419]/12" : "border-[#26324A] bg-[#18202E]"}`}>
+    <div data-testid="streak-badge" className={`mb-4 rounded-2xl border px-4 py-3 ${active ? "border-[#3E9C93]/50 bg-[#3E9C93]/12" : "border-[#2A3B49] bg-[#1B2A38]"}`}>
       <div className="flex items-center gap-3">
-        <div className={`relative w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${n > 0 ? "bg-[#F26419]/20" : "bg-[#26324A]"}`}>
-          <Flame className={`w-6 h-6 ${n > 0 ? "text-[#F26419]" : "text-[#7E8A93]"}`} fill={n > 0 ? "currentColor" : "none"} />
+        <div className={`relative w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${n > 0 ? "bg-[#3E9C93]/20" : "bg-[#2A3B49]"}`}>
+          <Flame className={`w-6 h-6 ${n > 0 ? "text-[#3E9C93]" : "text-[#7E8A93]"}`} fill={n > 0 ? "currentColor" : "none"} />
         </div>
         <div className="min-w-0 flex-1">
           <p className="font-display text-base font-extrabold text-white leading-tight" data-testid="streak-count">
@@ -77,15 +77,15 @@ export default function StreakFlame() {
       <div className="flex items-center gap-1.5 mt-3 flex-wrap" data-testid="streak-milestones">
         {milestones.map((m) => (
           <span key={m.days} data-testid={`streak-milestone-${m.days}`}
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold border ${m.reached ? "bg-[#F26419] text-[#0B0E14] border-[#F26419]" : "text-[#7E8A93] border-[#26324A]"}`}>
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold border ${m.reached ? "bg-[#3E9C93] text-[#0E1620] border-[#3E9C93]" : "text-[#7E8A93] border-[#2A3B49]"}`}>
             {m.reached ? "🔥" : <Lock className="w-2.5 h-2.5" />} {m.days}
           </span>
         ))}
       </div>
       {/* Badge-ricompensa al traguardo raggiunto */}
       {topRewardDays && (
-        <div data-testid="streak-reward" className="mt-2.5 flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-gradient-to-r from-[#F26419]/20 to-[#7a531d]/20 border border-[#F26419]/40 px-3 py-2">
-          <Award className="w-4 h-4 text-[#F26419] shrink-0" />
+        <div data-testid="streak-reward" className="mt-2.5 flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-gradient-to-r from-[#3E9C93]/20 to-[#7a531d]/20 border border-[#3E9C93]/40 px-3 py-2">
+          <Award className="w-4 h-4 text-[#3E9C93] shrink-0" />
           <p className="text-[12px] font-bold text-white leading-tight">
             {REWARDS[topRewardDays]}
             <span className="ml-1 font-semibold text-[#AEB8BF]">· {topRewardDays} {L("giorni", "Tage", "days", "días", "jours", "روز")}</span>

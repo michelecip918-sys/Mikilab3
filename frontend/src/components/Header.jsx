@@ -33,20 +33,20 @@ export default function Header() {
   return (
     <header
       data-testid="app-header"
-      className="sticky top-0 z-40 bg-[#0B0E14]/95 dark:bg-[#0B0E14]/95 backdrop-blur-md border-b border-[#26324A] dark:border-[#26324A]"
+      className="sticky top-0 z-40 bg-[#0E1620]/95 dark:bg-[#0E1620]/95 backdrop-blur-md border-b border-[#2A3B49] dark:border-[#2A3B49]"
     >
       <div className="px-3 sm:px-4 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-y-2 gap-x-2">
       <div className="flex items-center gap-2 min-w-0 w-full sm:w-auto sm:flex-1">
         <button data-testid="site-menu-open" onClick={() => window.dispatchEvent(new Event("mikilab-open-menu"))} aria-label="Menu"
-          className="menu-attn w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] flex items-center justify-center text-[#F26419] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
+          className="menu-attn w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] flex items-center justify-center text-[#3E9C93] dark:text-[#e4eff8] active:scale-95 hover:bg-[#d9e8f4] transition-all shrink-0">
           <Menu className="w-5 h-5" />
         </button>
         <button data-testid="header-logo-home" onClick={() => { try { window.dispatchEvent(new CustomEvent("mikilab-goto", { detail: { tab: "home" } })); } catch (e) { /* */ } }} className="flex items-center gap-2 min-w-0 active:scale-95 transition-all">
-          <span className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 overflow-hidden bg-[#18202E] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
+          <span className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 overflow-hidden bg-[#1B2A38] flex items-center justify-center shadow-sm ring-2 ring-[#D4AF37]/70 shrink-0">
             <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-full h-full object-cover" />
           </span>
           <span className="leading-none min-w-0 text-left">
-            <span className="block font-display text-lg font-extrabold tracking-tight text-[#F26419] dark:text-[#e4eff8] truncate">MikiLab</span>
+            <span className="block font-display text-lg font-extrabold tracking-tight text-[#3E9C93] dark:text-[#e4eff8] truncate">MikiLab</span>
             <span className="block text-[9px] sm:text-[10px] font-semibold text-[#7E8A93] truncate max-w-[150px]">{t("brand_subtitle")}</span>
           </span>
         </button>
@@ -54,18 +54,18 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-1 flex-wrap justify-end w-full sm:w-auto">
-        <span data-testid="bakemix-status" title="BakeMix AI online" className="flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #26324A" }}>
+        <span data-testid="bakemix-status" title="BakeMix AI online" className="flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #2A3B49" }}>
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#39d98a" }} />
-          <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#E8A838" }}>BakeMix AI</span>
+          <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#5E8CA8" }}>BakeMix AI</span>
         </span>
         <TrinitySeal />
         <button data-testid="header-search-btn" onClick={() => window.dispatchEvent(new Event("mikilab-open-search"))} aria-label={mkTri(lang)("Cerca", "Suche", "Search", "Buscar", "Chercher", "جستجو")}
-          className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] flex items-center justify-center text-[#F26419] active:scale-95 hover:bg-[#d9e8f4] transition-all">
+          className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] flex items-center justify-center text-[#3E9C93] active:scale-95 hover:bg-[#d9e8f4] transition-all">
           <Search className="w-4.5 h-4.5" />
         </button>
         {/* Orologio (nascosto su schermi stretti per non coprire il titolo) */}
-        <div data-testid="header-clock" className="flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#18202E] rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] px-2 py-1.5">
-          <Clock className="w-3.5 h-3.5 text-[#F26419]" />
+        <div data-testid="header-clock" className="flex items-center gap-1.5 bg-[#e4eff8] dark:bg-[#1B2A38] rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] px-2 py-1.5">
+          <Clock className="w-3.5 h-3.5 text-[#3E9C93]" />
           <span className="font-mono-data text-xs font-bold text-[#2B303B] dark:text-[#e4eff8]">
             {now.toLocaleTimeString(mkTri(lang)("it-IT", "de-DE", "en-GB"), { hour: "2-digit", minute: "2-digit" })}
           </span>
@@ -77,12 +77,12 @@ export default function Header() {
           className="relative shrink-0"
           aria-label={t("lang_label")}
         >
-          <div className="relative flex items-center rounded-xl border border-[#26324A] bg-[#18202E]/80 backdrop-blur-md">
+          <div className="relative flex items-center rounded-xl border border-[#2A3B49] bg-[#1B2A38]/80 backdrop-blur-md">
             <select
               data-testid="lang-select"
               value={lang}
               onChange={(e) => setLang(e.target.value)}
-              className="appearance-none bg-transparent text-xs font-extrabold uppercase text-[#F26419] pl-2 pr-5 py-1.5 outline-none cursor-pointer"
+              className="appearance-none bg-transparent text-xs font-extrabold uppercase text-[#3E9C93] pl-2 pr-5 py-1.5 outline-none cursor-pointer"
             >
               <option value="it">🇮🇹 IT</option>
               <option value="de">🇩🇪 DE</option>
@@ -111,7 +111,7 @@ export default function Header() {
           <button
             data-testid="logout-btn"
             onClick={logout}
-            className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] flex items-center justify-center text-[#F26419] active:scale-95 transition-all"
+            className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] flex items-center justify-center text-[#3E9C93] active:scale-95 transition-all"
             aria-label="Logout"
             title={user.email}
           >
@@ -121,7 +121,7 @@ export default function Header() {
           <button
             data-testid="login-btn"
             onClick={() => setAuthOpen(true)}
-            className="relative h-10 px-3.5 rounded-xl bg-gradient-to-br from-[#F26419] to-[#D94E00] border border-[#F26419]/60 text-white text-sm font-extrabold flex items-center gap-1.5 shadow-[0_0_18px_rgba(242,100,25,0.4)] active:scale-95 transition-all"
+            className="relative h-10 px-3.5 rounded-xl bg-gradient-to-br from-[#3E9C93] to-[#2E7D75] border border-[#3E9C93]/60 text-white text-sm font-extrabold flex items-center gap-1.5 shadow-[0_0_18px_rgba(62,156,147,0.4)] active:scale-95 transition-all"
             aria-label="Accedi"
             style={{ textShadow: "0 1px 1px rgba(0,0,0,.5)" }}
           >

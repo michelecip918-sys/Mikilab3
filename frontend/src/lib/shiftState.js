@@ -25,7 +25,7 @@ export function statusLabel(s, tri) {
 }
 
 export const STATUS_COLOR = {
-  da_fare: "#B08D57", in_lavorazione: "#E8A838", pronto: "#5E7A3A", in_cella: "#3E6E8E",
+  da_fare: "#B08D57", in_lavorazione: "#5E8CA8", pronto: "#5E7A3A", in_cella: "#3E6E8E",
   in_lievitazione: "#8A5A16", precotto: "#9C4A1E", base_pronta: "#6B4A2B", fatto: "#5E7A3A",
 };
 

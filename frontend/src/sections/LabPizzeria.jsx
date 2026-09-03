@@ -16,9 +16,9 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
   const { lang } = useLang();
   const L = (i, e) => mkTri(lang)(i, e, e, e);
   const num = (v) => Math.round(v).toLocaleString(lang === "it" ? "it" : "en");
-  const inp = "w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#F26419] dark:text-[#e4eff8] focus:border-[#F26419] font-mono-data";
-  const lbl = "text-[12px] font-semibold text-[#F26419] dark:text-[#AEB8BF] mb-1";
-  const card = "rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4 shadow-sm";
+  const inp = "w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#3E9C93] dark:text-[#e4eff8] focus:border-[#3E9C93] font-mono-data";
+  const lbl = "text-[12px] font-semibold text-[#3E9C93] dark:text-[#AEB8BF] mb-1";
+  const card = "rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
   const [tab, setTab] = useState("prefermenti");
 
   // Biga & Poolish
@@ -106,17 +106,17 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
 
   return (
     <div className="pb-8" data-testid="lab-pizzeria">
-      {onBack && <button data-testid="pizzeria-back" onClick={onBack} className="flex items-center gap-1 text-[#F26419] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
+      {onBack && <button data-testid="pizzeria-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
       <RelatedToolsRow cat="pizzeria" onOpenTool={onOpenTool} />
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#F26419,#F26419 60%,#F26419)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Pizza className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Laboratorio Pizzeria", "Pizzeria Lab")}</h1>
-        <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">{L("Prefermenti, maturazione e organizzazione del servizio per Napoletana, Teglia e Pala.", "Preferments, maturation and service planning for Neapolitan, Pan and Pala.")}</p>
+        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Prefermenti, maturazione e organizzazione del servizio per Napoletana, Teglia e Pala.", "Preferments, maturation and service planning for Neapolitan, Pan and Pala.")}</p>
       </div>
 
-      <div className="flex flex-wrap gap-1.5 bg-[#18202E] p-1.5 rounded-2xl mb-5 border border-[#26324A]">
+      <div className="flex flex-wrap gap-1.5 bg-[#1B2A38] p-1.5 rounded-2xl mb-5 border border-[#2A3B49]">
         {TABS.map(({ id, Icon, label }) => (
-          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all ${tab === id ? "bg-[#F26419] text-[#0B0E14] shadow" : "text-[#F26419]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`pizzeria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all ${tab === id ? "bg-[#3E9C93] text-[#0E1620] shadow" : "text-[#3E9C93]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
@@ -129,7 +129,7 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
             <div><p className={lbl}>{L("% farina in prefermento", "% flour in preferment")}</p><input type="number" value={prefPct} onChange={(e) => setPrefPct(Number(e.target.value))} className={inp} /></div>
             <div><p className={lbl}>{L("T° ambiente", "Room T°")}</p><input type="number" value={tRoom} onChange={(e) => setTRoom(Number(e.target.value))} className={inp} /></div>
           </div>
-          <div data-testid="pz-pref-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-[13px] text-[#F26419] font-semibold space-y-1">
+          <div data-testid="pz-pref-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-[13px] text-[#3E9C93] font-semibold space-y-1">
             <p>{L("Chiusura impasto", "Dough hydration")}: <span className="font-mono-data">{bp.hyd}%</span> · {L("Acqua totale", "Total water")}: <span className="font-mono-data">{num(bp.totWater)} g</span></p>
             <p>{PREF[pref].name}: <span className="font-mono-data">{num(bp.pFlour)} g {L("farina", "flour")} + {num(bp.pWater)} g {L("acqua", "water")}</span></p>
             <p>{L("Acqua nell'impasto finale", "Water in final dough")}: <span className="font-mono-data">{num(bp.doughWater)} g</span></p>
@@ -145,10 +145,10 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
           <p className={lbl}>{L("Indice P/L (tenacità/estensibilità)", "P/L index (tenacity/extensibility)")}</p>
           <input data-testid="pz-pl" type="number" step="0.05" value={pl} onChange={(e) => setPl(e.target.value)} className={inp + " mb-3"} />
           <div className="grid grid-cols-2 gap-2 mb-2">
-            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#F26419]">{L("Maturazione in frigo", "Cold maturation")}</p><p data-testid="pz-fridge" className="font-display text-xl font-bold text-[#F26419]">{matrix.fridge}</p></div>
-            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#F26419]">{L("Appretto (fuori frigo)", "Appretto (room)")}</p><p data-testid="pz-appretto" className="font-display text-xl font-bold text-[#F26419]">{matrix.appretto}</p></div>
+            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#3E9C93]">{L("Maturazione in frigo", "Cold maturation")}</p><p data-testid="pz-fridge" className="font-display text-xl font-bold text-[#3E9C93]">{matrix.fridge}</p></div>
+            <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 text-center"><p className="text-[11px] font-semibold text-[#3E9C93]">{L("Appretto (fuori frigo)", "Appretto (room)")}</p><p data-testid="pz-appretto" className="font-display text-xl font-bold text-[#3E9C93]">{matrix.appretto}</p></div>
           </div>
-          <p className="text-[12.5px] text-[#F26419] dark:text-[#AEB8BF] leading-snug">{matrix.note}</p>
+          <p className="text-[12.5px] text-[#3E9C93] dark:text-[#AEB8BF] leading-snug">{matrix.note}</p>
         </div>
       )}
 
@@ -158,16 +158,16 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
             <div><p className={lbl}>{L("Numero di pizze", "Number of pizzas")}</p><input data-testid="pz-pizzas" type="number" value={pizzas} onChange={(e) => setPizzas(Number(e.target.value))} className={inp} /></div>
             <div><p className={lbl}>{L("Tipo", "Type")}</p><select data-testid="pz-sptype" value={sptype} onChange={(e) => setSptype(e.target.value)} className={inp}>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v.it}</option>)}</select></div>
           </div>
-          <div data-testid="pz-planner-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#26324A]">
+          <div data-testid="pz-planner-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#2A3B49]">
             {[[L("Impasto totale", "Total dough"), `${num(sp.doughTot)} g`], [L("Farina", "Flour"), `${sp.flourKg.toFixed(1)} kg`], [L("Acqua", "Water"), `${sp.waterKg.toFixed(1)} kg`], [L("Lievito (diretto ~0,3%)", "Yeast (~0.3%)"), `${num(sp.yeastG)} g`], [L("Cassette necessarie", "Boxes needed"), `${sp.boxes}`]].map(([k, v], i) => (
-              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#F26419]">{k}</span><span className="font-mono-data font-bold text-[#F26419]">{v}</span></div>
+              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#3E9C93]">{k}</span><span className="font-mono-data font-bold text-[#3E9C93]">{v}</span></div>
             ))}
           </div>
         </div>
       )}
       {tab === "acqua" && (
         <div className={card} data-testid="pizzeria-acqua">
-          <p className="text-[12.5px] text-[#F26419] mb-3">{L("Teorema della temperatura acqua: (T° impasto × fattore macchina) − (T° ambiente + T° farina + T° attrito).", "Water temperature theorem: (dough T° × machine factor) − (room T° + flour T° + friction T°).")}</p>
+          <p className="text-[12.5px] text-[#3E9C93] mb-3">{L("Teorema della temperatura acqua: (T° impasto × fattore macchina) − (T° ambiente + T° farina + T° attrito).", "Water temperature theorem: (dough T° × machine factor) − (room T° + flour T° + friction T°).")}</p>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div><p className={lbl}>{L("T° impasto voluta", "Desired dough T°")}</p><input data-testid="pz-tdough" type="number" value={tDough} onChange={(e) => setTDough(e.target.value)} className={inp} /></div>
             <div><p className={lbl}>{L("Fattore macchina", "Machine factor")}</p><input data-testid="pz-factor" type="number" value={factor} onChange={(e) => setFactor(e.target.value)} className={inp} /></div>
@@ -176,27 +176,27 @@ export default function LabPizzeria({ onBack, onOpenTool }) {
             <div><p className={lbl}>{L("T° attrito", "Friction T°")}</p><input data-testid="pz-tfriction" type="number" value={tFriction} onChange={(e) => setTFriction(e.target.value)} className={inp} /></div>
           </div>
           <div data-testid="pz-water-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-4 text-center">
-            <p className="text-[12px] font-semibold text-[#F26419]">{L("Temperatura acqua consigliata", "Recommended water temperature")}</p>
-            <p className="font-display text-4xl font-bold text-[#F26419]">{waterT}°C</p>
+            <p className="text-[12px] font-semibold text-[#3E9C93]">{L("Temperatura acqua consigliata", "Recommended water temperature")}</p>
+            <p className="font-display text-4xl font-bold text-[#3E9C93]">{waterT}°C</p>
           </div>
         </div>
       )}
 
       {tab === "settimana" && (
         <div className={card} data-testid="pizzeria-settimana">
-          <p className="text-[12.5px] text-[#F26419] mb-3">{L("Pianifica impasti e palline da Lunedì a Domenica.", "Plan doughs and dough balls from Monday to Sunday.")}</p>
+          <p className="text-[12.5px] text-[#3E9C93] mb-3">{L("Pianifica impasti e palline da Lunedì a Domenica.", "Plan doughs and dough balls from Monday to Sunday.")}</p>
           <div className="space-y-2 mb-3">
             {DAYS.map((d, i) => (
               <div key={i} className="flex items-center gap-2" data-testid={`pz-week-${i}`}>
-                <span className="w-24 shrink-0 text-[13px] font-semibold text-[#F26419]">{d}</span>
+                <span className="w-24 shrink-0 text-[13px] font-semibold text-[#3E9C93]">{d}</span>
                 <select data-testid={`pz-week-type-${i}`} value={week[i].type} onChange={(e) => setDay(i, "type", e.target.value)} className={inp + " flex-1 min-w-0"}>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v.it}</option>)}</select>
                 <input data-testid={`pz-week-balls-${i}`} type="number" value={week[i].balls} onChange={(e) => setDay(i, "balls", e.target.value)} placeholder={L("palline", "balls")} className={inp + " w-24 shrink-0"} />
               </div>
             ))}
           </div>
-          <div data-testid="pz-week-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#26324A]">
+          <div data-testid="pz-week-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-3 divide-y divide-[#2A3B49]">
             {[[L("Palline totali", "Total balls"), `${num(weekTot.balls)}`], [L("Impasto totale", "Total dough"), `${num(weekTot.dough)} g`], [L("Farina totale", "Total flour"), `${weekTot.flourKg.toFixed(1)} kg`]].map(([k, v], i) => (
-              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#F26419]">{k}</span><span className="font-mono-data font-bold text-[#F26419]">{v}</span></div>
+              <div key={i} className="flex justify-between py-1.5 text-[13px]"><span className="text-[#3E9C93]">{k}</span><span className="font-mono-data font-bold text-[#3E9C93]">{v}</span></div>
             ))}
           </div>
         </div>

@@ -8,7 +8,7 @@ export default function Avatar3D({ active = true, speaking = false, listening = 
   const isListening = listening && !speaking;
   const sphereGrad = isListening
     ? "radial-gradient(circle at 34% 28%, #A7F3D0 0%, #34D399 30%, #0E9F6E 64%, #04503A 100%)"
-    : "radial-gradient(circle at 34% 28%, #F6D27A 0%, #E8A838 32%, #A9741E 66%, #5A3B12 100%)";
+    : "radial-gradient(circle at 34% 28%, #F6D27A 0%, #5E8CA8 32%, #A9741E 66%, #5A3B12 100%)";
   const haloColor = isListening ? "rgba(52,211,153,0.55)" : "rgba(231,178,60,0.5)";
   const haloColor2 = isListening ? "rgba(52,211,153,0.35)" : "rgba(231,178,60,0.35)";
   const sphereBorder = isListening ? "3px solid #6EE7B7" : "3px solid #F6D27A";
@@ -54,8 +54,8 @@ export default function Avatar3D({ active = true, speaking = false, listening = 
                 onError={(e) => { e.currentTarget.style.display = "none"; }}
               />
               {/* Micro badge */}
-              <span className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full flex items-center justify-center shadow-lg" style={{ background: "#0B0E14", border: `2px solid ${isListening ? "#34D399" : "#E8A838"}` }}>
-                <Mic className="w-4 h-4" style={{ color: isListening ? "#34D399" : "#E8A838" }} />
+              <span className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full flex items-center justify-center shadow-lg" style={{ background: "#0E1620", border: `2px solid ${isListening ? "#34D399" : "#5E8CA8"}` }}>
+                <Mic className="w-4 h-4" style={{ color: isListening ? "#34D399" : "#5E8CA8" }} />
               </span>
             </motion.div>
           </motion.div>

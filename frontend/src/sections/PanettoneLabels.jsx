@@ -36,10 +36,10 @@ export default function PanettoneLabels() {
 
   return (
     <div className="pb-24">
-      <div className="no-print relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#F26419] to-[#F26419] p-6 text-white">
+      <div className="no-print relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#F26419]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#F26419]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#F26419]" /><div className="flex-1 bg-[#F26419]" />
+          <div className="flex-1 bg-[#3E9C93]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#3E9C93]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#3E9C93]" /><div className="flex-1 bg-[#3E9C93]" />
         </div>
         <Tag className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("labels_title")}</h1>
@@ -49,14 +49,14 @@ export default function PanettoneLabels() {
       <div className="no-print flex gap-2 mb-3">
         {["labels", "listino"].map((v) => (
           <button key={v} data-testid={`view-${v}`} onClick={() => setView(v)}
-            className={`flex-1 px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-colors ${view === v ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white dark:bg-[#18202E] text-[#3F4A54] dark:text-[#AEB8BF] border-[#26324A] dark:border-[#26324A]"}`}>
+            className={`flex-1 px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-colors ${view === v ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
             {t(v === "labels" ? "view_labels" : "view_listino")}
           </button>
         ))}
       </div>
 
       <button data-testid="labels-print-btn" onClick={() => window.print()}
-        className="no-print w-full mb-5 bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="no-print w-full mb-5 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <Printer className="w-5 h-5" /> {view === "labels" ? t("labels_print") : t("listino_print")}
       </button>
 
@@ -66,19 +66,19 @@ export default function PanettoneLabels() {
         <p className="no-print text-center text-[#7E8A93] py-8">{t("labels_empty")}</p>
       ) : view === "listino" ? (
         <div className="print-area">
-          <div className="rounded-2xl border-2 border-[#F26419] bg-white text-[#2B303B] overflow-hidden">
-            <div className="relative bg-gradient-to-br from-[#F26419] to-[#F26419] text-white p-5 text-center">
+          <div className="rounded-2xl border-2 border-[#3E9C93] bg-white text-[#2B303B] overflow-hidden">
+            <div className="relative bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] text-white p-5 text-center">
               <div className="absolute top-0 left-0 right-0 flex h-1.5">
-                <div className="flex-1 bg-[#F26419]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#F26419]" />
-                <div className="flex-1 bg-black" /><div className="flex-1 bg-[#F26419]" /><div className="flex-1 bg-[#F26419]" />
+                <div className="flex-1 bg-[#3E9C93]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#3E9C93]" />
+                <div className="flex-1 bg-black" /><div className="flex-1 bg-[#3E9C93]" /><div className="flex-1 bg-[#3E9C93]" />
               </div>
-              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-14 h-14 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#F26419]/70 mx-auto mb-1.5 mt-1" />
+              <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-14 h-14 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#3E9C93]/70 mx-auto mb-1.5 mt-1" />
               <h2 className="font-display text-2xl font-extrabold">Panettoni MikiLab</h2>
               <p className="text-white/85 text-xs mt-0.5">{t("listino_subtitle")}</p>
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#e4eff8] text-[#F26419] text-xs uppercase tracking-wide">
+                <tr className="bg-[#e4eff8] text-[#3E9C93] text-xs uppercase tracking-wide">
                   <th className="text-left p-2.5">{t("listino_col_flavor")}</th>
                   <th className="text-right p-2.5 whitespace-nowrap">500 g</th>
                   <th className="text-right p-2.5 whitespace-nowrap">100 g</th>
@@ -88,7 +88,7 @@ export default function PanettoneLabels() {
                 {items.map((r) => {
                   const c = r.costing || {};
                   return (
-                    <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#26324A]">
+                    <tr key={r.id} data-testid={`listino-${r.id}`} className="border-t border-[#2A3B49]">
                       <td className="p-2.5 font-semibold">{flavor(r.name)}</td>
                       <td className="p-2.5 text-right font-mono-data">{c.b2b_500g != null ? `€ ${Number(c.b2b_500g).toFixed(2)}` : "—"}</td>
                       <td className="p-2.5 text-right font-mono-data">{c.b2b_100g != null ? `€ ${Number(c.b2b_100g).toFixed(2)}` : "—"}</td>
@@ -115,21 +115,21 @@ export default function PanettoneLabels() {
             if (sl.includes("cocco") || sl.includes("kokos")) alg.push(tri("frutta a guscio (cocco)", "Schalenfrüchte (Kokos)", "tree nuts (coconut)"));
             return (
               <div key={r.id} data-testid={`label-${r.id}`}
-                className="rounded-2xl border-2 border-[#F26419] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
+                className="rounded-2xl border-2 border-[#3E9C93] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
                 style={{ pageBreakInside: "avoid" }}>
-                {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-2xl shadow-md border border-amber-900/40 mb-2 border border-[#26324A]" />}
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#F26419]/70 mb-1.5 -mt-6 bg-white" />
+                {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-2xl shadow-md border border-amber-900/40 mb-2 border border-[#2A3B49]" />}
+                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#3E9C93]/70 mb-1.5 -mt-6 bg-white" />
                 <p className="font-display text-lg font-bold leading-tight">Panettone Artigianale MikiLab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
-                  <span className="inline-block w-3 h-2 bg-[#F26419]" /><span className="inline-block w-3 h-2 bg-[#F26419]" />
+                  <span className="inline-block w-3 h-2 bg-[#3E9C93]" /><span className="inline-block w-3 h-2 bg-[#3E9C93]" />
                   <span className="px-1">•</span>
-                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#F26419]" />
+                  <span className="inline-block w-3 h-2 bg-black" /><span className="inline-block w-3 h-2 bg-[#3E9C93]" />
                 </div>
-                <p className="font-display text-xl font-extrabold text-[#F26419]">{flavor(r.name)}</p>
+                <p className="font-display text-xl font-extrabold text-[#3E9C93]">{flavor(r.name)}</p>
                 {susp.length > 0 && (
                   <p className="text-xs text-[#3F4A54] mt-1.5"><span className="font-semibold">{t("labels_ingredients")}:</span> {susp.join(", ")}</p>
                 )}
-                <p className="text-[11px] font-bold text-[#F26419] mt-1.5">{tri("Peso netto", "Nettogewicht", "Net weight")}: ~1 kg</p>
+                <p className="text-[11px] font-bold text-[#3E9C93] mt-1.5">{tri("Peso netto", "Nettogewicht", "Net weight")}: ~1 kg</p>
                 <p data-testid={`label-allergens-${r.id}`} className="text-[10px] text-[#3F4A54] mt-1 leading-snug">
                   <span className="font-semibold uppercase">{tri("Allergeni", "Allergene", "Allergens")}:</span>{" "}
                   {alg.map((a, i) => (
@@ -138,7 +138,7 @@ export default function PanettoneLabels() {
                   {". "}
                   {tri("Può contenere tracce di soia.", "Kann Spuren von Soja enthalten.", "May contain traces of soy.")}
                 </p>
-                <table data-testid={`label-nutrition-${r.id}`} className="w-full text-[9px] text-[#2B303B] mt-2 border border-[#26324A]">
+                <table data-testid={`label-nutrition-${r.id}`} className="w-full text-[9px] text-[#2B303B] mt-2 border border-[#2A3B49]">
                   <thead>
                     <tr className="bg-[#e4eff8]">
                       <th className="text-left px-1.5 py-0.5 font-bold uppercase" colSpan={2}>
@@ -156,7 +156,7 @@ export default function PanettoneLabels() {
                       [tri("Proteine", "Eiweiß", "Protein"), gf(nv.prot), true],
                       [tri("Sale", "Salz", "Salt"), gf(nv.salt), true],
                     ]; })().map(([k, v, bold], i) => (
-                      <tr key={i} className="border-t border-[#26324A]">
+                      <tr key={i} className="border-t border-[#2A3B49]">
                         <td className={`text-left px-1.5 py-0.5 ${bold ? "font-semibold" : "pl-3 text-[#3F4A54]"}`}>{k}</td>
                         <td className="text-right px-1.5 py-0.5 font-mono-data">{v}</td>
                       </tr>

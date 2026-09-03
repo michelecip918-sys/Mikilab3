@@ -148,7 +148,7 @@ export default function ManiSporche() {
   return (
     <div className="pb-52" data-testid="manisporche">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center"><Hand className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#3E9C93] flex items-center justify-center"><Hand className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Mani In Pasta", "Hände im Teig", "Hands in the Dough", "Manos en la Masa")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Tasti grandi e controllo vocale hands-free mentre impasti", "Große Tasten und freihändige Sprachsteuerung beim Kneten", "Big buttons and hands-free voice control while you knead", "Botones grandes y control por voz mientras amasas")}</p>
@@ -163,8 +163,8 @@ export default function ManiSporche() {
 
       {/* Operatore corrente */}
       <button data-testid="manisporche-operator" onClick={() => window.dispatchEvent(new Event("mikilab-open-guida"))}
-        className="w-full flex items-center gap-2 mb-4 rounded-2xl bg-[#121722] border border-[#26324A] px-3 py-2.5 active:scale-[0.99] transition-all">
-        <span className="w-8 h-8 rounded-full bg-[#F26419]/15 border border-[#F26419]/40 flex items-center justify-center text-[#F26419] font-bold text-sm shrink-0">
+        className="w-full flex items-center gap-2 mb-4 rounded-2xl bg-[#14212C] border border-[#2A3B49] px-3 py-2.5 active:scale-[0.99] transition-all">
+        <span className="w-8 h-8 rounded-full bg-[#3E9C93]/15 border border-[#3E9C93]/40 flex items-center justify-center text-[#3E9C93] font-bold text-sm shrink-0">
           {operator ? (operator.name || "?").charAt(0).toUpperCase() : "?"}
         </span>
         <span className="min-w-0 text-left flex-1">
@@ -174,15 +174,15 @@ export default function ManiSporche() {
               <span className="block text-[11px] text-[#7E8A93]">{tri("Tocca per cambiare operatore", "Zum Wechseln tippen", "Tap to switch operator", "Toca para cambiar")}</span>
             </>
           ) : (
-            <span className="block text-sm font-semibold text-[#F26419]">{tri("Seleziona il tuo profilo", "Profil wählen", "Select your profile", "Selecciona tu perfil")}</span>
+            <span className="block text-sm font-semibold text-[#3E9C93]">{tri("Seleziona il tuo profilo", "Profil wählen", "Select your profile", "Selecciona tu perfil")}</span>
           )}
         </span>
       </button>
 
       {/* Produzione di OGGI dal Piano Settimanale */}
       {todayItems.length > 0 && (
-        <div className="rounded-2xl bg-gradient-to-br from-[#F26419]/15 to-[#3a2415]/40 border border-[#F26419]/40 p-3 mb-4" data-testid="manisporche-today">
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2">
+        <div className="rounded-2xl bg-gradient-to-br from-[#3E9C93]/15 to-[#3a2415]/40 border border-[#3E9C93]/40 p-3 mb-4" data-testid="manisporche-today">
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2">
             <ChefHat className="w-4 h-4" /> {tri("Produzione di oggi", "Heutige Produktion", "Today's production", "Producción de hoy")} · {dayLabel(todayKey(), lang)}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -190,7 +190,7 @@ export default function ManiSporche() {
               const on = activeId === it.recipe_id;
               return (
                 <button key={it.id} data-testid={`manisporche-today-${it.recipe_id}`} onClick={() => setActive(it.recipe_id)}
-                  className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white/5 text-[#e4eff8] border-[#F26419]/30 hover:border-[#F26419]"}`}>
+                  className={`px-3 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border transition-all active:scale-95 ${on ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white/5 text-[#e4eff8] border-[#3E9C93]/30 hover:border-[#3E9C93]"}`}>
                   {it.recipe_name} <span className="opacity-70">· {Math.round(it.pieces || 0)}×</span>
                 </button>
               );
@@ -200,18 +200,18 @@ export default function ManiSporche() {
       )}
 
       {/* Ricetta attiva: collega i tempi delle fasi */}
-      <div className="rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] p-3 mb-4">
-        <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#F26419] mb-1.5">
+      <div className="rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] p-3 mb-4">
+        <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-1.5">
           <ChefHat className="w-4 h-4" /> {tri("Ricetta attiva", "Aktives Rezept", "Active recipe", "Receta activa")}
         </label>
         <select data-testid="manisporche-recipe-select" value={activeId} onChange={(e) => setActive(e.target.value)}
-          className="w-full rounded-2xl shadow-md border border-amber-900/40 bg-[#f5f5f5] dark:bg-[#151515] border border-[#26324A] text-[#2B303B] dark:text-[#e4eff8] text-base font-semibold px-3 py-3">
+          className="w-full rounded-2xl shadow-md border border-amber-900/40 bg-[#f5f5f5] dark:bg-[#151515] border border-[#2A3B49] text-[#2B303B] dark:text-[#e4eff8] text-base font-semibold px-3 py-3">
           <option value="">{tri("Nessuna (tempi standard)", "Keins (Standardzeiten)", "None (standard times)", "Ninguna (tiempos estándar)")}</option>
           {recipes.map((r) => { const id = r.id || r.recipe_id; return <option key={id} value={id}>{recipeTitle(r, lang)}</option>; })}
         </select>
         {activeRecipe && (
           <p className="text-[12px] text-[#7E8A93] mt-1.5" data-testid="manisporche-recipe-hint">
-            {tri("Tempi aggiornati da", "Zeiten aus", "Times from", "Tiempos de")} <span className="text-[#F26419] font-semibold">{recipeTitle(activeRecipe, lang)}</span>
+            {tri("Tempi aggiornati da", "Zeiten aus", "Times from", "Tiempos de")} <span className="text-[#3E9C93] font-semibold">{recipeTitle(activeRecipe, lang)}</span>
           </p>
         )}
       </div>
@@ -220,12 +220,12 @@ export default function ManiSporche() {
       <ProactiveAssistant />
 
       {/* Preset XL */}
-      <p className="text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2">{tri("Avvia un timer", "Timer starten", "Start a timer", "Iniciar temporizador")}</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2">{tri("Avvia un timer", "Timer starten", "Start a timer", "Iniciar temporizador")}</p>
       <div className="grid grid-cols-2 gap-3 mb-4">
         {PRESETS.map((p) => (
           <button key={p.key} data-testid={`manisporche-preset-${p.key}`} onClick={() => startPreset(p)}
-            className="relative flex flex-col items-center justify-center gap-1 py-7 rounded-3xl bg-white dark:bg-[#18202E] border-2 border-[#26324A] dark:border-[#26324A] active:scale-95 hover:border-[#F26419] transition-all">
-            {p.repeat && <RefreshCw className="absolute top-3 right-3 w-4 h-4 text-[#F26419]" />}
+            className="relative flex flex-col items-center justify-center gap-1 py-7 rounded-3xl bg-white dark:bg-[#1B2A38] border-2 border-[#2A3B49] dark:border-[#2A3B49] active:scale-95 hover:border-[#3E9C93] transition-all">
+            {p.repeat && <RefreshCw className="absolute top-3 right-3 w-4 h-4 text-[#3E9C93]" />}
             <span className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
             <span className="font-mono-data text-base text-[#7E8A93]">{p.min}′</span>
             {activeRecipe && !p.fromRecipe && p.key !== "pieghe" && (
@@ -237,33 +237,33 @@ export default function ManiSporche() {
 
       {/* Mic grande */}
       <button data-testid="manisporche-mic" onClick={() => (micOn ? stopMic() : startMic())}
-        className={`w-full flex items-center justify-center gap-3 py-6 rounded-3xl font-display text-xl font-bold text-white active:scale-97 transition-all mb-2 ${micOn ? "bg-[#F26419] animate-pulse" : "bg-[#F26419]"}`}>
+        className={`w-full flex items-center justify-center gap-3 py-6 rounded-3xl font-display text-xl font-bold text-white active:scale-97 transition-all mb-2 ${micOn ? "bg-[#3E9C93] animate-pulse" : "bg-[#3E9C93]"}`}>
         {micOn ? <Mic className="w-7 h-7" /> : <MicOff className="w-7 h-7" />}
         {micOn ? tri("Ti ascolto…", "Ich höre…", "Listening…", "Escuchando…") : tri("Parla", "Sprich", "Speak", "Habla")}
       </button>
       {micOn && (
         <p className="text-center text-xs text-[#7E8A93] mb-4">
           <Volume2 className="w-3.5 h-3.5 inline mr-1" />{tri('Di\': "pieghe", "puntata", "appretto", "cottura", "timer 20 minuti", "ferma"', 'Sag: "falten", "Timer 20 Minuten", "stop"', 'Say: "folds", "timer 20 minutes", "stop"', 'Di: "pliegues", "temporizador 20 minutos", "para"')}
-          {heard && <span className="block italic text-[#F26419] mt-0.5 truncate">"{heard}"</span>}
+          {heard && <span className="block italic text-[#3E9C93] mt-0.5 truncate">"{heard}"</span>}
         </p>
       )}
 
       {/* Timer attivi GRANDI */}
-      <p className="text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2 mt-2 flex items-center gap-1.5"><Clock className="w-4 h-4" /> {tri("Timer attivi", "Aktive Timer", "Active timers", "Temporizadores activos")}</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2 mt-2 flex items-center gap-1.5"><Clock className="w-4 h-4" /> {tri("Timer attivi", "Aktive Timer", "Active timers", "Temporizadores activos")}</p>
       <div className="space-y-3" data-testid="manisporche-timers">
         {timers.length === 0 && <p className="text-center text-sm text-[#7E8A93] py-5">{tri("Nessun timer attivo.", "Kein aktiver Timer.", "No active timer.", "Ningún temporizador.")}</p>}
         {timers.map((t) => {
           const rem = remainingOf(t); const done = rem <= 0;
           return (
-            <div key={t.id} className={`rounded-3xl p-5 border-2 ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#18202E] border-[#26324A] dark:border-[#26324A]"}`}>
+            <div key={t.id} className={`rounded-3xl p-5 border-2 ${done ? "bg-[#E4572E]/10 border-[#E4572E]/40" : "bg-white dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
               <div className="flex items-center justify-between mb-1">
-                <span className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#F26419]" />}</span>
+                <span className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate flex items-center gap-1.5">{t.name || t.label}{t.repeat && <RefreshCw className="w-4 h-4 text-[#3E9C93]" />}</span>
                 <button onClick={() => remove(t.id)} className="text-[#7E8A93] p-1"><Trash2 className="w-6 h-6" /></button>
               </div>
               <p className={`font-mono-data text-6xl font-bold text-center ${done ? "text-[#E4572E]" : "text-[#2B303B] dark:text-[#e4eff8]"}`}>{fmt(rem)}</p>
               <div className="grid grid-cols-2 gap-2 mt-3">
-                <button onClick={() => toggle(t.id)} disabled={done} className="bg-[#F26419] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97">{t.running ? tri("Pausa", "Pause", "Pause", "Pausa") : tri("Vai", "Start", "Go", "Va")}</button>
-                <button onClick={() => reset(t.id)} className="bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97">{tri("Reset", "Reset", "Reset", "Reset")}</button>
+                <button onClick={() => toggle(t.id)} disabled={done} className="bg-[#3E9C93] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97">{t.running ? tri("Pausa", "Pause", "Pause", "Pausa") : tri("Vai", "Start", "Go", "Va")}</button>
+                <button onClick={() => reset(t.id)} className="bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#2B303B] dark:text-[#e4eff8] font-bold text-lg py-4 rounded-2xl active:scale-97">{tri("Reset", "Reset", "Reset", "Reset")}</button>
               </div>
             </div>
           );

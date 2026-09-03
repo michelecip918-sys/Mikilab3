@@ -29,30 +29,30 @@ export default function SosImpastoGuida({ onBack, onOpenTool }) {
 
   return (
     <div className="pb-8" data-testid="sos-impasto">
-      {onBack && <button data-testid="sos-back" onClick={onBack} className="flex items-center gap-1 text-[#F26419] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#F26419,#F26419 60%,#F26419)" }}>
+      {onBack && <button data-testid="sos-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Stethoscope className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("SOS Impasto — Trova il Tuo Errore", "SOS Teig — Finde deinen Fehler", "Dough SOS — Find Your Mistake", "SOS Masa — Encuentra tu Error")}</h1>
-        <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">{L("Scegli il problema che vedi: ti spiego la causa e come rimediare.", "Wähle dein Problem: Ursache und Lösung.", "Pick the problem you see: cause and fix.", "Elige el problema: causa y solución.")}</p>
+        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Scegli il problema che vedi: ti spiego la causa e come rimediare.", "Wähle dein Problem: Ursache und Lösung.", "Pick the problem you see: cause and fix.", "Elige el problema: causa y solución.")}</p>
       </div>
 
       <div className="space-y-2.5" data-testid="sos-list">
         {DEFECTS.map((d, i) => {
           const isOpen = open === i;
           return (
-            <div key={i} data-testid={`sos-item-${i}`} className="rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] overflow-hidden shadow-sm">
+            <div key={i} data-testid={`sos-item-${i}`} className="rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] overflow-hidden shadow-sm">
               <button data-testid={`sos-toggle-${i}`} onClick={() => setOpen(isOpen ? null : i)} className="w-full flex items-center gap-3 p-4 text-left">
                 <span className="text-2xl">{d.emoji}</span>
-                <p className="flex-1 font-display text-[15px] font-bold text-[#F26419] dark:text-[#e4eff8] leading-tight">{d.it}</p>
-                <ChevronDown className={`w-5 h-5 text-[#F26419] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                <p className="flex-1 font-display text-[15px] font-bold text-[#3E9C93] dark:text-[#e4eff8] leading-tight">{d.it}</p>
+                <ChevronDown className={`w-5 h-5 text-[#3E9C93] transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </button>
               {isOpen && (
                 <div className="px-4 pb-4 space-y-2 text-[13.5px] leading-relaxed">
-                  <p className="text-[#F26419] dark:text-[#AEB8BF]"><span className="font-bold text-[#F26419]">{L("Causa:", "Ursache:", "Cause:", "Causa:")} </span>{d.cause}</p>
-                  <p className="text-[#F26419] dark:text-[#AEB8BF]"><span className="font-bold text-[#2e8b6f]">{L("Rimedio:", "Lösung:", "Fix:", "Solución:")} </span>{d.fix}</p>
-                  <div data-testid={`sos-calibrated-${i}`} className="flex items-center gap-2 mt-1 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: "#18202E", border: "2px solid #E8A838" }}>
+                  <p className="text-[#3E9C93] dark:text-[#AEB8BF]"><span className="font-bold text-[#3E9C93]">{L("Causa:", "Ursache:", "Cause:", "Causa:")} </span>{d.cause}</p>
+                  <p className="text-[#3E9C93] dark:text-[#AEB8BF]"><span className="font-bold text-[#2e8b6f]">{L("Rimedio:", "Lösung:", "Fix:", "Solución:")} </span>{d.fix}</p>
+                  <div data-testid={`sos-calibrated-${i}`} className="flex items-center gap-2 mt-1 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: "#1B2A38", border: "2px solid #5E8CA8" }}>
                     <span className="text-base">✅</span>
-                    <span className="text-[12.5px] font-extrabold" style={{ color: "#E8A838" }}>{L("Impasto calibrato con successo da Miki & BakeMix", "Teig erfolgreich kalibriert von Miki & BakeMix", "Dough successfully calibrated by Miki & BakeMix", "Masa calibrada con éxito por Miki & BakeMix")}</span>
+                    <span className="text-[12.5px] font-extrabold" style={{ color: "#5E8CA8" }}>{L("Impasto calibrato con successo da Miki & BakeMix", "Teig erfolgreich kalibriert von Miki & BakeMix", "Dough successfully calibrated by Miki & BakeMix", "Masa calibrada con éxito por Miki & BakeMix")}</span>
                   </div>
                 </div>
               )}
@@ -63,7 +63,7 @@ export default function SosImpastoGuida({ onBack, onOpenTool }) {
 
       {onOpenTool && (
         <button data-testid="sos-open-ai" onClick={() => onOpenTool("diagnosi")}
-          className="mt-5 w-full flex items-center justify-center gap-2 rounded-2xl bg-[#F26419] hover:bg-[#F26419] text-[#0B0E14] font-semibold px-5 py-3.5 active:scale-98 transition-all">
+          className="mt-5 w-full flex items-center justify-center gap-2 rounded-2xl bg-[#3E9C93] hover:bg-[#3E9C93] text-[#0E1620] font-semibold px-5 py-3.5 active:scale-98 transition-all">
           <Camera className="w-5 h-5" /> {L("Non lo trovi? Prova la Diagnosi Foto IA", "Nicht dabei? Foto-Diagnose testen", "Not listed? Try AI Photo Diagnosis", "¿No está? Prueba la Diagnosis por Foto")}
         </button>
       )}

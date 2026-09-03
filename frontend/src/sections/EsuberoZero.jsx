@@ -23,28 +23,28 @@ export default function EsuberoZero({ onBack }) {
 
   return (
     <div className="pb-8" data-testid="esubero-zero">
-      {onBack && <button data-testid="esubero-back" onClick={onBack} className="flex items-center gap-1 text-[#F26419] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#2e8b6f,#1c5c49 70%,#F26419)" }}>
+      {onBack && <button data-testid="esubero-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#2e8b6f,#1c5c49 70%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Recycle className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Esubero Zero-Sprechi", "Sauerteig-Rest-Rechner", "Zero-Waste Discard Calculator", "Calculadora Descarte Cero Residuos")}</h1>
-        <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">{L("Pesa l'esubero di lievito madre nel frigo: ti do subito le ricette con le dosi già calcolate.", "Wiege deinen Sauerteig-Rest: sofort Rezepte mit Mengen.", "Weigh your sourdough discard: instant recipes with doses.", "Pesa tu descarte: recetas con dosis al instante.")}</p>
+        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Pesa l'esubero di lievito madre nel frigo: ti do subito le ricette con le dosi già calcolate.", "Wiege deinen Sauerteig-Rest: sofort Rezepte mit Mengen.", "Weigh your sourdough discard: instant recipes with doses.", "Pesa tu descarte: recetas con dosis al instante.")}</p>
       </div>
 
-      <div className="rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4 shadow-sm mb-4">
-        <p className="text-[12px] font-semibold text-[#F26419] dark:text-[#AEB8BF] mb-1 flex items-center gap-1.5"><Scale className="w-4 h-4" /> {L("Peso esubero (g)", "Rest-Gewicht (g)", "Discard weight (g)", "Peso descarte (g)")}</p>
+      <div className="rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm mb-4">
+        <p className="text-[12px] font-semibold text-[#3E9C93] dark:text-[#AEB8BF] mb-1 flex items-center gap-1.5"><Scale className="w-4 h-4" /> {L("Peso esubero (g)", "Rest-Gewicht (g)", "Discard weight (g)", "Peso descarte (g)")}</p>
         <input data-testid="esubero-input" type="number" value={g} onChange={(e) => setG(e.target.value)}
-          className="w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#F26419] dark:text-[#e4eff8] focus:border-[#F26419] font-mono-data text-lg" />
+          className="w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#3E9C93] dark:text-[#e4eff8] focus:border-[#3E9C93] font-mono-data text-lg" />
       </div>
 
       <div className="space-y-3" data-testid="esubero-recipes">
         {RECIPES.map((r, i) => (
-          <div key={r.key} data-testid={`esubero-recipe-${i}`} className="rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] overflow-hidden shadow-sm">
-            <div className="bg-[#2e8b6f] text-[#0B0E14] px-4 py-2.5"><p className="font-display text-base font-bold">{rL(r)}</p></div>
-            <div className="divide-y divide-[#26324A] dark:divide-[#26324A]">
+          <div key={r.key} data-testid={`esubero-recipe-${i}`} className="rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] overflow-hidden shadow-sm">
+            <div className="bg-[#2e8b6f] text-[#0E1620] px-4 py-2.5"><p className="font-display text-base font-bold">{rL(r)}</p></div>
+            <div className="divide-y divide-[#2A3B49] dark:divide-[#2A3B49]">
               {r.ing(grams).map(([name, val], j) => (
                 <div key={j} className="flex items-center justify-between px-4 py-2 text-[13px]">
-                  <span className="text-[#F26419] dark:text-[#AEB8BF]">{name}</span>
-                  <span className="font-mono-data font-bold text-[#F26419] dark:text-[#e4eff8]">{name === "Uovo" ? `${val} pz` : `${num(val)} g`}</span>
+                  <span className="text-[#3E9C93] dark:text-[#AEB8BF]">{name}</span>
+                  <span className="font-mono-data font-bold text-[#3E9C93] dark:text-[#e4eff8]">{name === "Uovo" ? `${val} pz` : `${num(val)} g`}</span>
                 </div>
               ))}
             </div>

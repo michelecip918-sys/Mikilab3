@@ -647,10 +647,10 @@ export default function VoiceCommand({ onOpenTool }) {
       {timers.length > 0 && (
         <div data-testid="voice-timers" className="fixed bottom-48 right-3 z-50 space-y-1.5 max-w-[62vw]">
           {timers.map((tm) => (
-            <div key={tm.id} className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#121722]/95 backdrop-blur border border-[#F26419]/50 px-2.5 py-1.5 shadow-lg">
-              <TimerIcon className="w-4 h-4 text-[#F26419] shrink-0" />
+            <div key={tm.id} className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#14212C]/95 backdrop-blur border border-[#3E9C93]/50 px-2.5 py-1.5 shadow-lg">
+              <TimerIcon className="w-4 h-4 text-[#3E9C93] shrink-0" />
               <span className="text-[12px] font-bold text-white truncate max-w-[80px]">{tm.name}</span>
-              <span className="font-mono text-[13px] font-bold text-[#F26419] tabular-nums">{fmt(tm.remaining)}</span>
+              <span className="font-mono text-[13px] font-bold text-[#3E9C93] tabular-nums">{fmt(tm.remaining)}</span>
               <button onClick={() => setTimers((ts) => ts.map((x) => x.id === tm.id ? { ...x, paused: !x.paused } : x))} className="text-[#AEB8BF] hover:text-white">{tm.paused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}</button>
               <button onClick={() => setTimers((ts) => ts.filter((x) => x.id !== tm.id))} className="text-[#AEB8BF] hover:text-[#e05e00]"><Trash2 className="w-3.5 h-3.5" /></button>
             </div>
@@ -660,14 +660,14 @@ export default function VoiceCommand({ onOpenTool }) {
 
       {/* Onboarding rapido (nascosto in modalità Braccio/mani libere per non coprire i tasti) */}
       {onboard && !hidden && (
-        <div data-testid="voice-onboard" className="fixed inset-x-3 bottom-28 z-[60] mx-auto max-w-sm rounded-2xl bg-[#121722] border border-[#F26419]/50 p-4 shadow-2xl">
+        <div data-testid="voice-onboard" className="fixed inset-x-3 bottom-28 z-[60] mx-auto max-w-sm rounded-2xl bg-[#14212C] border border-[#3E9C93]/50 p-4 shadow-2xl">
           <button data-testid="voice-onboard-close" onClick={() => { setOnboard(false); try { localStorage.setItem("mikilab_voice_onboard", "1"); } catch { /* */ } }} className="absolute top-2 end-2 text-[#7E8A93] hover:text-white"><X className="w-4 h-4" /></button>
-          <p className="font-display text-sm font-extrabold text-[#F26419] mb-2 flex items-center gap-1.5"><Mic className="w-4 h-4" /> Lab Voice <span className="text-[9px] font-bold bg-[#F26419] text-white px-1.5 py-0.5 rounded-full uppercase">Exclusive</span></p>
+          <p className="font-display text-sm font-extrabold text-[#3E9C93] mb-2 flex items-center gap-1.5"><Mic className="w-4 h-4" /> Lab Voice <span className="text-[9px] font-bold bg-[#3E9C93] text-white px-1.5 py-0.5 rounded-full uppercase">Exclusive</span></p>
           <p className="text-[12.5px] text-[#C9D4DC] leading-snug mb-2">{tri("Comanda a voce, mani libere. Prova:", "Sprich, freihändig. Probier:", "Voice control, hands-free. Try:", "Control por voz. Prueba:", "Commande vocale. Essaie :", "کنترل صوتی. امتحان کن:")}</p>
           <ul className="text-[12px] text-[#AEB8BF] space-y-1 list-disc ps-4">
             <li>«{tri("Ehi Lab, timer autolisi 45 minuti", "Ehi Lab, Timer Autolyse 45 Minuten", "Ehi Lab, autolyse timer 45 minutes", "Ehi Lab, temporizador autólisis 45 minutos", "Ehi Lab, minuteur autolyse 45 minutes", "لب، تایمر اتولیز ۴۵ دقیقه")}»</li>
             <li>«{tri("Ehi Lab, crea una nuova ricetta: Baguette di Michele", "Ehi Lab, neues Rezept: Baguette", "Ehi Lab, create a new recipe: Baguette", "Ehi Lab, crea receta: Baguette", "Ehi Lab, crée une recette : Baguette", "لب، دستور جدید بساز: باگت")}»</li>
-            <li>«{tri("Ehi Lab, l'impasto è a 26 gradi, come lo salvo?", "Ehi Lab, Teig 26 Grad, was tun?", "Ehi Lab, dough is 26°, how to fix?", "Ehi Lab, masa a 26°, ¿cómo la salvo?", "Ehi Lab, pâte à 26°, comment faire ?", "لب، خمیر ۲۶ درجه است، چطور نجاتش دهم؟")}» <span className="text-[9px] font-bold text-[#F26419]">Lab Sense</span></li>
+            <li>«{tri("Ehi Lab, l'impasto è a 26 gradi, come lo salvo?", "Ehi Lab, Teig 26 Grad, was tun?", "Ehi Lab, dough is 26°, how to fix?", "Ehi Lab, masa a 26°, ¿cómo la salvo?", "Ehi Lab, pâte à 26°, comment faire ?", "لب، خمیر ۲۶ درجه است، چطور نجاتش دهم؟")}» <span className="text-[9px] font-bold text-[#3E9C93]">Lab Sense</span></li>
             <li>«{tri("Ehi Lab, portami alla home", "Ehi Lab, bring mich zur Startseite", "Ehi Lab, take me home", "Ehi Lab, llévame al inicio", "Ehi Lab, ramène-moi à l'accueil", "لب، برو به خانه")}»</li>
           </ul>
         </div>
@@ -684,12 +684,12 @@ export default function VoiceCommand({ onOpenTool }) {
         <div className="flex items-center gap-2">
           <button data-testid="voice-mute-btn" onClick={() => { const nv = !muted; setMuted(nv); setTTSMuted(nv); toast.info(nv ? tri("Audio disattivato", "Ton aus", "Audio off", "Audio apagado", "Son coupé", "صدا خاموش") : tri("Audio attivo", "Ton an", "Audio on", "Audio activo", "Son activé", "صدا روشن")); }}
             title={muted ? "Audio OFF" : "Audio ON"}
-            className={`w-10 h-10 rounded-full flex items-center justify-center border shadow-lg active:scale-95 transition-all ${muted ? "bg-[#121722] text-[#7E8A93] border-[#26324A]" : "bg-[#121722] text-[#F26419] border-[#F26419]/50"}`}>
+            className={`w-10 h-10 rounded-full flex items-center justify-center border shadow-lg active:scale-95 transition-all ${muted ? "bg-[#14212C] text-[#7E8A93] border-[#2A3B49]" : "bg-[#14212C] text-[#3E9C93] border-[#3E9C93]/50"}`}>
             {muted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
           </button>
           <button data-testid="voice-wake-toggle" onClick={toggleWake} aria-label="Hands-free" title="Hands-free (Ehi Lab)"
-            className={`relative w-14 h-14 rounded-full flex items-center justify-center border-2 shadow-2xl active:scale-95 transition-all text-2xl ${wake ? "bg-[#F26419] text-white border-[#F26419]" : "bg-[#121722] text-[#F26419] border-[#F26419]/60"}`}>
-            {wake && <span aria-hidden className="absolute inset-0 rounded-full bg-[#F26419] opacity-50 animate-ping" />}
+            className={`relative w-14 h-14 rounded-full flex items-center justify-center border-2 shadow-2xl active:scale-95 transition-all text-2xl ${wake ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-[#14212C] text-[#3E9C93] border-[#3E9C93]/60"}`}>
+            {wake && <span aria-hidden className="absolute inset-0 rounded-full bg-[#3E9C93] opacity-50 animate-ping" />}
             <span className="relative">👂</span>
           </button>
         </div>

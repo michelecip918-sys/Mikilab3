@@ -9,20 +9,20 @@ export default function NewsPage() {
   const news = content[lang].news || [];
   return (
     <div data-testid="news-page" className="pb-4">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#F26419] to-[#325046] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#3E9C93] to-[#325046] p-6 text-white">
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <HeroAvatar />
         <Newspaper className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{t("news_page_title")}</h1>
-        <div className="h-1 w-12 rounded-full bg-[#F26419] mt-1.5" />
+        <div className="h-1 w-12 rounded-full bg-[#3E9C93] mt-1.5" />
         <p className="text-white/85 text-sm mt-1">{t("news_page_sub")}</p>
       </div>
 
       {news.length > 0 && (
         <div className="space-y-3 mb-6">
           {news.map((n, i) => (
-            <div key={i} data-testid={`news-highlight-${i}`} className={`rounded-2xl p-5 border ${n.highlight ? "bg-[#F26419]/10 border-[#F26419]/40" : "bg-white dark:bg-[#18202E] border-[#26324A] dark:border-[#26324A]"}`}>
-              <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-2 ${n.highlight ? "text-white bg-[#F26419]" : "text-[#F26419] bg-[#F26419]/15"}`}>{n.tag}</span>
+            <div key={i} data-testid={`news-highlight-${i}`} className={`rounded-2xl p-5 border ${n.highlight ? "bg-[#3E9C93]/10 border-[#3E9C93]/40" : "bg-white dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+              <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-2 ${n.highlight ? "text-white bg-[#3E9C93]" : "text-[#3E9C93] bg-[#3E9C93]/15"}`}>{n.tag}</span>
               <h3 className="font-display text-lg font-semibold text-[#2B303B] dark:text-[#e4eff8]">{n.title}</h3>
               <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] mt-1 leading-relaxed">{n.body}</p>
             </div>

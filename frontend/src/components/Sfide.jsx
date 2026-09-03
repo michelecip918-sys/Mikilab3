@@ -141,21 +141,21 @@ export default function Sfide({ open, onClose }) {
     <AnimatePresence>
       <motion.div data-testid="sfide-overlay"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[75] bg-[#0B0E14] dark:bg-[#0B0E14] overflow-auto">
+        className="fixed inset-0 z-[75] bg-[#0E1620] dark:bg-[#0E1620] overflow-auto">
         <div className="max-w-xl mx-auto px-4 py-5 pb-24">
           <button data-testid="sfide-close" onClick={onClose}
-            className="mb-4 flex items-center gap-1.5 text-sm font-semibold text-[#F26419]">
+            className="mb-4 flex items-center gap-1.5 text-sm font-semibold text-[#3E9C93]">
             <X className="w-4 h-4" /> {tri("Chiudi", "Schließen", "Close", "Cerrar")}
           </button>
 
           {/* Hero */}
-          <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl"
-            style={{ background: "linear-gradient(135deg,#F26419 0%,#F26419 60%,#F26419 100%)" }}>
+          <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl"
+            style={{ background: "linear-gradient(135deg,#3E9C93 0%,#3E9C93 60%,#3E9C93 100%)" }}>
             <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3">
               <Trophy className="w-7 h-7" />
             </div>
             <h1 data-testid="sfide-title" className="font-display text-2xl sm:text-3xl font-bold leading-tight">{tri("Motore Sfide MikiLab", "MikiLab Challenges", "MikiLab Challenge Engine", "Motor de Retos MikiLab")}</h1>
-            <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">
+            <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">
               {tri("Nessun pagamento: sblocca ricette esclusive e schede tecniche completando le sfide della community.",
                    "Keine Zahlung: Schalte exklusive Rezepte und Datenblätter durch Community-Challenges frei.",
                    "No payment: unlock exclusive recipes and tech sheets by completing community challenges.",
@@ -164,28 +164,28 @@ export default function Sfide({ open, onClose }) {
           </div>
 
           {/* Progresso */}
-          <div data-testid="sfide-progress" className="mt-5 rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4">
+          <div data-testid="sfide-progress" className="mt-5 rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
             <div className="flex items-center justify-between mb-2">
-              <p className="font-display text-lg font-bold text-[#F26419] dark:text-[#e4eff8]">{tri("I tuoi progressi", "Dein Fortschritt", "Your progress", "Tu progreso")}</p>
-              <span className="text-sm font-bold text-[#F26419]">{count}/{total}</span>
+              <p className="font-display text-lg font-bold text-[#3E9C93] dark:text-[#e4eff8]">{tri("I tuoi progressi", "Dein Fortschritt", "Your progress", "Tu progreso")}</p>
+              <span className="text-sm font-bold text-[#3E9C93]">{count}/{total}</span>
             </div>
-            <div className="h-3 rounded-full bg-[#26324A] dark:bg-[#26324A] overflow-hidden">
-              <motion.div className="h-full rounded-full bg-gradient-to-r from-[#F26419] to-[#F26419]"
+            <div className="h-3 rounded-full bg-[#2A3B49] dark:bg-[#2A3B49] overflow-hidden">
+              <motion.div className="h-full rounded-full bg-gradient-to-r from-[#3E9C93] to-[#3E9C93]"
                 initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.6 }} />
             </div>
             <div className="grid grid-cols-2 gap-2 mt-3">
-              <div data-testid="sfide-milestone-panettoni" className={`rounded-2xl shadow-md border border-amber-900/40 p-2.5 border text-center ${count >= needPan ? "bg-[#ffffff] border-[#F26419]" : "bg-white/60 dark:bg-[#18202E] border-[#26324A] dark:border-[#26324A]"}`}>
-                <p className="text-[11px] font-semibold text-[#F26419] dark:text-[#AEB8BF]">{count >= needPan ? "✅ " : `🔒 ${needPan} `}{tri("sfide", "Challenges", "challenges", "retos")}</p>
-                <p className="text-[13px] font-bold text-[#F26419] dark:text-[#e4eff8] leading-tight">{tri("Panettoni + Academy", "Panettoni + Academy", "Panettoni + Academy", "Panettones + Academy")}</p>
+              <div data-testid="sfide-milestone-panettoni" className={`rounded-2xl shadow-md border border-amber-900/40 p-2.5 border text-center ${count >= needPan ? "bg-[#ffffff] border-[#3E9C93]" : "bg-white/60 dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+                <p className="text-[11px] font-semibold text-[#3E9C93] dark:text-[#AEB8BF]">{count >= needPan ? "✅ " : `🔒 ${needPan} `}{tri("sfide", "Challenges", "challenges", "retos")}</p>
+                <p className="text-[13px] font-bold text-[#3E9C93] dark:text-[#e4eff8] leading-tight">{tri("Panettoni + Academy", "Panettoni + Academy", "Panettoni + Academy", "Panettones + Academy")}</p>
               </div>
-              <div data-testid="sfide-milestone-all" className={`rounded-2xl shadow-md border border-amber-900/40 p-2.5 border text-center ${count >= needAll ? "bg-[#ffffff] border-[#F26419]" : "bg-white/60 dark:bg-[#18202E] border-[#26324A] dark:border-[#26324A]"}`}>
-                <p className="text-[11px] font-semibold text-[#F26419] dark:text-[#AEB8BF]">{count >= needAll ? "✅ " : `🔒 ${needAll} `}{tri("sfide", "Challenges", "challenges", "retos")}</p>
-                <p className="text-[13px] font-bold text-[#F26419] dark:text-[#e4eff8] leading-tight">{tri("Sblocca tutto", "Alles freischalten", "Unlock everything", "Desbloquea todo")}</p>
+              <div data-testid="sfide-milestone-all" className={`rounded-2xl shadow-md border border-amber-900/40 p-2.5 border text-center ${count >= needAll ? "bg-[#ffffff] border-[#3E9C93]" : "bg-white/60 dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+                <p className="text-[11px] font-semibold text-[#3E9C93] dark:text-[#AEB8BF]">{count >= needAll ? "✅ " : `🔒 ${needAll} `}{tri("sfide", "Challenges", "challenges", "retos")}</p>
+                <p className="text-[13px] font-bold text-[#3E9C93] dark:text-[#e4eff8] leading-tight">{tri("Sblocca tutto", "Alles freischalten", "Unlock everything", "Desbloquea todo")}</p>
               </div>
             </div>
             {user && count >= (state?.need_panettoni || 3) && (
               <button data-testid="sfide-certificate" onClick={downloadCertificate}
-                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419] hover:bg-[#F26419] text-[#0B0E14] font-semibold px-4 py-2.5 active:scale-98 transition-all">
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] hover:bg-[#3E9C93] text-[#0E1620] font-semibold px-4 py-2.5 active:scale-98 transition-all">
                 <Trophy className="w-4.5 h-4.5" /> {tri("Scarica il Certificato PDF", "PDF-Zertifikat herunterladen", "Download PDF Certificate", "Descargar Certificado PDF")}
               </button>
             )}
@@ -193,15 +193,15 @@ export default function Sfide({ open, onClose }) {
 
           {/* Percorsi Impara completati (mostrati insieme alle sfide) */}
           {user && [...completed].some((c) => c.startsWith("learn_")) && (
-            <div data-testid="sfide-learn" className="mt-4 rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4">
-              <p className="font-display text-base font-bold text-[#F26419] dark:text-[#e4eff8] flex items-center gap-2 mb-2.5">
-                <GraduationCap className="w-5 h-5 text-[#F26419]" /> {tri("Percorsi Impara completati", "Abgeschlossene Lernpfade", "Completed Learn paths", "Rutas de aprendizaje completadas")}
+            <div data-testid="sfide-learn" className="mt-4 rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
+              <p className="font-display text-base font-bold text-[#3E9C93] dark:text-[#e4eff8] flex items-center gap-2 mb-2.5">
+                <GraduationCap className="w-5 h-5 text-[#3E9C93]" /> {tri("Percorsi Impara completati", "Abgeschlossene Lernpfade", "Completed Learn paths", "Rutas de aprendizaje completadas")}
               </p>
               <div className="flex flex-wrap gap-2" data-testid="sfide-learn-list">
                 {[...completed].filter((c) => c.startsWith("learn_")).map((c) => {
                   const k = c.replace("learn_", ""); const m = LEARN_LABELS[k]; if (!m) return null;
                   return (
-                    <span key={c} data-testid={`sfide-learn-${k}`} className="inline-flex items-center gap-1.5 bg-[#ffffff] border border-[#F26419] text-[#F26419] text-[12.5px] font-bold px-3 py-1.5 rounded-full">
+                    <span key={c} data-testid={`sfide-learn-${k}`} className="inline-flex items-center gap-1.5 bg-[#ffffff] border border-[#3E9C93] text-[#3E9C93] text-[12.5px] font-bold px-3 py-1.5 rounded-full">
                       <span>{m.icon}</span>{m[lang] || m.en || m.it}<Check className="w-3.5 h-3.5" />
                     </span>
                   );
@@ -211,11 +211,11 @@ export default function Sfide({ open, onClose }) {
           )}
 
           {!user && (
-            <div className="mt-4 rounded-2xl bg-[#18202E] border border-[#26324A] p-4 text-center">
-              <Lock className="w-6 h-6 text-[#F26419] mx-auto mb-2" />
-              <p className="text-sm text-[#F26419] mb-3">{tri("Registrati gratis per partecipare alle sfide e sbloccare i contenuti.", "Registriere dich, um an Challenges teilzunehmen.", "Register to join challenges and unlock content.", "Regístrate para participar en los retos.")}</p>
+            <div className="mt-4 rounded-2xl bg-[#1B2A38] border border-[#2A3B49] p-4 text-center">
+              <Lock className="w-6 h-6 text-[#3E9C93] mx-auto mb-2" />
+              <p className="text-sm text-[#3E9C93] mb-3">{tri("Registrati gratis per partecipare alle sfide e sbloccare i contenuti.", "Registriere dich, um an Challenges teilzunehmen.", "Register to join challenges and unlock content.", "Regístrate para participar en los retos.")}</p>
               <button data-testid="sfide-register" onClick={() => setAuthOpen(true)}
-                className="w-full bg-[#F26419] hover:bg-[#F26419] text-[#0B0E14] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+                className="w-full bg-[#3E9C93] hover:bg-[#3E9C93] text-[#0E1620] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
                 {tri("Registrati per iniziare", "Registrieren und loslegen", "Register to start", "Regístrate para empezar")}
               </button>
             </div>
@@ -223,7 +223,7 @@ export default function Sfide({ open, onClose }) {
 
           {/* Lista sfide */}
           {loading ? (
-            <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#F26419]" /></div>
+            <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#3E9C93]" /></div>
           ) : (
             <div className="mt-5 space-y-2.5" data-testid="sfide-list">
               {catalog.map((c) => {
@@ -234,18 +234,18 @@ export default function Sfide({ open, onClose }) {
                 const isHonor = c.type === "honor";
                 return (
                   <div key={c.id} data-testid={`sfide-item-${c.id}`}
-                    className={`flex items-start gap-3 rounded-2xl p-4 border shadow-sm transition-all ${done ? "bg-[#ffffff] border-[#F26419]" : "bg-[#0B0E14] dark:bg-[#18202E] border-[#26324A] dark:border-[#26324A]"}`}>
-                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${done ? "bg-[#F26419] text-white" : "bg-[#F26419]/12 text-[#F26419]"}`}>
+                    className={`flex items-start gap-3 rounded-2xl p-4 border shadow-sm transition-all ${done ? "bg-[#ffffff] border-[#3E9C93]" : "bg-[#0E1620] dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${done ? "bg-[#3E9C93] text-white" : "bg-[#3E9C93]/12 text-[#3E9C93]"}`}>
                       {done ? <Check className="w-6 h-6" /> : <Icon className="w-5 h-5" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-display text-[15px] font-bold text-[#F26419] dark:text-[#e4eff8] leading-tight">{txt[0]}</p>
-                        <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full ${isHonor ? "bg-[#E8A838]/20 text-[#F26419]" : "bg-[#2e8b6f]/15 text-[#2e8b6f]"}`}>
+                        <p className="font-display text-[15px] font-bold text-[#3E9C93] dark:text-[#e4eff8] leading-tight">{txt[0]}</p>
+                        <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full ${isHonor ? "bg-[#5E8CA8]/20 text-[#3E9C93]" : "bg-[#2e8b6f]/15 text-[#2e8b6f]"}`}>
                           {isHonor ? tri("Onore", "Ehre", "Honor", "Honor") : tri("Verificata", "Geprüft", "Verified", "Verificada")}
                         </span>
                       </div>
-                      <p className="text-[12.5px] text-[#F26419] dark:text-[#AEB8BF] leading-snug mt-0.5">{txt[1]}</p>
+                      <p className="text-[12.5px] text-[#3E9C93] dark:text-[#AEB8BF] leading-snug mt-0.5">{txt[1]}</p>
                       {!done && (
                         <div className="flex items-center gap-2 mt-2">
                           {c.id === "whatsapp_share" && (
@@ -254,7 +254,7 @@ export default function Sfide({ open, onClose }) {
                           )}
                           <button data-testid={`sfide-complete-${c.id}`} disabled={busy === c.id}
                             onClick={() => doComplete(c.id, isHonor)}
-                            className="ml-auto flex items-center gap-1.5 bg-[#F26419] hover:bg-[#F26419] disabled:opacity-50 text-[#0B0E14] text-[13px] font-semibold px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
+                            className="ml-auto flex items-center gap-1.5 bg-[#3E9C93] hover:bg-[#3E9C93] disabled:opacity-50 text-[#0E1620] text-[13px] font-semibold px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
                             {busy === c.id ? <Loader2 className="w-4 h-4 animate-spin" /> : (isHonor ? <Check className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />)}
                             {isHonor ? tri("Ho fatto", "Erledigt", "I did it", "Hecho") : tri("Verifica ora", "Jetzt prüfen", "Verify now", "Verificar")}
                           </button>

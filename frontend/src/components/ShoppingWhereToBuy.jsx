@@ -51,9 +51,9 @@ export default function ShoppingWhereToBuy({ recipe, lang }) {
   const empty = !hasShoppingData(totals);
 
   return (
-    <div data-testid="shopping-where-to-buy" className="rounded-2xl bg-[#18202E] border border-[#26324A] p-4 space-y-4">
+    <div data-testid="shopping-where-to-buy" className="rounded-2xl bg-[#1B2A38] border border-[#2A3B49] p-4 space-y-4">
       <div className="flex items-center gap-2">
-        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419]/15 border border-[#F26419]/30 flex items-center justify-center shrink-0"><ShoppingCart className="w-5 h-5 text-[#F26419]" /></div>
+        <div className="w-9 h-9 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/15 border border-[#3E9C93]/30 flex items-center justify-center shrink-0"><ShoppingCart className="w-5 h-5 text-[#3E9C93]" /></div>
         <div className="min-w-0">
           <h3 className="font-display text-base font-bold text-white leading-tight">{L("Cosa e Dove Comprare", "Was & Wo kaufen", "What & Where to Buy", "Qué y dónde comprar", "Quoi et où acheter", "چه و از کجا")}</h3>
           <p className="text-[11px] text-[#AEB8BF] leading-snug">{L("Lista calcolata sul peso scelto + consigli su dove trovarli", "Liste nach gewähltem Gewicht + Einkaufstipps", "List by chosen weight + where-to-buy tips", "Lista por peso elegido + dónde encontrarlos", "Liste selon le poids + où les trouver", "لیست بر پایه وزن + راهنمای خرید")}</p>
@@ -66,12 +66,12 @@ export default function ShoppingWhereToBuy({ recipe, lang }) {
         <div className="flex items-center gap-2 mt-1.5">
           <input data-testid="shopping-target-input" type="number" min={100} step={100} value={target}
             onChange={(e) => setTarget(Math.max(100, Number(e.target.value) || 100))}
-            className="w-28 bg-[#0B0E14] border border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 text-sm text-white outline-none focus:border-[#F26419]" />
+            className="w-28 bg-[#0E1620] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 text-sm text-white outline-none focus:border-[#3E9C93]" />
           <span className="text-sm text-[#AEB8BF]">g</span>
           <div className="flex gap-1.5 ml-1">
             {presets.map((p) => (
               <button key={p} data-testid={`shopping-preset-${p}`} onClick={() => setTarget(p)}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${target === p ? "bg-[#F26419] text-[#0B0E14]" : "bg-[#0B0E14] text-[#AEB8BF] border border-[#26324A]"}`}>
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${target === p ? "bg-[#3E9C93] text-[#0E1620]" : "bg-[#0E1620] text-[#AEB8BF] border border-[#2A3B49]"}`}>
                 {p >= 1000 ? `${p / 1000}kg` : `${p}g`}
               </button>
             ))}
@@ -84,39 +84,39 @@ export default function ShoppingWhereToBuy({ recipe, lang }) {
       ) : (
         <div className="space-y-3" data-testid="shopping-sections">
           {sections.map((s) => (
-            <div key={s.key} data-testid={`shopping-cat-${s.key}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0B0E14] border border-[#26324A] p-3.5">
+            <div key={s.key} data-testid={`shopping-cat-${s.key}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] border border-[#2A3B49] p-3.5">
               <div className="flex items-center gap-2 mb-2">
-                <s.Icon className="w-4 h-4 text-[#F26419]" />
+                <s.Icon className="w-4 h-4 text-[#3E9C93]" />
                 <h4 className="font-display text-sm font-bold text-white">{s.title}</h4>
               </div>
               <ul className="space-y-1 mb-2.5">
                 {s.items.map((it, i) => (
                   <li key={i} className="text-[13px] text-[#E2E8F0] flex items-start gap-1.5">
-                    <span className="text-[#F26419] mt-0.5">•</span><span>{it}</span>
+                    <span className="text-[#3E9C93] mt-0.5">•</span><span>{it}</span>
                   </li>
                 ))}
               </ul>
-              <div className="flex items-start gap-1.5 rounded-lg bg-[#F26419]/10 border border-[#F26419]/25 px-2.5 py-2">
-                <MapPin className="w-3.5 h-3.5 text-[#F26419] mt-0.5 shrink-0" />
-                <p className="text-[11.5px] text-[#E2E8F0] leading-snug"><b className="text-[#F26419]">{L("Dove:", "Wo:", "Where:", "Dónde:", "Où:", "کجا:")}</b> {s.buy}</p>
+              <div className="flex items-start gap-1.5 rounded-lg bg-[#3E9C93]/10 border border-[#3E9C93]/25 px-2.5 py-2">
+                <MapPin className="w-3.5 h-3.5 text-[#3E9C93] mt-0.5 shrink-0" />
+                <p className="text-[11.5px] text-[#E2E8F0] leading-snug"><b className="text-[#3E9C93]">{L("Dove:", "Wo:", "Where:", "Dónde:", "Où:", "کجا:")}</b> {s.buy}</p>
               </div>
             </div>
           ))}
 
           {/* Attrezzi & Teglie */}
-          <div data-testid="shopping-cat-attrezzi" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0B0E14] border border-[#26324A] p-3.5">
+          <div data-testid="shopping-cat-attrezzi" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] border border-[#2A3B49] p-3.5">
             <div className="flex items-center gap-2 mb-2">
-              <Wrench className="w-4 h-4 text-[#F26419]" />
+              <Wrench className="w-4 h-4 text-[#3E9C93]" />
               <h4 className="font-display text-sm font-bold text-white">{L("Attrezzi & Teglie", "Werkzeuge & Bleche", "Tools & Pans", "Utensilios y bandejas", "Outils & plaques", "ابزار و قالب")}</h4>
             </div>
             <ul className="space-y-1 mb-2.5">
               {toolsList(lang).map((it, i) => (
-                <li key={i} className="text-[13px] text-[#E2E8F0] flex items-start gap-1.5"><span className="text-[#F26419] mt-0.5">•</span><span>{it}</span></li>
+                <li key={i} className="text-[13px] text-[#E2E8F0] flex items-start gap-1.5"><span className="text-[#3E9C93] mt-0.5">•</span><span>{it}</span></li>
               ))}
             </ul>
-            <div className="flex items-start gap-1.5 rounded-lg bg-[#F26419]/10 border border-[#F26419]/25 px-2.5 py-2">
-              <MapPin className="w-3.5 h-3.5 text-[#F26419] mt-0.5 shrink-0" />
-              <p className="text-[11.5px] text-[#E2E8F0] leading-snug"><b className="text-[#F26419]">{L("Dove:", "Wo:", "Where:", "Dónde:", "Où:", "کجا:")}</b> {whereToBuy("attrezzi", lang)}</p>
+            <div className="flex items-start gap-1.5 rounded-lg bg-[#3E9C93]/10 border border-[#3E9C93]/25 px-2.5 py-2">
+              <MapPin className="w-3.5 h-3.5 text-[#3E9C93] mt-0.5 shrink-0" />
+              <p className="text-[11.5px] text-[#E2E8F0] leading-snug"><b className="text-[#3E9C93]">{L("Dove:", "Wo:", "Where:", "Dónde:", "Où:", "کجا:")}</b> {whereToBuy("attrezzi", lang)}</p>
             </div>
           </div>
         </div>
@@ -125,8 +125,8 @@ export default function ShoppingWhereToBuy({ recipe, lang }) {
       {!empty && (
         <div className="grid grid-cols-2 gap-2">
           <button data-testid="shopping-copy-btn" onClick={copy}
-            className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#18202E] border border-[#F26419]/40 text-white font-semibold px-3 py-2.5 text-sm active:scale-95 transition-all">
-            <Copy className="w-4 h-4 text-[#F26419]" /> {L("Copia lista", "Kopieren", "Copy list", "Copiar", "Copier", "کپی")}
+            className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#1B2A38] border border-[#3E9C93]/40 text-white font-semibold px-3 py-2.5 text-sm active:scale-95 transition-all">
+            <Copy className="w-4 h-4 text-[#3E9C93]" /> {L("Copia lista", "Kopieren", "Copy list", "Copiar", "Copier", "کپی")}
           </button>
           <a data-testid="shopping-whatsapp-btn" href={`https://wa.me/?text=${encodeURIComponent(fullText)}`} target="_blank" rel="noreferrer"
             className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#2e8b6f] text-white font-semibold px-3 py-2.5 text-sm active:scale-95 transition-all">
