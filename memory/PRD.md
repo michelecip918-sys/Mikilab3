@@ -3586,3 +3586,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Alleggerito il velo scuro degli sfondi (App.js: img opacity 0.55→0.85; scrim 0.80/0.97 → 0.42/0.80) → scenari piu visibili mantenendo leggibilita.
 - Home e Lab rigenerati usando la FOTO REALE di Michele (michele-lab-pro.jpg come riferimento): volto riconoscibile, polo MikiLab con logo, scena calma teal + AI; Lab con assistente + cuffie. Salvati come bg-home.jpg / bg-lab.jpg.
 - Verificato: build OK, screenshot 390px (persona reale visibile in Home, testo leggibile).
+
+## v-lab.8 (2026-06) — Sfondi FUTURISTICI umani+robot (tutte le sezioni)
+- Rigenerati tutti e 6 gli sfondi (bg-home/lab/ricette/farine/accademia/community.jpg): panettieri con cuffie + ROBOT umanoidi/braccio robotico che lavorano insieme, ologrammi AI, logo MikiLab sulle divise. Palette calma slate-blue + teal/cyan tech (scelta agente). Niente foto reale.
+- Card della Home aggiornate agli stessi scenari futuristici (BLOCKS img → bg-lab/ricette/accademia/farine/community.jpg) per coerenza.
+- Sfondi piu visibili (velo alleggerito da v-lab.7). Verificato build OK, screenshot 390px. Deploy non lanciato.
+- ATTESA: utente invierà "quello che manca al sito".

@@ -16,7 +16,7 @@ export default function Home({ onNavigate }) {
 
   const BLOCKS = [
     {
-      tab: "maestro", img: "hero-laboratorio.jpg",
+      tab: "maestro", img: "bg-lab.jpg",
       title: L("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio"),
       badge: L("Pro · 3D", "Pro · 3D", "Pro · 3D", "Pro · 3D"),
       desc: L(
@@ -26,7 +26,7 @@ export default function Home({ onNavigate }) {
         "Elite Engine, banco de masas 3D, dosis del DB, hornos, radio y comandos de voz."),
     },
     {
-      tab: "ricette", img: "hero-ricette.jpg",
+      tab: "ricette", img: "bg-ricette.jpg",
       title: L("Ricette", "Rezepte", "Recipes", "Recetas"),
       badge: L("Ricettario", "Rezeptbuch", "Recipe book", "Recetario"),
       desc: L(
@@ -36,7 +36,7 @@ export default function Home({ onNavigate }) {
         "Recetas exclusivas con cantidades y pasos, listas para seguir."),
     },
     {
-      tab: "imparacon", img: "hero-impara.jpg",
+      tab: "imparacon", img: "bg-accademia.jpg",
       title: L("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"),
       badge: L("Impara", "Lernen", "Learn", "Aprende"),
       desc: L(
@@ -46,7 +46,7 @@ export default function Home({ onNavigate }) {
         "Lecciones, cuestionarios y ejercicios para empezar paso a paso."),
     },
     {
-      tab: "shop", img: "hero-bakery.jpg",
+      tab: "shop", img: "bg-farine.jpg",
       title: L("Centro Formule", "Formelzentrum", "Formula Center", "Centro de Fórmulas"),
       badge: L("Analisi Farine", "Mehlanalyse", "Flour Analysis", "Análisis de Harinas"),
       desc: L(
@@ -56,7 +56,7 @@ export default function Home({ onNavigate }) {
         "Análisis de harinas (fuerza W, proteína, absorción) y registro de pruebas con foto IA."),
     },
     {
-      tab: "community", img: "hero-social.jpg",
+      tab: "community", img: "bg-community.jpg",
       title: "Community",
       badge: L("Social", "Social", "Social", "Social"),
       desc: L(
