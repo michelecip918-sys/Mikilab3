@@ -7298,6 +7298,23 @@ async def create_delegation(user: dict = Depends(require_admin)):
     return {"code": code, "expires_at": exp}
 
 
+class OpProfileReq(BaseModel):
+    display_name: Optional[str] = Field("", max_length=80)
+    department: Optional[str] = Field("", max_length=40)
+
+
+@api_router.get("/operator/profile")
+async def get_operator_profile(user: dict = Depends(current_user)):
+    u = await db.users.find_one({"user_id": user.get("user_id")}, {"_id": 0, "operator_name": 1, "department": 1, "role": 1})
+    return u or {}
+
+
+@api_router.post("/operator/profile")
+async def set_operator_profile(body: OpProfileReq, user: dict = Depends(current_user)):
+    await db.users.update_one({"user_id": user.get("user_id")}, {"$set": {"operator_name": (body.display_name or "").strip(), "department": (body.department or "").strip()}})
+    return {"ok": True}
+
+
 
 # ---------------------------------------------------------------------------
 # Enterprise — Multi-Negozio (21) + Ordini Multi-Fornitore (23)

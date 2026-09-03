@@ -327,4 +327,6 @@ export const operatorApi = {
   createDelegation: () => api.post(`/operator/delegation`).then((r) => r.data),
   listInvites: () => api.get(`/operator/invites`).then((r) => r.data),
   redeem: (code) => api.post(`/operator/redeem`, { code }).then((r) => r.data),
+  getProfile: () => api.get(`/operator/profile`).then((r) => r.data),
+  saveProfile: (data) => api.post(`/operator/profile`, data).then((r) => r.data),
 };

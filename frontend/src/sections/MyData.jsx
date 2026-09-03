@@ -89,6 +89,23 @@ export default function MyData({ onOpenTool }) {
     } finally { setRedeemBusy(false); }
   };
 
+  const isOperator = user?.role === "operatore" || user?.role === "sostituto";
+  const [opName, setOpName] = useState("");
+  const [opDept, setOpDept] = useState("");
+  const [opBusy, setOpBusy] = useState(false);
+  useEffect(() => {
+    if (isOperator) operatorApi.getProfile().then((p) => { setOpName(p.operator_name || ""); setOpDept(p.department || ""); }).catch(() => {});
+  }, [isOperator]);
+  const DEPTS = [["impasti", "Impasti"], ["forni", "Forni"], ["pasticceria", "Pasticceria"], ["laugen", "Laugen"], ["banco", "Banco (Lavori a Mano)"], ["pretzel", "Macchina / Pretzel"]];
+  const saveOpProfile = async () => {
+    setOpBusy(true);
+    try {
+      await operatorApi.saveProfile({ display_name: opName, department: opDept });
+      toast.success(tri("Profilo operatore salvato ✔", "Operator-Profil gespeichert ✔", "Operator profile saved ✔"));
+    } catch { toast.error(tri("Errore nel salvataggio.", "Speicherfehler.", "Save error.")); }
+    finally { setOpBusy(false); }
+  };
+
   return (
     <div data-testid="my-data" className="pb-4">
       <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] mb-1">{tri("I Miei Dati Salvati", "Meine gespeicherten Daten", "My Saved Data")}</h2>
@@ -133,6 +150,23 @@ export default function MyData({ onOpenTool }) {
           </>
         )}
       </div>
+
+      {/* Onboarding Operatore — dati personali + reparto assegnato */}
+      {isOperator && (
+        <div data-testid="operator-onboarding" className="mb-4 rounded-2xl border border-[#3E9C93]/40 bg-white dark:bg-[#1B2A38] p-4 shadow-md">
+          <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#3E9C93] mb-1 flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> {tri("Il Mio Profilo Operatore", "Mein Operator-Profil", "My Operator Profile")}</p>
+          <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Inserisci il tuo nome e il reparto: vedrai la tua postazione dedicata.", "Gib deinen Namen und die Abteilung an: du siehst deinen Bereich.", "Enter your name and department: you'll see your dedicated station.")}</p>
+          <input data-testid="operator-name-input" value={opName} onChange={(e) => setOpName(e.target.value)} placeholder={tri("Il tuo nome", "Dein Name", "Your name")} className="w-full mb-2 rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+          <select data-testid="operator-dept-select" value={opDept} onChange={(e) => setOpDept(e.target.value)} className="w-full mb-3 rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]">
+            <option value="">{tri("Scegli il reparto…", "Abteilung wählen…", "Choose department…")}</option>
+            {DEPTS.map(([id, lab]) => <option key={id} value={id}>{lab}</option>)}
+          </select>
+          <button data-testid="operator-save-profile" disabled={opBusy} onClick={saveOpProfile} className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#3E9C93] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
+            {opBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Salva profilo", "Profil speichern", "Save profile")}
+          </button>
+          {opDept && <p className="text-[12px] text-[#3E9C93] font-semibold mt-2 text-center">{tri("Reparto assegnato:", "Zugewiesene Abteilung:", "Assigned department:")} {DEPTS.find((d) => d[0] === opDept)?.[1]}</p>}
+        </div>
+      )}
 
       {/* Modulo Assenze — avvisa il Capo (malattia/ferie) */}
       <div data-testid="absence-module" className="mb-4 rounded-2xl border border-[#2A3B49] bg-white dark:bg-[#1B2A38] p-4 shadow-md">

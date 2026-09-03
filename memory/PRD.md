@@ -3649,3 +3649,9 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Frontend (MyData/Capo): pulsante "Delega 8h" + badge DELEGA 8h nella lista.
 - Testato via curl: scaduto→410, valido→sostituto. Build OK.
 - Backlog v26 (grandi): gestione ordini/produzione remota, logistica voce-first magazzino/consegne, modalità ferie, allarme forno 2min, onboarding operatore.
+
+## v-lab.17 (2026-06) — Onboarding Operatore
+- Backend: GET/POST /api/operator/profile → salva operator_name + department sul doc utente.
+- Frontend (MyData): card "Il Mio Profilo Operatore" visibile solo per role operatore/sostituto: nome + select reparto (6) + salva; mostra reparto assegnato.
+- Testato via curl: save ok, get restituisce nome+reparto+role. Build OK.
+- Pronto per deploy unico con Delega 8h (scelta utente B).
