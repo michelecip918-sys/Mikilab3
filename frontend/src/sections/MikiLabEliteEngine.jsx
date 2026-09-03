@@ -55,6 +55,11 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const [targetCrateId, setTargetCrateId] = useState('');
   const [eliteSection, setEliteSection] = useState('laboratorio');
   const [activeTool, setActiveTool] = useState(null);
+  const [calcFlour, setCalcFlour] = useState(10);
+  const [calcHydration, setCalcHydration] = useState(70);
+  const [calcTAmb, setCalcTAmb] = useState(22);
+  const [calcTFlour, setCalcTFlour] = useState(20);
+  const [calcTFinal, setCalcTFinal] = useState(24);
   const isAfterCutoff = new Date().getHours() >= 18;
   const [holiday, setHoliday] = useState(false);
   const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
@@ -552,6 +557,25 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
         {/* SEZIONE RICETTE & SAPORI (ricette reali dal DB) */}
         {!isLocked && eliteSection === 'ricette' && (
           <div data-testid="elite-panel-ricette" style={{ marginBottom: '16px' }}>
+            {/* Calcolatore BakeMix — temperatura acqua & idratazione */}
+            <div data-testid="elite-bakemix" style={{ backgroundColor: 'rgba(0,0,0,0.5)', border: `1px solid ${currentRoom.color}`, borderRadius: '12px', padding: '12px', marginBottom: '14px' }}>
+              <div style={{ fontSize: '0.7rem', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>🧮 {_pick('Calcolatore Acqua & Idratazione', 'Wasser-Rechner', 'Water & Hydration Calc', 'Cálculo agua', 'Calcul eau', 'محاسبه آب')}</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: '6px', marginBottom: '8px' }}>
+                {[['Farina kg', calcFlour, setCalcFlour], ['Idrat. %', calcHydration, setCalcHydration], ['T° Amb.', calcTAmb, setCalcTAmb], ['T° Farina', calcTFlour, setCalcTFlour], ['T° Finale', calcTFinal, setCalcTFinal]].map(([lbl, val, set], i) => (
+                  <div key={i}>
+                    <label style={{ fontSize: '0.58rem', color: '#AAA', display: 'block' }}>{lbl}</label>
+                    <input data-testid={`bakemix-input-${i}`} type="number" value={val} onChange={e => set(Number(e.target.value))} style={{ width: '100%', backgroundColor: '#0E1620', color: currentRoom.color, border: '1px solid #33414E', borderRadius: '6px', padding: '5px', fontSize: '0.78rem', fontWeight: 700 }} />
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '8px', marginBottom: '8px' }}>
+                <span style={{ fontSize: '0.72rem', color: '#EEE' }}>💧 {_pick('Acqua', 'Wasser', 'Water', 'Agua', 'Eau', 'آب')}: <strong data-testid="bakemix-water-l" style={{ color: currentRoom.color }}>{(calcFlour * (calcHydration / 100)).toFixed(1)} L</strong></span>
+                <span style={{ fontSize: '0.72rem', color: '#EEE' }}>🌡️ T° {_pick('Acqua', 'Wasser', 'Water', 'Agua', 'Eau', 'آب')}: <strong data-testid="bakemix-water-t" style={{ color: '#E6A23C' }}>{(calcTFinal * 3) - (Number(calcTAmb) + Number(calcTFlour) + 9)}°C</strong></span>
+              </div>
+              <button data-testid="bakemix-speak" onClick={() => speakVoice(`Aggiungere ${(calcFlour * (calcHydration / 100)).toFixed(1)} litri d'acqua a ${(calcTFinal * 3) - (Number(calcTAmb) + Number(calcTFlour) + 9)} gradi.`)} style={{ width: '100%', backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '8px', padding: '8px', fontSize: '0.72rem', fontWeight: 800, cursor: 'pointer' }}>
+                🎧 {_pick('Invia alle Cuffie', 'An Kopfhörer', 'Send to Headset', 'Enviar a auriculares', 'Envoyer au casque', 'ارسال به هدست')}
+              </button>
+            </div>
             <div style={{ fontSize: '0.7rem', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>📖 {_pick('Ricette Custodite', 'Rezepte', 'Saved Recipes', 'Recetas', 'Recettes', 'دستورها')} ({dbRecipes.length})</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px', maxHeight: '260px', overflowY: 'auto' }}>
               {dbRecipes.length === 0 && <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick('Nessuna ricetta caricata.', 'Keine Rezepte.', 'No recipes loaded.', 'Sin recetas.', 'Aucune recette.', 'دستوری نیست.')}</div>}

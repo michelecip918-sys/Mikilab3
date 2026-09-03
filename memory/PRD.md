@@ -3736,3 +3736,8 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Produzione Guidata Vocale**: pulsante `elite-guided-voice` nel Pannello Capo → legge a voce una sequenza di passi (farina T500, acqua 22°, impasto 8 min, puntata) con ritardi progressivi (hands-free reale via speakVoice/TTS).
 - Verifica: screenshot Capo (pulsante presente e cliccabile). Compilazione pulita.
 - RESTA dallo script "Capo/Braccio" (prossima sessione): ruolo Capo(Testa)/Panettiere(Braccio) dentro l'Elite; widget Silos industriali (fill %) e Cella Freezer (stock+deficit) con dati reali dal server; produzione guidata step-by-step per l'operatore nella sua vista bloccata.
+
+## v47 (2026-06) — Calcolatore BakeMix (Acqua & Idratazione) nella sezione Ricette
+- **Calcolatore BakeMix** (`elite-bakemix`, sezione Ricette dell'Elite): input Farina kg, Idratazione %, T° Ambiente/Farina/Finale → calcola **Acqua (L)** = farina×idrat% (`bakemix-water-l`) e **T° Acqua** = (T°Finale×3)−(T°Amb+T°Farina+9) (`bakemix-water-t`). Pulsante `bakemix-speak` legge il risultato in cuffia (TTS reale). Formula deterministica, non mock.
+- Verifica: screenshot (10kg/70%→7.0 L; 24/22/20→21°C corretti) sopra le 148 ricette reali. Compilazione pulita.
+- RESTA (prossima sessione): simulatore Gesture magazzino (nod/shake→scarico giacenza), ruolo Capo/Braccio, widget Silos/Freezer con dati reali.
