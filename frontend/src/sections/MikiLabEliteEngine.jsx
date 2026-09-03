@@ -35,6 +35,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const [language, setLanguage] = useState(APP_LANG_TO_TTS[appLang] || 'it-IT');
   const [workMode, setWorkMode] = useState(() => { try { return localStorage.getItem('mikilab_work_mode') || 'solo'; } catch { return 'solo'; } });
   const [crew, setCrew] = useState([]);
+  const [ovenAlarms, setOvenAlarms] = useState([]);
   const [holiday, setHoliday] = useState(false);
   const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
   const alarmTimerRef = useRef(null);
@@ -66,13 +67,35 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   }, [open, locked, hasValidDept, lockedDept]);
 
   // Pannello Capo: carica la squadra (operai) quando serve.
-  useEffect(() => {
-    if (!open || !isCapo || workMode !== 'squadra' || !API) return;
+  const loadCrew = () => {
+    if (!API) return;
     fetch(`${API}/api/operator/crew`, { credentials: 'include' })
       .then(r => r.ok ? r.json() : { crew: [] })
       .then(d => setCrew(Array.isArray(d.crew) ? d.crew : []))
       .catch(() => setCrew([]));
+  };
+  useEffect(() => {
+    if (!open || !isCapo || workMode !== 'squadra' || !API) return;
+    loadCrew();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, isCapo, workMode]);
+
+  // Storico Allarmi Forno (Capo)
+  useEffect(() => {
+    if (!open || !isCapo || !API) return;
+    fetch(`${API}/api/oven/alarms`, { credentials: 'include' })
+      .then(r => r.ok ? r.json() : { alarms: [] })
+      .then(d => setOvenAlarms(Array.isArray(d.alarms) ? d.alarms : []))
+      .catch(() => setOvenAlarms([]));
+  }, [open, isCapo, alarmUnattended]);
+
+  const assignDept = async (email, dept) => {
+    setCrew(prev => prev.map(m => m.email === email ? { ...m, department: dept } : m));
+    try {
+      const res = await fetch(`${API}/api/operator/assign`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, department: dept }) });
+      if (!res.ok) loadCrew();
+    } catch (e) { loadCrew(); }
+  };
 
   const speakVoice = (text) => {
     if ('speechSynthesis' in window) {
@@ -398,18 +421,40 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 ) : (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '8px' }}>
                     {crew.map((m, i) => (
-                      <div key={i} data-testid={`elite-crew-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '10px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontWeight: 700, fontSize: '0.8rem', color: '#EEE', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name || m.email}</div>
-                          <div style={{ fontSize: '0.68rem', color: '#AAA' }}>{DEPT_LABELS[m.department] || (m.department || '—')}{m.role === 'sostituto' ? ' · Sostituto' : ''}</div>
+                      <div key={i} data-testid={`elite-crew-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '10px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                          <div style={{ fontWeight: 700, fontSize: '0.8rem', color: '#EEE', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name || m.email}{m.role === 'sostituto' ? ' · Sostituto' : ''}</div>
+                          <span style={{ fontSize: '0.62rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>Attivo</span>
                         </div>
-                        <span style={{ fontSize: '0.62rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>Attivo</span>
+                        <select data-testid={`elite-crew-dept-${i}`} value={ROOM_IDS.includes(m.department) ? m.department : 'panetteria'} onChange={(e) => assignDept(m.email, e.target.value)}
+                          style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '6px', padding: '5px', fontSize: '0.72rem', fontWeight: 700 }}>
+                          <option value="panetteria">Panetteria</option>
+                          <option value="pizzeria">Pizzeria</option>
+                          <option value="pasticceria">Pasticceria</option>
+                        </select>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {/* STORICO ALLARMI FORNO (Capo) */}
+        {isCapo && !isLocked && ovenAlarms.length > 0 && (
+          <div data-testid="elite-oven-alarms" style={{ backgroundColor: 'rgba(0,0,0,0.6)', border: '1px solid #E6A23C', borderRadius: '12px', padding: '12px', marginBottom: '16px' }}>
+            <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', color: '#E6A23C', fontWeight: 800, marginBottom: '8px' }}>
+              🔥 {_pick("Storico Allarmi Forno non gestiti", "Ofen-Alarm-Verlauf", "Unhandled oven alarms", "Historial de alarmas del horno", "Historique alarmes four", "تاریخچه هشدار فر")}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '160px', overflowY: 'auto' }}>
+              {ovenAlarms.slice(0, 20).map((a, i) => (
+                <div key={a.id || i} data-testid={`elite-oven-alarm-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(230,162,60,0.25)', borderRadius: '8px', padding: '8px', fontSize: '0.72rem', color: '#EEE' }}>
+                  <div style={{ fontWeight: 600 }}>{a.snippet}</div>
+                  <div style={{ fontSize: '0.62rem', color: '#AAA', marginTop: '2px' }}>{a.created_at ? new Date(a.created_at).toLocaleString() : ''}</div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

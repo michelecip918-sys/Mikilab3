@@ -3678,3 +3678,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - Test: iteration_167 → frontend **100% (7/7)** incl. ciclo allarme+ACK; backend gating verificato via curl (holiday admin-only, crew admin-only, oven alarm→2 admin, sostituto /me + auto-downgrade). Smoke EN OK.
 - Credenziali aggiunte: sostituto@mikilab.de / Test1234! (dept=pizzeria, +8h).
 - Backlog residuo (LOW): estrarre rooms3D/logica forno in moduli; escalation allarme server-side (ora si annulla chiudendo l'overlay); tradurre i titoli reparto/scena (ora IT).
+
+## v40.1 (2026-06) — Master Elite: Assegna Reparti Squadra + Storico Allarmi Forno
+- **Assegna Reparti Squadra** (Pannello Capo → Squadra): ogni operaio ha un menù a tendina (Panetteria/Pizzeria/Pasticceria) che salva sul server via `POST /api/operator/assign` (admin, valida i 3 reparti; `elite-crew-dept-<i>`).
+- **Storico Allarmi Forno** (Capo, `elite-oven-alarms`): lista degli allarmi forno non gestiti da `GET /api/oven/alarms` (notifiche type=oven_alarm dell'admin), con testo + data/ora.
+- Verificato via curl (assign→crew aggiornata, alarms, reparto invalido→400) + screenshot Capo. Compilazione pulita.
+- RESTA dal Master Elite v31.0 (confermato, da fare): Logistica Consegne Pizzeria (lista Lieferung con stato), Reparti dinamici (crea/elimina + aggiungi macchine), Ferie con Cutoff ordini 18:00.

@@ -7319,6 +7319,34 @@ async def list_operator_crew(user: dict = Depends(require_admin)):
     return {"crew": crew}
 
 
+class AssignReq(BaseModel):
+    email: str = Field(..., max_length=160)
+    department: str = Field(..., max_length=40)
+
+
+@api_router.post("/operator/assign")
+async def assign_operator_department(body: AssignReq, user: dict = Depends(require_admin)):
+    dept = (body.department or "").strip().lower()
+    if dept not in ("panetteria", "pizzeria", "pasticceria"):
+        raise HTTPException(status_code=400, detail="Reparto non valido")
+    res = await db.users.update_one(
+        {"email": (body.email or "").strip().lower(), "role": {"$in": ["operatore", "sostituto"]}},
+        {"$set": {"department": dept}},
+    )
+    if res.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Operatore non trovato")
+    return {"ok": True, "email": body.email, "department": dept}
+
+
+@api_router.get("/oven/alarms")
+async def list_oven_alarms(user: dict = Depends(require_admin)):
+    docs = await db.notifications.find(
+        {"user_id": user["user_id"], "type": "oven_alarm"},
+        {"_id": 0, "id": 1, "snippet": 1, "read": 1, "created_at": 1},
+    ).sort("created_at", -1).to_list(50)
+    return {"alarms": docs}
+
+
 class OvenAlarmReq(BaseModel):
     room: Optional[str] = Field("", max_length=40)
     recipe: Optional[str] = Field("", max_length=160)
