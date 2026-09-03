@@ -7,6 +7,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { useLang } from '@/i18n/LanguageContext';
+
+const APP_LANG_TO_TTS = { it: 'it-IT', de: 'de-DE', en: 'en-US', es: 'es-ES', fr: 'fr-FR', fa: 'fa-IR' };
 
 const API = process.env.REACT_APP_BACKEND_URL;
 // Stazioni reali della "Radio del Fornaio" (sottoinsieme di RadioFornaio.jsx)
@@ -21,13 +24,24 @@ const RADIO_STATIONS = [
   { id: 'classicfm', name: 'Classic FM (UK)', url: 'https://media-ssl.musicradio.com/ClassicFMMP3' },
 ];
 
-const ROOM_IDS = ['impasti', 'forni', 'pasticceria', 'laugen', 'banco', 'pretzel'];
+const ROOM_IDS = ['panetteria', 'pizzeria', 'pasticceria'];
+const DEPT_LABELS = { panetteria: 'Panetteria', pizzeria: 'Pizzeria', pasticceria: 'Pasticceria', impasti: 'Panetteria', forni: 'Panetteria', laugen: 'Panetteria', banco: 'Panetteria', pretzel: 'Panetteria' };
 
-export default function MikiLabEliteEngine({ open, onClose, locked = false, lockedDept = '' }) {
+export default function MikiLabEliteEngine({ open, onClose, locked = false, lockedDept = '', isCapo = false, readOnly = false }) {
   const hasValidDept = ROOM_IDS.includes(lockedDept);
   const isLocked = locked; // operatore/sostituto: sempre bloccato (fail-closed anche senza reparto valido)
-  const [activeTab, setActiveTab] = useState(locked && hasValidDept ? lockedDept : 'impasti');
-  const [language, setLanguage] = useState('it-IT');
+  const { lang: appLang } = useLang();
+  const [activeTab, setActiveTab] = useState(locked && hasValidDept ? lockedDept : 'panetteria');
+  const [language, setLanguage] = useState(APP_LANG_TO_TTS[appLang] || 'it-IT');
+  const [workMode, setWorkMode] = useState(() => { try { return localStorage.getItem('mikilab_work_mode') || 'solo'; } catch { return 'solo'; } });
+  const [crew, setCrew] = useState([]);
+  const [holiday, setHoliday] = useState(false);
+  const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
+  const alarmTimerRef = useRef(null);
+  const changeWorkMode = (m) => { setWorkMode(m); try { localStorage.setItem('mikilab_work_mode', m); } catch { /* */ } };
+
+  // Sincronizza la lingua del motore con la lingua dell'app
+  useEffect(() => { setLanguage(APP_LANG_TO_TTS[appLang] || 'it-IT'); }, [appLang]);
   const [batchKg, setBatchKg] = useState(50);
   const [radioPlaying, setRadioPlaying] = useState(false);
   const [stationId, setStationId] = useState('rai1');
@@ -50,6 +64,15 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     if (open && locked && hasValidDept) setActiveTab(lockedDept);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, locked, hasValidDept, lockedDept]);
+
+  // Pannello Capo: carica la squadra (operai) quando serve.
+  useEffect(() => {
+    if (!open || !isCapo || workMode !== 'squadra' || !API) return;
+    fetch(`${API}/api/operator/crew`, { credentials: 'include' })
+      .then(r => r.ok ? r.json() : { crew: [] })
+      .then(d => setCrew(Array.isArray(d.crew) ? d.crew : []))
+      .catch(() => setCrew([]));
+  }, [open, isCapo, workMode]);
 
   const speakVoice = (text) => {
     if ('speechSynthesis' in window) {
@@ -100,9 +123,42 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
       speakVoice("Allarme forno! Cottura completata, sfornare subito!");
       playBeepAlert();
       pushOvenDone();
+      // Allarme Forno Prioritario: parte il conteggio "incustodito" (2 min → notifica al Capo)
+      setAlarmUnattended(true);
+      if (alarmTimerRef.current) clearTimeout(alarmTimerRef.current);
+      alarmTimerRef.current = setTimeout(() => {
+        try {
+          if (API) fetch(`${API}/api/oven/alarm`, {
+            method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ room: (rooms3D[activeTab] && rooms3D[activeTab].title) || 'Forno', recipe: ovenRecipeName, minutes_unattended: 2 })
+          }).catch(() => {});
+          speakVoice("Attenzione: allarme forno non gestito. Notifico il Capo.");
+        } catch (e) { /* */ }
+      }, 120000);
     }
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBaking, timerSeconds]);
+
+  // Ferma l'escalation allarme quando l'engine si chiude
+  useEffect(() => { if (!open && alarmTimerRef.current) { clearTimeout(alarmTimerRef.current); alarmTimerRef.current = null; setAlarmUnattended(false); } }, [open]);
+
+  // Modalità Ferie: stato corrente
+  useEffect(() => {
+    if (!open || !API) return;
+    fetch(`${API}/api/lab/holiday`).then(r => r.ok ? r.json() : {}).then(d => setHoliday(!!d.active)).catch(() => {});
+  }, [open]);
+
+  const toggleHoliday = async () => {
+    const next = !holiday; setHoliday(next);
+    try {
+      const res = await fetch(`${API}/api/lab/holiday`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active: next }) });
+      if (!res.ok) { setHoliday(!next); return; }
+      window.dispatchEvent(new Event('mikilab-holiday-changed'));
+    } catch (e) { setHoliday(!next); }
+  };
+
+  const ackAlarm = () => { setAlarmUnattended(false); if (alarmTimerRef.current) { clearTimeout(alarmTimerRef.current); alarmTimerRef.current = null; } speakVoice("Allarme forno tacitato."); };
 
   // ESC per chiudere
   useEffect(() => {
@@ -172,67 +228,40 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
   useEffect(() => () => { try { if (radioRef.current) radioRef.current.pause(); } catch (e) {} }, []);
 
-  // AMBIENTI 3D DEL PANIFICIO (con FOTO REALI di Miki & Mohamed)
+  // 3 MACRO-AREE UNIFICATE (v31.0): Panetteria, Pizzeria (con Consegne), Pasticceria & Gelateria
   const rooms3D = {
-    impasti: {
-      title: "🌾 BANCO IMPASTI & SILOS 3D",
+    panetteria: {
+      title: "🍞 CENTRO PANETTERIA & IMPASTI 3D",
       color: "#5E8CA8",
       bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #3E9C93 100%)",
-      avatarName: "Michele (Maestro Impastatore)",
+      avatarName: "Michele (Maestro Panettiere)",
       avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Michele sta gestendo il banco impasti, l'acqua e la spirale!",
-      item3D: "📦 Silo Farina T500 & Vasca Impastatrice",
-      desc: "Reparto impasti ad alta idratazione e controllo del glutine"
+      avatarAction: "Impasti, forni e linea Laugen sincronizzati!",
+      item3D: "📦 Silos Farina, Impastatrice & Forni",
+      desc: "Impasti ad alta idratazione, forni, Laugen/Pretzel, fermentazione predittiva e Centro Formule",
+      features: ["Gestione Impastatore", "Forno Principale", "Laugen / Pretzel", "Fermentazione Predittiva", "Centro Formule"]
     },
-    forni: {
-      title: "🔥 FORNI SINCRONIZZATI 3D",
+    pizzeria: {
+      title: "🍕 REPARTO PIZZERIA & TEGLIE 3D",
       color: "#3E9C93",
       bgGradient: "linear-gradient(135deg, #0E1620 0%, #14212C 55%, #5E8CA8 100%)",
-      avatarName: "Michele (Capo Fornaio)",
+      avatarName: "Michele (Maestro Pizzaiolo)",
       avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Michele sta sincronizzando forni, vapore e timer di cottura!",
-      item3D: "🌋 Forni Sincronizzati con Mattoni Refrattari",
-      desc: "Gestione vapore, infornate e timer di cottura con allarme e notifica"
+      avatarAction: "Teglie, forno pizze e consegne in sincrono!",
+      item3D: "🔥 Forno Pizze & Ceste per la Consegna",
+      desc: "Impasti pizza, teglie, sfornate sincronizzate e gestione consegne (Lieferung / Ceste)",
+      features: ["Gestione Teglie & Impasti Pizza", "Forno Pizze", "Sfornate Sincronizzate", "Gestione Consegne (Lieferung / Ceste)"]
     },
     pasticceria: {
-      title: "🥐 KONDITOREI & PASTICCERIA 3D",
+      title: "🥐 LABORATORIO PASTICCERIA & GELATERIA 3D",
       color: "#7FB0A6",
       bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #7FB0A6 100%)",
       avatarName: "Michele (Maestro Pasticcere)",
       avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Laminazione del burro e abbattitore in azione!",
+      avatarAction: "Laminazione, abbattitore e formule dolci in azione!",
       item3D: "🧊 Abbattitore -35°C & Sfogliatrice",
-      desc: "Calcolo pieghe 4-4 e gestione temperature burro"
-    },
-    laugen: {
-      title: "🥨 LINEA LAUGEN 3D",
-      color: "#5E8CA8",
-      bgGradient: "linear-gradient(135deg, #0E1620 0%, #14212C 55%, #3E9C93 100%)",
-      avatarName: "Michele (Operatore Laugen)",
-      avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Immersione in soda e taglio: linea Laugen operativa!",
-      item3D: "🧪 Vasca Soda Laugen & Sale Grosso",
-      desc: "Bretzel e Laugengebäck: bagno alcalino, sicurezza e taglio"
-    },
-    banco: {
-      title: "✋ LAVORI A MANO (BANCO) 3D",
-      color: "#3E9C93",
-      bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #5E8CA8 100%)",
-      avatarName: "Michele (Formatore Artigianale)",
-      avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Formatura a mano: pezzatura, arrotondamento e taglio!",
-      item3D: "🪵 Banco in Legno & Tarocco",
-      desc: "Formatura artigianale, pezzatura e pirlatura a mano"
-    },
-    pretzel: {
-      title: "⚙️ MACCHINA / POSTAZIONE PRETZEL",
-      color: "#8FB0C2",
-      bgGradient: "linear-gradient(135deg, #0E1620 0%, #14212C 55%, #8FB0C2 100%)",
-      avatarName: "Michele (Operatore Macchine Dedicate)",
-      avatarImg: "/michele-real-lab.jpg",
-      avatarAction: "Postazione Pretzel dedicata · turno delle 05:00 attivo!",
-      item3D: "🥨 Macchina Pretzel Automatica (slot 05:00)",
-      desc: "Lavori a macchina e postazione Pretzel con slot orario dedicato"
+      desc: "Ricette dolci, bilanciamento formule, abbattitore e controllo tempi di raffreddamento",
+      features: ["Generatori Ricette Dolci", "Bilanciamento Formule", "Abbattitore & Forni Pasticceria", "Controllo Tempi Raffreddamento"]
     }
   };
 
@@ -282,6 +311,15 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 STANZA 3D ATTIVA
               </span>
               <h1 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', textShadow: '2px 2px 4px #000' }}>{currentRoom.title}</h1>
+              <p data-testid="elite-slogan" style={{ margin: '4px 0 0 0', fontSize: '0.72rem', color: currentRoom.color, fontWeight: 600, maxWidth: '340px', lineHeight: 1.3 }}>
+                {_pick(
+                  "L'ecosistema digitale integrato per produzione, logistica vocale e gestione dei laboratori.",
+                  "Das integrierte digitale Ökosystem für Produktion, Sprach-Logistik und Laborverwaltung.",
+                  "The integrated digital ecosystem for production, voice logistics and lab management.",
+                  "El ecosistema digital integrado para producción, logística por voz y gestión de laboratorios.",
+                  "L'écosystème numérique intégré pour la production, la logistique vocale et la gestion des laboratoires.",
+                  "اکوسیستم دیجیتال یکپارچه برای تولید، لجستیک صوتی و مدیریت آزمایشگاه.")}
+              </p>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -308,6 +346,73 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
           </div>
         </div>
 
+        {/* Vista Ospite (sola lettura) */}
+        {readOnly && (
+          <div data-testid="elite-guest-badge" style={{ backgroundColor: 'rgba(0,0,0,0.6)', border: '1px solid #8FB0C2', borderRadius: '12px', padding: '10px', marginBottom: '16px', textAlign: 'center', color: '#8FB0C2', fontWeight: 700, fontSize: '0.8rem' }}>
+            👁️ {_pick("Vista Ospite · sola lettura (accedi per operare)", "Gastansicht · nur Lesen", "Guest view · read-only", "Vista invitado · solo lectura", "Vue invité · lecture seule", "نمای مهمان · فقط خواندن")}
+          </div>
+        )}
+
+        {/* Modalità Ferie attiva (banner) */}
+        {holiday && (
+          <div data-testid="elite-holiday-banner" style={{ backgroundColor: 'rgba(94,140,168,.18)', border: `2px solid ${currentRoom.color}`, borderRadius: '12px', padding: '10px', marginBottom: '16px', textAlign: 'center', color: currentRoom.color, fontWeight: 800, fontSize: '0.82rem' }}>
+            🌴 {_pick("Laboratorio in Ferie — produzione in pausa", "Labor im Urlaub", "Lab on holiday — production paused", "Laboratorio de vacaciones", "Laboratoire en congé", "آزمایشگاه در تعطیلات")}
+          </div>
+        )}
+
+        {/* PANNELLO DI CONTROLLO CAPO — Solo vs Squadra/Turni (solo per il Capo) */}
+        {isCapo && !isLocked && (
+          <div data-testid="elite-capo-panel" style={{
+            backgroundColor: 'rgba(0,0,0,0.7)', border: `1px solid ${currentRoom.color}`,
+            borderRadius: '16px', padding: '14px', marginBottom: '16px'
+          }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#FFF' }}>{_pick("Pannello di Controllo Capo", "Chef-Kontrollpanel", "Capo Control Panel", "Panel de Control Capo", "Panneau de Contrôle Chef", "پنل کنترل سرآشپز")}</div>
+                <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick("Gestisci il laboratorio in autonomia o coordina la squadra.", "Führe das Labor allein oder koordiniere das Team.", "Run the lab solo or coordinate your crew.", "Gestiona el laboratorio solo o coordina el equipo.", "Gère le labo en solo ou coordonne l'équipe.", "آزمایشگاه را تنها اداره کن یا تیم را هماهنگ کن.")}</div>
+              </div>
+              <div style={{ display: 'flex', backgroundColor: 'rgba(255,255,255,0.08)', padding: '4px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)' }}>
+                <button data-testid="elite-capo-solo" onClick={() => changeWorkMode('solo')} style={{ padding: '8px 12px', borderRadius: '9px', fontSize: '0.72rem', fontWeight: 700, border: 'none', cursor: 'pointer', backgroundColor: workMode === 'solo' ? currentRoom.color : 'transparent', color: workMode === 'solo' ? '#000' : '#CCC' }}>
+                  {_pick("Lavoro da Solo", "Alleine", "Work Solo", "Trabajo Solo", "En Solo", "کار تنها")}
+                </button>
+                <button data-testid="elite-capo-squadra" onClick={() => changeWorkMode('squadra')} style={{ padding: '8px 12px', borderRadius: '9px', fontSize: '0.72rem', fontWeight: 700, border: 'none', cursor: 'pointer', backgroundColor: workMode === 'squadra' ? currentRoom.color : 'transparent', color: workMode === 'squadra' ? '#000' : '#CCC' }}>
+                  {_pick("Ho una Squadra", "Ich habe ein Team", "I have a Crew", "Tengo Equipo", "J'ai une Équipe", "تیم دارم")}
+                </button>
+              </div>
+            </div>
+            <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.75rem', color: '#CCC', fontWeight: 600 }}>🌴 {_pick("Modalità Ferie", "Urlaubsmodus", "Holiday mode", "Modo vacaciones", "Mode congé", "حالت تعطیلات")}</span>
+              <button data-testid="elite-holiday-toggle" onClick={toggleHoliday} style={{ padding: '6px 14px', borderRadius: '9px', fontSize: '0.72rem', fontWeight: 700, border: `1px solid ${currentRoom.color}`, cursor: 'pointer', backgroundColor: holiday ? currentRoom.color : 'transparent', color: holiday ? '#000' : currentRoom.color }}>
+                {holiday ? _pick("ATTIVA — Disattiva", "AKTIV — Aus", "ON — Turn off", "ACTIVO — Apagar", "ACTIF — Éteindre", "روشن — خاموش") : _pick("Attiva ferie", "Urlaub an", "Turn on", "Activar", "Activer", "روشن کن")}
+              </button>
+            </div>
+            {workMode === 'squadra' && (
+              <div data-testid="elite-capo-crew" style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+                <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '1px', color: currentRoom.color, fontWeight: 700, marginBottom: '8px' }}>
+                  {_pick("Turni & Assegnazione Reparti", "Schichten & Abteilungen", "Shifts & Department Assignment", "Turnos y Departamentos", "Postes & Rayons", "شیفت و بخش‌ها")}
+                </div>
+                {crew.length === 0 ? (
+                  <div style={{ fontSize: '0.75rem', color: '#AAA' }}>
+                    {_pick("Nessun operaio ancora. Invita operai con i token dal tuo profilo.", "Noch keine Mitarbeiter. Lade sie mit Tokens ein.", "No crew yet. Invite workers with tokens from your profile.", "Sin equipo aún. Invita con tokens desde tu perfil.", "Aucun employé. Invite-les avec des jetons.", "هنوز کارگری نیست. با توکن دعوت کن.")}
+                  </div>
+                ) : (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '8px' }}>
+                    {crew.map((m, i) => (
+                      <div key={i} data-testid={`elite-crew-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '10px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontWeight: 700, fontSize: '0.8rem', color: '#EEE', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name || m.email}</div>
+                          <div style={{ fontSize: '0.68rem', color: '#AAA' }}>{DEPT_LABELS[m.department] || (m.department || '—')}{m.role === 'sostituto' ? ' · Sostituto' : ''}</div>
+                        </div>
+                        <span style={{ fontSize: '0.62rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>Attivo</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* SELETTORE STANZE 3D — nascosto per l'operatore bloccato sul suo reparto */}
         {isLocked ? (
           <div data-testid="elite-locked-dept" style={{
@@ -323,12 +428,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
         ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px' }}>
           {[
-            { id: 'impasti', icon: '🌾', label: 'IMPASTI' },
-            { id: 'forni', icon: '🔥', label: 'FORNI' },
-            { id: 'pasticceria', icon: '🥐', label: 'PASTICCERIA' },
-            { id: 'laugen', icon: '🥨', label: 'LAUGEN' },
-            { id: 'banco', icon: '✋', label: 'BANCO' },
-            { id: 'pretzel', icon: '⚙️', label: 'PRETZEL' }
+            { id: 'panetteria', icon: '🍞', label: 'PANETTERIA' },
+            { id: 'pizzeria', icon: '🍕', label: 'PIZZERIA' },
+            { id: 'pasticceria', icon: '🥐', label: 'PASTICCERIA' }
           ].map(room => (
             <button key={room.id} data-testid={`elite-room-${room.id}`} onClick={() => { setActiveTab(room.id); speakVoice(`Spostamento in ${room.label}`); }} style={{
               backgroundColor: activeTab === room.id ? rooms3D[room.id].color : 'rgba(0,0,0,0.6)',
@@ -408,7 +510,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             <p style={{ fontSize: '0.85rem', color: '#DDD', marginBottom: '12px' }}>{currentRoom.desc}</p>
           )}
 
-          {activeTab === 'impasti' && (
+          {activeTab === 'panetteria' && (
             <div>
               {/* Ricette reali dal DB MikiLab */}
               {dbRecipes.length > 0 && (
@@ -425,7 +527,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', textAlign: 'center' }}>
                 <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px' }}>
                   <div style={{ fontSize: '0.7rem' }}>Farina T500</div>
-                  <input data-testid="elite-input-kg" type="number" value={batchKg} onChange={(e) => setBatchKg(Number(e.target.value))} style={{ width: '70px', backgroundColor: 'rgba(0,0,0,0.4)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '4px', padding: '4px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.1rem' }} />
+                  <input data-testid="elite-input-kg" type="number" value={batchKg} disabled={readOnly} onChange={(e) => setBatchKg(Number(e.target.value))} style={{ width: '70px', backgroundColor: 'rgba(0,0,0,0.4)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '4px', padding: '4px', textAlign: 'center', fontWeight: 'bold', fontSize: '1.1rem', opacity: readOnly ? 0.6 : 1 }} />
                   <span style={{ fontSize: '0.7rem', color: '#AAA' }}> kg</span>
                 </div>
                 <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '10px', borderRadius: '8px' }}>
@@ -440,9 +542,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             </div>
           )}
 
-          {activeTab === 'forni' && (
-            <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#C2612E' }}>🔥 Forno Rotativo ({ovenTemp}°C) - Allarme + Notifica Telefono</div>
+          {(activeTab === 'panetteria' || activeTab === 'pizzeria') && (
+            <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '12px', borderRadius: '8px', textAlign: 'center', marginTop: '12px' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#C2612E' }}>🔥 {activeTab === 'pizzeria' ? 'Forno Pizze' : 'Forno Rotativo'} ({ovenTemp}°C) - Allarme + Notifica Telefono</div>
               {ovenRecipeName && (
                 <div data-testid="elite-oven-recipe" style={{ fontSize: '0.72rem', color: '#D97706', marginTop: '4px' }}>
                   📖 Parametri da ricetta: <strong>{ovenRecipeName}</strong>
@@ -451,9 +553,30 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               <div data-testid="elite-timer" style={{ fontSize: '2rem', fontWeight: 'bold', margin: '6px 0', fontFamily: 'monospace' }}>
                 {formatTime(timerSeconds)}
               </div>
-              <button data-testid="elite-start-bake" onClick={startBake} style={{ backgroundColor: '#C2612E', color: '#FFF', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                {isBaking ? '⏳ COTTURA IN CORSO (ALLARME PRONTO)...' : '▶️ AVVIA COTTURA & NOTIFICA'}
-              </button>
+              {alarmUnattended ? (
+                <div data-testid="elite-alarm-priority" style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
+                  <div style={{ color: '#E63946', fontWeight: 800, fontSize: '0.8rem' }}>🚨 ALLARME FORNO — sfornare! (2 min → avviso al Capo)</div>
+                  <button data-testid="elite-alarm-ack" onClick={ackAlarm} style={{ backgroundColor: '#E63946', color: '#FFF', border: 'none', padding: '10px 22px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    ✋ TACITA ALLARME
+                  </button>
+                </div>
+              ) : (
+                <button data-testid="elite-start-bake" onClick={startBake} disabled={readOnly} style={{ backgroundColor: readOnly ? '#3A4652' : '#C2612E', color: '#FFF', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: readOnly ? 'not-allowed' : 'pointer', opacity: readOnly ? 0.6 : 1 }}>
+                  {isBaking ? '⏳ COTTURA IN CORSO (ALLARME PRONTO)...' : '▶️ AVVIA COTTURA & NOTIFICA'}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* GRIGLIA FUNZIONI DEL REPARTO (tutte le macro-aree) */}
+          {activeTab !== 'guida' && Array.isArray(currentRoom.features) && (
+            <div data-testid="elite-features" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px', marginTop: '14px' }}>
+              {currentRoom.features.map((feat, i) => (
+                <div key={i} data-testid={`elite-feature-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: `1px solid ${currentRoom.color}44`, padding: '10px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#EEE', fontWeight: 600 }}>{feat}</span>
+                  <span style={{ fontSize: '0.6rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>Attivo</span>
+                </div>
+              ))}
             </div>
           )}
         </div>

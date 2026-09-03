@@ -19,11 +19,30 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const { user } = useAuth();
+  const isCapo = user?.role === "admin";
   const isOperator = user?.role === "operatore" || user?.role === "sostituto";
   const [opDept, setOpDept] = useState("");
   useEffect(() => {
     if (isOperator) operatorApi.getProfile().then((p) => setOpDept(p.department || "")).catch(() => {});
   }, [isOperator]);
+  // Migrazione reparti: vecchie 6 stanze → nuove 3 macro-aree
+  const DEPT_TO_AREA = { impasti: "panetteria", forni: "panetteria", laugen: "panetteria", banco: "panetteria", pretzel: "panetteria", pasticceria: "pasticceria", pizzeria: "pizzeria", panetteria: "panetteria" };
+  const lockedArea = DEPT_TO_AREA[opDept] || opDept;
+  const isGuest = !user;
+  const sostitutoUntil = user?.sostituto_until;
+  const API = process.env.REACT_APP_BACKEND_URL;
+  const [holiday, setHoliday] = useState(false);
+  const [nowMs, setNowMs] = useState(Date.now());
+  useEffect(() => {
+    if (!API) return;
+    const load = () => fetch(`${API}/api/lab/holiday`).then((r) => r.ok ? r.json() : {}).then((d) => setHoliday(!!d.active)).catch(() => {});
+    load();
+    window.addEventListener("mikilab-holiday-changed", load);
+    return () => window.removeEventListener("mikilab-holiday-changed", load);
+  }, [API]);
+  useEffect(() => { if (!sostitutoUntil) return; const t = setInterval(() => setNowMs(Date.now()), 1000); return () => clearInterval(t); }, [sostitutoUntil]);
+  const remainMs = sostitutoUntil ? (new Date(sostitutoUntil).getTime() - nowMs) : 0;
+  const fmtRemain = (ms) => { const s = Math.max(0, Math.floor(ms / 1000)); const h = String(Math.floor(s / 3600)).padStart(2, "0"); const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0"); const ss = String(s % 60).padStart(2, "0"); return `${h}:${m}:${ss}`; };
   const shift = useShift();
   const alert = hasActiveAlerts(shift);
   const [vs, setVs] = useState({ listening: false, speaking: false, wake: false });
@@ -69,6 +88,22 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
 
   return (
     <div data-testid="braccio-lab" className="flex flex-col rounded-3xl p-4 gap-3" style={{ minHeight: "460px", background: `radial-gradient(120% 60% at 50% -10%, #14212C 0%, ${D.bg} 55%)`, color: D.text, border: `1px solid ${D.border}` }}>
+      {/* Modalità Ferie attiva */}
+      {holiday && (
+        <div data-testid="braccio-holiday-banner" className="rounded-2xl p-3 text-center font-extrabold text-[13px]" style={{ background: "rgba(94,140,168,.15)", border: `2px solid ${D.gold}`, color: D.gold }}>
+          🌴 {tri("Laboratorio in Ferie — produzione in pausa", "Labor im Urlaub — Produktion pausiert", "Lab on holiday — production paused", "Laboratorio de vacaciones — producción en pausa", "Laboratoire en congé — production en pause", "آزمایشگاه در تعطیلات — تولید متوقف")}
+        </div>
+      )}
+
+      {/* Delega Sostituto 8h — countdown */}
+      {sostitutoUntil && (
+        <div data-testid="braccio-sostituto-countdown" className="rounded-2xl p-3 text-center font-bold text-[12px]" style={{ background: "#1B2A38", border: `2px solid ${remainMs > 0 ? D.gold : D.danger}`, color: remainMs > 0 ? D.gold : D.danger }}>
+          {remainMs > 0
+            ? `⏳ ${tri("Delega Sostituto — scade tra", "Vertretung — endet in", "Substitute delegation — ends in", "Delegación sustituto — termina en", "Délégation remplaçant — se termine dans", "جانشین — پایان تا")} ${fmtRemain(remainMs)}`
+            : `⛔ ${tri("Delega scaduta — accesso terminato", "Vertretung abgelaufen", "Delegation expired — access ended", "Delegación expirada", "Délégation expirée", "زمان جانشینی تمام شد")}`}
+        </div>
+      )}
+
       {/* Banner emergenza / info */}
       {alert ? (
         <button data-testid="braccio-alert-banner" onClick={() => onOpenTool && onOpenTool("emergenze")}
@@ -178,7 +213,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
         </button>
       </div>
 
-      <MikiLabEliteEngine open={eliteOpen} onClose={() => setEliteOpen(false)} locked={isOperator} lockedDept={opDept} />
+      <MikiLabEliteEngine open={eliteOpen} onClose={() => setEliteOpen(false)} locked={isOperator} lockedDept={lockedArea} isCapo={isCapo} readOnly={isGuest} />
     </div>
   );
 }

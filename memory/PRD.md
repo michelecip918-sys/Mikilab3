@@ -3662,3 +3662,19 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Sincronizzazione titoli/menu**: etichetta sezione operativa standardizzata su "Modalità Chef · Laboratorio" (Home BLOCKS + CTA `home-chef-mode`, SiteMenu SECTIONS+ctxTitle, Maestro title) e "Modalità Chef" nella BottomNav (`nav-tab-maestro`). Eliminate le etichette disallineate ("Laboratorio", "Laboratorio di MikiLab", "Il Tuo Laboratorio").
 - Test: iteration_166 → frontend 100% (5/5 scenari: admin vede tutto+6 stanze; operatore vista pulita+lock FORNI; ospite vista completa; label sync). Self-test screenshot operatore OK.
 - Credenziali: admin@mikilab.de / **Mikilab2026!** (Capo); operatore@mikilab.de / Test1234! (dept=forni). Seed: `backend/seed_test_operator.py`.
+
+## v40 (2026-06) — v31.0 Elite Engine & Pure Core (3 macro-aree + Pannello Capo + funzioni avanzate)
+Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l'Elite Engine 3D esistente (radio, ricette DB, avatar, timer forno preservati).
+### Fase A — Struttura
+- **3 MACRO-AREE** (ex 6 stanze): `panetteria` (impasti+forni+Laugen+banco+pretzel), `pizzeria` (con Consegne/Lieferung), `pasticceria` (+gelateria). `MikiLabEliteEngine` ROOM_IDS aggiornati; selettore a 3; contenuti per-reparto (dosi+forno su Panetteria, forno su Pizzeria, griglia funzioni su tutte). Migrazione reparti vecchi→nuovi in BraccioLab (`DEPT_TO_AREA`) e MyData (`MIGRATE_DEPT`); selettore reparto operatore ora 3 opzioni.
+- **Slogan professionale** nell'header Elite Engine (trilingue via lingua app).
+- **Pannello Capo** (solo admin, `elite-capo-panel`): toggle "Lavoro da Solo" / "Ho una Squadra" (persist localStorage `mikilab_work_mode`); in Squadra mostra la crew da `GET /api/operator/crew` (nome, reparto, ruolo).
+- **Lingua Elite Engine sincronizzata** con `LanguageContext` (slogan/pannello/badge/allarme localizzati).
+### Fase B — Funzioni avanzate
+- **Ruolo Sostituto 8h + countdown**: redeem delega salva `sostituto_until`; `/api/auth/me` lo espone e AUTO-DOWNGRADE a `user` alla scadenza; banner countdown HH:MM:SS in BraccioLab (`braccio-sostituto-countdown`).
+- **Vista Ospite (sola lettura)**: utente non loggato → badge `elite-guest-badge`, input dosi e "Avvia Cottura" disabilitati (browsing consentito).
+- **Allarme Forno Prioritario**: a fine cottura parte watcher 2 min; se non tacitato (`elite-alarm-ack`) → `POST /api/oven/alarm` notifica tutti gli admin (notifiche in-app priority=urgent).
+- **Modalità Ferie**: toggle nel Pannello Capo (`elite-holiday-toggle`) → `GET/POST /api/lab/holiday`; banner in Elite Engine e in BraccioLab (aggiornamento live via evento `mikilab-holiday-changed`).
+- Test: iteration_167 → frontend **100% (7/7)** incl. ciclo allarme+ACK; backend gating verificato via curl (holiday admin-only, crew admin-only, oven alarm→2 admin, sostituto /me + auto-downgrade). Smoke EN OK.
+- Credenziali aggiunte: sostituto@mikilab.de / Test1234! (dept=pizzeria, +8h).
+- Backlog residuo (LOW): estrarre rooms3D/logica forno in moduli; escalation allarme server-side (ora si annulla chiudendo l'overlay); tradurre i titoli reparto/scena (ora IT).

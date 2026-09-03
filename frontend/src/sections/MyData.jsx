@@ -94,9 +94,10 @@ export default function MyData({ onOpenTool }) {
   const [opDept, setOpDept] = useState("");
   const [opBusy, setOpBusy] = useState(false);
   useEffect(() => {
-    if (isOperator) operatorApi.getProfile().then((p) => { setOpName(p.operator_name || ""); setOpDept(p.department || ""); }).catch(() => {});
+    if (isOperator) operatorApi.getProfile().then((p) => { setOpName(p.operator_name || ""); setOpDept(MIGRATE_DEPT[p.department] || p.department || ""); }).catch(() => {});
   }, [isOperator]);
-  const DEPTS = [["impasti", "Impasti"], ["forni", "Forni"], ["pasticceria", "Pasticceria"], ["laugen", "Laugen"], ["banco", "Banco (Lavori a Mano)"], ["pretzel", "Macchina / Pretzel"]];
+  const MIGRATE_DEPT = { impasti: "panetteria", forni: "panetteria", laugen: "panetteria", banco: "panetteria", pretzel: "panetteria" };
+  const DEPTS = [["panetteria", tri("Panetteria & Impasti", "Bäckerei & Teige", "Bakery & Doughs")], ["pizzeria", tri("Pizzeria & Consegne", "Pizzeria & Lieferung", "Pizzeria & Delivery")], ["pasticceria", tri("Pasticceria & Gelateria", "Konditorei & Eis", "Pastry & Gelato")]];
   const saveOpProfile = async () => {
     setOpBusy(true);
     try {

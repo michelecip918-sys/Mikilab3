@@ -558,7 +558,7 @@ def _set_cookie(resp, token):
 
 
 def _public_user(u):
-    return {"user_id": u["user_id"], "email": u["email"], "name": u.get("name", ""), "picture": u.get("picture", ""), "role": u.get("role", "user"), "created_at": u.get("created_at", ""), "birthday": u.get("birthday", "")}
+    return {"user_id": u["user_id"], "email": u["email"], "name": u.get("name", ""), "picture": u.get("picture", ""), "role": u.get("role", "user"), "created_at": u.get("created_at", ""), "birthday": u.get("birthday", ""), "sostituto_until": u.get("sostituto_until")}
 
 
 async def _role_for_new_user():
@@ -590,6 +590,18 @@ async def current_user(request: Request):
     if (u.get("email") or "").strip().lower() in OWNER_EMAILS and u.get("role") != "admin":
         await db.users.update_one({"user_id": u["user_id"]}, {"$set": {"role": "admin"}})
         u["role"] = "admin"
+    # Sostituto 8h: se la delega è scaduta, riporta il ruolo a 'user'.
+    if u.get("role") == "sostituto" and u.get("sostituto_until"):
+        try:
+            until = datetime.fromisoformat(u["sostituto_until"])
+            if until.tzinfo is None:
+                until = until.replace(tzinfo=timezone.utc)
+            if until < datetime.now(timezone.utc):
+                await db.users.update_one({"user_id": u["user_id"]}, {"$set": {"role": "user"}, "$unset": {"sostituto_until": ""}})
+                u["role"] = "user"
+                u.pop("sostituto_until", None)
+        except Exception:
+            pass
     return u
 
 
@@ -7285,8 +7297,68 @@ async def redeem_operator_invite(body: RedeemReq, user: dict = Depends(current_u
     new_role = inv.get("role") or "operatore"
     await db.operator_invites.update_one({"code": code}, {"$set": {"used_by": user.get("user_id"), "used_by_name": user.get("name") or user.get("email"), "used_at": now_iso()}})
     if user.get("role") != "admin":
-        await db.users.update_one({"user_id": user.get("user_id")}, {"$set": {"role": new_role}})
+        updates = {"role": new_role}
+        if new_role == "sostituto":
+            updates["sostituto_until"] = exp or (datetime.now(timezone.utc) + timedelta(hours=8)).isoformat()
+        await db.users.update_one({"user_id": user.get("user_id")}, {"$set": updates})
     return {"ok": True, "role": new_role if user.get("role") != "admin" else "admin"}
+
+
+@api_router.get("/operator/crew")
+async def list_operator_crew(user: dict = Depends(require_admin)):
+    docs = await db.users.find(
+        {"role": {"$in": ["operatore", "sostituto"]}},
+        {"_id": 0, "operator_name": 1, "name": 1, "email": 1, "department": 1, "role": 1},
+    ).to_list(200)
+    crew = [{
+        "name": (d.get("operator_name") or d.get("name") or d.get("email") or "").strip(),
+        "email": d.get("email", ""),
+        "department": d.get("department", ""),
+        "role": d.get("role", "operatore"),
+    } for d in docs]
+    return {"crew": crew}
+
+
+class OvenAlarmReq(BaseModel):
+    room: Optional[str] = Field("", max_length=40)
+    recipe: Optional[str] = Field("", max_length=160)
+    minutes_unattended: Optional[int] = 2
+
+
+@api_router.post("/oven/alarm")
+async def oven_priority_alarm(body: OvenAlarmReq, user: dict = Depends(current_user)):
+    # Allarme Forno Prioritario: se un forno resta incustodito, notifica TUTTI i Capo (admin).
+    admins = await db.users.find({"role": "admin"}, {"_id": 0, "user_id": 1}).to_list(50)
+    who = user.get("operator_name") or user.get("name") or user.get("email") or "Operatore"
+    snippet = f"🔥 ALLARME FORNO incustodito ({body.minutes_unattended or 2} min) · {body.room or 'Forno'}{(' · ' + body.recipe) if body.recipe else ''} · {who}"[:120]
+    now = now_iso()
+    for a in admins:
+        await db.notifications.insert_one({
+            "id": str(uuid.uuid4()), "user_id": a["user_id"], "actor_id": "system",
+            "type": "oven_alarm", "post_id": None, "actor_name": "Allarme Forno",
+            "snippet": snippet, "count": 1, "read": False, "priority": "urgent", "created_at": now,
+        })
+    return {"ok": True, "notified": len(admins)}
+
+
+@api_router.get("/lab/holiday")
+async def get_holiday_mode():
+    doc = await db.lab_settings.find_one({"key": "holiday"}, {"_id": 0})
+    return {"active": bool(doc and doc.get("active")), "since": (doc or {}).get("since")}
+
+
+class HolidayReq(BaseModel):
+    active: bool = False
+
+
+@api_router.post("/lab/holiday")
+async def set_holiday_mode(body: HolidayReq, user: dict = Depends(require_admin)):
+    await db.lab_settings.update_one(
+        {"key": "holiday"},
+        {"$set": {"key": "holiday", "active": bool(body.active), "since": now_iso() if body.active else None, "by": user.get("user_id")}},
+        upsert=True,
+    )
+    return {"ok": True, "active": bool(body.active)}
 
 
 @api_router.post("/operator/delegation")

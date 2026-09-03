@@ -1,0 +1,38 @@
+{
+  "summary": "Frontend-only verification of MikiLab v31.0 'Elite Engine & Pure Core'. All 7 requested scenarios PASS. (1) ADMIN: slogan present, exactly 3 macro-area buttons (elite-room-panetteria/pizzeria/pasticceria), all 5 OLD room testids (impasti/forni/laugen/banco/pretzel) are GONE, area switching works (titles change to PIZZERIA/PASTICCERIA/PANETTERIA), elite-capo-panel present, no locked badge. (2) Pannello Capo: elite-capo-solo/elite-capo-squadra toggle works, persists to localStorage mikilab_work_mode ('solo'/'squadra'), crew list hidden in solo and elite-capo-crew shows 2 seeded workers in squadra ('Operatore Forni · Panetteria', 'Sostituto Test · Pizzeria · Sostituto'). (3) Modalita Ferie: elite-holiday-toggle -> POST /api/lab/holiday persists {active:true}, elite-holiday-banner appears, braccio-holiday-banner appears in the operative lab ('Lab on holiday - production paused'); toggled back OFF and verified GET /api/lab/holiday = {active:false} (state left CLEAN). (4) Allarme Forno Prioritario verified END-TO-END: selected the 2-min DB recipe 'Pizza Napoletana (tonda)', elite-timer bound to recipe (2:00, 450C), elite-start-bake enabled and started countdown, at 0:00 elite-alarm-priority + elite-alarm-ack appeared, ACK cleared the alarm and restored elite-start-bake. (5) OPERATORE (dept forni): clean lab (braccio-quick-banco/aggiungi absent), engine has 0 elite-room-* buttons, elite-locked-dept present and forced to PANETTERIA, no elite-capo-panel. (6) SOSTITUTO: braccio-sostituto-countdown present and ticking (07:55:09 -> 07:55:06), clean operator view, engine locked to PIZZERIA, no capo panel. (7) GUEST (401 on /api/auth/me): elite-guest-badge present, elite-input-kg disabled, elite-start-bake disabled (click times out / timer stays 22:00), 3 room buttons still browsable (switched to PASTICCERIA). Backend gating re-confirmed via curl: POST /api/lab/holiday and GET /api/operator/crew = 401 guest / 403 operatore.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "BraccioLab", "issue": "braccio-holiday-banner does not refresh when Modalita Ferie is toggled from inside the Elite Engine: GET /api/lab/holiday is fetched only on mount, so after closing the overlay the lab banner is stale until a page reload. Lift the holiday state (or refetch on overlay close / via a callback from the engine).", "selector": "[data-testid=\"braccio-holiday-banner\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Modalita Ferie toggle", "issue": "toggleHoliday() optimistically sets local state BEFORE awaiting POST /api/lab/holiday and swallows all errors (try/catch empty, no response.ok check). If the request fails (session expired / 403) the Capo sees a false 'ferie ON' state. Not user-visible today because the toggle is only rendered for isCapo, but it is a silent-failure pattern.", "affected_selectors": ["[data-testid=\"elite-holiday-toggle\"]", "[data-testid=\"elite-holiday-banner\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Elite Engine (all roles)", "issues": ["The Elite Engine keeps its OWN language state (default it-IT) that is not synced with the app LanguageContext: with the app rendering in EN, elite-slogan, elite-locked-dept ('Reparto assegnato'), the Capo panel and the alarm text all render in Italian. Initialise the engine language from useLang() so labels stay consistent.", "Room/area titles and the alarm copy are hardcoded Italian strings (rooms3D.title, 'ALLARME FORNO - sfornare!') while the rest of the engine is multi-language."]}
+    ]
+  },
+  "test_report_links": ["/app/test_reports/iteration_167.json"],
+  "action_items": [
+    "LOW: refresh braccio-holiday-banner after the holiday toggle (lift holiday state or refetch on Elite Engine close) so the lab banner is not stale until reload",
+    "LOW: make toggleHoliday await/verify the POST (check res.ok) and revert local state + toast on failure instead of silently succeeding",
+    "LOW: sync MikiLabEliteEngine language with the app LanguageContext (slogan/locked badge/capo panel currently Italian while UI is EN); make rooms3D.title and the alarm copy translatable"
+  ],
+  "critical_code_review_comments": [
+    "MikiLabEliteEngine.jsx is 638 lines mixing rooms3D data, radio, oven timer, Capo panel and legal modals - extract rooms3D + the oven/alarm logic into separate modules/hooks",
+    "The alarm escalation setTimeout(120s) -> POST /api/oven/alarm only survives while the overlay is mounted (cleared in the !open effect), so an operator who closes the engine silently cancels the escalation to the Capo - consider server-side scheduling or persisting the pending alarm",
+    "MikiLabEliteEngine crew fetch and holiday fetch have no loading/error UI (both .catch(() => {})): a failed GET /api/operator/crew is indistinguishable from an empty crew ('Nessun operaio ancora')",
+    "BraccioLab operatorApi.getProfile().catch(() => {}) still has no error state; the lock is now fail-closed (isLocked = locked) which is correct, but the badge will show 'Reparto non ancora assegnato' for a transient network error"
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request); role gating spot-checked via curl: 4/4 as expected", "frontend": "100% (7/7 scenarios, incl. full oven alarm + ACK cycle)"},
+  "seed_data_creation": "None. Used existing admin/operatore/sostituto accounts. Modalita Ferie was toggled ON then OFF; GET /api/lab/holiday verified back to {active:false,since:null}.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (Capo); operatore@mikilab.de / Test1234! (dept forni -> Panetteria); sostituto@mikilab.de / Test1234! (dept pizzeria, sostituto_until +8h). PIN bypass: localStorage mikilab_pin_unlocked=1, mikilab_pin_enabled=0, mikilab_lab_tour_done=1, mikilab_lab_view=braccio, then reload BEFORE login.",
+  "context_for_next_testing_agent": "Everything in the v31.0 request is verified. Useful recipes: 'Pizza Napoletana (tonda)' has bake_minutes=2, so selecting it in elite-db-recipe-select lets you reach the elite-alarm-priority/elite-alarm-ack state in ~2 minutes of real waiting (verified). The kg input + dough dosages only render for the PANETTERIA area; the oven block renders for PANETTERIA and PIZZERIA only (PASTICCERIA has no elite-timer/elite-start-bake) - do not assert elite-input-kg on the other areas. Switch users with page.context.clear_cookies() + localStorage.clear() then re-apply the 4 PIN keys. Beware: Python f-strings cannot contain backslashes - build selectors by string concatenation. Untested/not requested: sostituto expiry auto-downgrade in the UI, MyData 3-macro-area dept selector, /api/oven/alarm push notification to admins from the UI path.",
+  "rca_of_the_issue": "No product defect found. The only failures during the run were errors in my own test script (f-string backslash, a bad process.env reference inside page.evaluate) which were fixed and re-run."
+}
