@@ -3759,3 +3759,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **SmartPlannerStressZero.jsx** (statico + audio + localStorage): orario turno notturno + volume giornaliero → report (3 impasti split) e "Sincronizza in cuffia". Aggiunto come tool Maestro `planner` (catalogo TOOLS in `PianoProduzioneAI.jsx`, cat coldchain; render in `Maestro.jsx`).
 - **Feed Wisdom**: aggiunta la frase filosofica sulla panificazione ("L'impasto…frequenza viva…") in `MikilaWisdom.jsx` array `home`, tradotta in 6 lingue.
 - Verificato via screenshot: Brot Sommelier + Smart Planner renderizzano, audio SpeechSynthesis attivo, report ricalcolato. Community/backend intatti.
+
+## Elite v3.0.1 (2026-06) — Team Balance · Anti-Burnout
+- Dallo script "MikiLabUltimateMaster" estratta SOLO la novità (Team Balance / Anti-Burnout), aggiunta al modulo `SmartPlannerStressZero.jsx` (opzione A). No paste del monolite.
+- Nuova sezione "Team Balance · Anti-Burnout": input pezzi per i 7 giorni (Lun–Dom) + n° persone squadra → calcola totale settimana, media livellata/giorno (su giorni lavorativi), pezzi/persona, e segnala giorni SOVRACCARICO/SOTTO MEDIA/IN LINEA/RIPOSO (soglia ±15%). Consiglio di spostamento carico + audio "Ascolta il Bilanciamento" (it-IT). Persistito in localStorage (`mikilab_planner_week`, `mikilab_planner_team`).
+- testid: `team-balance`, `team-day-{0..6}`, `team-state-{i}`, `team-size`, `balance-report`, `balance-total/avg/perperson`, `balance-sync`.
+- Verificato via screenshot+evaluate: stati colorati corretti, riepilogo corretto (2320/387/129/6), audio attivo. Statico/locale, nessun backend.
