@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Mic, MicOff, Timer, Play, Square, RotateCcw, Headphones, Activity, Plus, Trash2 } from "lucide-react";
+import { Mic, MicOff, Timer, Play, Square, RotateCcw, Headphones, Activity, Plus, Trash2, BellRing, Maximize2, Wrench } from "lucide-react";
 import { useMixers } from "@/audio/MixerTimersContext";
 
 const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
@@ -26,14 +26,23 @@ const sayRemaining = (m) => {
   speakPhrase(m.running ? `${m.name}: mancano ${t}.` : (s > 0 ? `${m.name} è in pausa, restano ${t}.` : `${m.name} è ferma.`));
 };
 
+const LAB_TOOLS = [
+  { name: "Impastatrice Spirale 50kg", status: "Pronta", color: "text-emerald-400" },
+  { name: "Forno Rotativo a Carrello", status: "In temperatura", color: "text-teal-300" },
+  { name: "Armadio Fermo-Lievitazione", status: "Attivo", color: "text-emerald-400" },
+];
+
 export default function VoiceCore() {
-  const { list, start, stop, reset, setMinutes, add, remove } = useMixers();
+  const { list, start, stop, reset, setMinutes, add, remove, dismiss } = useMixers();
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(true);
   const [transcript, setTranscript] = useState("");
+  const [pro, setPro] = useState(() => { try { return localStorage.getItem("mikilab_voicecore_pro") === "1"; } catch { return false; } });
   const recRef = useRef(null);
   const listRef = useRef(list);
   listRef.current = list;
+
+  useEffect(() => { try { localStorage.setItem("mikilab_voicecore_pro", pro ? "1" : "0"); } catch { /* */ } }, [pro]);
 
   const mixerByNumber = (n) => (n && listRef.current[n - 1]) || null;
 
@@ -85,15 +94,30 @@ export default function VoiceCore() {
   };
 
   const anyRunning = list.some((m) => m.running);
+  // Dimensioni PRO (tasti grandi per il lavoro al banco)
+  const micSize = pro ? "w-32 h-32" : "w-24 h-24";
+  const micIcon = pro ? "w-14 h-14" : "w-10 h-10";
+  const ctrl = pro ? "w-12 h-12" : "w-9 h-9";
+  const ctrlIcon = pro ? "w-6 h-6" : "w-4 h-4";
+  const timeText = pro ? "text-4xl" : "text-2xl";
 
   return (
     <div data-testid="voice-core" className="space-y-6">
-      <div className="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl px-4 py-3">
+      <div className="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl px-4 py-3 gap-3">
         <div className="flex items-center gap-2 text-xs font-mono text-teal-300">
           <span className="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_8px_#2dd4bf]" /> Sensori OK
         </div>
+        <button
+          data-testid="pro-toggle"
+          onClick={() => setPro((p) => !p)}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+            pro ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-300" : "bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-200"
+          }`}
+        >
+          <Maximize2 className="w-3.5 h-3.5" /> PRO: {pro ? "ON" : "OFF"}
+        </button>
         <div className="flex items-center gap-2 text-xs font-mono text-teal-300">
-          <Headphones className="w-4 h-4" /> Cuffie / Microfono connessi
+          <Headphones className="w-4 h-4" /> <span className="hidden sm:inline">Cuffie / Microfono connessi</span>
         </div>
       </div>
 
@@ -101,17 +125,17 @@ export default function VoiceCore() {
         <button
           data-testid="voice-mic-btn"
           onClick={toggleMic}
-          className={`w-24 h-24 rounded-full flex items-center justify-center transition-transform active:scale-95 ${
+          className={`${micSize} rounded-full flex items-center justify-center transition-transform active:scale-95 ${
             listening
               ? "bg-gradient-to-br from-rose-500 to-rose-700 animate-pulse shadow-[0_0_28px_rgba(244,63,94,0.5)]"
               : "bg-gradient-to-br from-teal-400 to-teal-700 shadow-[0_0_24px_rgba(45,212,191,0.35)] hover:scale-105"
           }`}
         >
-          {listening ? <MicOff className="w-10 h-10 text-white" /> : <Mic className="w-10 h-10 text-slate-950" />}
+          {listening ? <MicOff className={`${micIcon} text-white`} /> : <Mic className={`${micIcon} text-slate-950`} />}
         </button>
         <div>
-          <h2 className="text-2xl font-black text-slate-100 tracking-wide">MikiLab Voice Core</h2>
-          <p data-testid="voice-status" className="text-sm text-slate-400 mt-1">
+          <h2 className={`${pro ? "text-3xl" : "text-2xl"} font-black text-slate-100 tracking-wide`}>MikiLab Voice Core</h2>
+          <p data-testid="voice-status" className={`${pro ? "text-base" : "text-sm"} text-slate-400 mt-1`}>
             {!supported
               ? "Riconoscimento vocale non supportato da questo browser"
               : listening
@@ -136,13 +160,26 @@ export default function VoiceCore() {
 
         <div className="space-y-3">
           {list.map((m) => (
-            <div key={m.id} data-testid={`mixer-${m.id}`} className={`p-4 rounded-xl border bg-slate-950 flex items-center gap-4 ${m.running ? "border-amber-500/40" : "border-slate-800"}`}>
-              <Timer className={`w-6 h-6 shrink-0 ${m.running ? "text-amber-400" : "text-slate-500"}`} />
+            <div
+              key={m.id}
+              data-testid={`mixer-${m.id}`}
+              className={`p-4 rounded-xl border bg-slate-950 flex items-center gap-4 transition-colors ${
+                m.alerting ? "border-rose-500 animate-pulse shadow-[0_0_20px_rgba(244,63,94,0.4)]" : m.running ? "border-amber-500/40" : "border-slate-800"
+              }`}
+            >
+              <Timer className={`w-6 h-6 shrink-0 ${m.alerting ? "text-rose-400" : m.running ? "text-amber-400" : "text-slate-500"}`} />
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-bold text-slate-100 truncate">{m.name}</div>
+                <div className="text-sm font-bold text-slate-100 truncate flex items-center gap-2">
+                  {m.name}
+                  {m.alerting && (
+                    <span data-testid={`mixer-alert-${m.id}`} className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-rose-300 bg-rose-950/60 border border-rose-500/50 px-2 py-0.5 rounded-full">
+                      <BellRing className="w-3 h-3" /> Ciclo terminato
+                    </span>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span data-testid={`mixer-time-${m.id}`} className={`font-mono text-2xl font-black ${m.running ? "text-amber-300" : m.remaining > 0 ? "text-teal-300" : "text-slate-500"}`}>{fmt(m.remaining)}</span>
-                  {!m.running && (
+                  <span data-testid={`mixer-time-${m.id}`} className={`font-mono ${timeText} font-black ${m.alerting ? "text-rose-300" : m.running ? "text-amber-300" : m.remaining > 0 ? "text-teal-300" : "text-slate-500"}`}>{fmt(m.remaining)}</span>
+                  {!m.running && !m.alerting && (
                     <label className="flex items-center gap-1 text-[10px] text-slate-500 uppercase">
                       min
                       <input
@@ -158,22 +195,41 @@ export default function VoiceCore() {
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                {!m.running ? (
-                  <button data-testid={`mixer-start-${m.id}`} onClick={() => start(m.id)} className="w-9 h-9 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 flex items-center justify-center active:scale-95 transition-all" title="Avvia">
-                    <Play className="w-4 h-4" />
+                {m.alerting ? (
+                  <button data-testid={`mixer-dismiss-${m.id}`} onClick={() => dismiss(m.id)} className={`${ctrl} rounded-lg bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center active:scale-95 transition-all`} title="Ho capito">
+                    <BellRing className={ctrlIcon} />
+                  </button>
+                ) : !m.running ? (
+                  <button data-testid={`mixer-start-${m.id}`} onClick={() => start(m.id)} className={`${ctrl} rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 flex items-center justify-center active:scale-95 transition-all`} title="Avvia">
+                    <Play className={ctrlIcon} />
                   </button>
                 ) : (
-                  <button data-testid={`mixer-stop-${m.id}`} onClick={() => stop(m.id)} className="w-9 h-9 rounded-lg bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center active:scale-95 transition-all" title="Ferma">
-                    <Square className="w-4 h-4" />
+                  <button data-testid={`mixer-stop-${m.id}`} onClick={() => stop(m.id)} className={`${ctrl} rounded-lg bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center active:scale-95 transition-all`} title="Ferma">
+                    <Square className={ctrlIcon} />
                   </button>
                 )}
-                <button data-testid={`mixer-reset-${m.id}`} onClick={() => reset(m.id)} className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center active:scale-95 transition-all" title="Reset">
-                  <RotateCcw className="w-4 h-4" />
+                <button data-testid={`mixer-reset-${m.id}`} onClick={() => reset(m.id)} className={`${ctrl} rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center active:scale-95 transition-all`} title="Reset">
+                  <RotateCcw className={ctrlIcon} />
                 </button>
-                <button onClick={() => remove(m.id)} className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-500 hover:text-rose-400 flex items-center justify-center active:scale-95 transition-all" title="Rimuovi">
-                  <Trash2 className="w-4 h-4" />
+                <button onClick={() => remove(m.id)} className={`${ctrl} rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-500 hover:text-rose-400 flex items-center justify-center active:scale-95 transition-all`} title="Rimuovi">
+                  <Trash2 className={ctrlIcon} />
                 </button>
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Strumenti Laboratorio */}
+      <div data-testid="lab-tools" className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+        <h3 className="text-sm font-bold text-teal-400 flex items-center gap-2 uppercase tracking-wide">
+          <Wrench className="w-4 h-4" /> Strumenti Laboratorio
+        </h3>
+        <div className="space-y-2">
+          {LAB_TOOLS.map((tool) => (
+            <div key={tool.name} className="flex items-center justify-between bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm">
+              <span className="text-slate-200">{tool.name}</span>
+              <span className={`font-semibold ${tool.color}`}>{tool.status}</span>
             </div>
           ))}
         </div>

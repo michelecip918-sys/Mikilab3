@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones, PlusCircle, Wheat, Hand, Mic } from "lucide-react";
+import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones, PlusCircle, Wheat, Hand, Mic, Timer, Play, Square, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { useShift, setWorkMode, hasActiveAlerts, autonomyDeadline, fmtHM } from "@/lib/shiftState";
 import { isHeadsetRoutingAvailable, connectHeadset, startHeadsetSco } from "@/lib/nativeAudio";
 import Avatar3D from "@/components/Avatar3D";
+import { useMixers } from "@/audio/MixerTimersContext";
 import MikiLabEliteEngine from "@/sections/MikiLabEliteEngine";
 import { Cpu } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
@@ -14,6 +15,12 @@ import { operatorApi } from "@/lib/api";
 // VISTA "SCHEDE DI PRODUZIONE" — tema SCURO "Grain Gold" (ebano caldo + oro), zero-scroll.
 // Hands-free: ascolto continuo (tasto ORECCHIO in basso). Avatar 3D vocale al centro.
 const D = { bg: "#0E1620", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", goldSoft: "#5E8CA8", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
+const fmtSec = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+const LAB_TOOLS = [
+  { n: "Impastatrice Spirale 50kg", s: "Pronta" },
+  { n: "Forno Rotativo a Carrello", s: "In temperatura" },
+  { n: "Armadio Fermo-Lievitazione", s: "Attivo" },
+];
 
 export default function BraccioLab({ onOpenTool, onGestione }) {
   const { lang } = useLang();
@@ -56,6 +63,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   }, []);
 
   const consegne = () => window.dispatchEvent(new Event("mikilab-consegne"));
+  const { list: mixers, start: startMixer, stop: stopMixer } = useMixers();
   const [eliteOpen, setEliteOpen] = useState(false);
   const [hsBusy, setHsBusy] = useState(false);
   const onHeadset = async () => {
@@ -77,11 +85,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
     } finally { setHsBusy(false); }
   };
 
-  const QUICK = [
-    { id: "ricettadelgiorno", Icon: ChefHat, t: tri("Ricette del Giorno", "Tagesrezepte", "Today's Recipes", "Recetas del Día", "Recettes du Jour", "دستورهای امروز"), s: tri("Prodotti di oggi", "Heutige Produkte", "Today's products", "Productos de hoy", "Produits du jour", "محصولات امروز") },
-    { id: "emergenze", Icon: AlertTriangle, t: tri("Guasti & Celle", "Störungen & Zellen", "Failures & Cells", "Averías y Cámaras", "Pannes & Chambres", "خرابی و سردخانه"), s: tri("Emergenze & freddo", "Notfall & Kälte", "Emergency & cold", "Emergencia y frío", "Urgence & froid", "اضطراری و سرما"), badge: alert },
-    { id: "sosimpasto", Icon: LifeBuoy, t: tri("SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa", "SOS Pâte", "اس‌اواس خمیر"), s: tri("Soluzioni rapide", "Schnelle Hilfe", "Quick fixes", "Soluciones rápidas", "Solutions rapides", "راه‌حل سریع") },
-  ];
+  const QUICK = [];
 
   const lastNote = (shift.shift_notes || [])[0];
   const deadline = shift.work_mode === "autonomia" ? autonomyDeadline(shift) : null;
@@ -159,50 +163,42 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
         </div>
       </div>
 
-      {/* Comandi rapidi + Inserisci Ricetta */}
+      {/* Timer impastatrici reali + strumenti laboratorio */}
       <div className="space-y-2">
         <p className="text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1.5" style={{ color: D.gold }}>
-          <Zap className="w-3.5 h-3.5" /> {tri("Comandi rapidi", "Schnellbefehle", "Quick commands", "Comandos rápidos", "Commandes rapides", "دستورهای سریع")}
+          <Clock className="w-3.5 h-3.5" /> {tri("Timer Impastatrici", "Kneter-Timer", "Mixer timers", "Temporizadores amasadora", "Minuteurs pétrins", "تایمر خمیرگیر")}
         </p>
-        <div className="grid grid-cols-2 gap-2" data-testid="braccio-quick">
-          {QUICK.map((q) => (
-            <button key={q.id} data-testid={`braccio-quick-${q.id}`} onClick={() => onOpenTool && onOpenTool(q.id)}
-              className="relative flex items-center gap-2 rounded-2xl px-2.5 py-2 text-left active:scale-97 transition-all"
-              style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
-              <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(231,178,60,.14)", border: `1px solid ${D.goldSoft}` }}>
-                <q.Icon className="w-4 h-4" style={{ color: D.gold }} />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{q.t}</span>
-                <span className="block text-[10px] leading-tight truncate" style={{ color: D.muted }}>{q.s}</span>
-              </span>
-              {q.badge && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: D.danger }} />}
-            </button>
+        <div className="space-y-2" data-testid="braccio-mixers">
+          {mixers.map((m) => (
+            <div key={m.id} data-testid={`braccio-mixer-${m.id}`} className="flex items-center gap-3 rounded-2xl px-3 py-2.5" style={{ background: D.surf, border: `1.5px solid ${m.running ? D.gold : D.border}` }}>
+              <Timer className="w-5 h-5 shrink-0" style={{ color: m.running ? D.gold : D.muted }} />
+              <div className="flex-1 min-w-0">
+                <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{m.name}</span>
+                <span data-testid={`braccio-mixer-time-${m.id}`} className="block font-mono text-[18px] font-black leading-tight" style={{ color: m.running ? D.gold : (m.remaining > 0 ? D.text : D.muted) }}>{fmtSec(m.remaining)}</span>
+              </div>
+              {!m.running ? (
+                <button data-testid={`braccio-mixer-start-${m.id}`} onClick={() => startMixer(m.id)} className="w-9 h-9 rounded-lg flex items-center justify-center active:scale-95 transition-all" style={{ background: D.gold, color: D.bg }} title="Avvia">
+                  <Play className="w-4 h-4" />
+                </button>
+              ) : (
+                <button data-testid={`braccio-mixer-stop-${m.id}`} onClick={() => stopMixer(m.id)} className="w-9 h-9 rounded-lg flex items-center justify-center active:scale-95 transition-all" style={{ background: D.danger, color: "#fff" }} title="Ferma">
+                  <Square className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           ))}
-          {!isOperator && (<>
-          <button data-testid="braccio-quick-banco" onClick={() => setEliteOpen(true)}
-            className="flex items-center gap-2 rounded-2xl px-2.5 py-2 text-left active:scale-97 transition-all"
-            style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
-            <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(231,178,60,.14)", border: `1px solid ${D.goldSoft}` }}>
-              <Wheat className="w-4 h-4" style={{ color: D.gold }} />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{tri("Banco Impasti", "Teigbank", "Dough Bench", "Banco de Masas", "Banc à Pâte", "میز خمیر")}</span>
-              <span className="block text-[10px] leading-tight truncate" style={{ color: D.muted }}>{tri("Silos & dosi 3D", "Silos & Mengen 3D", "Silos & doses 3D", "Silos y dosis 3D", "Silos & doses 3D", "سیلو و مقدار")}</span>
-            </span>
-          </button>
-          <button data-testid="braccio-quick-aggiungi" onClick={() => onOpenTool && onOpenTool("aggiungi")}
-            className="flex items-center gap-2 rounded-2xl px-2.5 py-2 text-left active:scale-97 transition-all"
-            style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
-            <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(231,178,60,.14)", border: `1px solid ${D.goldSoft}` }}>
-              <PlusCircle className="w-4 h-4" style={{ color: D.gold }} />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{tri("Inserisci Ricetta", "Rezept hinzufügen", "Add Recipe", "Añadir Receta", "Ajouter Recette", "افزودن دستور")}</span>
-              <span className="block text-[10px] leading-tight truncate" style={{ color: D.muted }}>{tri("Scrivi o scansiona", "Schreiben/Scannen", "Write or scan", "Escribe o escanea", "Écris ou scanne", "بنویس یا اسکن کن")}</span>
-            </span>
-          </button>
-          </>)}
+        </div>
+
+        <p className="text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1.5 mt-1" style={{ color: D.gold }}>
+          <Wrench className="w-3.5 h-3.5" /> {tri("Strumenti Laboratorio", "Laborgeräte", "Lab tools", "Herramientas de laboratorio", "Outils du laboratoire", "ابزارهای آزمایشگاه")}
+        </p>
+        <div className="space-y-2" data-testid="braccio-labtools">
+          {LAB_TOOLS.map((tool) => (
+            <div key={tool.n} className="flex items-center justify-between rounded-2xl px-3 py-2.5" style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
+              <span className="text-[12px] font-bold" style={{ color: D.text }}>{tool.n}</span>
+              <span className="text-[11px] font-extrabold" style={{ color: D.gold }}>{tool.s}</span>
+            </div>
+          ))}
         </div>
 
         {/* Modalità Cuffie (hands-free) */}

@@ -41,7 +41,7 @@ export function MixerTimersProvider({ children }) {
       const now = Date.now();
       const finished = mixersRef.current.filter((m) => m.endsAt && m.endsAt <= now);
       if (finished.length) {
-        setMixers((l) => l.map((m) => (m.endsAt && m.endsAt <= now ? { ...m, endsAt: null, pausedRemaining: 0 } : m)));
+        setMixers((l) => l.map((m) => (m.endsAt && m.endsAt <= now ? { ...m, endsAt: null, pausedRemaining: 0, alerting: true } : m)));
         finished.forEach((m) => speak(`${m.name}, ciclo impasto terminato.`));
       } else {
         force((n) => n + 1); // aggiorna il countdown visivo
@@ -53,18 +53,19 @@ export function MixerTimersProvider({ children }) {
   const start = useCallback((id) => setMixers((l) => l.map((m) => {
     if (m.id !== id) return m;
     const secs = m.pausedRemaining && m.pausedRemaining > 0 ? m.pausedRemaining : Math.max(1, Math.round((Number(m.minutes) || 0) * 60));
-    return { ...m, endsAt: Date.now() + secs * 1000, pausedRemaining: null };
+    return { ...m, endsAt: Date.now() + secs * 1000, pausedRemaining: null, alerting: false };
   })), []);
   const stop = useCallback((id) => setMixers((l) => l.map((m) => (m.id === id && m.endsAt ? { ...m, pausedRemaining: remainingOf(m), endsAt: null } : m))), []);
-  const reset = useCallback((id) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, endsAt: null, pausedRemaining: null } : m))), []);
+  const reset = useCallback((id) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, endsAt: null, pausedRemaining: null, alerting: false } : m))), []);
+  const dismiss = useCallback((id) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, alerting: false } : m))), []);
   const setMinutes = useCallback((id, v) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, minutes: Math.max(0, Number(v) || 0) } : m))), []);
   const add = useCallback(() => setMixers((l) => [...l, { id: `m${Date.now()}`, name: `Impastatrice ${String(l.length + 1).padStart(2, "0")}`, minutes: 8, endsAt: null, pausedRemaining: null }]), []);
   const remove = useCallback((id) => setMixers((l) => (l.length > 1 ? l.filter((m) => m.id !== id) : l)), []);
 
-  const list = mixers.map((m) => ({ ...m, remaining: remainingOf(m), running: !!m.endsAt }));
+  const list = mixers.map((m) => ({ ...m, remaining: remainingOf(m), running: !!m.endsAt, alerting: !!m.alerting }));
 
   return (
-    <Ctx.Provider value={{ list, start, stop, reset, setMinutes, add, remove, speak }}>
+    <Ctx.Provider value={{ list, start, stop, reset, setMinutes, add, remove, dismiss, speak }}>
       {children}
     </Ctx.Provider>
   );
