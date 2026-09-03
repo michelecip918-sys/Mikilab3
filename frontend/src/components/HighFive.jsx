@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// Celebrazione "batti il 5" globale (Michele + Mohammed) con coriandoli e suono.
+// Celebrazione "batti il 5" globale (Michele + MikiLab) con coriandoli e suono.
 // Attiva con: fireHighFive("messaggio opzionale")
 export function fireHighFive(msg) {
   window.dispatchEvent(new CustomEvent("mikilab-highfive", { detail: { msg } }));
@@ -73,7 +73,7 @@ export default function HighFive() {
               className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-2xl" />
             <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.5, 1], opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }} className="mx-1 text-5xl drop-shadow-lg">🙌</motion.div>
-            <motion.img src={`${base}/mohammed-avatar.jpg`} alt="Mohammed"
+            <motion.img src={`${base}/logo.png`} alt="MikiLab"
               initial={{ x: 140, rotate: 10, opacity: 0 }} animate={{ x: 4, rotate: 0, opacity: 1 }}
               transition={{ type: "spring", stiffness: 130, damping: 12, delay: 0.1 }}
               className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-2xl" />

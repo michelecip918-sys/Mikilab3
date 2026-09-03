@@ -99,13 +99,13 @@
 "fr": "Enregistrer dans les rappels",
 "fa": "ذخیره در یادآورها"
 },
-"Scrivi o parla a Mohammadreza…": {
-"fr": "Écrivez ou parlez à Mohammadreza…",
-"fa": "بنویسید یا با Mohammadreza صحبت کنید…"
+"Scrivi o parla a MikiLab…": {
+"fr": "Écrivez ou parlez à MikiLab…",
+"fa": "بنویسید یا با MikiLab صحبت کنید…"
 },
-"Parla con Mohammadreza": {
-"fr": "Parler avec Mohammadreza",
-"fa": "صحبت با Mohammadreza"
+"Parla con MikiLab": {
+"fr": "Parler avec MikiLab",
+"fa": "صحبت با MikiLab"
 },
 "Sto ascoltando… parla pure.": {
 "fr": "J'écoute… parlez librement.",
@@ -1771,9 +1771,9 @@
 "fr": "SOS Pâte",
 "fa": "SOS خمیر"
 },
-"Diagnosi immediata da Mohammadreza": {
-"fr": "Diagnostic immédiat par Mohammadreza",
-"fa": "تشخیص فوری توسط Mohammadreza"
+"Diagnosi immediata da MikiLab": {
+"fr": "Diagnostic immédiat par MikiLab",
+"fa": "تشخیص فوری توسط MikiLab"
 },
 "Scatta o carica una foto del tuo pane o impasto: analizzo crosta, mollica, forma e cottura e ti dico causa e rimedio.": {
 "fr": "Prenez ou importez une photo de votre pain ou pâte : j'analyse la croûte, la mie, la forme et la cuisson, et je vous indique la cause et le remède.",
@@ -1783,9 +1783,9 @@
 "fr": "Analyse en cours…",
 "fa": "در حال تحلیل…"
 },
-"Ricetta consigliata da Mohammadreza": {
-"fr": "Recette recommandée par Mohammadreza",
-"fa": "دستور پیشنهادی Mohammadreza"
+"Ricetta consigliata da MikiLab": {
+"fr": "Recette recommandée par MikiLab",
+"fa": "دستور پیشنهادی MikiLab"
 },
 "Cerco la ricetta più adatta…": {
 "fr": "Je cherche la recette la plus adaptée…",
@@ -2359,9 +2359,9 @@
 "fr": "Academy da Casa",
 "fa": "Academy da Casa"
 },
-"Manda la foto del tuo pane a Mohammadreza per una diagnosi immediata": {
-"fr": "Envoie la photo de ton pain à Mohammadreza pour un diagnostic immédiat",
-"fa": "عکس نانت را برای Mohammadreza بفرست تا فوری تشخیص بده"
+"Manda la foto del tuo pane a MikiLab per una diagnosi immediata": {
+"fr": "Envoie la photo de ton pain à MikiLab pour un diagnostic immédiat",
+"fa": "عکس نانت را برای MikiLab بفرست تا فوری تشخیص بده"
 },
 "Apri": {
 "fr": "Ouvrir",
@@ -3731,9 +3731,9 @@
 "fr": "En plus · Tirez le meilleur parti du plan",
 "fa": "علاوه بر این · از برنامه نهایت استفاده را ببرید"
 },
-"Ciao, sono Mohammadreza 👋": {
-"fr": "Bonjour, je suis Mohammadreza 👋",
-"fa": "سلام، من Mohammadreza هستم 👋"
+"Ciao, sono MikiLab 👋": {
+"fr": "Bonjour, je suis MikiLab 👋",
+"fa": "سلام، من MikiLab هستم 👋"
 },
 "Assistente di Michele · ti guido nel laboratorio": {
 "fr": "Assistant de Michele · je vous guide dans le laboratoire",
@@ -3743,13 +3743,13 @@
 "fr": "Fermer l'assistant",
 "fa": "بستن دستیار"
 },
-"Chiedi a Mohammadreza": {
-"fr": "Demander à Mohammadreza",
-"fa": "از Mohammadreza بپرسید"
+"Chiedi a MikiLab": {
+"fr": "Demander à MikiLab",
+"fa": "از MikiLab بپرسید"
 },
-"Scrivi a Mohammadreza…": {
-"fr": "Écrire à Mohammadreza…",
-"fa": "پیام به Mohammadreza…"
+"Scrivi a MikiLab…": {
+"fr": "Écrire à MikiLab…",
+"fa": "پیام به MikiLab…"
 },
 "Piani di Lavoro": {
 "fr": "Plans de Travail",
@@ -3795,9 +3795,9 @@
 "fr": "Les PDF (plans, étiquettes UE, listes de courses) sont générés à la volée depuis les outils avec le bouton Imprimer/PDF. Ouvrez un plan ou une recette et utilisez 'Imprimer'.",
 "fa": "PDF‌ها (برنامه‌ها، برچسب‌های اتحادیه اروپا، لیست خرید) به‌صورت آنی از طریق ابزارها با دکمه چاپ/PDF تولید می‌شوند. یک برنامه یا دستورالعمل را باز کنید و از 'چاپ' استفاده کنید."
 },
-"Nessuna conversazione. Parla con 'Chiedi al Maestro' o con Mohammadreza nel Tuo Laboratorio: lo storico apparirà qui.": {
-"fr": "Aucune conversation. Parlez avec 'Demander au Maître' ou avec Mohammadreza dans Votre Laboratoire : l'historique apparaîtra ici.",
-"fa": "هیچ مکالمه‌ای وجود ندارد. با 'از استاد بپرسید' یا با Mohammadreza در کارگاه خود صحبت کنید: تاریخچه اینجا نمایش داده خواهد شد."
+"Nessuna conversazione. Parla con 'Chiedi al Maestro' o con MikiLab nel Tuo Laboratorio: lo storico apparirà qui.": {
+"fr": "Aucune conversation. Parlez avec 'Demander au Maître' ou avec MikiLab dans Votre Laboratoire : l'historique apparaîtra ici.",
+"fa": "هیچ مکالمه‌ای وجود ندارد. با 'از استاد بپرسید' یا با MikiLab در کارگاه خود صحبت کنید: تاریخچه اینجا نمایش داده خواهد شد."
 },
 "Chiedi al Maestro": {
 "fr": "Demander au Maître",
@@ -4067,33 +4067,33 @@
 "fr": "Temp. standard du laboratoire",
 "fa": "دمای استاندارد آزمایشگاه"
 },
-"Ciao Mohammadreza, sono in laboratorio e devo gestire la produzione. Voglio che analizzi la situazione, ricalcoli l'intero piano di lavoro a ritroso e mi dica esattamente cosa fare ora per ora. Se ci sono ordini urgenti, adatta gli slot del forno, le impastatrici e la cella frigo senza far bruciare o ritardare gli altri pani. Calcola anche la temperatura dell'acqua, l'idratazione corretta e inviami la timeline aggiornata con la conferma da premere.": {
-"fr": "Bonjour Mohammadreza, je suis en laboratoire et je dois gérer la production. Je veux que vous analysiez la situation, recalculiez l'intégralité du plan de travail à rebours et me disiez exactement quoi faire heure par heure. S'il y a des commandes urgentes, adaptez les créneaux du four, des pétrisseuses et de la chambre froide sans brûler ni retarder les autres pains. Calculez aussi la température de l'eau, l'hydratation correcte et envoyez-moi la timeline mise à jour avec la confirmation à valider.",
-"fa": "سلام Mohammadreza، در آزمایشگاه هستم و باید تولید را مدیریت کنم. می‌خواهم وضعیت را تحلیل کنی، کل برنامه کاری را از انتها به ابتدا محاسبه کنی و بگویی دقیقاً ساعت به ساعت چه کاری باید انجام دهم. اگر سفارش فوری وجود دارد، اسلات‌های فر، خمیرگیرها و یخچال را تنظیم کن بدون اینکه نان‌های دیگر بسوزند یا تأخیر بخورند. دمای آب و هیدراسیون صحیح را هم محاسبه کن و تایم‌لاین به‌روزشده را با دکمه تأیید برایم بفرست."
+"Ciao MikiLab, sono in laboratorio e devo gestire la produzione. Voglio che analizzi la situazione, ricalcoli l'intero piano di lavoro a ritroso e mi dica esattamente cosa fare ora per ora. Se ci sono ordini urgenti, adatta gli slot del forno, le impastatrici e la cella frigo senza far bruciare o ritardare gli altri pani. Calcola anche la temperatura dell'acqua, l'idratazione corretta e inviami la timeline aggiornata con la conferma da premere.": {
+"fr": "Bonjour MikiLab, je suis en laboratoire et je dois gérer la production. Je veux que vous analysiez la situation, recalculiez l'intégralité du plan de travail à rebours et me disiez exactement quoi faire heure par heure. S'il y a des commandes urgentes, adaptez les créneaux du four, des pétrisseuses et de la chambre froide sans brûler ni retarder les autres pains. Calculez aussi la température de l'eau, l'hydratation correcte et envoyez-moi la timeline mise à jour avec la confirmation à valider.",
+"fa": "سلام MikiLab، در آزمایشگاه هستم و باید تولید را مدیریت کنم. می‌خواهم وضعیت را تحلیل کنی، کل برنامه کاری را از انتها به ابتدا محاسبه کنی و بگویی دقیقاً ساعت به ساعت چه کاری باید انجام دهم. اگر سفارش فوری وجود دارد، اسلات‌های فر، خمیرگیرها و یخچال را تنظیم کن بدون اینکه نان‌های دیگر بسوزند یا تأخیر بخورند. دمای آب و هیدراسیون صحیح را هم محاسبه کن و تایم‌لاین به‌روزشده را با دکمه تأیید برایم بفرست."
 },
 "Gestisci la produzione ora": {
 "fr": "Gérer la production maintenant",
 "fa": "مدیریت تولید همین حالا"
 },
-"Ciao Mohammadreza, è arrivato un ordine extra all'ultimo momento e devo aggiungerlo alla produzione di oggi senza far ritardare o rovinare gli impasti già avviati. Dimmi in quale impastatrice inserirlo, come spostare gli slot del forno e della cella, e ricalcola la timeline ora per ora con le nuove quantità.": {
-"fr": "Bonjour Mohammadreza, une commande supplémentaire est arrivée à la dernière minute et je dois l'ajouter à la production d'aujourd'hui sans retarder ni abîmer les pâtes déjà lancées. Dites-moi dans quel pétrin l'insérer, comment déplacer les créneaux du four et de la chambre froide, et recalculez la timeline heure par heure avec les nouvelles quantités.",
-"fa": "سلام Mohammadreza، یک سفارش اضافه در آخرین لحظه رسیده و باید آن را به تولید امروز اضافه کنم بدون اینکه خمیرهای در جریان تأخیر بخورند یا خراب شوند. بگو در کدام خمیرگیر اضافه شود، چطور اسلات‌های فر و یخچال را جابه‌جا کنم، و تایم‌لاین را ساعت به ساعت با مقادیر جدید محاسبه کن."
+"Ciao MikiLab, è arrivato un ordine extra all'ultimo momento e devo aggiungerlo alla produzione di oggi senza far ritardare o rovinare gli impasti già avviati. Dimmi in quale impastatrice inserirlo, come spostare gli slot del forno e della cella, e ricalcola la timeline ora per ora con le nuove quantità.": {
+"fr": "Bonjour MikiLab, une commande supplémentaire est arrivée à la dernière minute et je dois l'ajouter à la production d'aujourd'hui sans retarder ni abîmer les pâtes déjà lancées. Dites-moi dans quel pétrin l'insérer, comment déplacer les créneaux du four et de la chambre froide, et recalculez la timeline heure par heure avec les nouvelles quantités.",
+"fa": "سلام MikiLab، یک سفارش اضافه در آخرین لحظه رسیده و باید آن را به تولید امروز اضافه کنم بدون اینکه خمیرهای در جریان تأخیر بخورند یا خراب شوند. بگو در کدام خمیرگیر اضافه شود، چطور اسلات‌های فر و یخچال را جابه‌جا کنم، و تایم‌لاین را ساعت به ساعت با مقادیر جدید محاسبه کن."
 },
 "Ordine urgente extra": {
 "fr": "Commande urgente supplémentaire",
 "fa": "سفارش فوری اضافه"
 },
-"Ciao Mohammadreza, l'impasto di oggi non è venuto come volevo (dimmi tu quali difetti controllare: struttura, idratazione, lievitazione, cottura). Analizza le possibili cause e correggi la ricetta e i tempi per la prossima volta: idratazione, temperatura dell'acqua, dosi di prefermento, durata di puntata e appretto. Dammi la versione corretta pronta da usare.": {
-"fr": "Bonjour Mohammadreza, la pâte d'aujourd'hui n'est pas sortie comme je le voulais (dis-moi quels défauts vérifier : structure, hydratation, levée, cuisson). Analyse les causes possibles et corrige la recette et les temps pour la prochaine fois : hydratation, température de l'eau, doses de pré-ferment, durée du pointage et de l'apprêt. Donne-moi la version corrigée prête à utiliser.",
-"fa": "سلام Mohammadreza، خمیر امروز اونطوری که می‌خواستم نشد (بگو کدوم نقص‌ها رو بررسی کنم: ساختار، رطوبت، تخمیر، پخت). دلایل احتمالی رو تحلیل کن و دستور و زمان‌بندی رو برای دفعه بعد اصلاح کن: رطوبت، دمای آب، مقدار پیش‌خمیر، مدت تخمیر اولیه و نهایی. نسخه اصلاح‌شده آماده استفاده رو بده."
+"Ciao MikiLab, l'impasto di oggi non è venuto come volevo (dimmi tu quali difetti controllare: struttura, idratazione, lievitazione, cottura). Analizza le possibili cause e correggi la ricetta e i tempi per la prossima volta: idratazione, temperatura dell'acqua, dosi di prefermento, durata di puntata e appretto. Dammi la versione corretta pronta da usare.": {
+"fr": "Bonjour MikiLab, la pâte d'aujourd'hui n'est pas sortie comme je le voulais (dis-moi quels défauts vérifier : structure, hydratation, levée, cuisson). Analyse les causes possibles et corrige la recette et les temps pour la prochaine fois : hydratation, température de l'eau, doses de pré-ferment, durée du pointage et de l'apprêt. Donne-moi la version corrigée prête à utiliser.",
+"fa": "سلام MikiLab، خمیر امروز اونطوری که می‌خواستم نشد (بگو کدوم نقص‌ها رو بررسی کنم: ساختار، رطوبت، تخمیر، پخت). دلایل احتمالی رو تحلیل کن و دستور و زمان‌بندی رو برای دفعه بعد اصلاح کن: رطوبت، دمای آب، مقدار پیش‌خمیر، مدت تخمیر اولیه و نهایی. نسخه اصلاح‌شده آماده استفاده رو بده."
 },
 "Correggi la ricetta": {
 "fr": "Corriger la recette",
 "fa": "اصلاح دستور"
 },
-"Ciao Mohammadreza, prepariamo già la produzione di domani. In base ai prodotti e alle quantità che ti indico, dimmi quali prefermenti e rinfreschi devo avviare stasera, a che ora, con quali dosi e temperature. Poi costruisci la timeline completa di domani a ritroso dall'orario di apertura, con impasti, celle e forni organizzati.": {
-"fr": "Bonjour Mohammadreza, préparons dès maintenant la production de demain. En fonction des produits et des quantités que je t'indique, dis-moi quels pré-ferments et rafraîchis je dois lancer ce soir, à quelle heure, avec quelles doses et températures. Puis construis la timeline complète de demain à rebours depuis l'heure d'ouverture, avec les pétrissages, chambres de fermentation et fours organisés.",
-"fa": "سلام Mohammadreza، بیا همین الان تولید فردا رو آماده کنیم. بر اساس محصولات و مقادیری که بهت می‌گم، بگو امشب چه پیش‌خمیرها و تجدیدخوراک‌هایی باید شروع کنم، چه ساعتی، با چه مقدار و دمایی. بعد برنامه زمانی کامل فردا رو از ساعت باز شدن به عقب بچین، با خمیرها، سلول‌های تخمیر و فرها سازمان‌دهی‌شده."
+"Ciao MikiLab, prepariamo già la produzione di domani. In base ai prodotti e alle quantità che ti indico, dimmi quali prefermenti e rinfreschi devo avviare stasera, a che ora, con quali dosi e temperature. Poi costruisci la timeline completa di domani a ritroso dall'orario di apertura, con impasti, celle e forni organizzati.": {
+"fr": "Bonjour MikiLab, préparons dès maintenant la production de demain. En fonction des produits et des quantités que je t'indique, dis-moi quels pré-ferments et rafraîchis je dois lancer ce soir, à quelle heure, avec quelles doses et températures. Puis construis la timeline complète de demain à rebours depuis l'heure d'ouverture, avec les pétrissages, chambres de fermentation et fours organisés.",
+"fa": "سلام MikiLab، بیا همین الان تولید فردا رو آماده کنیم. بر اساس محصولات و مقادیری که بهت می‌گم، بگو امشب چه پیش‌خمیرها و تجدیدخوراک‌هایی باید شروع کنم، چه ساعتی، با چه مقدار و دمایی. بعد برنامه زمانی کامل فردا رو از ساعت باز شدن به عقب بچین، با خمیرها، سلول‌های تخمیر و فرها سازمان‌دهی‌شده."
 },
 "Pianifica domani": {
 "fr": "Planifier demain",
@@ -5267,17 +5267,17 @@
 "fr": "CHOISIR AUSSI (interrupteurs du plan)",
 "fa": "همچنین انتخاب کن (کلیدهای برنامه)"
 },
-"👆 Interruttori ON/OFF: accendi solo ciò che vuoi nel piano. Tocca la «i» e Mohammadreza ti spiega cosa fa. Il piano base (ricette + quantità) si genera comunque.": {
-"fr": "👆 Interrupteurs ON/OFF : active uniquement ce que tu veux dans le plan. Touche le «i» et Mohammadreza t'explique ce que ça fait. Le plan de base (recettes + quantités) est généré dans tous les cas.",
-"fa": "👆 کلیدهای ON/OFF: فقط چیزی که می‌خواهی را در برنامه روشن کن. روی «i» بزن تا Mohammadreza توضیح دهد. برنامه پایه (دستورها + مقادیر) در هر صورت تولید می‌شود."
+"👆 Interruttori ON/OFF: accendi solo ciò che vuoi nel piano. Tocca la «i» e MikiLab ti spiega cosa fa. Il piano base (ricette + quantità) si genera comunque.": {
+"fr": "👆 Interrupteurs ON/OFF : active uniquement ce que tu veux dans le plan. Touche le «i» et MikiLab t'explique ce que ça fait. Le plan de base (recettes + quantités) est généré dans tous les cas.",
+"fa": "👆 کلیدهای ON/OFF: فقط چیزی که می‌خواهی را در برنامه روشن کن. روی «i» بزن تا MikiLab توضیح دهد. برنامه پایه (دستورها + مقادیر) در هر صورت تولید می‌شود."
 },
 "Apri anche altri strumenti": {
 "fr": "Ouvre aussi d'autres outils",
 "fa": "ابزارهای دیگر را هم باز کن"
 },
-"Tocca la «i» dorata su ogni strumento: Mohammadreza ti spiega a cosa serve (con un suono). Poi tocca lo strumento per aprirlo.": {
-"fr": "Touche le «i» doré sur chaque outil : Mohammadreza t'explique à quoi il sert (avec un son). Puis touche l'outil pour l'ouvrir.",
-"fa": "روی «i» طلایی هر ابزار بزن: Mohammadreza توضیح می‌دهد به چه دردی می‌خورد (با صدا). سپس روی ابزار بزن تا باز شود."
+"Tocca la «i» dorata su ogni strumento: MikiLab ti spiega a cosa serve (con un suono). Poi tocca lo strumento per aprirlo.": {
+"fr": "Touche le «i» doré sur chaque outil : MikiLab t'explique à quoi il sert (avec un son). Puis touche l'outil pour l'ouvrir.",
+"fa": "روی «i» طلایی هر ابزار بزن: MikiLab توضیح می‌دهد به چه دردی می‌خورد (با صدا). سپس روی ابزار بزن تا باز شود."
 },
 "🎉 Hai scoperto tutti gli strumenti!": {
 "fr": "🎉 Tu as découvert tous les outils !",
@@ -5855,9 +5855,9 @@
 "fr": "Ami, associé & Coach de Laboratoire",
 "fa": "دوست، شریک و مربی کارگاه"
 },
-"Sono Mohammadreza. Con Michele ci siamo conosciuti in viaggio e abbiamo lavorato spalla a spalla: oggi sono la guida che ti accompagna passo-passo su ricette, tempi e organizzazione.": {
-"fr": "Je suis Mohammadreza. Michele et moi nous sommes rencontrés en voyage et avons travaillé côte à côte : aujourd'hui je suis le guide qui t'accompagne pas-à-pas sur les recettes, les temps et l'organisation.",
-"fa": "من Mohammadreza هستم. من و Michele در سفر با هم آشنا شدیم و دوش‌به‌دوش کار کردیم: امروز من راهنمایی هستم که قدم‌به‌قدم در دستور‌العمل‌ها، زمان‌بندی و سازماندهی کنارت می‌مانم."
+"Sono MikiLab. Con Michele ci siamo conosciuti in viaggio e abbiamo lavorato spalla a spalla: oggi sono la guida che ti accompagna passo-passo su ricette, tempi e organizzazione.": {
+"fr": "Je suis MikiLab. Michele et moi nous sommes rencontrés en voyage et avons travaillé côte à côte : aujourd'hui je suis le guide qui t'accompagne pas-à-pas sur les recettes, les temps et l'organisation.",
+"fa": "من MikiLab هستم. من و Michele در سفر با هم آشنا شدیم و دوش‌به‌دوش کار کردیم: امروز من راهنمایی هستم که قدم‌به‌قدم در دستور‌العمل‌ها، زمان‌بندی و سازماندهی کنارت می‌مانم."
 },
 "La nostra è una storia di amicizia e riscatto. Conosciuti in viaggio, lontani da casa, ci siamo trovati fianco a fianco davanti al forno: notti di lavoro, tanta fatica e la voglia di ricominciare. Michele mi ha insegnato l'arte bianca, io gli ho dato una mano a non mollare mai. MikiLab nasce anche da qui — dall'idea che il pane unisce le persone e che nessuno debba sentirsi solo in un paese nuovo.": {
 "fr": "La nôtre est une histoire d'amitié et de renaissance. Rencontrés en voyage, loin de chez nous, nous nous sommes retrouvés côte à côte devant le four : des nuits de travail, beaucoup d'efforts et l'envie de recommencer. Michele m'a enseigné l'art boulanger, je l'ai aidé à ne jamais abandonner. MikiLab naît aussi de là — de l'idée que le pain unit les gens et que personne ne doit se sentir seul dans un nouveau pays.",
@@ -5891,9 +5891,9 @@
 "fr": "Guide du Site",
 "fa": "راهنمای سایت"
 },
-"Michele & Mohammadreza ti spiegano come funziona MikiLab.": {
-"fr": "Michele & Mohammadreza t'expliquent comment fonctionne MikiLab.",
-"fa": "Michele و Mohammadreza توضیح می‌دهند که MikiLab چطور کار می‌کند."
+"Michele & MikiLab ti spiegano come funziona MikiLab.": {
+"fr": "Michele & MikiLab t'expliquent comment fonctionne MikiLab.",
+"fa": "Michele و MikiLab توضیح می‌دهند که MikiLab چطور کار می‌کند."
 },
 "La nostra storia": {
 "fr": "Notre histoire",
@@ -6711,9 +6711,9 @@
 "fr": "La rencontre en voyage",
 "fa": "آشنایی در سفر"
 },
-"Michele e Mohammadreza si conoscono lontani da casa.": {
-"fr": "Michele et Mohammadreza se rencontrent loin de chez eux.",
-"fa": "Michele و Mohammadreza دور از خانه با هم آشنا می‌شوند."
+"Michele e MikiLab si conoscono lontani da casa.": {
+"fr": "Michele et MikiLab se rencontrent loin de chez eux.",
+"fa": "Michele و MikiLab دور از خانه با هم آشنا می‌شوند."
 },
 "Spalla a spalla al forno": {
 "fr": "Côte à côte au fournil",
@@ -6731,9 +6731,9 @@
 "fr": "L'idée que le pain unit les gens, pour aider chaque boulanger.",
 "fa": "این ایده که نان مردم را به هم پیوند می‌دهد، برای کمک به هر نانوا."
 },
-"Michele e Mohammadreza ti guidano nel sito, sezione per sezione.": {
-"fr": "Michele et Mohammadreza vous guident sur le site, section par section.",
-"fa": "Michele و Mohammadreza شما را بخش به بخش در سایت راهنمایی می‌کنند."
+"Michele e MikiLab ti guidano nel sito, sezione per sezione.": {
+"fr": "Michele et MikiLab vous guident sur le site, section par section.",
+"fa": "Michele و MikiLab شما را بخش به بخش در سایت راهنمایی می‌کنند."
 },
 "Gestione Vapore & Forno": {
 "fr": "Gestion Vapeur & Four",
@@ -10663,9 +10663,9 @@
 "fr": "moins",
 "fa": "کمتر"
 },
-"E io sono Mohammadreza, il tuo aiuto: dimmi cosa ti serve e ti porto subito nella sezione giusta.": {
-"fr": "Et moi je suis Mohammadreza, ton assistant : dis-moi ce dont tu as besoin et je t'emmène tout de suite dans la bonne section.",
-"fa": "و من Mohammadreza هستم، دستیار تو: بگو چه نیازی داری تا فوراً به بخش درست ببرمت."
+"E io sono MikiLab, il tuo aiuto: dimmi cosa ti serve e ti porto subito nella sezione giusta.": {
+"fr": "Et moi je suis MikiLab, ton assistant : dis-moi ce dont tu as besoin et je t'emmène tout de suite dans la bonne section.",
+"fa": "و من MikiLab هستم، دستیار تو: بگو چه نیازی داری تا فوراً به بخش درست ببرمت."
 },
 "Tutto è gratis: le ricette compaiono subito nel Piano IA. Ti configuro tutto io.": {
 "fr": "Tout est gratuit : les recettes apparaissent immédiatement dans le Plan IA. Je configure tout pour toi.",
@@ -10871,9 +10871,9 @@
 "fr": "Bravo ! Ton exploit est sur le fil de la communauté 🎉",
 "fa": "آفرین! دستاورد شما در فید جامعه است 🎉"
 },
-"Mohammadreza · il tuo assistente": {
-"fr": "Mohammadreza · ton assistant",
-"fa": "Mohammadreza · دستیار شما"
+"MikiLab · il tuo assistente": {
+"fr": "MikiLab · ton assistant",
+"fa": "MikiLab · دستیار شما"
 },
 "Inserisci le tue Ricette": {
 "fr": "Ajoute tes Recettes",
@@ -11607,9 +11607,9 @@
 "fr": "Par jour",
 "fa": "در روز"
 },
-"Ciao, sono Mohammadreza, il tuo assistente in laboratorio.": {
-"fr": "Ciao, sono Mohammadreza, il tuo assistente in laboratorio.",
-"fa": "سلام، من Mohammadreza هستم، دستیار شما در آزمایشگاه."
+"Ciao, sono MikiLab, il tuo assistente in laboratorio.": {
+"fr": "Ciao, sono MikiLab, il tuo assistente in laboratorio.",
+"fa": "سلام، من MikiLab هستم، دستیار شما در آزمایشگاه."
 },
 "Ti guido su ogni passaggio con timer, temperature e la lista della spesa (dove comprare)": {
 "fr": "Je vous guide à chaque étape avec des minuteries, des températures et la liste de courses (où acheter)",
@@ -11643,9 +11643,9 @@
 "fr": "Sam",
 "fa": "شنبه"
 },
-"Benvenuto ne «Il Tuo Laboratorio», il cuore di MikiLab. Ora Mohammadreza ti spiega in pochi minuti come muoverti qui: poi ti lascio libero di lavorare, in modo produttivo e senza stress.": {
-"fr": "Bienvenue dans «Ton Laboratoire», le cœur de MikiLab. Maintenant Mohammadreza t'explique en quelques minutes comment t'y retrouver : ensuite je te laisse libre de travailler, de façon productive et sans stress.",
-"fa": "به «آزمایشگاه تو» خوش آمدی، قلب MikiLab. حالا Mohammadreza در چند دقیقه توضیح می‌دهد چطور اینجا کار کنی: بعد از آن آزادی تا به شکلی سازنده و بدون استرس کار کنی."
+"Benvenuto ne «Il Tuo Laboratorio», il cuore di MikiLab. Ora MikiLab ti spiega in pochi minuti come muoverti qui: poi ti lascio libero di lavorare, in modo produttivo e senza stress.": {
+"fr": "Bienvenue dans «Ton Laboratoire», le cœur de MikiLab. Maintenant MikiLab t'explique en quelques minutes comment t'y retrouver : ensuite je te laisse libre de travailler, de façon productive et sans stress.",
+"fa": "به «آزمایشگاه تو» خوش آمدی، قلب MikiLab. حالا MikiLab در چند دقیقه توضیح می‌دهد چطور اینجا کار کنی: بعد از آن آزادی تا به شکلی سازنده و بدون استرس کار کنی."
 },
 "Da zero": {
 "fr": "De zéro",
@@ -11983,9 +11983,9 @@
 "fr": "Création du PDF…",
 "fa": "در حال ایجاد PDF…"
 },
-"Voce di Mohammadreza (assistente)": {
-"fr": "Voix de Mohammadreza (assistant)",
-"fa": "صدای Mohammadreza (دستیار)"
+"Voce di MikiLab (assistente)": {
+"fr": "Voix de MikiLab (assistant)",
+"fa": "صدای MikiLab (دستیار)"
 },
 "Snack": {
 "fr": "Snack",

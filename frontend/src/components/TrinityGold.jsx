@@ -58,11 +58,6 @@ export function TrinitySeal() {
                 "MikiLab est une plateforme propriétaire avancée de gestion de boulangerie professionnelle, conçue, développée et dirigée exclusivement par Michele (Le Commandant) avec BakeMix AI comme copilote.",
                 "MikiLab یک پلتفرم اختصاصی پیشرفته برای مدیریت نانوایی حرفه‌ای است که توسط میکله طراحی و هدایت شده است.")}
             </p>
-            <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 mb-3" style={{ background: "#12100C", border: "1px solid #2A3B49" }}>
-              <p className="text-[11.5px] leading-snug" style={{ color: "#94A3B8" }}>
-                {tri("Credits di background — Technical Advisor: Mohammed (Silent Contributor).", "Hintergrund-Credits — Technical Advisor: Mohammed (Silent Contributor).", "Background credits — Technical Advisor: Mohammed (Silent Contributor).", "Créditos — Asesor técnico: Mohammed (Silent Contributor).", "Crédits — Conseiller technique : Mohammed (Silent Contributor).", "تقدیر — مشاور فنی: محمد.")}
-              </p>
-            </div>
             <p className="text-[11px] leading-snug text-center" style={{ color: "#8f7a52" }}>
               {tri("© MikiLab — Proprietà Intellettuale Riservata. Software ideato, sviluppato e diretto da Michele. Tutti i diritti relativi all'architettura di sistema e al modello personalizzato BakeMix AI sono riservati. È severamente vietata qualsiasi riproduzione, modifica o distribuzione non autorizzata.",
                 "© MikiLab — Alle Rechte vorbehalten. Von Michele konzipiert und geleitet. Reproduktion/Änderung/Verbreitung untersagt.",

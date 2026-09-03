@@ -8,14 +8,14 @@ import { siteSettingsApi, weeklyApi } from "@/lib/api";
 const base = process.env.PUBLIC_URL || "";
 const AV = {
   michele: `${base}/michele-real-lab.jpg`,
-  momy: `${base}/mohammed-avatar.jpg`,
+  momy: `${base}/logo.png`,
 };
 
 // Testi "fumetto" (SOLO scritti, nessuna voce) per sezione.
 const SCRIPTS = {
   home: [
     { who: "michele", it: "Ciao, sono Michele! Questo è il mio MikiLab: pane vero, il mio metodo, zero fretta. Parti dalle Ricette e seguimi.", de: "Hallo, ich bin Michele! Das ist mein MikiLab: echtes Brot, meine Methode. Starte bei den Rezepten und folge mir.", en: "Hi, I'm Michele! This is my MikiLab: real bread, my method, no rush. Start from the Recipes and follow me.", es: "¡Hola, soy Michele! Este es mi MikiLab: pan de verdad, mi método. Empieza por las Recetas y sígueme." },
-    { who: "momy", it: "E io sono Mohammadreza, il tuo aiuto: dimmi cosa ti serve e ti porto subito nella sezione giusta.", de: "Und ich bin Mohammadreza, deine Hilfe: sag mir, was du brauchst, und ich bringe dich zum richtigen Bereich.", en: "And I'm Mohammadreza, your helper: tell me what you need and I'll take you to the right section.", es: "Y yo soy Mohammadreza, tu ayuda: dime qué necesitas y te llevo a la sección correcta." },
+    { who: "momy", it: "E io sono MikiLab, il tuo aiuto: dimmi cosa ti serve e ti porto subito nella sezione giusta.", de: "Und ich bin MikiLab, deine Hilfe: sag mir, was du brauchst, und ich bringe dich zum richtigen Bereich.", en: "And I'm MikiLab, your helper: tell me what you need and I'll take you to the right section.", es: "Y yo soy MikiLab, tu ayuda: dime qué necesitas y te llevo a la sección correcta." },
   ],
   ricette: [
     { who: "michele", it: "Queste sono le MIE ricette, spiegate passo dopo passo col mio metodo. Aprine una e adattala alle tue dosi.", de: "Das sind MEINE Rezepte, Schritt für Schritt nach meiner Methode. Öffne eins und passe es an deine Mengen an.", en: "These are MY recipes, explained step by step with my method. Open one and adapt it to your amounts.", es: "Estas son MIS recetas, explicadas paso a paso con mi método. Abre una y adáptala a tus dosis." },
@@ -39,7 +39,7 @@ const SCRIPTS = {
   ],
 };
 
-const NAME = { michele: "Michele", momy: "Mohammadreza" };
+const NAME = { michele: "Michele", momy: "MikiLab" };
 
 export default function AvatarBubbles({ variant = "impara" }) {
   const { lang } = useLang();

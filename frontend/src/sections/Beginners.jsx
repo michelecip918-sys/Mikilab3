@@ -539,14 +539,14 @@ export default function Beginners({ onNavigate }) {
       {/* Pianifica il pane a casa */}
       <HomePlanner />
 
-      {/* Academy da Casa — Mohammadreza assistente per l'home baker */}
+      {/* Academy da Casa — MikiLab assistente per l'home baker */}
       <div className="flex items-center gap-2 text-[#7E8A93] pt-2">
         <ChefHat className="w-4 h-4" />
         <span className="font-display text-lg font-bold">{tri3(lang, "Academy da Casa", "Heim-Academy", "Home Academy", "Academy en Casa")}</span>
       </div>
       <AcademyCoach />
 
-      {/* SOS Impasto: la foto del pane va a Mohammadreza per una diagnosi (apri dagli accessi rapidi) */}
+      {/* SOS Impasto: la foto del pane va a MikiLab per una diagnosi (apri dagli accessi rapidi) */}
       <SosImpasto open={sosOpen} onClose={() => setSosOpen(false)} onNavigate={onNavigate} />
 
 

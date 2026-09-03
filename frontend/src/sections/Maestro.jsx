@@ -66,6 +66,7 @@ import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import VoiceCore from "@/sections/VoiceCore";
 import ThermalGuard from "@/sections/ThermalGuard";
 import ReportGiornata from "@/sections/ReportGiornata";
+import TeamWorkflow from "@/sections/TeamWorkflow";
 import EsuberoZero from "@/sections/EsuberoZero";
 import SmartWeatherBaker from "@/sections/SmartWeatherBaker";
 import SimulatoreForno from "@/sections/SimulatoreForno";
@@ -76,6 +77,7 @@ import LabPizzeria from "@/sections/LabPizzeria";
 import LabPasticceria from "@/sections/LabPasticceria";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import ManiSporche from "@/sections/ManiSporche";
+import ManualePage from "@/sections/ManualePage";
 import ToolsDirectory from "@/components/ToolsDirectory";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
@@ -187,6 +189,8 @@ export default function Maestro() {
         {tool === "voicecore" && <VoiceCore />}
         {tool === "thermalguard" && <ThermalGuard />}
         {tool === "report" && <ReportGiornata />}
+        {tool === "manuale" && <ManualePage />}
+        {tool === "teamos" && <TeamWorkflow />}
         {tool === "scarti" && <RegistroScarti />}
         {tool === "ricettadelgiorno" && <RicettaDelGiorno />}
         {tool === "emergenze" && <Emergenze />}

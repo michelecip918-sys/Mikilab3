@@ -7,9 +7,9 @@ import { mkTri } from "@/i18n/triMaps";
 const DONE_KEY = "mikilab_lab_tour_done";
 const base = process.env.PUBLIC_URL || "";
 const MICHELE = `${base}/michele-avatar-full.jpg`;
-const MOHAMMED = `${base}/mohammed-avatar.jpg`;
+const MOHAMMED = `${base}/logo.png`;
 
-// Apri il tour a richiesta (dal riquadro di Mohammed o altrove).
+// Apri il tour a richiesta (dal riquadro di MikiLab o altrove).
 export function openLabTour() {
   window.dispatchEvent(new CustomEvent("mikilab-lab-tour"));
 }
@@ -21,9 +21,9 @@ function buildSlides(lang) {
       who: "michele", avatar: MICHELE,
       title: tri("Ciao, sono Michele! 👋", "Hallo, ich bin Michele! 👋", "Hi, I'm Michele! 👋"),
       body: tri(
-        "Benvenuto ne «Il Tuo Laboratorio», il cuore di MikiLab. Ora Mohammadreza ti spiega in pochi minuti come muoverti qui: poi ti lascio libero di lavorare, in modo produttivo e senza stress.",
-        "Willkommen in «Deiner Backstube», dem Herzen von MikiLab. Mohammadreza erklärt dir gleich in wenigen Minuten, wie du dich hier bewegst – danach lasse ich dich in Ruhe und stressfrei arbeiten.",
-        "Welcome to «Your Lab», the heart of MikiLab. Mohammadreza will now explain in a few minutes how to move around here – then I'll leave you free to work, productively and stress-free."),
+        "Benvenuto ne «Il Tuo Laboratorio», il cuore di MikiLab. Ora MikiLab ti spiega in pochi minuti come muoverti qui: poi ti lascio libero di lavorare, in modo produttivo e senza stress.",
+        "Willkommen in «Deiner Backstube», dem Herzen von MikiLab. MikiLab erklärt dir gleich in wenigen Minuten, wie du dich hier bewegst – danach lasse ich dich in Ruhe und stressfrei arbeiten.",
+        "Welcome to «Your Lab», the heart of MikiLab. MikiLab will now explain in a few minutes how to move around here – then I'll leave you free to work, productively and stress-free."),
     },
     {
       who: "mohammed", avatar: MOHAMMED, step: 1,
@@ -146,7 +146,7 @@ export default function LabOnboarding() {
             <div className={`p-5 ${cur.who === "michele" ? "bg-gradient-to-br from-[#3F4A54] to-[#5E6B62]" : "bg-gradient-to-br from-[#3E9C93] to-[#3E9C93]"} text-white`}>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-bold uppercase tracking-wide text-white/70">
-                  {cur.who === "michele" ? tri("Michele · MikiLab", "Michele · MikiLab", "Michele · MikiLab") : tri("Mohammadreza · il tuo assistente", "Mohammadreza · dein Assistent", "Mohammadreza · your assistant")}
+                  {cur.who === "michele" ? tri("Michele · MikiLab", "Michele · MikiLab", "Michele · MikiLab") : tri("MikiLab · il tuo assistente", "MikiLab · dein Assistent", "MikiLab · your assistant")}
                 </span>
                 <div className="flex items-center gap-1.5">
                   <button data-testid="lab-onboarding-close" onClick={close} title="close"

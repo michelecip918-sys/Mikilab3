@@ -41,8 +41,8 @@ export default function ModuloScienza({ activeTab = "scienza" }) {
           <FlaskConical className="w-6 h-6 text-teal-400" />
         </span>
         <div>
-          <h3 className="text-xl font-bold text-teal-400">Polo Didattico & Schede Tecniche Fermentazione</h3>
-          <p className="text-slate-400 text-sm mt-0.5">Guide scientifiche visive per il laboratorio.</p>
+          <h3 className="text-xl font-bold text-teal-400">Schede Tecniche di Fermentazione</h3>
+          <p className="text-slate-400 text-sm mt-0.5">Guide rapide per il laboratorio, senza fronzoli.</p>
         </div>
       </div>
 

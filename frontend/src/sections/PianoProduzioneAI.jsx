@@ -184,6 +184,8 @@ export const TOOLS = [
   { id: "voicecore", Icon: Mic, cat: "coldchain", kind: "gestisci", it: "Voice Core", de: "Voice Core", en: "Voice Core", es: "Voice Core" },
   { id: "thermalguard", Icon: Thermometer, cat: "coldchain", kind: "gestisci", it: "Zero-Night & Thermal Guard", de: "Zero-Night & Thermal Guard", en: "Zero-Night & Thermal Guard", es: "Zero-Night & Thermal Guard" },
   { id: "report", Icon: ClipboardList, cat: "coldchain", kind: "gestisci", it: "Report Fine Giornata", de: "Tagesabschluss-Report", en: "End-of-day Report", es: "Reporte de Fin de Día" },
+  { id: "teamos", Icon: Users, cat: "coldchain", kind: "gestisci", it: "Team OS · Workflow", de: "Team OS · Workflow", en: "Team OS · Workflow", es: "Team OS · Workflow" },
+  { id: "manuale", Icon: BookOpen, cat: "coldchain", kind: "controlla", it: "Manuale & Hardware", de: "Handbuch & Hardware", en: "Manual & Hardware", es: "Manual y Hardware" },
   { id: "scarti", Icon: Recycle, cat: "coldchain", kind: "gestisci", it: "Registro Scarti", de: "Ausschuss-Register", en: "Waste Log", es: "Registro de Mermas" },
   { id: "capo", Icon: Building2, cat: "coldchain", kind: "gestisci", it: "Controllo Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers", es: "Cámaras y Amasadoras" },
   { id: "freezer", Icon: Snowflake, cat: "coldchain", kind: "gestisci", it: "Giacenze Freezer", de: "Gefrier-Bestand", en: "Freezer Stock", es: "Stock Congelador" },
@@ -278,7 +280,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [plan, setPlan] = useState("");
   const capoArchiveRef = useRef(null);
   const favDragMoved = useRef(false);
-  const [guideId, setGuideId] = useState(null); // strumento spiegato da Mohammadreza
+  const [guideId, setGuideId] = useState(null); // strumento spiegato da MikiLab
   const [generating, setGenerating] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [bakerNote, setBakerNote] = useState("");
@@ -315,7 +317,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
   const [tourForce, setTourForce] = useState(0);
   const [toolUsage, setToolUsage] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_tool_usage") || "{}"); } catch { return {}; } });
   const guideToolId = (id) => MODULE_TOOL[id] || (TOOLS.some((t) => t.id === id) ? id : null);
-  // Apertura guida di Mohammadreza con suono di arrivo (campanella del forno)
+  // Apertura guida di MikiLab con suono di arrivo (campanella del forno)
   const openGuide = (id) => { try { playSfx("ding"); } catch { /* */ } setGuideId(id); };
 
   const openToolTracked = (id) => {
@@ -892,7 +894,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       {onOpenTool && <LabTour force={tourForce} onClose={() => setTourForce(0)} storageKey="mikilab_lab_tour_v2"
         labels={{ skip: tri3(lang, "Salta", "Überspringen", "Skip"), next: tri3(lang, "Avanti", "Weiter", "Next"), done: tri3(lang, "Ho capito!", "Verstanden!", "Got it!") }}
         steps={[
-          { target: null, title: tri3(lang, "Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋"),
+          { target: null, title: tri3(lang, "Ciao, sono MikiLab 👋", "Hallo, ich bin MikiLab 👋", "Hi, I'm MikiLab 👋"),
             body: tri3(lang, "Ti mostro in pochi passi, dall'alto verso il basso, come muoverti nel tuo laboratorio. Meno di un minuto!", "Ich zeige dir Schritt für Schritt, von oben nach unten, dein Labor. Weniger als eine Minute!", "I'll show you step by step, top to bottom, how to move around your lab. Under a minute!") },
           { target: "maestro-top-aggiungi", title: tri3(lang, "1 · Inserisci le tue ricette", "1 · Rezepte einfügen", "1 · Add your recipes"),
             body: tri3(lang, "Si parte da qui: tocca «Inserisci una Ricetta» per aggiungerle o scansionarle. Sono la base di tutto il resto.", "Hier geht's los: Tippe auf „Rezept einfügen“, um sie hinzuzufügen oder zu scannen. Sie sind die Basis für alles.", "Start here: tap 'Add a Recipe' to add or scan them. They're the base for everything else.") },
@@ -1007,13 +1009,13 @@ export default function PianoProduzioneAI({ onOpenTool }) {
 
 
       <div className="flex flex-col">
-      {/* Spiegazione Mohammadreza: pannello FISSO in fondo, visibile ovunque (niente scroll in alto) */}
+      {/* Spiegazione MikiLab: pannello FISSO in fondo, visibile ovunque (niente scroll in alto) */}
       {guideId && (
         <div data-testid="tool-guide-bubble" className="fixed inset-x-0 bottom-0 z-[80] px-3 pb-[max(16px,env(safe-area-inset-bottom))] pt-2 pointer-events-none">
           <div className="mx-auto max-w-md pointer-events-auto flex items-start gap-2.5 rounded-2xl bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] text-white p-3 shadow-2xl ring-1 ring-white/15">
-            <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-white/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">Mohammadreza</p>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-white/70">MikiLab</p>
               <p className="text-sm leading-snug mt-0.5">{(MODULE_DESC[guideId] && (MODULE_DESC[guideId][lang] || MODULE_DESC[guideId].it)) || guideFor(guideId, lang)}</p>
               {onOpenTool && guideToolId(guideId) && (
                 <button data-testid="tool-guide-open" onClick={() => { const tid = guideToolId(guideId); setGuideId(null); openToolTracked(tid); }}
@@ -1066,7 +1068,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           </p>
         </div>
 
-        {/* La spiegazione di Mohammadreza ora è un pannello fisso in fondo (vedi sotto): niente più scroll in alto. */}
+        {/* La spiegazione di MikiLab ora è un pannello fisso in fondo (vedi sotto): niente più scroll in alto. */}
 
         <div data-testid="capo-modules" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {MODULES.map(({ id, Icon, it, de, en }) => {
@@ -1102,7 +1104,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       <Section order={3} icon={<Wrench className="w-4 h-4" />} title={tri3(lang, "Apri anche altri strumenti", "Weitere Werkzeuge öffnen", "Open other tools")}>
         <div className="mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#1B2A38] dark:bg-[#2a2418] border border-[#e5d4b0] dark:border-[#4a3f28] p-2.5 flex items-start gap-2">
           <span className="w-5 h-5 rounded-full bg-[#3E9C93] flex items-center justify-center text-white shrink-0 mt-0.5"><Info className="w-3 h-3" /></span>
-          <p className="text-[11px] text-[#7a5a1f] dark:text-[#d3ab6b] leading-snug">{tri3(lang, "Tocca la «i» dorata su ogni strumento: Mohammadreza ti spiega a cosa serve (con un suono). Poi tocca lo strumento per aprirlo.", "Tippe auf das goldene „i“ auf jedem Werkzeug: Mohammadreza erklärt es dir (mit Ton). Dann tippe auf das Werkzeug, um es zu öffnen.", "Tap the golden 'i' on each tool: Mohammadreza explains what it's for (with a sound). Then tap the tool to open it.")}</p>
+          <p className="text-[11px] text-[#7a5a1f] dark:text-[#d3ab6b] leading-snug">{tri3(lang, "Tocca la «i» dorata su ogni strumento: MikiLab ti spiega a cosa serve (con un suono). Poi tocca lo strumento per aprirlo.", "Tippe auf das goldene „i“ auf jedem Werkzeug: MikiLab erklärt es dir (mit Ton). Dann tippe auf das Werkzeug, um es zu öffnen.", "Tap the golden 'i' on each tool: MikiLab explains what it's for (with a sound). Then tap the tool to open it.")}</p>
         </div>
         {onOpenTool && (
           <>
@@ -1482,33 +1484,33 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <div className="flex flex-wrap gap-1.5 mt-1 mb-1.5">
             <button type="button" data-testid="capo-cmd-mohammadreza"
               onClick={() => setNotes(tri3(lang,
-                "Ciao Mohammadreza, sono in laboratorio e devo gestire la produzione. Voglio che analizzi la situazione, ricalcoli l'intero piano di lavoro a ritroso e mi dica esattamente cosa fare ora per ora. Se ci sono ordini urgenti, adatta gli slot del forno, le impastatrici e la cella frigo senza far bruciare o ritardare gli altri pani. Calcola anche la temperatura dell'acqua, l'idratazione corretta e inviami la timeline aggiornata con la conferma da premere.",
-                "Hallo Mohammadreza, ich bin in der Backstube und muss die Produktion steuern. Analysiere die Lage, rechne den gesamten Arbeitsplan rückwärts neu und sag mir Stunde für Stunde genau, was zu tun ist. Bei dringenden Bestellungen passe Ofen-, Kneter- und Kühlzeiten an, ohne andere Brote zu verbrennen oder zu verzögern. Berechne auch Wassertemperatur und Hydratation und schick mir die aktualisierte Timeline mit Bestätigung.",
-                "Hi Mohammadreza, I'm in the bakery and need to manage production. Analyse the situation, recalculate the whole work plan backwards and tell me exactly what to do hour by hour. If there are urgent orders, adapt oven, mixer and fridge slots without burning or delaying the other breads. Also calculate water temperature and correct hydration and send me the updated timeline with a confirmation to press."))}
+                "Ciao MikiLab, sono in laboratorio e devo gestire la produzione. Voglio che analizzi la situazione, ricalcoli l'intero piano di lavoro a ritroso e mi dica esattamente cosa fare ora per ora. Se ci sono ordini urgenti, adatta gli slot del forno, le impastatrici e la cella frigo senza far bruciare o ritardare gli altri pani. Calcola anche la temperatura dell'acqua, l'idratazione corretta e inviami la timeline aggiornata con la conferma da premere.",
+                "Hallo MikiLab, ich bin in der Backstube und muss die Produktion steuern. Analysiere die Lage, rechne den gesamten Arbeitsplan rückwärts neu und sag mir Stunde für Stunde genau, was zu tun ist. Bei dringenden Bestellungen passe Ofen-, Kneter- und Kühlzeiten an, ohne andere Brote zu verbrennen oder zu verzögern. Berechne auch Wassertemperatur und Hydratation und schick mir die aktualisierte Timeline mit Bestätigung.",
+                "Hi MikiLab, I'm in the bakery and need to manage production. Analyse the situation, recalculate the whole work plan backwards and tell me exactly what to do hour by hour. If there are urgent orders, adapt oven, mixer and fridge slots without burning or delaying the other breads. Also calculate water temperature and correct hydration and send me the updated timeline with a confirmation to press."))}
               className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#3E9C93] bg-[#3E9C93]/10 border border-[#3E9C93]/30 px-2.5 py-1 rounded-full active:scale-95">
               <Sparkles className="w-3 h-3" /> {tri3(lang, "Gestisci la produzione ora", "Produktion jetzt steuern", "Manage production now")}
             </button>
             <button type="button" data-testid="capo-cmd-emergenza"
               onClick={() => setNotes(tri3(lang,
-                "Ciao Mohammadreza, è arrivato un ordine extra all'ultimo momento e devo aggiungerlo alla produzione di oggi senza far ritardare o rovinare gli impasti già avviati. Dimmi in quale impastatrice inserirlo, come spostare gli slot del forno e della cella, e ricalcola la timeline ora per ora con le nuove quantità.",
-                "Hallo Mohammadreza, es kam kurzfristig eine Extrabestellung und ich muss sie in die heutige Produktion aufnehmen, ohne die bereits gestarteten Teige zu verzögern oder zu verderben. Sag mir, in welchen Kneter ich sie gebe, wie ich Ofen- und Kammerzeiten verschiebe, und rechne die Timeline stundenweise mit den neuen Mengen neu.",
-                "Hi Mohammadreza, a last-minute extra order came in and I need to add it to today's production without delaying or ruining the doughs already started. Tell me which mixer to use, how to shift the oven and cell slots, and recalculate the timeline hour by hour with the new quantities."))}
+                "Ciao MikiLab, è arrivato un ordine extra all'ultimo momento e devo aggiungerlo alla produzione di oggi senza far ritardare o rovinare gli impasti già avviati. Dimmi in quale impastatrice inserirlo, come spostare gli slot del forno e della cella, e ricalcola la timeline ora per ora con le nuove quantità.",
+                "Hallo MikiLab, es kam kurzfristig eine Extrabestellung und ich muss sie in die heutige Produktion aufnehmen, ohne die bereits gestarteten Teige zu verzögern oder zu verderben. Sag mir, in welchen Kneter ich sie gebe, wie ich Ofen- und Kammerzeiten verschiebe, und rechne die Timeline stundenweise mit den neuen Mengen neu.",
+                "Hi MikiLab, a last-minute extra order came in and I need to add it to today's production without delaying or ruining the doughs already started. Tell me which mixer to use, how to shift the oven and cell slots, and recalculate the timeline hour by hour with the new quantities."))}
               className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#3E9C93] bg-[#3E9C93]/10 border border-[#3E9C93]/30 px-2.5 py-1 rounded-full active:scale-95">
               <Sparkles className="w-3 h-3" /> {tri3(lang, "Ordine urgente extra", "Dringende Extrabestellung", "Urgent extra order")}
             </button>
             <button type="button" data-testid="capo-cmd-correzione"
               onClick={() => setNotes(tri3(lang,
-                "Ciao Mohammadreza, l'impasto di oggi non è venuto come volevo (dimmi tu quali difetti controllare: struttura, idratazione, lievitazione, cottura). Analizza le possibili cause e correggi la ricetta e i tempi per la prossima volta: idratazione, temperatura dell'acqua, dosi di prefermento, durata di puntata e appretto. Dammi la versione corretta pronta da usare.",
-                "Hallo Mohammadreza, der heutige Teig ist nicht wie gewünscht geworden (sag mir, welche Fehler ich prüfen soll: Struktur, Hydratation, Gare, Backen). Analysiere die möglichen Ursachen und korrigiere Rezept und Zeiten für das nächste Mal: Hydratation, Wassertemperatur, Vorteigmengen, Stock- und Stückgare. Gib mir die korrigierte, einsatzbereite Version.",
-                "Hi Mohammadreza, today's dough didn't turn out as I wanted (tell me which faults to check: structure, hydration, proofing, baking). Analyse the possible causes and correct the recipe and timings for next time: hydration, water temperature, preferment amounts, bulk and final proof. Give me the corrected version ready to use."))}
+                "Ciao MikiLab, l'impasto di oggi non è venuto come volevo (dimmi tu quali difetti controllare: struttura, idratazione, lievitazione, cottura). Analizza le possibili cause e correggi la ricetta e i tempi per la prossima volta: idratazione, temperatura dell'acqua, dosi di prefermento, durata di puntata e appretto. Dammi la versione corretta pronta da usare.",
+                "Hallo MikiLab, der heutige Teig ist nicht wie gewünscht geworden (sag mir, welche Fehler ich prüfen soll: Struktur, Hydratation, Gare, Backen). Analysiere die möglichen Ursachen und korrigiere Rezept und Zeiten für das nächste Mal: Hydratation, Wassertemperatur, Vorteigmengen, Stock- und Stückgare. Gib mir die korrigierte, einsatzbereite Version.",
+                "Hi MikiLab, today's dough didn't turn out as I wanted (tell me which faults to check: structure, hydration, proofing, baking). Analyse the possible causes and correct the recipe and timings for next time: hydration, water temperature, preferment amounts, bulk and final proof. Give me the corrected version ready to use."))}
               className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#3E9C93] bg-[#3E9C93]/10 border border-[#3E9C93]/30 px-2.5 py-1 rounded-full active:scale-95">
               <Sparkles className="w-3 h-3" /> {tri3(lang, "Correggi la ricetta", "Rezept korrigieren", "Fix the recipe")}
             </button>
             <button type="button" data-testid="capo-cmd-domani"
               onClick={() => setNotes(tri3(lang,
-                "Ciao Mohammadreza, prepariamo già la produzione di domani. In base ai prodotti e alle quantità che ti indico, dimmi quali prefermenti e rinfreschi devo avviare stasera, a che ora, con quali dosi e temperature. Poi costruisci la timeline completa di domani a ritroso dall'orario di apertura, con impasti, celle e forni organizzati.",
-                "Hallo Mohammadreza, lass uns die morgige Produktion vorbereiten. Sag mir anhand der Produkte und Mengen, welche Vorteige und Auffrischungen ich heute Abend ansetzen muss, um wie viel Uhr, mit welchen Mengen und Temperaturen. Erstelle dann die komplette Timeline für morgen rückwärts ab Öffnungszeit, mit organisierten Teigen, Kammern und Öfen.",
-                "Hi Mohammadreza, let's prepare tomorrow's production now. Based on the products and quantities I give you, tell me which preferments and refreshes I must start tonight, at what time, with which amounts and temperatures. Then build tomorrow's full timeline backwards from opening time, with doughs, cells and ovens organised."))}
+                "Ciao MikiLab, prepariamo già la produzione di domani. In base ai prodotti e alle quantità che ti indico, dimmi quali prefermenti e rinfreschi devo avviare stasera, a che ora, con quali dosi e temperature. Poi costruisci la timeline completa di domani a ritroso dall'orario di apertura, con impasti, celle e forni organizzati.",
+                "Hallo MikiLab, lass uns die morgige Produktion vorbereiten. Sag mir anhand der Produkte und Mengen, welche Vorteige und Auffrischungen ich heute Abend ansetzen muss, um wie viel Uhr, mit welchen Mengen und Temperaturen. Erstelle dann die komplette Timeline für morgen rückwärts ab Öffnungszeit, mit organisierten Teigen, Kammern und Öfen.",
+                "Hi MikiLab, let's prepare tomorrow's production now. Based on the products and quantities I give you, tell me which preferments and refreshes I must start tonight, at what time, with which amounts and temperatures. Then build tomorrow's full timeline backwards from opening time, with doughs, cells and ovens organised."))}
               className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#2e8b6f] bg-[#2e8b6f]/10 border border-[#2e8b6f]/30 px-2.5 py-1 rounded-full active:scale-95">
               <Sparkles className="w-3 h-3" /> {tri3(lang, "Pianifica domani", "Morgen planen", "Plan tomorrow")}
             </button>

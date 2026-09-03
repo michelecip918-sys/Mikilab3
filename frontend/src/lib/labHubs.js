@@ -15,7 +15,7 @@ export const LAB_HUBS = [
   {
     id: "forni", emoji: "🍞", pro: true,
     it: "Gestione Forni & Attrezzature", de: "Öfen & Ausrüstung", en: "Ovens & Equipment", es: "Hornos y Equipos", fr: "Fours & Équipements", fa: "مدیریت فر و تجهیزات",
-    ids: ["macchine", "simforno", "adatta", "capo", "energia"],
+    ids: ["macchine", "simforno", "adatta", "capo", "energia", "manuale"],
   },
 ];
 

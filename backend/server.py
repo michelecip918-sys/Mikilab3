@@ -2447,10 +2447,10 @@ async def lab_ask(payload: ChatRequest):
 
 
 # ---------------------------------------------------------------------------
-# Mohammed — assistente di "Il Tuo Laboratorio" (Claude Sonnet 4.6, streaming)
+# MikiLab — assistente di "Il Tuo Laboratorio" (Claude Sonnet 4.6, streaming)
 # ---------------------------------------------------------------------------
 MOHAMMED_SYSTEM = (
-    "Sei 'Mohammadreza Jafari' (puoi presentarti come Mohammadreza), l'assistente PERSONALE di Michele, il creatore di MikiLab, e mastro panettiere della sezione 'Il Tuo Laboratorio'. Presentati sempre come l'assistente di Michele/MikiLab. "
+    "Sei 'MikiLab' (puoi presentarti come MikiLab), l'assistente PERSONALE di Michele, il creatore di MikiLab, e mastro panettiere della sezione 'Il Tuo Laboratorio'. Presentati sempre come l'assistente di Michele/MikiLab. "
     "COMPITI PRINCIPALI: 1) Accogli l'utente e guidalo nell'uso della sezione 'Il Tuo Laboratorio', che e' organizzata in 2 PASSI: "
     "PASSO 1 = 'Piano di Produzione con IA' (il cuore della sezione), PASSO 2 = 'Laboratorio & Strumenti'. "
     "2) Spiega con chiarezza le COSE FONDAMENTALI per GENERARE il Piano di Produzione con l'IA: "
@@ -2466,7 +2466,7 @@ MOHAMMED_SYSTEM = (
     "REGOLE FONDAMENTALI: AMBITO ESCLUSIVO - rispondi SOLO a domande legate alla sezione 'Il Tuo Laboratorio', alla "
     "gestione del forno e all'uso dei relativi strumenti dell'app. FUORI AMBITO - se l'utente fa domande NON pertinenti "
     "al laboratorio o al forno (es. meteo, programmazione, ricette generiche non legate all'organizzazione del forno), "
-    "rispondi garbatamente ESATTAMENTE: \"Sono Mohammadreza, il tuo assistente per 'Il Tuo Laboratorio'. Posso aiutarti "
+    "rispondi garbatamente ESATTAMENTE: \"Sono MikiLab, il tuo assistente per 'Il Tuo Laboratorio'. Posso aiutarti "
     "esclusivamente nell'organizzazione del tuo forno e nell'uso degli strumenti di questa sezione!\". "
     "TONO DI VOCE: professionale, pratico, chiaro, accogliente e da vero collega panettiere. "
     "FORMATO RISPOSTE: usa SEMPRE elenchi puntati o passaggi numerati (1, 2, 3...) per rendere le spiegazioni "
@@ -2493,7 +2493,7 @@ async def _lab_assistant_stream(system: str, lang_map: dict, session_id: str, me
     })
     context_prefix = ""
     if prior:
-        lines = [f"{'Utente' if m['role'] == 'user' else 'Mohammadreza'}: {m['content']}" for m in prior[-10:]]
+        lines = [f"{'Utente' if m['role'] == 'user' else 'MikiLab'}: {m['content']}" for m in prior[-10:]]
         context_prefix = "Conversazione precedente:\n" + "\n".join(lines) + "\n\nNuova domanda:\n"
 
     full_text = ""
@@ -2528,10 +2528,10 @@ async def mohammed_history(session_id: str):
 
 
 # ---------------------------------------------------------------------------
-# Academy da Casa — Mohammadreza per l'home baker (chi panifica a casa)
+# Academy da Casa — MikiLab per l'home baker (chi panifica a casa)
 # ---------------------------------------------------------------------------
 ACADEMY_COACH_SYSTEM = (
-    "Sei 'Mohammadreza', il Master Baker virtuale d'élite di MikiLab dedicato a chi panifica A CASA (home baker). "
+    "Sei 'MikiLab', il Master Baker virtuale d'élite di MikiLab dedicato a chi panifica A CASA (home baker). "
     "Trasformi la cucina dell'utente in un laboratorio casalingo ad alte prestazioni. NON parli mai di macchinari "
     "industriali: adatti tutto agli strumenti di casa (forno domestico max 230-250°C, pietra refrattaria, pentola in "
     "ghisa, planetaria casalinga o impasto a mano, frigo di casa).\n"
@@ -2720,9 +2720,9 @@ async def academy_grant_badge(body: BadgeReq, user: dict = Depends(current_user)
     return {"badges": u.get("badges", [])}
 
 
-# --- SOS Impasto: diagnosi rapida della foto del pane da parte di Mohammadreza (login richiesto) ---
+# --- SOS Impasto: diagnosi rapida della foto del pane da parte di MikiLab (login richiesto) ---
 SOS_PROMPT = (
-    "Sei 'Mohammadreza', Master Baker di MikiLab. Un panettiere ti manda la FOTO del suo pane/impasto per un SOS. "
+    "Sei 'MikiLab', Master Baker di MikiLab. Un panettiere ti manda la FOTO del suo pane/impasto per un SOS. "
     "Fai una DIAGNOSI STRUTTURALE immediata e pratica. Analizza (quando visibili): crosta, mollica/alveolatura, forma/sviluppo, "
     "colore/cottura, stato di lievitazione. Per ogni difetto indica CAUSA -> RIMEDIO concreto. Se l'impasto sembra buono, dillo con un complimento. "
     "Rispondi in markdown, breve e leggibile durante il lavoro, con questa struttura:\n"
@@ -2901,7 +2901,7 @@ async def academy_sos_recipe(body: SosRecipeReq, user: dict = Depends(current_us
     lang = body.lang if body.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
     lang_name = _LANG_NAMES.get(lang, "italiano")
     prompt = (
-        "Sei Mohammadreza. Data questa DIAGNOSI di un pane fatto in casa, scegli DALLA LISTA la ricetta MikiLab più adatta "
+        "Sei MikiLab. Data questa DIAGNOSI di un pane fatto in casa, scegli DALLA LISTA la ricetta MikiLab più adatta "
         "per allenarsi e correggere quel difetto (una ricetta che, seguendone bene il procedimento, aiuta a superare il problema).\n\n"
         f"DIAGNOSI:\n{di}\n\nLISTA RICETTE (id :: nome):\n{listing}\n\n"
         f"Rispondi SOLO con JSON valido: {{\"recipe_id\": \"<id esatto dalla lista>\", \"reason\": \"<motivo in 1 frase, in {lang_name}>\"}}."
@@ -5497,6 +5497,40 @@ async def save_freezer(body: FreezerSave, lang: str = "it", user: dict = Depends
         except Exception as e:
             logging.getLogger(__name__).error(f"freezer email failed: {e}")
     return {"ok": True, "low": low, "emailed": emailed}
+
+
+# --- Report di Fine Giornata: persistenza storica per confronti (per-owner) ---
+class DayReportSave(BaseModel):
+    date: Optional[str] = None
+    mixers_active: int = 0
+    alarms_count: int = 0
+    week_load: int = 0
+    alarms: List[dict] = []
+    notes: Optional[str] = ""
+
+
+@api_router.post("/reports")
+async def save_day_report(body: DayReportSave, user: dict = Depends(current_user)):
+    doc = body.model_dump()
+    doc["date"] = (doc.get("date") or now_iso()[:10])[:10]
+    doc["owner_id"] = user["user_id"]
+    doc["updated_at"] = now_iso()
+    existing = await db.day_reports.find_one({"owner_id": user["user_id"], "date": doc["date"]})
+    if existing:
+        await db.day_reports.update_one({"_id": existing["_id"]}, {"$set": doc})
+        rid = existing.get("id") or str(uuid.uuid4())
+        await db.day_reports.update_one({"_id": existing["_id"]}, {"$set": {"id": rid}})
+    else:
+        doc["id"] = str(uuid.uuid4())
+        doc["created_at"] = now_iso()
+        await db.day_reports.insert_one(doc)
+    return {"ok": True, "date": doc["date"]}
+
+
+@api_router.get("/reports")
+async def list_day_reports(limit: int = 90, user: dict = Depends(current_user)):
+    docs = await db.day_reports.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("date", -1).to_list(limit)
+    return {"items": docs}
 
 
 # ---------------------------------------------------------------------------

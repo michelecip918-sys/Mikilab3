@@ -20,7 +20,7 @@ export const getVoiceId = (who) =>
 export default function VoiceSettings({ open, onClose }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const [momy, setMohammadreza] = useState(getVoiceId("momy"));
+  const [momy, setMikiLab] = useState(getVoiceId("momy"));
   const [michele, setMichele] = useState(getVoiceId("michele"));
   const [previewing, setPreviewing] = useState(null);
   const audioRef = useRef(null);
@@ -31,7 +31,7 @@ export default function VoiceSettings({ open, onClose }) {
       setPreviewing(voiceId + who);
       const sample = who === "michele"
         ? tri("Ciao, sono Michele, benvenuto in MikiLab.", "Hallo, ich bin Michele, willkommen bei MikiLab.", "Hi, I'm Michele, welcome to MikiLab.")
-        : tri("Ciao, sono Mohammadreza, il tuo assistente in laboratorio.", "Hallo, ich bin Mohammadreza, dein Assistent.", "Hi, I'm Mohammadreza, your lab assistant.");
+        : tri("Ciao, sono MikiLab, il tuo assistente in laboratorio.", "Hallo, ich bin MikiLab, dein Assistent.", "Hi, I'm MikiLab, your lab assistant.");
       const res = await fetch(`${API}/tts`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
         body: JSON.stringify({ text: sample, lang, voice_id: voiceId }),
@@ -88,7 +88,7 @@ export default function VoiceSettings({ open, onClose }) {
             </div>
             <Group title={tri("Voce di Michele — Il Comandante", "Michele-Stimme — Der Kommandant", "Michele's voice — The Commander")} sel={michele} setSel={setMichele} who="michele" />
             <p className="text-[11px] text-[#7E8A93] -mt-2 mb-2">{tri("Opzione secondaria · supporto tecnico", "Sekundäre Option · technischer Support", "Secondary option · technical support")}</p>
-            <Group title={tri("Voce di Mohammadreza (supporto)", "Mohammadreza-Stimme (Support)", "Mohammadreza's voice (support)")} sel={momy} setSel={setMohammadreza} who="momy" />
+            <Group title={tri("Voce di MikiLab (supporto)", "MikiLab-Stimme (Support)", "MikiLab's voice (support)")} sel={momy} setSel={setMikiLab} who="momy" />
             <button data-testid="voice-settings-save" onClick={save}
               className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
               {tri("Salva le voci", "Stimmen speichern", "Save voices")}

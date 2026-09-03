@@ -473,7 +473,7 @@ export default function DayClose() {
                 className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-2xl" />
               <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.5, 1], opacity: 1 }}
                 transition={{ delay: 0.55, duration: 0.5 }} className="mx-1 text-5xl drop-shadow-lg">🙌</motion.div>
-              <motion.img src={`${process.env.PUBLIC_URL || ""}/mohammed-avatar.jpg`} alt="Mohammed"
+              <motion.img src={`${process.env.PUBLIC_URL || ""}/logo.png`} alt="MikiLab"
                 initial={{ x: 140, rotate: 10, opacity: 0 }} animate={{ x: 4, rotate: 0, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 130, damping: 12, delay: 0.1 }}
                 className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-2xl" />

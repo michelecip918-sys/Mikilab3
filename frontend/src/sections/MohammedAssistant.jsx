@@ -6,15 +6,15 @@ import { useLang } from "@/i18n/LanguageContext";
 import { registerChat } from "@/lib/chatHistory";
 import { mkTri } from "@/i18n/triMaps";
 
-const AVATAR = `${process.env.PUBLIC_URL}/mohammed-avatar.jpg`;
+const AVATAR = `${process.env.PUBLIC_URL}/logo.png`;
 const sid = () => {
   let s = localStorage.getItem("mikilab_mohammed_sid");
   if (!s) { s = "mohammed-" + Math.random().toString(36).slice(2, 10); localStorage.setItem("mikilab_mohammed_sid", s); }
   return s;
 };
 
-// Assistente "Mohammed" — accoglienza + guida operativa de "Il Tuo Laboratorio".
-export default function MohammedAssistant() {
+// Assistente "MikiLab" — accoglienza + guida operativa de "Il Tuo Laboratorio".
+export default function MikiLabAssistant() {
   const { lang } = useLang();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const [open, setOpen] = useState(false);
@@ -90,9 +90,9 @@ export default function MohammedAssistant() {
   return (
     <div data-testid="mohammed-assistant" className="rounded-2xl bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] text-white p-3 mb-4 shadow-md">
       <div className="flex items-center gap-2.5">
-        <img src={AVATAR} alt="Mohammadreza Jafari" data-testid="mohammed-avatar" className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-white/70 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <img src={AVATAR} alt="MikiLab" data-testid="mohammed-avatar" className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-white/70 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
-          <h2 className="font-display text-base font-bold leading-tight">{tri("Ciao, sono Mohammadreza 👋", "Hallo, ich bin Mohammadreza 👋", "Hi, I'm Mohammadreza 👋", "Hola, soy Mohammadreza 👋")}</h2>
+          <h2 className="font-display text-base font-bold leading-tight">{tri("Ciao, sono MikiLab 👋", "Hallo, ich bin MikiLab 👋", "Hi, I'm MikiLab 👋", "Hola, soy MikiLab 👋")}</h2>
           <p className="text-[11px] text-white/80 leading-snug">{tri("Assistente di Michele · ti guido nel laboratorio", "Micheles Assistent · ich führe dich durch die Backstube", "Michele's assistant · I guide you in the lab", "Asistente de Michele · te guío en el obrador")}</p>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function MohammedAssistant() {
 
       <button data-testid="mohammed-toggle" onClick={() => setOpen((o) => !o)}
         className="mt-2.5 inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur px-3 py-1.5 rounded-lg text-[13px] font-semibold active:scale-97 transition-all">
-        <Sparkles className="w-3.5 h-3.5" /> {open ? tri("Chiudi assistente", "Assistent schließen", "Close assistant", "Cerrar asistente") : tri("Chiedi a Mohammadreza", "Mohammadreza fragen", "Ask Mohammadreza", "Pregunta a Mohammadreza")}
+        <Sparkles className="w-3.5 h-3.5" /> {open ? tri("Chiudi assistente", "Assistent schließen", "Close assistant", "Cerrar asistente") : tri("Chiedi a MikiLab", "MikiLab fragen", "Ask MikiLab", "Pregunta a MikiLab")}
         {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
       </button>
 
@@ -137,7 +137,7 @@ export default function MohammedAssistant() {
           </div>
           <div className="flex items-center gap-2 mt-2">
             <input data-testid="mohammed-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder={tri("Scrivi a Mohammadreza…", "Schreibe an Mohammadreza…", "Message Mohammadreza…", "Escribe a Mohammadreza…")}
+              placeholder={tri("Scrivi a MikiLab…", "Schreibe an MikiLab…", "Message MikiLab…", "Escribe a MikiLab…")}
               className="flex-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
             <button data-testid="mohammed-send" onClick={() => send()} disabled={busy || !input.trim()}
               className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">

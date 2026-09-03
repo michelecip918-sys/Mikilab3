@@ -46,7 +46,7 @@ export default function AcademyHome({ onNavigate }) {
     { id: "esercizi", n: "3", Icon: ClipboardList, label: tri("Esercizi", "Übungen", "Exercises", "Ejercicios"), desc: tri("Calcola le dosi e prova sul campo", "Mengen berechnen und üben", "Calculate doses and practise", "Calcula las dosis y practica") },
   ];
   const EXTRA = [
-    { id: "scienza", Icon: FlaskConical, label: tri("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías") },
+    { id: "scienza", Icon: FlaskConical, label: tri("Schede Tecniche", "Technische Datenblätter", "Tech Sheets", "Fichas Técnicas") },
     { id: "sommelier", Icon: Wine, label: tri("Brot Sommelier", "Brot-Sommelier", "Bread Sommelier", "Sommelier del Pan") },
     { id: "farine", Icon: Wheat, label: tri("Farine", "Mehle", "Flours", "Harinas") },
     { id: "diagnosi", Icon: Camera, label: tri("Diagnosi", "Diagnose", "Diagnosis", "Diagnóstico") },

@@ -8,7 +8,7 @@ import { cleanForSpeech } from "@/lib/voice";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 
-// Assistente "Mohammadreza" per l'home baker: scheduling inverso + calcoli + troubleshooting.
+// Assistente "MikiLab" per l'home baker: scheduling inverso + calcoli + troubleshooting.
 export default function AcademyCoach() {
   const { lang } = useLang();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
@@ -128,10 +128,10 @@ export default function AcademyCoach() {
     <div data-testid="academy-coach" className="rounded-2xl overflow-hidden bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49]">
       <div className="flex items-center gap-3 p-4 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1B2A38 55%,#3E9C93)" }}>
         <div className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-white/20 overflow-hidden flex items-center justify-center shrink-0">
-          <img src={`${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt="Mohammadreza" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </div>
         <div className="min-w-0">
-          <p className="font-display text-lg font-bold leading-none">Mohammadreza</p>
+          <p className="font-display text-lg font-bold leading-none">MikiLab</p>
           <p className="text-[12px] text-white/90 mt-0.5">{tri("Il tuo Master Baker per la panificazione a casa", "Dein Master Baker fürs Backen zu Hause", "Your Master Baker for home baking", "Tu Master Baker para hornear en casa")}</p>
         </div>
         <ChefHat className="w-5 h-5 ml-auto shrink-0" />
@@ -185,11 +185,11 @@ export default function AcademyCoach() {
 
         <div className="flex items-center gap-2 pt-1">
           <input data-testid="academy-coach-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()}
-            placeholder={tri("Scrivi o parla a Mohammadreza…", "Schreib oder sprich mit Mohammadreza…", "Type or talk to Mohammadreza…", "Escribe o habla con Mohammadreza…")}
+            placeholder={tri("Scrivi o parla a MikiLab…", "Schreib oder sprich mit MikiLab…", "Type or talk to MikiLab…", "Escribe o habla con MikiLab…")}
             className="flex-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
           {speechSupported && (
             <button data-testid="academy-coach-mic" onClick={startListening} disabled={busy}
-              title={tri("Parla con Mohammadreza", "Mit Mohammadreza sprechen", "Talk to Mohammadreza", "Habla con Mohammadreza")}
+              title={tri("Parla con MikiLab", "Mit MikiLab sprechen", "Talk to MikiLab", "Habla con MikiLab")}
               className={`w-11 h-11 rounded-full flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0 transition-all ${listening ? "bg-[#3E9C93] animate-pulse text-white" : "bg-[#3E9C93] hover:bg-[#3E9C93] text-white"}`}>
               <Mic className="w-5 h-5" />
             </button>

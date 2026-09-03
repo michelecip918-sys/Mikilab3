@@ -33,15 +33,15 @@ export default function ScopriMikiLab() {
 
       <GuidaAvatar />
 
-      {/* Racconto in viaggio — timeline */}
+      {/* Come nasce MikiLab — timeline */}
       <div data-testid="scopri-timeline" className="rounded-2xl border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#1B2A38] p-4">
-        <p className="font-display text-lg font-bold text-[#3E9C93] dark:text-[#e4eff8] mb-3">{L("Il racconto in viaggio", "Die Reise-Geschichte", "The journey story", "El relato del viaje")}</p>
+        <p className="font-display text-lg font-bold text-[#3E9C93] dark:text-[#e4eff8] mb-3">{L("Come nasce MikiLab", "Wie MikiLab entstand", "How MikiLab was born", "Cómo nace MikiLab")}</p>
         <div className="relative pl-6">
           <div className="absolute left-[7px] top-1 bottom-1 w-0.5 bg-[#3E9C93]/30" />
           {[
-            { t: L("L'incontro in viaggio", "Die Begegnung auf Reisen", "Meeting while travelling", "El encuentro de viaje"), d: L("Michele e Mohammadreza si conoscono lontani da casa.", "Michele und Mohammadreza treffen sich fern der Heimat.", "Michele and Mohammadreza meet far from home.", "Michele y Mohammadreza se conocen lejos de casa.") },
-            { t: L("Spalla a spalla al forno", "Schulter an Schulter am Ofen", "Side by side at the oven", "Codo con codo ante el horno"), d: L("Notti di lavoro, tanta fatica e la voglia di ricominciare.", "Nachtschichten, harte Arbeit, Neuanfang.", "Night shifts, hard work, a fresh start.", "Noches de trabajo y ganas de empezar.") },
-            { t: L("Nasce MikiLab", "MikiLab entsteht", "MikiLab is born", "Nace MikiLab"), d: L("L'idea che il pane unisce le persone, per aiutare ogni fornaio.", "Die Idee, dass Brot Menschen verbindet.", "The idea that bread brings people together.", "La idea de que el pan une a las personas.") },
+            { t: L("Anni in laboratorio", "Jahre im Labor", "Years in the lab", "Años en el obrador"), d: L("Michele affina ricette e metodo, notte dopo notte, davanti al forno.", "Michele verfeinert Rezepte und Methode, Nacht für Nacht am Ofen.", "Michele refines recipes and method, night after night at the oven.", "Michele perfecciona recetas y método, noche tras noche ante el horno.") },
+            { t: L("L'idea di condividere", "Die Idee zu teilen", "The idea to share", "La idea de compartir"), d: L("Trasformare l'esperienza in strumenti semplici per ogni fornaio.", "Erfahrung in einfache Werkzeuge für jeden Bäcker verwandeln.", "Turning experience into simple tools for every baker.", "Convertir la experiencia en herramientas simples para cada panadero.") },
+            { t: L("Nasce MikiLab", "MikiLab entsteht", "MikiLab is born", "Nace MikiLab"), d: L("Ricette, pianificazione e un assistente IA, tutto in un unico laboratorio digitale.", "Rezepte, Planung und ein KI-Assistent in einem digitalen Labor.", "Recipes, planning and an AI assistant, all in one digital lab.", "Recetas, planificación y un asistente de IA, todo en un laboratorio digital.") },
           ].map((s, i) => (
             <div key={i} className="relative mb-4 last:mb-0">
               <span className="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#3E9C93] border-2 border-white dark:border-[#1B2A38]" />
@@ -54,7 +54,7 @@ export default function ScopriMikiLab() {
 
       <div className="flex items-start gap-2 text-xs text-[#7E8A93] px-1">
         <Info className="w-4 h-4 shrink-0 mt-0.5" />
-        <span>{L("Michele e Mohammadreza ti guidano nel sito, sezione per sezione.", "Michele und Mohammadreza führen dich durch die Seite.", "Michele and Mohammadreza guide you through the site.", "Michele y Mohammadreza te guían por el sitio.")}</span>
+        <span>{L("Michele ti guida in MikiLab, sezione per sezione.", "Michele führt dich durch MikiLab, Bereich für Bereich.", "Michele guides you through MikiLab, section by section.", "Michele te guía por MikiLab, sección por sección.")}</span>
       </div>
     </div>
   );

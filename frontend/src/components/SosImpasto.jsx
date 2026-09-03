@@ -16,7 +16,7 @@ function fileToDataUrl(file) {
   });
 }
 
-// SOS Impasto: manda la foto del pane a Mohammadreza per una diagnosi immediata (login richiesto).
+// SOS Impasto: manda la foto del pane a MikiLab per una diagnosi immediata (login richiesto).
 export default function SosImpasto({ open, onClose, onNavigate }) {
   const { lang } = useLang();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
@@ -90,7 +90,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
           <Stethoscope className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="font-display text-lg font-bold leading-none">{tri("SOS Impasto", "SOS Teig", "Dough SOS", "SOS Masa")}</p>
-            <p className="text-[12px] text-white/90 mt-0.5">{tri("Diagnosi immediata da Mohammadreza", "Sofortdiagnose von Mohammadreza", "Instant diagnosis from Mohammadreza", "Diagnóstico inmediato de Mohammadreza")}</p>
+            <p className="text-[12px] text-white/90 mt-0.5">{tri("Diagnosi immediata da MikiLab", "Sofortdiagnose von MikiLab", "Instant diagnosis from MikiLab", "Diagnóstico inmediato de MikiLab")}</p>
           </div>
           <button data-testid="sos-close" onClick={onClose} className="p-1 active:scale-90"><X className="w-5 h-5" /></button>
         </div>
@@ -131,7 +131,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
               className="w-full flex items-center gap-3 rounded-2xl p-3.5 text-left bg-gradient-to-br from-[#3E9C93] to-[#7a531d] text-white shadow-md active:scale-98 transition-all">
               <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-white/20 flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5" /></div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-bold uppercase tracking-wide text-white/80">{tri("Ricetta consigliata da Mohammadreza", "Von Mohammadreza empfohlenes Rezept", "Recipe recommended by Mohammadreza", "Receta recomendada por Mohammadreza")}</p>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/80">{tri("Ricetta consigliata da MikiLab", "Von MikiLab empfohlenes Rezept", "Recipe recommended by MikiLab", "Receta recomendada por MikiLab")}</p>
                 <p className="font-display text-base font-bold leading-tight truncate">{rec.name}</p>
                 {rec.reason && <p className="text-[12px] text-white/90 leading-snug line-clamp-2">{rec.reason}</p>}
               </div>

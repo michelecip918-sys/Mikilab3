@@ -233,7 +233,7 @@ export default function MyData({ onOpenTool }) {
       {tab === "chat" && (
         <div data-testid="mydata-chat" className="space-y-2">
           {chats.length === 0 ? (
-            <Empty text={tri("Nessuna conversazione. Parla con 'Chiedi al Maestro' o con Mohammadreza nel Tuo Laboratorio: lo storico apparirà qui.", "Noch keine Unterhaltung. Sprich mit 'Frag den Meister' oder mit Mohammadreza in deinem Labor: der Verlauf erscheint hier.", "No conversations yet. Chat with 'Ask the Master' or with Mohammadreza in Your Lab: the history will appear here.")} />
+            <Empty text={tri("Nessuna conversazione. Parla con 'Chiedi al Maestro' o con MikiLab nel Tuo Laboratorio: lo storico apparirà qui.", "Noch keine Unterhaltung. Sprich mit 'Frag den Meister' oder mit MikiLab in deinem Labor: der Verlauf erscheint hier.", "No conversations yet. Chat with 'Ask the Master' or with MikiLab in Your Lab: the history will appear here.")} />
           ) : (
             chats.map((c) => (
               <ChatCard key={c.id} chat={c} fmt={fmt} tri={tri} onDelete={() => deleteChat(c.id)} />
@@ -250,7 +250,7 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
   const [msgs, setMsgs] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const label = chat.kind === "mohammed" ? "Mohammadreza" : tri("Chiedi al Maestro", "Frag den Meister", "Ask the Master");
+  const label = chat.kind === "mohammed" ? "MikiLab" : tri("Chiedi al Maestro", "Frag den Meister", "Ask the Master");
 
   const toggle = async () => {
     const next = !open;
