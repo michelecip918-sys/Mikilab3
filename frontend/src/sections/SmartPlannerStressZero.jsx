@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Moon, Users, Scale, CalendarDays } from "lucide-react";
+import { Moon, Users, Scale, CalendarDays, Wand2 } from "lucide-react";
 import { weeklyApi } from "@/lib/api";
 import { toast } from "sonner";
 
@@ -32,6 +32,10 @@ export default function SmartPlannerStressZero() {
   const giorniSopra = nums.map((v, i) => ({ v, i })).filter((d) => stato(d.v) === "sopra").map((d) => GIORNI[d.i]);
   const giorniSotto = nums.map((v, i) => ({ v, i })).filter((d) => stato(d.v) === "sotto").map((d) => GIORNI[d.i]);
   const setDay = (i, val) => setWeek((w) => w.map((x, j) => (j === i ? val : x)));
+  const levelLoads = () => {
+    // Sposta l'eccesso dai giorni sovraccarichi verso quelli scarichi: livella i giorni lavorativi.
+    setWeek((w) => w.map((v) => ((Number(v) || 0) > 0 ? livellato : 0)));
+  };
   const STATE_STYLE = { sopra: "text-rose-400 border-rose-500/40", sotto: "text-amber-400 border-amber-500/40", linea: "text-teal-300 border-teal-500/40", riposo: "text-slate-500 border-slate-700" };
   const STATE_LABEL = { sopra: "Sovraccarico", sotto: "Sotto media", linea: "In linea", riposo: "Riposo" };
 
@@ -170,6 +174,14 @@ export default function SmartPlannerStressZero() {
               ? <>Sovraccarico: <b className="text-rose-400">{giorniSopra.join(", ")}</b>. Sposta parte della produzione verso i giorni più scarichi{giorniSotto.length ? <> (<b className="text-amber-400">{giorniSotto.join(", ")}</b>)</> : null} o congela in anticipo.</>
               : <>Carico già equilibrato: nessun giorno sovraccarico rispetto alla media livellata di {livellato} pezzi.</>}
           </p>
+          <button
+            data-testid="balance-level"
+            onClick={levelLoads}
+            disabled={giorniSopra.length === 0 && giorniSotto.length === 0}
+            className="w-full py-3 bg-teal-600 hover:bg-teal-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg inline-flex items-center justify-center gap-1.5"
+          >
+            <Wand2 className="w-4 h-4" /> Livella carichi automaticamente ({livellato}/giorno)
+          </button>
         </div>
       </div>
     </div>

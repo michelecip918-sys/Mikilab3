@@ -41,6 +41,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
 import { SoundFXProvider } from "@/audio/SoundFXContext";
+import { MixerTimersProvider } from "@/audio/MixerTimersContext";
 import ambient from "@/lib/ambientMusic";
 import { api, greetingsApi } from "@/lib/api";
 import { toast } from "sonner";
@@ -233,6 +234,7 @@ function App() {
     <AmbientProvider>
     <TimerProvider>
     <SoundFXProvider>
+    <MixerTimersProvider>
     <div className="App min-h-screen app-warm-bg">
       {/* Sfondo scenografico per sezione (fornaio + AI), toni calmi + velo scuro per leggibilità */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-cover bg-center bg-no-repeat"
@@ -333,6 +335,7 @@ function App() {
       )}
       </div>
     </div>
+    </MixerTimersProvider>
     </SoundFXProvider>
     </TimerProvider>
     </AmbientProvider>

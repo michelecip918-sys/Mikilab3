@@ -3783,3 +3783,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Monitoraggio Impastatrici**: timer REALI e interattivi per ciclo impasto (minuti impostabili, Avvia/Ferma/Reset, countdown mm:ss live via tick 1s, aggiungi/rimuovi impastatrice, annuncio vocale breve a fine ciclo via cleanForSpeech). I comandi rapidi/Mani-Libere esistenti restano invariati.
 - Agganciato: import+render in `Maestro.jsx`, catalogo TOOLS in `PianoProduzioneAI.jsx` (cat coldchain, icona Mic).
 - Verificato via screenshot: schermata renderizza, countdown reale decrescente (08:00→07:58), start/stop ok. Sfondo/hero lab invariati (scope solo avatar).
+
+## Elite v3.0.5 (2026-06) — Timer persistenti, comandi vocali estesi, bilanciamento azionabile
+- **Timer Impastatrici persistenti**: nuovo `audio/MixerTimersContext.jsx` (provider montato in App.js). Stato globale con `endsAt` assoluto + localStorage (`mikilab_mixers_v1`), tick globale 1s che continua anche cambiando/chiudendo schermata e annuncia a voce il fine ciclo (cleanForSpeech). `VoiceCore.jsx` ora consuma il contesto (niente più stato locale). Verificato: 08:00 → tool chiuso ~9s → 07:51.
+- **Comandi vocali estesi** in VoiceCore: parsing IT ("avvia/parti/via", "ferma/stop", "azzera/reset", "quanto manca/tempo rimasto") con numero reparto (cifre o parole uno..dieci) → avvia/ferma/azzera l'impastatrice indicata e RISPONDE a voce (es. "Impastatrice 02: mancano 5 minuti e 12 secondi"). Da provare su dispositivo reale con microfono.
+- **Bilanciamento azionabile** (SmartPlannerStressZero): pulsante "Livella carichi automaticamente" (testid `balance-level`) → porta ogni giorno lavorativo alla media livellata (giorni di riposo restano 0) e ricalcola tutto da solo. Verificato: [520,180,300,300,420,600,0] → [387×6,0].
+- Mockup HTML "Master Production & Brot Sommelier Pro": non ricostruito (Sommelier/Voice Core/ricettario/PRO già presenti); estratti solo i 3 task richiesti.

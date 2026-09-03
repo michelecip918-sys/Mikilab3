@@ -1,71 +1,80 @@
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Timer, Play, Square, RotateCcw, Headphones, Activity, Plus, Trash2 } from "lucide-react";
-import { cleanForSpeech } from "@/lib/voice";
+import { useMixers } from "@/audio/MixerTimersContext";
 
-const speak = (msg) => {
+const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+
+const NUM_WORDS = { uno: 1, "un": 1, due: 2, tre: 3, quattro: 4, cinque: 5, sei: 6, sette: 7, otto: 8, nove: 9, dieci: 10 };
+const parseNumber = (t) => {
+  const d = t.match(/\b(\d{1,2})\b/);
+  if (d) return Number(d[1]);
+  for (const [w, n] of Object.entries(NUM_WORDS)) if (new RegExp(`\\b${w}\\b`).test(t)) return n;
+  return null;
+};
+const speakPhrase = (msg) => {
   if ("speechSynthesis" in window) {
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(cleanForSpeech(msg));
-    u.lang = "it-IT";
-    u.rate = 0.98;
+    const u = new SpeechSynthesisUtterance(msg);
+    u.lang = "it-IT"; u.rate = 0.98;
     window.speechSynthesis.speak(u);
   }
 };
-
-const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-const DEFAULT_MIXERS = [
-  { id: "m1", name: "Impastatrice 01", minutes: 8, remaining: 0, running: false },
-  { id: "m2", name: "Impastatrice 02", minutes: 12, remaining: 0, running: false },
-];
+const sayRemaining = (m) => {
+  const s = m.remaining;
+  const min = Math.floor(s / 60), sec = s % 60;
+  const t = min > 0 ? `${min} minuti e ${sec} secondi` : `${sec} secondi`;
+  speakPhrase(m.running ? `${m.name}: mancano ${t}.` : (s > 0 ? `${m.name} è in pausa, restano ${t}.` : `${m.name} è ferma.`));
+};
 
 export default function VoiceCore() {
+  const { list, start, stop, reset, setMinutes, add, remove } = useMixers();
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(true);
   const [transcript, setTranscript] = useState("");
   const recRef = useRef(null);
+  const listRef = useRef(list);
+  listRef.current = list;
 
-  const [mixers, setMixers] = useState(DEFAULT_MIXERS);
-  const mixersRef = useRef(mixers);
-  mixersRef.current = mixers;
+  const mixerByNumber = (n) => (n && listRef.current[n - 1]) || null;
 
-  // Tick unico per tutti i timer attivi
-  useEffect(() => {
-    const iv = setInterval(() => {
-      setMixers((list) => {
-        let changed = false;
-        const next = list.map((m) => {
-          if (m.running && m.remaining > 0) {
-            changed = true;
-            const rem = m.remaining - 1;
-            if (rem === 0) speak(`${m.name}, ciclo impasto terminato.`);
-            return { ...m, remaining: rem, running: rem > 0 };
-          }
-          return m;
-        });
-        return changed ? next : list;
-      });
-    }, 1000);
-    return () => clearInterval(iv);
-  }, []);
+  const handleCommand = (raw) => {
+    const t = raw.toLowerCase();
+    const n = parseNumber(t);
+    if (/(quanto manca|quanto tempo|tempo rimasto|quanto resta)/.test(t)) {
+      const m = mixerByNumber(n) || listRef.current.find((x) => x.running) || listRef.current[0];
+      if (m) sayRemaining(m);
+      return;
+    }
+    if (/(avvia|parti|start|via|accendi)/.test(t)) {
+      const m = mixerByNumber(n);
+      if (m) { start(m.id); speakPhrase(`${m.name} avviata.`); }
+      else { const idle = listRef.current.find((x) => !x.running); if (idle) { start(idle.id); speakPhrase(`${idle.name} avviata.`); } }
+      return;
+    }
+    if (/(ferma|stop|basta|spegni)/.test(t)) {
+      const m = mixerByNumber(n);
+      if (m) { stop(m.id); speakPhrase(`${m.name} fermata.`); }
+      else { listRef.current.forEach((x) => x.running && stop(x.id)); speakPhrase("Tutte le impastatrici fermate."); }
+      return;
+    }
+    if (/(azzera|reset)/.test(t)) {
+      const m = mixerByNumber(n);
+      if (m) { reset(m.id); speakPhrase(`${m.name} azzerata.`); }
+    }
+  };
 
-  // Riconoscimento vocale
   useEffect(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { setSupported(false); return; }
     const rec = new SR();
     rec.lang = "it-IT";
     rec.interimResults = false;
-    rec.onresult = (e) => {
-      const text = e.results[0][0].transcript;
-      setTranscript(text);
-      const t = text.toLowerCase();
-      if (/(avvia|parti|start|via)/.test(t)) startFirstIdle();
-      else if (/(ferma|stop|basta)/.test(t)) stopAll();
-    };
+    rec.onresult = (e) => { const text = e.results[0][0].transcript; setTranscript(text); handleCommand(text); };
     rec.onend = () => setListening(false);
     rec.onerror = () => setListening(false);
     recRef.current = rec;
     return () => { try { rec.abort(); } catch { /* */ } };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleMic = () => {
@@ -75,23 +84,10 @@ export default function VoiceCore() {
     else { try { rec.start(); setListening(true); setTranscript(""); } catch { /* */ } }
   };
 
-  const startMixer = (id) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, running: true, remaining: m.remaining > 0 ? m.remaining : Math.max(1, Math.round(m.minutes * 60)) } : m)));
-  const stopMixer = (id) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, running: false } : m)));
-  const resetMixer = (id) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, running: false, remaining: 0 } : m)));
-  const setMinutes = (id, v) => setMixers((l) => l.map((m) => (m.id === id ? { ...m, minutes: Math.max(0, Number(v) || 0) } : m)));
-  const startFirstIdle = () => {
-    const idle = mixersRef.current.find((m) => !m.running);
-    if (idle) startMixer(idle.id);
-  };
-  const stopAll = () => setMixers((l) => l.map((m) => ({ ...m, running: false })));
-  const addMixer = () => setMixers((l) => [...l, { id: `m${Date.now()}`, name: `Impastatrice ${String(l.length + 1).padStart(2, "0")}`, minutes: 8, remaining: 0, running: false }]);
-  const removeMixer = (id) => setMixers((l) => (l.length > 1 ? l.filter((m) => m.id !== id) : l));
-
-  const anyRunning = mixers.some((m) => m.running);
+  const anyRunning = list.some((m) => m.running);
 
   return (
     <div data-testid="voice-core" className="space-y-6">
-      {/* Status bar */}
       <div className="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl px-4 py-3">
         <div className="flex items-center gap-2 text-xs font-mono text-teal-300">
           <span className="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_8px_#2dd4bf]" /> Sensori OK
@@ -101,7 +97,6 @@ export default function VoiceCore() {
         </div>
       </div>
 
-      {/* Voice Core */}
       <div className="bg-slate-900/80 border border-teal-500/30 rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
         <button
           data-testid="voice-mic-btn"
@@ -125,29 +120,28 @@ export default function VoiceCore() {
                   ? `Comando ricevuto: ${transcript}`
                   : "Tocca il microfono o usa le cuffie per dare comandi"}
           </p>
-          <p className="text-[11px] text-slate-500 mt-2 font-mono">Prova: “avvia” per far partire un ciclo · “ferma” per stopparli</p>
+          <p className="text-[11px] text-slate-500 mt-2 font-mono">Prova: “avvia impastatrice due” · “ferma” · “quanto manca”</p>
         </div>
       </div>
 
-      {/* Monitoraggio Impastatrici */}
       <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-teal-400 flex items-center gap-2 uppercase tracking-wide">
             <Activity className={`w-4 h-4 ${anyRunning ? "text-amber-400" : "text-slate-500"}`} /> Monitoraggio Impastatrici
           </h3>
-          <button data-testid="mixer-add" onClick={addMixer} className="inline-flex items-center gap-1 text-xs font-semibold text-teal-300 hover:text-teal-200">
+          <button data-testid="mixer-add" onClick={add} className="inline-flex items-center gap-1 text-xs font-semibold text-teal-300 hover:text-teal-200">
             <Plus className="w-3.5 h-3.5" /> Aggiungi
           </button>
         </div>
 
         <div className="space-y-3">
-          {mixers.map((m) => (
+          {list.map((m) => (
             <div key={m.id} data-testid={`mixer-${m.id}`} className={`p-4 rounded-xl border bg-slate-950 flex items-center gap-4 ${m.running ? "border-amber-500/40" : "border-slate-800"}`}>
               <Timer className={`w-6 h-6 shrink-0 ${m.running ? "text-amber-400" : "text-slate-500"}`} />
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-bold text-slate-100 truncate">{m.name}</div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span data-testid={`mixer-time-${m.id}`} className={`font-mono text-2xl font-black ${m.running ? "text-amber-300" : m.remaining > 0 ? "text-teal-300" : "text-slate-500"}`}>{fmt(m.remaining || Math.round(m.minutes * 60))}</span>
+                  <span data-testid={`mixer-time-${m.id}`} className={`font-mono text-2xl font-black ${m.running ? "text-amber-300" : m.remaining > 0 ? "text-teal-300" : "text-slate-500"}`}>{fmt(m.remaining)}</span>
                   {!m.running && (
                     <label className="flex items-center gap-1 text-[10px] text-slate-500 uppercase">
                       min
@@ -165,18 +159,18 @@ export default function VoiceCore() {
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 {!m.running ? (
-                  <button data-testid={`mixer-start-${m.id}`} onClick={() => startMixer(m.id)} className="w-9 h-9 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 flex items-center justify-center active:scale-95 transition-all" title="Avvia">
+                  <button data-testid={`mixer-start-${m.id}`} onClick={() => start(m.id)} className="w-9 h-9 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 flex items-center justify-center active:scale-95 transition-all" title="Avvia">
                     <Play className="w-4 h-4" />
                   </button>
                 ) : (
-                  <button data-testid={`mixer-stop-${m.id}`} onClick={() => stopMixer(m.id)} className="w-9 h-9 rounded-lg bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center active:scale-95 transition-all" title="Ferma">
+                  <button data-testid={`mixer-stop-${m.id}`} onClick={() => stop(m.id)} className="w-9 h-9 rounded-lg bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center active:scale-95 transition-all" title="Ferma">
                     <Square className="w-4 h-4" />
                   </button>
                 )}
-                <button data-testid={`mixer-reset-${m.id}`} onClick={() => resetMixer(m.id)} className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center active:scale-95 transition-all" title="Reset">
+                <button data-testid={`mixer-reset-${m.id}`} onClick={() => reset(m.id)} className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center active:scale-95 transition-all" title="Reset">
                   <RotateCcw className="w-4 h-4" />
                 </button>
-                <button onClick={() => removeMixer(m.id)} className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-500 hover:text-rose-400 flex items-center justify-center active:scale-95 transition-all" title="Rimuovi">
+                <button onClick={() => remove(m.id)} className="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-500 hover:text-rose-400 flex items-center justify-center active:scale-95 transition-all" title="Rimuovi">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
