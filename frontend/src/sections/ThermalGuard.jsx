@@ -3,6 +3,7 @@ import { Moon, Thermometer, ShieldAlert, Snowflake, Flame, Activity, TriangleAle
 import { useMachines } from "@/audio/MachinesContext";
 import { useMixers } from "@/audio/MixerTimersContext";
 import { weeklyApi, recipesApi } from "@/lib/api";
+import { enablePush } from "@/lib/reminders";
 import { toast } from "sonner";
 
 const toMin = (hhmm) => { const [h, m] = (hhmm || "0:0").split(":").map(Number); return (h * 60 + (m || 0)); };
@@ -94,7 +95,9 @@ export default function ThermalGuard() {
       <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-teal-400 flex items-center gap-2 uppercase tracking-wide"><ShieldAlert className="w-4 h-4" /> IoT Thermal Guard</h3>
-          <span className="text-[10px] font-mono text-slate-500">Sonde PT100 · Milesight/Efento</span>
+          <button data-testid="push-enable" onClick={async () => { const ok = await enablePush(); toast[ok ? "success" : "error"](ok ? "Notifiche push attive sul dispositivo" : "Notifiche non attivate (permesso negato)"); }} className="inline-flex items-center gap-1 text-[11px] font-bold text-teal-300 hover:text-teal-200 border border-teal-500/30 rounded-lg px-2 py-1">
+            <ShieldAlert className="w-3 h-3" /> Attiva notifiche push
+          </button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {thermal.map((t) => {

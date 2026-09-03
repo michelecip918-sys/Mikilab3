@@ -27,6 +27,15 @@ async function ensurePushSubscription() {
   } catch { return false; }
 }
 
+export async function enablePush() {
+  try {
+    if (!("Notification" in window)) return false;
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") return false;
+    return await ensurePushSubscription();
+  } catch { return false; }
+}
+
 
 // Estrae righe con un orario (HH:MM, HH.MM, oppure 12h con AM/PM) da un testo markdown.
 export function parseTimeline(text) {

@@ -8303,6 +8303,9 @@ class SensorReading(BaseModel):
     temp: float
     unit: Optional[str] = "°C"
 
+SENSOR_MAX = {"forno": 230, "cella": 6, "freezer": -15, "frigo": 6}
+SENSOR_NAME = {"forno": "Forno Rotativo", "cella": "Armadio Fermo-Lievitazione", "freezer": "Freezer", "frigo": "Frigorifero"}
+
 @api_router.post("/sensors/reading")
 async def push_sensor_reading(body: SensorReading):
     """Endpoint per sonde IoT reali (Milesight/Efento/PT100...): spinge una lettura."""
@@ -8311,7 +8314,25 @@ async def push_sensor_reading(body: SensorReading):
         {"$set": {f"readings.{body.id}": {"temp": body.temp, "unit": body.unit or "°C", "at": datetime.now(timezone.utc).isoformat()}}},
         upsert=True,
     )
-    return {"ok": True}
+    # Allarme termico -> notifica push a tutti (anche ad app chiusa)
+    mx = SENSOR_MAX.get(body.id)
+    alarm = mx is not None and body.temp > mx
+    if alarm:
+        last = await db.sensor_state.find_one({"_key": "mikilab_sensors"}, {"_id": 0, f"alarmed.{body.id}": 1})
+        already = (last or {}).get("alarmed", {}).get(body.id)
+        if not already:
+            await db.sensor_state.update_one({"_key": "mikilab_sensors"}, {"$set": {f"alarmed.{body.id}": True}}, upsert=True)
+            try:
+                _, priv = await _get_vapid()
+                subs = await db.push_subs.find({}, {"_id": 0}).to_list(500)
+                payload = {"title": "⚠️ Allarme termico MikiLab", "body": f"{SENSOR_NAME.get(body.id, body.id)}: {body.temp}°C (max {mx}°C)"}
+                for s in subs:
+                    await asyncio.to_thread(_send_push, s, payload, priv)
+            except Exception:
+                pass
+    elif mx is not None:
+        await db.sensor_state.update_one({"_key": "mikilab_sensors"}, {"$set": {f"alarmed.{body.id}": False}}, upsert=True)
+    return {"ok": True, "alarm": bool(alarm)}
 
 @api_router.get("/sensors/latest")
 async def get_sensors_latest():
@@ -8337,6 +8358,8 @@ async def put_alarms(body: dict):
 
 
 
+
+# ---- Web Push allarmi termici: riusa il sistema VAPID esistente ----
 
 app.include_router(api_router)
 
