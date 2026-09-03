@@ -3752,3 +3752,10 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - Collegato dentro l'hub "Scienza & Guide" (tab bottom-nav `imparacon` → `AcademyHome`) come voce "Strumenti extra" (sub `scienza`, testid `academy-tab-scienza`). Nessun nuovo tab bottom-nav (griglia fissa a 5).
 - Community NON toccata: il feed social (`Community.jsx` + `/api/community/*`) resta completo e persistito.
 - Verificato via screenshot: 4 schede presenti, audio-guida attiva SpeechSynthesis con testo corretto.
+
+## Elite v3.0 (2026-06) — Estrazione moduli (opzione b)
+- Dallo script "Elite Engine v3.0" estratte SOLO le novità (no paste integrale: duplicava shell/PIN/header e conteneva bug `litriAcqua`).
+- **BrotSommelier.jsx** (statico + audio it-IT): abbinamenti pane–gastronomia (Segale&Miele, Ciabatta 80%, Enkir&Spezie). Agganciato all'hub "Scienza & Guide" (`AcademyHome` → sub `sommelier`, testid `academy-tab-sommelier`).
+- **SmartPlannerStressZero.jsx** (statico + audio + localStorage): orario turno notturno + volume giornaliero → report (3 impasti split) e "Sincronizza in cuffia". Aggiunto come tool Maestro `planner` (catalogo TOOLS in `PianoProduzioneAI.jsx`, cat coldchain; render in `Maestro.jsx`).
+- **Feed Wisdom**: aggiunta la frase filosofica sulla panificazione ("L'impasto…frequenza viva…") in `MikilaWisdom.jsx` array `home`, tradotta in 6 lingue.
+- Verificato via screenshot: Brot Sommelier + Smart Planner renderizzano, audio SpeechSynthesis attivo, report ricalcolato. Community/backend intatti.
